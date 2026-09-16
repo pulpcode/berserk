@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口；W01-1 实际契约已记录于 harness-lab.md，其他占位模板不作为架构要求。"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口；W01-1 会话交互和渲染契约见 harness-lab.md。"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "保持消息、事件、持久化和页面投影契约一致。"}
+{"file": ".trellis/tasks/09-16-w01-harness-validation/research/harness-candidates.md", "reason": "Pi 首步会话/最小工具依据；高级恢复与确认研究仅供 S3/S4，不能作为首增量前置。"}
+{"file": ".trellis/tasks/09-16-w01-harness-validation/research/model-and-runtime.md", "reason": "模型原生消息、运行环境及真实联调前置条件。"}
+{"file": ".trellis/tasks/09-16-w01-harness-validation/research/interaction-notes.md", "reason": "S1 简单会话/对话、停止与历史查询；后续面板按阶段接入。"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "已实现 W01-1 的接口、状态和验证约定；后续修改需遵循实际契约。"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "已实现 W01-1 的接口、状态和验证约定；后续修改需遵循实际契约。"}

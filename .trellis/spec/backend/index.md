@@ -10,10 +10,15 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ---
 
+## Pre-Development and Quality Check
+
+Read [Harness Lab Contract](./harness-lab.md) for W01-1 implementation. Run the checks listed there. Existing placeholder documents below are not established conventions.
+
 ## Guidelines Index
 
 | Guide | Description | Status |
 |-------|-------------|--------|
+| [Harness Lab Contract](./harness-lab.md) | Actual W01-1 API, state, persistence and verification contracts | Implemented scope |
 | [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
 | [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | To fill |
 | [Error Handling](./error-handling.md) | Error types, handling strategies | To fill |

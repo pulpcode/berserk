@@ -1,0 +1,58 @@
+{
+  "id": "w01-harness-validation",
+  "name": "w01-harness-validation",
+  "title": "W01 通用 Harness 协议与技术路线验证",
+  "description": "基于 MVP v0.7 分期验证 Harness：先交付 Pi 多轮对话、最小只读工具与原生历史，再扩展 Memory/Skill/压缩/子 Agent，随后落地完整 Run 和可替换边界。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "harness",
+  "package": null,
+  "priority": "P0",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-09-16",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "docs/mvp/README.md",
+    "docs/mvp/design.md",
+    "docs/mvp/implement.md",
+    "docs/mvp/decisions.md",
+    ".trellis/tasks/09-16-w01-harness-validation/prd.md",
+    ".trellis/tasks/09-16-w01-harness-validation/design.md",
+    ".trellis/tasks/09-16-w01-harness-validation/implement.md",
+    "README.md",
+    "docs/mvp/prd.md",
+    "docs/mvp/acceptance.md",
+    ".trellis/tasks/09-16-w01-harness-validation/review.md",
+    ".trellis/tasks/09-16-w01-harness-validation/research/harness-candidates.md",
+    ".trellis/tasks/09-16-w01-harness-validation/design-later.md",
+    ".trellis/tasks/09-16-w01-harness-validation/research/model-and-runtime.md",
+    ".trellis/tasks/09-16-w01-harness-validation/research/interaction-notes.md",
+    "experiments/harness-lab/README.md",
+    "experiments/harness-lab/package.json"
+  ],
+  "notes": "W01-1（S0/S1）实现与 C01-C06 验收通过。Pi 0.85.1、DeepSeek deepseek-flash 默认端点、thinking关闭。真实13条探针+2条浏览器请求通过，包含独立Node进程重启续聊；无密钥泄漏。后续S2-S5未启动，完整W01保持in_progress，不归档。",
+  "meta": {
+    "w01_1": {
+      "status": "validated",
+      "date": "2026-09-16",
+      "criteria": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06"
+      ],
+      "evidence": "research/validation-results.md"
+    }
+  }
+}

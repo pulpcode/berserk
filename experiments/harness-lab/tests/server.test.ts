@@ -1,0 +1,106 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { PiLab } from '../src/pi/lab.js';
+import { createApp } from '../src/server/app.js';
+import { loadConfig } from '../src/server/config.js';
+import type { SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
+import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
+
+const cleanup: Array<() => Promise<void>> = [];
+afterEach(async () => { for (const fn of cleanup.splice(0).reverse()) await fn(); });
+async function setup(reply: Parameters<typeof fakeRuntime>[1] = () => ({ text: '实际 Pi 回复' }), configured = true) {
+  const dir = await mkdtemp(join(tmpdir(), 'berserk-api-test-'));
+  cleanup.push(() => rm(dir, { recursive: true, force: true }));
+  const config = testConfig(dir, configured ? {} : { apiKey: '' });
+  const fake = await fakeRuntime(config, reply);
+  const lab = await PiLab.create(config, fake.runtime);
+  const app = await createApp(lab); cleanup.push(() => app.close());
+  return { app, lab, config, calls: fake.calls };
+}
+function events(payload: string): StreamEvent[] {
+  return payload.split('\n\n').filter(line => line.startsWith('data: ')).map(line => JSON.parse(line.slice(6)) as StreamEvent);
+}
+
+describe('local API with real Pi sessions', () => {
+  it('creates, lists and reads isolated sessions, and streams a request with an authoritative final snapshot', async () => {
+    const { app, config, calls } = await setup();
+    const a = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    const b = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    expect(a.id).not.toBe(b.id);
+    const reply = await app.inject({ method: 'POST', url: `/api/sessions/${a.id}/messages`, payload: { text: '记住请求标记' } });
+    expect(reply.statusCode).toBe(200);
+    expect(reply.headers['content-type']).toContain('text/event-stream');
+    const stream = events(reply.payload);
+    expect(stream.map(event => event.type)).toEqual(['response.started', 'text.delta', 'response.completed']);
+    expect(stream.every(event => event.sessionId === a.id && event.requestId === stream[0].requestId)).toBe(true);
+    const history = (await app.inject(`/api/sessions/${a.id}`)).json<SessionSnapshot>();
+    expect(history.messages.map(message => message.text)).toEqual(['记住请求标记', '实际 Pi 回复']);
+    expect((await app.inject(`/api/sessions/${b.id}`)).json<SessionSnapshot>().messages).toEqual([]);
+    const list = (await app.inject('/api/sessions')).json<Array<{ id: string }>>();
+    expect(list.map(item => item.id)).toEqual(expect.arrayContaining([a.id, b.id]));
+    await app.inject(`/api/sessions/${a.id}`);
+    expect(calls).toHaveLength(1); // Snapshot queries and page refresh never resend commands.
+    const info = await app.inject('/api/info');
+    expect(info.json()).toMatchObject({ configured: true, model: config.model });
+    expect(info.payload).not.toContain(config.apiKey);
+    expect(info.payload).not.toContain(config.dataDir);
+    expect(reply.payload).not.toContain(config.apiKey);
+  });
+
+  it('enforces busy and precise cancellation while a stream is active', async () => {
+    const { app, calls } = await setup(() => ({ waitForAbort: true }));
+    const session = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    const work = app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '等待停止' } }).then(result => result);
+    await vi.waitFor(() => expect(calls).toHaveLength(1));
+    const active = (await app.inject(`/api/sessions/${session.id}`)).json<SessionSnapshot>();
+    expect(active.active?.status).toBe('responding');
+    const conflict = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '不能排队' } });
+    expect(conflict.statusCode).toBe(409);
+    expect(conflict.json().error.code).toBe('SESSION_BUSY');
+    const stop = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/cancel`, payload: { requestId: active.active!.requestId } });
+    expect(stop.statusCode).toBe(200);
+    expect(events((await work).payload).at(-1)?.type).toBe('response.cancelled');
+    const stale = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/cancel`, payload: { requestId: active.active!.requestId } });
+    expect(stale.statusCode).toBe(409);
+    expect(stale.json().error.code).toBe('STALE_REQUEST');
+    expect(calls).toHaveLength(1);
+  });
+
+  it('rejects malformed bodies, unknown sessions and unsafe origins before any model request', async () => {
+    const { app, calls } = await setup();
+    const session = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    for (const payload of [{}, { text: '' }, { text: '   ' }, { text: 'x'.repeat(16001) }]) {
+      expect((await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload })).statusCode).toBe(400);
+    }
+    expect((await app.inject('/api/sessions/not-a-session-id')).statusCode).toBe(400);
+    expect((await app.inject('/api/sessions/11111111-1111-4111-8111-111111111111')).statusCode).toBe(404);
+    expect((await app.inject({ method: 'GET', url: '/api/info', headers: { host: 'attacker.example' } })).statusCode).toBe(403);
+    expect((await app.inject({ method: 'POST', url: '/api/sessions', headers: { origin: 'https://attacker.example' } })).statusCode).toBe(403);
+    expect((await app.inject({ method: 'GET', url: '/api/info', headers: { host: '127.0.0.1:4310', origin: 'http://127.0.0.1:5173' } })).statusCode).toBe(200);
+    expect(calls).toHaveLength(0);
+  });
+
+  it('reports missing model configuration before occupying the session', async () => {
+    const { app, calls } = await setup(undefined, false);
+    const session = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    const reply = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '你好' } });
+    expect(reply.statusCode).toBe(503);
+    expect(reply.json().error.code).toBe('MODEL_NOT_CONFIGURED');
+    expect((await app.inject(`/api/sessions/${session.id}`)).json<SessionSnapshot>().active).toBeNull();
+    expect(calls).toHaveLength(0);
+  });
+});
+
+describe('server-only configuration', () => {
+  it('defaults to the explicitly selected model and rejects credentials in endpoint URLs', () => {
+    expect(loadConfig({})).toMatchObject({ provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', apiKey: '' });
+    for (const endpoint of ['http://api.deepseek.com', 'https://user:password@api.deepseek.com', 'https://api.deepseek.com?key=secret']) {
+      expect(() => loadConfig({ LLM_BASE_URL: endpoint })).toThrow(/HTTPS/);
+    }
+    expect(() => loadConfig({ REQUEST_TIMEOUT_MS: '-1' })).toThrow(/REQUEST_TIMEOUT_MS/);
+    expect(() => loadConfig({ MAX_TOOL_CALLS: '0' })).toThrow(/MAX_TOOL_CALLS/);
+    expect(() => loadConfig({ MAX_OUTPUT_TOKENS: 'NaN' })).toThrow(/MAX_OUTPUT_TOKENS/);
+  });
+});

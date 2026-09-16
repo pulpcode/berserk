@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 0
-- **Last Active**: -
+- **Total Sessions**: 2
+- **Last Active**: 2026-09-16
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~0 | Active |
+| `journal-1.md` | ~70 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 2 | 2026-09-16 | 完成 W01-1 真实模型与进程重启验收 | - | `main` |
+| 1 | 2026-09-16 | 实施 W01-1 本地多轮对话入口 | - | `main` |
 <!-- @@@/auto:session-history -->
 
 ---
