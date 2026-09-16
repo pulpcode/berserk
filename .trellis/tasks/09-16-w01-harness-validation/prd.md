@@ -1,6 +1,6 @@
 # W01 通用 Harness 协议与技术路线验证
 
-日期：2026-09-16。基线：MVP v0.7。状态：2026-09-16 用户授权实施 W01-1，任务 in_progress；S0／S1 已实现并完成 C01～C06 真实／本地组合验收；完整 W01 后续阶段尚未开始。结果见 [验证记录](research/validation-results.md)。
+日期：2026-09-16。基线：MVP v0.7。状态：2026-09-16 用户授权实施 W01-1，任务 in_progress；S0／S1 已实现并完成 C01～C06 真实／本地组合验收；W01-2（S2a）也已完成 A01～A12 组合验收，其余后续阶段尚未开始。结果见 [验证记录](research/validation-results.md)。
 
 ## 目标
 
@@ -50,7 +50,7 @@
 
 ## 下一增量 W01-2（S2a）
 
-已形成 [最小工作区、文件式 Memory 与 Skill 方案](../09-16-w01-2-workspace-memory/review.md)，状态 planning，尚未开始实现。先明确 Workspace 与 Session 归属；业务 Task／WorkItem 不在本期引入。采用独立 A01～A12 验收，覆盖 T06／T07 的部分能力；完整 T、FG 和业务 AC 保留。
+已形成 [最小工作区、文件式 Memory 与 Skill 方案](../09-16-w01-2-workspace-memory/review.md)，已实现并通过 A01～A12 组合验收。先明确 Workspace 与 Session 归属；业务 Task／WorkItem 不在本期引入。采用独立 A01～A12 验收，覆盖 T06／T07 的部分能力；完整 T、FG 和业务 AC 保留。
 
 S2 建议按 S2a 工作区／Memory／Skill → S2b 压缩 → S2c 子 Agent 与累计预算推进；后两项仍需分别细化、审阅。
 
@@ -88,6 +88,6 @@ T01～T13 是 S2～S5 的完整验证矩阵，均为**未执行**，不作为 W0
 
 第一步按 [design.md](design.md) 实现 Pi 多轮对话，复用原生会话和只读工具，不先建立完整平台运行体系；后续能力及契约见 [design-later.md](design-later.md)。Pi 的首轮使用方向已明确，长期路线仍由完整 W01 的实测与维护成本决定。
 
-开工审阅见 [review.md](review.md)，重点是首增量范围、交互和 C01～C06，不要求提前审定所有后续状态与迁移细节。用户已授权实施首增量，后续阶段未启动。
+开工审阅见 [review.md](review.md)，重点是首增量范围、交互和 C01～C06，不要求提前审定所有后续状态与迁移细节。用户已授权实施首增量及 W01-2（S2a）；其余后续阶段未启动。
 
 第一步就需要真实模型验证；已确定 DeepSeek 默认端点、deepseek-flash、thinking 关闭；用户明确暂不设置真实验收总请求数限制，保留单次请求边界。API Key 写入 Git 忽略的 `experiments/harness-lab/.env.local`。Ubuntu 登录信息仅在实际部署验证时索取。完整运行恢复、确认与快照兼容的未知项留到 S3／S4 验证，保留为长期选型风险，不当作已经解决。

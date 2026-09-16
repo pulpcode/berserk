@@ -3,7 +3,7 @@ import { createAssistantMessageEventStream, InMemoryCredentialStore, InMemoryMod
   type AssistantMessage, type Context, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { LabConfig } from '../../src/server/config.js';
 
-export type Reply = { text?: string; toolIds?: string[]; error?: string; length?: boolean; waitForAbort?: boolean };
+export type Reply = { text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean };
 export interface CapturedCall { context: Context; maxTokens?: number; aborted: boolean }
 
 /** Fake only the provider stream: Pi itself performs the real tool loop and persistence. */
@@ -50,12 +50,12 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           stream.push({ type: 'error', reason: 'error', error: message });
           return;
         }
-        for (const [index, id] of (plan.toolIds || []).entries()) {
-          const toolCall = { type: 'toolCall' as const, id: `call-${calls.length}-${index}`, name: 'source_read', arguments: { id } };
+        for (const [index, tool] of (plan.tools || (plan.toolIds || []).map(id => ({ name: 'source_read', arguments: { id } }))).entries()) {
+          const toolCall = { type: 'toolCall' as const, id: `call-${calls.length}-${index}`, ...tool };
           message.content.push(toolCall);
           stream.push({ type: 'toolcall_end', contentIndex: message.content.length - 1, toolCall, partial: message });
         }
-        message.stopReason = plan.toolIds?.length ? 'toolUse' : plan.length ? 'length' : 'stop';
+        message.stopReason = (plan.tools?.length || plan.toolIds?.length) ? 'toolUse' : plan.length ? 'length' : 'stop';
         stream.push({ type: 'done', reason: message.stopReason, message });
       });
       return stream;

@@ -8,7 +8,7 @@ Memory 在本项目中明确指 Agent 指令文件（如 AGENTS.md、CLAUDE.md�
 
 当前 W01-1 已完成实现与 C01～C06 验收，应用位于 [experiments/harness-lab](experiments/harness-lab/README.md)，本地检查与真实模型验收结果见 [验证记录](.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。规划内容根据 [项目讨论](https://chatgpt.com/share/6aa9fb5b-1938-83e8-be06-54d1be680784) 及后续调整更新至 v0.7：先交付 Pi 多轮对话，再完善 Harness 能力、运行管理与作业框架，随后开展样板业务和信息模拟服务。完整 Run、确认恢复、平台快照和导出检查不作为第一步前置条件。业务工作分派、子 Agent 委派与外部调度分别管理，调度实现继续后延。
 
-- [下一阶段 W01-2：审阅入口](.trellis/tasks/09-16-w01-2-workspace-memory/review.md)（工作区、文件式 Memory、Skill；方案待审，未实施）
+- [下一阶段 W01-2：审阅入口](.trellis/tasks/09-16-w01-2-workspace-memory/review.md)（工作区、文件式 Memory、Skill；已实现并通过 A01～A12 组合验收）
 - [MVP 文档入口](docs/mvp/README.md)
 - [MVP 范围与需求](docs/mvp/prd.md)
 - [设计边界](docs/mvp/design.md)

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, StreamEvent } from '../contracts/index';
+import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, StreamEvent, Workspace, WorkspaceList, InstructionUpdate } from '../contracts/index';
 import { api, sendMessage } from './api';
 
 const DRAFT_KEY = 'berserk.drafts';
@@ -14,8 +14,8 @@ function stored(key: string): Record<string, string> {
 function persist(key: string, value: unknown) {
   try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* In-memory drafts remain usable when storage is unavailable. */ }
 }
-function initialSelection() {
-  try { return sessionStorage.getItem('berserk.selected') || ''; } catch { return ''; }
+function initialWorkspace() {
+  try { return sessionStorage.getItem('berserk.workspace') || ''; } catch { return ''; }
 }
 const reason = (error: unknown) => error instanceof Error ? error.message : '连接异常，请稍后查询会话状态。';
 
@@ -32,7 +32,25 @@ export function useChat() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const creatingRef = useRef(false);
-  const [selected, setSelected] = useState(initialSelection);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [workspaceId, setWorkspaceId] = useState(initialWorkspace);
+  const workspaceRef = useRef(workspaceId);
+  const [selections, setSelections] = useState(() => stored('berserk.selections'));
+  const selectionsRef = useRef(selections);
+  const selected = selections[workspaceId] || '';
+  const draftKey = selected || `workspace:${workspaceId}`;
+  const [workspaceLoading, setWorkspaceLoading] = useState(false);
+  const [instructionChanges, setInstructionChanges] = useState<Record<string, InstructionUpdate[]>>({});
+  const listTokens = useRef<Record<string, symbol>>({});
+  const selectForWorkspace = useCallback((workspace: string, id: string) => {
+    selectionsRef.current = { ...selectionsRef.current, [workspace]: id };
+    setSelections(selectionsRef.current);
+    persist('berserk.selections', selectionsRef.current);
+  }, []);
+  const selectWorkspace = useCallback((id: string) => {
+    workspaceRef.current = id; setWorkspaceId(id);
+    try { sessionStorage.setItem('berserk.workspace', id); } catch { /* Keep selection in memory. */ }
+  }, []);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);
   const [submitted, setSubmitted] = useState(() => stored(SENT_KEY));
@@ -61,6 +79,7 @@ export function useChat() {
     if (!snapshot.active && snapshot.lastResult) {
       if (snapshot.lastResult.status === 'succeeded') rememberSubmitted(id, '');
       if (snapshot.lastResult.status === 'failed') recover(id);
+      if (snapshot.lastResult.status === 'cancelled' && !snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId)) recover(id);
     }
   }, [recover, rememberSubmitted]);
 
@@ -77,42 +96,65 @@ export function useChat() {
       put(result);
       setPending(previous => ({ ...previous, [id]: false }));
       setReadErrors(previous => ({ ...previous, [id]: '' }));
-    } catch (error) { setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
+    } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
   }, [put]);
 
+  const loadSessions = useCallback(async (workspace: string) => {
+    const token = Symbol(); listTokens.current[workspace] = token;
+    if (workspaceRef.current === workspace) setWorkspaceLoading(true);
+    try {
+      const list = await api<SessionSummary[]>(`/api/sessions?workspaceId=${encodeURIComponent(workspace)}`);
+      if (listTokens.current[workspace] !== token) return;
+      setSessions(previous => [...previous.filter(item => item.workspaceId !== workspace), ...list.map(item => snapshotsRef.current[item.id] || item)]);
+      const previous = selectionsRef.current[workspace];
+      if (!list.some(item => item.id === previous) && !snapshotsRef.current[previous]) selectForWorkspace(workspace, list[0]?.id || '');
+      setErrors(previous => ({ ...previous, [`workspace:${workspace}`]: '' }));
+    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${workspace}`]: reason(error) })); }
+    finally { if (workspaceRef.current === workspace && listTokens.current[workspace] === token) setWorkspaceLoading(false); }
+  }, [selectForWorkspace]);
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [app, list] = await Promise.all([api<AppInfo>('/api/info'), api<SessionSummary[]>('/api/sessions')]);
-      setInfo(app); setSessions(list);
-      setSelected(previous => list.some(item => item.id === previous) ? previous : list[0]?.id || '');
+      const [app, list] = await Promise.all([api<AppInfo>('/api/info'), api<WorkspaceList>('/api/workspaces')]);
+      setInfo(app); setWorkspaces(list.workspaces);
+      const workspace = list.workspaces.some(item => item.id === workspaceRef.current) ? workspaceRef.current : list.defaultWorkspaceId;
+      selectWorkspace(workspace);
+      await loadSessions(workspace);
       setErrors(previous => ({ ...previous, '': '' }));
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
-  }, []);
+  }, [loadSessions, selectWorkspace]);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
+  useEffect(() => { if (workspaceId) void loadSessions(workspaceId); }, [workspaceId, loadSessions]);
   useEffect(() => {
-    try { sessionStorage.setItem('berserk.selected', selected); } catch { /* Selection remains in memory. */ }
     if (!selected) return;
     void refresh(selected);
     const interval = window.setInterval(() => { void refresh(selected); }, 1800);
     return () => window.clearInterval(interval);
   }, [selected, refresh]);
 
+  const createWorkspace = useCallback(async (name: string) => {
+    const workspace = await api<Workspace>('/api/workspaces', { name });
+    setWorkspaces(previous => [...previous, workspace]);
+    selectWorkspace(workspace.id);
+    return workspace;
+  }, [selectWorkspace]);
+
   const create = useCallback(async (): Promise<string | null> => {
-    if (creatingRef.current) return null;
+    if (creatingRef.current || !workspaceId) return null;
     creatingRef.current = true; setCreating(true);
     try {
-      const snapshot = await api<SessionSnapshot>('/api/sessions', {});
-      put(snapshot); setSelected(snapshot.id);
-      if (draftsRef.current['']) { draft(snapshot.id, draftsRef.current['']); draft('', ''); }
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId });
+      put(snapshot); selectForWorkspace(workspaceId, snapshot.id);
+      const key = `workspace:${workspaceId}`;
+      if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
       return snapshot.id;
-    } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); return null; }
+    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${workspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = false; setCreating(false); }
-  }, [draft, put]);
+  }, [draft, put, selectForWorkspace, workspaceId]);
 
   const send = useCallback(async () => {
-    const text = (draftsRef.current[selected] || '').trim();
+    const text = (draftsRef.current[draftKey] || '').trim();
     if (!text) return;
     const id = selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active) return;
@@ -123,27 +165,31 @@ export function useChat() {
     streams.current.set(id, stream);
     setPending(previous => ({ ...previous, [id]: true }));
     setErrors(previous => ({ ...previous, [id]: '' }));
-    rememberSubmitted(id, text); draft(id, '');
+    rememberSubmitted(id, text);
+    if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
     let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
     let assistantNumber = 0;
     put({ ...before, messages, lastResult: null });
     const receive = (event: StreamEvent) => {
       if (event.sessionId !== id || streams.current.get(id)?.token !== token || stream.terminal) return;
-      if (event.type === 'response.started') stream.requestId = event.requestId;
+      if (stream.requestId && event.requestId !== stream.requestId) return;
+      if (event.type === 'response.started') { stream.requestId = event.requestId; messages = messages.map(message => message.id === 'sending-user' ? { ...message, requestId: event.requestId } : message); setInstructionChanges(previous => ({ ...previous, [id]: [] })); }
       if (event.requestId !== stream.requestId) return;
       const current = snapshotsRef.current[id];
       if (!current) return;
+      if (event.type === 'instructions.updated') setInstructionChanges(previous => ({ ...previous, [id]: [...(previous[id] || []), event.change] }));
       if ('snapshot' in event) {
         stream.terminal = true;
         put(event.snapshot);
+        setPending(previous => ({ ...previous, [id]: false }));
         return;
       }
       if (event.type === 'text.delta') {
         const last = messages.at(-1);
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
-        else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', text: event.delta }];
+        else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', requestId: event.requestId, text: event.delta }];
       }
-      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, role: 'tool', toolName: event.toolName, text: '' }];
+      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
       if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError } : message);
       put({ ...current, messages, active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding' } });
     };
@@ -155,7 +201,7 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [create, draft, put, recover, refresh, rememberSubmitted, selected]);
+  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -173,8 +219,12 @@ export function useChat() {
     }
   }, [put, selected]);
 
-  return { info, sessions, snapshots, selected, select: setSelected, loading, creating, create, send, cancel,
-    draft: drafts[selected] || '', setDraft: (text: string) => draft(selected, text),
-    submitted: submitted[selected] || '', restoreSubmitted: () => draft(selected, submittedRef.current[selected] || ''),
-    pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[''] || '', refresh, bootstrap };
+  return { info, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
+    select: (id: string) => selectForWorkspace(workspaceId, id), workspaces, workspaceId,
+    workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
+    loading: loading || workspaceLoading, creating, create, send, cancel,
+    draft: drafts[draftKey] || '', setDraft: (text: string) => draft(draftKey, text),
+    submitted: submitted[selected] || '', restoreSubmitted: () => draft(draftKey, submittedRef.current[selected] || ''),
+    instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
+    pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[`workspace:${workspaceId}`] || errors[''] || '', refresh, bootstrap };
 }

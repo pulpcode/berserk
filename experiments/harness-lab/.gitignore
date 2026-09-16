@@ -1,4 +1,5 @@
 .local/
+.backups/
 dist/
 test-results/
 playwright-report/

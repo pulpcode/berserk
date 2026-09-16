@@ -2,8 +2,8 @@
   "id": "w01-2-workspace-memory",
   "name": "w01-2-workspace-memory",
   "title": "W01-2 最小工作区、文件式 Memory 与 Skill 接入",
-  "description": "S2a：先明确工作区与会话归属，再接入 AGENTS.md 式指令加载与受控编辑、固定 Skill 和资料工具；本轮仅完成供审阅的方案。",
-  "status": "planning",
+  "description": "S2a：建立工作区与会话归属，接入 AGENTS.md 式指令加载与受控编辑、固定 Skill 和资料工具；按已批准方案实施并验证。",
+  "status": "completed",
   "dev_type": "fullstack",
   "scope": "harness",
   "package": null,
@@ -11,7 +11,7 @@
   "creator": "bobot",
   "assignee": "bobot",
   "createdAt": "2026-09-16",
-  "completedAt": null,
+  "completedAt": "2026-09-17",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
@@ -29,11 +29,13 @@
     "experiments/harness-lab/src/pi/lab.ts",
     "experiments/harness-lab/src/contracts/index.ts"
   ],
-  "notes": "设计已整理待审阅；未开始实现、模型调用或旧数据过渡。S2b/S2c 与 S3/S4 不进入本期。",
+  "notes": "W01-2/S2a 实现并验证。44项确定性测试、12项浏览器回归、最终18次真实请求通过；原有2会话备份迁移且原字节保留，服务恢复。只完成S2a，其余W01阶段未完成。",
   "meta": {
     "stage": "S2a",
     "parentWorkPackage": "W01",
-    "designStatus": "ready_for_review",
-    "implementationApproved": false
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "validationStatus": "validated",
+    "evidence": "research/validation-results.md"
   }
 }

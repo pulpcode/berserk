@@ -33,7 +33,7 @@ describe('local API with real Pi sessions', () => {
     expect(reply.statusCode).toBe(200);
     expect(reply.headers['content-type']).toContain('text/event-stream');
     const stream = events(reply.payload);
-    expect(stream.map(event => event.type)).toEqual(['response.started', 'text.delta', 'response.completed']);
+    expect(stream.map(event => event.type)).toEqual(['response.started', 'resources.loaded', 'text.delta', 'response.completed']);
     expect(stream.every(event => event.sessionId === a.id && event.requestId === stream[0].requestId)).toBe(true);
     const history = (await app.inject(`/api/sessions/${a.id}`)).json<SessionSnapshot>();
     expect(history.messages.map(message => message.text)).toEqual(['记住请求标记', '实际 Pi 回复']);
@@ -102,5 +102,47 @@ describe('server-only configuration', () => {
     expect(() => loadConfig({ REQUEST_TIMEOUT_MS: '-1' })).toThrow(/REQUEST_TIMEOUT_MS/);
     expect(() => loadConfig({ MAX_TOOL_CALLS: '0' })).toThrow(/MAX_TOOL_CALLS/);
     expect(() => loadConfig({ MAX_OUTPUT_TOKENS: 'NaN' })).toThrow(/MAX_OUTPUT_TOKENS/);
+  });
+});
+
+describe('workspace resource API', () => {
+  it('persists workspace ownership, exposes exact current/loaded resources and returns CAS conflicts without writing', async () => {
+    const { app, calls } = await setup();
+    const list = (await app.inject('/api/workspaces')).json<{ defaultWorkspaceId: string; workspaces: Array<{ id: string }> }>();
+    const created = await app.inject({ method: 'POST', url: '/api/workspaces', payload: { name: '第二工作区' } });
+    expect(created.statusCode).toBe(201); const id = created.json<{ id: string }>().id;
+    const session = (await app.inject({ method: 'POST', url: '/api/sessions', payload: { workspaceId: id } })).json<SessionSnapshot>();
+    expect(session.workspaceId).toBe(id);
+    expect((await app.inject('/api/sessions')).json()).toEqual([]);
+    expect((await app.inject(`/api/sessions?workspaceId=${id}`)).json()).toMatchObject([{ id: session.id, workspaceId: id }]);
+    const info = (await app.inject(`/api/workspaces/${id}/resources`)).json();
+    expect(info).toMatchObject({ workspaceId: id, sources: [{ id: 'meeting-notes' }, { id: 'resource-brief' }], skills: [{ id: 'synthesis' }, { id: 'review' }] });
+    expect((await app.inject('/api/info')).json()).not.toHaveProperty('sources');
+    const path = `/api/workspaces/${id}/instructions/workspace`;
+    const original = (await app.inject(path)).json();
+    const saved = await app.inject({ method: 'PUT', url: path, payload: { content: 'API_RULE', expectedHash: original.hash } });
+    expect(saved.statusCode).toBe(200); expect(saved.json()).toMatchObject({ status: 'updated', effectiveFrom: 'next_request' });
+    const stale = await app.inject({ method: 'PUT', url: path, payload: { content: '过期覆盖', expectedHash: original.hash } });
+    expect(stale.statusCode).toBe(409); expect(stale.json().error.code).toBe('INSTRUCTION_CONFLICT');
+    expect((await app.inject(path)).json().content).toBe('API_RULE');
+    expect((await app.inject(`/api/workspaces/${list.defaultWorkspaceId}/instructions/workspace`)).json().content).toBe('');
+    const response = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '测试规则' } });
+    const requestId = events(response.payload)[0].requestId;
+    expect((await app.inject(`/api/sessions/${session.id}/requests/${requestId}/resources`)).json()).toMatchObject({ status: 'available', workspaceId: id, instructions: [{ fileId: 'common' }, { fileId: 'workspace', content: 'API_RULE' }] });
+    expect(calls[0].context.systemPrompt).toContain('API_RULE');
+    expect((await app.inject(`/api/workspaces/${id}/skills/review`)).json()).toMatchObject({ id: 'review', content: expect.stringContaining('修订建议') });
+  });
+  it('rejects unknown workspace, read-only writes, oversized content and extra authority parameters', async () => {
+    const { app, calls } = await setup();
+    const id = (await app.inject('/api/workspaces')).json().defaultWorkspaceId;
+    const session = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();
+    for (const payload of [{ name: ' ' }, { name: 'x'.repeat(61) }, { name: '范围', path: '/tmp' }]) expect((await app.inject({ method: 'POST', url: '/api/workspaces', payload })).statusCode).toBe(400);
+    expect((await app.inject({ method: 'POST', url: '/api/sessions', payload: { workspaceId: '11111111-1111-4111-8111-111111111111' } })).statusCode).toBe(404);
+    expect((await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '提升权限', editable: true } })).statusCode).toBe(400);
+    expect((await app.inject({ method: 'PUT', url: `/api/workspaces/${id}/instructions/common`, payload: { content: '', expectedHash: null } })).statusCode).toBe(403);
+    expect((await app.inject({ method: 'PUT', url: `/api/workspaces/${id}/instructions/workspace`, payload: { content: '字'.repeat(6000), expectedHash: null } })).statusCode).toBe(413);
+    expect((await app.inject(`/api/workspaces/${id}/skills/unknown`)).statusCode).toBe(404);
+    expect((await app.inject({ method: 'PUT', url: `/api/workspaces/${id}/instructions/workspace`, payload: { content: '', expectedHash: null, force: true } })).statusCode).toBe(400);
+    expect(calls).toHaveLength(0);
   });
 });

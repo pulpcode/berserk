@@ -29,8 +29,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
     apiKey: env.LLM_API_KEY?.trim() || '',
     dataDir: resolve(env.LAB_DATA_DIR || '.local'),
     port: integer(env, 'PORT', 4310, 1024, 65535),
-    timeoutMs: integer(env, 'REQUEST_TIMEOUT_MS', 90000, 1000, 300000),
-    maxToolCalls: integer(env, 'MAX_TOOL_CALLS', 4, 1, 20),
+    timeoutMs: integer(env, 'REQUEST_TIMEOUT_MS', 120000, 1000, 300000),
+    maxToolCalls: integer(env, 'MAX_TOOL_CALLS', 8, 1, 20),
     maxOutputTokens: integer(env, 'MAX_OUTPUT_TOKENS', 2048, 64, 8192),
   };
 }

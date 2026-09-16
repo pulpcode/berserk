@@ -1,12 +1,12 @@
 # W01-2 具体设计
 
-日期：2026-09-16。状态：待审阅，未实施。范围以 [PRD](prd.md) 的 N01～N09／A01～A12 为准；[审阅入口](review.md) 汇总用户需要判断的使用行为。本文件是 S2a 的具体方案，优先于父任务中笼统的 S2 草案；S3／S4 契约不因此提前实现。
+日期：2026-09-16。状态：2026-09-17 已实现并完成 A01～A12 组合验收。范围以 [PRD](prd.md) 的 N01～N09／A01～A12 为准；[审阅入口](review.md) 汇总用户需要判断的使用行为。本文件是 S2a 的具体方案，优先于父任务中笼统的 S2 草案；S3／S4 契约不因此提前实现。
 
 ## 1. 实现基线与边界
 
 延续 `experiments/harness-lab/` 的 TypeScript／Node、React／Vite、Fastify、Pi 0.85.1、DeepSeek Flash。保留原生 JSONL 作为会话历史来源，不引入数据库或通用适配框架。SDK 与原生格式仍只在 `src/pi` 解释。
 
-当前 PiLab 将所有资料放在全局 `info.sources`，缓存会话内核实例并禁用外部资源发现；本期将资源解析绑定到工作区，并在每次请求开始时组装资源。实现依据与接口核验见 [研究记录](research/pi-resource-boundary.md)。
+W01-1 基线的 PiLab 将所有资料放在全局 `info.sources`，缓存会话内核实例并禁用外部资源发现；本期将资源解析绑定到工作区，并在每次请求开始时组装资源。实现依据与接口核验见 [研究记录](research/pi-resource-boundary.md)。
 
 ```mermaid
 flowchart LR
@@ -73,7 +73,7 @@ flowchart LR
 
 以下路径均位于已被 Git 忽略的 `LAB_DATA_DIR`（默认 `.local`）。客户端和模型只传 ID，服务端生成路径。
 
-这是服务端持久化方案：按实验工程目录启动时，默认根目录为 `experiments/harness-lab/.local/`；未来部署到服务器时由 LAB_DATA_DIR 指向服务器的持久化目录，不存放在浏览器。当前仅完成设计，尚未创建这些工作区文件；浏览器 sessionStorage 仅保留草稿与选择状态，不是工作区或指令的事实来源。
+这是服务端持久化方案：按实验工程目录启动时，默认根目录为 `experiments/harness-lab/.local/`；未来部署到服务器时由 LAB_DATA_DIR 指向服务器的持久化目录，不存放在浏览器。本期已实现这些工作区文件与受控读写；浏览器 sessionStorage 仅保留草稿与选择状态，不是工作区或指令的事实来源。
 
 ```text
 .local/
@@ -89,13 +89,13 @@ flowchart LR
 
 通用指令和两个 Skill 作为应用受控资源放在 `fixtures/common/AGENTS.md`、`fixtures/skills/<skillId>/SKILL.md`，随代码管理；这里指实验工程自己的 fixtures，不读取仓库根 AGENTS.md、`.agents/skills` 或开发机全局配置。
 
-索引字段建议：`schemaVersion:1`、`defaultWorkspaceId`、`workspaces:[{id,name,createdAt,sourceIds,skillIds}]`、`sessionBindings:{sessionId:workspaceId}`。工作区根路径按 ID 派生，不保存或接受任意目录。索引不复制聊天和 AGENTS.md 正文；没有两套可写历史。
+索引字段：`schemaVersion:1`、`defaultWorkspaceId`、`workspaces:[{id,name,createdAt,sourceIds,skillIds}]`、`sessionBindings:{sessionId:workspaceId}`。工作区根路径按 ID 派生，不保存或接受任意目录。索引不复制聊天和 AGENTS.md 正文；没有两套可写历史。
 
 索引写入在单进程锁中生成完整新文件，以同目录临时文件、fsync 和原子 rename 提交；失效版本或损坏文件明确停止写入，不用空索引覆盖。工作区先准备文件再登记索引，登记成功才返回；失败的未登记目录不自动发布或递归删除。
 
 新会话先创建原生空文件，再提交归属索引，二者完成后才进入列表和响应。没有索引归属的文件保留但不自动加载为默认工作区。两文件不宣称具备数据库事务；启动时发现未登记文件给出诊断，由人工核对。
 
-建议新增 `src/workspaces/store.ts` 负责目录／归属，`src/resources/instructions.ts`、`src/resources/skills.ts` 负责受控资源，现有 `src/tools/sources.ts` 改为接收工作区范围。它们不导入 Pi。PiLab 接收这些服务，在工具闭包内固定 workspaceId 和请求上下文；页面只使用公开契约。
+已新增 `src/workspaces/store.ts` 负责目录／归属，`src/resources/service.ts`、`src/resources/files.ts` 负责受控资源，现有 `src/tools/sources.ts` 改为接收工作区范围。它们不导入 Pi。PiLab 接收这些服务，在工具闭包内固定 workspaceId 和请求上下文；页面只使用公开契约。
 
 本期仅支持一个服务进程拥有该目录，依靠现有默认监听端口及部署约束，不承诺不同端口／多进程同时写同一目录的安全性。启动文档明确禁止此方式；多进程控制属于后续存储阶段。
 
@@ -112,6 +112,8 @@ flowchart LR
 7. 等待执行／取消完全收敛，保存结果、释放活动标记。准备阶段失败不发模型请求，不伪造用户消息已进入原生历史；页面保留待发草稿。
 
 步骤 1 沿用现有“同一会话同时只处理一个请求”的机制，其他会话分别维护自己的状态。requestId 用于把流式回复和停止操作对应到本次请求。本文的“宿主”指接入 Pi 的服务端应用；资源读写范围由服务端确定，模型不能自行扩大。用户在页面切换工作区，也不会改变已经开始的请求所属的工作区。
+
+实现补充（真实模型复验发现）：仅更新系统中的指令快照时，模型仍可能受历史里的旧 `instructions_read` 结果影响。因此，调用模型前还在提供方请求体的消息数组副本中，紧邻本次用户消息之前插入一条 **system 级宿主提醒**，同时保留首条系统消息，明确展示同一份完整指令快照和空文件语义。所有用户消息原文均不变；这段提醒只服务当前请求，不写回原生消息或页面；工具循环中的每次调用仍使用请求开始时的同一快照。下一请求重新生成，既不累计旧提醒，也不复制、重放历史。系统 ResourceLoader 仍是指令加载入口，程序权限不由提醒或模型决定；不对模型回答做关键词补写。实际提供方请求体与原生文件分别测试，真实回答效果另行验收。DeepSeek 当前 [Tool Calls 官方文档](https://api-docs.deepseek.com/guides/tool_calls/) 明确允许在对话中插入 system 消息；这项接法位于 `src/pi` 的提供方封装内，未来更换协议需重新验证。
 
 每请求新实例是本期为了固定加载边界的具体实现选择，不意味着成熟平台必须每轮重建。禁止用全局可变当前工作区或临时替换另一会话的 system prompt。避免每轮调用 `AgentSession.reload()`，其在当前版本包含额外运行时重载行为，见研究记录。
 
@@ -206,4 +208,4 @@ SSE 保留 sessionId、requestId 和原有事件；增加 `resources.loaded`（�
 - 检查原生 custom entry 在空／完成／取消会话中的保存时点和重启可读性。若准备阶段尚未落盘，不宣称有可靠请求日志；不能牺牲历史完整性强行手写原生消息。
 - 对所有目录／文件变更做并发、取消、磁盘失败与迁移中断测试；具体见 [实施计划](implement.md)。这些是实现验证点，均未被本方案标记为已通过。
 
-确认本方案后方可进入实现；本轮不改应用代码、不改用户 AGENTS.md、不调用模型或开始数据过渡。
+用户已明确批准实施。实际实现、模型验证与数据过渡证据见 [验证记录](research/validation-results.md)；未通过的行为不得只凭设计标为完成。

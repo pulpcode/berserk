@@ -24,3 +24,4 @@ Managed by Trellis. Edits outside this block are preserved; edits inside may be 
 
 - 本项目所有 Git commit message 必须以中文为主体，包括标题和正文；技术名词、标识符及可选的 Conventional Commits 前缀可以保留英文。
 - 自动生成的任务归档、会话记录等提交也遵循此约定。
+- Trellis 自动提交保持关闭；记录与归档后审阅变更，再使用中文提交信息手动提交。

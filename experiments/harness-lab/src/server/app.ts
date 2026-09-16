@@ -6,7 +6,7 @@ import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
 
 export async function createApp(lab: PiLab, serveWeb = false) {
-  const app = Fastify({ logger: false, bodyLimit: 64 * 1024 });
+  const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false } } });
   app.addHook('onRequest', async (request, reply) => {
     const host = request.headers.host?.split(':')[0];
     if (host !== '127.0.0.1' && host !== 'localhost') {
@@ -28,8 +28,20 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   });
   const params = { type: 'object', properties: { id: { type: 'string', pattern: '^[0-9a-f-]{36}$' } }, required: ['id'], additionalProperties: false };
   app.get('/api/info', async () => lab.info());
-  app.get('/api/sessions', async () => lab.list());
-  app.post('/api/sessions', async () => lab.createSession());
+  const uuid = { type: 'string', format: 'uuid' };
+  const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
+  app.get('/api/workspaces', async () => lab.workspaces.list());
+  app.post<{ Body: { name: string } }>('/api/workspaces', { schema: { body: { type: 'object', properties: { name: { type: 'string', minLength: 1, maxLength: 60 } }, required: ['name'], additionalProperties: false } } }, async (request, reply) => reply.code(201).send(await lab.workspaces.create(request.body.name)));
+  app.get<{ Querystring: { workspaceId?: string } }>('/api/sessions', { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId));
+  app.post<{ Body: { workspaceId?: string } }>('/api/sessions', { schema: { body: workspaceBody }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId));
+  app.get<{ Params: { id: string } }>('/api/workspaces/:id/resources', { schema: { params } }, async request => lab.resources.info(request.params.id));
+  const resourceParams = (key: string) => ({ type: 'object', properties: { id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } }, required: ['id', key], additionalProperties: false });
+  app.get<{ Params: { id: string; fileId: string } }>('/api/workspaces/:id/instructions/:fileId', { schema: { params: resourceParams('fileId') } }, async request => lab.resources.readInstruction(request.params.id, request.params.fileId));
+  app.put<{ Params: { id: string; fileId: string }; Body: { content: string; expectedHash: string | null } }>('/api/workspaces/:id/instructions/:fileId', {
+    schema: { params: resourceParams('fileId'), body: { type: 'object', properties: { content: { type: 'string' }, expectedHash: { anyOf: [{ type: 'string', pattern: '^[0-9a-f]{64}$' }, { type: 'null' }] } }, required: ['content', 'expectedHash'], additionalProperties: false } },
+  }, async request => lab.resources.updateInstruction(request.params.id, request.params.fileId, request.body.content, request.body.expectedHash));
+  app.get<{ Params: { id: string; skillId: string } }>('/api/workspaces/:id/skills/:skillId', { schema: { params: resourceParams('skillId') } }, async request => lab.resources.readSkill(request.params.id, request.params.skillId));
+  app.get<{ Params: { id: string; requestId: string } }>('/api/sessions/:id/requests/:requestId/resources', { schema: { params: { type: 'object', properties: { id: uuid, requestId: uuid }, required: ['id', 'requestId'], additionalProperties: false } } }, async request => lab.getRequestResources(request.params.id, request.params.requestId));
   app.get<{ Params: { id: string } }>('/api/sessions/:id', { schema: { params } }, async request => lab.get(request.params.id));
   app.post<{ Params: { id: string }; Body: { requestId: string } }>('/api/sessions/:id/cancel', {
     schema: { params, body: { type: 'object', properties: { requestId: { type: 'string', format: 'uuid' } }, required: ['requestId'], additionalProperties: false } },

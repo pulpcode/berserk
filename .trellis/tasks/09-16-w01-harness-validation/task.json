@@ -41,7 +41,7 @@
     "experiments/harness-lab/README.md",
     "experiments/harness-lab/package.json"
   ],
-  "notes": "W01-1（S0/S1）实现与 C01-C06 验收通过。Pi 0.85.1、DeepSeek deepseek-flash 默认端点、thinking关闭。真实13条探针+2条浏览器请求通过，包含独立Node进程重启续聊；无密钥泄漏。后续S2-S5未启动，完整W01保持in_progress，不归档。 已形成 W01-2（S2a）最小工作区、文件式 Memory 与 Skill 实现方案，待审阅；S2b 压缩／S2c 子 Agent 仍为后续草案。",
+  "notes": "W01-1/S0-S1已通过C01-C06；W01-2/S2a已实现工作区、Agent指令文件与固定Skill，A01-A12组合验收通过。真实18次最终请求、44项确定性测试和12项浏览器回归，历史安全迁移并恢复本地服务。S2b/S2c和S3-S5未交付，完整W01保持in_progress。",
   "meta": {
     "w01_1": {
       "status": "validated",
@@ -57,11 +57,13 @@
       "evidence": "research/validation-results.md"
     },
     "w01_2": {
-      "status": "planning",
+      "status": "validated",
       "stage": "S2a",
       "task": "../09-16-w01-2-workspace-memory",
       "review": "../09-16-w01-2-workspace-memory/review.md",
-      "implementationApproved": false
+      "implementationApproved": true,
+      "date": "2026-09-17",
+      "evidence": "../09-16-w01-2-workspace-memory/research/validation-results.md"
     }
   }
 }

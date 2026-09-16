@@ -121,7 +121,7 @@ describe('Pi native session integration', () => {
     await writeFile(join(config.dataDir, '.pi', 'skills', 'secret', 'SKILL.md'), '---\nname: secret\ndescription: PRIVATE_SKILL_MARKER\n---\n私有内容');
     const session = await lab.createSession();
     const { events } = await ask(lab, session.id, '读取资料');
-    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_read']);
+    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read']);
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_MEMORY_MARKER');
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_SKILL_MARKER');
     expect(events.some(event => event.type === 'tool.completed' && event.isError && event.text.includes('资料 ID 不存在'))).toBe(true);
@@ -207,5 +207,108 @@ describe('Pi native session integration', () => {
     await lab.start(session.id, '独立完成').run(() => { throw new Error('client disconnected'); });
     expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
     expect(lab.get(session.id).messages.at(-1)?.text).toBe('你好');
+  });
+});
+
+describe('per-request workspace resources through Pi', () => {
+  it('loads independent current rules, fixes each request snapshot, records skill text and never duplicates history', async () => {
+    let updateHash: string | null = null;
+    const { lab, calls, config } = await setup((_context, index) => {
+      if (index === 0) return { tools: [
+        { name: 'skill_read', arguments: { id: 'synthesis' } },
+        { name: 'instructions_update', arguments: { fileId: 'workspace', content: 'NEW_RULE', expectedHash: updateHash } },
+      ] };
+      return { text: '完成' };
+    });
+    const id = lab.workspaces.list().defaultWorkspaceId;
+    updateHash = (await lab.resources.updateInstruction(id, 'workspace', 'OLD_RULE', (await lab.resources.readInstruction(id, 'workspace')).hash)).hash;
+    const other = await lab.workspaces.create('隔离区');
+    await lab.resources.updateInstruction(other.id, 'workspace', 'OTHER_RULE', (await lab.resources.readInstruction(other.id, 'workspace')).hash);
+    const a = await lab.createSession(id); const b = await lab.createSession(id); const c = await lab.createSession(other.id);
+    const first = await ask(lab, a.id, 'A_CHAT_MARKER');
+    expect(calls).toHaveLength(2);
+    expect(calls[0].context.systemPrompt).toContain('OLD_RULE');
+    expect(calls[1].context.systemPrompt).toContain('OLD_RULE');
+    expect(calls[1].context.systemPrompt).not.toContain('NEW_RULE');
+    expect(JSON.stringify(calls[1].context.messages)).toContain('行动步骤');
+    expect(first.events.some(event => event.type === 'instructions.updated')).toBe(true);
+    const evidence = lab.getRequestResources(a.id, first.requestId);
+    expect(evidence).toMatchObject({ status: 'available', readSkills: [{ id: 'synthesis', content: expect.stringContaining('行动步骤') }] });
+    await ask(lab, a.id, '第二轮'); await ask(lab, b.id, 'B_CHAT_MARKER'); await ask(lab, c.id, 'C_CHAT_MARKER');
+    expect(calls[2].context.systemPrompt).toContain('NEW_RULE'); expect(calls[2].context.systemPrompt).not.toContain('OLD_RULE');
+    expect(calls[3].context.systemPrompt).toContain('NEW_RULE'); expect(JSON.stringify(calls[3].context.messages)).not.toContain('A_CHAT_MARKER');
+    expect(calls[4].context.systemPrompt).toContain('OTHER_RULE'); expect(JSON.stringify(calls[4].context)).not.toContain('NEW_RULE');
+    expect(lab.get(a.id).messages.filter(message => message.text === 'A_CHAT_MARKER')).toHaveLength(1);
+    expect(lab.get(a.id).messages.filter(message => message.role === 'tool')).toHaveLength(2);
+    expect(lab.getRequestResources(c.id, first.requestId)).toMatchObject({ status: 'unavailable' });
+    await lab.close();
+    const restored = await PiLab.create(config, (await fakeRuntime(config, () => ({ text: '恢复' }))).runtime); cleanup.push(() => restored.close());
+    expect(restored.getRequestResources(a.id, first.requestId)).toEqual(evidence);
+    expect(restored.get(a.id).messages.find(message => message.text === 'A_CHAT_MARKER')?.requestId).toBe(first.requestId);
+  });
+  it('uses fixed source snapshots while next request sees disk changes, and fails preparation without provider work', async () => {
+    const { lab, calls } = await setup((_context, index) => index === 0 ? { toolIds: ['meeting-notes'] } : { text: '完成' });
+    const session = await lab.createSession();
+    const path = join(lab.workspaces.directory(session.workspaceId), 'sources/meeting-notes.md');
+    await lab.start(session.id, '读取').run(event => { if (event.type === 'resources.loaded') { void writeFile(path, 'CHANGED_SOURCE'); } });
+    expect(JSON.stringify(calls[1].context.messages)).toContain('12 名新成员');
+    expect(JSON.stringify(calls[1].context.messages)).not.toContain('CHANGED_SOURCE');
+    await writeFile(path, 'x'.repeat(32769));
+    await ask(lab, session.id, '失败预检');
+    expect(calls).toHaveLength(2);
+    expect(lab.get(session.id).lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining('超过') });
+    expect(lab.get(session.id).messages.some(message => message.text === '失败预检')).toBe(false);
+    expect(lab.get(session.id).active).toBeNull();
+  });
+  it('rejects unauthorized tools/extra scope, counts failures, and retains committed writes when cancelled', async () => {
+    const { lab, calls } = await setup((_context, index) => index === 0 ? { tools: [
+      { name: 'instructions_update', arguments: { fileId: 'common', content: 'illegal', expectedHash: null } },
+      { name: 'skill_read', arguments: { id: 'unknown' } },
+      { name: 'source_read', arguments: { id: 'meeting-notes', workspaceId: 'other' } },
+    ] } : { text: '已拒绝' }, { maxToolCalls: 8 });
+    const session = await lab.createSession();
+    const { events } = await ask(lab, session.id, '工具边界');
+    expect(events.filter(event => event.type === 'tool.completed' && event.isError)).toHaveLength(3);
+    expect(calls).toHaveLength(2);
+    const config = lab.config;
+    const updated = await PiLab.create(config, (await fakeRuntime(config, () => ({ tools: [{ name: 'instructions_update', arguments: { fileId: 'workspace', content: '已保存规则', expectedHash: (awaitHash) } }] }))).runtime);
+    cleanup.push(() => updated.close());
+    const awaitHash = (await updated.resources.readInstruction(session.workspaceId, 'workspace')).hash;
+    const request = updated.start(session.id, '记住规则');
+    await request.run(event => { if (event.type === 'instructions.updated') updated.cancel(session.id, request.requestId); });
+    expect(updated.get(session.id).lastResult).toMatchObject({ status: 'cancelled', instructionChanges: [{ status: 'updated' }] });
+    expect((await updated.resources.readInstruction(session.workspaceId, 'workspace')).content).toBe('已保存规则');
+  });
+});
+
+describe('native evidence corruption', () => {
+  it.each(['workspace', 'version', 'hash', 'extra', 'read-skill-version', 'late-skill', 'late-change', 'result-request'])('does not expose or resume %s-corrupt resource entries', async corruption => {
+    const { lab, config } = await setup(); const session = await lab.createSession();
+    const first = await ask(lab, session.id, '有效请求'); await lab.close();
+    const directory = join(config.dataDir, 'sessions'); const [name] = await readdir(directory);
+    const path = join(directory, name);
+    const entries = (await readFile(path, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
+    const entry = entries.find(entry => entry.type === 'custom' && entry.customType === 'berserk.request-resources.v1');
+    if (corruption === 'workspace') entry.data.workspaceId = '11111111-1111-4111-8111-111111111111';
+    if (corruption === 'version') entry.customType = 'berserk.request-resources.v99';
+    if (corruption === 'hash') entry.data.instructions[1].content = 'UNVERIFIED_RULE';
+    if (corruption === 'extra') entry.data.instructions[1].unregisteredPath = '/outside/AGENTS.md';
+    const skill = await lab.resources.readSkill(session.workspaceId, 'synthesis');
+    if (corruption === 'read-skill-version') entry.data.readSkills = [{ ...skill, version: 'unregistered' }];
+    const result = entries.find(entry => entry.type === 'custom' && entry.customType === 'berserk.request-result.v1');
+    if (corruption === 'late-skill') entries.push({ ...result, id: 'late-skill', parentId: result.id, customType: 'berserk.skill-read.v1', data: { requestId: first.requestId, skill } });
+    if (corruption === 'late-change') {
+      // A tool record cannot follow the terminal result even with a valid request ID.
+      entries.push({ ...result, id: 'late-change', parentId: result.id, customType: 'berserk.instructions-updated.v1', data: { requestId: first.requestId, change: { fileId: 'workspace', status: 'updated', previousHash: null, hash: skill.hash, effectiveFrom: 'next_request' } } });
+    }
+    if (corruption === 'result-request') result.data.requestId = '11111111-1111-4111-8111-111111111111';
+    const damaged = entries.map(entry => JSON.stringify(entry)).join('\n') + '\n'; await writeFile(path, damaged);
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const fake = await fakeRuntime(config, () => ({ text: '不可运行' }));
+    const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
+    expect(restored.list()).toEqual([]);
+    expect(() => restored.getRequestResources(session.id, first.requestId)).toThrow(/不存在/);
+    expect(() => restored.start(session.id, '拒绝')).toThrow(/不存在/);
+    expect(fake.calls).toHaveLength(0); expect(await readFile(path, 'utf8')).toBe(damaged);
   });
 });

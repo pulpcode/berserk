@@ -1,14 +1,18 @@
 import type { ApiError, StreamEvent } from '../contracts/index';
 
+export class ApiFailure extends Error {
+  constructor(message: string, readonly code: string, readonly status: number) { super(message); }
+}
+
 async function checkResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   const body = await response.json().catch(() => null) as ApiError | null;
-  throw new Error(body?.error?.message || `请求未完成（${response.status}）`);
+  throw new ApiFailure(body?.error?.message || `请求未完成（${response.status}）`, body?.error?.code || 'HTTP_ERROR', response.status);
 }
 
-export async function api<T>(path: string, body?: object): Promise<T> {
+export async function api<T>(path: string, body?: object, method: 'POST' | 'PUT' = 'POST'): Promise<T> {
   const response = await fetch(path, body === undefined ? { cache: 'no-store' } : {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   });
   await checkResponse(response);
   return response.json() as Promise<T>;

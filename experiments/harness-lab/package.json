@@ -16,7 +16,9 @@
     "lint": "eslint . && node scripts/check-boundaries.mjs",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "probe:live": "tsx --env-file-if-exists=.env.local scripts/probe-live.ts"
+    "probe:live": "tsx --env-file-if-exists=.env.local scripts/probe-live.ts",
+    "probe:workspace": "tsx --env-file-if-exists=.env.local scripts/probe-workspace.ts",
+    "migrate:workspace": "tsx scripts/migrate-workspace.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
