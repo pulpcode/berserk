@@ -37,12 +37,12 @@ Pi Agent 核心和 coding-agent SDK 使用 TypeScript，构建为 JavaScript 模
 | 能力 | Pi 原生／扩展点 | OpenCode 包装路线 | Berserk 宿主必须负责 |
 | --- | --- | --- | --- |
 | Tool 循环 | Agent 根据返回结果继续调用；自定义工具 schema、事件、前后置 hook | server 内运行，支持 TS/JS 自定义工具 | 身份、对象权限、参数验证、结果引用、预算、幂等与副作用账本 |
-| Skill | 资源加载与技能元数据、按需读取指引 | `skill` 工具和权限规则 | 固定审核清单、版本快照；Skill 不能授予工具权限 |
+| Skill | 资源加载与技能元数据、按需读取 Skill 说明 | `skill` 工具和权限规则 | 固定审核清单、版本快照；Skill 不能授予工具权限 |
 | 历史 | SessionManager entries、分支、恢复 | 会话／消息／子会话 API 与自身存储 | 平台会话范围、原文保存、恢复映射与可见性 |
 | 取消 | abort 与 idle；工具接收 AbortSignal | session abort endpoint | 传播到子运行、收敛执行资源、区分已提交副作用，不能声称撤销 |
 | 文件式 Memory | 原生 Context Files 加载 AGENTS.md／CLAUDE.md，SDK 可指定文件内容 | 规则文件接入待按选定版本进一步对照，不沿用旧结构化 Memory 标准判定缺口 | 限定工作区文件清单、编辑权限与重载时机；不需要记忆条目库或召回服务 |
 | 压缩 | 自动／手动压缩，原始 entries 留存；可替换摘要、报告失败与 usage | 原生 compaction；需核对所选发布线 API | 关键约束与引用校验、输入预算、失败策略、费用合并、压缩记录 |
-| Subagent | SDK 明确可用自定义工具创建独立 agent；不等于现成业务子运行系统 | 原生 subagent、Task 权限、children API | 单层、权限子集、父子预算、并发、取消、回传及无共享指引文件直写 |
+| Subagent | SDK 明确可用自定义工具创建独立 agent；不等于现成业务子运行系统 | 原生 subagent、Task 权限、children API | 单层、权限子集、父子预算、并发、取消、回传及无共享指令文件直写 |
 | 待确认 | 工具拦截、循环停止与恢复可组合；没有直接等价于平台 waiting_confirmation 的完整工作流 | allow／ask／deny 和确认 API | 持久确认对象、暂停后释放槽位、恢复身份和操作绑定、重复决策处理 |
 | Web 事件 | 原生流式事件可映射 | server SSE | 平台顺序号、持久事件、重连、权限过滤、最终状态投影 |
 
@@ -50,13 +50,13 @@ Pi Agent 核心和 coding-agent SDK 使用 TypeScript，构建为 JavaScript 模
 
 ### Memory 含义复核（用户澄清后）
 
-用户指 AGENTS.md／CLAUDE.md 式持久指引文件，不要求自动抽取事实、语义召回或候选采纳。此前以更复杂 Memory 合约判断宿主补齐范围不适用，已从设计和验收撤去。
+用户指 AGENTS.md／CLAUDE.md 式持久指令文件，不要求自动抽取事实、语义召回或候选采纳。此前以更复杂 Memory 合约判断宿主补齐范围不适用，已从设计和验收撤去。
 
-Pi v0.85.1 官方说明支持加载 AGENTS.md 或 CLAUDE.md，SDK 的 Context Files／ResourceLoader 可以限定文件和内容。可复用这一机制，项目负责工作区映射与受控编辑；新 Run 重载、范围过滤及压缩后当前指引保留仍须实测。[Context Files](https://github.com/earendil-works/pi/blob/v0.85.1/packages/coding-agent/README.md#context-files)、[SDK Context Files](https://github.com/earendil-works/pi/blob/v0.85.1/packages/coding-agent/docs/sdk.md#context-files)。这澄清了 Memory 成本，未自动解决 Subagent、确认续接和模型兼容等选型问题。
+Pi v0.85.1 官方说明支持加载 AGENTS.md 或 CLAUDE.md，SDK 的 Context Files／ResourceLoader 可以限定文件和内容。可复用这一机制，项目负责工作区映射与受控编辑；新 Run 重载、范围过滤及压缩后当前指令保留仍须实测。[Context Files](https://github.com/earendil-works/pi/blob/v0.85.1/packages/coding-agent/README.md#context-files)、[SDK Context Files](https://github.com/earendil-works/pi/blob/v0.85.1/packages/coding-agent/docs/sdk.md#context-files)。这澄清了 Memory 成本，未自动解决 Subagent、确认续接和模型兼容等选型问题。
 
 ### 工具白名单与资源发现
 
-Pi 当前 SDK 的 `noTools: "builtin"` 可关闭默认内置工具并保留自定义工具；`tools` 可限定启用名称。首步仅注册 source.read，后续按阶段再加入草稿、指引文件、技能和委派等宿主工具；不暴露内置 bash/read/edit/write。**仅改变 cwd 不构成隔离**；自定义 ResourceLoader 只提供已批准资源，避免自动发现本机／仓库祖先目录的扩展、AGENTS 和 Skills。[SDK 工具与资源说明](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/sdk.md)、[ResourceLoader 源码](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/resource-loader.ts)。
+Pi 当前 SDK 的 `noTools: "builtin"` 可关闭默认内置工具并保留自定义工具；`tools` 可限定启用名称。首步仅注册 source.read，后续按阶段再加入草稿、指令文件、技能和委派等宿主工具；不暴露内置 bash/read/edit/write。**仅改变 cwd 不构成隔离**；自定义 ResourceLoader 只提供已批准资源，避免自动发现本机／仓库祖先目录的扩展、AGENTS 和 Skills。[SDK 工具与资源说明](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/sdk.md)、[ResourceLoader 源码](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/resource-loader.ts)。
 
 OpenCode 默认权限较宽松；可以全局 deny 后放行自定义工具、skill 和限定 Task 类型。宿主仍须阻止客户端直接调用 shell 等原始 server endpoint，并提供隔离配置目录、工作目录与工具实现。权限配置不是多租户沙箱。其 agent 的 Task 权限也不能直接当平台 API 授权。[OpenCode permissions](https://opencode.ai/docs/permissions/)、[OpenCode agents](https://opencode.ai/docs/agents/)。
 
@@ -100,7 +100,7 @@ Pi 的 provider 列表包含 DeepSeek、Moonshot AI（含 China）及 Kimi For C
 
 Pi 压缩 hook 可以接管摘要，接收 AbortSignal，并回传 usage；默认序列化会截断过长工具结果用于摘要。因此原始结果和关键引用必须由宿主保留，不能仅依赖默认 coding 摘要完整承接垂直业务约束。W01 用小预算探针检查纠正、版本、引用与确认仍有效；自定义压缩成本合并父预算。[Pi compaction](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/compaction.md)。
 
-子运行建议通过唯一 `delegate` 宿主工具创建另一独立 AgentSession，只传允许资料与任务目标，不暴露 delegate、编辑共享指引文件或批准工具；父子预算／并发／取消在宿主实现。这是使用成熟循环组合功能，不是再次自研模型工具循环。OpenCode 原生子会话可减少部分创建工作，但平台责任与 scope 仍需映射和验证。
+子运行建议通过唯一 `delegate` 宿主工具创建另一独立 AgentSession，只传允许资料与任务目标，不暴露 delegate、编辑共享指令文件或批准工具；父子预算／并发／取消在宿主实现。这是使用成熟循环组合功能，不是再次自研模型工具循环。OpenCode 原生子会话可减少部分创建工作，但平台责任与 scope 仍需映射和验证。
 
 ### 淘汰与复核条件
 
@@ -127,7 +127,7 @@ OpenCode 若需作为替代，还须先验证 server 版本和文档路由一致
 
 ## Caveats / Not Found
 
-- 项目尚无应用实现，未找到可以复用的应用 Agent adapter／指引文件适配／Run controller；已有 `.opencode` 是开发辅助配置，不能当产品内核。
+- 项目尚无应用实现，未找到可以复用的应用 Agent adapter／指令文件适配／Run controller；已有 `.opencode` 是开发辅助配置，不能当产品内核。
 - GitHub main 与 release tag 的依赖内容已有差异；以上核心控制／恢复结论使用 `v0.85.1` 源码，文档描述使用访问日官方页。实施时必须重新对照已安装包的类型和行为。
 - OpenCode 同时存在版本化文档，本文只证明 server/SDK 路线存在，未承诺不同文档版本间 endpoint 可混用。
 - 尚未完成包安装、Ubuntu、许可证传递清单、内存占用、恢复故障注入、真实模型或多会话隔离实测。

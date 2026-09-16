@@ -19,3 +19,8 @@ If you're using Codex or another agent-capable tool, additional project-scoped h
 Managed by Trellis. Edits outside this block are preserved; edits inside may be overwritten by a future `trellis update`.
 
 <!-- TRELLIS:END -->
+
+## Git 提交约定
+
+- 本项目所有 Git commit message 必须以中文为主体，包括标题和正文；技术名词、标识符及可选的 Conventional Commits 前缀可以保留英文。
+- 自动生成的任务归档、会话记录等提交也遵循此约定。

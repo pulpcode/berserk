@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口，区分已实现契约和本期待实现设计。"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "保留既有会话、取消、密钥保护、原生历史和 Pi 依赖边界。"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口。"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "保留会话草稿、流事件隔离、中文输入与可访问交互。"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "检查工作区归属、文件效果、请求快照与页面投影。"}
+{"file": ".trellis/tasks/09-16-w01-2-workspace-memory/research/pi-resource-boundary.md", "reason": "当前代码事实、Pi 0.85.1 资源装配与 Skill 桥接依据；不能把未验证接法当验收通过。"}
