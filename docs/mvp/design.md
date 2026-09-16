@@ -169,7 +169,7 @@ W01 核验候选的原生能力及宿主需补齐的部分，W05 落地。测试
 
 ### W01-2 的最小工作区前置设计
 
-S2a 先明确 Workspace 是指令／资料范围，Session 固定归属该范围；业务 Task／WorkItem 后续关联，不将 workspaceId 与 taskId 混用。同区共享指令不共享聊天。下一阶段仅增加创建／切换、会话归属及文件式指令／Skill，具体见 [W01-2 实施方案](../../.trellis/tasks/09-16-w01-2-workspace-memory/review.md)。本节其余正式任务与持久化语义仍按 S3／M1 推进。
+S2a 先明确 Workspace 是指令／资料范围，Session 固定归属该范围；业务 Task／WorkItem 后续关联，不将 workspaceId 与 taskId 混用。同区共享指令不共享聊天。下一阶段仅增加创建／切换、会话归属及文件式指令／Skill，具体见 [W01-2 实施方案](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md)。本节其余正式任务与持久化语义仍按 S3／M1 推进。
 
 ## 6. 工具、工作区与集成契约
 

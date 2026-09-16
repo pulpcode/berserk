@@ -12,7 +12,7 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 
 样板业务 W00 和信息模拟服务 W03 仍位于通用框架之后。前期以固定资料、测试工具和合成事件验证 Tool、Memory、Skill、Subagent、上下文管理与压缩，以及任务／会话／成果、确认和后台运行；不等待特情场景、业务席位、专业模板、领域 Skill 或地图就绪。固定资料是可复现测试输入，不能将自然语言目标、工具选择和处理步骤写成唯一固定脚本。
 
-当前 W01-1 已完成实现与 C01～C06 验收：[本地启动与验证](../../experiments/harness-lab/README.md) · [实施证据](../../.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。下一阶段 [W01-2 方案](../../.trellis/tasks/09-16-w01-2-workspace-memory/review.md) 已实现并通过验收：先建立工作区与会话归属，再接入文件式 Memory 和 Skill；压缩／Subagent 仍在后续 S2 增量，MVP 总范围不变。
+当前 W01-1 已完成实现与 C01～C06 验收：[本地启动与验证](../../experiments/harness-lab/README.md) · [实施证据](../../.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。下一阶段 [W01-2 方案](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md) 已实现并通过验收：先建立工作区与会话归属，再接入文件式 Memory 和 Skill；压缩／Subagent 仍在后续 S2 增量，MVP 总范围不变。
 
 ## 目标与建议规模
 

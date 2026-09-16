@@ -30,7 +30,7 @@ S0 仅解决对话入口所需准备，不安装 SQLite，不建设平台 Run／
 
 ### S2 Harness 能力扩展
 
-拆分为可独立审阅的增量：S2a [W01-2 工作区、Memory 与 Skill](../09-16-w01-2-workspace-memory/review.md)（已完成，A01～A12 通过）；S2b 压缩；S2c 只读子 Agent 与累计预算。S2b／S2c 目前仍为草案，待前序证据形成后细化。
+拆分为可独立审阅的增量：S2a [W01-2 工作区、Memory 与 Skill](../archive/2026-09/09-16-w01-2-workspace-memory/review.md)（已完成，A01～A12 通过）；S2b 压缩；S2c 只读子 Agent 与累计预算。S2b／S2c 目前仍为草案，待前序证据形成后细化。
 
 - [x] S2a 先落地工作区、会话固定归属及原有会话过渡，再接入指令与 Skill；不引入业务 Task／WorkItem。
 

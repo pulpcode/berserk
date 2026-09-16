@@ -59,11 +59,11 @@
     "w01_2": {
       "status": "validated",
       "stage": "S2a",
-      "task": "../09-16-w01-2-workspace-memory",
-      "review": "../09-16-w01-2-workspace-memory/review.md",
+      "task": "../archive/2026-09/09-16-w01-2-workspace-memory",
+      "review": "../archive/2026-09/09-16-w01-2-workspace-memory/review.md",
       "implementationApproved": true,
       "date": "2026-09-17",
-      "evidence": "../09-16-w01-2-workspace-memory/research/validation-results.md"
+      "evidence": "../archive/2026-09/09-16-w01-2-workspace-memory/research/validation-results.md"
     }
   }
 }

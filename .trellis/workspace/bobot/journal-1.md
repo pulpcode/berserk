@@ -68,3 +68,25 @@
 ### Next Steps
 
 - 审阅W01-1交付并按需启动S2具体设计
+
+
+## Session 3: 完成工作区与指令文件阶段
+
+**Date**: 2026-09-17
+**Task**: 完成工作区与指令文件阶段
+**Branch**: `main`
+
+### Summary
+
+完成W01-2/S2a：最小工作区、会话归属、AGENTS.md受控编辑与冲突处理、固定Skill和迁移。44项确定性测试、12项浏览器回归与最终18次真实请求通过；记录五轮模型验证及修复，原有2会话备份升级且原字节保留。中文提交约定持久化，Trellis自动提交关闭；S2b/S2c及完整W01仍未完成。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `50e103e` | (see git log) |
+| `0316a74` | (see git log) |
+
+### Status
+
+[OK] **Completed**

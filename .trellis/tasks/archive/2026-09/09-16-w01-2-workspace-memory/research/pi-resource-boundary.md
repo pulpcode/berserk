@@ -10,7 +10,7 @@
 - `src/server/app.ts` 当前没有工作区或指令接口，响应直接返回公开结构；`start` 在异步准备前保留 active，适合继续在该边界固定 workspaceId 和资源范围。
 - 浏览器状态与 draft 已按会话隔离，可扩展区级资源缓存；不能把侧栏选中工作区直接当服务端工具上下文。
 
-以上是提交 `b50a919` 的事实，不代表已实现本期方案。现有规范见 [后端契约](../../../spec/backend/harness-lab.md)、[前端契约](../../../spec/frontend/harness-lab.md)。
+以上是提交 `b50a919` 的事实，不代表已实现本期方案。现有规范见 [后端契约](../../../../../spec/backend/harness-lab.md)、[前端契约](../../../../../spec/frontend/harness-lab.md)。
 
 ## 2. 版本与官方接口
 

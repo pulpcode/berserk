@@ -2,7 +2,7 @@
 
 基于 Pi SDK 的本地 Web 对话工作台。支持工作区创建与切换、独立多轮会话、流式回答、资料读取、停止，以及工作区 AGENTS.md 的查看和编辑。Agent 可以按用户明确要求修改工作区指令，并按需读取资料综合写作、结果检查两个 Skill。
 
-W01-1 的 C01～C06 已通过；W01-2 的验收结果见 [阶段记录](../../.trellis/tasks/09-16-w01-2-workspace-memory/research/validation-results.md)。完整 Run、业务任务管理、上下文压缩、Subagent 和外部调度属于后续阶段。
+W01-1 的 C01～C06 已通过；W01-2 的验收结果见 [阶段记录](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/research/validation-results.md)。完整 Run、业务任务管理、上下文压缩、Subagent 和外部调度属于后续阶段。
 
 ## 启动
 

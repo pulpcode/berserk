@@ -37,7 +37,7 @@ M1 中 W07-A 可与 W05 按接口分工，W10-A 可在 W05 完成后独立推进
 
 前期验证使用静态文本／JSON、测试身份、固定工具和合成事件，增加长对话、指令文件修改及目标变化的输入。测试数据不建设业务模拟服务；固定输入不等于固定处理流程。模型和工具循环须有真实证据，故障路径可用确定性替身。新增 Harness 要求扩大了框架验证工作量，应在 W01 后据实估算。
 
-下一增量为 [W01-2：最小工作区、文件式 Memory 与 Skill](../../.trellis/tasks/09-16-w01-2-workspace-memory/review.md)，已完成 A01～A12 组合验收。S2 分为 S2a 工作区／Memory／Skill、S2b 压缩、S2c 子 Agent 与累计预算；只有 S2a 本轮形成具体方案。
+下一增量为 [W01-2：最小工作区、文件式 Memory 与 Skill](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md)，已完成 A01～A12 组合验收。S2 分为 S2a 工作区／Memory／Skill、S2b 压缩、S2c 子 Agent 与累计预算；只有 S2a 本轮形成具体方案。
 
 ## 2. M0：通用协议与技术验证
 

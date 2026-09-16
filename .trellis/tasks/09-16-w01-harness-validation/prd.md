@@ -50,7 +50,7 @@
 
 ## 下一增量 W01-2（S2a）
 
-已形成 [最小工作区、文件式 Memory 与 Skill 方案](../09-16-w01-2-workspace-memory/review.md)，已实现并通过 A01～A12 组合验收。先明确 Workspace 与 Session 归属；业务 Task／WorkItem 不在本期引入。采用独立 A01～A12 验收，覆盖 T06／T07 的部分能力；完整 T、FG 和业务 AC 保留。
+已形成 [最小工作区、文件式 Memory 与 Skill 方案](../archive/2026-09/09-16-w01-2-workspace-memory/review.md)，已实现并通过 A01～A12 组合验收。先明确 Workspace 与 Session 归属；业务 Task／WorkItem 不在本期引入。采用独立 A01～A12 验收，覆盖 T06／T07 的部分能力；完整 T、FG 和业务 AC 保留。
 
 S2 建议按 S2a 工作区／Memory／Skill → S2b 压缩 → S2c 子 Agent 与累计预算推进；后两项仍需分别细化、审阅。
 
