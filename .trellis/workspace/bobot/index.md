@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 3
+- **Total Sessions**: 4
 - **Last Active**: 2026-09-17
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~92 | Active |
+| `journal-1.md` | ~127 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 4 | 2026-09-17 | 工作区分组导航与全部动态 | `f4e2cb5` | `main` |
 | 3 | 2026-09-17 | 完成工作区与指令文件阶段 | `50e103e`, `0316a74` | `main` |
 | 2 | 2026-09-16 | 完成 W01-1 真实模型与进程重启验收 | - | `main` |
 | 1 | 2026-09-16 | 实施 W01-1 本地多轮对话入口 | - | `main` |
