@@ -8,7 +8,8 @@ Read when changing `experiments/harness-lab/src/web`. The React conversation UI 
 
 - `api<T>(path, body?, method?)` handles direct JSON responses with `ApiFailure` errors; explicit PUT is used for instruction edits.
 - `sendMessage(sessionId, text, receive)` consumes POST SSE without implicit retry.
-- `useChat` owns workspace/session selection, snapshots, independent drafts, pending streams, submitted-text recovery and cancellation.
+- `useChat` owns workspace/session selection, snapshots, independent drafts, pending streams, submitted-text recovery, cancellation and global activity polling/read markers.
+- `WorkspaceNavigation` groups sessions by workspace; `ActivityOverview` filters global summaries without fetching conversation bodies.
 - `useInstructions` owns workspace-keyed editor state, GET/PUT lifecycle, comparison text and manual conflict resolution.
 - `Resources` renders current instructions/source metadata/fixed Skills in a modal panel.
 - `RequestResources({sessionId, requestId?, close})` fetches historical loaded content or explains missing evidence.
@@ -20,7 +21,11 @@ Read when changing `experiments/harness-lab/src/web`. The React conversation UI 
 
 ### Workspaces, sessions and streams
 
-Fetch workspace choices from `/api/workspaces`; sessions and source metadata come from the selected workspace's endpoints. `/api/info` no longer owns a global source catalog. Every session has a fixed `workspaceId`; changing the selector does not move sessions or cancel execution. Preserve the most recently selected session per workspace. An empty workspace can create a session explicitly or when its first message is sent.
+Fetch workspace choices and all-session navigation metadata from `/api/activity`; source metadata comes from the selected workspace's resources endpoint. `/api/info` does not own a global source catalog. Every session has a fixed `workspaceId`; navigating to another workspace does not move sessions or cancel execution. Selecting a session resolves its workspace from the owned summary. Preserve the most recently selected session per workspace. An empty workspace can create a session explicitly or when its first message is sent.
+
+Poll global activity about every 1800 ms with one request in flight; refresh on window focus. Retain the last result and explicitly report stale status on failure. Merge by ID, retain existing navigation order, and preserve locally created records when an older GET arrives. Workspace POST and polling can observe the same creation in either order: deduplicate IDs. Guard summaries using per-session revisions captured before GET; an active local stream accepts only its own request's active summary, never an old terminal result. Summary changes invalidate older detail GETs. Compare semantic fields rather than JSON property order to avoid false revisions. Summary metadata must never replace the stored conversation body.
+
+Group collapse retains active/attention counts; global filters are all, active, and attention (failed, recovery warning or unread success). Store last viewed successful request ID per session under `berserk.read-results` in sessionStorage. Completion alone does not imply read: require visible foreground chat, loaded snapshot and summary agreeing on a successful request ID, no active request, no covering dialog/drawer and scroll within 32 px of the bottom. Polling the activity view never marks read. Reading position/follow-bottom is session-keyed in memory and survives navigation through other sessions or the activity view.
 
 Key chat snapshots, drafts, errors and streams by session ID. Use a workspace-specific draft key before its first session exists. Capture the workspace/session before asynchronous creation or sending; if selection changes while creation is pending, the original message and any newer draft remain in their original workspace. Do not transfer the eventual reply into the selected view.
 
@@ -59,7 +64,7 @@ The details action normally belongs to assistant messages. When a request has a 
 
 ### Interaction and accessibility
 
-Enter sends only outside IME composition; Shift+Enter inserts a newline. During a reply keep the composer editable for the next draft but disallow submission until the request settles. Stop uses the exact active request ID and remains stopping until settlement. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.
+Enter sends only outside IME composition; Shift+Enter inserts a newline. During a reply keep the composer editable for the next draft but disallow submission until the request settles. Stop uses the exact active request ID and remains stopping until settlement. If an active summary arrives before the matching conversation snapshot, show reading/busy state and disable Stop until snapshot request ID matches; the current cancel path depends on that snapshot. Stop disappearing alone does not imply the send form is ready: loaded conversation, configuration and settled request are all required. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.
 
 Use semantic labelled controls, visible focus, a polite status region, reduced-motion support and the narrow-screen sidebar drawer. Resource dialogs support Escape and restore focus to the originating control when it still exists. Ctrl/⌘+S saves instructions only outside IME composition and with a valid save/merge state. Show conflict comparison columns vertically on narrow screens without page overflow.
 
@@ -75,6 +80,10 @@ Render model Markdown without raw HTML execution. Enable GFM through remark-gfm,
 | SSE terminal followed by failed GET | Terminal snapshot remains authoritative; no stuck pending state |
 | Disconnection without terminal evidence | Query state, no implicit message retry |
 | Stale event/GET/Skill response | Ignore without replacing newer or differently scoped state |
+| Global activity GET fails | Retain previous summaries with explicit stale-status notice; no implicit POST |
+| Workspace POST settles after overview already included it | Keep exactly one workspace group |
+| Completion arrives while reading earlier messages/activity view | Preserve reading position and unread marker until actually viewed |
+| Active summary arrives before matching conversation snapshot | Show loading and disable Stop; enable after the matching snapshot arrives |
 | Preparation failure/early cancellation | Preserve/recover unrecorded submitted text without overwriting a newer draft |
 | Instruction version conflict | Keep draft; fetch readonly comparison; explicit manual merge or discard |
 | Comparison GET failure | Keep draft and existing comparison; show retry |
@@ -96,6 +105,8 @@ Run `npm run typecheck`, `npm run lint`, `npm run test:e2e` and `npm run build` 
 
 Assert IME behavior, chat/sessionStorage failures, draft isolation, same/cross-workspace switching during streams, first-session creation races, exact-request cancellation, late events, polling after refresh and no implicit POST. Cover terminal SSE followed by failed GET and failures/cancellation before any persisted message, including draft restoration and accessible historical details.
 
+Navigation tests cover unopened-session progress without fetching its body, folded-group counts, all/running/attention filters, unread across refresh, failed status refresh and recovery, late overview versus newer SSE, stable ordering, creation deduplication, scroll/draft restoration and narrow-screen navigation.
+
 Editor tests must assert actual GET/PUT counts and payload hashes: preserve edits on conflict, view latest without rebasing, manual merge success, repeated conflicts, comparison read failure, uncertain saves, explicit discard without PUT, stale responses after switching, clearing/saving and keyboard/IME behavior. Include fixed Skill viewing and historical snapshot contents independent of current files.
 
 Verify actual tool details, semantic Markdown tables, mobile overflow/scrollability, native dialogs, Escape and focus restoration. Use real Web → API → Pi → provider validation separately for instruction effects, natural-language file edits and actual Skill/source use.
@@ -113,3 +124,7 @@ Correct: retain `draft`/`base`, store `latest` separately and use its hash only 
 Wrong: leave pending true until a follow-up GET succeeds, even after receiving a terminal SSE snapshot.
 
 Correct: settle local pending state when the terminal event arrives and retain its authoritative snapshot if later status queries fail.
+
+Wrong: mark every successful result seen in global polling as read, or overwrite its current phase from a GET started before a newer stream event.
+
+Correct: retain request-keyed read markers until the matching reply is visible at the bottom, and reject stale summaries using captured revisions.

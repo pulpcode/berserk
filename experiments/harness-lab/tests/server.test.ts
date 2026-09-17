@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
 import { loadConfig } from '../src/server/config.js';
-import type { SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
+import type { ActivityOverview, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
 
 const cleanup: Array<() => Promise<void>> = [];
@@ -24,6 +24,33 @@ function events(payload: string): StreamEvent[] {
 }
 
 describe('local API with real Pi sessions', () => {
+  it('returns cross-workspace navigation metadata without history, resources, errors or native paths', async () => {
+    const { app, lab, config } = await setup(() => ({ text: 'PRIVATE_ASSISTANT_BODY' }));
+    const a = await lab.createSession();
+    const workspace = await lab.workspaces.create('另一工作区');
+    const b = await lab.createSession(workspace.id);
+    const instruction = await lab.resources.readInstruction(workspace.id, 'workspace');
+    await lab.resources.updateInstruction(workspace.id, 'workspace', 'PRIVATE_INSTRUCTION_BODY', instruction.hash);
+    const request = lab.start(b.id, '标题'.repeat(30) + 'PRIVATE_USER_BODY_TAIL');
+    await request.run(() => {});
+    const response = await app.inject('/api/activity');
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['cache-control']).toBe('no-store');
+    const overview = response.json<ActivityOverview>();
+    expect(overview.workspaces).toHaveLength(2);
+    expect(overview.sessions).toEqual(expect.arrayContaining([
+      { id: a.id, workspaceId: a.workspaceId, title: '新会话', updatedAt: a.updatedAt, active: null, lastResult: null, statusUpdatedAt: a.updatedAt },
+      { id: b.id, workspaceId: b.workspaceId, title: '标题'.repeat(20), updatedAt: expect.any(String), active: null,
+        lastResult: { requestId: request.requestId, status: 'succeeded' }, statusUpdatedAt: expect.any(String) },
+    ]));
+    for (const privateText of ['PRIVATE_ASSISTANT_BODY', 'PRIVATE_INSTRUCTION_BODY', 'PRIVATE_USER_BODY_TAIL', config.apiKey, config.dataDir, 'messages', 'instructions', '.jsonl']) {
+      expect(response.payload).not.toContain(privateText);
+    }
+    // The old list remains scoped and retains its exact public shape.
+    expect((await app.inject('/api/sessions')).json()).toEqual([{ id: a.id, workspaceId: a.workspaceId, title: a.title, updatedAt: a.updatedAt }]);
+    expect((await app.inject(`/api/activity?workspaceId=${a.workspaceId}`)).statusCode).toBe(400);
+  });
+
   it('creates, lists and reads isolated sessions, and streams a request with an authoritative final snapshot', async () => {
     const { app, config, calls } = await setup();
     const a = (await app.inject({ method: 'POST', url: '/api/sessions' })).json<SessionSnapshot>();

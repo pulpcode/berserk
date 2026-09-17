@@ -31,6 +31,7 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   const uuid = { type: 'string', format: 'uuid' };
   const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
   app.get('/api/workspaces', async () => lab.workspaces.list());
+  app.get('/api/activity', { schema: { querystring: { type: 'object', additionalProperties: false } } }, async () => lab.activity());
   app.post<{ Body: { name: string } }>('/api/workspaces', { schema: { body: { type: 'object', properties: { name: { type: 'string', minLength: 1, maxLength: 60 } }, required: ['name'], additionalProperties: false } } }, async (request, reply) => reply.code(201).send(await lab.workspaces.create(request.body.name)));
   app.get<{ Querystring: { workspaceId?: string } }>('/api/sessions', { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId));
   app.post<{ Body: { workspaceId?: string } }>('/api/sessions', { schema: { body: workspaceBody }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId));

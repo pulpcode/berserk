@@ -10,6 +10,8 @@ export interface PublicMessage {
 export interface RequestState {
   requestId: string;
   status: 'responding' | 'stopping';
+  phase?: 'preparing' | 'generating' | 'tool';
+  toolName?: string;
 }
 export interface RequestResult {
   requestId: string;
@@ -19,6 +21,12 @@ export interface RequestResult {
   instructionOutcomeUncertain?: boolean;
 }
 export interface SessionSummary { id: string; workspaceId: string; title: string; updatedAt: string }
+export interface SessionActivity extends SessionSummary {
+  active: RequestState | null;
+  lastResult: Pick<RequestResult, 'requestId' | 'status'> | null;
+  recoveryWarning?: string;
+  statusUpdatedAt: string;
+}
 export interface SessionSnapshot extends SessionSummary {
   messages: PublicMessage[];
   active: RequestState | null;
@@ -46,6 +54,7 @@ export interface ApiError { error: { code: string; message: string } }
 
 export interface Workspace { id: string; name: string; createdAt: string }
 export interface WorkspaceList { defaultWorkspaceId: string; workspaces: Workspace[] }
+export interface ActivityOverview extends WorkspaceList { sessions: SessionActivity[] }
 export type InstructionFileId = 'common' | 'workspace';
 export interface InstructionInfo { fileId: InstructionFileId; name: string; hash: string | null; editable: boolean }
 export interface InstructionFile extends InstructionInfo { content: string }

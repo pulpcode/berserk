@@ -229,3 +229,79 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
   .instruction-comparison textarea, .workspace-form input { font-size: 16px; }
   .request-resources { margin-left: 0; min-height: 44px; }
 }
+
+/* Workspace navigation keeps every group visible without moving live sessions. */
+.navigation-actions { margin: 26px 0 16px; }
+.navigation-actions .new-chat { width: 100%; margin: 0 0 7px; min-height: 58px; text-align: left; }
+.navigation-actions .new-chat > span { min-width: 0; }
+.navigation-actions .new-chat small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.create-workspace { width: 100%; display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 6px 12px; border: 0; background: transparent; font-size: 12px; color: var(--muted); border-radius: 7px; }
+.create-workspace:hover { color: var(--accent); background: var(--accent-soft); }
+.activity-entry { width: 100%; min-height: 42px; display: flex; align-items: center; gap: 9px; padding: 10px 12px; border: 0; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 600; }
+.activity-entry:hover, .activity-entry.selected { background: var(--accent-soft); color: var(--accent); }
+.activity-entry svg:last-child { margin-left: auto; }
+.activity-counts { margin: 7px 10px 23px; font-size: 10px; color: var(--muted); line-height: 1.6; }
+.workspace-groups { flex: 1; min-height: 70px; overflow-y: auto; padding: 3px; margin: -3px; }
+.workspace-group { margin-bottom: 15px; }
+.workspace-group-heading { display: flex; align-items: center; gap: 2px; padding-right: 6px; min-height: 38px; }
+.group-toggle { width: 28px; min-height: 36px; display: grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted); flex-shrink: 0; }
+.group-toggle[aria-expanded="false"] svg { transform: rotate(-90deg); }
+.group-toggle:hover, .workspace-entry:hover { background: var(--faint); }
+.workspace-entry { display: flex; align-items: center; gap: 7px; min-width: 0; flex: 1; min-height: 36px; padding: 6px 3px; border: 0; background: transparent; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: left; }
+.workspace-entry span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.workspace-group.current .workspace-entry { color: var(--accent); }
+.group-count { border-radius: 4px; min-width: 18px; padding: 2px 4px; text-align: center; font-size: 10px; font-variant-numeric: tabular-nums; }
+.group-count.running { background: var(--accent-soft); color: var(--accent); }
+.group-count.attention { color: #805727; background: #f3eadc; }
+.group-sessions { margin-left: 16px; padding-left: 4px; border-left: 1px solid var(--line); }
+.group-sessions .session-item { align-items: flex-start; gap: 8px; padding: 10px 8px; margin-bottom: 2px; }
+.group-sessions .session-item > svg { margin-top: 3px; }
+.group-sessions .session-item > .session-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; overflow: visible; white-space: normal; flex: 1; }
+.session-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.5; }
+.activity-status { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 400; line-height: 1.5; }
+.activity-status.running { color: var(--accent); }
+.activity-status.attention { color: var(--danger); }
+.unread-badge { color: var(--accent); background: var(--accent-soft); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
+.activity-error { margin: 12px 24px 0; flex-shrink: 0; }
+.activity-overview { flex: 1; min-height: 0; overflow-y: auto; padding: 40px clamp(20px, 5vw, 80px); }
+.activity-heading, .activity-filters, .activity-list, .activity-empty { max-width: 980px; margin-left: auto; margin-right: auto; }
+.activity-heading h1 { font-size: 28px; margin-bottom: 10px; }
+.activity-heading > p:last-child { font-size: 13px; line-height: 1.8; color: var(--muted); margin: 0; }
+.activity-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 29px; margin-bottom: 18px; }
+.activity-filters button { min-height: 38px; padding: 8px 14px; border: 1px solid transparent; border-radius: 7px; font-size: 12px; background: transparent; color: var(--muted); }
+.activity-filters button[aria-pressed="true"] { background: var(--accent-soft); border-color: #dce6de; color: var(--accent); font-weight: 600; }
+.activity-filters button:hover { background: var(--faint); }
+.activity-filters > span { margin-left: auto; color: var(--muted); font-size: 11px; }
+.activity-list { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+.activity-row { display: flex; align-items: center; width: 100%; gap: 16px; border: 0; border-bottom: 1px solid var(--line); padding: 21px 10px; background: transparent; text-align: left; }
+.activity-row:hover { background: #f8faf8; }
+.activity-row-icon { height: 38px; width: 38px; border-radius: 10px; display: grid; place-items: center; background: #f0f4f1; color: var(--accent); flex-shrink: 0; }
+.activity-row-content { display: grid; gap: 7px; min-width: 0; flex: 1; }
+.activity-workspace { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.activity-row-content strong { font-size: 14px; font-weight: 500; line-height: 1.65; overflow-wrap: anywhere; }
+.activity-row .activity-status { font-size: 12px; }
+.activity-row-end { align-self: stretch; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 12px; font-size: 11px; color: var(--muted); flex-shrink: 0; }
+.activity-empty { padding: 65px 20px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.activity-empty > svg { color: #90a497; }
+.sidebar .sources { padding: 12px 8px 7px; margin-top: 10px; }
+.sidebar .sidebar-footer { padding: 13px 8px; }
+@media (max-width: 767px) {
+  .navigation-actions { margin-top: 20px; }
+  .create-workspace, .activity-entry, .workspace-entry, .group-toggle { min-height: 44px; }
+  .group-toggle { width: 32px; }
+  .activity-counts { margin-bottom: 17px; }
+  .activity-overview { padding: 26px 18px; }
+  .activity-heading h1 { font-size: 25px; }
+  .activity-filters { gap: 3px; margin-top: 22px; }
+  .activity-filters button { min-height: 44px; padding: 8px 10px; }
+  .activity-filters > span { font-size: 10px; }
+  .activity-row { gap: 10px; padding: 18px 3px; }
+  .activity-row-icon { display: none; }
+  .activity-row-end { max-width: 83px; text-align: right; line-height: 1.7; }
+  .activity-error { margin: 10px 14px 0; }
+}
+@media (max-height: 680px) {
+  .navigation-actions { margin-top: 16px; margin-bottom: 8px; }
+  .activity-counts { margin-bottom: 12px; }
+  .sidebar .sidebar-footer { display: none; }
+}

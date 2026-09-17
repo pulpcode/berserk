@@ -12,6 +12,7 @@ The local user can access every workspace. Isolation means that each session's m
 - `createSession(workspaceId?)`, `list(workspaceId?)`, `get(sessionId)`: default omitted workspace IDs to the default workspace. A session's workspace cannot change.
 - `start(sessionId, text) -> {requestId, run(listener)}`: reserve the session synchronously before asynchronous preparation.
 - `cancel(sessionId, requestId)`: reject stale IDs and retain the active marker until execution settles.
+- `activity() -> ActivityOverview`: global workspace/session navigation metadata without messages or resource bodies.
 - `getRequestResources(sessionId, requestId)`: return that session's historical resource record or explicit `unavailable`; never substitute current files.
 - `ResourceService.snapshot(workspaceId, signal?)`, `readInstruction(workspaceId, fileId)`, `updateInstruction(workspaceId, fileId, content, expectedHash, signal?)`, `readSkill(workspaceId, skillId)`.
 
@@ -19,6 +20,7 @@ The local user can access every workspace. Isolation means that each session's m
 | --- | --- |
 | `GET /api/info` | Model/configuration/limits; no global source catalog or secrets |
 | `GET /api/workspaces` | `{defaultWorkspaceId, workspaces}` |
+| `GET /api/activity` | `WorkspaceList & {sessions: SessionActivity[]}`; metadata across all local workspaces |
 | `POST /api/workspaces` | `{name}` → 201 Workspace |
 | `GET /api/sessions?workspaceId=…` | Summaries from that workspace; omission uses default |
 | `POST /api/sessions` | Optional `{workspaceId}` → SessionSnapshot; omission uses default |
@@ -49,6 +51,8 @@ Stop the service before `--apply`. Never use a running service's changing files 
 `SessionSummary` and `SessionSnapshot` contain `workspaceId`. Each SSE event contains `sessionId` and `requestId`. Terminal events carry the authoritative snapshot. `resources.loaded` exposes metadata; `instructions.updated` exposes actual changes. Full texts are fetched through the request resource endpoint. `PublicMessage.requestId` is optional: native resource entries establish request boundaries; legacy messages do not receive invented IDs.
 
 Pi packages and JSONL interpretation stay inside `src/pi` and corresponding integration tests. The server uses concrete `PiLab` methods; resource/workspace services do not import Pi; the browser imports contracts. Do not introduce a generic adapter until there is a tested need.
+
+`SessionActivity` extends `SessionSummary` with `active`, `lastResult` restricted to `{requestId,status}`, optional `recoveryWarning` and `statusUpdatedAt`. `RequestState` adds optional `phase: preparing | generating | tool` and public `toolName`. Reserve starts preparing; actual model invocation sets generating; tool start/end sets tool/preparing. Stopping takes precedence over phase. Update status time on real transitions, not every token. After restart use persisted results/recovery warnings, never invent a running request. Activity uses a native-leaf-keyed metadata projection cache; repeated polling must not call `get()` and materialize every message. Return fresh DTOs without paths, full messages, tool arguments, instruction changes or resource contents. This is local-user navigation visibility, not cross-workspace model access or a full Run contract.
 
 ### Workspace storage and migration
 
@@ -111,6 +115,7 @@ Rename is the effect boundary. Cancellation observed before rename prevents the 
 | Preflight failure after SSE acceptance | `response.failed`; no model call and no invented persisted user message |
 | Timeout / attempt limit / truncated output | Explicit failed result; release active state only after settlement |
 | Client disconnect | Server work continues; GET observes state without replaying commands |
+| Global activity after restart | No invented active worker; persisted terminal/recovery state remains visible |
 
 ## 5. Good / Base / Bad Cases
 
@@ -129,6 +134,8 @@ Deterministic tests must use isolated data directories and real Pi sessions with
 `tests/pi/provider-payload.test.ts` exercises the actual provider adapter with fake HTTP SSE. Assert that a tool write leaves both the system rules and transient reminder unchanged for the current request, a later request receives new/empty rules, the reminder occurs exactly once as a system message immediately before the current user, all user payloads remain original, and no reminder or extra user message appears in native history. Testing the loader alone cannot detect provider conversion or accidental persistence bugs.
 
 Resource/migration tests cover BOM/UTF-8 byte hashes, missing vs empty, size limits, leaf/ancestor symlinks, readonly unchanged calls, simultaneous CAS, cancellation before/after rename, disk/readback failure, duplicate index keys, backup failure and interruption at prepared/indexed stages. Preserve old empty/completed/incomplete/corrupt files and reject unbound auto-import.
+
+Activity tests cover multiple workspaces, real model/tool phases, stopping, success/failure/cancellation, restart/recovery, explicit field projection and caching. Assert that repeated unchanged polls do not traverse native histories and that GET does not invoke the provider.
 
 `probe:live` and `probe:workspace` are explicit real-model validation. Current prompt presence and deterministic green tests do not prove semantic compliance: test rule replacement/deletion, agent editing, malicious source content, Skill use and restarted continuation with the actual configured model. Never mark these passed based on a fake or a tool trace alone.
 

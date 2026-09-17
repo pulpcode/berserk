@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, StreamEvent, Workspace, WorkspaceList, InstructionUpdate } from '../contracts/index';
+import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
 import { api, sendMessage } from './api';
 
 const DRAFT_KEY = 'berserk.drafts';
 const SENT_KEY = 'berserk.submitted';
+const READ_KEY = 'berserk.read-results';
 function stored(key: string): Record<string, string> {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
@@ -19,9 +20,43 @@ function initialWorkspace() {
 }
 const reason = (error: unknown) => error instanceof Error ? error.message : '连接异常，请稍后查询会话状态。';
 
+// Keep navigation order stable while status and streamed content change.
+function mergeById<T extends { id: string }>(previous: T[], incoming: T[]): T[] {
+  const updates = new Map(incoming.map(item => [item.id, item]));
+  const known = new Set(previous.map(item => item.id));
+  return [...incoming.filter(item => !known.has(item.id)), ...previous.map(item => updates.get(item.id) || item)];
+}
+function activityOf(snapshot: SessionSnapshot, previous?: SessionActivity): SessionActivity {
+  const { id, workspaceId, title, updatedAt, active, lastResult, recoveryWarning } = snapshot;
+  const sameState = JSON.stringify(active) === JSON.stringify(previous?.active)
+    && lastResult?.requestId === previous?.lastResult?.requestId && lastResult?.status === previous?.lastResult?.status;
+  return { id, workspaceId, title, updatedAt, active, recoveryWarning,
+    lastResult: lastResult ? { requestId: lastResult.requestId, status: lastResult.status } : null,
+    statusUpdatedAt: sameState && previous ? previous.statusUpdatedAt : active ? new Date().toISOString() : updatedAt };
+}
+function sameActivity(a: SessionActivity, b?: SessionActivity) {
+  return b && a.id === b.id && a.workspaceId === b.workspaceId && a.title === b.title && a.updatedAt === b.updatedAt
+    && a.statusUpdatedAt === b.statusUpdatedAt && a.recoveryWarning === b.recoveryWarning
+    && a.active?.requestId === b.active?.requestId && a.active?.status === b.active?.status
+    && a.active?.phase === b.active?.phase && a.active?.toolName === b.active?.toolName
+    && a.lastResult?.requestId === b.lastResult?.requestId && a.lastResult?.status === b.lastResult?.status;
+}
+
 export function useChat() {
   const [info, setInfo] = useState<AppInfo | null>(null);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
+  const [activities, setActivities] = useState<SessionActivity[]>([]);
+  const activitiesRef = useRef(activities);
+  const [activityError, setActivityError] = useState('');
+  const activityRequest = useRef<Promise<void> | null>(null);
+  const overviewLoaded = useRef(false);
+  const [readResults, setReadResults] = useState(() => stored(READ_KEY));
+  const markRead = useCallback((id: string, requestId: string) => {
+    setReadResults(previous => {
+      if (previous[id] === requestId) return previous;
+      const next = { ...previous, [id]: requestId }; persist(READ_KEY, next); return next;
+    });
+  }, []);
   const [snapshots, setSnapshots] = useState<Record<string, SessionSnapshot>>({});
   const snapshotsRef = useRef(snapshots);
   const revisions = useRef<Record<string, number>>({});
@@ -39,9 +74,7 @@ export function useChat() {
   const selectionsRef = useRef(selections);
   const selected = selections[workspaceId] || '';
   const draftKey = selected || `workspace:${workspaceId}`;
-  const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [instructionChanges, setInstructionChanges] = useState<Record<string, InstructionUpdate[]>>({});
-  const listTokens = useRef<Record<string, symbol>>({});
   const selectForWorkspace = useCallback((workspace: string, id: string) => {
     selectionsRef.current = { ...selectionsRef.current, [workspace]: id };
     setSelections(selectionsRef.current);
@@ -75,7 +108,9 @@ export function useChat() {
     revisions.current[id] = (revisions.current[id] || 0) + 1;
     snapshotsRef.current = { ...snapshotsRef.current, [id]: snapshot };
     setSnapshots(snapshotsRef.current);
-    setSessions(previous => [snapshot, ...previous.filter(item => item.id !== id)].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
+    setSessions(previous => mergeById(previous, [snapshot]));
+    activitiesRef.current = mergeById(activitiesRef.current, [activityOf(snapshot, activitiesRef.current.find(item => item.id === id))]);
+    setActivities(activitiesRef.current);
     if (!snapshot.active && snapshot.lastResult) {
       if (snapshot.lastResult.status === 'succeeded') rememberSubmitted(id, '');
       if (snapshot.lastResult.status === 'failed') recover(id);
@@ -99,33 +134,64 @@ export function useChat() {
     } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
   }, [put]);
 
-  const loadSessions = useCallback(async (workspace: string) => {
-    const token = Symbol(); listTokens.current[workspace] = token;
-    if (workspaceRef.current === workspace) setWorkspaceLoading(true);
-    try {
-      const list = await api<SessionSummary[]>(`/api/sessions?workspaceId=${encodeURIComponent(workspace)}`);
-      if (listTokens.current[workspace] !== token) return;
-      setSessions(previous => [...previous.filter(item => item.workspaceId !== workspace), ...list.map(item => snapshotsRef.current[item.id] || item)]);
-      const previous = selectionsRef.current[workspace];
-      if (!list.some(item => item.id === previous) && !snapshotsRef.current[previous]) selectForWorkspace(workspace, list[0]?.id || '');
-      setErrors(previous => ({ ...previous, [`workspace:${workspace}`]: '' }));
-    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${workspace}`]: reason(error) })); }
-    finally { if (workspaceRef.current === workspace && listTokens.current[workspace] === token) setWorkspaceLoading(false); }
-  }, [selectForWorkspace]);
+  const refreshActivity = useCallback((): Promise<void> => {
+    if (activityRequest.current) return activityRequest.current;
+    const before = { ...revisions.current };
+    const request = (async () => {
+      try {
+        const overview = await api<ActivityOverview>('/api/activity');
+        // A slow overview must not roll back a stream or a newer selected-session GET.
+        const incoming = overview.sessions.filter(item => {
+          const stream = streams.current.get(item.id);
+          return (before[item.id] || 0) === (revisions.current[item.id] || 0)
+            && (!stream || stream.terminal || (item.active && item.active.requestId === stream.requestId));
+        });
+        for (const item of incoming) {
+          if (!sameActivity(item, activitiesRef.current.find(old => old.id === item.id))) {
+            revisions.current[item.id] = (revisions.current[item.id] || 0) + 1;
+          }
+        }
+        activitiesRef.current = mergeById(activitiesRef.current, incoming);
+        setActivities(activitiesRef.current);
+        setSessions(previous => mergeById(previous, incoming));
+        // There is no deletion API. Preserve just-created workspaces/sessions if a GET predates their POST.
+        setWorkspaces(previous => [...previous, ...overview.workspaces.filter(item => !previous.some(old => old.id === item.id))]);
+        if (!overviewLoaded.current) {
+          const workspace = overview.workspaces.some(item => item.id === workspaceRef.current) ? workspaceRef.current : overview.defaultWorkspaceId;
+          selectWorkspace(workspace); overviewLoaded.current = true;
+        }
+        for (const owner of overview.workspaces) {
+          const selectedId = selectionsRef.current[owner.id];
+          if (!activitiesRef.current.some(item => item.id === selectedId && item.workspaceId === owner.id)) {
+            selectForWorkspace(owner.id, activitiesRef.current.find(item => item.workspaceId === owner.id)?.id || '');
+          }
+        }
+        setActivityError('');
+      } catch (error) {
+        setActivityError(`动态更新失败，显示的是上次获取的状态。${reason(error)}`);
+        throw error;
+      }
+    })();
+    activityRequest.current = request;
+    void request.finally(() => { if (activityRequest.current === request) activityRequest.current = null; }).catch(() => {});
+    return request;
+  }, [selectForWorkspace, selectWorkspace]);
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
-      const [app, list] = await Promise.all([api<AppInfo>('/api/info'), api<WorkspaceList>('/api/workspaces')]);
-      setInfo(app); setWorkspaces(list.workspaces);
-      const workspace = list.workspaces.some(item => item.id === workspaceRef.current) ? workspaceRef.current : list.defaultWorkspaceId;
-      selectWorkspace(workspace);
-      await loadSessions(workspace);
+      const [app] = await Promise.all([api<AppInfo>('/api/info'), refreshActivity()]);
+      setInfo(app);
       setErrors(previous => ({ ...previous, '': '' }));
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
-  }, [loadSessions, selectWorkspace]);
+  }, [refreshActivity]);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
-  useEffect(() => { if (workspaceId) void loadSessions(workspaceId); }, [workspaceId, loadSessions]);
+  useEffect(() => {
+    const update = () => { void refreshActivity().catch(() => {}); };
+    const interval = window.setInterval(update, 1800);
+    window.addEventListener('focus', update);
+    return () => { window.clearInterval(interval); window.removeEventListener('focus', update); };
+  }, [refreshActivity]);
   useEffect(() => {
     if (!selected) return;
     void refresh(selected);
@@ -135,7 +201,7 @@ export function useChat() {
 
   const createWorkspace = useCallback(async (name: string) => {
     const workspace = await api<Workspace>('/api/workspaces', { name });
-    setWorkspaces(previous => [...previous, workspace]);
+    setWorkspaces(previous => previous.some(item => item.id === workspace.id) ? previous : [...previous, workspace]);
     selectWorkspace(workspace.id);
     return workspace;
   }, [selectWorkspace]);
@@ -157,7 +223,7 @@ export function useChat() {
     const text = (draftsRef.current[draftKey] || '').trim();
     if (!text) return;
     const id = selected || await create();
-    if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active) return;
+    if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
     const before = snapshotsRef.current[id];
     if (!before) return;
     const token = Symbol();
@@ -191,7 +257,10 @@ export function useChat() {
       }
       if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
       if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError } : message);
-      put({ ...current, messages, active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding' } });
+      const phase = ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
+        : event.type === 'text.delta' ? 'generating' : current.active?.phase;
+      put({ ...current, messages, active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
+        ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };
     try {
       await sendMessage(id, text, receive);
@@ -220,9 +289,14 @@ export function useChat() {
   }, [put, selected]);
 
   return { info, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
-    select: (id: string) => selectForWorkspace(workspaceId, id), workspaces, workspaceId,
+    activities, activityError, refreshActivity, markRead,
+    unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
+    select: (id: string) => {
+      const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
+      if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
+    }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading: loading || workspaceLoading, creating, create, send, cancel,
+    loading, creating, create, send, cancel,
     draft: drafts[draftKey] || '', setDraft: (text: string) => draft(draftKey, text),
     submitted: submitted[selected] || '', restoreSubmitted: () => draft(draftKey, submittedRef.current[selected] || ''),
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],

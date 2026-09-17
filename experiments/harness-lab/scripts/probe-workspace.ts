@@ -200,7 +200,7 @@ try {
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
     await page.goto(base);
-    await page.getByLabel('工作区', { exact: true }).selectOption(a.id);
+    await page.getByRole('button', { name: `进入工作区：${a.name}`, exact: true }).click();
     await page.getByRole('button', { name: '工作区资料', exact: true }).click();
     const draft = page.getByRole('textbox', { name: /^你的草稿/ });
     await expect(draft).toBeVisible();

@@ -6,7 +6,7 @@ import {
   SessionManager, SettingsManager, type AgentSession,
 } from '@earendil-works/pi-coding-agent';
 import { InMemoryCredentialStore, InMemoryModelsStore, createAssistantMessageEventStream } from '@earendil-works/pi-ai';
-import type { AppInfo, PublicMessage, RequestResult, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile } from '../contracts/index.js';
+import type { ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import type { LabConfig } from '../server/config.js';
 import { WorkspaceStore } from '../workspaces/store.js';
@@ -20,6 +20,8 @@ type Listener = (event: StreamEvent) => void;
 interface Active {
   id: string;
   status: 'responding' | 'stopping';
+  phase: NonNullable<RequestState['phase']>;
+  toolName?: string;
   reason?: 'cancelled' | 'timeout' | 'limit';
   controller: AbortController;
   changes: InstructionUpdate[];
@@ -35,6 +37,19 @@ interface RecordState {
   active?: Active;
   result: RequestResult | null;
   warning?: string;
+  statusUpdatedAt?: string;
+  summary?: { leafId: string | null; value: SessionSummary };
+}
+
+function requestState(active?: Active): RequestState | null {
+  return active ? { requestId: active.id, status: active.status, phase: active.phase,
+    ...(active.toolName ? { toolName: active.toolName } : {}) } : null;
+}
+
+function setPhase(record: RecordState, active: Active, phase: Active['phase'], toolName?: string): void {
+  if (active.phase === phase && active.toolName === toolName) return;
+  active.phase = phase; active.toolName = toolName;
+  record.statusUpdatedAt = new Date().toISOString();
 }
 
 export function providerError(raw: string): string {
@@ -135,10 +150,30 @@ export class PiLab {
 
   list(workspaceId = this.workspaces.list().defaultWorkspaceId): SessionSummary[] {
     this.workspaces.get(workspaceId);
-    return [...this.records.keys()].filter(id => this.record(id).workspaceId === workspaceId).map(id => {
-      const { title, updatedAt } = this.get(id);
-      return { id, workspaceId, title, updatedAt };
-    }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return [...this.records.values()].filter(record => record.workspaceId === workspaceId)
+      .map(record => this.summary(record)).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  }
+
+  private summary(record: RecordState): SessionSummary {
+    const leafId = record.manager.getLeafId();
+    if (record.summary?.leafId !== leafId) {
+      const firstUser = record.manager.getBranch().find(entry => entry.type === 'message' && entry.message.role === 'user');
+      const content = firstUser?.type === 'message' && firstUser.message.role === 'user' ? firstUser.message.content : '';
+      const title = typeof content === 'string' ? content : content.filter(block => block.type === 'text').map(block => block.text).join('\n');
+      record.summary = { leafId, value: { id: record.manager.getSessionId(), workspaceId: record.workspaceId,
+        title: title.slice(0, 40) || '新会话', updatedAt: record.manager.getLeafEntry()?.timestamp || record.manager.getHeader()!.timestamp } };
+    }
+    // Return a new object so callers cannot mutate the cached projection.
+    return { ...record.summary!.value };
+  }
+
+  activity(): ActivityOverview {
+    return { ...this.workspaces.list(), sessions: [...this.records.values()].map(record => {
+      const summary = this.summary(record);
+      return { ...summary, active: requestState(record.active),
+        lastResult: record.result ? { requestId: record.result.requestId, status: record.result.status } : null,
+        ...(record.warning ? { recoveryWarning: record.warning } : {}), statusUpdatedAt: record.statusUpdatedAt || summary.updatedAt };
+    }).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)) };
   }
 
   private record(id: string): RecordState {
@@ -173,7 +208,7 @@ export class PiLab {
     return {
       id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
       updatedAt: entries.at(-1)?.timestamp || record.manager.getHeader()!.timestamp,
-      messages, active: record.active ? { requestId: record.active.id, status: record.active.status } : null,
+      messages, active: requestState(record.active),
       lastResult: record.result, ...(record.warning ? { recoveryWarning: record.warning } : {}),
     };
   }
@@ -241,6 +276,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
         if (active && !active.reason) active.reason = 'limit';
         throw new Error('当前请求已停止或达到调用上限。');
       }
+      setPhase(record, active, 'generating');
       const safeStream = createAssistantMessageEventStream();
       void (async () => {
         try {
@@ -288,8 +324,9 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
     if (record.active) throw new RequestError('SESSION_BUSY', '当前会话正在回复，请结束或停止后再发送。', 409);
     if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
     if (!this.config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '请先在服务端 .env.local 中配置 LLM_API_KEY。', 503);
-    const active: Active = { id: randomUUID(), status: 'responding', toolCalls: 0, modelCalls: 0, controller: new AbortController(), changes: [] };
+    const active: Active = { id: randomUUID(), status: 'responding', phase: 'preparing', toolCalls: 0, modelCalls: 0, controller: new AbortController(), changes: [] };
     record.active = active; record.result = null;
+    record.statusUpdatedAt = new Date().toISOString();
     let started = false;
     return { requestId: active.id, run: listener => {
       if (started) throw new Error('Request already started');
@@ -305,6 +342,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
     const timer = setTimeout(() => {
       if (!active.reason) active.reason = 'timeout';
       active.status = 'stopping';
+      record.statusUpdatedAt = new Date().toISOString();
       active.controller.abort();
       record.session?.agent.abort();
     }, this.config.timeoutMs);
@@ -327,8 +365,10 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
           if (event.type === 'message_update' && event.assistantMessageEvent.type === 'text_delta') {
             emit({ ...base, type: 'text.delta', delta: event.assistantMessageEvent.delta });
           } else if (event.type === 'tool_execution_start') {
+            setPhase(record, active, 'tool', publicToolName(event.toolName));
             emit({ ...base, type: 'tool.started', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName) });
           } else if (event.type === 'tool_execution_end') {
+            setPhase(record, active, 'preparing');
             const result = event.result as { content?: Array<{ type: string; text?: string }> };
             emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName),
               text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError });
@@ -354,6 +394,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
         ...(active.changes.length ? { instructionChanges: active.changes } : {}), ...(active.uncertain ? { instructionOutcomeUncertain: true } : {}) };
       try { record.manager.appendCustomEntry(RESULT_ENTRY, record.result); } catch { record.result.instructionOutcomeUncertain = Boolean(active.changes.length); }
       record.active = undefined;
+      record.statusUpdatedAt = new Date().toISOString();
       emit({ ...base, type: status === 'succeeded' ? 'response.completed' : status === 'cancelled' ? 'response.cancelled' : 'response.failed', snapshot: this.get(id) });
     }
   }
@@ -363,6 +404,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
     if (!record.active || record.active.id !== requestId) throw new RequestError('STALE_REQUEST', '该请求已结束或已被替换。', 409);
     if (!record.active.reason) record.active.reason = 'cancelled';
     record.active.status = 'stopping';
+    record.statusUpdatedAt = new Date().toISOString();
     record.active.controller.abort();
     record.session?.agent.abort();
     return this.get(id);
