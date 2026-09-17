@@ -70,6 +70,8 @@ export function useChat() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspaceId, setWorkspaceId] = useState(initialWorkspace);
   const workspaceRef = useRef(workspaceId);
+  const navigationRevision = useRef(0);
+  const noteNavigation = useCallback(() => { navigationRevision.current++; }, []);
   const [selections, setSelections] = useState(() => stored('berserk.selections'));
   const selectionsRef = useRef(selections);
   const selected = selections[workspaceId] || '';
@@ -81,9 +83,10 @@ export function useChat() {
     persist('berserk.selections', selectionsRef.current);
   }, []);
   const selectWorkspace = useCallback((id: string) => {
+    noteNavigation();
     workspaceRef.current = id; setWorkspaceId(id);
     try { sessionStorage.setItem('berserk.workspace', id); } catch { /* Keep selection in memory. */ }
-  }, []);
+  }, [noteNavigation]);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);
   const [submitted, setSubmitted] = useState(() => stored(SENT_KEY));
@@ -185,6 +188,7 @@ export function useChat() {
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
   }, [refreshActivity]);
+  const refreshInfo = useCallback(async () => { setInfo(await api<AppInfo>('/api/info')); }, []);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
   useEffect(() => {
     const update = () => { void refreshActivity().catch(() => {}); };
@@ -206,18 +210,25 @@ export function useChat() {
     return workspace;
   }, [selectWorkspace]);
 
-  const create = useCallback(async (): Promise<string | null> => {
-    if (creatingRef.current || !workspaceId) return null;
+  const create = useCallback(async (targetWorkspaceId = workspaceId): Promise<string | null> => {
+    if (creatingRef.current || !targetWorkspaceId) return null;
+    const navigation = navigationRevision.current;
     creatingRef.current = true; setCreating(true);
     try {
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId });
-      put(snapshot); selectForWorkspace(workspaceId, snapshot.id);
-      const key = `workspace:${workspaceId}`;
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId });
+      put(snapshot);
+      // A delayed creation may populate its project, but must not undo later navigation.
+      if (navigationRevision.current === navigation) {
+        selectForWorkspace(targetWorkspaceId, snapshot.id);
+        selectWorkspace(targetWorkspaceId);
+      } else if (!selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
+      const key = `workspace:${targetWorkspaceId}`;
       if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
+      setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
-    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${workspaceId}`]: reason(error) })); return null; }
+    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = false; setCreating(false); }
-  }, [draft, put, selectForWorkspace, workspaceId]);
+  }, [draft, put, selectForWorkspace, selectWorkspace, workspaceId]);
 
   const send = useCallback(async () => {
     const text = (draftsRef.current[draftKey] || '').trim();
@@ -288,8 +299,8 @@ export function useChat() {
     }
   }, [put, selected]);
 
-  return { info, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
-    activities, activityError, refreshActivity, markRead,
+  return { info, refreshInfo, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
+    activities, activityError, refreshActivity, markRead, noteNavigation,
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
     select: (id: string) => {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;

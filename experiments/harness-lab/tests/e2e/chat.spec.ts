@@ -1,7 +1,7 @@
 import { createServer, type ServerResponse } from 'node:http';
 import { once } from 'node:events';
 import { test, expect, type Page } from '@playwright/test';
-import type { SessionSnapshot, StreamEvent, InstructionFile, Workspace, ActivityOverview } from '../../src/contracts/index';
+import type { SessionSnapshot, StreamEvent, InstructionFile, Workspace, ActivityOverview, ModelSettings, ModelSettingsUpdate } from '../../src/contracts/index';
 
 const tableReply = `| 工作项 | 负责角色 | 交付内容 | 验收条件 |
 | --- | --- | --- | --- |
@@ -18,7 +18,10 @@ async function mockApi(page: Page) {
   const instructions = new Map<string, InstructionFile>(workspaces.map(item => [item.id, { fileId: 'workspace', name: 'AGENTS.md', content: `${item.name}：使用中文回答`, hash: `hash-${item.id}-1`, editable: true }]));
   const common: InstructionFile = { fileId: 'common', name: '通用 AGENTS.md', content: '尊重事实，说明来源。', hash: 'common-hash', editable: false };
   const skills = [{ id: 'synthesis', name: '资料综合写作', description: '综合资料并注明来源', version: '1.0', hash: 'skill-hash' }];
-  const faults = { holdSessionRead: false, releaseSessionRead: undefined as (() => void) | undefined, holdWorkspaceCreate: false, releaseWorkspaceCreate: undefined as (() => void) | undefined, activity: false, holdActivity: false, releaseActivity: undefined as (() => void) | undefined, reads: false, puts: false, sessionReads: false, holdRead: false, releaseRead: undefined as (() => void) | undefined, holdCreate: false, releaseCreate: undefined as (() => void) | undefined };
+  let modelSettings: ModelSettings = { provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', configured: true, source: 'environment', version: 'model-v1' };
+  const modelFaults = { read: false, write: false, conflict: false, busy: false };
+  const modelWrites: ModelSettingsUpdate[] = [];
+  const faults = { create: false, holdSessionRead: false, releaseSessionRead: undefined as (() => void) | undefined, holdWorkspaceCreate: false, releaseWorkspaceCreate: undefined as (() => void) | undefined, activity: false, holdActivity: false, releaseActivity: undefined as (() => void) | undefined, reads: false, puts: false, sessionReads: false, holdRead: false, releaseRead: undefined as (() => void) | undefined, holdCreate: false, releaseCreate: undefined as (() => void) | undefined };
   const responses = new Map<string, ServerResponse>();
   const counts = { activityReads: 0, sessionReads: [] as string[], sends: 0, creates: 0, cancels: [] as string[], puts: [] as { workspaceId: string; content: string; expectedHash: string | null }[], instructionReads: 0, workspaces: 0 };
   const event = (id: string, data: StreamEvent) => responses.get(id)?.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -41,12 +44,23 @@ async function mockApi(page: Page) {
       response.writeHead(status, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
       response.end(JSON.stringify(value));
     };
-    if (path === '/api/info') return json({ model: 'deepseek-flash', configured: true, sources: [
+    if (path === '/api/info') return json({ model: modelSettings.model, configured: modelSettings.configured, sources: [
       { id: 'brief', title: '项目讨论纪要', description: '目标、约束与待明确事项' },
       { id: 'plan', title: '协作方案参考', description: '方案结构与编制要点' },
     ], limits: { timeoutMs: 60000, maxToolCalls: 4, maxOutputTokens: 4096 } });
     let body = '';
     if (request.method !== 'GET') for await (const chunk of request) body += chunk;
+    if (path === '/api/settings/model') {
+      if (request.method === 'GET') return modelFaults.read ? json({ error: { code: 'SERVER_ERROR', message: '暂时无法读取模型配置' } }, 503) : json(modelSettings);
+      const update = JSON.parse(body) as ModelSettingsUpdate;
+      modelWrites.push(update);
+      if (modelFaults.write) return json({ error: { code: 'MODEL_SETTINGS_SAVE_FAILED', message: '模型配置保存失败' } }, 503);
+      if (modelFaults.busy) return json({ error: { code: 'MODEL_SETTINGS_BUSY', message: '仍有会话正在回复，请结束后再保存。' } }, 409);
+      if (modelFaults.conflict || update.expectedVersion !== modelSettings.version) return json({ error: { code: 'MODEL_SETTINGS_CONFLICT', message: '模型配置已被更新，请读取最新配置后再保存。' } }, 409);
+      if ((update.provider !== modelSettings.provider || update.baseUrl !== modelSettings.baseUrl) && !update.apiKey?.trim()) return json({ error: { code: 'MODEL_API_KEY_REQUIRED', message: '更换提供方或端点时，请输入新的 API Key。' } }, 400);
+      modelSettings = { provider: update.provider, model: update.model, baseUrl: update.baseUrl, configured: Boolean(update.apiKey?.trim()) || modelSettings.configured, version: `model-v${modelWrites.length + 1}`, source: 'local' };
+      return json(modelSettings);
+    }
     const input = JSON.parse(body || '{}') as { text?: string; requestId?: string; workspaceId?: string; name?: string; content?: string; expectedHash?: string | null };
     if (path === '/api/activity') {
       counts.activityReads++;
@@ -87,6 +101,7 @@ async function mockApi(page: Page) {
     }
     if (path === '/api/sessions' && request.method === 'GET') return json([...sessions.values()].filter(item => item.workspaceId === (url.searchParams.get('workspaceId') || 'w1')));
     if (path === '/api/sessions' && request.method === 'POST') {
+      if (faults.create) return json({ error: { code: 'SERVER_ERROR', message: '会话创建失败' } }, 503);
       const id = `new-${++counts.creates}`;
       const session: SessionSnapshot = { id, workspaceId: input.workspaceId || 'w1', title: '新对话', updatedAt: new Date().toISOString(), messages: [], active: null, lastResult: null };
       sessions.set(id, session);
@@ -144,7 +159,7 @@ async function mockApi(page: Page) {
   const address = server.address();
   if (!address || typeof address === 'string') throw new Error('Missing test server address');
   await page.route('**/api/**', route => route.continue({ url: `http://127.0.0.1:${address.port}${new URL(route.request().url()).pathname}${new URL(route.request().url()).search}` }));
-  return { sessions, workspaces, instructions, faults, counts, finish, close: async () => { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); } };
+  return { sessions, workspaces, instructions, faults, counts, finish, modelFaults, modelWrites, close: async () => { server.closeAllConnections(); await new Promise<void>(resolve => server.close(() => resolve())); } };
 }
 
 test('中文输入、独立草稿、多轮消息与刷新不重发', async ({ page }) => {
@@ -180,7 +195,8 @@ test('中文输入、独立草稿、多轮消息与刷新不重发', async ({ pa
     await expect(page.getByText('终态之后的迟到内容不得展示')).toHaveCount(0);
     await expect(page.getByText('其他请求的迟到消息')).toHaveCount(0);
     await expect(page.getByText('其他会话的迟到消息')).toHaveCount(0);
-    await page.getByRole('button', { name: '新建对话' }).click();
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await page.getByRole('button', { name: '创建对话', exact: true }).click();
     await expect(page.locator('.header-title')).toHaveText('新对话');
     expect(mock.counts.creates).toBe(1);
   } finally { await mock.close(); }
@@ -290,7 +306,7 @@ test('工作区隔离运行中的流、会话历史、选择与草稿，新建�
     await input.fill('慢速回复'); await input.press('Enter');
     await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
     await input.fill('A 下轮草稿');
-    await page.getByRole('button', { name: '进入工作区：另一工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
     await expect(page.getByRole('button', { name: '会话 A', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '会话 C', exact: true })).toBeVisible();
     await expect(input).toHaveValue('');
@@ -300,19 +316,19 @@ test('工作区隔离运行中的流、会话历史、选择与草稿，新建�
     await expect(page.getByText('C 的回复', { exact: true })).toHaveCount(0);
     await input.fill('D 的草稿');
     mock.finish('A');
-    await page.getByRole('button', { name: '进入工作区：默认工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
     await expect(input).toHaveValue('A 下轮草稿');
     await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '停止回复' })).toHaveCount(0);
-    await page.getByRole('button', { name: '进入工作区：另一工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
     await expect(input).toHaveValue('D 的草稿');
     await page.reload();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     await expect(input).toHaveValue('D 的草稿');
     expect(mock.counts.cancels).toHaveLength(0);
-    await page.getByRole('button', { name: '新建工作区', exact: true }).click();
-    await page.getByLabel('工作区名称').fill('新方案');
-    await page.getByRole('button', { name: '创建工作区', exact: true }).click();
+    await page.getByRole('button', { name: '新建项目', exact: true }).click();
+    await page.getByLabel('项目名称').fill('新方案');
+    await page.getByRole('button', { name: '创建项目', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('新方案');
     await expect(page.getByRole('heading', { name: '今天，我们一起处理什么？' })).toBeVisible();
     await input.fill('新方案的消息'); await input.press('Enter');
@@ -329,7 +345,7 @@ test('Agent 更新期间保留草稿，冲突可查看、人工合并，再次�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
-    const open = page.getByRole('button', { name: '工作区资料', exact: true });
+    const open = page.getByRole('button', { name: '项目资料', exact: true });
     await open.click();
     const draft = page.getByLabel(/^你的草稿/);
     await expect(draft).toHaveValue('默认工作区：使用中文回答');
@@ -338,11 +354,11 @@ test('Agent 更新期间保留草稿，冲突可查看、人工合并，再次�
     await expect(open).toBeFocused();
     await page.getByRole('textbox', { name: '发送消息' }).fill('记住引用来源');
     await page.getByRole('button', { name: '发送消息', exact: true }).click();
-    await expect(page.getByText('工作区指令已保存，下次发送时生效。', { exact: true })).toBeVisible();
+    await expect(page.getByText('项目指令已保存，下次发送时生效。', { exact: true })).toBeVisible();
     await open.click();
     await expect(draft).toHaveValue('使用中文回答\n先给结论');
     await page.getByRole('button', { name: '保存指令', exact: true }).click();
-    await expect(page.getByText('工作区指令已更新，本次保存未完成，你的修改已保留。')).toBeVisible();
+    await expect(page.getByText('项目指令已更新，本次保存未完成，你的修改已保留。')).toBeVisible();
     await expect(page.getByRole('button', { name: '合并后保存' })).toBeDisabled();
     await page.getByRole('button', { name: '查看最新内容' }).click();
     const latest = page.getByLabel('最新内容（只读）');
@@ -377,7 +393,7 @@ test('查看、放弃与刷新不写文件，失败和工作区旧响应不覆�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
-    const open = page.getByRole('button', { name: '工作区资料', exact: true });
+    const open = page.getByRole('button', { name: '项目资料', exact: true });
     const draft = page.getByLabel(/^你的草稿/);
     await open.click();
     await expect(draft).toBeVisible();
@@ -386,14 +402,14 @@ test('查看、放弃与刷新不写文件，失败和工作区旧响应不覆�
     await page.getByRole('button', { name: '查看最新内容' }).click();
     await expect.poll(() => Boolean(mock.faults.releaseRead)).toBe(true);
     await page.getByRole('button', { name: '关闭面板' }).click();
-    await page.getByRole('button', { name: '进入工作区：另一工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
     await open.click();
     await expect(draft).toHaveValue('另一工作区：使用中文回答');
     await draft.fill('另一工作区的草稿');
     mock.faults.releaseRead!();
     await expect(draft).toHaveValue('另一工作区的草稿');
     await page.getByRole('button', { name: '关闭面板' }).click();
-    await page.getByRole('button', { name: '进入工作区：默认工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
     await open.click();
     await expect(draft).toHaveValue('我的未保存草稿');
     await page.getByRole('button', { name: '查看最新内容' }).click();
@@ -437,7 +453,7 @@ test('窄屏指令对照、键盘保存、IME 与只读 Skill 和请求记录', 
     await page.keyboard.press('Escape');
     await page.setViewportSize({ width: 375, height: 812 });
     await page.getByRole('button', { name: '打开会话列表' }).click();
-    const open = page.getByRole('button', { name: '工作区资料', exact: true });
+    const open = page.getByRole('button', { name: '项目资料', exact: true });
     await open.click();
     const draft = page.getByLabel(/^你的草稿/);
     await expect(draft).toBeVisible();
@@ -472,7 +488,7 @@ test('指令初次读取失败可恢复，存储不可用仍能编辑并清空�
     await page.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('storage unavailable'); }; });
     mock.faults.reads = true;
     await page.goto('/');
-    await page.getByRole('button', { name: '工作区资料', exact: true }).click();
+    await page.getByRole('button', { name: '项目资料', exact: true }).click();
     await expect(page.getByText('指令暂时无法读取')).toBeVisible();
     await expect(page.getByRole('button', { name: '保存指令', exact: true })).toHaveCount(0);
     mock.faults.reads = false;
@@ -481,7 +497,7 @@ test('指令初次读取失败可恢复，存储不可用仍能编辑并清空�
     await expect(draft).toHaveValue('默认工作区：使用中文回答');
     await draft.fill('只存在内存中的编辑');
     await page.keyboard.press('Escape');
-    await page.getByRole('button', { name: '工作区资料', exact: true }).click();
+    await page.getByRole('button', { name: '项目资料', exact: true }).click();
     await expect(draft).toHaveValue('只存在内存中的编辑');
     await page.getByRole('button', { name: '清空草稿' }).click();
     await expect(draft).toHaveValue('');
@@ -497,23 +513,23 @@ test('首条消息创建会话等待期间切区，新输入和请求仍归原�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
-    await page.getByRole('button', { name: '新建工作区', exact: true }).click();
-    await page.getByLabel('工作区名称').fill('等待创建');
-    await page.getByRole('button', { name: '创建工作区', exact: true }).click();
+    await page.getByRole('button', { name: '新建项目', exact: true }).click();
+    await page.getByLabel('项目名称').fill('等待创建');
+    await page.getByRole('button', { name: '创建项目', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('等待创建');
     const input = page.getByRole('textbox', { name: '发送消息' });
     mock.faults.holdCreate = true;
     await input.fill('原始提交'); await input.press('Enter');
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
     await input.fill('创建期间的新草稿');
-    await page.getByRole('button', { name: '进入工作区：默认工作区', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
     await expect(input).toHaveValue('');
     await input.fill('默认区独立草稿');
     mock.faults.releaseCreate!();
     await expect.poll(() => mock.counts.sends).toBe(1);
     await expect(input).toHaveValue('默认区独立草稿');
     await expect(page.getByText('new-1 的回复', { exact: true })).toHaveCount(0);
-    await page.getByRole('button', { name: '进入工作区：等待创建', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：等待创建', exact: true }).click();
     await expect(input).toHaveValue('创建期间的新草稿');
     await expect(page.getByText('new-1 的回复', { exact: true })).toBeVisible();
     expect(mock.sessions.get('new-1')?.messages[0].text).toBe('原始提交');
@@ -552,7 +568,7 @@ test('没有助手回复的失败请求可查看资料，准备失败恢复草�
   } finally { await mock.close(); }
 });
 
-test('分组侧栏与全部动态持续汇总未打开会话，完成与新回复分别显示', async ({ page }) => {
+test('分组侧栏与全部动态持续汇总未打开会话，未读回复用蓝点显示并在阅读后清除', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const c = mock.sessions.get('C')!;
@@ -565,7 +581,7 @@ test('分组侧栏与全部动态持续汇总未打开会话，完成与新回�
     expect(mock.counts.sessionReads).not.toContain('C');
     expect(mock.counts.sessionReads).not.toContain('D');
     const originalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
-    await page.getByRole('button', { name: '折叠工作区：另一工作区' }).click();
+    await page.getByRole('button', { name: '折叠项目：另一工作区' }).click();
     await expect(group.getByLabel('1 个处理中', { exact: true })).toBeVisible();
     await expect(group.getByRole('button', { name: '会话 C', exact: true })).toBeHidden();
     await page.getByRole('button', { name: '全部动态', exact: true }).click();
@@ -578,11 +594,12 @@ test('分组侧栏与全部动态持续汇总未打开会话，完成与新回�
     await expect(overview.getByText('目前没有正在处理的会话。')).toBeVisible();
     await overview.getByRole('button', { name: '需关注', exact: true }).click();
     await expect(overview.getByRole('button', { name: /^打开会话：/ })).toHaveCount(2);
-    await expect(overview.getByRole('button', { name: '打开会话：会话 C' })).toContainText('本轮完成新回复');
+    await expect(overview.getByRole('button', { name: '打开会话：会话 C' }).getByRole('img', { name: '有新回复未读' })).toBeVisible();
+    await expect(overview).not.toContainText('本轮完成');
     await page.reload();
     await page.getByRole('button', { name: '全部动态', exact: true }).click();
     await overview.getByRole('button', { name: '需关注', exact: true }).click();
-    await expect(overview.getByRole('button', { name: '打开会话：会话 C' })).toContainText('新回复');
+    await expect(overview.getByRole('button', { name: '打开会话：会话 C' }).getByRole('img', { name: '有新回复未读' })).toBeVisible();
     await overview.getByRole('button', { name: '打开会话：会话 C' }).click();
     await expect(page.getByText('来自后台的 C 回复', { exact: true })).toBeVisible();
     await expect(page.locator('#activity-counts')).toHaveText('0 个处理中 · 0 个新回复 · 1 个异常');
@@ -673,10 +690,10 @@ test('动态先发现新工作区，创建响应随后返回时只保留一个�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
-    await page.getByRole('button', { name: '新建工作区', exact: true }).click();
-    await page.getByLabel('工作区名称').fill('并发创建区');
+    await page.getByRole('button', { name: '新建项目', exact: true }).click();
+    await page.getByLabel('项目名称').fill('并发创建区');
     mock.faults.holdWorkspaceCreate = true;
-    await page.getByRole('button', { name: '创建工作区', exact: true }).click();
+    await page.getByRole('button', { name: '创建项目', exact: true }).click();
     await expect.poll(() => Boolean(mock.faults.releaseWorkspaceCreate)).toBe(true);
     await expect(page.locator('.workspace-group[aria-label="并发创建区"]')).toHaveCount(1);
     mock.faults.releaseWorkspaceCreate!();
@@ -708,5 +725,163 @@ test('刷新后摘要先于正文到达，停止按钮等待同一请求的正�
     await page.getByRole('textbox', { name: '发送消息' }).fill('可以继续');
     await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
     expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('新建对话先选项目，取消不创建，折叠项目加号直接创建且不抢回后续导航', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    const newChat = page.getByRole('button', { name: '新建对话', exact: true });
+    await newChat.click();
+    await expect(page.getByLabel('选择项目')).toHaveValue('w1');
+    expect(mock.counts.creates).toBe(0);
+    await page.getByRole('button', { name: '取消', exact: true }).click();
+    await expect(newChat).toBeFocused();
+    expect(mock.counts.creates).toBe(0);
+    await newChat.click();
+    await page.getByLabel('选择项目').selectOption('w2');
+    await page.getByRole('button', { name: '创建对话', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
+    expect(mock.sessions.get('new-1')?.workspaceId).toBe('w2');
+    await page.getByRole('button', { name: '折叠项目：默认工作区' }).click();
+    await page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }).click();
+    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
+    expect(mock.sessions.get('new-2')?.workspaceId).toBe('w1');
+    expect(mock.counts.creates).toBe(2);
+    await page.getByRole('textbox', { name: '发送消息' }).fill('保留在默认项目的草稿');
+    mock.faults.holdCreate = true;
+    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }).click();
+    await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
+    await page.getByRole('button', { name: '会话 D', exact: true }).click();
+    await page.getByRole('textbox', { name: '发送消息' }).fill('D 的独立草稿');
+    mock.faults.releaseCreate!();
+    await expect(page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true })).toBeEnabled();
+    await expect(page.locator('.header-title')).toHaveText('会话 D');
+    await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('D 的独立草稿');
+    expect(mock.sessions.get('new-3')?.workspaceId).toBe('w2');
+    expect(mock.counts.creates).toBe(3);
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('模型设置保存后更新模型，密钥只写且关闭后清空，手机窗口不溢出', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    const trigger = page.getByRole('button', { name: '设置', exact: true });
+    await trigger.click();
+    const modal = page.getByRole('dialog', { name: '设置', exact: true });
+    const key = page.locator('#model-key');
+    await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-flash');
+    await expect(key).toHaveValue('');
+    await expect(key).toHaveAttribute('type', 'password');
+    await page.getByLabel('模型 ID').fill('deepseek-test');
+    await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
+    expect(mock.modelWrites).toHaveLength(1);
+    expect(mock.modelWrites[0].apiKey).toBeUndefined();
+    await expect(page.locator('.model-badge')).toContainText('deepseek-test');
+    await page.getByLabel('服务商标识').fill('custom');
+    await page.getByLabel('API 地址', { exact: true }).fill('https://models.example.com/v1');
+    await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(modal.getByRole('alert')).toContainText('请输入新的 API Key');
+    await key.fill('test-ui-secret-never-persist');
+    await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
+    await expect(key).toHaveValue('');
+    expect(mock.modelWrites.at(-1)?.apiKey).toBe('test-ui-secret-never-persist');
+    const storage = await page.evaluate(() => JSON.stringify({ session: { ...sessionStorage }, local: { ...localStorage } }));
+    expect(storage).not.toContain('test-ui-secret-never-persist');
+    await key.fill('discard-this-unsaved-key');
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await expect(key).toHaveValue('');
+    await expect(page.getByLabel('模型 ID')).toHaveValue('deepseek-test');
+    await page.setViewportSize({ width: 375, height: 812 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+    expect(await modal.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(false);
+    await page.getByLabel('模型 ID').focus();
+    await page.keyboard.press('Escape');
+    await expect(modal).toHaveCount(0);
+    expect(mock.modelWrites).toHaveLength(3);
+  } finally { await mock.close(); }
+});
+
+test('模型配置读取可重试，冲突和失败保留填写内容并要求读取后手动保存', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    mock.modelFaults.read = true;
+    await page.goto('/');
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    const modal = page.getByRole('dialog', { name: '设置', exact: true });
+    await expect(modal.getByRole('alert')).toContainText('暂时无法读取模型配置');
+    mock.modelFaults.read = false;
+    await modal.getByRole('button', { name: '重试', exact: true }).click();
+    await page.getByLabel('模型 ID').fill('my-draft-model');
+    mock.modelFaults.conflict = true;
+    await modal.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(modal.getByRole('alert')).toContainText('你填写的内容仍保留');
+    await expect(page.getByLabel('模型 ID')).toHaveValue('my-draft-model');
+    await expect(modal.getByRole('button', { name: '按最新版本保存', exact: true })).toBeDisabled();
+    await modal.getByRole('button', { name: '查看最新配置', exact: true }).click();
+    await expect(modal.getByLabel('最新模型配置')).toContainText('deepseek-flash');
+    await expect(page.getByLabel('模型 ID')).toHaveValue('my-draft-model');
+    expect(mock.modelWrites).toHaveLength(1);
+    mock.modelFaults.conflict = false;
+    mock.modelFaults.busy = true;
+    await modal.getByRole('button', { name: '按最新版本保存', exact: true }).click();
+    await expect(modal.getByRole('alert')).toContainText('仍有会话正在回复');
+    await expect(page.getByLabel('模型 ID')).toHaveValue('my-draft-model');
+    mock.modelFaults.busy = false;
+    mock.modelFaults.write = true;
+    await modal.getByRole('button', { name: '按最新版本保存', exact: true }).click();
+    await expect(modal.getByRole('alert')).toContainText('模型配置保存失败');
+    await expect(modal.getByRole('button', { name: '按最新版本保存', exact: true })).toBeDisabled();
+    expect(mock.modelWrites).toHaveLength(3);
+    mock.modelFaults.write = false;
+    await modal.getByRole('button', { name: '查看最新配置', exact: true }).click();
+    await modal.getByRole('button', { name: '按最新版本保存', exact: true }).click();
+    await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
+    expect(mock.modelWrites).toHaveLength(4);
+    expect(mock.modelWrites.at(-1)?.model).toBe('my-draft-model');
+  } finally { await mock.close(); }
+});
+
+test('跨项目创建失败可见，全部动态保护后续选择，手机新建聚焦输入且设置遮挡不误读', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    mock.faults.create = true;
+    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+    await expect(page.getByRole('alert')).toContainText('在「另一工作区」中创建对话未完成');
+    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
+    mock.faults.create = false;
+    mock.faults.holdCreate = true;
+    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+    await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
+    await page.getByRole('button', { name: '全部动态', exact: true }).click();
+    mock.faults.releaseCreate!();
+    await expect(page.getByRole('button', { name: '在项目 另一工作区 中新建对话' })).toBeEnabled();
+    expect(await page.evaluate(() => sessionStorage.getItem('berserk.workspace'))).toBe('w1');
+    await expect(page.locator('.header-title')).toHaveText('全部动态');
+    await page.getByRole('button', { name: '打开会话：会话 A', exact: true }).click();
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.getByRole('button', { name: '打开会话列表' }).click();
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await page.getByRole('button', { name: '创建对话', exact: true }).click();
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await expect(input).toBeFocused();
+    await input.fill('慢速回复'); await input.press('Enter');
+    await expect(page.getByText('new-2 的回复', { exact: true })).toBeVisible();
+    await page.getByRole('button', { name: '模型设置', exact: true }).click();
+    await expect(page.getByLabel('模型 ID')).toBeVisible();
+    mock.finish('new-2');
+    await expect.poll(async () => page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBeUndefined();
+    await page.keyboard.press('Escape');
+    await expect.poll(async () => page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBe('request-1');
+    expect(mock.counts.creates).toBe(2);
   } finally { await mock.close(); }
 });

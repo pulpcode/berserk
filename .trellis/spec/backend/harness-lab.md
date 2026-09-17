@@ -94,9 +94,17 @@ Rename is the effect boundary. Cancellation observed before rename prevents the 
 
 ### Configuration and execution limits
 
-`LLM_API_KEY` is server-only and comes from ignored `.env.local`. Defaults: provider `deepseek`, model `deepseek-flash`, HTTPS `LLM_BASE_URL`, thinking disabled, `LAB_DATA_DIR=.local`, `PORT=4310`. Reject endpoint credentials, query strings and fragments. Bind only to `127.0.0.1` and enforce the local Host/Origin allowlist.
+`LLM_API_KEY` is server-only. Environment configuration comes from ignored `.env.local`; an optional controlled `LAB_DATA_DIR/model-settings.json` overrides model/provider/endpoint/key after a Web settings save. Defaults: provider `deepseek`, model `deepseek-flash`, HTTPS `LLM_BASE_URL`, thinking disabled, `LAB_DATA_DIR=.local`, `PORT=4310`. Reject endpoint credentials, query strings and fragments. Bind only to `127.0.0.1` and enforce the local Host/Origin allowlist.
 
 `REQUEST_TIMEOUT_MS` defaults to 120000; `MAX_TOOL_CALLS` to 8; `MAX_OUTPUT_TOKENS` to 2048. Explicit valid environment overrides take precedence. Maximum model calls are `maxToolCalls + 1`; tools have a 5000 ms cancellation deadline. These bound one request, not total validation requests or monetary spend. Sanitize provider errors before Pi persists them or the browser receives them. Zero placeholder SDK costs are not evidence of free usage.
+
+### Persistent model settings
+
+GET `/api/settings/model` projects only `{provider, model, baseUrl, configured, version, source}`; never return the key or a key-derived hash. PUT accepts `{provider, model, baseUrl, expectedVersion, apiKey?}` with strict fields and limits. Normalize HTTPS endpoints and reject URL credentials/query/fragment. Empty key retains the existing secret only for the same provider and normalized endpoint; changed destinations require an explicit new key.
+
+`ModelSettingsStore` reads controlled regular files, rejects symlinks/invalid persisted state, and writes mode-0600 temporary files followed by atomic rename. Persist a random version independent of the key. Preserve environment files. Build the candidate runtime before saving; only publish config/runtime after successful persistence, with no await between commit and publication. Never mutate caller-owned injected configuration.
+
+A synchronous PiLab guard excludes configuration updates while any session is active and excludes request starts/concurrent saves during a settings write. Busy returns `MODEL_SETTINGS_BUSY`; stale versions return `MODEL_SETTINGS_CONFLICT`; absent/new-destination keys return `MODEL_API_KEY_REQUIRED`. Failed saves retain the active configuration. New requests and restarts use saved settings; in-flight requests are never retargeted. This remains a single-process, single-active-provider service using the current compatible protocol.
 
 ## 4. Validation & Error Matrix
 
@@ -105,6 +113,9 @@ Rename is the effect boundary. Cancellation observed before rename prevents the 
 | Unknown session / workspace / resource | 404 `SESSION_NOT_FOUND` / `WORKSPACE_NOT_FOUND` / `RESOURCE_NOT_FOUND` |
 | Concurrent send / stale cancellation | 409 `SESSION_BUSY` / `STALE_REQUEST` |
 | Incomplete restored protocol history | 409 `RECOVERY_REQUIRED`; never auto-resume |
+| Settings save during active work / request start during save | 409 `MODEL_SETTINGS_BUSY`, no partial runtime change |
+| Stale settings version / new destination without new key | 409 `MODEL_SETTINGS_CONFLICT` / 400 `MODEL_API_KEY_REQUIRED` |
+| Invalid settings file / persistence failure | 503 `MODEL_SETTINGS_INVALID` / `MODEL_SETTINGS_SAVE_FAILED`; never silently fall back or expose secrets |
 | Missing key | 503 `MODEL_NOT_CONFIGURED`; no occupied request or model call |
 | Invalid/extra/oversized request fields | 400/413 `INVALID_INPUT` |
 | Untrusted Host/Origin | 403, before model work |
@@ -135,6 +146,8 @@ Deterministic tests must use isolated data directories and real Pi sessions with
 
 Resource/migration tests cover BOM/UTF-8 byte hashes, missing vs empty, size limits, leaf/ancestor symlinks, readonly unchanged calls, simultaneous CAS, cancellation before/after rename, disk/readback failure, duplicate index keys, backup failure and interruption at prepared/indexed stages. Preserve old empty/completed/incomplete/corrupt files and reject unbound auto-import.
 
+Model-settings tests assert actual adapter endpoint/model/Authorization before and after a save and restart, native-history continuity without secrets, environment-object immutability, redacted GET/PUT, normalized endpoint key retention, active/save mutual exclusion, strict JSON types (disable AJV coercion), 0600 permissions, file corruption/symlinks, and unchanged runtime after failed persistence.
+
 Activity tests cover multiple workspaces, real model/tool phases, stopping, success/failure/cancellation, restart/recovery, explicit field projection and caching. Assert that repeated unchanged polls do not traverse native histories and that GET does not invoke the provider.
 
 `probe:live` and `probe:workspace` are explicit real-model validation. Current prompt presence and deterministic green tests do not prove semantic compliance: test rule replacement/deletion, agent editing, malicious source content, Skill use and restarted continuation with the actual configured model. Never mark these passed based on a fake or a tool trace alone.
@@ -156,3 +169,7 @@ Correct: return the conflict without writing; require the UI's explicit manual m
 Wrong: race a file write against cancellation and report that cancellation means no changes occurred.
 
 Correct: observe cancellation before rename, settle any issued rename, retain actual saved effects and expose uncertainty for readback.
+
+Wrong: keep using an old API key after the browser changes the destination, or switch the runtime before persistence succeeds.
+
+Correct: require a new key for changed provider/endpoint, reserve the update against starts, then atomically publish runtime after the file commit.

@@ -4,7 +4,7 @@ import type { InstructionFile, RequestResourcesRecord, SkillFile, WorkspaceResou
 import { api } from './api';
 import type { useInstructions } from './useInstructions';
 
-export function Panel({ title, children, close }: { title: string; children: ReactNode; close: () => void }) {
+export function Panel({ title, children, close, className = '' }: { title: string; children: ReactNode; close: () => void; className?: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const previous = document.activeElement;
@@ -12,7 +12,7 @@ export function Panel({ title, children, close }: { title: string; children: Rea
     element?.showModal();
     return () => { element?.close(); if (previous instanceof HTMLElement && previous.isConnected) previous.focus(); };
   }, []);
-  return <dialog ref={dialog} className="resource-panel" aria-label={title} onCancel={event => { event.preventDefault(); close(); }}>
+  return <dialog ref={dialog} className={`resource-panel ${className}`} aria-label={title} onCancel={event => { event.preventDefault(); close(); }}>
     <header className="panel-header"><h2>{title}</h2><button className="icon-button" aria-label="关闭面板" onClick={close} autoFocus><X size={20} /></button></header>
     <div className="panel-body">{children}</div>
   </dialog>;
@@ -53,9 +53,9 @@ export function Resources({ workspaceId, name, resources, instructions, resource
     } catch (error) { if (token === skillToken.current.value) setError(error instanceof Error ? error.message : 'Skill 读取失败。'); }
     finally { if (token === skillToken.current.value) setSkillLoading(false); }
   }
-  return <Panel title={`${name} · 工作区资料`} close={close}>
+  return <Panel title={`${name} · 项目资料`} close={close}>
     <section className="resource-section">
-      <h3>工作区指令</h3><p className="resource-help">这些约定用于本工作区的每个会话，保存后下次发送时生效。</p>
+      <h3>项目指令</h3><p className="resource-help">这些约定用于本项目的每个会话，保存后下次发送时生效。</p>
       {editor ? <>
         <div className={`instruction-comparison${editor.latest ? ' comparing' : ''}`}>
           <div><label htmlFor="instruction-draft">你的草稿{changed ? ' · 未保存' : ''}</label>
@@ -74,7 +74,7 @@ export function Resources({ workspaceId, name, resources, instructions, resource
           <button disabled={saving || !editor.latest} onClick={() => instructions.discard(workspaceId)}>放弃草稿，使用最新内容</button>
         </div>
         <p className="resource-help">Ctrl / ⌘ + S 保存。查看与放弃草稿仅更新页面；请自行对照整理后保存。</p>
-      </> : <p role="status">{loading ? '正在读取工作区指令…' : '尚未读取工作区指令。'}</p>}
+      </> : <p role="status">{loading ? '正在读取项目指令…' : '尚未读取项目指令。'}</p>}
       {readError && <div className="resource-error" role="alert">{readError}<button disabled={loading} onClick={() => void read(workspaceId, Boolean(editor))}>重试读取指令</button></div>}
     </section>
     <section className="resource-section"><h3>通用指令（只读）</h3>{common ? <pre className="resource-text" tabIndex={0}>{common.content || '（空文件）'}</pre> : <p>通用指令尚未读取。<button onClick={() => setCommonReload(value => value + 1)}>重新读取通用指令</button></p>}</section>

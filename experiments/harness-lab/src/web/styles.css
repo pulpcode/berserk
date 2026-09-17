@@ -305,3 +305,70 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
   .activity-counts { margin-bottom: 12px; }
   .sidebar .sidebar-footer { display: none; }
 }
+
+/* Project entry points and quiet, unread-only completion indicators. */
+.navigation-actions .new-chat { min-height: 44px; }
+.project-new-chat { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 32px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); }
+.project-new-chat:hover { background: var(--accent-soft); color: var(--accent); }
+.session-title-row, .activity-title-row { display: flex; min-width: 0; align-items: center; gap: 9px; }
+.session-title-row .session-title { flex: 1; }
+.unread-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #3975dc; flex-shrink: 0; }
+.group-sessions .session-item { align-items: center; }
+.group-sessions .session-item > svg { margin-top: 0; }
+.sidebar .sidebar-footer { display: flex; padding: 8px 0 12px; }
+.settings-trigger { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; width: 100%; border: 0; background: transparent; border-radius: 8px; font-size: 13px; text-align: left; }
+.settings-trigger:hover { background: var(--faint); }
+.settings-trigger-model { margin-left: auto; color: var(--muted); font-size: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.model-badge:hover { background: var(--accent-soft); }
+.new-session-panel { width: min(440px, calc(100vw - 32px)); }
+.new-session-form { padding-top: 22px; }
+.project-select { position: relative; }
+.project-select > svg { position: absolute; top: 15px; left: 12px; color: var(--muted); pointer-events: none; }
+.project-select select { width: 100%; min-height: 48px; padding: 10px 30px 10px 39px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--text); }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+
+/* Settings uses the same native modal and focus restoration as resources. */
+.settings-panel { width: min(820px, calc(100vw - 40px)); }
+.settings-panel .panel-header { padding: 14px 22px; }
+.settings-panel .panel-body { padding: 0; }
+.settings-layout { display: grid; grid-template-columns: 156px minmax(0, 1fr); min-height: 470px; }
+.settings-nav { padding: 21px 12px; border-right: 1px solid var(--line); background: #f8f9fa; }
+.settings-nav button { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; border-radius: 8px; padding: 12px; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 500; }
+.settings-content { padding: 27px 30px 26px; min-width: 0; }
+.settings-heading h3 { margin: 0 0 9px; font-size: 18px; font-weight: 600; }
+.settings-heading p { color: var(--muted); font-size: 13px; margin: 0 0 27px; line-height: 1.7; }
+.settings-loading { font-size: 13px; color: var(--muted); }
+.model-settings-form fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+.settings-field-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }
+.settings-field { margin-bottom: 22px; min-width: 0; }
+.settings-field label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; margin-bottom: 9px; }
+.settings-field input { display: block; width: 100%; min-height: 43px; border: 1px solid #d8dde1; border-radius: 8px; padding: 10px 12px; color: var(--text); background: white; font-size: 13px; }
+.settings-field input::placeholder { color: #7b828a; }
+.settings-field p { font-size: 11px; color: var(--muted); line-height: 1.8; margin: 7px 0 0; }
+.key-state { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 10px; font-weight: 400; margin-left: auto; }
+.settings-form-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; margin-top: 6px; }
+.settings-form-footer > span { font-size: 11px; color: var(--muted); }
+.settings-form-footer button, .secondary-action { border: 1px solid var(--line); border-radius: 8px; min-height: 42px; padding: 10px 15px; font-size: 12px; background: white; }
+.settings-form-footer .primary-action { background: var(--accent); border-color: var(--accent); }
+.settings-review { margin: 16px 0; padding: 14px; border: 1px solid #ded8cc; border-radius: 8px; background: #faf8f3; font-size: 12px; line-height: 1.8; }
+.settings-review p { margin: 0 0 10px; }
+.settings-review dl { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 7px; margin: 14px 0 0; }
+.settings-review dt { color: var(--muted); }
+.settings-review dd { margin: 0; overflow-wrap: anywhere; }
+.settings-success { display: flex; gap: 6px; align-items: flex-start; color: var(--accent); font-size: 12px; line-height: 1.8; }
+.settings-success svg { margin-top: 2px; }
+@media (max-width: 767px) {
+  .project-new-chat { width: 36px; height: 44px; }
+  .settings-panel { width: calc(100vw - 20px); }
+  .settings-layout { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .settings-nav { border-right: 0; border-bottom: 1px solid var(--line); padding: 10px 14px; }
+  .settings-nav button { width: auto; min-height: 40px; padding: 9px 15px; }
+  .settings-content { padding: 23px 18px; }
+  .settings-heading p { margin-bottom: 22px; }
+  .settings-field-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .settings-field { margin-bottom: 18px; }
+  .settings-field input, .project-select select { font-size: 16px; min-height: 46px; }
+  .settings-form-footer { align-items: flex-start; }
+  .settings-form-footer > span { max-width: 48%; line-height: 1.8; }
+  .settings-form-footer button, .secondary-action { min-height: 44px; }
+}

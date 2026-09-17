@@ -38,6 +38,21 @@ export interface AppInfo {
   configured: boolean;
   limits: { timeoutMs: number; maxToolCalls: number; maxOutputTokens: number };
 }
+export interface ModelSettings {
+  provider: string;
+  model: string;
+  baseUrl: string;
+  configured: boolean;
+  version: string;
+  source: 'environment' | 'local';
+}
+export interface ModelSettingsUpdate {
+  provider: string;
+  model: string;
+  baseUrl: string;
+  expectedVersion: string;
+  apiKey?: string;
+}
 export type StreamEvent = {
   sessionId: string;
   requestId: string;

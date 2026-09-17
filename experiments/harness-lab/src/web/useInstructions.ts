@@ -80,7 +80,7 @@ export function useInstructions() {
         // A failed save invalidates the previously viewed merge version. Keep its
         // text visible, but require another successful read before a new merge.
         latest: current!.latest, canMerge: conflict || uncertain ? false : current!.canMerge,
-        error: conflict ? '工作区指令已更新，本次保存未完成，你的修改已保留。' : uncertain ? '保存结果尚未确认，你的修改已保留。请查看最新内容核对后再操作。' : reason(error),
+        error: conflict ? '项目指令已更新，本次保存未完成，你的修改已保留。' : uncertain ? '保存结果尚未确认，你的修改已保留。请查看最新内容核对后再操作。' : reason(error),
       }));
     } finally { savingRef.current.delete(id); setSaving(previous => ({ ...previous, [id]: false })); }
   }, [update]);

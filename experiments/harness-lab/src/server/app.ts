@@ -4,9 +4,10 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
+import type { ModelSettingsUpdate } from '../contracts/index.js';
 
 export async function createApp(lab: PiLab, serveWeb = false) {
-  const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false } } });
+  const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
   app.addHook('onRequest', async (request, reply) => {
     const host = request.headers.host?.split(':')[0];
     if (host !== '127.0.0.1' && host !== 'localhost') {
@@ -28,6 +29,16 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   });
   const params = { type: 'object', properties: { id: { type: 'string', pattern: '^[0-9a-f-]{36}$' } }, required: ['id'], additionalProperties: false };
   app.get('/api/info', async () => lab.info());
+  const settingsQuery = { type: 'object', additionalProperties: false };
+  app.get('/api/settings/model', { schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
+  app.put<{ Body: ModelSettingsUpdate }>('/api/settings/model', { schema: {
+    querystring: settingsQuery,
+    body: { type: 'object', additionalProperties: false, required: ['provider', 'model', 'baseUrl', 'expectedVersion'], properties: {
+      provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },
+      baseUrl: { type: 'string', minLength: 1, maxLength: 2048 }, expectedVersion: { type: 'string', format: 'uuid' },
+      apiKey: { type: 'string', maxLength: 4096 },
+    } },
+  } }, async request => lab.updateModelSettings(request.body));
   const uuid = { type: 'string', format: 'uuid' };
   const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
   app.get('/api/workspaces', async () => lab.workspaces.list());

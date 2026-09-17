@@ -200,8 +200,8 @@ try {
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
     await page.goto(base);
-    await page.getByRole('button', { name: `进入工作区：${a.name}`, exact: true }).click();
-    await page.getByRole('button', { name: '工作区资料', exact: true }).click();
+    await page.getByRole('button', { name: `进入项目：${a.name}`, exact: true }).click();
+    await page.getByRole('button', { name: '项目资料', exact: true }).click();
     const draft = page.getByRole('textbox', { name: /^你的草稿/ });
     await expect(draft).toBeVisible();
     await draft.fill('所有回复以【页面验收】开头。');
@@ -209,7 +209,8 @@ try {
     await expect.poll(async () => (await instructions(a.id)).content).toBe('所有回复以【页面验收】开头。');
     await page.getByRole('button', { name: '关闭面板', exact: true }).click();
     const created = page.waitForResponse(response => response.url().endsWith('/api/sessions') && response.request().method() === 'POST');
-    await page.getByRole('button', { name: /^新建对话/ }).click();
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await page.getByRole('button', { name: '创建对话', exact: true }).click();
     const uiSession = await (await created).json() as SessionSnapshot;
     const input = '请简单问候，并遵循工作区指令。';
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill(input);
@@ -224,7 +225,7 @@ try {
     const chatImage = join(root, 'desktop-chat.png');
     await page.screenshot({ path: chatImage, fullPage: true }); screenshots.push(chatImage);
 
-    await page.getByRole('button', { name: '工作区资料', exact: true }).click();
+    await page.getByRole('button', { name: '项目资料', exact: true }).click();
     await draft.fill('我的未保存草稿。');
     await setInstructions(a.id, '服务端新内容。');
     await page.getByRole('button', { name: '保存指令', exact: true }).click();

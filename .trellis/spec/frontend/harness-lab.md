@@ -33,6 +33,14 @@ Accept stream events only for their captured session ID, request ID and local st
 
 Persist drafts, submitted text and selection in sessionStorage. Storage exceptions must leave in-memory editing usable. Preserve the pending submitted text separately from a user's next draft. Restore failed submissions only when doing so does not overwrite new input; offer explicit recovery when both exist. Cancellation during preparation also restores submitted text if no user message for that request reached native history. Cancellation after a message is recorded does not imply that the user message or file effects were undone.
 
+### Project entry points and model settings
+
+The UI calls workspaces projects; API/storage ownership remains `workspaceId`. Global New Conversation opens a project-select dialog and creates only after confirmation. A group's plus button directly calls `create(targetWorkspaceId)`, including folded groups. Capture a navigation revision before POST; completion enters the new session only when the user has not navigated since. Preserve later selections and keep the result/draft in the captured target project. Entering All Activity must also invalidate pending creation navigation. Surface cross-project creation failures in the visible page; only focus a successfully created conversation if the user has not navigated and no modal covers it. Never create on opening/cancelling the picker.
+
+Successful unread results use an accessible blue dot (`有新回复未读`); successful read and ordinary idle sessions have no visible status text. Keep active, stopping, failed and recovery indicators. New-session/settings dialogs also block mark-read while covering the chat.
+
+`ModelSettings` uses GET/PUT `/api/settings/model` and refreshes `/api/info` after save. The centered settings dialog has a single Models section. API keys are write-only password fields, initially blank, never copied from GET or persisted in browser storage. Empty key retains the current secret only when provider/endpoint stay unchanged; destination changes require an explicit key. Clear key after successful save and destroy it on close. Preserve form edits on failures; version conflict or uncertain save requires manually viewing fresh configuration before explicit retry. Do not automatically replay PUT. Respect native-dialog Escape, focus restoration and narrow layouts.
+
 ### Instruction editor and conflicts
 
 Fetch `common` as readonly and `workspace` as editable; resources are keyed by workspace ID. An editor keeps distinct `draft`, `base`, optional `latest`, `review` and `canMerge` state. Do not rebase a draft merely because a GET returned a different version. Opening a panel or refreshing may fetch comparison content but must preserve unsaved edits.
@@ -56,7 +64,7 @@ Instruction editor state and asynchronous responses remain attached to the origi
 
 ### Current resources versus historical evidence
 
-“工作区资料” is an on-demand panel for current editable instructions, readonly common text, source metadata and the two fixed Skills. Show save success as effective on the next send. A chat's `instructions.updated`/terminal results can display actual saved effects, including cancellation, or an explicit need to inspect current files when the outcome is uncertain.
+“项目资料” is an on-demand panel for current editable instructions, readonly common text, source metadata and the two fixed Skills. Show save success as effective on the next send. A chat's `instructions.updated`/terminal results can display actual saved effects, including cancellation, or an explicit need to inspect current files when the outcome is uncertain.
 
 “查看本轮资料” opens the historical request endpoint using the owning session and request ID. Show the actual loaded texts/hashes and read Skill versions/body, readonly. Keep hash strings inside details rather than the main conversation. Old messages without request IDs explain that the request was not recorded; `unavailable` responses must not be filled from current files.
 
@@ -74,6 +82,8 @@ Render model Markdown without raw HTML execution. Enable GFM through remark-gfm,
 
 | Condition | Behavior |
 | --- | --- |
+| Model settings conflict or uncertain save | Keep edits, GET latest for review, then explicit PUT; no automatic retry |
+| Cross-project create fails or settles after navigation | Visible error on failure; later project/view choice wins |
 | Initial API/configuration failure | Actionable message; drafts preserved; no send until configured/loaded |
 | Active request | Editable next draft, send blocked, exact-request Stop available |
 | Workspace/session switch during execution | Work continues in its original scope; independent drafts/replies |
@@ -107,6 +117,8 @@ Assert IME behavior, chat/sessionStorage failures, draft isolation, same/cross-w
 
 Navigation tests cover unopened-session progress without fetching its body, folded-group counts, all/running/attention filters, unread across refresh, failed status refresh and recovery, late overview versus newer SSE, stable ordering, creation deduplication, scroll/draft restoration and narrow-screen navigation.
 
+Settings/creation tests cover picker cancellation without POST, explicit target and folded-group plus, delayed creation versus session/activity navigation, mobile focus, settings read retry/save/conflict/busy/persistence feedback, blank-key retention and new-destination key requirements. Assert API keys are absent from browser storage and cleared after save/close; covered chats remain unread.
+
 Editor tests must assert actual GET/PUT counts and payload hashes: preserve edits on conflict, view latest without rebasing, manual merge success, repeated conflicts, comparison read failure, uncertain saves, explicit discard without PUT, stale responses after switching, clearing/saving and keyboard/IME behavior. Include fixed Skill viewing and historical snapshot contents independent of current files.
 
 Verify actual tool details, semantic Markdown tables, mobile overflow/scrollability, native dialogs, Escape and focus restoration. Use real Web → API → Pi → provider validation separately for instruction effects, natural-language file edits and actual Skill/source use.
@@ -128,3 +140,7 @@ Correct: settle local pending state when the terminal event arrives and retain i
 Wrong: mark every successful result seen in global polling as read, or overwrite its current phase from a GET started before a newer stream event.
 
 Correct: retain request-keyed read markers until the matching reply is visible at the bottom, and reject stale summaries using captured revisions.
+
+Wrong: close a settings dialog and retain its secret in sessionStorage, or silently resend after a version conflict.
+
+Correct: unmount write-only secret state; show latest redacted configuration separately and require a manual save.

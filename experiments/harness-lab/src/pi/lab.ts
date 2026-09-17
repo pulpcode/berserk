@@ -6,9 +6,10 @@ import {
   SessionManager, SettingsManager, type AgentSession,
 } from '@earendil-works/pi-coding-agent';
 import { InMemoryCredentialStore, InMemoryModelsStore, createAssistantMessageEventStream } from '@earendil-works/pi-ai';
-import type { ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile } from '../contracts/index.js';
+import type { ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile, ModelSettings, ModelSettingsUpdate } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import type { LabConfig } from '../server/config.js';
+import { ModelSettingsStore } from '../server/model-settings.js';
 import { WorkspaceStore } from '../workspaces/store.js';
 import { ResourceService, resourceInfo, type ResourceSnapshot } from '../resources/service.js';
 import { checkDirectory } from '../resources/files.js';
@@ -61,34 +62,48 @@ export function providerError(raw: string): string {
   return '模型调用失败，请检查服务端模型配置或稍后重试。';
 }
 
+async function configuredRuntime(config: LabConfig): Promise<ModelRuntime> {
+  const runtime = await ModelRuntime.create({
+    credentials: new InMemoryCredentialStore(), modelsStore: new InMemoryModelsStore(),
+    modelsPath: null, allowModelNetwork: false, refreshOnCreate: false,
+  });
+  runtime.registerProvider(config.provider, {
+    baseUrl: config.baseUrl, api: 'openai-completions',
+    models: [{ id: config.model, name: config.model, reasoning: false, input: ['text'],
+      contextWindow: 1_000_000, maxTokens: config.maxOutputTokens,
+      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+      compat: { supportsStore: false, supportsDeveloperRole: false, maxTokensField: 'max_tokens' },
+    }],
+  });
+  if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
+  return runtime;
+}
+
+function settingsBusy() {
+  return new RequestError('MODEL_SETTINGS_BUSY', '有会话正在处理或模型配置正在保存，请稍后重试。', 409);
+}
+
 export class PiLab {
   private readonly records = new Map<string, RecordState>();
   private readonly sessionDir: string;
   private readonly agentDir: string;
-  private constructor(readonly config: LabConfig, private readonly runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService) {
+  private settingsUpdating = false;
+  private constructor(private currentConfig: LabConfig, private runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService, private readonly settings: ModelSettingsStore) {
+    const config = currentConfig;
     this.sessionDir = join(config.dataDir, 'sessions');
     this.agentDir = join(config.dataDir, 'agent');
   }
 
+  get config(): Readonly<LabConfig> { return this.currentConfig; }
+
   // Tests inject a deterministic provider runtime; production always uses the configured API.
   static async create(config: LabConfig, runtime?: ModelRuntime): Promise<PiLab> {
-    if (!runtime) {
-      runtime = await ModelRuntime.create({
-        credentials: new InMemoryCredentialStore(), modelsStore: new InMemoryModelsStore(),
-        modelsPath: null, allowModelNetwork: false, refreshOnCreate: false,
-      });
-      runtime.registerProvider(config.provider, {
-        baseUrl: config.baseUrl, api: 'openai-completions',
-        models: [{ id: config.model, name: config.model, reasoning: false, input: ['text'],
-          contextWindow: 1_000_000, maxTokens: config.maxOutputTokens,
-          cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-          compat: { supportsStore: false, supportsDeveloperRole: false, maxTokensField: 'max_tokens' },
-        }],
-      });
-    }
-    if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
+    const settings = await ModelSettingsStore.open(config);
+    config = { ...config, ...settings.config() };
+    if (!runtime) runtime = await configuredRuntime(config);
+    else if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
     const workspaces = await WorkspaceStore.open(config.dataDir);
-    const lab = new PiLab(config, runtime, workspaces, new ResourceService(workspaces));
+    const lab = new PiLab(config, runtime, workspaces, new ResourceService(workspaces), settings);
     await mkdir(lab.sessionDir, { recursive: true, mode: 0o700 });
     await mkdir(lab.agentDir, { recursive: true, mode: 0o700 });
     await checkDirectory(lab.sessionDir); await checkDirectory(lab.agentDir);
@@ -131,6 +146,26 @@ export class PiLab {
   info(): AppInfo {
     return { model: this.config.model, configured: Boolean(this.config.apiKey),
       limits: { timeoutMs: this.config.timeoutMs, maxToolCalls: this.config.maxToolCalls, maxOutputTokens: this.config.maxOutputTokens } };
+  }
+
+  modelSettings(): ModelSettings { return this.settings.info(); }
+
+  async updateModelSettings(input: ModelSettingsUpdate): Promise<ModelSettings> {
+    // Reserve synchronously, before runtime construction or disk I/O can yield to start().
+    if (this.settingsUpdating || [...this.records.values()].some(record => record.active)) throw settingsBusy();
+    this.settingsUpdating = true;
+    try {
+      const next = this.settings.prepare(input);
+      const config = { ...this.currentConfig, provider: next.provider, model: next.model, baseUrl: next.baseUrl, apiKey: next.apiKey };
+      let runtime: ModelRuntime;
+      try { runtime = await configuredRuntime(config); } catch {
+        throw new RequestError('MODEL_SETTINGS_INVALID', '无法加载该模型配置，请检查服务商和模型设置。', 400);
+      }
+      await this.settings.save(next);
+      // No await after the file commit: new requests see matching runtime and settings.
+      this.currentConfig = config; this.runtime = runtime;
+      return this.settings.info();
+    } finally { this.settingsUpdating = false; }
   }
 
   async createSession(workspaceId = this.workspaces.list().defaultWorkspaceId): Promise<SessionSnapshot> {
@@ -294,7 +329,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
               const messages: unknown[] = payload.messages;
               const currentUserIndex = messages.findLastIndex(message => typeof message === 'object' && message !== null && 'role' in message && message.role === 'user');
               if (currentUserIndex < 0) throw new Error('Current user message unavailable');
-              return { ...payload, thinking: { type: 'disabled' }, messages: [
+              return { ...payload, ...(this.config.provider.toLowerCase() === 'deepseek' ? { thinking: { type: 'disabled' } } : {}), messages: [
                 ...messages.slice(0, currentUserIndex),
                 { role: 'system', content: requestReminder },
                 ...messages.slice(currentUserIndex),
@@ -320,10 +355,11 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
   }
 
   start(id: string, text: string): { requestId: string; run: (listener: Listener) => Promise<void> } {
+    if (this.settingsUpdating) throw settingsBusy();
     const record = this.record(id);
     if (record.active) throw new RequestError('SESSION_BUSY', '当前会话正在回复，请结束或停止后再发送。', 409);
     if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
-    if (!this.config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '请先在服务端 .env.local 中配置 LLM_API_KEY。', 503);
+    if (!this.config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '请先在设置中配置模型 API Key。', 503);
     const active: Active = { id: randomUUID(), status: 'responding', phase: 'preparing', toolCalls: 0, modelCalls: 0, controller: new AbortController(), changes: [] };
     record.active = active; record.result = null;
     record.statusUpdatedAt = new Date().toISOString();
