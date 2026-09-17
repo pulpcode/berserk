@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "核对现有取消、写入失败、原生历史及新运行控制兼容边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "保持项目导航、模型设置、压缩详情、状态、未读与草稿契约"}
+{"file": ".trellis/spec/backend/quality-guidelines.md", "reason": "检查受影响集成、故障路径和真实调用证据"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "检查交互、可访问性及既有浏览器回归"}
+{"file": ".trellis/tasks/09-17-w01-3-context-compaction/research/pi-compaction.md", "reason": "Pi默认压缩、原生生命周期、调用用途与保存边界"}
+{"file": ".trellis/tasks/09-17-w01-3-context-compaction/research/model-budget.md", "reason": "模型容量与输出能力、原生重试、独立超时、可选总时限和旧配置迁移"}

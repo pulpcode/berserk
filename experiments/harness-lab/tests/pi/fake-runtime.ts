@@ -3,7 +3,7 @@ import { createAssistantMessageEventStream, InMemoryCredentialStore, InMemoryMod
   type AssistantMessage, type Context, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { LabConfig } from '../../src/server/config.js';
 
-export type Reply = { text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean };
+export type Reply = { text?: string; toolIds?: string[]; tools?: Array<{ name: string; arguments: Record<string, unknown> }>; error?: string; length?: boolean; waitForAbort?: boolean; usageInput?: number; usageOutput?: number; delayMs?: number };
 export interface CapturedCall { context: Context; maxTokens?: number; aborted: boolean }
 
 /** Fake only the provider stream: Pi itself performs the real tool loop and persistence. */
@@ -14,7 +14,7 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
   runtime.registerProvider(config.provider, {
     api: 'openai-completions', baseUrl: config.baseUrl,
     models: [{ id: config.model, name: config.model, reasoning: false, input: ['text'],
-      contextWindow: 131072, maxTokens: config.maxOutputTokens,
+      contextWindow: config.contextWindow ?? 131072, maxTokens: config.maxOutputTokens ?? 128,
       cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } }],
     streamSimple(model, context, options?: SimpleStreamOptions) {
       const call = { context: JSON.parse(JSON.stringify(context)) as Context, maxTokens: options?.maxTokens, aborted: false };
@@ -23,9 +23,9 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
       const stream = createAssistantMessageEventStream();
       const message: AssistantMessage = { role: 'assistant', content: [], api: model.api,
         provider: model.provider, model: model.id, timestamp: Date.now(), stopReason: 'stop',
-        usage: { input: 1, output: 1, cacheRead: 0, cacheWrite: 0, totalTokens: 2,
+        usage: { input: plan.usageInput ?? 1, output: plan.usageOutput ?? (plan.length ? model.maxTokens : 1), cacheRead: 0, cacheWrite: 0, totalTokens: (plan.usageInput ?? 1) + (plan.usageOutput ?? (plan.length ? model.maxTokens : 1)),
           cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } } };
-      queueMicrotask(() => {
+      const emitReply = () => {
         stream.push({ type: 'start', partial: message });
         if (plan.waitForAbort) {
           const abort = () => {
@@ -57,7 +57,8 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
         }
         message.stopReason = (plan.tools?.length || plan.toolIds?.length) ? 'toolUse' : plan.length ? 'length' : 'stop';
         stream.push({ type: 'done', reason: message.stopReason, message });
-      });
+      };
+      if (plan.delayMs) setTimeout(emitReply, plan.delayMs); else queueMicrotask(emitReply);
       return stream;
     },
   });
@@ -66,6 +67,7 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
 
 export function testConfig(dataDir: string, overrides: Partial<LabConfig> = {}): LabConfig {
   return { provider: 'test-local', model: 'deterministic-model', baseUrl: 'https://no-network.invalid',
-    apiKey: 'fake-key-NEVER-LEAK-123', dataDir, port: 4310, timeoutMs: 2000,
-    maxToolCalls: 4, maxOutputTokens: 128, ...overrides };
+    apiKey: 'fake-key-NEVER-LEAK-123', dataDir, port: 4310, agentRunTimeoutMs: 0, httpIdleTimeoutMs: 300000,
+    contextWindow: 131072, maxOutputTokens: 128, compactionReserveTokens: 16384, compactionKeepRecentTokens: 20000,
+    contextSource: 'explicit', outputSource: 'explicit', contextReady: true, ...overrides };
 }

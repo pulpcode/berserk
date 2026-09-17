@@ -6,11 +6,27 @@ export interface PublicMessage {
   requestId?: string;
   toolName?: string;
   isError?: boolean;
+  toolCallId?: string;
+}
+export interface SubagentSummary {
+  subagentId: string;
+  parentRequestId: string;
+  toolCallId: string;
+  role: string;
+  description: string;
+  task: string;
+  status: 'running' | 'stopping' | 'succeeded' | 'failed' | 'cancelled' | 'interrupted';
+  phase?: 'preparing' | 'generating' | 'tool' | 'compacting' | 'retrying';
+  toolName?: string;
+  result?: string;
+  error?: string;
+  startedAt: string;
+  completedAt?: string;
 }
 export interface RequestState {
   requestId: string;
   status: 'responding' | 'stopping';
-  phase?: 'preparing' | 'generating' | 'tool';
+  phase?: 'preparing' | 'generating' | 'tool' | 'compacting' | 'subagent';
   toolName?: string;
 }
 export interface RequestResult {
@@ -19,6 +35,10 @@ export interface RequestResult {
   message?: string;
   instructionChanges?: InstructionUpdate[];
   instructionOutcomeUncertain?: boolean;
+  compactionIds?: string[];
+  compactions?: CompactionSummary[];
+  usageSummary?: UsageSummary;
+  subagentUsage?: UsageSummary;
 }
 export interface SessionSummary { id: string; workspaceId: string; title: string; updatedAt: string }
 export interface SessionActivity extends SessionSummary {
@@ -28,6 +48,8 @@ export interface SessionActivity extends SessionSummary {
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  subagents?: SubagentSummary[];
+  latestCompaction?: CompactionSummary;
   messages: PublicMessage[];
   active: RequestState | null;
   lastResult: RequestResult | null;
@@ -36,9 +58,19 @@ export interface SessionSnapshot extends SessionSummary {
 export interface AppInfo {
   model: string;
   configured: boolean;
-  limits: { timeoutMs: number; maxToolCalls: number; maxOutputTokens: number };
+  contextReady: boolean;
+  limits: { agentRunTimeoutMs: number | null; httpIdleTimeoutMs: number; llmRequestTimeoutMs: number | null; maxOutputTokens: number | null };
 }
-export interface ModelSettings {
+export interface ModelParameters {
+  contextWindow: number | null;
+  maxOutputTokens: number | null;
+  compactionReserveTokens: number | null;
+  compactionKeepRecentTokens: number | null;
+}
+export interface ModelSettings extends ModelParameters {
+  contextSource: 'preset' | 'explicit' | 'unknown';
+  outputSource: 'preset' | 'explicit' | 'unknown';
+  contextReady: boolean;
   provider: string;
   model: string;
   baseUrl: string;
@@ -47,6 +79,10 @@ export interface ModelSettings {
   source: 'environment' | 'local';
 }
 export interface ModelSettingsUpdate {
+  contextWindow?: number;
+  maxOutputTokens?: number;
+  compactionReserveTokens?: number;
+  compactionKeepRecentTokens?: number;
   provider: string;
   model: string;
   baseUrl: string;
@@ -58,11 +94,14 @@ export type StreamEvent = {
   requestId: string;
 } & (
   | { type: 'response.started' }
+  | { type: 'context.compaction_started'; reason: CompactionReason }
+  | { type: 'context.compaction_completed'; compaction: CompactionSummary }
   | { type: 'resources.loaded'; resources: WorkspaceResources }
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }
   | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean }
+  | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'response.completed' | 'response.failed' | 'response.cancelled'; snapshot: SessionSnapshot }
 );
 export interface ApiError { error: { code: string; message: string } }
@@ -80,7 +119,35 @@ export interface InstructionUpdate {
 export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string }
 export interface SkillFile extends SkillInfo { content: string }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
-export type RequestResourcesRecord = {
+export type RequestResourcesRecord = { compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];
   skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
-} | { status: 'unavailable'; requestId: string; message: string };
+} | { status: 'unavailable'; requestId: string; message: string });
+
+export type CompactionReason = 'threshold' | 'overflow' | 'unknown';
+/** Actual provider usage, distinct from context-size estimates; null means unavailable. */
+export interface TokenUsage { input: number; output: number; cacheRead: number; cacheWrite: number; totalTokens: number }
+export interface UsageSummary {
+  modelAttempts: number;
+  replyAttempts: number;
+  compactionAttempts: number;
+  toolCalls: number;
+  unknownUsageAttempts: number;
+  actual: TokenUsage | null;
+}
+export interface CompactionSummary {
+  id: string;
+  createdAt: string;
+  reason: CompactionReason;
+  tokensBefore: number;
+  tokensAfter: number | null;
+  requestId?: string;
+  model?: string;
+  modelSettingsVersion?: string;
+  usage?: TokenUsage | null;
+}
+export interface CompactionDetail extends CompactionSummary {
+  sessionId: string;
+  summary: string;
+  firstKeptEntryId: string;
+}

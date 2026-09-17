@@ -126,9 +126,17 @@ describe('server-only configuration', () => {
     for (const endpoint of ['http://api.deepseek.com', 'https://user:password@api.deepseek.com', 'https://api.deepseek.com?key=secret']) {
       expect(() => loadConfig({ LLM_BASE_URL: endpoint })).toThrow(/HTTPS/);
     }
-    expect(() => loadConfig({ REQUEST_TIMEOUT_MS: '-1' })).toThrow(/REQUEST_TIMEOUT_MS/);
-    expect(() => loadConfig({ MAX_TOOL_CALLS: '0' })).toThrow(/MAX_TOOL_CALLS/);
-    expect(() => loadConfig({ MAX_OUTPUT_TOKENS: 'NaN' })).toThrow(/MAX_OUTPUT_TOKENS/);
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const config = loadConfig({ REQUEST_TIMEOUT_MS: '-1', MAX_TOOL_CALLS: '0', MAX_OUTPUT_TOKENS: 'SECRET-NOT-PRINTED' });
+    expect(config).toMatchObject({ agentRunTimeoutMs: 0, httpIdleTimeoutMs: 300000, maxOutputTokens: 393216 });
+    expect(warning).toHaveBeenCalledOnce();
+    expect(warning.mock.calls.flat().join(' ')).not.toContain('SECRET-NOT-PRINTED');
+    warning.mockRestore();
+    for (const key of ['AGENT_RUN_TIMEOUT_MS', 'LLM_HTTP_IDLE_TIMEOUT_MS', 'LLM_REQUEST_TIMEOUT_MS']) {
+      for (const value of ['-1', '1.5', 'NaN', '2147483648', '', '1e3']) expect(() => loadConfig({ [key]: value })).toThrow(key);
+    }
+    expect(() => loadConfig({ LLM_REQUEST_TIMEOUT_MS: '0' })).toThrow('LLM_REQUEST_TIMEOUT_MS');
+    expect(loadConfig({ AGENT_RUN_TIMEOUT_MS: '2147483647', LLM_HTTP_IDLE_TIMEOUT_MS: '0', LLM_REQUEST_TIMEOUT_MS: '1000' })).toMatchObject({ agentRunTimeoutMs: 2147483647, httpIdleTimeoutMs: 0, llmRequestTimeoutMs: 1000 });
   });
 });
 
@@ -172,4 +180,41 @@ describe('workspace resource API', () => {
     expect((await app.inject({ method: 'PUT', url: `/api/workspaces/${id}/instructions/workspace`, payload: { content: '', expectedHash: null, force: true } })).statusCode).toBe(400);
     expect(calls).toHaveLength(0);
   });
+});
+
+it('serves compaction detail read-only for its owning session while retaining full raw history', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'berserk-compaction-api-'));
+  cleanup.push(() => rm(dir, { recursive: true, force: true }));
+  const config = testConfig(dir, { compactionReserveTokens: 100000, compactionKeepRecentTokens: 128 });
+  let replies = 0;
+  const fake = await fakeRuntime(config, context => {
+    if (!context.tools?.length) return { text: '摘要：保留原始资料和待办。' };
+    replies++;
+    return { text: `回复${replies}：完整原文`, usageInput: replies === 2 ? 50000 : 100 };
+  });
+  const lab = await PiLab.create(config, fake.runtime); const app = await createApp(lab); cleanup.push(() => app.close());
+  const a = await lab.createSession();
+  const workspace = await lab.workspaces.create('摘要隔离项目');
+  const b = await lab.createSession(workspace.id);
+  const original = '第一轮原始资料'.repeat(1000);
+  await lab.start(a.id, original).run(() => {});
+  const request = lab.start(a.id, '继续确认资料'.repeat(300)); await request.run(() => {});
+  const snapshot = lab.get(a.id);
+  expect(snapshot.lastResult?.status).toBe('succeeded');
+  expect(snapshot.latestCompaction).toBeDefined();
+  const compactionId = snapshot.latestCompaction!.id;
+  const callsBefore = fake.calls.length;
+  const detail = await app.inject(`/api/sessions/${a.id}/compactions/${compactionId}`);
+  expect(detail.statusCode).toBe(200);
+  expect(detail.headers['cache-control']).toBe('no-store');
+  expect(detail.json()).toMatchObject({ id: compactionId, sessionId: a.id, summary: expect.stringContaining('保留原始资料'), firstKeptEntryId: expect.any(String), tokensBefore: expect.any(Number) });
+  const resources = await app.inject(`/api/sessions/${a.id}/requests/${request.requestId}/resources`);
+  expect(resources.json().compactions).toEqual(expect.arrayContaining([expect.objectContaining({ id: compactionId })]));
+  const denied = await app.inject(`/api/sessions/${b.id}/compactions/${compactionId}`);
+  expect(denied.statusCode).toBe(404); expect(denied.json().error.code).toBe('COMPACTION_NOT_FOUND');
+  expect((await app.inject(`/api/sessions/${a.id}/compactions/${compactionId}?otherSession=${b.id}`)).statusCode).toBe(400);
+  expect(fake.calls).toHaveLength(callsBefore);
+  expect(lab.get(a.id).messages.find(message => message.role === 'user')?.text).toBe(original);
+  expect(lab.get(b.id).messages).toEqual([]);
+  expect(detail.payload).not.toContain(config.apiKey); expect(detail.payload).not.toContain(dir);
 });

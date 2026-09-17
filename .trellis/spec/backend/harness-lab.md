@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read before changing `experiments/harness-lab` Pi integration, workspace/resource storage, API, configuration, migration or native history. The implementation includes W01-1 conversation behavior and W01-2/S2a workspaces, file instructions and fixed Skills. It does not provide multi-user authorization, cross-session retrieval, database transactions, persistent Runs, business approvals, compaction or subagents.
+Read before changing `experiments/harness-lab` Pi integration, workspace/resource storage, API, configuration, migration or native history. The implementation includes W01-1 conversation behavior and W01-2/S2a workspaces, file instructions and fixed Skills, plus W01-3/S2b native automatic compaction and W01-4/S2c single readonly subagent delegation. It does not provide multi-user authorization, cross-session retrieval, database transactions, persistent Runs, business approvals or detached/recursive subagents.
 
 The local user can access every workspace. Isolation means that each session's model inputs and tools use its fixed workspace; it is not an account authorization boundary. One service process owns a data directory. Do not run multiple processes against the same `LAB_DATA_DIR`.
 
@@ -13,6 +13,7 @@ The local user can access every workspace. Isolation means that each session's m
 - `start(sessionId, text) -> {requestId, run(listener)}`: reserve the session synchronously before asynchronous preparation.
 - `cancel(sessionId, requestId)`: reject stale IDs and retain the active marker until execution settles.
 - `activity() -> ActivityOverview`: global workspace/session navigation metadata without messages or resource bodies.
+- `getCompaction(sessionId, compactionId)`: readonly native summary detail scoped to its owning session.
 - `getRequestResources(sessionId, requestId)`: return that session's historical resource record or explicit `unavailable`; never substitute current files.
 - `ResourceService.snapshot(workspaceId, signal?)`, `readInstruction(workspaceId, fileId)`, `updateInstruction(workspaceId, fileId, content, expectedHash, signal?)`, `readSkill(workspaceId, skillId)`.
 
@@ -24,6 +25,7 @@ The local user can access every workspace. Isolation means that each session's m
 | `POST /api/workspaces` | `{name}` → 201 Workspace |
 | `GET /api/sessions?workspaceId=…` | Summaries from that workspace; omission uses default |
 | `POST /api/sessions` | Optional `{workspaceId}` → SessionSnapshot; omission uses default |
+| `GET /api/sessions/:id/compactions/:compactionId` | Readonly summary, native retention boundary and available metadata |
 | `GET /api/sessions/:id` | Authoritative messages, workspace, activity and last result |
 | `POST /api/sessions/:id/messages` | `{text}` → POST SSE |
 | `POST /api/sessions/:id/cancel` | `{requestId}` → snapshot while stopping |
@@ -52,7 +54,7 @@ Stop the service before `--apply`. Never use a running service's changing files 
 
 Pi packages and JSONL interpretation stay inside `src/pi` and corresponding integration tests. The server uses concrete `PiLab` methods; resource/workspace services do not import Pi; the browser imports contracts. Do not introduce a generic adapter until there is a tested need.
 
-`SessionActivity` extends `SessionSummary` with `active`, `lastResult` restricted to `{requestId,status}`, optional `recoveryWarning` and `statusUpdatedAt`. `RequestState` adds optional `phase: preparing | generating | tool` and public `toolName`. Reserve starts preparing; actual model invocation sets generating; tool start/end sets tool/preparing. Stopping takes precedence over phase. Update status time on real transitions, not every token. After restart use persisted results/recovery warnings, never invent a running request. Activity uses a native-leaf-keyed metadata projection cache; repeated polling must not call `get()` and materialize every message. Return fresh DTOs without paths, full messages, tool arguments, instruction changes or resource contents. This is local-user navigation visibility, not cross-workspace model access or a full Run contract.
+`SessionActivity` extends `SessionSummary` with `active`, `lastResult` restricted to `{requestId,status}`, optional `recoveryWarning` and `statusUpdatedAt`. `RequestState` adds optional `phase: preparing | generating | tool | compacting | subagent` and public `toolName`. Reserve starts preparing; actual model invocation sets generating; tool start/end sets tool/preparing. Stopping takes precedence over phase. Update status time on real transitions, not every token. After restart use persisted results/recovery warnings, never invent a running request. Activity uses a native-leaf-keyed metadata projection cache; repeated polling must not call `get()` and materialize every message. Return fresh DTOs without paths, full messages, tool arguments, instruction changes or resource contents. This is local-user navigation visibility, not cross-workspace model access or a full Run contract.
 
 ### Workspace storage and migration
 
@@ -66,9 +68,9 @@ Existing native files without an index require explicit migration. Back up the w
 
 ### Request resources and tools
 
-Reserve a request and its bound workspace before any asynchronous work. Snapshot instructions, source bodies and Skill bodies under the workspace resource mutex; preparation and lock waiting count toward the request deadline. Keep that snapshot fixed through every model/tool iteration. `source_read` and `skill_read` consume it; `instructions_read` deliberately reads current disk content for CAS, without changing the loaded system rules.
+Reserve a request and its bound workspace before any asynchronous work. Snapshot instructions, source bodies and Skill bodies under the workspace resource mutex; preparation and lock waiting count toward an explicitly configured whole-request deadline. Keep that snapshot fixed through every model/tool iteration. `source_read` and `skill_read` consume it; `instructions_read` deliberately reads current disk content for CAS, without changing the loaded system rules.
 
-Create a new AgentSession per request using the existing SessionManager. Disable builtin tools, external context/Skill/extension/prompt discovery, retries and compaction. Use `agentsFilesOverride` to inject only controlled common/workspace instructions. Common methods precede workspace refinements; file text cannot increase executable permissions. Explicitly advertise the fixed Skill catalog and bridge it through `skill_read`; Pi's builtin Skill discovery does not supply this bridge when `read`/`bash` are disabled.
+Create a new AgentSession per request using the existing SessionManager. Disable builtin tools and external context/Skill/extension/prompt discovery. Enable Pi default automatic compaction and native transient retry (at most 3 extra attempts; provider retries 0). Use `agentsFilesOverride` to inject only controlled common/workspace instructions. Common methods precede workspace refinements; file text cannot increase executable permissions. Explicitly advertise the fixed Skill catalog and bridge it through `skill_read`; Pi's builtin Skill discovery does not supply this bridge when `read`/`bash` are disabled.
 
 `openSession` also captures a transient `<host_request_instructions>` reminder containing the same common/workspace `{fileId, hash, content}` snapshot and explicit empty/missing-file semantics. Inside the OpenAI adapter's `onPayload`, copy the final wire-message array and insert one system reminder immediately before the latest user message, retaining the initial system message. Do not mutate Pi's context, native messages, or any user text. Each tool-loop call starts from the original context and inserts exactly one copy of the same captured reminder; a same-request write does not refresh it. The next request captures the updated or emptied file. This reinforces current rules over stale historical promises/tool results; real-model compliance still requires separate verification.
 
@@ -80,9 +82,31 @@ Create a new AgentSession per request using the existing SessionManager. Disable
 | `instructions.update` / `instructions_update` | `{fileId, content, expectedHash}` | CAS update of this session's workspace file only |
 | `skill.read` / `skill_read` | `{id}` | Registered Skill body/version/hash from the snapshot |
 
-Tools use strict schemas, serial execution, cancellation checks and attempt counting; failed arguments/tools also consume budget. Natural language edit intent is understood by the model. Prompts require explicit user intent, but this is not a programmatic proof of intent or complete prompt-injection protection. Real source-induced write attempts must be tested.
+Tools use strict schemas, serial execution, cancellation checks and observational attempt counting; there is no default cumulative tool/model attempt cap. Host tool definitions may declare timeoutMs. Wait for cancellation settlement before returning a timeout; unknown file effects stop the request and require inspection. Natural language edit intent is understood by the model. Prompts require explicit user intent, but this is not a programmatic proof of intent or complete prompt-injection protection. Real source-induced write attempts must be tested.
 
 `berserk.request-resources.v1`, `berserk.skill-read.v1`, `berserk.instructions-updated.v1` and `berserk.request-result.v1` are native custom entries, not model messages or a business operation ledger. Decode them in `src/pi/history-evidence.ts`. Validate known fields/versions, request/workspace ownership, text hashes and registered Skill versions; reject tool evidence attached after a request terminal result. Invalid evidence leaves native files untouched and prevents exposing/resuming that session. Legacy requests remain explicitly unavailable. Result entries can exist without resource entries for preparation failures or early cancellation.
+
+### Native compaction and persistence
+
+Subscribe before prompt. A per-request synchronous compaction_start/end marker distinguishes native summary streams from replies, independent of browser visibility. Both use the controlled stream for cancellation, sanitized errors and usage; summary streams keep native prompts and maxTokens and receive no host AGENTS reminder. Reply streams keep the current fixed snapshot. Do not call prompt again for retry/overflow, manually append compaction, or inject a custom summary format.
+
+Pi owns trigger/cut points, recent token retention and one overflow recovery. Its native summary may truncate each tool result to 2,000 characters; disk and public history stay complete. Multiple compactions in one request associate by new entry ID, never summary text. `RequestResult` optionally adds compactionIds/compactions/usageSummary; `SessionSnapshot` adds latestCompaction. Missing usage is unknown, not zero cost. Native estimates and actual provider usage remain distinct.
+
+Default summaries must contain text and no tool calls; empty/truncated/final failed summaries cannot continue model/tool work. Latch admission closed before full `AgentSession.abort()`, not only agent.abort(); never await self-idle inside a callback. Temporary overflow errors are not terminal. Cancelled writes or summaries already committed remain. Guard native append methods: failed persistence poisons the manager and forbids finally from appending more; reload strict disk history before reuse. Validate every JSONL line and compaction retention ancestry before Pi can silently skip bad input. Incomplete requests still require recovery even if a summary exists.
+
+`context.compaction_started/completed` are session/request-scoped SSE events. Completed carries the actual saved entry metadata. Error/cancel ends through the normal single terminal result. `getCompaction` rejects foreign IDs and does not invoke the model.
+
+### Single readonly subagents
+
+`subagent({agent, task})` is a normal serial parent tool. Reject additional authority fields and unknown roles. Each call creates an independent public Pi AgentSession/SessionManager; reuse the same session construction, controlled stream, native compaction/retry and cancellation implementation. Do not call public `start()` recursively, copy parent messages into the child, or modify Pi internals. Child input is the explicit task, selected role and fixed parent resource/AGENTS snapshot. Only the final child text/error is returned to the parent tool loop; child original messages and summaries are not parent context.
+
+`src/pi/roles.ts` loads controlled `fixtures/agents/*.md` once per parent request using public Pi frontmatter parsing. Require unique safe name, nonempty description/body and explicit tools; allow only source_list/source_read/instructions_read/skill_read. Reject duplicate/unknown tools, fields including model, missing/empty directory, symlinks, invalid UTF-8 and files above 64 KiB. `tools: []` means no tools. Freeze role bodies/tool arrays; edits, additions and deletions take effect next request. Preset analyst has three resource/instruction tools; reviewer also has skill_read. Runtime registration enforces the selected allowlist; child instructions_read returns the fixed snapshot with editable=false, not current disk content. No writes, shell, external discovery or recursive subagent tool.
+
+Each parent has at most one active child, with no cumulative delegation cap. The parent's optional deadline includes child work; abort must settle the child before parent terminal publication. onUpdate/tool_execution_update projects public child phases. Child failure, empty/truncated output and cancellation are explicit; afterToolCall maps failure to native isError. Do not retry the whole child task automatically. Child compaction/retry and usage are independent; RequestResult.usageSummary remains parent-only and subagentUsage aggregates child usage once, retaining unknown usage.
+
+Save children under `LAB_DATA_DIR/subagents/<parentSessionId>/<subagentId>/`; never bind them as ordinary workspace sessions. Parent `berserk.subagent-start.v1` precedes child model work; child origin records the same role/configuration/resource ownership. Save child terminal evidence and parent `berserk.subagent-result.v1` before returning the tool result. Validate IDs, role/prompt hashes, effective tools, fixed readonly resources, terminal text/error, usage, and parent native tool result consistency. There is no cross-file transaction. Persistence failure blocks further parent work; incomplete records become interrupted without replay. Invalid parent records remain rejected. Missing/corrupt/inconsistent child files preserve a valid parent for reading, block continuation with recoveryWarning and project affected child cards as interrupted without an unverified result. Keep original files unchanged.
+
+Public `SubagentSummary` and `subagent.updated` expose IDs, role/description/task, phase/status, final result/error and timestamps, never raw Pi entries, filesystem paths or role hashes. Snapshots merge persisted and active children by subagentId. Activity remains parent-only metadata; child completion is not parent completion. Integration tests in roles.test.ts, subagent-sdk.test.ts and subagent.test.ts cover loader/SDK/lifecycle/persistence boundaries; explicit probe:subagent uses isolated data for real-model validation.
 
 ### Controlled files and CAS
 
@@ -96,11 +120,11 @@ Rename is the effect boundary. Cancellation observed before rename prevents the 
 
 `LLM_API_KEY` is server-only. Environment configuration comes from ignored `.env.local`; an optional controlled `LAB_DATA_DIR/model-settings.json` overrides model/provider/endpoint/key after a Web settings save. Defaults: provider `deepseek`, model `deepseek-flash`, HTTPS `LLM_BASE_URL`, thinking disabled, `LAB_DATA_DIR=.local`, `PORT=4310`. Reject endpoint credentials, query strings and fragments. Bind only to `127.0.0.1` and enforce the local Host/Origin allowlist.
 
-`REQUEST_TIMEOUT_MS` defaults to 120000; `MAX_TOOL_CALLS` to 8; `MAX_OUTPUT_TOKENS` to 2048. Explicit valid environment overrides take precedence. Maximum model calls are `maxToolCalls + 1`; tools have a 5000 ms cancellation deadline. These bound one request, not total validation requests or monetary spend. Sanitize provider errors before Pi persists them or the browser receives them. Zero placeholder SDK costs are not evidence of free usage.
+`LLM_HTTP_IDLE_TIMEOUT_MS` defaults to 300000 (0 disables); host HTTP response bytes reset this timer through the public fetch option, including SSE heartbeats; fake runtime tests may use synthetic events. High-level text deltas alone are not transport progress. `LLM_REQUEST_TIMEOUT_MS` is optional and maps to provider timeoutMs. `AGENT_RUN_TIMEOUT_MS` defaults to 0 (no total deadline), with a positive value covering every phase from synchronous acceptance. Validate timer values as safe integers ≤2147483647. Old REQUEST_TIMEOUT_MS/MAX_TOOL_CALLS/MAX_OUTPUT_TOKENS only warn by key name and are ignored; do not rewrite environment files. There is no default tool/model count cap. Public limits use null for absent total/request limits, never misleading zero-call labels. Sanitize provider errors before Pi persists them or the browser receives them. Zero placeholder SDK costs are not evidence of free usage.
 
 ### Persistent model settings
 
-GET `/api/settings/model` projects only `{provider, model, baseUrl, configured, version, source}`; never return the key or a key-derived hash. PUT accepts `{provider, model, baseUrl, expectedVersion, apiKey?}` with strict fields and limits. Normalize HTTPS endpoints and reject URL credentials/query/fragment. Empty key retains the existing secret only for the same provider and normalized endpoint; changed destinations require an explicit new key.
+GET `/api/settings/model` projects identity/configured/version/source, `contextWindow`, `maxOutputTokens`, `compactionReserveTokens`, `compactionKeepRecentTokens`, `contextSource`, `outputSource`, and `contextReady`; never return the key or a key-derived hash. PUT accepts `{provider, model, baseUrl, expectedVersion, apiKey?, contextWindow?, maxOutputTokens?, compactionReserveTokens?, compactionKeepRecentTokens?}` with strict integer fields; no null values. Read v1, save v2. Same-identity omitted values remain; identity changes recalculate rather than inherit. Persisted v2 wins; environment C/M can fill v1 only for the exact matching identity. Unknown C/M remains null and blocks start before reservation/history writes. Require 8192≤C≤2000000, positive M/R/K, M≤C and R+K<C (not M≤R). Verified deepseek/deepseek-flash at official root or /v1 endpoint receives C=1000000, M=393216; other identities have no assumed preset. Normalize HTTPS endpoints and reject URL credentials/query/fragment. Empty key retains the existing secret only for the same provider and normalized endpoint; changed destinations require an explicit new key.
 
 `ModelSettingsStore` reads controlled regular files, rejects symlinks/invalid persisted state, and writes mode-0600 temporary files followed by atomic rename. Persist a random version independent of the key. Preserve environment files. Build the candidate runtime before saving; only publish config/runtime after successful persistence, with no await between commit and publication. Never mutate caller-owned injected configuration.
 
@@ -116,6 +140,8 @@ A synchronous PiLab guard excludes configuration updates while any session is ac
 | Settings save during active work / request start during save | 409 `MODEL_SETTINGS_BUSY`, no partial runtime change |
 | Stale settings version / new destination without new key | 409 `MODEL_SETTINGS_CONFLICT` / 400 `MODEL_API_KEY_REQUIRED` |
 | Invalid settings file / persistence failure | 503 `MODEL_SETTINGS_INVALID` / `MODEL_SETTINGS_SAVE_FAILED`; never silently fall back or expose secrets |
+| Unknown model capacity/output | 400 `MODEL_CONTEXT_REQUIRED`; no occupied request or persisted input |
+| Foreign/missing compaction ID | 404 `COMPACTION_NOT_FOUND`; no model call |
 | Missing key | 503 `MODEL_NOT_CONFIGURED`; no occupied request or model call |
 | Invalid/extra/oversized request fields | 400/413 `INVALID_INPUT` |
 | Untrusted Host/Origin | 403, before model work |
@@ -124,7 +150,7 @@ A synchronous PiLab guard excludes configuration updates while any session is ac
 | Oversized / unreadable resource | 413 `RESOURCE_TOO_LARGE` / 503 `RESOURCE_LOAD_FAILED` |
 | Unconfirmed instruction write | `INSTRUCTION_OUTCOME_UNCERTAIN`; read current state, no implicit resend |
 | Preflight failure after SSE acceptance | `response.failed`; no model call and no invented persisted user message |
-| Timeout / attempt limit / truncated output | Explicit failed result; release active state only after settlement |
+| Explicit timeout / truncated output / final compaction failure | Explicit failed result; release active state only after settlement |
 | Client disconnect | Server work continues; GET observes state without replaying commands |
 | Global activity after restart | No invented active worker; persisted terminal/recovery state remains visible |
 
@@ -140,7 +166,7 @@ Bad: follow a caller path, discover developer-machine AGENTS/Skills, let an old 
 
 Run `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:e2e` and `npm run build` as applicable. Lint enforces Pi/browser dependency boundaries.
 
-Deterministic tests must use isolated data directories and real Pi sessions with the provider stream or HTTP transport replaced. Assert final provider input, not only loader return values: current rules, fixed intra-request snapshots, tool results, native history exactly once, same/cross-workspace isolation, restart resource/Skill evidence and actual instruction effects. Cover invalid tool parameters/attempt caps, abort races, preflight failures without model calls, malformed evidence and secret sanitization.
+Deterministic tests must use isolated data directories and real Pi sessions with the provider stream or HTTP transport replaced. Assert final provider input, not only loader return values: current rules, fixed intra-request snapshots, tool results, native history exactly once, same/cross-workspace isolation, restart resource/Skill evidence and actual instruction effects. Cover invalid tool parameters, sustained execution beyond old experimental caps, abort races, preflight failures without model calls, malformed evidence and secret sanitization.
 
 `tests/pi/provider-payload.test.ts` exercises the actual provider adapter with fake HTTP SSE. Assert that a tool write leaves both the system rules and transient reminder unchanged for the current request, a later request receives new/empty rules, the reminder occurs exactly once as a system message immediately before the current user, all user payloads remain original, and no reminder or extra user message appears in native history. Testing the loader alone cannot detect provider conversion or accidental persistence bugs.
 
@@ -150,7 +176,9 @@ Model-settings tests assert actual adapter endpoint/model/Authorization before a
 
 Activity tests cover multiple workspaces, real model/tool phases, stopping, success/failure/cancellation, restart/recovery, explicit field projection and caching. Assert that repeated unchanged polls do not traverse native histories and that GET does not invoke the provider.
 
-`probe:live` and `probe:workspace` are explicit real-model validation. Current prompt presence and deterministic green tests do not prove semantic compliance: test rule replacement/deletion, agent editing, malicious source content, Skill use and restarted continuation with the actual configured model. Never mark these passed based on a fake or a tool trace alone.
+`probe:subagent`, `probe:compaction`, `probe:live` and `probe:workspace` are explicit real-model validation. Current prompt presence and deterministic green tests do not prove semantic compliance: test rule replacement/deletion, agent editing, malicious source content, Skill use and restarted continuation with the actual configured model. Never mark these passed based on a fake or a tool trace alone.
+
+Native-compaction tests cover trigger locations, retained boundaries, split summaries, complete raw history, current/deleted AGENTS, once-only overflow recovery, retry classification, full abort, poisoned writes and restart. Assert >8 tools, >32 model attempts and >120 seconds can complete by default, progressing versus stalled streams differ, and native summary output >2048 is preserved.
 
 ## 7. Wrong vs Correct
 
@@ -173,3 +201,7 @@ Correct: observe cancellation before rename, settle any issued rename, retain ac
 Wrong: keep using an old API key after the browser changes the destination, or switch the runtime before persistence succeeds.
 
 Correct: require a new key for changed provider/endpoint, reserve the update against starts, then atomically publish runtime after the file commit.
+
+Wrong: treat every stream as a normal reply, overwrite summary maxTokens, or inject AGENTS into default summary input.
+
+Correct: distinguish purpose using native compaction lifecycle; preserve default summary prompts/limits and add the fixed reminder only to reply payloads.

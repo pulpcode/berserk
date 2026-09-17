@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing and per-request resource details. Keep conversation central; business task trees, Runs, operation approvals, artifact management and arbitrary file access are outside this increment.
+Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details and W01-4 role-aware child-task cards. Keep conversation central; business task trees, Runs, operation approvals, artifact management and arbitrary file access are outside this increment.
 
 ## 2. Signatures
 
@@ -12,7 +12,6 @@ Read when changing `experiments/harness-lab/src/web`. The React conversation UI 
 - `WorkspaceNavigation` groups sessions by workspace; `ActivityOverview` filters global summaries without fetching conversation bodies.
 - `useInstructions` owns workspace-keyed editor state, GET/PUT lifecycle, comparison text and manual conflict resolution.
 - `Resources` renders current instructions/source metadata/fixed Skills in a modal panel.
-- `RequestResources({sessionId, requestId?, close})` fetches historical loaded content or explains missing evidence.
 - `Panel` uses a native modal dialog, keyboard dismissal and focus restoration.
 
 `src/contracts/index.ts` owns public types. The browser must not import Pi, parse native JSONL, derive resource paths or infer writable scope from instruction text.
@@ -41,6 +40,14 @@ Successful unread results use an accessible blue dot (`有新回复未读`); suc
 
 `ModelSettings` uses GET/PUT `/api/settings/model` and refreshes `/api/info` after save. The centered settings dialog has a single Models section. API keys are write-only password fields, initially blank, never copied from GET or persisted in browser storage. Empty key retains the current secret only when provider/endpoint stay unchanged; destination changes require an explicit key. Clear key after successful save and destroy it on close. Preserve form edits on failures; version conflict or uncertain save requires manually viewing fresh configuration before explicit retry. Do not automatically replay PUT. Respect native-dialog Escape, focus restoration and narrow layouts.
 
+### Compaction and model capacity
+
+Model settings edit C/M and optional advanced R/K with preset/explicit/unknown sources. On identity changes clear obsolete parameter values; absent C/M leaves contextReady=false, disables sending and keeps the draft. Unknown capacity is separate from a configured API key. New limits show actual output capability and optional run/idle/request timers, never old tool-count budgets.
+
+`RequestState.phase=compacting` and session/request-scoped context.compaction_started/completed drive chat and global navigation status. Stopping wins over phase. A completed summary is not a completed reply and never sets a blue dot. Continue waiting for the normal terminal event after automatic recovery; ignore stale events using existing request guards.
+
+`CompactionPanel` fetches GET /api/sessions/:id/compactions/:compactionId only. The latestCompaction entry provides a session-level readonly shortcut, including after reload. Keep original messages/tool bodies intact, distinguish estimates from actual usage, and show unknown metadata without inventing it. The summary dialog blocks mark-read and follows existing focus/375px behavior.
+
 ### Instruction editor and conflicts
 
 Fetch `common` as readonly and `workspace` as editable; resources are keyed by workspace ID. An editor keeps distinct `draft`, `base`, optional `latest`, `review` and `canMerge` state. Do not rebase a draft merely because a GET returned a different version. Opening a panel or refreshing may fetch comparison content but must preserve unsaved edits.
@@ -66,9 +73,7 @@ Instruction editor state and asynchronous responses remain attached to the origi
 
 “项目资料” is an on-demand panel for current editable instructions, readonly common text, source metadata and the two fixed Skills. Show save success as effective on the next send. A chat's `instructions.updated`/terminal results can display actual saved effects, including cancellation, or an explicit need to inspect current files when the outcome is uncertain.
 
-“查看本轮资料” opens the historical request endpoint using the owning session and request ID. Show the actual loaded texts/hashes and read Skill versions/body, readonly. Keep hash strings inside details rather than the main conversation. Old messages without request IDs explain that the request was not recorded; `unavailable` responses must not be filled from current files.
-
-The details action normally belongs to assistant messages. When a request has a user message but no assistant text, expose it on that user message. When the latest terminal request has no persisted message, expose the action with its terminal status area. Preparation/provider failures must not make existing resource evidence inaccessible. A request without a resource record still opens an explicit unavailable explanation.
+Per-request instruction/Skill snapshots and usage remain backend diagnostic records. Do not expose a “查看本轮资料” button or a per-request diagnostic panel in normal, failed, cancelled or legacy conversations. Message rendering and terminal notices contain no fallback debug entry. The session-level latest-compaction panel remains available separately.
 
 ### Interaction and accessibility
 
@@ -78,6 +83,12 @@ Use semantic labelled controls, visible focus, a polite status region, reduced-m
 
 Render model Markdown without raw HTML execution. Enable GFM through remark-gfm, retain table/header/cell semantics and wrap wide tables in a named, keyboard-scrollable region. Keep busy, stopping, failed and recovery-required states understandable without exposing internal paths or JSON in the main chat.
 
+### Subagent cards
+
+`SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.
+
+Use native details/summary with keyboard access, safe Markdown and contained wide tables. Keep cards collapsed initially; preserve per-session drafts, focus and reading position. Refresh/reconnect only reloads snapshots; never POST to replay a child. Do not render internal reasoning, paths, hashes, raw JSON, resource-debug buttons, standalone child chat or a separate child Stop. Child history errors show interrupted/recovery state, not a success card. `tests/e2e/chat.spec.ts` covers role-specific cards, cancellation, terminal failures, refresh/switch and narrow layout.
+
 ## 4. Validation & Error Matrix
 
 | Condition | Behavior |
@@ -85,6 +96,8 @@ Render model Markdown without raw HTML execution. Enable GFM through remark-gfm,
 | Model settings conflict or uncertain save | Keep edits, GET latest for review, then explicit PUT; no automatic retry |
 | Cross-project create fails or settles after navigation | Visible error on failure; later project/view choice wins |
 | Initial API/configuration failure | Actionable message; drafts preserved; no send until configured/loaded |
+| Unknown contextWindow/maxOutputTokens | Keep draft, disable send and point to model settings |
+| Summary started/completed | Show compacting / continue response; only normal response completion may mark unread |
 | Active request | Editable next draft, send blocked, exact-request Stop available |
 | Workspace/session switch during execution | Work continues in its original scope; independent drafts/replies |
 | SSE terminal followed by failed GET | Terminal snapshot remains authoritative; no stuck pending state |
@@ -99,27 +112,28 @@ Render model Markdown without raw HTML execution. Enable GFM through remark-gfm,
 | Comparison GET failure | Keep draft and existing comparison; show retry |
 | Repeated conflict/uncertain PUT result | Keep edits; require fresh successful read before merge retry |
 | Recovery warning in native history | Show explanation and allow a new session; do not auto-resume |
-| Missing historical request evidence | Show unavailable/legacy explanation, never current text as historical text |
 
 ## 5. Good / Base / Bad Cases
 
 Good: A streams in workspace 1 while the user switches to workspace 2, edits its own draft and returns to A with the correct stream and next draft intact. Agent edits to the shared workspace instruction produce a conflict in a stale editor; the draft and latest file remain separately visible until manual merge.
 
-Base: create/select a workspace, send an ordinary message, view a readonly Skill or loaded request details on demand, refresh without sending again.
+Base: create/select a workspace, send an ordinary message, view a readonly Skill or latest compaction on demand, refresh without sending again.
 
-Bad: append every delta to the selected chat, silently replace an instruction draft after GET, claim Stop rolled back a saved file, lose a preflight-failed input, or hide request details because no assistant text was produced.
+Bad: append every delta to the selected chat, silently replace an instruction draft after GET, claim Stop rolled back a saved file, lose a preflight-failed input or expose backend diagnostic records as a routine chat action.
 
 ## 6. Tests Required
 
 Run `npm run typecheck`, `npm run lint`, `npm run test:e2e` and `npm run build` after relevant code changes. Browser tests use a deterministic HTTP service; they are UI evidence, not proof of real-model compliance.
 
-Assert IME behavior, chat/sessionStorage failures, draft isolation, same/cross-workspace switching during streams, first-session creation races, exact-request cancellation, late events, polling after refresh and no implicit POST. Cover terminal SSE followed by failed GET and failures/cancellation before any persisted message, including draft restoration and accessible historical details.
+Assert IME behavior, chat/sessionStorage failures, draft isolation, same/cross-workspace switching during streams, first-session creation races, exact-request cancellation, late events, polling after refresh and no implicit POST. Cover terminal SSE followed by failed GET and failures/cancellation before any persisted message, including draft restoration and absence of per-request diagnostic actions.
 
 Navigation tests cover unopened-session progress without fetching its body, folded-group counts, all/running/attention filters, unread across refresh, failed status refresh and recovery, late overview versus newer SSE, stable ordering, creation deduplication, scroll/draft restoration and narrow-screen navigation.
 
 Settings/creation tests cover picker cancellation without POST, explicit target and folded-group plus, delayed creation versus session/activity navigation, mobile focus, settings read retry/save/conflict/busy/persistence feedback, blank-key retention and new-destination key requirements. Assert API keys are absent from browser storage and cleared after save/close; covered chats remain unread.
 
-Editor tests must assert actual GET/PUT counts and payload hashes: preserve edits on conflict, view latest without rebasing, manual merge success, repeated conflicts, comparison read failure, uncertain saves, explicit discard without PUT, stale responses after switching, clearing/saving and keyboard/IME behavior. Include fixed Skill viewing and historical snapshot contents independent of current files.
+Compaction tests cover lifecycle SSE, stop during compaction, foreign/late events, history detail GET without POST, latest summary after reload, no blue dot for summary alone, unknown-capacity draft retention and narrow advanced settings.
+
+Editor tests must assert actual GET/PUT counts and payload hashes: preserve edits on conflict, view latest without rebasing, manual merge success, repeated conflicts, comparison read failure, uncertain saves, explicit discard without PUT, stale responses after switching, clearing/saving and keyboard/IME behavior. Include fixed Skill viewing; historical snapshot correctness is tested at the backend API boundary.
 
 Verify actual tool details, semantic Markdown tables, mobile overflow/scrollability, native dialogs, Escape and focus restoration. Use real Web → API → Pi → provider validation separately for instruction effects, natural-language file edits and actual Skill/source use.
 

@@ -37,6 +37,10 @@ export async function createApp(lab: PiLab, serveWeb = false) {
       provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },
       baseUrl: { type: 'string', minLength: 1, maxLength: 2048 }, expectedVersion: { type: 'string', format: 'uuid' },
       apiKey: { type: 'string', maxLength: 4096 },
+      contextWindow: { type: 'integer', minimum: 8192, maximum: 2000000 },
+      maxOutputTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
+      compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
+      compactionKeepRecentTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
     } },
   } }, async request => lab.updateModelSettings(request.body));
   const uuid = { type: 'string', format: 'uuid' };
@@ -54,6 +58,7 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   }, async request => lab.resources.updateInstruction(request.params.id, request.params.fileId, request.body.content, request.body.expectedHash));
   app.get<{ Params: { id: string; skillId: string } }>('/api/workspaces/:id/skills/:skillId', { schema: { params: resourceParams('skillId') } }, async request => lab.resources.readSkill(request.params.id, request.params.skillId));
   app.get<{ Params: { id: string; requestId: string } }>('/api/sessions/:id/requests/:requestId/resources', { schema: { params: { type: 'object', properties: { id: uuid, requestId: uuid }, required: ['id', 'requestId'], additionalProperties: false } } }, async request => lab.getRequestResources(request.params.id, request.params.requestId));
+  app.get<{ Params: { id: string; compactionId: string } }>('/api/sessions/:id/compactions/:compactionId', { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId));
   app.get<{ Params: { id: string } }>('/api/sessions/:id', { schema: { params } }, async request => lab.get(request.params.id));
   app.post<{ Params: { id: string }; Body: { requestId: string } }>('/api/sessions/:id/cancel', {
     schema: { params, body: { type: 'object', properties: { requestId: { type: 'string', format: 'uuid' } }, required: ['requestId'], additionalProperties: false } },

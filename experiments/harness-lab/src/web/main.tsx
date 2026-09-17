@@ -7,10 +7,11 @@ import type { PublicMessage, WorkspaceResources } from '../contracts/index';
 import { useChat } from './useChat';
 import { api } from './api';
 import { useInstructions } from './useInstructions';
-import { Panel, Resources, RequestResources } from './Resources';
+import { Panel, Resources, CompactionPanel } from './Resources';
 import { ActivityOverview, WorkspaceNavigation } from './WorkspaceNavigation';
 import { NewSession } from './NewSession';
 import { ModelSettings } from './ModelSettings';
+import { SubagentCard, conversationItems, subagentStatus } from './SubagentCard';
 import './styles.css';
 
 const markdownComponents: Components = {
@@ -21,7 +22,8 @@ function BrandMark({ small = false }: { small?: boolean }) {
   return <span className={`brand-mark${small ? ' small' : ''}`} aria-hidden="true"><Zap size={small ? 16 : 23} strokeWidth={2.3} /></span>;
 }
 
-function Message({ message, active, showResources }: { message: PublicMessage; active: boolean; showResources?: () => void }) {
+function Message({ message, active }: { message: PublicMessage; active: boolean }) {
+  if (message.role === 'tool' && message.toolName === 'subagent') return <p className="subagent-placeholder">{message.isError ? '子任务委派未完成，请查看主回复中的说明。' : message.text || !active ? '未记录可展示的子任务详情。' : '正在准备子任务…'}</p>;
   const action = message.toolName === 'instructions.update' ? '更新指令' : message.toolName === 'instructions.read' ? '读取指令' : message.toolName === 'skill.read' ? '读取 Skill' : '读取资料';
   if (message.role === 'tool') return <details className={`tool-result${message.isError ? ' failed' : ''}`}>
     <summary><FileText size={16} aria-hidden="true" /><span>{message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
@@ -30,7 +32,6 @@ function Message({ message, active, showResources }: { message: PublicMessage; a
   return <article className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Berserk 的回复'}>
     {message.role === 'assistant' && <div className="message-author"><BrandMark small /><span>Berserk</span></div>}
     <div className="message-content">{message.role === 'user' ? <p>{message.text}</p> : <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>}</div>
-    {showResources && <button className="request-resources" onClick={showResources}>查看本轮资料</button>}
   </article>;
 }
 
@@ -42,7 +43,7 @@ function App() {
   const [resourceErrors, setResourceErrors] = useState<Record<string, string>>({});
   const [resourceReload, setResourceReload] = useState(0);
   const [resourceOpen, setResourceOpen] = useState(false);
-  const [requestDetail, setRequestDetail] = useState<{ sessionId: string; requestId?: string }>();
+  const [compactionDetail, setCompactionDetail] = useState<{ sessionId: string; entryId: string }>();
   const [workspaceForm, setWorkspaceForm] = useState(false);
   const [newSessionOpen, setNewSessionOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -86,11 +87,12 @@ function App() {
   const active = selectedActivity?.active || snapshot?.active;
   const busy = Boolean(active || chat.pending || chat.creating);
   const loadingSession = Boolean(chat.selected && !snapshot);
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : busy ? '回复中' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '回复完成' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
+  const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
+  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '回复完成' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
-  const canSend = !busy && !loadingSession && !chat.loading && Boolean(chat.info?.configured) && !snapshot?.recoveryWarning && Boolean(chat.draft.trim());
+  const canSend = !busy && !loadingSession && !chat.loading && Boolean(chat.info?.configured && chat.info.contextReady) && !snapshot?.recoveryWarning && Boolean(chat.draft.trim());
 
   useEffect(() => {
     const input = textarea.current;
@@ -102,10 +104,10 @@ function App() {
   const markVisibleRead = useCallback(() => {
     const element = scroll.current;
     const result = snapshot?.lastResult;
-    if (view !== 'chat' || sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || requestDetail || loading || loadingSession || !element || document.visibilityState !== 'visible' || !document.hasFocus()) return;
+    if (view !== 'chat' || sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail || loading || loadingSession || !element || document.visibilityState !== 'visible' || !document.hasFocus()) return;
     if (snapshot?.active || selectedActivity?.active || result?.status !== 'succeeded' || selectedActivity?.lastResult?.requestId !== result.requestId || selectedActivity.lastResult.status !== 'succeeded') return;
     if (element.scrollHeight - element.scrollTop - element.clientHeight <= 32) markRead(selectedId, result.requestId);
-  }, [view, sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, requestDetail, loading, selectedId, markRead, loadingSession, snapshot, selectedActivity]);
+  }, [view, sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail, loading, selectedId, markRead, loadingSession, snapshot, selectedActivity]);
   useLayoutEffect(() => {
     if (view !== 'chat') { renderedScrollKey.current = ''; return; }
     const element = scroll.current;
@@ -138,7 +140,7 @@ function App() {
   }, []);
   useEffect(() => { if (sidebarOpen) closeButton.current?.focus(); }, [sidebarOpen]);
   useEffect(() => {
-    if (!sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || requestDetail) return;
+    if (!sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail) return;
     const keyboard = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { setSidebarOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); }
       if (event.key !== 'Tab') return;
@@ -150,7 +152,7 @@ function App() {
     };
     document.addEventListener('keydown', keyboard);
     return () => document.removeEventListener('keydown', keyboard);
-  }, [sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, requestDetail]);
+  }, [sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail]);
 
   function closeSidebar() { setSidebarOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); }
   function suggest(text: string) { chat.setDraft(text); textarea.current?.focus(); }
@@ -194,7 +196,7 @@ function App() {
       <header className="workspace-header">
         <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'activity' ? '全部动态' : snapshot?.title || '新对话'}</span></div>
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : undefined}>{view === 'chat' ? chat.workspace?.name : '所有项目'}</span>
-        <button onClick={() => setSettingsOpen(true)} aria-label="模型设置" aria-haspopup="dialog" className={`model-badge${chat.info?.configured ? '' : ' unconfigured'}`}><span className="status-dot" />{chat.info?.model || '模型配置'}<span className="model-state">{chat.info?.configured ? '已配置' : '待配置'}</span><ChevronDown size={12} aria-hidden="true" /></button>
+        <button onClick={() => setSettingsOpen(true)} aria-label="模型设置" aria-haspopup="dialog" className={`model-badge${chat.info?.configured ? '' : ' unconfigured'}`}><span className="status-dot" /><span className="model-name" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span><span className="model-state">{chat.info?.configured ? '已配置' : '待配置'}</span><ChevronDown size={12} aria-hidden="true" /></button>
       </header>
 
       {creationError && <div className="notice error-notice activity-error" role="alert"><CircleAlert size={16} aria-hidden="true" /><span>{creationError}</span><button onClick={() => setCreationError('')}>关闭提示</button></div>}
@@ -217,18 +219,19 @@ function App() {
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{messages.map(message => <Message key={message.id} message={message} active={busy} showResources={message.role === 'assistant' || (message.role === 'user' && Boolean(message.requestId) && !messages.some(reply => reply.role === 'assistant' && reply.requestId === message.requestId)) ? () => setRequestDetail({ sessionId: chat.selected, requestId: message.requestId }) : undefined} />)}{busy && lastMessage?.role !== 'assistant' && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId).map(item => item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Message key={item.key} message={item.message} active={busy && item.message.requestId === active?.requestId} />)}{busy && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock">
         {newContent && <button className="new-content" onClick={() => { if (scroll.current) scroll.current.scrollTop = scroll.current.scrollHeight; follow.current = true; setNewContent(false); markVisibleRead(); }}><ArrowDown size={15} aria-hidden="true" />有新内容</button>}
         <div className="composer-container">
           {!chat.loading && !chat.info?.configured && <div className="notice configuration-notice"><CircleAlert size={16} aria-hidden="true" /><span>模型尚未配置，完成配置后即可开始对话。</span><button onClick={() => setSettingsOpen(true)}>配置模型</button></div>}
+          {!chat.loading && chat.info?.configured && !chat.info.contextReady && <div className="notice configuration-notice" role="status"><CircleAlert size={16} aria-hidden="true" /><span>请先补齐模型的上下文容量与输出能力，草稿会保留。</span><button onClick={() => setSettingsOpen(true)}>补充模型配置</button></div>}
           {snapshot?.recoveryWarning && <div className="notice error-notice" role="alert"><CircleAlert size={17} aria-hidden="true" /><span>{snapshot.recoveryWarning}</span><button onClick={() => void newChat()}>新建对话</button></div>}
           {chat.instructionChanges.length > 0 && <div className="notice instruction-notice" role="status"><Check size={16} aria-hidden="true" /><span>{chat.instructionChanges.some(change => change.status === 'updated') ? '项目指令已保存，下次发送时生效。' : '项目指令已核对，内容未变化。'}</span><button onClick={() => setResourceOpen(true)}>查看指令</button></div>}
           {snapshot?.lastResult?.instructionOutcomeUncertain && <div className="notice error-notice" role="alert"><span>指令更新结果尚未确认，请查看最新内容核对；停止回复不会撤销已经保存的文件。</span><button onClick={() => setResourceOpen(true)}>核对指令</button></div>}
           {error && <div className="notice error-notice" role="alert"><CircleAlert size={17} aria-hidden="true" /><span>{error}</span><button onClick={() => void (chat.selected ? chat.refresh(chat.selected) : chat.bootstrap())}>查询状态</button></div>}
-          {snapshot?.lastResult && !messages.some(message => message.requestId === snapshot.lastResult!.requestId) && <button className="request-resources" onClick={() => setRequestDetail({ sessionId: chat.selected, requestId: snapshot.lastResult!.requestId })}>查看本轮资料</button>}
+          {snapshot?.latestCompaction && <button className="request-resources" onClick={() => setCompactionDetail({ sessionId: chat.selected, entryId: snapshot.latestCompaction!.id })}>查看最近压缩摘要</button>}
           {error && chat.submitted && chat.draft !== chat.submitted && <button className="restore-draft" onClick={chat.restoreSubmitted}>恢复刚才发送的内容</button>}
           <form className="composer" onSubmit={event => { event.preventDefault(); if (canSend) void chat.send(); }}>
             <label htmlFor="message-input">发送至 {chat.workspace?.name || '当前项目'}</label>
@@ -248,7 +251,7 @@ function App() {
     {newSessionOpen && <NewSession workspaces={chat.workspaces} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
     {settingsOpen && <ModelSettings close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
     {resourceOpen && <Resources key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} resources={currentResources} resourceError={resourceErrors[chat.workspaceId]} reloadResources={() => setResourceReload(value => value + 1)} instructions={instructions} close={() => setResourceOpen(false)} />}
-    {requestDetail && <RequestResources {...requestDetail} close={() => setRequestDetail(undefined)} />}
+    {compactionDetail && <CompactionPanel key={`${compactionDetail.sessionId}:${compactionDetail.entryId}`} {...compactionDetail} close={() => setCompactionDetail(undefined)} />}
     {workspaceForm && <Panel title="新建项目" close={() => setWorkspaceForm(false)}><form className="workspace-form" onSubmit={event => { event.preventDefault(); void createWorkspace(); }}><label htmlFor="workspace-name">项目名称</label><input id="workspace-name" value={workspaceName} maxLength={60} required onChange={event => setWorkspaceName(event.target.value)} placeholder="例如：方案讨论" /><p className="resource-help">每个项目拥有独立的指令、资料和会话。</p>{workspaceError && <p className="resource-error" role="alert">{workspaceError}</p>}<button className="primary-action" disabled={workspaceCreating || !workspaceName.trim()} type="submit">{workspaceCreating ? '创建中…' : '创建项目'}</button></form></Panel>}
   </div>;
 }

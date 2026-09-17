@@ -21,7 +21,9 @@
   "children": [
     "09-16-w01-2-workspace-memory",
     "09-17-workspace-navigation",
-    "09-17-project-chat-settings"
+    "09-17-project-chat-settings",
+    "09-17-w01-3-context-compaction",
+    "09-17-w01-4-subagent"
   ],
   "parent": null,
   "relatedFiles": [
@@ -43,7 +45,7 @@
     "experiments/harness-lab/README.md",
     "experiments/harness-lab/package.json"
   ],
-  "notes": "W01-1/S0-S1已通过C01-C06；W01-2/S2a已实现工作区、Agent指令文件与固定Skill，A01-A12组合验收通过。真实18次最终请求、44项确定性测试和12项浏览器回归，历史安全迁移并恢复本地服务。S2b/S2c和S3-S5未交付，完整W01保持in_progress。",
+  "notes": "W01-1/S0-S1通过C01-C06；W01-2/S2a通过A01-A12。W01-3/S2b已实现Pi默认压缩、持续执行控制和网页摘要详情，通过B01-B13组合验收（89项确定性测试、27项浏览器回归、真实DeepSeek15次请求）。待提交与归档。W01-4/S2c已实现基础多角色single只读委派，验收见该阶段记录；S3-S5未交付，完整W01保持in_progress。",
   "meta": {
     "w01_1": {
       "status": "validated",
@@ -66,6 +68,18 @@
       "implementationApproved": true,
       "date": "2026-09-17",
       "evidence": "../archive/2026-09/09-16-w01-2-workspace-memory/research/validation-results.md"
+    },
+    "w01_3": {
+      "status": "in_progress",
+      "stage": "S2b",
+      "task": "../09-17-w01-3-context-compaction",
+      "review": "../09-17-w01-3-context-compaction/review.md",
+      "implementationApproved": true,
+      "date": "2026-09-17",
+      "compactionStrategy": "pi-default",
+      "runtimeControls": "native-retry-separate-timeouts-optional-deadline",
+      "implementationComplete": true,
+      "acceptancePassed": true
     }
   }
 }

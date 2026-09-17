@@ -232,7 +232,7 @@ export function useChat() {
 
   const send = useCallback(async () => {
     const text = (draftsRef.current[draftKey] || '').trim();
-    if (!text) return;
+    if (!text || !info?.configured || !info.contextReady) return;
     const id = selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
     const before = snapshotsRef.current[id];
@@ -266,11 +266,19 @@ export function useChat() {
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
         else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', requestId: event.requestId, text: event.delta }];
       }
-      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
+      if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
       if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError } : message);
-      const phase = ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
+      let subagents = current.subagents;
+      if (event.type === 'subagent.updated') {
+        const child = event.subagent;
+        if (child.parentRequestId !== event.requestId) return;
+        const previous = subagents?.find(item => item.subagentId === child.subagentId);
+        if (previous && (previous.parentRequestId !== child.parentRequestId || previous.toolCallId !== child.toolCallId || !['running', 'stopping'].includes(previous.status))) return;
+        subagents = [...(subagents || []).filter(item => item.subagentId !== child.subagentId), child];
+      }
+      const phase = event.type === 'subagent.updated' ? ['running', 'stopping'].includes(event.subagent.status) ? 'subagent' : 'preparing' : event.type === 'context.compaction_started'  ? 'compacting' : event.type === 'context.compaction_completed' ? 'generating' : ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
         : event.type === 'text.delta' ? 'generating' : current.active?.phase;
-      put({ ...current, messages, active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
+      put({ ...current, messages, ...(subagents ? { subagents } : {}), ...(event.type === 'context.compaction_completed' ? { latestCompaction: event.compaction } : {}), active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
         ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };
     try {
@@ -281,13 +289,13 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey]);
+  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
     if (!current?.active || current.active.status === 'stopping') return;
     const requestId = current.active.requestId;
-    put({ ...current, active: { requestId, status: 'stopping' } });
+    put({ ...current, active: { ...current.active, status: 'stopping' } });
     try {
       const result = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(selected)}/cancel`, { requestId });
       const latest = snapshotsRef.current[selected];
@@ -295,7 +303,7 @@ export function useChat() {
     } catch (error) {
       setErrors(previous => ({ ...previous, [selected]: reason(error) }));
       const latest = snapshotsRef.current[selected];
-      if (latest?.active?.requestId === requestId) put({ ...latest, active: { requestId, status: 'responding' } });
+      if (latest?.active?.requestId === requestId) put({ ...latest, active: { ...latest.active, status: 'responding' } });
     }
   }, [put, selected]);
 

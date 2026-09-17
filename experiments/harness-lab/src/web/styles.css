@@ -60,6 +60,8 @@ svg { flex-shrink: 0; }
 .header-title { display: flex; align-items: center; gap: 9px; min-width: 0; font-size: 13px; font-weight: 500; }
 .header-title > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .model-badge { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #42534a; padding: 7px 10px; border: 1px solid #e5eae6; border-radius: 6px; white-space: nowrap; background: #fbfcfb; }
+.model-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.model-badge > svg { flex-shrink: 0; }
 .model-state { border-left: 1px solid #dde5df; margin-left: 3px; padding-left: 8px; font-size: 10px; color: var(--muted); }
 .status-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #567960; flex-shrink: 0; }
 .unconfigured .status-dot { background: #96744b; }
@@ -203,7 +205,7 @@ input, select { font: inherit; }
 .instruction-comparison textarea { width: 100%; min-height: 240px; resize: vertical; padding: 12px; border: 1px solid #bbc8bf; border-radius: 8px; background: white; color: var(--text); font-size: 14px; line-height: 1.8; }
 .resource-text, .latest-instructions pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: inherit; line-height: 1.8; font-size: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f7f8fa; max-height: 360px; overflow-y: auto; margin: 0; }
 .latest-instructions pre { min-height: 240px; }
-.latest-instructions small, .resource-hash { display: block; color: var(--muted); margin-top: 8px; font-size: 12px; overflow-wrap: anywhere; }
+.latest-instructions small { display: block; color: var(--muted); margin-top: 8px; font-size: 12px; overflow-wrap: anywhere; }
 .resource-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .resource-actions button, .workspace-form button, .resource-error button, .resource-load-notice button { padding: 10px 12px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: 13px; }
 button.primary-action { background: var(--accent); border-color: var(--accent); color: white; }
@@ -220,7 +222,7 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 .workspace-form input { width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
 @media (max-width: 767px) {
   .workspace-name { max-width: 28%; font-size: 11px; }
-  .model-badge { max-width: 32%; }
+  .model-badge { max-width: 32%; flex-shrink: 0; white-space: nowrap; }
   .resource-panel { width: calc(100vw - 20px); max-height: calc(100dvh - 24px); }
   .panel-header { padding: 12px; }
   .panel-header h2 { font-size: 16px; }
@@ -328,8 +330,8 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
 
 /* Settings uses the same native modal and focus restoration as resources. */
-.settings-panel { width: min(820px, calc(100vw - 40px)); }
-.settings-panel .panel-header { padding: 14px 22px; }
+.settings-panel { width: min(820px, calc(100vw - 40px)); scroll-padding-top: 76px; }
+.settings-panel .panel-header { position: sticky; top: 0; z-index: 1; background: white; padding: 14px 22px; }
 .settings-panel .panel-body { padding: 0; }
 .settings-layout { display: grid; grid-template-columns: 156px minmax(0, 1fr); min-height: 470px; }
 .settings-nav { padding: 21px 12px; border-right: 1px solid var(--line); background: #f8f9fa; }
@@ -372,3 +374,44 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
   .settings-form-footer > span { max-width: 48%; line-height: 1.8; }
   .settings-form-footer button, .secondary-action { min-height: 44px; }
 }
+
+/* Context configuration and readonly compaction evidence share existing panels. */
+.model-advanced { margin: 0 0 22px; border-top: 1px solid var(--line); padding-top: 16px; }
+.model-advanced > summary { cursor: pointer; font-size: 13px; padding: 6px 0; }
+.model-advanced[open] > summary { margin-bottom: 12px; }
+.compaction-metadata { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 9px 14px; font-size: 12px; line-height: 1.8; }
+.compaction-metadata dt { color: var(--muted); }
+.compaction-metadata dd { margin: 0; overflow-wrap: anywhere; }
+.compaction-summary { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .compaction-metadata { grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
+  .model-advanced > summary { min-height: 44px; }
+}
+
+/* Child tasks stay inside their parent conversation and use native disclosure controls. */
+.subagent-card { margin: 18px 0 18px 38px; border: 1px solid var(--line); border-radius: 10px; min-width: 0; background: #fafcfb; }
+.subagent-card > summary { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 12px 14px; list-style: none; cursor: pointer; font-size: 13px; }
+.subagent-card > summary::-webkit-details-marker { display: none; }
+.subagent-card > summary > svg { flex-shrink: 0; color: var(--muted); }
+.subagent-card > summary strong { min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+.subagent-status { display: flex; align-items: center; gap: 6px; margin-left: auto; color: var(--muted); font-size: 12px; flex-shrink: 0; }
+.subagent-status.running { color: var(--accent); }
+.subagent-card.failed { border-color: #ddc8b2; }
+.subagent-card.failed .subagent-status, .subagent-error { color: #8b4b27; }
+.subagent-card[open] .subagent-chevron { transform: rotate(180deg); }
+.subagent-body { border-top: 1px solid var(--line); padding: 15px 17px; font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.subagent-body h4 { margin: 18px 0 6px; font-size: 12px; font-weight: 600; }
+.subagent-description, .subagent-progress { margin: 0; color: var(--muted); }
+.subagent-task { margin: 0; white-space: pre-wrap; }
+.subagent-progress, .subagent-error { margin: 16px 0 0; }
+.subagent-result { min-width: 0; font-size: 13px; }
+.subagent-result > :first-child { margin-top: 0; }
+.subagent-result pre { max-width: 100%; overflow-x: auto; }
+@media (max-width: 767px) {
+  .subagent-card { margin-left: 0; }
+  .subagent-card > summary { padding: 12px 10px; gap: 7px; }
+  .subagent-body { padding: 12px; }
+  .subagent-status { font-size: 11px; }
+}
+
+.subagent-placeholder { margin: 16px 0 16px 38px; color: var(--muted); font-size: 13px; line-height: 1.8; }

@@ -12,7 +12,7 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
-Read [Harness Lab Contract](./harness-lab.md) for W01-1 / W01-2 implementation. Run the checks listed there. Existing placeholder documents below are not established conventions.
+Read [Harness Lab Contract](./harness-lab.md) for W01-1 / W01-2 / W01-3 implementation. Run the checks listed there. Existing placeholder documents below are not established conventions.
 
 ## Guidelines Index
 

@@ -26,6 +26,29 @@ export async function readNativeUsage(dataDir: string) {
   return { usage, sessions };
 }
 
+/** Public text and native boundaries only: never export provider credentials or thinking blocks. */
+export async function readNativeCompactionEvidence(dataDir: string, sessionId: string) {
+  const directory = join(dataDir, 'sessions');
+  for (const name of await readdir(directory)) {
+    if (!name.endsWith('.jsonl')) continue;
+    const path = join(directory, name);
+    if (!(await lstat(path)).isFile()) continue;
+    const manager = SessionManager.open(path, directory);
+    if (manager.getSessionId() !== sessionId) continue;
+    return manager.getBranch().flatMap<{ id: string; type: string; summary?: string; firstKeptEntryId?: string; tokensBefore?: number; role?: string; text?: string }>(entry => {
+      if (entry.type === 'compaction') return [{ id: entry.id, type: 'compaction', summary: entry.summary,
+        firstKeptEntryId: entry.firstKeptEntryId, tokensBefore: entry.tokensBefore }];
+      if (entry.type !== 'message') return [];
+      const message = entry.message;
+      if (message.role !== 'user' && message.role !== 'assistant' && message.role !== 'toolResult') return [];
+      const text = typeof message.content === 'string' ? message.content : message.content
+        .filter(block => block.type === 'text').map(block => block.text).join('\n');
+      return [{ id: entry.id, type: 'message', role: message.role, text }];
+    });
+  }
+  throw new Error('验收会话不存在。');
+}
+
 /** Synthetic legacy fixture written with the pinned Pi SDK, never to a user's directory. */
 export async function createLegacyValidationSession(dataDir: string) {
   const sessionDir = join(dataDir, 'sessions');

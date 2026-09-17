@@ -1,0 +1,409 @@
+{
+  "date": "2026-09-17",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "pi": "0.85.1",
+  "contextWindow": 1000000,
+  "maxOutputTokens": 393216,
+  "thinking": "disabled",
+  "probeRunTimeoutMs": 300000,
+  "triggerSettings": {
+    "compaction": {
+      "reserveTokens": 993000,
+      "keepRecentTokens": 700
+    },
+    "cancel": {
+      "reserveTokens": 998000,
+      "keepRecentTokens": 300
+    },
+    "quietContinuation": {
+      "reserveTokens": 100000,
+      "keepRecentTokens": 700
+    }
+  },
+  "sourceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/berserk-compaction-live-8Puiwb",
+  "requests": [
+    {
+      "case": "建立目标",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "5ccce663-1d95-4fff-953f-584703faa380",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 1348,
+          "output": 58,
+          "cacheRead": 128,
+          "cacheWrite": 0,
+          "totalTokens": 1534
+        }
+      },
+      "compactions": [],
+      "answer": "收到，青松培训项目：原定 20 人、60 分钟，待完成交付物为执行检查清单，本轮不生成。\n\n若后续需要我综合资料形成方案或检查草稿，请告知，我再读取相应资料与 Skill。\n\n【验收甲】"
+    },
+    {
+      "case": "两项纠正",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "86cede11-9a0d-4e29-b2a2-3a4428dadd7a",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 671,
+          "output": 46,
+          "cacheRead": 896,
+          "cacheWrite": 0,
+          "totalTokens": 1613
+        }
+      },
+      "compactions": [],
+      "answer": "确认变更：青松培训项目人数 37 人、时长 45 分钟，后续仅以这两个数字为准；其他目标不变，交付物仍为执行检查清单，本轮不生成。\n\n【验收甲】"
+    },
+    {
+      "case": "真实工具读取",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "a6621d7f-5a57-4593-8b9a-ac6f1a1b7fa9",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 2,
+        "replyAttempts": 2,
+        "compactionAttempts": 0,
+        "toolCalls": 1,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 2719,
+          "output": 145,
+          "cacheRead": 2688,
+          "cacheWrite": 0,
+          "totalTokens": 5552
+        }
+      },
+      "compactions": [],
+      "answer": "已读取 meeting-notes。\n\n- 资料标识：meeting-notes（项目讨论纪要）\n- 该资料记载的原始培训时长：90 分钟（首次活动，线上方式）\n- 该资料其余相关数据：面向 12 名新成员\n\n以上均为资料原文事实，不覆盖已确认的 45 分钟与 37 人；后续仍以 37 人、45 分钟为准。执行检查清单仍待生成，本轮不生成。\n\n【验收甲】"
+    },
+    {
+      "case": "首次压缩-1",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "22d069a1-68a5-4fe3-b6dc-d88499a59371",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 3,
+        "replyAttempts": 1,
+        "compactionAttempts": 2,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 8119,
+          "output": 555,
+          "cacheRead": 1152,
+          "cacheWrite": 0,
+          "totalTokens": 9826
+        }
+      },
+      "compactions": [
+        {
+          "id": "4c2ab8dd",
+          "createdAt": "2026-09-17T11:05:18.376Z",
+          "reason": "threshold",
+          "tokensBefore": 7114,
+          "tokensAfter": 1584,
+          "requestId": "22d069a1-68a5-4fe3-b6dc-d88499a59371",
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "f8b1a0f3-8291-48f4-a456-50f7f083d7b5",
+          "usage": {
+            "input": 2158,
+            "output": 554,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 2712
+          }
+        }
+      ],
+      "answer": "收到"
+    },
+    {
+      "case": "首次压缩后续作",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "8c6def4a-7afc-4d2b-8e85-3329d0892d27",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 4401,
+          "output": 94,
+          "cacheRead": 896,
+          "cacheWrite": 0,
+          "totalTokens": 5391
+        }
+      },
+      "compactions": [],
+      "answer": "当前项目信息：\n\n- **项目代号**：青松培训项目\n- **人数**：37 人（最新确认；资料 meeting-notes 原文为 12 人，已作废）\n- **时长**：45 分钟（最新确认；资料 meeting-notes 原文为 90 分钟，已作废）\n- **待交付内容**：执行检查清单（尚未生成，本轮按要求不生成）\n\n【验收甲】"
+    },
+    {
+      "case": "新增保留事实",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "50924e2e-6968-4a4e-8c87-61b1378c5b4a",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 688,
+          "output": 41,
+          "cacheRead": 4736,
+          "cacheWrite": 0,
+          "totalTokens": 5465
+        }
+      },
+      "compactions": [],
+      "answer": "收到，仅在本会话内记下这一事实：\n\n- **交付地点**：海棠厅\n\n不改动任何指令文件；执行检查清单仍待生成，本轮不生成。\n\n【验收甲】"
+    },
+    {
+      "case": "再次压缩-1",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "10aab451-cb11-463e-b172-b85434ee1d68",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 3,
+        "replyAttempts": 1,
+        "compactionAttempts": 2,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 5338,
+          "output": 742,
+          "cacheRead": 7936,
+          "cacheWrite": 0,
+          "totalTokens": 14016
+        }
+      },
+      "compactions": [
+        {
+          "id": "5ffe3c5b",
+          "createdAt": "2026-09-17T11:05:24.526Z",
+          "reason": "threshold",
+          "tokensBefore": 8727,
+          "tokensAfter": 1663,
+          "requestId": "10aab451-cb11-463e-b172-b85434ee1d68",
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "ed69273c-05c9-4f98-8551-f7b2bc604077",
+          "usage": {
+            "input": 1481,
+            "output": 736,
+            "cacheRead": 3072,
+            "cacheWrite": 0,
+            "totalTokens": 5289
+          }
+        }
+      ],
+      "answer": "收到\n\n【验收甲】"
+    },
+    {
+      "case": "压缩后更换当前指令",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "87e82229-e74c-4cd2-a179-e514e71b60d4",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 5343,
+          "output": 19,
+          "cacheRead": 128,
+          "cacheWrite": 0,
+          "totalTokens": 5490
+        }
+      },
+      "compactions": [],
+      "answer": "最新确认：人数 37 人，时长 45 分钟。\n\n【验收乙】"
+    },
+    {
+      "case": "压缩后删除指令",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "9ea6457b-ed3a-407e-80fe-6ad9d670ae8d",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 5227,
+          "output": 14,
+          "cacheRead": 256,
+          "cacheWrite": 0,
+          "totalTokens": 5497
+        }
+      },
+      "compactions": [],
+      "answer": "当前确认的人数 37 人、时长 45 分钟。"
+    },
+    {
+      "case": "停止测试准备",
+      "sessionId": "01a0af0a-f3d5-7565-b921-d80624865d42",
+      "requestId": "9d912f77-fb63-4d9a-860a-8cc19f037b79",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 3757,
+          "output": 2,
+          "cacheRead": 896,
+          "cacheWrite": 0,
+          "totalTokens": 4655
+        }
+      },
+      "compactions": [],
+      "answer": "收到。"
+    },
+    {
+      "case": "停止测试准备第二轮",
+      "sessionId": "01a0af0a-f3d5-7565-b921-d80624865d42",
+      "requestId": "2205308d-ac86-4099-b336-9d72c0bdaf40",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 7002,
+          "output": 2,
+          "cacheRead": 896,
+          "cacheWrite": 0,
+          "totalTokens": 7900
+        }
+      },
+      "compactions": [],
+      "answer": "收到。"
+    },
+    {
+      "case": "真实摘要中停止",
+      "sessionId": "01a0af0a-f3d5-7565-b921-d80624865d42",
+      "requestId": "784169a4-994b-4921-b28d-f76b06532043",
+      "status": "cancelled",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 0,
+        "compactionAttempts": 1,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 1,
+        "actual": null
+      },
+      "compactions": [],
+      "answer": "收到。"
+    },
+    {
+      "case": "停止后续聊",
+      "sessionId": "01a0af0a-f3d5-7565-b921-d80624865d42",
+      "requestId": "ffdc646d-d657-4785-9bcc-d4bcd88d693b",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 3822,
+          "output": 3,
+          "cacheRead": 4096,
+          "cacheWrite": 0,
+          "totalTokens": 7921
+        }
+      },
+      "compactions": [],
+      "answer": "可以继续。"
+    },
+    {
+      "case": "独立进程恢复",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "22f41999-9100-4da7-8bbe-78cc035fcc3c",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 534,
+          "output": 92,
+          "cacheRead": 4992,
+          "cacheWrite": 0,
+          "totalTokens": 5618
+        }
+      },
+      "compactions": [],
+      "answer": "当前记录如下：\n\n- 项目代号：青松培训项目\n- 最新人数：37 人\n- 最新时长：45 分钟\n- 尚待完成的交付物：执行检查清单（尚未生成）\n- 交付地点：海棠厅（本会话内记录）\n\n补充说明：资料 meeting-notes 原文记的是 12 人、90 分钟，仅作资料事实记录，不覆盖上述最新参数。"
+    },
+    {
+      "case": "真实网页续聊与只读摘要",
+      "sessionId": "01a0af0a-ab95-7565-b921-d7fc278f34b1",
+      "requestId": "78426d2f-0cff-466f-9e09-a0ecb1c5a02e",
+      "status": "succeeded",
+      "usageSummary": {
+        "modelAttempts": 1,
+        "replyAttempts": 1,
+        "compactionAttempts": 0,
+        "toolCalls": 0,
+        "unknownUsageAttempts": 0,
+        "actual": {
+          "input": 651,
+          "output": 77,
+          "cacheRead": 4992,
+          "cacheWrite": 0,
+          "totalTokens": 5720
+        }
+      },
+      "compactions": [],
+      "answer": "- 项目代号：青松培训项目\n- 人数：37 人\n- 时长：45 分钟\n- 交付地点：海棠厅\n- 未完成交付物：执行检查清单（尚未生成）\n\n（资料 meeting-notes 原文记的是 12 人、90 分钟，仅作资料事实，不覆盖上述最新参数。）"
+    }
+  ],
+  "nativeSummaries": [
+    {
+      "id": "4c2ab8dd",
+      "type": "compaction",
+      "summary": "## Goal\n- 准备\"青松培训项目\"的执行检查清单（交付物暂不生成）。\n\n## Constraints & Preferences\n- 人数以最新 37 人为准（原 20 人已作废）。\n- 时长以最新 45 分钟为准（原 60 分钟已作废）。\n- 后续仅以这两个最新数字为准，其他目标不变。\n- 本轮不生成执行检查清单。\n\n## Progress\n### Done\n- [x] 确认初始参数：原定 20 人、60 分钟。\n- [x] 确认变更：人数 37 人、时长 45 分钟。\n\n### In Progress\n- [ ] 等待用户告知后续需求（如形成方案或检查清单草稿）。\n\n### Blocked\n- (none)\n\n## Key Decisions\n- **参数变更生效**：更新为 37 人、45 分钟，其他目标保持不变。\n\n## Next Steps\n1. 若用户要求，读取相应资料与 Skill，综合形成方案或执行检查清单草稿。\n\n## Critical Context\n- 交付物：执行检查清单（本轮不生成）。\n- 项目名称：青松培训项目。\n- 最终参数：人数 37 人，时长 45 分钟。\n\n---\n\n**Turn Context (split turn):**\n\n## Original Request\n用户要求实际读取 meeting-notes 资料，记录其资料标识与原始培训时长（该原始时长不覆盖刚确认的 45 分钟），只作简短确认，并声明检查清单仍待生成。\n\n## Early Progress\n- 通过 `source_read(id=\"meeting-notes\")` 读取了资料。\n- 资料标识：`meeting-notes`（标题「项目讨论纪要」），为虚构样例。\n- 资料原文记载的原始培训时长：**90 分钟**（首次活动，线上方式）。\n- 资料其余相关数据：面向 **12 名新成员**。\n- 助手给出简短确认，明确以上为资料原文事实，**不覆盖**已确认的 **45 分钟**与 **37 人**；后续仍以 37 人、45 分钟为准。\n- 声明执行检查清单仍待生成，本轮不生成。\n- 助手回复以标记「【验收甲】」结尾。\n\n## Context for Suffix\n- 已确认的关键参数：人数 = 37，时长 = 45 分钟（优先于资料原文的 12 人与 90 分钟）。\n- 资料原文另有待确认项：演练主题、主持人、结果记录模板；交付物含一页议程、准备清单及待确认事项。\n- 检查清单尚未生成，为待办事项。",
+      "firstKeptEntryId": "de2b25f0",
+      "tokensBefore": 7114
+    },
+    {
+      "id": "5ffe3c5b",
+      "type": "compaction",
+      "summary": "## Goal\n- 准备\"青松培训项目\"的执行检查清单（交付物暂不生成）。\n\n## Constraints & Preferences\n- 人数以最新 **37 人**为准（原 20 人已作废，资料 meeting-notes 原文为 12 人，亦不采用）。\n- 时长以最新 **45 分钟**为准（原 60 分钟已作废，资料 meeting-notes 原文为 90 分钟，亦不采用）。\n- 后续仅以这两个最新数字为准，其他目标不变。\n- 本轮不生成执行检查清单。\n- 不生成检查清单；只回复项目代号、人数、时长、待交付内容。\n\n## Progress\n### Done\n- [x] 确认初始参数：原定 20 人、60 分钟。\n- [x] 确认变更：人数 37 人、时长 45 分钟。\n- [x] 读取资料 `source_read(id=\"meeting-notes\")`：标识 `meeting-notes`（标题「项目讨论纪要」，虚构样例），原文记载原始时长 90 分钟、面向 12 名新成员。\n- [x] 确认资料原文事实不覆盖已确认的 37 人与 45 分钟。\n- [x] 按用户要求简短回复当前项目代号、人数、时长、待交付内容，未生成检查清单。\n\n### In Progress\n- [ ] 等待用户告知后续需求（如形成方案或执行检查清单草稿）。\n\n### Blocked\n- (none)\n\n## Key Decisions\n- **参数变更生效**：更新为 37 人、45 分钟，其他目标保持不变。\n- **资料原文不覆盖已确认参数**：meeting-notes 记载的 12 人、90 分钟仅作资料事实记录，仍以 37 人、45 分钟为准。\n\n## Next Steps\n1. 若用户要求，读取相应资料与 Skill，综合形成方案或执行检查清单草稿。\n2. 待生成执行检查清单（当前为待办，本轮不生成）。\n\n## Critical Context\n- 交付物：执行检查清单（尚未生成，本轮不生成）。\n- 项目代号：青松培训项目。\n- 最终参数：人数 37 人，时长 45 分钟。\n- 资料 `meeting-notes` 原文数据（不覆盖最新参数）：12 名新成员，原始时长 90 分钟（首次活动，线上方式）。\n- 资料原文另有待确认项：演练主题、主持人、结果记录模板；交付物含一页议程、准备清单及待确认事项。\n- 助手回复以标记「【验收甲】」结尾。\n\n---\n\n**Turn Context (split turn):**\n\n## Original Request\n用户补充了一条仅限本会话的事实：交付地点为海棠厅，并要求不要修改任何指令文件，只简短确认。用户同时说明检查清单仍待生成。\n\n## Early Progress\n- 助手确认仅在当前会话内记录该事实：交付地点 = 海棠厅。\n- 明确不改动任何指令文件。\n- 明确执行检查清单仍待生成，本轮不生成。\n- 助手回复末尾出现标记【验收甲】。\n\n## Context for Suffix\n- 本会话新增唯一事实：交付地点为海棠厅（仅限本会话，不写入指令文件）。\n- 检查清单尚未生成，属于待办事项。\n- 无任何指令文件被修改。\n- 需注意前文出现的【验收甲】标记，可能与后续验收相关。",
+      "firstKeptEntryId": "f1e377d0",
+      "tokensBefore": 8727
+    }
+  ],
+  "artifacts": {
+    "evidence.json": "70acbf3dc076a6b75ba0252fdccbdc54aaf785e5b7d731f663ebb499d8c1b039",
+    "restart-evidence.json": "ee444595ec15fb8ef3625f78d6954332d6952680a54a03011abe2d672a29273e",
+    "browser-evidence.json": "06a856a118684259b5e4767eebad11e0e3704da4cde95ede551ab5c1c3ad561c",
+    "native-evidence.json": "9dfd5e79afcaa8d1f070e6c83380be79aef4e74d77e7433503e73e9f38c524ff"
+  }
+}

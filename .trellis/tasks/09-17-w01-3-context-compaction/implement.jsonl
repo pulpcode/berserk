@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "复用当前请求占位、资源快照、模型设置、严格历史与 Pi 模块边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "保持项目导航、模型设置、压缩详情、状态、未读与草稿契约"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "摘要和超时错误清洗、终态与无密钥泄漏"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "同步配置、DTO、SSE、历史记录和页面投影"}
+{"file": ".trellis/tasks/09-17-w01-3-context-compaction/research/pi-compaction.md", "reason": "Pi默认压缩、原生生命周期、调用用途与保存边界"}
+{"file": ".trellis/tasks/09-17-w01-3-context-compaction/research/model-budget.md", "reason": "模型容量与输出能力、原生重试、独立超时、可选总时限和旧配置迁移"}

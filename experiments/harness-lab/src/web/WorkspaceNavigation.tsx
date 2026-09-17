@@ -5,6 +5,8 @@ import type { SessionActivity, Workspace } from '../contracts/index';
 export function activityStatus(session: SessionActivity) {
   if (session.active?.status === 'stopping') return '正在停止';
   if (session.active) {
+    if (session.active.phase === 'subagent') return '子任务处理中';
+    if (session.active.phase === 'compacting') return '正在压缩上下文';
     if (session.active.phase === 'preparing') return '准备资料';
     if (session.active.phase === 'generating') return '生成回复';
     if (session.active.phase === 'tool') {

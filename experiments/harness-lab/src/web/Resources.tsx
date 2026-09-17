@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { X } from 'lucide-react';
-import type { InstructionFile, RequestResourcesRecord, SkillFile, WorkspaceResources } from '../contracts/index';
+import type { CompactionDetail, InstructionFile, SkillFile, WorkspaceResources } from '../contracts/index';
 import { api } from './api';
 import type { useInstructions } from './useInstructions';
 
@@ -86,21 +86,33 @@ export function Resources({ workspaceId, name, resources, instructions, resource
   </Panel>;
 }
 
-export function RequestResources({ sessionId, requestId, close }: { sessionId: string; requestId?: string; close: () => void }) {
-  const [record, setRecord] = useState<RequestResourcesRecord>();
+function CompactionContent({ sessionId, entryId }: { sessionId: string; entryId: string }) {
+  const [detail, setDetail] = useState<CompactionDetail>();
   const [error, setError] = useState('');
   const [reload, setReload] = useState(0);
   useEffect(() => {
-    if (!requestId) return;
     let current = true;
-    api<RequestResourcesRecord>(`/api/sessions/${encodeURIComponent(sessionId)}/requests/${encodeURIComponent(requestId)}/resources`).then(result => { if (current) { setRecord(result); setError(''); } }).catch((error: unknown) => { if (current) setError(error instanceof Error ? error.message : '本轮资料读取失败。'); });
+    api<CompactionDetail>(`/api/sessions/${encodeURIComponent(sessionId)}/compactions/${encodeURIComponent(entryId)}`)
+      .then(result => { if (current) { setDetail(result); setError(''); } })
+      .catch((reason: unknown) => { if (current) setError(reason instanceof Error ? reason.message : '摘要详情读取失败。'); });
     return () => { current = false; };
-  }, [requestId, sessionId, reload]);
-  return <Panel title="本轮实际加载的资料" close={close}>
-    <p className="resource-help">这是发送当时的只读记录，当前编辑不会改变这份记录。</p>
-    {!requestId ? <p>该历史请求未记录指令。</p> : error ? <p role="alert" className="resource-error">{error}<button onClick={() => setReload(value => value + 1)}>重试读取</button></p> : !record ? <p role="status">正在读取本轮资料…</p> : record.status === 'unavailable' ? <p>{record.message}</p> : <>
-      {record.instructions.map(file => <section className="resource-section" key={file.fileId}><h3>{file.name}</h3><pre className="resource-text" tabIndex={0}>{file.content || '（空文件）'}</pre><small className="resource-hash">内容 hash：{file.hash || '未记录'}</small></section>)}
-      <section className="resource-section"><h3>本轮已读取的 Skill</h3>{record.readSkills.length ? record.readSkills.map(file => <details key={file.id}><summary>{file.name} · {file.version}</summary><pre className="resource-text" tabIndex={0}>{file.content}</pre><small className="resource-hash">内容 hash：{file.hash}</small></details>) : <p>本轮没有读取 Skill。</p>}</section>
-    </>}
-  </Panel>;
+  }, [sessionId, entryId, reload]);
+  if (error) return <p className="resource-error" role="alert">{error}<button onClick={() => setReload(value => value + 1)}>重试读取摘要</button></p>;
+  if (!detail) return <p role="status">正在读取摘要…</p>;
+  return <div className="compaction-detail">
+    <p className="resource-help">摘要用于后续上下文，原始消息和工具结果仍保留在对话中。</p>
+    <dl className="compaction-metadata">
+      <dt>生成时间</dt><dd>{new Date(detail.createdAt).toLocaleString('zh-CN')}</dd>
+      <dt>触发原因</dt><dd>{detail.reason === 'threshold' ? '接近上下文容量' : detail.reason === 'overflow' ? '上下文超限恢复' : '未记录'}</dd>
+      <dt>模型</dt><dd>{detail.model || '未记录'}</dd>
+      <dt>压缩前估算</dt><dd>{detail.tokensBefore.toLocaleString()} token</dd>
+      <dt>压缩后估算</dt><dd>{detail.tokensAfter === null ? '未记录' : `${detail.tokensAfter.toLocaleString()} token`}</dd>
+      <dt>摘要实际用量</dt><dd>{detail.usage ? `${detail.usage.totalTokens.toLocaleString()} token` : '未知'}</dd>
+      <dt>原文保留起点</dt><dd>{detail.firstKeptEntryId}</dd>
+    </dl>
+    <pre className="resource-text compaction-summary" aria-label="压缩摘要正文（只读）" tabIndex={0}>{detail.summary}</pre>
+  </div>;
+}
+export function CompactionPanel({ sessionId, entryId, close }: { sessionId: string; entryId: string; close: () => void }) {
+  return <Panel title="上下文压缩摘要" close={close}><CompactionContent key={entryId} sessionId={sessionId} entryId={entryId} /></Panel>;
 }

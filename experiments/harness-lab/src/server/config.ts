@@ -1,16 +1,27 @@
 import { resolve } from 'node:path';
+import type { ModelParameters } from '../contracts/index.js';
 
-export interface LabConfig {
+export type ParameterSource = 'preset' | 'explicit' | 'unknown';
+export interface ResolvedModelParameters extends ModelParameters {
+  contextSource: ParameterSource;
+  outputSource: ParameterSource;
+  contextReady: boolean;
+}
+export interface LabConfig extends ResolvedModelParameters {
   provider: string;
   model: string;
   baseUrl: string;
   apiKey: string;
   dataDir: string;
+  /** Controlled fixture directory override for isolated integration tests. */
+  agentRolesDir?: string;
   port: number;
-  timeoutMs: number;
-  maxToolCalls: number;
-  maxOutputTokens: number;
+  agentRunTimeoutMs: number;
+  httpIdleTimeoutMs: number;
+  llmRequestTimeoutMs?: number;
 }
+export const modelParameterKeys = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
+export type ModelParameterOverrides = Partial<Record<typeof modelParameterKeys[number], number>>;
 export function normalizeModelEndpoint(value: string): string {
   try {
     if (!value || value.length > 2048 || /[\s\\?#]/.test(value)) throw new Error();
@@ -21,22 +32,49 @@ export function normalizeModelEndpoint(value: string): string {
     throw new Error('模型地址必须为不含凭证、查询参数或片段的 HTTPS 地址。');
   }
 }
+/** Only this verified provider/model/endpoint tuple receives the official preset. */
+export function resolveModelParameters(identity: { provider: string; model: string; baseUrl: string }, values: ModelParameterOverrides = {}): ResolvedModelParameters {
+  for (const name of modelParameterKeys) {
+    const value = values[name];
+    if (value !== undefined && (!Number.isSafeInteger(value) || value < (name === 'contextWindow' ? 8192 : 1) || value > 2_000_000)) {
+      throw new Error(`${name} 必须是范围内的整数。`);
+    }
+  }
+  // Official API specifies max_tokens <= 393216 (384K); C uses the documented decimal 1M.
+  // https://api-docs.deepseek.com/api/create-chat-completion/
+  const preset = identity.provider === 'deepseek' && identity.model === 'deepseek-flash'
+    && ['https://api.deepseek.com', 'https://api.deepseek.com/v1'].includes(normalizeModelEndpoint(identity.baseUrl));
+  const contextWindow = values.contextWindow ?? (preset ? 1_000_000 : null);
+  const maxOutputTokens = values.maxOutputTokens ?? (preset ? 393216 : null);
+  const compactionReserveTokens = values.compactionReserveTokens ?? (contextWindow === null ? null : Math.min(16384, Math.floor(contextWindow / 4)));
+  const compactionKeepRecentTokens = values.compactionKeepRecentTokens ?? (contextWindow === null || compactionReserveTokens === null ? null : Math.min(20000, Math.floor((contextWindow - compactionReserveTokens) / 2)));
+  if (contextWindow !== null && maxOutputTokens !== null && maxOutputTokens > contextWindow) throw new Error('模型最大输出量不能超过上下文容量。');
+  if (compactionKeepRecentTokens !== null && compactionKeepRecentTokens < 1) throw new Error('上下文容量不足，请调整压缩预留量。');
+  if (contextWindow !== null && compactionReserveTokens !== null && compactionKeepRecentTokens !== null && compactionReserveTokens + compactionKeepRecentTokens >= contextWindow) throw new Error('压缩预留量与近期保留量之和必须小于上下文容量。');
+  return { contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens,
+    contextSource: values.contextWindow !== undefined ? 'explicit' : preset ? 'preset' : 'unknown',
+    outputSource: values.maxOutputTokens !== undefined ? 'explicit' : preset ? 'preset' : 'unknown',
+    contextReady: [contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens].every(value => value !== null) };
+}
 function integer(env: NodeJS.ProcessEnv, key: string, fallback: number, min: number, max: number) {
-  const value = Number(env[key] || fallback);
-  if (!Number.isInteger(value) || value < min || value > max) throw new Error(`${key} 必须是 ${min}～${max} 的整数。`);
+  const raw = env[key];
+  const value = raw === undefined ? fallback : /^\d+$/.test(raw) ? Number(raw) : NaN;
+  if (!Number.isSafeInteger(value) || value < min || value > max) throw new Error(`${key} 必须是 ${min}～${max} 的整数。`);
   return value;
 }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   const baseUrl = normalizeModelEndpoint(env.LLM_BASE_URL || 'https://api.deepseek.com');
-  return {
-    provider: env.LLM_PROVIDER || 'deepseek',
-    model: env.LLM_MODEL || 'deepseek-flash',
-    baseUrl,
-    apiKey: env.LLM_API_KEY?.trim() || '',
-    dataDir: resolve(env.LAB_DATA_DIR || '.local'),
+  const identity = { provider: env.LLM_PROVIDER || 'deepseek', model: env.LLM_MODEL || 'deepseek-flash', baseUrl };
+  const parameters: ModelParameterOverrides = {};
+  if (env.LLM_CONTEXT_WINDOW !== undefined) parameters.contextWindow = integer(env, 'LLM_CONTEXT_WINDOW', 0, 8192, 2_000_000);
+  if (env.LLM_MAX_OUTPUT_TOKENS !== undefined) parameters.maxOutputTokens = integer(env, 'LLM_MAX_OUTPUT_TOKENS', 0, 1, 2_000_000);
+  const legacy = ['REQUEST_TIMEOUT_MS', 'MAX_TOOL_CALLS', 'MAX_OUTPUT_TOKENS'].filter(name => env[name] !== undefined);
+  if (legacy.length) console.warn(`已忽略旧实验配置：${legacy.join('、')}。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。`);
+  return { ...identity, ...resolveModelParameters(identity, parameters),
+    apiKey: env.LLM_API_KEY?.trim() || '', dataDir: resolve(env.LAB_DATA_DIR || '.local'),
     port: integer(env, 'PORT', 4310, 1024, 65535),
-    timeoutMs: integer(env, 'REQUEST_TIMEOUT_MS', 120000, 1000, 300000),
-    maxToolCalls: integer(env, 'MAX_TOOL_CALLS', 8, 1, 20),
-    maxOutputTokens: integer(env, 'MAX_OUTPUT_TOKENS', 2048, 64, 8192),
+    agentRunTimeoutMs: integer(env, 'AGENT_RUN_TIMEOUT_MS', 0, 0, 2147483647),
+    httpIdleTimeoutMs: integer(env, 'LLM_HTTP_IDLE_TIMEOUT_MS', 300000, 0, 2147483647),
+    ...(env.LLM_REQUEST_TIMEOUT_MS === undefined ? {} : { llmRequestTimeoutMs: integer(env, 'LLM_REQUEST_TIMEOUT_MS', 0, 1, 2147483647) }),
   };
 }

@@ -50,12 +50,12 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   const read = await app.inject('/api/settings/model');
   const original = read.json<ModelSettings>();
   expect(read.headers['cache-control']).toBe('no-store');
-  expect(original).toEqual({ provider: 'deepseek', model: config.model, baseUrl: config.baseUrl, configured: true, version: expect.any(String), source: 'environment' });
+  expect(original).toMatchObject({ provider: 'deepseek', model: config.model, baseUrl: config.baseUrl, configured: true, version: expect.any(String), source: 'environment' });
   expect(read.payload).not.toContain(config.apiKey);
   const session = await lab.createSession();
   await lab.start(session.id, '切换前').run(() => {});
   expect(calls[0]).toMatchObject({ url: 'https://old-model.invalid/v1/chat/completions', authorization: `Bearer ${config.apiKey}`, body: { model: config.model, thinking: { type: 'disabled' } } });
-  const saved = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(original, { provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://NEW-model.invalid:443/v2/', apiKey: 'new-secret-only' }) });
+  const saved = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(original, { provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://NEW-model.invalid:443/v2/', apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 }) });
   expect(saved.statusCode).toBe(200);
   const next = saved.json<ModelSettings>();
   expect(next).toMatchObject({ provider: 'compatible-new', model: 'model-v2', baseUrl: 'https://new-model.invalid/v2', source: 'local', configured: true });
@@ -69,7 +69,7 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   expect(calls[1].body).not.toHaveProperty('thinking');
   const path = join(dir, 'model-settings.json');
   expect((await stat(path)).mode & 0o777).toBe(0o600);
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 1, version: next.version, apiKey: 'new-secret-only' });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 2, version: next.version, apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 });
   await app.close();
   const restarted = await PiLab.create({ ...config, apiKey: 'different-env-key' }); cleanup.push(() => restarted.close());
   expect(restarted.modelSettings()).toEqual(next);
@@ -86,7 +86,7 @@ it('retains a key only for the same provider and normalized destination, and rej
   const calls = captureProvider();
   const { app, lab, config } = await setup({ baseUrl: 'https://SAME.invalid:443/v1/' });
   const original = lab.modelSettings();
-  const request = update(original, { model: 'other-model', baseUrl: 'https://same.invalid/v1', apiKey: '   ' });
+  const request = update(original, { model: 'other-model', baseUrl: 'https://same.invalid/v1', apiKey: '   ', contextWindow: 131072, maxOutputTokens: 8192 });
   const first = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: request });
   expect(first.statusCode).toBe(200);
   const next = first.json<ModelSettings>();
@@ -121,6 +121,9 @@ it('rejects unsafe or extra fields and untrusted origins without changing config
     { baseUrl: 'https://user:secret@host.invalid' }, { baseUrl: 'https://host.invalid?key=secret' },
     { baseUrl: 'https://host.invalid#secret' }, { baseUrl: 'https://host.invalid?' },
     { baseUrl: 'https://host.invalid/#' }, { baseUrl: 'https://host.invalid\\route' },
+    { contextWindow: null }, { contextWindow: '131072' }, { contextWindow: 8191 }, { maxOutputTokens: 0 }, { compactionReserveTokens: 1.5 }, { compactionKeepRecentTokens: null },
+    { contextWindow: 8192, maxOutputTokens: 9000, compactionReserveTokens: 1000, compactionKeepRecentTokens: 1000 },
+    { contextWindow: 8192, maxOutputTokens: 1000, compactionReserveTokens: 4000, compactionKeepRecentTokens: 4192 },
     { apiKey: 'invalid\nkey' }, { apiKey: 's'.repeat(4097) }, { apiKey: null },
     { expectedVersion: 'not-version' }, { extra: true }, { dataDir: '/tmp/elsewhere' },
   ];
@@ -196,4 +199,26 @@ it('fails closed on corrupted, duplicate-key, oversized or symlinked local setti
   await expect(PiLab.create(config)).rejects.toMatchObject({ code: 'MODEL_SETTINGS_INVALID' });
   const alias = join(dir, 'alias'); await symlink(dir, alias);
   await expect(PiLab.create({ ...config, dataDir: alias })).rejects.toMatchObject({ code: 'MODEL_SETTINGS_INVALID' });
+});
+
+it('keeps history readable but rejects unknown capacity before reserving or writing a message', async () => {
+  const calls = captureProvider(); const { app, lab } = await setup();
+  const session = await lab.createSession();
+  await lab.start(session.id, '已有历史').run(() => {});
+  const changed = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(lab.modelSettings(), { model: 'unknown-capacity-model' }) });
+  expect(changed.statusCode).toBe(200);
+  expect(changed.json()).toMatchObject({ contextReady: false, contextWindow: null, maxOutputTokens: null, contextSource: 'unknown', outputSource: 'unknown' });
+  const before = lab.get(session.id);
+  const blocked = await app.inject({ method: 'POST', url: `/api/sessions/${session.id}/messages`, payload: { text: '不能入库的草稿' } });
+  expect(blocked.statusCode).toBe(400); expect(blocked.json().error.code).toBe('MODEL_CONTEXT_REQUIRED');
+  expect(lab.get(session.id)).toEqual(before);
+  expect(calls).toHaveLength(1);
+  expect((await app.inject(`/api/sessions/${session.id}`)).statusCode).toBe(200);
+  const fixed = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(lab.modelSettings(), { contextWindow: 65536, maxOutputTokens: 8192 }) });
+  expect(fixed.statusCode).toBe(200); expect(fixed.json().contextReady).toBe(true);
+  // Saving settings never replays the rejected message.
+  expect(calls).toHaveLength(1);
+  expect(lab.get(session.id).messages).toEqual(before.messages);
+  await lab.start(session.id, '用户重新发送').run(() => {});
+  expect(calls).toHaveLength(2);
 });

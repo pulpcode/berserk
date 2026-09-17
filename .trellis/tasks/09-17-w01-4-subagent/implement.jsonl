@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "复用既有请求、资源、受控模型流与原生历史边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "保持切换、停止、未读、草稿和诊断信息边界"}
+{"file": ".trellis/tasks/09-17-w01-4-subagent/research/pi-subagent.md", "reason": "区分 Pi 原生能力、官方示例和项目补齐，遵循固定版本公共 API"}
+{"file": ".trellis/spec/backend/error-handling.md", "reason": "父子失败分类与错误清洗"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "同步 native 记录、DTO、SSE 和网页投影"}

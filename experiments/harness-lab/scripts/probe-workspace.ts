@@ -215,7 +215,7 @@ try {
     const input = '请简单问候，并遵循工作区指令。';
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill(input);
     await page.getByRole('button', { name: '发送消息', exact: true }).click();
-    await expect.poll(async () => (await api<SessionSnapshot>(`/api/sessions/${uiSession.id}`)).lastResult?.status, { timeout: config.timeoutMs + 5000 }).toBe('succeeded');
+    await expect.poll(async () => (await api<SessionSnapshot>(`/api/sessions/${uiSession.id}`)).lastResult?.status, { timeout: (config.agentRunTimeoutMs || 300000) + 5000 }).toBe('succeeded');
     const uiResult = await api<SessionSnapshot>(`/api/sessions/${uiSession.id}`);
     assert.match(answer(uiResult).trimStart(), /^【页面验收】/);
     const requestId = uiResult.lastResult!.requestId;

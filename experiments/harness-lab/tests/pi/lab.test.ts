@@ -121,7 +121,7 @@ describe('Pi native session integration', () => {
     await writeFile(join(config.dataDir, '.pi', 'skills', 'secret', 'SKILL.md'), '---\nname: secret\ndescription: PRIVATE_SKILL_MARKER\n---\n私有内容');
     const session = await lab.createSession();
     const { events } = await ask(lab, session.id, '读取资料');
-    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read']);
+    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read', 'subagent']);
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_MEMORY_MARKER');
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_SKILL_MARKER');
     expect(events.some(event => event.type === 'tool.completed' && event.isError && event.text.includes('资料 ID 不存在'))).toBe(true);
@@ -135,7 +135,7 @@ describe('Pi native session integration', () => {
   });
 
   it.each([
-    ['timeout', { waitForAbort: true }, { timeoutMs: 50 }, '超时'],
+    ['timeout', { waitForAbort: true }, { agentRunTimeoutMs: 50 }, '超时'],
     ['output cap', { text: '截断', length: true }, {}, '输出上限'],
     ['provider error', { error: '401 api key fake-key-NEVER-LEAK-123' }, {}, '认证失败'],
   ] satisfies Array<[string, Reply, Partial<LabConfig>, string]>)('handles %s without leaked credentials or a stuck session', async (_name, plan, overrides, expected) => {
@@ -145,18 +145,18 @@ describe('Pi native session integration', () => {
     expect(lab.get(session.id).active).toBeNull();
     expect(lab.get(session.id).lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining(expected) });
     expect(JSON.stringify(events)).not.toContain(config.apiKey);
-    expect(calls[0]?.maxTokens).toBe(config.maxOutputTokens);
+    expect(calls[0]?.maxTokens).toBeUndefined();
     const dir = join(config.dataDir, 'sessions');
     for (const name of await readdir(dir)) expect(await readFile(join(dir, name), 'utf8')).not.toContain(config.apiKey);
   });
 
-  it('bounds repeated tool calls and stops before additional model work', async () => {
-    const { lab, calls } = await setup(() => ({ toolIds: ['meeting-notes'] }), { maxToolCalls: 1 });
+  it('continues past the previous eight tool and 32 model boundaries', async () => {
+    const { lab, calls } = await setup((_context, index) => index < 35 ? { toolIds: ['meeting-notes'] } : { text: '持续任务完成' });
     const session = await lab.createSession();
     await ask(lab, session.id, '持续读取');
-    expect(lab.get(session.id).lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining('调用上限') });
-    expect(calls).toHaveLength(2);
-    expect(lab.get(session.id).messages.filter(message => message.role === 'tool' && !message.isError)).toHaveLength(1);
+    expect(lab.get(session.id).lastResult).toMatchObject({ status: 'succeeded', usageSummary: { modelAttempts: 36, toolCalls: 35 } });
+    expect(calls).toHaveLength(36);
+    expect(lab.get(session.id).messages.filter(message => message.role === 'tool' && !message.isError)).toHaveLength(35);
   });
 
   it('cancels before Pi opens without calling the provider', async () => {
@@ -171,15 +171,13 @@ describe('Pi native session integration', () => {
     expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
   });
 
-  it('blocks the remainder of a mixed tool batch at the limit and makes no further provider request', async () => {
-    const { lab, calls } = await setup(() => ({ toolIds: ['meeting-notes', 'resource-brief'] }), { maxToolCalls: 1 });
+  it('completes a multi-tool batch without the retired tool limit', async () => {
+    const { lab, calls } = await setup((_context, index) => index === 0 ? { toolIds: Array.from({ length: 10 }, () => 'resource-brief') } : { text: '完成' });
     const session = await lab.createSession();
-    await ask(lab, session.id, '同时读取两份');
-    expect(calls).toHaveLength(1);
-    const snapshot = lab.get(session.id);
-    expect(snapshot.lastResult?.status).toBe('failed');
-    expect(snapshot.messages.filter(message => message.role === 'tool' && !message.isError)).toHaveLength(1);
-    expect(JSON.stringify(snapshot.messages)).not.toContain('800 元');
+    await ask(lab, session.id, '同时读取多份');
+    expect(calls).toHaveLength(2);
+    expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(lab.get(session.id).messages.filter(message => message.role === 'tool' && !message.isError)).toHaveLength(10);
   });
 
   it('retains streamed partial text when the provider subsequently fails', async () => {
@@ -265,10 +263,11 @@ describe('per-request workspace resources through Pi', () => {
       { name: 'instructions_update', arguments: { fileId: 'common', content: 'illegal', expectedHash: null } },
       { name: 'skill_read', arguments: { id: 'unknown' } },
       { name: 'source_read', arguments: { id: 'meeting-notes', workspaceId: 'other' } },
-    ] } : { text: '已拒绝' }, { maxToolCalls: 8 });
+    ] } : { text: '已拒绝' });
     const session = await lab.createSession();
     const { events } = await ask(lab, session.id, '工具边界');
     expect(events.filter(event => event.type === 'tool.completed' && event.isError)).toHaveLength(3);
+    expect(lab.get(session.id).lastResult?.usageSummary?.toolCalls).toBe(3);
     expect(calls).toHaveLength(2);
     const config = lab.config;
     const updated = await PiLab.create(config, (await fakeRuntime(config, () => ({ tools: [{ name: 'instructions_update', arguments: { fileId: 'workspace', content: '已保存规则', expectedHash: (awaitHash) } }] }))).runtime);
