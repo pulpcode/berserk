@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert, FileText, FolderOpen, Paperclip, Menu, MessageSquare, Plus, Settings, Square, X, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert, FileText, FolderOpen, Paperclip, Menu, MessageSquare, Plus, Settings, Square, X } from 'lucide-react';
 import Markdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { PublicMessage, WorkspaceResources } from '../contracts/index';
@@ -21,7 +21,7 @@ const markdownComponents: Components = {
 };
 
 function BrandMark({ small = false }: { small?: boolean }) {
-  return <span className={`brand-mark${small ? ' small' : ''}`} aria-hidden="true"><Zap size={small ? 16 : 23} strokeWidth={2.3} /></span>;
+  return <img className={`brand-mark${small ? ' small' : ''}`} src="/brand/axon-app-icon.svg" width={small ? 27 : 38} height={small ? 27 : 38} alt="" aria-hidden="true" />;
 }
 
 function Message({ message, active, workspaceId }: { message: PublicMessage; active: boolean; workspaceId: string }) {
@@ -197,7 +197,7 @@ function App() {
     <a className="skip-link" href={view === 'chat' ? '#conversation' : '#activity-overview'}>{view === 'chat' ? '跳至对话' : '跳至全部动态'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
     <aside ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
-      <div className="sidebar-brand"><BrandMark /><span>Axon<span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
+      <div className="sidebar-brand"><BrandMark /><span><img className="brand-wordmark" src="/brand/axon-wordmark.svg" width="81" height="27" alt="Axon" /><span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
       <div className="navigation-actions">
         <button className="new-chat" aria-label="新建对话" aria-haspopup="dialog" onClick={() => void newChat()} disabled={chat.creating || chat.loading || !chat.workspaceId}><Plus size={18} aria-hidden="true" /><span>新建对话</span></button>
         <button className="create-workspace" onClick={() => { rememberPosition(); setWorkspaceForm(true); setWorkspaceError(''); }} aria-label="新建项目"><Plus size={15} aria-hidden="true" />新建项目</button>
