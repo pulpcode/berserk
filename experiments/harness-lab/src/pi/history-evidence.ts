@@ -6,6 +6,7 @@ import { emptyUsage } from './controlled-stream.js';
 import { hashContent, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
 import { CHANGE_ENTRY, RESOURCE_ENTRY, RESULT_ENTRY, SKILL_ENTRY } from './resource-tools.js';
+import { FILE_INPUT, FILE_OUTPUT, decodeFileInput, decodeFileOutput, fileReferenceText } from './file-history.js';
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 const hash = (value: unknown) => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
 const keys = (value: Record<string, unknown>, allowed: string[]) => Object.keys(value).every(key => allowed.includes(key));
@@ -36,14 +37,42 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   let currentRequest: string | undefined;
   let result: RequestResult | null = null;
   const compactedBy = new Map<string, string | undefined>();
+  const fileInputs = new Set<string>();
+  const fileOutputs = new Map<string, ReturnType<typeof decodeFileOutput>>();
+  const outputDownloads = new Set<string>();
+  const fileCalls = new Map<string, {requestId: string | undefined; path: unknown}>();
+  const fileReturned = new Set<string>();
+  let currentRequestHasUser = false;
   for (const entry of entries) {
+    if (entry.type === 'message' && entry.message.role === 'user') currentRequestHasUser = true;
+    if (entry.type === 'message' && entry.message.role === 'assistant') for (const block of entry.message.content) {
+      if (block.type === 'toolCall' && block.name === 'file_output') {
+        const key = `${currentRequest}:${block.id}`;
+        if (fileCalls.has(key)) throw stateError();
+        fileCalls.set(key, {requestId: currentRequest, path: block.arguments.path});
+      }
+    }
+    if (entry.type === 'message' && entry.message.role === 'toolResult' && entry.message.toolName === 'file_output') {
+      const message = entry.message; const key = `${currentRequest}:${message.toolCallId}`; const saved = fileOutputs.get(key);
+      if (saved) {
+        if (fileReturned.has(key)) throw stateError();
+        if (!message.isError && (message.content.length !== 1 || message.content[0].type !== 'text' || message.content[0].text !== `文件已提供下载：${saved.name}（${saved.size} 字节）。` || !object(message.details) || !keys(message.details, ['file']) || JSON.stringify(message.details.file) !== JSON.stringify(saved))) throw stateError();
+        fileReturned.add(key);
+      } else if (currentRequest && !message.isError) throw stateError();
+    }
+    if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
+      if (readonly || entry.customType !== FILE_INPUT) throw stateError();
+      const input = decodeFileInput(entry.details, workspaceId, parentSessionId);
+      if (currentRequestHasUser || currentRequest !== input.requestId || fileInputs.has(input.requestId) || entry.display !== false || entry.content !== fileReferenceText(input.files)) throw stateError();
+      fileInputs.add(input.requestId);
+    }
     if (entry.type === 'compaction') compactedBy.set(entry.id, currentRequest);
     if (entry.type !== 'custom' || !entry.customType.startsWith('berserk.')) continue;
     if (entry.customType === RESOURCE_ENTRY) {
       const resources = decodeResourceRecord(entry.data, workspaceId, readonly);
       if (requests.has(resources.requestId) || completed.has(resources.requestId)) throw stateError();
       requests.set(resources.requestId, resources);
-      currentRequest = resources.requestId;
+      currentRequest = resources.requestId; currentRequestHasUser = false;
       continue;
     }
     const data = entry.data;
@@ -61,9 +90,18 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
         const aggregate = emptyUsage(); for (const child of delegated) addUsage(aggregate, child.usage);
         if (!validUsage(data.subagentUsage) || JSON.stringify(data.subagentUsage) !== JSON.stringify(aggregate)) throw stateError();
       }
+      if (data.status === 'succeeded' && [...fileOutputs].some(([key, output]) => output.requestId === data.requestId && !fileReturned.has(key))) throw stateError();
       result = data as unknown as RequestResult;
       completed.add(data.requestId);
       currentRequest = undefined;
+    } else if (entry.customType === FILE_OUTPUT) {
+      const output = decodeFileOutput(data, workspaceId, parentSessionId);
+      const key = `${output.requestId}:${output.toolCallId}`;
+      const call = fileCalls.get(key);
+      const normalizedPath = typeof call?.path === 'string' && call.path.startsWith('/workspace/') ? call.path.slice('/workspace/'.length) : call?.path;
+      if (readonly || currentRequest !== output.requestId || fileOutputs.has(key) || outputDownloads.has(output.downloadId)
+        || !call || call.requestId !== currentRequest || normalizedPath !== output.path) throw stateError();
+      fileOutputs.set(key, output); outputDownloads.add(output.downloadId);
     } else if (entry.customType === SKILL_ENTRY) {
       const request = requests.get(data.requestId);
       if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version)) throw stateError();

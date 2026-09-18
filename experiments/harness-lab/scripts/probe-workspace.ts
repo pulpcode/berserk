@@ -221,7 +221,7 @@ try {
     const requestId = uiResult.lastResult!.requestId;
     const resources = await api<RequestResourcesRecord>(`/api/sessions/${uiSession.id}/requests/${requestId}/resources`);
     evidence.push({ case: 'A03/A09 Web', sessionId: uiSession.id, requestId, input, snapshot: uiResult, events: [], resources });
-    await expect(page.getByRole('article', { name: 'Berserk 的回复', exact: true }).last()).toContainText('页面验收');
+    await expect(page.getByRole('article', { name: 'Axon 的回复', exact: true }).last()).toContainText('页面验收');
     const chatImage = join(root, 'desktop-chat.png');
     await page.screenshot({ path: chatImage, fullPage: true }); screenshots.push(chatImage);
 

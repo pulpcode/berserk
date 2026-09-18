@@ -1,6 +1,6 @@
 # MVP 工作文档
 
-整理日期：2026-09-16。版本：v0.7。状态：已明确垂直场景 Agent 作业平台定位，补齐成熟 Harness 基础能力；框架先行、业务后接入，调度实现继续后延。
+整理日期：2026-09-18。版本：v0.8。状态：已明确垂直场景 Agent 作业平台定位，补齐成熟 Harness 基础能力；框架先行、业务后接入，调度实现继续后延。
 
 Memory 在本项目中明确指 Agent 指令文件（如 AGENTS.md、CLAUDE.md），保存约定、偏好与工作规则，按工作区加载和受控编辑；不包含结构化长期记忆数据库、自动提取或召回服务。
 
@@ -12,7 +12,7 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 
 样板业务 W00 和信息模拟服务 W03 仍位于通用框架之后。前期以固定资料、测试工具和合成事件验证 Tool、Memory、Skill、Subagent、上下文管理与压缩，以及任务／会话／成果、确认和后台运行；不等待特情场景、业务席位、专业模板、领域 Skill 或地图就绪。固定资料是可复现测试输入，不能将自然语言目标、工具选择和处理步骤写成唯一固定脚本。
 
-当前 W01-1 已完成实现与 C01～C06 验收：[本地启动与验证](../../experiments/harness-lab/README.md) · [实施证据](../../.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。[W01-2 方案](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md) 已实现并通过验收：先建立工作区与会话归属，再接入文件式 Memory 和 Skill；本阶段 [W01-3：上下文管理与压缩](../../.trellis/tasks/09-17-w01-3-context-compaction/review.md) 采用 Pi 默认压缩、既有 AGENTS.md 独立加载和原始历史保留，已实现并通过 B01～B13 组合验收；[W01-4：子 Agent 委派与协作](../../.trellis/tasks/09-17-w01-4-subagent/review.md) 已实现基础多角色配置与 single 只读委派，复用 Pi 公共 SDK；验收见该阶段记录。MVP 总范围不变。
+当前 W01-1 已完成实现与 C01～C06 验收：[本地启动与验证](../../experiments/harness-lab/README.md) · [实施证据](../../.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。[W01-2 方案](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md) 已实现并通过验收：先建立工作区与会话归属，再接入文件式 Memory 和 Skill；本阶段 [W01-3：上下文管理与压缩](../../.trellis/tasks/09-17-w01-3-context-compaction/review.md) 采用 Pi 默认压缩、既有 AGENTS.md 独立加载和原始历史保留，已实现并通过 B01～B13 组合验收；[W01-4：子 Agent 委派与协作](../../.trellis/tasks/09-17-w01-4-subagent/review.md) 已实现基础多角色配置与 single 只读委派，复用 Pi 公共 SDK；验收见该阶段记录。文件处理能力按 W01-5 扩展，业务闭环和调度后延保持。
 
 ## 目标与建议规模
 
@@ -48,8 +48,10 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 | M3 领域接入与方案闭环 | 特情处理和专业子 Agent 配置、双向地图、多源方案集成 | W09-B、W10-B、W11、W12 |
 | M4 异常验证与交付 | 双任务隔离、恢复和幂等测试、Ubuntu 部署与演示材料 | W13 |
 
-W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，后续能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
+W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，其后的能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
 
 用户已具备 DeepSeek、Kimi 等 API 和 Ubuntu 服务器，建设后由用户配置接入信息；具体模型、接口协议、资源规格及预算届时补齐，不要求现在提供密钥。凭证放入项目目录的本地配置并排除 Git 跟踪。协议设计可以先行，内核与技术路线通过 W01 收敛。样板业务、席位矩阵、成果字段与地图在 M2／M3 再收敛。人员、工期、成本和性能阈值未确定，本稿不补造承诺。
 
-编号用于追踪，不代表执行顺序；A 表示通用部分，B 表示后续业务接入。M1 按 [FG01～FG11](acceptance.md) 验证，最终 MVP 按 AC01～AC24 验收。变更见 [版本记录](decisions.md)，范围仍以 v0.7 为准；W01 的任务验收是前置探针，不提前宣告框架或业务验收通过。
+编号用于追踪，不代表执行顺序；A 表示通用部分，B 表示后续业务接入。M1 按 [FG01～FG11](acceptance.md) 验证，最终 MVP 按 AC01～AC24 验收。变更见 [版本记录](decisions.md)，范围以 v0.8 为准；W01 的任务验收是前置探针，不提前宣告框架或业务验收通过。
+
+文件作业增量 [W01-5：Web 通用文件作业](../../.trellis/tasks/09-17-w01-5-artifact-versions/review.md) 为 S3a：工作区按任务 × 席位隔离，上传完成即普通可写文件；Pi 通过最小容器沙盒读写文件、编写执行脚本、保留中间产物并提供预览／下载。沿用 Pi 原生会话；成果上报、业务状态与版本库、完整 Run 及会话迁移后置。已实现并通过 E01～E15 组合验收。

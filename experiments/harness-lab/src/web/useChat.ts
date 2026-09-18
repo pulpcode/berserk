@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
 import { api, sendMessage } from './api';
+import { useAttachments } from './useAttachments';
 
 const DRAFT_KEY = 'berserk.drafts';
 const SENT_KEY = 'berserk.submitted';
@@ -43,6 +44,8 @@ function sameActivity(a: SessionActivity, b?: SessionActivity) {
 }
 
 export function useChat() {
+  const attachments = useAttachments();
+  const { recover: recoverAttachments, clearSubmitted: clearSubmittedAttachments, move: moveAttachments, consume: consumeAttachments } = attachments;
   const [info, setInfo] = useState<AppInfo | null>(null);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [activities, setActivities] = useState<SessionActivity[]>([]);
@@ -103,9 +106,10 @@ export function useChat() {
     persist(SENT_KEY, submittedRef.current);
   }, []);
   const recover = useCallback((id: string) => {
+    recoverAttachments(id);
     const text = submittedRef.current[id];
     if (text && !draftsRef.current[id]) draft(id, text);
-  }, [draft]);
+  }, [draft, recoverAttachments]);
   const put = useCallback((snapshot: SessionSnapshot) => {
     const id = snapshot.id;
     revisions.current[id] = (revisions.current[id] || 0) + 1;
@@ -115,11 +119,11 @@ export function useChat() {
     activitiesRef.current = mergeById(activitiesRef.current, [activityOf(snapshot, activitiesRef.current.find(item => item.id === id))]);
     setActivities(activitiesRef.current);
     if (!snapshot.active && snapshot.lastResult) {
-      if (snapshot.lastResult.status === 'succeeded') rememberSubmitted(id, '');
+      if (snapshot.lastResult.status === 'succeeded') { rememberSubmitted(id, ''); clearSubmittedAttachments(id); }
       if (snapshot.lastResult.status === 'failed') recover(id);
       if (snapshot.lastResult.status === 'cancelled' && !snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId)) recover(id);
     }
-  }, [recover, rememberSubmitted]);
+  }, [recover, rememberSubmitted, clearSubmittedAttachments]);
 
   const refresh = useCallback(async (id: string) => {
     const revision = revisions.current[id] || 0;
@@ -223,16 +227,18 @@ export function useChat() {
         selectWorkspace(targetWorkspaceId);
       } else if (!selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
       const key = `workspace:${targetWorkspaceId}`;
+      moveAttachments(key, snapshot.id);
       if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
       setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = false; setCreating(false); }
-  }, [draft, put, selectForWorkspace, selectWorkspace, workspaceId]);
+  }, [draft, put, selectForWorkspace, selectWorkspace, workspaceId, moveAttachments]);
 
   const send = useCallback(async () => {
     const text = (draftsRef.current[draftKey] || '').trim();
-    if (!text || !info?.configured || !info.contextReady) return;
+    const files = attachments.current(draftKey);
+    if (!text || files.some(file => file.status !== 'ready') || !info?.configured || !info.contextReady) return;
     const id = selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
     const before = snapshotsRef.current[id];
@@ -243,6 +249,7 @@ export function useChat() {
     setPending(previous => ({ ...previous, [id]: true }));
     setErrors(previous => ({ ...previous, [id]: '' }));
     rememberSubmitted(id, text);
+    consumeAttachments(id, files);
     if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
     let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
     let assistantNumber = 0;
@@ -268,6 +275,11 @@ export function useChat() {
       }
       if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
       if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError } : message);
+      let fileOutputs = current.fileOutputs;
+      if (event.type === 'files.output') {
+        if (event.file.workspaceId !== current.workspaceId || event.file.sessionId !== id || event.file.requestId !== event.requestId) return;
+        fileOutputs = [...(fileOutputs || []).filter(file => file.downloadId !== event.file.downloadId), event.file];
+      }
       let subagents = current.subagents;
       if (event.type === 'subagent.updated') {
         const child = event.subagent;
@@ -278,18 +290,18 @@ export function useChat() {
       }
       const phase = event.type === 'subagent.updated' ? ['running', 'stopping'].includes(event.subagent.status) ? 'subagent' : 'preparing' : event.type === 'context.compaction_started'  ? 'compacting' : event.type === 'context.compaction_completed' ? 'generating' : ['response.started', 'resources.loaded', 'tool.completed'].includes(event.type) ? 'preparing' : event.type === 'tool.started' ? 'tool'
         : event.type === 'text.delta' ? 'generating' : current.active?.phase;
-      put({ ...current, messages, ...(subagents ? { subagents } : {}), ...(event.type === 'context.compaction_completed' ? { latestCompaction: event.compaction } : {}), active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
+      put({ ...current, messages, ...(fileOutputs ? { fileOutputs } : {}), ...(subagents ? { subagents } : {}), ...(event.type === 'context.compaction_completed' ? { latestCompaction: event.compaction } : {}), active: { requestId: event.requestId, status: current.active?.status === 'stopping' ? 'stopping' : 'responding', phase,
         ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };
     try {
-      await sendMessage(id, text, receive);
+      await sendMessage(id, text, receive, files.length ? { uploadIds: files.filter(file => file.uploadId).map(file => file.uploadId!), fileRefs: files.filter(file => !file.uploadId).map(file => ({ path: file.path! })) } : undefined);
       if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: '连接已断开，正在查询会话状态；消息不会重复发送。' }));
     } catch (error) { setErrors(previous => ({ ...previous, [id]: reason(error) })); recover(id); }
     finally {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info]);
+  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info, attachments, consumeAttachments]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -315,7 +327,7 @@ export function useChat() {
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading, creating, create, send, cancel,
+    loading, creating, create, send, cancel, draftKey, attachments,
     draft: drafts[draftKey] || '', setDraft: (text: string) => draft(draftKey, text),
     submitted: submitted[selected] || '', restoreSubmitted: () => draft(draftKey, submittedRef.current[selected] || ''),
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],

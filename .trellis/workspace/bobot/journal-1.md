@@ -146,3 +146,36 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 6: 完成W01-5通用文件作业与真实服务器验收
+
+**Date**: 2026-09-18
+**Task**: 完成W01-5通用文件作业与真实服务器验收
+**Branch**: `main`
+
+### Summary
+
+实现任务×席位文件目录、上传与下载、Pi容器工具和网页文件处理；真实Docker、DeepSeek、压缩续作、停止与网页完整流程通过。用户已允许服务器模型配置，仍待Git提交。
+
+### Main Changes
+
+- 复用Pi公开文件工具，使用请求级Linux容器；普通文件与固定下载副本独立保存。
+- 新增上传、文件面板、预览和下载卡，保留会话输入与既有交互。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 176项全量测试、40项浏览器回归；新增250字节文件名回归，本地和Linux文件服务8项通过。
+- [OK] 真实Docker P0、DeepSeek两组文件探针、网页70到75多轮计算与下载、停止及重启通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户查看http://127.0.0.1:4315；后续按中文提交约定审阅提交与归档。

@@ -1,4 +1,4 @@
-# W01：多轮对话与工作区实验
+# W01：Web Agent 工作台
 
 基于 Pi SDK 的本地 Web 对话工作台。支持工作区创建与切换、独立多轮会话、流式回答、资料读取、停止，以及工作区 AGENTS.md 的查看和编辑。Agent 可以按用户明确要求修改工作区指令，并按需读取资料综合写作、结果检查两个 Skill。
 
@@ -6,7 +6,7 @@ W01-1 的 C01～C06 已通过；W01-2 的验收结果见 [阶段记录](../../.t
 
 ## 启动
 
-需要 Node.js 24 和 npm。首次安装：
+应用服务需要 Node.js 24、npm 和 Python 3（仅运行固定的安全文件读写辅助程序）；文件工具和用户脚本需要 Linux Docker 与下文执行镜像。首次安装：
 
 ```bash
 cd experiments/harness-lab
@@ -38,11 +38,11 @@ npm run build
 npm start
 ```
 
-访问 http://127.0.0.1:4310 。当前是单一本地用户、单服务进程，不支持两个进程同时写同一数据目录，暂不部署到 Ubuntu。
+访问 http://127.0.0.1:4310 。当前使用服务端固定测试席位、单服务进程，不支持两个进程同时写同一数据目录。可在 Ubuntu 同机运行应用和执行容器，通过 SSH 转发本地访问；不直接暴露公网。
 
 ## 使用
 
-页面中的“项目”沿用工作区的数据与隔离规则，底层 `workspaceId` 和现有存储不变。
+页面中的“项目”对应任务范围；实际工作区按任务 × 席位隔离。相同席位在同一项目中的会话共享普通文件和指令，聊天历史独立。服务端 `LAB_SEAT_ID` 固定测试席位，网页不能自行选择别人的席位。旧 workspaceId 和原生会话保留。
 
 - 侧栏按项目分组显示会话，点击会话可以直接跨项目进入；分组可折叠，折叠后仍显示处理中和需关注的数量。全局“新建对话”先选择项目，确认后创建；各项目标题旁的加号可直接在该项目新建对话。取消选择窗口不会创建空会话。会话创建后固定属于该工作区，不能跨区移动。同区会话使用相同资料与指令，但不读取彼此的聊天历史。
 - “全部动态”汇总各工作区会话，可筛选“全部”“处理中”“需关注”。阶段来自实际执行状态；蓝点仅表示当前标签页尚未查看的新回复，读到回复末尾后消失；普通空闲会话不再显示“本轮完成／等待输入”文字。失败或需要恢复的会话也进入“需关注”。更新失败时保留上次状态并显示提示。
@@ -84,7 +84,7 @@ tools: []
 仅整理任务中给出的内容，保留原意，不添加未经提供的事实。
 ```
 
-name 唯一，description 描述职责，正文为角色指令；tools 支持逗号分隔文本或 YAML 数组。可声明的工具为 source_list、source_read、instructions_read、skill_read，不支持写入、Shell 或再次委派。工具必须显式声明，无工具用 `[]`；角色文件为 UTF-8，单份不超过 64 KiB。错误配置会明确提示，不回退为全量工具。
+name 唯一，description 描述职责，正文为角色指令；tools 支持逗号分隔文本或 YAML 数组。可声明的工具为 source_list、source_read、instructions_read、skill_read、read、ls、find；文件只读工具需要执行镜像，不支持写入、Shell 或再次委派。工具必须显式声明，无工具用 `[]`；角色文件为 UTF-8，单份不超过 64 KiB。错误配置会明确提示，不回退为全量工具。
 
 角色目录在每次用户请求开始时加载并固定，文件新增／修改／删除在下一请求生效。角色共用父请求模型，不能在文件里配置 model；网页角色管理、独立角色模型、并行／chain、递归和后台独立运行后置。
 
@@ -100,6 +100,11 @@ name 唯一，description 描述职责，正文为角色指令；tools 支持逗
   migrations/workspace-v1.json  # 旧版本迁移记录（如执行过）
   workspaces/<id>/AGENTS.md     # 当前工作区指令
   workspaces/<id>/sources/      # 每区独立的两份测试资料
+  workspaces/<id>/files/        # 席位持久工作目录：上传、脚本、中间文件和成果
+  file-storage/<id>/uploads/    # 上传状态与实际保存路径
+  file-storage/<id>/staging/    # 未完成传输，不对 Agent 开放
+  file-storage/<id>/downloads/  # 聊天下载卡的固定副本
+  file-storage/<id>/executions/ # 持久命令日志，在容器内只读映射为 /logs
   sessions/                    # 原有 Pi 原生会话文件，位置和 ID 不变
   subagents/<parent>/<child>/   # 内部子会话的 Pi 原生历史
   agent/                       # 受限内核目录
@@ -117,6 +122,54 @@ npm run migrate:workspace -- --data-dir /absolute/path/harness-lab/.local --back
 `--dry-run` 只检查；`--apply` 先复制整个停服数据目录，核验后登记默认工作区。旧原生文件不重写，不调用模型；无法解析的文件保留并记入报告。中途失败时保留备份和报告，使用相同参数重试。索引损坏或丢失不会通过扫描历史猜测重建。
 
 回退时停止新版本，将升级前备份恢复到另一个独立目录，由旧版本通过 LAB_DATA_DIR 指向恢复目录。保留升级后目录及新增指令、会话供核对；不要直接用旧版打开升级后的活动目录，也不自动合并新旧数据。
+
+已有工作区索引 v1 需要升级为任务／席位索引 v2，同样先停服，使用新的独立备份目录：
+
+```bash
+npm run migrate:seats -- --data-dir /absolute/path/harness-lab/.local --backup-dir /absolute/path/backups/before-seats --dry-run
+npm run migrate:seats -- --data-dir /absolute/path/harness-lab/.local --backup-dir /absolute/path/backups/before-seats --apply --service-stopped
+```
+
+升级只增加归属与普通文件目录，不重写聊天历史。默认把原有工作区归到 `test-seat`，每个原工作区保留独立任务范围；使用其他测试席位时，迁移的 `--seat-id` 必须与服务端 `LAB_SEAT_ID` 一致。
+
+## 文件作业与执行环境
+
+W01-5 已接入文件功能，真实 Ubuntu 容器验收状态见[阶段记录](../../.trellis/tasks/09-17-w01-5-artifact-versions/research/validation-results.md)。
+
+- 输入框加号或拖放上传文件；上传完成即成为当前席位工作目录中的普通文件。同名文件自动改名，不覆盖原文件。移除消息附件只移除引用，文件仍在工作区。
+- “文件”面板浏览目录、搜索、引用、预览或下载当前文件。Markdown 不加载外部图片或执行 HTML；HTML／SVG 仅按文本预览；其他格式下载查看。PNG／JPEG 预览限制为 10 MiB、8192 边长和 1600 万像素。
+- 发送时需要说明处理目标，文件内容由 Agent 按需读取或编写脚本解析。可要求“分析这份 CSV，生成图表与 Word 报告，并提供下载”。当前模型不直接理解图像。
+- 同一工作区多会话并行，共享目录。修改同一文件可能互相覆盖；本期不自动合并、不建立 worktree。不同席位使用不同目录。
+- Agent 用 file_output 交付文件后，聊天展示下载卡，指向固定副本；后续修改或删除工作目录中的文件不会改变这张卡的内容。此功能不包含上报、审批或业务成果状态。
+- 停止只清理当前请求容器和子进程，已经写出的文件保留；不自动重放失败命令。原生长输出日志归档到持久目录，可从后续请求的 `/logs` 读取。
+
+在 Ubuntu 应用目录构建镜像（构建时需要下载基础镜像和依赖）：
+
+```bash
+docker build -t berserk-file-runtime:w01-5 execution-image
+npm run probe:execution
+```
+
+运行时默认无网络、非 root、只读根目录；只挂载当前席位工作目录和只读日志。模型/API Key、原生会话和工作区索引留在应用宿主，不注入容器。Docker 不可用时文件执行明确失败，不回退宿主执行；普通聊天和文件管理仍可使用。应以普通用户运行应用，容器 UID/GID 默认跟随应用用户；配置其他 UID 时须先保证挂载目录读写权限。
+
+| 环境配置 | 默认值 | 用途 |
+| --- | --- | --- |
+| LAB_SEAT_ID | test-seat | 服务端固定席位 |
+| LAB_EXECUTION_ENABLED | true | 是否注册容器文件工具 |
+| LAB_EXECUTION_IMAGE | berserk-file-runtime:w01-5 | 已构建的本地镜像 |
+| LAB_EXECUTION_CPUS / LAB_EXECUTION_MEMORY_MB / LAB_EXECUTION_PIDS | 2 / 1024 / 128 | 单请求容器资源 |
+| LAB_EXECUTION_UID / LAB_EXECUTION_GID | 应用进程 UID/GID | 非 root 容器身份 |
+| LAB_MAX_FILE_BYTES / LAB_MAX_ATTACHMENTS | 104857600 / 20 | 单文件传输与单条消息附件上限 |
+
+执行容器根目录 tmpfs 限制为 256 MiB；单命令输出和 read 整文件读取有边界。持久 bind mount 不提供硬磁盘配额，应监控服务器磁盘空间。每个请求启动独立容器，请求结束销毁；应用启动清理同实例残留容器，不恢复执行。
+
+服务器部署时，代码、应用、持久数据和 Docker 放在同一 Ubuntu 主机；不要将 Mac 的路径直接交给远程 Docker daemon。服务器运行 `npm run build`，再运行 `PORT=4315 npm start`，然后在本机终端建立同端口转发：
+
+```bash
+ssh -N -L 4315:127.0.0.1:4315 tencent-server
+```
+
+浏览器访问 http://127.0.0.1:4315 （使用独立本地端口，避免与本地开发服务冲突）。SSH 凭证只保存在本机 SSH 配置中；API Key 仅写入服务器 `.env.local` 或受控模型设置，均不提交 Git。
 
 ## 上下文压缩与运行控制
 
@@ -147,7 +200,7 @@ AGENTS.md 继续独立加载：下一次发送读取最新版本，同一次请�
 
 通用指令上限 4 KiB、工作区指令 16 KiB、单 Skill 16 KiB、单份资料 32 KiB，均按 UTF-8 字节计算，超限报错。DeepSeek Flash 显式关闭 thinking。Pi 价格占位值不能当作实际费用。
 
-工具为 source.list/read、instructions.read/update、skill.read；模型调用名称使用下划线，例如 source_read。任意文件／Shell 工具和扩展自动发现保持关闭。
+原有 source.list/read、instructions.read/update、skill.read 继续可用；文件作业增加 Pi 原生 read、write、edit、bash、ls、find 与 file_output。文件及命令只在请求容器中执行；宿主内置文件／Shell 工具与扩展自动发现保持关闭。
 
 ## 验证
 
@@ -157,7 +210,10 @@ npm run lint
 npm test
 npm run test:e2e
 npm run build
+npm run probe:execution
 # 以下命令调用真实模型并消耗额度
+npm run probe:files
+npm run probe:files-continuation
 npm run probe:compaction
 npm run probe:subagent
 npm run probe:workspace
@@ -165,6 +221,8 @@ npm run probe:live -- --case C02
 ```
 
 普通测试使用确定性模型流，实际运行 Pi 会话、工具和原生历史；浏览器回归使用受控 API 响应。`probe:workspace` 在独立临时目录执行迁移、真实 HTTP/SSE 模型调用、独立进程重启，以及真实 Chrome 页面保存与冲突处理，输出证据路径、请求结果和实际 token 用量，不使用用户当前会话目录。
+
+`probe:execution` 要求真实 Linux Docker 和已构建镜像，验证文件格式、容器隔离、并行及停止，无模型调用。`probe:files` 使用独立数据目录、真实模型和容器验证上传后的脚本处理、修改、固定下载副本、只读子 Agent 与重启；`probe:files-continuation` 验证原生压缩后继续处理原文件，以及停止真实长命令和后续读取。两个文件探针的单轮 600 秒时限仅用于诊断，不改变产品配置。
 
 `probe:compaction` 使用独立临时目录及真实 DeepSeek，验证最新纠正、连续压缩、原文保留、摘要中停止和独立进程重启。只调整隔离目录的 R/K 提前触发，不伪造模型容量；探针单轮 300 秒时限不影响产品默认。真实验收没有 10 条请求总量限制。
 

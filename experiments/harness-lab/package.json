@@ -20,7 +20,11 @@
     "probe:workspace": "tsx --env-file-if-exists=.env.local scripts/probe-workspace.ts",
     "migrate:workspace": "tsx scripts/migrate-workspace.ts",
     "probe:compaction": "tsx --env-file-if-exists=.env.local scripts/probe-compaction.ts",
-    "probe:subagent": "tsx --env-file-if-exists=.env.local scripts/probe-subagent.ts"
+    "probe:subagent": "tsx --env-file-if-exists=.env.local scripts/probe-subagent.ts",
+    "migrate:seats": "tsx --env-file=.env.local scripts/migrate-seats.ts",
+    "probe:execution": "tsx scripts/probe-execution.ts",
+    "probe:files": "tsx --env-file=.env.local scripts/probe-files.ts",
+    "probe:files-continuation": "tsx --env-file=.env.local scripts/probe-files-continuation.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

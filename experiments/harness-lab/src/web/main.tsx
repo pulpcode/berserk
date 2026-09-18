@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert, FileText, Menu, MessageSquare, Plus, Settings, Square, X, Zap } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert, FileText, FolderOpen, Paperclip, Menu, MessageSquare, Plus, Settings, Square, X, Zap } from 'lucide-react';
 import Markdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { PublicMessage, WorkspaceResources } from '../contracts/index';
@@ -12,6 +12,7 @@ import { ActivityOverview, WorkspaceNavigation } from './WorkspaceNavigation';
 import { NewSession } from './NewSession';
 import { ModelSettings } from './ModelSettings';
 import { SubagentCard, conversationItems, subagentStatus } from './SubagentCard';
+import { Attachments, FileOutputCard, FilesPanel, HistoricalFile } from './Files';
 import './styles.css';
 
 const markdownComponents: Components = {
@@ -22,16 +23,17 @@ function BrandMark({ small = false }: { small?: boolean }) {
   return <span className={`brand-mark${small ? ' small' : ''}`} aria-hidden="true"><Zap size={small ? 16 : 23} strokeWidth={2.3} /></span>;
 }
 
-function Message({ message, active }: { message: PublicMessage; active: boolean }) {
+function Message({ message, active, workspaceId }: { message: PublicMessage; active: boolean; workspaceId: string }) {
   if (message.role === 'tool' && message.toolName === 'subagent') return <p className="subagent-placeholder">{message.isError ? '子任务委派未完成，请查看主回复中的说明。' : message.text || !active ? '未记录可展示的子任务详情。' : '正在准备子任务…'}</p>;
-  const action = message.toolName === 'instructions.update' ? '更新指令' : message.toolName === 'instructions.read' ? '读取指令' : message.toolName === 'skill.read' ? '读取 Skill' : '读取资料';
+  const fileActions: Record<string, string> = { read: '读取文件', write: '写入文件', edit: '修改文件', bash: '执行命令', ls: '列出文件', find: '查找文件', file_output: '提供文件' };
+  const action = (message.toolName && fileActions[message.toolName]) || (message.toolName === 'instructions.update' ? '更新指令' : message.toolName === 'instructions.read' ? '读取指令' : message.toolName === 'skill.read' ? '读取 Skill' : '读取资料');
   if (message.role === 'tool') return <details className={`tool-result${message.isError ? ' failed' : ''}`}>
     <summary><FileText size={16} aria-hidden="true" /><span>{message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
     <div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
   </details>;
-  return <article className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Berserk 的回复'}>
-    {message.role === 'assistant' && <div className="message-author"><BrandMark small /><span>Berserk</span></div>}
-    <div className="message-content">{message.role === 'user' ? <p>{message.text}</p> : <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>}</div>
+  return <article className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
+    {message.role === 'assistant' && <div className="message-author"><BrandMark small /><span>Axon</span></div>}
+    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>}</div>
   </article>;
 }
 
@@ -43,6 +45,14 @@ function App() {
   const [resourceErrors, setResourceErrors] = useState<Record<string, string>>({});
   const [resourceReload, setResourceReload] = useState(0);
   const [resourceOpen, setResourceOpen] = useState(false);
+  const [filesOpen, setFilesOpen] = useState(false);
+  const [draggingFiles, setDraggingFiles] = useState(false);
+  const attachmentInput = useRef<HTMLInputElement>(null);
+  const fileLimits = chat.info?.files;
+  const attachmentItems = chat.attachments.all[chat.draftKey] || [];
+  const blockedAttachments = attachmentItems.some(item => item.status !== 'ready');
+  const uploadFiles = (files: File[]) => { if (fileLimits?.enabled && chat.workspaceId) chat.attachments.add(chat.draftKey, chat.workspaceId, files, fileLimits); };
+  const attachmentList = <Attachments items={attachmentItems} notice={chat.attachments.notice[chat.draftKey]} remove={item => { void chat.attachments.remove(chat.draftKey, item); }} retry={item => { void chat.attachments.retry(item); }} />;
   const [compactionDetail, setCompactionDetail] = useState<{ sessionId: string; entryId: string }>();
   const [workspaceForm, setWorkspaceForm] = useState(false);
   const [newSessionOpen, setNewSessionOpen] = useState(false);
@@ -92,7 +102,7 @@ function App() {
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
-  const canSend = !busy && !loadingSession && !chat.loading && Boolean(chat.info?.configured && chat.info.contextReady) && !snapshot?.recoveryWarning && Boolean(chat.draft.trim());
+  const canSend = !busy && !loadingSession && !chat.loading && Boolean(chat.info?.configured && chat.info.contextReady) && !snapshot?.recoveryWarning && Boolean(chat.draft.trim()) && !blockedAttachments;
 
   useEffect(() => {
     const input = textarea.current;
@@ -104,10 +114,10 @@ function App() {
   const markVisibleRead = useCallback(() => {
     const element = scroll.current;
     const result = snapshot?.lastResult;
-    if (view !== 'chat' || sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail || loading || loadingSession || !element || document.visibilityState !== 'visible' || !document.hasFocus()) return;
+    if (view !== 'chat' || sidebarOpen || resourceOpen || filesOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail || loading || loadingSession || !element || document.visibilityState !== 'visible' || !document.hasFocus()) return;
     if (snapshot?.active || selectedActivity?.active || result?.status !== 'succeeded' || selectedActivity?.lastResult?.requestId !== result.requestId || selectedActivity.lastResult.status !== 'succeeded') return;
     if (element.scrollHeight - element.scrollTop - element.clientHeight <= 32) markRead(selectedId, result.requestId);
-  }, [view, sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail, loading, selectedId, markRead, loadingSession, snapshot, selectedActivity]);
+  }, [view, sidebarOpen, resourceOpen, filesOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail, loading, selectedId, markRead, loadingSession, snapshot, selectedActivity]);
   useLayoutEffect(() => {
     if (view !== 'chat') { renderedScrollKey.current = ''; return; }
     const element = scroll.current;
@@ -140,7 +150,7 @@ function App() {
   }, []);
   useEffect(() => { if (sidebarOpen) closeButton.current?.focus(); }, [sidebarOpen]);
   useEffect(() => {
-    if (!sidebarOpen || resourceOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail) return;
+    if (!sidebarOpen || resourceOpen || filesOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail) return;
     const keyboard = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { setSidebarOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); }
       if (event.key !== 'Tab') return;
@@ -152,7 +162,7 @@ function App() {
     };
     document.addEventListener('keydown', keyboard);
     return () => document.removeEventListener('keydown', keyboard);
-  }, [sidebarOpen, resourceOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail]);
+  }, [sidebarOpen, resourceOpen, filesOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail]);
 
   function closeSidebar() { setSidebarOpen(false); requestAnimationFrame(() => menuButton.current?.focus()); }
   function suggest(text: string) { chat.setDraft(text); textarea.current?.focus(); }
@@ -182,7 +192,7 @@ function App() {
     <a className="skip-link" href={view === 'chat' ? '#conversation' : '#activity-overview'}>{view === 'chat' ? '跳至对话' : '跳至全部动态'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
     <aside ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
-      <div className="sidebar-brand"><BrandMark /><span>Berserk<span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
+      <div className="sidebar-brand"><BrandMark /><span>Axon<span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
       <div className="navigation-actions">
         <button className="new-chat" aria-label="新建对话" aria-haspopup="dialog" onClick={() => void newChat()} disabled={chat.creating || chat.loading || !chat.workspaceId}><Plus size={18} aria-hidden="true" /><span>新建对话</span></button>
         <button className="create-workspace" onClick={() => { rememberPosition(); setWorkspaceForm(true); setWorkspaceError(''); }} aria-label="新建项目"><Plus size={15} aria-hidden="true" />新建项目</button>
@@ -196,6 +206,7 @@ function App() {
       <header className="workspace-header">
         <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'activity' ? '全部动态' : snapshot?.title || '新对话'}</span></div>
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : undefined}>{view === 'chat' ? chat.workspace?.name : '所有项目'}</span>
+        {fileLimits?.enabled && view === 'chat' && <button className="files-trigger" onClick={() => setFilesOpen(true)} disabled={!chat.workspaceId} aria-haspopup="dialog"><FolderOpen size={16} aria-hidden="true" />文件</button>}
         <button onClick={() => setSettingsOpen(true)} aria-label="模型设置" aria-haspopup="dialog" className={`model-badge${chat.info?.configured ? '' : ' unconfigured'}`}><span className="status-dot" /><span className="model-name" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span><span className="model-state">{chat.info?.configured ? '已配置' : '待配置'}</span><ChevronDown size={12} aria-hidden="true" /></button>
       </header>
 
@@ -219,7 +230,7 @@ function App() {
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId).map(item => item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Message key={item.key} message={item.message} active={busy && item.message.requestId === active?.requestId} />)}{busy && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId).map(item => item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Fragment key={item.key}>{!(item.message.toolName === 'file_output' && snapshot?.fileOutputs?.some(file => file.toolCallId === item.message.toolCallId)) && <Message workspaceId={snapshot!.workspaceId} message={item.message} active={busy && item.message.requestId === active?.requestId} />}{snapshot?.fileOutputs?.filter(file => file.toolCallId === item.message.toolCallId).map(file => <FileOutputCard key={file.downloadId} file={file} />)}</Fragment>)}{snapshot?.fileOutputs?.filter(file => !messages.some(message => message.toolCallId === file.toolCallId)).map(file => <FileOutputCard key={file.downloadId} file={file} />)}{busy && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock">
@@ -233,7 +244,9 @@ function App() {
           {error && <div className="notice error-notice" role="alert"><CircleAlert size={17} aria-hidden="true" /><span>{error}</span><button onClick={() => void (chat.selected ? chat.refresh(chat.selected) : chat.bootstrap())}>查询状态</button></div>}
           {snapshot?.latestCompaction && <button className="request-resources" onClick={() => setCompactionDetail({ sessionId: chat.selected, entryId: snapshot.latestCompaction!.id })}>查看最近压缩摘要</button>}
           {error && chat.submitted && chat.draft !== chat.submitted && <button className="restore-draft" onClick={chat.restoreSubmitted}>恢复刚才发送的内容</button>}
-          <form className="composer" onSubmit={event => { event.preventDefault(); if (canSend) void chat.send(); }}>
+          <form className={`composer${draggingFiles ? ' file-dragging' : ''}`} onDragOver={event => { if (fileLimits?.enabled && event.dataTransfer.types.includes('Files')) { event.preventDefault(); setDraggingFiles(true); } }} onDragLeave={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDraggingFiles(false); }} onDrop={event => { if (fileLimits?.enabled && event.dataTransfer.files.length) { event.preventDefault(); setDraggingFiles(false); uploadFiles(Array.from(event.dataTransfer.files)); } }} onSubmit={event => { event.preventDefault(); if (canSend) void chat.send(); }}>
+            {attachmentList}
+            {draggingFiles && <p className="attachment-notice">松开文件，上传到当前项目</p>}
             <label htmlFor="message-input">发送至 {chat.workspace?.name || '当前项目'}</label>
             <textarea id="message-input" aria-label="发送消息" ref={textarea} rows={2} value={chat.draft} placeholder="描述你的问题，或继续补充想法…" aria-describedby="input-hint" onChange={event => chat.setDraft(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onKeyDown={event => {
               if (event.key === 'Enter' && !event.shiftKey && !composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
@@ -241,13 +254,17 @@ function App() {
                 if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{busy && <span className="composer-context"><MessageSquare size={14} aria-hidden="true" />可继续编辑，回复结束后发送</span>}{busy ? <button type="button" className="stop-button" disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" />{active?.status === 'stopping' ? '正在停止' : '停止回复'}</button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
+            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /><button type="button" className="icon-button attach-button" aria-label="添加附件" title="上传文件到当前项目" disabled={!chat.workspaceId} onClick={() => attachmentInput.current?.click()}><Paperclip size={19} /></button></>}{busy && <span className="composer-context"><MessageSquare size={14} aria-hidden="true" />可继续编辑，回复结束后发送</span>}{busy ? <button type="button" className="stop-button" disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" />{active?.status === 'stopping' ? '正在停止' : '停止回复'}</button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
           </form>
+          {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
+          {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
+          {attachmentItems.length > 0 && !chat.draft.trim() && <p className="attachment-notice">请描述希望如何处理这些文件。</p>}
           <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{busy ? <span className="loading-dot" /> : snapshot?.lastResult?.status === 'succeeded' ? <Check size={12} aria-hidden="true" /> : <span className="status-dot" />}{status}</span><span id="input-hint">Enter 发送<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
         </div>
       </div>
       </>}
     </main>
+    {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.draftKey, chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
     {newSessionOpen && <NewSession workspaces={chat.workspaces} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
     {settingsOpen && <ModelSettings close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
     {resourceOpen && <Resources key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} resources={currentResources} resourceError={resourceErrors[chat.workspaceId]} reloadResources={() => setResourceReload(value => value + 1)} instructions={instructions} close={() => setResourceOpen(false)} />}

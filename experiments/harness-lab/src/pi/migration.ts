@@ -37,7 +37,7 @@ async function inventory(directory: string): Promise<LegacyFile[]> {
 }
 async function exists(path: string): Promise<boolean> { try { await lstat(path); return true; } catch (error) { if (missing(error)) return false; throw error; } }
 function indexFor(report: MigrationReport): WorkspaceIndex {
-  return { schemaVersion: 1, defaultWorkspaceId: report.workspace.id, workspaces: [report.workspace],
+  return { schemaVersion: 2, defaultWorkspaceId: report.workspace.id, workspaces: [report.workspace],
     sessionBindings: Object.fromEntries(report.files.filter(file => file.sessionId).map(file => [file.sessionId!, report.workspace.id])) };
 }
 function parseReport(raw: string, sourceDir: string, backupDir: string): MigrationReport {
@@ -80,7 +80,7 @@ export async function migrateWorkspace(options: MigrationOptions): Promise<Migra
   const expectedIndex = JSON.stringify(indexFor(report), null, 2);
   if (report.stage !== 'prepared' && existingIndex === null) throw stateError();
   if (existingIndex !== null && existingIndex !== expectedIndex) throw stateError();
-  if (marker !== null && marker !== 'workspace-v1\n') throw stateError();
+  if (marker !== null && marker !== 'workspace-v2\n') throw stateError();
   if (report.stage === 'completed') {
     if (existingIndex === null || marker === null) throw stateError();
     return report;
@@ -100,7 +100,7 @@ export async function migrateWorkspace(options: MigrationOptions): Promise<Migra
   report.stage = 'indexed';
   await atomicWrite(reportPath, JSON.stringify(report, null, 2));
   await options.afterStage?.('indexed');
-  await atomicWrite(join(sourceDir, '.workspace-initialized'), 'workspace-v1\n');
+  await atomicWrite(join(sourceDir, '.workspace-initialized'), 'workspace-v2\n');
   report.stage = 'completed';
   await atomicWrite(reportPath, JSON.stringify(report, null, 2));
   await options.afterStage?.('completed');

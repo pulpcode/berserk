@@ -2,15 +2,15 @@
 
 ## 1. Scope / Trigger
 
-Read before changing `experiments/harness-lab` Pi integration, workspace/resource storage, API, configuration, migration or native history. The implementation includes W01-1 conversation behavior and W01-2/S2a workspaces, file instructions and fixed Skills, plus W01-3/S2b native automatic compaction and W01-4/S2c single readonly subagent delegation. It does not provide multi-user authorization, cross-session retrieval, database transactions, persistent Runs, business approvals or detached/recursive subagents.
+Read before changing `experiments/harness-lab` Pi integration, workspace/resource storage, API, configuration, migration or native history. The implementation includes W01-1 conversation behavior and W01-2/S2a workspaces, file instructions and fixed Skills, plus W01-3/S2b native automatic compaction and W01-4/S2c single readonly subagent delegation, plus W01-5 seat-scoped files, uploads and Pi tools routed to request containers. Physical Docker acceptance remains separately recorded in the task. It does not provide multi-user authorization, cross-session retrieval, database transactions, persistent Runs, business approvals or detached/recursive subagents.
 
-The local user can access every workspace. Isolation means that each session's model inputs and tools use its fixed workspace; it is not an account authorization boundary. One service process owns a data directory. Do not run multiple processes against the same `LAB_DATA_DIR`.
+The service uses a fixed LAB_SEAT_ID. Workspace/session/resource/file APIs expose only that seat's workspaces; this is not real login or personnel handover. A workspace is unique by taskSpaceId × seatId, and sessions share its files while retaining independent histories. One service process owns a data directory. Do not run multiple processes against the same `LAB_DATA_DIR`.
 
 ## 2. Signatures
 
-- `PiLab.create(config, runtime?)`: construct the concrete Pi integration; the optional runtime is for deterministic integration tests.
+- `PiLab.create(config, runtime?, execution?)`: construct the concrete Pi integration; optional model and Docker execution services support deterministic integration tests.
 - `createSession(workspaceId?)`, `list(workspaceId?)`, `get(sessionId)`: default omitted workspace IDs to the default workspace. A session's workspace cannot change.
-- `start(sessionId, text) -> {requestId, run(listener)}`: reserve the session synchronously before asynchronous preparation.
+- `start(sessionId, text, {uploadIds?, fileRefs?}?) -> {requestId, run(listener)}`: reserve the session synchronously before asynchronous preparation and resolve attachments within its bound workspace.
 - `cancel(sessionId, requestId)`: reject stale IDs and retain the active marker until execution settles.
 - `activity() -> ActivityOverview`: global workspace/session navigation metadata without messages or resource bodies.
 - `getCompaction(sessionId, compactionId)`: readonly native summary detail scoped to its owning session.
@@ -27,7 +27,7 @@ The local user can access every workspace. Isolation means that each session's m
 | `POST /api/sessions` | Optional `{workspaceId}` → SessionSnapshot; omission uses default |
 | `GET /api/sessions/:id/compactions/:compactionId` | Readonly summary, native retention boundary and available metadata |
 | `GET /api/sessions/:id` | Authoritative messages, workspace, activity and last result |
-| `POST /api/sessions/:id/messages` | `{text}` → POST SSE |
+| `POST /api/sessions/:id/messages` | `{text, uploadIds?, fileRefs?: [{path}]}` → POST SSE |
 | `POST /api/sessions/:id/cancel` | `{requestId}` → snapshot while stopping |
 | `GET /api/workspaces/:id/resources` | Current instruction/source/Skill metadata |
 | `GET /api/workspaces/:id/instructions/:fileId` | Current `common` or `workspace` text/hash/editability |
@@ -48,7 +48,7 @@ Stop the service before `--apply`. Never use a running service's changing files 
 
 ### Public data and dependency boundary
 
-`src/contracts/index.ts` owns public messages, snapshots, resources, update results and SSE events. Responses are direct JSON; errors are `{error:{code,message}}`. Reject additional body/query authority fields instead of silently stripping them. Clients and models supply IDs, never filesystem paths, writable scopes or permissions.
+`src/contracts/index.ts` owns public messages, snapshots, resources, update results and SSE events. Responses are direct JSON; errors are `{error:{code,message}}`. Reject additional body/query authority fields instead of silently stripping them. Clients and models supply IDs or controlled workspace file paths, never host filesystem paths, writable scopes or permissions. File paths are resolved within the server-selected seat and workspace.
 
 `SessionSummary` and `SessionSnapshot` contain `workspaceId`. Each SSE event contains `sessionId` and `requestId`. Terminal events carry the authoritative snapshot. `resources.loaded` exposes metadata; `instructions.updated` exposes actual changes. Full texts are fetched through the request resource endpoint. `PublicMessage.requestId` is optional: native resource entries establish request boundaries; legacy messages do not receive invented IDs.
 
@@ -58,7 +58,7 @@ Pi packages and JSONL interpretation stay inside `src/pi` and corresponding inte
 
 ### Workspace storage and migration
 
-`workspace-index.json` contains `schemaVersion:1`, `defaultWorkspaceId`, workspace entries and `sessionBindings`. Workspace IDs are UUIDs; names are trimmed, nonempty and at most 60 characters. Paths derive from IDs. Every workspace has the two registered source IDs and `synthesis`/`review` Skill IDs. New workspaces receive empty `AGENTS.md` and source fixture copies.
+`workspace-index.json` contains `schemaVersion:2`, `defaultWorkspaceId`, workspace entries and `sessionBindings`. Workspace IDs are UUIDs; names are trimmed, nonempty and at most 60 characters. Paths derive from IDs. Every workspace has the two registered source IDs and `synthesis`/`review` Skill IDs. New workspaces receive empty `AGENTS.md`, source fixture copies and a persistent `files/` directory. Each entry includes taskSpaceId (UUID) and seatId (1–64 safe identifier characters); reject duplicate task/seat ownership. Old v1 indexes require the explicit offline migrate:seats command, with a full stopped-data backup; never silently assign ownership or rewrite native histories.
 
 Persist complete indexes through a single-process mutex and same-directory temporary file, fsync and rename. Revalidate the current index before replacing it. Reject duplicate JSON keys, invalid schemas, duplicate workspaces, unknown bindings and unexpected disk changes. `.workspace-initialized` distinguishes initialization from index loss; missing/damaged indexes or markers must not silently recreate ownership.
 
@@ -66,11 +66,15 @@ Create a native empty session file before committing its workspace binding; publ
 
 Existing native files without an index require explicit migration. Back up the whole stopped directory before changes. `migrations/workspace-v1.json` fixes the original inventory, backup location and default workspace ID. Its `prepared`, `indexed` and `completed` stages support retry with matching inventories/indexes; interrupted migration blocks normal startup. Preserve native IDs, filenames and contents, including unrecognized files. Completed imports are not rescanned into new bindings. Rollback uses a separate restored backup directory; never open the upgraded active directory with the old application.
 
+### Ordinary files and execution
+
+Read [File and Execution Contract](files-execution.md) for uploads, seat directories, container tools, logs and download evidence.
+
 ### Request resources and tools
 
 Reserve a request and its bound workspace before any asynchronous work. Snapshot instructions, source bodies and Skill bodies under the workspace resource mutex; preparation and lock waiting count toward an explicitly configured whole-request deadline. Keep that snapshot fixed through every model/tool iteration. `source_read` and `skill_read` consume it; `instructions_read` deliberately reads current disk content for CAS, without changing the loaded system rules.
 
-Create a new AgentSession per request using the existing SessionManager. Disable builtin tools and external context/Skill/extension/prompt discovery. Enable Pi default automatic compaction and native transient retry (at most 3 extra attempts; provider retries 0). Use `agentsFilesOverride` to inject only controlled common/workspace instructions. Common methods precede workspace refinements; file text cannot increase executable permissions. Explicitly advertise the fixed Skill catalog and bridge it through `skill_read`; Pi's builtin Skill discovery does not supply this bridge when `read`/`bash` are disabled.
+Create a new AgentSession per request using the existing SessionManager. Disable builtin host tools and external context/Skill/extension/prompt discovery. Public Pi file factories are registered as custom tools with container operations and a virtual /workspace cwd on both the loader and AgentSession. Enable Pi default automatic compaction and native transient retry (at most 3 extra attempts; provider retries 0). Use `agentsFilesOverride` to inject only controlled common/workspace instructions. Common methods precede workspace refinements; file text cannot increase executable permissions. Explicitly advertise the fixed Skill catalog and bridge it through `skill_read`; Pi's builtin Skill discovery remains disabled even when container file tools are enabled.
 
 `openSession` also captures a transient `<host_request_instructions>` reminder containing the same common/workspace `{fileId, hash, content}` snapshot and explicit empty/missing-file semantics. Inside the OpenAI adapter's `onPayload`, copy the final wire-message array and insert one system reminder immediately before the latest user message, retaining the initial system message. Do not mutate Pi's context, native messages, or any user text. Each tool-loop call starts from the original context and inserts exactly one copy of the same captured reminder; a same-request write does not refresh it. The next request captures the updated or emptied file. This reinforces current rules over stale historical promises/tool results; real-model compliance still requires separate verification.
 
@@ -100,7 +104,7 @@ Default summaries must contain text and no tool calls; empty/truncated/final fai
 
 `subagent({agent, task})` is a normal serial parent tool. Reject additional authority fields and unknown roles. Each call creates an independent public Pi AgentSession/SessionManager; reuse the same session construction, controlled stream, native compaction/retry and cancellation implementation. Do not call public `start()` recursively, copy parent messages into the child, or modify Pi internals. Child input is the explicit task, selected role and fixed parent resource/AGENTS snapshot. Only the final child text/error is returned to the parent tool loop; child original messages and summaries are not parent context.
 
-`src/pi/roles.ts` loads controlled `fixtures/agents/*.md` once per parent request using public Pi frontmatter parsing. Require unique safe name, nonempty description/body and explicit tools; allow only source_list/source_read/instructions_read/skill_read. Reject duplicate/unknown tools, fields including model, missing/empty directory, symlinks, invalid UTF-8 and files above 64 KiB. `tools: []` means no tools. Freeze role bodies/tool arrays; edits, additions and deletions take effect next request. Preset analyst has three resource/instruction tools; reviewer also has skill_read. Runtime registration enforces the selected allowlist; child instructions_read returns the fixed snapshot with editable=false, not current disk content. No writes, shell, external discovery or recursive subagent tool.
+`src/pi/roles.ts` loads controlled `fixtures/agents/*.md` once per parent request using public Pi frontmatter parsing. Require unique safe name, nonempty description/body and explicit tools; allow only source_list/source_read/instructions_read/skill_read/read/ls/find. Reject duplicate/unknown tools, fields including model, missing/empty directory, symlinks, invalid UTF-8 and files above 64 KiB. `tools: []` means no tools. Freeze role bodies/tool arrays; edits, additions and deletions take effect next request. Preset analyst has resource/instruction tools and container read/ls/find; reviewer also has skill_read. Old role records retaining only their original tools remain valid. Runtime registration enforces the selected allowlist; child instructions_read returns the fixed snapshot with editable=false, not current disk content. No writes, shell, external discovery or recursive subagent tool.
 
 Each parent has at most one active child, with no cumulative delegation cap. The parent's optional deadline includes child work; abort must settle the child before parent terminal publication. onUpdate/tool_execution_update projects public child phases. Child failure, empty/truncated output and cancellation are explicit; afterToolCall maps failure to native isError. Do not retry the whole child task automatically. Child compaction/retry and usage are independent; RequestResult.usageSummary remains parent-only and subagentUsage aggregates child usage once, retaining unknown usage.
 

@@ -1,0 +1,6 @@
+{"file":".trellis/spec/backend/harness-lab.md","reason":"已实现的工作区、原生历史、资源与主子 Agent 契约；文件能力需显式扩展而不能破坏旧数据。"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "新增普通文件、席位归属、上传/下载、容器工具与原生文件证据契约。"}
+{"file":".trellis/spec/frontend/harness-lab.md","reason":"保持项目／会话草稿、异步归属、焦点、未读与安全预览交互。"}
+{"file":".trellis/tasks/09-17-w01-5-artifact-versions/research/implementation-basis.md","reason":"文件、执行服务、上传与历史的代码接入点及 P0 先决条件。"}
+{"file":".trellis/tasks/09-17-w01-5-artifact-versions/research/pi-file-runtime.md","reason":"精确 Pi 0.85.1 公共工具接口、虚拟 cwd、日志、并发及取消的实际边界。"}
+{"file":".trellis/tasks/09-17-w01-5-artifact-versions/research/upload-ux.md","reason":"官方竞品上传／下载交互及其与本项目设计的区别。"}

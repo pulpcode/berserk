@@ -5,7 +5,7 @@ import { RequestError } from '../contracts/errors.js';
 import { checkDirectory, hashContent, readControlled } from '../resources/files.js';
 import { fixtureDir } from '../tools/sources.js';
 
-export const readonlyToolNames = ['source_list', 'source_read', 'instructions_read', 'skill_read'] as const;
+export const readonlyToolNames = ['source_list', 'source_read', 'instructions_read', 'skill_read', 'read', 'ls', 'find'] as const;
 export interface AgentRole {
   readonly name: string;
   readonly description: string;

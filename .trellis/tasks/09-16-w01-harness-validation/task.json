@@ -2,7 +2,7 @@
   "id": "w01-harness-validation",
   "name": "w01-harness-validation",
   "title": "W01 通用 Harness 协议与技术路线验证",
-  "description": "基于 MVP v0.7 分期验证 Harness：先交付 Pi 多轮对话、最小只读工具与原生历史，再扩展 Memory/Skill/压缩/子 Agent，随后落地完整 Run 和可替换边界。",
+  "description": "分期验证 Harness：Pi 多轮对话、Memory/Skill/压缩/子 Agent 已形成基础；已完成 Web 文件读写、隔离脚本执行与上传下载，再推进正式运行与可替换边界。",
   "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "harness",
@@ -23,7 +23,8 @@
     "09-17-workspace-navigation",
     "09-17-project-chat-settings",
     "09-17-w01-3-context-compaction",
-    "09-17-w01-4-subagent"
+    "09-17-w01-4-subagent",
+    "09-17-w01-5-artifact-versions"
   ],
   "parent": null,
   "relatedFiles": [
@@ -45,7 +46,7 @@
     "experiments/harness-lab/README.md",
     "experiments/harness-lab/package.json"
   ],
-  "notes": "W01-1/S0-S1通过C01-C06；W01-2/S2a通过A01-A12。W01-3/S2b已实现Pi默认压缩、持续执行控制和网页摘要详情，通过B01-B13组合验收（89项确定性测试、27项浏览器回归、真实DeepSeek15次请求）。待提交与归档。W01-4/S2c已实现基础多角色single只读委派，验收见该阶段记录；S3-S5未交付，完整W01保持in_progress。",
+  "notes": "W01-1/S0-S1通过C01-C06；W01-2/S2a通过A01-A12。W01-3/S2b已实现Pi默认压缩、持续执行控制和网页摘要详情，通过B01-B13组合验收（89项确定性测试、27项浏览器回归、真实DeepSeek15次请求）。待提交与归档。W01-4/S2c已实现基础多角色single只读委派，验收见该阶段记录；W01-5/S3a文件作业已实现并通过E01～E15组合验收；完整S3-S5未交付，完整W01保持in_progress。",
   "meta": {
     "w01_1": {
       "status": "validated",
@@ -80,6 +81,18 @@
       "runtimeControls": "native-retry-separate-timeouts-optional-deadline",
       "implementationComplete": true,
       "acceptancePassed": true
+    },
+    "w01_5": {
+      "status": "validated",
+      "stage": "S3a",
+      "task": "../09-17-w01-5-artifact-versions",
+      "review": "../09-17-w01-5-artifact-versions/review.md",
+      "implementationApproved": true,
+      "implementationComplete": true,
+      "acceptancePassed": true,
+      "scope": "pi-web-file-processing",
+      "date": "2026-09-18",
+      "evidence": "../09-17-w01-5-artifact-versions/research/validation-results.md"
     }
   }
 }

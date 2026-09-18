@@ -6,6 +6,7 @@
   --text: #252b32;
   --muted: #6b727d;
   --faint: #eef0f3;
+  --surface: #fff;
   --line: #e4e7eb;
   --accent: #426354;
   --accent-soft: #e8eee9;
@@ -415,3 +416,62 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 }
 
 .subagent-placeholder { margin: 16px 0 16px 38px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+/* Ordinary project files and message references share the existing workbench palette. */
+.files-trigger, .files-toolbar button, .file-pagination button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--text); cursor: pointer; }
+.files-trigger { flex-shrink: 0; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.attach-button { margin-right: auto; }
+.attachments:empty { display: none; }
+.attachments ul, .message-attachments, .file-list { padding: 0; margin: 0; list-style: none; }
+.attachments ul { display: grid; gap: 7px; max-height: 220px; overflow-y: auto; }
+.attachment { display: flex; gap: 8px; align-items: flex-start; padding: 9px; border: 1px solid var(--line); border-radius: 9px; font-size: 13px; }
+.attachment > svg { flex: 0 0 auto; margin-top: 3px; }
+.attachment-detail { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.attachment-detail strong, .attachment-detail small { display: block; }
+.attachment-detail small { color: var(--muted); font-size: 12px; }
+.attachment .icon-button { flex-shrink: 0; }
+.attachment-detail progress { width: 100%; height: 6px; accent-color: var(--accent); }
+.attachment .resource-error { margin: 5px 0 0; }
+.attachment button:not(.icon-button) { border: 0; background: none; color: var(--accent); min-height: 32px; cursor: pointer; }
+.attachment-notice { margin: 6px 2px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.composer.file-dragging { outline: 2px solid var(--accent); outline-offset: 3px; }
+.message-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.message-attachments li { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; font-size: 12px; overflow-wrap: anywhere; padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; }
+.message-attachments small { flex-basis: 100%; color: var(--muted); }
+.file-output { display: flex; align-items: center; gap: 12px; padding: 15px; margin: 12px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.file-output > svg { flex-shrink: 0; color: var(--muted); }
+.file-output > div { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.file-output strong, .file-output small { display: block; }
+.file-output small { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.file-output a { display: flex; align-items: center; gap: 5px; padding: 8px; color: var(--accent); text-decoration: none; flex-shrink: 0; }
+.files-panel { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(540px, 100vw); max-width: 100vw; border-radius: 0; }
+.files-toolbar { display: flex; gap: 10px; }
+.file-search { display: grid; gap: 5px; font-size: 13px; margin-top: 18px; color: var(--muted); }
+.file-search input { min-width: 0; width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; color: var(--text); background: var(--surface); }
+.file-breadcrumb { display: flex; gap: 8px; align-items: center; margin: 12px 0; overflow-wrap: anywhere; font-size: 13px; }
+.file-breadcrumb button { background: none; border: 0; min-height: 36px; min-width: 36px; cursor: pointer; color: inherit; }
+.file-list li { display: flex; gap: 5px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.file-name { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; min-height: 38px; padding: 4px; text-align: left; background: none; border: 0; color: var(--text); cursor: pointer; }
+.file-name > svg { flex-shrink: 0; color: var(--muted); }
+.file-name span { overflow-wrap: anywhere; }
+.file-name small { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+.file-list a { color: var(--accent); text-decoration: none; flex-shrink: 0; }
+.file-empty { font-size: 13px; color: var(--muted); }
+.file-pagination { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 14px; font-size: 12px; }
+.file-preview { border-top: 1px solid var(--line); margin-top: 22px; padding-top: 14px; min-width: 0; }
+.file-preview h3 { overflow-wrap: anywhere; font-size: 15px; }
+.file-preview img { display: block; max-width: 100%; height: auto; }
+.file-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 50dvh; overflow-y: auto; padding: 12px; background: var(--surface); font-size: 12px; }
+.markdown-preview { font-size: 14px; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .files-panel { width: 100vw; }
+  .files-trigger { min-width: 40px; padding: 7px; }
+  .attachment { flex-wrap: wrap; }
+  .attachment-detail { min-width: 55%; }
+  .file-output { gap: 8px; padding: 12px; }
+  .workspace-header:has(.files-trigger) .workspace-name { display: none; }
+}
+
+.historical-file button { display: inline-flex; gap: 5px; align-items: center; border: 0; background: none; padding: 3px 0; text-align: left; overflow-wrap: anywhere; }
+.historical-file a { color: var(--accent); }

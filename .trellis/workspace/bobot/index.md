@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 5
-- **Last Active**: 2026-09-17
+- **Total Sessions**: 6
+- **Last Active**: 2026-09-18
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~148 | Active |
+| `journal-1.md` | ~181 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 6 | 2026-09-18 | 完成W01-5通用文件作业与真实服务器验收 | - | `main` |
 | 5 | 2026-09-17 | 项目会话入口与模型设置窗口 | `7903039` | `main` |
 | 4 | 2026-09-17 | 工作区分组导航与全部动态 | `f4e2cb5` | `main` |
 | 3 | 2026-09-17 | 完成工作区与指令文件阶段 | `50e103e`, `0316a74` | `main` |

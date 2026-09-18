@@ -1,3 +1,5 @@
+import type { FileRef, FileOutput } from './files.js';
+export type * from './files.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
 export interface PublicMessage {
   id: string;
@@ -7,6 +9,7 @@ export interface PublicMessage {
   toolName?: string;
   isError?: boolean;
   toolCallId?: string;
+  attachments?: FileRef[];
 }
 export interface SubagentSummary {
   subagentId: string;
@@ -48,6 +51,7 @@ export interface SessionActivity extends SessionSummary {
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  fileOutputs?: FileOutput[];
   subagents?: SubagentSummary[];
   latestCompaction?: CompactionSummary;
   messages: PublicMessage[];
@@ -56,6 +60,7 @@ export interface SessionSnapshot extends SessionSummary {
   recoveryWarning?: string;
 }
 export interface AppInfo {
+  files?: { enabled: boolean; maxFileBytes: number; maxAttachments: number; executionAvailable: boolean };
   model: string;
   configured: boolean;
   contextReady: boolean;
@@ -102,11 +107,12 @@ export type StreamEvent = {
   | { type: 'tool.started'; toolCallId: string; toolName: string }
   | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
+  | { type: 'files.output'; file: FileOutput }
   | { type: 'response.completed' | 'response.failed' | 'response.cancelled'; snapshot: SessionSnapshot }
 );
 export interface ApiError { error: { code: string; message: string } }
 
-export interface Workspace { id: string; name: string; createdAt: string }
+export interface Workspace { id: string; name: string; createdAt: string; taskSpaceId?: string; seatId?: string }
 export interface WorkspaceList { defaultWorkspaceId: string; workspaces: Workspace[] }
 export interface ActivityOverview extends WorkspaceList { sessions: SessionActivity[] }
 export type InstructionFileId = 'common' | 'workspace';

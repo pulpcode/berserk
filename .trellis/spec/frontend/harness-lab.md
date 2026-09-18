@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details and W01-4 role-aware child-task cards. Keep conversation central; business task trees, Runs, operation approvals, artifact management and arbitrary file access are outside this increment.
+Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details, W01-4 role-aware child-task cards and W01-5 file uploads, browsing and download cards. Keep conversation central; business task trees, Runs, operation approvals and business artifact states remain outside this increment.
 
 ## 2. Signatures
 
@@ -74,6 +74,16 @@ Instruction editor state and asynchronous responses remain attached to the origi
 “项目资料” is an on-demand panel for current editable instructions, readonly common text, source metadata and the two fixed Skills. Show save success as effective on the next send. A chat's `instructions.updated`/terminal results can display actual saved effects, including cancellation, or an explicit need to inspect current files when the outcome is uncertain.
 
 Per-request instruction/Skill snapshots and usage remain backend diagnostic records. Do not expose a “查看本轮资料” button or a per-request diagnostic panel in normal, failed, cancelled or legacy conversations. Message rendering and terminal notices contain no fallback debug entry. The session-level latest-compaction panel remains available separately.
+
+### Workspace files and attachments (W01-5)
+
+useAttachments keeps uploads/references keyed by the originating session or workspace draft key. Capture ownership before every async operation; moving a new-project draft into its first session must also move pending results/cancellation by stable attachment ID. Persist completed and submitted refs, not File objects or model credentials. Refresh marks interrupted uploads for manual recovery. Never silently drop a failed/pending attachment and send the remaining text.
+
+POST upload metadata then PUT raw bytes using XHR progress; uncertain response queries its upload ID before explicit retry. A completed upload is already an ordinary file. Removing its chip removes only the message reference; incomplete cancellation uses the scoped DELETE route and checks completion races. Both composer plus/dragdrop and the files panel use this lifecycle. Empty text with attachments requests the user's goal. File reference sends do not copy bodies into chat.
+
+FilesPanel uses captured workspace IDs, directory navigation, filename search, pagination, refresh, previews and attachment/download actions. Keep folder paths server-provided and URLs encoded. PNG/JPEG previews use fetched blob URLs revoked on unmount; Markdown disables external images/links and raw HTML; HTML/SVG appear as code. Errors preserve context and offer download. Follow the existing modal focus/Escape contract and full-screen 375px layout.
+
+files.output SSE and terminal snapshots carry validated FileOutput metadata; render FileOutputCard with its downloadId, never fabricate a card from model prose or a path. Keep cards in their owning request and merge under existing stream guards. These links are fixed bytes. HistoricalFile checks files/status only when clicked and labels current/changed/missing before offering a current-file download; missing refs do not gain a same-name substitute. No per-poll filesystem hashing or raw hash display. Files dialogs cover the chat for unread tracking. No extra user-facing debugging controls.
 
 ### Interaction and accessibility
 

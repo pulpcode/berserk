@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
 import type { ModelSettingsUpdate } from '../contracts/index.js';
+import { fileRoutes } from './file-routes.js';
 
 export async function createApp(lab: PiLab, serveWeb = false) {
   const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
@@ -28,6 +29,7 @@ export async function createApp(lab: PiLab, serveWeb = false) {
     return reply.code(500).send({ error: { code: 'SERVER_ERROR', message: '服务暂时无法处理请求，请稍后重试。' } });
   });
   const params = { type: 'object', properties: { id: { type: 'string', pattern: '^[0-9a-f-]{36}$' } }, required: ['id'], additionalProperties: false };
+  await fileRoutes(app, lab.files, lab.config.fileLimits?.maxFileBytes ?? 100 * 1024 * 1024);
   app.get('/api/info', async () => lab.info());
   const settingsQuery = { type: 'object', additionalProperties: false };
   app.get('/api/settings/model', { schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
@@ -63,12 +65,15 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   app.post<{ Params: { id: string }; Body: { requestId: string } }>('/api/sessions/:id/cancel', {
     schema: { params, body: { type: 'object', properties: { requestId: { type: 'string', format: 'uuid' } }, required: ['requestId'], additionalProperties: false } },
   }, async request => lab.cancel(request.params.id, request.body.requestId));
-  app.post<{ Params: { id: string }; Body: { text: string } }>('/api/sessions/:id/messages', {
-    schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 } }, required: ['text'], additionalProperties: false } },
+  app.post<{ Params: { id: string }; Body: { text: string; uploadIds?: string[]; fileRefs?: { path: string }[] } }>('/api/sessions/:id/messages', {
+    schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 },
+      uploadIds: { type: 'array', maxItems: lab.config.fileLimits?.maxAttachments ?? 20, uniqueItems: true, items: uuid },
+      fileRefs: { type: 'array', maxItems: lab.config.fileLimits?.maxAttachments ?? 20, items: { type: 'object', additionalProperties: false, required: ['path'], properties: { path: { type: 'string', minLength: 1, maxLength: 4096 } } } },
+    }, required: ['text'], additionalProperties: false } },
   }, async (request, reply) => {
     const text = request.body.text.trim();
     if (!text) throw new RequestError('EMPTY_MESSAGE', '请输入消息。');
-    const execution = lab.start(request.params.id, text);
+    const execution = lab.start(request.params.id, text, { uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs });
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });

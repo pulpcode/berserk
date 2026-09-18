@@ -19,6 +19,9 @@ export interface LabConfig extends ResolvedModelParameters {
   agentRunTimeoutMs: number;
   httpIdleTimeoutMs: number;
   llmRequestTimeoutMs?: number;
+  seatId?: string;
+  fileLimits?: { maxFileBytes: number; maxAttachments: number };
+  execution?: { enabled: boolean; image: string; cpus: number; memoryMb: number; pidsLimit: number; uid: number; gid: number };
 }
 export const modelParameterKeys = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
 export type ModelParameterOverrides = Partial<Record<typeof modelParameterKeys[number], number>>;
@@ -63,6 +66,9 @@ function integer(env: NodeJS.ProcessEnv, key: string, fallback: number, min: num
   return value;
 }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
+  const seatId = env.LAB_SEAT_ID ?? 'test-seat';
+  if (!/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new Error('LAB_SEAT_ID 仅允许 1～64 个字母、数字、下划线和短横线。');
+  if (env.LAB_EXECUTION_ENABLED !== undefined && !['true', 'false'].includes(env.LAB_EXECUTION_ENABLED)) throw new Error('LAB_EXECUTION_ENABLED 必须为 true 或 false。');
   const baseUrl = normalizeModelEndpoint(env.LLM_BASE_URL || 'https://api.deepseek.com');
   const identity = { provider: env.LLM_PROVIDER || 'deepseek', model: env.LLM_MODEL || 'deepseek-flash', baseUrl };
   const parameters: ModelParameterOverrides = {};
@@ -72,6 +78,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   if (legacy.length) console.warn(`已忽略旧实验配置：${legacy.join('、')}。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。`);
   return { ...identity, ...resolveModelParameters(identity, parameters),
     apiKey: env.LLM_API_KEY?.trim() || '', dataDir: resolve(env.LAB_DATA_DIR || '.local'),
+    seatId,
+    fileLimits: { maxFileBytes: integer(env, 'LAB_MAX_FILE_BYTES', 100 * 1024 * 1024, 1, 1024 * 1024 * 1024), maxAttachments: integer(env, 'LAB_MAX_ATTACHMENTS', 20, 1, 100) },
+    execution: { enabled: env.LAB_EXECUTION_ENABLED !== 'false', image: env.LAB_EXECUTION_IMAGE || 'berserk-file-runtime:w01-5',
+      cpus: integer(env, 'LAB_EXECUTION_CPUS', 2, 1, 32), memoryMb: integer(env, 'LAB_EXECUTION_MEMORY_MB', 1024, 128, 65536),
+      pidsLimit: integer(env, 'LAB_EXECUTION_PIDS', 128, 16, 4096),
+      uid: integer(env, 'LAB_EXECUTION_UID', process.getuid?.() || 1000, 1, 2147483647),
+      gid: integer(env, 'LAB_EXECUTION_GID', process.getgid?.() || 1000, 1, 2147483647) },
     port: integer(env, 'PORT', 4310, 1024, 65535),
     agentRunTimeoutMs: integer(env, 'AGENT_RUN_TIMEOUT_MS', 0, 0, 2147483647),
     httpIdleTimeoutMs: integer(env, 'LLM_HTTP_IDLE_TIMEOUT_MS', 300000, 0, 2147483647),

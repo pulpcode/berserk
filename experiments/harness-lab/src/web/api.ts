@@ -4,7 +4,7 @@ export class ApiFailure extends Error {
   constructor(message: string, readonly code: string, readonly status: number) { super(message); }
 }
 
-async function checkResponse(response: Response): Promise<Response> {
+export async function checkResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   const body = await response.json().catch(() => null) as ApiError | null;
   throw new ApiFailure(body?.error?.message || `请求未完成（${response.status}）`, body?.error?.code || 'HTTP_ERROR', response.status);
@@ -19,9 +19,9 @@ export async function api<T>(path: string, body?: object, method: 'POST' | 'PUT'
 }
 
 // A disconnected response never retries the POST: the server may still be working.
-export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void): Promise<void> {
+export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void, attachments?: { uploadIds?: string[]; fileRefs?: { path: string }[] }): Promise<void> {
   const response = await checkResponse(await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/messages`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }),
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, ...attachments }),
   }));
   if (!response.body) throw new Error('连接未返回消息流，请查询会话状态。');
   const reader = response.body.getReader();
