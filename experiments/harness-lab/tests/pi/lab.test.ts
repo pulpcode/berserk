@@ -121,7 +121,7 @@ describe('Pi native session integration', () => {
     await writeFile(join(config.dataDir, '.pi', 'skills', 'secret', 'SKILL.md'), '---\nname: secret\ndescription: PRIVATE_SKILL_MARKER\n---\n私有内容');
     const session = await lab.createSession();
     const { events } = await ask(lab, session.id, '读取资料');
-    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read', 'subagent']);
+    expect(calls[0].context.tools?.map(tool => tool.name)).toEqual(['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read', 'subagent', 'ask_user']);
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_MEMORY_MARKER');
     expect(calls[0].context.systemPrompt).not.toContain('PRIVATE_SKILL_MARKER');
     expect(events.some(event => event.type === 'tool.completed' && event.isError && event.text.includes('资料 ID 不存在'))).toBe(true);

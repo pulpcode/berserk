@@ -13,6 +13,7 @@ import { NewSession } from './NewSession';
 import { ModelSettings } from './ModelSettings';
 import { SubagentCard, conversationItems, subagentStatus } from './SubagentCard';
 import { Attachments, FileOutputCard, FilesPanel, HistoricalFile } from './Files';
+import { InteractionCard } from './InteractionCard';
 import './styles.css';
 
 const markdownComponents: Components = {
@@ -101,7 +102,8 @@ function App() {
   const busy = Boolean(active || chat.pending || chat.creating);
   const loadingSession = Boolean(chat.selected && !snapshot);
   const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '回复完成' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
+  const waiting = active?.phase === 'waiting_answer' || active?.phase === 'waiting_confirmation';
+  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '回复完成' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
@@ -224,7 +226,7 @@ function App() {
         if (follow.current) setNewContent(false);
         markVisibleRead();
       }}>
-        {loadingSession || chat.loading ? <div className="loading-conversation" role="status"><span className="loading-dot" />正在读取会话…</div> : messages.length === 0 ? <div className="empty-state">
+        {loadingSession || chat.loading ? <div className="loading-conversation" role="status"><span className="loading-dot" />正在读取会话…</div> : messages.length === 0 && !snapshot?.interactions?.length ? <div className="empty-state">
           <div className="welcome-symbol"><BrandMark /></div>
           <p className="eyebrow">想法，从这里展开</p>
           <h1>今天，我们一起处理什么？</h1>
@@ -233,7 +235,7 @@ function App() {
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId).map(item => item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Fragment key={item.key}>{!(item.message.toolName === 'file_output' && snapshot?.fileOutputs?.some(file => file.toolCallId === item.message.toolCallId)) && <Message workspaceId={snapshot!.workspaceId} message={item.message} active={busy && item.message.requestId === active?.requestId} />}{snapshot?.fileOutputs?.filter(file => file.toolCallId === item.message.toolCallId).map(file => <FileOutputCard key={file.downloadId} file={file} />)}</Fragment>)}{snapshot?.fileOutputs?.filter(file => !messages.some(message => message.toolCallId === file.toolCallId)).map(file => <FileOutputCard key={file.downloadId} file={file} />)}{busy && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId, snapshot?.interactions || []).map(item => item.kind === 'interaction' ? <InteractionCard key={item.key} interaction={item.interaction} result={item.result} canRespond={item.interaction.status === 'pending' && active?.requestId === item.interaction.requestId && active.status !== 'stopping'} submission={chat.interactionSubmissions[item.interaction.interactionId]} respond={chat.respondInteraction} query={chat.queryInteraction} /> : item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Fragment key={item.key}>{!(item.message.toolName === 'file_output' && snapshot?.fileOutputs?.some(file => file.toolCallId === item.message.toolCallId)) && <Message workspaceId={snapshot!.workspaceId} message={item.message} active={busy && item.message.requestId === active?.requestId} />}{snapshot?.fileOutputs?.filter(file => file.toolCallId === item.message.toolCallId).map(file => <FileOutputCard key={file.downloadId} file={file} />)}</Fragment>)}{snapshot?.fileOutputs?.filter(file => !messages.some(message => message.toolCallId === file.toolCallId)).map(file => <FileOutputCard key={file.downloadId} file={file} />)}{busy && !waiting && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock">
@@ -262,7 +264,7 @@ function App() {
           {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
           {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
           {attachmentItems.length > 0 && !chat.draft.trim() && <p className="attachment-notice">请描述希望如何处理这些文件。</p>}
-          <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{busy ? <span className="loading-dot" /> : snapshot?.lastResult?.status === 'succeeded' ? <Check size={12} aria-hidden="true" /> : <span className="status-dot" />}{status}</span><span id="input-hint">Enter 发送<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
+          <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{busy && !waiting ? <span className="loading-dot" /> : snapshot?.lastResult?.status === 'succeeded' ? <Check size={12} aria-hidden="true" /> : <span className="status-dot" />}{status}</span><span id="input-hint">Enter 发送<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
         </div>
       </div>
       </>}

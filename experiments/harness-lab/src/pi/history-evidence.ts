@@ -1,3 +1,4 @@
+import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
 import { validCompactionSummary } from './compaction-history.js';
@@ -31,6 +32,7 @@ export function decodeResourceRecord(value: unknown, workspaceId: string, readon
 }
 /** Reject incompatible/cross-workspace host entries before exposing or resuming native history. */
 export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: string, parentSessionId?: string, readonly = false): RequestResult | null {
+  interactionHistory(entries, workspaceId, parentSessionId);
   const children = subagentHistory(entries, workspaceId, parentSessionId);
   const requests = new Map<string, Extract<RequestResourcesRecord, { status: 'available' }>>();
   const completed = new Set<string>();
@@ -107,6 +109,8 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       if (!keys(data, ['requestId', 'skill']) || currentRequest !== data.requestId || !request || !skill(data.skill, true) || !object(data.skill) || !request.skills.some(item => item.id === (data.skill as Record<string, unknown>).id && item.hash === (data.skill as Record<string, unknown>).hash && item.version === (data.skill as Record<string, unknown>).version)) throw stateError();
     } else if (entry.customType === CHANGE_ENTRY) {
       if (readonly || !keys(data, ['requestId', 'change']) || currentRequest !== data.requestId || !requests.has(data.requestId) || !change(data.change)) throw stateError();
+    } else if (entry.customType === INTERACTION_REQUESTED || entry.customType === INTERACTION_RESOLVED || entry.customType === COMMAND_POLICY) {
+      if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();
     } else if (entry.customType === SUBAGENT_START || entry.customType === SUBAGENT_RESULT) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();
     } else { throw stateError(); }

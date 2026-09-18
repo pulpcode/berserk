@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
+import type { Interaction, InteractionResponse, AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
 import { api, sendMessage } from './api';
+import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { useAttachments } from './useAttachments';
 
 const DRAFT_KEY = 'berserk.drafts';
@@ -43,6 +44,15 @@ function sameActivity(a: SessionActivity, b?: SessionActivity) {
     && a.lastResult?.requestId === b.lastResult?.requestId && a.lastResult?.status === b.lastResult?.status;
 }
 
+/** Interaction outcomes only advance; delayed HTTP acknowledgements may omit execution evidence. */
+function mergeInteraction(previous: Interaction | undefined, incoming: Interaction): Interaction {
+  if (!previous) return incoming;
+  if (previous.requestId !== incoming.requestId || previous.toolCallId !== incoming.toolCallId || previous.kind !== incoming.kind) return previous;
+  if (previous.status !== 'pending' && previous.status !== incoming.status) return previous;
+  if (previous.kind === 'confirmation' && incoming.kind === 'confirmation' && previous.execution && (!incoming.execution || (previous.execution !== 'unknown' && incoming.execution === 'unknown'))) return { ...incoming, execution: previous.execution };
+  return incoming;
+}
+
 export function useChat() {
   const attachments = useAttachments();
   const { recover: recoverAttachments, clearSubmitted: clearSubmittedAttachments, move: moveAttachments, consume: consumeAttachments } = attachments;
@@ -64,6 +74,8 @@ export function useChat() {
   const snapshotsRef = useRef(snapshots);
   const revisions = useRef<Record<string, number>>({});
   const streams = useRef(new Map<string, { token: symbol; requestId?: string; terminal: boolean }>());
+  const interactionLocks = useRef(new Set<string>());
+  const [interactionSubmissions, setInteractionSubmissions] = useState<Record<string, InteractionSubmission>>({});
   const [pending, setPending] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
@@ -112,6 +124,17 @@ export function useChat() {
   }, [draft, recoverAttachments]);
   const put = useCallback((snapshot: SessionSnapshot) => {
     const id = snapshot.id;
+    const old = snapshotsRef.current[id]?.interactions || [];
+    const interactions = (snapshot.interactions || []).filter(item => item.sessionId === id && item.workspaceId === snapshot.workspaceId).map(item => {
+      const previous = old.find(entry => entry.interactionId === item.interactionId);
+      // A late pending projection cannot reopen an already settled interaction.
+      return mergeInteraction(previous, item);
+    });
+    for (const item of interactions) if (item.status !== 'pending') clearInteractionDraft(item);
+    snapshot = { ...snapshot, interactions };
+    if (snapshot.active && ['waiting_answer', 'waiting_confirmation'].includes(snapshot.active.phase || '') && !interactions.some(item => item.requestId === snapshot.active!.requestId && item.status === 'pending')) {
+      snapshot = { ...snapshot, active: { ...snapshot.active, phase: 'preparing' } };
+    }
     revisions.current[id] = (revisions.current[id] || 0) + 1;
     snapshotsRef.current = { ...snapshotsRef.current, [id]: snapshot };
     setSnapshots(snapshotsRef.current);
@@ -132,7 +155,11 @@ export function useChat() {
       // A GET started before a newer stream event must not overwrite that event.
       if (revision !== (revisions.current[id] || 0)) return;
       const stream = streams.current.get(id);
-      if (stream && !stream.terminal && result.active) return;
+      if (stream && !stream.terminal && result.active) {
+        const current = snapshotsRef.current[id];
+        if (current && result.active.requestId === stream.requestId) put({ ...current, interactions: result.interactions, active: result.active });
+        return;
+      }
       // Polling may observe completion before the final SSE frame arrives.
       if (stream && !stream.terminal && !result.active) return;
       put(result);
@@ -140,6 +167,50 @@ export function useChat() {
       setReadErrors(previous => ({ ...previous, [id]: '' }));
     } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
   }, [put]);
+
+  const applyInteraction = useCallback((item: Interaction) => {
+    const current = snapshotsRef.current[item.sessionId];
+    if (!current || item.workspaceId !== current.workspaceId) return;
+    const previous = current.interactions?.find(entry => entry.interactionId === item.interactionId);
+    if (previous && (previous.requestId !== item.requestId || previous.toolCallId !== item.toolCallId || (previous.status !== 'pending' && previous.status !== item.status))) return;
+    item = mergeInteraction(previous, item);
+    const interactions = [...(current.interactions || []).filter(entry => entry.interactionId !== item.interactionId), item];
+    const waiting = interactions.find(entry => entry.requestId === item.requestId && entry.status === 'pending');
+    const active = current.active?.requestId === item.requestId && current.active.status !== 'stopping' && (!previous || previous.status === 'pending')
+      ? { ...current.active, phase: waiting ? waiting.kind === 'question' ? 'waiting_answer' as const : 'waiting_confirmation' as const : item.status === 'approved' ? 'tool' as const : 'preparing' as const }
+      : current.active;
+    put({ ...current, active, interactions });
+  }, [put]);
+  const queryInteraction = useCallback(async (item: Interaction) => {
+    const key = item.interactionId;
+    if (interactionLocks.current.has(key)) return;
+    interactionLocks.current.add(key);
+    setInteractionSubmissions(previous => ({ ...previous, [key]: { ...previous[key], busy: true } }));
+    try {
+      const result = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(item.sessionId)}`);
+      const latest = result.interactions?.find(entry => entry.interactionId === key && entry.requestId === item.requestId);
+      if (!latest || result.id !== item.sessionId || result.workspaceId !== item.workspaceId) throw new Error('未查询到该交互，请刷新会话后核对。');
+      applyInteraction(latest);
+      setReadErrors(previous => ({ ...previous, [item.sessionId]: '' }));
+      setInteractionSubmissions(previous => ({ ...previous, [key]: { error: latest.status === 'pending' ? '尚未收到提交，请核对后手动重试。' : '' } }));
+    } catch (error) { setInteractionSubmissions(previous => ({ ...previous, [key]: { needsQuery: true, error: `查询未完成，草稿已保留。${reason(error)}` } })); }
+    finally { interactionLocks.current.delete(key); }
+  }, [applyInteraction]);
+  const respondInteraction = useCallback(async (item: Interaction, response: InteractionResponse) => {
+    const key = item.interactionId;
+    const current = snapshotsRef.current[item.sessionId];
+    if (interactionLocks.current.has(key) || interactionSubmissions[key]?.needsQuery || current?.active?.requestId !== item.requestId || current.active.status === 'stopping' || current.interactions?.find(entry => entry.interactionId === key)?.status !== 'pending') return;
+    interactionLocks.current.add(key);
+    setInteractionSubmissions(previous => ({ ...previous, [key]: { busy: true } }));
+    try {
+      const result = await api<Interaction>(`/api/sessions/${encodeURIComponent(item.sessionId)}/interactions/${encodeURIComponent(key)}/response`, response);
+      if (result.interactionId !== key || result.sessionId !== item.sessionId || result.requestId !== item.requestId || result.kind !== item.kind) throw new Error('返回的交互归属不一致，请查询核对。');
+      applyInteraction(result);
+      setInteractionSubmissions(previous => ({ ...previous, [key]: {} }));
+    } catch (error) {
+      setInteractionSubmissions(previous => ({ ...previous, [key]: { needsQuery: true, error: `提交结果需核对，草稿已保留；请先查询最新状态。${reason(error)}` } }));
+    } finally { interactionLocks.current.delete(key); }
+  }, [applyInteraction, interactionSubmissions]);
 
   const refreshActivity = useCallback((): Promise<void> => {
     if (activityRequest.current) return activityRequest.current;
@@ -268,6 +339,10 @@ export function useChat() {
         setPending(previous => ({ ...previous, [id]: false }));
         return;
       }
+      if (event.type === 'interaction.updated') {
+        if (event.interaction.sessionId !== id || event.interaction.requestId !== event.requestId) return;
+        applyInteraction(event.interaction); return;
+      }
       if (event.type === 'text.delta') {
         const last = messages.at(-1);
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
@@ -296,12 +371,17 @@ export function useChat() {
     try {
       await sendMessage(id, text, receive, files.length ? { uploadIds: files.filter(file => file.uploadId).map(file => file.uploadId!), fileRefs: files.filter(file => !file.uploadId).map(file => ({ path: file.path! })) } : undefined);
       if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: '连接已断开，正在查询会话状态；消息不会重复发送。' }));
-    } catch (error) { setErrors(previous => ({ ...previous, [id]: reason(error) })); recover(id); }
+    } catch (error) {
+      setErrors(previous => ({ ...previous, [id]: reason(error) }));
+      // After admission, a reload/disconnection can interrupt the stream while the
+      // server still owns this request. Only its terminal snapshot may restore it.
+      if (!stream.requestId) recover(id);
+    }
     finally {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info, attachments, consumeAttachments]);
+  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info, attachments, consumeAttachments, applyInteraction]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -327,7 +407,7 @@ export function useChat() {
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading, creating, create, send, cancel, draftKey, attachments,
+    loading, creating, create, send, cancel, draftKey, attachments, interactionSubmissions, respondInteraction, queryInteraction,
     draft: drafts[draftKey] || '', setDraft: (text: string) => draft(draftKey, text),
     submitted: submitted[selected] || '', restoreSubmitted: () => draft(draftKey, submittedRef.current[selected] || ''),
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],

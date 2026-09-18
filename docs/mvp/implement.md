@@ -39,20 +39,22 @@ M1 中 W07-A 可与 W05 按接口分工，W10-A 可在 W05 完成后独立推进
 
 [W01-2：最小工作区、文件式 Memory 与 Skill](../../.trellis/tasks/archive/2026-09/09-16-w01-2-workspace-memory/review.md) 已完成 A01～A12 组合验收。本增量 [W01-3：上下文管理与压缩](../../.trellis/tasks/09-17-w01-3-context-compaction/review.md) 已形成 S2b 需求、设计、实施步骤与 B01～B13 验收：采用 Pi 默认压缩，保留当前指令和原始历史；持续执行采用独立超时、可选总时限和原生摘要输出额度，已实现并通过 B01～B13 组合验收；S2c [W01-4 子 Agent 委派与协作](../../.trellis/tasks/09-17-w01-4-subagent/review.md) 已实现基础多角色配置、single 只读委派、父子关联和用量观测，复用 Pi SDK，正式预算仍在 S3。 文件作业增量 [W01-5 Web 通用文件作业](../../.trellis/tasks/09-17-w01-5-artifact-versions/review.md) 为 S3a，已实现并通过 E01～E15 组合验收，覆盖文件上传、Pi 文件工具、隔离脚本执行及下载交付，Pi 原生会话不迁移，成果业务状态后置。
 
+已完成 [W01-6 Web 人工交互：提问与操作确认（HITL）](../../.trellis/tasks/09-18-w01-6-hitl/review.md)（S3b），已实现并通过 F01～F18 组合验收：复用 Pi 固定扩展与工具钩子接入 AskUser、确认／拒绝及 bash 参数规则，共用停止、刷新和历史；按 F01～F18 验证。真实上报／下发、跨席位审批、完整 Run、等待资源释放及跨重启接续后置。
+
 ## 2. M0：通用协议与技术验证
 
 ### W01 通用 Harness 协议与技术路线验证
 
 建议责任方向：Agent／后端技术负责人。
 
-W01 首增量先交付 Pi 多轮对话与最小只读工具，见 [首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[需求与分期验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。完整 Run 与数据契约在 [后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 中单独标明阶段。W01-1 已完成 C01～C06，W01-2/S2a 已完成 A01～A12；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；S3～S5 未实施。首增量证据见任务验证记录。
+W01 首增量先交付 Pi 多轮对话与最小只读工具，见 [首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[需求与分期验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。完整 Run 与数据契约在 [后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 中单独标明阶段。W01-1 已完成 C01～C06，W01-2/S2a 已完成 A01～A12；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c、W01-5/S3a 已实现；W01-6/S3b 已实现并通过 F01～F18 组合验收，其余 S3～S5 未实施。首增量证据见任务验证记录。
 
 | 顺序 | 工作与完成条件 |
 | --- | --- |
 | S0 最小准备 | TypeScript／Node + Pi 接入模块、Web／API 工程、配置与只读 fixture；首次真实联调前由用户配置 API Key 和测试预算。不先建设 SQLite、完整内核契约或确认恢复 |
 | S1 首增量 W01-1 | 真实多轮与流式回复、独立会话、基本停止／错误、一个资料读取工具、Pi 原生历史保存；C01～C06 通过即可独立交付 |
 | S2 Harness 扩展 | AGENTS.md、Skill、更多工具、上下文压缩、单层只读子 Agent；先验证能力，正式 Run 和成果版本不作为前置 |
-| S3 文件作业与运行管理 | 先按 W01-5/S3a 验证任务 × 席位工作区、上传即普通文件、Pi 文件读写、最小执行沙盒、中间产物和预览／下载（E01～E15）；后续另接完整 Run、业务成果状态／版本、平台会话存储、授权与可靠事件，完成 T01～T11 |
+| S3 文件作业与运行管理 | 先按 W01-5/S3a 验证任务 × 席位工作区、上传即普通文件、Pi 文件读写、最小执行沙盒、中间产物和预览／下载（E01～E15）；随后按 W01-6/S3b 验证 Web 提问、操作确认与 bash 规则（F01～F18，已通过）；后续另接完整 Run、业务成果状态／版本、平台会话存储、授权与可靠事件，完成 T01～T11 |
 | S4 可替换边界 | 补齐独立工作记录、版本化快照、导出／读回与契约检查，完成 T13；不实现自研第二内核或完整迁移 |
 | S5 技术收敛 | 按 T12 汇总完整证据、宿主补齐和维护成本，确定 M1 内核／数据库／主要框架；首步使用 Pi 不等于长期定案 |
 

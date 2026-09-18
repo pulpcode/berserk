@@ -48,10 +48,12 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 | M3 领域接入与方案闭环 | 特情处理和专业子 Agent 配置、双向地图、多源方案集成 | W09-B、W10-B、W11、W12 |
 | M4 异常验证与交付 | 双任务隔离、恢复和幂等测试、Ubuntu 部署与演示材料 | W13 |
 
-W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，其后的能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
+W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，W01-6/S3b 已实现并通过 F01～F18 组合验收，其后的能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
 
 用户已具备 DeepSeek、Kimi 等 API 和 Ubuntu 服务器，建设后由用户配置接入信息；具体模型、接口协议、资源规格及预算届时补齐，不要求现在提供密钥。凭证放入项目目录的本地配置并排除 Git 跟踪。协议设计可以先行，内核与技术路线通过 W01 收敛。样板业务、席位矩阵、成果字段与地图在 M2／M3 再收敛。人员、工期、成本和性能阈值未确定，本稿不补造承诺。
 
 编号用于追踪，不代表执行顺序；A 表示通用部分，B 表示后续业务接入。M1 按 [FG01～FG11](acceptance.md) 验证，最终 MVP 按 AC01～AC24 验收。变更见 [版本记录](decisions.md)，范围以 v0.8 为准；W01 的任务验收是前置探针，不提前宣告框架或业务验收通过。
 
 文件作业增量 [W01-5：Web 通用文件作业](../../.trellis/tasks/09-17-w01-5-artifact-versions/review.md) 为 S3a：工作区按任务 × 席位隔离，上传完成即普通可写文件；Pi 通过最小容器沙盒读写文件、编写执行脚本、保留中间产物并提供预览／下载。沿用 Pi 原生会话；成果上报、业务状态与版本库、完整 Run 及会话迁移后置。已实现并通过 E01～E15 组合验收。
+
+[W01-6：Web 人工交互——提问与操作确认（HITL）](../../.trellis/tasks/09-18-w01-6-hitl/review.md) 为 S3b，已实现并通过 F01～F18 组合验收。复用 Pi 固定扩展与工具钩子，实现 AskUser、操作确认及 bash 允许／询问／禁止规则；提问与授权分别处理，Docker 隔离保持不变。普通 Python／Node 文件脚本仍可执行，规则不等于任意脚本行为审计。为后续上报、下发准备；业务审批、成果状态、完整 Run 与跨重启接续另行建设。

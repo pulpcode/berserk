@@ -1,3 +1,5 @@
+import type { Interaction } from './interactions.js';
+export type * from './interactions.js';
 import type { FileRef, FileOutput } from './files.js';
 export type * from './files.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
@@ -29,7 +31,7 @@ export interface SubagentSummary {
 export interface RequestState {
   requestId: string;
   status: 'responding' | 'stopping';
-  phase?: 'preparing' | 'generating' | 'tool' | 'compacting' | 'subagent';
+  phase?: 'preparing' | 'generating' | 'tool' | 'compacting' | 'subagent' | 'waiting_answer' | 'waiting_confirmation';
   toolName?: string;
 }
 export interface RequestResult {
@@ -51,6 +53,7 @@ export interface SessionActivity extends SessionSummary {
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  interactions?: Interaction[];
   fileOutputs?: FileOutput[];
   subagents?: SubagentSummary[];
   latestCompaction?: CompactionSummary;
@@ -106,6 +109,7 @@ export type StreamEvent = {
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }
   | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean }
+  | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }
   | { type: 'response.completed' | 'response.failed' | 'response.cancelled'; snapshot: SessionSnapshot }

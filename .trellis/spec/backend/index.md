@@ -12,7 +12,7 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
-Read [Harness Lab Contract](./harness-lab.md) for conversation, workspace, compaction and subagent implementation. Also read [File and Execution Contract](./files-execution.md) for W01-5 files, upload and sandbox work. Run the checks listed there. Existing placeholder documents below are not established conventions.
+Read [Harness Lab Contract](./harness-lab.md) for conversation, workspace, compaction and subagent implementation. Also read [File and Execution Contract](./files-execution.md) for W01-5 files, upload and sandbox work. Read [Web Interaction Contract](./hitl.md) for W01-6 AskUser, operation confirmation and Bash rules. Run the checks listed there. Existing placeholder documents below are not established conventions.
 
 ## Guidelines Index
 
@@ -20,6 +20,7 @@ Read [Harness Lab Contract](./harness-lab.md) for conversation, workspace, compa
 |-------|-------------|--------|
 | [Harness Lab Contract](./harness-lab.md) | Implemented conversation/workspace API, state, persistence and verification contracts | Implemented scope |
 | [File and Execution Contract](./files-execution.md) | Seat files, upload/download, public Pi tools and request container boundaries | Implemented; physical acceptance tracked per task |
+| [Web Interaction Contract](./hitl.md) | AskUser, operation gates, native history and Bash policy | Implemented scope |
 | [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
 | [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | To fill |
 | [Error Handling](./error-handling.md) | Error types, handling strategies | To fill |

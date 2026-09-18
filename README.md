@@ -10,6 +10,7 @@ Memory 在本项目中明确指 Agent 指令文件（如 AGENTS.md、CLAUDE.md�
 
 当前 W01-1 已完成实现与 C01～C06 验收，应用位于 [experiments/harness-lab](experiments/harness-lab/README.md)，本地检查与真实模型验收结果见 [验证记录](.trellis/tasks/09-16-w01-harness-validation/research/validation-results.md)。规划内容根据 [项目讨论](https://chatgpt.com/share/6aa9fb5b-1938-83e8-be06-54d1be680784) 及后续调整更新至 v0.8：先交付 Pi 多轮对话，再完善 Harness 能力、Web 文件与脚本作业、运行管理与作业框架，随后开展样板业务和信息模拟服务。完整 Run、确认恢复、平台快照和导出检查不作为第一步前置条件。业务工作分派、子 Agent 委派与外部调度分别管理，调度实现继续后延。
 
+- [W01-6：Web 人工交互](.trellis/tasks/09-18-w01-6-hitl/review.md)（S3b：AskUser、操作确认、Bash 命令规则；已实现并通过 F01～F18 组合验收）
 - [W01-4：子 Agent 委派与协作](.trellis/tasks/09-17-w01-4-subagent/review.md)（S2c：优先复用 Pi，基础多角色配置与单层只读委派；已实现，验收见阶段记录）
 - [W01-5：Web 通用文件作业](.trellis/tasks/09-17-w01-5-artifact-versions/review.md)（S3a：任务 × 席位工作区、普通文件上传、Pi 文件工具、最小执行沙盒与下载交付；已实现并通过 E01～E15 组合验收）
 - [W01-3：上下文管理与压缩](.trellis/tasks/09-17-w01-3-context-compaction/review.md)（S2b：Pi 默认压缩，已实现并通过 B01～B13 组合验收）

@@ -5,6 +5,8 @@ import type { SessionActivity, Workspace } from '../contracts/index';
 export function activityStatus(session: SessionActivity) {
   if (session.active?.status === 'stopping') return '正在停止';
   if (session.active) {
+    if (session.active.phase === 'waiting_answer') return '待回答';
+    if (session.active.phase === 'waiting_confirmation') return '待确认';
     if (session.active.phase === 'subagent') return '子任务处理中';
     if (session.active.phase === 'compacting') return '正在压缩上下文';
     if (session.active.phase === 'preparing') return '准备资料';
@@ -26,7 +28,7 @@ export function activityStatus(session: SessionActivity) {
 }
 
 function needsAttention(session: SessionActivity, unread: Record<string, boolean>) {
-  return Boolean(session.recoveryWarning || (!session.active && session.lastResult?.status === 'failed') || unread[session.id]);
+  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && session.lastResult?.status === 'failed') || unread[session.id]);
 }
 
 function Status({ session, unread = false, id }: { session: SessionActivity; unread?: boolean; id?: string }) {

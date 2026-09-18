@@ -38,7 +38,8 @@ export function writableFileTools(sandbox: RequestSandbox, options: { logsDir: s
   return [
     defineTool(createWriteToolDefinition('/workspace', { operations: { writeFile: (path, content) => sandbox.writeFile(path, content), mkdir: (path) => sandbox.mkdir(path) } })),
     defineTool(createEditToolDefinition('/workspace', { operations: { readFile: path => sandbox.readFile(path), writeFile: (path, content) => sandbox.writeFile(path, content), access: path => sandbox.access(path) } })),
-    defineTool({ ...bash, promptGuidelines: ['命令在当前席位的隔离容器中执行，工作目录是 /workspace；无网络，不包含模型密钥。'],
+    defineTool({ ...bash, promptGuidelines: ['命令在当前席位的隔离容器中执行，工作目录是 /workspace；无网络，不包含模型密钥。',
+      'bash 调用由服务端命令规则检查。需授权的命令会在实际执行前暂停，网页展示完整命令供用户明确确认或拒绝；发起工具调用本身不代表已获批准。不要用 ask_user 代替操作授权。用户拒绝后，不要通过改写命令或其他工具执行同一被拒绝操作。'],
       execute: async (...args: Parameters<typeof bash.execute>) => {
         options.signal.throwIfAborted();
         const directory = join(options.logsDir, options.requestId);

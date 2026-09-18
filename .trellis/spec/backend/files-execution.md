@@ -52,3 +52,7 @@ Run typecheck, lint and npm test -- --maxWorkers=2. File routes are covered by t
 ## Wrong vs correct
 
 Wrong: validate an existing generated download filename with the upload-only 240-byte naming rule, causing successful publication followed by download failure. Correct: validate the controlled relative path and require the stored name to equal its basename; cover a 250-byte ordinary filename in publication/download tests.
+
+### W01-6 command entry policy
+
+Bash calls pass the [Web Interaction Contract](hitl.md) before reaching existing container operations. `command-policy.ts` uses tree-sitter 0.25.1 and tree-sitter-bash 0.25.1, returning allow/ask/deny; unsupported syntax asks, infrastructure failures stop. This does not audit arbitrary script contents or replace filesystem/process isolation. Keep ordinary Python/Node file execution and all existing container restrictions. Policy tests never execute their dangerous sample strings.

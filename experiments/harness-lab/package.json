@@ -24,7 +24,8 @@
     "migrate:seats": "tsx --env-file=.env.local scripts/migrate-seats.ts",
     "probe:execution": "tsx scripts/probe-execution.ts",
     "probe:files": "tsx --env-file=.env.local scripts/probe-files.ts",
-    "probe:files-continuation": "tsx --env-file=.env.local scripts/probe-files-continuation.ts"
+    "probe:files-continuation": "tsx --env-file=.env.local scripts/probe-files-continuation.ts",
+    "probe:hitl": "tsx --env-file-if-exists=.env.local scripts/probe-hitl.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
@@ -36,6 +37,8 @@
     "react-dom": "19.3.0",
     "react-markdown": "10.1.0",
     "remark-gfm": "4.0.1",
+    "tree-sitter": "0.25.1",
+    "tree-sitter-bash": "0.25.1",
     "typebox": "1.3.7"
   },
   "devDependencies": {

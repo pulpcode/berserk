@@ -62,6 +62,9 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   app.get<{ Params: { id: string; requestId: string } }>('/api/sessions/:id/requests/:requestId/resources', { schema: { params: { type: 'object', properties: { id: uuid, requestId: uuid }, required: ['id', 'requestId'], additionalProperties: false } } }, async request => lab.getRequestResources(request.params.id, request.params.requestId));
   app.get<{ Params: { id: string; compactionId: string } }>('/api/sessions/:id/compactions/:compactionId', { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId));
   app.get<{ Params: { id: string } }>('/api/sessions/:id', { schema: { params } }, async request => lab.get(request.params.id));
+  app.post<{ Params: { id: string; interactionId: string }; Body: unknown }>('/api/sessions/:id/interactions/:interactionId/response', {
+    schema: { params: resourceParams('interactionId'), querystring: settingsQuery },
+  }, async request => lab.respondInteraction(request.params.id, request.params.interactionId, request.body));
   app.post<{ Params: { id: string }; Body: { requestId: string } }>('/api/sessions/:id/cancel', {
     schema: { params, body: { type: 'object', properties: { requestId: { type: 'string', format: 'uuid' } }, required: ['requestId'], additionalProperties: false } },
   }, async request => lab.cancel(request.params.id, request.body.requestId));

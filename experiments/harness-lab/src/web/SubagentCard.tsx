@@ -1,7 +1,7 @@
 import { ChevronDown, GitBranch } from 'lucide-react';
 import Markdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import type { PublicMessage, SubagentSummary } from '../contracts/index';
+import type { Interaction, PublicMessage, SubagentSummary } from '../contracts/index';
 
 const markdownComponents: Components = {
   table: ({ children }) => <div className="markdown-table" role="region" aria-label="子任务结果表格，可横向滚动" tabIndex={0}><table>{children}</table></div>,
@@ -42,9 +42,9 @@ export function SubagentCard({ child, parentStopping }: { child: SubagentSummary
   </details>;
 }
 
-type ConversationItem = { kind: 'message'; key: string; message: PublicMessage } | { kind: 'subagent'; key: string; child: SubagentSummary };
+type ConversationItem = { kind: 'interaction'; key: string; interaction: Interaction; result?: PublicMessage } | { kind: 'message'; key: string; message: PublicMessage } | { kind: 'subagent'; key: string; child: SubagentSummary };
 /** Keep child evidence at its owning tool position, including native histories after reload. */
-export function conversationItems(messages: PublicMessage[], subagents: SubagentSummary[], activeRequestId?: string): ConversationItem[] {
+export function conversationItems(messages: PublicMessage[], subagents: SubagentSummary[], activeRequestId?: string, interactions: Interaction[] = []): ConversationItem[] {
   const children = [...new Map(subagents.map(child => [child.subagentId, child])).values()];
   const byTool = new Map(children.map(child => [child.toolCallId, child]));
   const byRequest = new Map<string, SubagentSummary[]>();
@@ -75,5 +75,23 @@ export function conversationItems(messages: PublicMessage[], subagents: Subagent
   });
   // During preparation a stream can have a child update before its first projected message.
   if (activeRequestId) (byRequest.get(activeRequestId) || []).filter(child => !anchored.has(child.subagentId)).forEach(add);
-  return items;
+  // Interaction evidence remains attached to its exact tool call, with a request-boundary fallback.
+  const output: ConversationItem[] = [];
+  const added = new Set<string>();
+  const append = (interaction: Interaction, result?: PublicMessage) => {
+    if (added.has(interaction.interactionId)) return;
+    added.add(interaction.interactionId);
+    output.push({ kind: 'interaction', key: `interaction:${interaction.interactionId}`, interaction, result });
+  };
+  for (const item of items) {
+    const message = item.kind === 'message' ? item.message : undefined;
+    const interaction = message?.role === 'tool' ? interactions.find(entry => entry.toolCallId === (message.toolCallId || message.id) && (!message.requestId || message.requestId === entry.requestId)) : undefined;
+    if (interaction) append(interaction, message);
+    else output.push(item);
+    if (message?.requestId && messages[lastRequestIndex.get(message.requestId)!]?.id === message.id) {
+      interactions.filter(entry => entry.requestId === message.requestId && !messages.some(candidate => candidate.role === 'tool' && (candidate.toolCallId || candidate.id) === entry.toolCallId)).forEach(entry => append(entry));
+    }
+  }
+  interactions.filter(entry => !added.has(entry.interactionId)).forEach(entry => append(entry));
+  return output;
 }

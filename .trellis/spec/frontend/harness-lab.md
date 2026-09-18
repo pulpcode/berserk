@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details, W01-4 role-aware child-task cards and W01-5 file uploads, browsing and download cards. Keep conversation central; business task trees, Runs, operation approvals and business artifact states remain outside this increment.
+Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details, W01-4 role-aware child-task cards and W01-5 file uploads, browsing and download cards. Keep conversation central; business task trees, persistent Runs and business artifact states remain outside this increment. W01-6 adds the request-local interactions below.
 
 ## 2. Signatures
 
@@ -170,3 +170,13 @@ Correct: retain request-keyed read markers until the matching reply is visible a
 Wrong: close a settings dialog and retain its secret in sessionStorage, or silently resend after a version conflict.
 
 Correct: unmount write-only secret state; show latest redacted configuration separately and require a manual save.
+
+### Web questions and operation confirmation (W01-6)
+
+`InteractionCard` renders the shared question/confirmation union at its exact tool position. Keep question answers separate from approvals; never auto-submit options or parse ordinary text as authorization. Plain text questions and full original commands/cwd are inert. Approved is not succeeded; show actual tool evidence and distinguish not-started/unknown outcomes. Navigation phases waiting_answer/waiting_confirmation enter attention without marking a new reply unread.
+
+`useChat` owns response POST, query-before-manual-retry and session/request guards. Failed or uncertain submissions preserve input and require GET before retry; never implicitly replay POST. Merge terminal interactions monotonically so late pending snapshots cannot reopen controls. Per-tab sessionStorage drafts use session/request/interaction IDs; switching/refresh retain them and a terminal result clears them. Closing the tab does not promise draft recovery. Model-supplied question IDs may be `constructor` or `__proto__`: use own-property lookup, not inherited object fields, when reading draft dictionaries.
+
+Keep original chat drafts, focus and stop controls while ordinary message sending is disabled. No Enter/IME implicit answer or approval, no global modal. Errors are associated with their card. Test stale responses, multiple tabs, custom and multi-select answers, skip, stop and narrow layout in addition to normal submission.
+
+Once `response.started` has supplied a requestId, an SSE read error (including page reload) is not proof that the message was rejected. Do not restore submitted text into the composer on that error alone. Keep recovery text separate; use the authoritative snapshot to handle actual failure/cancellation and preserve a newer draft. Test accepted AskUser → stream failure → reload with an empty composer and an independent new draft.

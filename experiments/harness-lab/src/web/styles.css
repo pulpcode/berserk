@@ -475,3 +475,25 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 
 .historical-file button { display: inline-flex; gap: 5px; align-items: center; border: 0; background: none; padding: 3px 0; text-align: left; overflow-wrap: anywhere; }
 .historical-file a { color: var(--accent); }
+
+.interaction-card { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 18px 0; background: var(--surface); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; min-width: 0; }
+.interaction-card > header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--accent); }
+.interaction-status { margin-left: auto; font-size: 12px; color: var(--text); }
+.interaction-questions fieldset { min-width: 0; border: 0; padding: 0; margin: 18px 0; }
+.interaction-questions legend { font-weight: 600; margin-bottom: 8px; white-space: pre-wrap; }
+.interaction-option { display: flex; gap: 10px; align-items: flex-start; padding: 10px; margin: 6px 0; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+.interaction-option input { margin: 5px 0 0; flex-shrink: 0; width: 16px; height: 16px; accent-color: var(--accent); }
+.interaction-option small { display: block; color: var(--muted); }
+.interaction-text { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.interaction-text textarea { width: 100%; min-height: 90px; resize: vertical; padding: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: var(--surface); }
+.interaction-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+.interaction-actions button { min-height: 40px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; background: var(--surface); }
+.interaction-actions button.primary-action { background: var(--accent); color: white; }
+.interaction-action h3 { font-size: 15px; margin: 16px 0 8px; }
+.interaction-action p, .interaction-answer, .interaction-reason { white-space: pre-wrap; }
+.interaction-card pre { max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: var(--faint); border-radius: 6px; font-size: 12px; }
+.interaction-card summary { cursor: pointer; min-height: 32px; }
+.interaction-rule, .interaction-reason { color: var(--muted); }
+.interaction-history-options { padding-left: 20px; color: var(--muted); }
+.interaction-result { margin-top: 14px; }
+@media (max-width: 767px) { .interaction-card { padding: 14px; } .interaction-text textarea { font-size: 16px; } .interaction-actions button { min-height: 44px; } }

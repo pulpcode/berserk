@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "请求停止、Pi 历史、会话隔离与 SDK 边界"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "确认不得改变文件范围和容器结束清理"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "会话归属、活动状态、草稿与未读规则"}
+{"file": ".trellis/tasks/09-18-w01-6-hitl/research/pi-hitl.md", "reason": "Pi 固定扩展、工具拦截、网页桥接与等待停止时序"}
+{"file": ".trellis/tasks/09-18-w01-6-hitl/research/command-policy.md", "reason": "命令策略的参考范围、允许／询问／禁止样例和脚本边界"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "已实现的交互记录、命令策略及执行效果契约"}
