@@ -71,6 +71,33 @@ const composer = (page: Page) => page.getByRole('textbox', { name: '发送消息
 const attach = (page: Page, name?: string) => page.getByLabel('选择附件', { exact: true }).setInputFiles(file(name));
 
 // Deterministic HTTP evidence only; real Pi/container/provider acceptance is a separate probe.
+test('cancelled commands show stopped while nonzero exits, timeouts and cleanup failures remain failures after reload', async ({ page }) => {
+  const app = await filesApi(page);
+  const session = app.sessions[0]!;
+  const cancelled = '命令已取消；已保存文件不会回滚。';
+  const log = `/logs/8403c8f2-aab0-4045-aad9-2d5d71c86211/${'a'.repeat(64)}.log`;
+  session.messages = [
+    { text: cancelled, isError: true },
+    { text: `${cancelled}\n已保留命令日志：${log}`, isError: true },
+    { text: `${cancelled}\n\nCommand exited with code 7`, isError: true },
+    { text: '命令超过 1 秒并已停止。', isError: true },
+    { text: '执行环境清理失败，请核对。', isError: true },
+    { text: cancelled, isError: false },
+  ].map((result, index) => ({ id: `tool-${index}`, role: 'tool', toolName: 'bash', requestId: 'cancelled-request', ...result }));
+  session.lastResult = { requestId: 'cancelled-request', status: 'cancelled' };
+  await page.getByRole('button', { name: '会话 A', exact: true }).click();
+  for (let round = 0; round < 2; round++) {
+    if (round) await page.reload();
+    await expect(page.locator('summary').filter({ hasText: /^命令已停止$/ })).toHaveCount(2);
+    await expect(page.locator('.tool-result.failed > summary')).toHaveCount(3);
+    await expect(page.locator('summary').filter({ hasText: /^已执行命令$/ })).toHaveCount(1);
+    const stopped = page.locator('.tool-result').filter({ hasText: log });
+    await stopped.locator('summary').click();
+    await expect(stopped.locator('pre')).toHaveText(`${cancelled}\n已保留命令日志：${log}`);
+    await expect(stopped).not.toHaveClass(/failed/);
+  }
+});
+
 test('upload stays with its original session, restores references after refresh, removal keeps workspace bytes', async ({ page }) => {
   const app = await filesApi(page); app.controls.hold = true;
   await composer(page).fill('甲会话草稿'); await attach(page);

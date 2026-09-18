@@ -27,8 +27,11 @@ function Message({ message, active, workspaceId }: { message: PublicMessage; act
   if (message.role === 'tool' && message.toolName === 'subagent') return <p className="subagent-placeholder">{message.isError ? '子任务委派未完成，请查看主回复中的说明。' : message.text || !active ? '未记录可展示的子任务详情。' : '正在准备子任务…'}</p>;
   const fileActions: Record<string, string> = { read: '读取文件', write: '写入文件', edit: '修改文件', bash: '执行命令', ls: '列出文件', find: '查找文件', file_output: '提供文件' };
   const action = (message.toolName && fileActions[message.toolName]) || (message.toolName === 'instructions.update' ? '更新指令' : message.toolName === 'instructions.read' ? '读取指令' : message.toolName === 'skill.read' ? '读取 Skill' : '读取资料');
-  if (message.role === 'tool') return <details className={`tool-result${message.isError ? ' failed' : ''}`}>
-    <summary><FileText size={16} aria-hidden="true" /><span>{message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
+  // Match the executor's exact cancellation response, including old history and optional archived log.
+  // A nonzero exit, timeout or cleanup failure must keep its failure label even in a cancelled request.
+  const cancelled = message.toolName === 'bash' && message.isError && /^命令已取消(?:。|；已保存文件不会回滚。)(?:\n已保留命令日志：\/logs\/[0-9a-f-]{36}\/[0-9a-f]{64}\.log)?$/.test(message.text);
+  if (message.role === 'tool') return <details className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
+    <summary><FileText size={16} aria-hidden="true" /><span>{cancelled ? '命令已停止' : message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
     <div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
   </details>;
   return <article className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>

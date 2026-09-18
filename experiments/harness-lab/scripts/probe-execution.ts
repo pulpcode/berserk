@@ -83,6 +83,10 @@ with Image.open('result.png') as im: im.verify()
 print('formats-ok')`;
   await a.writeFile('/workspace/analyze.py', formats);
   assert.match(await command(a, 'python analyze.py'), /formats-ok/);
+  assert.equal((await command(a, 'file --brief --mime-type result.png')).trim(), 'image/png');
+  assert.equal((await command(a, 'file --brief --mime-type result.pdf')).trim(), 'application/pdf');
+  assert.match(await command(a, 'file --brief input.csv'), /text/);
+  checks.push('file 命令识别 PNG、PDF 与文本文件');
   assert.equal(await a.detectImageMimeType('/workspace/result.png'), 'image/png');
   assert.deepEqual(JSON.parse((await a.readFile('/workspace/result.json')).toString()), { total: 30 });
   assert.ok((await a.glob('*.py', '/workspace', { ignore: ['**/.git/**'], limit: 10 })).includes('analyze.py'));

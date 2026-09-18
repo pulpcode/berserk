@@ -3,7 +3,7 @@ FROM python:3.12.11-slim-bookworm
 ARG DEBIAN_MIRROR=https://deb.debian.org
 RUN sed -i "s|http://deb.debian.org|${DEBIAN_MIRROR}|g" /etc/apt/sources.list.d/debian.sources \
     && apt-get update && apt-get install -y --no-install-recommends \
-    bash nodejs ripgrep fonts-noto-cjk \
+    bash nodejs ripgrep file fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 COPY requirements.txt /opt/berserk/requirements.txt
 ARG PIP_INDEX_URL=https://pypi.org/simple

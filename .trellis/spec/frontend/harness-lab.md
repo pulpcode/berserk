@@ -93,6 +93,8 @@ Use semantic labelled controls, visible focus, a polite status region, reduced-m
 
 Render model Markdown without raw HTML execution. Enable GFM through remark-gfm, retain table/header/cell semantics and wrap wide tables in a named, keyboard-scrollable region. Keep busy, stopping, failed and recovery-required states understandable without exposing internal paths or JSON in the main chat.
 
+For bash results, the executor's exact cancellation response (optionally followed by its archived /logs reference) renders as “命令已停止” without failure styling, including existing native history. Keep the original body and isError unchanged. Do not infer individual tool cancellation from the whole request status or substring matches: nonzero exits, timeouts and cleanup failures still render as failures.
+
 ### Subagent cards
 
 `SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.

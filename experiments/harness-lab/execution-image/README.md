@@ -16,7 +16,7 @@ npx tsx --env-file=.env.local scripts/probe-files.ts
 
 Python 包默认来自 `https://pypi.org/simple`；构建期可通过 `--build-arg PIP_INDEX_URL=https://mirrors.cloud.tencent.com/pypi/simple` 选择部署方确认的 HTTPS 镜像。上述参数仅控制镜像构建下载，运行容器仍关闭网络。
 
-镜像提供 Python、Bash、Node、ripgrep、Noto 中文字体及 `requirements.txt` 中固定版本的 Python 文件处理库。镜像构建需要获取依赖；任务执行时关闭网络，缺少依赖不会自动安装。Python 顶层包固定版本，系统包与传递依赖以构建所得镜像为准；验证时应记录实际镜像 ID，不能把标签视为不可变镜像摘要。
+镜像提供 Python、Bash、Node、ripgrep、`file`（文件类型识别）、Noto 中文字体及 `requirements.txt` 中固定版本的 Python 文件处理库。镜像构建需要获取依赖；任务执行时关闭网络，缺少依赖不会自动安装。Python 顶层包固定版本，系统包与传递依赖以构建所得镜像为准；验证时应记录实际镜像 ID，不能把标签视为不可变镜像摘要。
 
 每个请求惰性创建自己的容器：仅 `/workspace` 挂载该席位普通文件，`/logs` 只读挂载该工作区历史命令日志。普通聊天不创建容器。系统只读，`/tmp` 是 256 MiB 临时盘，无额外 capabilities，禁止提权。CPU、内存、进程数由服务配置；默认单次读取和命令输出各为 100 MiB。普通工作目录没有硬磁盘配额。
 
