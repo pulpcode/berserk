@@ -103,7 +103,7 @@ function App() {
   const loadingSession = Boolean(chat.selected && !snapshot);
   const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
   const waiting = active?.phase === 'waiting_answer' || active?.phase === 'waiting_confirmation';
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '回复完成' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
+  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '可以开始对话';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
@@ -264,7 +264,7 @@ function App() {
           {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
           {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
           {attachmentItems.length > 0 && !chat.draft.trim() && <p className="attachment-notice">请描述希望如何处理这些文件。</p>}
-          <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{busy && !waiting ? <span className="loading-dot" /> : snapshot?.lastResult?.status === 'succeeded' ? <Check size={12} aria-hidden="true" /> : <span className="status-dot" />}{status}</span><span id="input-hint">Enter 发送<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
+          <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{status && (busy && !waiting ? <span className="loading-dot" /> : <span className="status-dot" />)}{status}</span><span id="input-hint">Enter 发送<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
         </div>
       </div>
       </>}

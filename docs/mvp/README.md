@@ -1,6 +1,8 @@
 # MVP 工作文档
 
-整理日期：2026-09-18。版本：v0.8。状态：已明确垂直场景 Agent 作业平台定位，补齐成熟 Harness 基础能力；框架先行、业务后接入，调度实现继续后延。
+整理日期：2026-09-19。版本：v0.8。状态：已明确垂直场景 Agent 作业平台定位，补齐成熟 Harness 基础能力；框架先行、业务后接入，调度实现继续后延。
+
+下一增量 [W01-8 任务分派与成果交接](../../.trellis/tasks/09-19-w01-8-task-handoff/review.md)（S3d）已形成待审方案，尚未实施：按用户选择切换两个测试席位，验证分派、办理、固定文件提交及验收／退回；继续复用 Pi 原生会话和现有 HITL。只为具体协作增加业务记录，完整 Run、平台会话迁移、真实登录和调度不作为前置。
 
 Memory 在本项目中明确指 Agent 指令文件（如 AGENTS.md、CLAUDE.md），保存约定、偏好与工作规则，按工作区加载和受控编辑；不包含结构化长期记忆数据库、自动提取或召回服务。
 
@@ -50,7 +52,7 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 | M3 领域接入与方案闭环 | 特情处理和专业子 Agent 配置、双向地图、多源方案集成 | W09-B、W10-B、W11、W12 |
 | M4 异常验证与交付 | 双任务隔离、恢复和幂等测试、Ubuntu 部署与演示材料 | W13 |
 
-W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，W01-6/S3b 已实现并通过 F01～F18 组合验收，其后的能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
+W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，W01-6/S3b 和 W01-7/S3c 已分别通过 F01～F18、G01～G15 组合验收，W01-8/S3d 设计待审，其后的能力未实施。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包待开始。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
 
 用户已具备 DeepSeek、Kimi 等 API 和 Ubuntu 服务器，建设后由用户配置接入信息；具体模型、接口协议、资源规格及预算届时补齐，不要求现在提供密钥。凭证放入项目目录的本地配置并排除 Git 跟踪。协议设计可以先行，内核与技术路线通过 W01 收敛。样板业务、席位矩阵、成果字段与地图在 M2／M3 再收敛。人员、工期、成本和性能阈值未确定，本稿不补造承诺。
 

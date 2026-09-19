@@ -909,7 +909,7 @@ test('跨项目创建失败可见，全部动态保护后续选择，手机新�
     await expect(page.getByLabel('模型 ID')).toBeVisible();
     mock.finish('new-2');
     // Wait for the browser's terminal state, not merely an unread value that was already absent.
-    await expect(page.locator('.request-status')).toHaveText('回复完成');
+    await expect(page.locator('.request-status')).toBeEmpty();
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toBeVisible();
     expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBeUndefined();
     await page.keyboard.press('Escape');
@@ -1259,7 +1259,7 @@ test('子事件不抢阅读位置或输入焦点，断线后查询恢复且不�
     mock.updateChild('A', { ...child, status: 'succeeded', result: '断线后由查询获取的结果。' });
     mock.finish('A');
     await expect(page.locator('[data-subagent-id="reconnect-child"] > summary')).toContainText('已完成');
-    await expect(page.locator('.request-status')).toHaveText('回复完成');
+    await expect(page.locator('.request-status')).toBeEmpty();
     expect(await conversation.evaluate(element => element.scrollTop)).toBeLessThan(5);
     await expect(input).toHaveValue('断线也不丢失的下一轮草稿');
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(1);
