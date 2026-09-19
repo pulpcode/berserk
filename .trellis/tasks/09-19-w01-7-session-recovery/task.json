@@ -15,7 +15,7 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "843e502",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -30,7 +30,7 @@
     ".trellis/tasks/09-19-w01-7-session-recovery/research/validation-results.md",
     ".trellis/tasks/09-19-w01-7-session-recovery/research/recovery-evidence.json"
   ],
-  "notes": "2026-09-19 按用户批准的最小 Pi 适配方案实现并完成组合验收；无新持久中断记录或恢复提示词。待用户验收、提交和部署，不自动归档。",
+  "notes": "2026-09-19 最小 Pi 适配实现及组合验收完成；用户授权后以中文提交并推送，更新 Ubuntu 4315/4316。数据已备份，待用户使用验收。",
   "meta": {
     "stage": "S3c",
     "implementationApproved": true,
@@ -60,8 +60,8 @@
     "recoveryPrompt": false,
     "userAcceptance": "pending",
     "evidence": "research/validation-results.md",
-    "gitCommitted": false,
-    "deployed": false,
+    "gitCommitted": true,
+    "deployed": true,
     "validation": {
       "date": "2026-09-19",
       "pi": "0.85.1",
@@ -80,6 +80,18 @@
       "localLinks": 119,
       "browserTests": 61,
       "browserRetries": 0
+    },
+    "deployment": {
+      "date": "2026-09-19",
+      "codeCommit": "843e502",
+      "host": "tencent-server",
+      "ports": [
+        4315,
+        4316
+      ],
+      "app": "/home/ubuntu/axon-release-843e502/app",
+      "backupRoot": "/home/ubuntu/axon-release-843e502/backups",
+      "smoke": "passed"
     }
   }
 }
