@@ -103,8 +103,9 @@ export function subagentHistory(entries: SessionEntry[], workspaceId: string, pa
       if (!start || start.requestId !== requestId || results.has(start.subagentId)) throw stateError();
       results.set(start.subagentId, decodeSubagentResult(entry.data, start));
     } else if (entry.customType === 'berserk.request-result.v1') {
-      if ([...starts.values()].some(start => start.requestId === requestId && !results.has(start.subagentId))) throw stateError();
-      if (object(entry.data) && entry.data.status === 'succeeded' && [...starts.values()].some(start => start.requestId === requestId && !returned.has(start.subagentId))) throw stateError();
+      const terminalRequestId = object(entry.data) ? entry.data.requestId : undefined;
+      if ([...starts.values()].some(start => start.requestId === terminalRequestId && !results.has(start.subagentId))) throw stateError();
+      if (object(entry.data) && entry.data.status === 'succeeded' && [...starts.values()].some(start => start.requestId === terminalRequestId && !returned.has(start.subagentId))) throw stateError();
       requestId = undefined;
     }
   }

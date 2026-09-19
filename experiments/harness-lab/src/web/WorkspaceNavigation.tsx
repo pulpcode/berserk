@@ -24,15 +24,16 @@ export function activityStatus(session: SessionActivity) {
   if (session.recoveryWarning) return '需要恢复';
   if (session.lastResult?.status === 'failed') return '回复未完成';
   if (session.lastResult?.status === 'cancelled') return '已停止';
+  if (session.lastResult?.status === 'interrupted') return '已中断';
   return '';
 }
 
 function needsAttention(session: SessionActivity, unread: Record<string, boolean>) {
-  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && session.lastResult?.status === 'failed') || unread[session.id]);
+  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted')) || unread[session.id]);
 }
 
 function Status({ session, unread = false, id }: { session: SessionActivity; unread?: boolean; id?: string }) {
-  const failed = !session.active && (session.recoveryWarning || session.lastResult?.status === 'failed');
+  const failed = !session.active && (session.recoveryWarning || (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'));
   const label = activityStatus(session);
   if (!label) return unread ? <span id={id} className="unread-dot" role="img" aria-label="有新回复未读" title="有新回复未读" /> : null;
   return <span id={id} className={`activity-status${session.active ? ' running' : failed ? ' attention' : ''}`}>
@@ -60,7 +61,7 @@ export function WorkspaceNavigation({ workspaces, activities, unread, workspaceI
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const running = activities.filter(session => session.active).length;
   const fresh = activities.filter(session => unread[session.id]).length;
-  const errors = activities.filter(session => session.recoveryWarning || (!session.active && session.lastResult?.status === 'failed')).length;
+  const errors = activities.filter(session => session.recoveryWarning || (!session.active && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
   return <>
     <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" aria-describedby="activity-counts">
       <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />

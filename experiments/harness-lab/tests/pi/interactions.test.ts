@@ -199,12 +199,70 @@ describe('fixed Pi web interactions', () => {
     await done; await lab.close();
     for (const [bytes, state] of [[pendingBytes, 'expired'], [approvedBytes, 'approved']] as const) {
       await writeFile(path, bytes); const count = fake.calls.length;
-      const restored = await PiLab.create(config, fake.runtime);
+      const nextFake = await fakeRuntime(config, (_context, index) => index === 0 ? { tools: [{ name: 'confirmation_demo', arguments: { content: '演示' } }] } : { text: '新请求完成' });
+      const restored = await PiLab.create(config, nextFake.runtime);
       const restoredItem = restored.get(session.id).interactions![0]; expect(restoredItem.status).toBe(state);
       if (state === 'approved') expect(restoredItem.kind === 'confirmation' && restoredItem.execution).toBe('unknown');
-      expect(restored.get(session.id).recoveryWarning).toBeTruthy(); expect(() => restored.start(session.id, '继续')).toThrow();
-      expect(fake.calls).toHaveLength(count); await restored.close(); expect(await readFile(path, 'utf8')).toBe(bytes);
+      expect(restored.get(session.id).recoveryWarning).toBeUndefined();
+      expect(restored.get(session.id).lastResult?.status).toBe('interrupted');
+      expect(fake.calls).toHaveLength(count); expect(nextFake.calls).toHaveLength(0); expect(await readFile(path, 'utf8')).toBe(bytes);
+      expect(() => restored.respondInteraction(session.id, item.interactionId, decision(item))).toThrow(/失效/);
+      const next = await start(restored, session.id);
+      expect(next.item.requestId).not.toBe(item.requestId); expect(next.item.interactionId).not.toBe(item.interactionId);
+      expect(restored.get(session.id).interactions?.[0]).toMatchObject({ status: state, ...(state === 'approved' ? { execution: 'unknown' } : {}) });
+      expect(nextFake.calls).toHaveLength(1);
+      restored.respondInteraction(session.id, next.item.interactionId, decision(next.item)); await next.done;
+      expect(restored.get(session.id).lastResult?.status).toBe('succeeded');
+      expect(restored.get(session.id).interactions?.[0]).toMatchObject({ status: state, ...(state === 'approved' ? { execution: 'unknown' } : {}) });
+      await restored.close();
+      const reopened = await PiLab.create(config, nextFake.runtime);
+      expect(reopened.get(session.id).lastResult?.status).toBe('succeeded');
+      expect(reopened.get(session.id).interactions?.[0]).toMatchObject({ status: state, ...(state === 'approved' ? { execution: 'unknown' } : {}) });
+      expect(() => reopened.respondInteraction(session.id, item.interactionId, decision(item))).toThrow(/失效/);
+      await reopened.close();
     }
+  });
+
+  it.each(['answered', 'rejected'] as const)('preserves a saved %s decision without a tool result and permits a fresh interaction', async status => {
+    const tool = status === 'answered' ? ask : { name: 'confirmation_demo', arguments: { content: '演示' } };
+    const reply: Parameters<typeof fakeRuntime>[1] = (_context, index) => index === 0 ? { tools: [tool] } : { text: '已完成' };
+    const { lab, session, config } = await setup(reply, { demo: status === 'rejected' });
+    const original = await start(lab, session.id);
+    const response = status === 'answered' ? answer(original.item) : decision(original.item, 'reject');
+    lab.respondInteraction(session.id, original.item.interactionId, response); await original.done; await lab.close();
+    const { path } = await native(config);
+    const lines = (await readFile(path, 'utf8')).trim().split('\n');
+    const resolved = lines.findIndex(line => JSON.parse(line).customType === INTERACTION_RESOLVED);
+    expect(resolved).toBeGreaterThan(0);
+    const bytes = lines.slice(0, resolved + 1).join('\n') + '\n';
+    expect(bytes).not.toContain('"role":"toolResult"');
+    await writeFile(path, bytes);
+
+    const fake = await fakeRuntime(config, reply);
+    const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
+    const saved = restored.get(session.id).interactions![0];
+    expect(saved.status).toBe(status);
+    if (saved.kind === 'question') expect(saved.answers).toEqual([{ questionId: 'format', optionIds: ['md'] }]);
+    else expect(saved.execution).toBeUndefined();
+    expect(restored.get(session.id).lastResult?.status).toBe('interrupted');
+    expect(restored.get(session.id).messages.filter(message => message.role === 'tool' && !message.resultMissing)).toEqual([]);
+    expect(fake.calls).toHaveLength(0); expect(await readFile(path, 'utf8')).toBe(bytes);
+    expect(() => restored.respondInteraction(session.id, original.item.interactionId, response)).toThrow(/失效/);
+
+    const next = await start(restored, session.id);
+    expect(next.item.requestId).not.toBe(original.item.requestId);
+    expect(next.item.interactionId).not.toBe(original.item.interactionId);
+    expect(restored.get(session.id).interactions![0]).toEqual(saved);
+    restored.respondInteraction(session.id, next.item.interactionId, status === 'answered' ? answer(next.item) : decision(next.item));
+    await next.done;
+    expect(restored.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(restored.get(session.id).interactions![0]).toEqual(saved);
+    expect(restored.get(session.id).messages.filter(message => message.role === 'tool' && message.requestId === original.item.requestId && !message.resultMissing)).toEqual([]);
+    expect((await readFile(path, 'utf8')).startsWith(bytes)).toBe(true);
+    await restored.close();
+    const reopened = await PiLab.create(config, fake.runtime); cleanup.push(() => reopened.close());
+    expect(reopened.get(session.id).interactions![0]).toEqual(saved);
+    expect(() => reopened.respondInteraction(session.id, original.item.interactionId, response)).toThrow(/失效/);
   });
 
   it('rejects corrupted history ownership, duplicated terminals and changed approved parameters', async () => {
@@ -314,6 +372,18 @@ describe('fixed Pi web interactions', () => {
     expect(saved.kind === 'question' && saved.answers).toBeUndefined();
     expect(() => restored.respondInteraction(session.id, item.interactionId, answer(item))).toThrow(/失效/);
     expect(fake.calls).toHaveLength(1); expect(await readFile(path, 'utf8')).toBe(pendingBytes);
+    const nextFake = await fakeRuntime(config, (_context, index) => index === 0 ? { tools: [ask] } : { text: '新回答已收到' });
+    await restored.close();
+    const nextLab = await PiLab.create(config, nextFake.runtime); cleanup.push(() => nextLab.close());
+    const next = await start(nextLab, session.id);
+    expect(nextLab.get(session.id).interactions?.map(item => item.status)).toEqual(['expired', 'pending']);
+    nextLab.respondInteraction(session.id, next.item.interactionId, answer(next.item)); await next.done;
+    expect(nextLab.get(session.id).interactions?.map(item => item.status)).toEqual(['expired', 'answered']);
+    expect(nextLab.get(session.id).lastResult?.status).toBe('succeeded');
+    await nextLab.close();
+    const reopened = await PiLab.create(config, nextFake.runtime); cleanup.push(() => reopened.close());
+    expect(reopened.get(session.id).interactions?.map(item => item.status)).toEqual(['expired', 'answered']);
+    expect(reopened.get(session.id).lastResult?.status).toBe('succeeded');
   });
 
   it('defaults demo off and rejects invalid environment flags', () => {

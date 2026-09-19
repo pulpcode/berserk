@@ -20,7 +20,7 @@ import { ResourceService, resourceInfo, type ResourceSnapshot } from '../resourc
 import { checkDirectory, hashContent, stateError } from '../resources/files.js';
 import { loadAgentRoles, type AgentRole } from './roles.js';
 import { SUBAGENT_START, SUBAGENT_RESULT, CHILD_ORIGIN, subagentHistory, initialSubagent, decodeSubagentStart, subagentResultText, addUsage, type SubagentStart } from './subagent-history.js';
-import { decodeResourceRecord, validateHistoryEvidence } from './history-evidence.js';
+import { decodeResourceRecord, validateHistoryEvidence, unfinishedRequests } from './history-evidence.js';
 import { RESOURCE_ENTRY, SKILL_ENTRY, RESULT_ENTRY, publicToolName, requestRecord, resourceTools } from './resource-tools.js';
 import { FileService } from '../files/service.js';
 import { DockerExecutionService, type RequestSandbox } from '../execution/docker.js';
@@ -166,7 +166,6 @@ export class PiLab {
         const branch = manager.getBranch();
         const messages = branch.flatMap(entry => entry.type === 'message' ? [entry.message] : []);
         const lastResources = branch.findLast(entry => entry.type === 'custom' && entry.customType === RESOURCE_ENTRY);
-        const unfinishedRequest = lastResources?.type === 'custom' && (lastResources.data as { requestId: string }).requestId !== record.result?.requestId;
         const last = messages.at(-1);
         const pending = new Set<string>();
         for (const message of messages) {
@@ -175,8 +174,11 @@ export class PiLab {
           }
           if (message.role === 'toolResult') pending.delete(message.toolCallId);
         }
-        if (unfinishedRequest || ((!record.result || lastResources === undefined) && (last?.role === 'user' || last?.role === 'toolResult' || pending.size))) {
+        if (lastResources === undefined && (last?.role === 'user' || last?.role === 'toolResult' || pending.size)) {
           record.warning = '上次执行未完整结束，记录已保留。请新建会话继续；系统不会自动重发。';
+        }
+        if (unfinishedRequests(branch).some(request => request.usedSandbox) && !lab.execution?.status().available) {
+          record.warning = '上次处理涉及沙盒执行，尚未确认旧执行环境已清理；请检查执行环境并重启服务。已保存内容保留。';
         }
         lab.watchPersistence(record);
         lab.records.set(header.id, record);
@@ -297,9 +299,11 @@ export class PiLab {
     const entries = record.manager.getBranch();
     const messages: PublicMessage[] = [];
     const history = fileHistory(entries, record.workspaceId, id);
+    const interrupted = new Map(unfinishedRequests(entries).filter(request => request.requestId !== record.active?.id).map(request => [request.requestId, request]));
     let requestId: string | undefined;
     for (const entry of entries) {
       if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) requestId = (entry.data as { requestId: string }).requestId;
+      if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) requestId = undefined;
       if (entry.type !== 'message') continue;
       const message = entry.message;
       if (message.role !== 'user' && message.role !== 'assistant' && message.role !== 'toolResult') continue;
@@ -310,6 +314,12 @@ export class PiLab {
         ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError } : {}),
         ...(message.role === 'user' && requestId && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
+      if (message.role === 'assistant' && requestId) for (const [index, block] of message.content.entries()) {
+        if (block.type === 'toolCall' && interrupted.get(requestId)?.pendingTools.has(block.id)) messages.push({
+          id: `missing-${entry.id}-${index}`, requestId, role: 'tool', toolName: publicToolName(block.name),
+          toolCallId: block.id, resultMissing: true, text: '未收到执行结果，无法确认是否已执行。',
+        });
+      }
     }
     // The active partial is ephemeral; persisted entries remain the history authority.
     const partial = record.session?.agent.state.streamingMessage;
@@ -488,6 +498,7 @@ ${active.sandbox ? '当前工作目录是 /workspace，属于当前任务和席�
 
   private async validateChildren(record: RecordState): Promise<void> {
     const history = subagentHistory(record.manager.getBranch(), record.workspaceId, record.manager.getSessionId());
+    const interrupted = new Set(unfinishedRequests(record.manager.getBranch()).map(request => request.requestId));
     for (const start of history.starts) {
       try {
         const directory = join(this.config.dataDir, 'subagents', start.parentSessionId, start.subagentId);
@@ -498,6 +509,10 @@ ${active.sandbox ? '当前工作目录是 /workspace，属于当前任务和席�
         const manager = await openStrictSession(file, directory);
         if (manager.getSessionId() !== start.childSessionId) throw stateError();
         const entries = manager.getBranch();
+        if (interrupted.has(start.requestId) && !this.execution?.status().available && entries.some(entry => entry.type === 'message'
+          && entry.message.role === 'assistant' && entry.message.content.some(block => block.type === 'toolCall' && ['read', 'ls', 'find'].includes(block.name)))) {
+          record.warning = '上次子任务涉及沙盒执行，尚未确认旧执行环境已清理；请检查执行环境并重启服务。已保存内容保留。';
+        }
         const origins = entries.filter(entry => entry.type === 'custom' && entry.customType === CHILD_ORIGIN);
         if (origins.length !== 1 || origins[0].type !== 'custom' || JSON.stringify(decodeSubagentStart(origins[0].data, record.workspaceId, start.parentSessionId)) !== JSON.stringify(start)) throw stateError();
         const result = validateHistoryEvidence(entries.filter(entry => entry.type !== 'custom' || entry.customType !== CHILD_ORIGIN), record.workspaceId, undefined, true);
@@ -507,6 +522,10 @@ ${active.sandbox ? '当前工作目录是 /workspace，属于当前任务和席�
           || JSON.stringify(decodeResourceRecord(childResources[0].data, record.workspaceId, true)) !== JSON.stringify({ ...parentResources,
             requestId: start.subagentId, instructions: parentResources.instructions.map(file => ({ ...file, editable: false })), editableFileIds: [] })))) throw stateError();
         const saved = history.results.find(item => item.subagentId === start.subagentId);
+        if (!saved) {
+          record.warning ||= '上次子任务未完整结束，原记录已保留，不会自动重新委派；请核对后新建会话。';
+          continue;
+        }
         if (saved && (result?.requestId !== start.subagentId || result.status !== saved.summary.status || JSON.stringify(result.usageSummary) !== JSON.stringify(saved.usage))) throw stateError();
         if (saved) {
           const last = entries.findLast(entry => entry.type === 'message' && entry.message.role === 'assistant');
@@ -810,6 +829,7 @@ ${active.sandbox ? '当前工作目录是 /workspace，属于当前任务和席�
     const response = decodeResponse(input, item);
     const conflict = () => new RequestError('INTERACTION_CONFLICT', '该交互已结束、已失效或已收到不同回答，请刷新核对。', 409);
     if (response.requestId !== item.requestId) throw conflict();
+    if (record.active?.id !== item.requestId && unfinishedRequests(record.manager.getBranch()).some(request => request.requestId === item.requestId)) throw conflict();
     if (item.status !== 'pending') {
       if (!['answered', 'skipped', 'approved', 'rejected'].includes(item.status) || !sameResponse(item, response)) throw conflict();
       return structuredClone(item);

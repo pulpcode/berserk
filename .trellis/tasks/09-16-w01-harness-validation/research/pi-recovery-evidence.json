@@ -1,0 +1,707 @@
+{
+  "piVersion": "0.85.1",
+  "transport": "real OpenAI-compatible adapter + local deterministic SSE provider",
+  "crash": "SIGKILL child process",
+  "results": [
+    {
+      "scenario": "awaiting_model",
+      "seedEffects": 0,
+      "nativeToolCalls": 0,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 0,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 0,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/awaiting_model/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "partial_text",
+      "seedEffects": 0,
+      "nativeToolCalls": 0,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 0,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 0,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/partial_text/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "before_tool",
+      "seedEffects": 0,
+      "nativeToolCalls": 1,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 1,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 0,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/before_tool/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-seed-1",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-seed-1"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "after_effect",
+      "seedEffects": 1,
+      "nativeToolCalls": 1,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 1,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 1,
+      "effectsWhenModelReissues": 2,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/after_effect/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-seed-1",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-seed-1"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ],
+      "reissuedCallUsesNewId": true
+    },
+    {
+      "scenario": "after_result",
+      "seedEffects": 1,
+      "nativeToolCalls": 1,
+      "nativeToolResults": 1,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 0,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 1,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/after_result/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-seed-1",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "Marker appended.",
+          "tool_call_id": "call-seed-1"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "waiting_question",
+      "seedEffects": 0,
+      "nativeToolCalls": 1,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 1,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 0,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/waiting_question/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-seed-1",
+              "type": "function",
+              "function": {
+                "name": "probe_ask",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-seed-1"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "waiting_confirmation",
+      "seedEffects": 0,
+      "nativeToolCalls": 1,
+      "nativeToolResults": 0,
+      "partialTextPersisted": false,
+      "automaticModelCallsOnOpen": 0,
+      "recoveryModelCalls": 1,
+      "synthesizedMissingResults": 1,
+      "nativeHistoryPrefixPreserved": true,
+      "toolEffectsAfterRecovery": 0,
+      "firstRecoveryMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7/waiting_confirmation/recover\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-seed-1",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-seed-1"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "上次请求中断了。请依据已有历史继续回答，不重复执行旧工具。"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "date": "2026-09-19",
+  "nodeVersion": "24.14.0",
+  "deterministicEvidenceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-zxhur7",
+  "scriptSha256": "51fb4fbde7099b1986591cd2790046204cd9070d9c090c71952e535f6e2b18f3",
+  "liveSourceEvidenceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-recovery-yKM4Ri",
+  "live": [
+    {
+      "scenario": "before_tool",
+      "model": "deepseek-flash",
+      "provider": "deepseek",
+      "modelRequests": 2,
+      "rawEvidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-before_tool-Hof1Iz/live-evidence.json",
+      "firstProviderMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-before_tool-Hof1Iz\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-probe_write",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-probe_write"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "服务曾异常中断。这次只核对，不重做旧操作。请调用 probe_status 查询实际已保存的标记次数，再用中文简短说明：次数是多少；旧工具调用是否已有真实成功结果；缺少结果能否证明没有执行。不要猜测旧问题答案或旧操作已获批准。"
+            }
+          ]
+        }
+      ],
+      "toolResults": [
+        {
+          "role": "toolResult",
+          "toolCallId": "call_00_ShdBK51YUs3hvFf0C9YZ9183",
+          "toolName": "probe_status",
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"savedMarkers\":0}"
+            }
+          ],
+          "details": {},
+          "isError": false,
+          "timestamp": 1789788070891
+        }
+      ],
+      "reply": [
+        "核对结果：\n\n- **实际已保存的标记次数：0 次。**\n- **旧工具调用是否已有真实成功结果：没有。** 之前那次写入调用只返回“未提供结果”，这不是成功回执。\n- **缺少结果能否证明没有执行：不能。** 结果缺失不等于未执行，不能据此断言旧操作是否真的落地；我也不会推测旧问题的答案或认定旧操作已获批准。\n\n本次仅做核对，未重做任何旧操作。"
+      ]
+    },
+    {
+      "scenario": "after_effect",
+      "model": "deepseek-flash",
+      "provider": "deepseek",
+      "modelRequests": 2,
+      "rawEvidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-after_effect-UZ7uge/live-evidence.json",
+      "firstProviderMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-after_effect-UZ7uge\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-probe_write",
+              "type": "function",
+              "function": {
+                "name": "probe_write",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-probe_write"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "服务曾异常中断。这次只核对，不重做旧操作。请调用 probe_status 查询实际已保存的标记次数，再用中文简短说明：次数是多少；旧工具调用是否已有真实成功结果；缺少结果能否证明没有执行。不要猜测旧问题答案或旧操作已获批准。"
+            }
+          ]
+        }
+      ],
+      "toolResults": [
+        {
+          "role": "toolResult",
+          "toolCallId": "call_00_ODB0uJ5bfGT1Qrtg8x2E8343",
+          "toolName": "probe_status",
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"savedMarkers\":1}"
+            }
+          ],
+          "details": {},
+          "isError": false,
+          "timestamp": 1789788072889
+        }
+      ],
+      "reply": [
+        "核对结果如下：\n\n- **次数**：probe_status 显示实际已保存标记数为 **1**。\n- **旧工具调用是否有真实成功结果**：没有。此前那次写入调用返回的是\"未提供结果\"（No result provided），并非真实的成功回执。\n- **缺少结果能否证明没有执行**：不能。缺少工具结果只能说明没有拿到可核对的回执，不能据此断定该操作未执行；反过来，也不能据此断定它已成功。当前唯一可确认的事实是保存标记数为 1。\n\n不对旧问题答案或旧操作是否获批作任何推测。"
+      ]
+    },
+    {
+      "scenario": "waiting_question",
+      "model": "deepseek-flash",
+      "provider": "deepseek",
+      "modelRequests": 2,
+      "rawEvidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-waiting_question-yByRh9/live-evidence.json",
+      "firstProviderMessages": [
+        {
+          "role": "system",
+          "content": "You are a local recovery probe. Do not infer a missing tool result means no file effect.\nCurrent working directory: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-pi-live-waiting_question-yByRh9\n"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "请记住基线事实：编号 789。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": "已保留编号 789。"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "恢复验证标记 789：请处理测试任务。"
+            }
+          ]
+        },
+        {
+          "role": "assistant",
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call-probe_ask",
+              "type": "function",
+              "function": {
+                "name": "probe_ask",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "No result provided",
+          "tool_call_id": "call-probe_ask"
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "服务曾异常中断。这次只核对，不重做旧操作。请调用 probe_status 查询实际已保存的标记次数，再用中文简短说明：次数是多少；旧工具调用是否已有真实成功结果；缺少结果能否证明没有执行。不要猜测旧问题答案或旧操作已获批准。"
+            }
+          ]
+        }
+      ],
+      "toolResults": [
+        {
+          "role": "toolResult",
+          "toolCallId": "call_00_2YkzVdz48xaDno8CVxiT3231",
+          "toolName": "probe_status",
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"savedMarkers\":0}"
+            }
+          ],
+          "details": {},
+          "isError": false,
+          "timestamp": 1789788075496
+        }
+      ],
+      "reply": [
+        "核对结果如下：\n\n- **实际已保存的标记次数**：0 次（probe_status 返回 `savedMarkers: 0`）。\n- **旧工具调用是否已有真实成功结果**：没有。本次会话中，编号 789 的保存动作以及我误发起的 probe_ask 调用，都未返回任何真实成功结果。\n- **缺少结果能否证明没有执行**：不能。缺少工具结果只说明本地没有读到该结果，并不等于文件或标记未被写入；因此不能据此断定旧操作没有执行，也不能断定它已执行。\n\n所以我只陈述可观测事实：当前保存标记为 0，旧调用结果缺失，结论不确定。我不猜测旧问题的答案，也不认为旧操作已获批准或已完成。"
+      ]
+    }
+  ],
+  "checks": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "existingAxonTargetedTests": 3,
+    "productSourcesChanged": false,
+    "deployed": false
+  }
+}

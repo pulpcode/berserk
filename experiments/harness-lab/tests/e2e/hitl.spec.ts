@@ -53,6 +53,23 @@ async function answer(page: Page) {
   await page.getByLabel('填写回答', { exact: true }).fill('中文输入内容');
 }
 
+for (const initial of [question(), confirmation()]) test(`restart expires ${initial.kind} without reopening old controls or resending chat`, async ({ page }) => {
+  const { a, state } = await fixture(page, initial);
+  await page.getByRole('textbox', { name: '发送消息' }).fill('重启前编辑的新草稿');
+  a.active = null;
+  a.lastResult = { requestId: 'r1', status: 'interrupted', message: '上次处理已中断，已保存内容保留，可继续发送消息。' };
+  a.interactions = [{ ...initial, status: 'expired', reason: '服务重启，交互已失效' }];
+  await page.reload();
+  await expect(page.getByText('已失效', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '确认执行', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '提交回答', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('重启前编辑的新草稿');
+  await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
+  await expect(page.getByLabel('有新回复未读')).toHaveCount(0);
+  expect(state.sends).toBe(0); expect(state.posts).toHaveLength(0);
+});
+
 test('question drafts survive switch and refresh, submit exact answers once without IME auto-send', async ({ page }) => {
   const { state } = await fixture(page);
   await expect(page.getByRole('button', { name: '提交回答' })).toBeDisabled();

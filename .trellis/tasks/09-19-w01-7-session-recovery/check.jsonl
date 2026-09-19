@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "原生历史、当前指令、请求隔离与持久化失败守卫"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "旧交互失效、批准与效果、严格请求关联"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "工作区边界、Docker 生命周期与真实文件效果"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "快照、活动缓存、草稿、附件与未读规则"}
+{"file": ".trellis/tasks/09-16-w01-harness-validation/research/pi-recovery-validation.md", "reason": "已验证的 Pi 恢复能力与未覆盖的 Axon 边界"}
+{"file": ".trellis/tasks/09-19-w01-7-session-recovery/research/code-map.md", "reason": "实际代码入口与本期需要修改的边界"}

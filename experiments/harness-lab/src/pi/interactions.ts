@@ -146,8 +146,9 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
     }
     if (entry.type !== 'custom') continue;
     if (entry.customType === RESULT_ENTRY) {
-      if ([...items.values()].some(item => item.requestId === requestId && (item.status === 'pending'
-        || ((entry.data as { status?: string }).status === 'succeeded' && !returned.has(`${requestId}:${item.toolCallId}`))))) throw stateError();
+      const terminal = entry.data as { requestId?: string; status?: string };
+      if ([...items.values()].some(item => item.requestId === terminal.requestId && (item.status === 'pending'
+        || (terminal.status === 'succeeded' && !returned.has(`${terminal.requestId}:${item.toolCallId}`))))) throw stateError();
       requestId = undefined; continue;
     }
     if (entry.customType === COMMAND_POLICY) {
@@ -166,7 +167,8 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
     if (!call || call.name !== item.toolName) throw stateError();
     const previous = items.get(item.interactionId);
     if (entry.customType === INTERACTION_REQUESTED) {
-      if (previous || item.status !== 'pending' || [...items.values()].some(old => old.status === 'pending' || (old.requestId === requestId && old.toolCallId === item.toolCallId))) throw stateError();
+      // An unresolved interaction from an earlier request is expired, not a live wait.
+      if (previous || item.status !== 'pending' || [...items.values()].some(old => old.requestId === requestId && (old.status === 'pending' || old.toolCallId === item.toolCallId))) throw stateError();
       if (item.kind === 'question' ? !isDeepStrictEqual(call.arguments, { questions: item.questions }) : !isDeepStrictEqual(call.arguments, item.action.parameters)) throw stateError();
       if (item.kind === 'confirmation') {
         const policy = policies.get(`${requestId}:${item.toolCallId}`);

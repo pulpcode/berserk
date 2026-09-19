@@ -121,15 +121,19 @@ describe('native default compaction', () => {
     expect(restored.list()).toEqual([]); expect(await readFile(file, 'utf8')).toBe(bad);
   });
 
-  it('does not let a saved summary hide an interrupted raw request on restart', async () => {
+  it('retains the saved summary and continues an interrupted raw request only on new input', async () => {
     const { lab, session, config, file } = await setup(); await ask(lab, session.id); await lab.close();
     const entries = (await readFile(file, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
     const resultIndex = entries.findIndex(entry => entry.type === 'custom' && entry.customType === 'berserk.request-result.v1');
     entries.splice(resultIndex); await writeFile(file, entries.map(entry => JSON.stringify(entry)).join('\n') + '\n');
-    const restored = await PiLab.create(config, (await fakeRuntime(config, () => ({ text: '不会调用' }))).runtime); cleanups.push(() => restored.close());
+    const fake = await fakeRuntime(config, () => ({ text: '继续完成' }));
+    const restored = await PiLab.create(config, fake.runtime); cleanups.push(() => restored.close());
     expect(restored.get(session.id).latestCompaction).toBeDefined();
-    expect(restored.get(session.id).recoveryWarning).toContain('未完整结束');
-    expect(() => restored.start(session.id, '继续')).toThrow(/未完整结束/);
+    expect(restored.get(session.id).recoveryWarning).toBeUndefined();
+    expect(restored.get(session.id).lastResult?.status).toBe('interrupted');
+    expect(fake.calls).toHaveLength(0);
+    await restored.start(session.id, '继续').run(() => {});
+    expect(restored.get(session.id).lastResult?.status).toBe('succeeded');
   });
 });
 

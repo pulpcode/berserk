@@ -96,9 +96,17 @@ Subscribe before prompt. A per-request synchronous compaction_start/end marker d
 
 Pi owns trigger/cut points, recent token retention and one overflow recovery. Its native summary may truncate each tool result to 2,000 characters; disk and public history stay complete. Multiple compactions in one request associate by new entry ID, never summary text. `RequestResult` optionally adds compactionIds/compactions/usageSummary; `SessionSnapshot` adds latestCompaction. Missing usage is unknown, not zero cost. Native estimates and actual provider usage remain distinct.
 
-Default summaries must contain text and no tool calls; empty/truncated/final failed summaries cannot continue model/tool work. Latch admission closed before full `AgentSession.abort()`, not only agent.abort(); never await self-idle inside a callback. Temporary overflow errors are not terminal. Cancelled writes or summaries already committed remain. Guard native append methods: failed persistence poisons the manager and forbids finally from appending more; reload strict disk history before reuse. Validate every JSONL line and compaction retention ancestry before Pi can silently skip bad input. Incomplete requests still require recovery even if a summary exists.
+Default summaries must contain text and no tool calls; empty/truncated/final failed summaries cannot continue model/tool work. Latch admission closed before full `AgentSession.abort()`, not only agent.abort(); never await self-idle inside a callback. Temporary overflow errors are not terminal. Cancelled writes or summaries already committed remain. Guard native append methods: failed persistence poisons the manager and forbids finally from appending more; reload strict disk history before reuse. Validate every JSONL line and compaction retention ancestry before Pi can silently skip bad input. A saved summary does not prove that its request completed; ordinary interrupted requests use the rules below.
 
 `context.compaction_started/completed` are session/request-scoped SSE events. Completed carries the actual saved entry metadata. Error/cancel ends through the normal single terminal result. `getCompaction` rejects foreign IDs and does not invoke the model.
+
+### Interrupted sessions (W01-7)
+
+`unfinishedRequests(entries)` derives request IDs, unmatched tool calls and sandbox use from existing resource/result boundaries. Public `lastResult.status='interrupted'` is a read projection, never a persisted result status. Startup and GET leave JSONL unchanged and never replay model/tool work. An explicit new `start()` can use the same valid session/workspace with a new request ID and current instructions. Reuse Pi native context, missing-result pairing and compaction; add no interruption entry, recovery prompt or summary.
+
+`PublicMessage.resultMissing?: true` identifies a UI-only notice for an interrupted request's unmatched tool call. It is neither a failed tool result nor proof of no effect, and must not enter native history or model input. Scope notices and evidence by request ID plus tool-call ID. A new model call can repeat an old operation; this feature does not deduplicate effects.
+
+Keep strict history/ownership validation, poisoned persistence, legacy unscoped unfinished tails, unfinished or inconsistent children, and unavailable sandbox initialization after parent/child sandbox use as blocking warnings. A completed child with an interrupted parent can continue if its evidence validates. Validate result ownership by its own requestId: a new preflight failure may have no resource entry, but a late result cannot close an older request across a newer resource boundary. Expired waits and unknown approvals are handled by [interaction history](hitl.md).
 
 ### Single readonly subagents
 
@@ -140,7 +148,8 @@ A synchronous PiLab guard excludes configuration updates while any session is ac
 | --- | --- |
 | Unknown session / workspace / resource | 404 `SESSION_NOT_FOUND` / `WORKSPACE_NOT_FOUND` / `RESOURCE_NOT_FOUND` |
 | Concurrent send / stale cancellation | 409 `SESSION_BUSY` / `STALE_REQUEST` |
-| Incomplete restored protocol history | 409 `RECOVERY_REQUIRED`; never auto-resume |
+| Valid interrupted request with resource ownership | Project interrupted; explicit new message allowed, no automatic replay |
+| Corrupt/unscoped incomplete history, inconsistent child or required sandbox unavailable | Preserve warning; 409 `RECOVERY_REQUIRED`, no fabricated repair |
 | Settings save during active work / request start during save | 409 `MODEL_SETTINGS_BUSY`, no partial runtime change |
 | Stale settings version / new destination without new key | 409 `MODEL_SETTINGS_CONFLICT` / 400 `MODEL_API_KEY_REQUIRED` |
 | Invalid settings file / persistence failure | 503 `MODEL_SETTINGS_INVALID` / `MODEL_SETTINGS_SAVE_FAILED`; never silently fall back or expose secrets |
@@ -180,11 +189,17 @@ Model-settings tests assert actual adapter endpoint/model/Authorization before a
 
 Activity tests cover multiple workspaces, real model/tool phases, stopping, success/failure/cancellation, restart/recovery, explicit field projection and caching. Assert that repeated unchanged polls do not traverse native histories and that GET does not invoke the provider.
 
+`tests/pi/recovery.test.ts` and related interaction/subagent tests cover consecutive interruptions, later preflight failure, repeated tool IDs, current instructions, unchanged history, missing-result projections and hard guards. `scripts/probe-session-recovery.ts` kills disposable Axon/Pi children with SIGKILL before/after user persistence, tool effects/results, waits and native compaction. `--docker --live` verifies actual isolated file effects, cleanup and fresh interactions using the configured provider; deterministic transport is not real-model evidence.
+
 `probe:subagent`, `probe:compaction`, `probe:live` and `probe:workspace` are explicit real-model validation. Current prompt presence and deterministic green tests do not prove semantic compliance: test rule replacement/deletion, agent editing, malicious source content, Skill use and restarted continuation with the actual configured model. Never mark these passed based on a fake or a tool trace alone.
 
 Native-compaction tests cover trigger locations, retained boundaries, split summaries, complete raw history, current/deleted AGENTS, once-only overflow recovery, retry classification, full abort, poisoned writes and restart. Assert >8 tools, >32 model attempts and >120 seconds can complete by default, progressing versus stalled streams differ, and native summary output >2048 is preserved.
 
 ## 7. Wrong vs Correct
+
+Wrong: append a synthetic failed tool result or replay an old approval to make a restored conversation look complete.
+
+Correct: leave native history intact, expose a missing-result notice, expire the old wait and require an explicit new user request.
 
 Wrong: mutate a cached session's rules midway through a request or replay native messages to create a new AgentSession.
 

@@ -132,6 +132,28 @@ describe('independent read-only subagents through Pi', () => {
     const rejected = await PiLab.create(config, runtime); cleanup.push(() => rejected.close()); expect(rejected.list()).toEqual([]);
   });
 
+  it('continues the interrupted parent when the child and its returned result are complete', async () => {
+    const { lab, config } = await setup((_context, index) => index === 0 ? delegate() : { text: '完成' });
+    const session = await lab.createSession(); await ask(lab, session.id); await lab.close();
+    const file = await parentFile(config); const lines = (await readFile(file, 'utf8')).trim().split('\n');
+    const childReturn = lines.findIndex(line => { const entry = JSON.parse(line); return entry.message?.role === 'toolResult' && entry.message.toolName === 'subagent'; });
+    expect(childReturn).toBeGreaterThan(0);
+    const bytes = lines.slice(0, childReturn + 1).join('\n') + '\n'; await writeFile(file, bytes);
+    const fake = await fakeRuntime(config, () => ({ text: '复用已有子任务结果' }));
+    const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
+    expect(restored.get(session.id).recoveryWarning).toBeUndefined();
+    expect(restored.get(session.id).subagents?.[0].status).toBe('succeeded');
+    expect(restored.get(session.id).lastResult?.status).toBe('interrupted');
+    expect(fake.calls).toHaveLength(0); expect(await readFile(file, 'utf8')).toBe(bytes);
+    await ask(restored, session.id, '继续');
+    expect(restored.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(restored.get(session.id).subagents).toHaveLength(1);
+    await restored.close();
+    const reopened = await PiLab.create(config, fake.runtime); cleanup.push(() => reopened.close());
+    expect(reopened.get(session.id).recoveryWarning).toBeUndefined();
+    expect(reopened.get(session.id).subagents?.[0].status).toBe('succeeded');
+  });
+
   it('stops the whole parent on a failed end-link commit without claiming child success', async () => {
     const append = SessionManager.prototype.appendCustomEntry;
     vi.spyOn(SessionManager.prototype, 'appendCustomEntry').mockImplementation(function (this: SessionManager, type, data) {
@@ -160,7 +182,7 @@ describe('independent read-only subagents through Pi', () => {
     expect(() => lab.start(session.id, '不可继续')).toThrow(/记录|保存失败/);
   });
 
-  it.each(['truncated', 'missing', 'body-mismatch'])('preserves a readable parent while blocking %s child history after restart', async corruption => {
+  it.each(['truncated', 'missing', 'body-mismatch', 'missing-terminal'])('preserves a readable parent while blocking %s child history after restart', async corruption => {
     const { lab, config, runtime } = await setup((_context, index) => index === 0 ? delegate() : { text: 'CHILD_FINAL' });
     const session = await lab.createSession(); await ask(lab, session.id);
     const childId = lab.get(session.id).subagents![0].subagentId; await lab.close();
@@ -169,6 +191,12 @@ describe('independent read-only subagents through Pi', () => {
     const originalParent = await readFile(await parentFile(config), 'utf8');
     if (corruption === 'missing') await rm(file);
     else if (corruption === 'truncated') await writeFile(file, (await readFile(file, 'utf8')) + '{broken');
+    else if (corruption === 'missing-terminal') {
+      const lines = (await readFile(file, 'utf8')).trim().split('\n');
+      const terminal = lines.findIndex(line => JSON.parse(line).customType === 'berserk.request-result.v1');
+      expect(terminal).toBeGreaterThan(0);
+      await writeFile(file, lines.slice(0, terminal).join('\n') + '\n');
+    }
     else await writeFile(file, (await readFile(file, 'utf8')).replaceAll('CHILD_FINAL', 'MISMATCHED_FINAL'));
     const restored = await PiLab.create(config, runtime); cleanup.push(() => restored.close());
     const snapshot = restored.get(session.id);

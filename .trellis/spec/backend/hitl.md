@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when changing W01-6 question tools, operation gates, command policy, interaction history, response routes or their Web consumers. These are request-local interactions, not business approvals, persistent Runs or restart continuation. Reuse Pi 0.85.1 public extension/tool APIs and the existing Docker execution service. Root commit messages remain primarily Chinese.
+Read when changing W01-6 question tools, operation gates, command policy, interaction history, response routes or their Web consumers. These are request-local interactions, not business approvals or persistent Runs. W01-7 allows new requests after interruption but does not reconstruct old waits. Reuse Pi 0.85.1 public extension/tool APIs and the existing Docker execution service. Root commit messages remain primarily Chinese.
 
 ## 2. Signatures
 
@@ -28,6 +28,8 @@ Native JSONL entries `berserk.interaction.requested.v1`, `berserk.interaction.re
 
 Restart projects unresolved pending entries as expired and does not rebuild waiting tasks. Approval without execution evidence is unknown. Evidence that a tool was blocked before execution is distinct from actual tool failure. Preserve recovery warnings and old histories; never delete entries to make an old parser accept them.
 
+Pending uniqueness is request-scoped: an old interrupted request's pending entry cannot block a new request's interaction. Match terminal evidence by its requestId, including a later preflight failure without a resource entry. Submitting any response to an old interrupted request returns 409, even if the same response was saved before interruption. Normal completed-response idempotence remains. A later successful request never turns an old unknown execution into success.
+
 The Bash policy uses locked tree-sitter/grammar versions and a bounded literal subset. Rules inspect command chains before any part executes; deny beats ask, which beats allow. Unsupported syntax asks; parser or policy infrastructure failures terminate. Decoding strings must not execute expansions. Environment wrappers/assignments, nested substitutions and tree-sitter's backslash-newline fragments need regression coverage. Retain the original command for execution and display. Ordinary Python/Node file bodies and arbitrary executable internals are not audited; allow is not a read-only guarantee. Approval never changes Docker mounts, networking, user or capabilities.
 
 ## 4. Validation & Error Matrix
@@ -37,7 +39,8 @@ The Bash policy uses locked tree-sitter/grammar versions and a bounded literal s
 | Unknown interaction/session | 404; no effect |
 | Wrong kind, malformed/extra fields, unknown question/option, incomplete answers | 400; keep valid wait |
 | Stale request, conflicting answer/decision, cancelled/expired interaction | 409; no continuation |
-| Identical accepted response | Return existing record; no replay |
+| Identical accepted response outside an interrupted request | Return existing record; no replay |
+| Response to an old interrupted request, including saved approval | 409; new work needs a fresh interaction |
 | Persistence, extension loading or policy infrastructure failure | Fail request; do not fabricate answers or allow execution |
 | Unsupported Bash syntax | ask with explicit review reason; no partial chain execution |
 | Recognized prohibited environment command | deny; no approval button |

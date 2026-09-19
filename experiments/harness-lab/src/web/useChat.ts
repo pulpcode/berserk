@@ -81,7 +81,7 @@ export function useChat() {
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
-  const creatingRef = useRef(false);
+  const creatingRef = useRef<string | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspaceId, setWorkspaceId] = useState(initialWorkspace);
   const workspaceRef = useRef(workspaceId);
@@ -144,7 +144,12 @@ export function useChat() {
     if (!snapshot.active && snapshot.lastResult) {
       if (snapshot.lastResult.status === 'succeeded') { rememberSubmitted(id, ''); clearSubmittedAttachments(id); }
       if (snapshot.lastResult.status === 'failed') recover(id);
-      if (snapshot.lastResult.status === 'cancelled' && !snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId)) recover(id);
+      const userMessageSaved = snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId);
+      if (snapshot.lastResult.status === 'cancelled' && !userMessageSaved) recover(id);
+      if (snapshot.lastResult.status === 'interrupted') {
+        if (userMessageSaved) { rememberSubmitted(id, ''); clearSubmittedAttachments(id); }
+        else recover(id);
+      }
     }
   }, [recover, rememberSubmitted, clearSubmittedAttachments]);
 
@@ -240,6 +245,9 @@ export function useChat() {
         }
         for (const owner of overview.workspaces) {
           const selectedId = selectionsRef.current[owner.id];
+          // A creation may appear in polling before POST returns and transfers
+          // its workspace draft. Keep that composer owner until create settles.
+          if (!selectedId && creatingRef.current === owner.id) continue;
           if (!activitiesRef.current.some(item => item.id === selectedId && item.workspaceId === owner.id)) {
             selectForWorkspace(owner.id, activitiesRef.current.find(item => item.workspaceId === owner.id)?.id || '');
           }
@@ -288,7 +296,7 @@ export function useChat() {
   const create = useCallback(async (targetWorkspaceId = workspaceId): Promise<string | null> => {
     if (creatingRef.current || !targetWorkspaceId) return null;
     const navigation = navigationRevision.current;
-    creatingRef.current = true; setCreating(true);
+    creatingRef.current = targetWorkspaceId; setCreating(true);
     try {
       const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId });
       put(snapshot);
@@ -303,7 +311,7 @@ export function useChat() {
       setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
-    finally { creatingRef.current = false; setCreating(false); }
+    finally { creatingRef.current = null; setCreating(false); }
   }, [draft, put, selectForWorkspace, selectWorkspace, workspaceId, moveAttachments]);
 
   const send = useCallback(async () => {

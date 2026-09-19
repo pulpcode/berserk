@@ -1,0 +1,273 @@
+{
+  "date": "2026-09-19",
+  "pi": "0.85.1",
+  "local": {
+    "evidenceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-session-recovery-Fk5XD7",
+    "pi": "0.85.1",
+    "seedModel": "deterministic transport with real Axon/Pi",
+    "results": [
+      {
+        "scenario": "before_user",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 1712
+      },
+      {
+        "scenario": "awaiting_model",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 2307
+      },
+      {
+        "scenario": "partial_text",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 2305
+      },
+      {
+        "scenario": "before_tool",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 2934
+      },
+      {
+        "scenario": "after_effect",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 3375
+      },
+      {
+        "scenario": "after_result",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 4127
+      },
+      {
+        "scenario": "waiting_question",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 3647
+      },
+      {
+        "scenario": "waiting_confirmation",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 4272
+      },
+      {
+        "scenario": "approved_confirmation",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 5170
+      },
+      {
+        "scenario": "compaction_call",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 37469
+      },
+      {
+        "scenario": "compaction_saved",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": false,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 38147
+      }
+    ]
+  },
+  "ubuntu": {
+    "evidenceDirectory": "/tmp/axon-session-recovery-7AUhvb",
+    "validationApp": "/home/ubuntu/axon-w01-7.Vww2EN/app",
+    "pi": "0.85.1",
+    "seedModel": "deterministic transport with real Axon/Pi",
+    "results": [
+      {
+        "scenario": "docker_after_effect",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": true,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 3403,
+        "usage": {
+          "modelAttempts": 2,
+          "replyAttempts": 2,
+          "compactionAttempts": 0,
+          "toolCalls": 2,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 272,
+            "output": 446,
+            "cacheRead": 6528,
+            "cacheWrite": 0,
+            "totalTokens": 7246
+          }
+        },
+        "initialInteractions": [],
+        "finalInteractions": [],
+        "remainingOwnedContainers": 0,
+        "finalSourceReloadPassed": true
+      },
+      {
+        "scenario": "docker_waiting_confirmation",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": true,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 4389,
+        "usage": {
+          "modelAttempts": 3,
+          "replyAttempts": 3,
+          "compactionAttempts": 0,
+          "toolCalls": 2,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 680,
+            "output": 315,
+            "cacheRead": 9472,
+            "cacheWrite": 0,
+            "totalTokens": 10467
+          }
+        },
+        "initialInteractions": [
+          {
+            "kind": "confirmation",
+            "status": "expired",
+            "execution": null
+          }
+        ],
+        "finalInteractions": [
+          {
+            "kind": "confirmation",
+            "status": "expired",
+            "execution": null
+          },
+          {
+            "kind": "confirmation",
+            "status": "rejected",
+            "execution": null
+          }
+        ],
+        "remainingOwnedContainers": 0,
+        "finalSourceReloadPassed": true
+      },
+      {
+        "scenario": "docker_approved",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": true,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 5424,
+        "usage": {
+          "modelAttempts": 3,
+          "replyAttempts": 3,
+          "compactionAttempts": 0,
+          "toolCalls": 2,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 631,
+            "output": 382,
+            "cacheRead": 9600,
+            "cacheWrite": 0,
+            "totalTokens": 10613
+          }
+        },
+        "initialInteractions": [
+          {
+            "kind": "confirmation",
+            "status": "approved",
+            "execution": "unknown"
+          }
+        ],
+        "finalInteractions": [
+          {
+            "kind": "confirmation",
+            "status": "approved",
+            "execution": "unknown"
+          },
+          {
+            "kind": "confirmation",
+            "status": "rejected",
+            "execution": null
+          }
+        ],
+        "remainingOwnedContainers": 0,
+        "finalSourceReloadPassed": true
+      },
+      {
+        "scenario": "waiting_question",
+        "passed": true,
+        "crash": "SIGKILL",
+        "liveContinuation": true,
+        "nativeHistoryUnchangedOnLoad": true,
+        "originalBytes": 3589,
+        "usage": {
+          "modelAttempts": 2,
+          "replyAttempts": 2,
+          "compactionAttempts": 0,
+          "toolCalls": 1,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 2306,
+            "output": 227,
+            "cacheRead": 2176,
+            "cacheWrite": 0,
+            "totalTokens": 4709
+          }
+        },
+        "initialInteractions": [
+          {
+            "kind": "question",
+            "status": "expired",
+            "execution": null
+          }
+        ],
+        "finalInteractions": [
+          {
+            "kind": "question",
+            "status": "expired",
+            "execution": null
+          },
+          {
+            "kind": "question",
+            "status": "answered",
+            "execution": null
+          }
+        ],
+        "remainingOwnedContainers": 0,
+        "finalSourceReloadPassed": true
+      }
+    ]
+  },
+  "scope": "SIGKILL seeds use actual Axon/Pi with deterministic transport; Ubuntu continuations use real DeepSeek; isolated data only",
+  "quality": {
+    "unitFiles": 26,
+    "unitTests": 323,
+    "browserTests": 61,
+    "browserRetries": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "build": "passed",
+    "diffCheck": "passed"
+  }
+}

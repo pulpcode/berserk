@@ -545,6 +545,11 @@ test('首条消息创建会话等待期间切区，新输入和请求仍归原�
     mock.faults.holdCreate = true;
     await input.fill('原始提交'); await input.press('Enter');
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
+    // The overview may discover the new session before its POST response arrives.
+    // It must not switch the composer away from the pending workspace draft.
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(page.getByRole('region', { name: '等待创建', exact: true }).getByRole('button', { name: '新对话', exact: true })).toBeVisible();
+    await expect(input).toHaveValue('原始提交');
     await input.fill('创建期间的新草稿');
     await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
     await expect(input).toHaveValue('');

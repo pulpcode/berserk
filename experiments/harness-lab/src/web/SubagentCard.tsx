@@ -46,13 +46,12 @@ type ConversationItem = { kind: 'interaction'; key: string; interaction: Interac
 /** Keep child evidence at its owning tool position, including native histories after reload. */
 export function conversationItems(messages: PublicMessage[], subagents: SubagentSummary[], activeRequestId?: string, interactions: Interaction[] = []): ConversationItem[] {
   const children = [...new Map(subagents.map(child => [child.subagentId, child])).values()];
-  const byTool = new Map(children.map(child => [child.toolCallId, child]));
   const byRequest = new Map<string, SubagentSummary[]>();
   for (const child of children) byRequest.set(child.parentRequestId, [...(byRequest.get(child.parentRequestId) || []), child]);
   const childForMessage = (message: PublicMessage) => {
     if (message.role !== 'tool' || message.toolName !== 'subagent') return undefined;
-    const child = byTool.get(message.toolCallId || message.id);
-    return child && (!message.requestId || message.requestId === child.parentRequestId) ? child : undefined;
+    return children.find(child => child.toolCallId === (message.toolCallId || message.id)
+      && (!message.requestId || message.requestId === child.parentRequestId));
   };
   const anchored = new Set<string>();
   const lastRequestIndex = new Map<string, number>();

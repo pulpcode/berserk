@@ -34,9 +34,9 @@ Persist drafts, submitted text and selection in sessionStorage. Storage exceptio
 
 ### Project entry points and model settings
 
-The UI calls workspaces projects; API/storage ownership remains `workspaceId`. Global New Conversation opens a project-select dialog and creates only after confirmation. A group's plus button directly calls `create(targetWorkspaceId)`, including folded groups. Capture a navigation revision before POST; completion enters the new session only when the user has not navigated since. Preserve later selections and keep the result/draft in the captured target project. Entering All Activity must also invalidate pending creation navigation. Surface cross-project creation failures in the visible page; only focus a successfully created conversation if the user has not navigated and no modal covers it. Never create on opening/cancelling the picker.
+The UI calls workspaces projects; API/storage ownership remains `workspaceId`. Global New Conversation opens a project-select dialog and creates only after confirmation. A group's plus button directly calls `create(targetWorkspaceId)`, including folded groups. Capture a navigation revision before POST; completion enters the new session only when the user has not navigated since. Preserve later selections and keep the result/draft in the captured target project. Entering All Activity must also invalidate pending creation navigation. Surface cross-project creation failures in the visible page; only focus a successfully created conversation if the user has not navigated and no modal covers it. Never create on opening/cancelling the picker. While creation is pending for a project, activity may list the new session before POST returns, but must not auto-select it: the composer still belongs to the project draft until creation moves that draft to the session. Test this ordering explicitly so the handoff cannot overwrite input typed during creation.
 
-Successful unread results use an accessible blue dot (`有新回复未读`); successful read and ordinary idle sessions have no visible status text. Keep active, stopping, failed and recovery indicators. New-session/settings dialogs also block mark-read while covering the chat.
+Successful unread results use an accessible blue dot (`有新回复未读`); successful read and ordinary idle sessions have no visible status text. Keep active, stopping, failed, interrupted and recovery indicators. New-session/settings dialogs also block mark-read while covering the chat.
 
 `ModelSettings` uses GET/PUT `/api/settings/model` and refreshes `/api/info` after save. The centered settings dialog has a single Models section. API keys are write-only password fields, initially blank, never copied from GET or persisted in browser storage. Empty key retains the current secret only when provider/endpoint stay unchanged; destination changes require an explicit key. Clear key after successful save and destroy it on close. Preserve form edits on failures; version conflict or uncertain save requires manually viewing fresh configuration before explicit retry. Do not automatically replay PUT. Respect native-dialog Escape, focus restoration and narrow layouts.
 
@@ -97,9 +97,15 @@ For bash results, the executor's exact cancellation response (optionally followe
 
 ### Subagent cards
 
-`SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.
+`SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by requestId plus toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.
 
 Use native details/summary with keyboard access, safe Markdown and contained wide tables. Keep cards collapsed initially; preserve per-session drafts, focus and reading position. Refresh/reconnect only reloads snapshots; never POST to replay a child. Do not render internal reasoning, paths, hashes, raw JSON, resource-debug buttons, standalone child chat or a separate child Stop. Child history errors show interrupted/recovery state, not a success card. `tests/e2e/chat.spec.ts` covers role-specific cards, cancellation, terminal failures, refresh/switch and narrow layout.
+
+### Interrupted conversations (W01-7)
+
+An interrupted lastResult shows “已中断” and attention navigation, not an active spinner or unread reply. With no recoveryWarning, explicit sending remains available; GET/reconnect never submits automatically. A `resultMissing` tool message shows “未收到执行结果，无法确认是否已执行”, not success, failure or rollback. It is a display projection only. Match tool, child and file cards within their request, because toolCallId can repeat in later requests.
+
+After interruption, a submitted user message already present in the snapshot clears its submitted backup rather than returning to the composer. Unpersisted input retains explicit recovery; preserve any newer draft and attachment selections. Old question/confirmation cards remain expired or show their saved decision/unknown effect, with no active controls. Hard recoveryWarning still blocks sending.
 
 ## 4. Validation & Error Matrix
 
@@ -124,6 +130,7 @@ Use native details/summary with keyboard access, safe Markdown and contained wid
 | Comparison GET failure | Keep draft and existing comparison; show retry |
 | Repeated conflict/uncertain PUT result | Keep edits; require fresh successful read before merge retry |
 | Recovery warning in native history | Show explanation and allow a new session; do not auto-resume |
+| Interrupted lastResult without recoveryWarning | Show interruption, allow explicit new message; no auto-submit or invented result |
 
 ## 5. Good / Base / Bad Cases
 
@@ -136,6 +143,8 @@ Bad: append every delta to the selected chat, silently replace an instruction dr
 ## 6. Tests Required
 
 Run `npm run typecheck`, `npm run lint`, `npm run test:e2e` and `npm run build` after relevant code changes. Browser tests use a deterministic HTTP service; they are UI evidence, not proof of real-model compliance.
+
+`tests/e2e/recovery.spec.ts` covers interrupted status, missing results, draft/attachment retention, explicit send and request-scoped subagent/file cards even when tool IDs repeat. `hitl.spec.ts` covers expired old cards alongside fresh interactions. Assert request counts; opening or refreshing must never send a message.
 
 Assert IME behavior, chat/sessionStorage failures, draft isolation, same/cross-workspace switching during streams, first-session creation races, exact-request cancellation, late events, polling after refresh and no implicit POST. Cover terminal SSE followed by failed GET and failures/cancellation before any persisted message, including draft restoration and absence of per-request diagnostic actions.
 

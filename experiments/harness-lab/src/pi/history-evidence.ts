@@ -30,6 +30,28 @@ export function decodeResourceRecord(value: unknown, workspaceId: string, readon
   if (!record.readSkills.every(read => record.skills.some(allowed => allowed.id === read.id && allowed.hash === read.hash && allowed.version === read.version))) throw stateError();
   return record;
 }
+/** Read only after strict evidence validation. Request boundaries do not require a terminal entry. */
+export function unfinishedRequests(entries: SessionEntry[]) {
+  const requests = new Map<string, { requestId: string; pendingTools: Map<string, string>; usedSandbox: boolean }>();
+  let current: ReturnType<typeof requests.get>;
+  for (const entry of entries) {
+    if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) {
+      const requestId = (entry.data as { requestId: string }).requestId;
+      current = { requestId, pendingTools: new Map(), usedSandbox: false };
+      requests.set(requestId, current);
+    } else if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) {
+      requests.delete((entry.data as { requestId: string }).requestId); current = undefined;
+    } else if (current && entry.type === 'message') {
+      if (entry.message.role === 'assistant') for (const block of entry.message.content) {
+        if (block.type !== 'toolCall') continue;
+        current.pendingTools.set(block.id, block.name);
+        if (['read', 'ls', 'find', 'write', 'edit', 'bash'].includes(block.name)) current.usedSandbox = true;
+      }
+      if (entry.message.role === 'toolResult') current.pendingTools.delete(entry.message.toolCallId);
+    }
+  }
+  return [...requests.values()];
+}
 /** Reject incompatible/cross-workspace host entries before exposing or resuming native history. */
 export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: string, parentSessionId?: string, readonly = false): RequestResult | null {
   interactionHistory(entries, workspaceId, parentSessionId);
@@ -46,6 +68,9 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   const fileReturned = new Set<string>();
   let currentRequestHasUser = false;
   for (const entry of entries) {
+    // Once host request records exist, later native messages must have a request boundary.
+    // Earlier migrated Pi-only history remains readable without invented request IDs.
+    if (entry.type === 'message' && requests.size && currentRequest === undefined) throw stateError();
     if (entry.type === 'message' && entry.message.role === 'user') currentRequestHasUser = true;
     if (entry.type === 'message' && entry.message.role === 'assistant') for (const block of entry.message.content) {
       if (block.type === 'toolCall' && block.name === 'file_output') {
@@ -75,6 +100,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       if (requests.has(resources.requestId) || completed.has(resources.requestId)) throw stateError();
       requests.set(resources.requestId, resources);
       currentRequest = resources.requestId; currentRequestHasUser = false;
+      result = { requestId: resources.requestId, status: 'interrupted', message: '上次处理已中断，已保存内容保留，可继续发送消息。' };
       continue;
     }
     const data = entry.data;
@@ -82,7 +108,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
     if (entry.customType === RESULT_ENTRY) {
       // Preparation failures and pre-open cancellation legitimately have no resource entry.
       if (!['succeeded', 'failed', 'cancelled'].includes(String(data.status)) || (data.message !== undefined && typeof data.message !== 'string') || (data.instructionChanges !== undefined && (!Array.isArray(data.instructionChanges) || !data.instructionChanges.every(change))) || (data.instructionOutcomeUncertain !== undefined && typeof data.instructionOutcomeUncertain !== 'boolean')) throw stateError();
-      if (!keys(data, ['requestId', 'status', 'message', 'instructionChanges', 'instructionOutcomeUncertain', 'compactionIds', 'compactions', 'usageSummary', 'subagentUsage']) || completed.has(data.requestId) || (currentRequest !== undefined && currentRequest !== data.requestId) || (!requests.has(data.requestId) && (data.status === 'succeeded' || (Array.isArray(data.instructionChanges) && data.instructionChanges.length)))) throw stateError();
+      if (!keys(data, ['requestId', 'status', 'message', 'instructionChanges', 'instructionOutcomeUncertain', 'compactionIds', 'compactions', 'usageSummary', 'subagentUsage']) || completed.has(data.requestId) || (requests.has(data.requestId) && currentRequest !== data.requestId) || (!requests.has(data.requestId) && (data.status === 'succeeded' || (Array.isArray(data.instructionChanges) && data.instructionChanges.length)))) throw stateError();
       if (data.compactionIds !== undefined && (!Array.isArray(data.compactionIds) || !data.compactionIds.every(id => typeof id === 'string' && compactedBy.get(id) === data.requestId))) throw stateError();
       if (Array.isArray(data.compactionIds) && new Set(data.compactionIds).size !== data.compactionIds.length) throw stateError();
       if (data.compactions !== undefined && (!Array.isArray(data.compactions) || !data.compactions.every(item => validCompactionSummary(item) && item.requestId === data.requestId && Array.isArray(data.compactionIds) && data.compactionIds.includes(item.id) && entries.some(native => native.type === 'compaction' && native.id === item.id && native.timestamp === item.createdAt && native.tokensBefore === item.tokensBefore)))) throw stateError();
@@ -114,6 +140,9 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
     } else if (entry.customType === SUBAGENT_START || entry.customType === SUBAGENT_RESULT) {
       if (readonly || currentRequest !== data.requestId || !requests.has(data.requestId)) throw stateError();
     } else { throw stateError(); }
+  }
+  if (result?.status === 'interrupted' && unfinishedRequests(entries).find(request => request.requestId === result.requestId)?.pendingTools.size) {
+    result.message += ' 部分工具未收到执行结果，无法据此判断是否已执行，请先核对已有结果。';
   }
   return result;
 }

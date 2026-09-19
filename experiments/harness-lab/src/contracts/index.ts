@@ -11,6 +11,8 @@ export interface PublicMessage {
   toolName?: string;
   isError?: boolean;
   toolCallId?: string;
+  /** UI-only notice for an interrupted call, not a persisted tool result. */
+  resultMissing?: true;
   attachments?: FileRef[];
 }
 export interface SubagentSummary {
@@ -36,7 +38,8 @@ export interface RequestState {
 }
 export interface RequestResult {
   requestId: string;
-  status: 'succeeded' | 'failed' | 'cancelled';
+  /** interrupted is a read projection only; native terminal records keep their existing format. */
+  status: 'succeeded' | 'failed' | 'cancelled' | 'interrupted';
   message?: string;
   instructionChanges?: InstructionUpdate[];
   instructionOutcomeUncertain?: boolean;

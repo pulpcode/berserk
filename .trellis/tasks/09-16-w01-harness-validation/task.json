@@ -2,7 +2,7 @@
   "id": "w01-harness-validation",
   "name": "w01-harness-validation",
   "title": "W01 通用 Harness 协议与技术路线验证",
-  "description": "分期验证 Harness：多轮对话、Memory、压缩、子 Agent 和 Web 文件作业已完成；W01-6 Web 提问、操作确认及 bash 规则已实现并通过开发验收，再推进正式运行与可替换边界。",
+  "description": "分期验证 Harness：多轮对话、Memory、压缩、子 Agent、Web 文件作业及 HITL 已实现；W01-7 中断后原会话续聊已实现并通过组合验收，再推进完整运行与可替换边界。",
   "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "harness",
@@ -25,7 +25,8 @@
     "09-17-w01-3-context-compaction",
     "09-17-w01-4-subagent",
     "09-17-w01-5-artifact-versions",
-    "09-18-w01-6-hitl"
+    "09-18-w01-6-hitl",
+    "09-19-w01-7-session-recovery"
   ],
   "parent": null,
   "relatedFiles": [
@@ -106,6 +107,22 @@
       "implementationComplete": true,
       "acceptancePassed": true,
       "evidence": "../09-18-w01-6-hitl/research/validation-results.md"
+    },
+    "w01_7": {
+      "status": "validated",
+      "stage": "S3c",
+      "task": "../09-19-w01-7-session-recovery",
+      "review": "../09-19-w01-7-session-recovery/review.md",
+      "date": "2026-09-19",
+      "implementationApproved": true,
+      "implementationComplete": true,
+      "acceptancePassed": true,
+      "scope": "interrupted-session-new-request",
+      "prerequisiteEvidence": "research/pi-recovery-validation.md",
+      "recoveryState": "derived-from-existing-request-records",
+      "newPersistentEntries": false,
+      "recoveryPrompt": false,
+      "evidence": "../09-19-w01-7-session-recovery/research/validation-results.md"
     }
   }
 }
