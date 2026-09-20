@@ -247,3 +247,33 @@
 ### Next Steps
 
 - 用户查看验收；需要时以中文提交当前Git，并按用户指令更新唯一线上服务。
+
+
+## Session 9: 提交W01-9并更新唯一线上实例
+
+**Date**: 2026-09-20
+**Task**: 提交W01-9并更新唯一线上实例
+**Branch**: `main`
+
+### Summary
+
+中文提交当前实现，从已提交代码构建并部署tencent-server唯一4315实例；停服备份、历史副本读回、服务与浏览器验证通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `2abb782` | (see git log) |
+
+### Testing
+
+- [OK] 原48个文件哈希保持一致，A/B各2个会话均可读，模型及Docker正常，4316未启动。
+- [OK] HTTP构建资产逐字节一致；浏览器刷新原历史和新增菜单、Skill候选正常。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户使用线上页面验收；本轮未推送GitHub。

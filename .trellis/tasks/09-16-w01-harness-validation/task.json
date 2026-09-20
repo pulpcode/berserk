@@ -151,8 +151,9 @@
       "scope": "composer-file-skill-subagent-selection",
       "implementationComplete": true,
       "acceptancePassed": true,
-      "acceptanceStatus": "validated-awaiting-user-not-deployed",
-      "evidence": "../09-20-w01-9-conversation-references/research/validation-results.md"
+      "acceptanceStatus": "validated-and-deployed-awaiting-user",
+      "evidence": "../09-20-w01-9-conversation-references/research/validation-results.md",
+      "commit": "2abb782"
     }
   }
 }

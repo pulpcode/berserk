@@ -15,7 +15,7 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "2abb782",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -29,7 +29,7 @@
     ".trellis/tasks/09-20-w01-9-conversation-references/research/existing-capabilities.md",
     ".trellis/tasks/09-20-w01-9-conversation-references/research/validation-results.md"
   ],
-  "notes": "2026-09-20 用户授权实施；I01～I15 组合验收通过，待用户查看。保留既有 W01-8 未提交改动，本轮未提交或部署。",
+  "notes": "2026-09-20 已按用户要求提交实现并更新唯一线上4315实例；组合验收及发布检查通过，待用户使用验收。未推送GitHub。",
   "meta": {
     "stage": "S3e",
     "date": "2026-09-20",
@@ -62,6 +62,15 @@
     "contextManifestsCurated": true,
     "evidence": "research/validation-results.md",
     "acceptancePassed": true,
-    "acceptanceStatus": "validated-awaiting-user-not-deployed"
+    "acceptanceStatus": "validated-and-deployed-awaiting-user",
+    "deployment": {
+      "date": "2026-09-20",
+      "host": "tencent-server",
+      "port": 4315,
+      "release": "/home/ubuntu/axon-release-w01-9.8poKyq",
+      "backup": "/home/ubuntu/axon-release-w01-9.8poKyq/backups/4315",
+      "commit": "2abb782",
+      "archiveSha256": "a64be5ca1d931c84c7fcadcf3334c9ec73665ff0b796450439b135b5da00d230"
+    }
   }
 }

@@ -66,7 +66,7 @@ S3d [W01-8 任务分派与成果交接](../09-19-w01-8-task-handoff/review.md) �
 - [ ] 实现分派、签收、固定文件提交及验收／退回，页面和 Pi 工具共用确认及状态校验。
 - [ ] 提供席位切换、工作待办和详情，按 H01～H16 验证隔离、固定版本、重复操作、中断及真实闭环。
 
-S3e [W01-9 文件引用与 Skill、子 Agent 选择](../09-20-w01-9-conversation-references/review.md) 已实现并通过组合验收，尚未部署：
+S3e [W01-9 文件引用与 Skill、子 Agent 选择](../09-20-w01-9-conversation-references/review.md) 已实现并通过组合验收，已部署，待用户验收：
 
 - [x] 复用文件／Skill 查询并增加只读角色目录；将本条选择安全传入 Pi。
 - [x] 实现 `@` 文件／子 Agent、`/` Skill 候选、选择标签及独立草稿，按 I01～I15 验证。
