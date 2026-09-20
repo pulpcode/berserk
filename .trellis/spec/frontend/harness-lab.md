@@ -97,7 +97,7 @@ For bash results, the executor's exact cancellation response (optionally followe
 
 ### Composer references (W01-9)
 
-`ComposerReferences` keeps the existing textarea and adds a scoped picker plus removable chips: `@` files/readonly roles and `/` Skills. The add menu uses the same selection paths. A selection is not a send, tool call or delegation result. Require a user goal; submit only file paths and Skill/role IDs with hashes. Render actual child execution through `SubagentCard`.
+`ComposerReferences` keeps the existing textarea and adds a scoped picker plus removable chips: `@` first shows the categories “项目文件或文件夹” and “子 Agent”; only entering a category fetches and displays its file or role candidates. Child lists offer a return-to-categories control. Direct `/` Skills remain unchanged. Directories are navigation targets, not sendable references. The add menu uses the same selection paths. A selection is not a send, tool call or delegation result. Require a user goal; submit only file paths and Skill/role IDs with hashes. Render actual child execution through `SubagentCard`.
 
 Before bootstrap establishes the initial workspace/session, disable composer editing and add/upload actions (`composerReady = !chat.loading && Boolean(chat.workspaceId)`). Otherwise text can be written to an empty workspace key and disappear when bootstrap selects a session. This gate must not include active-request state: editing the next draft during execution remains available.
 
@@ -120,6 +120,10 @@ Use native details/summary with keyboard access, safe Markdown and contained wid
 An interrupted lastResult shows “已中断” and attention navigation, not an active spinner or unread reply. With no recoveryWarning, explicit sending remains available; GET/reconnect never submits automatically. A `resultMissing` tool message shows “未收到执行结果，无法确认是否已执行”, not success, failure or rollback. It is a display projection only. Match tool, child and file cards within their request, because toolCallId can repeat in later requests.
 
 After interruption, a submitted user message already present in the snapshot clears its submitted backup rather than returning to the composer. Unpersisted input retains explicit recovery; preserve any newer draft and attachment selections. Old question/confirmation cards remain expired or show their saved decision/unknown effect, with no active controls. Hard recoveryWarning still blocks sending.
+
+User-facing role selectors are named `Agents`; internal `agent` fields and subagent delegation retain their meaning. Desktop browsers are the product target: prioritize desktop window resizing and keyboard/mouse use; existing responsive CSS may stay, but phone-specific design and validation are not new requirements.
+
+Composer visual contract: keep one compact input surface with wrapping selection chips and the existing textarea autosizing. Do not show an idle readiness slogan. Category choices are concise rows; secondary headers retain back/close actions and agent read-only context. Ready file chips retain non-root paths and renamed originals visibly so touch users can distinguish files. Scope compact attachment styling to the composer; the Files panel keeps its full metadata and upload/error controls.
 
 ### Test seats and work handoff (W01-8)
 

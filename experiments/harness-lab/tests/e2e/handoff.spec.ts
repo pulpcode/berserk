@@ -154,7 +154,7 @@ test('seat switches preserve separate drafts, late Pi replies and scoped XHR upl
     await visible(page).getByRole('textbox', { name: '发送消息' }).fill('B自己的草稿');
     await visible(page).getByLabel('选择附件', { exact: true }).setInputFiles({ name: 'B上传.txt', mimeType: 'text/plain', buffer: Buffer.from('B ONLY') });
     await expect(visible(page).getByText('B上传.txt', { exact: true })).toBeVisible();
-    await expect(visible(page).getByText('已保存到工作区', { exact: false })).toBeVisible();
+    await expect(visible(page).getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
     await expect(visible(page).getByText('当前席位处理完毕', { exact: true })).toHaveCount(0);
     await expect.poll(() => env.lab.activity('test-seat').sessions[0]?.lastResult?.status).toBe('succeeded');
     await switchSeat(page, 'test-seat');

@@ -45,7 +45,7 @@ async function selectSkill(page: Page, name = 'synthesis') {
   await menu(page, '使用 Skill'); await visible(page).getByRole('option', { name: new RegExp(name === 'synthesis' ? '资料综合写作' : '结果检查') }).click();
 }
 async function selectAgent(page: Page, name = 'analyst') {
-  await menu(page, '委派子 Agent'); await visible(page).getByRole('option', { name: new RegExp(name) }).click();
+  await menu(page, 'Agents'); await visible(page).getByRole('option', { name: new RegExp(name) }).click();
 }
 async function seat(page: Page, id: string) {
   await visible(page).getByRole('combobox', { name: '测试席位' }).selectOption(id);
@@ -57,6 +57,7 @@ test('typed references select using keyboard, preserve prose, show historical Sk
   try {
     await page.goto('/');
     await input(page).pressSequentially('请处理 @plans/');
+    await input(page).press('Enter');
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();
     await input(page).press('Enter');
     await expect(input(page)).toHaveValue('请处理 ');
@@ -64,13 +65,15 @@ test('typed references select using keyboard, preserve prose, show historical Sk
     await input(page).pressSequentially('/syn');
     await expect(visible(page).getByRole('option', { name: /资料综合写作/ })).toBeVisible();
     await input(page).press('ArrowDown'); await input(page).press('Enter');
-    await expect(picks(page)).toContainText('Skill · 资料综合写作');
+    await expect(picks(page)).toContainText('资料综合写作');
     await expect(input(page)).toHaveValue('请处理 ');
     await input(page).pressSequentially('@analyst');
+    await input(page).press('ArrowDown'); await input(page).press('Enter');
     await expect(visible(page).getByRole('option', { name: /analyst/ })).toBeVisible();
     await input(page).press('Enter');
-    await expect(picks(page)).toContainText('委派 · analyst');
+    await expect(picks(page)).toContainText('analyst');
     expect(env.messages).toHaveLength(0); expect(env.calls).toHaveLength(0);
+    await page.screenshot({ path: test.info().outputPath('composer-selected-desktop.png') });
     await picks(page).getByTitle('查看 Skill 内容').click();
     await expect(page.getByRole('dialog')).toContainText('区分资料事实');
     await page.getByRole('dialog').getByRole('button', { name: '关闭面板' }).click();
@@ -111,7 +114,7 @@ test('IME, Escape, outside click and pasted paths remain plain text; menu allows
     await selectAgent(page); await selectAgent(page, 'reviewer');
     await expect(picks(page)).toContainText('reviewer'); await expect(picks(page)).not.toContainText('analyst');
     await expect(visible(page).getByRole('button', { name: '发送消息', exact: true })).toBeDisabled();
-    await picks(page).getByRole('button', { name: '移除 Skill' }).click(); await picks(page).getByRole('button', { name: '移除子 Agent' }).click();
+    await picks(page).getByRole('button', { name: '移除 Skill' }).click(); await picks(page).getByRole('button', { name: '移除 Agents' }).click();
     await expect(picks(page)).toHaveCount(0); expect(env.calls).toHaveLength(0);
   } finally { await env.close(); }
 });
@@ -148,7 +151,7 @@ test('seat-scoped drafts survive refresh, delayed directories cannot leak, and f
   try {
     await page.goto('/'); await selectSkill(page); await input(page).fill('A 的任务');
     env.controls.delayAgents = 500;
-    await menu(page, '委派子 Agent');
+    await menu(page, 'Agents');
     await seat(page, 'seat-b');
     await expect(picks(page)).toHaveCount(0); await expect(input(page)).toHaveValue('');
     await page.waitForTimeout(650);
@@ -199,6 +202,7 @@ test('changed selection fails before model work and preserves all inputs until e
   try {
     await page.goto('/'); await selectSkill(page); await selectAgent(page);
     await input(page).pressSequentially('检查资料 @plans/');
+    await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible(); await input(page).press('Enter');
     await appendFile(join(env.roles, 'analyst.md'), '\n增加一条分析约定。\n');
     await visible(page).getByRole('button', { name: '发送消息', exact: true }).click();
@@ -227,7 +231,7 @@ test('workspace navigation preserves separate drafts and dismisses stale pickers
     await expect(input(page)).toHaveValue(''); await expect(picks(page)).toHaveCount(0);
     await selectAgent(page); await input(page).fill('另一个项目草稿');
     env.controls.delayAgents = 400;
-    await menu(page, '委派子 Agent');
+    await menu(page, 'Agents');
     await visible(page).getByRole('button', { name: '进入项目：默认工作区' }).click();
     await expect(input(page)).toHaveValue('原项目草稿'); await expect(picks(page)).toContainText('资料综合写作');
     await expect(visible(page).getByLabel('选择引用')).toHaveCount(0);
@@ -236,7 +240,7 @@ test('workspace navigation preserves separate drafts and dismisses stale pickers
     await expect(input(page)).toHaveValue('另一个项目草稿'); await expect(picks(page)).toContainText('analyst');
     await expect(visible(page).getByLabel('选择引用')).toHaveCount(0);
     expect(env.calls).toHaveLength(0);
-    await menu(page, '委派子 Agent');
+    await menu(page, 'Agents');
     await expect(visible(page).getByRole('option', { name: /analyst/ })).toBeVisible();
     await page.screenshot({ path: test.info().outputPath('references-desktop.png') });
   } finally { await env.close(); }
@@ -247,6 +251,7 @@ test('Chinese composition filters the browsed directory and caret movement aband
   const env = await setup(page);
   try {
     await page.goto('/'); await input(page).pressSequentially('请查看 @pla');
+    await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
     await visible(page).getByRole('option', { name: /^plans / }).click();
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();
     await expect(input(page)).toHaveValue('请查看 @plans/');
@@ -261,9 +266,12 @@ test('Chinese composition filters the browsed directory and caret movement aband
     await input(page).press('Enter');
     await expect(input(page)).toHaveValue('请查看 '); await expect(visible(page).getByLabel('消息附件')).toContainText('方案.md');
     await input(page).pressSequentially('@plans/');
+    await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();
     await visible(page).getByRole('button', { name: '上一级' }).click();
     await expect(input(page)).toHaveValue('请查看 @');
+    await visible(page).getByRole('button', { name: '返回类别' }).click();
+    await visible(page).getByRole('option', { name: /^Agents/ }).click();
     await input(page).pressSequentially('analyst');
     await expect(visible(page).getByRole('option', { name: /analyst/ })).toBeVisible();
     await input(page).press('Home');
@@ -289,5 +297,50 @@ for (const newerText of ['新的目标', '原始目标']) test(`late preparation
     await visible(page).getByRole('button', { name: '恢复刚才发送的内容' }).click();
     await expect(input(page)).toHaveValue('原始目标'); await expect(picks(page)).toContainText('结果检查'); await expect(picks(page)).toContainText('analyst'); await expect(picks(page)).not.toContainText('资料综合写作');
     expect(env.calls).toHaveLength(0); expect(env.messages).toHaveLength(1);
+  } finally { await env.close(); }
+});
+
+
+test('@ opens categories without loading file or agent lists and supports returning between categories', async ({ page }) => {
+  const env = await setup(page);
+  try {
+    await page.goto('/'); await expect(input(page)).toBeEditable();
+    const listings = () => env.paths.filter(path => /\/(files(?:\?|$)|agents$)/.test(path));
+    const before = listings().length;
+    await input(page).pressSequentially('请查看 @plans/');
+    await expect(visible(page).getByRole('option', { name: /^项目文件或文件夹/ })).toBeVisible();
+    await expect(visible(page).getByRole('option', { name: /^Agents/ })).toBeVisible();
+    await expect(visible(page).getByRole('listbox', { name: '可选引用' }).getByRole('option')).toHaveCount(2);
+    expect(listings()).toHaveLength(before);
+    await page.screenshot({ path: test.info().outputPath('composer-categories-desktop.png') });
+    await input(page).press('Enter');
+    await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();
+    expect(listings().some(path => path.endsWith('/agents'))).toBe(false);
+    await page.screenshot({ path: test.info().outputPath('composer-files-desktop.png') });
+    await visible(page).getByRole('button', { name: '返回类别' }).click();
+    await expect(input(page)).toHaveValue('请查看 @');
+    const afterFiles = listings().length;
+    await expect(visible(page).getByRole('listbox', { name: '可选引用' }).getByRole('option')).toHaveCount(2);
+    await input(page).press('ArrowDown'); await input(page).press('Enter');
+    await expect(visible(page).getByRole('option', { name: /analyst/ })).toBeVisible();
+    await input(page).pressSequentially('review');
+    await expect(visible(page).getByRole('option', { name: /reviewer/ })).toBeVisible();
+    await visible(page).getByRole('button', { name: '返回类别' }).click();
+    await expect(input(page)).toHaveValue('请查看 @');
+    expect(listings().length).toBeGreaterThan(afterFiles);
+    const afterAgents = listings().length;
+    await input(page).dispatchEvent('compositionstart');
+    await input(page).dispatchEvent('keydown', { key: 'Enter', isComposing: true, keyCode: 229 });
+    await input(page).dispatchEvent('compositionend');
+    await expect(visible(page).getByRole('listbox', { name: '可选引用' }).getByRole('option')).toHaveCount(2);
+    expect(listings()).toHaveLength(afterAgents);
+    await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
+    await expect(visible(page).getByRole('option', { name: /^plans / })).toBeVisible();
+    await visible(page).getByRole('option', { name: /^plans / }).click();
+    await expect(input(page)).toHaveValue('请查看 @plans/');
+    await expect(visible(page).getByLabel('消息附件').locator('li')).toHaveCount(0);
+    await input(page).press('Escape');
+    await expect(input(page)).toHaveValue('请查看 @plans/');
+    expect(env.messages).toHaveLength(0); expect(env.calls).toHaveLength(0);
   } finally { await env.close(); }
 });

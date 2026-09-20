@@ -103,10 +103,10 @@ test('upload stays with its original session, restores references after refresh,
   await composer(page).fill('甲会话草稿'); await attach(page);
   await expect.poll(() => Boolean(app.controls.release)).toBe(true);
   await page.getByRole('button', { name: /会话 B/ }).click(); await composer(page).fill('乙会话草稿');
-  await app.controls.release!(); await expect(page.getByRole('list', { name: '消息附件' })).toBeEmpty();
+  await app.controls.release!(); await expect(page.getByLabel('消息附件').getByRole('listitem')).toHaveCount(0);
   await page.getByRole('button', { name: /会话 A/ }).click();
-  await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible(); await expect(composer(page)).toHaveValue('甲会话草稿');
-  await page.reload(); await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible(); await expect(composer(page)).toHaveValue('甲会话草稿');
+  await page.reload(); await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
   await page.getByRole('button', { name: '移除引用 数据.csv' }).click();
   expect(app.deletes).toHaveLength(0); expect(app.contents.has('w1/数据.csv')).toBe(true);
   await page.getByRole('button', { name: '文件', exact: true }).click();
@@ -126,7 +126,7 @@ test('failed upload blocks sending, explicit retry verifies status, cancelled up
   await expect(page.getByRole('button', { name: '核对并重试 数据.csv' })).toBeVisible();
   await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: '核对并重试 数据.csv' }).click();
-  await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible(); expect(app.transfers).toHaveLength(2);
+  await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible(); expect(app.transfers).toHaveLength(2);
   app.controls.hold = true; await attach(page, '另一个.csv'); await expect.poll(() => Boolean(app.controls.release)).toBe(true);
   await page.getByRole('button', { name: '取消上传 另一个.csv' }).click();
   await expect(page.getByRole('list', { name: '消息附件' })).not.toContainText('另一个.csv');
@@ -158,7 +158,7 @@ test('uncertain upload response is checked without duplicate transfer and same n
   await attach(page); await expect(page.getByRole('button', { name: '核对并重试 数据.csv' })).toBeVisible();
   expect(app.contents.has('w1/数据.csv')).toBe(true);
   await page.getByRole('button', { name: '核对并重试 数据.csv' }).click();
-  await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible(); expect(app.transfers).toHaveLength(1);
+  await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible(); expect(app.transfers).toHaveLength(1);
   await attach(page); await expect(page.getByRole('list', { name: '消息附件' })).toContainText('副本-数据.csv');
   await composer(page).fill('处理两份文件'); await page.getByRole('button', { name: '发送消息', exact: true }).click();
   await expect.poll(() => app.sent.length).toBe(1); expect(app.sent[0]!.uploadIds).toEqual(['u0', 'u1']);
@@ -167,13 +167,13 @@ test('uncertain upload response is checked without duplicate transfer and same n
 test('workspace draft attachments follow the captured first session while later navigation wins', async ({ page }) => {
   const app = await filesApi(page); app.controls.emptySecond = true;
   await page.reload(); await page.getByRole('button', { name: '进入项目：另一工作区' }).click();
-  await attach(page); await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible();
+  await attach(page); await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
   await composer(page).fill('新项目的文件任务'); app.controls.holdCreate = true;
   await page.getByRole('button', { name: '发送消息', exact: true }).click(); await expect.poll(() => Boolean(app.controls.releaseCreate)).toBe(true);
   await page.getByRole('button', { name: '会话 A', exact: true }).click(); await composer(page).fill('留在这里的草稿');
   await app.controls.releaseCreate!(); await expect.poll(() => app.sent.length).toBe(1);
   expect(app.sent[0]!.id).toBe('new-3'); expect(app.sent[0]!.uploadIds).toEqual(['u0']); expect(app.uploads.get('u0')!.workspaceId).toBe('w2');
-  await expect(composer(page)).toHaveValue('留在这里的草稿'); await expect(page.getByRole('list', { name: '消息附件' })).toBeEmpty();
+  await expect(composer(page)).toHaveValue('留在这里的草稿'); await expect(page.getByLabel('消息附件').getByRole('listitem')).toHaveCount(0);
 });
 
 test('drag and drop has keyboard alternative and never fetches Markdown remote images', async ({ page }) => {
@@ -182,7 +182,7 @@ test('drag and drop has keyboard alternative and never fetches Markdown remote i
   const data = await page.evaluateHandle(() => { const transfer = new DataTransfer(); transfer.items.add(new File(['# 标题\n![外图](https://external.invalid/pixel.png)'], '说明.md', { type: 'text/markdown' })); return transfer; });
   await page.locator('form.composer').dispatchEvent('drop', { dataTransfer: data });
   await expect(page.getByRole('button', { name: '添加附件' })).toBeVisible();
-  await expect(page.getByText('已保存到工作区', { exact: false })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
   await page.getByRole('button', { name: '文件', exact: true }).click(); await page.getByRole('button', { name: '预览 说明.md' }).click();
   await expect(page.getByRole('region', { name: '说明.md 预览' })).toContainText('[图片：外图]'); expect(externalLoads).toBe(0); expect(app.sent).toHaveLength(0);
   await page.screenshot({ path: '/tmp/berserk-files-desktop.png', fullPage: true });
@@ -212,6 +212,6 @@ test('pending cancellation follows an attachment moved from project draft into a
   await expect.poll(() => Boolean(app.controls.releaseDelete)).toBe(true);
   await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
   await expect(page.getByRole('button', { name: '新对话', exact: true })).toBeVisible();
-  await app.controls.releaseDelete!(); await expect(page.getByRole('list', { name: '消息附件' })).toBeEmpty();
+  await app.controls.releaseDelete!(); await expect(page.getByLabel('消息附件').getByRole('listitem')).toHaveCount(0);
   expect(app.sent).toHaveLength(0); expect(app.contents.size).toBe(0);
 });

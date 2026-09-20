@@ -57,7 +57,8 @@
     "userConfirmedChoices": [
       "文件引用、Skill、Agent 作为一个开发阶段",
       "@ 文件／子 Agent，/ Skill",
-      "子 Agent 委派本条任务，结果返回主会话"
+      "子 Agent 委派本条任务，结果返回主会话",
+      "@ 先选项目文件或文件夹／子 Agent，再选择具体项；文件夹仍只用于浏览"
     ],
     "contextManifestsCurated": true,
     "evidence": "research/validation-results.md",
@@ -71,6 +72,15 @@
       "backup": "/home/ubuntu/axon-release-w01-9.8poKyq/backups/4315",
       "commit": "2abb782",
       "archiveSha256": "a64be5ca1d931c84c7fcadcf3334c9ec73665ff0b796450439b135b5da00d230"
+    },
+    "menuFollowup": {
+      "status": "completed",
+      "deployed": true
+    },
+    "composerVisualFollowup": {
+      "status": "completed",
+      "deployed": true,
+      "release": "/home/ubuntu/axon-release-w01-9.8poKyq/composer-update-20260920"
     }
   }
 }
