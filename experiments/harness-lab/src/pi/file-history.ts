@@ -35,7 +35,7 @@ export function decodeFileOutput(value: unknown, workspaceId: string, sessionId?
     || value.toolCallId.length > 512 || typeof value.createdAt !== 'string' || !Number.isFinite(Date.parse(value.createdAt))) throw stateError();
   return structuredClone(value) as unknown as FileOutput;
 }
-export function fileHistory(entries: SessionEntry[], workspaceId: string, sessionId: string) {
+export function fileHistory(entries: SessionEntry[], workspaceId: string, sessionId?: string) {
   const inputs = new Map<string, FileRef[]>();
   const outputs: FileOutput[] = [];
   for (const entry of entries) {

@@ -1,14 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
 import type { Upload } from '../contracts/files';
-import { api, checkResponse } from './api';
+import { useApi, checkResponse } from './api';
 
 export interface DraftAttachment {
   id: string; workspaceId: string; name: string; originalName?: string; size: number; path?: string; uploadId?: string;
   status: 'uploading' | 'ready' | 'failed'; progress: number; error?: string;
 }
 type AttachmentMap = Record<string, DraftAttachment[]>;
-const KEY = 'berserk.attachments';
-const SENT = 'berserk.submitted-attachments';
 function load(key: string): AttachmentMap {
   try {
     const value = JSON.parse(sessionStorage.getItem(key) || '{}') as AttachmentMap;
@@ -17,10 +15,14 @@ function load(key: string): AttachmentMap {
   } catch { return {}; }
 }
 function save(key: string, state: AttachmentMap) { try { sessionStorage.setItem(key, JSON.stringify(state)); } catch { /* In-memory drafts remain available. */ } }
-const endpoint = (workspaceId: string, uploadId?: string) => `/api/workspaces/${encodeURIComponent(workspaceId)}/uploads${uploadId ? `/${encodeURIComponent(uploadId)}` : ''}`;
+const uploadEndpoint = (workspaceId: string, uploadId?: string) => `/api/workspaces/${encodeURIComponent(workspaceId)}/uploads${uploadId ? `/${encodeURIComponent(uploadId)}` : ''}`;
 const message = (error: unknown) => error instanceof Error ? error.message : '上传失败，请重试或移除此引用。';
 
 export function useAttachments() {
+  const { api, url, storageKey } = useApi();
+  const KEY = storageKey('berserk.attachments');
+  const SENT = storageKey('berserk.submitted-attachments');
+  const endpoint = useCallback((workspaceId: string, uploadId?: string) => url(uploadEndpoint(workspaceId, uploadId)), [url]);
   const [all, setAll] = useState(() => load(KEY));
   const state = useRef(all);
   const submitted = useRef(load(SENT));
@@ -28,8 +30,17 @@ export function useAttachments() {
   const transfers = useRef(new Map<string, { cancelled: boolean; xhr?: XMLHttpRequest }>());
   const [notice, setNotice] = useState<Record<string, string>>({});
   const update = useCallback((change: (current: AttachmentMap) => AttachmentMap) => {
-    state.current = change(state.current); setAll(state.current); save(KEY, state.current);
-  }, []);
+    state.current = Object.fromEntries(Object.entries(change(state.current)).map(([owner, items]) => {
+      const paths = new Set<string>();
+      return [owner, items.filter(item => {
+        if (item.status !== 'ready' || !item.path) return true;
+        const key = `${item.workspaceId}:${item.path}`;
+        if (paths.has(key)) return false;
+        paths.add(key); return true;
+      })];
+    }));
+    setAll(state.current); save(KEY, state.current);
+  }, [KEY, setAll]);
   // Locate by stable attachment ID: a first-session creation can move its owner while transfer is pending.
   const patch = useCallback((id: string, change: Partial<DraftAttachment>) => update(current => Object.fromEntries(Object.entries(current).map(([key, items]) => [key, items.map(item => item.id === id ? { ...item, ...change } : item)]))), [update]);
   const transfer = useCallback(async (item: DraftAttachment) => {
@@ -75,7 +86,7 @@ export function useAttachments() {
       localFiles.current.delete(item.id);
     } catch (error) { if (!control.cancelled) patch(item.id, { status: 'failed', error: message(error) }); }
     finally { transfers.current.delete(item.id); }
-  }, [patch]);
+  }, [api, endpoint, patch]);
   const add = useCallback((owner: string, workspaceId: string, files: File[], limits: { maxAttachments: number; maxFileBytes: number }) => {
     const count = state.current[owner]?.length || 0;
     if (count + files.length > limits.maxAttachments) { setNotice(previous => ({ ...previous, [owner]: `每条消息最多关联 ${limits.maxAttachments} 个文件。` })); return; }
@@ -92,17 +103,17 @@ export function useAttachments() {
       localFiles.current.delete(item.id);
       setNotice(previous => ({ ...previous, [owner]: '已移除附件引用；已保存的文件仍保留在工作区。' }));
     } catch (error) { patch(item.id, { status: 'failed', error: `取消结果未确认：${message(error)} 请核对后再移除。` }); }
-  }, [patch, update]);
+  }, [endpoint, patch, update]);
   const move = useCallback((from: string, to: string) => update(current => ({ ...current, [to]: [...(current[to] || []), ...(current[from] || [])], [from]: [] })), [update]);
   const consume = useCallback((owner: string, items: DraftAttachment[]) => {
     submitted.current = { ...submitted.current, [owner]: items }; save(SENT, submitted.current);
     update(current => ({ ...current, [owner]: (current[owner] || []).filter(item => !items.some(sent => sent.id === item.id)) }));
-  }, [update]);
+  }, [SENT, update]);
   const recover = useCallback((owner: string) => {
     update(current => ({ ...current, [owner]: [...(current[owner] || []), ...(submitted.current[owner] || []).filter(item => !(current[owner] || []).some(existing => existing.id === item.id))] }));
     submitted.current = { ...submitted.current, [owner]: [] }; save(SENT, submitted.current);
-  }, [update]);
-  const clearSubmitted = useCallback((owner: string) => { submitted.current = { ...submitted.current, [owner]: [] }; save(SENT, submitted.current); }, []);
+  }, [SENT, update]);
+  const clearSubmitted = useCallback((owner: string) => { submitted.current = { ...submitted.current, [owner]: [] }; save(SENT, submitted.current); }, [SENT]);
   const reference = useCallback((owner: string, workspaceId: string, file: { name: string; path: string; size?: number }, maxAttachments: number) => {
     if (state.current[owner]?.some(item => item.path === file.path && item.workspaceId === workspaceId)) { setNotice(previous => ({ ...previous, [owner]: '此文件已关联到当前消息。' })); return true; }
     if ((state.current[owner]?.length || 0) >= maxAttachments) { setNotice(previous => ({ ...previous, [owner]: `每条消息最多关联 ${maxAttachments} 个文件。` })); return false; }

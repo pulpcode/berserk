@@ -25,7 +25,9 @@
     "probe:execution": "tsx scripts/probe-execution.ts",
     "probe:files": "tsx --env-file=.env.local scripts/probe-files.ts",
     "probe:files-continuation": "tsx --env-file=.env.local scripts/probe-files-continuation.ts",
-    "probe:hitl": "tsx --env-file-if-exists=.env.local scripts/probe-hitl.ts"
+    "probe:hitl": "tsx --env-file-if-exists=.env.local scripts/probe-hitl.ts",
+    "probe:handoff": "tsx --env-file-if-exists=.env.local scripts/probe-handoff.ts",
+    "probe:references": "tsx --env-file-if-exists=.env.local scripts/probe-references.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

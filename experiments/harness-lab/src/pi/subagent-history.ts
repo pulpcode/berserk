@@ -1,5 +1,8 @@
+import { isDeepStrictEqual } from 'node:util';
+import { agentInfo, composerHistory, selectedChildInput, validSkill } from './composer-input.js';
+import { fileHistory, validFileRef } from './file-history.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
-import type { SubagentSummary, UsageSummary } from '../contracts/index.js';
+import type { FileRef, SkillFile, SubagentSummary, UsageSummary } from '../contracts/index.js';
 import { hashContent, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
 import { tokenUsage } from './compaction-history.js';
@@ -12,6 +15,7 @@ export interface SubagentStart {
   requestId: string; parentSessionId: string; workspaceId: string; childSessionId: string;
   subagentId: string; toolCallId: string; task: string; role: AgentRole; promptHash: string;
   effectiveTools: string[]; startedAt: string;
+  input?: { skill?: SkillFile; files: FileRef[] };
 }
 export interface SubagentResult { requestId: string; subagentId: string; summary: SubagentSummary; usage: UsageSummary }
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
@@ -33,10 +37,14 @@ export function addUsage(target: UsageSummary, source: UsageSummary): void {
   }
 }
 export function decodeSubagentStart(value: unknown, workspaceId: string, parentSessionId?: string): SubagentStart {
-  if (!object(value) || !keys(value, ['requestId', 'parentSessionId', 'workspaceId', 'childSessionId', 'subagentId', 'toolCallId', 'task', 'role', 'promptHash', 'effectiveTools', 'startedAt'])
+  if (!object(value) || !keys(value, ['requestId', 'parentSessionId', 'workspaceId', 'childSessionId', 'subagentId', 'toolCallId', 'task', 'role', 'promptHash', 'effectiveTools', 'startedAt', 'input'])
     || !['requestId', 'parentSessionId', 'childSessionId', 'subagentId'].every(key => uuid(value[key])) || value.workspaceId !== workspaceId
     || (parentSessionId !== undefined && value.parentSessionId !== parentSessionId) || typeof value.toolCallId !== 'string' || !value.toolCallId
     || typeof value.task !== 'string' || !value.task.trim() || !date(value.startedAt)) throw stateError();
+  if (value.input !== undefined && (!object(value.input) || !keys(value.input, ['skill', 'files'])
+    || (value.input.skill !== undefined && !validSkill(value.input.skill, true)) || !Array.isArray(value.input.files)
+    || !value.input.files.every(file => validFileRef(file) && object(file) && keys(file, ['path', 'name', 'size', 'hash']))
+    || new Set(value.input.files.map(file => file.path)).size !== value.input.files.length)) throw stateError();
   const role = value.role;
   if (!object(role) || !keys(role, ['name', 'description', 'tools', 'systemPrompt', 'hash'])
     || typeof role.name !== 'string' || !/^[a-z][a-z0-9_-]*$/.test(role.name) || typeof role.description !== 'string' || !role.description.trim()
@@ -68,6 +76,8 @@ export function decodeSubagentResult(value: unknown, start: SubagentStart): Suba
 
 /** Validate ordering/ownership against native calls; incomplete work is projected, never replayed. */
 export function subagentHistory(entries: SessionEntry[], workspaceId: string, parentSessionId?: string): { starts: SubagentStart[]; summaries: SubagentSummary[]; results: SubagentResult[] } {
+  const selections = composerHistory(entries, workspaceId, parentSessionId);
+  const files = fileHistory(entries, workspaceId, parentSessionId).inputs;
   const starts = new Map<string, SubagentStart>(); const results = new Map<string, SubagentResult>();
   const returned = new Set<string>();
   const calls = new Map<string, { requestId: string | undefined; agent: unknown; task: unknown }>();
@@ -96,6 +106,9 @@ export function subagentHistory(entries: SessionEntry[], workspaceId: string, pa
       const start = decodeSubagentStart(entry.data, workspaceId, parentSessionId); const call = calls.get(start.toolCallId);
       if (start.requestId !== requestId || !call || call.requestId !== requestId || call.agent !== start.role.name || call.task !== start.task
         || starts.has(start.subagentId) || [...starts.values()].some(other => other.childSessionId === start.childSessionId || (other.requestId === start.requestId && other.toolCallId === start.toolCallId))) throw stateError();
+      const selected = selections.get(start.requestId);
+      if (selected?.agent?.name === start.role.name && !isDeepStrictEqual(selected.agent, agentInfo(start.role))) throw stateError();
+      if (!isDeepStrictEqual(start.input, selectedChildInput(selections.get(start.requestId), files.get(start.requestId) ?? [], start.role.name))) throw stateError();
       starts.set(start.subagentId, start);
     } else if (entry.customType === SUBAGENT_RESULT) {
       if (!object(entry.data) || typeof entry.data.subagentId !== 'string') throw stateError();

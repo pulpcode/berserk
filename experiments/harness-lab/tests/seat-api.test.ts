@@ -1,0 +1,156 @@
+import { randomUUID } from 'node:crypto';
+import { mkdtemp, rm, writeFile, readFile, readdir, cp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, describe, expect, it } from 'vitest';
+import { PiLab } from '../src/pi/lab.js';
+import { createApp } from '../src/server/app.js';
+import { loadConfig } from '../src/server/config.js';
+import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
+import type { WorkAction, WorkDetail, WorkReceipt } from '../src/contracts/collaboration.js';
+import type { SessionSnapshot, WorkspaceList } from '../src/contracts/index.js';
+
+const cleanups: Array<() => Promise<unknown>> = [];
+afterEach(async () => { for (const cleanup of cleanups.splice(0).reverse()) await cleanup(); });
+async function setup() {
+  const dir = await mkdtemp(join(tmpdir(), 'axon-seat-api-'));
+  cleanups.push(() => rm(dir, { recursive: true, force: true }));
+  const config = testConfig(dir, { seatId: 'test-seat', testSeats: [{ id: 'test-seat', name: '席位 A' }, { id: 'seat-b', name: '席位 B' }] });
+  const fake = await fakeRuntime(config, () => ({ text: '当前席位回复' }));
+  const lab = await PiLab.create(config, fake.runtime);
+  const app = await createApp(lab); cleanups.push(() => app.close());
+  return { app, lab, dir, fake };
+}
+const A = '/api/test-seats/test-seat'; const B = '/api/test-seats/seat-b';
+
+describe('two test seats on one service', () => {
+  it('validates explicit two-seat configuration and preserves single-seat defaults', () => {
+    expect(loadConfig({}).testSeats).toBeUndefined();
+    expect(loadConfig({ LAB_TEST_SEATS: '[{"id":"test-seat","name":"A"},{"id":"b","name":"B"}]' }).testSeats).toHaveLength(2);
+    for (const raw of ['[]', '{}', '[{"id":"b","name":"B"},{"id":"c","name":"C"}]', '[{"id":"test-seat","name":"A"},{"id":"test-seat","name":"B"}]', '[{"id":"test-seat","name":"A"},{"id":"b","name":"B","admin":true}]']) expect(() => loadConfig({ LAB_TEST_SEATS: raw })).toThrow('LAB_TEST_SEATS');
+  });
+  it('scopes all existing reads and mutations, binary upload/download and native histories', async () => {
+    const { app, lab } = await setup();
+    expect((await app.inject('/api/info')).statusCode).toBe(200);
+    for (const url of ['/api/workspaces', '/api/activity', '/api/settings/model', '/api/test-seats/foreign/workspaces']) expect((await app.inject(url)).statusCode).toBe(404);
+    const wa = (await app.inject(`${A}/workspaces`)).json<WorkspaceList>().workspaces[0];
+    const wb = (await app.inject(`${B}/workspaces`)).json<WorkspaceList>().workspaces[0];
+    expect(wa.id).not.toBe(wb.id);
+    const sa = (await app.inject({ method: 'POST', url: `${A}/sessions`, payload: { workspaceId: wa.id } })).json<SessionSnapshot>();
+    const sbResponse = await app.inject({ method: 'POST', url: `${B}/sessions`, payload: { workspaceId: wb.id } });
+    expect(sbResponse.statusCode).toBe(200); const sb = sbResponse.json<SessionSnapshot>();
+    expect((await app.inject(`${A}/sessions/${sa.id}`)).statusCode).toBe(200);
+    for (const url of [`sessions/${sa.id}`, `sessions/${sa.id}/compactions/abc`, `sessions/${sa.id}/requests/${randomUUID()}/resources`, `workspaces/${wa.id}/resources`, `workspaces/${wa.id}/instructions/workspace`, `workspaces/${wa.id}/skills/synthesis`, `workspaces/${wa.id}/files`, `workspaces/${wa.id}/files/content?path=private.txt`, `sessions?workspaceId=${wa.id}`]) expect((await app.inject(`${B}/${url}`)).statusCode, url).toBe(404);
+    for (const [url, payload] of [[`sessions/${sa.id}/messages`, { text: '错误席位' }], [`sessions/${sa.id}/cancel`, { requestId: randomUUID() }], [`sessions/${sa.id}/interactions/${randomUUID()}/response`, { requestId: randomUUID(), kind: 'confirmation', decision: 'approve' }], [`workspaces/${wa.id}/uploads`, { name: 'private.txt', size: 3 }]] as const) expect((await app.inject({ method: 'POST', url: `${B}/${url}`, payload })).statusCode, url).toBe(404);
+    expect((await app.inject({ method: 'PUT', url: `${B}/workspaces/${wa.id}/instructions/workspace`, payload: { content: 'wrong', expectedHash: null } })).statusCode).toBe(404);
+    const resource = await app.inject(`${B}/workspaces/${wb.id}/resources`); expect(resource.statusCode).toBe(200);
+    const instruction = await lab.resources.readInstruction(wb.id, 'workspace', 'seat-b');
+    expect((await app.inject({ method: 'PUT', url: `${B}/workspaces/${wb.id}/instructions/workspace`, payload: { content: 'B规则', expectedHash: instruction.hash } })).statusCode).toBe(200);
+    const created = await app.inject({ method: 'POST', url: `${B}/workspaces/${wb.id}/uploads`, payload: { name: 'hello.txt', size: 3 } });
+    expect(created.statusCode).toBe(201); const uploadId = created.json().uploadId;
+    expect((await app.inject({ method: 'PUT', url: `${B}/workspaces/${wb.id}/uploads/${uploadId}/content`, headers: { 'content-type': 'application/octet-stream' }, payload: Buffer.from('abc') })).statusCode).toBe(200);
+    expect((await app.inject(`${B}/workspaces/${wb.id}/files/content?path=hello.txt&preview=1`)).body).toBe('abc');
+    expect((await app.inject(`${A}/workspaces/${wb.id}/uploads/${uploadId}`)).statusCode).toBe(404);
+    expect((await app.inject({ method: 'DELETE', url: `${A}/workspaces/${wb.id}/uploads/${uploadId}` })).statusCode).toBe(404);
+    const published = await lab.files.publish(wb.id, { sessionId: sb.id, requestId: randomUUID(), toolCallId: 'test', path: 'hello.txt' }, undefined, 'seat-b');
+    expect((await app.inject(`${B}/workspaces/${wb.id}/downloads/${published.downloadId}`)).body).toBe('abc');
+    expect((await app.inject(`${A}/workspaces/${wb.id}/downloads/${published.downloadId}`)).statusCode).toBe(404);
+    const result = await app.inject({ method: 'POST', url: `${B}/sessions/${sb.id}/messages`, payload: { text: '请回复', fileRefs: [{ path: 'hello.txt' }] } });
+    expect(result.statusCode).toBe(200); expect(result.body).toContain('response.completed');
+    expect(lab.get(sb.id, 'seat-b').lastResult?.status).toBe('succeeded');
+    expect((await app.inject(`${B}/activity`)).json().sessions.map((session: {id: string}) => session.id)).toEqual([sb.id]);
+    expect((await app.inject({ method: 'POST', url: `${B}/sessions`, payload: { workspaceId: wb.id, seatId: 'test-seat' } })).statusCode).toBe(400);
+  });
+  it('ensures one receiver workspace under concurrent assignments without copying instructions', async () => {
+    const { lab } = await setup(); const source = lab.workspaces.get();
+    await writeFile(join(lab.workspaces.directory(source.id), 'AGENTS.md'), 'private owner rules');
+    const targets = await Promise.all(Array.from({ length: 3 }, () => lab.workspaces.ensureWorkspace(source.taskSpaceId, 'seat-b', source.name)));
+    expect(new Set(targets.map(item => item.id)).size).toBe(1);
+    expect((await lab.resources.readInstruction(targets[0].id, 'workspace', 'seat-b')).content).toBe('');
+    expect(() => lab.workspaces.get(targets[0].id)).toThrow();
+  });
+  it('runs explicit page handoff with fixed files, same-task import, receipt lookup and session binding', async () => {
+    const { app, lab } = await setup(); const workspace = lab.workspaces.get();
+    await writeFile(join(lab.files.filesDirectory(workspace.id), '任务书.md'), '固定的任务书');
+    const payload = { clientActionId: randomUUID(), kind: 'assign', taskSpaceId: workspace.taskSpaceId, payload: { workspaceId: workspace.id, assigneeSeatId: 'seat-b', title: '编制方案', goal: '按任务书处理', inputPaths: ['任务书.md'] } };
+    const prepared = await app.inject({ method: 'POST', url: `${A}/work-items/prepare`, payload });
+    expect(prepared.statusCode, prepared.body).toBe(200); const action = prepared.json<WorkAction>();
+    expect((await app.inject(`${A}/work-actions?clientActionId=${payload.clientActionId}`)).json()).toEqual(action);
+    expect((await app.inject(`${B}/handoff-files/${action.files[0].fileId}`)).statusCode).toBe(404);
+    await writeFile(join(lab.files.filesDirectory(workspace.id), '任务书.md'), '源文件已更新');
+    expect((await app.inject(`${A}/handoff-files/${action.files[0].fileId}?preview=1`)).body).toBe('固定的任务书');
+    expect((await app.inject({ method: 'POST', url: `${A}/work-actions/${action.operationId}/commit`, payload: { confirm: true, approved: true } })).statusCode).toBe(400);
+    const commit = () => app.inject({ method: 'POST', url: `${A}/work-actions/${action.operationId}/commit`, payload: { confirm: true } });
+    const committed = await commit(); expect(committed.statusCode, committed.body).toBe(200); const receipt = committed.json<WorkReceipt>();
+    expect((await commit()).json()).toEqual(receipt);
+    expect((await app.inject(`${B}/work-items`)).json()).toHaveLength(1);
+    expect((await app.inject(`${B}/handoff-files/${action.files[0].fileId}`)).body).toBe('固定的任务书');
+    const receiver = lab.workspaces.list('seat-b').workspaces.find(item => item.taskSpaceId === workspace.taskSpaceId)!;
+    const unrelated = lab.workspaces.list('seat-b').workspaces.find(item => item.taskSpaceId !== workspace.taskSpaceId)!;
+    expect((await app.inject({ method: 'POST', url: `${B}/handoff-files/${action.files[0].fileId}/import`, payload: { workspaceId: unrelated.id } })).statusCode).toBe(404);
+    const imported = await app.inject({ method: 'POST', url: `${B}/handoff-files/${action.files[0].fileId}/import`, payload: { workspaceId: receiver.id } });
+    expect(imported.statusCode, imported.body).toBe(200);
+    const sessionReply = await app.inject({ method: 'POST', url: `${B}/sessions`, payload: { workspaceId: receiver.id, workItemId: receipt.workItemId } });
+    expect(sessionReply.statusCode, sessionReply.body).toBe(200); const session = sessionReply.json<SessionSnapshot>(); expect(session.workItemId).toBe(receipt.workItemId);
+    expect((await app.inject(`${B}/work-items/${receipt.workItemId}`)).json<WorkDetail>().sessionIds).toEqual([session.id]);
+    expect((await app.inject(`${A}/work-items/${receipt.workItemId}`)).json<WorkDetail>().sessionIds).toEqual([]);
+    const another = await lab.createSession(receiver.id, 'seat-b');
+    expect((await app.inject({ method: 'POST', url: `${B}/sessions/${another.id}/work-item`, payload: { workItemId: receipt.workItemId } })).statusCode).toBe(200);
+    const execution = lab.start(another.id, '处理', undefined, 'seat-b');
+    expect((await app.inject({ method: 'POST', url: `${B}/sessions/${another.id}/work-item`, payload: { workItemId: receipt.workItemId } })).statusCode).toBe(409);
+    await execution.run(() => {});
+    const requestId = randomUUID(); lab.collaboration!.beginRequest(session.id, requestId);
+    const agentAction = await lab.collaboration!.prepare({seatId:'seat-b'}, {kind:'claim',workItemId:receipt.workItemId,expectedRevision:1,payload:{}}, {source:'agent',sessionId:session.id,requestId,toolCallId:'claim-test'});
+    expect((await app.inject({ method: 'POST', url: `${B}/work-actions/${agentAction.operationId}/commit`, payload: { confirm: true } })).statusCode).toBe(409);
+    lab.collaboration!.endRequest(session.id, requestId);
+  });
+
+  it('restores both seat histories and uploads from one unchanged workspace index', async () => {
+    const { lab, app } = await setup();
+    const workspace = lab.workspaces.list('seat-b').workspaces[0];
+    const session = await lab.createSession(workspace.id, 'seat-b');
+    await lab.start(session.id, '席位 B 原始消息', undefined, 'seat-b').run(() => {});
+    const upload = await lab.files.createUpload(workspace.id, { name: 'keep.txt', size: 4 }, 'seat-b');
+    await lab.files.receiveUpload(workspace.id, upload.uploadId, (async function* () { yield Buffer.from('keep'); })(), undefined, 'seat-b');
+    const ids = lab.workspaces.listAll().map(item => item.id);
+    await app.close();
+    const fake = await fakeRuntime(lab.config, () => ({ text: '恢复后的回答' }));
+    const reopened = await PiLab.create(lab.config, fake.runtime); const next = await createApp(reopened); cleanups.push(() => next.close());
+    expect(reopened.workspaces.listAll().map(item => item.id)).toEqual(ids);
+    expect((await next.inject(`${A}/sessions/${session.id}`)).statusCode).toBe(404);
+    const history = await next.inject(`${B}/sessions/${session.id}`); expect(history.statusCode).toBe(200); expect(history.body).toContain('席位 B 原始消息');
+    expect((await next.inject(`${B}/workspaces/${workspace.id}/uploads/${upload.uploadId}`)).json().status).toBe('completed');
+    expect((await next.inject({ method: 'POST', url: `${B}/sessions/${session.id}/messages`, payload: { text: '继续' } })).body).toContain('response.completed');
+  });
+
+  it('opens a stopped single-seat backup in two-seat mode without rewriting native history or files', async () => {
+    const parent = await mkdtemp(join(tmpdir(), 'axon-seat-upgrade-'));
+    cleanups.push(() => rm(parent, { recursive: true, force: true }));
+    const config = testConfig(join(parent, 'original'), { seatId: 'test-seat' });
+    const originalRuntime = await fakeRuntime(config, () => ({ text: '旧席位回答' }));
+    const original = await PiLab.create(config, originalRuntime.runtime);
+    const workspace = original.workspaces.get(); const session = await original.createSession();
+    const instructionPath = join('workspaces', workspace.id, 'AGENTS.md');
+    const filePath = join('workspaces', workspace.id, 'files', 'keep.txt');
+    await writeFile(join(config.dataDir, instructionPath), '既有项目规则');
+    await writeFile(join(config.dataDir, filePath), '既有普通文件');
+    await original.start(session.id, '旧会话消息').run(() => {});
+    await original.close();
+    const histories = (await readdir(join(config.dataDir, 'sessions'))).map(name => join('sessions', name));
+    const paths = [...histories, instructionPath, filePath];
+    const before = await Promise.all(paths.map(path => readFile(join(config.dataDir, path))));
+    const backup = join(parent, 'stopped-backup'); await cp(config.dataDir, backup, { recursive: true });
+    const upgradedConfig = { ...config, dataDir: backup, testSeats: [{ id: 'test-seat', name: 'A' }, { id: 'seat-b', name: 'B' }] };
+    const fake = await fakeRuntime(upgradedConfig, () => ({ text: '新回复' }));
+    const upgraded = await PiLab.create(upgradedConfig, fake.runtime); const app = await createApp(upgraded); cleanups.push(() => app.close());
+    expect(upgraded.workspaces.get().id).toBe(workspace.id);
+    expect(upgraded.get(session.id).workspaceId).toBe(workspace.id);
+    expect(fake.calls).toHaveLength(0);
+    expect((await app.inject('/api/sessions')).statusCode).toBe(404);
+    expect((await app.inject(`${A}/sessions/${session.id}`)).body).toContain('旧会话消息');
+    expect((await app.inject(`${B}/sessions/${session.id}`)).statusCode).toBe(404);
+    expect(await Promise.all(paths.map(path => readFile(join(backup, path))))).toEqual(before);
+    expect(await Promise.all(paths.map(path => readFile(join(config.dataDir, path))))).toEqual(before);
+  });
+
+});

@@ -3,6 +3,7 @@ import { Type } from 'typebox';
 import { Check } from 'typebox/value';
 import type { SessionEntry, ExtensionFactory } from '@earendil-works/pi-coding-agent';
 import type { Interaction, InteractionAnswer, InteractionResponse, QuestionInteraction } from '../contracts/index.js';
+import { handoffConfirmationSchema } from '../contracts/collaboration.js';
 import { RequestError } from '../contracts/errors.js';
 import { stateError } from '../resources/files.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
@@ -32,7 +33,7 @@ export const interactionResponseSchema = Type.Union([
 const base = { schemaVersion: Type.Literal(1), interactionId: uuid, workspaceId: uuid, sessionId: uuid, requestId: uuid,
   toolCallId: Type.String({ minLength: 1 }), toolName: id, createdAt: text, resolvedAt: Type.Optional(text), reason: Type.Optional(text) };
 const policySchema = Type.Object({ requestId: uuid, workspaceId: uuid, sessionId: uuid, seatId: Type.String({ pattern: '^[a-zA-Z0-9_-]{1,64}$' }),
-  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo')]), parameters: Type.Record(Type.String(), Type.Unknown()),
+  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo'), Type.Literal('work_item_commit')]), parameters: Type.Record(Type.String(), Type.Unknown()),
   policy: Type.Object({ decision: Type.Union([Type.Literal('allow'), Type.Literal('ask'), Type.Literal('deny')]), ruleId: text, reason: text, version: text }, strict),
 }, strict);
 const interactionSchema = Type.Union([
@@ -40,7 +41,7 @@ const interactionSchema = Type.Union([
     status: Type.Union(['pending', 'answered', 'skipped', 'cancelled', 'expired'].map(value => Type.Literal(value))), answers: Type.Optional(Type.Array(answerSchema)) }, strict),
   Type.Object({ ...base, kind: Type.Literal('confirmation'),
     status: Type.Union(['pending', 'approved', 'rejected', 'cancelled', 'expired'].map(value => Type.Literal(value))),
-    action: Type.Object({ title: text, description: text, command: Type.Optional(Type.String({ minLength: 1 })), cwd: Type.Optional(text), parameters: Type.Record(Type.String(), Type.Unknown()) }, strict),
+    action: Type.Object({ title: text, description: text, command: Type.Optional(Type.String({ minLength: 1 })), cwd: Type.Optional(text), parameters: Type.Record(Type.String(), Type.Unknown()), handoff: Type.Optional(handoffConfirmationSchema) }, strict),
     rule: Type.Object({ ruleId: text, reason: text, version: text }, strict),
   }, strict),
 ]);
@@ -108,7 +109,14 @@ function decodeInteraction(value: unknown): Interaction {
     try { validateQuestions({ questions: item.questions }); } catch { throw stateError(); }
     if (item.toolName !== 'ask_user' || (item.status === 'answered') !== (item.answers !== undefined)) throw stateError();
     if (item.answers) { try { decodeResponse({ requestId: item.requestId, kind: 'question', action: 'answer', answers: item.answers }, item); } catch { throw stateError(); } }
-  } else if (!['bash', 'confirmation_demo'].includes(item.toolName)) throw stateError();
+  } else {
+    if (!['bash', 'confirmation_demo', 'work_item_commit'].includes(item.toolName)) throw stateError();
+    if (item.toolName === 'work_item_commit') {
+      if (!item.action.handoff || !isDeepStrictEqual(item.action.parameters, { operationId: item.action.handoff.operationId })
+        || item.action.command !== undefined || item.action.cwd !== undefined || item.action.title !== item.action.handoff.title
+        || item.action.description !== item.action.handoff.description) throw stateError();
+    } else if (item.action.handoff !== undefined) throw stateError();
+  }
   return item;
 }
 /** One strict replay owner for live snapshots and restart history. Never inject custom entries into context. */
@@ -128,7 +136,7 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
       const item = [...items.values()].find(item => item.requestId === requestId && item.toolCallId === result.toolCallId);
       const key = `${requestId}:${result.toolCallId}`;
       const policy = policies.get(key);
-      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
+      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (result.toolName === 'work_item_commit' && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
       const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown } | undefined;
       if (policy && ((!result.isError && (details?.executionStarted !== true || !isDeepStrictEqual(details.commandPolicy, policy)))
         || (policy.decision === 'deny' && (!result.isError || details?.executionStarted === true))

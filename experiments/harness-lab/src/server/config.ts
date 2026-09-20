@@ -20,6 +20,7 @@ export interface LabConfig extends ResolvedModelParameters {
   httpIdleTimeoutMs: number;
   llmRequestTimeoutMs?: number;
   seatId?: string;
+  testSeats?: Array<{ id: string; name: string }>;
   hitlDemoEnabled?: boolean;
   fileLimits?: { maxFileBytes: number; maxAttachments: number };
   execution?: { enabled: boolean; image: string; cpus: number; memoryMb: number; pidsLimit: number; uid: number; gid: number };
@@ -66,6 +67,14 @@ function integer(env: NodeJS.ProcessEnv, key: string, fallback: number, min: num
   if (!Number.isSafeInteger(value) || value < min || value > max) throw new Error(`${key} 必须是 ${min}～${max} 的整数。`);
   return value;
 }
+export function parseTestSeats(raw: string | undefined, seatId: string): LabConfig['testSeats'] {
+  if (raw === undefined) return undefined;
+  try {
+    const seats: unknown = JSON.parse(raw);
+    if (!Array.isArray(seats) || seats.length !== 2 || seats.some(seat => !seat || typeof seat !== 'object' || Object.keys(seat).some(key => !['id', 'name'].includes(key)) || typeof seat.id !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(seat.id) || typeof seat.name !== 'string' || !seat.name.trim() || seat.name.length > 60) || new Set(seats.map(seat => seat.id)).size !== 2 || !seats.some(seat => seat.id === seatId)) throw new Error();
+    return seats.map(seat => ({ id: seat.id, name: seat.name.trim() }));
+  } catch { throw new Error('LAB_TEST_SEATS 必须为两个不同的 {id,name} 席位组成的 JSON 数组，且包含 LAB_SEAT_ID。'); }
+}
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   const seatId = env.LAB_SEAT_ID ?? 'test-seat';
   if (!/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new Error('LAB_SEAT_ID 仅允许 1～64 个字母、数字、下划线和短横线。');
@@ -80,7 +89,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   if (legacy.length) console.warn(`已忽略旧实验配置：${legacy.join('、')}。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。`);
   return { ...identity, ...resolveModelParameters(identity, parameters),
     apiKey: env.LLM_API_KEY?.trim() || '', dataDir: resolve(env.LAB_DATA_DIR || '.local'),
-    seatId, hitlDemoEnabled: env.LAB_HITL_DEMO_ENABLED === 'true',
+    seatId, testSeats: parseTestSeats(env.LAB_TEST_SEATS, seatId), hitlDemoEnabled: env.LAB_HITL_DEMO_ENABLED === 'true',
     fileLimits: { maxFileBytes: integer(env, 'LAB_MAX_FILE_BYTES', 100 * 1024 * 1024, 1, 1024 * 1024 * 1024), maxAttachments: integer(env, 'LAB_MAX_ATTACHMENTS', 20, 1, 100) },
     execution: { enabled: env.LAB_EXECUTION_ENABLED !== 'false', image: env.LAB_EXECUTION_IMAGE || 'berserk-file-runtime:w01-5',
       cpus: integer(env, 'LAB_EXECUTION_CPUS', 2, 1, 32), memoryMb: integer(env, 'LAB_EXECUTION_MEMORY_MB', 1024, 128, 65536),

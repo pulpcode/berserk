@@ -1,3 +1,4 @@
+import { COMPOSER_INPUT, composerInputText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
@@ -15,10 +16,6 @@ function instruction(value: unknown, readonly = false) {
   if (!object(value) || !keys(value, ['fileId', 'name', 'content', 'hash', 'editable']) || !['common', 'workspace'].includes(String(value.fileId)) || typeof value.name !== 'string' || typeof value.content !== 'string' || value.editable !== (!readonly && value.fileId === 'workspace')) return false;
   if (Buffer.byteLength(value.content) > (value.fileId === 'common' ? 4096 : 16384)) return false;
   return value.hash === null ? value.content === '' : hash(value.hash) && value.hash === hashContent(value.content);
-}
-function skill(value: unknown, content: boolean) {
-  if (!object(value) || !keys(value, ['id', 'name', 'description', 'version', 'hash', ...(content ? ['content'] : [])]) || !['synthesis', 'review'].includes(String(value.id)) || typeof value.name !== 'string' || typeof value.description !== 'string' || typeof value.version !== 'string' || !hash(value.hash)) return false;
-  return !content || (typeof value.content === 'string' && Buffer.byteLength(value.content) <= 16384 && hashContent(value.content) === value.hash);
 }
 function change(value: unknown): value is InstructionUpdate {
   return object(value) && keys(value, ['fileId', 'status', 'previousHash', 'hash', 'effectiveFrom']) && value.fileId === 'workspace' && ['updated', 'unchanged'].includes(String(value.status)) && (value.previousHash === null || hash(value.previousHash)) && hash(value.hash) && value.effectiveFrom === 'next_request';
@@ -62,6 +59,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
   let result: RequestResult | null = null;
   const compactedBy = new Map<string, string | undefined>();
   const fileInputs = new Set<string>();
+  const composerInputs = new Set<string>();
   const fileOutputs = new Map<string, ReturnType<typeof decodeFileOutput>>();
   const outputDownloads = new Set<string>();
   const fileCalls = new Map<string, {requestId: string | undefined; path: unknown}>();
@@ -88,10 +86,19 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       } else if (currentRequest && !message.isError) throw stateError();
     }
     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
-      if (readonly || entry.customType !== FILE_INPUT) throw stateError();
-      const input = decodeFileInput(entry.details, workspaceId, parentSessionId);
-      if (currentRequestHasUser || currentRequest !== input.requestId || fileInputs.has(input.requestId) || entry.display !== false || entry.content !== fileReferenceText(input.files)) throw stateError();
-      fileInputs.add(input.requestId);
+      if (entry.customType === COMPOSER_INPUT) {
+        const input = decodeComposerInput(entry.details, workspaceId, parentSessionId);
+        const resources = requests.get(input.requestId);
+        if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false
+          || entry.content !== composerInputText(input) || (readonly && input.agent)
+          || (input.skill && !resources?.skills.some(skill => skill.id === input.skill!.id && skill.hash === input.skill!.hash && skill.version === input.skill!.version
+            && skill.name === input.skill!.name && skill.description === input.skill!.description))) throw stateError();
+        composerInputs.add(input.requestId);
+      } else if (entry.customType === FILE_INPUT) {
+        const input = decodeFileInput(entry.details, workspaceId, parentSessionId);
+        if (currentRequestHasUser || currentRequest !== input.requestId || fileInputs.has(input.requestId) || entry.display !== false || entry.content !== fileReferenceText(input.files)) throw stateError();
+        fileInputs.add(input.requestId);
+      } else throw stateError();
     }
     if (entry.type === 'compaction') compactedBy.set(entry.id, currentRequest);
     if (entry.type !== 'custom' || !entry.customType.startsWith('berserk.')) continue;

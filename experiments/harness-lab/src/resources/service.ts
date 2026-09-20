@@ -22,30 +22,30 @@ export function resourceInfo(snapshot: ResourceSnapshot): WorkspaceResources {
 export class ResourceService {
   private locks = new Map<string, Mutex>();
   constructor(private readonly workspaces: WorkspaceStore, private readonly hooks: WriteHooks = {}) {}
-  private lock(id: string) { this.workspaces.get(id); if (!this.locks.has(id)) this.locks.set(id, new Mutex()); return this.locks.get(id)!; }
-  private async instruction(workspaceId: string, fileId: string): Promise<InstructionFile> {
-    this.workspaces.get(workspaceId);
+  private lock(id: string, seatId?: string) { this.workspaces.get(id, seatId); if (!this.locks.has(id)) this.locks.set(id, new Mutex()); return this.locks.get(id)!; }
+  private async instruction(workspaceId: string, fileId: string, seatId?: string): Promise<InstructionFile> {
+    this.workspaces.get(workspaceId, seatId);
     if (fileId !== 'common' && fileId !== 'workspace') throw new RequestError('RESOURCE_NOT_FOUND', '指令文件不存在。', 404);
-    const path = fileId === 'common' ? join(fixtureDir, 'common/AGENTS.md') : join(this.workspaces.directory(workspaceId), 'AGENTS.md');
+    const path = fileId === 'common' ? join(fixtureDir, 'common/AGENTS.md') : join(this.workspaces.directory(workspaceId, seatId), 'AGENTS.md');
     const content = await readControlled(path, fileId === 'common' ? 4096 : 16384, true);
     return { fileId, name: fileId === 'common' ? '通用指令（AGENTS.md）' : '工作区指令（AGENTS.md）', content: content ?? '', hash: content === null ? null : hashContent(content), editable: fileId === 'workspace' };
   }
-  readInstruction(workspaceId: string, fileId: string) { return this.lock(workspaceId).run(() => this.instruction(workspaceId, fileId)); }
-  async updateInstruction(workspaceId: string, fileId: string, content: string, expectedHash: string | null, signal?: AbortSignal): Promise<InstructionUpdate> {
-    return this.lock(workspaceId).run(async () => {
+  readInstruction(workspaceId: string, fileId: string, seatId?: string) { return this.lock(workspaceId, seatId).run(() => this.instruction(workspaceId, fileId, seatId)); }
+  async updateInstruction(workspaceId: string, fileId: string, content: string, expectedHash: string | null, signal?: AbortSignal, seatId?: string): Promise<InstructionUpdate> {
+    return this.lock(workspaceId, seatId).run(async () => {
       signal?.throwIfAborted();
       if (fileId !== 'workspace') throw new RequestError('RESOURCE_READ_ONLY', '只能修改当前工作区指令。', 403);
       if (Buffer.byteLength(content, 'utf8') > 16384) throw new RequestError('RESOURCE_TOO_LARGE', '工作区指令不能超过 16 KiB。', 413);
-      const current = await this.instruction(workspaceId, fileId);
+      const current = await this.instruction(workspaceId, fileId, seatId);
       signal?.throwIfAborted();
       const hash = hashContent(content);
       if (current.hash === hash) return { fileId, status: 'unchanged', previousHash: current.hash, hash, effectiveFrom: 'next_request' };
       if (expectedHash !== current.hash) throw new RequestError('INSTRUCTION_CONFLICT', '工作区指令已更新，本次保存未完成，你的修改已保留。', 409);
-      const path = join(this.workspaces.directory(workspaceId), 'AGENTS.md');
+      const path = join(this.workspaces.directory(workspaceId, seatId), 'AGENTS.md');
       try { await atomicWrite(path, content, signal, this.hooks); }
       catch (error) {
         // Rename may already have committed; inspect before reporting an outcome.
-        const actual = await this.instruction(workspaceId, fileId).catch(() => null);
+        const actual = await this.instruction(workspaceId, fileId, seatId).catch(() => null);
         if (actual?.hash === hash) return { fileId, status: 'updated', previousHash: current.hash, hash, effectiveFrom: 'next_request' };
         if (signal?.aborted && actual?.hash === current.hash) throw signal.reason;
         if (actual?.hash !== current.hash) throw new RequestError('INSTRUCTION_OUTCOME_UNCERTAIN', '指令保存结果未确认，请读取当前文件核对；不会自动重试。', 503);
@@ -55,27 +55,34 @@ export class ResourceService {
       return { fileId, status: 'updated', previousHash: current.hash, hash, effectiveFrom: 'next_request' };
     });
   }
-  async readSkill(workspaceId: string, id: string): Promise<SkillFile> {
-    const workspace = this.workspaces.get(workspaceId);
+  async readSkill(workspaceId: string, id: string, seatId?: string): Promise<SkillFile> {
+    const workspace = this.workspaces.get(workspaceId, seatId);
     const skill = skills.find(skill => skill.id === id && workspace.skillIds.includes(id));
     if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
     const content = (await readControlled(join(fixtureDir, 'skills', skill.id, 'SKILL.md'), 16384))!;
     if (!content.startsWith(`---\nname: ${skill.id}\ndescription:`)) throw new RequestError('RESOURCE_STATE_INVALID', 'Skill 配置损坏。', 409);
     return { ...skill, hash: hashContent(content), content };
   }
-  snapshot(workspaceId: string, signal?: AbortSignal): Promise<ResourceSnapshot> {
-    return this.lock(workspaceId).run(async () => {
+  snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string): Promise<ResourceSnapshot> {
+    return this.lock(workspaceId, seatId).run(async () => {
       signal?.throwIfAborted();
-      const workspace = this.workspaces.get(workspaceId);
-      const instructions = await Promise.all(['common', 'workspace'].map(id => this.instruction(workspaceId, id)));
+      const workspace = this.workspaces.get(workspaceId, seatId);
+      const instructions = await Promise.all(['common', 'workspace'].map(id => this.instruction(workspaceId, id, seatId)));
       const sources = await Promise.all(sourceDefinitions.filter(source => workspace.sourceIds.includes(source.id)).map(async source => {
-        const content = (await readControlled(join(this.workspaces.directory(workspaceId), 'sources', `${source.id}.md`), 32768))!;
+        const content = (await readControlled(join(this.workspaces.directory(workspaceId, seatId), 'sources', `${source.id}.md`), 32768))!;
         return { ...source, content, hash: hashContent(content) };
       }));
-      const loadedSkills = await Promise.all(workspace.skillIds.map(id => this.readSkill(workspaceId, id)));
+      const loadedSkills = await Promise.all(workspace.skillIds.map(id => this.readSkill(workspaceId, id, seatId)));
       signal?.throwIfAborted();
       return { workspaceId, instructions, sources, skills: loadedSkills };
     });
   }
-  async info(workspaceId: string): Promise<WorkspaceResources> { return resourceInfo(await this.snapshot(workspaceId)); }
+  async info(workspaceId: string, seatId?: string): Promise<WorkspaceResources> { return resourceInfo(await this.snapshot(workspaceId, undefined, seatId)); }
+}
+
+/** Both explicit selection and skill_read use the same fixed request snapshot. */
+export function snapshotSkill(snapshot: ResourceSnapshot, id: string): SkillFile {
+  const skill = snapshot.skills.find(item => item.id === id);
+  if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill 不存在或不可用，请重新选择。', 404);
+  return structuredClone(skill);
 }

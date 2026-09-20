@@ -2,6 +2,7 @@ import type { Interaction } from './interactions.js';
 export type * from './interactions.js';
 import type { FileRef, FileOutput } from './files.js';
 export type * from './files.js';
+export type * from './collaboration.js';
 export interface SourceInfo { id: string; title: string; description: string; hash: string }
 export interface PublicMessage {
   id: string;
@@ -14,6 +15,7 @@ export interface PublicMessage {
   /** UI-only notice for an interrupted call, not a persisted tool result. */
   resultMissing?: true;
   attachments?: FileRef[];
+  selections?: LoadedComposerSelection;
 }
 export interface SubagentSummary {
   subagentId: string;
@@ -48,7 +50,7 @@ export interface RequestResult {
   usageSummary?: UsageSummary;
   subagentUsage?: UsageSummary;
 }
-export interface SessionSummary { id: string; workspaceId: string; title: string; updatedAt: string }
+export interface SessionSummary { id: string; workspaceId: string; workItemId?: string; title: string; updatedAt: string }
 export interface SessionActivity extends SessionSummary {
   active: RequestState | null;
   lastResult: Pick<RequestResult, 'requestId' | 'status'> | null;
@@ -66,6 +68,8 @@ export interface SessionSnapshot extends SessionSummary {
   recoveryWarning?: string;
 }
 export interface AppInfo {
+  testSeats?: Array<{ id: string; name: string }>;
+  defaultSeatId?: string;
   files?: { enabled: boolean; maxFileBytes: number; maxAttachments: number; executionAvailable: boolean };
   model: string;
   configured: boolean;
@@ -131,6 +135,9 @@ export interface InstructionUpdate {
 }
 export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string }
 export interface SkillFile extends SkillInfo { content: string }
+export interface AgentInfo { name: string; description: string; hash: string }
+export interface ComposerSelection { skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
+export interface LoadedComposerSelection { skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];

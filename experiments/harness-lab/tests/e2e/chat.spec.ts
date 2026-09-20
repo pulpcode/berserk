@@ -811,7 +811,7 @@ test('模型设置保存后更新模型，密钥只写且关闭后清空，手�
     await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
     expect(mock.modelWrites).toHaveLength(1);
     expect(mock.modelWrites[0].apiKey).toBeUndefined();
-    await expect(page.locator('.model-badge')).toContainText('deepseek-test');
+    await expect(page.locator('.settings-trigger-model')).toContainText('deepseek-test');
     await page.getByLabel('服务商标识').fill('custom');
     await page.getByLabel('API 地址', { exact: true }).fill('https://models.example.com/v1');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
@@ -905,7 +905,8 @@ test('跨项目创建失败可见，全部动态保护后续选择，手机新�
     await expect(input).toBeFocused();
     await input.fill('慢速回复'); await input.press('Enter');
     await expect(page.getByText('new-2 的回复', { exact: true })).toBeVisible();
-    await page.getByRole('button', { name: '模型设置', exact: true }).click();
+    await page.getByRole('button', { name: '打开会话列表' }).click();
+    await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByLabel('模型 ID')).toBeVisible();
     mock.finish('new-2');
     // Wait for the browser's terminal state, not merely an unread value that was already absent.
@@ -914,7 +915,8 @@ test('跨项目创建失败可见，全部动态保护后续选择，手机新�
     expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBeUndefined();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: '模型设置', exact: true })).toBeFocused();
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused();
+    await page.locator('.sidebar-brand').getByRole('button', { name: '关闭会话列表' }).click();
     // Reading requires a visible foreground document; element focus alone is insufficient.
     await page.bringToFront();
     await expect.poll(() => page.evaluate(() => document.hasFocus() && document.visibilityState === 'visible')).toBe(true);
@@ -935,7 +937,7 @@ test('未知模型参数阻止发送并保留历史草稿，补填后不自动�
     await expect(page.getByText('仍能查看的原始历史')).toBeVisible();
     await expect(input).toHaveValue('等待模型配置的草稿');
     expect(mock.counts.sends).toBe(0);
-    await page.getByRole('button', { name: '补充模型配置' }).click();
+    await page.getByRole('button', { name: '设置', exact: true }).click();
     await expect(page.getByLabel('上下文容量（token）')).toBeEmpty();
     await page.getByLabel('上下文容量（token）').fill('32768');
     await page.getByLabel('最大输出能力（token）').fill('8192');
@@ -956,7 +958,8 @@ test('容量参数来源、模型切换清空与冲突草稿保护，375px高级
   try {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
-    await page.getByRole('button', { name: '模型设置', exact: true }).click();
+    await page.getByRole('button', { name: '打开会话列表' }).click();
+    await page.getByRole('button', { name: '设置', exact: true }).click();
     const modal = page.getByRole('dialog', { name: '设置', exact: true });
     await expect(page.getByLabel('上下文容量（token）')).toHaveValue('1000000');
     await expect(page.getByLabel('最大输出能力（token）')).toHaveValue('393216');
@@ -1265,4 +1268,27 @@ test('子事件不抢阅读位置或输入焦点，断线后查询恢复且不�
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(1);
     expect(mock.counts.sends).toBe(1);
   } finally { await mock.close(); }
+});
+
+
+test('启动工作区归属读取完成前保护输入，随后文字归入初始会话且可发送', async ({ page }) => {
+  const mock = await mockApi(page);
+  mock.faults.holdActivity = true;
+  try {
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await expect(input).toBeDisabled();
+    await expect(page.getByRole('button', { name: '添加附件' })).toBeDisabled();
+    await expect.poll(() => Boolean(mock.faults.releaseActivity)).toBe(true);
+    mock.faults.releaseActivity!(); mock.faults.releaseActivity = undefined;
+    await expect(input).toBeEditable();
+    await input.fill('生成表格');
+    await page.getByRole('button', { name: '会话 B', exact: true }).click();
+    await expect(input).toHaveValue('');
+    await page.getByRole('button', { name: '会话 A', exact: true }).click();
+    await expect(input).toHaveValue('生成表格');
+    await page.getByRole('button', { name: '发送消息', exact: true }).click();
+    await expect(page.getByRole('table')).toBeVisible();
+    expect(mock.counts.sends).toBe(1);
+  } finally { mock.faults.releaseActivity?.(); await mock.close(); }
 });

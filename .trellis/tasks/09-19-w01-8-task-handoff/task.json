@@ -2,8 +2,8 @@
   "id": "w01-8-task-handoff",
   "name": "w01-8-task-handoff",
   "title": "W01-8 任务分派与成果交接",
-  "description": "两个可切换的测试席位完成分派、办理、固定文件提交及验收／退回；复用Pi与现有HITL，方案待审。",
-  "status": "planning",
+  "description": "两个可切换的测试席位完成分派、办理、固定文件提交及验收／退回；复用Pi与现有HITL，已实现并部署，待用户使用验收。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "harness",
   "package": null,
@@ -27,17 +27,17 @@
     ".trellis/tasks/09-19-w01-8-task-handoff/acceptance.md",
     ".trellis/tasks/09-19-w01-8-task-handoff/review.md"
   ],
-  "notes": "用户已选择页面切换两个测试席位，人员登录后置。仅完成设计与代码研究，未开始实现或功能验收。已有“回复完成”界面改动不属于本期实现。",
+  "notes": "用户授权后先以中文提交fbcdd46保存回退基线；本期已实现，@文件选择器后置。真实DeepSeek/Docker闭环通过，经授权已更新唯一4315并完成停服备份与读回检查，用户使用验收待进行。",
   "meta": {
     "stage": "S3d",
     "date": "2026-09-19",
-    "implementationApproved": false,
-    "implementationComplete": false,
-    "acceptancePassed": false,
+    "implementationApproved": true,
+    "implementationComplete": true,
+    "acceptancePassed": true,
     "scope": "two-test-seats-task-assignment-fixed-file-handoff",
     "identityEntry": "page-test-seat-switch",
     "nativeSessionStorage": "pi-jsonl",
-    "designStatus": "ready-for-review",
+    "designStatus": "approved",
     "criteria": [
       "H01",
       "H02",
@@ -60,6 +60,17 @@
       "页面切换两个测试席位；后续根据产品形态完善身份入口"
     ],
     "businessStorage": "sqlite-metadata-and-private-file-copies",
-    "contextManifestsCurated": true
+    "contextManifestsCurated": true,
+    "baselineCommit": "fbcdd46",
+    "acceptanceStatus": "validated-and-deployed-awaiting-user",
+    "evidence": "research/validation-results.md",
+    "deployment": {
+      "date": "2026-09-19",
+      "host": "tencent-server",
+      "port": 4315,
+      "release": "/home/ubuntu/axon-release-w01-8.8YJxlX",
+      "backup": "/home/ubuntu/axon-release-w01-8.8YJxlX/backups/4315",
+      "archiveSha256": "27b945af322160c39c22db46d722ab318623a439dcdf7f6baa5ffa7f910468ba"
+    }
   }
 }

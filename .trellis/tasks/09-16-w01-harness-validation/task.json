@@ -2,7 +2,7 @@
   "id": "w01-harness-validation",
   "name": "w01-harness-validation",
   "title": "W01 通用 Harness 协议与技术路线验证",
-  "description": "分期验证 Harness：W01-1～W01-7 已实现；W01-8 任务分派与成果交接设计待审，完整运行与可替换边界另行验证。",
+  "description": "分期验证 Harness：W01-1～W01-7 已实现；W01-8 任务分派与成果交接已实现并部署，待用户验收，完整运行与可替换边界另行验证。",
   "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "harness",
@@ -27,7 +27,8 @@
     "09-17-w01-5-artifact-versions",
     "09-18-w01-6-hitl",
     "09-19-w01-7-session-recovery",
-    "09-19-w01-8-task-handoff"
+    "09-19-w01-8-task-handoff",
+    "09-20-w01-9-conversation-references"
   ],
   "parent": null,
   "relatedFiles": [
@@ -49,7 +50,7 @@
     "experiments/harness-lab/README.md",
     "experiments/harness-lab/package.json"
   ],
-  "notes": "W01-1/S0-S1通过C01-C06；W01-2/S2a通过A01-A12。W01-3/S2b已实现Pi默认压缩、持续执行控制和网页摘要详情，通过B01-B13组合验收（89项确定性测试、27项浏览器回归、真实DeepSeek15次请求）。待提交与归档。W01-4/S2c已实现基础多角色single只读委派，验收见该阶段记录；W01-5/S3a文件作业已实现并通过E01～E15组合验收；完整S3-S5未交付，完整W01保持in_progress。 W01-6/S3b与W01-7/S3c已通过组合验收；W01-8/S3d双测试席位任务分派与成果交接设计待审，未实施。",
+  "notes": "W01-1/S0-S1通过C01-C06；W01-2/S2a通过A01-A12。W01-3/S2b已实现Pi默认压缩、持续执行控制和网页摘要详情，通过B01-B13组合验收（89项确定性测试、27项浏览器回归、真实DeepSeek15次请求）。待提交与归档。W01-4/S2c已实现基础多角色single只读委派，验收见该阶段记录；W01-5/S3a文件作业已实现并通过E01～E15组合验收；完整S3-S5未交付，完整W01保持in_progress。 W01-6/S3b与W01-7/S3c已通过组合验收；W01-8/S3d双测试席位任务分派与成果交接已实现并部署，待用户验收。",
   "meta": {
     "w01_1": {
       "status": "validated",
@@ -126,17 +127,32 @@
       "evidence": "../09-19-w01-7-session-recovery/research/validation-results.md"
     },
     "w01_8": {
-      "status": "planning",
+      "status": "validated-and-deployed",
       "stage": "S3d",
       "task": "../09-19-w01-8-task-handoff",
       "review": "../09-19-w01-8-task-handoff/review.md",
       "date": "2026-09-19",
-      "implementationApproved": false,
-      "implementationComplete": false,
-      "acceptancePassed": false,
+      "implementationApproved": true,
+      "implementationComplete": true,
+      "acceptancePassed": true,
       "scope": "two-test-seats-task-assignment-fixed-file-handoff",
       "identityEntry": "page-test-seat-switch",
-      "nativeSessionStorage": "pi-jsonl"
+      "nativeSessionStorage": "pi-jsonl",
+      "evidence": "../09-19-w01-8-task-handoff/research/validation-results.md"
+    },
+    "w01_9": {
+      "status": "in_progress",
+      "stage": "S3e",
+      "task": "../09-20-w01-9-conversation-references",
+      "review": "../09-20-w01-9-conversation-references/review.md",
+      "date": "2026-09-20",
+      "designStatus": "approved",
+      "implementationApproved": true,
+      "scope": "composer-file-skill-subagent-selection",
+      "implementationComplete": true,
+      "acceptancePassed": true,
+      "acceptanceStatus": "validated-awaiting-user-not-deployed",
+      "evidence": "../09-20-w01-9-conversation-references/research/validation-results.md"
     }
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import type { CompactionDetail, InstructionFile, SkillFile, WorkspaceResources } from '../contracts/index';
-import { api } from './api';
+import { useApi } from './api';
 import type { useInstructions } from './useInstructions';
 
 export function Panel({ title, children, close, className = '' }: { title: string; children: ReactNode; close: () => void; className?: string }) {
@@ -22,6 +22,7 @@ export function Resources({ workspaceId, name, resources, instructions, resource
   workspaceId: string; name: string; resources?: WorkspaceResources;
   instructions: ReturnType<typeof useInstructions>; resourceError?: string; reloadResources: () => void; close: () => void;
 }) {
+  const { api } = useApi();
   const [common, setCommon] = useState<InstructionFile>();
   const [skill, setSkill] = useState<SkillFile>();
   const [error, setError] = useState('');
@@ -40,7 +41,7 @@ export function Resources({ workspaceId, name, resources, instructions, resource
     void read(workspaceId);
     api<InstructionFile>(`/api/workspaces/${encodeURIComponent(workspaceId)}/instructions/common`).then(file => { if (current) { setCommon(file); setError(''); } }).catch((error: unknown) => { if (current) setError(error instanceof Error ? error.message : '通用指令读取失败。'); });
     return () => { current = false; token.value++; };
-  }, [workspaceId, read, commonReload]);
+  }, [workspaceId, read, commonReload, api]);
   const review = Boolean(editor?.review);
   const changed = editor?.draft !== editor?.base.content;
   const save = () => { if (editor && !saving && (!review || editor.canMerge)) void instructions.save(workspaceId, review); };
@@ -87,6 +88,7 @@ export function Resources({ workspaceId, name, resources, instructions, resource
 }
 
 function CompactionContent({ sessionId, entryId }: { sessionId: string; entryId: string }) {
+  const { api } = useApi();
   const [detail, setDetail] = useState<CompactionDetail>();
   const [error, setError] = useState('');
   const [reload, setReload] = useState(0);
@@ -96,7 +98,7 @@ function CompactionContent({ sessionId, entryId }: { sessionId: string; entryId:
       .then(result => { if (current) { setDetail(result); setError(''); } })
       .catch((reason: unknown) => { if (current) setError(reason instanceof Error ? reason.message : '摘要详情读取失败。'); });
     return () => { current = false; };
-  }, [sessionId, entryId, reload]);
+  }, [sessionId, entryId, reload, api]);
   if (error) return <p className="resource-error" role="alert">{error}<button onClick={() => setReload(value => value + 1)}>重试读取摘要</button></p>;
   if (!detail) return <p role="status">正在读取摘要…</p>;
   return <div className="compaction-detail">

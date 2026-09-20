@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Interaction, InteractionResponse, AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
-import { api, sendMessage } from './api';
+import { useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { useAttachments } from './useAttachments';
+import { useComposerSelections, selectionInput } from './useComposerSelections';
 
-const DRAFT_KEY = 'berserk.drafts';
-const SENT_KEY = 'berserk.submitted';
-const READ_KEY = 'berserk.read-results';
 function stored(key: string): Record<string, string> {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
@@ -17,8 +15,8 @@ function stored(key: string): Record<string, string> {
 function persist(key: string, value: unknown) {
   try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* In-memory drafts remain usable when storage is unavailable. */ }
 }
-function initialWorkspace() {
-  try { return sessionStorage.getItem('berserk.workspace') || ''; } catch { return ''; }
+function initialWorkspace(key: string) {
+  try { return sessionStorage.getItem(key) || ''; } catch { return ''; }
 }
 const reason = (error: unknown) => error instanceof Error ? error.message : '连接异常，请稍后查询会话状态。';
 
@@ -29,15 +27,15 @@ function mergeById<T extends { id: string }>(previous: T[], incoming: T[]): T[] 
   return [...incoming.filter(item => !known.has(item.id)), ...previous.map(item => updates.get(item.id) || item)];
 }
 function activityOf(snapshot: SessionSnapshot, previous?: SessionActivity): SessionActivity {
-  const { id, workspaceId, title, updatedAt, active, lastResult, recoveryWarning } = snapshot;
+  const { id, workspaceId, workItemId, title, updatedAt, active, lastResult, recoveryWarning } = snapshot;
   const sameState = JSON.stringify(active) === JSON.stringify(previous?.active)
     && lastResult?.requestId === previous?.lastResult?.requestId && lastResult?.status === previous?.lastResult?.status;
-  return { id, workspaceId, title, updatedAt, active, recoveryWarning,
+  return { id, workspaceId, workItemId, title, updatedAt, active, recoveryWarning,
     lastResult: lastResult ? { requestId: lastResult.requestId, status: lastResult.status } : null,
     statusUpdatedAt: sameState && previous ? previous.statusUpdatedAt : active ? new Date().toISOString() : updatedAt };
 }
 function sameActivity(a: SessionActivity, b?: SessionActivity) {
-  return b && a.id === b.id && a.workspaceId === b.workspaceId && a.title === b.title && a.updatedAt === b.updatedAt
+  return b && a.id === b.id && a.workspaceId === b.workspaceId && a.workItemId === b.workItemId && a.title === b.title && a.updatedAt === b.updatedAt
     && a.statusUpdatedAt === b.statusUpdatedAt && a.recoveryWarning === b.recoveryWarning
     && a.active?.requestId === b.active?.requestId && a.active?.status === b.active?.status
     && a.active?.phase === b.active?.phase && a.active?.toolName === b.active?.toolName
@@ -54,7 +52,13 @@ function mergeInteraction(previous: Interaction | undefined, incoming: Interacti
 }
 
 export function useChat() {
+  const { api, sendMessage, storageKey } = useApi();
+  const DRAFT_KEY = storageKey('berserk.drafts');
+  const SENT_KEY = storageKey('berserk.submitted');
+  const READ_KEY = storageKey('berserk.read-results');
   const attachments = useAttachments();
+  const composerSelections = useComposerSelections();
+  const { move: moveSelections, consume: consumeSelections, recover: recoverSelections, clearSubmitted: clearSubmittedSelections } = composerSelections;
   const { recover: recoverAttachments, clearSubmitted: clearSubmittedAttachments, move: moveAttachments, consume: consumeAttachments } = attachments;
   const [info, setInfo] = useState<AppInfo | null>(null);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
@@ -69,7 +73,7 @@ export function useChat() {
       if (previous[id] === requestId) return previous;
       const next = { ...previous, [id]: requestId }; persist(READ_KEY, next); return next;
     });
-  }, []);
+  }, [READ_KEY]);
   const [snapshots, setSnapshots] = useState<Record<string, SessionSnapshot>>({});
   const snapshotsRef = useRef(snapshots);
   const revisions = useRef<Record<string, number>>({});
@@ -83,11 +87,11 @@ export function useChat() {
   const [creating, setCreating] = useState(false);
   const creatingRef = useRef<string | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [workspaceId, setWorkspaceId] = useState(initialWorkspace);
+  const [workspaceId, setWorkspaceId] = useState(() => initialWorkspace(storageKey('berserk.workspace')));
   const workspaceRef = useRef(workspaceId);
   const navigationRevision = useRef(0);
   const noteNavigation = useCallback(() => { navigationRevision.current++; }, []);
-  const [selections, setSelections] = useState(() => stored('berserk.selections'));
+  const [selections, setSelections] = useState(() => stored(storageKey('berserk.selections')));
   const selectionsRef = useRef(selections);
   const selected = selections[workspaceId] || '';
   const draftKey = selected || `workspace:${workspaceId}`;
@@ -95,15 +99,18 @@ export function useChat() {
   const selectForWorkspace = useCallback((workspace: string, id: string) => {
     selectionsRef.current = { ...selectionsRef.current, [workspace]: id };
     setSelections(selectionsRef.current);
-    persist('berserk.selections', selectionsRef.current);
-  }, []);
+    persist(storageKey('berserk.selections'), selectionsRef.current);
+  }, [storageKey]);
   const selectWorkspace = useCallback((id: string) => {
     noteNavigation();
     workspaceRef.current = id; setWorkspaceId(id);
-    try { sessionStorage.setItem('berserk.workspace', id); } catch { /* Keep selection in memory. */ }
-  }, [noteNavigation]);
+    try { sessionStorage.setItem(storageKey('berserk.workspace'), id); } catch { /* Keep selection in memory. */ }
+  }, [noteNavigation, storageKey]);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);
+  const movedDrafts = useRef(new Map<string, string>());
+  // New handlers now capture the new draft owner; only the intervening old render needed aliases.
+  useEffect(() => { movedDrafts.current.clear(); }, [draftKey]);
   const [submitted, setSubmitted] = useState(() => stored(SENT_KEY));
   const submittedRef = useRef(submitted);
 
@@ -111,17 +118,18 @@ export function useChat() {
     draftsRef.current = { ...draftsRef.current, [id]: text };
     setDrafts(draftsRef.current);
     persist(DRAFT_KEY, draftsRef.current);
-  }, []);
+  }, [DRAFT_KEY]);
   const rememberSubmitted = useCallback((id: string, text: string) => {
     submittedRef.current = { ...submittedRef.current, [id]: text };
     setSubmitted(submittedRef.current);
     persist(SENT_KEY, submittedRef.current);
-  }, []);
+  }, [SENT_KEY]);
   const recover = useCallback((id: string) => {
     recoverAttachments(id);
     const text = submittedRef.current[id];
+    recoverSelections(id, !draftsRef.current[id] || draftsRef.current[id] === text);
     if (text && !draftsRef.current[id]) draft(id, text);
-  }, [draft, recoverAttachments]);
+  }, [draft, recoverAttachments, recoverSelections]);
   const put = useCallback((snapshot: SessionSnapshot) => {
     const id = snapshot.id;
     const old = snapshotsRef.current[id]?.interactions || [];
@@ -142,16 +150,16 @@ export function useChat() {
     activitiesRef.current = mergeById(activitiesRef.current, [activityOf(snapshot, activitiesRef.current.find(item => item.id === id))]);
     setActivities(activitiesRef.current);
     if (!snapshot.active && snapshot.lastResult) {
-      if (snapshot.lastResult.status === 'succeeded') { rememberSubmitted(id, ''); clearSubmittedAttachments(id); }
+      if (snapshot.lastResult.status === 'succeeded') { rememberSubmitted(id, ''); clearSubmittedAttachments(id); clearSubmittedSelections(id); }
       if (snapshot.lastResult.status === 'failed') recover(id);
       const userMessageSaved = snapshot.messages.some(message => message.role === 'user' && message.requestId === snapshot.lastResult!.requestId);
       if (snapshot.lastResult.status === 'cancelled' && !userMessageSaved) recover(id);
       if (snapshot.lastResult.status === 'interrupted') {
-        if (userMessageSaved) { rememberSubmitted(id, ''); clearSubmittedAttachments(id); }
+        if (userMessageSaved) { rememberSubmitted(id, ''); clearSubmittedAttachments(id); clearSubmittedSelections(id); }
         else recover(id);
       }
     }
-  }, [recover, rememberSubmitted, clearSubmittedAttachments]);
+  }, [recover, rememberSubmitted, clearSubmittedAttachments, clearSubmittedSelections]);
 
   const refresh = useCallback(async (id: string) => {
     const revision = revisions.current[id] || 0;
@@ -171,7 +179,7 @@ export function useChat() {
       setPending(previous => ({ ...previous, [id]: false }));
       setReadErrors(previous => ({ ...previous, [id]: '' }));
     } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
-  }, [put]);
+  }, [api, put]);
 
   const applyInteraction = useCallback((item: Interaction) => {
     const current = snapshotsRef.current[item.sessionId];
@@ -200,7 +208,7 @@ export function useChat() {
       setInteractionSubmissions(previous => ({ ...previous, [key]: { error: latest.status === 'pending' ? '尚未收到提交，请核对后手动重试。' : '' } }));
     } catch (error) { setInteractionSubmissions(previous => ({ ...previous, [key]: { needsQuery: true, error: `查询未完成，草稿已保留。${reason(error)}` } })); }
     finally { interactionLocks.current.delete(key); }
-  }, [applyInteraction]);
+  }, [api, applyInteraction]);
   const respondInteraction = useCallback(async (item: Interaction, response: InteractionResponse) => {
     const key = item.interactionId;
     const current = snapshotsRef.current[item.sessionId];
@@ -215,7 +223,7 @@ export function useChat() {
     } catch (error) {
       setInteractionSubmissions(previous => ({ ...previous, [key]: { needsQuery: true, error: `提交结果需核对，草稿已保留；请先查询最新状态。${reason(error)}` } }));
     } finally { interactionLocks.current.delete(key); }
-  }, [applyInteraction, interactionSubmissions]);
+  }, [api, applyInteraction, interactionSubmissions]);
 
   const refreshActivity = useCallback((): Promise<void> => {
     if (activityRequest.current) return activityRequest.current;
@@ -261,7 +269,7 @@ export function useChat() {
     activityRequest.current = request;
     void request.finally(() => { if (activityRequest.current === request) activityRequest.current = null; }).catch(() => {});
     return request;
-  }, [selectForWorkspace, selectWorkspace]);
+  }, [api, selectForWorkspace, selectWorkspace]);
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
@@ -270,8 +278,8 @@ export function useChat() {
       setErrors(previous => ({ ...previous, '': '' }));
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
-  }, [refreshActivity]);
-  const refreshInfo = useCallback(async () => { setInfo(await api<AppInfo>('/api/info')); }, []);
+  }, [api, refreshActivity]);
+  const refreshInfo = useCallback(async () => { setInfo(await api<AppInfo>('/api/info')); }, [api]);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
   useEffect(() => {
     const update = () => { void refreshActivity().catch(() => {}); };
@@ -291,14 +299,14 @@ export function useChat() {
     setWorkspaces(previous => previous.some(item => item.id === workspace.id) ? previous : [...previous, workspace]);
     selectWorkspace(workspace.id);
     return workspace;
-  }, [selectWorkspace]);
+  }, [api, selectWorkspace]);
 
-  const create = useCallback(async (targetWorkspaceId = workspaceId): Promise<string | null> => {
+  const create = useCallback(async (targetWorkspaceId = workspaceId, workItemId?: string): Promise<string | null> => {
     if (creatingRef.current || !targetWorkspaceId) return null;
     const navigation = navigationRevision.current;
     creatingRef.current = targetWorkspaceId; setCreating(true);
     try {
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId });
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}) });
       put(snapshot);
       // A delayed creation may populate its project, but must not undo later navigation.
       if (navigationRevision.current === navigation) {
@@ -306,17 +314,19 @@ export function useChat() {
         selectWorkspace(targetWorkspaceId);
       } else if (!selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
       const key = `workspace:${targetWorkspaceId}`;
-      moveAttachments(key, snapshot.id);
+      movedDrafts.current.set(key, snapshot.id);
+      moveAttachments(key, snapshot.id); moveSelections(key, snapshot.id);
       if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
       setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = null; setCreating(false); }
-  }, [draft, put, selectForWorkspace, selectWorkspace, workspaceId, moveAttachments]);
+  }, [workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
   const send = useCallback(async () => {
     const text = (draftsRef.current[draftKey] || '').trim();
     const files = attachments.current(draftKey);
+    const picks = composerSelections.current(draftKey);
     if (!text || files.some(file => file.status !== 'ready') || !info?.configured || !info.contextReady) return;
     const id = selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
@@ -328,7 +338,7 @@ export function useChat() {
     setPending(previous => ({ ...previous, [id]: true }));
     setErrors(previous => ({ ...previous, [id]: '' }));
     rememberSubmitted(id, text);
-    consumeAttachments(id, files);
+    consumeAttachments(id, files); consumeSelections(id, picks);
     if ((draftsRef.current[id] || '').trim() === text) draft(id, '');
     let messages: PublicMessage[] = [...before.messages, { id: 'sending-user', role: 'user', text }];
     let assistantNumber = 0;
@@ -377,7 +387,7 @@ export function useChat() {
         ...(phase === 'tool' ? { toolName: event.type === 'tool.started' ? event.toolName : current.active?.toolName } : {}) } });
     };
     try {
-      await sendMessage(id, text, receive, files.length ? { uploadIds: files.filter(file => file.uploadId).map(file => file.uploadId!), fileRefs: files.filter(file => !file.uploadId).map(file => ({ path: file.path! })) } : undefined);
+      await sendMessage(id, text, receive, { ...selectionInput(picks), ...(files.length ? { uploadIds: files.filter(file => file.uploadId).map(file => file.uploadId!), fileRefs: files.filter(file => !file.uploadId).map(file => ({ path: file.path! })) } : {}) });
       if (!stream.terminal) setErrors(previous => ({ ...previous, [id]: '连接已断开，正在查询会话状态；消息不会重复发送。' }));
     } catch (error) {
       setErrors(previous => ({ ...previous, [id]: reason(error) }));
@@ -389,7 +399,7 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [create, draft, put, recover, refresh, rememberSubmitted, selected, draftKey, info, attachments, consumeAttachments, applyInteraction]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, info?.configured, info?.contextReady, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -405,19 +415,25 @@ export function useChat() {
       const latest = snapshotsRef.current[selected];
       if (latest?.active?.requestId === requestId) put({ ...latest, active: { ...latest.active, status: 'responding' } });
     }
-  }, [put, selected]);
+  }, [api, put, selected]);
 
   return { info, refreshInfo, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
-    activities, activityError, refreshActivity, markRead, noteNavigation,
+    activities, activityError, refreshActivity, markRead, noteNavigation, adopt: put,
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
     select: (id: string) => {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading, creating, create, send, cancel, draftKey, attachments, interactionSubmissions, respondInteraction, queryInteraction,
-    draft: drafts[draftKey] || '', setDraft: (text: string) => draft(draftKey, text),
-    submitted: submitted[selected] || '', restoreSubmitted: () => draft(draftKey, submittedRef.current[selected] || ''),
+    loading, creating, create, send, cancel, draftKey, attachments, composerSelections,
+    resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
+    setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),
+    interactionSubmissions, respondInteraction, queryInteraction,
+    draft: drafts[draftKey] || '',
+    // An input event from the previous render can arrive after first-session creation moved its draft.
+    setDraft: (text: string) => draft(movedDrafts.current.get(draftKey) || draftKey, text),
+    recoverableSelectionDiffers: JSON.stringify(selectionInput(composerSelections.recovery[selected] || {})) !== JSON.stringify(selectionInput(composerSelections.all[draftKey] || {})),
+    submitted: submitted[selected] || '', restoreSubmitted: () => { draft(draftKey, submittedRef.current[selected] || ''); composerSelections.restore(draftKey); },
     instructionChanges: snapshots[selected]?.lastResult?.instructionChanges || instructionChanges[selected] || [],
     pending: pending[selected] || false, error: errors[selected] || readErrors[selected] || errors[`workspace:${workspaceId}`] || errors[''] || '', refresh, bootstrap };
 }

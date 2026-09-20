@@ -1,3 +1,4 @@
+import { useApi } from './api';
 import { useState } from 'react';
 import { Activity, ArrowUpRight, ChevronDown, CircleAlert, Folder, MessageSquare, Plus } from 'lucide-react';
 import type { SessionActivity, Workspace } from '../contracts/index';
@@ -58,15 +59,16 @@ interface NavigationProps {
 }
 
 export function WorkspaceNavigation({ workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
+  const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const running = activities.filter(session => session.active).length;
   const fresh = activities.filter(session => unread[session.id]).length;
   const errors = activities.filter(session => session.recoveryWarning || (!session.active && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
   return <>
-    <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" aria-describedby="activity-counts">
+    <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" aria-describedby={domId('activity-counts')}>
       <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />
     </button>
-    <p id="activity-counts" className="activity-counts" role="status" aria-live="polite" aria-atomic="true">{running} 个处理中 · {fresh} 个新回复 · {errors} 个异常</p>
+    <p id={domId('activity-counts')} className="activity-counts" role="status" aria-live="polite" aria-atomic="true">{running} 个处理中 · {fresh} 个新回复 · {errors} 个异常</p>
     <div className="section-label">项目<span>{workspaces.length}</span></div>
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <p className="sidebar-empty">正在加载项目…</p>}
@@ -94,10 +96,11 @@ export function WorkspaceNavigation({ workspaces, activities, unread, workspaceI
 }
 
 export function ActivityOverview({ workspaces, activities, unread, selectSession, loading }: Pick<NavigationProps, 'workspaces' | 'activities' | 'unread' | 'selectSession' | 'loading'>) {
+  const { domId } = useApi();
   const [filter, setFilter] = useState<'all' | 'running' | 'attention'>('all');
   const visible = activities.filter(session => filter === 'all' || (filter === 'running' ? Boolean(session.active) : needsAttention(session, unread)));
   const choices = [{ id: 'all', label: '全部' }, { id: 'running', label: '处理中' }, { id: 'attention', label: '需关注' }] as const;
-  return <div className="activity-overview" id="activity-overview" tabIndex={0} aria-label="全部动态列表">
+  return <div className="activity-overview" id={domId('activity-overview')} tabIndex={0} aria-label="全部动态列表">
     <div className="activity-heading"><p className="eyebrow">项目概览</p><h1>全部动态</h1><p>查看各项目的处理进展，继续需要你关注的对话。</p></div>
     <div className="activity-filters" role="group" aria-label="动态筛选">{choices.map(choice => <button key={choice.id} aria-pressed={filter === choice.id} onClick={() => setFilter(choice.id)}>{choice.label}</button>)}<span>{visible.length} 个会话</span></div>
     {loading && !activities.length ? <p className="activity-empty">正在读取动态…</p> : !visible.length ? <div className="activity-empty"><Activity size={24} aria-hidden="true" /><p>{filter === 'running' ? '目前没有正在处理的会话。' : filter === 'attention' ? '目前没有需要关注的会话。' : '从项目中新建一个对话，进展会显示在这里。'}</p></div> : <ul className="activity-list">{visible.map(session => {

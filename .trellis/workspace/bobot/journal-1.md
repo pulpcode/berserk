@@ -179,3 +179,71 @@
 ### Next Steps
 
 - 用户查看http://127.0.0.1:4315；后续按中文提交约定审阅提交与归档。
+
+
+## Session 7: 实现双测试席位任务分派与成果交接
+
+**Date**: 2026-09-19
+**Task**: 实现双测试席位任务分派与成果交接
+**Branch**: `main`
+
+### Summary
+
+先提交中文回退基线，再完成W01-8实现。355项单元/集成已验证、66项浏览器全量通过，真实DeepSeek/Docker完成分派→脚本生成→提交→退回→再提交→验收及重启读回。正式部署与用户验收待进行，@文件选择器后置。
+
+### Main Changes
+
+- 保留Pi原生循环与会话，新增两席位范围、业务工具及HITL、SQLite回执与固定副本、网页待办及关联办理。
+- 同步MVP路线、具体阶段记录、前后端规范和使用说明；本轮实现尚未再次提交或推送。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `fbcdd46` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、lint、build、git diff --check通过；5项新增浏览器用例使用真实本地业务后端，仅模型模拟。
+- [OK] SIGKILL覆盖复制中、等待确认、业务提交前后；旧单席位停服备份启用双席位后原JSONL/指令/文件字节不变。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户查看并验收本期；需要更新线上服务时停服备份并仅发布4315。
+
+
+## Session 8: 实现文件、Skill与子Agent对话选择
+
+**Date**: 2026-09-20
+**Task**: 实现文件、Skill与子Agent对话选择
+**Branch**: `main`
+
+### Summary
+
+完成W01-9：@文件/只读子Agent、/Skill、独立草稿与原生输入历史；375项单元/集成、77项浏览器范围及真实DeepSeek/Docker组合验证通过。未提交或部署。
+
+### Main Changes
+
+- 复用Pi原生循环和JSONL，受控加载Skill并传入匹配子角色，文件去重后合并计数。
+- 修复IME、目录筛选、失败选择恢复以及初始化期间输入归属问题，同步规范和验收证据。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 全套单元/集成375项通过；最终产品代码下浏览器76/77，余项确认测试等待问题，仅修正测试后引用组10/10通过。
+- [OK] 真实reviewer/analyst读取文件并按Skill返回；普通续聊、重启历史和越界访问通过；typecheck/lint/build通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户查看验收；需要时以中文提交当前Git，并按用户指令更新唯一线上服务。

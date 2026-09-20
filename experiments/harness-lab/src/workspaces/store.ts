@@ -84,19 +84,35 @@ export class WorkspaceStore {
     await atomicWrite(join(dataDir, '.workspace-initialized'), 'workspace-v2\n');
     return new WorkspaceStore(dataDir, index, seatId);
   }
-  list(): WorkspaceList {
-    const workspaces = this.index.workspaces.filter(item => item.seatId === this.seatId).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name, createdAt, taskSpaceId, seatId }));
+  list(seatId = this.seatId): WorkspaceList {
+    const workspaces = this.index.workspaces.filter(item => item.seatId === seatId).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name, createdAt, taskSpaceId, seatId }));
     return { defaultWorkspaceId: workspaces.some(item => item.id === this.index.defaultWorkspaceId) ? this.index.defaultWorkspaceId : workspaces[0]?.id || '', workspaces };
   }
-  get(id = this.list().defaultWorkspaceId): WorkspaceEntry {
-    const item = this.index.workspaces.find(item => item.id === id && item.seatId === this.seatId);
+  get(id: string | undefined = undefined, seatId = this.seatId): WorkspaceEntry {
+    const item = this.index.workspaces.find(item => item.id === (id ?? this.list(seatId).defaultWorkspaceId) && item.seatId === seatId);
     if (!item) throw new RequestError('WORKSPACE_NOT_FOUND', '工作区不存在。', 404);
     return structuredClone(item);
   }
-  directory(id: string) { return join(this.dataDir, 'workspaces', this.get(id).id); }
-  filesDirectory(id: string) { return join(this.directory(id), 'files'); }
-  binding(id: string) { const workspaceId = this.index.sessionBindings[id]; return this.index.workspaces.some(item => item.id === workspaceId && item.seatId === this.seatId) ? workspaceId : undefined; }
-  bindings() { return Object.fromEntries(Object.entries(this.index.sessionBindings).filter(([, id]) => this.index.workspaces.some(item => item.id === id && item.seatId === this.seatId))); }
+  directory(id: string, seatId = this.seatId) { return join(this.dataDir, 'workspaces', this.get(id, seatId).id); }
+  filesDirectory(id: string, seatId = this.seatId) { return join(this.directory(id, seatId), 'files'); }
+  binding(id: string, seatId = this.seatId) { const workspaceId = this.index.sessionBindings[id]; return this.index.workspaces.some(item => item.id === workspaceId && item.seatId === seatId) ? workspaceId : undefined; }
+  bindings(seatId = this.seatId) { return Object.fromEntries(Object.entries(this.index.sessionBindings).filter(([, id]) => this.index.workspaces.some(item => item.id === id && item.seatId === seatId))); }
+  /** Trusted startup lookup only; public access must use get(id, actor.seatId). */
+  getAny(id: string): WorkspaceEntry {
+    const item = this.index.workspaces.find(item => item.id === id);
+    if (!item) throw new RequestError('WORKSPACE_NOT_FOUND', '工作区不存在。', 404);
+    return structuredClone(item);
+  }
+  listAll() { return structuredClone(this.index.workspaces); }
+  allBindings() { return { ...this.index.sessionBindings }; }
+  async ensureWorkspace(taskSpaceId: string, seatId: string, name: string): Promise<Workspace> {
+    return this.lock.run(async () => {
+      const existing = this.index.workspaces.find(item => item.taskSpaceId === taskSpaceId && item.seatId === seatId);
+      if (existing) return this.get(existing.id, seatId);
+      if (!UUID.test(taskSpaceId) || !this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId)) throw stateError();
+      return this.createUnlocked(name, taskSpaceId, seatId);
+    });
+  }
   private async commit(next: WorkspaceIndex) {
     // Revalidate disk before overwriting so corruption is never silently healed by a live process.
     const disk = await readControlled(join(this.dataDir, 'workspace-index.json'), 2 * 1024 * 1024);
@@ -105,20 +121,22 @@ export class WorkspaceStore {
     await atomicWrite(join(this.dataDir, 'workspace-index.json'), JSON.stringify(next, null, 2));
     this.index = next;
   }
-  async create(name: string, taskSpaceId?: string): Promise<Workspace> {
-    name = name.trim();
-    if (!name || name.length > 60) throw new RequestError('INVALID_INPUT', '工作区名称应为 1～60 个字符。');
-    return this.lock.run(async () => {
-      if (taskSpaceId && (!UUID.test(taskSpaceId) || this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId && item.seatId === this.seatId))) throw stateError();
-      const workspace = newWorkspace(name, undefined, this.seatId, taskSpaceId);
-      await prepareWorkspace(this.dataDir, workspace);
-      await this.commit({ ...this.index, workspaces: [...this.index.workspaces, workspace] });
-      const { id, createdAt } = workspace; return { id, name, createdAt, taskSpaceId: workspace.taskSpaceId, seatId: workspace.seatId };
-    });
+  async create(name: string, taskSpaceId?: string, seatId = this.seatId): Promise<Workspace> {
+    return this.lock.run(() => this.createUnlocked(name, taskSpaceId, seatId));
   }
-  async bind(sessionId: string, workspaceId: string) {
+  private async createUnlocked(name: string, taskSpaceId: string | undefined, seatId: string): Promise<Workspace> {
+    name = name.trim();
+    if (!name || name.length > 60 || !/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new RequestError('INVALID_INPUT', '工作区名称或席位无效。');
+    if (taskSpaceId && (!UUID.test(taskSpaceId) || this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId && item.seatId === seatId))) throw stateError();
+    const workspace = newWorkspace(name, undefined, seatId, taskSpaceId);
+    await prepareWorkspace(this.dataDir, workspace);
+    await this.commit({ ...this.index, workspaces: [...this.index.workspaces, workspace] });
+    const { id, createdAt } = workspace;
+    return { id, name, createdAt, taskSpaceId: workspace.taskSpaceId, seatId: workspace.seatId };
+  }
+  async bind(sessionId: string, workspaceId: string, seatId = this.seatId) {
     return this.lock.run(async () => {
-      this.get(workspaceId);
+      this.get(workspaceId, seatId);
       if (!UUID.test(sessionId) || this.index.sessionBindings[sessionId]) throw stateError();
       await this.commit({ ...this.index, sessionBindings: { ...this.index.sessionBindings, [sessionId]: workspaceId } });
     });

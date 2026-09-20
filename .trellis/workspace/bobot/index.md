@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 6
-- **Last Active**: 2026-09-18
+- **Total Sessions**: 8
+- **Last Active**: 2026-09-20
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~181 | Active |
+| `journal-1.md` | ~249 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 8 | 2026-09-20 | 实现文件、Skill与子Agent对话选择 | - | `main` |
+| 7 | 2026-09-19 | 实现双测试席位任务分派与成果交接 | `fbcdd46` | `main` |
 | 6 | 2026-09-18 | 完成W01-5通用文件作业与真实服务器验收 | - | `main` |
 | 5 | 2026-09-17 | 项目会话入口与模型设置窗口 | `7903039` | `main` |
 | 4 | 2026-09-17 | 工作区分组导航与全部动态 | `f4e2cb5` | `main` |

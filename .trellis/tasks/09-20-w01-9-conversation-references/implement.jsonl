@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "Pi公开SDK、受控资源、原生历史与请求范围"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "本期显式选择契约、原生输入和子任务传递边界"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "普通文件引用及席位工作区路径校验"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "捕获席位及业务确认边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "草稿迁移、选择与异步事件归属"}
+{"file": ".trellis/tasks/09-20-w01-9-conversation-references/research/existing-capabilities.md", "reason": "现有能力、Pi显式Skill语义及本期适配边界"}

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import type { InstructionFile, InstructionUpdate } from '../contracts/index';
-import { api, ApiFailure } from './api';
+import { useApi, ApiFailure } from './api';
 
 interface Editor {
   draft: string;
@@ -11,8 +11,7 @@ interface Editor {
   message?: string;
   error?: string;
 }
-const STORAGE = 'berserk.instructions';
-function restore(): Record<string, Editor> {
+function restore(STORAGE: string): Record<string, Editor> {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(STORAGE) || '{}');
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
@@ -26,7 +25,9 @@ const reason = (error: unknown) => error instanceof Error ? error.message : '读
 const path = (id: string) => `/api/workspaces/${encodeURIComponent(id)}/instructions/workspace`;
 
 export function useInstructions() {
-  const [editors, setEditors] = useState(restore);
+  const { api, storageKey } = useApi();
+  const STORAGE = storageKey('berserk.instructions');
+  const [editors, setEditors] = useState(() => restore(STORAGE));
   const ref = useRef(editors);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
@@ -37,7 +38,7 @@ export function useInstructions() {
     ref.current = { ...ref.current, [id]: change(ref.current[id]) };
     setEditors(ref.current);
     try { sessionStorage.setItem(STORAGE, JSON.stringify(ref.current)); } catch { /* Keep unsaved edits in memory. */ }
-  }, []);
+  }, [STORAGE]);
   const read = useCallback(async (id: string, compare = false) => {
     const token = Symbol(); reads.current[id] = token;
     setLoading(previous => ({ ...previous, [id]: true }));
@@ -57,7 +58,7 @@ export function useInstructions() {
     } finally {
       if (reads.current[id] === token) setLoading(previous => ({ ...previous, [id]: false }));
     }
-  }, [update]);
+  }, [api, update]);
   const save = useCallback(async (id: string, merge = false) => {
     const editor = ref.current[id];
     if (!editor || savingRef.current.has(id) || (editor.review && !merge) || (merge && (!editor.latest || !editor.canMerge))) return;
@@ -83,7 +84,7 @@ export function useInstructions() {
         error: conflict ? '项目指令已更新，本次保存未完成，你的修改已保留。' : uncertain ? '保存结果尚未确认，你的修改已保留。请查看最新内容核对后再操作。' : reason(error),
       }));
     } finally { savingRef.current.delete(id); setSaving(previous => ({ ...previous, [id]: false })); }
-  }, [update]);
+  }, [api, update]);
   return { editors, loading, saving, readErrors, read, save,
     edit: (id: string, draft: string) => update(id, current => ({ ...current!, draft, message: '' })),
     discard: (id: string) => {

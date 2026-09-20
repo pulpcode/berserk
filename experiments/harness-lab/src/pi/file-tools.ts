@@ -33,7 +33,7 @@ export function workspaceFileTools(sandbox: RequestSandbox) {
     defineTool(createFindToolDefinition('/workspace', { operations: { exists: path => sandbox.exists(path), glob: (pattern, cwd, options) => sandbox.glob(pattern, cwd, options) } })),
   ];
 }
-export function writableFileTools(sandbox: RequestSandbox, options: { logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: FileService; signal: AbortSignal; output: (file: FileOutput) => void }) {
+export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: string; logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: FileService; signal: AbortSignal; output: (file: FileOutput) => void }) {
   const bash = createBashToolDefinition('/workspace', { exposeSessionEnvironment: false, operations: { exec: (...args) => sandbox.exec(...args) } });
   return [
     defineTool(createWriteToolDefinition('/workspace', { operations: { writeFile: (path, content) => sandbox.writeFile(path, content), mkdir: (path) => sandbox.mkdir(path) } })),
@@ -101,7 +101,7 @@ export function writableFileTools(sandbox: RequestSandbox, options: { logsDir: s
       execute: async (toolCallId, params, signal) => {
         options.signal.throwIfAborted(); signal?.throwIfAborted();
         const path = params.path.startsWith('/workspace/') ? params.path.slice('/workspace/'.length) : params.path;
-        const file = await options.files.publish(options.workspaceId, { sessionId: options.sessionId, requestId: options.requestId, toolCallId, path }, options.signal);
+        const file = await options.files.publish(options.workspaceId, { sessionId: options.sessionId, requestId: options.requestId, toolCallId, path }, options.signal, options.seatId);
         options.manager.appendCustomEntry(FILE_OUTPUT, file);
         options.output(file);
         return { content: [{ type: 'text', text: `文件已提供下载：${file.name}（${file.size} 字节）。` }], details: { file } };

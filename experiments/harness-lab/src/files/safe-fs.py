@@ -108,13 +108,14 @@ def main(a):
     raise ValueError('verb')
 
 
-try:
-    raw = sys.stdin.buffer.read(65537)
-    if len(raw) > 65536:
-        raise ValueError('arguments')
-    result = main(json.loads(raw))
-    print(json.dumps(result, ensure_ascii=False))
-except BaseException as error:
-    code = 'EXISTS' if isinstance(error, FileExistsError) else 'NOT_FOUND' if isinstance(error, FileNotFoundError) else 'TOO_LARGE' if isinstance(error, OverflowError) else 'UNSAFE_FILE'
-    print(json.dumps(dict(error=code)))
-    sys.exit(1)
+if __name__ == '__main__':
+    try:
+        raw = sys.stdin.buffer.read(65537)
+        if len(raw) > 65536:
+            raise ValueError('arguments')
+        result = main(json.loads(raw))
+        print(json.dumps(result, ensure_ascii=False))
+    except BaseException as error:
+        code = 'EXISTS' if isinstance(error, FileExistsError) else 'NOT_FOUND' if isinstance(error, FileNotFoundError) else 'TOO_LARGE' if isinstance(error, OverflowError) else 'UNSAFE_FILE'
+        print(json.dumps(dict(error=code)))
+        sys.exit(1)

@@ -1,4 +1,5 @@
-import type { ApiError, StreamEvent } from '../contracts/index';
+import { createContext, useContext } from 'react';
+import type { ApiError, StreamEvent, ComposerSelection } from '../contracts/index';
 
 export class ApiFailure extends Error {
   constructor(message: string, readonly code: string, readonly status: number) { super(message); }
@@ -19,8 +20,8 @@ export async function api<T>(path: string, body?: object, method: 'POST' | 'PUT'
 }
 
 // A disconnected response never retries the POST: the server may still be working.
-export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void, attachments?: { uploadIds?: string[]; fileRefs?: { path: string }[] }): Promise<void> {
-  const response = await checkResponse(await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/messages`, {
+export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }, apiRoot = '/api'): Promise<void> {
+  const response = await checkResponse(await fetch(`${apiRoot}/sessions/${encodeURIComponent(sessionId)}/messages`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, ...attachments }),
   }));
   if (!response.body) throw new Error('连接未返回消息流，请查询会话状态。');
@@ -47,3 +48,19 @@ export async function sendMessage(sessionId: string, text: string, onEvent: (eve
     }
   } finally { reader.releaseLock(); }
 }
+
+/** Each mounted seat owns an immutable client. Async callbacks never read the current selector. */
+export function createApiClient(seatId?: string) {
+  const root = seatId ? `/api/test-seats/${encodeURIComponent(seatId)}` : '/api';
+  const url = (path: string) => path === '/api/info' || path.startsWith('/api/test-seats/') ? path : path.replace(/^\/api(?=\/|$)/, root);
+  return {
+    seatId,
+    url,
+    domId: (id: string) => seatId ? `${id}-${seatId}` : id,
+    storageKey: (key: string) => seatId ? `${key}:seat:${seatId}` : key,
+    api: <T,>(path: string, body?: object, method?: 'POST' | 'PUT') => api<T>(url(path), body, method),
+    sendMessage: (sessionId: string, text: string, receive: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }) => sendMessage(sessionId, text, receive, attachments, root),
+  };
+}
+export const ApiContext = createContext(createApiClient());
+export const useApi = () => useContext(ApiContext);

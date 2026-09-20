@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details, W01-4 role-aware child-task cards and W01-5 file uploads, browsing and download cards. Keep conversation central; business task trees, persistent Runs and business artifact states remain outside this increment. W01-6 adds the request-local interactions below.
+Read when changing `experiments/harness-lab/src/web`. The React conversation UI includes W01-1 chat behavior and W01-2/S2a workspace selection, instruction editing, fixed Skill viewing, plus W01-3 compaction status/readonly summary details, W01-4 role-aware child-task cards and W01-5 file uploads, browsing and download cards. Keep conversation central; persistent Runs and general file lifecycle states remain outside scope. W01-6 adds request-local interactions; W01-8 adds concrete work handoffs described below.
 
 ## 2. Signatures
 
@@ -26,7 +26,7 @@ Poll global activity about every 1800 ms with one request in flight; refresh on 
 
 Group collapse retains active/attention counts; global filters are all, active, and attention (failed, recovery warning or unread success). Store last viewed successful request ID per session under `berserk.read-results` in sessionStorage. Completion alone does not imply read: require visible foreground chat, loaded snapshot and summary agreeing on a successful request ID, no active request, no covering dialog/drawer and scroll within 32 px of the bottom. Polling the activity view never marks read. Reading position/follow-bottom is session-keyed in memory and survives navigation through other sessions or the activity view.
 
-Key chat snapshots, drafts, errors and streams by session ID. Use a workspace-specific draft key before its first session exists. Capture the workspace/session before asynchronous creation or sending; if selection changes while creation is pending, the original message and any newer draft remain in their original workspace. Do not transfer the eventual reply into the selected view.
+Key chat snapshots, drafts, errors and streams by session ID. Use a workspace-specific draft key before its first session exists. Capture the workspace/session before asynchronous creation or sending; if selection changes while creation is pending, the original message and any newer draft remain in their original workspace. Do not transfer the eventual reply into the selected view. When first-session creation moves a workspace draft, late input callbacks from the preceding render must resolve that recorded move and write to the new session; otherwise text can become stranded under the old workspace key.
 
 Accept stream events only for their captured session ID, request ID and local stream token. Reject events after a terminal frame. Terminal snapshots are authoritative. Clear pending on the terminal frame itself; a failing follow-up GET must not keep a completed request stuck as responding. Guard GET results with snapshot revisions so older responses cannot overwrite newer stream events. Poll selected-session snapshots to recover status after refresh/disconnection; never implicitly replay POST.
 
@@ -38,7 +38,7 @@ The UI calls workspaces projects; API/storage ownership remains `workspaceId`. G
 
 Successful unread results use an accessible blue dot (`有新回复未读`); successful read and ordinary idle sessions have no visible status text. Keep active, stopping, failed, interrupted and recovery indicators. New-session/settings dialogs also block mark-read while covering the chat.
 
-`ModelSettings` uses GET/PUT `/api/settings/model` and refreshes `/api/info` after save. The centered settings dialog has a single Models section. API keys are write-only password fields, initially blank, never copied from GET or persisted in browser storage. Empty key retains the current secret only when provider/endpoint stay unchanged; destination changes require an explicit key. Clear key after successful save and destroy it on close. Preserve form edits on failures; version conflict or uncertain save requires manually viewing fresh configuration before explicit retry. Do not automatically replay PUT. Respect native-dialog Escape, focus restoration and narrow layouts.
+`ModelSettings` uses GET/PUT `/api/settings/model` and refreshes `/api/info` after save. The centered settings dialog has a single Models section. Its only entry is the sidebar footer Settings button (open the sidebar first on narrow screens). Do not add a header model button; configuration notices point to the same sidebar entry. API keys are write-only password fields, initially blank, never copied from GET or persisted in browser storage. Empty key retains the current secret only when provider/endpoint stay unchanged; destination changes require an explicit key. Clear key after successful save and destroy it on close. Preserve form edits on failures; version conflict or uncertain save requires manually viewing fresh configuration before explicit retry. Do not automatically replay PUT. Respect native-dialog Escape, focus restoration and narrow layouts.
 
 ### Compaction and model capacity
 
@@ -95,6 +95,20 @@ Render model Markdown without raw HTML execution. Enable GFM through remark-gfm,
 
 For bash results, the executor's exact cancellation response (optionally followed by its archived /logs reference) renders as “命令已停止” without failure styling, including existing native history. Keep the original body and isError unchanged. Do not infer individual tool cancellation from the whole request status or substring matches: nonzero exits, timeouts and cleanup failures still render as failures.
 
+### Composer references (W01-9)
+
+`ComposerReferences` keeps the existing textarea and adds a scoped picker plus removable chips: `@` files/readonly roles and `/` Skills. The add menu uses the same selection paths. A selection is not a send, tool call or delegation result. Require a user goal; submit only file paths and Skill/role IDs with hashes. Render actual child execution through `SubagentCard`.
+
+Before bootstrap establishes the initial workspace/session, disable composer editing and add/upload actions (`composerReady = !chat.loading && Boolean(chat.workspaceId)`). Otherwise text can be written to an empty workspace key and disappear when bootstrap selects a session. This gate must not include active-request state: editing the next draft during execution remains available.
+
+`useComposerSelections` owns per-seat, per-session/workspace draft and submitted selections in sessionStorage. Move new-session selections with the existing text/attachment draft. Completion must not erase edits made during a request. Failed preparation restores recoverable inputs without overwriting a newer draft; explicit recovery must recover the original selections as well as text. Candidate requests retain scope and query generation; late responses cannot populate another workspace or seat.
+
+Use current-directory browsing, path/name filters and existing pagination, not recursive search. Shared file references deduplicate with completed uploads before the common count. Removing a chip does not delete a file. Selected Skill details show the current matching hash before send; historical `SelectionHistory` shows the resolved body actually saved in `PublicMessage.selections`.
+
+Recognize an actively typed standalone trigger fragment only; pasted email/path/code remains ordinary text. Enter selects a visible candidate before it can send, Escape closes without deleting text, and IME composition never selects or sends. Preserve the active trigger through composition and filter after committing Chinese text. Menu and typed entry share these contracts. Keep focus restoration, visible errors and contained 375px layout.
+
+`tests/e2e/references.spec.ts` uses the real local API/Pi with a deterministic provider to check selection, no implicit model calls, drafts and async races, failure recovery, IME, pagination/deduplication and responsive rendering. Real model delegation is verified separately by `probe:references`.
+
 ### Subagent cards
 
 `SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by requestId plus toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.
@@ -106,6 +120,24 @@ Use native details/summary with keyboard access, safe Markdown and contained wid
 An interrupted lastResult shows “已中断” and attention navigation, not an active spinner or unread reply. With no recoveryWarning, explicit sending remains available; GET/reconnect never submits automatically. A `resultMissing` tool message shows “未收到执行结果，无法确认是否已执行”, not success, failure or rollback. It is a display projection only. Match tool, child and file cards within their request, because toolCallId can repeat in later requests.
 
 After interruption, a submitted user message already present in the snapshot clears its submitted backup rather than returning to the composer. Unpersisted input retains explicit recovery; preserve any newer draft and attachment selections. Old question/confirmation cards remain expired or show their saved decision/unknown effect, with no active controls. Hard recoveryWarning still blocks sending.
+
+### Test seats and work handoff (W01-8)
+
+`Seats` reads public `/api/info`; optional `testSeats` and `defaultSeatId` enable the test selector. Absence keeps single-seat URLs and storage keys. This selector is a test identity, not login. Each visited seat retains a mounted App with its own immutable `ApiContext`; inactive seats remain hidden/inert so pending streams, uploads, caches and independent drafts keep their original owner. Never mutate a global selected-seat HTTP client. Only visible seats mark replies read or update scroll positions. Shared model information refreshes when entering a seat.
+
+`useApi` provides scoped JSON/SSE calls, `url()` for binary fetch/XHR/native download links, `storageKey()` and `domId()`. All business requests use `/api/test-seats/:seatId/...`; only bootstrap `/api/info` is unscoped. Cache, draft, instruction-editor, attachment and read-marker storage is seat-partitioned; test-seat selection uses per-tab sessionStorage. Interaction answer drafts retain their globally unique session/request/interaction keys. DOM landmarks, skip links and focus targets must also distinguish retained seat subtrees.
+
+`WorkInbox` preserves the existing project/chat navigation and adds work lists, assignment, detail, explicit claim, file submission and review. “全部” keeps completed work reachable by either party; reading a detail never claims or approves it. New or explicitly bound idle same-project sessions can carry `workItemId`; chat displays the work title through `LinkedWork`. Binding never moves an unrelated conversation or injects another seat's chat history. Business counts and assistant unread dots remain separate.
+
+Assignment and submission choose ordinary workspace paths through `WorkFilePicker`; assignment allows configured multiple inputs, submission selects one file. `HandoffFiles` renders only authorized fixed file references for preview/download and explicit same-project import. Inline Markdown disables raw HTML, external images and active links; only supported image types become revoked-on-cleanup blob URLs. Direct downloads keep the captured seat scope. Import offers an optional alternate path; no overwrite action exists.
+
+Page prepare saves the exact input and `clientActionId` before POST. Known operation IDs use GET `/work-actions/:id`; lost prepare responses use GET `/work-actions?clientActionId=...`. Failure or uncertain completion retains drafts and requires explicit query; never automatically replay commit. A successful receipt remains authoritative when chat delivery or detail refresh fails. Cancel explicitly abandons a prepared page action; closing its panel does not cancel. Reload queries the stored preparation instead of re-submitting it. Delayed receipt/detail responses cannot override later navigation.
+
+The confirmation shows host-produced title/description and fixed file copies; it never re-reads mutable workspace paths. Agent confirmations reuse `InteractionCard.action.handoff`, including the same fixed-file component. Page forms cannot confirm an Agent preparation. Pending operation, per-project assignment, per-work submission choice and return-reason drafts persist separately; model secrets do not.
+
+Native dialogs preserve Escape and focus restoration, including a visible replacement trigger when opening assignment has navigated away from its original button. At 375px the selected work detail replaces the list with an explicit back button. Inputs and long filenames wrap without page overflow. The `@` file chooser remains deferred. See [backend task handoff](../backend/task-handoff.md) for payloads and effect boundaries.
+
+`tests/e2e/handoff.spec.ts` exercises the real local API/Pi session/SQLite/file-copy implementation with only the provider mocked: two-seat return/resubmit closure, immutable bytes, completed-work lookup, lost commit query after reload, per-seat drafts/late replies/XHR/tabs and mobile focus. It does not count as live provider or Docker evidence.
 
 ## 4. Validation & Error Matrix
 

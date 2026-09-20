@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check, Cpu, KeyRound } from 'lucide-react';
 import type { ModelSettings as Settings, ModelSettingsUpdate } from '../contracts/index';
-import { api, ApiFailure } from './api';
+import { useApi, ApiFailure } from './api';
 import { Panel } from './Resources';
 
 const parameterFields = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
@@ -15,6 +15,7 @@ function toDraft(result: Settings): Draft {
 const sourceLabel = (source?: Settings['contextSource']) => source === 'preset' ? '已核对的模型规格' : source === 'explicit' ? '手动配置' : '未知，请填写';
 
 export function ModelSettings({ close, saved }: { close: () => void; saved: () => Promise<void> }) {
+  const { api } = useApi();
   const [settings, setSettings] = useState<Settings>();
   const [draft, setDraft] = useState<Draft>();
   const [latest, setLatest] = useState<Settings>();
@@ -38,7 +39,7 @@ export function ModelSettings({ close, saved }: { close: () => void; saved: () =
     }).catch((reason: unknown) => { if (current) setError(reason instanceof Error ? reason.message : '模型配置读取失败，请重试。'); })
       .finally(() => { if (current) setLoading(false); });
     return () => { current = false; };
-  }, [reload]);
+  }, [api, reload]);
   function loadLatest() { if (pending.current) return; setLoading(true); setLatest(undefined); setSuccess(''); setReload(value => value + 1); }
   function edit(field: keyof Draft, value: string) {
     if (parameterFields.includes(field as ParameterField)) changedParameters.current.add(field as ParameterField);
