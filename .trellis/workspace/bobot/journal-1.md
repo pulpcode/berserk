@@ -337,3 +337,38 @@
 ### Next Steps
 
 - 用户测试，新实现及发布记录尚未提交。
+
+
+## Session 12: 实现信息处理与席位投递并完成开发验证
+
+**Date**: 2026-09-22
+**Task**: 实现信息处理与席位投递并完成开发验证
+**Branch**: `main`
+
+### Summary
+
+先提交设计基线，再实现来源接入、Pi 后台预处理、多席位投递、人员确认后的分析和信息处理中心。未部署线上，任务保留待用户验收。
+
+### Main Changes
+
+- 保留 Pi 原生会话与压缩；新增后台元数据、共享模型许可、规则与来源权限、固定文件及收件入口。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9b98c22` | (see git log) |
+| `baaedba` | (see git log) |
+
+### Testing
+
+- [OK] 462 项单元及集成测试、92 项浏览器测试、typecheck、lint、build通过；实际SIGKILL 边界 5 项通过。
+- [OK] tencent-server 独立数据完成 DeepSeek 和 Docker 链路，证据见当前任务validation.md。
+
+### Status
+
+[OK] **开发验证完成；待部署与用户验收**
+
+### Next Steps
+
+- 按用户要求部署并完成用户验收；后续智能分流单独设计。
