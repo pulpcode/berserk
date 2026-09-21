@@ -5,7 +5,7 @@ import { PiLab } from '../src/pi/lab.js';
 import { loadConfig } from '../src/server/config.js';
 import type { SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 if (!config.apiKey) throw new Error('请先在 .env.local 配置 LLM_API_KEY；未发送任何模型请求。');
 const selected = process.argv.includes('--case') ? process.argv[process.argv.indexOf('--case') + 1] : 'all';
 if (!['all', 'C01', 'C02', 'C03', 'C04', 'C05'].includes(selected)) throw new Error('支持 --case C01～C05；C06 通过本地检查与集成测试验证。');

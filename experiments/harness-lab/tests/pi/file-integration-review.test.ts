@@ -81,8 +81,8 @@ describe('file execution integration review',()=>{
     expect(lab.info().files?.executionAvailable).toBe(false);
   });
   it('rejects explicit empty or overlong seat IDs consistently with storage ownership',()=>{
-    expect(()=>loadConfig({LAB_SEAT_ID:''})).toThrow(/LAB_SEAT_ID/);
-    expect(()=>loadConfig({LAB_SEAT_ID:'s'.repeat(65)})).toThrow(/LAB_SEAT_ID/);
-    expect(loadConfig({LAB_SEAT_ID:'s'.repeat(64)}).seatId).toHaveLength(64);
+    expect(()=>loadConfig({LAB_AUTH_MODE:'test',LAB_SEAT_ID:''})).toThrow(/LAB_SEAT_ID/);
+    expect(()=>loadConfig({LAB_AUTH_MODE:'test',LAB_SEAT_ID:'s'.repeat(65)})).toThrow(/LAB_SEAT_ID/);
+    expect(loadConfig({LAB_AUTH_MODE:'test',LAB_SEAT_ID:'s'.repeat(64)}).seatId).toHaveLength(64);
   });
 });

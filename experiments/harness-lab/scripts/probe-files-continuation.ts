@@ -10,7 +10,7 @@ import { loadConfig } from '../src/server/config.js';
 import { runDocker } from '../src/execution/docker.js';
 import type { FileOutput, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '需要已配置的模型 API；未发送请求。');
 assert.ok(config.execution?.enabled, '需要启用真实执行环境，并先完成 Docker P0。');
 assert.ok(config.contextWindow && config.maxOutputTokens, '需要真实模型容量与输出配置。');

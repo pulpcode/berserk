@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Task and Seat Access](../backend/task-access.md) for formal login, task scope, authentication-aware clients and provisioning.
+
 Read [Harness Lab Contract](./harness-lab.md) for conversation, workspace, compaction and subagent implementation. Also read [File and Execution Contract](./files-execution.md) for W01-5 files, upload and sandbox work. Read [Web Interaction Contract](./hitl.md) for W01-6 AskUser, operation confirmation and Bash rules. Read [Task Handoff Contract](./task-handoff.md) for W01-8 test seats, SQLite state and fixed-file handoff. Run the checks listed there. Existing placeholder documents below are not established conventions.
 
 ## Guidelines Index

@@ -26,7 +26,7 @@ async function hold(): Promise<never> { ready(); return new Promise(() => {}); }
 
 async function child(scenario: Scenario, mode: string, dir: string, endpoint: string) {
   const runtime = await ModelRuntime.create({ credentials: new InMemoryCredentialStore(), modelsStore: new InMemoryModelsStore(), modelsPath: null, allowModelNetwork: false, refreshOnCreate: false });
-  const config = mode === 'live' ? loadConfig() : undefined;
+  const config = mode === 'live' ? loadConfig({...process.env,LAB_AUTH_MODE:'test'}) : undefined;
   if (config) assert.ok(config.apiKey, 'Live probe requires configured API key');
   const provider = config?.provider ?? 'recovery-probe'; const modelId = config?.model ?? 'probe-model';
   runtime.registerProvider(provider, { api: 'openai-completions', baseUrl: config?.baseUrl ?? endpoint,

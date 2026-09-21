@@ -15,6 +15,7 @@ async function fixture(page: Page, initial: Interaction = question(), stream = f
   await page.route('**/api/**', async route => {
     const request = route.request(); const path = new URL(request.url()).pathname;
     const json = (body: unknown, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+    if (path === '/api/auth/session') return json({mode:'test'});
     if (path === '/api/info') return json({ model: 'test', configured: true, contextReady: true, limits: {} });
     if (path === '/api/activity') return json({ defaultWorkspaceId: 'w1', workspaces: [{ id: 'w1', name: '测试项目', createdAt: base.createdAt }], sessions: [a, b].map(({ id, workspaceId, title, updatedAt, active, lastResult }) => ({ id, workspaceId, title, updatedAt, active, lastResult, statusUpdatedAt: updatedAt })) });
     if (path.endsWith('/resources')) return json({ workspaceId: 'w1', instructions: [], sources: [], skills: [] });

@@ -64,6 +64,7 @@ async function mockApi(page: Page) {
       response.writeHead(status, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
       response.end(JSON.stringify(value));
     };
+    if (path === '/api/auth/session') return json({mode:'test'});
     if (path === '/api/info') return json({ model: modelSettings.model, configured: modelSettings.configured, contextReady: modelSettings.contextReady, sources: [
       { id: 'brief', title: '项目讨论纪要', description: '目标、约束与待明确事项' },
       { id: 'plan', title: '协作方案参考', description: '方案结构与编制要点' },

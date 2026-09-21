@@ -121,6 +121,10 @@ export class FileService {
     }
   }
   async createUpload(workspaceId: string, input: {name: string; size: number}, seatId?: string): Promise<Upload> {
+    const release=this.workspaces.acquireWrite(workspaceId,seatId);
+    try {return await this.createUploadInternal(workspaceId,input,seatId);} finally {release();}
+  }
+  private async createUploadInternal(workspaceId: string, input: {name: string; size: number}, seatId?: string): Promise<Upload> {
     const workspace = this.workspaces.get(workspaceId, seatId); safeName(input.name);
     if (!Number.isSafeInteger(input.size) || input.size < 0 || input.size > this.maxFileBytes) throw new RequestError('FILE_TOO_LARGE', '文件超过当前传输大小限制。', 413);
     await this.directories(workspaceId, seatId);
@@ -137,6 +141,10 @@ export class FileService {
     }); } finally { this.cancellationRequests.delete(uploadId); }
   }
   async receiveUpload(workspaceId: string, uploadId: string, chunks: AsyncIterable<Uint8Array>, signal?: AbortSignal, seatId?: string): Promise<Upload> {
+    const release=this.workspaces.acquireWrite(workspaceId,seatId);
+    try {return await this.receiveUploadInternal(workspaceId,uploadId,chunks,signal,seatId);} finally {release();}
+  }
+  private async receiveUploadInternal(workspaceId: string, uploadId: string, chunks: AsyncIterable<Uint8Array>, signal?: AbortSignal, seatId?: string): Promise<Upload> {
     return this.lock(id(uploadId)).run(async () => {
       const record = await this.loadUpload(workspaceId, uploadId, seatId);
       if (record.status === 'completed') return this.publicUpload(record);

@@ -25,9 +25,9 @@ const A = '/api/test-seats/test-seat'; const B = '/api/test-seats/seat-b';
 
 describe('two test seats on one service', () => {
   it('validates explicit two-seat configuration and preserves single-seat defaults', () => {
-    expect(loadConfig({}).testSeats).toBeUndefined();
-    expect(loadConfig({ LAB_TEST_SEATS: '[{"id":"test-seat","name":"A"},{"id":"b","name":"B"}]' }).testSeats).toHaveLength(2);
-    for (const raw of ['[]', '{}', '[{"id":"b","name":"B"},{"id":"c","name":"C"}]', '[{"id":"test-seat","name":"A"},{"id":"test-seat","name":"B"}]', '[{"id":"test-seat","name":"A"},{"id":"b","name":"B","admin":true}]']) expect(() => loadConfig({ LAB_TEST_SEATS: raw })).toThrow('LAB_TEST_SEATS');
+    expect(loadConfig({LAB_AUTH_MODE:'test',}).testSeats).toBeUndefined();
+    expect(loadConfig({LAB_AUTH_MODE:'test', LAB_TEST_SEATS: '[{"id":"test-seat","name":"A"},{"id":"b","name":"B"}]' }).testSeats).toHaveLength(2);
+    for (const raw of ['[]', '{}', '[{"id":"b","name":"B"},{"id":"c","name":"C"}]', '[{"id":"test-seat","name":"A"},{"id":"test-seat","name":"B"}]', '[{"id":"test-seat","name":"A"},{"id":"b","name":"B","admin":true}]']) expect(() => loadConfig({LAB_AUTH_MODE:'test', LAB_TEST_SEATS: raw })).toThrow('LAB_TEST_SEATS');
   });
   it('scopes all existing reads and mutations, binary upload/download and native histories', async () => {
     const { app, lab } = await setup();

@@ -387,8 +387,8 @@ describe('fixed Pi web interactions', () => {
   });
 
   it('defaults demo off and rejects invalid environment flags', () => {
-    expect(loadConfig({}).hitlDemoEnabled).toBe(false); expect(loadConfig({ LAB_HITL_DEMO_ENABLED: 'true' }).hitlDemoEnabled).toBe(true);
-    expect(() => loadConfig({ LAB_HITL_DEMO_ENABLED: '1' })).toThrow(/true 或 false/);
+    expect(loadConfig({LAB_AUTH_MODE:'test',}).hitlDemoEnabled).toBe(false); expect(loadConfig({LAB_AUTH_MODE:'test', LAB_HITL_DEMO_ENABLED: 'true' }).hitlDemoEnabled).toBe(true);
+    expect(() => loadConfig({LAB_AUTH_MODE:'test', LAB_HITL_DEMO_ENABLED: '1' })).toThrow(/true 或 false/);
   });
 
   it('preserves actual execution evidence and stops if the original Pi result hook fails', async () => {

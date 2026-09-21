@@ -12,6 +12,8 @@ This directory contains guidelines for frontend development. Fill in each file w
 
 ## Pre-Development and Quality Check
 
+Read [Task and Seat Access](../backend/task-access.md) for formal login, task scope, authentication-aware clients and provisioning.
+
 Read [Harness Lab Contract](./harness-lab.md) for W01-1 / W01-2 / W01-3 implementation. Run the checks listed there. Existing placeholder documents below are not established conventions.
 
 ## Guidelines Index

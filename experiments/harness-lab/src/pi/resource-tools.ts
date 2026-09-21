@@ -11,7 +11,7 @@ export const CHANGE_ENTRY = 'berserk.instructions-updated.v1';
 export const toolNames = ['source_list', 'source_read', 'instructions_read', 'instructions_update', 'skill_read'] as const;
 export const publicToolName = (name: string) => (toolNames as readonly string[]).includes(name) ? name.replace('_', '.') : name;
 export function requestRecord(requestId: string, snapshot: ResourceSnapshot, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
-  return { status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
+  return { ...(snapshot.task ? { task: snapshot.task } : {}), status: 'available', requestId, workspaceId: snapshot.workspaceId, instructions: readonly ? snapshot.instructions.map(file => ({ ...file, editable: false })) : snapshot.instructions,
     skills: resourceInfo(snapshot).skills, readSkills: [], editableFileIds: readonly ? [] : ['workspace'] };
 }
 export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceService, manager: SessionManager, requestId: string, controller: AbortController,

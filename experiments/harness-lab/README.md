@@ -268,3 +268,37 @@ macOS 优先使用已安装的 Chrome；其他环境需先准备 Playwright Chro
 `probe:subagent` 在独立临时目录验证真实角色选择、资料分析／内容检查、同轮先后委派、停止及独立进程重新加载；不使用用户会话目录。构建后可通过 `npm run probe:subagent -- --browser <证据目录> <父会话ID>` 查看真实历史的网页展示，验证展开、375px 布局和刷新无重发。探针单轮 300 秒时限仅用于验收。
 
 官方依据：[Pi SDK v0.85.1](https://github.com/earendil-works/pi/blob/v0.85.1/packages/coding-agent/docs/sdk.md)、[DeepSeek Chat Completions](https://api-docs.deepseek.com/api/create-chat-completion/)。
+
+## 业务任务与账号入口
+
+正式启动默认要求登录。一个启用账号固定绑定一个席位；公共任务的说明对启用席位可见，文件／会话仍按任务 × 席位分别保存。席位私有任务不对其他席位开放。公共任务内的工作分派、成果提交与验收继续使用原有确认流程。
+
+本期不迁移难以对应的旧实验项目。需要重新初始化时，先停止服务，再备份完整数据根：
+
+```sh
+npm run access:admin -- reset --data-dir /绝对路径/数据目录 --backup-dir /绝对路径/独立备份目录 --service-stopped
+```
+
+命令将旧目录完整移动到备份位置，并准备空数据目录；只复制模型设置。已有备份不会被覆盖。需要回退时先保留新数据，再用旧程序和原备份恢复。**不要对正在运行的数据根执行维护命令。**
+
+在实验目录内开通账号（密码由终端隐蔽输入两次，不放在命令参数或对话中）：
+
+```sh
+npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-a --name 席位A用户 --seat seat-a --seat-name 席位A --create-public --manage-model --service-stopped
+npm run access:admin -- account --data-dir /绝对路径/数据目录 --username operator-b --name 席位B用户 --seat seat-b --seat-name 席位B --service-stopped
+```
+
+首次开通生成被 Git 忽略的 `.env.auth.local`，包含数据目录和随机签名密钥；`npm start`／`npm run dev:api` 会加载它。密码只以加盐 scrypt 摘要存储。同用户名再次运行是重置密码和能力，会使旧登录失效；账号不可在此命令中换席位。停用使用 `disable --username operator-b --data-dir ... --service-stopped`。正式配置请移除原 `LAB_TEST_SEATS`，不得与登录模式同时启用。
+
+| 配置 | 用途 |
+| --- | --- |
+| `LAB_AUTH_MODE=login`（默认） | 正式账号入口；缺签名密钥或启用账号时拒绝启动 |
+| `LAB_SESSION_SECRET` | 至少 32 字符，维护命令随机生成，不提交仓库 |
+| `LAB_SESSION_HOURS=8` | 绝对登录有效期，不限制 Agent 执行时长 |
+| `LAB_AUTH_MODE=test` | 仅供独立测试数据，允许原固定／测试席位接口；不提供认证 |
+
+当前仍仅监听本机，通过已有 SSH 同端口转发访问。Cookie 的 HTTP 例外仅用于此本地连接；此实现未扩大为公网 HTTPS 部署。
+
+退出会清理本页未发送内容与附件引用；已接受的 Agent 处理继续，重新登录后可查结果。不同账号并行验收应使用独立浏览器配置或隐身会话；同一浏览器标签页共享登录。
+
+`npm run probe:access` 使用新临时数据根运行真实模型与 Docker 的任务上下文、席位文件隔离、重启续聊验证；不启动生产监听器，不打开生产会话库。权限与登录主要由 `tests/access.test.ts` 和 `tests/e2e/access.spec.ts` 确定性验收。

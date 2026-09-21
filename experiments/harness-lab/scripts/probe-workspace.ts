@@ -11,7 +11,7 @@ import { loadConfig } from '../src/server/config.js';
 import { createLegacyValidationSession, readNativeUsage } from '../src/pi/validation.js';
 import type { InstructionFile, RequestResourcesRecord, SessionSnapshot, StreamEvent, Workspace, WorkspaceList } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 if (!config.apiKey) throw new Error('请先配置 LLM_API_KEY；未发送模型请求。');
 const root = await mkdtemp(join(tmpdir(), 'berserk-workspace-live-'));
 const dataDir = join(root, 'data');

@@ -10,7 +10,7 @@ import type { DraftAttachment } from './useAttachments';
 export function fileSize(bytes: number) { return bytes < 1024 ? `${bytes} B` : bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KiB` : `${(bytes / 1024 / 1024).toFixed(1)} MiB`; }
 export const currentFileUrl = (workspaceId: string, path: string) => `/api/workspaces/${encodeURIComponent(workspaceId)}/files/content?path=${encodeURIComponent(path)}`;
 export function HistoricalFile({ file, workspaceId }: { file: FileRef; workspaceId: string }) {
-  const { url } = useApi();
+  const { url, request: fetchScoped } = useApi();
   const [status, setStatus] = useState<FileStatus>();
   const [loading, setLoading] = useState(false); const [error, setError] = useState('');
   const request = useRef<AbortController | undefined>(undefined);
@@ -19,7 +19,7 @@ export function HistoricalFile({ file, workspaceId }: { file: FileRef; workspace
     request.current?.abort(); const controller = new AbortController(); request.current = controller;
     setLoading(true); setError(''); setStatus(undefined);
     try {
-      const response = await checkResponse(await fetch(url(`/api/workspaces/${encodeURIComponent(workspaceId)}/files/status?${new URLSearchParams({ path: file.path, hash: file.hash })}`), { cache: 'no-store', signal: controller.signal }));
+      const response = await checkResponse(await fetchScoped(url(`/api/workspaces/${encodeURIComponent(workspaceId)}/files/status?${new URLSearchParams({ path: file.path, hash: file.hash })}`), { cache: 'no-store', signal: controller.signal }));
       const result = await response.json() as FileStatus;
       if (!controller.signal.aborted) setStatus(result);
     } catch (reason) { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : '文件状态读取失败，请重试。'); }
@@ -35,14 +35,14 @@ export function Attachments({ items, remove, retry, notice }: { items: DraftAtta
   return <div className="attachments"><ul aria-label="消息附件">{items.map(item => <li key={item.id} className={`attachment ${item.status}`} aria-label={`${item.status === 'ready' ? item.uploadId ? '已保存到工作区' : '工作区文件' : item.status === 'failed' ? '上传未完成' : '正在上传'}：${item.name}`} title={[item.path || item.name, fileSize(item.size), item.originalName && item.originalName !== item.name ? `原文件名：${item.originalName}` : ''].filter(Boolean).join(' · ')}><Paperclip size={16} aria-hidden="true" /><div className="attachment-detail"><strong>{item.name}</strong>{item.originalName && item.originalName !== item.name && <small>原文件名：{item.originalName}</small>}<small className="attachment-meta">{fileSize(item.size)} · {item.status === 'ready' ? item.uploadId ? '已保存到工作区' : '工作区文件' : item.status === 'failed' ? '未完成' : item.progress === 100 ? '正在保存…' : `上传中 ${item.progress}%`}</small>{item.path && item.path !== item.name && <small>{item.path}</small>}{item.status === 'uploading' && <progress aria-label={`${item.name} 上传进度`} value={item.progress} max={100} />}{item.error && <p className="resource-error" role="alert">{item.error}</p>}</div>{item.status === 'failed' && <button type="button" onClick={() => retry(item)} aria-label={`核对并重试 ${item.name}`}>核对并重试</button>}<button type="button" className="icon-button" onClick={() => remove(item)} aria-label={`${item.status === 'uploading' ? '取消上传' : '移除引用'} ${item.name}`} title={item.status === 'uploading' ? '取消未完成的上传' : '仅移除引用，文件仍保留在工作区'}><X size={16} /></button></li>)}</ul>{notice && <p className="attachment-notice" role="status">{notice}</p>}</div>;
 }
 function Preview({ workspaceId, entry }: { workspaceId: string; entry: FileEntry }) {
-  const { url } = useApi();
+  const { url, request: fetchScoped } = useApi();
   const [content, setContent] = useState<{ text?: string; image?: string }>();
   const [error, setError] = useState('');
   useEffect(() => {
     const controller = new AbortController(); let image: string | undefined;
     void (async () => {
       try {
-        const response = await checkResponse(await fetch(url(`${currentFileUrl(workspaceId, entry.path)}&preview=1`), { signal: controller.signal, cache: 'no-store' }));
+        const response = await checkResponse(await fetchScoped(url(`${currentFileUrl(workspaceId, entry.path)}&preview=1`), { signal: controller.signal, cache: 'no-store' }));
         const type = response.headers.get('content-type')?.split(';')[0];
         if (type === 'image/png' || type === 'image/jpeg') { image = URL.createObjectURL(await response.blob()); if (!controller.signal.aborted) setContent({ image }); else URL.revokeObjectURL(image); }
         else if (type === 'text/plain') { const text = await response.text(); if (!controller.signal.aborted) setContent({ text }); }
@@ -50,7 +50,7 @@ function Preview({ workspaceId, entry }: { workspaceId: string; entry: FileEntry
       } catch (reason) { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : '读取失败，请下载查看。'); }
     })();
     return () => { controller.abort(); if (image) URL.revokeObjectURL(image); };
-  }, [workspaceId, entry.path, url]);
+  }, [workspaceId, entry.path, url, fetchScoped]);
   return <section className="file-preview" aria-label={`${entry.name} 预览`}><h3>{entry.name}</h3><p className="resource-help">工作区中的当前内容</p>{error ? <p role="status">{error}</p> : !content ? <p role="status">正在读取文件…</p> : content.image ? <img src={content.image} alt={entry.name} /> : /\.md$/i.test(entry.name) ? <div className="markdown-preview"><Markdown remarkPlugins={[remarkGfm]} components={{ img: ({ alt }) => <span>[图片：{alt || '未加载'}]</span>, a: ({ children }) => <span>{children}</span>, table: ({ children }) => <div className="markdown-table" role="region" tabIndex={0} aria-label="文件表格，可横向滚动"><table>{children}</table></div> }}>{content.text}</Markdown></div> : <pre tabIndex={0}>{content.text}</pre>}</section>;
 }
 export function FilesPanel({ workspaceId, name, close, upload, reference, attachments, refreshKey, executionAvailable }: {

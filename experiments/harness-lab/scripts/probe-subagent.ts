@@ -11,7 +11,7 @@ import { loadConfig } from '../src/server/config.js';
 import { createApp } from '../src/server/app.js';
 import type { SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '请先配置 LLM_API_KEY；未发送模型请求。');
 const resume = process.argv.indexOf('--resume');
 const browserMode = process.argv.indexOf('--browser');

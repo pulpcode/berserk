@@ -2,8 +2,8 @@
   "id": "task-scope-and-seat-access",
   "name": "task-scope-and-seat-access",
   "title": "业务任务、可见范围与席位入口",
-  "description": "仅设计首个增量：公共与私有任务、席位工作区归属、最小登录和访问边界；后续后台执行与智能分流保留路线图，供用户逐期审阅。",
-  "status": "planning",
+  "description": "实现公共与席位私有任务、独立席位登录、访问边界及旧数据备份初始化；后续后台作业保持独立规划。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "task-scope-and-seat-access",
   "package": null,
@@ -26,14 +26,15 @@
     ".trellis/tasks/09-21-task-scope-and-seat-access/design.md",
     ".trellis/tasks/09-21-task-scope-and-seat-access/implement.md",
     ".trellis/tasks/09-21-task-scope-and-seat-access/acceptance.md",
-    ".trellis/tasks/09-21-task-scope-and-seat-access/research/basis.md"
+    ".trellis/tasks/09-21-task-scope-and-seat-access/research/basis.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/research/validation-results.md"
   ],
-  "notes": "仅设计首增量，按用户要求逐期审阅；不启动实现，不更改当前执行任务。D01～D03为待审建议。",
+  "notes": "2026-09-21 用户批准实施；沿用D01～D03推荐方案。允许舍弃迁移困难的历史数据；采用停服完整备份后新数据根初始化，不建设复杂旧项目映射。",
   "meta": {
     "stage": "M1 / 任务与访问首增量",
-    "designStatus": "awaiting-review",
-    "implementationApproved": false,
-    "implementationComplete": false,
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
     "desktopOnly": true,
     "contextManifestsCurated": true,
     "criteria": [
@@ -59,10 +60,14 @@
       "W04",
       "W08-A"
     ],
-    "pendingProductDecisions": [
-      "D01 最小登录与固定席位绑定",
-      "D02 私有任务归席位或个人账号",
-      "D03 公共任务目录可见范围"
-    ]
+    "pendingProductDecisions": [],
+    "userAcceptance": "pending",
+    "deployed": true,
+    "deployment": {
+      "release": "/home/ubuntu/axon-release-access.QCcDaB",
+      "port": 4315,
+      "backupVerifiedFiles": 51,
+      "userAcceptance": "pending"
+    }
   }
 }

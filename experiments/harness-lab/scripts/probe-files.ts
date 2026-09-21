@@ -9,7 +9,7 @@ import { createApp } from '../src/server/app.js';
 import { loadConfig } from '../src/server/config.js';
 import type { FileOutput, SessionSnapshot, StreamEvent, Upload } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '请先配置 LLM_API_KEY；未发送模型请求。');
 assert.ok(config.execution?.enabled, '请启用 LAB_EXECUTION_ENABLED 并准备执行镜像。');
 config.dataDir = await mkdtemp(join(tmpdir(), 'berserk-files-live-'));

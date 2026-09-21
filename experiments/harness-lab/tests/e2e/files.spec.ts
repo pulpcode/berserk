@@ -12,6 +12,7 @@ async function filesApi(page: Page) {
   await page.route('**/api/**', async route => {
     const url = new URL(route.request().url()); const path = url.pathname; const method = route.request().method();
     const json = (value: unknown, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(value) });
+    if (path === '/api/auth/session') return json({mode:'test'});
     if (path === '/api/info') return json({ model: 'deepseek-flash', configured: true, contextReady: true, files: { enabled: true, maxFileBytes: 104857600, maxAttachments: 20, executionAvailable: true }, limits: { agentRunTimeoutMs: null, httpIdleTimeoutMs: 300000, llmRequestTimeoutMs: null, maxOutputTokens: 393216 } });
     if (path === '/api/activity') return json({ defaultWorkspaceId: 'w1', workspaces, sessions: sessions.filter(session => !controls.emptySecond || session.id !== 'C').map(session => ({ ...session, statusUpdatedAt: session.updatedAt })) });
     if (path.includes('/resources')) return json({ workspaceId: path.split('/')[3], instructions: [], sources: [], skills: [] });

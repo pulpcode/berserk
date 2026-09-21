@@ -29,14 +29,14 @@ function HandoffFileRow({ file, workspaceId }: { file: HandoffFile; workspaceId?
   return <li><div className="handoff-file-row"><FileText size={18} aria-hidden="true" /><span><strong>{file.name}</strong><small>{fileSize(file.size)} · 固定副本</small></span><button onClick={() => setPreview(value => !value)} aria-expanded={preview}>{preview ? '收起预览' : '查看'}</button><a href={url(`/api/handoff-files/${encodeURIComponent(file.fileId)}`)} download={file.name} aria-label={`下载交接文件 ${file.name}`}><Download size={16} aria-hidden="true" />下载</a></div>{preview && <FixedPreview file={file} />}{workspaceId && <details className="handoff-import"><summary>复制到我的项目文件</summary><label>另存路径（可选）<input value={savePath} placeholder="留空保存到收到资料目录" onChange={event => setSavePath(event.target.value)} /></label><button disabled={saving} onClick={() => void importFile()}>{saving ? '复制中…' : '确认复制'}</button><p className="resource-help">不会覆盖已有的不同内容；同名冲突时请填写其他路径。</p></details>}{message && <p role="status" className="resource-success">{message}</p>}{error && <p role="alert" className="resource-error">{error}</p>}</li>;
 }
 function FixedPreview({ file }: { file: HandoffFile }) {
-  const { url } = useApi();
+  const { url, request } = useApi();
   const [content, setContent] = useState<{ text?: string; image?: string }>();
   const [error, setError] = useState('');
   useEffect(() => {
     const controller = new AbortController(); let image: string | undefined;
     void (async () => {
       try {
-        const response = await checkResponse(await fetch(url(`/api/handoff-files/${encodeURIComponent(file.fileId)}?preview=1`), { signal: controller.signal, cache: 'no-store' }));
+        const response = await checkResponse(await request(url(`/api/handoff-files/${encodeURIComponent(file.fileId)}?preview=1`), { signal: controller.signal, cache: 'no-store' }));
         const type = response.headers.get('content-type')?.split(';')[0];
         if (type === 'image/png' || type === 'image/jpeg') { image = URL.createObjectURL(await response.blob()); if (!controller.signal.aborted) setContent({ image }); else URL.revokeObjectURL(image); }
         else if (type === 'text/plain') { const text = await response.text(); if (!controller.signal.aborted) setContent({ text }); }
@@ -44,7 +44,7 @@ function FixedPreview({ file }: { file: HandoffFile }) {
       } catch (reason) { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : '预览读取失败，请下载查看。'); }
     })();
     return () => { controller.abort(); if (image) URL.revokeObjectURL(image); };
-  }, [file.fileId, url]);
+  }, [file.fileId, url, request]);
   return <section className="file-preview" aria-label={`${file.name} 固定副本预览`}>{error ? <p role="status">{error}</p> : !content ? <p role="status">正在读取副本…</p> : content.image ? <img src={content.image} alt={file.name} /> : /\.md$/i.test(file.name) ? <Markdown remarkPlugins={[remarkGfm]} components={{ img: ({ alt }) => <span>[图片：{alt || '未加载'}]</span>, a: ({ children }) => <span>{children}</span>, table: ({ children }) => <div className="markdown-table" role="region" tabIndex={0} aria-label="交接文件表格"><table>{children}</table></div> }}>{content.text}</Markdown> : <pre tabIndex={0}>{content.text}</pre>}</section>;
 }
 

@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import type { AuthSession } from '../contracts/access';
 import type { ApiError, StreamEvent, ComposerSelection } from '../contracts/index';
 
 export class ApiFailure extends Error {
@@ -20,8 +21,8 @@ export async function api<T>(path: string, body?: object, method: 'POST' | 'PUT'
 }
 
 // A disconnected response never retries the POST: the server may still be working.
-export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }, apiRoot = '/api'): Promise<void> {
-  const response = await checkResponse(await fetch(`${apiRoot}/sessions/${encodeURIComponent(sessionId)}/messages`, {
+export async function sendMessage(sessionId: string, text: string, onEvent: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }, apiRoot = '/api', transport: typeof fetch = fetch): Promise<void> {
+  const response = await checkResponse(await transport(`${apiRoot}/sessions/${encodeURIComponent(sessionId)}/messages`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, ...attachments }),
   }));
   if (!response.body) throw new Error('连接未返回消息流，请查询会话状态。');
@@ -50,16 +51,30 @@ export async function sendMessage(sessionId: string, text: string, onEvent: (eve
 }
 
 /** Each mounted seat owns an immutable client. Async callbacks never read the current selector. */
-export function createApiClient(seatId?: string) {
-  const root = seatId ? `/api/test-seats/${encodeURIComponent(seatId)}` : '/api';
+export function createApiClient(seatId?: string, auth?: AuthSession, invalid?: () => void) {
+  const controller = new AbortController();
+  const headers: Record<string,string> = auth ? { 'x-csrf-token':auth.csrf!, 'x-axon-view':auth.viewId! } : {};
+  const request: typeof fetch = async (input,init) => {
+    controller.signal.throwIfAborted();
+    const response=await fetch(input,{...init,headers:{...Object.fromEntries(new Headers(init?.headers)),...headers},signal:init?.signal ? AbortSignal.any([controller.signal,init.signal]) : controller.signal});
+    if(auth && (response.status===401 || response.status===409)) {
+      const body=await response.clone().json().catch(()=>null) as ApiError|null;
+      if(response.status===401 || body?.error.code==='IDENTITY_CHANGED') {invalid?.(); throw new ApiFailure('登录已变化，请重新进入。','IDENTITY_CHANGED',401);}
+    }
+    controller.signal.throwIfAborted(); return response;
+  };
+  const root = seatId && !auth ? `/api/test-seats/${encodeURIComponent(seatId)}` : '/api';
   const url = (path: string) => path === '/api/info' || path.startsWith('/api/test-seats/') ? path : path.replace(/^\/api(?=\/|$)/, root);
   return {
-    seatId,
+    seatId, headers, request, dispose: () => controller.abort(),
     url,
     domId: (id: string) => seatId ? `${id}-${seatId}` : id,
-    storageKey: (key: string) => seatId ? `${key}:seat:${seatId}` : key,
-    api: <T,>(path: string, body?: object, method?: 'POST' | 'PUT') => api<T>(url(path), body, method),
-    sendMessage: (sessionId: string, text: string, receive: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }) => sendMessage(sessionId, text, receive, attachments, root),
+    storageKey: (key: string) => auth ? `${key}:login:${auth.viewId}` : seatId ? `${key}:seat:${seatId}` : key,
+    api: async <T,>(path: string, body?: object, method: 'POST' | 'PUT' = 'POST'): Promise<T> => {
+      const response=await checkResponse(await request(url(path),body===undefined ? {cache:'no-store'} : {method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}));
+      return response.json() as Promise<T>;
+    },
+    sendMessage: (sessionId: string, text: string, receive: (event: StreamEvent) => void, attachments?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] }) => sendMessage(sessionId, text, receive, attachments, root, request),
   };
 }
 export const ApiContext = createContext(createApiClient());

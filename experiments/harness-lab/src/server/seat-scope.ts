@@ -1,13 +1,15 @@
+import { identityOf } from './auth.js';
 import type { FastifyRequest } from 'fastify';
 import { RequestError } from '../contracts/errors.js';
 import type { LabConfig } from './config.js';
 
 /** One explicit route tree; request identity never mutates the shared runtime. */
-export function apiScope(config: Pick<LabConfig, 'seatId' | 'testSeats'>) {
+export function apiScope(config: Pick<LabConfig, 'seatId' | 'testSeats' | 'auth'>) {
   const testing = !!config.testSeats;
   return {
     base: testing ? '/api/test-seats/:seatId' : '/api',
     seat(request: FastifyRequest): string {
+      if (config.auth) return identityOf(request).seatId;
       if (!testing) return config.seatId ?? 'test-seat';
       const seatId = (request.params as { seatId?: string }).seatId;
       if (!seatId || !config.testSeats!.some(seat => seat.id === seatId)) throw new RequestError('SEAT_NOT_FOUND', '测试席位不存在。', 404);

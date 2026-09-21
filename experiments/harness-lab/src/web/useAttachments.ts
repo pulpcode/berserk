@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Upload } from '../contracts/files';
 import { useApi, checkResponse } from './api';
 
@@ -19,7 +19,7 @@ const uploadEndpoint = (workspaceId: string, uploadId?: string) => `/api/workspa
 const message = (error: unknown) => error instanceof Error ? error.message : '上传失败，请重试或移除此引用。';
 
 export function useAttachments() {
-  const { api, url, storageKey } = useApi();
+  const { api, url, storageKey, headers, request } = useApi();
   const KEY = storageKey('berserk.attachments');
   const SENT = storageKey('berserk.submitted-attachments');
   const endpoint = useCallback((workspaceId: string, uploadId?: string) => url(uploadEndpoint(workspaceId, uploadId)), [url]);
@@ -28,6 +28,7 @@ export function useAttachments() {
   const submitted = useRef(load(SENT));
   const localFiles = useRef(new Map<string, File>());
   const transfers = useRef(new Map<string, { cancelled: boolean; xhr?: XMLHttpRequest }>());
+  useEffect(()=>{const active=transfers.current;return()=>{for(const transfer of active.values()){transfer.cancelled=true;transfer.xhr?.abort();}};},[]);
   const [notice, setNotice] = useState<Record<string, string>>({});
   const update = useCallback((change: (current: AttachmentMap) => AttachmentMap) => {
     state.current = Object.fromEntries(Object.entries(change(state.current)).map(([owner, items]) => {
@@ -62,12 +63,13 @@ export function useAttachments() {
           uploadId = record.uploadId; patch(item.id, { uploadId });
         }
         if (control.cancelled) {
-          await checkResponse(await fetch(endpoint(item.workspaceId, uploadId), { method: 'DELETE' })); return;
+          await checkResponse(await request(endpoint(item.workspaceId, uploadId), { method: 'DELETE' })); return;
         }
         record = await new Promise<Upload>((resolve, reject) => {
           const xhr = new XMLHttpRequest(); control.xhr = xhr;
           xhr.open('PUT', `${endpoint(item.workspaceId, uploadId)}/content`);
           xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+          for (const [name,value] of Object.entries(headers)) xhr.setRequestHeader(name,value);
           xhr.upload.onprogress = event => { if (event.lengthComputable) patch(item.id, { progress: Math.round(event.loaded / event.total * 100) }); };
           xhr.onload = () => {
             try {
@@ -86,7 +88,7 @@ export function useAttachments() {
       localFiles.current.delete(item.id);
     } catch (error) { if (!control.cancelled) patch(item.id, { status: 'failed', error: message(error) }); }
     finally { transfers.current.delete(item.id); }
-  }, [api, endpoint, patch]);
+  }, [api, endpoint, patch, headers, request]);
   const add = useCallback((owner: string, workspaceId: string, files: File[], limits: { maxAttachments: number; maxFileBytes: number }) => {
     const count = state.current[owner]?.length || 0;
     if (count + files.length > limits.maxAttachments) { setNotice(previous => ({ ...previous, [owner]: `每条消息最多关联 ${limits.maxAttachments} 个文件。` })); return; }
@@ -98,12 +100,12 @@ export function useAttachments() {
   const remove = useCallback(async (owner: string, item: DraftAttachment) => {
     const control = transfers.current.get(item.id); if (control) { control.cancelled = true; control.xhr?.abort(); }
     try {
-      if (item.uploadId && item.status !== 'ready') await checkResponse(await fetch(endpoint(item.workspaceId, item.uploadId), { method: 'DELETE' }));
+      if (item.uploadId && item.status !== 'ready') await checkResponse(await request(endpoint(item.workspaceId, item.uploadId), { method: 'DELETE' }));
       update(current => Object.fromEntries(Object.entries(current).map(([key, items]) => [key, items.filter(value => value.id !== item.id)])));
       localFiles.current.delete(item.id);
       setNotice(previous => ({ ...previous, [owner]: '已移除附件引用；已保存的文件仍保留在工作区。' }));
     } catch (error) { patch(item.id, { status: 'failed', error: `取消结果未确认：${message(error)} 请核对后再移除。` }); }
-  }, [endpoint, patch, update]);
+  }, [endpoint, patch, update, request]);
   const move = useCallback((from: string, to: string) => update(current => ({ ...current, [to]: [...(current[to] || []), ...(current[from] || [])], [from]: [] })), [update]);
   const consume = useCallback((owner: string, items: DraftAttachment[]) => {
     submitted.current = { ...submitted.current, [owner]: items }; save(SENT, submitted.current);

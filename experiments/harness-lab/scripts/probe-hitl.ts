@@ -9,7 +9,7 @@ import { loadConfig } from '../src/server/config.js';
 import { evaluateCommand } from '../src/execution/command-policy.js';
 import type { Interaction, InteractionResponse, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '请配置模型凭证；尚未发起真实请求。');
 assert.ok(config.execution?.enabled, '真实 HITL 验收需要现有 Docker 镜像。');
 config.dataDir = await mkdtemp(join(tmpdir(), 'axon-hitl-live-'));

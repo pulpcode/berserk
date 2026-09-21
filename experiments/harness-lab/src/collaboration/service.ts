@@ -1,14 +1,14 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { chmod, lstat, mkdir, readdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { Check } from 'typebox/value';
 import { workPrepareSchema, type ActorContext, type HandoffFile, type HandoffImportResult, type Submission, type WorkAction, type WorkDetail, type WorkItem, type WorkPrepareInput, type WorkReceipt } from '../contracts/collaboration.js';
 import { RequestError } from '../contracts/errors.js';
 import { filePath } from '../files/service.js';
-import { atomicWrite, checkDirectory, Mutex, parseJsonStrict, readControlled, stateError } from '../resources/files.js';
+import { Mutex, parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID, WorkspaceStore } from '../workspaces/store.js';
 import { HandoffFiles } from './files.js';
+import { openDatabase } from '../access/database.js';
 
 export type PreparationOrigin = { source: 'page'; clientActionId: string } | { source: 'agent'; sessionId: string; requestId: string; toolCallId: string };
 export interface AgentCommitGrant { sessionId: string; requestId: string; toolCallId: string; interactionId: string }
@@ -35,33 +35,21 @@ export class CollaborationService {
   private readonly grants = new Map<string, AgentCommitGrant>();
   private closed = false;
   private constructor(readonly workspaces: WorkspaceStore, private readonly options: CollaborationOptions, private readonly db: DatabaseSync, private readonly files: HandoffFiles) {}
-  static async open(workspaces: WorkspaceStore, options: CollaborationOptions): Promise<CollaborationService> {
+  static async open(workspaces: WorkspaceStore, options: CollaborationOptions, database?: DatabaseSync): Promise<CollaborationService> {
     if (!options.seatIds.length || new Set(options.seatIds).size !== options.seatIds.length || options.seatIds.some(id => !/^[a-zA-Z0-9_-]{1,64}$/.test(id))) throw stateError();
-    const directory = join(workspaces.dataDir, 'collaboration'); await mkdir(directory, {recursive: true, mode: 0o700}); await checkDirectory(directory);
-    const markerPath = join(directory, '.initialized'); const marker = await readControlled(markerPath, 1024, true);
-    const dbPath = join(directory, 'collaboration.sqlite');
-    const stat = await lstat(dbPath).catch(error => { if (error.code === 'ENOENT') return null; throw error; });
-    if ((!stat && (await readdir(directory)).length !== 0) || (marker === null) !== (stat === null) || (marker !== null && marker !== 'collaboration-v1\n') || (stat && (!stat.isFile() || stat.nlink !== 1))) throw stateError();
-    const db = new DatabaseSync(dbPath);
+    const db = database ?? await openDatabase(workspaces.dataDir);
+    const directory = join(workspaces.dataDir, 'collaboration');
     try {
-      db.exec('PRAGMA foreign_keys=ON; PRAGMA synchronous=FULL;');
-      if (!stat) {
-        db.exec(`BEGIN IMMEDIATE;
-          CREATE TABLE works(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
-          CREATE TABLE actions(id TEXT PRIMARY KEY, dedup_key TEXT UNIQUE NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)));
-          CREATE TABLE files(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
-          CREATE TABLE submissions(id TEXT PRIMARY KEY, work_id TEXT NOT NULL REFERENCES works(id), data TEXT NOT NULL CHECK(json_valid(data)));
-          CREATE TABLE session_links(session_id TEXT PRIMARY KEY, work_id TEXT NOT NULL REFERENCES works(id));
-          PRAGMA user_version=1; COMMIT;`);
-        await chmod(dbPath, 0o600); await atomicWrite(markerPath, 'collaboration-v1\n');
-      }
-      if (db.prepare('PRAGMA user_version').get()?.user_version !== 1 || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
       const files = new HandoffFiles(join(directory, 'files'), options.maxFileBytes ?? 104857600, options.python ?? 'python3'); await files.initialize();
       const service = new CollaborationService(workspaces, {...options, seatIds: [...options.seatIds]}, db, files);
       service.validateStored(); return service;
     } catch (error) { db.close(); throw error instanceof RequestError ? error : stateError(); }
   }
   close() { if (!this.closed) { this.closed = true; this.db.close(); } }
+  hasUnfinishedTask(id: string) {
+    return this.db.prepare("SELECT id FROM works WHERE json_extract(data,'$.taskSpaceId')=? AND json_extract(data,'$.state')!='completed' LIMIT 1").get(id) !== undefined
+      || this.db.prepare("SELECT data FROM actions WHERE json_extract(data,'$.action.taskSpaceId')=? AND json_extract(data,'$.action.status')='prepared'").all(id).some(row=>this.live(parse<StoredAction>(row)));
+  }
   private actor(actor: ActorContext) { if (!this.options.seatIds.includes(actor.seatId)) throw notFound(); }
   private validateStored() {
     // Metadata is private, but damaged records must never become a fresh/partly empty inbox.
@@ -143,7 +131,7 @@ export class CollaborationService {
   }
   private work(actor: ActorContext, id: string): WorkItem {
     this.actor(actor); const row = this.db.prepare('SELECT data FROM works WHERE id=?').get(id); if (!row) throw notFound();
-    const work = parse<WorkItem>(row); if (work.creatorSeatId !== actor.seatId && work.assigneeSeatId !== actor.seatId) throw notFound(); return work;
+    const work = parse<WorkItem>(row); if (work.creatorSeatId !== actor.seatId && work.assigneeSeatId !== actor.seatId) throw notFound(); this.workspaces.access?.get(work.taskSpaceId,actor.seatId); return work;
   }
   private file(id: string): StoredFile { const row = this.db.prepare('SELECT data FROM files WHERE id=?').get(id); if (!row) throw notFound(); return parse<StoredFile>(row); }
   private publicFile(file: StoredFile): HandoffFile { const {fileId, name, size, hash, createdAt} = file; return {fileId, name, size, hash, createdAt}; }
@@ -162,7 +150,7 @@ export class CollaborationService {
   bindSession(actor: ActorContext, sessionId: string, workItemId: string) {
     const work = this.work(actor, workItemId); const workspaceId = this.workspaces.binding(sessionId, actor.seatId); if (!workspaceId) throw notFound();
     if (this.requests.has(sessionId)) throw conflict('会话正在处理，请结束后再关联工作。');
-    const workspace = this.workspaces.get(workspaceId, actor.seatId); if (workspace.taskSpaceId !== work.taskSpaceId) throw notFound();
+    const workspace = this.workspaces.get(workspaceId, actor.seatId); this.workspaces.access?.get(workspace.taskSpaceId,actor.seatId,true); if (workspace.taskSpaceId !== work.taskSpaceId) throw notFound();
     const previous = this.workIdForSession(actor, sessionId); if (previous && previous !== workItemId) throw conflict('会话已关联另一项工作。');
     this.db.prepare('INSERT OR IGNORE INTO session_links(session_id,work_id) VALUES(?,?)').run(sessionId, workItemId);
   }
@@ -177,12 +165,16 @@ export class CollaborationService {
   private validateInput(actor: ActorContext, input: WorkPrepareInput): WorkItem | undefined {
     this.actor(actor); if (!Check(workPrepareSchema, input)) throw new RequestError('INVALID_INPUT', '工作操作参数无效。');
     if (input.kind === 'assign') {
+      const task = this.workspaces.access?.get(input.taskSpaceId,actor.seatId,true);
+      if (task && !this.workspaces.access!.seats().some(seat=>seat.id===input.payload.assigneeSeatId)) throw new RequestError('INVALID_INPUT','接收席位当前不可用。');
+      if (task && task.visibility !== 'public') throw new RequestError('PRIVATE_TASK','跨席位分派须在公共任务中进行。',403);
       const workspace = this.workspaces.get(input.payload.workspaceId, actor.seatId);
       if (workspace.taskSpaceId !== input.taskSpaceId || !this.options.seatIds.includes(input.payload.assigneeSeatId) || input.payload.assigneeSeatId === actor.seatId) throw new RequestError('INVALID_INPUT', '请选择本项目及另一接收席位。');
       if (!input.payload.title.trim() || !input.payload.goal.trim() || (input.payload.inputPaths?.length ?? 0) > (this.options.maxAttachments ?? 20)) throw new RequestError('INVALID_INPUT', '请填写工作标题和目标，并检查附件数量。');
       for (const path of input.payload.inputPaths ?? []) filePath(path); return undefined;
     }
     const work = this.work(actor, input.workItemId);
+    this.workspaces.access?.get(work.taskSpaceId,actor.seatId,true);
     if (input.expectedRevision !== work.revision) throw conflict();
     if (input.kind === 'claim' && (work.assigneeSeatId !== actor.seatId || work.state !== 'assigned')) throw conflict();
     if (input.kind === 'submit') {
@@ -197,6 +189,10 @@ export class CollaborationService {
     return work;
   }
   async prepare(actor: ActorContext, input: WorkPrepareInput, origin: PreparationOrigin, signal?: AbortSignal): Promise<WorkAction> {
+    const release=this.workspaces.access?.acquire(input.kind === 'assign' ? input.taskSpaceId : this.work(actor,input.workItemId).taskSpaceId,actor.seatId);
+    try {return await this.prepareInternal(actor,input,origin,signal);} finally {release?.();}
+  }
+  private async prepareInternal(actor: ActorContext, input: WorkPrepareInput, origin: PreparationOrigin, signal?: AbortSignal): Promise<WorkAction> {
     // Copy before the first await: callers cannot change the approved payload during preparation.
     input = structuredClone(input); origin = structuredClone(origin); actor = {...actor}; this.actor(actor);
     if (origin.source === 'page') {
@@ -261,6 +257,11 @@ export class CollaborationService {
     try { return await this.commit(actor, id, grant, signal); } finally { this.grants.delete(id); }
   }
   private async commit(actor: ActorContext, id: string, grant?: AgentCommitGrant, signal?: AbortSignal): Promise<WorkReceipt> {
+    const receipt=this.storedAction(actor,id).action.receipt; if(receipt) return receipt;
+    const release=this.workspaces.access?.acquire(this.storedAction(actor,id).action.taskSpaceId,actor.seatId);
+    try {return await this.commitInternal(actor,id,grant,signal);} finally {release?.();}
+  }
+  private async commitInternal(actor: ActorContext, id: string, grant?: AgentCommitGrant, signal?: AbortSignal): Promise<WorkReceipt> {
     let stored = this.storedAction(actor, id);
     if (stored.action.receipt) return stored.action.receipt;
     this.checkPrepared(stored); signal?.throwIfAborted();
@@ -317,6 +318,10 @@ export class CollaborationService {
   }
   async openFile(actor: ActorContext, id: string) { return this.files.open(this.authorizedFile(actor,id)); }
   async importFile(actor: ActorContext, id: string, workspaceId: string, path?: string, signal?: AbortSignal): Promise<HandoffImportResult> {
+    const release=this.workspaces.access?.acquire(this.workspaces.get(workspaceId,actor.seatId).taskSpaceId,actor.seatId);
+    try {return await this.importFileInternal(actor,id,workspaceId,path,signal);} finally {release?.();}
+  }
+  private async importFileInternal(actor: ActorContext, id: string, workspaceId: string, path?: string, signal?: AbortSignal): Promise<HandoffImportResult> {
     const file = this.authorizedFile(actor,id); const workspace = this.workspaces.get(workspaceId,actor.seatId);
     if (!file.workItemId || workspace.taskSpaceId !== file.taskSpaceId) throw notFound();
     const target = filePath(path ?? `收到资料/${file.workItemId}/${file.fileId}/${file.name}`);

@@ -10,6 +10,7 @@ const skills = [
   { id: 'review', name: '结果检查', description: '根据资料检查草稿的事实、约束与可执行性。', version: '1' },
 ];
 export interface ResourceSnapshot {
+  task?: {id:string;title:string;goal:string;visibility:'public'|'private'};
   workspaceId: string; instructions: InstructionFile[];
   sources: Array<SourceInfo & { content: string }>; skills: SkillFile[];
 }
@@ -28,10 +29,14 @@ export class ResourceService {
     if (fileId !== 'common' && fileId !== 'workspace') throw new RequestError('RESOURCE_NOT_FOUND', '指令文件不存在。', 404);
     const path = fileId === 'common' ? join(fixtureDir, 'common/AGENTS.md') : join(this.workspaces.directory(workspaceId, seatId), 'AGENTS.md');
     const content = await readControlled(path, fileId === 'common' ? 4096 : 16384, true);
-    return { fileId, name: fileId === 'common' ? '通用指令（AGENTS.md）' : '工作区指令（AGENTS.md）', content: content ?? '', hash: content === null ? null : hashContent(content), editable: fileId === 'workspace' };
+    return { fileId, name: fileId === 'common' ? '通用指令（AGENTS.md）' : '工作区指令（AGENTS.md）', content: content ?? '', hash: content === null ? null : hashContent(content), editable: fileId === 'workspace' && (!this.workspaces.access || this.workspaces.access.get(this.workspaces.get(workspaceId,seatId).taskSpaceId,seatId ?? this.workspaces.seatId).state === 'active') };
   }
   readInstruction(workspaceId: string, fileId: string, seatId?: string) { return this.lock(workspaceId, seatId).run(() => this.instruction(workspaceId, fileId, seatId)); }
   async updateInstruction(workspaceId: string, fileId: string, content: string, expectedHash: string | null, signal?: AbortSignal, seatId?: string): Promise<InstructionUpdate> {
+    const release = this.workspaces.acquireWrite(workspaceId, seatId);
+    try { return await this.updateInstructionInternal(workspaceId,fileId,content,expectedHash,signal,seatId); } finally { release(); }
+  }
+  private async updateInstructionInternal(workspaceId: string, fileId: string, content: string, expectedHash: string | null, signal?: AbortSignal, seatId?: string): Promise<InstructionUpdate> {
     return this.lock(workspaceId, seatId).run(async () => {
       signal?.throwIfAborted();
       if (fileId !== 'workspace') throw new RequestError('RESOURCE_READ_ONLY', '只能修改当前工作区指令。', 403);
@@ -74,7 +79,8 @@ export class ResourceService {
       }));
       const loadedSkills = await Promise.all(workspace.skillIds.map(id => this.readSkill(workspaceId, id, seatId)));
       signal?.throwIfAborted();
-      return { workspaceId, instructions, sources, skills: loadedSkills };
+      const task = this.workspaces.access?.get(workspace.taskSpaceId, workspace.seatId);
+      return { workspaceId, instructions, sources, skills: loadedSkills, ...(task ? { task: { id:task.id,title:task.title,goal:task.goal,visibility:task.visibility } } : {}) };
     });
   }
   async info(workspaceId: string, seatId?: string): Promise<WorkspaceResources> { return resourceInfo(await this.snapshot(workspaceId, undefined, seatId)); }

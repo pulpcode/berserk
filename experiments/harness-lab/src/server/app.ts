@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+import { registerAuth, identityOf } from './auth.js';
+import { taskRoutes } from './task-routes.js';
 import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { existsSync } from 'node:fs';
@@ -30,6 +33,9 @@ export async function createApp(lab: PiLab, serveWeb = false) {
     }
     return reply.code(500).send({ error: { code: 'SERVER_ERROR', message: '服务暂时无法处理请求，请稍后重试。' } });
   });
+  if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab); }
+  else app.get('/api/auth/session',async()=>({mode:'test'}));
+  app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
   await app.register(async scoped => {
     const scope = apiScope(lab.config);
@@ -38,6 +44,7 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   });
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
+    app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
   }
   app.addHook('onClose', () => lab.close());
   return app;
@@ -60,12 +67,15 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionKeepRecentTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
     } },
-  } }, async request => lab.updateModelSettings(request.body));
+  } }, async request => { if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN','当前席位无权修改模型设置。',403); return lab.updateModelSettings(request.body); });
   const uuid = { type: 'string', format: 'uuid' };
   const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
   app.get(`${scope.base}/workspaces`, async request => lab.workspaces.list(scope.seat(request)));
   app.get(`${scope.base}/activity`, { schema: { querystring: { type: 'object', additionalProperties: false } } }, async request => lab.activity(scope.seat(request)));
-  app.post<{ Body: { name: string } }>(`${scope.base}/workspaces`, { schema: { body: { type: 'object', properties: { name: { type: 'string', minLength: 1, maxLength: 60 } }, required: ['name'], additionalProperties: false } } }, async (request, reply) => reply.code(201).send(await lab.workspaces.create(request.body.name, undefined, scope.seat(request))));
+  app.post<{ Body: { name: string } }>(`${scope.base}/workspaces`, { schema: { body: { type: 'object', properties: { name: { type: 'string', minLength: 1, maxLength: 60 } }, required: ['name'], additionalProperties: false } } }, async (request, reply) => {
+    if (lab.access) { const actor=identityOf(request); const task=lab.access.create(actor,{title:request.body.name,goal:'',visibility:'private',clientActionId:randomUUID()}); return reply.code(201).send(await lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title)); }
+    return reply.code(201).send(await lab.workspaces.create(request.body.name, undefined, scope.seat(request)));
+  });
   app.get<{ Querystring: { workspaceId?: string } }>(`${scope.base}/sessions`, { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId, scope.seat(request)));
   app.post<{ Body: { workspaceId?: string; workItemId?: string } }>(`${scope.base}/sessions`, { schema: { body: { ...workspaceBody, properties: { ...workspaceBody.properties, workItemId: uuid } } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request)));
@@ -99,13 +109,16 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });
+    const authTimer = request.authValid ? setInterval(() => { if (!request.authValid!()) stream.destroy(); },1000) : undefined;
+    stream.once('close',()=>{if(authTimer)clearInterval(authTimer);});
     const heartbeat = setInterval(() => { if (!stream.destroyed) stream.write(': keepalive\n\n'); }, 15000);
     const work = execution.run(event => {
       if (stream.destroyed || stream.writableEnded) return;
+      if (request.authValid && !request.authValid()) { stream.destroy(); return; }
       if (stream.writableLength > 256 * 1024) { stream.destroy(); return; }
       stream.write(`data: ${JSON.stringify(event)}\n\n`);
     });
-    void work.finally(() => { clearInterval(heartbeat); if (!stream.destroyed) stream.end(); });
+    void work.finally(() => { clearInterval(heartbeat); if(authTimer)clearInterval(authTimer); if (!stream.destroyed) stream.end(); });
     return reply;
   });
 }

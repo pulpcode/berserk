@@ -9,7 +9,7 @@ import { createApp } from '../src/server/app.js';
 import { loadConfig } from '../src/server/config.js';
 import type { WorkAction, WorkActionKind, WorkDetail, WorkReceipt, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
 
-const config = loadConfig();
+const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '模型凭证尚未配置。'); assert.ok(config.execution?.enabled, '需要真实 Docker 执行环境。');
 config.dataDir = await mkdtemp(join(tmpdir(), 'axon-handoff-live-'));
 config.seatId = 'test-seat'; config.testSeats = [{ id:'test-seat', name:'席位 A' }, { id:'seat-b', name:'席位 B' }];

@@ -44,6 +44,11 @@ function Status({ session, unread = false, id }: { session: SessionActivity; unr
 }
 
 interface NavigationProps {
+  taskMode?: boolean;
+  taskMeta?: Record<string,{visibility:'public'|'private';state:'active'|'archived'}>;
+  createTask?: (visibility:'public'|'private') => void;
+  publicAllowed?: boolean;
+  showTask?: (id:string) => void;
   workspaces: Workspace[];
   activities: SessionActivity[];
   unread: Record<string, boolean>;
@@ -58,7 +63,7 @@ interface NavigationProps {
   showActivity: () => void;
 }
 
-export function WorkspaceNavigation({ workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
+export function WorkspaceNavigation({ taskMode,taskMeta,createTask,publicAllowed,showTask,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const running = activities.filter(session => session.active).length;
@@ -69,10 +74,11 @@ export function WorkspaceNavigation({ workspaces, activities, unread, workspaceI
       <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />
     </button>
     <p id={domId('activity-counts')} className="activity-counts" role="status" aria-live="polite" aria-atomic="true">{running} 个处理中 · {fresh} 个新回复 · {errors} 个异常</p>
-    <div className="section-label">项目<span>{workspaces.length}</span></div>
+    {!taskMode && <div className="section-label">项目<span>{workspaces.length}</span></div>}
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <p className="sidebar-empty">正在加载项目…</p>}
-      {workspaces.map(workspace => {
+      {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=><div key={group}>{taskMode && <div className="section-label">{group==='public'?'公共任务':'席位私有'}{(group==='private' || publicAllowed) && <button className="icon-button" aria-label={group==='public'?'建立公共任务':'建立席位私有任务'} onClick={()=>createTask?.(group==='public'?'public':'private')}><Plus size={15}/></button>}</div>}
+      {workspaces.filter(workspace=>group==='legacy' || taskMeta?.[workspace.id]?.visibility===group).map(workspace => {
         const sessions = activities.filter(session => session.workspaceId === workspace.id);
         const activeCount = sessions.filter(session => session.active).length;
         const attentionCount = sessions.filter(session => needsAttention(session, unread)).length;
@@ -82,7 +88,8 @@ export function WorkspaceNavigation({ workspaces, activities, unread, workspaceI
             <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={!activityView && workspaceId === workspace.id ? 'true' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><Folder size={14} aria-hidden="true" /><span>{workspace.name}</span></button>
             {activeCount > 0 && <span className="group-count running" aria-label={`${activeCount} 个处理中`} title={`${activeCount} 个处理中`}>{activeCount}</span>}
             {attentionCount > 0 && <span className="group-count attention" aria-label={`${attentionCount} 个需关注`} title={`${attentionCount} 个需关注`}>{attentionCount}</span>}
-            <button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>
+            <button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>
+            {taskMode && <button className="icon-button" aria-label={`任务说明：${workspace.name}`} onClick={()=>showTask?.(workspace.id)}><ArrowUpRight size={14}/></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">
             {sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
@@ -90,7 +97,7 @@ export function WorkspaceNavigation({ workspaces, activities, unread, workspaceI
             </button>) : <p className="sidebar-empty">还没有对话</p>}
           </div>
         </section>;
-      })}
+      })}</div>)}
     </nav>
   </>;
 }

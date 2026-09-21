@@ -235,3 +235,12 @@ Correct: unmount write-only secret state; show latest redacted configuration sep
 Keep original chat drafts, focus and stop controls while ordinary message sending is disabled. No Enter/IME implicit answer or approval, no global modal. Errors are associated with their card. Test stale responses, multiple tabs, custom and multi-select answers, skip, stop and narrow layout in addition to normal submission.
 
 Once `response.started` has supplied a requestId, an SSE read error (including page reload) is not proof that the message was rejected. Do not restore submitted text into the composer on that error alone. Keep recovery text separate; use the authoritative snapshot to handle actual failure/cancellation and preserve a newer draft. Test accepted AskUser → stream failure → reload with an empty composer and an independent new draft.
+
+
+### Authenticated task entry
+
+Formal `Seats` first queries `/api/auth/session`; failures never fall back to test identity. Login mounts exactly one App keyed by opaque viewId, with an immutable authenticated API client. Origin/CSRF/view headers cover JSON, SSE, binary previews and XHR uploads; logout/unmount aborts client connections and pending XHR without cancelling accepted server jobs. Existing test-seat trees exist only after an explicit `mode=test` response.
+
+SessionStorage keys for drafts/selections/read state are view-scoped; logout warns that unsent content will clear. BroadcastChannel invalidates other same-origin tabs and focus revalidates identity. Server checks remain authoritative even before the other tab receives the event. Late results cannot update the new App. Independent simultaneous accounts require separate browser storage contexts.
+
+Task sidebar groups public and seat-private metadata. Task descriptions do not provision a workspace; a row plus or global new conversation lazily prepares the current seat's directory. Task panels use revision CAS, keep text on conflict and show latest text separately before manual merge. Unknown creation results must be queried by clientActionId before retry. Archived tasks remain accessible via filter, with new work disabled and host-enforced. Do not expose private tasks in cross-seat assignment selectors. Account/logout and privileged settings remain at bottom-left; the footer stacks these rows rather than shrinking them side-by-side.

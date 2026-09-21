@@ -121,7 +121,7 @@ test('two seats assign fixed inputs, bind a conversation, submit, return and acc
       let text = ''; for await (const part of file.stream) text += part;
       expect(text).toBe(submission.attempt === 1 ? '# 第一版方案' : '# 第二版方案');
     }
-    expect(env.paths.filter(path => path !== '/api/info').every(path => path.startsWith('/api/test-seats/'))).toBe(true);
+    expect(env.paths.filter(path => path !== '/api/info' && path !== '/api/auth/session').every(path => path.startsWith('/api/test-seats/'))).toBe(true);
   } finally { await env.close(); }
 });
 

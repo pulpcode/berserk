@@ -1,3 +1,4 @@
+import type { AccessStore } from '../access/store.js';
 import { randomUUID } from 'node:crypto';
 import { mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -14,7 +15,7 @@ export function validateIndex(value: unknown): WorkspaceIndex {
   if (!value || typeof value !== 'object') throw stateError();
   const index = value as WorkspaceIndex;
   if (Object.keys(index).some(key => !['schemaVersion', 'defaultWorkspaceId', 'workspaces', 'sessionBindings'].includes(key))) throw stateError();
-  if (index.schemaVersion !== 2 || !Array.isArray(index.workspaces) || !index.workspaces.length || !index.sessionBindings || typeof index.sessionBindings !== 'object' || Array.isArray(index.sessionBindings)) throw stateError();
+  if (index.schemaVersion !== 2 || !Array.isArray(index.workspaces) || !index.sessionBindings || typeof index.sessionBindings !== 'object' || Array.isArray(index.sessionBindings)) throw stateError();
   const ids = new Set<string>();
   const owners = new Set<string>();
   for (const item of index.workspaces) {
@@ -23,7 +24,7 @@ export function validateIndex(value: unknown): WorkspaceIndex {
     owners.add(`${item.taskSpaceId}:${item.seatId}`);
     ids.add(item.id);
   }
-  if (!ids.has(index.defaultWorkspaceId)) throw stateError();
+  if (index.workspaces.length ? !ids.has(index.defaultWorkspaceId) : index.defaultWorkspaceId !== '' || Object.keys(index.sessionBindings).length > 0) throw stateError();
   for (const [id, workspace] of Object.entries(index.sessionBindings)) if (!UUID.test(id) || !ids.has(workspace)) throw stateError();
   return index;
 }
@@ -45,9 +46,10 @@ export async function prepareWorkspace(dataDir: string, workspace: WorkspaceEntr
   }
 }
 export class WorkspaceStore {
+  access?: AccessStore;
   private readonly lock = new Mutex();
   private constructor(readonly dataDir: string, private index: WorkspaceIndex, readonly seatId: string) {}
-  static async open(dataDir: string, seatId = 'test-seat'): Promise<WorkspaceStore> {
+  static async open(dataDir: string, seatId = 'test-seat', empty = false): Promise<WorkspaceStore> {
     if (!/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw stateError();
     await mkdir(dataDir, { recursive: true, mode: 0o700 }); await checkDirectory(dataDir);
     const raw = await readControlled(join(dataDir, 'workspace-index.json'), 2 * 1024 * 1024, true);
@@ -78,20 +80,21 @@ export class WorkspaceStore {
     await mkdir(join(dataDir, 'sessions'), { recursive: true, mode: 0o700 }); await checkDirectory(join(dataDir, 'sessions'));
     if ((await readdir(join(dataDir, 'sessions'))).length) throw new RequestError('MIGRATION_REQUIRED', '检测到旧会话。请停止服务并执行工作区迁移（先备份），不会自动导入。', 409);
     const workspace = newWorkspace('默认工作区', undefined, seatId);
-    await prepareWorkspace(dataDir, workspace);
-    const index: WorkspaceIndex = { schemaVersion: 2, defaultWorkspaceId: workspace.id, workspaces: [workspace], sessionBindings: {} };
+    if (!empty) await prepareWorkspace(dataDir, workspace);
+    const index: WorkspaceIndex = { schemaVersion: 2, defaultWorkspaceId: empty ? '' : workspace.id, workspaces: empty ? [] : [workspace], sessionBindings: {} };
     await atomicWrite(join(dataDir, 'workspace-index.json'), JSON.stringify(index, null, 2));
     await atomicWrite(join(dataDir, '.workspace-initialized'), 'workspace-v2\n');
     return new WorkspaceStore(dataDir, index, seatId);
   }
   list(seatId = this.seatId): WorkspaceList {
-    const workspaces = this.index.workspaces.filter(item => item.seatId === seatId).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name, createdAt, taskSpaceId, seatId }));
+    const workspaces = this.index.workspaces.filter(item => item.seatId === seatId).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name: this.access?.get(taskSpaceId, seatId).title ?? name, createdAt, taskSpaceId, seatId }));
     return { defaultWorkspaceId: workspaces.some(item => item.id === this.index.defaultWorkspaceId) ? this.index.defaultWorkspaceId : workspaces[0]?.id || '', workspaces };
   }
   get(id: string | undefined = undefined, seatId = this.seatId): WorkspaceEntry {
     const item = this.index.workspaces.find(item => item.id === (id ?? this.list(seatId).defaultWorkspaceId) && item.seatId === seatId);
     if (!item) throw new RequestError('WORKSPACE_NOT_FOUND', '工作区不存在。', 404);
-    return structuredClone(item);
+    const task = this.access?.get(item.taskSpaceId, seatId);
+    return { ...structuredClone(item), ...(task ? { name: task.title } : {}) };
   }
   directory(id: string, seatId = this.seatId) { return join(this.dataDir, 'workspaces', this.get(id, seatId).id); }
   filesDirectory(id: string, seatId = this.seatId) { return join(this.directory(id, seatId), 'files'); }
@@ -106,12 +109,20 @@ export class WorkspaceStore {
   listAll() { return structuredClone(this.index.workspaces); }
   allBindings() { return { ...this.index.sessionBindings }; }
   async ensureWorkspace(taskSpaceId: string, seatId: string, name: string): Promise<Workspace> {
+    const release = this.access?.acquire(taskSpaceId, seatId);
+    try { return await this.ensureUnlocked(taskSpaceId, seatId, name); } finally { release?.(); }
+  }
+  private async ensureUnlocked(taskSpaceId: string, seatId: string, name: string): Promise<Workspace> {
     return this.lock.run(async () => {
       const existing = this.index.workspaces.find(item => item.taskSpaceId === taskSpaceId && item.seatId === seatId);
       if (existing) return this.get(existing.id, seatId);
-      if (!UUID.test(taskSpaceId) || !this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId)) throw stateError();
+      if (!UUID.test(taskSpaceId) || (!this.access && !this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId))) throw stateError();
       return this.createUnlocked(name, taskSpaceId, seatId);
     });
+  }
+  acquireWrite(id: string | undefined, seatId = this.seatId) {
+    const workspace = this.get(id, seatId);
+    return this.access?.acquire(workspace.taskSpaceId, seatId) ?? (() => {});
   }
   private async commit(next: WorkspaceIndex) {
     // Revalidate disk before overwriting so corruption is never silently healed by a live process.
@@ -125,12 +136,13 @@ export class WorkspaceStore {
     return this.lock.run(() => this.createUnlocked(name, taskSpaceId, seatId));
   }
   private async createUnlocked(name: string, taskSpaceId: string | undefined, seatId: string): Promise<Workspace> {
+    if (this.access) { if (!taskSpaceId) throw new RequestError('TASK_REQUIRED', '请先创建任务。', 400); this.access.get(taskSpaceId, seatId, true); }
     name = name.trim();
     if (!name || name.length > 60 || !/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new RequestError('INVALID_INPUT', '工作区名称或席位无效。');
     if (taskSpaceId && (!UUID.test(taskSpaceId) || this.index.workspaces.some(item => item.taskSpaceId === taskSpaceId && item.seatId === seatId))) throw stateError();
     const workspace = newWorkspace(name, undefined, seatId, taskSpaceId);
     await prepareWorkspace(this.dataDir, workspace);
-    await this.commit({ ...this.index, workspaces: [...this.index.workspaces, workspace] });
+    await this.commit({ ...this.index, defaultWorkspaceId: this.index.defaultWorkspaceId || workspace.id, workspaces: [...this.index.workspaces, workspace] });
     const { id, createdAt } = workspace;
     return { id, name, createdAt, taskSpaceId: workspace.taskSpaceId, seatId: workspace.seatId };
   }

@@ -1,0 +1,97 @@
+{
+  "passed": true,
+  "taskId": "ea516cb2-a5b1-4c29-b778-813d0f70cab5",
+  "evidence": [
+    {
+      "seat": "a",
+      "sessionId": "01a0c3a7-68c1-7561-bf15-8fea7b528320",
+      "requestId": "9b491a3c-b85c-4180-aba9-77923070a99e",
+      "result": {
+        "requestId": "9b491a3c-b85c-4180-aba9-77923070a99e",
+        "status": "succeeded",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 6,
+          "replyAttempts": 6,
+          "compactionAttempts": 0,
+          "toolCalls": 6,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 5817,
+            "output": 603,
+            "cacheRead": 26752,
+            "cacheWrite": 0,
+            "totalTokens": 33172
+          }
+        }
+      },
+      "tools": [
+        "work_item_list",
+        "source.list",
+        "ls",
+        "write",
+        "read",
+        "file_output"
+      ]
+    },
+    {
+      "seat": "b",
+      "sessionId": "01a0c3a7-68c8-7561-bf15-8fec663de7bc",
+      "requestId": "c0d96ee3-ca1e-4070-ac05-f1a2a985bcf7",
+      "result": {
+        "requestId": "c0d96ee3-ca1e-4070-ac05-f1a2a985bcf7",
+        "status": "succeeded",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 4,
+          "replyAttempts": 4,
+          "compactionAttempts": 0,
+          "toolCalls": 3,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 5323,
+            "output": 234,
+            "cacheRead": 15488,
+            "cacheWrite": 0,
+            "totalTokens": 21045
+          }
+        }
+      },
+      "tools": [
+        "ls",
+        "write",
+        "file_output"
+      ]
+    },
+    {
+      "seat": "a",
+      "sessionId": "01a0c3a7-68c1-7561-bf15-8fea7b528320",
+      "requestId": "1ef4761b-eb09-4bb6-9ec1-e291f0c02a83",
+      "result": {
+        "requestId": "1ef4761b-eb09-4bb6-9ec1-e291f0c02a83",
+        "status": "succeeded",
+        "compactionIds": [],
+        "compactions": [],
+        "usageSummary": {
+          "modelAttempts": 2,
+          "replyAttempts": 2,
+          "compactionAttempts": 0,
+          "toolCalls": 1,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 1630,
+            "output": 133,
+            "cacheRead": 10368,
+            "cacheWrite": 0,
+            "totalTokens": 12131
+          }
+        }
+      },
+      "tools": [
+        "read"
+      ]
+    }
+  ]
+}

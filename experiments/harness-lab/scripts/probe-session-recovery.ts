@@ -29,7 +29,7 @@ async function history(dir: string) {
 }
 async function child(scenario: string, mode: string, dir: string, live: boolean) {
   const docker = scenario.startsWith('docker_');
-  const realConfig = loadConfig();
+  const realConfig = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
   const config = live ? { ...realConfig, dataDir: dir } : testConfig(dir);
   config.hitlDemoEnabled = true;
   config.agentRunTimeoutMs = 120_000; // Probe-only deadline; not a product default.

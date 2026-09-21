@@ -5,6 +5,7 @@
 !.env.*.example
 secrets/
 config/local/
+.local/
 *.pem
 *.key
 

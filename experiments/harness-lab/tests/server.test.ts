@@ -122,21 +122,21 @@ describe('local API with real Pi sessions', () => {
 
 describe('server-only configuration', () => {
   it('defaults to the explicitly selected model and rejects credentials in endpoint URLs', () => {
-    expect(loadConfig({})).toMatchObject({ provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', apiKey: '' });
+    expect(loadConfig({LAB_AUTH_MODE:'test',})).toMatchObject({ provider: 'deepseek', model: 'deepseek-flash', baseUrl: 'https://api.deepseek.com', apiKey: '' });
     for (const endpoint of ['http://api.deepseek.com', 'https://user:password@api.deepseek.com', 'https://api.deepseek.com?key=secret']) {
-      expect(() => loadConfig({ LLM_BASE_URL: endpoint })).toThrow(/HTTPS/);
+      expect(() => loadConfig({LAB_AUTH_MODE:'test', LLM_BASE_URL: endpoint })).toThrow(/HTTPS/);
     }
     const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const config = loadConfig({ REQUEST_TIMEOUT_MS: '-1', MAX_TOOL_CALLS: '0', MAX_OUTPUT_TOKENS: 'SECRET-NOT-PRINTED' });
+    const config = loadConfig({LAB_AUTH_MODE:'test', REQUEST_TIMEOUT_MS: '-1', MAX_TOOL_CALLS: '0', MAX_OUTPUT_TOKENS: 'SECRET-NOT-PRINTED' });
     expect(config).toMatchObject({ agentRunTimeoutMs: 0, httpIdleTimeoutMs: 300000, maxOutputTokens: 393216 });
     expect(warning).toHaveBeenCalledOnce();
     expect(warning.mock.calls.flat().join(' ')).not.toContain('SECRET-NOT-PRINTED');
     warning.mockRestore();
     for (const key of ['AGENT_RUN_TIMEOUT_MS', 'LLM_HTTP_IDLE_TIMEOUT_MS', 'LLM_REQUEST_TIMEOUT_MS']) {
-      for (const value of ['-1', '1.5', 'NaN', '2147483648', '', '1e3']) expect(() => loadConfig({ [key]: value })).toThrow(key);
+      for (const value of ['-1', '1.5', 'NaN', '2147483648', '', '1e3']) expect(() => loadConfig({LAB_AUTH_MODE:'test', [key]: value })).toThrow(key);
     }
-    expect(() => loadConfig({ LLM_REQUEST_TIMEOUT_MS: '0' })).toThrow('LLM_REQUEST_TIMEOUT_MS');
-    expect(loadConfig({ AGENT_RUN_TIMEOUT_MS: '2147483647', LLM_HTTP_IDLE_TIMEOUT_MS: '0', LLM_REQUEST_TIMEOUT_MS: '1000' })).toMatchObject({ agentRunTimeoutMs: 2147483647, httpIdleTimeoutMs: 0, llmRequestTimeoutMs: 1000 });
+    expect(() => loadConfig({LAB_AUTH_MODE:'test', LLM_REQUEST_TIMEOUT_MS: '0' })).toThrow('LLM_REQUEST_TIMEOUT_MS');
+    expect(loadConfig({LAB_AUTH_MODE:'test', AGENT_RUN_TIMEOUT_MS: '2147483647', LLM_HTTP_IDLE_TIMEOUT_MS: '0', LLM_REQUEST_TIMEOUT_MS: '1000' })).toMatchObject({ agentRunTimeoutMs: 2147483647, httpIdleTimeoutMs: 0, llmRequestTimeoutMs: 1000 });
   });
 });
 

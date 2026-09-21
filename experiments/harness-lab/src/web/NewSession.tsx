@@ -6,7 +6,7 @@ import { Panel } from './Resources';
 export function NewSession({ workspaces, workspaceId, create, close }: {
   workspaces: Workspace[]; workspaceId: string; create: (workspaceId: string) => Promise<string | null>; close: () => void;
 }) {
-  const [target, setTarget] = useState(workspaceId);
+  const [target, setTarget] = useState(workspaces.some(w=>w.id===workspaceId)?workspaceId:workspaces[0]?.id || '');
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
   const pending = useRef(false);

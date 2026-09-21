@@ -277,3 +277,63 @@
 ### Next Steps
 
 - 用户使用线上页面验收；本轮未推送GitHub。
+
+
+## Session 10: 实现业务任务与独立席位登录
+
+**Date**: 2026-09-21
+**Task**: 实现业务任务与独立席位登录
+**Branch**: `main`
+
+### Summary
+
+提交实施前设计基线；实现账号登录、公私任务目录、工作区访问、归档和备份初始化，代码待用户验收，未更新线上服务。
+
+### Main Changes
+
+- 复用 Pi 原生会话；增加固定席位身份和任务范围校验、跨标签退出隔离。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `a4080ea` | (see git log) |
+
+### Testing
+
+- [OK] 402 项 Vitest、87 项浏览器回归；退出竞争修复后相关 6 次复测通过；3 轮真实模型与 Docker 成功。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户验收后再安排实现提交及部署，正式账号由离线维护命令开通。
+
+
+## Session 11: 发布任务与独立席位登录版本
+
+**Date**: 2026-09-21
+**Task**: 发布任务与独立席位登录版本
+**Branch**: `main`
+
+### Summary
+
+按用户要求更新 tencent-server 唯一4315服务；51个旧数据文件完整备份核验，新数据根及两个随机密码账号就绪，登录与模型配置冒烟验证通过。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] A/B登录、席位绑定、匿名401、空目录、模型就绪；浏览器登录页可见。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户测试，新实现及发布记录尚未提交。

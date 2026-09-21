@@ -246,7 +246,7 @@ export function useChat() {
         setActivities(activitiesRef.current);
         setSessions(previous => mergeById(previous, incoming));
         // There is no deletion API. Preserve just-created workspaces/sessions if a GET predates their POST.
-        setWorkspaces(previous => [...previous, ...overview.workspaces.filter(item => !previous.some(old => old.id === item.id))]);
+        setWorkspaces(previous => mergeById(previous, overview.workspaces));
         if (!overviewLoaded.current) {
           const workspace = overview.workspaces.some(item => item.id === workspaceRef.current) ? workspaceRef.current : overview.defaultWorkspaceId;
           selectWorkspace(workspace); overviewLoaded.current = true;

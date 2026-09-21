@@ -116,7 +116,6 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .composer textarea { resize: none; width: 100%; border: 0; padding: 0; min-height: 28px; max-height: 180px; font-size: 14px; line-height: 1.8; color: var(--text); background: transparent; display: block; outline: none; }
 .composer textarea::placeholder { color: #7c8387; }
 .composer-toolbar { display: flex; align-items: center; justify-content: flex-end; min-height: 34px; gap: 12px; margin-top: 2px; }
-.composer-context { margin-right: auto; display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); }
 .send-button { display: grid; place-items: center; width: 36px; height: 36px; background: var(--accent); color: white; border: 0; border-radius: 9px; }
 .send-button:hover { background: #32523f; }
 .send-button:disabled { background: #e5eae6; color: #87988c; opacity: 1; }
@@ -652,3 +651,24 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 .message-list .subagent-card > summary { padding: 7px 0; min-height: 34px; font-size: 12px; gap: 8px; }
 .message-list .subagent-body { border-top: 0; border-left: 1px solid var(--line); padding: 8px 14px; }
 .process-content .tool-result, .process-content .subagent-card { margin-left: 0; }
+
+/* Authenticated desktop task workspace. */
+.login-page { min-height:100vh; display:grid; place-items:center; background:var(--bg, #f6f7f5); }
+.login-card { width:380px; display:flex; flex-direction:column; gap:12px; padding:36px; background:var(--surface,white); border:1px solid var(--border,#dfe3df); border-radius:16px; box-shadow:0 12px 42px #203c3310; }
+.login-card h1 { margin:4px 0 0; font-size:24px; }
+.login-card p { margin:0 0 8px; color:#53635c; }
+.login-card input:not([type=checkbox]), .task-filters>input { min-width:0; border:1px solid #bac8bf; border-radius:8px; padding:10px 12px; background:white; color:#253d32; }
+.login-card .show-password { display:flex; align-items:center; gap:8px; font-size:13px; }
+.task-filters { padding:8px 14px; display:flex; flex-direction:column; gap:8px; font-size:12px; }
+.task-filters label { display:flex; align-items:center; gap:6px; }
+.task-detail-link { align-self:flex-start; margin:4px 24px; border:0; color:#557063; background:transparent; font-size:12px; }
+.account-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px; font-size:13px; }
+.account-footer small { display:block; color:#68786f; margin-top:3px; }
+.account-footer button { background:transparent; border:0; color:#52675b; }
+.task-comparison { background:#f2f5f2; border-radius:8px; padding:12px; white-space:pre-wrap; }
+.workspace-form textarea { padding:10px; border:1px solid #bac8bf; border-radius:8px; resize:vertical; font:inherit; }
+.sidebar .sidebar-footer:has(.account-footer) { flex-direction:column; align-items:stretch; }
+.account-footer { width:100%; min-width:0; }
+.account-footer>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.account-footer button { flex-shrink:0; white-space:nowrap; }
+.workspace-groups .section-label { align-items:center; padding-bottom:4px; }

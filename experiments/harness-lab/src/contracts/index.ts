@@ -146,7 +146,7 @@ export interface AgentInfo { name: string; description: string; hash: string }
 export interface ComposerSelection { skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
 export interface LoadedComposerSelection { skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
-export type RequestResourcesRecord = { compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
+export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];
   skills: SkillInfo[]; readSkills: SkillFile[]; editableFileIds: InstructionFileId[];
 } | { status: 'unavailable'; requestId: string; message: string });
