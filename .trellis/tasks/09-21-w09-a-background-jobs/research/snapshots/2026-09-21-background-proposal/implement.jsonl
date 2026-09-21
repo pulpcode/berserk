@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "Pi 原生会话、执行、压缩、Agents 和旧数据兼容"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "受控文件、固定副本与请求级 Docker 边界"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "人工提问、操作确认及取消边界，不自动批准后台命令"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "复用 SQLite 事务与业务回执，保持自动结果和正式业务提交的边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "工作台异步归属、独立草稿及信息结果与业务待办的界面边界"}
+{"file": ".trellis/tasks/09-21-w09-a-background-jobs/research/basis.md", "reason": "已核对的实现基础、缺口及 Hermes 借鉴范围"}

@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "现有席位主体、SQLite、WorkItem、确认及交接权限"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "原生 Pi 会话、资源范围、并发及历史兼容；需分段读完整"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "文件上传下载、目录与 Docker 隔离"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "旧确认、取消和会话恢复边界"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "工作台草稿、迟到响应和导航交互；需分段读完整"}
+{"file": ".trellis/tasks/09-21-task-scope-and-seat-access/research/basis.md", "reason": "当前身份与任务缺口，登录与交互参考"}

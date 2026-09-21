@@ -1,0 +1,42 @@
+{
+  "createdAt": "2026-09-21",
+  "status": "discussion-snapshot-not-approved",
+  "files": [
+    {
+      "path": "review.md",
+      "sha256": "29c713fd4ae87832f072f993bca6083f49f799b9255693582bc34bb63725b1a4"
+    },
+    {
+      "path": "prd.md",
+      "sha256": "864cf06f37df432ffb58b0bb3d7cda44138e8a8a165070a3da4fe30d99a1c1c1"
+    },
+    {
+      "path": "design.md",
+      "sha256": "c957983b271c07bf3c57c0a42a5bf74cee0876f44c25ee7a40f04656a651b1ff"
+    },
+    {
+      "path": "implement.md",
+      "sha256": "6310aedc8cfaa70a4718e7d6c75a873b6d147d940924fb288ff6dffa8f9427a0"
+    },
+    {
+      "path": "acceptance.md",
+      "sha256": "5f05503be83228bfd3cd51767476a0ae5d6fc47f67715c2fde2011a099ac351d"
+    },
+    {
+      "path": "research/basis.md",
+      "sha256": "cb53c71e18233f535a4fd83e800279b680d2e5ac5d661dbb636b0040e5d26f15"
+    },
+    {
+      "path": "task.json",
+      "sha256": "9919b49f2e9182092baedcc9491e96baa75ba0187b67aa081b4b3929a620a874"
+    },
+    {
+      "path": "implement.jsonl",
+      "sha256": "78347fcccee53688013425a7421ff65558f8ad64348cad34aff7163e0110e0fc"
+    },
+    {
+      "path": "check.jsonl",
+      "sha256": "78347fcccee53688013425a7421ff65558f8ad64348cad34aff7163e0110e0fc"
+    }
+  ]
+}

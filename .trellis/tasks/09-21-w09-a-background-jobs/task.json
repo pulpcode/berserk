@@ -1,0 +1,54 @@
+{
+  "id": "w09-a-background-jobs",
+  "name": "w09-a-background-jobs",
+  "title": "任务与后台作业分阶段规划",
+  "description": "保留完整讨论快照，仅展开第一增量；后台执行和智能分流到对应阶段再设计、审阅和批准。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "background-jobs",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-09-21",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "09-21-task-scope-and-seat-access"
+  ],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/09-21-w09-a-background-jobs/review.md",
+    ".trellis/tasks/09-21-w09-a-background-jobs/prd.md",
+    ".trellis/tasks/09-21-w09-a-background-jobs/design.md",
+    ".trellis/tasks/09-21-w09-a-background-jobs/implement.md",
+    ".trellis/tasks/09-21-w09-a-background-jobs/acceptance.md",
+    ".trellis/tasks/09-21-w09-a-background-jobs/research/basis.md"
+  ],
+  "notes": "父任务仅跟踪路线图，不整体实施。原九份文件已保存为 2026-09-21 快照并校验；当前审阅目标为 09-21-task-scope-and-seat-access。",
+  "meta": {
+    "stage": "M1 分阶段规划",
+    "designStatus": "roadmap-only",
+    "implementationApproved": false,
+    "implementationComplete": false,
+    "desktopOnly": true,
+    "contextManifestsCurated": true,
+    "criteria": [],
+    "relatedWorkPackages": [
+      "W02",
+      "W04",
+      "W05",
+      "W08-A",
+      "W09-A"
+    ],
+    "proposal": "先审任务与访问；通用后台执行、上下文查询与分流分别后续设计。",
+    "pendingProductDecisions": [],
+    "implementationTarget": false,
+    "snapshot": "research/snapshots/2026-09-21-background-proposal/README.md"
+  }
+}

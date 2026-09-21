@@ -1,0 +1,68 @@
+{
+  "id": "task-scope-and-seat-access",
+  "name": "task-scope-and-seat-access",
+  "title": "业务任务、可见范围与席位入口",
+  "description": "仅设计首个增量：公共与私有任务、席位工作区归属、最小登录和访问边界；后续后台执行与智能分流保留路线图，供用户逐期审阅。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "task-scope-and-seat-access",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-09-21",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-21-w09-a-background-jobs",
+  "relatedFiles": [
+    ".trellis/tasks/09-21-task-scope-and-seat-access/review.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/prd.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/design.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/implement.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/acceptance.md",
+    ".trellis/tasks/09-21-task-scope-and-seat-access/research/basis.md"
+  ],
+  "notes": "仅设计首增量，按用户要求逐期审阅；不启动实现，不更改当前执行任务。D01～D03为待审建议。",
+  "meta": {
+    "stage": "M1 / 任务与访问首增量",
+    "designStatus": "awaiting-review",
+    "implementationApproved": false,
+    "implementationComplete": false,
+    "desktopOnly": true,
+    "contextManifestsCurated": true,
+    "criteria": [
+      "TA01",
+      "TA02",
+      "TA03",
+      "TA04",
+      "TA05",
+      "TA06",
+      "TA07",
+      "TA08",
+      "TA09",
+      "TA10",
+      "TA11",
+      "TA12",
+      "TA13",
+      "TA14",
+      "TA15",
+      "TA16"
+    ],
+    "relatedWorkPackages": [
+      "W02",
+      "W04",
+      "W08-A"
+    ],
+    "pendingProductDecisions": [
+      "D01 最小登录与固定席位绑定",
+      "D02 私有任务归席位或个人账号",
+      "D03 公共任务目录可见范围"
+    ]
+  }
+}
