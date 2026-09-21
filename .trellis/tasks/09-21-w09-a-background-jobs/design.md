@@ -5,7 +5,8 @@
 | 内容 | 唯一当前入口 |
 | --- | --- |
 | 第一增量需求与具体设计 | [业务任务、可见范围与席位入口](../09-21-task-scope-and-seat-access/review.md) |
-| 后两个增量的方向 | [阶段安排](review.md#阶段安排) |
+| 第二增量需求与具体设计 | [信息处理与席位投递](../09-21-background-execution/review.md) |
+| 第三增量的方向 | [阶段安排](review.md#阶段安排) |
 | 原后台作业详细讨论 | [2026-09-21 原稿快照](research/snapshots/2026-09-21-background-proposal/README.md) |
 
 原完整草案保持原字节，存档状态由快照 README 统一说明。后续设计可以引用其中研究，但需重新确认实际需求、权限与接口，不从原稿直接实施。

@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/backend/task-access.md", "reason": "正式身份、公私任务、来源权限及排队会话和归档边界"}
+{"file": ".trellis/spec/backend/harness-lab.md", "reason": "复用 Pi 会话、历史、压缩与只读委派；身份以 task-access 为准"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "独立目录、上传、固定下载及 Docker 边界"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "Bash 参数规则、人工确认与取消"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "已有业务事务与固定文件，不伪造业务动作"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "工作台与信息处理中心导航、草稿、身份及迟到响应隔离"}
+{"file": ".trellis/tasks/09-21-background-execution/research/basis.md", "reason": "接收、基础规则、多席位投递、人员分析与 Pi 复用缺口"}
