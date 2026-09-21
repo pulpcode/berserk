@@ -672,3 +672,94 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 .account-footer>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .account-footer button { flex-shrink:0; white-space:nowrap; }
 .workspace-groups .section-label { align-items:center; padding-bottom:4px; }
+
+/* Information handling uses the desktop workbench's colors and controls. */
+.information-center[hidden], .information-inbox[hidden], .information-rules[hidden], .workspace[hidden], .sidebar[hidden] { display: none; }
+.information-center { grid-column: 1 / -1; height: 100dvh; display: flex; flex-direction: column; min-height: 0; background: var(--surface); }
+.information-center button, .information-inbox button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); border-radius: 7px; padding: 8px 12px; font-size: 13px; }
+.information-center button:hover:not(:disabled), .information-inbox button:hover:not(:disabled) { background: var(--faint); }
+.information-center .primary-action, .information-inbox .primary-action { color: white; background: var(--accent); border-color: var(--accent); }
+.information-center .primary-action:hover:not(:disabled), .information-inbox .primary-action:hover:not(:disabled) { background: #345344; }
+.information-center-header { padding: 22px 36px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.information-center-header > div { display: flex; gap: 12px; align-items: center; }
+.information-center h1, .information-inbox h1 { margin: 0; font-size: 23px; letter-spacing: -.5px; }
+.information-center h2, .information-inbox h2 { font-size: 19px; letter-spacing: -.2px; margin: 0 0 12px; overflow-wrap: anywhere; }
+.information-center h3, .information-inbox h3 { font-size: 14px; margin: 0 0 12px; }
+.information-tabs { display: flex; gap: 26px; padding: 0 36px; border-bottom: 1px solid var(--line); }
+.information-tabs button { border: none; border-radius: 0; padding: 17px 0 14px; border-bottom: 3px solid transparent; font-size: 14px; color: var(--muted); }
+.information-tabs button[aria-current] { border-bottom-color: var(--accent); color: var(--accent); font-weight: 600; }
+.information-center-body { flex: 1; min-height: 0; overflow: auto; padding: 22px 36px; }
+.information-toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-bottom: 18px; }
+.information-toolbar > label, .information-form > label, .information-form fieldset > label:not(.information-check), .information-capability-options > label { display: flex; flex-direction: column; gap: 7px; color: var(--muted); font-size: 12px; }
+.information-toolbar input, .information-toolbar select, .information-form input:not([type=checkbox]), .information-form select, .information-form textarea { font: inherit; font-size: 13px; color: var(--text); background: var(--surface); padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; min-height: 36px; }
+.information-toolbar select { min-width: 155px; }
+.information-search { flex: 1; max-width: 330px; }
+.information-controls { display: flex; gap: 14px; align-items: center; min-height: 38px; margin-bottom: 14px; color: var(--muted); font-size: 12px; }
+.information-controls > button:last-child { margin-left: auto; }
+.information-records { display: grid; min-width: 0; }
+.information-records.with-detail { grid-template-columns: minmax(450px, 1.1fr) minmax(370px, 1fr); gap: 24px; }
+.information-record-list { min-width: 0; }
+.information-table-scroll { overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+.information-table { border-collapse: collapse; text-align: left; width: 100%; font-size: 12px; }
+.information-table th { font-weight: 500; color: var(--muted); background: #f8f9fa; white-space: nowrap; }
+.information-table th, .information-table td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.information-table tr:last-child td { border-bottom: none; }
+.information-table tr.selected { background: #f2f6f3; }
+.information-table td small { display: block; color: var(--muted); padding-top: 5px; overflow-wrap: anywhere; }
+.information-center .information-row-link { border: 0; background: none; border-radius: 2px; font-weight: 500; padding: 0; text-align: left; color: var(--accent); line-height: 1.7; }
+.information-tag { display: inline-block; padding: 3px 7px; font-size: 11px; color: #59626a; background: var(--faint); border-radius: 5px; white-space: nowrap; }
+.information-tag.succeeded { color: #365f48; background: #edf4ee; }
+.information-tag.running, .information-tag.queued { color: #395a85; background: #eef3fa; }
+.information-tag.failed, .information-tag.interrupted { color: #8b4137; background: #fbefec; }
+.delivery-line { display: block; padding-bottom: 4px; white-space: nowrap; }
+.information-detail { min-width: 0; padding: 22px; }
+.information-record-detail { padding: 20px; border: 1px solid var(--line); border-radius: 10px; }
+.information-detail header { margin: 18px 0 22px; }
+.information-detail header p, .information-heading p { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.information-detail > section { padding: 22px 0; border-top: 1px solid var(--line); }
+.information-detail > section p { font-size: 13px; line-height: 1.9; }
+.information-text { line-height: 1.85; font-size: 13px; overflow-wrap: anywhere; }
+.information-text pre { overflow: auto; background: #f6f7f8; border-radius: 6px; padding: 14px; }
+.information-text p:first-child { margin-top: 0; }
+.information-original { margin: 18px 0; font-size: 13px; }
+.information-original > summary { cursor: pointer; padding: 12px 0; color: var(--accent); }
+.information-step { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; border-left: 2px solid var(--line); padding: 4px 0 12px 14px; font-size: 12px; }
+.information-step .information-text, .information-step p { width: 100%; }
+.information-step small { color: var(--muted); }
+.information-timeline { margin: 0; padding: 0; list-style: none; }
+.information-timeline li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; padding-left: 14px; border-left: 2px solid var(--line); font-size: 12px; }
+.information-timeline li div { display: flex; flex-direction: column; gap: 6px; }
+.information-timeline small { color: var(--muted); }
+.information-files { list-style: none; margin: 12px 0; padding: 0; }
+.information-files li { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 7px; font-size: 12px; }
+.information-files li > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.information-files small { display: block; color: var(--muted); margin-top: 3px; }
+.information-metadata { display: grid; grid-template-columns: 80px 1fr; gap: 10px; font-size: 12px; }
+.information-metadata dt { color: var(--muted); }
+.information-metadata dd { margin: 0; }
+.information-pagination { display: flex; justify-content: end; align-items: center; gap: 10px; padding: 15px 0; font-size: 12px; color: var(--muted); }
+.information-split { display: grid; grid-template-columns: minmax(230px, .75fr) minmax(400px, 1.5fr); border: 1px solid var(--line); border-radius: 10px; overflow: clip; }
+.information-list { border-right: 1px solid var(--line); }
+.information-list > ul { list-style: none; margin: 0; padding: 8px; }
+.information-list li > button { display: flex; flex-direction: column; width: 100%; gap: 8px; align-items: start; text-align: left; border: none; padding: 14px; margin-bottom: 4px; }
+.information-list li > button[aria-current] { background: var(--accent-soft); }
+.information-list li strong { font-size: 13px; overflow-wrap: anywhere; }
+.information-list li span, .information-list li small { font-size: 11px; color: var(--muted); }
+.information-form { display: flex; flex-direction: column; gap: 16px; }
+.information-form header { display: flex; align-items: center; gap: 12px; }
+.information-form fieldset { display: flex; flex-direction: column; gap: 14px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.information-form legend { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+.information-form .information-selection { border: 1px solid var(--line); border-radius: 7px; padding: 12px; }
+.information-check { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.information-check input { width: 15px; height: 15px; accent-color: var(--accent); }
+.information-check small { color: var(--muted); font-size: 11px; margin-left: auto; }
+.information-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.information-capability-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.information-form > .primary-action { align-self: start; }
+.information-empty { min-height: 100px; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; padding: 28px 18px; text-align: center; color: var(--muted); font-size: 13px; }
+.information-inbox { flex: 1; min-height: 0; overflow-y: auto; padding: 26px 32px; }
+.information-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
+.information-rules .information-detail { max-width: 800px; }
+.information-center .information-back, .information-inbox .information-back { border: 0; padding-left: 0; background: transparent; color: var(--muted); }
+
+.information-queue-notice { border: 1px solid #dce5df; border-radius: 7px; padding: 12px 14px; background: #f4f7f5; color: #526a5b; font-size: 13px; line-height: 1.7; }

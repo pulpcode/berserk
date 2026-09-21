@@ -156,12 +156,14 @@ it('blocks configuration updates while any session is reserved or running', asyn
 
 it('reserves the update across disk writes, rejects concurrent starts and saves, and settles before publishing', async () => {
   const { app, lab } = await setup(); const session = await lab.createSession(); const original = lab.modelSettings();
+  expect(lab.canStartBackground()).toBe(true);
   const save = ModelSettingsStore.prototype.save;
   let release!: () => void; const gate = new Promise<void>(resolve => { release = resolve; });
   const spy = vi.spyOn(ModelSettingsStore.prototype, 'save').mockImplementation(async function (this: ModelSettingsStore, next) {
     await gate; await save.call(this, next);
   });
   const saving = lab.updateModelSettings(update(original, { model: 'after-save' }));
+  expect(lab.canStartBackground()).toBe(false);
   await vi.waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
   try {
     expect(lab.modelSettings()).toEqual(original);
@@ -171,6 +173,7 @@ it('reserves the update across disk writes, rejects concurrent starts and saves,
     const concurrent = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(original, { model: 'racing-save' }) });
     expect(concurrent.statusCode).toBe(409); expect(concurrent.json().error.code).toBe('MODEL_SETTINGS_BUSY');
   } finally { release(); await saving; }
+  expect(lab.canStartBackground()).toBe(true);
   expect(lab.modelSettings().model).toBe('after-save');
 });
 

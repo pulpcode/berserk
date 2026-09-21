@@ -1,0 +1,196 @@
+{
+  "passed": true,
+  "dataDir": "/tmp/axon-background-live-mHv3kJ",
+  "model": "deepseek-flash",
+  "preprocess": {
+    "id": "8249fe9a-0fd3-4eef-870f-52f3f719eff5",
+    "eventId": "12a7943d-61af-4c00-ba5b-4e0102532941",
+    "sourceId": "test-source",
+    "kind": "preprocess",
+    "status": "succeeded",
+    "revision": 17,
+    "createdAt": "2026-09-21T16:03:16.687Z",
+    "sessionId": "a123b202-a3c9-4f45-b8a8-c1704a2b2478",
+    "requestId": "266a697b-4282-4a9f-813c-fa01eb66b96a",
+    "ruleSnapshot": {
+      "rule": {
+        "name": "双席位预处理投递",
+        "sourceId": "test-source",
+        "profileId": "preprocess",
+        "recipientSeatIds": [
+          "a",
+          "b"
+        ],
+        "enabled": true,
+        "id": "e602119c-e52e-4e99-932a-38c46e0b831c",
+        "revision": 1,
+        "createdAt": "2026-09-21T16:03:15.525Z",
+        "updatedAt": "2026-09-21T16:03:15.525Z",
+        "createdByUserId": "f068daab-3ca2-4ccc-98d7-587e24d65494",
+        "updatedByUserId": "f068daab-3ca2-4ccc-98d7-587e24d65494"
+      },
+      "profile": {
+        "id": "preprocess",
+        "name": "资料预处理",
+        "goal": "请读取收到的 CSV，用 write 创建 Python 脚本 analyze.py，用 bash 执行 python3 analyze.py，统计 amount 列总和，写入 report.txt 并调用 file_output 交付。最后中文说明总和及待核实问题。仅使用所附文件，无需人工提问。当前目录已经是 /workspace，不使用 cd。执行脚本只调用 bash 的 command=\"python3 analyze.py\"。",
+        "tools": [
+          "read",
+          "write",
+          "bash",
+          "file_output"
+        ],
+        "skillIds": [],
+        "agentIds": [],
+        "instructions": "这是独立验收，请保留所有中间文件。",
+        "resources": [],
+        "skills": [],
+        "agents": []
+      }
+    },
+    "model": "deepseek-flash",
+    "modelSettingsVersion": "0973aafd-ac21-47e3-b386-2a4ef4c9619c",
+    "startedAt": "2026-09-21T16:03:16.693Z",
+    "usage": {
+      "modelAttempts": 6,
+      "replyAttempts": 6,
+      "compactionAttempts": 0,
+      "toolCalls": 5,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 1547,
+        "output": 816,
+        "cacheRead": 10496,
+        "cacheWrite": 0,
+        "totalTokens": 12859
+      }
+    },
+    "result": {
+      "sessionId": "a123b202-a3c9-4f45-b8a8-c1704a2b2478",
+      "requestId": "266a697b-4282-4a9f-813c-fa01eb66b96a",
+      "finalMessageId": "30f0cb47",
+      "files": [
+        {
+          "id": "69fc22bf-6be1-4a77-b908-746b52e38938",
+          "name": "report.txt",
+          "size": 138,
+          "hash": "dc232f822f4dbe8eca7a697afebddd771b6cd7f377a7fa3301b23e7272a93928"
+        }
+      ]
+    },
+    "endedAt": "2026-09-21T16:03:23.252Z"
+  },
+  "deliveries": [
+    {
+      "id": "19f80c10-3ff2-46d0-ba09-15d85a196850",
+      "eventId": "12a7943d-61af-4c00-ba5b-4e0102532941",
+      "jobId": "8249fe9a-0fd3-4eef-870f-52f3f719eff5",
+      "sourceId": "test-source",
+      "recipientSeatId": "b",
+      "status": "delivered",
+      "revision": 2,
+      "createdAt": "2026-09-21T16:03:23.252Z",
+      "updatedAt": "2026-09-21T16:03:23.266Z",
+      "deliveredAt": "2026-09-21T16:03:23.266Z"
+    },
+    {
+      "id": "f51a7e78-cb31-4ce7-9453-e50d50c3473b",
+      "eventId": "12a7943d-61af-4c00-ba5b-4e0102532941",
+      "jobId": "8249fe9a-0fd3-4eef-870f-52f3f719eff5",
+      "sourceId": "test-source",
+      "recipientSeatId": "a",
+      "status": "delivered",
+      "revision": 2,
+      "createdAt": "2026-09-21T16:03:23.252Z",
+      "updatedAt": "2026-09-21T16:03:23.276Z",
+      "deliveredAt": "2026-09-21T16:03:23.276Z"
+    }
+  ],
+  "conversation": {
+    "requestId": "ad36ae53-2aa7-4cf3-8ac7-37d0425ef169",
+    "status": "succeeded",
+    "compactionIds": [],
+    "compactions": [],
+    "usageSummary": {
+      "modelAttempts": 3,
+      "replyAttempts": 3,
+      "compactionAttempts": 0,
+      "toolCalls": 4,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 5789,
+        "output": 1014,
+        "cacheRead": 11904,
+        "cacheWrite": 0,
+        "totalTokens": 18707
+      }
+    }
+  },
+  "seatAnalysis": {
+    "id": "165c6e9f-ec73-4997-accc-8d3385ff8f14",
+    "kind": "seat_analysis",
+    "eventId": "12a7943d-61af-4c00-ba5b-4e0102532941",
+    "sourceId": "test-source",
+    "status": "succeeded",
+    "revision": 16,
+    "createdAt": "2026-09-21T16:03:31.080Z",
+    "userId": "b19a523f-6ee3-428c-bac8-86d614a64976",
+    "seatId": "b",
+    "taskSpaceId": "80520d55-4fbb-4c30-a2b4-a3008fb8bb69",
+    "workspaceId": "9357a0e0-4314-4933-80d8-8c941db257a4",
+    "sessionId": "4b38fed8-24df-4fe6-9e27-fb1e0d4504c3",
+    "requestId": "243c4b53-cca0-4793-9f3a-0daca20c02e3",
+    "deliveryId": "19f80c10-3ff2-46d0-ba09-15d85a196850",
+    "actionId": "b4220a10-7b48-4dc0-bd4b-3a95d90a791a",
+    "model": "deepseek-flash",
+    "modelSettingsVersion": "0973aafd-ac21-47e3-b386-2a4ef4c9619c",
+    "startedAt": "2026-09-21T16:03:31.085Z",
+    "usage": {
+      "modelAttempts": 5,
+      "replyAttempts": 5,
+      "compactionAttempts": 0,
+      "toolCalls": 5,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 3788,
+        "output": 1262,
+        "cacheRead": 16000,
+        "cacheWrite": 0,
+        "totalTokens": 21050
+      }
+    },
+    "result": {
+      "sessionId": "4b38fed8-24df-4fe6-9e27-fb1e0d4504c3",
+      "requestId": "243c4b53-cca0-4793-9f3a-0daca20c02e3",
+      "finalMessageId": "e962d2fc",
+      "files": [
+        {
+          "id": "5e604d3b-cf1e-4538-8314-1250b9765036",
+          "name": "seat-report.txt",
+          "size": 393,
+          "hash": "18cd16b67a721e20e12e479c3f2d9b15e4493cd35f6d52f05221d9a405e6931f"
+        }
+      ]
+    },
+    "endedAt": "2026-09-21T16:03:39.687Z"
+  },
+  "continuation": {
+    "requestId": "4e3b75dd-f985-482a-8c73-d16288d920af",
+    "status": "succeeded",
+    "compactionIds": [],
+    "compactions": [],
+    "usageSummary": {
+      "modelAttempts": 1,
+      "replyAttempts": 1,
+      "compactionAttempts": 0,
+      "toolCalls": 0,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 6935,
+        "output": 27,
+        "cacheRead": 384,
+        "cacheWrite": 0,
+        "totalTokens": 7346
+      }
+    }
+  }
+}

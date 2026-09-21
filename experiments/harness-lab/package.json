@@ -29,7 +29,9 @@
     "probe:handoff": "tsx --env-file-if-exists=.env.local scripts/probe-handoff.ts",
     "probe:references": "tsx --env-file-if-exists=.env.local scripts/probe-references.ts",
     "access:admin": "tsx scripts/access-admin.ts",
-    "probe:access": "tsx --env-file-if-exists=.env.local scripts/probe-access.ts"
+    "probe:access": "tsx --env-file-if-exists=.env.local scripts/probe-access.ts",
+    "background:admin": "tsx --env-file-if-exists=.env.local --env-file-if-exists=.env.auth.local scripts/background-admin.ts",
+    "probe:background": "tsx --env-file-if-exists=.env.local scripts/probe-background.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

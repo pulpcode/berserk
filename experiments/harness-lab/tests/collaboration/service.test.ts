@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import type { Readable } from 'node:stream';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CollaborationService } from '../../src/collaboration/service.js';
 import type { WorkPrepareInput } from '../../src/contracts/collaboration.js';
 import { WorkspaceStore } from '../../src/workspaces/store.js';
@@ -192,15 +192,18 @@ it('rejects a structurally valid SQLite database with broken business references
 });
 it('settles import publication when cancelled between link and unlink', async () => {
   const {service,assign,workspaces,root,dir,options} = await setup(); await writeFile(join(root,'input'),'complete'); const work = await assign(['input']); service.close();
-  const linked = join(dir,'linked'); const wrapper = join(dir,'python-wrapper');
-  await writeFile(wrapper,`#!/usr/bin/env python3\nimport os, runpy, sys, time\noriginal = os.link\ndef link(*args, **kwargs):\n    original(*args, **kwargs)\n    if sys.argv[1].endswith('safe-import.py'):\n        with open(${JSON.stringify(linked)}, 'w') as marker: marker.write('linked')\n        time.sleep(0.2)\nos.link = link\nrunpy.run_path(sys.argv[1], run_name='__main__')\n`,{mode:0o700});
+  const linked = join(dir,'linked'); const released = join(dir,'released'); const wrapper = join(dir,'python-wrapper');
+  await writeFile(wrapper,`#!/usr/bin/env python3\nimport os, runpy, sys, time\noriginal = os.link\ndef link(*args, **kwargs):\n    original(*args, **kwargs)\n    if sys.argv[1].endswith('safe-import.py'):\n        with open(${JSON.stringify(linked)}, 'w') as marker: marker.write('linked')\n        deadline = time.monotonic() + 15\n        while not os.path.exists(${JSON.stringify(released)}) and time.monotonic() < deadline:\n            time.sleep(0.01)\nos.link = link\nrunpy.run_path(sys.argv[1], run_name='__main__')\n`,{mode:0o700});
   const reopened = await CollaborationService.open(workspaces,{...options,python:wrapper}); services.push(reopened);
   const own = workspaces.list(b.seatId).workspaces[0]; const controller = new AbortController();
   const importing = reopened.importFile(b,work.inputFiles[0].fileId,own.id,'cancelled.txt',controller.signal).catch(error=>error);
-  let found = false;
-  for (let i=0;i<400;i++) { if (await readFile(linked,'utf8').catch(()=>'')) { found=true; break; } await new Promise(resolve=>setTimeout(resolve,5)); }
-  expect(found).toBe(true); controller.abort(); expect(await importing).toBeInstanceOf(Error);
+  try {
+    await vi.waitFor(async () => expect(await readFile(linked,'utf8').catch(()=>'')).toBe('linked'), {timeout:10_000,interval:10});
+  } finally {
+    controller.abort(); await writeFile(released,'release'); await importing;
+  }
+  expect(await importing).toBeInstanceOf(Error);
   const {stat} = await import('node:fs/promises'); const target = join(workspaces.filesDirectory(own.id,b.seatId),'cancelled.txt');
   expect((await stat(target)).nlink).toBe(1); expect(await readFile(target,'utf8')).toBe('complete');
   expect((await reopened.importFile(b,work.inputFiles[0].fileId,own.id,'cancelled.txt')).path).toBe('cancelled.txt');
-});
+}, 20_000);

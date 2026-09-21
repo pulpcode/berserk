@@ -1,0 +1,27 @@
+{
+  "enabled": false,
+  "concurrency": 1,
+  "modelConcurrency": 2,
+  "backlogLimit": 100,
+  "sources": [
+    {
+      "sourceId": "material-feed",
+      "name": "资料接入",
+      "credentialRef": "MATERIAL_FEED_TOKEN",
+      "allowedProfileIds": ["material-preprocess"],
+      "allowedRecipientSeatIds": ["test-seat", "seat-b"]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "material-preprocess",
+      "name": "资料预处理",
+      "goal": "读取原文与附件，提取事实要点、重复信息和待核实问题；必要时计算数据、生成辅助材料，供接收席位决定后续处理。",
+      "tools": ["read", "write", "bash", "file_output", "source_list", "source_read", "skill_read", "subagent"],
+      "skillIds": ["review"],
+      "agentIds": ["analyst", "reviewer"],
+      "instructions": "区分原文事实、推测与尚待核实的问题。",
+      "resources": []
+    }
+  ]
+}

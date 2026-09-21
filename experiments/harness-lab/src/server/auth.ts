@@ -45,6 +45,8 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
   app.addHook('onRequest', async request => {
     const path=request.url.split('?')[0];
     if(!path.startsWith('/api/')) return;
+    // Only explicitly registered source routes use their own Bearer authentication.
+    if(request.routeOptions.config.axonSource === true) return;
     const authRoute=path.startsWith('/api/auth/');
     if(request.session.userId && (request.session.expiresAt ?? 0)>Date.now()) request.identity=access.identity(request.session.userId);
     if(!authRoute && path!=='/api/health' && !request.identity) throw unauthorized();

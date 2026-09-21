@@ -1,3 +1,8 @@
+import { BackgroundStore } from '../background/store.js';
+import { BackgroundService } from '../background/service.js';
+import { loadBackgroundConfig, type BackgroundConfig } from '../background/config.js';
+import type { BackgroundExecutor } from '../background/executor.js';
+import { backgroundRoutes } from './background-routes.js';
 import { randomUUID } from 'node:crypto';
 import { registerAuth, identityOf } from './auth.js';
 import { taskRoutes } from './task-routes.js';
@@ -12,8 +17,18 @@ import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
 
-export async function createApp(lab: PiLab, serveWeb = false) {
+export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}) {
+  const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
+  if (!backgroundConfig && lab.access && Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version) >= 3) {
+    const existing = new BackgroundStore(lab.access.db);
+    if (existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
+      throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);
+    }
+  }
+  const background = backgroundConfig ? new BackgroundService(lab, backgroundConfig, backgroundOptions?.executor) : undefined;
   const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
+  app.addHook('onClose', async () => { await background?.close(); await lab.close(); });
+  if (background) { await background.initialize(); app.addHook('onReady', () => background.start()); }
   app.addHook('onRequest', async (request, reply) => {
     const host = request.headers.host?.split(':')[0];
     if (host !== '127.0.0.1' && host !== 'localhost') {
@@ -33,8 +48,9 @@ export async function createApp(lab: PiLab, serveWeb = false) {
     }
     return reply.code(500).send({ error: { code: 'SERVER_ERROR', message: '服务暂时无法处理请求，请稍后重试。' } });
   });
-  if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab); }
+  if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab, taskId => background?.store.hasTaskReservations(taskId) ?? false); }
   else app.get('/api/auth/session',async()=>({mode:'test'}));
+  if (lab.access) await backgroundRoutes(app,background,backgroundOptions?.env);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
   await app.register(async scoped => {
@@ -45,8 +61,8 @@ export async function createApp(lab: PiLab, serveWeb = false) {
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
+    app.get('/information',(_request,reply)=>reply.sendFile('index.html'));
   }
-  app.addHook('onClose', () => lab.close());
   return app;
 }
 

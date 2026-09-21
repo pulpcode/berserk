@@ -4,7 +4,7 @@
 
 W01-5 的文件作业先按 [E01～E15](../../.trellis/tasks/09-17-w01-5-artifact-versions/acceptance.md) 独立验证任务 × 席位工作区、上传即普通文件、最小沙盒与文件交付；成果上报、业务状态与完整运行记录不作为该增量通过条件，最终 MVP 仍需下列完整验收。
 
-任务与访问首增量已实现并部署，按 [TA01～TA16](../../.trellis/tasks/09-21-task-scope-and-seat-access/acceptance.md) 记录开发验证与用户验收。当前 [第二增量 BG01～BG22](../../.trellis/tasks/09-21-background-execution/acceptance.md) 为待审标准、未执行；不以本期完成 FG06 全部方向为前提。智能分流到下一增量再设计，原后台 BG 清单仅为讨论存档。
+任务与访问首增量已实现并部署，按 [TA01～TA16](../../.trellis/tasks/09-21-task-scope-and-seat-access/acceptance.md) 记录开发验证与用户验收。当前 [第二增量 BG01～BG22](../../.trellis/tasks/09-21-background-execution/acceptance.md) 已完成开发验证、待部署与用户验收；不以本期完成 FG06 全部方向为前提。智能分流到下一增量再设计，原后台 BG 清单仅为讨论存档。
 
 ## 0. 通用框架阶段验收（M0／M1）
 

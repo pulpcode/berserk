@@ -57,13 +57,17 @@ export interface ConversationTurn {
   finalMessageId?: string;
 }
 export interface SessionSummary { id: string; workspaceId: string; workItemId?: string; title: string; updatedAt: string }
+/** Host queue projection only; never appended to native conversation history. */
+export interface BackgroundJobReservation { id: string; status: 'queued' | 'running'; revision: number }
 export interface SessionActivity extends SessionSummary {
+  backgroundJob?: BackgroundJobReservation;
   active: RequestState | null;
   lastResult: Pick<RequestResult, 'requestId' | 'status'> | null;
   recoveryWarning?: string;
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  backgroundJob?: BackgroundJobReservation;
   turns?: ConversationTurn[];
   interactions?: Interaction[];
   fileOutputs?: FileOutput[];

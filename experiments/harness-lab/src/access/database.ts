@@ -23,7 +23,7 @@ export async function openDatabase(dataDir: string): Promise<DatabaseSync> {
           PRAGMA user_version=1; COMMIT;`);
         await chmod(dbPath, 0o600); await atomicWrite(markerPath, 'collaboration-v1\n');
       }
-      if (![1,2].includes(Number(db.prepare('PRAGMA user_version').get()?.user_version)) || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
+      if (![1,2,3].includes(Number(db.prepare('PRAGMA user_version').get()?.user_version)) || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
       return db;
     } catch (error) { db.close(); throw error instanceof RequestError ? error : stateError(); }
 }

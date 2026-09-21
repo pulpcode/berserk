@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read for authentication, task metadata, workspace access or account provisioning. This increment supersedes the anonymous entry assumptions in W01-8 for formal mode. Keep one PiLab/data root; no event bus, detached jobs, personnel handover or second chat store.
+Read for authentication, task metadata, workspace access or account provisioning. This increment supersedes the anonymous entry assumptions in W01-8 for formal mode. Keep one PiLab/data root; no personnel handover or second chat store. Optional background intake/execution is specified separately in [Information Processing and Seat Delivery](background-execution.md).
 
 ## 2. Signatures
 

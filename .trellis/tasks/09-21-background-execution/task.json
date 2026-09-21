@@ -2,8 +2,8 @@
   "id": "background-execution",
   "name": "background-execution",
   "title": "信息处理与席位投递",
-  "description": "设计可靠接入、Pi 后台预处理、多席位投递、人员确认后的对话／后台分析及受限信息处理中心；待审，未实施。",
-  "status": "planning",
+  "description": "实现可靠接入、Pi 后台预处理、多席位投递、人员确认后的对话／后台分析及受限信息处理中心。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "background-execution",
   "package": null,
@@ -26,16 +26,18 @@
     ".trellis/tasks/09-21-background-execution/design.md",
     ".trellis/tasks/09-21-background-execution/acceptance.md",
     ".trellis/tasks/09-21-background-execution/implement.md",
-    ".trellis/tasks/09-21-background-execution/research/basis.md"
+    ".trellis/tasks/09-21-background-execution/research/basis.md",
+    ".trellis/tasks/09-21-background-execution/validation.md",
+    ".trellis/spec/backend/background-execution.md"
   ],
-  "notes": "按最新讨论更新第二增量文档；未激活实施。原讨论快照不变，第一增量用户验收独立，第三增量仍保留方向。",
+  "notes": "2026-09-21 用户批准实施；设计基线 9b98c22。2026-09-22 完成代码与开发验证，尚未部署，待用户验收。第一增量验收独立，第三增量仅保留方向。",
   "meta": {
     "stage": "M1 第二增量",
-    "designStatus": "pending-review",
-    "implementationApproved": false,
-    "implementationComplete": false,
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
     "desktopOnly": true,
-    "baselineCommit": "683cd37",
+    "baselineCommit": "9b98c22",
     "contextManifestsCurated": true,
     "criteria": [
       "BG01",
@@ -82,6 +84,15 @@
       "规则快照与分席位投递记录",
       "后台分析队列与普通会话的衔接",
       "中心权限与席位私有内容边界"
-    ]
+    ],
+    "deploymentStatus": "pending",
+    "userAcceptance": "pending",
+    "validation": {
+      "record": "validation.md",
+      "unitIntegrationTests": 462,
+      "browserTests": 92,
+      "sigkillTests": 5,
+      "livePiDocker": "research/live-validation.json"
+    }
   }
 }

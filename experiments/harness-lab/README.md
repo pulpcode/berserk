@@ -302,3 +302,39 @@ npm run access:admin -- account --data-dir /绝对路径/数据目录 --username
 退出会清理本页未发送内容与附件引用；已接受的 Agent 处理继续，重新登录后可查结果。不同账号并行验收应使用独立浏览器配置或隐身会话；同一浏览器标签页共享登录。
 
 `npm run probe:access` 使用新临时数据根运行真实模型与 Docker 的任务上下文、席位文件隔离、重启续聊验证；不启动生产监听器，不打开生产会话库。权限与登录主要由 `tests/access.test.ts` 和 `tests/e2e/access.spec.ts` 确定性验收。
+
+## 信息处理与席位投递
+
+登录模式下可选启用本功能：接收来源文本／文件，Pi 后台预处理后投递一个或多个席位；席位人员再选择进入对话，或明确提交后台分析。对话入口只准备资料和草稿，不自动发送。后台分析沿用本席位所选任务的文件，执行完可继续原会话。
+
+先复制 `config/background.example.json` 到受控的本地配置文件，核对来源、处理方案及实际席位 ID。在被 Git 忽略的环境文件中设置：
+
+```dotenv
+LAB_BACKGROUND_CONFIG=/绝对路径/background.json
+# 至少 24 字符的随机来源凭证；由部署人员设置，不提交 Git
+MATERIAL_FEED_TOKEN=填入随机凭证
+```
+
+配置的 `enabled:false` 使首次来源接收和队列均暂停。之后网页开关持久保存，重启不会用配置值覆盖。`concurrency` 控制后台作业数，`modelConcurrency` 控制进程内真实模型调用数，`backlogLimit` 统计未匹配信息和排队作业。来源凭证只能提交该来源，不能登录席位或管理规则。
+
+停服备份数据根后，给账号或席位授予指定来源的信息中心权限：
+
+```sh
+npm run background:admin -- grant --data-dir /绝对路径/数据目录 --source material-feed --account a --permission manage --service-stopped
+# 只读观察权限将 manage 改为 view；按席位授权将 --account a 改为 --seat test-seat
+npm run background:admin -- list --data-dir /绝对路径/数据目录 --service-stopped
+```
+
+授权者在工作台左下进入“信息处理中心”，查看信息记录、后台作业，维护“处理与投递规则”。新建规则选择已登记方案和接收席位，再启用来源接收与队列。普通席位通过“收到的信息”查看各自收件；信息中心权限不授予其他席位的私有分析内容。
+
+集成入口使用 `Authorization: Bearer <来源凭证>`：
+
+- `POST /api/integrations/:sourceId/uploads`，JSON `{name,size}`；随后 `PUT /uploads/:uploadId/content` 上传 `application/octet-stream` 字节。
+- `POST /api/integrations/:sourceId/events`，JSON `{sourceMessageId,title,text,uploadIds?,subjectId?,occurredAt?}`；纯附件消息传空 `text`。
+- `GET /api/integrations/:sourceId/events?sourceMessageId=...` 查询已接受回执。
+
+同一消息重送沿用 `sourceMessageId`；同键同内容返回原回执，同键异内容返回 409。无启用规则的信息会保存为待匹配，不启动模型；管理人员明确补处理后才入队。投递失败可单独重试，预处理不会重跑。脚本需要人工批准时后台以 `HUMAN_ACTION_REQUIRED` 结束，保留文件；人员通过普通对话继续核对。
+
+新增 SQLite 元数据以 schema v3 保存，Pi 原生历史不迁移、不另存一份聊天。文件位于 `background/events`（固定正文）、`background/files`（固定输入与交付副本）、`background/jobs/<id>`（预处理工作文件、原生会话和日志）；人员分析仍在原任务 × 席位目录。运行中异常退出后标为中断，不自动重放工具；排队项重启后重新校验再领取。
+
+`npm run probe:background` 使用临时账号／任务和新临时目录，调用真实模型与 Docker 验证上传、Python 处理、双席位投递、前台接手、后台分析及续聊，保存 `validation.json`，不启动生产监听器。发布需另行更新服务；回退前保留新收到的数据，使用匹配的旧程序与完整备份。

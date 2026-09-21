@@ -22,6 +22,7 @@ export function activityStatus(session: SessionActivity) {
     }
     return '处理中';
   }
+  if (session.backgroundJob) return session.backgroundJob.status === 'queued' ? '后台分析排队中' : '后台分析中';
   if (session.recoveryWarning) return '需要恢复';
   if (session.lastResult?.status === 'failed') return '回复未完成';
   if (session.lastResult?.status === 'cancelled') return '已停止';
@@ -30,15 +31,15 @@ export function activityStatus(session: SessionActivity) {
 }
 
 function needsAttention(session: SessionActivity, unread: Record<string, boolean>) {
-  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted')) || unread[session.id]);
+  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted')) || unread[session.id]);
 }
 
 function Status({ session, unread = false, id }: { session: SessionActivity; unread?: boolean; id?: string }) {
-  const failed = !session.active && (session.recoveryWarning || (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'));
+  const failed = !session.active && !session.backgroundJob && (session.recoveryWarning || (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'));
   const label = activityStatus(session);
   if (!label) return unread ? <span id={id} className="unread-dot" role="img" aria-label="有新回复未读" title="有新回复未读" /> : null;
-  return <span id={id} className={`activity-status${session.active ? ' running' : failed ? ' attention' : ''}`}>
-    {session.active ? <span className="status-dot" /> : failed ? <CircleAlert size={12} aria-hidden="true" /> : null}
+  return <span id={id} className={`activity-status${session.active || session.backgroundJob ? ' running' : failed ? ' attention' : ''}`}>
+    {session.active || session.backgroundJob ? <span className="status-dot" /> : failed ? <CircleAlert size={12} aria-hidden="true" /> : null}
     <span>{label}</span>{unread && <span className="unread-dot" role="img" aria-label="有新回复未读" title="有新回复未读" />}
   </span>;
 }
@@ -66,9 +67,9 @@ interface NavigationProps {
 export function WorkspaceNavigation({ taskMode,taskMeta,createTask,publicAllowed,showTask,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
-  const running = activities.filter(session => session.active).length;
+  const running = activities.filter(session => session.active || session.backgroundJob).length;
   const fresh = activities.filter(session => unread[session.id]).length;
-  const errors = activities.filter(session => session.recoveryWarning || (!session.active && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
+  const errors = activities.filter(session => session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
   return <>
     <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" aria-describedby={domId('activity-counts')}>
       <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />
@@ -80,7 +81,7 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,publicAllowed
       {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=><div key={group}>{taskMode && <div className="section-label">{group==='public'?'公共任务':'席位私有'}{(group==='private' || publicAllowed) && <button className="icon-button" aria-label={group==='public'?'建立公共任务':'建立席位私有任务'} onClick={()=>createTask?.(group==='public'?'public':'private')}><Plus size={15}/></button>}</div>}
       {workspaces.filter(workspace=>group==='legacy' || taskMeta?.[workspace.id]?.visibility===group).map(workspace => {
         const sessions = activities.filter(session => session.workspaceId === workspace.id);
-        const activeCount = sessions.filter(session => session.active).length;
+        const activeCount = sessions.filter(session => session.active || session.backgroundJob).length;
         const attentionCount = sessions.filter(session => needsAttention(session, unread)).length;
         return <section className={`workspace-group${workspaceId === workspace.id ? ' current' : ''}`} key={workspace.id} aria-label={workspace.name}>
           <div className="workspace-group-heading">
@@ -105,7 +106,7 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,publicAllowed
 export function ActivityOverview({ workspaces, activities, unread, selectSession, loading }: Pick<NavigationProps, 'workspaces' | 'activities' | 'unread' | 'selectSession' | 'loading'>) {
   const { domId } = useApi();
   const [filter, setFilter] = useState<'all' | 'running' | 'attention'>('all');
-  const visible = activities.filter(session => filter === 'all' || (filter === 'running' ? Boolean(session.active) : needsAttention(session, unread)));
+  const visible = activities.filter(session => filter === 'all' || (filter === 'running' ? Boolean(session.active || session.backgroundJob) : needsAttention(session, unread)));
   const choices = [{ id: 'all', label: '全部' }, { id: 'running', label: '处理中' }, { id: 'attention', label: '需关注' }] as const;
   return <div className="activity-overview" id={domId('activity-overview')} tabIndex={0} aria-label="全部动态列表">
     <div className="activity-heading"><p className="eyebrow">项目概览</p><h1>全部动态</h1><p>查看各项目的处理进展，继续需要你关注的对话。</p></div>

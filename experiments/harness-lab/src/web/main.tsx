@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, FileText, FolderOpen, Menu, MessageSquare, Plus, Settings, Square, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, FileText, FolderOpen, Inbox as InboxIcon, Workflow, Menu, MessageSquare, Plus, Settings, Square, X } from 'lucide-react';
 import type { WorkspaceResources } from '../contracts/index';
 import { useChat } from './useChat';
 import { useApi } from './api';
+import { InformationCenter } from './InformationCenter';
+import { Inbox } from './Inbox';
+import { useInformationQuery } from './information-ui';
+import type { BackgroundAction, InformationCapabilities } from '../contracts/background';
+import type { AgentInfo, SessionSnapshot } from '../contracts/index';
 import { useInstructions } from './useInstructions';
 import { Panel, Resources, CompactionPanel } from './Resources';
 import { ActivityOverview, WorkspaceNavigation } from './WorkspaceNavigation';
@@ -37,7 +42,12 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   const showTask=(id:string)=>{const task=taskFor(id);if(task)setTaskPanel({task,visibility:task.visibility});};
   const refreshModelInfo = chat.refreshInfo;
   useEffect(() => { if (seatActive) void refreshModelInfo().catch(() => {}); }, [seatActive, refreshModelInfo]);
-  const [view, setView] = useState<'chat' | 'activity' | 'work'>('chat');
+  const [view, setView] = useState<'chat' | 'activity' | 'work' | 'inbox' | 'information'>(() => location.pathname === '/information' ? 'information' : location.pathname === '/inbox' ? 'inbox' : 'chat');
+  const information = useInformationQuery<InformationCapabilities>('/api/information/access', seatActive && !!identity, 10000);
+  useEffect(() => {
+    const pop = () => setView(location.pathname === '/information' ? 'information' : location.pathname === '/inbox' ? 'inbox' : 'chat');
+    window.addEventListener('popstate', pop); return () => window.removeEventListener('popstate', pop);
+  }, []);
   const instructions = useInstructions();
   const workControl = useRef<WorkInboxHandle>(null);
   const [resources, setResources] = useState<Record<string, WorkspaceResources>>({});
@@ -105,11 +115,13 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   const snapshot = chat.snapshots[chat.selected];
   const selectedActivity = chat.activities.find(session => session.id === chat.selected);
   const active = selectedActivity?.active || snapshot?.active;
-  const busy = Boolean(active || chat.pending || chat.creating);
+  const backgroundJob = selectedActivity?.backgroundJob || snapshot?.backgroundJob;
+  const [backgroundStopping, setBackgroundStopping] = useState(false);
+  const busy = Boolean(active || backgroundJob || chat.pending || chat.creating);
   const loadingSession = Boolean(chat.selected && !snapshot);
   const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
   const waiting = active?.phase === 'waiting_answer' || active?.phase === 'waiting_confirmation';
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : 'Agent 处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '';
+  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : 'Agent 处理中' : backgroundJob?.status === 'queued' ? '后台分析排队中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
@@ -126,7 +138,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
     const element = scroll.current;
     const result = snapshot?.lastResult;
     if (!seatActive || view !== 'chat' || sidebarOpen || resourceOpen || filesOpen || workspaceForm || newSessionOpen || settingsOpen || compactionDetail || loading || loadingSession || !element || document.visibilityState !== 'visible' || !document.hasFocus()) return;
-    if (snapshot?.active || selectedActivity?.active || result?.status !== 'succeeded' || selectedActivity?.lastResult?.requestId !== result.requestId || selectedActivity.lastResult.status !== 'succeeded') return;
+    if (snapshot?.active || selectedActivity?.active || snapshot?.backgroundJob || selectedActivity?.backgroundJob || result?.status !== 'succeeded' || selectedActivity?.lastResult?.requestId !== result.requestId || selectedActivity.lastResult.status !== 'succeeded') return;
     if (element.scrollHeight - element.scrollTop - element.clientHeight <= 32) markRead(selectedId, result.requestId);
   }, [seatActive, view, sidebarOpen, resourceOpen, filesOpen, workspaceForm, newSessionOpen, settingsOpen, compactionDetail, loading, selectedId, markRead, loadingSession, snapshot, selectedActivity]);
   useLayoutEffect(() => {
@@ -181,16 +193,56 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   function rememberPosition() {
     if (view === 'chat' && scroll.current && !loadingSession) positions.current[scrollKey] = { top: scroll.current.scrollTop, follow: follow.current };
   }
-  function enterWorkspace(id: string) { if(id.startsWith('task:')){showTask(id);return;} navigationRequest.current++; rememberPosition(); chat.selectWorkspace(id); setView('chat'); setSidebarOpen(false); if (sidebarOpen || view === 'activity') requestAnimationFrame(() => textarea.current?.focus()); }
-  function showActivity() { navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('activity'); setSidebarOpen(false); requestAnimationFrame(() => document.getElementById(domId('activity-overview'))?.focus()); }
+  function enterWorkspace(id: string) { if (location.pathname !== '/') history.pushState(null, '', '/'); if(id.startsWith('task:')){showTask(id);return;} navigationRequest.current++; rememberPosition(); chat.selectWorkspace(id); setView('chat'); setSidebarOpen(false); if (sidebarOpen || view === 'activity') requestAnimationFrame(() => textarea.current?.focus()); }
+  function showActivity() { if (location.pathname !== '/') history.pushState(null, '', '/'); navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('activity'); setSidebarOpen(false); requestAnimationFrame(() => document.getElementById(domId('activity-overview'))?.focus()); }
   function selectSession(id: string) {
+    if (location.pathname !== '/') history.pushState(null, '', '/');
     navigationRequest.current++;
     rememberPosition(); setView('chat'); chat.select(id); setSidebarOpen(false);
     if (sidebarOpen || view === 'activity') requestAnimationFrame(() => textarea.current?.focus());
   }
   function showWork(id?: string, assignWorkspaceId?: string) {
+    if (location.pathname !== '/') history.pushState(null, '', '/');
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('work'); setSidebarOpen(false);
     workControl.current?.open(id, assignWorkspaceId);
+  }
+  async function stopBackground() {
+    if (!backgroundJob || backgroundStopping) return;
+    setBackgroundStopping(true);
+    try { await api(`/api/background/jobs/${encodeURIComponent(backgroundJob.id)}/cancel`, { revision: backgroundJob.revision }); await chat.refresh(chat.selected); await chat.refreshActivity(); }
+    catch (reason) { setCreationError(reason instanceof Error ? reason.message : '停止未完成，请查询状态。'); }
+    finally { setBackgroundStopping(false); }
+  }
+  function showInformation() {
+    navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('information'); setSidebarOpen(false); history.pushState(null, '', '/information');
+  }
+  function showInbox() {
+    navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('inbox'); setSidebarOpen(false); history.pushState(null, '', '/inbox');
+  }
+  function leaveInformation() { history.pushState(null, '', '/'); setView('chat'); }
+  async function openInformationSession(id: string) {
+    const captured = navigationRequest.current;
+    try { const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(id)}`); chat.adopt(session); await chat.refreshActivity(); if (captured === navigationRequest.current) selectSession(id); }
+    catch (reason) { setCreationError(reason instanceof Error ? reason.message : '会话读取失败。'); }
+  }
+  async function preparedAnalysis(action: BackgroundAction) {
+    if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return;
+    const captured = navigationRequest.current;
+    const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(action.sessionId)}`);
+    chat.adopt(session);
+    if (!action.jobId) {
+      const resources = action.selection?.skill ? await api<WorkspaceResources>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/resources`) : undefined;
+      const roles = action.selection?.agent ? await api<AgentInfo[]>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/agents`) : undefined;
+      const skill = resources?.skills.find(item => item.id === action.selection?.skill?.id);
+      const role = roles?.find(item => item.name === action.selection?.agent?.name);
+      if (chat.prepareDraft(session.id, action.draft || '')) {
+        if (skill && action.selection?.skill) chat.prepareSelection(session.id, 'skill', { ...skill, hash: action.selection.skill.hash });
+        if (role && action.selection?.agent) chat.prepareSelection(session.id, 'agent', { ...role, hash: action.selection.agent.hash });
+        for (const file of action.fileRefs || []) chat.attachments.reference(session.id, action.workspaceId, { ...file, name: file.name || file.path.split('/').at(-1) || file.path }, fileLimits?.maxAttachments || 20);
+      }
+    }
+    await chat.refreshActivity(); directory.refresh();
+    if (captured === navigationRequest.current) selectSession(session.id);
   }
   function newChat() { rememberPosition(); setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {
@@ -211,9 +263,9 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   }
 
   return <div className="app-shell">
-    <a className="skip-link" href={`#${domId(view === 'chat' ? 'conversation' : view === 'work' ? 'work-inbox' : 'activity-overview')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : '跳至全部动态'}</a>
+    <a className="skip-link" href={`#${domId(view === 'chat' ? 'conversation' : view === 'work' ? 'work-inbox' : view === 'inbox' ? 'information-inbox' : view === 'information' ? 'information-center' : 'activity-overview')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : view === 'inbox' ? '跳至收到的信息' : view === 'information' ? '跳至信息处理中心' : '跳至全部动态'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
-    <aside ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
+    <aside hidden={view === 'information'} ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
       <div className="sidebar-brand"><BrandMark /><span><img className="brand-wordmark" src="/brand/axon-wordmark.svg" width="81" height="27" alt="Axon" /><span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
       {!identity && seats.length > 0 && <label className="test-seat-selector">测试席位<select aria-label="测试席位" value={seatId} onChange={event => { chat.noteNavigation(); switchSeat(event.target.value); }}>{seats.map(seat => <option key={seat.id} value={seat.id}>{seat.name}</option>)}</select></label>}
       <div className="navigation-actions">
@@ -221,25 +273,27 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
         {!identity && <button className="create-workspace" onClick={() => { rememberPosition(); setWorkspaceForm(true); setWorkspaceError(''); }} aria-label="新建项目"><Plus size={15} aria-hidden="true" />新建项目</button>}
       </div>
       {seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} onClick={() => showWork()}><FileText size={17} aria-hidden="true" />工作待办</button>}
+      {identity && <button className="work-inbox-trigger" aria-pressed={view === 'inbox'} onClick={showInbox}><InboxIcon size={17} aria-hidden="true" />收到的信息</button>}
       {identity && <div className="task-filters"><input aria-label="搜索任务" placeholder="搜索任务" value={taskSearch} onChange={e=>setTaskSearch(e.target.value)}/><label><input type="checkbox" checked={archived} onChange={e=>setArchived(e.target.checked)}/>含已归档</label>{directory.error && <p role="alert">{directory.error}<button onClick={directory.refresh}>重试</button></p>}</div>}
       <WorkspaceNavigation taskMode={!!identity} taskMeta={taskMeta} publicAllowed={identity?.createPublicTask} createTask={visibility=>setTaskPanel({visibility})} showTask={showTask} workspaces={navigationWorkspaces} activities={chat.activities} unread={chat.unread} workspaceId={chat.workspaceId} selected={chat.selected} activityView={view === 'activity'} loading={chat.loading} creating={chat.creating} createSession={id => { void createChat(id); }} enterWorkspace={enterWorkspace} selectSession={selectSession} showActivity={showActivity} />
       <div className="sources"><button className="resources-trigger" onClick={() => setResourceOpen(true)} disabled={!chat.workspaceId}><BookOpen size={16} aria-hidden="true" />项目资料<ArrowUpRight size={14} aria-hidden="true" /></button><p>查看指令、资料与 Skill。</p></div>
-      <div className="sidebar-footer">{identity && <div className="account-footer"><span>{identity.displayName}<small>{identity.seatName}</small></span><button onClick={logout}>退出</button></div>}{(!identity || identity.manageModelSettings) && <button className="settings-trigger" aria-label="设置" onClick={() => setSettingsOpen(true)} aria-haspopup="dialog" aria-expanded={settingsOpen}><Settings size={18} aria-hidden="true" /><span>设置</span><span className="settings-trigger-model" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span></button>}</div>
+      <div className="sidebar-footer">{information.data?.sources.length ? <button className="settings-trigger" onClick={showInformation}><Workflow size={18} aria-hidden="true" /><span>信息处理中心</span></button> : null}{identity && <div className="account-footer"><span>{identity.displayName}<small>{identity.seatName}</small></span><button onClick={logout}>退出</button></div>}{(!identity || identity.manageModelSettings) && <button className="settings-trigger" aria-label="设置" onClick={() => setSettingsOpen(true)} aria-haspopup="dialog" aria-expanded={settingsOpen}><Settings size={18} aria-hidden="true" /><span>设置</span><span className="settings-trigger-model" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span></button>}</div>
     </aside>
 
-    <main className="workspace" inert={sidebarOpen || undefined}>
+    <main hidden={view === 'information'} className="workspace" inert={sidebarOpen || undefined}>
       <header className="workspace-header">
-        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'activity' ? '全部动态' : view === 'work' ? '工作待办' : snapshot?.title || '新对话'}</span></div>
+        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'activity' ? '全部动态' : view === 'work' ? '工作待办' : view === 'inbox' ? '收到的信息' : snapshot?.title || '新对话'}</span></div>
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : undefined}>{view === 'chat' ? chat.workspace?.name : '所有项目'}</span>
         {seats.length > 0 && view === 'chat' && (!identity || currentTask?.visibility==='public') && <button className="files-trigger" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}>分派工作</button>}
         {fileLimits?.enabled && view === 'chat' && <button className="files-trigger" onClick={() => setFilesOpen(true)} disabled={!chat.workspaceId} aria-haspopup="dialog"><FolderOpen size={16} aria-hidden="true" />文件</button>}
       </header>
 
-      {identity && currentTask && <button className="task-detail-link" onClick={()=>showTask(chat.workspaceId)}>{currentTask.visibility==='public'?'公共任务':'席位私有'} · {currentTask.state==='archived'?'已归档 · ':''}任务说明</button>}
+      {identity && currentTask && view === 'chat' && <button className="task-detail-link" onClick={()=>showTask(chat.workspaceId)}>{currentTask.visibility==='public'?'公共任务':'席位私有'} · {currentTask.state==='archived'?'已归档 · ':''}任务说明</button>}
       {creationError && <div className="notice error-notice activity-error" role="alert"><CircleAlert size={16} aria-hidden="true" /><span>{creationError}</span><button onClick={() => setCreationError('')}>关闭提示</button></div>}
       {chat.activityError && <div className="notice error-notice activity-error" role="status"><CircleAlert size={16} aria-hidden="true" /><span>{chat.activityError}</span><button onClick={() => void chat.refreshActivity().catch(() => {})}>重新获取动态</button></div>}
       {seats.length > 0 && <WorkInbox visible={seatActive && view === 'work'} control={workControl} seatId={seatId!} seats={seats} workspaces={identity ? chat.workspaces.filter(w=>directory.tasks.some(t=>t.id===w.taskSpaceId && t.visibility==='public' && t.state==='active')) : chat.workspaces} activities={chat.activities} maxFiles={fileLimits?.maxAttachments || 20} createSession={chat.create} openSession={selectSession} refreshActivity={chat.refreshActivity} adoptSession={chat.adopt} />}
-      {view === 'work' ? null : view === 'activity' ? <ActivityOverview workspaces={chat.workspaces} activities={chat.activities} unread={chat.unread} selectSession={selectSession} loading={chat.loading} /> : <>
+      {identity && <Inbox visible={seatActive && view === 'inbox'} tasks={directory.tasks} workspaces={chat.workspaces} seats={seats} prepared={preparedAnalysis} openSession={id => void openInformationSession(id)} />}
+      {view === 'work' || view === 'inbox' || view === 'information' ? null : view === 'activity' ? <ActivityOverview workspaces={chat.workspaces} activities={chat.activities} unread={chat.unread} selectSession={selectSession} loading={chat.loading} /> : <>
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}
       <div id={domId('conversation')} className="conversation-scroll" ref={scroll} tabIndex={0} aria-label="对话内容" onScroll={() => {
         const element = scroll.current;
@@ -258,7 +312,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && backgroundJob?.status !== 'queued' && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock">
@@ -284,7 +338,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
                 if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{busy ? <button type="button" className="stop-button" disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" />{active?.status === 'stopping' ? '正在停止' : '停止回复'}</button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
+            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button>{backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button> : busy ? <button type="button" className="stop-button" disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" />{active?.status === 'stopping' ? '正在停止' : '停止回复'}</button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
           </form>
           {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
           {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
@@ -294,6 +348,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
       </div>
       </>}
     </main>
+    <InformationCenter visible={seatActive && view === 'information'} capabilities={information.data} refreshAccess={information.refresh} tasks={directory.tasks} back={leaveInformation} openSession={id => void openInformationSession(id)} />
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
     {newSessionOpen && <NewSession workspaces={navigationWorkspaces.filter(w=>taskMeta?.[w.id]?.state!=='archived')} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
     {settingsOpen && <ModelSettings close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}

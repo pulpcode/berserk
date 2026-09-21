@@ -5,3 +5,4 @@
 {"file": ".trellis/spec/backend/task-handoff.md", "reason": "已有业务事务与固定文件，不伪造业务动作"}
 {"file": ".trellis/spec/frontend/harness-lab.md", "reason": "工作台与信息处理中心导航、草稿、身份及迟到响应隔离"}
 {"file": ".trellis/tasks/09-21-background-execution/research/basis.md", "reason": "接收、基础规则、多席位投递、人员分析与 Pi 复用缺口"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "本阶段实现的接入、持久执行、投递、权限与页面契约"}

@@ -9,6 +9,18 @@ const skills = [
   { id: 'synthesis', name: '资料综合写作', description: '综合多份资料形成有来源、可执行的方案。', version: '1' },
   { id: 'review', name: '结果检查', description: '根据资料检查草稿的事实、约束与可执行性。', version: '1' },
 ];
+/** Deployment-owned fixed Skills, independent of any seat workspace. */
+export async function loadControlledSkills(ids: readonly string[], signal?: AbortSignal): Promise<SkillFile[]> {
+  return Promise.all(ids.map(async id => {
+    signal?.throwIfAborted();
+    const skill = skills.find(item => item.id === id);
+    if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
+    const content = (await readControlled(join(fixtureDir, 'skills', skill.id, 'SKILL.md'), 16384))!;
+    if (!content.startsWith(`---\nname: ${skill.id}\ndescription:`)) throw new RequestError('RESOURCE_STATE_INVALID', 'Skill 配置损坏。', 409);
+    signal?.throwIfAborted();
+    return { ...skill, hash: hashContent(content), content };
+  }));
+}
 export interface ResourceSnapshot {
   task?: {id:string;title:string;goal:string;visibility:'public'|'private'};
   workspaceId: string; instructions: InstructionFile[];
@@ -62,11 +74,8 @@ export class ResourceService {
   }
   async readSkill(workspaceId: string, id: string, seatId?: string): Promise<SkillFile> {
     const workspace = this.workspaces.get(workspaceId, seatId);
-    const skill = skills.find(skill => skill.id === id && workspace.skillIds.includes(id));
-    if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
-    const content = (await readControlled(join(fixtureDir, 'skills', skill.id, 'SKILL.md'), 16384))!;
-    if (!content.startsWith(`---\nname: ${skill.id}\ndescription:`)) throw new RequestError('RESOURCE_STATE_INVALID', 'Skill 配置损坏。', 409);
-    return { ...skill, hash: hashContent(content), content };
+    if (!workspace.skillIds.includes(id)) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
+    return (await loadControlledSkills([id]))[0];
   }
   snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string): Promise<ResourceSnapshot> {
     return this.lock(workspaceId, seatId).run(async () => {

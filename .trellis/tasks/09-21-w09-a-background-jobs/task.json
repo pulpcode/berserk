@@ -2,7 +2,7 @@
   "id": "w09-a-background-jobs",
   "name": "w09-a-background-jobs",
   "title": "任务与后台作业分阶段规划",
-  "description": "保留讨论快照；第一增量已实现部署，第二增量信息处理与席位投递设计待审，第三增量独立设计。",
+  "description": "保留讨论快照；第一增量已实现部署，第二增量信息处理与席位投递已完成开发验证待部署，第三增量独立设计。",
   "status": "planning",
   "dev_type": "fullstack",
   "scope": "background-jobs",
@@ -31,7 +31,7 @@
     ".trellis/tasks/09-21-w09-a-background-jobs/acceptance.md",
     ".trellis/tasks/09-21-w09-a-background-jobs/research/basis.md"
   ],
-  "notes": "父任务仅跟踪路线图，不整体实施。原九份文件已保存为 2026-09-21 快照；当前审阅目标为 09-21-background-execution。",
+  "notes": "父任务仅跟踪路线图，不整体实施。原九份文件已保存为 2026-09-21 快照；第二增量实现记录为 09-21-background-execution。",
   "meta": {
     "stage": "M1 分阶段规划",
     "designStatus": "roadmap-only",
@@ -47,7 +47,7 @@
       "W08-A",
       "W09-A"
     ],
-    "proposal": "当前审阅后台预处理、多席位投递、人员分析与信息处理中心；跨系统上下文查询及智能分流后续独立设计。",
+    "proposal": "第二增量已实现后台预处理、多席位投递、人员分析与信息处理中心；跨系统上下文查询及智能分流后续独立设计。",
     "pendingProductDecisions": [],
     "implementationTarget": false,
     "snapshot": "research/snapshots/2026-09-21-background-proposal/README.md"

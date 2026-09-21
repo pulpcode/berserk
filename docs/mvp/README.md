@@ -2,7 +2,7 @@
 
 整理日期：2026-09-21。版本：v0.8。状态：已明确垂直场景 Agent 作业平台定位，补齐成熟 Harness 基础能力；框架先行、业务后接入，调度实现继续后延。
 
-当前审阅 [信息处理与席位投递](../../.trellis/tasks/09-21-background-execution/review.md)：可靠接入、Pi 预处理、多席位投递、人员确认后的分析及信息处理中心，尚未实施。[任务与访问首增量](../../.trellis/tasks/09-21-task-scope-and-seat-access/review.md) 已实现并部署，用户验收独立记录。“上下文查询与智能分流”到下一增量再设计，无需本次一并审定；[总体规划与讨论存档](../../.trellis/tasks/09-21-w09-a-background-jobs/review.md) 保留已有结果。
+当前 [信息处理与席位投递](../../.trellis/tasks/09-21-background-execution/review.md)：可靠接入、Pi 预处理、多席位投递、人员确认后的分析及信息处理中心，已实现并完成开发验证，待部署与用户验收。[任务与访问首增量](../../.trellis/tasks/09-21-task-scope-and-seat-access/review.md) 已实现并部署，用户验收独立记录。“上下文查询与智能分流”到下一增量再设计，无需本次一并审定；[总体规划与讨论存档](../../.trellis/tasks/09-21-w09-a-background-jobs/review.md) 保留已有结果。
 
 [W01-10 聊天过程展示优化](../../.trellis/tasks/09-20-w01-10-chat-presentation/design.md) 已实现、验证并部署，见[验证记录](../../.trellis/tasks/09-20-w01-10-chat-presentation/research/validation-results.md)。此前 [W01-9 文件引用与 Skill、Agents 选择](../../.trellis/tasks/09-20-w01-9-conversation-references/review.md)（S3e）已实现并通过组合验收：`@` 选择当前工作区文件或 Agents，`/` 选择 Skill，复用已有 Pi、资源和文件能力。
 
@@ -56,7 +56,7 @@ v0.7 将第一步收敛为 **Pi 多轮对话与最小只读工具接入**：会�
 | M3 领域接入与方案闭环 | 特情处理和专业子 Agent 配置、双向地图、多源方案集成 | W09-B、W10-B、W11、W12 |
 | M4 异常验证与交付 | 双任务隔离、恢复和幂等测试、Ubuntu 部署与演示材料 | W13 |
 
-W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，W01-6/S3b 和 W01-7/S3c 已分别通过 F01～F18、G01～G15 组合验收；W01-8、W01-9 和 W01-10 已实现并部署，阶段证据见各任务记录，用户使用验收与开发验证分别记录。任务与访问首增量已实现并部署；W09-A 第二增量信息处理与席位投递已有独立待审方案，第三增量仍保留方向。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包完成状态须按各自验收确认。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
+W01-1 已完成代码实现和真实 API 验收；W01-2 已实现并通过 A01～A12 组合验收；W01-3/S2b 已实现并通过 B01～B13 组合验收，W01-4/S2c 已实现；W01-5/S3a 已实现并通过 E01～E15 组合验收，W01-6/S3b 和 W01-7/S3c 已分别通过 F01～F18、G01～G15 组合验收；W01-8、W01-9 和 W01-10 已实现并部署，阶段证据见各任务记录，用户使用验收与开发验证分别记录。任务与访问首增量已实现并部署；W09-A 第二增量信息处理与席位投递已完成开发验证，待部署与用户验收，第三增量仍保留方向。入口为 [W01 需求与验收](../../.trellis/tasks/09-16-w01-harness-validation/prd.md)、[首增量设计](../../.trellis/tasks/09-16-w01-harness-validation/design.md)、[后续设计](../../.trellis/tasks/09-16-w01-harness-validation/design-later.md) 和 [实施计划](../../.trellis/tasks/09-16-w01-harness-validation/implement.md)。首增量通过即可独立演示，不等待完整 T 矩阵；其余工作包完成状态须按各自验收确认。仓库现有 `00-bootstrap-guidelines` 为规范初始化任务，与本 MVP 工作清单分开管理。
 
 用户已具备 DeepSeek、Kimi 等 API 和 Ubuntu 服务器，建设后由用户配置接入信息；具体模型、接口协议、资源规格及预算届时补齐，不要求现在提供密钥。凭证放入项目目录的本地配置并排除 Git 跟踪。协议设计可以先行，内核与技术路线通过 W01 收敛。样板业务、席位矩阵、成果字段与地图在 M2／M3 再收敛。人员、工期、成本和性能阈值未确定，本稿不补造承诺。
 

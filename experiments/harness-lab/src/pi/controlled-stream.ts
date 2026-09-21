@@ -3,6 +3,7 @@ import type { ModelRuntime } from '@earendil-works/pi-coding-agent';
 import type { LabConfig } from '../server/config.js';
 import type { UsageSummary } from '../contracts/index.js';
 import { tokenUsage } from './compaction-history.js';
+import type { ModelPermits } from '../background/model-permits.js';
 
 /** Fixed, credential-free categories also preserve Pi's native retry/overflow classifiers. */
 export function providerError(raw: string): string {
@@ -24,13 +25,14 @@ function failedMessage(model: Model<Api>, text: string, aborted = false): Assist
     usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0, cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } } };
 }
 export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConfig>, selected: Model<Api>, context: Context,
-  options: SimpleStreamOptions | undefined, purpose: 'reply' | 'compaction', reminder: string, signal: AbortSignal, usage: UsageSummary) {
+  options: SimpleStreamOptions | undefined, purpose: 'reply' | 'compaction', reminder: string, signal: AbortSignal, usage: UsageSummary,
+  admission?: { permits: ModelPermits; waiting: () => void; started: () => void }) {
   const safe = createAssistantMessageEventStream();
-  usage.modelAttempts++;
-  if (purpose === 'compaction') usage.compactionAttempts++; else usage.replyAttempts++;
   void (async () => {
     let final: AssistantMessage | undefined;
     let receivedUsage = false;
+    let attempted = false;
+    let release: (() => void) | undefined;
     const idle = new AbortController();
     const combined = AbortSignal.any([signal, idle.signal, ...(options?.signal ? [options.signal] : [])]);
     let transportActive = false;
@@ -40,7 +42,13 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
       if (config.httpIdleTimeoutMs) idleTimer = setTimeout(() => idle.abort(new Error('模型流空闲超时。')), config.httpIdleTimeoutMs);
     };
     try {
-      signal.throwIfAborted();
+      combined.throwIfAborted();
+      if (admission) { admission.waiting(); release = await admission.permits.acquire(combined); }
+      combined.throwIfAborted();
+      attempted = true;
+      usage.modelAttempts++;
+      if (purpose === 'compaction') usage.compactionAttempts++; else usage.replyAttempts++;
+      admission?.started();
       progress();
       const upstream = runtime.streamSimple(selected, context, {
         ...options, signal: combined,
@@ -92,7 +100,8 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
       final = failedMessage(selected, providerError(idle.signal.aborted ? 'timeout' : error instanceof Error ? error.message : ''), signal.aborted || options?.signal?.aborted);
     } finally {
       clearTimeout(idleTimer);
-      if (!receivedUsage) usage.unknownUsageAttempts++;
+      release?.();
+      if (attempted && !receivedUsage) usage.unknownUsageAttempts++;
       const result = !final || final.stopReason === 'pending' ? failedMessage(selected, providerError('')) : final;
       if (result.stopReason === 'error' || result.stopReason === 'aborted') safe.push({ type: 'error', reason: result.stopReason, error: result });
       else safe.push({ type: 'done', reason: result.stopReason as 'stop' | 'length' | 'toolUse' | 'deferred', message: result });

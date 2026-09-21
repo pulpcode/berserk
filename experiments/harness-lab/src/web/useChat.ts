@@ -27,15 +27,17 @@ function mergeById<T extends { id: string }>(previous: T[], incoming: T[]): T[] 
   return [...incoming.filter(item => !known.has(item.id)), ...previous.map(item => updates.get(item.id) || item)];
 }
 function activityOf(snapshot: SessionSnapshot, previous?: SessionActivity): SessionActivity {
-  const { id, workspaceId, workItemId, title, updatedAt, active, lastResult, recoveryWarning } = snapshot;
+  const { id, workspaceId, workItemId, title, updatedAt, active, lastResult, recoveryWarning, backgroundJob } = snapshot;
   const sameState = JSON.stringify(active) === JSON.stringify(previous?.active)
+    && backgroundJob?.id === previous?.backgroundJob?.id && backgroundJob?.revision === previous?.backgroundJob?.revision
     && lastResult?.requestId === previous?.lastResult?.requestId && lastResult?.status === previous?.lastResult?.status;
-  return { id, workspaceId, workItemId, title, updatedAt, active, recoveryWarning,
+  return { id, workspaceId, workItemId, title, updatedAt, active, recoveryWarning, backgroundJob,
     lastResult: lastResult ? { requestId: lastResult.requestId, status: lastResult.status } : null,
     statusUpdatedAt: sameState && previous ? previous.statusUpdatedAt : active ? new Date().toISOString() : updatedAt };
 }
 function sameActivity(a: SessionActivity, b?: SessionActivity) {
   return b && a.id === b.id && a.workspaceId === b.workspaceId && a.workItemId === b.workItemId && a.title === b.title && a.updatedAt === b.updatedAt
+    && a.backgroundJob?.id === b.backgroundJob?.id && a.backgroundJob?.revision === b.backgroundJob?.revision && a.backgroundJob?.status === b.backgroundJob?.status
     && a.statusUpdatedAt === b.statusUpdatedAt && a.recoveryWarning === b.recoveryWarning
     && a.active?.requestId === b.active?.requestId && a.active?.status === b.active?.status
     && a.active?.phase === b.active?.phase && a.active?.toolName === b.active?.toolName
@@ -419,7 +421,9 @@ export function useChat() {
 
   return { info, refreshInfo, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
     activities, activityError, refreshActivity, markRead, noteNavigation, adopt: put,
-    unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
+    prepareDraft: (id: string, text: string) => { if (Object.hasOwn(draftsRef.current, id)) return false; draft(id, text); return true; },
+    prepareSelection: (id: string, kind: 'skill' | 'agent', value: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(id, kind, value),
+    unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && !item.backgroundJob && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
     select: (id: string) => {
       const owner = activitiesRef.current.find(item => item.id === id)?.workspaceId;
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
