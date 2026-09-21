@@ -54,6 +54,8 @@ Stop the service before `--apply`. Never use a running service's changing files 
 
 Pi packages and JSONL interpretation stay inside `src/pi` and corresponding integration tests. The server uses concrete `PiLab` methods; resource/workspace services do not import Pi; the browser imports contracts. Do not introduce a generic adapter until there is a tested need.
 
+`SessionSnapshot.turns` is an optional readonly presentation projection of validated request resource/result boundaries. It exposes historical terminal status and, only for a succeeded request whose actual last native message is an assistant with `stopReason=stop`, nonempty text, no tool calls and a same-request public message, `finalMessageId`. Empty/tool-only tails must disqualify earlier text; never scan backwards for a substitute final answer. Exclude the active request; valid unfinished requests project interrupted, and unscoped legacy messages get no invented turn. Reading this field must not append history, change runtime success rules, or invoke a model.
+
 `SessionActivity` extends `SessionSummary` with `active`, `lastResult` restricted to `{requestId,status}`, optional `recoveryWarning` and `statusUpdatedAt`. `RequestState` adds optional `phase: preparing | generating | tool | compacting | subagent | waiting_answer | waiting_confirmation` and public `toolName`. Reserve starts preparing; actual model invocation sets generating; tool start/end sets tool/preparing. Stopping takes precedence over phase. Update status time on real transitions, not every token. After restart use persisted results/recovery warnings, never invent a running request. Activity uses a native-leaf-keyed metadata projection cache; repeated polling must not call `get()` and materialize every message. Return fresh DTOs without paths, full messages, tool arguments, instruction changes or resource contents. This is local-user navigation visibility, not cross-workspace model access or a full Run contract.
 
 ### Workspace storage and migration
@@ -176,6 +178,8 @@ Base: ordinary conversation needs no tool. A missing instruction file contribute
 Bad: follow a caller path, discover developer-machine AGENTS/Skills, let an old tool result override current file rules, report cancelled writes as rolled back, invent old loaded text from current files, or rebuild a lost index by assigning every native file to the default workspace.
 
 ## 6. Tests Required
+
+For macOS-to-Linux releases, use an archive method that excludes AppleDouble `._*` metadata and verify the archive inventory before upload. Native macOS `tar --exclude` alone can still generate these entries; `fixtures/agents/._*.md` is rejected as an invalid role. Preflight the actual extracted release against a stopped-data copy, including the Agents catalog, before switching the live service. Never weaken role validation to accommodate packaging debris.
 
 Run `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:e2e` and `npm run build` as applicable. Lint enforces Pi/browser dependency boundaries.
 

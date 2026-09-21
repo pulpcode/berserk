@@ -21,7 +21,7 @@ import { ResourceService, resourceInfo, type ResourceSnapshot } from '../resourc
 import { checkDirectory, hashContent, stateError } from '../resources/files.js';
 import { loadAgentRoles, type AgentRole } from './roles.js';
 import { SUBAGENT_START, SUBAGENT_RESULT, CHILD_ORIGIN, subagentHistory, initialSubagent, decodeSubagentStart, subagentResultText, addUsage, type SubagentStart } from './subagent-history.js';
-import { decodeResourceRecord, validateHistoryEvidence, unfinishedRequests } from './history-evidence.js';
+import { conversationTurns, decodeResourceRecord, validateHistoryEvidence, unfinishedRequests } from './history-evidence.js';
 import { RESOURCE_ENTRY, SKILL_ENTRY, RESULT_ENTRY, publicToolName, requestRecord, resourceTools } from './resource-tools.js';
 import { CollaborationService } from '../collaboration/service.js';
 import { handoffConfirmation, type WorkDetail } from '../contracts/collaboration.js';
@@ -381,7 +381,7 @@ export class PiLab {
     return {
       ...this.summary(record), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
       updatedAt: entries.at(-1)?.timestamp || record.manager.getHeader()!.timestamp,
-      messages, active: requestState(record.active),
+      messages, active: requestState(record.active), turns: conversationTurns(entries, messages, record.active?.id),
       interactions: interactionHistory(entries, record.workspaceId, id, record.active?.id, record.seatId),
       ...(history.outputs.length ? { fileOutputs: history.outputs } : {}),
       ...(subagents.size ? { subagents: [...subagents.values()] } : {}),

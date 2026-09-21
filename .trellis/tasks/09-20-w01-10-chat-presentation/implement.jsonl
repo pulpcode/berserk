@@ -1,0 +1,4 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "对话、请求归属、历史卡片、滚动与焦点契约"}
+{"file": ".trellis/spec/backend/index.md", "reason": "后端指南入口"}
+{"file": ".trellis/tasks/09-20-w01-10-chat-presentation/design.md", "reason": "本轮只读投影与折叠边界"}

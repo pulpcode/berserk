@@ -646,7 +646,7 @@ test('旧动态请求不覆盖新流状态，更新失败保留状态并可恢�
   try {
     await page.goto('/');
     const input = page.getByRole('textbox', { name: '发送消息' });
-    await expect(input).toBeVisible();
+    await expect(input).toBeEnabled();
     mock.faults.holdActivity = true;
     await expect.poll(() => Boolean(mock.faults.releaseActivity)).toBe(true);
     await input.fill('慢速回复'); await input.press('Enter');
@@ -1291,4 +1291,157 @@ test('启动工作区归属读取完成前保护输入，随后文字归入初�
     await expect(page.getByRole('table')).toBeVisible();
     expect(mock.counts.sends).toBe(1);
   } finally { mock.faults.releaseActivity?.(); await mock.close(); }
+});
+
+function presentationSession(session: SessionSnapshot) {
+  session.active = { requestId: 'presentation', status: 'responding', phase: 'tool' };
+  session.messages = [
+    { id: 'presentation-user', requestId: 'presentation', role: 'user', text: '分析资料并提供结果。' },
+    { id: 'presentation-note', requestId: 'presentation', role: 'assistant', text: '先核对资料中的依据。' },
+    { id: 'presentation-read', requestId: 'presentation', role: 'tool', toolName: 'read', toolCallId: 'read-call', text: '资料原文完整保留。' },
+  ];
+}
+function completePresentation(session: SessionSnapshot) {
+  session.active = null;
+  session.lastResult = { requestId: 'presentation', status: 'succeeded' };
+  session.turns = [{ requestId: 'presentation', status: 'succeeded', finalMessageId: 'presentation-final' }];
+  session.messages.push({ id: 'presentation-final', requestId: 'presentation', role: 'assistant', text: '核对完毕，最终建议如下。' });
+  session.updatedAt = new Date().toISOString();
+}
+
+test('可靠成功后折叠连续过程，确认错误与成果保持顺序且手动展开跨会话稳定', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.interactions = [{ schemaVersion: 1, interactionId: 'past-confirm', workspaceId: 'w1', sessionId: 'A', requestId: 'presentation', toolCallId: 'confirm', toolName: 'bash', createdAt: '', kind: 'confirmation', status: 'approved', execution: 'unknown', action: { title: '处理文件', description: '核对操作', parameters: {}, command: 'echo test' }, rule: { ruleId: 'r', reason: '需要确认', version: '1' } }];
+    session.messages.push(
+      { id: 'confirmation', requestId: 'presentation', role: 'tool', toolName: 'bash', toolCallId: 'confirm', resultMissing: true, text: '未收到执行结果，无法确认是否已执行。' },
+      { id: 'error', requestId: 'presentation', role: 'tool', toolName: 'custom_tool', isError: true, text: '服务暂不可用' },
+      { id: 'file', requestId: 'presentation', role: 'tool', toolName: 'file_output', toolCallId: 'output', text: '已生成文件' },
+    );
+    session.fileOutputs = [{ downloadId: 'fixed', workspaceId: 'w1', sessionId: 'A', requestId: 'presentation', toolCallId: 'output', path: '报告.md', name: '报告.md', size: 40, hash: 'hash', createdAt: '' }];
+    completePresentation(session);
+    await page.goto('/');
+    const process = page.locator('.process-group');
+    await expect(process).not.toHaveAttribute('open');
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(page.locator('.interaction-card')).toContainText('执行结果未确认');
+    await expect(page.locator('.tool-result.failed > summary')).toHaveText('调用工具失败');
+    await expect(page.locator('.file-output')).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath('chat-process-collapsed.png') });
+    await process.locator(':scope > summary').click();
+    await expect(page.getByText('先核对资料中的依据。', { exact: true })).toBeVisible();
+    await page.locator('.tool-result').first().locator('summary').click();
+    await expect(page.getByText('资料原文完整保留。', { exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath('chat-process-expanded.png') });
+    await page.getByRole('button', { name: /^会话 B/ }).click();
+    await page.getByRole('button', { name: /^会话 A/ }).click();
+    await expect(process).toHaveAttribute('open', '');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('完成不会自动折叠有焦点的过程，也不重置手动展开', async ({ page }, testInfo) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    await page.goto('/');
+    const process = page.locator('.process-group');
+    await expect(process).toHaveAttribute('open', '');
+    const tool = page.locator('.tool-result > summary'); await tool.focus();
+    await page.screenshot({ path: testInfo.outputPath('chat-process-running.png') });
+    completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(process).toHaveAttribute('open', ''); await expect(tool).toBeFocused();
+    await page.getByRole('textbox', { name: '发送消息' }).focus();
+    await expect(process).toHaveAttribute('open', '');
+    await process.locator(':scope > summary').click();
+    await expect(process).not.toHaveAttribute('open');
+    await expect(process.locator(':scope > summary')).toBeFocused();
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('向上阅读时完成保留展开与阅读位置，旧快照无终态依据不隐藏过程', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.unshift({ id: 'old-long', role: 'assistant', text: Array.from({ length: 60 }, (_, index) => `早前说明 ${index}`).join('\n\n') });
+    await page.goto('/');
+    const process = page.locator('.process-group'); await expect(process).toHaveAttribute('open', '');
+    const scroll = page.locator('.conversation-scroll');
+    await scroll.evaluate(node => { node.scrollTop = 200; node.dispatchEvent(new Event('scroll')); });
+    completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeAttached();
+    await expect(process).toHaveAttribute('open', '');
+    await expect.poll(() => scroll.evaluate(node => node.scrollTop)).toBe(200);
+    delete session.turns;
+    await page.reload();
+    await expect(process).toHaveAttribute('open', '');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('后台完成后返回向上阅读会话不自动收起新过程段', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.unshift({ id: 'old-long', role: 'assistant', text: Array.from({ length: 60 }, (_, index) => `早前说明 ${index}`).join('\n\n') });
+    await page.goto('/'); await expect(page.locator('.process-group')).toHaveAttribute('open', '');
+    const scroll = page.locator('.conversation-scroll');
+    await scroll.evaluate(node => { node.scrollTop = 200; node.dispatchEvent(new Event('scroll')); });
+    await page.getByRole('button', { name: /^会话 B/ }).click();
+    session.messages.push({ id: 'boundary', requestId: 'presentation', role: 'tool', toolName: 'bash', isError: true, text: '需要核对' }, { id: 'another-read', requestId: 'presentation', role: 'tool', toolName: 'read', text: '新的资料结果' });
+    completePresentation(session);
+    await page.getByRole('button', { name: /^会话 A/ }).click();
+    await expect(page.locator('.process-group')).toHaveCount(2);
+    await expect(page.locator('.process-group[open]')).toHaveCount(2);
+    await expect.poll(() => scroll.evaluate(node => node.scrollTop)).toBe(200);
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+for (const target of ['link', 'table'] as const) test(`流式说明移入过程时保留${target}焦点且不自动折叠`, async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.pop();
+    session.messages[1].text = target === 'link' ? '[来源](https://example.com/source)' : '| 字段 | 数据 |\n| --- | --- |\n| 目标 | 内容 |';
+    await page.goto('/');
+    const control = target === 'link' ? page.getByRole('link', { name: '来源', exact: true }) : page.getByRole('region', { name: '回复表格，可横向滚动' });
+    await control.focus(); await expect(control).toBeFocused();
+    session.messages.push({ id: 'new-read', requestId: 'presentation', role: 'tool', toolName: 'read', text: '读取完成' });
+    completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(control).toBeFocused();
+    await expect(page.locator('.process-group')).toHaveAttribute('open', '');
+    await page.getByRole('button', { name: /^会话 B/ }).click();
+    await page.getByRole('textbox', { name: '发送消息' }).focus();
+    await page.getByRole('button', { name: /^会话 A/ }).click();
+    await expect(control).not.toBeFocused();
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+test('尾部说明并入手动收起的过程时焦点优先，摘要焦点不阻止手动收起', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!; presentationSession(session);
+    session.messages.push({ id: 'tail-note', requestId: 'presentation', role: 'assistant', text: '[继续核对来源](https://example.com/source)' });
+    await page.goto('/');
+    const process = page.locator('.process-group');
+    await expect(process).toHaveAttribute('open', '');
+    await process.locator(':scope > summary').click();
+    await expect(process).not.toHaveAttribute('open');
+    const link = page.getByRole('link', { name: '继续核对来源' }); await link.focus();
+    session.messages.push({ id: 'last-read', requestId: 'presentation', role: 'tool', toolName: 'read', text: '核对结果' });
+    completePresentation(session);
+    await expect(page.getByText('核对完毕，最终建议如下。', { exact: true })).toBeVisible();
+    await expect(link).toBeFocused(); await expect(process).toHaveAttribute('open', '');
+    await process.locator(':scope > summary').click();
+    await expect(process).not.toHaveAttribute('open'); await expect(process.locator(':scope > summary')).toBeFocused();
+    await page.getByRole('textbox', { name: '发送消息' }).fill('保留下一轮草稿');
+    await expect(process).not.toHaveAttribute('open');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
 });

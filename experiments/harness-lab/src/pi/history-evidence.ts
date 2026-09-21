@@ -1,7 +1,7 @@
 import { COMPOSER_INPUT, composerInputText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
-import type { InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
+import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
 import { validCompactionSummary } from './compaction-history.js';
 import { SUBAGENT_START, SUBAGENT_RESULT, subagentHistory, validUsage, addUsage } from './subagent-history.js';
 import { emptyUsage } from './controlled-stream.js';
@@ -48,6 +48,39 @@ export function unfinishedRequests(entries: SessionEntry[]) {
     }
   }
   return [...requests.values()];
+}
+
+/** Read only after strict history validation. Never infer completion from message text/order alone. */
+export function conversationTurns(entries: SessionEntry[], messages: PublicMessage[], activeRequestId?: string): ConversationTurn[] {
+  const turns = new Map<string, ConversationTurn>();
+  const visible = new Map(messages.map(message => [message.id, message]));
+  let currentRequest: string | undefined;
+  let lastMessage: Extract<SessionEntry, { type: 'message' }> | undefined;
+  for (const entry of entries) {
+    if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) {
+      currentRequest = (entry.data as { requestId: string }).requestId;
+      turns.set(currentRequest, { requestId: currentRequest, status: 'interrupted' });
+      lastMessage = undefined;
+    } else if (entry.type === 'message' && currentRequest) {
+      // Empty/tool-only assistant messages still replace the candidate; never look backwards.
+      lastMessage = entry;
+    } else if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) {
+      const { requestId, status } = entry.data as RequestResult;
+      const turn: ConversationTurn = { requestId, status };
+      const message = lastMessage?.message;
+      const projected = lastMessage && visible.get(lastMessage.id);
+      if (lastMessage && status === 'succeeded' && currentRequest === requestId && message?.role === 'assistant'
+        && message.stopReason === 'stop' && !message.content.some(block => block.type === 'toolCall')
+        && message.content.some(block => block.type === 'text' && block.text.trim())
+        && projected?.role === 'assistant' && projected.requestId === requestId && projected.text.trim()) {
+        turn.finalMessageId = lastMessage.id;
+      }
+      turns.set(requestId, turn);
+      currentRequest = undefined;
+      lastMessage = undefined;
+    }
+  }
+  return [...turns.values()].filter(turn => turn.requestId !== activeRequestId);
 }
 /** Reject incompatible/cross-workspace host entries before exposing or resuming native history. */
 export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: string, parentSessionId?: string, readonly = false): RequestResult | null {

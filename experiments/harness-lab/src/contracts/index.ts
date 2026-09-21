@@ -50,6 +50,12 @@ export interface RequestResult {
   usageSummary?: UsageSummary;
   subagentUsage?: UsageSummary;
 }
+/** Read-only evidence for presentation; absence of a final ID must not imply a final answer. */
+export interface ConversationTurn {
+  requestId: string;
+  status: RequestResult['status'];
+  finalMessageId?: string;
+}
 export interface SessionSummary { id: string; workspaceId: string; workItemId?: string; title: string; updatedAt: string }
 export interface SessionActivity extends SessionSummary {
   active: RequestState | null;
@@ -58,6 +64,7 @@ export interface SessionActivity extends SessionSummary {
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  turns?: ConversationTurn[];
   interactions?: Interaction[];
   fileOutputs?: FileOutput[];
   subagents?: SubagentSummary[];

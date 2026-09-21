@@ -109,7 +109,17 @@ Recognize an actively typed standalone trigger fragment only; pasted email/path/
 
 `tests/e2e/references.spec.ts` uses the real local API/Pi with a deterministic provider to check selection, no implicit model calls, drafts and async races, failure recovery, IME, pagination/deduplication and responsive rendering. Real model delegation is verified separately by `probe:references`.
 
-### Subagent cards
+### Chat process presentation (W01-10)
+
+Chat replies do not render a repeated avatar or Axon name above the content. Keep the sidebar product identity and accessible message labels.
+
+Reuse `conversationItems` ownership and deduplication, then group only contiguous ordinary process items within one request. Do not move user messages, questions/confirmations, errors, interrupted/unknown results or downloadable files into a fold. A successful `turns` entry plus a visible same-request `finalMessageId` is required for automatic folding; missing evidence keeps process expanded. Final answers remain visible and pure chat has no empty process control. Tool/Agents counts describe actual grouped items, never an inferred overall success.
+
+Scope manual fold choices to seat/session/request/stable segment identity. Preserve them through stream updates and navigation. Automatic folding must not hide focused controls or disturb reading above the bottom; keep the segment open when uncertain. Expanding/viewing process is local UI work and never invokes a model or replays tools. Use compact tool rows, safe Markdown and neutral unknown-tool labels; do not expose internal reasoning or main/subagent hierarchy.
+
+When a valid persisted file output matches the exact request and tool call, keep its download card and deduplicate the missing generic `file_output` result, as before. An actual tool error still stays visible beside a matching file card; absent matching output evidence, the unknown-result notice remains visible.
+
+### Agents process cards
 
 `SubagentCard` renders actual role/description/task and public phase/result/error inside the owning parent request. Anchor by requestId plus toolCallId, fall back to the owning request boundary, and deduplicate its generic tool result. Merge snapshot and subagent.updated by subagentId under the existing session/request/stream revision guards; parent terminal snapshots remain authoritative. Child success updates only its card, not parent completion or unread markers. Parent stopping takes precedence until all work settles; use the existing cancel endpoint.
 

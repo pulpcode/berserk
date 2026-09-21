@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, Fragment } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronDown, CircleAlert, FileText, FolderOpen, Menu, MessageSquare, Plus, Settings, Square, X } from 'lucide-react';
-import Markdown, { type Components } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import type { PublicMessage, WorkspaceResources } from '../contracts/index';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, FileText, FolderOpen, Menu, MessageSquare, Plus, Settings, Square, X } from 'lucide-react';
+import type { WorkspaceResources } from '../contracts/index';
 import { useChat } from './useChat';
 import { useApi } from './api';
 import { useInstructions } from './useInstructions';
@@ -11,37 +9,16 @@ import { Panel, Resources, CompactionPanel } from './Resources';
 import { ActivityOverview, WorkspaceNavigation } from './WorkspaceNavigation';
 import { NewSession } from './NewSession';
 import { ModelSettings } from './ModelSettings';
-import { SubagentCard, conversationItems, subagentStatus } from './SubagentCard';
-import { Attachments, FileOutputCard, FilesPanel, HistoricalFile } from './Files';
-import { InteractionCard } from './InteractionCard';
+import { subagentStatus } from './SubagentCard';
+import { Attachments, FilesPanel } from './Files';
 import { WorkInbox, LinkedWork, type WorkInboxHandle } from './WorkInbox';
 import { Seats, type SeatView } from './Seats';
-import { ComposerReferences, SelectionHistory, type ComposerReferenceHandle } from './ComposerReferences';
+import { ComposerReferences, type ComposerReferenceHandle } from './ComposerReferences';
+import { ChatPresentation, type ProcessChoices } from './ChatPresentation';
 import './styles.css';
-
-const markdownComponents: Components = {
-  table: ({ children }) => <div className="markdown-table" role="region" aria-label="回复表格，可横向滚动" tabIndex={0}><table>{children}</table></div>,
-};
 
 function BrandMark({ small = false }: { small?: boolean }) {
   return <img className={`brand-mark${small ? ' small' : ''}`} src="/brand/axon-app-icon.svg" width={small ? 27 : 38} height={small ? 27 : 38} alt="" aria-hidden="true" />;
-}
-
-function Message({ message, active, workspaceId }: { message: PublicMessage; active: boolean; workspaceId: string }) {
-  if (message.role === 'tool' && message.toolName === 'subagent') return <p className="subagent-placeholder">{message.isError ? '子任务委派未完成，请查看主回复中的说明。' : message.text || !active ? '未记录可展示的子任务详情。' : '正在准备子任务…'}</p>;
-  const fileActions: Record<string, string> = { read: '读取文件', write: '写入文件', edit: '修改文件', bash: '执行命令', ls: '列出文件', find: '查找文件', file_output: '提供文件', work_item_list: '查看工作待办', work_item_read: '查看工作详情', work_item_prepare: '准备交接', work_item_commit: '执行交接', handoff_import_file: '复制交接文件', 'work_item.list': '查看工作待办', 'work_item.read': '查看工作详情', 'work_item.prepare': '准备交接', 'work_item.commit': '执行交接', 'handoff.import_file': '复制交接文件' };
-  const action = (message.toolName && fileActions[message.toolName]) || (message.toolName === 'instructions.update' ? '更新指令' : message.toolName === 'instructions.read' ? '读取指令' : message.toolName === 'skill.read' ? '读取 Skill' : '读取资料');
-  // Match the executor's exact cancellation response, including old history and optional archived log.
-  // A nonzero exit, timeout or cleanup failure must keep its failure label even in a cancelled request.
-  const cancelled = message.toolName === 'bash' && message.isError && /^命令已取消(?:。|；已保存文件不会回滚。)(?:\n已保留命令日志：\/logs\/[0-9a-f-]{36}\/[0-9a-f]{64}\.log)?$/.test(message.text);
-  if (message.role === 'tool') return <details className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
-    <summary><FileText size={16} aria-hidden="true" /><span>{message.resultMissing ? '未收到执行结果' : cancelled ? '命令已停止' : message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
-    <div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
-  </details>;
-  return <article className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
-    {message.role === 'assistant' && <div className="message-author"><BrandMark small /><span>Axon</span></div>}
-    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} />{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>}</div>
-  </article>;
 }
 
 function App({ active: seatActive, seatId, seats, switchSeat }: SeatView) {
@@ -101,6 +78,7 @@ function App({ active: seatActive, seatId, seats, switchSeat }: SeatView) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const sidebar = useRef<HTMLElement>(null);
   const follow = useRef(true);
+  const [processChoices] = useState<ProcessChoices>(() => new Map());
   const positions = useRef<Record<string, { top: number; follow: boolean }>>({});
   const renderedScrollKey = useRef('');
   const scrollKey = chat.selected || `workspace:${chat.workspaceId}`;
@@ -120,7 +98,7 @@ function App({ active: seatActive, seatId, seats, switchSeat }: SeatView) {
   const loadingSession = Boolean(chat.selected && !snapshot);
   const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
   const waiting = active?.phase === 'waiting_answer' || active?.phase === 'waiting_confirmation';
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : '子任务处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '';
+  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : 'Agent 处理中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
@@ -262,7 +240,7 @@ function App({ active: seatActive, seatId, seats, switchSeat }: SeatView) {
             <button onClick={() => suggest('我想梳理一个问题，请先帮我明确目标和需要补充的信息。')}><MessageSquare size={19} aria-hidden="true" /><strong>一起梳理思路</strong><span>从一个问题开始讨论</span><ArrowUpRight size={15} aria-hidden="true" /></button>
             {currentResources?.sources[0] && <button onClick={() => suggest(`请读取《${currentResources?.sources[0]?.title}》，提炼要点，并说明信息依据。`)}><BookOpen size={19} aria-hidden="true" /><strong>从资料中找线索</strong><span>读取资料，提炼关键信息</span><ArrowUpRight size={15} aria-hidden="true" /></button>}
           </div>
-        </div> : <div className="message-list">{conversationItems(messages, snapshot?.subagents || [], active?.requestId, snapshot?.interactions || []).map(item => item.kind === 'interaction' ? <InteractionCard key={item.key} interaction={item.interaction} result={item.result} canRespond={item.interaction.status === 'pending' && active?.requestId === item.interaction.requestId && active.status !== 'stopping'} submission={chat.interactionSubmissions[item.interaction.interactionId]} respond={chat.respondInteraction} query={chat.queryInteraction} /> : item.kind === 'subagent' ? <SubagentCard key={item.key} child={item.child} parentStopping={active?.requestId === item.child.parentRequestId && active.status === 'stopping'} /> : <Fragment key={item.key}>{!(item.message.toolName === 'file_output' && snapshot?.fileOutputs?.some(file => item.message.role === 'tool' && item.message.toolName === 'file_output' && file.requestId === item.message.requestId && file.toolCallId === item.message.toolCallId)) && <Message workspaceId={snapshot!.workspaceId} message={item.message} active={busy && item.message.requestId === active?.requestId} />}{snapshot?.fileOutputs?.filter(file => item.message.role === 'tool' && item.message.toolName === 'file_output' && file.requestId === item.message.requestId && file.toolCallId === item.message.toolCallId).map(file => <FileOutputCard key={file.downloadId} file={file} />)}</Fragment>)}{snapshot?.fileOutputs?.filter(file => !messages.some(message => message.role === 'tool' && message.toolName === 'file_output' && message.requestId === file.requestId && message.toolCallId === file.toolCallId)).map(file => <FileOutputCard key={file.downloadId} file={file} />)}{busy && !waiting && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><BrandMark small /><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
+        </div> : <div className="message-list">{snapshot && <ChatPresentation snapshot={snapshot} active={active} busy={busy} choices={processChoices} canAutoCollapse={() => seatActive && view === 'chat' && (renderedScrollKey.current === scrollKey ? follow.current : (positions.current[scrollKey]?.follow ?? true)) && !document.querySelector('dialog[open]')} submissions={chat.interactionSubmissions} respond={chat.respondInteraction} query={chat.queryInteraction} />}{busy && !waiting && (lastMessage?.role !== 'assistant' || active?.phase === 'compacting') && <div className="thinking"><span>{active?.status === 'stopping' ? '正在停止本次回复…' : active?.phase === 'compacting' ? '正在压缩上下文…' : '正在思考…'}</span><span className="loading-dot" /></div>}</div>}
       </div>
 
       <div className="composer-dock">

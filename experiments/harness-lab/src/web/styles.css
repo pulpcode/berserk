@@ -82,7 +82,6 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .message.user { display: flex; justify-content: flex-end; }
 .message.user .message-content { max-width: 87%; border-radius: 14px 14px 4px 14px; padding: 12px 18px; background: #f0f2f3; }
 .message.user p { margin: 0; white-space: pre-wrap; }
-.message-author { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
 .assistant .message-content { padding-left: 36px; }
 .message-content p { margin: 0 0 16px; }
 .message-content p:last-child { margin-bottom: 0; }
@@ -634,3 +633,22 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 
 .composer .attachment.ready .attachment-meta { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .composer .attachment.ready .attachment-detail small:not(.attachment-meta) { font-size: 10px; line-height: 1.35; overflow-wrap: anywhere; }
+
+/* Conversation process: plain evidence rows, separate final reply and protected actions. */
+.process-group { margin: 4px 0 20px 36px; min-width: 0; }
+.process-group > summary { display: flex; align-items: center; gap: 8px; padding: 7px 0; min-height: 32px; list-style: none; cursor: pointer; color: var(--muted); font-size: 12px; }
+.process-group > summary::-webkit-details-marker { display: none; }
+.process-group > summary > svg { flex-shrink: 0; }
+.process-group > summary > svg:last-child { margin-left: auto; }
+.process-group:not([open]) > summary > svg:last-child { transform: rotate(-90deg); }
+.process-content { border-left: 1px solid var(--line); margin: 5px 0 0 7px; padding-left: 16px; }
+.process-content .message { margin: 12px 0; font-size: 13px; }
+.process-content .assistant .message-content { padding-left: 0; }
+.message-list .tool-result { border: 0; border-radius: 0; background: transparent; margin-top: 4px; margin-bottom: 12px; }
+.message-list .tool-result > summary { min-height: 32px; padding: 6px 0; gap: 8px; }
+.message-list .tool-body { padding: 6px 12px; border-left: 1px solid var(--line); }
+.message-list .tool-body pre { margin-top: 6px; }
+.message-list .subagent-card { border: 0; background: transparent; border-radius: 0; margin-top: 5px; margin-bottom: 12px; }
+.message-list .subagent-card > summary { padding: 7px 0; min-height: 34px; font-size: 12px; gap: 8px; }
+.message-list .subagent-body { border-top: 0; border-left: 1px solid var(--line); padding: 8px 14px; }
+.process-content .tool-result, .process-content .subagent-card { margin-left: 0; }
