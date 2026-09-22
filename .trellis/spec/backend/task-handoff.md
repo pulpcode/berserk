@@ -20,6 +20,8 @@ Read when changing test seats, collaboration tools, work items, handoff files or
 
 Workspace identity remains taskSpaceId × seatId in index v2. Assignment ensures the recipient's workspace without copying the sender's instructions or chat. Session links only join an idle, owned session in the same task; opening work details does not claim it.
 
+The model-visible workspace description states that sessions in the same task and seat share ordinary files, while different seats' `/workspace` paths resolve to independent directories. `assign.payload.goal` describes the work and deliverable; optional `inputPaths` selects current-workspace files frozen at preparation. Omission or `[]` remains a valid text-only assignment; paths mentioned in `goal` do not transfer files. Import file IDs may come from `inputFiles[].fileId` or `submissions[].file.fileId`. Keep these meanings in the relevant workspace/tool/field description rather than repeating bug-specific reminders.
+
 `assigned → working → submitted → completed`, or `submitted → returned → submitted`. Only the assignee claims/submits; only the creator reviews the latest submission. Multiple input files, one output file per submission. Chat success does not complete a WorkItem.
 
 `collaboration/collaboration.sqlite` (schema version 1) contains works, actions, files, submissions and session_links. Private fixed bytes live under `collaboration/files/<fileId>/content`. Marker/schema/integrity failures block opening; do not reconstruct a missing DB from files. Back up the whole stopped data directory, including SQLite and fixed files.
@@ -60,6 +62,8 @@ Bad: using the selected browser seat for a late callback, copying the sender's A
 Run typecheck, lint, unit/integration, browser tests and build. `tests/seat-api.test.ts` checks old native data and all scoped API ownership. `tests/collaboration/` checks state, bytes, deduplication, revision races, SQL rollback, corruption and actual SIGKILL during copy/before/after commit. `tests/pi/collaboration.test.ts` checks the real Pi loop with only the model deterministic, exact HITL, child restrictions and SIGKILL while waiting/around commit. `tests/e2e/handoff.spec.ts` exercises the actual service/UI with deterministic model responses.
 
 `npm run probe:handoff` uses real configured model and Docker with a new temporary data root; it never opens production data or starts another production listener. Keep live-model, browser, fault and deployment evidence separate.
+
+`npm run probe:handoff -- --attachments baseline|verify` captures actual provider messages/tools without request headers or credentials, native tool calls, fixed-file hashes and receiver-imported bytes. The baseline has one natural two-turn case; verification has three independent natural cases plus one-file, text-only and explicit-two-file controls, including submission import back to A. Retain every failure: deterministic provider tests or explicit-file success cannot substitute for natural multi-turn acceptance. Do not tighten optional parameters or add intent checks solely to make this probe pass.
 
 ## 7. Wrong vs Correct
 

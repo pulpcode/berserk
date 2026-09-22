@@ -1,0 +1,52 @@
+{
+  "release": "/home/ubuntu/axon-release-background.ClBNID",
+  "stage": "/home/ubuntu/axon-release-background.ClBNID/updates/handoff-or3pm42x",
+  "sourceBaseCommit": "ef25acf",
+  "includesWorkingTreeChanges": true,
+  "archiveSha256": "8433414430bb76c81b76dca61151f8581421f1a6b6537a0268f15953486e9b27",
+  "previousPid": 1360339,
+  "port": 4315,
+  "dataDir": "/home/ubuntu/axon-release-background.ClBNID/data",
+  "changedFiles": [
+    "src/web/HandoffFiles.tsx",
+    "src/web/InteractionCard.tsx",
+    "src/web/WorkInbox.tsx",
+    "src/contracts/collaboration.ts",
+    "src/pi/collaboration-tools.ts",
+    "src/pi/lab.ts",
+    "scripts/probe-handoff.ts"
+  ],
+  "phase": "ready",
+  "backup": "/home/ubuntu/axon-release-background.ClBNID/updates/handoff-or3pm42x/backup",
+  "backupVerified": true,
+  "dataFilesBefore": 52,
+  "pid": 1462561,
+  "health": {
+    "ok": true
+  },
+  "accounts": [
+    {
+      "account": "a",
+      "sessionIds": [
+        "01a0c3df-1db9-734e-b5b5-042afc9ec159",
+        "01a0c3f8-9cb8-76cb-bc27-ad92b495c890",
+        "df6de98a-982a-4b4c-8ab2-0ebedb06aed7"
+      ],
+      "inboxCount": 2,
+      "workCount": 2
+    },
+    {
+      "account": "b",
+      "sessionIds": [
+        "01a0c3fa-2aae-76cb-bc27-ad955b9f452f",
+        "01a0c7fa-c509-76f3-9b7e-73a8419c0ab5"
+      ],
+      "inboxCount": 1,
+      "workCount": 2
+    }
+  ],
+  "preservedContentFiles": 51,
+  "asset": "/assets/index-jpnuQFPR.js",
+  "singleAxonListener": true,
+  "deployedAt": "2026-09-22T09:15:34Z"
+}

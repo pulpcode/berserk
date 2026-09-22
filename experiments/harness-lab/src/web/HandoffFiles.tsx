@@ -10,6 +10,9 @@ import { fileSize } from './Files';
 export function HandoffFiles({ files, workspaceId }: { files: HandoffFile[]; workspaceId?: string }) {
   return <ul className="handoff-files">{files.map(file => <HandoffFileRow key={file.fileId} file={file} workspaceId={workspaceId} />)}</ul>;
 }
+export function AssignmentAttachments({ files }: { files: HandoffFile[] }) {
+  return <section aria-label="本次附件"><h4>本次附件：{files.length} 个</h4>{files.length > 0 ? <HandoffFiles files={files} /> : <p className="resource-help">本次未附文件；在工作说明中写路径不会自动交接文件。</p>}</section>;
+}
 function HandoffFileRow({ file, workspaceId }: { file: HandoffFile; workspaceId?: string }) {
   const { api, url } = useApi();
   const [preview, setPreview] = useState(false);

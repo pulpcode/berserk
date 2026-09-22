@@ -1,0 +1,347 @@
+{
+  "date": "2026-09-22",
+  "runtime": {
+    "host": "tencent-server",
+    "codeDirectory": "/home/ubuntu/axon-handoff-validation.pBhEnB",
+    "node": "24.14.0",
+    "pi": "0.85.1",
+    "model": "deepseek-flash",
+    "image": "berserk-file-runtime:w01-5",
+    "sourceBaseline": "ef25acf",
+    "isolatedData": true,
+    "productionChanged": false
+  },
+  "runs": [
+    {
+      "mode": "baseline",
+      "passed": false,
+      "modelRequestCount": 5,
+      "remoteEvidenceRoot": "/tmp/axon-handoff-live-AHthix",
+      "localEvidenceRoot": "/tmp/axon-handoff-review/baseline",
+      "files": [
+        {
+          "name": "handoff-attachment-cases.json",
+          "sha256": "63c9cb04565989e700c20bbe135850971567ad915171dac7ef5fcb79f0a6a089"
+        },
+        {
+          "name": "handoff-attachment-turns.json",
+          "sha256": "fcf07617440e507de70d115d25ed0eabd3a2805bb37bcb43028a2e69b873fc5e"
+        },
+        {
+          "name": "handoff-evidence.json",
+          "sha256": "24483f41b839156774035a72898ca9d343c907187ce1cbb57f77451d20d13110"
+        },
+        {
+          "name": "handoff-model-inputs.jsonl",
+          "sha256": "b26d20852b77dfa068e8f8bd6356b300ffb7abc10435043c4c3c4c9669d78196"
+        }
+      ],
+      "modelInputChecks": [
+        {
+          "case": "自然多轮 1 / A 分派",
+          "modelRequest": 4,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": false,
+          "inputPathsDescriptionPresent": false,
+          "submitRevisionDescriptionPresent": false,
+          "submittedFileImportDescriptionPresent": false
+        }
+      ],
+      "cases": [
+        {
+          "label": "自然多轮 1",
+          "passed": false,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文"
+          ],
+          "failure": "固定验收目标不应产生额外问题\n+ actual - expected\n\n+ 'question'\n- 'confirmation'\n",
+          "questions": [
+            {
+              "id": "scope",
+              "prompt": "分派给席位 B 的任务范围，按哪种方式？",
+              "options": [
+                {
+                  "id": "draft_only",
+                  "label": "只起草修订稿",
+                  "description": "目标：按《值班交接说明_修订要求.md》起草 值班交接说明_修订稿.md，输入为初稿与修订要求两个文件"
+                },
+                {
+                  "id": "draft_plus_review",
+                  "label": "起草修订稿 + 自查",
+                  "description": "起草后另做一轮依据/遗漏自查，一起回传"
+                },
+                {
+                  "id": "other",
+                  "label": "其他（我来说明）",
+                  "description": "你直接写出想交给 B 的具体目标"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "verify",
+      "passed": false,
+      "modelRequestCount": 46,
+      "remoteEvidenceRoot": "/tmp/axon-handoff-live-HDB4Gs",
+      "localEvidenceRoot": "/tmp/axon-handoff-review/verify",
+      "files": [
+        {
+          "name": "handoff-attachment-cases.json",
+          "sha256": "476e872428f9c14285f29dc2e83a42d859fae02c75acf26b0e9e1785b9f414cf"
+        },
+        {
+          "name": "handoff-attachment-turns.json",
+          "sha256": "dcd224e465126a7dda9153012cab925bdbf0586356b7063be088adb8a659d382"
+        },
+        {
+          "name": "handoff-evidence.json",
+          "sha256": "a975c50ccd0cb0230be4af63f7eee910999f3df95b0f1c7283f7866a0ee0ff02"
+        },
+        {
+          "name": "handoff-model-inputs.jsonl",
+          "sha256": "7a2ce452df28fd549835e4022917773574acc37ea2f2e8b04a7051a9ae3c2a17"
+        }
+      ],
+      "modelInputChecks": [
+        {
+          "case": "自然多轮 1 / A 分派",
+          "modelRequest": 4,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        },
+        {
+          "case": "自然多轮 2 / A 分派",
+          "modelRequest": 9,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        },
+        {
+          "case": "自然多轮 3 / A 分派",
+          "modelRequest": 15,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        },
+        {
+          "case": "仅交一份 / A 分派",
+          "modelRequest": 20,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        },
+        {
+          "case": "纯文字任务 / A 分派",
+          "modelRequest": 26,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        },
+        {
+          "case": "明确双附件与成果回传 / A 分派",
+          "modelRequest": 31,
+          "currentProjectPresent": true,
+          "seatBPresent": true,
+          "explicitIsolationPresent": true,
+          "inputPathsDescriptionPresent": true,
+          "submitRevisionDescriptionPresent": true,
+          "submittedFileImportDescriptionPresent": true
+        }
+      ],
+      "cases": [
+        {
+          "label": "自然多轮 1",
+          "passed": false,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文"
+          ],
+          "failure": "固定验收目标不应产生额外问题\n+ actual - expected\n\n+ 'question'\n- 'confirmation'\n",
+          "questions": [
+            {
+              "id": "confirm_scope",
+              "prompt": "确认按上述范围准备分派给 seat-b（席位 B）？",
+              "options": [
+                {
+                  "id": "as_planned",
+                  "label": "按上述范围准备（两个输入文件，交付 值班交接说明_修订稿.md）",
+                  "description": "只带初稿和修订要求两份文件"
+                },
+                {
+                  "id": "include_txt",
+                  "label": "额外把 绿植养护记录.txt 也一起交接",
+                  "description": "三个输入文件"
+                },
+                {
+                  "id": "other",
+                  "label": "还有其他调整（请说明）"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "自然多轮 2",
+          "passed": false,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文"
+          ],
+          "failure": "固定验收目标不应产生额外问题\n+ actual - expected\n\n+ 'question'\n- 'confirmation'\n",
+          "questions": [
+            {
+              "id": "task_space",
+              "prompt": "分派需要目标任务空间 ID（我猜的 ID 无效，返回 WORK_NOT_FOUND）。请提供该分派应归属的任务空间 ID。",
+              "options": [
+                {
+                  "id": "provide",
+                  "label": "我提供任务空间 ID",
+                  "description": "直接回复 UUID 形式的任务空间 ID"
+                },
+                {
+                  "id": "unsure",
+                  "label": "我不确定，请帮我查",
+                  "description": "由我在当前项目内进一步查找可用任务空间"
+                }
+              ]
+            },
+            {
+              "id": "scope",
+              "prompt": "“全部”指的范围是？",
+              "options": [
+                {
+                  "id": "revision_only",
+                  "label": "就是本次修订任务",
+                  "description": "按《修订要求》产出 设备借用说明_修订稿.md 并提交"
+                },
+                {
+                  "id": "revision_plus",
+                  "label": "还有别的",
+                  "description": "除修订外还有其他工作要一起分派，我来补充"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "自然多轮 3",
+          "passed": false,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文"
+          ],
+          "failure": "固定验收目标不应产生额外问题\n+ actual - expected\n\n+ 'question'\n- 'confirmation'\n",
+          "questions": [
+            {
+              "id": "scope",
+              "prompt": "分派给席位 B 的执行范围，按哪个？",
+              "options": [
+                {
+                  "id": "a",
+                  "label": "仅按修订要求出《会议材料归档说明_修订稿.md》",
+                  "description": "修订旧说明、登记三项信息、加核对清单和虚构示例，保留测试声明，初稿不动"
+                },
+                {
+                  "id": "b",
+                  "label": "修订稿 + 附加交付说明",
+                  "description": "在 A 的基础上，另附一份简短的修订对照说明（改了什么、依据哪条要求）"
+                }
+              ]
+            },
+            {
+              "id": "files",
+              "prompt": "是否把当前工作区的两份文件随工作一起交接给席位 B？",
+              "options": [
+                {
+                  "id": "both",
+                  "label": "两份都交（初稿 + 修订要求）"
+                },
+                {
+                  "id": "req_only",
+                  "label": "只交修订要求"
+                },
+                {
+                  "id": "none",
+                  "label": "不交附件，B 自己看要求"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "仅交一份",
+          "passed": true,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文",
+            "实际准备/确认附件为 1 份，名称、字节、hash 一致，无关文件未交接",
+            "B 工作区初始为空且不能读取 A 工作区",
+            "B 通过真实模型调用导入资料，本地文件与交接副本逐字节一致"
+          ],
+          "questions": []
+        },
+        {
+          "label": "纯文字任务",
+          "passed": false,
+          "checks": [],
+          "failure": "固定验收目标不应产生额外问题\n+ actual - expected\n\n+ 'question'\n- 'confirmation'\n",
+          "questions": [
+            {
+              "id": "task_space",
+              "prompt": "分派给席位 B 时需要指定项目任务空间（taskSpaceId），但我这边没有现成的可选项。请问用哪个任务空间 ID？",
+              "options": [
+                {
+                  "id": "provide_id",
+                  "label": "我提供任务空间 ID",
+                  "description": "请在自定义输入中粘贴该任务空间的 UUID"
+                }
+              ]
+            },
+            {
+              "id": "title",
+              "prompt": "这项工作的标题用什么？（用于交接卡片展示）",
+              "options": [
+                {
+                  "id": "default_title",
+                  "label": "拟三条会议室使用提醒"
+                },
+                {
+                  "id": "other",
+                  "label": "我来指定（自定义填写）"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "明确双附件与成果回传",
+          "passed": true,
+          "checks": [
+            "首轮真实工具结果含初稿和修订要求正文",
+            "实际准备/确认附件为 2 份，名称、字节、hash 一致，无关文件未交接",
+            "B 工作区初始为空且不能读取 A 工作区",
+            "B 通过真实模型调用导入资料，本地文件与交接副本逐字节一致",
+            "B 正式提交成果，A 通过实际模型调用导入且字节与提交副本一致"
+          ],
+          "questions": []
+        }
+      ]
+    }
+  ]
+}

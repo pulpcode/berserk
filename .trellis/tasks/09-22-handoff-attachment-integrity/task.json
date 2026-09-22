@@ -2,8 +2,8 @@
   "id": "handoff-attachment-integrity",
   "name": "handoff-attachment-integrity",
   "title": "修复跨席位文件交接与确认展示",
-  "description": "先补清 Agent 可见的工作区隔离与文件交接说明，用真实自然多轮场景验证，并改善实际附件展示；额外参数约束依据验证再议，本轮仅设计待审。",
-  "status": "planning",
+  "description": "补清工作区隔离与文件交接说明，展示实际附件并验证自然多轮；代码已修改，A2未通过，后续补充待审。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "handoff-attachments",
   "package": null,
@@ -24,12 +24,23 @@
     ".trellis/tasks/09-22-handoff-attachment-integrity/prd.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/design.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/implement.md",
-    ".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md"
+    ".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/verification.md"
   ],
-  "notes": "用户要求说明聚焦通用契约，避免重复防御提醒及按单次 bug 编写操作剧本。先补清工作区与文件交接说明，再验证额外约束的必要性。方案待审，保持 planning；未改产品代码或线上数据。",
+  "notes": "实施前提交 ef25acf。已完成说明、UI和验证代码；真实明确双附件回传及单附件通过，三组自然多轮和纯文字未完成，保留证据与待审建议。用户要求更新线上供测试，已部署当前实现，任务仍不归档。",
   "meta": {
-    "designStatus": "pending_review",
-    "implementationApproved": false,
-    "implementationComplete": false
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": false,
+    "approvedScopeCodeComplete": true,
+    "acceptancePassed": false,
+    "verificationStatus": "needs_review",
+    "deployment": {
+      "status": "ready",
+      "port": 4315,
+      "deployedAt": "2026-09-22T09:15:34Z",
+      "record": ".trellis/tasks/09-22-handoff-attachment-integrity/research/deployment.json",
+      "includesWorkingTreeChanges": true
+    }
   }
 }

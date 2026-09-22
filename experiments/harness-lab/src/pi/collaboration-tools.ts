@@ -48,7 +48,7 @@ export function collaborationTools(service: CollaborationService, options: Optio
         if (Boolean(params.workItemId) === Boolean(params.operationId)) throw new RequestError('INVALID_INPUT', '请选择一个工作编号或操作编号查询。');
         return params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
       }, signal) }),
-    defineTool({ name: 'work_item_prepare', label: '准备工作交接', description: '准备分派assign、签收claim、提交文件submit或验收/退回review。action填具体对象：assign/submit的workspaceId必须为当前工作区；其他操作用最新revision。仅保存固定内容，不显示确认卡片，也不进行正式交接。准备成功后，应立即用返回的operationId调用work_item_commit，由该工具展示确认卡片并等待用户；不要停在普通文字回复中等待确认。用户意图或文件不明确时先询问；不要代替用户决定接收席位。',
+    defineTool({ name: 'work_item_prepare', label: '准备工作交接', description: '准备分派（assign）、签收（claim）、提交文件（submit）或验收/退回（review）。assign/submit 的 workspaceId 使用当前工作区；claim/submit/review 的 expectedRevision 使用工作最新版本。保存准备内容，返回 operationId 和本次实际附件 files。核对交接内容后，用返回的 operationId 调用 work_item_commit 展示确认卡片并等待用户批准。对象或文件不明确时先澄清。',
       parameters: Type.Object({ action: workPrepareSchema }, { additionalProperties: false }), executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(scopedSignal => service.prepare(actor, scoped(params.action), {
         source: 'agent', sessionId: options.sessionId, requestId: options.requestId, toolCallId,

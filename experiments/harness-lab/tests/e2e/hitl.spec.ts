@@ -54,6 +54,44 @@ async function answer(page: Page) {
   await page.getByLabel('填写回答', { exact: true }).fill('中文输入内容');
 }
 
+for (const count of [0, 2]) test(`assignment card shows ${count} actual attachments before the description and preserves them after refresh`, async ({ page }) => {
+  const item = confirmation();
+  const files = Array.from({ length: count }, (_, index) => ({ fileId: `file-${index}`, name: index ? '修订要求.md' : '初稿.md', size: 42, hash: 'a'.repeat(64), createdAt: base.createdAt }));
+  item.toolName = 'work_item_commit';
+  item.rule = { ruleId: 'work-item-commit', reason: '正式交接需要用户确认', version: '1' };
+  item.action = { title: '分派工作', description: '随附两份文件，接收后修订初稿。', parameters: { operationId: 'op1' }, handoff: { operationId: 'op1', kind: 'assign', title: '分派工作', description: '随附两份文件，接收后修订初稿。', files } };
+  const { state } = await fixture(page, item);
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  const attachments = card.getByRole('region', { name: '本次附件', exact: true });
+  await expect(attachments.getByRole('heading', { name: `本次附件：${count} 个` })).toBeVisible();
+  expect((await attachments.boundingBox())!.y).toBeLessThan((await card.getByText(item.action.description, { exact: true }).boundingBox())!.y);
+  if (count) {
+    await page.route('**/api/handoff-files/*', route => route.fulfill({ contentType: 'text/plain', body: '# 已准备的初稿正文' }));
+    await attachments.getByRole('button', { name: '查看', exact: true }).first().click();
+    await expect(attachments.getByRole('region', { name: '初稿.md 固定副本预览' })).toContainText('已准备的初稿正文');
+    await expect(attachments.getByRole('link', { name: '下载交接文件 初稿.md' })).toHaveAttribute('href', /handoff-files\/file-0$/);
+  } else {
+    await expect(attachments).toContainText('本次未附文件；在工作说明中写路径不会自动交接文件。');
+  }
+  await page.screenshot({ path: test.info().outputPath(`assignment-attachments-${count}.png`) });
+  await page.reload();
+  await expect(attachments.getByRole('heading', { name: `本次附件：${count} 个` })).toBeVisible();
+  expect(state.posts).toHaveLength(0);
+  await card.getByRole('button', { name: '确认执行', exact: true }).click();
+  expect(state.posts).toEqual([{ requestId: 'r1', kind: 'confirmation', decision: 'approve' }]);
+});
+
+for (const kind of ['claim', 'submit', 'review'] as const) test(`${kind} confirmation does not show assignment attachment warnings`, async ({ page }) => {
+  const item = confirmation();
+  item.toolName = 'work_item_commit';
+  item.rule = { ruleId: 'work-item-commit', reason: '正式交接需要用户确认', version: '1' };
+  item.action = { title: '交接操作', description: '核对操作内容', parameters: { operationId: 'op1' }, handoff: { operationId: 'op1', kind, title: '交接操作', description: '核对操作内容', files: [] } };
+  await fixture(page, item);
+  await expect(page.getByRole('region', { name: '操作确认', exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: '本次附件', exact: true })).toHaveCount(0);
+  await expect(page.getByText(/本次未附文件/)).toHaveCount(0);
+});
+
 for (const initial of [question(), confirmation()]) test(`restart expires ${initial.kind} without reopening old controls or resending chat`, async ({ page }) => {
   const { a, state } = await fixture(page, initial);
   await page.getByRole('textbox', { name: '发送消息' }).fill('重启前编辑的新草稿');

@@ -56,6 +56,7 @@ async function assign(page: Page, title = '编制处置方案') {
   await dialog.getByRole('checkbox', { name: /数据.csv/ }).check();
   await dialog.getByRole('button', { name: '核对分派内容' }).click();
   await expect(page.getByRole('dialog', { name: '确认交接内容' })).toBeVisible();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: '本次附件：2 个' })).toBeVisible();
 }
 async function confirm(page: Page) {
   await page.getByRole('dialog').getByRole('button', { name: '确认执行交接' }).click();
@@ -75,7 +76,10 @@ test('two seats assign fixed inputs, bind a conversation, submit, return and acc
     const work = env.lab.collaboration!.list({ seatId: 'test-seat' })[0]!;
     await switchSeat(page, 'seat-b'); await inbox(page);
     await visible(page).getByRole('button', { name: /编制处置方案.*待签收/ }).click();
-    await visible(page).getByRole('button', { name: '开始办理', exact: true }).click(); await confirm(page);
+    await expect(visible(page).getByRole('heading', { name: '输入资料（2 个）' })).toBeVisible();
+    await visible(page).getByRole('button', { name: '开始办理', exact: true }).click();
+    await expect(page.getByRole('dialog').getByRole('region', { name: '本次附件', exact: true })).toHaveCount(0);
+    await confirm(page);
     await visible(page).getByRole('button', { name: '新建对话办理' }).click();
     await expect(visible(page).getByRole('button', { name: '查看关联工作' })).toBeVisible();
     const detail = env.lab.collaboration!.read({ seatId: 'seat-b' }, work.id);
@@ -207,5 +211,33 @@ test('lost preparation response resolves by client action ID without another pre
     await confirm(page);
     expect(env.controls.commits).toBe(1);
     expect(env.lab.collaboration!.list({ seatId: 'test-seat' })).toHaveLength(1);
+  } finally { await env.close(); }
+});
+
+test('text-only assignment shows zero actual attachments in confirmation and receiver detail after reload', async ({ page }) => {
+  const env = await setup(page);
+  try {
+    await page.goto('/');
+    await visible(page).getByRole('button', { name: '分派工作', exact: true }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('工作标题').fill('核对实际附件');
+    await dialog.getByLabel('工作目标').fill('随附两份文件：任务书.md、数据.csv。请按要求修订。');
+    await dialog.getByRole('button', { name: '核对分派内容' }).click();
+    const attachments = dialog.getByRole('region', { name: '本次附件', exact: true });
+    await expect(attachments).toContainText('本次附件：0 个');
+    await expect(attachments).toContainText('本次未附文件；在工作说明中写路径不会自动交接文件。');
+    const description = dialog.locator('.work-confirmation > p').first();
+    expect((await attachments.boundingBox())!.y).toBeLessThan((await description.boundingBox())!.y);
+    await expect(dialog.getByRole('button', { name: '确认执行交接' })).toBeEnabled();
+    await confirm(page);
+    await switchSeat(page, 'seat-b'); await inbox(page);
+    await visible(page).getByRole('button', { name: /核对实际附件.*待签收/ }).click();
+    await expect(visible(page).getByRole('heading', { name: '输入资料（0 个）' })).toBeVisible();
+    await expect(visible(page).getByText('本次分派未附文件', { exact: true })).toBeVisible();
+    await page.reload(); await inbox(page);
+    await visible(page).getByRole('button', { name: /核对实际附件.*待签收/ }).click();
+    await expect(visible(page).getByText('本次分派未附文件', { exact: true })).toBeVisible();
+    expect(env.controls.commits).toBe(1);
+    expect(env.lab.collaboration!.list({ seatId: 'seat-b' })[0].inputFileIds).toEqual([]);
   } finally { await env.close(); }
 });

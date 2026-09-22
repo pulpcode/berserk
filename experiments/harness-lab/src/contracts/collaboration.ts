@@ -29,7 +29,7 @@ const path = Type.String({ minLength: 1, maxLength: 4096 });
 const revision = Type.Integer({ minimum: 1 });
 const assign = {
   kind: Type.Literal('assign'), taskSpaceId: uuid,
-  payload: Type.Object({ workspaceId: uuid, assigneeSeatId: Type.String({ pattern: '^[a-zA-Z0-9_-]{1,64}$' }), title: Type.String({ minLength: 1, maxLength: 120 }), goal: Type.String({ minLength: 1, maxLength: 12000 }), inputPaths: Type.Optional(Type.Array(path, { maxItems: 100 })) }, strict),
+  payload: Type.Object({ workspaceId: uuid, assigneeSeatId: Type.String({ pattern: '^[a-zA-Z0-9_-]{1,64}$' }), title: Type.String({ minLength: 1, maxLength: 120 }), goal: Type.String({ minLength: 1, maxLength: 12000, description: '接收方需要完成的工作目标与交付要求。' }), inputPaths: Type.Optional(Type.Array(path, { maxItems: 100, description: '随工作交接的当前工作区文件路径列表，准备时保存固定副本。无附件时可省略或传空数组。' })) }, strict),
 };
 const claim = { kind: Type.Literal('claim'), workItemId: uuid, expectedRevision: revision, payload: Type.Object({}, strict) };
 const submit = { kind: Type.Literal('submit'), workItemId: uuid, expectedRevision: revision, payload: Type.Object({ workspaceId: uuid, path }, strict) };
@@ -41,7 +41,7 @@ export const pageWorkPrepareSchema = Type.Union([Type.Object({ ...assign, client
 export type PageWorkPrepareInput = Static<typeof pageWorkPrepareSchema>;
 export const workCommitSchema = Type.Object({ operationId: uuid }, strict);
 export const workReadSchema = Type.Object({ workItemId: Type.Optional(uuid), operationId: Type.Optional(uuid) }, {...strict, minProperties: 1, maxProperties: 1});
-export const handoffImportSchema = Type.Object({ fileId: uuid, path: Type.Optional(path) }, strict);
+export const handoffImportSchema = Type.Object({ fileId: { ...uuid, description: '已交接文件的编号，可从关联工作或工作详情取得，例如 inputFiles[].fileId 或 submissions[].file.fileId。' }, path: Type.Optional(path) }, strict);
 export const pageHandoffImportSchema = Type.Object({ workspaceId: uuid, path: Type.Optional(path) }, strict);
 export interface HandoffImportResult { fileId: string; workspaceId: string; path: string; name: string; size: number; hash: string }
 export const handoffConfirmationSchema = Type.Object({
