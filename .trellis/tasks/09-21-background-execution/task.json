@@ -30,7 +30,7 @@
     ".trellis/tasks/09-21-background-execution/validation.md",
     ".trellis/spec/backend/background-execution.md"
   ],
-  "notes": "2026-09-21 用户批准实施；设计基线 9b98c22。2026-09-22 完成代码与开发验证，尚未部署，待用户验收。第一增量验收独立，第三增量仅保留方向。",
+  "notes": "设计基线 9b98c22，功能提交 baaedba；2026-09-22 已部署到唯一4315实例，保留旧账号任务与历史，已验证测试资料向A/B投递，待用户验收。",
   "meta": {
     "stage": "M1 第二增量",
     "designStatus": "approved",
@@ -85,7 +85,7 @@
       "后台分析队列与普通会话的衔接",
       "中心权限与席位私有内容边界"
     ],
-    "deploymentStatus": "pending",
+    "deploymentStatus": "deployed",
     "userAcceptance": "pending",
     "validation": {
       "record": "validation.md",
@@ -93,6 +93,12 @@
       "browserTests": 92,
       "sigkillTests": 5,
       "livePiDocker": "research/live-validation.json"
+    },
+    "deployment": {
+      "record": "research/deployment.json",
+      "releaseCommit": "08f708f",
+      "port": 4315,
+      "verified": true
     }
   }
 }

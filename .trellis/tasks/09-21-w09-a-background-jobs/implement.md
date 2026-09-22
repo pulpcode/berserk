@@ -3,7 +3,7 @@
 此父任务不直接进入整体实施，按独立增量推进。
 
 1. [第一增量](../09-21-task-scope-and-seat-access/review.md) 已实现并部署，开发验证与用户验收分别记录。
-2. [第二增量](../09-21-background-execution/review.md) 已实现并完成开发验证，待部署与用户验收。
+2. [第二增量](../09-21-background-execution/review.md) 已实现并部署，待用户验收。
 3. 第三增量在进入时设计，不提前锁定上下文查询、智能分流与交付细节。
 
 现有后台作业全文保存在 [讨论快照](research/snapshots/2026-09-21-background-proposal/README.md)，没有丢弃研究结果，也不将原草案的实现顺序当成当前承诺。第一、第二增量已有独立任务；第三增量只保留路线图，不预建详细实施包。

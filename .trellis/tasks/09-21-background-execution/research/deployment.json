@@ -1,0 +1,71 @@
+{
+  "release": "/home/ubuntu/axon-release-background.ClBNID",
+  "commit": "08f708f",
+  "implementationCommit": "baaedba",
+  "previousRelease": "/home/ubuntu/axon-release-access.QCcDaB",
+  "previousPid": 1162860,
+  "backup": "/home/ubuntu/axon-release-background.ClBNID/backups/before-update/data",
+  "dataDir": "/home/ubuntu/axon-release-background.ClBNID/data",
+  "backupVerified": true,
+  "filesBefore": 28,
+  "port": 4315,
+  "pid": 1360339,
+  "health": {
+    "ok": true
+  },
+  "accounts": [
+    {
+      "account": "a",
+      "sessions": 2,
+      "centerSources": 1,
+      "inbox": 0
+    },
+    {
+      "account": "b",
+      "sessions": 1,
+      "centerSources": 0,
+      "inbox": 0
+    }
+  ],
+  "preservedContentFiles": 27,
+  "phase": "ready",
+  "deployedAt": "2026-09-22T02:21:02Z",
+  "smoke": {
+    "eventId": "eb3f3e8d-bb48-41fa-8c2e-529a5f8a0e5d",
+    "jobs": [
+      {
+        "id": "a9b476d0-db65-49fa-9f4a-0dd6bf4880b2",
+        "status": "succeeded",
+        "error": null,
+        "usage": {
+          "modelAttempts": 2,
+          "replyAttempts": 2,
+          "compactionAttempts": 0,
+          "toolCalls": 2,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 2102,
+            "output": 810,
+            "cacheRead": 1792,
+            "cacheWrite": 0,
+            "totalTokens": 4704
+          }
+        }
+      }
+    ],
+    "deliveries": [
+      {
+        "seat": "test-seat",
+        "status": "delivered"
+      },
+      {
+        "seat": "seat-b",
+        "status": "delivered"
+      }
+    ]
+  },
+  "backgroundSource": "material-feed",
+  "centerManager": "a",
+  "browserVerified": true,
+  "singleAxonListener": true
+}

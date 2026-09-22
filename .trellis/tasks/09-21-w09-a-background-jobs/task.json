@@ -2,7 +2,7 @@
   "id": "w09-a-background-jobs",
   "name": "w09-a-background-jobs",
   "title": "任务与后台作业分阶段规划",
-  "description": "保留讨论快照；第一增量已实现部署，第二增量信息处理与席位投递已完成开发验证待部署，第三增量独立设计。",
+  "description": "保留讨论快照；第一增量已实现部署，第二增量信息处理与席位投递已完成开发验证并部署待用户验收，第三增量独立设计。",
   "status": "planning",
   "dev_type": "fullstack",
   "scope": "background-jobs",
