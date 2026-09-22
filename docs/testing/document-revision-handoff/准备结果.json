@@ -1,0 +1,78 @@
+{
+  "scenarioId": "document-revision-20260922",
+  "service": "http://127.0.0.1:4315/",
+  "sourceId": "material-feed",
+  "sourceMessageId": "manual-document-revision-20260922-01",
+  "uploads": [
+    {
+      "name": "值班交接说明_初稿.md",
+      "uploadId": "56b2ef2e-d78d-413a-844f-e88e51e17023",
+      "size": 693,
+      "hash": "f36c463dd10a3814a597202dcaf5f3f7119e1cba18a058b3d0abf282277dd06f"
+    },
+    {
+      "name": "修订要求.md",
+      "uploadId": "6f1c9007-f638-45d3-937a-64190bf644b5",
+      "size": 1077,
+      "hash": "a8cf0612bc49f82326eb56746882ede87d7b648faa7e3549bc206200bef4cbb8"
+    }
+  ],
+  "rule": {
+    "id": "d202324d-f3b5-48f9-af83-ebbb76ec956b",
+    "name": "文稿修订测试：预处理后投递席位 A",
+    "revision": 2,
+    "recipientSeatIds": [
+      "test-seat"
+    ]
+  },
+  "task": {
+    "id": "edf1fd60-81fd-4eff-94da-2a27e557ef35",
+    "title": "值班交接说明修订测试",
+    "goal": "模拟文稿修订：席位 A 接收初稿与修订要求，分派席位 B 修订；B 提交一个 Markdown 修订稿，A 验收。",
+    "visibility": "public",
+    "ownerSeatId": "test-seat",
+    "state": "active",
+    "revision": 1,
+    "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+    "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+    "createdAt": "2026-09-22T03:17:58.219Z",
+    "updatedAt": "2026-09-22T03:17:58.219Z"
+  },
+  "receipt": {
+    "eventId": "8d33b1c4-7640-4230-88f3-b80ccfc2cb1b",
+    "sourceMessageId": "manual-document-revision-20260922-01",
+    "receivedAt": "2026-09-22T03:17:10.591Z",
+    "status": "accepted"
+  },
+  "jobs": [
+    {
+      "id": "e1603803-1b27-4a20-9afb-1417a08b0dd3",
+      "status": "succeeded"
+    }
+  ],
+  "deliveries": [
+    {
+      "id": "878be739-9e15-4553-94a8-805deefe4228",
+      "eventId": "8d33b1c4-7640-4230-88f3-b80ccfc2cb1b",
+      "jobId": "e1603803-1b27-4a20-9afb-1417a08b0dd3",
+      "sourceId": "material-feed",
+      "recipientSeatId": "test-seat",
+      "status": "delivered",
+      "revision": 2,
+      "createdAt": "2026-09-22T03:17:21.378Z",
+      "updatedAt": "2026-09-22T03:17:21.392Z",
+      "deliveredAt": "2026-09-22T03:17:21.392Z"
+    }
+  ],
+  "inboxUrl": "http://127.0.0.1:4315/inbox?id=878be739-9e15-4553-94a8-805deefe4228",
+  "verifiedAt": "2026-09-22T03:19:41.536787+00:00",
+  "verification": {
+    "preprocessSucceeded": true,
+    "singleEventSingleJob": true,
+    "deliveredToAOnly": true,
+    "bothAttachmentDownloadsMatchSource": true,
+    "publicTaskVisibleToBothSeats": true,
+    "noAssignmentCreated": true,
+    "noSeatAnalysisStarted": true
+  }
+}

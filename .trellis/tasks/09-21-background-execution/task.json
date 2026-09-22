@@ -18,7 +18,9 @@
   "commit": null,
   "pr_url": null,
   "subtasks": [],
-  "children": [],
+  "children": [
+    "09-22-handoff-attachment-integrity"
+  ],
   "parent": "09-21-w09-a-background-jobs",
   "relatedFiles": [
     ".trellis/tasks/09-21-background-execution/review.md",

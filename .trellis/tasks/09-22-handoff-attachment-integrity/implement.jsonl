@@ -1,0 +1,5 @@
+{"file":".trellis/spec/backend/task-handoff.md","reason":"既有 prepare/commit、固定文件、旧存储和原回执契约；身份入口以 task-access 为准。"}
+{"file":".trellis/spec/backend/task-access.md","reason":"当前登录身份、公共任务及席位工作区权限边界。"}
+{"file":".trellis/spec/backend/hitl.md","reason":"保持 Pi 原生工具调用、确认与停止语义；本次不新增参数拦截。"}
+{"file":".trellis/spec/frontend/harness-lab.md","reason":"沿用确认卡片、历史展示和前端状态约定。"}
+{"file":".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md","reason":"工作区与交接说明缺口、实际漏字段证据及自然多轮验证边界；备选机制不自动纳入实现。"}

@@ -1,0 +1,35 @@
+{
+  "id": "handoff-attachment-integrity",
+  "name": "handoff-attachment-integrity",
+  "title": "修复跨席位文件交接与确认展示",
+  "description": "先补清 Agent 可见的工作区隔离与文件交接说明，用真实自然多轮场景验证，并改善实际附件展示；额外参数约束依据验证再议，本轮仅设计待审。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "handoff-attachments",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-09-22",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-21-background-execution",
+  "relatedFiles": [
+    ".trellis/tasks/09-22-handoff-attachment-integrity/prd.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/design.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/implement.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md"
+  ],
+  "notes": "用户要求说明聚焦通用契约，避免重复防御提醒及按单次 bug 编写操作剧本。先补清工作区与文件交接说明，再验证额外约束的必要性。方案待审，保持 planning；未改产品代码或线上数据。",
+  "meta": {
+    "designStatus": "pending_review",
+    "implementationApproved": false,
+    "implementationComplete": false
+  }
+}

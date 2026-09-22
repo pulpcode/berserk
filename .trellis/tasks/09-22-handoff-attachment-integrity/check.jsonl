@@ -1,0 +1,5 @@
+{"file":".trellis/spec/backend/task-handoff.md","reason":"验证真实附件、旧记录兼容和精确确认，不将准备成功等同于用户目标完整。"}
+{"file":".trellis/spec/backend/task-access.md","reason":"验证当前席位权限和跨席位交接，不放宽文件访问。"}
+{"file":".trellis/spec/backend/hitl.md","reason":"核对仍沿用原生工具与确认流程、旧历史可读和非分派确认不回归；不要求漏填可选字段必报错。"}
+{"file":".trellis/spec/frontend/harness-lab.md","reason":"核对用户可见的真实附件、空状态和既有操作语义。"}
+{"file":".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md","reason":"对照本次真实故障和现有验证局限，防止过度承诺。"}

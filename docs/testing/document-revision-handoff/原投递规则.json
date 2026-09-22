@@ -1,0 +1,16 @@
+{
+  "name": "测试资料预处理与双席位投递",
+  "sourceId": "material-feed",
+  "profileId": "material-preprocess",
+  "recipientSeatIds": [
+    "test-seat",
+    "seat-b"
+  ],
+  "enabled": true,
+  "id": "d202324d-f3b5-48f9-af83-ebbb76ec956b",
+  "revision": 1,
+  "createdAt": "2026-09-22T02:22:48.077Z",
+  "updatedAt": "2026-09-22T02:22:48.077Z",
+  "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+  "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1"
+}
