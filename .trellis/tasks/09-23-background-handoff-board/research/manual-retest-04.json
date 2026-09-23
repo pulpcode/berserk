@@ -1,0 +1,17 @@
+{
+  "requestedByUser": "帮我发一条信息，我来测试",
+  "environment": "tencent-server:4315",
+  "sourceId": "material-feed",
+  "sourceMessageId": "manual-document-revision-20260923-retest-04",
+  "title": "【复测04·后台反馈更新后】请修订值班交接说明（附初稿和修订要求）",
+  "receivedAt": "2026-09-23T07:44:03.149Z",
+  "eventId": "0aafb72e-f2ea-497f-9199-3fe2319b3dad",
+  "attachments": ["值班交接说明_初稿.md", "修订要求.md"],
+  "jobId": "12907f9d-1b18-41cb-a583-c9b4cbea3a8f",
+  "jobStatus": "succeeded",
+  "deliveryId": "125d1435-366a-4c74-82d6-311bdc640af5",
+  "recipientSeatId": "test-seat",
+  "deliveryStatus": "delivered",
+  "serverEvidenceDirectory": "/home/ubuntu/axon-release-background.ClBNID/manual-tests/document-revision-20260923-retest-04",
+  "note": "经来源上传及事件接入API发起新信息，现有规则触发真实预处理并投递A；未重新处理旧作业，未代用户分派或确认。执行结束不替代用户对内容质量及A→B完整流程的验收。"
+}

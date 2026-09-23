@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范入口；按需读取 Harness 指引，避免大文件自动注入被截断"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "现有确认等待、取消、执行证据和重启失效契约"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "固定副本、业务事务与回执；模型工具部分按本任务待审设计更新"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "当前登录席位和任务范围，不使用历史测试席位推断权限"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口；按需读取聊天与交互部分，具体兼容要求见研究文件"}
+{"file": ".trellis/tasks/09-22-handoff-confirmation-flow/research/code-review.md", "reason": "故障证据、最小适配方式及旧历史兼容检查"}

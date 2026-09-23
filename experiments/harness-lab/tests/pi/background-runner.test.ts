@@ -9,6 +9,7 @@ import type { BackgroundExecutionInput } from '../../src/background/executor.js'
 import { PiLab } from '../../src/pi/lab.js';
 import { createBackgroundExecutor, snapshotBackgroundProfile } from '../../src/pi/background-runner.js';
 import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
+import * as policy from '../../src/execution/command-policy.js';
 import type { LabConfig } from '../../src/server/config.js';
 import { testConfig, fakeRuntime } from './fake-runtime.js';
 
@@ -49,7 +50,7 @@ describe('native Pi background adapter', () => {
     expect(JSON.stringify(env.calls)).toContain('ONLY_SERVICE_SOURCE');
     expect(JSON.stringify(env.calls)).not.toContain('PRIVATE_SEAT_INSTRUCTIONS');
     expect(JSON.stringify(env.calls)).not.toContain('meeting-notes');
-    expect(env.calls[0].context.tools?.map(tool => tool.name)).not.toEqual(expect.arrayContaining(['ask_user', 'instructions_update', 'work_item_commit']));
+    for (const tool of ['ask_user', 'instructions_update', 'work_item_prepare', 'work_item_commit', 'work_item_action']) expect(env.calls[0].context.tools?.map(item => item.name)).not.toContain(tool);
     expect(env.lab.workspaces.allBindings()).toEqual(beforeBindings);
     expect(env.lab.activity().sessions).toEqual([]);
     await env.lab.close();
@@ -79,16 +80,81 @@ describe('native Pi background adapter', () => {
     expect((await createBackgroundExecutor(restored).read(env.job))?.subagents).toEqual(result.snapshot.subagents);
   });
 
-  it('stops an ask-policy Bash command without starting it or making a confirmation wait', async () => {
-    const env = await setup(() => ({ tools: [{ name: 'bash', arguments: { command: 'rm -rf /workspace/old' } }] }), true);
-    env.input.profile = await snapshotBackgroundProfile(env.lab, { ...profile, tools: ['bash'] });
+  it.each(['preprocess', 'seat_analysis'] as const)('returns an ask-policy tool error and lets %s continue with an allowed read', async kind => {
+    const env = await setup((_context, index) => index === 0 ? { tools: [{ name: 'bash', arguments: { command: 'rm -rf /workspace/old' } }] }
+      : index === 1 ? { tools: [{ name: 'source_read', arguments: { id: kind === 'preprocess' ? 'incoming' : 'meeting-notes' } }] }
+      : { text: '已读取资料，原删除命令未执行。' }, true);
+    env.input.profile = await snapshotBackgroundProfile(env.lab, { ...profile, tools: ['bash', 'source_read'] });
+    if (kind === 'seat_analysis') {
+      const session = await env.lab.createSession();
+      Object.assign(env.job, { kind, sessionId: session.id, workspaceId: session.workspaceId, seatId: 'test-seat' });
+    }
     const result = await env.executor.execute(env.job, env.input);
-    expect(result.snapshot.lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining('HUMAN_ACTION_REQUIRED') });
+    expect(result.snapshot.lastResult?.status).toBe('succeeded');
     expect(result.snapshot.interactions).toEqual([]);
-    expect(env.calls).toHaveLength(1); expect(env.commands).toEqual([]);
+    expect(env.calls).toHaveLength(3); expect(env.commands).toEqual([]);
+    const bashDescription = env.calls[0].context.tools?.find(tool => tool.name === 'bash')?.description;
+    expect(bashDescription).toContain('后台不能等待人工确认');
+    expect(bashDescription).not.toContain('网页展示完整命令');
+    expect(env.calls[0].context.systemPrompt).not.toContain('由人员在普通对话接手');
+    const blocked = env.calls[1].context.messages.find(message => message.role === 'toolResult' && message.toolName === 'bash');
+    expect(blocked).toMatchObject({ isError: true, content: [{ type: 'text', text: expect.stringContaining('后台无法审批，本次命令未执行') }] });
+    expect(JSON.stringify(blocked)).toContain('rm 可能删除');
+    expect(env.calls[2].context.messages.find(message => message.role === 'toolResult' && message.toolName === 'source_read')).toMatchObject({ isError: false });
+    expect(result.snapshot.commandPolicies).toEqual([expect.objectContaining({ requestId: env.job.requestId, command: 'rm -rf /workspace/old', cwd: '/workspace',
+      policy: expect.objectContaining({ decision: 'ask', ruleId: 'shell.modify' }), execution: 'not_started' })]);
     await env.lab.close();
     const restored = await PiLab.create(env.config, env.runtime); cleanup.push(() => restored.close());
-    expect((await createBackgroundExecutor(restored).read(env.job))?.lastResult?.message).toContain('HUMAN_ACTION_REQUIRED');
+    const read = await createBackgroundExecutor(restored).read(env.job);
+    expect(read?.lastResult?.status).toBe('succeeded');
+    expect(read?.commandPolicies).toEqual(result.snapshot.commandPolicies);
+    expect(read?.messages).toEqual(result.snapshot.messages);
+  });
+
+  it('keeps a normal inability reply as an execution result instead of classifying business completion', async () => {
+    const env = await setup((_context, index) => index === 0 ? { tools: [{ name: 'bash', arguments: { command: 'ls "$FILES"' } }] }
+      : { text: '无法完成本次检查：所需命令未执行。' }, true);
+    env.input.profile = await snapshotBackgroundProfile(env.lab, { ...profile, tools: ['bash'] });
+    const { snapshot } = await env.executor.execute(env.job, env.input);
+    expect(snapshot.lastResult?.status).toBe('succeeded');
+    expect(snapshot.messages.at(-1)?.text).toBe('无法完成本次检查：所需命令未执行。');
+    expect(snapshot.turns?.[0].finalMessageId).toBe(snapshot.messages.at(-1)?.id);
+    expect(snapshot.commandPolicies?.[0]).toMatchObject({ execution: 'not_started', policy: { ruleId: 'shell.review', reason: expect.stringContaining('无法可靠分析') } });
+    expect(snapshot.interactions).toEqual([]);
+    expect(env.commands).toEqual([]); expect(env.calls).toHaveLength(2);
+  });
+
+  it.each(['preprocess', 'seat_analysis'] as const)('runs ordinary inspection chains and file scripts in %s but never executes a denied command', async kind => {
+    const allowed = ['cd /workspace && ls -la',
+      'cd /workspace && ls -la && echo "---HASH---" && md5sum *.md && sha256sum *.md && echo "---WC---" && wc -l -c *.md',
+      'python /workspace/analyze.py', 'node /workspace/check.js'];
+    const env = await setup((_context, index) => index === 0 ? { tools: [{ name: 'bash', arguments: { command: 'sudo ls' } },
+      ...allowed.map(command => ({ name: 'bash', arguments: { command } }))] } : { text: '文件检查完成' }, true);
+    env.input.profile = await snapshotBackgroundProfile(env.lab, { ...profile, tools: ['bash'] });
+    if (kind === 'seat_analysis') {
+      const session = await env.lab.createSession();
+      Object.assign(env.job, { kind, sessionId: session.id, workspaceId: session.workspaceId, seatId: 'test-seat' });
+    }
+    const { snapshot } = await env.executor.execute(env.job, env.input);
+    expect(snapshot.lastResult?.status).toBe('succeeded');
+    expect(snapshot.interactions).toEqual([]);
+    expect(env.commands).toEqual(allowed);
+    expect(snapshot.commandPolicies?.map(item => [item.policy.decision, item.execution])).toEqual([
+      ['deny', 'not_started'], ...allowed.map(() => ['allow', 'succeeded']),
+    ]);
+    expect(env.calls).toHaveLength(2);
+  });
+
+  it('terminates background work on policy infrastructure failure rather than returning a recoverable block', async () => {
+    vi.spyOn(policy, 'evaluateCommand').mockImplementation(() => { throw new Error('parser unavailable'); });
+    const env = await setup((_context, index) => index === 0 ? { tools: [{ name: 'bash', arguments: { command: 'ls' } },
+      { name: 'bash', arguments: { command: 'echo next' } }] } : { text: '不得调用' }, true);
+    env.input.profile = await snapshotBackgroundProfile(env.lab, { ...profile, tools: ['bash'] });
+    const { snapshot } = await env.executor.execute(env.job, env.input);
+    expect(snapshot.lastResult?.status).toBe('failed');
+    expect(snapshot.lastResult?.message).toContain('操作规则或交互记录不可用');
+    expect(snapshot.interactions).toEqual([]);
+    expect(env.commands).toEqual([]); expect(env.calls).toHaveLength(1);
   });
 
   it('uses existing native file tools and records a fixed output result', async () => {

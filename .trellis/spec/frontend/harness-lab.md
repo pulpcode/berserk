@@ -149,6 +149,8 @@ Page prepare saves the exact input and `clientActionId` before POST. Known opera
 
 The confirmation shows host-produced title/description and fixed file copies; it never re-reads mutable workspace paths. Agent confirmations reuse `InteractionCard.action.handoff`, including the same fixed-file component. Page forms cannot confirm an Agent preparation. Pending operation, per-project assignment, per-work submission choice and return-reason drafts persist separately; model secrets do not.
 
+New Agent calls display `work_item_action` as “工作交接”; keep old prepare/commit display names for historical messages. The single call waits in the existing card and then returns its receipt. Approved remains distinct from actual execution success; no extra success state/card is added.
+
 For `assign`, both confirmation entrances show `本次附件：N 个` from actual `files` before the long description, reusing `AssignmentAttachments` / `HandoffFiles`. With zero files show `本次未附文件；在工作说明中写路径不会自动交接文件。`, preserving the existing approval/rejection/cancellation controls. Never infer attachment count from prose or show this assignment warning for claim/submit/review. Work detail always shows `输入资料（N 个）`, with `本次分派未附文件` when empty. Preview/download reads existing fixed copies and creates no new handoff copy. Browser tests cover both entrances, misleading prose, refresh and non-assignment compatibility.
 
 Native dialogs preserve Escape and focus restoration, including a visible replacement trigger when opening assignment has navigated away from its original button. At 375px the selected work detail replaces the list with an explicit back button. Inputs and long filenames wrap without page overflow. The `@` file chooser remains deferred. See [backend task handoff](../backend/task-handoff.md) for payloads and effect boundaries.
@@ -189,6 +191,8 @@ Base: create/select a workspace, send an ordinary message, view a readonly Skill
 Bad: append every delta to the selected chat, silently replace an instruction draft after GET, claim Stop rolled back a saved file, lose a preflight-failed input or expose backend diagnostic records as a routine chat action.
 
 ## 6. Tests Required
+
+For a deployment built from a source archive, include `public/` alongside source and build configuration. Before replacing `dist/`, verify that its public asset paths and bytes match `public/`. After deployment, fetch the app icon, wordmark and favicon through the served URLs and check image MIME and bytes as well as status. A successful Vite build or index/JS health check does not prove public assets were packaged; a source-only archive caused missing production logos on 2026-09-23.
 
 Run `npm run typecheck`, `npm run lint`, `npm run test:e2e` and `npm run build` after relevant code changes. Browser tests use a deterministic HTTP service; they are UI evidence, not proof of real-model compliance.
 
@@ -246,3 +250,15 @@ Formal `Seats` first queries `/api/auth/session`; failures never fall back to te
 SessionStorage keys for drafts/selections/read state are view-scoped; logout warns that unsent content will clear. BroadcastChannel invalidates other same-origin tabs and focus revalidates identity. Server checks remain authoritative even before the other tab receives the event. Late results cannot update the new App. Independent simultaneous accounts require separate browser storage contexts.
 
 Task sidebar groups public and seat-private metadata. Task descriptions do not provision a workspace; a row plus or global new conversation lazily prepares the current seat's directory. Task panels use revision CAS, keep text on conflict and show latest text separately before manual merge. Unknown creation results must be queried by clientActionId before retry. Archived tasks remain accessible via filter, with new work disabled and host-enforced. Do not expose private tasks in cross-seat assignment selectors. Account/logout and privileged settings remain at bottom-left; the footer stacks these rows rather than shrinking them side-by-side.
+
+### Information center navigation and job observation
+
+`/information` retains the existing sidebar and mounted App/useChat; changing the right-hand page must not clear drafts, selection or streams. Do not require a Back to Workspace button. Default to the jobs board; preserve explicit tab/id deep links. Query state includes source/search, board/list view and independent column offsets. Browser history, reload and closing a detail preserve the originating location; polling never takes focus.
+
+`InformationJobColumn` queries `/api/information/jobs?statuses=...` independently for queued/running/succeeded and the combined failed/interrupted/cancelled column. Use returned counts and pages, not a partition of a global first page. The list retains ordinary status filtering. `InformationDrawer` displays existing input, result, tool evidence, exact-job deliveries and authorized actions; Escape closes and restores visible card focus. Sidebar navigation remains accessible while the covered board is inert.
+
+Display succeeded as execution completed, not task achieved. Both event rows and detail history associate delivery with `jobId`; a later failed reprocess must not inherit a prior successful delivery label. Native `commandPolicies` supplies command/cwd/reason and separate execution evidence; Web does not parse JSONL or infer execution from a started event. Other-seat analysis never exposes private detail or conversation links. Do not render private download cards using preprocessing service paths; use the existing file endpoint appropriate to the owner.
+
+`useInformationQuery` keys results and errors by request path. Clearing or changing the selected detail must not render the previous body's content or error. An undefined path is inactive; optional comparison alone must not match an undefined error and then dereference it.
+
+Tests cover independent board paging/counts, source/search, detail deep link/reload/back/forward/Escape/focus, old delivery versus failed reprocess, read-only operations, and navigating away from a streaming conversation while preserving its next draft. Screenshots target the existing desktop layout; no mobile product scope is added.

@@ -9,7 +9,7 @@ import { loadConfig } from '../../src/server/config.js';
 import type { Interaction, StreamEvent } from '../../src/contracts/index.js';
 import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
 import * as policy from '../../src/execution/command-policy.js';
-import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from '../../src/pi/interactions.js';
+import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory, interactionEvidence } from '../../src/pi/interactions.js';
 import { fakeRuntime, testConfig } from './fake-runtime.js';
 const cleanup: Array<() => Promise<void>> = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const fn of cleanup.splice(0).reverse()) await fn(); });
@@ -125,6 +125,11 @@ describe('fixed Pi web interactions', () => {
     lab.respondInteraction(session.id, item.interactionId, decision(item, value)); await done;
     expect(commands).toHaveLength(value === 'approve' ? 1 : 0);
     expect(lab.get(session.id).interactions?.[0]).toMatchObject(value === 'approve' ? { status: 'approved', execution: 'succeeded' } : { status: 'rejected' });
+    expect(lab.get(session.id).commandPolicies).toEqual([expect.objectContaining({ command: 'rm -- /workspace/example', cwd: '/workspace',
+      policy: expect.objectContaining({ decision: 'ask' }), execution: value === 'approve' ? 'succeeded' : 'not_started' })]);
+    const bashDescription = fake.calls[0].context.tools?.find(tool => tool.name === 'bash')?.description;
+    expect(bashDescription).toContain('网页展示完整命令');
+    expect(bashDescription).not.toContain('后台不能等待人工确认');
     const { path, dir } = await native(config); const manager = SessionManager.open(path, dir);
     const result = manager.getBranch().find(entry => entry.type === 'message' && entry.message.role === 'toolResult' && entry.message.toolName === 'bash');
     if (value === 'approve') expect(result?.type === 'message' && result.message.role === 'toolResult' && result.message.details).toHaveProperty('commandPolicy.version');
@@ -146,6 +151,38 @@ describe('fixed Pi web interactions', () => {
     await lab.start(session.id, '执行').run(() => {});
     expect(lab.get(session.id).interactions).toEqual([]); expect(commands).toHaveLength(1); expect(commands[0]).toContain('process.py');
     expect(lab.get(session.id).messages.find(message => message.toolName === 'bash')?.isError).toBe(true);
+  });
+
+  it('runs both file inspection reproductions in the foreground without a confirmation', async () => {
+    const allowed = ['cd /workspace && ls -la',
+      'cd /workspace && ls -la && echo "---HASH---" && md5sum *.md && sha256sum *.md && echo "---WC---" && wc -l -c *.md'];
+    const { lab, session, commands } = await setup((_context, index) => index === 0
+      ? { tools: allowed.map(command => ({ name: 'bash', arguments: { command } })) } : { text: '检查完成' }, { docker: true });
+    await lab.start(session.id, '检查文件').run(() => {});
+    expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(lab.get(session.id).interactions).toEqual([]);
+    expect(commands).toEqual(allowed);
+    expect(lab.get(session.id).commandPolicies?.every(item => item.policy.decision === 'allow' && item.execution === 'succeeded')).toBe(true);
+  });
+
+  it('projects only native Bash execution evidence and rejects a forged execution for an unapproved call', async () => {
+    const { lab, session, config } = await setup((_context, index) => index === 0
+      ? { tools: [{ name: 'bash', arguments: { command: 'rm old.md' } }] } : { text: '已保留文件' }, { docker: true });
+    const { item, done } = await start(lab, session.id);
+    lab.respondInteraction(session.id, item.interactionId, decision(item, 'reject')); await done;
+    const { path, dir } = await native(config); const before = await readFile(path, 'utf8');
+    const entries = SessionManager.open(path, dir).getBranch();
+    const resultIndex = entries.findIndex(entry => entry.type === 'message' && entry.message.role === 'toolResult');
+    const read = (history = entries) => interactionEvidence(history, session.workspaceId, session.id, undefined, 'test-seat');
+    expect(read().commandPolicies[0].execution).toBe('not_started');
+    expect(read(entries.slice(0, resultIndex)).commandPolicies[0].execution).toBe('unknown');
+    const duplicate = structuredClone(entries); duplicate.splice(resultIndex, 0, duplicate[resultIndex]);
+    expect(() => read(duplicate)).toThrow();
+    const forged = structuredClone(entries); const result = forged[resultIndex];
+    if (result.type !== 'message' || result.message.role !== 'toolResult') throw new Error('missing result');
+    result.message.details = { executionStarted: true, commandPolicy: read().commandPolicies[0].policy };
+    expect(() => read(forged)).toThrow();
+    expect(await readFile(path, 'utf8')).toBe(before);
   });
 
   it('reports demo execution failure after approval without relabeling it successful', async () => {

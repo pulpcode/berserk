@@ -675,20 +675,20 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 
 /* Information handling uses the desktop workbench's colors and controls. */
 .information-center[hidden], .information-inbox[hidden], .information-rules[hidden], .workspace[hidden], .sidebar[hidden] { display: none; }
-.information-center { grid-column: 1 / -1; height: 100dvh; display: flex; flex-direction: column; min-height: 0; background: var(--surface); }
+.information-center { position: relative; min-width: 0; height: 100dvh; display: flex; flex-direction: column; min-height: 0; background: var(--surface); overflow: hidden; }
 .information-center button, .information-inbox button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); border-radius: 7px; padding: 8px 12px; font-size: 13px; }
 .information-center button:hover:not(:disabled), .information-inbox button:hover:not(:disabled) { background: var(--faint); }
 .information-center .primary-action, .information-inbox .primary-action { color: white; background: var(--accent); border-color: var(--accent); }
 .information-center .primary-action:hover:not(:disabled), .information-inbox .primary-action:hover:not(:disabled) { background: #345344; }
-.information-center-header { padding: 22px 36px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.information-center-header { min-height: 77px; padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .information-center-header > div { display: flex; gap: 12px; align-items: center; }
 .information-center h1, .information-inbox h1 { margin: 0; font-size: 23px; letter-spacing: -.5px; }
 .information-center h2, .information-inbox h2 { font-size: 19px; letter-spacing: -.2px; margin: 0 0 12px; overflow-wrap: anywhere; }
 .information-center h3, .information-inbox h3 { font-size: 14px; margin: 0 0 12px; }
-.information-tabs { display: flex; gap: 26px; padding: 0 36px; border-bottom: 1px solid var(--line); }
+.information-tabs { display: flex; gap: 26px; padding: 0 28px; border-bottom: 1px solid var(--line); }
 .information-tabs button { border: none; border-radius: 0; padding: 17px 0 14px; border-bottom: 3px solid transparent; font-size: 14px; color: var(--muted); }
 .information-tabs button[aria-current] { border-bottom-color: var(--accent); color: var(--accent); font-weight: 600; }
-.information-center-body { flex: 1; min-height: 0; overflow: auto; padding: 22px 36px; }
+.information-center-body { flex: 1; min-height: 0; overflow: auto; padding: 22px 28px; scroll-padding: 20px; }
 .information-toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-bottom: 18px; }
 .information-toolbar > label, .information-form > label, .information-form fieldset > label:not(.information-check), .information-capability-options > label { display: flex; flex-direction: column; gap: 7px; color: var(--muted); font-size: 12px; }
 .information-toolbar input, .information-toolbar select, .information-form input:not([type=checkbox]), .information-form select, .information-form textarea { font: inherit; font-size: 13px; color: var(--text); background: var(--surface); padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; min-height: 36px; }
@@ -763,3 +763,46 @@ button.primary-action { background: var(--accent); border-color: var(--accent); 
 .information-center .information-back, .information-inbox .information-back { border: 0; padding-left: 0; background: transparent; color: var(--muted); }
 
 .information-queue-notice { border: 1px solid #dce5df; border-radius: 7px; padding: 12px 14px; background: #f4f7f5; color: #526a5b; font-size: 13px; line-height: 1.7; }
+
+/* Desktop job board and non-modal detail drawer share the existing workbench. */
+.information-view-toggle { display: flex; gap: 4px; border: 1px solid var(--line); border-radius: 8px; padding: 3px; }
+.information-view-toggle > button { border: 0; padding: 6px 9px; }
+.information-view-toggle > button[aria-pressed=true] { color: var(--accent); background: var(--accent-soft); }
+.information-board { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 14px; align-items: start; min-width: 780px; }
+.information-job-column { min-width: 0; background: #f7f8fa; padding: 12px; border: 1px solid var(--line); border-radius: 10px; }
+.information-job-column > header { display: flex; align-items: center; gap: 8px; padding: 2px 1px 14px; }
+.information-job-column > header h2 { font-size: 13px; margin: 0; font-weight: 600; }
+.information-job-column > header > span { margin-left: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.information-job-cards { display: flex; flex-direction: column; gap: 10px; }
+.information-center .information-job-card { width: 100%; min-width: 0; display: flex; flex-direction: column; align-items: stretch; gap: 9px; padding: 13px; text-align: left; line-height: 1.6; box-shadow: 0 1px 2px #252b3205; }
+.information-center .information-job-card:hover, .information-center .information-job-card[aria-current] { border-color: #a7bcaf; background: white; }
+.information-job-card > strong { font-size: 13px; overflow-wrap: anywhere; }
+.information-job-card > span, .information-job-card > time { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.information-card-heading { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; }
+.information-card-heading small { font-size: 10px; }
+.information-job-card .information-card-phase { color: var(--accent); }
+.information-job-card .information-card-error { color: var(--danger); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.information-delivery-summary { display: block; color: var(--muted); font-size: 11px; }
+.information-job-card .information-delivery-summary { border-top: 1px solid var(--line); padding-top: 9px; }
+.information-job-card .delivery-line { white-space: normal; padding-bottom: 0; }
+.information-column-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 28px 8px; margin: 0; }
+.information-job-column .information-pagination { flex-wrap: wrap; justify-content: space-between; gap: 6px; padding-bottom: 0; }
+.information-job-column .information-pagination > span { width: 100%; font-size: 11px; }
+.information-job-column .information-pagination button { font-size: 11px; padding: 5px 8px; }
+.information-drawer { position: absolute; inset: 0 0 0 auto; z-index: 8; width: min(620px, 100%); display: flex; flex-direction: column; padding: 0; background: var(--surface); border-left: 1px solid var(--line); box-shadow: -12px 0 36px #252b3215; }
+.information-drawer-heading { display: flex; justify-content: space-between; align-items: center; min-height: 77px; padding: 16px 24px; border-bottom: 1px solid var(--line); }
+.information-drawer-heading h2 { font-size: 16px; margin: 0; }
+.information-drawer-heading button { padding: 7px; }
+.information-drawer-body { flex: 1; min-height: 0; overflow: auto; padding: 0 24px 28px; scroll-padding: 16px; }
+.information-drawer-body > section { border-top: 1px solid var(--line); padding: 22px 0; }
+.information-drawer-body > header { margin-top: 24px; }
+.information-drawer-body > section > p { font-size: 13px; line-height: 1.8; }
+.information-drawer-body .information-actions { margin: 18px 0 24px; }
+.information-job-history + .information-job-history { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 20px; }
+.information-job-history > details { font-size: 13px; margin: 12px 0; }
+.information-job-history summary { color: var(--accent); cursor: pointer; padding-bottom: 8px; }
+.information-command-policy { border: 1px solid var(--line); border-radius: 8px; margin: 12px 0; padding: 12px; font-size: 12px; }
+.information-command-policy pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--faint); border-radius: 5px; padding: 10px; }
+.information-command-policy p { line-height: 1.7; overflow-wrap: anywhere; }
+.information-drawer-body .message { max-width: 100%; margin-left: 0; margin-right: 0; }
+.information-drawer-body .message.user { padding: 12px; }

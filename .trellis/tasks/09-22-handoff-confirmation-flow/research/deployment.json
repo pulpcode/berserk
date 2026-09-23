@@ -1,0 +1,80 @@
+{
+  "release": "/home/ubuntu/axon-release-background.ClBNID",
+  "stage": "/home/ubuntu/axon-release-background.ClBNID/updates/confirmation-jfz4b0b9",
+  "sourceBaseCommit": "047ab63",
+  "includesWorkingTreeChanges": true,
+  "archiveSha256": "6f1d375397e80b37dc262d537df009a2c1e35dc4a8048b428dbc6008df676860",
+  "previousPid": 1462561,
+  "port": 4315,
+  "dataDir": "/home/ubuntu/axon-release-background.ClBNID/data",
+  "changedFiles": [
+    "scripts/probe-handoff.ts",
+    "src/contracts/collaboration.ts",
+    "src/pi/collaboration-tools.ts",
+    "src/pi/interactions.ts",
+    "src/pi/lab.ts",
+    "src/web/ChatMessage.tsx"
+  ],
+  "phase": "ready",
+  "backup": "/home/ubuntu/axon-release-background.ClBNID/updates/confirmation-jfz4b0b9/backup",
+  "backupVerified": true,
+  "dataFilesBefore": 92,
+  "pid": 1695027,
+  "health": {
+    "ok": true
+  },
+  "accounts": [
+    {
+      "account": "a",
+      "sessionIds": [
+        "01a0c3df-1db9-734e-b5b5-042afc9ec159",
+        "01a0c3f8-9cb8-76cb-bc27-ad92b495c890",
+        "181b0089-01cc-45ef-b2b6-0bd49854b2eb",
+        "840eb803-147b-455f-941a-b53b5ad02f80",
+        "df6de98a-982a-4b4c-8ab2-0ebedb06aed7"
+      ],
+      "inboxCount": 4,
+      "workCount": 2
+    },
+    {
+      "account": "b",
+      "sessionIds": [
+        "01a0c3fa-2aae-76cb-bc27-ad955b9f452f",
+        "01a0c7fa-c509-76f3-9b7e-73a8419c0ab5"
+      ],
+      "inboxCount": 1,
+      "workCount": 2
+    }
+  ],
+  "preservedContentFiles": 91,
+  "asset": "/assets/index-h3VHlteP.js",
+  "singleAxonListener": true,
+  "deployedAt": "2026-09-23T01:50:55Z",
+  "cancelledWait": {
+    "sessionId": "181b0089-01cc-45ef-b2b6-0bd49854b2eb",
+    "requestId": "84d7f5a3-409a-443b-aa49-f36801aaca23",
+    "active": false,
+    "lastResultStatus": "cancelled",
+    "interactions": [
+      {
+        "id": "02ce0e7b-151d-4bd8-802f-520ca84d3437",
+        "status": "cancelled"
+      }
+    ],
+    "cancelledAt": "2026-09-23T01:48:29Z"
+  },
+  "authorizedByUser": "允许上传并更新，结束旧等待",
+  "localForwardHealth": {
+    "ok": true
+  },
+  "historicalSessions": {
+    "count": 7,
+    "readable": true,
+    "recoveryWarnings": 0
+  },
+  "staticAssetsRepair": {
+    "record": "static-assets-repair.json",
+    "repairedAt": "2026-09-23T01:59:13Z",
+    "verifiedThroughLocalForward": true
+  }
+}

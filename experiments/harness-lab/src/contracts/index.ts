@@ -1,4 +1,4 @@
-import type { Interaction } from './interactions.js';
+import type { CommandPolicyRecord, Interaction } from './interactions.js';
 export type * from './interactions.js';
 import type { FileRef, FileOutput } from './files.js';
 export type * from './files.js';
@@ -70,6 +70,7 @@ export interface SessionSnapshot extends SessionSummary {
   backgroundJob?: BackgroundJobReservation;
   turns?: ConversationTurn[];
   interactions?: Interaction[];
+  commandPolicies?: CommandPolicyRecord[];
   fileOutputs?: FileOutput[];
   subagents?: SubagentSummary[];
   latestCompaction?: CompactionSummary;

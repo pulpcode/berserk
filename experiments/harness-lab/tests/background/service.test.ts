@@ -11,9 +11,10 @@ import * as backgroundRuntime from '../../src/pi/background-runner.js';
 import { BackgroundStore } from '../../src/background/store.js';
 import { parseBackgroundConfig } from '../../src/background/config.js';
 import { PiLab } from '../../src/pi/lab.js';
+import { DockerExecutionService, type DockerRunner } from '../../src/execution/docker.js';
 import { createApp } from '../../src/server/app.js';
 import type { AuthSession, TaskSpace } from '../../src/contracts/access.js';
-import type { BackgroundAction, BackgroundEventDetail, BackgroundJob, BackgroundReceipt, InformationRule, InboxDetail, BackgroundControl, BackgroundPage, InboxItem } from '../../src/contracts/background.js';
+import type { BackgroundAction, BackgroundEventDetail, BackgroundJob, BackgroundReceipt, InformationRule, InboxDetail, BackgroundControl, BackgroundPage, InboxItem, InformationJobSummary, InformationJobDetail } from '../../src/contracts/background.js';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime.js';
 
 const cleanup: Array<() => Promise<unknown>> = [];
@@ -32,20 +33,27 @@ async function login(app: FastifyInstance, name: string) {
   return {auth, headers, call: (url: string, payload?: object, method: 'POST' | 'PUT' = 'POST') => app.inject({url, method: payload === undefined ? 'GET' : method, headers, ...(payload === undefined ? {} : {payload})})};
 }
 type Client = Awaited<ReturnType<typeof login>>;
-async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number} = {}) {
+async function setup(options: {reply?: Parameters<typeof fakeRuntime>[1]; absent?: boolean; backlogLimit?: number; docker?: boolean} = {}) {
   const dataDir = await mkdtemp(join(tmpdir(), 'axon-background-api-')); cleanup.push(() => rm(dataDir, {recursive: true, force: true}));
   const db = await openDatabase(dataDir); const access = new AccessStore(db);
   for (const username of ['a', 'b']) await access.saveAccount({username, displayName: username, seatId: username, seatName: `席位 ${username}`, password: 'test-password-123', createPublicTask: true, manageModelSettings: username === 'a'});
   db.close();
   const config = testConfig(dataDir, {seatId: 'a', auth: {secret: 'test-signing-key-at-least-32-characters', sessionMs: 28800000}});
   const fake = await fakeRuntime(config, options.reply ?? (() => ({text: '预处理结果：请核对时间与地点。'})));
-  const lab = await PiLab.create(config, fake.runtime);
+  const commands: string[] = [];
+  const runner: DockerRunner = async (args, options) => {
+    if (args[0] === 'info') return {code:0,stdout:Buffer.from('linux'),stderr:Buffer.alloc(0)};
+    if (args[0] === 'exec' && args.includes('/opt/berserk/command.py')) commands.push(options?.input?.toString() ?? '');
+    return {code:0,stdout:Buffer.alloc(0),stderr:Buffer.alloc(0)};
+  };
+  const lab = await PiLab.create(config, fake.runtime, options.docker ? new DockerExecutionService({instanceId:dataDir},runner) : undefined);
   const background = catalog(); if (options.backlogLimit) background.backlogLimit = options.backlogLimit;
+  if (options.docker) background.profiles[0].tools.push('bash');
   const app = await createApp(lab, false, options.absent ? undefined : {config: background, env}); cleanup.push(() => app.close());
   const store = options.absent ? undefined : new BackgroundStore(lab.access!.db);
   if (store) for (const source of background.sources) store.grant('seat', 'a', source.sourceId, 'manage');
   const source = (url: string, payload?: object, sourceId = 'special') => app.inject({url: `/api/integrations/${sourceId}/${url}`, method: payload === undefined ? 'GET' : 'POST', headers: {authorization: `Bearer ${env[sourceId === 'special' ? 'SPECIAL_TOKEN' : 'OTHER_TOKEN']}`}, ...(payload === undefined ? {} : {payload})});
-  return {app, lab, config, background, store: store!, source, fake, dataDir};
+  return {app, lab, config, background, store: store!, source, fake, dataDir, commands};
 }
 const message = (sourceMessageId: string = randomUUID(), uploadIds?: string[]) => ({sourceMessageId, title: '测试信息', text: '收到一份材料，需要核对时间与地点。', ...(uploadIds ? {uploadIds} : {})});
 async function createRule(a: Client, recipientSeatIds = ['a', 'b']) {
@@ -253,6 +261,74 @@ describe('information intake and native background service', () => {
     const before = context.fake.calls.length; expect((await again.call(`/api/sessions/${action.sessionId}`)).json().lastResult.status).toBe('succeeded'); expect(context.fake.calls).toHaveLength(before);
     expect((await again.call(`/api/sessions/${action.sessionId}/messages`, {text: '请继续'})).body).toContain('response.completed');
     expect(context.lab.get(action.sessionId!, 'b').messages.filter(item => item.role === 'user')).toHaveLength(2);
+    const history = (await again.call(`/api/background/jobs/${action.jobId}`)).json<InformationJobDetail>();
+    expect(history.snapshot?.messages.filter(item => item.role === 'user')).toHaveLength(1);
+    expect(history.snapshot?.messages.every(item => item.requestId === action.requestId)).toBe(true);
+    expect(history.snapshot?.lastResult).toBeNull();
+    expect(history.text).toBe('PRIVATE_SEAT_B_ANALYSIS');
+    const redacted = (await a.call(`/api/information/jobs/${action.jobId}`)).json<InformationJobDetail>();
+    for (const key of ['title','snapshot','input','files','text','error','deliveries','retryOfJobId','sessionId']) expect(redacted).not.toHaveProperty(key);
+  });
+
+  it('provides independent board counts and merged-state pagination without searching private content', async () => {
+    const context = await setup(); const a = await login(context.app,'a'), b = await login(context.app,'b');
+    context.store.setControl('queue',0,false); await createRule(a);
+    const accepted = await context.source('events',{...message('board-source-id'),title:'看板筛选材料'});
+    const event = context.store.getEvent(accepted.json<BackgroundReceipt>().eventId), initial = context.store.getJob(event.initialJobId!);
+    const failed: BackgroundJob[] = [];
+    for (let index = 0; index < 32; index++) {
+      const next: BackgroundJob = {...initial,id:randomUUID(),sessionId:randomUUID(),requestId:randomUUID()};
+      context.store.enqueueJob(next,100);
+      if (index < 6) failed.push(context.store.finishJob(next.id,1,{status:(['failed','interrupted','cancelled'] as const)[index % 3],error:{code:'PRIVATE',message:'PRIVATE_SEAT_ERROR'}}));
+    }
+    const otherRule = await a.call('/api/information/rules',{clientActionId:randomUUID(),name:'另一来源',sourceId:'other',profileId:'material',recipientSeatIds:['a'],enabled:true});
+    expect(otherRule.statusCode,otherRule.body).toBe(200);
+    await context.source('events',message('other-source-id'), 'other');
+    const query = 'sourceId=special&search=看板&statuses=failed,interrupted,cancelled&limit=2';
+    const pages = await Promise.all([0,2,4].map(async offset => (await a.call(`/api/information/jobs?${query}&offset=${offset}`)).json<BackgroundPage<InformationJobSummary>>()));
+    expect(pages.map(page => page.total)).toEqual([6,6,6]);
+    expect(pages.flatMap(page => page.items.map(item => item.id))).toEqual(failed.toReversed().map(item => item.id));
+    const queued = (await a.call('/api/information/jobs?sourceId=special&search=看板&status=queued&limit=2&offset=2')).json<BackgroundPage<InformationJobSummary>>();
+    expect(queued.total).toBe(27); expect(queued.items).toHaveLength(2);
+    expect(queued.items.every(item => item.status === 'queued')).toBe(true);
+    expect((await a.call('/api/information/jobs?search=PRIVATE_SEAT_ERROR')).json().total).toBe(0);
+    expect((await b.call(`/api/information/jobs?${query}`)).json().total).toBe(0);
+    context.store.grant('seat','b','other','view');
+    expect((await b.call('/api/information/jobs')).json().total).toBe(1);
+    expect((await a.call('/api/information/jobs')).json().total).toBe(34);
+    expect((await b.call(`/api/information/jobs?${query}`)).json().total).toBe(0);
+    expect((await a.call('/api/information/jobs?statuses=failed,running&status=failed')).statusCode).toBe(400);
+    expect((await a.call('/api/information/jobs?statuses=failed,unknown')).statusCode).toBe(400);
+    expect((await a.call('/api/information/jobs?statuses=failed&limit=201')).statusCode).toBe(400);
+    expect(context.fake.calls).toEqual([]);
+  });
+
+  it('shows native blocked-command evidence and associates delivery with the completed execution, not its failed retry', async () => {
+    const context = await setup({docker:true,reply: (_context,index) => index === 0
+      ? {tools:[{name:'bash',arguments:{command:'rm -rf /workspace/old'}}]}
+      : index === 1 ? {text:'无法完成删除；本次命令没有执行。'} : {error:'Invalid API key'}});
+    const a = await login(context.app,'a'), b = await login(context.app,'b');
+    const uploadId = await upload(context); const {job,event} = await delivered(context,a,message('native-detail',[uploadId]));
+    const detailResponse = await a.call(`/api/information/jobs/${job.id}`); expect(detailResponse.statusCode,detailResponse.body).toBe(200);
+    const detail = detailResponse.json<InformationJobDetail>();
+    expect(detail.status).toBe('succeeded'); expect(detail.text).toBe('无法完成删除；本次命令没有执行。');
+    expect(detail.input).toMatchObject({title:event.title,text:message().text,files:[{id:event.files[0].id}]});
+    expect(detail.snapshot?.commandPolicies).toEqual([expect.objectContaining({requestId:job.requestId,command:'rm -rf /workspace/old',cwd:'/workspace',execution:'not_started',policy:expect.objectContaining({decision:'ask',ruleId:'shell.modify'})})]);
+    expect(detail.snapshot?.messages.find(item => item.role === 'tool')).toMatchObject({toolName:'bash',isError:true,text:expect.stringContaining('本次命令未执行')});
+    expect(detail.deliveries?.map(item => [item.jobId,item.status])).toEqual([[job.id,'delivered'],[job.id,'delivered']]);
+    expect((await b.call(`/api/information/jobs/${job.id}`)).statusCode).toBe(404);
+    context.store.grant('seat','b','special','view');
+    expect((await b.call(`/api/information/jobs/${job.id}`)).json().text).toBe(detail.text);
+    expect((await b.call(`/api/information/jobs/${job.id}/reprocess`,{clientActionId:randomUUID()})).statusCode).toBe(403);
+    const again = await a.call(`/api/information/jobs/${job.id}/reprocess`,{clientActionId:randomUUID()}); expect(again.statusCode,again.body).toBe(200);
+    const retried = await settled(context.store,again.json<BackgroundJob>().id); expect(retried.status).toBe('failed');
+    const retryDetail = (await a.call(`/api/information/jobs/${retried.id}`)).json<InformationJobDetail>();
+    expect(retryDetail.retryOfJobId).toBe(job.id); expect(retryDetail.deliveries).toEqual([]); expect(retryDetail.error).toBeDefined();
+    const originalDetail = (await a.call(`/api/information/jobs/${job.id}`)).json<InformationJobDetail>();
+    expect(originalDetail.status).toBe('succeeded'); expect(originalDetail.deliveries).toHaveLength(2);
+    const list = (await a.call(`/api/information/jobs?search=${event.sourceMessageId}`)).json<BackgroundPage<InformationJobSummary>>();
+    expect(list.items.map(item => [item.id,item.status,item.deliveries?.length])).toEqual([[retried.id,'failed',0],[job.id,'succeeded',2]]);
+    expect(context.commands).toEqual([]);
   });
 
   it('keeps per-seat delivery failures separate and retries delivery without a second model call', async () => {
@@ -261,7 +337,7 @@ describe('information intake and native background service', () => {
     const response = await context.source('events', message()); const event = context.store.getEvent(response.json<BackgroundReceipt>().eventId);
     expect((await settled(context.store, event.initialJobId!)).status).toBe('succeeded');
     await vi.waitFor(() => expect(context.store.listDeliveries().filter(item => item.status === 'failed')).toHaveLength(1));
-    expect(context.store.listDeliveries().find(item => item.recipientSeatId === 'a')?.status).toBe('delivered');
+    await vi.waitFor(() => expect(context.store.listDeliveries().find(item => item.recipientSeatId === 'a')?.status).toBe('delivered'));
     const failed = context.store.listDeliveries().find(item => item.recipientSeatId === 'b')!;
     context.lab.access!.db.prepare('UPDATE accounts SET enabled=1 WHERE seat_id=?').run('b');
     const action = {clientActionId: randomUUID()}; const retried = await a.call(`/api/information/deliveries/${failed.id}/retry`, action); expect(retried.statusCode, retried.body).toBe(200); expect(retried.json().status).toBe('delivered');

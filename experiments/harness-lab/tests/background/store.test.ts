@@ -185,6 +185,39 @@ describe('durable background metadata', () => {
     expect(reopened.getRule(rule.id).enabled).toBe(false);
   });
 
+  it('counts and pages merged job states in one stable order under the same source and public search filters', async () => {
+    const {store} = await setup(); const {e,j,snapshot} = accept(store);
+    const failed: BackgroundJob[] = [];
+    for (const status of ['failed','cancelled','interrupted','failed','cancelled'] as const) {
+      const next = {...job(e,snapshot),createdAt:j.createdAt}; store.enqueueJob(next,100);
+      failed.push(store.finishJob(next.id,next.revision,{status,error:{code:'TEST',message:'PRIVATE_ERROR'}}));
+    }
+    const foreign = {...event('foreign-message','other'),title:'OTHER_SOURCE'};
+    store.acceptEvent(foreign,{capacity:100});
+    const foreignJob = job(foreign); store.enqueueJob(foreignJob,100); store.finishJob(foreignJob.id,1,{status:'failed'});
+    const filter = {sourceIds:['special'],statuses:['failed','cancelled','interrupted'] as const,search:e.title,limit:2};
+    const pages = [0,2,4].map(offset => store.pageJobs({...filter,statuses:[...filter.statuses],offset}));
+    expect(pages.map(page => page.total)).toEqual([5,5,5]);
+    expect(pages.flatMap(page => page.items.map(item => item.id))).toEqual(failed.toReversed().map(item => item.id));
+    expect(store.pageJobs({sourceIds:['special'],status:'queued'}).items.map(item => item.id)).toEqual([j.id]);
+    expect(store.pageJobs({sourceIds:['special'],search:e.sourceMessageId}).total).toBe(6);
+    expect(store.pageJobs({sourceIds:['special'],search:failed[0].id}).total).toBe(1);
+    expect(store.pageJobs({sourceIds:['special'],search:'PRIVATE_ERROR'}).total).toBe(0);
+    expect(store.pageJobs({sourceIds:[],statuses:['failed']}).total).toBe(0);
+    expect(store.pageJobs({sourceIds:['special'],sourceId:'other'}).total).toBe(0);
+    expect(() => store.pageJobs({limit:201})).toThrow('分页参数');
+  });
+
+  it('queries deliveries for the exact successful job after a later retry fails', async () => {
+    const {store} = await setup(); const {e,j,snapshot} = accept(store); success(store,j);
+    const retry = {...job(e,snapshot),retryOfJobId:j.id}; store.enqueueJob(retry,100);
+    store.finishJob(retry.id,retry.revision,{status:'failed'});
+    expect(store.listDeliveries(j.id)).toHaveLength(2);
+    expect(store.listDeliveries(retry.id)).toEqual([]);
+    expect(store.pageDeliveries({jobId:j.id}).total).toBe(2);
+    expect(store.pageDeliveries({jobId:retry.id}).total).toBe(0);
+  });
+
   it('removes an optional public task label when a rule edit clears the selection', async () => {
     const {store} = await setup(); const input = {...ruleInput(),publicTaskId:randomUUID()};
     const original = store.createRule('operator',randomUUID(),input);

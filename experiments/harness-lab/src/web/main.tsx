@@ -68,6 +68,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   const [newSessionOpen, setNewSessionOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [creationError, setCreationError] = useState('');
+  const [informationNavigationError, setInformationNavigationError] = useState<{ url: string; message: string }>();
   const navigationRequest = useRef(0);
   const focusAfterCreation = useRef<{ id: string; navigation: number } | undefined>(undefined);
   const [workspaceName, setWorkspaceName] = useState('');
@@ -193,13 +194,13 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   function rememberPosition() {
     if (view === 'chat' && scroll.current && !loadingSession) positions.current[scrollKey] = { top: scroll.current.scrollTop, follow: follow.current };
   }
-  function enterWorkspace(id: string) { if (location.pathname !== '/') history.pushState(null, '', '/'); if(id.startsWith('task:')){showTask(id);return;} navigationRequest.current++; rememberPosition(); chat.selectWorkspace(id); setView('chat'); setSidebarOpen(false); if (sidebarOpen || view === 'activity') requestAnimationFrame(() => textarea.current?.focus()); }
+  function enterWorkspace(id: string) { if (location.pathname !== '/') history.pushState(null, '', '/'); if(id.startsWith('task:')){showTask(id);return;} navigationRequest.current++; rememberPosition(); chat.selectWorkspace(id); setView('chat'); setSidebarOpen(false); if (sidebarOpen || view !== 'chat') requestAnimationFrame(() => textarea.current?.focus()); }
   function showActivity() { if (location.pathname !== '/') history.pushState(null, '', '/'); navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('activity'); setSidebarOpen(false); requestAnimationFrame(() => document.getElementById(domId('activity-overview'))?.focus()); }
   function selectSession(id: string) {
     if (location.pathname !== '/') history.pushState(null, '', '/');
     navigationRequest.current++;
     rememberPosition(); setView('chat'); chat.select(id); setSidebarOpen(false);
-    if (sidebarOpen || view === 'activity') requestAnimationFrame(() => textarea.current?.focus());
+    if (sidebarOpen || view !== 'chat') requestAnimationFrame(() => textarea.current?.focus());
   }
   function showWork(id?: string, assignWorkspaceId?: string) {
     if (location.pathname !== '/') history.pushState(null, '', '/');
@@ -214,16 +215,24 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
     finally { setBackgroundStopping(false); }
   }
   function showInformation() {
+    if (view === 'information') return;
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('information'); setSidebarOpen(false); history.pushState(null, '', '/information');
   }
   function showInbox() {
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('inbox'); setSidebarOpen(false); history.pushState(null, '', '/inbox');
   }
-  function leaveInformation() { history.pushState(null, '', '/'); setView('chat'); }
   async function openInformationSession(id: string) {
-    const captured = navigationRequest.current;
-    try { const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(id)}`); chat.adopt(session); await chat.refreshActivity(); if (captured === navigationRequest.current) selectSession(id); }
-    catch (reason) { setCreationError(reason instanceof Error ? reason.message : '会话读取失败。'); }
+    const captured = ++navigationRequest.current;
+    const originUrl = location.pathname + location.search;
+    setInformationNavigationError(undefined);
+    const current = () => captured === navigationRequest.current && originUrl === location.pathname + location.search;
+    try { const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(id)}`); chat.adopt(session); await chat.refreshActivity(); if (current()) selectSession(id); }
+    catch (reason) {
+      if (!current()) return;
+      const message = reason instanceof Error ? reason.message : '会话读取失败。';
+      if (originUrl.startsWith('/information')) setInformationNavigationError({ url: originUrl, message });
+      else setCreationError(message);
+    }
   }
   async function preparedAnalysis(action: BackgroundAction) {
     if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return;
@@ -246,6 +255,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   }
   function newChat() { rememberPosition(); setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {
+    if (location.pathname !== '/') history.pushState(null, '', '/');
     const navigation = ++navigationRequest.current;
     rememberPosition(); setView('chat'); setSidebarOpen(false); setCreationError('');
     if (workspaceId.startsWith('task:')) {
@@ -265,7 +275,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
   return <div className="app-shell">
     <a className="skip-link" href={`#${domId(view === 'chat' ? 'conversation' : view === 'work' ? 'work-inbox' : view === 'inbox' ? 'information-inbox' : view === 'information' ? 'information-center' : 'activity-overview')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : view === 'inbox' ? '跳至收到的信息' : view === 'information' ? '跳至信息处理中心' : '跳至全部动态'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
-    <aside hidden={view === 'information'} ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
+    <aside ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
       <div className="sidebar-brand"><BrandMark /><span><img className="brand-wordmark" src="/brand/axon-wordmark.svg" width="81" height="27" alt="Axon" /><span className="brand-subtitle">对话工作台</span></span><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
       {!identity && seats.length > 0 && <label className="test-seat-selector">测试席位<select aria-label="测试席位" value={seatId} onChange={event => { chat.noteNavigation(); switchSeat(event.target.value); }}>{seats.map(seat => <option key={seat.id} value={seat.id}>{seat.name}</option>)}</select></label>}
       <div className="navigation-actions">
@@ -274,10 +284,11 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
       </div>
       {seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} onClick={() => showWork()}><FileText size={17} aria-hidden="true" />工作待办</button>}
       {identity && <button className="work-inbox-trigger" aria-pressed={view === 'inbox'} onClick={showInbox}><InboxIcon size={17} aria-hidden="true" />收到的信息</button>}
+      {information.data?.sources.length ? <button className="work-inbox-trigger" aria-pressed={view === 'information'} onClick={showInformation}><Workflow size={17} aria-hidden="true" />信息处理中心</button> : null}
       {identity && <div className="task-filters"><input aria-label="搜索任务" placeholder="搜索任务" value={taskSearch} onChange={e=>setTaskSearch(e.target.value)}/><label><input type="checkbox" checked={archived} onChange={e=>setArchived(e.target.checked)}/>含已归档</label>{directory.error && <p role="alert">{directory.error}<button onClick={directory.refresh}>重试</button></p>}</div>}
       <WorkspaceNavigation taskMode={!!identity} taskMeta={taskMeta} publicAllowed={identity?.createPublicTask} createTask={visibility=>setTaskPanel({visibility})} showTask={showTask} workspaces={navigationWorkspaces} activities={chat.activities} unread={chat.unread} workspaceId={chat.workspaceId} selected={chat.selected} activityView={view === 'activity'} loading={chat.loading} creating={chat.creating} createSession={id => { void createChat(id); }} enterWorkspace={enterWorkspace} selectSession={selectSession} showActivity={showActivity} />
       <div className="sources"><button className="resources-trigger" onClick={() => setResourceOpen(true)} disabled={!chat.workspaceId}><BookOpen size={16} aria-hidden="true" />项目资料<ArrowUpRight size={14} aria-hidden="true" /></button><p>查看指令、资料与 Skill。</p></div>
-      <div className="sidebar-footer">{information.data?.sources.length ? <button className="settings-trigger" onClick={showInformation}><Workflow size={18} aria-hidden="true" /><span>信息处理中心</span></button> : null}{identity && <div className="account-footer"><span>{identity.displayName}<small>{identity.seatName}</small></span><button onClick={logout}>退出</button></div>}{(!identity || identity.manageModelSettings) && <button className="settings-trigger" aria-label="设置" onClick={() => setSettingsOpen(true)} aria-haspopup="dialog" aria-expanded={settingsOpen}><Settings size={18} aria-hidden="true" /><span>设置</span><span className="settings-trigger-model" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span></button>}</div>
+      <div className="sidebar-footer">{identity && <div className="account-footer"><span>{identity.displayName}<small>{identity.seatName}</small></span><button onClick={logout}>退出</button></div>}{(!identity || identity.manageModelSettings) && <button className="settings-trigger" aria-label="设置" onClick={() => setSettingsOpen(true)} aria-haspopup="dialog" aria-expanded={settingsOpen}><Settings size={18} aria-hidden="true" /><span>设置</span><span className="settings-trigger-model" title={chat.info?.model}>{chat.info?.model || '模型配置'}</span></button>}</div>
     </aside>
 
     <main hidden={view === 'information'} className="workspace" inert={sidebarOpen || undefined}>
@@ -348,7 +359,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout }
       </div>
       </>}
     </main>
-    <InformationCenter visible={seatActive && view === 'information'} capabilities={information.data} refreshAccess={information.refresh} tasks={directory.tasks} back={leaveInformation} openSession={id => void openInformationSession(id)} />
+    <InformationCenter visible={seatActive && view === 'information'} capabilities={information.data} refreshAccess={information.refresh} tasks={directory.tasks} openSession={id => void openInformationSession(id)} navigationError={informationNavigationError} clearNavigationError={() => setInformationNavigationError(undefined)} />
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
     {newSessionOpen && <NewSession workspaces={navigationWorkspaces.filter(w=>taskMeta?.[w.id]?.state!=='archived')} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
     {settingsOpen && <ModelSettings close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}

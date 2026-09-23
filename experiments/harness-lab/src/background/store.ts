@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { Identity } from '../contracts/access.js';
-import type { BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
+import type { BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
@@ -14,7 +14,7 @@ const active = new Set(['queued', 'running']);
 const indexes = ['background_jobs_queue', 'background_jobs_reserved_session', 'background_deliveries_inbox', 'information_rules_enabled_source'];
 const tables = ['background_events', 'background_jobs', 'background_deliveries', 'information_rules', 'information_grants', 'background_actions', 'background_controls'];
 export const backgroundHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; status?: string; seatId?: string; offset?: number; limit?: number; search?: string};
+export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string};
 export type NewBackgroundAction = Omit<BackgroundAction, 'id' | 'status' | 'revision' | 'createdAt' | 'updatedAt'> & {id?: string};
 
 function decode<T extends {id: string; revision: number}>(row: Record<string, unknown> | undefined): T {
@@ -346,13 +346,24 @@ export class BackgroundStore {
     if (filter.sourceIds) { if (!filter.sourceIds.length) return {items: [], total: 0, offset, limit}; clauses.push(`source_id IN (${filter.sourceIds.map(() => '?').join(',')})`); values.push(...filter.sourceIds); }
     if (filter.sourceId) { clauses.push('source_id=?'); values.push(filter.sourceId); }
     if (filter.eventId) { clauses.push(`${table === 'background_events' ? 'id' : 'event_id'}=?`); values.push(filter.eventId); }
+    if (filter.jobId && table === 'background_deliveries') { clauses.push('job_id=?'); values.push(filter.jobId); }
     if (filter.status && table !== 'background_events') { clauses.push('status=?'); values.push(filter.status); }
+    if (filter.statuses && table === 'background_jobs') {
+      if (!filter.statuses.length) return {items: [], total: 0, offset, limit};
+      clauses.push(`status IN (${filter.statuses.map(() => '?').join(',')})`); values.push(...filter.statuses);
+    }
     if (filter.status && table === 'background_events') {
       if (filter.status === 'unmatched') clauses.push('initial_job_id IS NULL');
       else { clauses.push('EXISTS(SELECT 1 FROM background_jobs j WHERE j.event_id=background_events.id AND j.status=?)'); values.push(filter.status); }
     }
     if (filter.seatId && table !== 'background_events') { clauses.push('seat_id=?'); values.push(filter.seatId); }
-    if (filter.search) { clauses.push("instr(lower(json_extract(data,'$.title')),lower(?))>0"); values.push(filter.search); }
+    if (filter.search) {
+      if (table === 'background_jobs') {
+        // Only searchable public source metadata, never a seat's goal, task or native history.
+        clauses.push("(instr(id,?)>0 OR EXISTS(SELECT 1 FROM background_events e WHERE e.id=background_jobs.event_id AND (instr(json_extract(e.data,'$.title'),?)>0 OR instr(e.message_id,?)>0)))");
+        values.push(filter.search, filter.search, filter.search);
+      } else { clauses.push("instr(lower(json_extract(data,'$.title')),lower(?))>0"); values.push(filter.search); }
+    }
     const where = clauses.length ? ` WHERE ${clauses.join(' AND ')}` : '';
     const total = Number(this.db.prepare(`SELECT count(*) AS n FROM ${table}${where}`).get(...values)?.n);
     const items = this.db.prepare(`SELECT * FROM ${table}${where} ORDER BY rowid DESC LIMIT ? OFFSET ?`).all(...values, limit, offset).map(row => decode<T>(row));
@@ -363,7 +374,7 @@ export class BackgroundStore {
   pageDeliveries(filter: BackgroundListFilter = {}) { return this.page<BackgroundDelivery>('background_deliveries', filter); }
   listEvents() { return this.db.prepare('SELECT * FROM background_events ORDER BY rowid DESC').all().map(row => decode<BackgroundEvent>(row)); }
   listJobs() { return this.db.prepare('SELECT * FROM background_jobs ORDER BY rowid DESC').all().map(row => decode<BackgroundJob>(row)); }
-  listDeliveries() { return this.db.prepare('SELECT * FROM background_deliveries ORDER BY rowid DESC').all().map(row => decode<BackgroundDelivery>(row)); }
+  listDeliveries(jobId?: string) { return this.db.prepare(`SELECT * FROM background_deliveries${jobId ? ' WHERE job_id=?' : ''} ORDER BY rowid DESC`).all(...(jobId ? [jobId] : [])).map(row => decode<BackgroundDelivery>(row)); }
   /** Stable FIFO, independent of reverse-chronological observation lists. */
   queuedJobs(limit = 100): BackgroundJob[] { return this.db.prepare("SELECT * FROM background_jobs WHERE status='queued' ORDER BY created_at,rowid LIMIT ?").all(limit).map(row => decode<BackgroundJob>(row)); }
 }

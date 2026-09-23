@@ -33,13 +33,17 @@ export function workspaceFileTools(sandbox: RequestSandbox) {
     defineTool(createFindToolDefinition('/workspace', { operations: { exists: path => sandbox.exists(path), glob: (pattern, cwd, options) => sandbox.glob(pattern, cwd, options) } })),
   ];
 }
-export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: string; logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: Pick<FileService, 'publish'>; signal: AbortSignal; output: (file: FileOutput) => void }) {
+export function writableFileTools(sandbox: RequestSandbox, options: { seatId?: string; background?: boolean; logsDir: string; requestId: string; workspaceId: string; sessionId: string; manager: SessionManager; files: Pick<FileService, 'publish'>; signal: AbortSignal; output: (file: FileOutput) => void }) {
   const bash = createBashToolDefinition('/workspace', { exposeSessionEnvironment: false, operations: { exec: (...args) => sandbox.exec(...args) } });
+  const commandGuidance = options.background
+    ? 'bash 调用由服务端命令规则检查。后台不能等待人工确认；待审或禁止的命令不执行，工具返回原因。可选择获准步骤继续；无法完成时如实说明已完成内容和限制。'
+    : 'bash 调用由服务端命令规则检查。需授权的命令会在实际执行前暂停，网页展示完整命令供用户明确确认或拒绝；发起工具调用本身不代表已获批准。不要用 ask_user 代替操作授权。用户拒绝后，不要通过改写命令或其他工具执行同一被拒绝操作。';
   return [
     defineTool(createWriteToolDefinition('/workspace', { operations: { writeFile: (path, content) => sandbox.writeFile(path, content), mkdir: (path) => sandbox.mkdir(path) } })),
     defineTool(createEditToolDefinition('/workspace', { operations: { readFile: path => sandbox.readFile(path), writeFile: (path, content) => sandbox.writeFile(path, content), access: path => sandbox.access(path) } })),
-    defineTool({ ...bash, promptGuidelines: ['命令在当前席位的隔离容器中执行，工作目录是 /workspace；无网络，不包含模型密钥。',
-      'bash 调用由服务端命令规则检查。需授权的命令会在实际执行前暂停，网页展示完整命令供用户明确确认或拒绝；发起工具调用本身不代表已获批准。不要用 ask_user 代替操作授权。用户拒绝后，不要通过改写命令或其他工具执行同一被拒绝操作。'],
+    // A custom system prompt replaces Pi's default promptGuidelines; the tool
+    // description reaches the provider in both execution modes.
+    defineTool({ ...bash, description: `${bash.description}\n命令在本次请求的隔离容器中执行，工作目录是 /workspace；无网络，不包含模型密钥。\n${commandGuidance}`,
       execute: async (...args: Parameters<typeof bash.execute>) => {
         options.signal.throwIfAborted();
         const directory = join(options.logsDir, options.requestId);

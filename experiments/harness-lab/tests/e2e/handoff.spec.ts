@@ -4,14 +4,14 @@ import { join } from 'node:path';
 import { test, expect, type Page } from '@playwright/test';
 import { createApp } from '../../src/server/app.js';
 import { PiLab } from '../../src/pi/lab.js';
-import { fakeRuntime, testConfig } from '../pi/fake-runtime.js';
+import { fakeRuntime, testConfig, type Reply } from '../pi/fake-runtime.js';
 
 // Actual local API, Pi sessions, safe file copying and SQLite. Only the model provider is fake.
 // This does not constitute live provider / Docker acceptance.
-async function setup(page: Page, delayMs = 0) {
+async function setup(page: Page, delayMs = 0, reply?: (index: number) => Reply) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-web-handoff-'));
   const config = testConfig(dir, { seatId: 'test-seat', testSeats: [{ id: 'test-seat', name: '席位 A' }, { id: 'seat-b', name: '席位 B' }] });
-  const fake = await fakeRuntime(config, () => ({ text: '当前席位处理完毕', delayMs }));
+  const fake = await fakeRuntime(config, (_context, index) => reply ? reply(index) : ({ text: '当前席位处理完毕', delayMs }));
   const lab = await PiLab.create(config, fake.runtime);
   const app = await createApp(lab);
   const pages: Page[] = [];
@@ -239,5 +239,26 @@ test('text-only assignment shows zero actual attachments in confirmation and rec
     await expect(visible(page).getByText('本次分派未附文件', { exact: true })).toBeVisible();
     expect(env.controls.commits).toBe(1);
     expect(env.lab.collaboration!.list({ seatId: 'seat-b' })[0].inputFileIds).toEqual([]);
+  } finally { await env.close(); }
+});
+
+
+test('one native Agent action opens the existing card and browser approval commits exactly one handoff', async ({ page }) => {
+  const env = await setup(page, 0, index => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: 'seat-b', title: '浏览器交接', goal: '修订说明', inputPaths: ['任务书.md', '数据.csv'] } } } }] } : { text: '已完成交接' });
+  try {
+    const session = await env.lab.createSession();
+    const done = env.lab.start(session.id, '将两份资料交给 B').run(() => {});
+    await expect.poll(() => env.lab.get(session.id).interactions?.[0]?.status).toBe('pending');
+    await page.goto('/');
+    const card = visible(page).getByRole('region', { name: '操作确认', exact: true });
+    await expect(card.getByRole('heading', { name: '本次附件：2 个' })).toBeVisible();
+    expect(env.lab.collaboration!.list({ seatId: 'seat-b' })).toEqual([]);
+    await page.reload(); await expect(card.getByRole('button', { name: '确认执行', exact: true })).toBeEnabled();
+    await card.getByRole('button', { name: '确认执行', exact: true }).click(); await done;
+    await page.reload(); await expect(card).toContainText('已确认');
+    expect(env.lab.get(session.id).interactions?.[0]).toMatchObject({ status: 'approved', execution: 'succeeded' });
+    expect(env.lab.collaboration!.list({ seatId: 'seat-b' })).toHaveLength(1);
+    expect(env.controls.commits).toBe(0); expect(env.controls.prepares).toBe(0);
+    expect(env.paths.filter(path => path.endsWith('/response'))).toHaveLength(1);
   } finally { await env.close(); }
 });

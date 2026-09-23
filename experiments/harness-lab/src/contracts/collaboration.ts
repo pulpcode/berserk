@@ -36,6 +36,16 @@ const submit = { kind: Type.Literal('submit'), workItemId: uuid, expectedRevisio
 const review = { kind: Type.Literal('review'), workItemId: uuid, expectedRevision: revision, payload: Type.Object({ submissionId: uuid, decision: Type.Union([Type.Literal('accept'), Type.Literal('return')]), reason: Type.Optional(Type.String({ maxLength: 4000 })) }, strict) };
 export const workPrepareSchema = Type.Union([Type.Object(assign, strict), Type.Object(claim, strict), Type.Object(submit, strict), Type.Object(review, strict)]);
 export type WorkPrepareInput = Static<typeof workPrepareSchema>;
+/** Model inputs omit the task/workspace identity captured by the host. */
+export const workActionSchema = Type.Union([
+  Type.Object({ kind: assign.kind, payload: Type.Omit(assign.payload, ['workspaceId'], strict) }, strict),
+  Type.Object(claim, strict),
+  Type.Object({ ...submit, payload: Type.Omit(submit.payload, ['workspaceId'], strict) }, strict),
+  Type.Object(review, strict),
+]);
+export type WorkActionInput = Static<typeof workActionSchema>;
+export const workActionToolSchema = Type.Object({ action: workActionSchema }, strict);
+
 const clientActionId = Type.String({ minLength: 1, maxLength: 128 });
 export const pageWorkPrepareSchema = Type.Union([Type.Object({ ...assign, clientActionId }, strict), Type.Object({ ...claim, clientActionId }, strict), Type.Object({ ...submit, clientActionId }, strict), Type.Object({ ...review, clientActionId }, strict)]);
 export type PageWorkPrepareInput = Static<typeof pageWorkPrepareSchema>;

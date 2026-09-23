@@ -2,8 +2,8 @@ import { isDeepStrictEqual } from 'node:util';
 import { Type } from 'typebox';
 import { Check } from 'typebox/value';
 import type { SessionEntry, ExtensionFactory } from '@earendil-works/pi-coding-agent';
-import type { Interaction, InteractionAnswer, InteractionResponse, QuestionInteraction } from '../contracts/index.js';
-import { handoffConfirmationSchema } from '../contracts/collaboration.js';
+import type { CommandPolicyRecord, Interaction, InteractionAnswer, InteractionResponse, QuestionInteraction } from '../contracts/index.js';
+import { handoffConfirmationSchema, workActionToolSchema } from '../contracts/collaboration.js';
 import { RequestError } from '../contracts/errors.js';
 import { stateError } from '../resources/files.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
@@ -33,7 +33,7 @@ export const interactionResponseSchema = Type.Union([
 const base = { schemaVersion: Type.Literal(1), interactionId: uuid, workspaceId: uuid, sessionId: uuid, requestId: uuid,
   toolCallId: Type.String({ minLength: 1 }), toolName: id, createdAt: text, resolvedAt: Type.Optional(text), reason: Type.Optional(text) };
 const policySchema = Type.Object({ requestId: uuid, workspaceId: uuid, sessionId: uuid, seatId: Type.String({ pattern: '^[a-zA-Z0-9_-]{1,64}$' }),
-  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo'), Type.Literal('work_item_commit')]), parameters: Type.Record(Type.String(), Type.Unknown()),
+  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo'), Type.Literal('work_item_commit'), Type.Literal('work_item_action')]), parameters: Type.Record(Type.String(), Type.Unknown()),
   policy: Type.Object({ decision: Type.Union([Type.Literal('allow'), Type.Literal('ask'), Type.Literal('deny')]), ruleId: text, reason: text, version: text }, strict),
 }, strict);
 const interactionSchema = Type.Union([
@@ -110,9 +110,12 @@ function decodeInteraction(value: unknown): Interaction {
     if (item.toolName !== 'ask_user' || (item.status === 'answered') !== (item.answers !== undefined)) throw stateError();
     if (item.answers) { try { decodeResponse({ requestId: item.requestId, kind: 'question', action: 'answer', answers: item.answers }, item); } catch { throw stateError(); } }
   } else {
-    if (!['bash', 'confirmation_demo', 'work_item_commit'].includes(item.toolName)) throw stateError();
-    if (item.toolName === 'work_item_commit') {
-      if (!item.action.handoff || !isDeepStrictEqual(item.action.parameters, { operationId: item.action.handoff.operationId })
+    if (!['bash', 'confirmation_demo', 'work_item_commit', 'work_item_action'].includes(item.toolName)) throw stateError();
+    if (item.toolName === 'work_item_commit' || item.toolName === 'work_item_action') {
+      const validParameters = item.toolName === 'work_item_commit'
+        ? isDeepStrictEqual(item.action.parameters, { operationId: item.action.handoff?.operationId })
+        : Check(workActionToolSchema, item.action.parameters) && item.action.parameters.action.kind === item.action.handoff?.kind;
+      if (!item.action.handoff || !validParameters
         || item.action.command !== undefined || item.action.cwd !== undefined || item.action.title !== item.action.handoff.title
         || item.action.description !== item.action.handoff.description) throw stateError();
     } else if (item.action.handoff !== undefined) throw stateError();
@@ -121,10 +124,14 @@ function decodeInteraction(value: unknown): Interaction {
 }
 /** One strict replay owner for live snapshots and restart history. Never inject custom entries into context. */
 export function interactionHistory(entries: SessionEntry[], workspaceId: string, sessionId?: string, activeRequestId?: string, seatId?: string): Interaction[] {
+  return interactionEvidence(entries, workspaceId, sessionId, activeRequestId, seatId).interactions;
+}
+export function interactionEvidence(entries: SessionEntry[], workspaceId: string, sessionId?: string, activeRequestId?: string, seatId?: string): { interactions: Interaction[]; commandPolicies: CommandPolicyRecord[] } {
   const items = new Map<string, Interaction>();
   const calls = new Map<string, { name: string; arguments: Record<string, unknown> }>();
   const returned = new Set<string>();
   const policies = new Map<string, { decision: string; ruleId: string; reason: string; version: string }>();
+  const commandPolicies = new Map<string, CommandPolicyRecord>();
   let requestId: string | undefined;
   for (const entry of entries) {
     if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) requestId = (entry.data as { requestId: string }).requestId;
@@ -136,11 +143,18 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
       const item = [...items.values()].find(item => item.requestId === requestId && item.toolCallId === result.toolCallId);
       const key = `${requestId}:${result.toolCallId}`;
       const policy = policies.get(key);
-      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (result.toolName === 'work_item_commit' && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
-      const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown } | undefined;
+      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (['work_item_commit', 'work_item_action'].includes(result.toolName) && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
+      const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown; operationId?: unknown } | undefined;
+      if (!result.isError && result.toolName === 'work_item_action' && (item?.kind !== 'confirmation' || details?.operationId !== item.action.handoff?.operationId)) throw stateError();
       if (policy && ((!result.isError && (details?.executionStarted !== true || !isDeepStrictEqual(details.commandPolicy, policy)))
         || (policy.decision === 'deny' && (!result.isError || details?.executionStarted === true))
+        || (policy.decision === 'ask' && details?.executionStarted === true && (item?.kind !== 'confirmation' || item.status !== 'approved'))
         || (details?.commandPolicy !== undefined && !isDeepStrictEqual(details.commandPolicy, policy)))) throw stateError();
+      const commandPolicy = commandPolicies.get(key);
+      if (commandPolicy) {
+        if (returned.has(key) || result.toolName !== 'bash') throw stateError();
+        commandPolicy.execution = details?.executionStarted === true ? (result.isError ? 'failed' : 'succeeded') : 'not_started';
+      }
       if (item) {
         if (returned.has(key) || result.toolName !== item.toolName || item.status === 'pending') throw stateError();
         returned.add(key);
@@ -151,6 +165,7 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
           || !isDeepStrictEqual(result.details, { interactionId: item.interactionId, ...questionResult(item) })
           || !isDeepStrictEqual(result.content, [{ type: 'text', text: JSON.stringify(questionResult(item)) }]))) throw stateError();
       }
+      if (commandPolicy) returned.add(key);
     }
     if (entry.type !== 'custom') continue;
     if (entry.customType === RESULT_ENTRY) {
@@ -164,7 +179,13 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
       const data = entry.data; const key = `${requestId}:${data.toolCallId}`; const call = calls.get(key);
       if (!sessionId || data.sessionId !== sessionId || data.workspaceId !== workspaceId || data.requestId !== requestId || (seatId && data.seatId !== seatId)
         || !call || call.name !== data.toolName || !isDeepStrictEqual(call.arguments, data.parameters) || policies.has(key)) throw stateError();
-      policies.set(key, data.policy); continue;
+      policies.set(key, data.policy);
+      if (data.toolName === 'bash') {
+        if (typeof data.parameters.command !== 'string') throw stateError();
+        commandPolicies.set(key, { requestId: data.requestId, toolCallId: data.toolCallId, command: data.parameters.command,
+          cwd: '/workspace', policy: structuredClone(data.policy), execution: 'unknown' });
+      }
+      continue;
     }
     if (entry.customType !== INTERACTION_REQUESTED && entry.customType !== INTERACTION_RESOLVED) continue;
     const data = entry.data as { requestId?: string; seatId?: string; interaction?: unknown };
@@ -190,9 +211,10 @@ export function interactionHistory(entries: SessionEntry[], workspaceId: string,
     }
     items.set(item.interactionId, item);
   }
-  return [...items.values()].map(item => {
+  const interactions: Interaction[] = [...items.values()].map(item => {
     if (item.status === 'pending' && item.requestId !== activeRequestId) return { ...item, status: 'expired', reason: '服务重启，原交互已失效。' };
     if (item.kind === 'confirmation' && item.status === 'approved' && !item.execution && item.requestId !== activeRequestId) return { ...item, execution: 'unknown' };
     return item;
   });
+  return { interactions, commandPolicies: [...commandPolicies.values()] };
 }

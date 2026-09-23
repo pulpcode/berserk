@@ -1,0 +1,32 @@
+{
+  "repairedAt": "2026-09-23T01:59:13Z",
+  "cause": "发布源代码归档漏掉public目录，暂存Vite构建成功但dist不含Logo和favicon；发布校验只检查首页及JS，未检查public资源。",
+  "change": "把服务器原public中的三个文件按原路径复制到线上dist并补齐暂存public；hash与本地仓库一致。",
+  "beforeStatus": 404,
+  "afterChecks": [
+    {
+      "path": "/brand/axon-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1063,
+      "sha256": "2f4c6cf11781919a97a66ff94552b59dc6d867cb94333af5a4d2098132e3f3dd"
+    },
+    {
+      "path": "/brand/axon-wordmark.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1122,
+      "sha256": "0daebb73e677c43bab0abc732a4994193fb719c270807d6bd4aa93acc09a5ccf"
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200,
+      "contentType": "image/vnd.microsoft.icon",
+      "bytes": 7611,
+      "sha256": "70cfed088307c6feb4b1a0fb83cd82814752200dc98882880ed41e6341b309af"
+    }
+  ],
+  "restartRequired": false,
+  "businessDataChanged": false,
+  "prevention": "README及frontend spec要求源码包包含public，并逐项校验构建产物及实际图片HTTP响应。"
+}

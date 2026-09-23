@@ -57,9 +57,9 @@ async function answer(page: Page) {
 for (const count of [0, 2]) test(`assignment card shows ${count} actual attachments before the description and preserves them after refresh`, async ({ page }) => {
   const item = confirmation();
   const files = Array.from({ length: count }, (_, index) => ({ fileId: `file-${index}`, name: index ? '修订要求.md' : '初稿.md', size: 42, hash: 'a'.repeat(64), createdAt: base.createdAt }));
-  item.toolName = 'work_item_commit';
+  item.toolName = count ? 'work_item_action' : 'work_item_commit';
   item.rule = { ruleId: 'work-item-commit', reason: '正式交接需要用户确认', version: '1' };
-  item.action = { title: '分派工作', description: '随附两份文件，接收后修订初稿。', parameters: { operationId: 'op1' }, handoff: { operationId: 'op1', kind: 'assign', title: '分派工作', description: '随附两份文件，接收后修订初稿。', files } };
+  item.action = { title: '分派工作', description: '随附两份文件，接收后修订初稿。', parameters: count ? { action: { kind: 'assign', payload: { assigneeSeatId: 'seat-b', title: '修订', goal: '修订说明', inputPaths: ['初稿.md', '修订要求.md'] } } } : { operationId: 'op1' }, handoff: { operationId: 'op1', kind: 'assign', title: '分派工作', description: '随附两份文件，接收后修订初稿。', files } };
   const { state } = await fixture(page, item);
   const card = page.getByRole('region', { name: '操作确认', exact: true });
   const attachments = card.getByRole('region', { name: '本次附件', exact: true });

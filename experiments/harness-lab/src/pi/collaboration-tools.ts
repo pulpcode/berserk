@@ -1,16 +1,41 @@
 import { Type } from 'typebox';
+import { Check } from 'typebox/value';
+import { isDeepStrictEqual } from 'node:util';
 import { defineTool } from '@earendil-works/pi-coding-agent';
-import { CollaborationService } from '../collaboration/service.js';
-import { workPrepareSchema, workReadSchema, workCommitSchema, handoffImportSchema, type ActorContext, type WorkPrepareInput } from '../contracts/collaboration.js';
+import { CollaborationService, type AgentCommitGrant } from '../collaboration/service.js';
+import { workActionToolSchema, workReadSchema, handoffImportSchema, type ActorContext, type WorkPrepareInput } from '../contracts/collaboration.js';
 import type { Workspace } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 
+export interface ApprovedWorkAction { operationId: string; parameters: Record<string, unknown>; grant: AgentCommitGrant }
 interface Options {
   actor: ActorContext; workspace: Workspace; sessionId: string; requestId: string; signal: AbortSignal;
   check: () => void;
-  grant: (toolCallId: string) => { sessionId: string; requestId: string; toolCallId: string; interactionId: string } | undefined;
+  takeApproval: (toolCallId: string) => ApprovedWorkAction | undefined;
+  fail: () => void;
 }
 const relative = (path: string) => path.startsWith('/workspace/') ? path.slice('/workspace/'.length) : path;
+
+/** Only explicit business/input rejections can be corrected by the model. */
+export function recoverableWorkError(error: unknown): error is RequestError {
+  return error instanceof RequestError && [
+    'INVALID_INPUT', 'WORK_NOT_FOUND', 'WORK_CONFLICT', 'PRIVATE_TASK', 'TASK_NOT_FOUND', 'TASK_ARCHIVED', 'FORBIDDEN',
+    'FILE_NOT_FOUND', 'FILE_TOO_LARGE', 'FILE_UNSAFE_FILE', 'FILE_EXISTS',
+  ].includes(error.code);
+}
+/** Separate service DTO: never rewrite the model call or its native history. */
+export function scopedWorkAction(service: CollaborationService, actor: ActorContext, workspace: Workspace, parameters: unknown): WorkPrepareInput {
+  if (!Check(workActionToolSchema, parameters)) throw new RequestError('INVALID_INPUT', '工作操作参数无效。');
+  if (!workspace.taskSpaceId) throw new RequestError('WORK_NOT_FOUND', '当前工作区没有可交接的项目。', 404);
+  const value = structuredClone(parameters.action);
+  if (value.kind === 'assign') return { ...value, taskSpaceId: workspace.taskSpaceId,
+    payload: { ...value.payload, workspaceId: workspace.id, ...(value.payload.inputPaths ? { inputPaths: value.payload.inputPaths.map(relative) } : {}) } };
+  if (service.read(actor, value.workItemId).taskSpaceId !== workspace.taskSpaceId) {
+    throw new RequestError('WORK_NOT_FOUND', '操作不属于当前会话项目，请进入对应项目会话。', 404);
+  }
+  if (value.kind === 'submit') return { ...value, payload: { ...value.payload, workspaceId: workspace.id, path: relative(value.payload.path) } };
+  return value;
+}
 
 /** Ordinary Pi tools; the host's existing beforeToolCall hook owns approval. */
 export function collaborationTools(service: CollaborationService, options: Options) {
@@ -28,16 +53,6 @@ export function collaborationTools(service: CollaborationService, options: Optio
       throw new Error('工作交接未完成，请查询原操作结果后再决定是否重试。');
     }
   }
-  function scoped(input: WorkPrepareInput): WorkPrepareInput {
-    const value = structuredClone(input);
-    const taskSpaceId = value.kind === 'assign' ? value.taskSpaceId : service.read(actor, value.workItemId).taskSpaceId;
-    if (taskSpaceId !== workspace.taskSpaceId || ('workspaceId' in value.payload && value.payload.workspaceId !== workspace.id)) {
-      throw new RequestError('WORK_NOT_FOUND', '操作不属于当前会话项目或工作区，请进入对应项目会话。', 404);
-    }
-    if (value.kind === 'assign' && value.payload.inputPaths) value.payload.inputPaths = value.payload.inputPaths.map(relative);
-    if (value.kind === 'submit') value.payload.path = relative(value.payload.path);
-    return value;
-  }
   return [
     defineTool({ name: 'work_item_list', label: '查看工作待办', description: '查询当前席位在当前项目的工作，包含工作ID、目标和当前状态；不会签收或启动执行。',
       parameters: Type.Object({}, { additionalProperties: false }), executionMode: 'sequential',
@@ -48,17 +63,21 @@ export function collaborationTools(service: CollaborationService, options: Optio
         if (Boolean(params.workItemId) === Boolean(params.operationId)) throw new RequestError('INVALID_INPUT', '请选择一个工作编号或操作编号查询。');
         return params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
       }, signal) }),
-    defineTool({ name: 'work_item_prepare', label: '准备工作交接', description: '准备分派（assign）、签收（claim）、提交文件（submit）或验收/退回（review）。assign/submit 的 workspaceId 使用当前工作区；claim/submit/review 的 expectedRevision 使用工作最新版本。保存准备内容，返回 operationId 和本次实际附件 files。核对交接内容后，用返回的 operationId 调用 work_item_commit 展示确认卡片并等待用户批准。对象或文件不明确时先澄清。',
-      parameters: Type.Object({ action: workPrepareSchema }, { additionalProperties: false }), executionMode: 'sequential',
-      execute: (toolCallId, params, signal) => execute(scopedSignal => service.prepare(actor, scoped(params.action), {
-        source: 'agent', sessionId: options.sessionId, requestId: options.requestId, toolCallId,
-      }, scopedSignal), signal) }),
-    defineTool({ name: 'work_item_commit', label: '确认工作交接', description: '提交本请求准备的operationId；工具会展示固定内容并等待用户明确批准。不能替换参数、借旧批准或用AskUser答案授权。拒绝后不要重复尝试同一操作。成功回执表示已交接，可结束本轮，无需等待对方办理。',
-      parameters: workCommitSchema, executionMode: 'sequential',
-      execute: (toolCallId, params, signal) => execute(scopedSignal => {
-        const grant = options.grant(toolCallId);
-        if (!grant) throw new RequestError('CONFIRMATION_REQUIRED', '该调用尚未获得确认。', 409);
-        return service.commitAgent(actor, params.operationId, grant, scopedSignal);
+    defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，等待用户批准后执行；成功返回交接回执。文件来自当前工作区，交接使用固定副本。工作编号与 expectedRevision 从工作详情取得；需要澄清的业务信息先询问。',
+      parameters: workActionToolSchema, executionMode: 'sequential',
+      execute: (toolCallId, params, signal) => execute(async scopedSignal => {
+        const approved = options.takeApproval(toolCallId);
+        if (!approved || !isDeepStrictEqual(approved.parameters, params)) {
+          options.fail();
+          throw new RequestError('CONFIRMATION_REQUIRED', '该调用未获得对应内容的确认。', 409);
+        }
+        try { return await service.commitAgent(actor, approved.operationId, approved.grant, scopedSignal); }
+        catch (error) {
+          if (!scopedSignal.aborted && !recoverableWorkError(error)) options.fail();
+          const code = error instanceof RequestError ? error.code : 'WORK_ACTION_FAILED';
+          const reason = error instanceof RequestError ? error.message : '工作交接结果尚未确认，请查询原操作。';
+          throw new RequestError(code, `${reason} operationId=${approved.operationId}`, error instanceof RequestError ? error.statusCode : 503);
+        }
       }, signal) }),
     defineTool({ name: 'handoff_import_file', label: '接收交接文件', description: '将获准交接的固定文件复制到当前席位同项目工作区，返回普通文件路径供read/bash处理。已有相同内容可复用，同名不同内容不覆盖，可指定其他相对路径。',
       parameters: handoffImportSchema, executionMode: 'sequential',

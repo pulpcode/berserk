@@ -3,7 +3,7 @@ import { Readable } from 'node:stream';
 import { authenticateSource } from '../background/config.js';
 import type { BackgroundService, IncomingInformation, InformationFilter } from '../background/service.js';
 import { page } from '../background/service.js';
-import type { BackgroundAnalysisInput, InformationRuleInput } from '../contracts/background.js';
+import type { BackgroundAnalysisInput, BackgroundJobStatus, InformationRuleInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { identityOf } from './auth.js';
 import { sendFile } from './file-response.js';
@@ -18,6 +18,8 @@ const params = (properties:Record<string,unknown> = {id:uuid}) => body(propertie
 const actionBody = body({clientActionId:uuid});
 const revisionBody = body({revision:{type:'integer',minimum:1}});
 const listQuery = {type:'object',additionalProperties:false,properties:{sourceId:id,status:{type:'string',maxLength:30},search:{type:'string',maxLength:200},offset:{type:'string',pattern:'^\\d{1,8}$'},limit:{type:'string',pattern:'^\\d{1,3}$'}}};
+const jobStatuses = ['queued','running','succeeded','failed','cancelled','interrupted'];
+const jobListQuery = {...listQuery,properties:{...listQuery.properties,status:{enum:jobStatuses},statuses:{type:'string',maxLength:80,pattern:`^(?:${jobStatuses.join('|')})(?:,(?:${jobStatuses.join('|')}))*$`}}};
 interface Query {sourceId?:string;status?:string;search?:string;offset?:string;limit?:string;clientActionId?:string}
 function filter(query:Query):InformationFilter {
   const offset = Number(query.offset ?? 0),limit = Number(query.limit ?? 25);
@@ -51,7 +53,10 @@ export async function backgroundRoutes(app:FastifyInstance, background?:Backgrou
   app.get<{Querystring:Query}>('/api/information/events',{schema:{querystring:listQuery}},request => background.events(identityOf(request),filter(request.query)));
   app.get<{Params:{id:string}}>('/api/information/events/:id',{schema:{params:params(),querystring:empty}},request => background.eventDetail(identityOf(request),request.params.id));
   app.post<{Params:{id:string};Body:{clientActionId:string}}>('/api/information/events/:id/process',{schema:{params:params(),querystring:empty,body:actionBody}},request => background.processEvent(identityOf(request),request.params.id,request.body.clientActionId));
-  app.get<{Querystring:Query}>('/api/information/jobs',{schema:{querystring:listQuery}},request => background.jobs(identityOf(request),filter(request.query)));
+  app.get<{Querystring:Query & {statuses?:string}}>('/api/information/jobs',{schema:{querystring:jobListQuery}},request => {
+    const {statuses,...query} = request.query;
+    return background.jobs(identityOf(request),{...filter(query),...(statuses ? {statuses: [...new Set(statuses.split(','))] as BackgroundJobStatus[]} : {})});
+  });
   for (const area of ['information','background']) {
     app.get<{Params:{id:string}}>(`/api/${area}/jobs/:id`,{schema:{params:params(),querystring:empty}},request => background.jobDetail(identityOf(request),request.params.id,area === 'information'));
     app.post<{Params:{id:string};Body:{revision:number}}>(`/api/${area}/jobs/:id/cancel`,{schema:{params:params(),querystring:empty,body:revisionBody}},request => background.cancel(identityOf(request),request.params.id,request.body.revision));

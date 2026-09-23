@@ -3,12 +3,13 @@ import Bash from 'tree-sitter-bash';
 import { posix } from 'node:path';
 
 export interface CommandDecision { decision: 'allow' | 'ask' | 'deny'; ruleId: string; reason: string; version: string }
-export const COMMAND_POLICY_VERSION = 'axon-bash-v1';
+export const COMMAND_POLICY_VERSION = 'axon-bash-v2';
 const denied = new Set(['sudo', 'su', 'doas', 'mount', 'umount', 'nsenter', 'chroot']);
 const destructive = new Set(['rm', 'rmdir', 'unlink', 'shred', 'truncate', 'chmod', 'chown', 'chgrp']);
 const shells = new Set(['bash', 'sh', 'dash', 'zsh', 'ksh', 'fish']);
 const delegates = new Set(['eval', 'source', '.', 'exec', 'builtin', 'time', 'timeout', 'xargs', 'nice', 'nohup', 'watch', 'setsid', 'chrt', 'taskset']);
 const interpreters = new Set(['perl', 'ruby', 'php', 'awk', 'gawk', 'mawk', 'lua', 'Rscript']);
+const filenameGlobCommands = new Set(['ls', 'md5sum', 'sha256sum', 'wc']);
 const score = { allow: 0, ask: 1, deny: 2 };
 const result = (decision: CommandDecision['decision'], ruleId: string, reason: string): CommandDecision => ({ decision, ruleId, reason, version: COMMAND_POLICY_VERSION });
 const unknown = () => result('ask', 'shell.review', '该命令含未支持或无法可靠分析的语法，需要人工检查。');
@@ -42,6 +43,12 @@ function literal(node: Parser.SyntaxNode): string | undefined {
   return value;
 }
 
+/** Only a basename pattern for ordinary file inspection, not a shell expansion. */
+function simpleFilenameGlob(node: Parser.SyntaxNode): string | undefined {
+  return node.type === 'word' && !node.text.startsWith('-') && /[*?]/.test(node.text)
+    && /^[\p{L}\p{N}._*?-]+$/u.test(node.text) ? node.text : undefined;
+}
+
 function commandRule(input: string[]): CommandDecision {
   const words = [...input];
   // Handle only literal assignments and the simple forms of these wrappers.
@@ -67,7 +74,8 @@ function commandRule(input: string[]): CommandDecision {
   if (denied.has(name)) return result('deny', 'shell.environment', '本期不允许提权或切换执行环境；请在当前沙盒权限内完成任务。');
   if (destructive.has(name)) return result('ask', 'shell.modify', `${name} 可能删除、截断文件或修改文件权限／归属，请确认完整命令。`);
   if (shells.has(name) || /\.(?:sh|bash|zsh|ksh)$/.test(name) || delegates.has(name) || interpreters.has(name)) return unknown();
-  if (['cd', 'pushd', 'popd'].includes(name)) return unknown();
+  if (['cd', 'pushd', 'popd'].includes(name)
+    && !(words[0] === 'cd' && args.length === 1 && ['/workspace', '.'].includes(args[0]))) return unknown();
   if (/^python(?:\d+(?:\.\d+)*)?$/.test(name) || ['node', 'nodejs'].includes(name)) {
     // Ordinary file scripts stay usable; their contents are explicitly not audited.
     if (!args.length || args[0].startsWith('-')) return unknown();
@@ -111,6 +119,9 @@ export function evaluateCommand(command: string, cwd = '/workspace'): CommandDec
       case 'comment': return;
       case 'command': {
         const words: string[] = [];
+        const name = node.childForFieldName('name');
+        const executable = name && literal(name);
+        const allowFilenameGlobs = executable !== null && executable !== undefined && filenameGlobCommands.has(posix.basename(executable));
         // The grammar can split a word around a skipped escaped newline.
         // Such fragments are not separate argv entries in Bash.
         for (let i = 1; i < node.namedChildren.length; i++) {
@@ -129,7 +140,7 @@ export function evaluateCommand(command: string, cwd = '/workspace'): CommandDec
             }
             continue;
           }
-          const value = literal(child);
+          const value = literal(child) ?? (allowFilenameGlobs && child !== name ? simpleFilenameGlob(child) : undefined);
           if (value === undefined) {
             merge(unknown());
             // Known nested invocations still take precedence, e.g. sudo inside $(...).
@@ -137,8 +148,7 @@ export function evaluateCommand(command: string, cwd = '/workspace'): CommandDec
           } else words.push(value);
         }
         // Do not shift arguments into the executable position when its name was dynamic.
-        const name = node.childForFieldName('name');
-        if (name && literal(name) !== undefined) merge(commandRule(words));
+        if (executable !== null && executable !== undefined) merge(commandRule(words));
         else merge(unknown());
         return;
       }

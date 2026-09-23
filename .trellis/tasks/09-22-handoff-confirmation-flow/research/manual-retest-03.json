@@ -1,0 +1,26 @@
+{
+  "sentAt": "2026-09-23T02:06:21.646Z",
+  "title": "【复测03】请修订值班交接说明（附初稿和修订要求）",
+  "sourceId": "material-feed",
+  "sourceMessageId": "manual-document-revision-20260923-retest-03",
+  "eventId": "f255816f-46ab-4281-a6b1-9c223dd8455c",
+  "jobId": "c54f7c46-38fb-4061-9f70-d7c19d564b50",
+  "sessionId": "a02a4078-b2a3-41cc-be44-c25732bbcb6e",
+  "files": [
+    "值班交接说明_初稿.md",
+    "修订要求.md"
+  ],
+  "intakeStatus": "accepted",
+  "preprocessStatus": "failed",
+  "errorCode": "HUMAN_ACTION_REQUIRED",
+  "deliveries": [],
+  "blockedCommand": "cd /workspace && ls -la",
+  "policy": {
+    "decision": "ask",
+    "ruleId": "shell.review",
+    "version": "axon-bash-v1"
+  },
+  "relatedKnownBug": "BUG-002",
+  "retried": false,
+  "userHandoffTestReached": false
+}

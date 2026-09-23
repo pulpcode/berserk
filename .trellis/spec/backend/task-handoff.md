@@ -12,7 +12,7 @@ Read when changing test seats, collaboration tools, work items, handoff files or
 - `GET /work-items`, `GET /work-items/:id`; `POST /work-items/prepare` takes strict `PageWorkPrepareInput` with `clientActionId`; `GET /work-actions?clientActionId=...` resolves uncertain preparation.
 - `GET /work-actions/:id`; `POST /work-actions/:id/commit` takes `{confirm:true}`; `POST /work-actions/:id/cancel` abandons only a page preparation.
 - `GET /handoff-files/:id?preview=1`, `POST /handoff-files/:id/import` takes `{workspaceId,path?}`; `POST /sessions/:id/work-item` takes `{workItemId}`. All are under the scoped prefix above.
-- Parent Pi tools: `work_item_list({})`, `work_item_read({workItemId}|{operationId})`, `work_item_prepare({action})`, `work_item_commit({operationId})`, `handoff_import_file({fileId,path?})`. Children receive none of these mutation tools.
+- Parent Pi tools: `work_item_list({})`, `work_item_read({workItemId}|{operationId})`, `work_item_action({action})`, `handoff_import_file({fileId,path?})`. Background preprocessing and readonly children receive no handoff mutation tools. Legacy prepare/commit names remain readable in history but are not registered for new requests.
 
 ## 3. Contracts
 
@@ -26,9 +26,13 @@ The model-visible workspace description states that sessions in the same task an
 
 `collaboration/collaboration.sqlite` (schema version 1) contains works, actions, files, submissions and session_links. Private fixed bytes live under `collaboration/files/<fileId>/content`. Marker/schema/integrity failures block opening; do not reconstruct a missing DB from files. Back up the whole stopped data directory, including SQLite and fixed files.
 
-Preparation freezes actual bytes and returns an operationId; it does not show an Agent confirmation card. The model must then call commit, whose existing beforeToolCall hook displays the fixed action and waits. This distinction is explicit in the tool description after a real model stopped at prepare and incorrectly claimed a card existed.
+`workActionToolSchema` exposes the four existing business actions while omitting assign.taskSpaceId and assign/submit.payload.workspaceId. Reject extra model fields; build a separate service DTO from the captured workspace and actor. Keep page/stored `workPrepareSchema` unchanged. Absolute `/workspace/` paths are normalized only in this internal DTO, never in native tool arguments.
+
+One `work_item_action` call uses the existing beforeToolCall hook to prepare fixed bytes, check the active prepared operation, display the existing confirmation and wait. The host binds operationId, exact parameters and approval grant to this toolCallId; execute consumes that binding and returns the actual commit receipt. The model never needs to pass an operationId into a second tool to open the card. An explicit recoverable preparation error becomes a native blocked tool result before any card; persistence, corrupt-state and uncertain file-service failures remain terminal. Do not classify every RequestError/4xx as recoverable. Waiting-time permission/version changes still fail the existing commit recheck.
 
 Page commits accept only page-origin actions. Agent commits require an in-memory grant matching the active sessionId/requestId/toolCallId/interactionId and original preparation. Request end/cancel/restart expires uncommitted Agent preparations; restart expires all old uncommitted preparations. Browser refresh alone does not. No native history or ordinary text is interpreted as a fresh grant.
+
+Native policy/interaction records retain real `work_item_action` arguments `{action}`; fixed operationId/files stay in handoff. Replay validates the new schema separately from old commit `{operationId}`, retaining actual call/policy/decision linkage. Old prepare/commit histories may be continued with only the new tool registered; attempted obsolete tools fail without an alias or replay. Older binaries unable to decode new records are not safe rollback targets. A separate business workflow prompt is deferred; this change only replaces the old tool-chain directions.
 
 File copying happens before the short SQLite transaction; the transaction atomically validates revision, changes work/submission state and saves the receipt. Reusing a committed operationId returns its receipt; a distinct stale operation conflicts. Fixed byte/hash verification precedes publication/download. Source edits after preparation do not alter the approved copy. Unpublished or partial files remain private. This guarantee applies to the business transaction, not arbitrary Bash side effects.
 
@@ -42,6 +46,7 @@ Per-request business context contains only the current work goal, state, revisio
 | --- | --- |
 | Unknown seat, foreign session/workspace/work/file | Scoped rejection; no content disclosure |
 | Extra body authority fields or malformed action | 400 strict schema |
+| Recoverable model preparation error, including missing files or stale revision | Specific native tool error; no confirmation, model may correct inputs |
 | Stale revision, wrong actor/state, old submission review | 409 `WORK_CONFLICT` |
 | Page attempts Agent action, missing exact grant | 409; no effect |
 | Fixed bytes missing/corrupt, unsafe path/type | Explicit error; no valid submission |
@@ -64,6 +69,8 @@ Run typecheck, lint, unit/integration, browser tests and build. `tests/seat-api.
 `npm run probe:handoff` uses real configured model and Docker with a new temporary data root; it never opens production data or starts another production listener. Keep live-model, browser, fault and deployment evidence separate.
 
 `npm run probe:handoff -- --attachments baseline|verify` captures actual provider messages/tools without request headers or credentials, native tool calls, fixed-file hashes and receiver-imported bytes. The baseline has one natural two-turn case; verification has three independent natural cases plus one-file, text-only and explicit-two-file controls, including submission import back to A. Retain every failure: deterministic provider tests or explicit-file success cannot substitute for natural multi-turn acceptance. Do not tighten optional parameters or add intent checks solely to make this probe pass.
+
+Single-action tests also cover all four actions, original absolute-path arguments versus host scope, business-error correction without a card, infrastructure stop, cancellation during preparation/while waiting/immediately after approval, stale revision after approval, and old history continuation. Use synchronization barriers rather than timing sleeps. The probe matches one real action call to its card and committed receipt, then checks B's bytes and A's final acceptance.
 
 ## 7. Wrong vs Correct
 

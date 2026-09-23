@@ -18,7 +18,9 @@
   "commit": null,
   "pr_url": null,
   "subtasks": [],
-  "children": [],
+  "children": [
+    "09-22-handoff-confirmation-flow"
+  ],
   "parent": "09-21-background-execution",
   "relatedFiles": [
     ".trellis/tasks/09-22-handoff-attachment-integrity/prd.md",

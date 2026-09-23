@@ -95,7 +95,14 @@ export interface InformationJobSummary {
   id: string; kind: BackgroundJobKind; sourceId: string; eventId: string;
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
   createdAt: string; startedAt?: string; endedAt?: string; seatId?: string; sessionId?: string;
+  title?: string;
+  /** Preprocessing deliveries belong to this execution, never the latest event-wide state. */
+  deliveries?: BackgroundDelivery[];
   error?: {code: string; message: string};
 }
-export interface InformationJobDetail extends InformationJobSummary { text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot }
+export interface InformationJobDetail extends InformationJobSummary {
+  text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot;
+  input?: {title: string; text: string; files: BackgroundFile[]};
+  retryOfJobId?: string;
+}
 export interface BackgroundReceipt { eventId: string; sourceMessageId: string; receivedAt: string; status: 'accepted' }

@@ -8,7 +8,8 @@ import { SessionManager } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
 import { loadConfig } from '../src/server/config.js';
-import type { HandoffFile, HandoffImportResult, WorkAction, WorkActionKind, WorkDetail, WorkPrepareInput, WorkReceipt, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
+import type { HandoffFile, HandoffImportResult, WorkAction, WorkActionKind, WorkDetail, WorkReceipt, SessionSnapshot, StreamEvent } from '../src/contracts/index.js';
+import type { WorkActionInput } from '../src/contracts/collaboration.js';
 
 // No arguments retains the original full handoff/return/resubmit/restart probe.
 const args = process.argv.slice(2);
@@ -105,9 +106,12 @@ async function scenario(seatId:string,sessionId:string,prompt:string,label:strin
         return;
       }
       businessApprovals++;
-      assert.equal(item.toolName,'work_item_commit'); assert.equal(item.action.handoff?.kind,expected);
+      assert.equal(item.toolName,'work_item_action'); assert.equal(item.action.handoff?.kind,expected);
       const action=await json<WorkAction>(seatId,`/work-actions/${item.action.handoff!.operationId}`);
       assert.equal(action.source,'agent'); assert.equal(action.status,'prepared');
+      if (action.kind === 'assign') {
+        assert.equal(lab.collaboration!.list({seatId:action.assigneeSeatId}).filter(work => work.taskSpaceId === action.taskSpaceId).length,0,'批准前不产生正式分派');
+      }
       const forbidden=await app.inject({method:'POST',url:`${root(seatId)}/work-actions/${action.operationId}/commit`,headers,payload:{confirm:true}});
       assert.equal(forbidden.statusCode,409,'页面不得绕过原 Agent 确认');
       const fresh=await json<SessionSnapshot>(seatId,`/sessions/${sessionId}`);
@@ -201,15 +205,28 @@ async function attachmentScenario(item:AttachmentFixture) {
     const sorted = (names:string[]) => names.toSorted();
     assert.deepEqual(sorted(work.inputFiles.map(file => file.name)),sorted(expected.map(file => file.name)), '实际附件必须恰为用户选择的资料，不能漏传或附上无关文件');
     const trace = traceFor(sender.id);
-    const prepared = trace.results.find(value => value.toolName === 'work_item_prepare' && !value.isError &&
-      work.id === lab.collaboration!.getAction({seatId:'test-seat'},(value.details as WorkAction).operationId).receipt?.workItemId);
-    assert.ok(prepared,'缺少本工作准备结果');
-    const confirmed = prepared.details as WorkAction;
-    const call = trace.calls.find(value => value.id === prepared.toolCallId && value.name === 'work_item_prepare');
+    const committed = trace.results.find(value => value.toolName === 'work_item_action' && !value.isError &&
+      work.id === (value.details as WorkReceipt).workItemId);
+    assert.ok(committed,'缺少本工作真实工具回执');
+    const receipt = committed.details as WorkReceipt;
+    const confirmed = lab.collaboration!.getAction({seatId:'test-seat'},receipt.operationId);
+    assert.equal(confirmed.status,'committed');
+    assert.ok(confirmed.receipt,'交接必须保存实际业务回执');
+    for (const key of Object.keys(confirmed.receipt) as (keyof WorkReceipt)[]) {
+      assert.equal(receipt[key],confirmed.receipt[key],`工具回执字段 ${key} 必须与业务记录一致`);
+    }
+    const call = trace.calls.find(value => value.id === committed.toolCallId && value.name === 'work_item_action');
     assert.ok(call,'缺少本工作真实调用参数');
-    const action = call.arguments.action as WorkPrepareInput;
+    const action = call.arguments.action as WorkActionInput;
     assert.equal(action.kind,'assign');
     if (action.kind !== 'assign') throw new Error('预期分派调用');
+    assert.ok(!('taskSpaceId' in action) && !('workspaceId' in action.payload),'模型不填写宿主已知的项目与工作区');
+    const card = evidence.findLast(value => value.snapshot.id === sender.id)?.snapshot.interactions?.find(value =>
+      value.kind === 'confirmation' && value.toolCallId === call.id);
+    assert.ok(card?.kind === 'confirmation' && card.status === 'approved','同一工具调用必须有真实批准');
+    assert.deepEqual(card.action.parameters,call.arguments,'确认参数与原始模型调用一致');
+    assert.equal(card.action.handoff?.operationId,receipt.operationId);
+    assert.deepEqual(card.action.handoff?.files,work.inputFiles,'卡片实际附件与交接文件一致');
     const paths = action.payload.inputPaths ?? [];
     assert.ok(Array.isArray(paths),'真实附件参数应为路径数组');
     assert.deepEqual(sorted(paths.map(path => path.replace(/^\/workspace\//,''))),sorted(expected.map(file => file.name)), '实际调用选择的路径必须与本场景资料一致');
@@ -245,6 +262,10 @@ async function attachmentScenario(item:AttachmentFixture) {
         await verifyImported('test-seat',a.id,sender.id,[output]);
         result.work = submitted;
         result.checks.push('B 正式提交成果，A 通过实际模型调用导入且字节与提交副本一致');
+        await scenario('test-seat',sender.id,'我已确认这份修订稿符合要求，请验收通过当前提交。',`${item.label} / A 验收`,'review');
+        result.work = await json<WorkDetail>('test-seat',`/work-items/${work.id}`);
+        assert.equal(result.work.state,'completed');
+        result.checks.push('A 确认验收，实际回执对应工作完成状态');
       }
     }
     result.passed = true;

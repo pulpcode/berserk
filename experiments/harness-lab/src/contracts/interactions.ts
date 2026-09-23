@@ -33,6 +33,15 @@ export interface ConfirmationInteraction extends InteractionBase {
   execution?: 'succeeded' | 'failed' | 'unknown' | 'not_started';
 }
 export type Interaction = QuestionInteraction | ConfirmationInteraction;
+/** Read-only projection of existing native Bash policy and execution evidence. */
+export interface CommandPolicyRecord {
+  requestId: string;
+  toolCallId: string;
+  command: string;
+  cwd: string;
+  policy: { decision: 'allow' | 'ask' | 'deny'; ruleId: string; reason: string; version: string };
+  execution: 'succeeded' | 'failed' | 'unknown' | 'not_started';
+}
 export type InteractionResponse =
   | { requestId: string; kind: 'question'; action: 'answer'; answers: InteractionAnswer[] }
   | { requestId: string; kind: 'question'; action: 'skip' }

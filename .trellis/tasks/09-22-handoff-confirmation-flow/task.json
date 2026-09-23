@@ -1,0 +1,40 @@
+{
+  "id": "handoff-confirmation-flow",
+  "name": "handoff-confirmation-flow",
+  "title": "修复工作交接工具与确认衔接",
+  "description": "BUG-003 修复：收敛 Agent 交接工具，复用现有确认等待，提前校验并明确错误；业务流程补充提示后置。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "handoff-confirmation",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-09-22",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-22-handoff-attachment-integrity",
+  "relatedFiles": [
+    ".trellis/tasks/09-22-handoff-confirmation-flow/prd.md",
+    ".trellis/tasks/09-22-handoff-confirmation-flow/design.md",
+    ".trellis/tasks/09-22-handoff-confirmation-flow/implement.md",
+    ".trellis/tasks/09-22-handoff-confirmation-flow/research/code-review.md"
+  ],
+  "notes": "本地482项单元/集成及99项浏览器检查通过。2026-09-23用户明确授权源码发布和取消旧确认等待，已更新腾讯云4315，保留数据与7个会话。待用户真实验收；未提交Git，不归档。业务流程补充提示后置；BUG-001、BUG-002独立跟踪。",
+  "meta": {
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
+    "sourceBug": "BUG-003",
+    "businessWorkflowPrompt": "deferred_by_user",
+    "reviewStatus": "passed",
+    "liveAcceptanceStatus": "user_manual_acceptance_pending",
+    "deploymentStatus": "deployed"
+  }
+}

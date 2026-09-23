@@ -34,7 +34,7 @@ describe('background deployment catalog', () => {
   });
   it('rejects unknown authority fields, unsafe/unknown tools, duplicate catalogs, foreign profiles and invalid limits', () => {
     expect(() => parseBackgroundConfig({...fixture(), token: 'plaintext'})).toThrow();
-    for (const tool of ['ask_user', 'instructions_update', 'work_item_prepare', 'host_exec']) expect(() => parseBackgroundConfig({...fixture(), profiles: [{...fixture().profiles[0], tools: [tool]}]})).toThrow();
+    for (const tool of ['ask_user', 'instructions_update', 'work_item_prepare', 'work_item_action', 'host_exec']) expect(() => parseBackgroundConfig({...fixture(), profiles: [{...fixture().profiles[0], tools: [tool]}]})).toThrow();
     const source = fixture().sources[0];
     expect(() => parseBackgroundConfig({...fixture(), sources: [source, source]})).toThrow();
     expect(() => parseBackgroundConfig({...fixture(), sources: [{...source, allowedProfileIds: ['missing']}]})).toThrow();

@@ -1,0 +1,102 @@
+{
+  "release": "/home/ubuntu/axon-release-background.ClBNID",
+  "stage": "/home/ubuntu/axon-release-background.ClBNID/updates/background-board-v0ueqoob",
+  "port": 4315,
+  "dataDir": "/home/ubuntu/axon-release-background.ClBNID/data",
+  "archiveSha256": "d6b52ce73ebfa4902b8b0ecb2c4d25aacd91fff669a0f7f8587b18e05db45215",
+  "sourceBaseCommit": "047ab63",
+  "includesWorkingTreeChanges": true,
+  "previousPid": 1695027,
+  "authorizedByUser": "批准更新线上服务，我来测试",
+  "phase": "ready",
+  "backup": "/home/ubuntu/axon-release-background.ClBNID/updates/background-board-v0ueqoob/backup",
+  "backupVerified": true,
+  "dataFilesBefore": 111,
+  "pid": 1780253,
+  "preservedContentFiles": 110,
+  "contentChangesAfterRestart": [],
+  "health": {
+    "ok": true
+  },
+  "assets": [
+    {
+      "path": "/brand/axon-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1063,
+      "sha256": "2f4c6cf11781919a97a66ff94552b59dc6d867cb94333af5a4d2098132e3f3dd"
+    },
+    {
+      "path": "/brand/axon-wordmark.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1122,
+      "sha256": "0daebb73e677c43bab0abc732a4994193fb719c270807d6bd4aa93acc09a5ccf"
+    },
+    {
+      "path": "/favicon.ico",
+      "status": 200,
+      "contentType": "image/vnd.microsoft.icon",
+      "bytes": 7611,
+      "sha256": "70cfed088307c6feb4b1a0fb83cd82814752200dc98882880ed41e6341b309af"
+    }
+  ],
+  "deployedAt": "2026-09-23T07:37:20.027008+00:00",
+  "postDeploy": {
+    "accounts": [
+      {
+        "account": "a",
+        "sessions": 5,
+        "historyReadable": true,
+        "recoveryWarnings": 0,
+        "active": 0,
+        "executionAvailable": true,
+        "inboxItems": 4,
+        "jobCounts": {
+          "status=queued": 0,
+          "status=running": 0,
+          "status=succeeded": 4,
+          "statuses=failed,interrupted,cancelled": 7
+        },
+        "jobDetailsReadable": 11
+      },
+      {
+        "account": "b",
+        "sessions": 2,
+        "historyReadable": true,
+        "recoveryWarnings": 0,
+        "active": 0,
+        "executionAvailable": true,
+        "inboxItems": 1
+      }
+    ],
+    "asset": "/assets/index-CzFRNN21.js",
+    "listeners": [
+      "LISTEN 0      511        127.0.0.1:4315      0.0.0.0:*    users:((\"MainThread\",pid=1780253,fd=22))"
+    ]
+  },
+  "postDeployScriptCorrection": "首次检查脚本把详情响应误按job包装读取；按现有InformationJobDetail顶层id修正后通过，没有修改服务代码或业务数据。",
+  "serverCommandPolicyChecks": [
+    {
+      "command": "cd /workspace && ls -la",
+      "decision": "allow",
+      "version": "axon-bash-v2"
+    },
+    {
+      "command": "cd /workspace && ls -la && echo \"---HASH---\" && md5sum *.md && sha256sum *.md && echo \"---WC---\" && wc -l -c *.md",
+      "decision": "allow",
+      "version": "axon-bash-v2"
+    },
+    {
+      "command": "cd /workspace && rm draft.md",
+      "decision": "ask",
+      "version": "axon-bash-v2"
+    },
+    {
+      "command": "cd /workspace && sudo apt-get update",
+      "decision": "deny",
+      "version": "axon-bash-v2"
+    }
+  ],
+  "localForwardChecked": true
+}

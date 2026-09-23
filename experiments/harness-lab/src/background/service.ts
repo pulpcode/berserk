@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import type { Identity } from '../contracts/access.js';
-import type { BackgroundAction, BackgroundAnalysisInput, BackgroundAnalysisSummary, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundEventDetail, BackgroundEventSummary, BackgroundFile, BackgroundJob, BackgroundPage, BackgroundProfileSnapshot, BackgroundReceipt, BackgroundRuleSnapshot, InboxDetail, InboxItem, InformationCapabilities, InformationJobDetail, InformationJobSummary, InformationRuleInput } from '../contracts/background.js';
+import type { BackgroundAction, BackgroundAnalysisInput, BackgroundAnalysisSummary, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundEventDetail, BackgroundEventSummary, BackgroundFile, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundProfileSnapshot, BackgroundReceipt, BackgroundRuleSnapshot, InboxDetail, InboxItem, InformationCapabilities, InformationJobDetail, InformationJobSummary, InformationRuleInput } from '../contracts/background.js';
 import type { ComposerSelection, FileOutput, FileRef, SessionSnapshot, UsageSummary } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import type { HandoffFile } from '../contracts/collaboration.js';
@@ -28,6 +28,7 @@ function combinedUsage(parent?: UsageSummary, child?: UsageSummary): UsageSummar
 const fixedFile = (file: BackgroundFile): HandoffFile => ({fileId: file.id, name: file.name, size: file.size, hash: file.hash, createdAt: ''});
 export interface IncomingInformation {sourceMessageId: string; title: string; text: string; uploadIds?: string[]; subjectId?: string; occurredAt?: string}
 export interface InformationFilter {sourceId?: string; status?: string; search?: string; offset?: number; limit?: number}
+export interface InformationJobFilter extends InformationFilter {statuses?: BackgroundJobStatus[]}
 export function page<T>(items: T[], query: InformationFilter = {}): BackgroundPage<T> {
   const offset = query.offset ?? 0, limit = query.limit ?? 25;
   return {items: items.slice(offset, offset + limit), total: items.length, offset, limit};
@@ -35,6 +36,18 @@ export function page<T>(items: T[], query: InformationFilter = {}): BackgroundPa
 function finalText(snapshot: SessionSnapshot | null, requestId: string): string {
   const id = snapshot?.turns?.find(turn => turn.requestId === requestId)?.finalMessageId;
   return id ? snapshot!.messages.find(message => message.id === id)?.text ?? '' : '';
+}
+/** A seat can continue its session later; job detail still shows only this execution. */
+function requestSnapshot(snapshot: SessionSnapshot, requestId: string): SessionSnapshot {
+  return {...snapshot, backgroundJob: undefined, messages: snapshot.messages.filter(message => message.requestId === requestId),
+    turns: snapshot.turns?.filter(turn => turn.requestId === requestId),
+    interactions: snapshot.interactions?.filter(item => item.requestId === requestId),
+    commandPolicies: snapshot.commandPolicies?.filter(item => item.requestId === requestId),
+    fileOutputs: snapshot.fileOutputs?.filter(item => item.requestId === requestId),
+    subagents: snapshot.subagents?.filter(item => item.parentRequestId === requestId),
+    latestCompaction: snapshot.latestCompaction?.requestId === requestId ? snapshot.latestCompaction : undefined,
+    active: snapshot.active?.requestId === requestId ? snapshot.active : null,
+    lastResult: snapshot.lastResult?.requestId === requestId ? snapshot.lastResult : null};
 }
 
 /** Durable admission and delivery. The native runtime remains the conversation authority. */
@@ -199,20 +212,18 @@ export class BackgroundService {
     else { const item = this.allowedInbox(actor,id); files = [...item.event.files, ...(item.job.result?.files ?? [])]; }
     const file = files.find(file => file.id === fileId); if (!file) throw notFound(); return this.files.copies.open(fixedFile(file));
   }
-  jobs(actor: Identity, query: InformationFilter): BackgroundPage<InformationJobSummary> {
-    const items = this.store.listJobs().filter(job => {
-      if (!this.store.effectivePermission(actor,job.sourceId) || (query.sourceId && job.sourceId !== query.sourceId) || (query.status && job.status !== query.status)) return false;
-      if (!query.search) return true;
-      // Search only source information the viewer can read, never a seat's private analysis.
-      const event = this.store.getEvent(job.eventId);
-      return [job.id,event.title,event.sourceMessageId].some(value => value.includes(query.search!));
-    });
-    return page(items.map(job => this.jobSummary(actor,job)),query);
+  jobs(actor: Identity, query: InformationJobFilter): BackgroundPage<InformationJobSummary> {
+    if (query.status && query.statuses) throw new RequestError('INVALID_INPUT', '作业状态筛选不能同时指定 status 和 statuses。');
+    const sourceIds = this.config.sources.filter(source => this.store.effectivePermission(actor,source.sourceId)).map(source => source.sourceId);
+    const result = this.store.pageJobs({...query,sourceIds});
+    return {...result,items:result.items.map(job => this.jobSummary(actor,job))};
   }
   private jobSummary(actor: Identity, job: BackgroundJob): InformationJobSummary {
     const own = job.kind === 'preprocess' || job.seatId === actor.seatId;
     return {id:job.id,kind:job.kind,sourceId:job.sourceId,eventId:job.eventId,status:job.status,revision:job.revision,createdAt:job.createdAt,
       ...(job.phase ? {phase:job.phase} : {}), ...(job.startedAt ? {startedAt:job.startedAt} : {}), ...(job.endedAt ? {endedAt:job.endedAt} : {}), ...(job.seatId ? {seatId:job.seatId} : {}),
+      ...(own ? {title:this.store.getEvent(job.eventId).title} : {}),
+      ...(job.kind === 'preprocess' ? {deliveries:this.store.listDeliveries(job.id)} : {}),
       ...(own && job.kind === 'seat_analysis' && job.sessionId ? {sessionId:job.sessionId} : {}), ...(own && job.error ? {error:job.error} : {})};
   }
   async jobDetail(actor: Identity, id: string, center: boolean): Promise<InformationJobDetail> {
@@ -223,7 +234,13 @@ export class BackgroundService {
     if (job.kind === 'seat_analysis' && job.seatId !== actor.seatId) return summary;
     if (job.kind === 'seat_analysis') this.lab.access!.get(job.taskSpaceId!,actor.seatId);
     const snapshot = await this.executor.read(job);
-    return {...summary,...(snapshot ? {snapshot,text:finalText(snapshot,job.requestId)} : {}),files:job.result?.files ?? []};
+    const event = job.kind === 'preprocess' ? this.store.getEvent(job.eventId) : undefined;
+    const input = event ? {title:event.title,text:await this.eventText(event),files:event.files} : undefined;
+    // Async native/file reads must not turn a revoked grant into a content response.
+    if (center) this.permission(actor,job.sourceId);
+    if (job.kind === 'seat_analysis') this.lab.access!.get(job.taskSpaceId!,actor.seatId);
+    return {...summary,...(snapshot ? {snapshot:requestSnapshot(snapshot,job.requestId),text:finalText(snapshot,job.requestId)} : {}),
+      files:job.result?.files ?? [],...(input ? {input} : {}),...(job.retryOfJobId ? {retryOfJobId:job.retryOfJobId} : {})};
   }
   async cancel(actor: Identity, id: string, revision: number) {
     const job = this.store.getJob(id);
