@@ -67,7 +67,7 @@ export function InformationDrawer({ title, selectedId, close, children }: { titl
     document.addEventListener('keydown', keydown); return () => document.removeEventListener('keydown', keydown);
   }, [close]);
   return <aside ref={panel} className="information-detail information-drawer" aria-label={title}>
-    <div className="information-drawer-heading"><h2>{title}</h2><button ref={closeButton} onClick={close} aria-label={`关闭${title}`}><X size={18} aria-hidden="true" /></button></div>
+    <div className="information-drawer-heading"><h2>{title}</h2><button className="icon-button" ref={closeButton} onClick={close} aria-label={`关闭${title}`}><X size={18} aria-hidden="true" /></button></div>
     <div className="information-drawer-body">{children}</div>
   </aside>;
 }

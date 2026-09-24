@@ -71,8 +71,8 @@ export function Resources({ workspaceId, name, resources, instructions, resource
         <div className="resource-actions">
           {!review ? <button className="primary-action" disabled={saving} onClick={() => void instructions.save(workspaceId)}>{saving ? '保存中…' : '保存指令'}</button> : <button className="primary-action" disabled={saving || loading || !editor.latest || !editor.canMerge} onClick={() => void instructions.save(workspaceId, true)}>{saving ? '保存中…' : '合并后保存'}</button>}
           <button disabled={saving || loading} onClick={() => void read(workspaceId, true)}>{loading ? '读取中…' : '查看最新内容'}</button>
-          <button disabled={saving} onClick={() => instructions.edit(workspaceId, '')}>清空草稿</button>
-          <button disabled={saving || !editor.latest} onClick={() => instructions.discard(workspaceId)}>放弃草稿，使用最新内容</button>
+          <button className="danger-action" disabled={saving} onClick={() => instructions.edit(workspaceId, '')}>清空草稿</button>
+          <button className="danger-action" disabled={saving || !editor.latest} onClick={() => instructions.discard(workspaceId)}>放弃草稿，使用最新内容</button>
         </div>
         <p className="resource-help">Ctrl / ⌘ + S 保存。查看与放弃草稿仅更新页面；请自行对照整理后保存。</p>
       </> : <p role="status">{loading ? '正在读取项目指令…' : '尚未读取项目指令。'}</p>}

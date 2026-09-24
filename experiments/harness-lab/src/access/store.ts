@@ -84,8 +84,8 @@ export class AccessStore {
     return row ? [this.get(String(row.task_id),actor.seatId)] : [];
   }
   create(actor: Identity, input: TaskInput): TaskSpace {
-    if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写任务名称，公共任务还需要目标说明。');
-    if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建公共任务。', 403);
+    if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，工作任务还需要目标说明。');
+    if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
     const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility]);
     const old = this.db.prepare('SELECT input,task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,input.clientActionId);
     if (old) { if (old.input !== digest) throw conflict('同一次创建的内容已变化，请先核对任务列表。'); return this.get(String(old.task_id),actor.seatId); }
@@ -98,7 +98,9 @@ export class AccessStore {
   }
   update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state']}, blocked: () => boolean = () => false): TaskSpace {
     const task = this.get(id,actor.seatId);
-    if (task.ownerSeatId !== actor.seatId) throw new RequestError('FORBIDDEN','仅负责席位可管理任务。',403);
+    // The existing public-create capability also governs all public task metadata management.
+    const allowed = task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId;
+    if (!allowed) throw new RequestError('FORBIDDEN','当前席位无权管理此任务。',403);
     if (task.revision !== revision) throw conflict();
     if (change.state === 'archived' && ((this.busy.get(id) || 0) > 0 || blocked())) throw conflict('任务仍有处理请求、写入或未完成工作，请结束后再归档。');
     const next = {...task,...change,revision:task.revision+1,updatedByUserId:actor.userId,updatedAt:new Date().toISOString()};

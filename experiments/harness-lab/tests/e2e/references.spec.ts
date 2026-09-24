@@ -225,6 +225,7 @@ test('workspace navigation preserves separate drafts and dismisses stale pickers
   const env = await setup(page);
   try {
     await page.goto('/'); await selectSkill(page); await input(page).fill('原项目草稿');
+    await visible(page).locator('.catalog-heading').hover();
     await visible(page).getByRole('button', { name: '新建项目', exact: true }).click();
     await page.getByRole('dialog').getByLabel('项目名称').fill('另一个项目');
     await page.getByRole('dialog').getByRole('button', { name: '创建项目' }).click();

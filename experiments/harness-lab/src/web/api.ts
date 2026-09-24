@@ -6,6 +6,16 @@ export class ApiFailure extends Error {
   constructor(message: string, readonly code: string, readonly status: number) { super(message); }
 }
 
+// Keep transport failures separate from HTTP rejections: a failed write may already have committed.
+export class NetworkFailure extends Error {
+  readonly code = 'NETWORK_ERROR';
+  constructor() { super('暂时无法连接服务，请稍后重试。'); }
+}
+
+export function isConnectionFailure(error: unknown): boolean {
+  return error instanceof NetworkFailure || (error instanceof ApiFailure && [502, 503, 504].includes(error.status));
+}
+
 export async function checkResponse(response: Response): Promise<Response> {
   if (response.ok) return response;
   const body = await response.json().catch(() => null) as ApiError | null;
@@ -56,7 +66,15 @@ export function createApiClient(seatId?: string, auth?: AuthSession, invalid?: (
   const headers: Record<string,string> = auth ? { 'x-csrf-token':auth.csrf!, 'x-axon-view':auth.viewId! } : {};
   const request: typeof fetch = async (input,init) => {
     controller.signal.throwIfAborted();
-    const response=await fetch(input,{...init,headers:{...Object.fromEntries(new Headers(init?.headers)),...headers},signal:init?.signal ? AbortSignal.any([controller.signal,init.signal]) : controller.signal});
+    const signal = init?.signal ? AbortSignal.any([controller.signal, init.signal]) : controller.signal;
+    let response: Response;
+    try {
+      response = await fetch(input, {...init, headers: {...Object.fromEntries(new Headers(init?.headers)), ...headers}, signal});
+    } catch (error) {
+      signal.throwIfAborted();
+      if (error instanceof TypeError) throw new NetworkFailure();
+      throw error;
+    }
     if(auth && (response.status===401 || response.status===409)) {
       const body=await response.clone().json().catch(()=>null) as ApiError|null;
       if(response.status===401 || body?.error.code==='IDENTITY_CHANGED') {invalid?.(); throw new ApiFailure('登录已变化，请重新进入。','IDENTITY_CHANGED',401);}

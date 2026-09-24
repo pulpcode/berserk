@@ -13,6 +13,7 @@ async function filesApi(page: Page) {
     const url = new URL(route.request().url()); const path = url.pathname; const method = route.request().method();
     const json = (value: unknown, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(value) });
     if (path === '/api/auth/session') return json({mode:'test'});
+    if (path === '/api/models') return json({ defaultModelId: 'default', models: [{ id: 'default', provider: 'test', model: 'deepseek-flash', configured: true, contextReady: true, contextWindow: 1000000, maxOutputTokens: 393216 }] });
     if (path === '/api/info') return json({ model: 'deepseek-flash', configured: true, contextReady: true, files: { enabled: true, maxFileBytes: 104857600, maxAttachments: 20, executionAvailable: true }, limits: { agentRunTimeoutMs: null, httpIdleTimeoutMs: 300000, llmRequestTimeoutMs: null, maxOutputTokens: 393216 } });
     if (path === '/api/activity') return json({ defaultWorkspaceId: 'w1', workspaces, sessions: sessions.filter(session => !controls.emptySecond || session.id !== 'C').map(session => ({ ...session, statusUpdatedAt: session.updatedAt })) });
     if (path.includes('/resources')) return json({ workspaceId: path.split('/')[3], instructions: [], sources: [], skills: [] });
@@ -110,7 +111,7 @@ test('upload stays with its original session, restores references after refresh,
   await page.reload(); await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
   await page.getByRole('button', { name: '移除引用 数据.csv' }).click();
   expect(app.deletes).toHaveLength(0); expect(app.contents.has('w1/数据.csv')).toBe(true);
-  await page.getByRole('button', { name: '文件', exact: true }).click();
+  await page.getByRole('button', { name: '项目文件', exact: true }).click();
   await expect(page.getByRole('button', { name: '预览 数据.csv' })).toBeVisible();
   await page.getByRole('button', { name: '预览 数据.csv' }).click(); await expect(page.getByRole('region', { name: '数据.csv 预览' })).toContainText('甲,42');
   await page.getByRole('button', { name: '引用 数据.csv' }).click();
@@ -143,14 +144,22 @@ test('failed upload blocks sending, explicit retry verifies status, cancelled up
 test('project switching isolates files and file panel works on narrow screens without executing HTML', async ({ page }) => {
   const app = await filesApi(page); app.contents.set('w1/网页.html', '<script>window.filePreviewExecuted=true</script>');
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.getByRole('button', { name: '文件', exact: true }).click();
+  const tools = page.locator('.workspace-header').getByRole('group', { name: '项目工具' });
+  for (const name of ['项目资料', '项目文件']) {
+    const button = tools.getByRole('button', { name, exact: true });
+    await expect(button).toBeInViewport();
+    await expect(button).toHaveAttribute('title', name);
+    await expect(button).toHaveAttribute('aria-haspopup', 'dialog');
+    await expect(button).toHaveText('');
+  }
+  await tools.getByRole('button', { name: '项目文件', exact: true }).click();
   await page.getByRole('button', { name: '预览 网页.html' }).click();
   await expect(page.getByRole('region', { name: '网页.html 预览' })).toContainText('<script>');
   expect(await page.evaluate(() => 'filePreviewExecuted' in window)).toBe(false);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  await page.keyboard.press('Escape'); await expect(page.getByRole('button', { name: '文件', exact: true })).toBeFocused();
+  await page.keyboard.press('Escape'); await expect(page.getByRole('button', { name: '项目文件', exact: true })).toBeFocused();
   await page.getByRole('button', { name: '打开会话列表' }).click(); await page.getByRole('button', { name: /会话 C/ }).click();
-  await page.getByRole('button', { name: '文件', exact: true }).click(); await expect(page.getByRole('list', { name: '项目文件列表' })).not.toContainText('网页.html');
+  await page.getByRole('button', { name: '项目文件', exact: true }).click(); await expect(page.getByRole('list', { name: '项目文件列表' })).not.toContainText('网页.html');
 });
 
 
@@ -184,7 +193,7 @@ test('drag and drop has keyboard alternative and never fetches Markdown remote i
   await page.locator('form.composer').dispatchEvent('drop', { dataTransfer: data });
   await expect(page.getByRole('button', { name: '添加附件' })).toBeVisible();
   await expect(page.getByRole('listitem', { name: /已保存到工作区/ })).toBeVisible();
-  await page.getByRole('button', { name: '文件', exact: true }).click(); await page.getByRole('button', { name: '预览 说明.md' }).click();
+  await page.getByRole('button', { name: '项目文件', exact: true }).click(); await page.getByRole('button', { name: '预览 说明.md' }).click();
   await expect(page.getByRole('region', { name: '说明.md 预览' })).toContainText('[图片：外图]'); expect(externalLoads).toBe(0); expect(app.sent).toHaveLength(0);
   await page.screenshot({ path: '/tmp/berserk-files-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 375, height: 812 }); await page.screenshot({ path: '/tmp/berserk-files-mobile.png', fullPage: true });

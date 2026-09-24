@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Interaction, InteractionResponse, AppInfo, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
-import { useApi } from './api';
+import type { Interaction, InteractionResponse, AppInfo, ModelChoices, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
+import { isConnectionFailure, useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
 import { useAttachments } from './useAttachments';
 import { useComposerSelections, selectionInput } from './useComposerSelections';
@@ -63,10 +63,20 @@ export function useChat() {
   const { move: moveSelections, consume: consumeSelections, recover: recoverSelections, clearSubmitted: clearSubmittedSelections } = composerSelections;
   const { recover: recoverAttachments, clearSubmitted: clearSubmittedAttachments, move: moveAttachments, consume: consumeAttachments } = attachments;
   const [info, setInfo] = useState<AppInfo | null>(null);
+  const [models, setModels] = useState<ModelChoices>();
+  const [modelsError, setModelsError] = useState('');
+  const modelListRequest = useRef<Promise<void> | null>(null);
+  const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
+  const [modelSaving, setModelSaving] = useState<Record<string, boolean>>({});
+  const modelLocks = useRef(new Set<string>());
+  const MODEL_DRAFT_KEY = storageKey('berserk.draft-models');
+  const [draftModels, setDraftModels] = useState(() => stored(MODEL_DRAFT_KEY));
+  const draftModelsRef = useRef(draftModels);
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [activities, setActivities] = useState<SessionActivity[]>([]);
   const activitiesRef = useRef(activities);
   const [activityError, setActivityError] = useState('');
+  const [activityConnectionError, setActivityConnectionError] = useState(false);
   const activityRequest = useRef<Promise<void> | null>(null);
   const overviewLoaded = useRef(false);
   const [readResults, setReadResults] = useState(() => stored(READ_KEY));
@@ -97,6 +107,8 @@ export function useChat() {
   const selectionsRef = useRef(selections);
   const selected = selections[workspaceId] || '';
   const draftKey = selected || `workspace:${workspaceId}`;
+  const selectedModelId = (selected ? snapshots[selected]?.modelId : draftModels[draftKey]) || models?.defaultModelId || 'default';
+  const selectedModel = models?.models.find(model => model.id === selectedModelId);
   const [instructionChanges, setInstructionChanges] = useState<Record<string, InstructionUpdate[]>>({});
   const selectForWorkspace = useCallback((workspace: string, id: string) => {
     selectionsRef.current = { ...selectionsRef.current, [workspace]: id };
@@ -164,11 +176,12 @@ export function useChat() {
   }, [recover, rememberSubmitted, clearSubmittedAttachments, clearSubmittedSelections]);
 
   const refresh = useCallback(async (id: string) => {
+    if (modelLocks.current.has(id)) return;
     const revision = revisions.current[id] || 0;
     try {
       const result = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(id)}`);
       // A GET started before a newer stream event must not overwrite that event.
-      if (revision !== (revisions.current[id] || 0)) return;
+      if (revision !== (revisions.current[id] || 0) || modelLocks.current.has(id)) return;
       const stream = streams.current.get(id);
       if (stream && !stream.terminal && result.active) {
         const current = snapshotsRef.current[id];
@@ -180,6 +193,7 @@ export function useChat() {
       put(result);
       setPending(previous => ({ ...previous, [id]: false }));
       setReadErrors(previous => ({ ...previous, [id]: '' }));
+      setModelErrors(previous => previous[id] ? { ...previous, [id]: '' } : previous);
     } catch (error) { if (revision === (revisions.current[id] || 0)) setReadErrors(previous => ({ ...previous, [id]: reason(error) })); }
   }, [api, put]);
 
@@ -263,8 +277,10 @@ export function useChat() {
           }
         }
         setActivityError('');
+        setActivityConnectionError(false);
       } catch (error) {
-        setActivityError(`动态更新失败，显示的是上次获取的状态。${reason(error)}`);
+        setActivityError('动态更新失败，显示的是上次获取的状态。');
+        setActivityConnectionError(isConnectionFailure(error));
         throw error;
       }
     })();
@@ -272,6 +288,42 @@ export function useChat() {
     void request.finally(() => { if (activityRequest.current === request) activityRequest.current = null; }).catch(() => {});
     return request;
   }, [api, selectForWorkspace, selectWorkspace]);
+  const refreshModels = useCallback((): Promise<void> => {
+    if (modelListRequest.current) return modelListRequest.current;
+    const request = api<ModelChoices>('/api/models').then(result => { setModels(result); setModelsError(''); })
+      .catch((error: unknown) => { setModelsError(`可用模型读取失败。${reason(error)}`); throw error; });
+    modelListRequest.current = request;
+    void request.finally(() => { if (modelListRequest.current === request) modelListRequest.current = null; }).catch(() => {});
+    return request;
+  }, [api]);
+  const chooseModel = useCallback(async (modelId: string) => {
+    const target = movedDrafts.current.get(draftKey) || draftKey;
+    const model = models?.models.find(item => item.id === modelId);
+    if (!model?.configured || !model.contextReady || creatingRef.current || modelLocks.current.has(target)) return;
+    if (target.startsWith('workspace:')) {
+      draftModelsRef.current = { ...draftModelsRef.current, [target]: modelId };
+      setDraftModels(draftModelsRef.current); persist(MODEL_DRAFT_KEY, draftModelsRef.current);
+      return;
+    }
+    const current = snapshotsRef.current[target];
+    const activity = activitiesRef.current.find(item => item.id === target);
+    if (!current || current.active || current.backgroundJob || activity?.active || activity?.backgroundJob || streams.current.has(target)) return;
+    modelLocks.current.add(target);
+    revisions.current[target] = (revisions.current[target] || 0) + 1;
+    setModelSaving(previous => ({ ...previous, [target]: true }));
+    setModelErrors(previous => ({ ...previous, [target]: '' }));
+    try {
+      const result = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(target)}/model`, { modelId }, 'PUT');
+      if (result.id !== target) throw new Error('模型选择返回的会话不一致，请查询状态。');
+      put(result);
+    } catch (error) {
+      setModelErrors(previous => ({ ...previous, [target]: `模型切换未完成，请查询当前选择。${reason(error)}` }));
+      void refreshModels().catch(() => {});
+    } finally {
+      modelLocks.current.delete(target);
+      setModelSaving(previous => ({ ...previous, [target]: false }));
+    }
+  }, [MODEL_DRAFT_KEY, api, draftKey, models, put, refreshModels]);
   const bootstrap = useCallback(async () => {
     setLoading(true);
     try {
@@ -281,7 +333,14 @@ export function useChat() {
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
   }, [api, refreshActivity]);
-  const refreshInfo = useCallback(async () => { setInfo(await api<AppInfo>('/api/info')); }, [api]);
+  const refreshInfo = useCallback(async () => {
+    await Promise.all([api<AppInfo>('/api/info').then(setInfo), refreshModels()]);
+  }, [api, refreshModels]);
+  useEffect(() => {
+    const update = () => { void refreshModels().catch(() => {}); };
+    update(); window.addEventListener('focus', update);
+    return () => window.removeEventListener('focus', update);
+  }, [refreshModels]);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
   useEffect(() => {
     const update = () => { void refreshActivity().catch(() => {}); };
@@ -308,7 +367,8 @@ export function useChat() {
     const navigation = navigationRevision.current;
     creatingRef.current = targetWorkspaceId; setCreating(true);
     try {
-      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}) });
+      const modelId = draftModelsRef.current[`workspace:${targetWorkspaceId}`];
+      const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) });
       put(snapshot);
       // A delayed creation may populate its project, but must not undo later navigation.
       if (navigationRevision.current === navigation) {
@@ -317,19 +377,23 @@ export function useChat() {
       } else if (!selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
       const key = `workspace:${targetWorkspaceId}`;
       movedDrafts.current.set(key, snapshot.id);
+      if (draftModelsRef.current[key]) {
+        const next = { ...draftModelsRef.current }; delete next[key];
+        draftModelsRef.current = next; setDraftModels(next); persist(MODEL_DRAFT_KEY, next);
+      }
       moveAttachments(key, snapshot.id); moveSelections(key, snapshot.id);
       if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
       setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
     } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = null; setCreating(false); }
-  }, [workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
+  }, [MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
   const send = useCallback(async () => {
     const text = (draftsRef.current[draftKey] || '').trim();
     const files = attachments.current(draftKey);
     const picks = composerSelections.current(draftKey);
-    if (!text || files.some(file => file.status !== 'ready') || !info?.configured || !info.contextReady) return;
+    if (!text || files.some(file => file.status !== 'ready') || !selectedModel?.configured || !selectedModel.contextReady || modelsError || modelErrors[draftKey] || modelLocks.current.has(draftKey)) return;
     const id = selected || await create();
     if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
     const before = snapshotsRef.current[id];
@@ -401,7 +465,7 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [draftKey, attachments, composerSelections, consumeSelections, info?.configured, info?.contextReady, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModel, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -419,8 +483,8 @@ export function useChat() {
     }
   }, [api, put, selected]);
 
-  return { info, refreshInfo, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
-    activities, activityError, refreshActivity, markRead, noteNavigation, adopt: put,
+  return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
+    activities, activityError, activityConnectionError, refreshActivity, markRead, noteNavigation, adopt: put,
     prepareDraft: (id: string, text: string) => { if (Object.hasOwn(draftsRef.current, id)) return false; draft(id, text); return true; },
     prepareSelection: (id: string, kind: 'skill' | 'agent', value: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(id, kind, value),
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && !item.backgroundJob && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),

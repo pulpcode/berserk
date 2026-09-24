@@ -4,7 +4,7 @@ import type { AppInfo } from '../contracts/index';
 import { api, ApiContext, createApiClient } from './api';
 
 export interface TestSeat { id: string; name: string }
-export interface SeatView { identity?: Identity; logout?: () => void; active: boolean; seatId?: string; seats: TestSeat[]; switchSeat: (id: string) => void }
+export interface SeatView { identity?: Identity; logout?: () => void; logoutError?: string; active: boolean; seatId?: string; seats: TestSeat[]; switchSeat: (id: string) => void }
 
 /** Keep visited seats mounted: their streams, next-message drafts and late replies keep their owner. */
 function TestSeats({ children }: { children: (view: SeatView) => ReactNode }) {
@@ -75,7 +75,7 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     catch(error){setError(error instanceof Error ? error.message : '退出失败，请重试。');}
   }
   if(state?.mode==='test')return <TestSeats>{children}</TestSeats>;
-  if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{error && <p role="alert">{error}</p>}{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout()})}</ApiContext.Provider>;
+  if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
   return <main className="login-page"><form className="login-card" onSubmit={e=>{e.preventDefault();void login();}}>
     <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1><p>进入你的席位工作台</p>
     <label htmlFor="login-user">账号</label><input id="login-user" autoComplete="username" value={username} onChange={e=>setUsername(e.target.value)} maxLength={64} required/>

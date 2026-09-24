@@ -1,3 +1,4 @@
+import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
 import { COMPOSER_INPUT, composerInputText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
@@ -137,6 +138,11 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
     }
     if (entry.type === 'compaction') compactedBy.set(entry.id, currentRequest);
     if (entry.type !== 'custom' || !entry.customType.startsWith('berserk.')) continue;
+    if (entry.customType === MODEL_SELECTION) {
+      if (readonly) throw stateError();
+      decodeModelSelection(entry.data, workspaceId, parentSessionId);
+      continue;
+    }
     if (entry.customType === RESOURCE_ENTRY) {
       const resources = decodeResourceRecord(entry.data, workspaceId, readonly);
       if (requests.has(resources.requestId) || completed.has(resources.requestId)) throw stateError();

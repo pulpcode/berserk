@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Check, Cpu, KeyRound } from 'lucide-react';
-import type { ModelSettings as Settings, ModelSettingsUpdate } from '../contracts/index';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Check, KeyRound } from 'lucide-react';
+import type { ModelSettings as Settings, ModelSettingsUpdate, ModelCatalog, ModelProfile } from '../contracts/index';
 import { useApi, ApiFailure } from './api';
-import { Panel } from './Resources';
 
 const parameterFields = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
 type ParameterField = typeof parameterFields[number];
@@ -14,11 +13,21 @@ function toDraft(result: Settings): Draft {
 }
 const sourceLabel = (source?: Settings['contextSource']) => source === 'preset' ? '已核对的模型规格' : source === 'explicit' ? '手动配置' : '未知，请填写';
 
-export function ModelSettings({ close, saved }: { close: () => void; saved: () => Promise<void> }) {
+function emptySettings(version: string): Settings {
+  return { provider: '', model: '', baseUrl: '', configured: false, source: 'local', version,
+    contextWindow: null, maxOutputTokens: null, compactionReserveTokens: null, compactionKeepRecentTokens: null,
+    contextSource: 'unknown', outputSource: 'unknown', contextReady: false };
+}
+
+export function ModelSettings({ saved, profileId = 'default', creating = false, selection, edited, busy }: {
+  saved: (profile: ModelProfile) => Promise<void>; profileId?: string; creating?: boolean; selection?: ReactNode;
+  edited?: (value: boolean) => void; busy?: (value: boolean) => void;
+}) {
   const { api } = useApi();
   const [settings, setSettings] = useState<Settings>();
   const [draft, setDraft] = useState<Draft>();
   const [latest, setLatest] = useState<Settings>();
+  const [latestCatalog, setLatestCatalog] = useState<ModelCatalog>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -30,7 +39,15 @@ export function ModelSettings({ close, saved }: { close: () => void; saved: () =
   const [identityEdited, setIdentityEdited] = useState(false);
   useEffect(() => {
     let current = true;
-    api<Settings>('/api/settings/model').then(result => {
+    const read = profileId === 'default' && !creating
+      ? api<Settings>('/api/settings/model')
+      : api<ModelCatalog>('/api/settings/models').then(catalog => {
+        if (creating) { if (current) setLatestCatalog(catalog); return emptySettings(catalog.version); }
+        const profile = catalog.models.find(model => model.id === profileId);
+        if (!profile) throw new Error('该模型已不在可用列表中，请重新打开设置。');
+        return profile;
+      });
+    read.then(result => {
       if (!current) return;
       setSettings(previous => previous || result);
       setDraft(previous => previous || toDraft(result));
@@ -39,9 +56,10 @@ export function ModelSettings({ close, saved }: { close: () => void; saved: () =
     }).catch((reason: unknown) => { if (current) setError(reason instanceof Error ? reason.message : '模型配置读取失败，请重试。'); })
       .finally(() => { if (current) setLoading(false); });
     return () => { current = false; };
-  }, [api, reload]);
-  function loadLatest() { if (pending.current) return; setLoading(true); setLatest(undefined); setSuccess(''); setReload(value => value + 1); }
+  }, [api, reload, profileId, creating]);
+  function loadLatest() { if (pending.current) return; setLoading(true); setLatest(undefined); setLatestCatalog(undefined); setSuccess(''); setReload(value => value + 1); }
   function edit(field: keyof Draft, value: string) {
+    edited?.(true);
     if (parameterFields.includes(field as ParameterField)) changedParameters.current.add(field as ParameterField);
     const identity = field === 'provider' || field === 'model' || field === 'baseUrl';
     if (identity) { changedParameters.current.clear(); setIdentityEdited(true); }
@@ -59,25 +77,24 @@ export function ModelSettings({ close, saved }: { close: () => void; saved: () =
       if (!Number.isSafeInteger(value) || value <= 0) { setError('容量和压缩参数须为正整数。'); return; }
       parameters[field] = value;
     }
-    pending.current = true; setSaving(true); setError(''); setSuccess('');
+    pending.current = true; setSaving(true); busy?.(true); setError(''); setSuccess('');
     const payload: ModelSettingsUpdate = { ...parameters, provider: draft.provider.trim(), model: draft.model.trim(), baseUrl: draft.baseUrl.trim(), expectedVersion: base.version, ...(draft.apiKey.trim() ? { apiKey: draft.apiKey.trim() } : {}) };
     try {
-      const result = await api<Settings>('/api/settings/model', payload, 'PUT');
+      const path = creating ? '/api/settings/models' : profileId === 'default' ? '/api/settings/model' : `/api/settings/models/${encodeURIComponent(profileId)}`;
+      const result = await api<Settings | ModelProfile>(path, payload, creating ? 'POST' : 'PUT');
       setSettings(result); setLatest(result); setNeedsReview(false);
-      setDraft(toDraft(result)); changedParameters.current.clear(); setIdentityEdited(false);
+      setDraft(toDraft(result)); changedParameters.current.clear(); setIdentityEdited(false); edited?.(false);
       setSuccess('已保存，下次发送消息时使用新配置。');
-      await saved().catch(() => { setSuccess('配置已保存，页面模型名称暂未刷新，重新打开页面即可更新。'); });
+      await saved({ ...result, id: 'id' in result ? result.id : profileId }).catch(() => { setSuccess('配置已保存，模型列表暂未刷新，重新打开页面即可更新。'); });
     } catch (reason) {
       const uncertain = !(reason instanceof ApiFailure) || reason.code === 'MODEL_SETTINGS_CONFLICT' || reason.code === 'MODEL_SETTINGS_SAVE_FAILED';
       if (uncertain) { setNeedsReview(true); setLatest(undefined); }
       setError(reason instanceof ApiFailure && reason.code === 'MODEL_SETTINGS_CONFLICT' ? '配置已被修改，本次未保存。你填写的内容仍保留，请查看最新配置后再决定如何保存。' : reason instanceof Error ? reason.message : '保存结果未确认，请查看最新配置后再操作。');
-    } finally { pending.current = false; setSaving(false); }
+    } finally { pending.current = false; setSaving(false); busy?.(false); }
   }
-  return <Panel title="设置" className="settings-panel" close={close}>
-    <div className="settings-layout">
-      <nav className="settings-nav" aria-label="设置分类"><button type="button" aria-current="page"><Cpu size={17} aria-hidden="true" />模型</button></nav>
-      <section className="settings-content" aria-labelledby="model-settings-title">
-        <div className="settings-heading"><h3 id="model-settings-title">模型配置</h3><p>连接用于对话和任务处理的模型。</p></div>
+  return <section className="settings-content" aria-labelledby="model-settings-title">
+        <div className="settings-heading"><h3 id="model-settings-title">模型配置</h3><p>配置可供所有席位在对话中选择的模型。</p></div>
+        {selection}
         {!draft ? <div className="settings-loading">{loading ? <p role="status">正在读取配置…</p> : <><p className="resource-error" role="alert">{error}</p><button type="button" className="secondary-action" onClick={loadLatest}>重试</button></>}</div> : <form className="model-settings-form" onSubmit={event => { event.preventDefault(); void save(); }}>
           <fieldset disabled={saving}><div className="settings-field-grid">
             <div className="settings-field"><label htmlFor="model-provider">服务商标识</label><input id="model-provider" value={draft.provider} onChange={event => edit('provider', event.target.value)} maxLength={80} required placeholder="deepseek" autoComplete="off" spellCheck={false} /></div>
@@ -90,18 +107,16 @@ export function ModelSettings({ close, saved }: { close: () => void; saved: () =
             <div className="settings-field"><label htmlFor="model-output">最大输出能力（token）</label><input id="model-output" type="number" min={1} max={2000000} step={1} value={draft.maxOutputTokens} onChange={event => edit('maxOutputTokens', event.target.value)} placeholder="填写模型部署支持的上限" aria-describedby="model-output-help" /><p id="model-output-help">来源：{identityEdited ? '保存时重新解析' : sourceLabel(settings?.outputSource)}。不能超过上下文容量。</p></div>
           </div>
           {identityEdited && <p className="resource-help">模型身份已编辑，保存时重新解析规格；未填写的参数不沿用其他模型。仍为原模型时，留空保留已有配置。</p>}
-          {!identityEdited && !settings?.contextReady && <p className="resource-error" role="status">模型容量或输出能力尚未完整配置，补齐后才能发送消息。已有历史和草稿会保留。</p>}
+          {!creating && !identityEdited && !settings?.contextReady && <p className="resource-error" role="status">模型容量或输出能力尚未完整配置，补齐后才能发送消息。已有历史和草稿会保留。</p>}
           <details className="model-advanced"><summary>高级压缩参数</summary><p className="resource-help">通常无需修改。留空使用服务端解析值；同一模型保留已有设置。</p><div className="settings-field-grid">
             <div className="settings-field"><label htmlFor="model-reserve">压缩预留量（token）</label><input id="model-reserve" type="number" min={1} step={1} max={2000000} value={draft.compactionReserveTokens} onChange={event => edit('compactionReserveTokens', event.target.value)} aria-describedby="model-compaction-help" /></div>
             <div className="settings-field"><label htmlFor="model-keep">近期原文保留量（token）</label><input id="model-keep" type="number" min={1} step={1} max={2000000} value={draft.compactionKeepRecentTokens} onChange={event => edit('compactionKeepRecentTokens', event.target.value)} aria-describedby="model-compaction-help" /></div>
           </div><p id="model-compaction-help" className="resource-help">预留量与保留量之和须小于上下文容量。近期消息按内容量保留原文，不按固定轮数。</p></details>
           </fieldset>
           {error && <p className="resource-error" role="alert">{error}</p>}
-          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="secondary-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>}</div>}
+          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="secondary-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && (creating ? <div aria-label="最新模型列表"><p role="status">已读取最新模型列表，请检查是否已有刚才添加的模型，再决定是否保存。</p><ul>{latestCatalog?.models.map(model => <li key={model.id}>{model.provider} / {model.model}</li>)}</ul></div> : <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>)}</div>}
           {success && <p className="settings-success" role="status"><Check size={16} aria-hidden="true" />{success}</p>}
-          <div className="settings-form-footer"><span>{settings?.source === 'local' ? '当前使用已保存的配置' : '当前使用环境配置'}</span><button type="submit" className="primary-action" disabled={saving || loading || (needsReview && !latest)}>{saving ? '保存中…' : needsReview ? '按最新版本保存' : '保存配置'}</button></div>
+          <div className="settings-form-footer"><span>{creating ? '新模型保存后可在对话中选择' : settings?.source === 'local' ? '当前使用已保存的配置' : '当前使用环境配置'}</span><button type="submit" className="primary-action" disabled={saving || loading || (needsReview && !latest)}>{saving ? '保存中…' : needsReview ? '按最新版本保存' : '保存配置'}</button></div>
         </form>}
-      </section>
-    </div>
-  </Panel>;
+  </section>;
 }

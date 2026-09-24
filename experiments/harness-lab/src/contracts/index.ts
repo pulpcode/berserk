@@ -67,6 +67,7 @@ export interface SessionActivity extends SessionSummary {
   statusUpdatedAt: string;
 }
 export interface SessionSnapshot extends SessionSummary {
+  modelId?: string;
   backgroundJob?: BackgroundJobReservation;
   turns?: ConversationTurn[];
   interactions?: Interaction[];
@@ -105,6 +106,19 @@ export interface ModelSettings extends ModelParameters {
   version: string;
   source: 'environment' | 'local';
 }
+/** Safe selection metadata, available to every authenticated seat. */
+export interface ModelChoice {
+  id: string;
+  provider: string;
+  model: string;
+  configured: boolean;
+  contextReady: boolean;
+  contextWindow: number | null;
+  maxOutputTokens: number | null;
+}
+export interface ModelChoices { defaultModelId: string; models: ModelChoice[] }
+export interface ModelProfile extends ModelSettings { id: string }
+export interface ModelCatalog { version: string; models: ModelProfile[] }
 export interface ModelSettingsUpdate {
   contextWindow?: number;
   maxOutputTokens?: number;

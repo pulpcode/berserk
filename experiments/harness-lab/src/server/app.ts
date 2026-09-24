@@ -6,7 +6,7 @@ import { backgroundRoutes } from './background-routes.js';
 import { randomUUID } from 'node:crypto';
 import { registerAuth, identityOf } from './auth.js';
 import { taskRoutes } from './task-routes.js';
-import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyError, type FastifyInstance, type FastifyRequest } from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -71,10 +71,10 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   await fileRoutes(app, lab.files, lab.config.fileLimits?.maxFileBytes ?? 100 * 1024 * 1024, scope);
   await collaborationRoutes(app, lab, scope);
   const settingsQuery = { type: 'object', additionalProperties: false };
-  app.get(`${scope.base}/settings/model`, { schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
-  app.put<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/model`, { schema: {
-    querystring: settingsQuery,
-    body: { type: 'object', additionalProperties: false, required: ['provider', 'model', 'baseUrl', 'expectedVersion'], properties: {
+  const requireModelSettings = async (request: FastifyRequest) => {
+    if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);
+  };
+  const modelBody = { type: 'object', additionalProperties: false, required: ['provider', 'model', 'baseUrl', 'expectedVersion'], properties: {
       provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },
       baseUrl: { type: 'string', minLength: 1, maxLength: 2048 }, expectedVersion: { type: 'string', format: 'uuid' },
       apiKey: { type: 'string', maxLength: 4096 },
@@ -82,8 +82,14 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       maxOutputTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionKeepRecentTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
-    } },
-  } }, async request => { if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN','当前席位无权修改模型设置。',403); return lab.updateModelSettings(request.body); });
+    } };
+  const modelId = { type: 'string', pattern: '^(default|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$' };
+  app.get(`${scope.base}/models`, { schema: { querystring: settingsQuery } }, async () => lab.modelChoices());
+  app.get(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelSettings());
+  app.get(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery } }, async () => lab.modelCatalog());
+  app.put<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/model`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelSettings(request.body));
+  app.post<{ Body: ModelSettingsUpdate }>(`${scope.base}/settings/models`, { preHandler: requireModelSettings, schema: { querystring: settingsQuery, body: modelBody } }, async (request, reply) => reply.code(201).send(await lab.updateModelProfile(request.body, 'default', true)));
+  app.put<{ Params: { id: string }; Body: ModelSettingsUpdate }>(`${scope.base}/settings/models/:id`, { preHandler: requireModelSettings, schema: { params: scope.params({ id: modelId }), querystring: settingsQuery, body: modelBody } }, async request => lab.updateModelProfile(request.body, request.params.id));
   const uuid = { type: 'string', format: 'uuid' };
   const workspaceBody = { type: 'object', properties: { workspaceId: uuid }, additionalProperties: false };
   app.get(`${scope.base}/workspaces`, async request => lab.workspaces.list(scope.seat(request)));
@@ -93,7 +99,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
     return reply.code(201).send(await lab.workspaces.create(request.body.name, undefined, scope.seat(request)));
   });
   app.get<{ Querystring: { workspaceId?: string } }>(`${scope.base}/sessions`, { schema: { querystring: workspaceBody } }, async request => lab.list(request.query.workspaceId, scope.seat(request)));
-  app.post<{ Body: { workspaceId?: string; workItemId?: string } }>(`${scope.base}/sessions`, { schema: { body: { ...workspaceBody, properties: { ...workspaceBody.properties, workItemId: uuid } } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId));
+  app.post<{ Body: { workspaceId?: string; workItemId?: string; modelId?: string } }>(`${scope.base}/sessions`, { schema: { body: { ...workspaceBody, properties: { ...workspaceBody.properties, workItemId: uuid, modelId } } }, preValidation: async request => { request.body ??= {}; } }, async request => lab.createSession(request.body.workspaceId, scope.seat(request), request.body.workItemId, undefined, request.body.modelId));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/resources`, { schema: { params } }, async request => lab.resources.info(request.params.id, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/workspaces/:id/agents`, { schema: { params, querystring: settingsQuery } }, async request => lab.agents(request.params.id, scope.seat(request)));
   const resourceParams = (key: string) => scope.params({ id: uuid, [key]: { type: 'string', minLength: 1, maxLength: 80 } });
@@ -105,6 +111,9 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   app.get<{ Params: { id: string; requestId: string } }>(`${scope.base}/sessions/:id/requests/:requestId/resources`, { schema: { params: scope.params({ id: uuid, requestId: uuid }) } }, async request => lab.getRequestResources(request.params.id, request.params.requestId, scope.seat(request)));
   app.get<{ Params: { id: string; compactionId: string } }>(`${scope.base}/sessions/:id/compactions/:compactionId`, { schema: { querystring: settingsQuery, params: resourceParams('compactionId') } }, async request => lab.getCompaction(request.params.id, request.params.compactionId, scope.seat(request)));
   app.get<{ Params: { id: string } }>(`${scope.base}/sessions/:id`, { schema: { params } }, async request => lab.get(request.params.id, scope.seat(request)));
+  app.put<{ Params: { id: string }; Body: { modelId: string } }>(`${scope.base}/sessions/:id/model`, { schema: {
+    params, querystring: settingsQuery, body: { type: 'object', required: ['modelId'], additionalProperties: false, properties: { modelId } },
+  } }, async request => lab.selectModel(request.params.id, request.body.modelId, scope.seat(request)));
   app.post<{ Params: { id: string; interactionId: string }; Body: unknown }>(`${scope.base}/sessions/:id/interactions/:interactionId/response`, {
     schema: { params: resourceParams('interactionId'), querystring: settingsQuery },
   }, async request => lab.respondInteraction(request.params.id, request.params.interactionId, request.body, scope.seat(request)));

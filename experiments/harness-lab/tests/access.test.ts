@@ -14,10 +14,10 @@ import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
 
 const cleanups:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const fn of cleanups.splice(0).reverse())await fn();});
-async function setup() {
+async function setup(managers = ['a']) {
   const dir=await mkdtemp(join(tmpdir(),'axon-access-'));cleanups.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir);const store=new AccessStore(db);
-  for(const name of ['a','b','c'])await store.saveAccount({username:name,displayName:name,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:name==='a',manageModelSettings:name==='a'});
+  for(const name of ['a','b','c'])await store.saveAccount({username:name,displayName:name,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:managers.includes(name),manageModelSettings:name==='a'});
   db.close();
   const config=testConfig(dir,{seatId:'a',auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
   const fake=await fakeRuntime(config,()=>({text:'任务处理完成'})); const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);cleanups.push(()=>app.close());
@@ -36,6 +36,48 @@ async function login(app:FastifyInstance,name:string) {
 }
 const input=(visibility:'public'|'private'='public')=>({title:'联合任务',goal:'汇总资料形成计划',visibility,clientActionId:randomUUID()});
 describe('authenticated task scopes',()=>{
+  it('limits model configuration to managers while every seat can select a safe model for its own idle conversations', async () => {
+    const { app, lab, config } = await setup();
+    const a = await login(app, 'a'), b = await login(app, 'b');
+    expect((await app.inject('/api/models')).statusCode).toBe(401);
+    const initial = (await a.call('/api/settings/models')).json();
+    const settings = { provider: config.provider, model: config.model, baseUrl: 'https://alternate.invalid/v1', apiKey: 'catalog-test-only-secret', expectedVersion: initial.version, contextWindow: 65536, maxOutputTokens: 2048 };
+    const added = await a.call('/api/settings/models', settings);
+    expect(added.statusCode, added.body).toBe(201);
+    const profile = added.json();
+    const safe = await b.call('/api/models');
+    expect(safe.statusCode).toBe(200);
+    expect(safe.json()).toMatchObject({ defaultModelId: 'default', models: [{ id: 'default' }, { id: profile.id }] });
+    for (const hidden of ['baseUrl', 'apiKey', config.apiKey, config.baseUrl, settings.apiKey, settings.baseUrl]) expect(safe.payload).not.toContain(hidden);
+    for (const url of ['/api/settings/model', '/api/settings/models']) expect((await b.call(url)).statusCode).toBe(403);
+    expect((await b.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).statusCode).toBe(403);
+    for (const url of ['/api/settings/model', `/api/settings/models/${profile.id}`]) expect((await b.call(url, { ...settings, expectedVersion: profile.version }, 'PUT')).statusCode).toBe(403);
+    expect((await a.call('/api/settings/model')).statusCode).toBe(200);
+    expect((await a.call('/api/settings/models')).json().models).toHaveLength(2);
+    const taskA = (await a.call('/api/tasks', input('private'))).json<TaskSpace>();
+    const taskB = (await b.call('/api/tasks', input('private'))).json<TaskSpace>();
+    const wa = (await a.call(`/api/tasks/${taskA.id}/workspace`, {})).json();
+    const wb = (await b.call(`/api/tasks/${taskB.id}/workspace`, {})).json();
+    const sa = (await a.call('/api/sessions', { workspaceId: wa.id })).json();
+    const sb = (await b.call('/api/sessions', { workspaceId: wb.id, modelId: profile.id })).json();
+    expect(sb.modelId).toBe(profile.id);
+    expect((await b.call(`/api/sessions/${sa.id}/model`, { modelId: profile.id }, 'PUT')).statusCode).toBe(404);
+    expect((await a.call(`/api/sessions/${sb.id}/model`, { modelId: 'default' }, 'PUT')).statusCode).toBe(404);
+    expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: 'default' }, 'PUT')).json().modelId).toBe('default');
+    for (const extra of [{ provider: 'foreign' }, { apiKey: 'injected' }, { baseUrl: 'https://elsewhere.invalid' }]) {
+      expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id, ...extra }, 'PUT')).statusCode).toBe(400);
+    }
+    const pending = lab.start(sb.id, '预留中的会话', {}, 'b');
+    expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
+    expect((await a.call('/api/settings/models', { ...settings, expectedVersion: profile.version })).json().error.code).toBe('MODEL_SETTINGS_BUSY');
+    await pending.run(() => {});
+    lab.backgroundHooks = { isSessionReserved: id => id === sb.id, isActive: () => false };
+    expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().error.code).toBe('SESSION_BUSY');
+    lab.backgroundHooks = undefined;
+    expect((await b.call(`/api/sessions/${sb.id}/model`, { modelId: profile.id }, 'PUT')).json().modelId).toBe(profile.id);
+    expect(lab.get(sa.id, 'a').modelId).toBe('default');
+  });
+
   it('requires explicit production credentials and rejects test-seat bypass, CSRF and stale views',async()=>{
     expect(()=>loadConfig({})).toThrow('初始化');
     expect(()=>loadConfig({LAB_SESSION_SECRET:'x'.repeat(40),LAB_TEST_SEATS:'[]'})).toThrow('LAB_TEST_SEATS');
@@ -82,6 +124,44 @@ describe('authenticated task scopes',()=>{
     lab.access!.disable('b');
     await a.call(`/api/sessions/${sa.id}/messages`,{text:'现在可以指派给谁'});
     expect(fake.calls.at(-1)!.context.systemPrompt).not.toContain('"id":"b","name":"席位 b"');
+  });
+  it('lets task managers edit, archive and reopen another seat public task without gaining workspace or private access',async()=>{
+    const {app,lab}=await setup(['a','b']);const a=await login(app,'a'),b=await login(app,'b');
+    const task=(await a.call('/api/tasks',input())).json<TaskSpace>();
+    const privateTask=(await a.call('/api/tasks',input('private'))).json<TaskSpace>();
+    const workspace=(await a.call(`/api/tasks/${task.id}/workspace`,{})).json();
+    const session=(await a.call('/api/sessions',{workspaceId:workspace.id})).json();
+    expect((await b.call(`/api/workspaces/${workspace.id}/files`)).statusCode).toBe(404);
+    expect((await b.call(`/api/sessions/${session.id}`)).statusCode).toBe(404);
+    for(const suffix of ['', '/workspace', '/archive', '/reopen']) {
+      const result=await b.call(`/api/tasks/${privateTask.id}${suffix}`,suffix===''?undefined:suffix==='/workspace'?{}:{revision:1});
+      expect(result.statusCode).toBe(404);
+    }
+    expect((await b.call(`/api/tasks/${privateTask.id}`,{revision:1,title:'不可修改',goal:''},'PUT')).statusCode).toBe(404);
+    const edited=await b.call(`/api/tasks/${task.id}`,{revision:1,title:'统一调整后的任务',goal:'更新目标'},'PUT');
+    expect(edited.statusCode,edited.body).toBe(200);
+    expect(edited.json()).toMatchObject({ownerSeatId:'a',createdByUserId:a.auth.identity!.userId,updatedByUserId:b.auth.identity!.userId,revision:2});
+    const release=lab.workspaces.acquireWrite(workspace.id,'a');
+    expect((await b.call(`/api/tasks/${task.id}/archive`,{revision:2})).statusCode).toBe(409);release();
+    const archived=await b.call(`/api/tasks/${task.id}/archive`,{revision:2});
+    expect(archived.statusCode,archived.body).toBe(200);expect(archived.json()).toMatchObject({state:'archived',revision:3,updatedByUserId:b.auth.identity!.userId});
+    const reopened=await b.call(`/api/tasks/${task.id}/reopen`,{revision:3});
+    expect(reopened.statusCode,reopened.body).toBe(200);expect(reopened.json()).toMatchObject({state:'active',revision:4,updatedByUserId:b.auth.identity!.userId});
+  });
+  it('requires the public management capability even for its creator while keeping own private spaces manageable',async()=>{
+    const {app,lab}=await setup(['a','b']);const a=await login(app,'a'),b=await login(app,'b');
+    const task=(await a.call('/api/tasks',input())).json<TaskSpace>();
+    lab.access!.db.prepare('UPDATE seats SET create_public=0 WHERE id=?').run('a');
+    expect((await a.call('/api/tasks',input())).statusCode).toBe(403);
+    expect((await a.call(`/api/tasks/${task.id}`,{revision:1,title:'撤权后修改',goal:'新目标'},'PUT')).statusCode).toBe(403);
+    expect((await a.call(`/api/tasks/${task.id}/archive`,{revision:1})).statusCode).toBe(403);
+    expect((await b.call(`/api/tasks/${task.id}/archive`,{revision:1})).statusCode).toBe(200);
+    expect((await a.call(`/api/tasks/${task.id}/reopen`,{revision:2})).statusCode).toBe(403);
+    const privateResult=await a.call('/api/tasks',input('private'));
+    expect(privateResult.statusCode,privateResult.body).toBe(200);const privateTask=privateResult.json<TaskSpace>();
+    expect((await a.call(`/api/tasks/${privateTask.id}`,{revision:1,title:'自己的个人空间',goal:''},'PUT')).statusCode).toBe(200);
+    expect((await a.call(`/api/tasks/${privateTask.id}/archive`,{revision:2})).statusCode).toBe(200);
+    expect((await a.call(`/api/tasks/${privateTask.id}/reopen`,{revision:3})).statusCode).toBe(200);
   });
   it('holds archive admission across execution and uploads, with history readable after archiving',async()=>{
     const {app,lab}=await setup();const a=await login(app,'a');const task=(await a.call('/api/tasks',input())).json<TaskSpace>();const w=(await a.call(`/api/tasks/${task.id}/workspace`,{})).json();

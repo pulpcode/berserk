@@ -1,6 +1,6 @@
 import { useApi } from './api';
 import { useState } from 'react';
-import { Activity, ArrowUpRight, ChevronDown, CircleAlert, Folder, MessageSquare, Plus } from 'lucide-react';
+import { Activity, ArrowUpRight, ChevronDown, CircleAlert, ClipboardPlus, Folder, FolderPlus, MessageSquare, Plus } from 'lucide-react';
 import type { SessionActivity, Workspace } from '../contracts/index';
 
 export function activityStatus(session: SessionActivity) {
@@ -48,6 +48,7 @@ interface NavigationProps {
   taskMode?: boolean;
   taskMeta?: Record<string,{visibility:'public'|'private';state:'active'|'archived'}>;
   createTask?: (visibility:'public'|'private') => void;
+  createWorkspace?: () => void;
   publicAllowed?: boolean;
   showTask?: (id:string) => void;
   workspaces: Workspace[];
@@ -64,41 +65,53 @@ interface NavigationProps {
   showActivity: () => void;
 }
 
-export function WorkspaceNavigation({ taskMode,taskMeta,createTask,publicAllowed,showTask,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
+export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,showTask,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
   const running = activities.filter(session => session.active || session.backgroundJob).length;
   const fresh = activities.filter(session => unread[session.id]).length;
   const errors = activities.filter(session => session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
   return <>
-    <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" aria-describedby={domId('activity-counts')}>
+    <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" title="全部动态" aria-describedby={domId('activity-counts')}>
       <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />
     </button>
     <p id={domId('activity-counts')} className="activity-counts" role="status" aria-live="polite" aria-atomic="true">{running} 个处理中 · {fresh} 个新回复 · {errors} 个异常</p>
-    {!taskMode && <div className="section-label">项目<span>{workspaces.length}</span></div>}
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <p className="sidebar-empty">正在加载项目…</p>}
-      {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=><div key={group}>{taskMode && <div className="section-label">{group==='public'?'公共任务':'席位私有'}{(group==='private' || publicAllowed) && <button className="icon-button" aria-label={group==='public'?'建立公共任务':'建立席位私有任务'} onClick={()=>createTask?.(group==='public'?'public':'private')}><Plus size={15}/></button>}</div>}
+      {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=>{
+        const label=group==='public'?'工作任务':group==='private'?'个人空间':'项目';
+        const folded=!!catalogCollapsed[group];
+        return <div key={group}>
+        <div className="section-label catalog-heading">
+          <button className="catalog-toggle" aria-label={`${folded?'展开':'折叠'}${label}`} aria-expanded={!folded} aria-controls={domId(`catalog-${group}`)} onClick={()=>setCatalogCollapsed(previous=>({...previous,[group]:!previous[group]}))}>
+            <span>{label}</span><ChevronDown size={14} aria-hidden="true"/>
+          </button>
+          {(group!=='public' || publicAllowed) && <button className="icon-button catalog-create" aria-label={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} title={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} onClick={()=>group==='legacy'?createWorkspace?.():createTask?.(group)}>
+            <Plus className="catalog-plus" size={16} aria-hidden="true"/>{group==='public'?<ClipboardPlus className="catalog-rail-icon" size={20} aria-hidden="true"/>:<FolderPlus className="catalog-rail-icon" size={20} aria-hidden="true"/>}
+          </button>}
+        </div>
+        <div id={domId(`catalog-${group}`)} className={`catalog-items${folded?' is-collapsed':''}`}>
       {workspaces.filter(workspace=>group==='legacy' || taskMeta?.[workspace.id]?.visibility===group).map(workspace => {
         const sessions = activities.filter(session => session.workspaceId === workspace.id);
         const activeCount = sessions.filter(session => session.active || session.backgroundJob).length;
         const attentionCount = sessions.filter(session => needsAttention(session, unread)).length;
         return <section className={`workspace-group${workspaceId === workspace.id ? ' current' : ''}`} key={workspace.id} aria-label={workspace.name}>
           <div className="workspace-group-heading">
-            <button className="group-toggle" aria-label={`${collapsed[workspace.id] ? '展开' : '折叠'}项目：${workspace.name}`} aria-expanded={!collapsed[workspace.id]} aria-controls={`workspace-sessions-${workspace.id}`} onClick={() => setCollapsed(previous => ({ ...previous, [workspace.id]: !previous[workspace.id] }))}><ChevronDown size={15} aria-hidden="true" /></button>
-            <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={!activityView && workspaceId === workspace.id ? 'true' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><Folder size={14} aria-hidden="true" /><span>{workspace.name}</span></button>
+            <button className="group-toggle" aria-label={`${collapsed[workspace.id] ? '展开' : '折叠'}项目：${workspace.name}`} aria-expanded={!collapsed[workspace.id]} aria-controls={`workspace-sessions-${workspace.id}`} onClick={() => setCollapsed(previous => ({ ...previous, [workspace.id]: !previous[workspace.id] }))}><Folder className="workspace-folder-icon" size={16} aria-hidden="true" /><ChevronDown className="workspace-disclosure-icon" size={16} aria-hidden="true" /></button>
+            <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={!activityView && workspaceId === workspace.id ? 'true' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><Folder className="workspace-rail-icon" size={20} aria-hidden="true" /><span>{workspace.name}</span></button>
             {activeCount > 0 && <span className="group-count running" aria-label={`${activeCount} 个处理中`} title={`${activeCount} 个处理中`}>{activeCount}</span>}
             {attentionCount > 0 && <span className="group-count attention" aria-label={`${attentionCount} 个需关注`} title={`${attentionCount} 个需关注`}>{attentionCount}</span>}
             <button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>
-            {taskMode && <button className="icon-button" aria-label={`任务说明：${workspace.name}`} onClick={()=>showTask?.(workspace.id)}><ArrowUpRight size={14}/></button>}
+            {taskMode && <button className="icon-button" aria-label={`${taskMeta?.[workspace.id]?.visibility==='private'?'空间说明':'任务说明'}：${workspace.name}`} title={taskMeta?.[workspace.id]?.visibility==='private'?'空间说明':'任务说明'} onClick={()=>showTask?.(workspace.id)}><ArrowUpRight size={14}/></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">
             {sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
-              <MessageSquare size={15} aria-hidden="true" /><span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span>{!activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>{activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>
+              <span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span>{!activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>{activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>
             </button>) : <p className="sidebar-empty">还没有对话</p>}
           </div>
         </section>;
-      })}</div>)}
+      })}</div></div>;})}
     </nav>
   </>;
 }

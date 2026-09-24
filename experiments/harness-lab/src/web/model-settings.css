@@ -1,0 +1,14 @@
+.model-catalog-controls { margin-bottom: 24px; }
+.model-catalog-selector label { display: block; margin-bottom: 9px; font-size: 13px; font-weight: 500; }
+.model-catalog-actions { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.model-catalog-actions select { flex: 1; min-width: 0; min-height: var(--control-height); padding: 9px 30px 9px 12px; border: 1px solid var(--line); border-radius: var(--control-radius); color: var(--text); background: var(--surface); font-size: var(--control-font-size); }
+.model-catalog-add { display: inline-flex; flex-shrink: 0; align-items: center; gap: var(--control-gap); }
+.model-catalog-error { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+.model-catalog-error p { flex: 1; margin: 0; }
+@media (max-width: 767px), (pointer: coarse) {
+  .model-catalog-actions select { min-height: 44px; font-size: 16px; }
+}
+@media (max-width: 400px) {
+  .model-catalog-actions { flex-wrap: wrap; }
+  .model-catalog-actions select { flex-basis: 100%; }
+}

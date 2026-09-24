@@ -29,7 +29,7 @@ if(command==='reset') {
     if(command==='account') {
       const username=value('--username'),seatId=value('--seat');if(!username || !seatId)throw new Error('需要 --username 与 --seat。密码仅从终端隐蔽输入。');
       const password=await hiddenPassword('密码（至少12个字符）：');const repeated=await hiddenPassword('再次输入密码：');if(password!==repeated)throw new Error('两次密码不一致，未保存。');
-      await store.saveAccount({username,seatId,displayName:value('--name')||username,seatName:value('--seat-name')||seatId,password,createPublicTask:args.includes('--create-public'),manageModelSettings:args.includes('--manage-model')});
+      await store.saveAccount({username,seatId,displayName:value('--name')||username,seatName:value('--seat-name')||seatId,password,createPublicTask:args.includes('--manage-tasks') || args.includes('--create-public'),manageModelSettings:args.includes('--manage-model')});
       const envPath=resolve('.env.auth.local');
       if(!await lstat(envPath).catch(()=>null))await writeFile(envPath,`LAB_AUTH_MODE=login\nLAB_SESSION_SECRET=${randomBytes(48).toString('base64url')}\nLAB_DATA_DIR=${dataDir}\n`,{flag:'wx',mode:0o600});
       console.info('账号已保存，旧登录已失效。签名配置位于被 Git 忽略的 .env.auth.local；密码未写入配置文件。');

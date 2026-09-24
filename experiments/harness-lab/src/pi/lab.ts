@@ -1,3 +1,4 @@
+import { MODEL_SELECTION, selectedModelId } from './model-selection.js';
 import { AccessStore } from '../access/store.js';
 import { openDatabase, assertDataMode } from '../access/database.js';
 import { COMPOSER_INPUT, agentInfo, composerHistory, composerInputText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
@@ -11,7 +12,7 @@ import {
 } from '@earendil-works/pi-coding-agent';
 import { InMemoryCredentialStore, InMemoryModelsStore } from '@earendil-works/pi-ai';
 import { Type } from 'typebox';
-import type { ComposerSelection, LoadedComposerSelection, AgentInfo, ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile, ModelSettings, ModelSettingsUpdate, CompactionSummary, CompactionDetail, UsageSummary, SubagentSummary } from '../contracts/index.js';
+import type { ComposerSelection, LoadedComposerSelection, AgentInfo, ActivityOverview, AppInfo, PublicMessage, RequestResult, RequestState, SessionSnapshot, SessionSummary, StreamEvent, RequestResourcesRecord, InstructionUpdate, SkillFile, ModelSettings, ModelSettingsUpdate, ModelCatalog, ModelChoices, ModelProfile, CompactionSummary, CompactionDetail, UsageSummary, SubagentSummary } from '../contracts/index.js';
 import { compactionSummary, guardPersistence, openStrictSession } from './compaction-history.js';
 import { controlledStream, emptyUsage, providerError } from './controlled-stream.js';
 export { providerError } from './controlled-stream.js';
@@ -50,7 +51,9 @@ export interface PreprocessInput {
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
 }
 export interface PreprocessReference { jobId: string; sessionId: string; directory: string }
+interface RequestModel { id: string; config: LabConfig; runtime: ModelRuntime; version: string }
 interface Active {
+  model: RequestModel;
   background?: boolean;
   service?: PreprocessInput;
   releaseTask?: () => void;
@@ -148,12 +151,14 @@ export class PiLab {
   private readonly sessionDir: string;
   private readonly agentDir: string;
   private settingsUpdating = false;
+  private readonly runtimes = new Map<string, ModelRuntime>();
   readonly files: FileService;
   collaboration?: CollaborationService;
   access?: AccessStore;
   private execution?: DockerExecutionService;
-  private constructor(private currentConfig: LabConfig, private runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService, private readonly settings: ModelSettingsStore) {
+  private constructor(private currentConfig: LabConfig, runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService, private readonly settings: ModelSettingsStore) {
     const config = currentConfig;
+    this.runtimes.set('default', runtime);
     this.sessionDir = join(config.dataDir, 'sessions');
     this.agentDir = join(config.dataDir, 'agent');
     this.files = new FileService(workspaces, config.fileLimits);
@@ -184,6 +189,9 @@ export class PiLab {
     }
     for (const seat of config.testSeats ?? []) if (!workspaces.list(seat.id).workspaces.length) await workspaces.create('默认工作区', undefined, seat.id);
     const lab = new PiLab(config, runtime, workspaces, new ResourceService(workspaces), settings);
+    for (const profile of settings.catalog().models) if (profile.id !== 'default') {
+      lab.runtimes.set(profile.id, await configuredRuntime({ ...config, ...settings.config(profile.id) }));
+    }
     lab.access = access;
     await lab.files.initialize();
     if (config.testSeats || access) lab.collaboration = await CollaborationService.open(workspaces, {
@@ -250,13 +258,44 @@ export class PiLab {
   }
 
   modelSettings(): ModelSettings { return this.settings.info(); }
+  modelCatalog(): ModelCatalog { return this.settings.catalog(); }
+  modelChoices(): ModelChoices { return this.settings.choices(); }
+
+  private requestModel(id: string): RequestModel {
+    const config = { ...this.currentConfig, ...this.settings.config(id) };
+    const runtime = this.runtimes.get(id);
+    if (!runtime) throw new RequestError('MODEL_UNAVAILABLE', '所选模型暂时不可用，请重新选择。', 503);
+    if (!config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '所选模型尚未配置，请选择其他模型或联系有权限的席位。', 503);
+    if (!config.contextReady) throw new RequestError('MODEL_CONTEXT_REQUIRED', '所选模型的上下文容量和最大输出量尚未配置完整。', 400);
+    return { id, config, runtime, version: this.settings.info(id).version };
+  }
+
+  selectModel(id: string, modelId: string, seatId?: string): SessionSnapshot {
+    if (this.settingsUpdating) throw settingsBusy();
+    const record = this.record(id, seatId);
+    if (record.active || this.backgroundHooks?.isSessionReserved(id)) throw new RequestError('SESSION_BUSY', '当前会话正在处理或排队，请结束后再切换模型。', 409);
+    if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
+    this.requestModel(modelId);
+    const release = this.workspaces.acquireWrite(record.workspaceId, record.seatId);
+    try {
+      if (selectedModelId(record.manager.getBranch(), record.workspaceId, id) !== modelId) {
+        record.manager.appendCustomEntry(MODEL_SELECTION, { schemaVersion: 1, workspaceId: record.workspaceId, sessionId: id, modelId });
+      }
+      return this.snapshot(record);
+    } finally { release(); }
+  }
 
   async updateModelSettings(input: ModelSettingsUpdate): Promise<ModelSettings> {
+    await this.updateModelProfile(input);
+    return this.settings.info();
+  }
+
+  async updateModelProfile(input: ModelSettingsUpdate, id = 'default', create = false): Promise<ModelProfile> {
     // Reserve synchronously, before runtime construction or disk I/O can yield to start().
     if (this.settingsUpdating || this.backgroundHooks?.isActive() || [...this.records.values(), ...this.serviceRecords.values()].some(record => record.active)) throw settingsBusy();
     this.settingsUpdating = true;
     try {
-      const next = this.settings.prepare(input);
+      const next = this.settings.prepare(input, id, create);
       const config = { ...this.currentConfig, provider: next.provider, model: next.model, baseUrl: next.baseUrl, apiKey: next.apiKey,
         contextWindow: next.contextWindow, maxOutputTokens: next.maxOutputTokens, compactionReserveTokens: next.compactionReserveTokens,
         compactionKeepRecentTokens: next.compactionKeepRecentTokens, contextSource: next.contextSource, outputSource: next.outputSource, contextReady: next.contextReady };
@@ -266,12 +305,14 @@ export class PiLab {
       }
       await this.settings.save(next);
       // No await after the file commit: new requests see matching runtime and settings.
-      this.currentConfig = config; this.runtime = runtime;
-      return this.settings.info();
+      this.runtimes.set(next.id, runtime);
+      if (next.id === 'default') this.currentConfig = config;
+      return { id: next.id, ...this.settings.info(next.id) };
     } finally { this.settingsUpdating = false; }
   }
 
-  async createSession(workspaceId?: string, seatId = this.config.seatId ?? 'test-seat', workItemId?: string, sessionId?: string): Promise<SessionSnapshot> {
+  async createSession(workspaceId?: string, seatId = this.config.seatId ?? 'test-seat', workItemId?: string, sessionId?: string, modelId?: string): Promise<SessionSnapshot> {
+    if (modelId !== undefined) { if (this.settingsUpdating) throw settingsBusy(); this.requestModel(modelId); }
     if (sessionId && !UUID.test(sessionId)) throw new RequestError('INVALID_INPUT', '会话标识无效。');
     if (sessionId && this.records.has(sessionId)) {
       const prior = this.record(sessionId, seatId);
@@ -280,14 +321,14 @@ export class PiLab {
     }
     if (sessionId && this.preparingSessions.has(sessionId)) {
       await this.preparingSessions.get(sessionId);
-      return this.createSession(workspaceId, seatId, workItemId, sessionId);
+      return this.createSession(workspaceId, seatId, workItemId, sessionId, modelId);
     }
     const release = this.workspaces.acquireWrite(workspaceId, seatId);
-    const pending = this.createSessionInternal(workspaceId, seatId, workItemId, sessionId);
+    const pending = this.createSessionInternal(workspaceId, seatId, workItemId, sessionId, modelId);
     if (sessionId) this.preparingSessions.set(sessionId, pending);
     try { return await pending; } finally { release(); if (sessionId) this.preparingSessions.delete(sessionId); }
   }
-  private async createSessionInternal(workspaceId: string | undefined, seatId: string, workItemId?: string, sessionId?: string): Promise<SessionSnapshot> {
+  private async createSessionInternal(workspaceId: string | undefined, seatId: string, workItemId?: string, sessionId?: string, modelId?: string): Promise<SessionSnapshot> {
     workspaceId ??= this.workspaces.list(seatId).defaultWorkspaceId;
     const workspace = this.workspaces.get(workspaceId, seatId);
     if (workItemId) {
@@ -296,6 +337,12 @@ export class PiLab {
     }
     const manager = await this.prepareNativeSession(this.sessionDir, sessionId);
     const id = manager.getSessionId();
+    if (modelId !== undefined) {
+      // Validate again after asynchronous setup, before publishing the session binding.
+      if (this.settingsUpdating) throw settingsBusy();
+      this.requestModel(modelId);
+      manager.appendCustomEntry(MODEL_SELECTION, { schemaVersion: 1, workspaceId, sessionId: id, modelId });
+    }
     await this.workspaces.bind(id, workspaceId, seatId);
     const record: RecordState = { manager, workspaceId, seatId, result: null };
     this.watchPersistence(record);
@@ -338,7 +385,8 @@ export class PiLab {
     for (const name of ['files', 'logs', 'sessions']) { await mkdir(join(directory, name), { recursive: true, mode: 0o700 }); await checkDirectory(join(directory, name)); }
     const manager = await this.prepareNativeSession(join(directory, 'sessions'), input.sessionId);
     const record: RecordState = { manager, workspaceId: input.jobId, seatId: 'service', service: { directory }, result: null };
-    const active: Active = { id: input.requestId, background: true, service: { ...input, resources: structuredClone(input.resources), roles: structuredClone(input.roles), tools: [...input.tools], files: structuredClone(input.files) },
+    if (this.settingsUpdating) throw settingsBusy();
+    const active: Active = { model: this.requestModel('default'), id: input.requestId, background: true, service: { ...input, resources: structuredClone(input.resources), roles: structuredClone(input.roles), tools: [...input.tools], files: structuredClone(input.files) },
       status: 'responding', phase: 'preparing', acceptedAt: Date.now(), compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
     record.active = active; this.watchPersistence(record); this.serviceRecords.set(input.sessionId, record);
     let started = false;
@@ -508,7 +556,7 @@ export class PiLab {
     for (const [childId, child] of record.active?.subagents ?? []) subagents.set(childId, { ...child });
     const interactions = interactionEvidence(entries, record.workspaceId, id, record.active?.id, record.seatId);
     return {
-      ...this.summary(record), ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
+      ...this.summary(record), modelId: record.service ? 'default' : selectedModelId(entries, record.workspaceId, id), ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
       updatedAt: entries.at(-1)?.timestamp || record.manager.getHeader()!.timestamp,
       messages, active: requestState(record.active), turns: conversationTurns(entries, messages, record.active?.id),
       interactions: interactions.interactions,
@@ -554,10 +602,11 @@ export class PiLab {
   }
 
   private async openSession(record: RecordState, snapshot: ResourceSnapshot, active: Active, changed: (change: InstructionUpdate) => void, role?: AgentRole): Promise<AgentSession> {
+    const { config, runtime } = active.model;
     const settingsManager = SettingsManager.inMemory({
-      compaction: { enabled: true, reserveTokens: this.config.compactionReserveTokens!, keepRecentTokens: this.config.compactionKeepRecentTokens! },
-      retry: { enabled: true, maxRetries: 3, baseDelayMs: 2000, provider: { maxRetries: 0, ...(this.config.llmRequestTimeoutMs ? { timeoutMs: this.config.llmRequestTimeoutMs } : {}) } },
-      httpIdleTimeoutMs: this.config.httpIdleTimeoutMs,
+      compaction: { enabled: true, reserveTokens: config.compactionReserveTokens!, keepRecentTokens: config.compactionKeepRecentTokens! },
+      retry: { enabled: true, maxRetries: 3, baseDelayMs: 2000, provider: { maxRetries: 0, ...(config.llmRequestTimeoutMs ? { timeoutMs: config.llmRequestTimeoutMs } : {}) } },
+      httpIdleTimeoutMs: config.httpIdleTimeoutMs,
       enableAnalytics: false, enableInstallTelemetry: false,
     });
     // The reminder is transient provider input. Pi retains the unmodified user message.
@@ -610,10 +659,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       execute: (toolCallId, params, signal, onUpdate) => this.runSubagent(record, active, snapshot, toolCallId, params.agent, params.task, signal,
         child => onUpdate?.({ content: [{ type: 'text', text: `${child.role}：${child.status}` }], details: { subagent: child } })),
     })]).filter(tool => !active.service || (role ? role.tools : active.service.tools).includes(tool.name));
-    const model = this.runtime.getModel(this.config.provider, this.config.model);
+    const model = runtime.getModel(config.provider, config.model);
     if (!model) throw new RequestError('MODEL_UNAVAILABLE', '模型不可用，请检查服务端配置。', 503);
     const { session } = await createAgentSession({
-      cwd: '/workspace', agentDir: this.agentDir, modelRuntime: this.runtime, model, thinkingLevel: 'off',
+      cwd: '/workspace', agentDir: this.agentDir, modelRuntime: runtime, model, thinkingLevel: 'off',
       sessionManager: record.manager, settingsManager, resourceLoader: loader,
       noTools: 'builtin', tools: [...customTools.map(tool => tool.name), ...(role || active.background ? [] : ['ask_user', ...(this.config.hitlDemoEnabled ? ['confirmation_demo'] : [])])], customTools,
     });
@@ -700,7 +749,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
       const purpose = active.compacting ? 'compaction' : 'reply';
       setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating');
-      return controlledStream(this.runtime, this.config, selected, context, options, purpose, requestReminder, active.controller.signal, active.usage,
+      return controlledStream(runtime, config, selected, context, options, purpose, requestReminder, active.controller.signal, active.usage,
         this.modelPermits ? { permits: this.modelPermits, waiting: () => setPhase(record, active, 'preparing'), started: () => setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating') } : undefined);
     };
     return session;
@@ -801,7 +850,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       parent.manager.appendCustomEntry(SUBAGENT_START, start);
       owner.subagents ||= new Map(); owner.subagentUsage ||= emptyUsage();
       summary = initialSubagent(start); publish();
-      active = { id: subagentId, status: 'responding', phase: 'preparing', acceptedAt: owner.acceptedAt,
+      active = { model: owner.model, id: subagentId, status: 'responding', phase: 'preparing', acceptedAt: owner.acceptedAt,
         background: owner.background, service: owner.service,
         sandbox: owner.sandbox, files: selectedInput?.files, selections: selectedInput?.skill ? { skill: selectedInput.skill } : undefined,
         compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [],
@@ -853,9 +902,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     if (internal && record.manager.getBranch().some(entry => entry.type === 'custom' && [RESOURCE_ENTRY, RESULT_ENTRY].includes(entry.customType)
       && (entry.data as { requestId?: string })?.requestId === internal.requestId)) throw new RequestError('SESSION_BUSY', '该后台请求已有执行记录，不会自动重新运行。', 409);
     if (record.warning) throw new RequestError('RECOVERY_REQUIRED', record.warning, 409);
-    if (!this.config.apiKey) throw new RequestError('MODEL_NOT_CONFIGURED', '请先在设置中配置模型 API Key。', 503);
-    if (!this.config.contextReady) throw new RequestError('MODEL_CONTEXT_REQUIRED', '请先在模型设置中补填有效的上下文容量和最大输出量。', 400);
-    const active: Active = { id: internal?.requestId ?? randomUUID(), background: internal?.background, status: 'responding', phase: 'preparing', acceptedAt: Date.now(),
+    const model = this.requestModel(internal?.background ? 'default' : selectedModelId(record.manager.getBranch(), record.workspaceId, id));
+    const active: Active = { model, id: internal?.requestId ?? randomUUID(), background: internal?.background, status: 'responding', phase: 'preparing', acceptedAt: Date.now(),
       input: structuredClone(input), work: this.collaboration?.workForSession({ seatId: record.seatId }, id),
       compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
     active.releaseTask = this.workspaces.acquireWrite(record.workspaceId, record.seatId);
@@ -936,7 +984,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
               const item = compactionSummary(entry, { id: entry.id, createdAt: entry.timestamp,
                 requestId: active.id, reason: event.reason === 'manual' ? 'unknown' : event.reason,
                 tokensBefore: entry.tokensBefore, tokensAfter: event.result.estimatedTokensAfter ?? null,
-                model: this.config.model, modelSettingsVersion: this.settings.info().version });
+                model: active.model.config.model, modelSettingsVersion: active.model.version });
               active.compactions.push(item);
               emit({ ...base, type: 'context.compaction_completed', compaction: item });
             }
@@ -987,7 +1035,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         for (const entry of record.manager.getEntries()) {
           if (entry.type !== 'compaction' || originalEntryIds.has(entry.id) || active.compactions.some(item => item.id === entry.id)) continue;
           active.compactions.push({ ...compactionSummary(entry), requestId: active.id,
-            model: this.config.model, modelSettingsVersion: this.settings.info().version });
+            model: active.model.config.model, modelSettingsVersion: active.model.version });
         }
       }
       unsubscribe?.(); active.compacting = false;

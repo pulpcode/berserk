@@ -69,9 +69,11 @@ async function mockApi(page: Page) {
       { id: 'brief', title: '项目讨论纪要', description: '目标、约束与待明确事项' },
       { id: 'plan', title: '协作方案参考', description: '方案结构与编制要点' },
     ], limits: { agentRunTimeoutMs: null, httpIdleTimeoutMs: 300000, llmRequestTimeoutMs: null, maxOutputTokens: modelSettings.maxOutputTokens } });
+    if (path === '/api/models') return json({ defaultModelId: 'default', models: [{ id: 'default', provider: modelSettings.provider, model: modelSettings.model, configured: modelSettings.configured, contextReady: modelSettings.contextReady, contextWindow: modelSettings.contextWindow, maxOutputTokens: modelSettings.maxOutputTokens }] });
+    if (path === '/api/settings/models' && request.method === 'GET') return json({ version: modelSettings.version, models: [{ ...modelSettings, id: 'default' }] });
     let body = '';
     if (request.method !== 'GET') for await (const chunk of request) body += chunk;
-    if (path === '/api/settings/model') {
+    if (path === '/api/settings/model' || path === '/api/settings/models/default') {
       if (request.method === 'GET') return modelFaults.read ? json({ error: { code: 'SERVER_ERROR', message: '暂时无法读取模型配置' } }, 503) : json(modelSettings);
       const update = JSON.parse(body) as ModelSettingsUpdate;
       modelWrites.push(update);
@@ -88,7 +90,7 @@ async function mockApi(page: Page) {
       modelSettings = { contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextReady: Boolean(contextWindow && maxOutputTokens && compactionReserveTokens && compactionKeepRecentTokens), contextSource: update.contextWindow ? 'explicit' : changed ? 'unknown' : modelSettings.contextSource, outputSource: update.maxOutputTokens ? 'explicit' : changed ? 'unknown' : modelSettings.outputSource, provider: update.provider, model: update.model, baseUrl: update.baseUrl, configured: Boolean(update.apiKey?.trim()) || modelSettings.configured, version: `model-v${modelWrites.length + 1}`, source: 'local' };
       return json(modelSettings);
     }
-    const input = JSON.parse(body || '{}') as { text?: string; requestId?: string; workspaceId?: string; name?: string; content?: string; expectedHash?: string | null };
+    const input = JSON.parse(body || '{}') as { text?: string; requestId?: string; workspaceId?: string; modelId?: string; name?: string; content?: string; expectedHash?: string | null };
     if (path === '/api/activity') {
       counts.activityReads++;
       if (faults.activity) return json({ error: { code: 'SERVER_ERROR', message: '动态暂时不可用' } }, 503);
@@ -354,6 +356,7 @@ test('工作区隔离运行中的流、会话历史、选择与草稿，新建�
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     await expect(input).toHaveValue('D 的草稿');
     expect(mock.counts.cancels).toHaveLength(0);
+    await page.locator('.catalog-heading').hover();
     await page.getByRole('button', { name: '新建项目', exact: true }).click();
     await page.getByLabel('项目名称').fill('新方案');
     await page.getByRole('button', { name: '创建项目', exact: true }).click();
@@ -477,8 +480,11 @@ test('窄屏指令对照、键盘保存、IME 与只读 Skill', async ({ page })
     await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '查看本轮资料' })).toHaveCount(0);
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.getByRole('button', { name: '打开会话列表' }).click();
-    const open = page.getByRole('button', { name: '项目资料', exact: true });
+    const menu = page.getByRole('button', { name: '打开会话列表' });
+    await menu.click();
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeFocused();
+    const open = page.getByRole('group', { name: '项目工具' }).getByRole('button', { name: '项目资料', exact: true });
     await open.click();
     const draft = page.getByLabel(/^你的草稿/);
     await expect(draft).toBeVisible();
@@ -501,8 +507,7 @@ test('窄屏指令对照、键盘保存、IME 与只读 Skill', async ({ page })
     await page.keyboard.press('Escape');
     await expect(open).toBeFocused();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await page.keyboard.press('Escape');
-    await expect(page.getByRole('button', { name: '打开会话列表' })).toBeFocused();
+    await expect(page.locator('main.workspace')).not.toHaveAttribute('inert');
     expect(mock.counts.puts).toHaveLength(1);
   } finally { await mock.close(); }
 });
@@ -538,6 +543,7 @@ test('首条消息创建会话等待期间切区，新输入和请求仍归原�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
+    await page.locator('.catalog-heading').hover();
     await page.getByRole('button', { name: '新建项目', exact: true }).click();
     await page.getByLabel('项目名称').fill('等待创建');
     await page.getByRole('button', { name: '创建项目', exact: true }).click();
@@ -655,11 +661,11 @@ test('旧动态请求不覆盖新流状态，更新失败保留状态并可恢�
     mock.faults.releaseActivity!();
     await expect(page.locator('#activity-counts')).toContainText('1 个处理中');
     mock.faults.activity = true;
-    await expect(page.getByText(/动态更新失败，显示的是上次获取的状态/)).toBeVisible();
+    await expect(page.getByRole('status', { name: '数据更新状态' })).toBeVisible();
     await expect(page.locator('#activity-counts')).toContainText('1 个处理中');
     await input.fill('保留草稿');
     mock.faults.activity = false;
-    await expect(page.getByText(/动态更新失败，显示的是上次获取的状态/)).toHaveCount(0);
+    await expect(page.getByRole('status', { name: '数据更新状态' })).toHaveCount(0);
     mock.finish('A');
     await expect(page.getByRole('button', { name: '停止回复' })).toHaveCount(0);
     await expect(input).toHaveValue('保留草稿');
@@ -720,6 +726,7 @@ test('动态先发现新工作区，创建响应随后返回时只保留一个�
   const mock = await mockApi(page);
   try {
     await page.goto('/');
+    await page.locator('.catalog-heading').hover();
     await page.getByRole('button', { name: '新建项目', exact: true }).click();
     await page.getByLabel('项目名称').fill('并发创建区');
     mock.faults.holdWorkspaceCreate = true;
@@ -812,7 +819,7 @@ test('模型设置保存后更新模型，密钥只写且关闭后清空，手�
     await expect(modal.getByText('已保存，下次发送消息时使用新配置。')).toBeVisible();
     expect(mock.modelWrites).toHaveLength(1);
     expect(mock.modelWrites[0].apiKey).toBeUndefined();
-    await expect(page.locator('.settings-trigger-model')).toContainText('deepseek-test');
+    await expect(page.locator('select[aria-label="选择模型"]')).toContainText('deepseek-test');
     await page.getByLabel('服务商标识').fill('custom');
     await page.getByLabel('API 地址', { exact: true }).fill('https://models.example.com/v1');
     await page.getByRole('button', { name: '保存配置', exact: true }).click();
@@ -1443,6 +1450,140 @@ test('尾部说明并入手动收起的过程时焦点优先，摘要焦点不�
     await expect(process).not.toHaveAttribute('open'); await expect(process.locator(':scope > summary')).toBeFocused();
     await page.getByRole('textbox', { name: '发送消息' }).fill('保留下一轮草稿');
     await expect(process).not.toHaveAttribute('open');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+
+test('桌面侧边栏可用键盘折叠展开，保留草稿且不影响手机抽屉', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await input.fill('折叠侧栏时保留草稿');
+    for (const width of [1440, 900, 1720]) {
+      await page.setViewportSize({ width, height: 960 });
+      const expandedWidth = (await page.locator('main.workspace').boundingBox())!.width;
+      const collapse = page.getByRole('button', { name: '折叠侧边栏', exact: true });
+      await collapse.focus();
+      await page.keyboard.press('Enter');
+      const expand = page.getByRole('button', { name: '展开侧边栏', exact: true });
+      await expect(expand).toBeFocused();
+      await expect(expand).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: '会话 B', exact: true })).toBeHidden();
+      expect((await page.locator('main.workspace').boundingBox())!.width).toBeGreaterThan(expandedWidth);
+      await expect(input).toHaveValue('折叠侧栏时保留草稿');
+      await page.keyboard.press('Tab');
+      await expect(page.getByRole('button', { name: '新建对话', exact: true })).toBeFocused();
+      await expand.focus();
+      await page.keyboard.press('Space');
+      await expect(collapse).toBeFocused();
+      await expect(collapse).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+    }
+    await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
+    await page.setViewportSize({ width: 375, height: 812 });
+    const menu = page.getByRole('button', { name: '打开会话列表' });
+    await menu.click();
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeHidden();
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeFocused();
+    await expect(input).toHaveValue('折叠侧栏时保留草稿');
+    await page.setViewportSize({ width: 1440, height: 960 });
+    await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeVisible();
+    await expect(page.locator('main.workspace')).not.toHaveAttribute('inert');
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+
+test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦点', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await input.fill('图标导航保留草稿');
+    await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
+    for (const name of ['新建对话', '新建项目', '全部动态', '设置']) {
+      const button = page.getByRole('button', { name, exact: true });
+      await expect(button).toBeVisible();
+      await expect(button).toHaveAttribute('title', name);
+      const bounds = (await button.boundingBox())!;
+      expect(bounds.width).toBe(44);
+      expect(bounds.height).toBeGreaterThanOrEqual(44);
+      await expect(button.locator('svg:visible').first()).toBeVisible();
+      if (await button.locator('span').count()) await expect(button.locator('span').first()).toBeHidden();
+    }
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: '设置', exact: true })).toBeFocused();
+    const header = page.locator('.workspace-header');
+    const tools = header.getByRole('group', { name: '项目工具' });
+    const resources = tools.getByRole('button', { name: '项目资料', exact: true });
+    await expect(resources).toBeVisible();
+    await expect(resources).toHaveAttribute('title', '项目资料');
+    await expect(resources).toHaveAttribute('aria-haspopup', 'dialog');
+    await expect(resources).toHaveText('');
+    await expect(resources.locator('svg')).toBeVisible();
+    await expect(page.getByRole('complementary', { name: '会话与资料' }).getByRole('button', { name: '项目资料', exact: true })).toHaveCount(0);
+    const headerBox = (await header.boundingBox())!;
+    const toolsBox = (await tools.boundingBox())!;
+    expect(toolsBox.x).toBeGreaterThan(headerBox.x + headerBox.width / 2);
+    await resources.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(resources).toBeFocused();
+    await page.getByRole('button', { name: '新建对话', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: '新建对话' })).toBeVisible();
+    await page.getByRole('button', { name: '取消', exact: true }).click();
+    expect(mock.counts.creates).toBe(0);
+    await page.getByRole('button', { name: '全部动态', exact: true }).click();
+    await expect(page.getByRole('heading', { name: '全部动态' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveAttribute('aria-current', 'page');
+    await expect(resources).toBeVisible();
+    await expect(resources).toBeEnabled();
+    await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
+    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
+    await page.getByRole('button', { name: '进入项目：默认工作区', exact: true }).click();
+    await expect(input).toHaveValue('图标导航保留草稿');
+    await expect(page.getByRole('button', { name: '展开侧边栏', exact: true })).toBeVisible();
+    expect(mock.counts.sends).toBe(0);
+  } finally { await mock.close(); }
+});
+
+
+test('折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开图标', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
+    const toggle = page.getByRole('button', { name: '展开侧边栏', exact: true });
+    const logo = toggle.locator('img');
+    const icon = toggle.locator('svg');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await input.click();
+    await expect(logo).toBeVisible();
+    await expect(icon).toBeHidden();
+    await expect(page.locator('.sidebar-brand > .brand-mark')).toBeHidden();
+    const bounds = await toggle.boundingBox();
+    await toggle.hover();
+    await expect(icon).toBeVisible();
+    await expect(logo).toBeHidden();
+    expect(await toggle.boundingBox()).toEqual(bounds);
+    await input.hover();
+    await expect(logo).toBeVisible();
+    await expect(icon).toBeHidden();
+    await page.keyboard.press('Tab');
+    await toggle.focus();
+    await expect(icon).toBeVisible();
+    await expect(logo).toBeHidden();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('button', { name: '折叠侧边栏', exact: true })).toBeFocused();
+    await expect(page.locator('.sidebar-brand > .brand-mark')).toBeVisible();
     expect(mock.counts.sends).toBe(0);
   } finally { await mock.close(); }
 });

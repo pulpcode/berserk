@@ -1,6 +1,8 @@
 export interface Identity {
   userId: string; username: string; displayName: string; seatId: string; seatName: string;
-  createPublicTask: boolean; manageModelSettings: boolean;
+  /** Legacy name: create and manage all public task metadata; never grants workspace access. */
+  createPublicTask: boolean;
+  manageModelSettings: boolean;
 }
 export interface AuthSession {
   mode: 'login' | 'test'; csrf?: string; viewId?: string; identity?: Identity;

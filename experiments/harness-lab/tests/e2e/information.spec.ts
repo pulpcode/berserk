@@ -51,7 +51,7 @@ async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1]) {
   return { lab, store, fake, task, actor, ruleInput, attach, receive, close: async () => { for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank').catch(() => {}); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
 }
 async function login(page: Page, name: string) {
-  await page.goto('/'); await page.getByLabel('账号', { exact: true }).fill(name); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.locator('.account-footer')).toContainText(`用户 ${name}`);
+  await page.goto('/'); await page.getByLabel('账号', { exact: true }).fill(name); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '登录', exact: true })).toHaveCount(0); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
 }
 async function inbox(page: Page) { await page.getByRole('button', { name: '收到的信息', exact: true }).click(); await page.getByRole('button', { name: /道路通行信息/ }).click(); }
 
