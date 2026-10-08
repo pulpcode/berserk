@@ -1,4 +1,5 @@
-import type { ComposerSelection, SessionSnapshot, SkillFile, UsageSummary } from './index.js';
+import type { ContextScopeSnapshot } from './context.js';
+import type { ComposerSelection, PublicMessage, SessionSnapshot, SkillFile, UsageSummary } from './index.js';
 
 export type BackgroundJobKind = 'preprocess' | 'seat_analysis';
 export type BackgroundJobStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'interrupted';
@@ -21,6 +22,8 @@ export interface InformationRule extends InformationRuleInput {
 export interface BackgroundProfileSnapshot {
   id: string; name: string; goal: string; tools: string[]; skillIds: string[]; agentIds: string[];
   instructions: string;
+  contextScopeId?: string;
+  contextScope?: ContextScopeSnapshot;
   resources: Array<{ id: string; title: string; content: string }>;
   skills?: SkillFile[];
   agents?: Array<{name: string; description: string; systemPrompt: string; tools: readonly string[]; hash: string}>;
@@ -28,6 +31,7 @@ export interface BackgroundProfileSnapshot {
 export interface BackgroundRuleSnapshot { rule: InformationRule; profile: BackgroundProfileSnapshot }
 export interface BackgroundEvent {
   id: string; sourceId: string; sourceMessageId: string; title: string;
+  systemId?: string;
   subjectId?: string; occurredAt?: string; receivedAt: string;
   payloadHash: string; files: BackgroundFile[]; ruleSnapshot?: BackgroundRuleSnapshot;
   initialJobId?: string; revision: number;
@@ -41,6 +45,7 @@ export interface BackgroundJob {
   createdAt: string; startedAt?: string; endedAt?: string; cancelRequestedAt?: string;
   sessionId?: string; requestId: string; retryOfJobId?: string;
   ruleSnapshot?: BackgroundRuleSnapshot;
+  contextScope?: ContextScopeSnapshot;
   userId?: string; seatId?: string; taskSpaceId?: string; workspaceId?: string;
   deliveryId?: string; actionId?: string;
   model?: string; modelSettingsVersion?: string; result?: BackgroundResultRef; usage?: UsageSummary;
@@ -56,13 +61,13 @@ export interface InformationSource {
   sourceId: string; name: string; allowedProfileIds: string[]; allowedRecipientSeatIds: string[];
   accepting: boolean; revision: number; permission: InformationPermission;
 }
-export interface InformationProfile { id: string; name: string; goal: string }
+export interface InformationProfile { id: string; name: string; goal: string; configurationError?: string; contextScope?: ContextScopeSnapshot & {systemNames?: string[]} }
 export interface InformationCapabilities {
   enabled: boolean; sources: InformationSource[]; profiles: InformationProfile[];
   seats: Array<{ id: string; name: string }>; canManageQueue: boolean; queue: BackgroundControl & {blockedReason?: string};
 }
 export interface BackgroundPage<T> { items: T[]; total: number; offset: number; limit: number }
-export interface BackgroundEventSummary extends BackgroundEvent { jobs: BackgroundJob[]; deliveries: BackgroundDelivery[] }
+export interface BackgroundEventSummary extends BackgroundEvent { contentRestricted?: boolean; jobs: BackgroundJob[]; deliveries: BackgroundDelivery[] }
 export interface BackgroundEventDetail extends BackgroundEventSummary { text: string; results: Array<{jobId: string; text: string; files: BackgroundFile[]}>; analyses: BackgroundAnalysisSummary[] }
 /** The center receives only this projection for another seat's analysis. */
 export interface BackgroundAnalysisSummary {
@@ -71,7 +76,7 @@ export interface BackgroundAnalysisSummary {
   createdAt: string; endedAt?: string; jobId?: string; sessionId?: string;
 }
 export interface InboxItem { sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob }
-export interface InboxDetail extends InboxItem { text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[] }
+export interface InboxDetail extends InboxItem { queryMessages?: PublicMessage[]; profileName?: string; text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[] }
 export interface BackgroundAnalysisInput {
   clientActionId: string; taskSpaceId: string; goal: string;
   mode: 'conversation' | 'background'; includeResult: boolean; fileIds: string[];
@@ -96,12 +101,13 @@ export interface InformationJobSummary {
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
   createdAt: string; startedAt?: string; endedAt?: string; seatId?: string; sessionId?: string;
   title?: string;
+  contentRestricted?: boolean;
   /** Preprocessing deliveries belong to this execution, never the latest event-wide state. */
   deliveries?: BackgroundDelivery[];
   error?: {code: string; message: string};
 }
 export interface InformationJobDetail extends InformationJobSummary {
-  text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot;
+  profileName?: string; text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot;
   input?: {title: string; text: string; files: BackgroundFile[]};
   retryOfJobId?: string;
 }

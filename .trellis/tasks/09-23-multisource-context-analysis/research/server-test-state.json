@@ -1,0 +1,241 @@
+{
+  "tasks": {
+    "A": {
+      "clientActionId": "1ccb4b9b-4c4f-47d4-8412-408c09b4ffc0",
+      "task": {
+        "id": "4e173eb0-c946-427f-a11b-938c60dd4819",
+        "title": "【多源验证】西区补给方案",
+        "goal": "软件能力验证用合成任务：2026-10-01 09:40 开始执行，至少需要 3 辆车，使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "test-seat",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "createdAt": "2026-10-08T08:20:05.267Z",
+        "updatedAt": "2026-10-08T08:20:05.267Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:40:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    },
+    "B": {
+      "clientActionId": "8f6928d2-4abd-4ff5-9471-7532839c3ebc",
+      "task": {
+        "id": "d3b8e44e-b421-45d2-a684-ee1095adee98",
+        "title": "【多源验证】西区设备转移方案",
+        "goal": "软件能力验证用合成任务：2026-10-01 09:50 开始执行，至少需要 1 辆车，使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "test-seat",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "createdAt": "2026-10-08T08:20:05.276Z",
+        "updatedAt": "2026-10-08T08:20:05.276Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:50:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    },
+    "C": {
+      "clientActionId": "aaa8c9ee-6df6-4e5f-95b6-7004d52da2ec",
+      "task": {
+        "id": "6e882ec6-6242-4ae6-907c-b05c09af7abb",
+        "title": "【多源验证】东区补给方案",
+        "goal": "软件能力验证用合成任务：2026-10-01 09:45 开始执行，至少需要 2 辆车，使用东区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "test-seat",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "createdAt": "2026-10-08T08:20:05.287Z",
+        "updatedAt": "2026-10-08T08:20:05.287Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-east-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-east"
+            ],
+            "time": {
+              "from": "2026-10-01T01:45:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "rules": {
+    "mock-intel-source": {
+      "clientActionId": "ddd82c1c-6160-44ff-b8d8-4f9b940fe984",
+      "rule": {
+        "name": "模拟特情综合分析",
+        "sourceId": "mock-intel-source",
+        "profileId": "context-analysis",
+        "recipientSeatIds": [
+          "test-seat",
+          "seat-b"
+        ],
+        "enabled": true,
+        "id": "1db61cb5-5a94-485e-be87-5361d9eaf553",
+        "revision": 1,
+        "createdAt": "2026-10-08T08:20:05.299Z",
+        "updatedAt": "2026-10-08T08:20:05.299Z",
+        "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1"
+      }
+    },
+    "mock-situation-source": {
+      "clientActionId": "1dee271a-fb1f-41b6-9c1c-41b9174abd5f",
+      "rule": {
+        "name": "模拟态势综合分析",
+        "sourceId": "mock-situation-source",
+        "profileId": "context-analysis",
+        "recipientSeatIds": [
+          "test-seat",
+          "seat-b"
+        ],
+        "enabled": true,
+        "id": "d9a2d0fb-7972-43ba-a92f-201af72456d4",
+        "revision": 1,
+        "createdAt": "2026-10-08T08:20:05.309Z",
+        "updatedAt": "2026-10-08T08:20:05.309Z",
+        "createdByUserId": "470bb585-6111-4be5-b59f-16210b6926f1",
+        "updatedByUserId": "470bb585-6111-4be5-b59f-16210b6926f1"
+      }
+    }
+  },
+  "messages": {
+    "E1": {
+      "input": {
+        "sourceMessageId": "manual-context-20261008-intel-msg-0001",
+        "title": "【多源验证】西区通道限制信息更新",
+        "text": "报告 report-west-01 更新至修订 2。关联对象 situation/road/road-west-01；限制时段为 2026-10-01T09:20:00+08:00 至 2026-10-01T10:10:00+08:00。请查询报告正文及历史。",
+        "subjectId": "report-west-01",
+        "occurredAt": "2026-10-01T09:20:00+08:00"
+      },
+      "receipt": {
+        "eventId": "de0b9c69-7b5c-4a41-bd92-2f8cad9f3282",
+        "sourceMessageId": "manual-context-20261008-intel-msg-0001",
+        "receivedAt": "2026-10-08T08:22:25.965Z",
+        "status": "accepted"
+      },
+      "status": "succeeded",
+      "jobId": "401807cd-f150-442f-8de8-81d23ecef8e9",
+      "deliveries": [
+        {
+          "id": "2872d2c0-c5fc-47b0-8728-710cb538b18b",
+          "seat": "seat-b",
+          "status": "delivered"
+        },
+        {
+          "id": "e1f64817-7941-46df-8da1-c8614e1fad18",
+          "seat": "test-seat",
+          "status": "delivered"
+        }
+      ],
+      "queryCounts": {
+        "a": 9,
+        "b": 9
+      }
+    },
+    "E2": {
+      "input": {
+        "sourceMessageId": "manual-context-20261008-situation-msg-0001",
+        "title": "【多源验证】西区可用车辆更新",
+        "text": "对象 situation/resource/vehicles-west-01 的修订由 1 更新为 2，可用车辆由 4 辆变为 2 辆。变化游标从 situation-87c40ad7-d31a-46a9-a15c-dc4314f95782-seq-100 推进至 situation-87c40ad7-d31a-46a9-a15c-dc4314f95782-seq-101；请查询变化详情。",
+        "subjectId": "vehicles-west-01",
+        "occurredAt": "2026-10-01T09:30:00+08:00"
+      },
+      "receipt": {
+        "eventId": "70fb60e0-2579-41be-aea1-38eb7fcef575",
+        "sourceMessageId": "manual-context-20261008-situation-msg-0001",
+        "receivedAt": "2026-10-08T08:23:40.167Z",
+        "status": "accepted"
+      },
+      "status": "succeeded",
+      "jobId": "9ef9bd97-e6cb-4b51-bdab-cf67eedf702b",
+      "deliveries": [
+        {
+          "id": "21604fc1-7cfd-4a5b-8ced-b99e3d954716",
+          "seat": "seat-b",
+          "status": "delivered"
+        },
+        {
+          "id": "0ef478bb-abdd-4246-abd1-bb6bc2f1f44c",
+          "seat": "test-seat",
+          "status": "delivered"
+        }
+      ],
+      "queryCounts": {
+        "a": 12,
+        "b": 12
+      }
+    }
+  }
+}

@@ -64,7 +64,7 @@ export async function backgroundRoutes(app:FastifyInstance, background?:Backgrou
   app.post<{Params:{id:string};Body:{clientActionId:string}}>('/api/information/jobs/:id/reprocess',{schema:{params:params(),querystring:empty,body:actionBody}},request => background.reprocess(identityOf(request),request.params.id,request.body.clientActionId));
   app.get<{Querystring:Query}>('/api/information/deliveries',{schema:{querystring:listQuery}},request => {
     const actor=identityOf(request),q=filter(request.query);
-    return page(background.store.listDeliveries().filter(delivery => background.store.effectivePermission(actor,delivery.sourceId) && (!q.sourceId || delivery.sourceId === q.sourceId) && (!q.status || delivery.status === q.status)),q);
+    return background.deliveries(actor,q);
   });
   app.post<{Params:{id:string};Body:{clientActionId:string}}>('/api/information/deliveries/:id/retry',{schema:{params:params(),querystring:empty,body:actionBody}},request => background.retryDelivery(identityOf(request),request.params.id,request.body.clientActionId));
   app.get<{Querystring:Query}>('/api/information/rules',{schema:{querystring:{...listQuery,properties:{...listQuery.properties,clientActionId:uuid}}}},request => background.rules(identityOf(request),{...filter(request.query),clientActionId:request.query.clientActionId}));

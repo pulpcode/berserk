@@ -267,6 +267,8 @@ SessionStorage keys for drafts/selections/read state are view-scoped; logout war
 
 Task sidebar groups public and seat-private metadata. Task descriptions do not provision a workspace; a row plus or global new conversation lazily prepares the current seat's directory. Task panels use revision CAS, keep text on conflict and show latest text separately before manual merge. Unknown creation results must be queried by clientActionId before retry. The sidebar lists active tasks only; archived metadata and selected archived history remain readable, with new work disabled and host-enforced. Do not expose private tasks in cross-seat assignment selectors. The sidebar footer has one Settings entry for every seat. Account identity and logout live inside settings; only authorized seats see model management.
 
+Task context is optional. Validate actual calendar dates and hour ranges as well as ISO syntax before submission; `Date.parse` alone normalizes nonexistent dates. Show field errors in the editor and preserve the draft; do not send invalid dates into the save-conflict recovery flow.
+
 ### Information center navigation and job observation
 
 `/information` retains the existing sidebar and mounted App/useChat; changing the right-hand page must not clear drafts, selection or streams. Do not require a Back to Workspace button. Default to the jobs board; preserve explicit tab/id deep links. Query state includes source/search, board/list view and independent column offsets. Browser history, reload and closing a detail preserve the originating location; polling never takes focus.
@@ -277,7 +279,9 @@ Display succeeded as execution completed, not task achieved. Both event rows and
 
 `useInformationQuery` keys results and errors by request path. Clearing or changing the selected detail must not render the previous body's content or error. An undefined path is inactive; optional comparison alone must not match an undefined error and then dereference it.
 
-Tests cover independent board paging/counts, source/search, detail deep link/reload/back/forward/Escape/focus, old delivery versus failed reprocess, read-only operations, and navigating away from a streaming conversation while preserving its next draft. Screenshots target the existing desktop layout; no mobile product scope is added.
+Inbox continuation preparation carries a callback for the originating selection generation through the parent’s asynchronous session/resource reads. Recheck both that selection and App navigation before writing draft state or selecting the prepared session; selecting another inbox item must invalidate the old navigation even though App’s route has not changed. The server-created conversation remains available for explicit access later.
+
+Tests cover independent board paging/counts, source/search, detail deep link/reload/back/forward/Escape/focus, old delivery versus failed reprocess, read-only operations, late continuation results, and navigating away from a streaming conversation while preserving its next draft. Screenshots target the existing desktop layout; no mobile product scope is added.
 
 ### Task catalog and personal spaces
 

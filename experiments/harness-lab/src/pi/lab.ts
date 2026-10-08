@@ -1,3 +1,7 @@
+import { contextTools } from './context-tools.js';
+import { ContextService } from '../context/service.js';
+import { TaskQueryService } from '../context/task-query.js';
+import type { ContextPrincipal } from '../contracts/context.js';
 import { MODEL_SELECTION, selectedModelId } from './model-selection.js';
 import { AccessStore } from '../access/store.js';
 import { openDatabase, assertDataMode } from '../access/database.js';
@@ -48,6 +52,7 @@ export interface PreprocessInput {
   resources: ResourceSnapshot;
   roles: Array<{ name: string; description: string; systemPrompt: string; tools: readonly string[]; hash: string }>;
   tools: string[]; files: FileRef[];
+  contextPrincipal?: Extract<ContextPrincipal, {kind: 'service'}>;
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
 }
 export interface PreprocessReference { jobId: string; sessionId: string; directory: string }
@@ -155,6 +160,9 @@ export class PiLab {
   readonly files: FileService;
   collaboration?: CollaborationService;
   access?: AccessStore;
+  context?: ContextService;
+  contextUnavailable = false;
+  private contextTasks?: TaskQueryService;
   private execution?: DockerExecutionService;
   private constructor(private currentConfig: LabConfig, runtime: ModelRuntime, readonly workspaces: WorkspaceStore, readonly resources: ResourceService, private readonly settings: ModelSettingsStore) {
     const config = currentConfig;
@@ -644,7 +652,16 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
     }, {}, Boolean(role) || Boolean(active.background), record.seatId).filter(tool => !(active.background && tool.name === 'instructions_update'));
     const readonlyFiles = active.sandbox ? workspaceFileTools(active.sandbox) : [];
-    const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles,
+    const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', seatId: record.seatId};
+    if (this.access && !this.contextTasks) this.contextTasks = new TaskQueryService(this.access);
+    const queries = !role && this.context && principal ? contextTools(this.context, this.contextTasks, principal, active.controller, () => {
+      active.controller.signal.throwIfAborted();
+      if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
+      if (principal.kind === 'service') this.context!.assertServiceScope(principal.scope);
+      else if (this.access && !this.access.seats().some(seat => seat.id === principal.seatId)) throw new RequestError('CONTEXT_FORBIDDEN', '当前席位不可查询业务资料。', 403);
+    }) : [];
+
+    const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries,
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {

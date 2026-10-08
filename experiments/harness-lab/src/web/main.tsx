@@ -236,14 +236,17 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       else setCreationError(message);
     }
   }
-  async function preparedAnalysis(action: BackgroundAction) {
+  async function preparedAnalysis(action: BackgroundAction, originCurrent: () => boolean) {
     if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return;
     const captured = navigationRequest.current;
+    const current = () => captured === navigationRequest.current && originCurrent();
     const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(action.sessionId)}`);
+    if (!current()) return;
     chat.adopt(session);
     if (!action.jobId) {
       const resources = action.selection?.skill ? await api<WorkspaceResources>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/resources`) : undefined;
       const roles = action.selection?.agent ? await api<AgentInfo[]>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/agents`) : undefined;
+      if (!current()) return;
       const skill = resources?.skills.find(item => item.id === action.selection?.skill?.id);
       const role = roles?.find(item => item.name === action.selection?.agent?.name);
       if (chat.prepareDraft(session.id, action.draft || '')) {
@@ -253,7 +256,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       }
     }
     await chat.refreshActivity(); directory.refresh();
-    if (captured === navigationRequest.current) selectSession(session.id);
+    if (current()) selectSession(session.id);
   }
   function newChat() { rememberPosition(); setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {

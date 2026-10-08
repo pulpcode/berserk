@@ -1,0 +1,52 @@
+{
+  "stage": "/home/ubuntu/axon-release-background.ClBNID/updates/axon-context-deploy-3dhwb09h",
+  "remote": "/home/ubuntu/axon-release-background.ClBNID/updates/axon-context-deploy-3dhwb09h",
+  "sourceBaseCommit": "c3b5bd681d4354a55172701fb777213e1e12f7b7",
+  "includesWorkingTreeChanges": true,
+  "archiveSha256": "a18be4c9959b961ad691534c4e1a4ab5c060dc74a904663ecaa29f07e4227435",
+  "fileCount": 150,
+  "phase": "ready",
+  "release": "/home/ubuntu/axon-release-background.ClBNID",
+  "port": 4315,
+  "pid": 2533184,
+  "mockPid": 2533162,
+  "mockPort": 4401,
+  "backup": "/home/ubuntu/axon-release-background.ClBNID/updates/axon-context-deploy-3dhwb09h/backup",
+  "backupVerified": true,
+  "preservedContentFiles": 134,
+  "accounts": [
+    {
+      "account": "a",
+      "seatId": "test-seat",
+      "sessionIds": [
+        "01a0c3df-1db9-734e-b5b5-042afc9ec159",
+        "01a0c3f8-9cb8-76cb-bc27-ad92b495c890",
+        "181b0089-01cc-45ef-b2b6-0bd49854b2eb",
+        "68b93568-9a33-42db-92ca-3a27f86a8faf",
+        "840eb803-147b-455f-941a-b53b5ad02f80",
+        "df6de98a-982a-4b4c-8ab2-0ebedb06aed7"
+      ],
+      "inboxCount": 5,
+      "tasks": [
+        "edf1fd60-81fd-4eff-94da-2a27e557ef35",
+        "6a97486e-b276-4a3b-acd5-1d4411880e99"
+      ]
+    },
+    {
+      "account": "b",
+      "seatId": "seat-b",
+      "sessionIds": [
+        "01a0c3fa-2aae-76cb-bc27-ad955b9f452f",
+        "01a0c7fa-c509-76f3-9b7e-73a8419c0ab5",
+        "01a0cd3d-2fc0-754e-869b-04c9a222c6f8"
+      ],
+      "inboxCount": 1,
+      "tasks": [
+        "edf1fd60-81fd-4eff-94da-2a27e557ef35",
+        "6a97486e-b276-4a3b-acd5-1d4411880e99"
+      ]
+    }
+  ],
+  "asset": "/assets/index-ByJbWI0k.js",
+  "deployedAt": "2026-10-08T08:18:18Z"
+}

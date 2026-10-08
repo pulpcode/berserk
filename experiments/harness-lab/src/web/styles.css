@@ -960,3 +960,28 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .directory-status { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 10px 20px; border-bottom: 1px solid var(--line); background: var(--accent-soft); color: var(--muted); font-size: 13px; line-height: 1.5; flex-shrink: 0; }
 .directory-status > span { flex: 1; min-width: min(180px, 100%); }
 .directory-status button { background: transparent; border-color: transparent; color: var(--accent); font-weight: 400; }
+
+/* Optional task context and current-job query evidence reuse the existing panels. */
+.task-context-editor { border-block: 1px solid var(--line); padding: 16px 0; margin-block: 8px; }
+.task-context-editor > summary { cursor: pointer; font-size: 14px; line-height: 1.6; }
+.task-context-editor > summary span { display: block; margin: 4px 0 0 18px; color: var(--muted); font-size: 12px; }
+.task-context-editor fieldset { min-width: 0; border: 0; padding: 0; margin: 16px 0 0; }
+.task-context-editor legend { padding: 0; margin-bottom: 8px; font-size: 13px; }
+.task-context-reference { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 16px; }
+.task-context-reference > button { justify-self: start; }
+.task-context-editor label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 13px; }
+.task-context-editor input, .task-context-editor select, .task-context-editor textarea { width: 100%; min-width: 0; }
+.task-context-editor small { color: var(--muted); line-height: 1.6; overflow-wrap: anywhere; }
+.task-context-editor small.resource-error { color: var(--danger); }
+.task-context-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 20px; }
+.task-context-summary p { overflow-wrap: anywhere; white-space: pre-wrap; }
+.context-evidence { margin-block: 20px; border-block: 1px solid var(--line); padding: 14px 0; }
+.context-evidence summary { cursor: pointer; line-height: 1.7; }
+.context-evidence-query { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--line); }
+.context-evidence-query > summary { font-size: 13px; }
+.context-evidence-query pre { max-height: 380px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; padding: 12px; background: var(--surface); }
+.context-evidence-records { padding-left: 20px; font-size: 12px; }
+.context-evidence-records li { margin-bottom: 10px; overflow-wrap: anywhere; }
+.context-evidence-records span { display: block; color: var(--muted); line-height: 1.6; }
+.task-context-editor select { font: inherit; color: var(--text); background: var(--surface); padding: 10px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; }
+.task-context-editor small { font-weight: 400; }

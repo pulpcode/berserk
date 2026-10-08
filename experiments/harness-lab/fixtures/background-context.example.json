@@ -1,0 +1,52 @@
+{
+  "enabled": true,
+  "concurrency": 1,
+  "modelConcurrency": 2,
+  "sources": [
+    {
+      "sourceId": "mock-intel-source",
+      "systemId": "intel",
+      "name": "模拟特情通知",
+      "credentialRef": "MOCK_INTEL_SOURCE_TOKEN",
+      "allowedProfileIds": [
+        "context-analysis"
+      ],
+      "allowedRecipientSeatIds": [
+        "seat-a",
+        "seat-b"
+      ]
+    },
+    {
+      "sourceId": "mock-situation-source",
+      "systemId": "situation",
+      "name": "模拟态势通知",
+      "credentialRef": "MOCK_SITUATION_SOURCE_TOKEN",
+      "allowedProfileIds": [
+        "context-analysis"
+      ],
+      "allowedRecipientSeatIds": [
+        "seat-a",
+        "seat-b"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "context-analysis",
+      "name": "多源综合分析",
+      "goal": "根据收到的更新，按需查询报告正文与历史、当前态势及 Axon 活动公共任务，综合说明变化、任务相关性和可能影响。比较目标、资源条件与有效时间，区分事实、建议及资料缺口，并标明来源和修订。不要修改任务或自动分派。",
+      "tools": [
+        "information_search",
+        "information_read",
+        "situation_query",
+        "task_search",
+        "task_read"
+      ],
+      "contextScopeId": "demo-context",
+      "instructions": "",
+      "skillIds": [],
+      "agentIds": [],
+      "resources": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "依索引读取适用 Pi 集成规范；大文件按章节完整读取，避免自动注入截断"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "任务、主体、公私权限与同版本更新"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "当前后台执行、投递、列表及结果授权边界"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "文件导入、沙盒与归属保持现有约定"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "依索引读取桌面工作台规范；大文件按任务面板、信息中心、迟到响应章节完整读取"}
+{"file": ".trellis/tasks/09-23-multisource-context-analysis/research/backend-fit.md", "reason": "当前代码事实与查询适配缺口"}
+{"file": ".trellis/tasks/09-23-multisource-context-analysis/research/basis.md", "reason": "设计依据及 integration-contract.md 入口；实现前完整读取 HTTP 请求／响应与游标契约"}
+{"file": ".trellis/tasks/09-23-multisource-context-analysis/research/interaction.md", "reason": "现有交互复用及状态边界"}
+{"file": ".trellis/tasks/09-23-multisource-context-analysis/research/simulation-scenario.md", "reason": "双源与多任务场景、固定业务时间及预期"}

@@ -64,10 +64,10 @@ test('one preprocessing reaches two seats; conversation prepares a draft without
     await expect(page.getByRole('button', { name: '信息处理中心', exact: true })).toBeVisible(); await expect(b.getByRole('button', { name: '信息处理中心', exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }).click(); await page.getByRole('textbox', { name: '发送消息' }).fill('保留在原对话的草稿');
     await page.getByRole('button', { name: '信息处理中心', exact: true }).click(); await expect(page.getByRole('heading', { name: '信息处理中心' })).toBeVisible(); await expect(page.getByRole('complementary', { name: '会话与资料' })).toBeVisible(); await expect(page.getByRole('button', { name: '返回工作台', exact: true })).toHaveCount(0); await page.locator('.session-item.selected').click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('保留在原对话的草稿');
-    await inbox(page); await page.getByLabel('分析所属任务').selectOption(env.task.id); await page.getByRole('textbox', { name: '分析目标', exact: true }).fill('请确认道路信息对任务的影响'); await page.getByRole('button', { name: '进入对话分析', exact: true }).click();
+    await inbox(page); await page.getByLabel('会话保存位置').selectOption(env.task.id); await page.getByRole('textbox', { name: '问题或工作要求', exact: true }).fill('请确认道路信息对任务的影响'); await page.getByRole('button', { name: '进入对话', exact: true }).click();
     await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue(/请确认道路信息对任务的影响/); expect(env.fake.calls).toHaveLength(initialCalls);
     await page.getByRole('button', { name: '发送消息', exact: true }).click(); await expect.poll(() => env.fake.calls.length).toBe(initialCalls + 1);
-    await inbox(b); await b.getByLabel('分析所属任务').selectOption(env.task.id); await b.getByRole('textbox', { name: '分析目标', exact: true }).fill('席位 B 私有分析目标');
+    await inbox(b); await b.getByLabel('会话保存位置').selectOption(env.task.id); await b.getByRole('textbox', { name: '问题或工作要求', exact: true }).fill('席位 B 私有分析目标');
     await b.getByRole('button', { name: '提交后台分析', exact: true }).click(); await expect(b.getByRole('dialog', { name: '确认后台分析' })).toBeVisible(); expect(env.store.listJobs().filter(item => item.kind === 'seat_analysis')).toHaveLength(0);
     await b.getByRole('button', { name: '确认提交后台分析', exact: true }).click(); await expect.poll(() => env.store.listJobs().find(item => item.kind === 'seat_analysis')?.status).toBe('succeeded');
     await page.getByRole('button', { name: '信息处理中心', exact: true }).click(); await page.getByRole('button', { name: '后台作业', exact: true }).click(); await page.getByRole('button', { name: '刷新记录', exact: true }).click(); await page.locator(`[data-information-id="${env.store.listJobs().find(item => item.kind === 'seat_analysis')!.id}"]`).click();
@@ -101,7 +101,7 @@ test('queued seat analysis reserves the conversation, cancellation releases it w
   try {
     await env.receive(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
     const calls = env.fake.calls.length; const queue = env.store.getControl('queue'); env.store.setControl('queue', queue.revision, false, env.actor.userId);
-    await login(page, 'a'); await inbox(page); await page.getByLabel('分析所属任务').selectOption(env.task.id);
+    await login(page, 'a'); await inbox(page); await page.getByLabel('会话保存位置').selectOption(env.task.id); await page.getByLabel('问题或工作要求').fill('请结合这份信息核实任务影响');
     await page.getByRole('button', { name: '提交后台分析', exact: true }).click(); await page.getByRole('button', { name: '确认提交后台分析', exact: true }).click();
     await expect.poll(() => env.store.listJobs().find(item => item.kind === 'seat_analysis')?.status).toBe('queued');
     await page.getByRole('button', { name: '进入关联对话', exact: true }).first().click(); await expect(page.getByRole('button', { name: '取消排队', exact: true })).toBeVisible();
@@ -118,8 +118,8 @@ test('received attachment downloads fixed bytes and imports as a normal workspac
     await env.receive('道路通行信息', true); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
     await login(page, 'a'); await inbox(page); const deepLink = page.url(); await page.reload(); await expect(page.getByRole('heading', { name: '道路通行信息', exact: true })).toBeVisible(); expect(page.url()).toBe(deepLink);
     await page.getByText('查看原文与附件', { exact: true }).click(); const downloading = page.waitForEvent('download'); await page.getByRole('button', { name: '下载 任务材料.txt', exact: true }).click(); const download = await downloading; expect(await readFile((await download.path())!, 'utf8')).toBe('附件原文：道路施工，等待恢复。');
-    await page.getByLabel('分析所属任务').selectOption(env.task.id); await page.getByRole('checkbox', { name: /任务材料.txt/ }).check(); const calls = env.fake.calls.length;
-    await page.getByRole('button', { name: '进入对话分析', exact: true }).click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue(/请结合这份信息/);
+    await page.getByLabel('会话保存位置').selectOption(env.task.id); await page.getByLabel('问题或工作要求').fill('请结合这份信息核实任务影响'); await page.getByRole('checkbox', { name: /任务材料.txt/ }).check(); const calls = env.fake.calls.length;
+    await page.getByRole('button', { name: '进入对话', exact: true }).click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue(/请结合这份信息/);
     const action = env.store.listActions().find(item => item.kind === 'analysis')!; expect(action.imports).toHaveLength(1);
     expect(await readFile(join(env.lab.files.filesDirectory(action.workspaceId!, 'a'), action.imports![0]!.path), 'utf8')).toBe('附件原文：道路施工，等待恢复。'); expect(env.fake.calls).toHaveLength(calls);
     await expect(page.getByRole('list', { name: '消息附件', exact: true })).toContainText('任务材料.txt');
@@ -222,7 +222,7 @@ test('linked conversation failures stay visible in the drawer; late failures can
   let release: (() => void) | undefined;
   try {
     await env.receive(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
-    await login(page, 'a'); await inbox(page); await page.getByLabel('分析所属任务').selectOption(env.task.id);
+    await login(page, 'a'); await inbox(page); await page.getByLabel('会话保存位置').selectOption(env.task.id); await page.getByLabel('问题或工作要求').fill('请结合这份信息核实任务影响');
     await page.getByRole('button', { name: '提交后台分析', exact: true }).click(); await page.getByRole('button', { name: '确认提交后台分析', exact: true }).click();
     await expect.poll(() => env.store.listJobs().find(item => item.kind === 'seat_analysis')?.status).toBe('succeeded');
     const job = env.store.listJobs().find(item => item.kind === 'seat_analysis')!;

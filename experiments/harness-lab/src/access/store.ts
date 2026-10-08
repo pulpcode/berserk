@@ -1,9 +1,10 @@
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
-import type { Identity, TaskInput, TaskSpace } from '../contracts/access.js';
+import type { Identity, TaskContext, TaskInput, TaskSpace } from '../contracts/access.js';
 import { UUID } from '../workspaces/store.js';
 import { stateError } from '../resources/files.js';
 import { RequestError } from '../contracts/errors.js';
+import { normalizeTaskContext } from './context.js';
 
 const missing = () => new RequestError('TASK_NOT_FOUND', '任务不存在或无权访问。', 404);
 const conflict = (message = '任务已变化，请查看最新说明后重试。') => new RequestError('TASK_CONFLICT', message, 409);
@@ -14,6 +15,9 @@ export function derivePassword(password: string, salt: string): Promise<Buffer> 
 function decodeTask(row: {id: unknown;data:unknown}): TaskSpace {
   const task=JSON.parse(String(row.data)) as TaskSpace;
   if(!task || typeof task!=='object' || task.id!==row.id || !UUID.test(task.id) || typeof task.title!=='string' || !task.title.trim() || task.title.length>60 || typeof task.goal!=='string' || task.goal.length>8000 || !['public','private'].includes(task.visibility) || !['active','archived'].includes(task.state) || !Number.isSafeInteger(task.revision) || task.revision<1 || !/^[a-zA-Z0-9_-]{1,64}$/.test(task.ownerSeatId) || !UUID.test(task.createdByUserId) || !UUID.test(task.updatedByUserId) || !Number.isFinite(Date.parse(task.createdAt)) || !Number.isFinite(Date.parse(task.updatedAt)))throw stateError();
+  if (task.context !== undefined) {
+    try { normalizeTaskContext(task.context); } catch { throw stateError(); }
+  }
   return task;
 }
 
@@ -71,6 +75,17 @@ export class AccessStore {
   list(seatId: string): TaskSpace[] {
     return this.db.prepare('SELECT id,data FROM task_spaces ORDER BY rowid DESC').all().map(row => decodeTask({id:row.id,data:row.data})).filter(task => task.visibility === 'public' || task.ownerSeatId === seatId);
   }
+  /** Service queries are explicitly public-only; no synthetic seat or workspace is involved. */
+  listActivePublic(): TaskSpace[] {
+    return this.db.prepare("SELECT id,data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row => decodeTask({id:row.id,data:row.data}));
+  }
+  getActivePublic(id: string): TaskSpace {
+    const row = this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
+    if (!row) throw missing();
+    const task = decodeTask({id:row.id,data:row.data});
+    if (task.visibility !== 'public' || task.state !== 'active') throw missing();
+    return task;
+  }
   get(id: string, seatId: string, write = false): TaskSpace {
     const row = this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
     if (!row) throw missing();
@@ -86,24 +101,31 @@ export class AccessStore {
   create(actor: Identity, input: TaskInput): TaskSpace {
     if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，工作任务还需要目标说明。');
     if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
-    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility]);
+    const context = input.context === undefined ? undefined : normalizeTaskContext(input.context);
+    // Keep legacy no-context creation receipts replayable without migrating task_actions.
+    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context ? [context] : [])]);
     const old = this.db.prepare('SELECT input,task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,input.clientActionId);
     if (old) { if (old.input !== digest) throw conflict('同一次创建的内容已变化，请先核对任务列表。'); return this.get(String(old.task_id),actor.seatId); }
     const time = new Date().toISOString();
-    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time};
+    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {})};
     this.db.exec('BEGIN IMMEDIATE');
     try { this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task)); this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id); this.db.exec('COMMIT'); }
     catch(error) { this.db.exec('ROLLBACK'); throw error; }
     return task;
   }
-  update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state']}, blocked: () => boolean = () => false): TaskSpace {
+  update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false): TaskSpace {
     const task = this.get(id,actor.seatId);
     // The existing public-create capability also governs all public task metadata management.
     const allowed = task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId;
     if (!allowed) throw new RequestError('FORBIDDEN','当前席位无权管理此任务。',403);
     if (task.revision !== revision) throw conflict();
     if (change.state === 'archived' && ((this.busy.get(id) || 0) > 0 || blocked())) throw conflict('任务仍有处理请求、写入或未完成工作，请结束后再归档。');
-    const next = {...task,...change,revision:task.revision+1,updatedByUserId:actor.userId,updatedAt:new Date().toISOString()};
+    const {context: requestedContext, ...metadata} = change;
+    const next: TaskSpace = {...task,...metadata,revision:task.revision+1,updatedByUserId:actor.userId,updatedAt:new Date().toISOString()};
+    if (requestedContext !== undefined) {
+      const context = requestedContext === null ? undefined : normalizeTaskContext(requestedContext);
+      if (context) next.context = context; else delete next.context;
+    }
     if (!next.title.trim() || next.title.length > 60 || next.goal.length > 8000 || (next.visibility === 'public' && !next.goal.trim())) throw new RequestError('INVALID_INPUT','请填写有效的任务名称与目标。');
     next.title = next.title.trim(); next.goal = next.goal.trim();
     this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify(next),id); return next;

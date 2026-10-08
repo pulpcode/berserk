@@ -1,0 +1,7 @@
+{
+  "systems": [
+    {"id":"intel","name":"模拟特情系统","adapter":"mock-information-http","baseUrl":"http://127.0.0.1:4401/intel","tokenEnv":"MOCK_CONTEXT_API_TOKEN"},
+    {"id":"situation","name":"模拟态势系统","adapter":"mock-situation-http","baseUrl":"http://127.0.0.1:4401/situation","tokenEnv":"MOCK_CONTEXT_API_TOKEN"}
+  ],
+  "scopes": [{"id":"demo-context","name":"演示业务资料","systemIds":["intel","situation"],"seatIds":["seat-a","seat-b"]}]
+}

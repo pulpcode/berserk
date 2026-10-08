@@ -348,3 +348,16 @@ npm run background:admin -- list --data-dir /绝对路径/数据目录 --service
 新增 SQLite 元数据以 schema v3 保存，Pi 原生历史不迁移、不另存一份聊天。文件位于 `background/events`（固定正文）、`background/files`（固定输入与交付副本）、`background/jobs/<id>`（预处理工作文件、原生会话和日志）；人员分析仍在原任务 × 席位目录。运行中异常退出后标为中断，不自动重放工具；排队项重启后重新校验再领取。
 
 `npm run probe:background` 使用临时账号／任务和新临时目录，调用真实模型与 Docker 验证上传、Python 处理、双席位投递、前台接手、后台分析及续聊，并完成 A 分派两份附件、B 签收修订并提交 A 的流程。`npm run probe:background -- --feedback` 单独验证后台命令受阻后继续读取。两者保存 `validation.json`，不启动生产监听器，不自动批准 shell；交接验收只确认脚本核对过的本次合成工作。发布需另行更新服务；回退前保留新收到的数据，使用匹配的旧程序与完整备份。
+
+## 多源上下文能力验证
+
+本阶段验证真实 HTTP 接入、任务关联查询、综合研判和结果后的提问与处理。模拟道路、车辆、资料范围与固定接收席位仅用于验收，不代表后续业务模型或能力边界；未实现地图、路网拓扑、动态路由或权限管理门户。
+
+- `fixtures/context-config.example.json`：系统适配及固定资料范围；复制到本地配置后，以绝对路径设置 `LAB_CONTEXT_CONFIG`。缺省不启用查询；无效配置令相关能力不可用，普通对话继续可用。
+- `fixtures/background-context.example.json`：两类来源和综合分析 Profile。按现有后台配置方式设置 `LAB_BACKGROUND_CONFIG`，两份入站来源令牌与 `MOCK_CONTEXT_API_TOKEN` 查询令牌分开配置；席位 ID 应与真实账号一致。来源权限及启用规则仍通过现有管理入口设置。
+- `npm run mock:context`：独立模拟 HTTP 服务。推进数据、生成通知及发送方法见 [模拟服务说明](scripts/mock-context/README.md)。新通知仍 POST 到原有集成接入接口。
+- 任务管理中的业务引用、区域、时间和主题均可留空。公共任务按当前管理权限维护，私有任务属于自己的席位。查询只返回任务元数据，不读取其文件或聊天。
+- 前台主 Agent 和获准 Profile 可使用 `information_search`、`information_read`、`situation_query`、`task_search`、`task_read`；宿主执行 HTTP 查询，沙盒网络及只读 Agents 权限保持原状。查询原文在 Pi 历史中保存，作业及收件详情可展开查看。
+- 收件中的“提问与处理”用于基于已有结论追问或开展工作。所选任务是会话和文件保存位置，不限制问题涉及哪些任务；准备会话不会调用模型。
+
+`npm run probe:context -- E1 E2` 使用 `.env.local` 中现有模型，在独立临时目录创建合成任务和两席位，真实调用模型及模拟 HTTP。不修改已有数据或线上服务。省略参数运行全部场景（包括条件互换、未知对象、来源不可用和旧通知晚到）；输出证据目录、作业 ID、实际查询和回答。自动断言只检查执行与查询链路，研判质量还需阅读回答及来源核对。单独验证旧通知晚到可运行 `npm run probe:context -- late-notice`。该查询验证无需 Docker，也不替代既有脚本/文件沙盒验收。

@@ -5,7 +5,7 @@ import type { BackgroundProfileSnapshot, InformationRuleInput } from '../contrac
 import { RequestError } from '../contracts/errors.js';
 
 export interface BackgroundSourceConfig {
-  sourceId: string; name: string; credentialRef: string;
+  sourceId: string; name: string; credentialRef: string; systemId?: string;
   allowedProfileIds: string[]; allowedRecipientSeatIds: string[];
 }
 export interface BackgroundConfig {
@@ -13,7 +13,7 @@ export interface BackgroundConfig {
   sources: BackgroundSourceConfig[]; profiles: BackgroundProfileSnapshot[];
 }
 const idPattern = /^[a-zA-Z0-9_-]{1,64}$/;
-const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent']);
+const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent', 'information_search', 'information_read', 'situation_query', 'task_search', 'task_read']);
 const fail = () => new Error('后台配置无效，请核对来源、处理方案及容量；凭证只通过环境变量提供。');
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw fail();
@@ -42,7 +42,7 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
   if (raw.enabled !== undefined && typeof raw.enabled !== 'boolean') throw fail();
   if (!Array.isArray(raw.sources) || !Array.isArray(raw.profiles) || raw.sources.length > 100 || raw.profiles.length > 100) throw fail();
   const profiles = raw.profiles.map(item => {
-    const p = record(item); fields(p, ['id', 'name', 'goal', 'tools', 'skillIds', 'agentIds', 'instructions', 'resources']);
+    const p = record(item); fields(p, ['id', 'name', 'goal', 'tools', 'skillIds', 'agentIds', 'instructions', 'resources', 'contextScopeId']);
     const selectedTools = list(p.tools); if (!selectedTools.length || selectedTools.some(tool => !tools.has(tool))) throw fail();
     if (p.resources !== undefined && (!Array.isArray(p.resources) || p.resources.length > 100)) throw fail();
     const resources = ((p.resources ?? []) as unknown[]).map(item => {
@@ -53,14 +53,14 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
     const instructions = text(p.instructions ?? '', 16_384, true);
     if (Buffer.byteLength(instructions, 'utf8') > 16_384) throw fail();
     return {id: identifier(p.id), name: text(p.name ?? p.id, 100), goal: text(p.goal, 16_000), tools: selectedTools,
-      skillIds: list(p.skillIds, true), agentIds: list(p.agentIds, true), instructions, resources};
+      ...(p.contextScopeId === undefined ? {} : {contextScopeId: identifier(p.contextScopeId)}), skillIds: list(p.skillIds, true), agentIds: list(p.agentIds, true), instructions, resources};
   });
   const sources = raw.sources.map(item => {
-    const s = record(item); fields(s, ['sourceId', 'name', 'credentialRef', 'allowedProfileIds', 'allowedRecipientSeatIds']);
+    const s = record(item); fields(s, ['sourceId', 'name', 'credentialRef', 'allowedProfileIds', 'allowedRecipientSeatIds', 'systemId']);
     const credentialRef = text(s.credentialRef, 100); if (!/^[A-Z][A-Z0-9_]{0,99}$/.test(credentialRef)) throw fail();
     const allowedProfileIds = list(s.allowedProfileIds), allowedRecipientSeatIds = list(s.allowedRecipientSeatIds);
     if (!allowedProfileIds.length || !allowedRecipientSeatIds.length || allowedProfileIds.some(id => !profiles.some(p => p.id === id))) throw fail();
-    return {sourceId: identifier(s.sourceId), name: text(s.name, 100), credentialRef, allowedProfileIds, allowedRecipientSeatIds};
+    return {...(s.systemId === undefined ? {} : {systemId: identifier(s.systemId)}), sourceId: identifier(s.sourceId), name: text(s.name, 100), credentialRef, allowedProfileIds, allowedRecipientSeatIds};
   });
   if (new Set(sources.map(s => s.sourceId)).size !== sources.length || new Set(profiles.map(p => p.id)).size !== profiles.length || new Set(sources.map(s => s.credentialRef)).size !== sources.length) throw fail();
   return {enabled: raw.enabled === true, concurrency: limit(raw.concurrency, 1, 32), modelConcurrency: limit(raw.modelConcurrency, 2, 64), backlogLimit: limit(raw.backlogLimit, 100, 100_000), sources, profiles};

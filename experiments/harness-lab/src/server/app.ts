@@ -1,3 +1,5 @@
+import { loadContextConfig, type ContextConfig } from '../context/config.js';
+import { ContextService } from '../context/service.js';
 import { BackgroundStore } from '../background/store.js';
 import { BackgroundService } from '../background/service.js';
 import { loadBackgroundConfig, type BackgroundConfig } from '../background/config.js';
@@ -17,7 +19,13 @@ import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
 
-export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}) {
+export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}, contextOptions?: {config: ContextConfig; env?: NodeJS.ProcessEnv}) {
+  if (!lab.context) {
+    try {
+      const config = contextOptions?.config ?? await loadContextConfig();
+      if (config) lab.context = new ContextService(config, contextOptions?.env);
+    } catch { lab.contextUnavailable = true; }
+  }
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
   if (!backgroundConfig && lab.access && Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version) >= 3) {
     const existing = new BackgroundStore(lab.access.db);
@@ -70,6 +78,10 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   const params = scope.params({ id: { type: 'string', pattern: '^[0-9a-f-]{36}$' } });
   await fileRoutes(app, lab.files, lab.config.fileLimits?.maxFileBytes ?? 100 * 1024 * 1024, scope);
   await collaborationRoutes(app, lab, scope);
+  app.get(`${scope.base}/context/catalog`, {schema: {querystring: {type: 'object', additionalProperties: false}}}, async request => {
+    if (lab.contextUnavailable) throw new RequestError('CONTEXT_UNAVAILABLE', '业务资料配置不可用，请检查服务配置。', 503);
+    return lab.context?.catalog(scope.seat(request)) ?? {systems: []};
+  });
   const settingsQuery = { type: 'object', additionalProperties: false };
   const requireModelSettings = async (request: FastifyRequest) => {
     if (lab.access && !identityOf(request).manageModelSettings) throw new RequestError('FORBIDDEN', '当前席位无权管理模型配置。', 403);

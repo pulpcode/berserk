@@ -14,7 +14,7 @@ const active = new Set(['queued', 'running']);
 const indexes = ['background_jobs_queue', 'background_jobs_reserved_session', 'background_deliveries_inbox', 'information_rules_enabled_source'];
 const tables = ['background_events', 'background_jobs', 'background_deliveries', 'information_rules', 'information_grants', 'background_actions', 'background_controls'];
 export const backgroundHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string};
+export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string; searchContentEventIds?: string[]};
 export type NewBackgroundAction = Omit<BackgroundAction, 'id' | 'status' | 'revision' | 'createdAt' | 'updatedAt'> & {id?: string};
 
 function decode<T extends {id: string; revision: number}>(row: Record<string, unknown> | undefined): T {
@@ -28,6 +28,16 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
       if (data[field] !== undefined && (typeof data[field] !== 'string' || !UUID.test(data[field]))) throw stateError();
     }
     if (data.sourceId !== undefined && (typeof data.sourceId !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(data.sourceId))) throw stateError();
+    const contextId = (value: unknown) => typeof value === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value);
+    if (data.systemId !== undefined && !contextId(data.systemId)) throw stateError();
+    const profile = (data.ruleSnapshot as BackgroundRuleSnapshot | undefined)?.profile;
+    if (profile?.contextScopeId !== undefined && !contextId(profile.contextScopeId)) throw stateError();
+    for (const scope of [data.contextScope,profile?.contextScope].filter(scope => scope !== undefined)) {
+      const value = scope as {scopeId?:unknown;systemIds?:unknown};
+      if (!value || typeof value !== 'object' || Object.keys(value).some(key => !['scopeId','systemIds'].includes(key)) || !contextId(value.scopeId)
+        || !Array.isArray(value.systemIds) || !value.systemIds.length || value.systemIds.some(id => !contextId(id)) || new Set(value.systemIds).size !== value.systemIds.length) throw stateError();
+    }
+    if (profile?.contextScopeId && profile.contextScope?.scopeId !== profile.contextScopeId) throw stateError();
     const columns: Record<string, string> = {source_id:'sourceId', message_id:'sourceMessageId', payload_hash:'payloadHash', received_at:'receivedAt', initial_job_id:'initialJobId', event_id:'eventId', job_id:'jobId', kind:'kind', status:'status', created_at:'createdAt', session_id:'sessionId', seat_id:'seatId', task_id:'taskSpaceId', user_id:'userId', client_action_id:'clientActionId'};
     for (const [column, field] of Object.entries(columns)) {
       const property = column === 'seat_id' && 'job_id' in row ? 'recipientSeatId' : field;
@@ -360,8 +370,9 @@ export class BackgroundStore {
     if (filter.search) {
       if (table === 'background_jobs') {
         // Only searchable public source metadata, never a seat's goal, task or native history.
-        clauses.push("(instr(id,?)>0 OR EXISTS(SELECT 1 FROM background_events e WHERE e.id=background_jobs.event_id AND (instr(json_extract(e.data,'$.title'),?)>0 OR instr(e.message_id,?)>0)))");
+        clauses.push("(instr(id,?)>0 OR EXISTS(SELECT 1 FROM background_events e WHERE e.id=background_jobs.event_id AND (instr(json_extract(e.data,'$.title'),?)>0 OR instr(e.message_id,?)>0)" + (filter.searchContentEventIds ? ' AND e.id IN (SELECT value FROM json_each(?))' : '') + '))');
         values.push(filter.search, filter.search, filter.search);
+        if (filter.searchContentEventIds) values.push(JSON.stringify(filter.searchContentEventIds));
       } else { clauses.push("instr(lower(json_extract(data,'$.title')),lower(?))>0"); values.push(filter.search); }
     }
     const where = clauses.length ? ` WHERE ${clauses.join(' AND ')}` : '';

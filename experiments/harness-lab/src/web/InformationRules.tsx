@@ -14,6 +14,7 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
   const lock = useRef(false); const generation = useRef(0);
   const managed = capabilities.sources.filter(source => source.permission === 'manage');
   const source = capabilities.sources.find(source => source.sourceId === editor?.draft.sourceId);
+  const profile = capabilities.profiles.find(item => item.id === editor?.draft.profileId);
   const canEdit = source?.permission === 'manage';
   useEffect(() => {
     if (!visible || !selectedId || selectedId === editor?.key) return;
@@ -30,7 +31,7 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
   }
   function change(value: Partial<InformationRuleInput>) { generation.current++; setEditor(current => current && ({ ...current, draft: { ...current.draft, ...value } })); }
   async function save() {
-    if (!editor || !canEdit || lock.current || editor.conflict) return;
+    if (!editor || !canEdit || lock.current || editor.conflict || profile?.configurationError) return;
     lock.current = true; setBusy(true); setError(''); setNotice('');
     const captured = editor; const editVersion = generation.current;
     try {
@@ -64,15 +65,18 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
         <header><h2>{editor.base ? '规则详情' : '新建规则'}</h2>{!canEdit && <span className="information-tag">只读</span>}</header>
         <label>规则名称<input required maxLength={100} value={editor.draft.name} disabled={!canEdit} onChange={event => change({ name: event.target.value })} /></label>
         <label>接入来源<select value={editor.draft.sourceId} disabled={Boolean(editor.base) || !canEdit} onChange={event => { const selected = capabilities.sources.find(item => item.sourceId === event.target.value)!; change({ sourceId: selected.sourceId, profileId: selected.allowedProfileIds[0] || '', recipientSeatIds: [] }); }}><option value="" disabled>选择来源</option>{capabilities.sources.filter(item => item.permission === 'manage' || item.sourceId === editor.draft.sourceId).map(item => <option key={item.sourceId} value={item.sourceId}>{item.name}</option>)}</select></label>
-        <label>预处理方案<select required value={editor.draft.profileId} disabled={!canEdit} onChange={event => change({ profileId: event.target.value })}><option value="" disabled>选择方案</option>{capabilities.profiles.filter(item => source?.allowedProfileIds.includes(item.id)).map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><p className="resource-help">{capabilities.profiles.find(item => item.id === editor.draft.profileId)?.goal}</p>
+        <label>处理方案<select required value={editor.draft.profileId} disabled={!canEdit} onChange={event => change({ profileId: event.target.value })}><option value="" disabled>选择方案</option>{capabilities.profiles.filter(item => source?.allowedProfileIds.includes(item.id)).map(item => <option key={item.id} value={item.id} disabled={Boolean(item.configurationError)}>{item.name}{item.configurationError?'（配置不可用）':''}</option>)}</select></label><p className="resource-help">{profile?.goal}</p>
+        {profile?.configurationError && <p className="resource-error" role="alert">此处理方案暂不可用：{profile.configurationError}</p>}
+        {profile?.contextScope && <p className="resource-help">允许查询的系统：{(profile.contextScope.systemNames || profile.contextScope.systemIds).join('、')}</p>}
         <fieldset><legend>接收席位</legend>{capabilities.seats.filter(item => source?.allowedRecipientSeatIds.includes(item.id)).map(seat => <label className="information-check" key={seat.id}><input type="checkbox" disabled={!canEdit} checked={editor.draft.recipientSeatIds.includes(seat.id)} onChange={event => change({ recipientSeatIds: event.target.checked ? [...editor.draft.recipientSeatIds, seat.id] : editor.draft.recipientSeatIds.filter(id => id !== seat.id) })} />{seat.name}</label>)}</fieldset>
         <label>工作任务展示归属（可选）<select value={editor.draft.publicTaskId || ''} disabled={!canEdit} onChange={event => change({ publicTaskId: event.target.value || undefined })}><option value="">不关联</option>{tasks.filter(task => task.visibility === 'public').map(task => <option key={task.id} value={task.id}>{task.title}{task.state === 'archived' ? '（已归档）' : ''}</option>)}</select></label>
+        <p className="resource-help">展示归属只用于分类，不限定可能涉及的任务，也不扩大查询权限。</p>
         <label className="information-check"><input type="checkbox" checked={editor.draft.enabled} disabled={!canEdit} onChange={event => change({ enabled: event.target.checked })} />启用规则</label>
-        <p className="resource-help">预处理完成后投递所选席位，等待席位人员发起分析。停用规则后仍接收信息，但不自动处理。</p>
+        <p className="resource-help">处理结果投递所选席位，人员可围绕结论提问或开展后续工作。停用规则后仍接收信息，但不自动处理。</p>
         {error && <p className="resource-error" role="alert">{error} 你的编辑已保留。</p>}{notice && <p className="resource-success" role="status">{notice}</p>}
         {editor.conflict && <button type="button" disabled={busy} onClick={() => void latest()}>{editor.base ? '查看最新规则' : '核对保存结果'}</button>}
         {editor.latest && <aside className="task-comparison"><strong>最新规则（你的编辑仍保留）</strong><p>{editor.latest.name} · {editor.latest.enabled ? '启用' : '停用'} · 版本 {editor.latest.revision}</p><p>处理方案：{capabilities.profiles.find(item => item.id === editor.latest!.profileId)?.name || editor.latest.profileId}</p><p>接收席位：{editor.latest.recipientSeatIds.map(id => capabilities.seats.find(seat => seat.id === id)?.name || id).join('、')}</p><button type="button" onClick={() => { setEditor(current => current?.latest ? { ...current, base: current.latest, latest: undefined, conflict: false } : current); setError(''); }}>已核对，继续合并编辑</button></aside>}
-        {canEdit && <button className="primary-action" type="submit" disabled={busy || editor.conflict || !editor.draft.name.trim() || !editor.draft.profileId || !editor.draft.recipientSeatIds.length}>{busy ? '保存中…' : '保存规则'}</button>}
+        {canEdit && <button className="primary-action" type="submit" disabled={busy || editor.conflict || Boolean(profile?.configurationError) || !editor.draft.name.trim() || !editor.draft.profileId || !editor.draft.recipientSeatIds.length}>{busy ? '保存中…' : '保存规则'}</button>}
       </form>}</div></div>
   </section>;
 }

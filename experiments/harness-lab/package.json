@@ -31,7 +31,10 @@
     "access:admin": "tsx scripts/access-admin.ts",
     "probe:access": "tsx --env-file-if-exists=.env.local scripts/probe-access.ts",
     "background:admin": "tsx --env-file-if-exists=.env.local --env-file-if-exists=.env.auth.local scripts/background-admin.ts",
-    "probe:background": "tsx --env-file-if-exists=.env.local scripts/probe-background.ts"
+    "probe:background": "tsx --env-file-if-exists=.env.local scripts/probe-background.ts",
+    "mock:context": "tsx --env-file-if-exists=.env.local scripts/mock-context/main.ts",
+    "mock:context:control": "tsx scripts/mock-context/control.ts",
+    "probe:context": "tsx --env-file-if-exists=.env.local scripts/probe-context.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

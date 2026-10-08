@@ -5,6 +5,7 @@ import type { BackgroundDelivery, BackgroundEventDetail, BackgroundEventSummary,
 import { useApi } from './api';
 import { InformationRules } from './InformationRules';
 import { Message } from './ChatMessage';
+import { ContextEvidence, isContextEvidence } from './ContextEvidence';
 import type { ChatFocusTransfer } from './useChatItemFocus';
 import { AnalysisHistory, deliveryLabels, InformationFiles, InformationPagination, InformationText, informationError, informationTime, jobLabels, useInformationQuery } from './information-ui';
 import { InformationDrawer, InformationJobColumn, JobDeliverySummary, JobStatus, jobColumns, jobPhases, jobTitle } from './InformationJobs';
@@ -101,18 +102,21 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
         {feedback}{detailError && <p className="resource-error" role="alert">{detailError}<button onClick={refresh}>重新读取详情</button></p>}
         {route.tab === 'events' ? !shownEvent ? !detailError && <p role="status">正在读取信息…</p> : <>
           <header><h2>{shownEvent.title}</h2><p>{sourceName(shownEvent.sourceId)} · {informationTime(shownEvent.receivedAt)}</p></header>
+          {shownEvent.contentRestricted ? <><p className="resource-help">无该资料范围访问权限，仅可查看处理状态。</p>{shownEvent.jobs.map(item=><p key={item.id}><JobStatus status={item.status}/> · {informationTime(item.createdAt)}</p>)}</> : <>
           <section><h3>原文与附件</h3><InformationText>{shownEvent.text}</InformationText><InformationFiles files={shownEvent.files} base={`/api/information/events/${encodeURIComponent(shownEvent.id)}/files`} /></section>
           <section><h3>使用规则</h3>{shownEvent.ruleSnapshot ? <p>{shownEvent.ruleSnapshot.rule.name} · 版本 {shownEvent.ruleSnapshot.rule.revision} · {shownEvent.ruleSnapshot.profile.name}</p> : <><p>未匹配处理规则，尚未调用模型。</p>{canManage(shownEvent.sourceId) && <button disabled={busy} onClick={() => void mutate(`/api/information/events/${encodeURIComponent(shownEvent.id)}/process`, {}, 'POST', true)}>按当前规则处理</button>}</>}</section>
           <section><h3>各次执行与投递</h3>{shownEvent.jobs.filter(item => item.kind === 'preprocess').map(item => <div className="information-job-history" key={item.id} data-job-id={item.id}>
             <div className="information-step"><JobStatus status={item.status} /><time>{informationTime(item.createdAt)}</time><small>{item.id.slice(0, 8)}</small><button onClick={() => navigate({ tab: 'jobs', id: item.id, status: '', offset: 0 })}>查看作业<ArrowRight size={14} aria-hidden="true" /></button></div>
             {item.error && <p className="resource-error">{item.error.message}</p>}
-            {shownEvent.results.find(result => result.jobId === item.id) && <details><summary>处理答复</summary><InformationText>{shownEvent.results.find(result => result.jobId === item.id)!.text}</InformationText></details>}
+            {shownEvent.results.find(result => result.jobId === item.id) && <details><summary>处理结果</summary><InformationText>{shownEvent.results.find(result => result.jobId === item.id)!.text}</InformationText></details>}
             {deliveries(shownEvent.deliveries.filter(delivery => delivery.jobId === item.id), shownEvent.sourceId)}
           </div>)}</section>
           <AnalysisHistory items={shownEvent.analyses} seats={capabilities.seats} openSession={openSession} />
+          </>}
         </> : !shownJob ? !detailError && <p role="status">正在读取作业…</p> : <>
           <header><h2>{jobTitle(shownJob, seatName)}</h2><JobStatus status={shownJob.status} /><p>{sourceName(shownJob.sourceId)} · {shownJob.kind === 'preprocess' ? '自动预处理' : '席位后台分析'}{shownJob.seatId ? ` · ${seatName(shownJob.seatId)}` : ''}</p></header>
           <dl className="information-metadata"><dt>排队时间</dt><dd>{informationTime(shownJob.createdAt)}</dd><dt>开始时间</dt><dd>{informationTime(shownJob.startedAt)}</dd><dt>结束时间</dt><dd>{informationTime(shownJob.endedAt)}</dd>{shownJob.status === 'running' && shownJob.phase && <><dt>当前阶段</dt><dd>{jobPhases[shownJob.phase]}</dd></>}</dl>
+          {shownJob.contentRestricted ? <p className="resource-help">无该资料范围访问权限，仅可查看处理状态。</p> : <>
           <div className="information-actions">
             {(shownJob.kind === 'preprocess' ? canManage(shownJob.sourceId) : shownJob.sessionId) && ['queued', 'running'].includes(shownJob.status) && <button disabled={busy} onClick={() => void mutate(`/api/${shownJob.kind === 'preprocess' ? 'information' : 'background'}/jobs/${encodeURIComponent(shownJob.id)}/cancel`, { revision: shownJob.revision })}>取消{shownJob.kind === 'preprocess' ? '预处理' : '后台分析'}</button>}
             {shownJob.kind === 'preprocess' && canManage(shownJob.sourceId) && !['queued', 'running'].includes(shownJob.status) && <button disabled={busy} onClick={() => { if (window.confirm('沿用原输入和规则快照，启动新的预处理作业；已有记录保留。是否继续？')) void mutate(`/api/information/jobs/${encodeURIComponent(shownJob.id)}/reprocess`, {}, 'POST', true); }}>重新预处理</button>}
@@ -121,15 +125,17 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
           </div>
           {shownJob.input && <section><h3>原始输入与附件</h3><InformationText>{shownJob.input.text}</InformationText><InformationFiles files={shownJob.input.files} base={`/api/information/events/${encodeURIComponent(shownJob.eventId)}/files`} /><button onClick={() => navigate({ tab: 'events', id: shownJob.eventId, status: '', offset: 0 })}>查看来源信息</button></section>}
           {shownJob.error && <section><h3>执行错误</h3><p className="resource-error">{shownJob.error.message}</p></section>}
-          {shownJob.text !== undefined && <section><h3>处理答复</h3><InformationText>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
+          {shownJob.text !== undefined && <section><h3>处理结果</h3>{shownJob.profileName && <p className="resource-help">处理方案：{shownJob.profileName}</p>}<InformationText>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
+          <ContextEvidence messages={shownJob.snapshot?.messages}/>
           {shownJob.kind === 'preprocess' && <section><h3>本次投递</h3>{deliveries(shownJob.deliveries || [], shownJob.sourceId)}</section>}
           {shownJob.snapshot && <details className="information-original"><summary>查看执行过程</summary>
             {shownJob.snapshot.commandPolicies?.map((record, index) => <div className="information-command-policy" key={`${record.requestId}:${record.toolCallId}:${index}`}>
               <strong>{record.execution === 'not_started' ? '未执行' : record.execution === 'succeeded' ? '执行成功' : record.execution === 'failed' ? '执行失败' : '执行结果未知'}</strong>
               <pre>{record.command}</pre><p>工作目录：<code>{record.cwd}</code></p><p>{record.policy.reason}</p>
             </div>)}
-            {shownJob.snapshot.messages.map(message => <Message key={message.id} message={{ ...message, attachments: undefined }} active={shownJob.status === 'running'} workspaceId={shownJob.snapshot!.workspaceId} focusKey={message.id} focusTransfers={focusTransfers} />)}
+            {shownJob.snapshot.messages.filter(message=>!isContextEvidence(message)).map(message => <Message key={message.id} message={{ ...message, attachments: undefined }} active={shownJob.status === 'running'} workspaceId={shownJob.snapshot!.workspaceId} focusKey={message.id} focusTransfers={focusTransfers} />)}
           </details>}
+          </>}
         </>}
       </InformationDrawer>}
     </>}

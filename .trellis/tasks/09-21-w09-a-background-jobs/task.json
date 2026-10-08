@@ -2,7 +2,7 @@
   "id": "w09-a-background-jobs",
   "name": "w09-a-background-jobs",
   "title": "任务与后台作业分阶段规划",
-  "description": "保留讨论快照；第一增量已实现部署，第二增量信息处理与席位投递已完成开发验证并部署待用户验收，第三增量独立设计。",
+  "description": "保留原讨论快照；前两增量已实现部署，第三增量多源上下文接入与自动综合研判已完成能力验证实现，待用户验收、尚未部署；动态席位路由后置。",
   "status": "planning",
   "dev_type": "fullstack",
   "scope": "background-jobs",
@@ -20,7 +20,8 @@
   "subtasks": [],
   "children": [
     "09-21-task-scope-and-seat-access",
-    "09-21-background-execution"
+    "09-21-background-execution",
+    "09-23-multisource-context-analysis"
   ],
   "parent": null,
   "relatedFiles": [
@@ -47,7 +48,7 @@
       "W08-A",
       "W09-A"
     ],
-    "proposal": "第二增量已实现后台预处理、多席位投递、人员分析与信息处理中心；跨系统上下文查询及智能分流后续独立设计。",
+    "proposal": "第三增量已实现跨系统只读查询、任务关注范围、综合研判与人员接续，用于能力验证，不固化最终场景；固定多席位投递继续复用。",
     "pendingProductDecisions": [],
     "implementationTarget": false,
     "snapshot": "research/snapshots/2026-09-21-background-proposal/README.md"

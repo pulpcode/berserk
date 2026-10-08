@@ -18,7 +18,10 @@ export async function snapshotBackgroundProfile(lab: PiLab, profile: BackgroundP
     return structuredClone(role);
   });
   const skills = await loadControlledSkills(profile.skillIds);
-  return { ...structuredClone(profile), skills, agents };
+  if (profile.contextScopeId && !lab.context) throw new RequestError('CONTEXT_UNAVAILABLE', '业务资料配置不可用，未启动综合查询。', 503);
+  const contextScope = profile.contextScopeId ? lab.context!.scopeSnapshot(profile.contextScopeId) : undefined;
+  if (!contextScope && profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE', '查询方案须配置业务资料范围。', 503);
+  return { ...structuredClone(profile), skills, agents, ...(contextScope ? {contextScope} : {}) };
 }
 
 function resources(profile: BackgroundProfileSnapshot, jobId: string): ResourceSnapshot {
@@ -62,6 +65,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         if (!input.profile) throw new RequestError('BACKGROUND_PROFILE_MISSING', '后台处理方案快照缺失。', 409);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, job.id), roles: input.profile.agents!, tools: input.profile.tools,
+          ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
           publish: input.publish });
         running.set(job.id, prepared.cancel);
         if (cancelled) prepared.cancel();
