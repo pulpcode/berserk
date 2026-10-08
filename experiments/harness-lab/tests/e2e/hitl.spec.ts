@@ -60,10 +60,11 @@ for (const count of [0, 2]) test(`assignment card shows ${count} actual attachme
   const files = Array.from({ length: count }, (_, index) => ({ fileId: `file-${index}`, name: index ? '修订要求.md' : '初稿.md', size: 42, hash: 'a'.repeat(64), createdAt: base.createdAt }));
   item.toolName = count ? 'work_item_action' : 'work_item_commit';
   item.rule = { ruleId: 'work-item-commit', reason: '正式交接需要用户确认', version: '1' };
-  item.action = { title: '分派工作', description: '随附两份文件，接收后修订初稿。', parameters: count ? { action: { kind: 'assign', payload: { assigneeSeatId: 'seat-b', title: '修订', goal: '修订说明', inputPaths: ['初稿.md', '修订要求.md'] } } } : { operationId: 'op1' }, handoff: { operationId: 'op1', kind: 'assign', title: '分派工作', description: '随附两份文件，接收后修订初稿。', files } };
+  item.action = { title: '分派「修订说明」给 B', description: '随附两份文件，接收后修订初稿。', parameters: count ? { action: { kind: 'assign', payload: { assigneeSeatId: 'seat-b', title: '修订', goal: '修订说明', inputPaths: ['初稿.md', '修订要求.md'] } } } : { operationId: 'op1' }, handoff: { operationId: 'op1', kind: 'assign', title: '分派「修订说明」给 B', description: '随附两份文件，接收后修订初稿。', files } };
   const { state } = await fixture(page, item);
   const card = page.getByRole('region', { name: '操作确认', exact: true });
   const attachments = card.getByRole('region', { name: '本次附件', exact: true });
+  await expect(card.getByRole('heading', { level: 3, name: item.action.title, exact: true })).toBeVisible();
   await expect(attachments.getByRole('heading', { name: `本次附件：${count} 个` })).toBeVisible();
   expect((await attachments.boundingBox())!.y).toBeLessThan((await card.getByText(item.action.description, { exact: true }).boundingBox())!.y);
   if (count) {
@@ -78,19 +79,100 @@ for (const count of [0, 2]) test(`assignment card shows ${count} actual attachme
   await page.reload();
   await expect(attachments.getByRole('heading', { name: `本次附件：${count} 个` })).toBeVisible();
   expect(state.posts).toHaveLength(0);
-  await card.getByRole('button', { name: '确认执行', exact: true }).click();
+  await card.getByRole('button', { name: '确认分派', exact: true }).click();
   expect(state.posts).toEqual([{ requestId: 'r1', kind: 'confirmation', decision: 'approve' }]);
 });
 
-for (const kind of ['claim', 'submit', 'review'] as const) test(`${kind} confirmation does not show assignment attachment warnings`, async ({ page }) => {
+for (const { kind, label, title } of [
+  { kind: 'claim', label: '确认签收', title: '签收「修订说明」' },
+  { kind: 'submit', label: '确认提交', title: '提交「修订说明」' },
+  { kind: 'review', label: '确认审核', title: '审核「修订说明」' },
+] as const) test(`${kind} confirmation names its action and does not show assignment attachment warnings`, async ({ page }) => {
   const item = confirmation();
   item.toolName = 'work_item_commit';
   item.rule = { ruleId: 'work-item-commit', reason: '正式交接需要用户确认', version: '1' };
-  item.action = { title: '交接操作', description: '核对操作内容', parameters: { operationId: 'op1' }, handoff: { operationId: 'op1', kind, title: '交接操作', description: '核对操作内容', files: [] } };
-  await fixture(page, item);
-  await expect(page.getByRole('region', { name: '操作确认', exact: true })).toBeVisible();
+  item.action = { title, description: '核对操作内容', parameters: { operationId: 'op1' }, handoff: { operationId: 'op1', kind, title, description: '核对操作内容', files: [] } };
+  const { state } = await fixture(page, item);
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  await expect(card.getByRole('heading', { level: 3, name: title, exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: '本次附件', exact: true })).toHaveCount(0);
   await expect(page.getByText(/本次未附文件/)).toHaveCount(0);
+  await card.getByRole('button', { name: label, exact: true }).click();
+  expect(state.posts).toEqual([{ requestId: 'r1', kind: 'confirmation', decision: 'approve' }]);
+});
+
+for (const viewport of [
+  { name: 'desktop', width: 1280, height: 900 },
+  { name: 'mobile', width: 375, height: 812 },
+]) test(`pending confirmation is fully reviewable on ${viewport.name}`, async ({ page }) => {
+  await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  const item = confirmation();
+  const { state } = await fixture(page, item);
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  await expect(card.getByRole('heading', { level: 3, name: item.action.title, exact: true })).toBeVisible();
+  await expect(card.getByText('请确认本次操作', { exact: true })).toHaveCount(0);
+  await expect(card.getByText(item.action.description, { exact: true })).toBeVisible();
+  await expect(card.getByLabel('完整命令', { exact: true })).toHaveText(item.action.command!);
+  await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
+  await expect(card.getByText(item.action.cwd!, { exact: true })).toBeVisible();
+  await expect(card.getByText(item.rule.reason, { exact: true })).toBeVisible();
+  await expect(card.getByRole('button', { name: '允许本次执行', exact: true })).toBeEnabled();
+  await expect(card.locator('details.confirmation-history')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: test.info().outputPath(`confirmation-pending-${viewport.name}.png`), fullPage: true });
+  expect(state.posts).toHaveLength(0); expect(state.sends).toBe(0);
+});
+
+test('confirmation without a command keeps a generic explicit approval action', async ({ page }) => {
+  const item = confirmation();
+  item.action = { title: '应用文件变更', description: '核对后应用本次文件变更。', parameters: {} };
+  const { state } = await fixture(page, item);
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  await expect(card.getByRole('heading', { level: 3, name: item.action.title, exact: true })).toBeVisible();
+  await card.getByRole('button', { name: '确认执行', exact: true }).click();
+  await expect(card.locator('details.confirmation-history > summary').getByText('执行结果待确认。', { exact: true })).toBeVisible();
+  expect(state.posts).toEqual([{ requestId: 'r1', kind: 'confirmation', decision: 'approve' }]);
+});
+
+for (const scenario of [
+  { status: 'approved', label: '已确认', execution: undefined, outcome: '执行结果待确认。' },
+  { status: 'approved', label: '已确认', execution: 'succeeded', outcome: '执行已完成。' },
+  { status: 'approved', label: '已确认', execution: 'failed', outcome: '执行失败，请查看详情。' },
+  { status: 'approved', label: '已确认', execution: 'unknown', outcome: '执行结果未确认，请核对后再继续。' },
+  { status: 'approved', label: '已确认', execution: 'not_started', outcome: '未执行：操作在开始前已停止。' },
+  { status: 'rejected', label: '已拒绝', execution: undefined, outcome: undefined },
+  { status: 'cancelled', label: '已取消', execution: undefined, outcome: undefined },
+  { status: 'expired', label: '已失效', execution: undefined, outcome: undefined },
+] as const) test(`${scenario.status} confirmation history keeps ${scenario.execution ?? 'no execution evidence'} visible while collapsed`, async ({ page }) => {
+  const item: ConfirmationInteraction = { ...confirmation(), status: scenario.status, execution: scenario.execution, reason: '历史记录只供核对，不能再次执行。' };
+  const { a, state } = await fixture(page, item);
+  a.active = null;
+  a.messages[1] = { ...a.messages[1], text: '工具返回的原始记录：已保留本次操作详情。' };
+  await page.reload();
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  const history = card.locator('details.confirmation-history');
+  const summary = history.locator(':scope > summary');
+  await expect(history).toHaveJSProperty('open', false);
+  await expect(summary.getByText(item.action.title, { exact: true })).toBeVisible();
+  await expect(summary.getByText(scenario.label, { exact: true })).toBeVisible();
+  if (scenario.outcome) await expect(summary.getByText(scenario.outcome, { exact: true })).toBeVisible();
+  await expect(card.getByLabel('完整命令', { exact: true })).toBeHidden();
+  await expect(card.getByText(item.action.description, { exact: true })).toBeHidden();
+  await expect(card.getByRole('button', { name: /^(允许本次执行|确认执行|拒绝)$/ })).toHaveCount(0);
+  if (scenario.execution === 'unknown') await page.screenshot({ path: test.info().outputPath('confirmation-history-collapsed.png'), fullPage: true });
+  await summary.focus(); await page.keyboard.press('Enter');
+  await expect(history).toHaveJSProperty('open', true);
+  await expect(card.getByText(item.action.description, { exact: true })).toBeVisible();
+  await expect(card.getByLabel('完整命令', { exact: true })).toHaveText(item.action.command!);
+  await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
+  await expect(card.getByText(item.action.cwd!, { exact: true })).toBeVisible();
+  await expect(card.getByText(item.rule.reason, { exact: true })).toBeVisible();
+  await expect(card.getByText(item.reason!, { exact: true })).toBeVisible();
+  await history.locator('.interaction-result > summary').click();
+  await expect(history.getByText(a.messages[1].text, { exact: true })).toBeVisible();
+  if (scenario.execution === 'unknown') await page.screenshot({ path: test.info().outputPath('confirmation-history-expanded.png'), fullPage: true });
+  await summary.click(); await expect(history).toHaveJSProperty('open', false);
+  expect(state.posts).toHaveLength(0); expect(state.sends).toBe(0);
 });
 
 for (const initial of [question(), confirmation()]) test(`restart expires ${initial.kind} without reopening old controls or resending chat`, async ({ page }) => {
@@ -101,7 +183,7 @@ for (const initial of [question(), confirmation()]) test(`restart expires ${init
   a.interactions = [{ ...initial, status: 'expired', reason: '服务重启，交互已失效' }];
   await page.reload();
   await expect(page.getByText('已失效', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: '确认执行', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '允许本次执行', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '提交回答', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '停止回复', exact: true })).toHaveCount(0);
   await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('重启前编辑的新草稿');
@@ -161,23 +243,54 @@ test('uncertain response requires GET before manual retry and keeps answers on r
   await expect(page.getByText('已回答', { exact: true })).toBeVisible(); expect(state.posts).toHaveLength(2);
 });
 
+test('uncertain confirmation must be queried before explicit retry and approval does not imply execution', async ({ page }) => {
+  const item = confirmation();
+  const { state } = await fixture(page, item);
+  const card = page.getByRole('region', { name: '操作确认', exact: true });
+  const composer = page.getByRole('textbox', { name: '发送消息' });
+  await composer.fill('下一条聊天草稿');
+  state.fault = 'fail'; state.readFailure = true;
+  await card.getByRole('button', { name: '允许本次执行', exact: true }).click();
+  await expect(card.getByRole('button', { name: '查询最新状态', exact: true })).toBeVisible();
+  await expect(card.getByRole('button', { name: '允许本次执行', exact: true })).toHaveCount(0);
+  await card.getByRole('button', { name: '查询最新状态', exact: true }).click();
+  await expect(card.getByRole('alert')).toContainText('查询未完成');
+  await expect(card.getByLabel('完整命令', { exact: true })).toBeVisible();
+  await expect(card.getByRole('button', { name: '允许本次执行', exact: true })).toHaveCount(0);
+  expect(state.posts).toHaveLength(1);
+  state.readFailure = false;
+  const readsBeforeQuery = state.reads;
+  await card.getByRole('button', { name: '查询最新状态', exact: true }).click();
+  await expect(card.getByRole('button', { name: '允许本次执行', exact: true })).toBeEnabled();
+  expect(state.reads).toBeGreaterThan(readsBeforeQuery); expect(state.posts).toHaveLength(1);
+  state.fault = '';
+  await card.getByRole('button', { name: '允许本次执行', exact: true }).click();
+  const summary = card.locator('details.confirmation-history > summary');
+  await expect(summary.getByText('已确认', { exact: true })).toBeVisible();
+  await expect(summary.getByText('执行结果待确认。', { exact: true })).toBeVisible();
+  await expect(card.getByText('执行已完成。', { exact: true })).toHaveCount(0);
+  await expect(composer).toHaveValue('下一条聊天草稿');
+  expect(state.posts).toEqual(Array.from({ length: 2 }, () => ({ requestId: 'r1', kind: 'confirmation', decision: 'approve' })));
+  expect(state.sends).toBe(0);
+});
+
 for (const fault of ['lost', 'conflict'] as const) test(`confirmation ${fault} reconciles first accepted decision without repost`, async ({ page }) => {
   const { state, a } = await fixture(page, confirmation()); state.fault = fault;
   await expect(page.getByLabel('完整命令', { exact: true })).toHaveText(confirmation().action.command!); state.readFailure = true;
-  await page.getByRole('button', { name: '确认执行' }).click();
+  await page.getByRole('button', { name: '允许本次执行' }).click();
   await expect(page.getByRole('button', { name: '查询最新状态' })).toBeVisible();
   state.readFailure = false; await page.getByRole('button', { name: '查询最新状态' }).click();
-  await expect(page.getByText(fault === 'lost' ? '已确认，继续处理' : '已拒绝', { exact: true })).toBeVisible();
+  await expect(page.getByText(fault === 'lost' ? '已确认' : '已拒绝', { exact: true })).toBeVisible();
   expect(state.posts).toHaveLength(1);
   a.interactions = [confirmation()]; await page.waitForTimeout(2000);
-  await expect(page.getByRole('button', { name: '确认执行' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '允许本次执行' })).toHaveCount(0);
 });
 
 test('stop and expired history disable decisions; approved unknown results stay distinct', async ({ page }) => {
   const { state, a } = await fixture(page, confirmation());
   await page.getByRole('button', { name: '停止回复', exact: true }).click();
   await expect(page.getByText('已取消', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: '确认执行' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '允许本次执行' })).toHaveCount(0);
   expect(state.cancels).toBe(1); expect(state.posts).toHaveLength(0);
   a.interactions = [{ ...confirmation(), status: 'expired', reason: '服务重启，交互已失效' }, { ...confirmation(), interactionId: 'i2', toolCallId: 't2', status: 'approved', execution: 'unknown' }, { ...confirmation(), interactionId: 'i3', toolCallId: 't3', status: 'approved', execution: 'not_started' }];
   await page.reload(); await expect(page.getByText('已失效', { exact: true })).toBeVisible();

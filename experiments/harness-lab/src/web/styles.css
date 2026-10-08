@@ -11,6 +11,8 @@
   --accent: #426354;
   --accent-soft: #e8eee9;
   --danger: #9f382f;
+  --warning: #866126;
+  --warning-soft: #fbf7ef;
   --control-height: 40px;
   --control-height-compact: 32px;
   --control-radius: 8px;
@@ -516,14 +518,53 @@ input, select { font: inherit; }
 .interaction-text { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .interaction-text textarea { width: 100%; min-height: 90px; resize: vertical; padding: 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: var(--surface); }
 .interaction-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
-.interaction-action h3 { font-size: 15px; margin: 16px 0 8px; }
-.interaction-action p, .interaction-answer, .interaction-reason { white-space: pre-wrap; }
+.interaction-answer, .interaction-reason { white-space: pre-wrap; }
 .interaction-card pre { max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; background: var(--faint); border-radius: 6px; font-size: 12px; }
 .interaction-card summary { cursor: pointer; min-height: 32px; }
 .interaction-rule, .interaction-reason { color: var(--muted); }
 .interaction-history-options { padding-left: 20px; color: var(--muted); }
 .interaction-result { margin-top: 14px; }
 @media (max-width: 767px) { .interaction-card { padding: 14px; } .interaction-text textarea { font-size: 16px; } }
+
+/* Confirmations share chat surfaces and ordinary action controls. */
+.interaction-card.confirmation-card { padding: 0; border-radius: 16px; line-height: 1.65; }
+.confirmation-card > .confirmation-strip { padding: 10px 16px; gap: 8px; border-radius: 15px 15px 0 0; border-bottom: 1px solid var(--line); background: var(--faint); color: var(--muted); font-size: 13px; line-height: 20px; }
+.confirmation-card[data-command="true"] > .confirmation-strip { color: var(--warning); background: var(--warning-soft); }
+.confirmation-kind { margin-left: auto; font-size: 12px; }
+.confirmation-body { padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.confirmation-body h3 { margin: 0; font-size: 15px; line-height: 24px; font-weight: 500; }
+.confirmation-body p { margin: 0; }
+.confirmation-description { white-space: pre-wrap; }
+.confirmation-metadata { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; margin: 0; font-size: 13px; }
+.confirmation-metadata dt, .confirmation-command > span { color: var(--muted); font-size: 12px; }
+.confirmation-metadata dd { margin: 0; min-width: 0; white-space: pre-wrap; }
+.confirmation-command { min-width: 0; }
+.confirmation-card pre { margin: 6px 0 0; max-height: 240px; font-size: 13px; line-height: 1.6; border-radius: var(--control-radius); }
+.confirmation-body .handoff-files { margin: 0; }
+.confirmation-body section[aria-label="本次附件"] h4 { font-size: 13px; font-weight: 500; margin: 0 0 8px; }
+.confirmation-body section[aria-label="本次附件"] > .resource-help { font-size: 13px; }
+.confirmation-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.confirmation-footer .interaction-rule { flex: 1 1 220px; margin: 0; font-size: 13px; }
+.confirmation-footer .resource-error { flex-basis: 100%; margin: 0; }
+.confirmation-footer .interaction-actions { margin: 0 0 0 auto; gap: var(--control-gap); }
+.confirmation-history > summary { display: flex; align-items: center; gap: 10px; padding: 14px 16px; list-style: none; border-radius: 15px; color: var(--muted); }
+.confirmation-history > summary::-webkit-details-marker { display: none; }
+.confirmation-history > summary:hover { background: var(--faint); }
+.confirmation-history > summary:focus-visible { outline-offset: -3px; }
+.confirmation-history-heading { display: grid; gap: 3px; min-width: 0; flex: 1; }
+.confirmation-title { color: var(--text); font-size: 14px; font-weight: 500; }
+.confirmation-decision { flex-shrink: 0; font-size: 12px; }
+.confirmation-outcome, .confirmation-body > .interaction-rule { font-size: 13px; }
+.confirmation-card[data-execution="failed"] .confirmation-outcome { color: var(--danger); }
+.confirmation-card[data-execution="unknown"] .confirmation-outcome { color: var(--warning); }
+.confirmation-history[open] > summary { border-radius: 15px 15px 0 0; }
+.confirmation-history[open] > .confirmation-body { border-top: 1px solid var(--line); }
+.confirmation-history[open] > summary .confirmation-chevron { transform: rotate(180deg); }
+.confirmation-card .interaction-result { margin-top: 0; }
+@media (max-width: 767px) {
+  .confirmation-body, .confirmation-footer { padding: 14px; }
+  .confirmation-history > summary { padding: 12px; gap: 8px; }
+}
 
 /* Test-seat views retain their scoped streams while inactive. */
 [hidden] { display: none !important; }
