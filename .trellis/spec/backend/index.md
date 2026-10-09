@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Information-to-Task Contract](./task-information.md) for schema v4, task judgments, human task creation, permission-filtered associations and task-based continuation.
+
 Read [Multi-source Context Queries](../backend/context-analysis.md) for the implemented capability-validation contracts, task context, query evidence and fixed scope checks.
 
 Read [Information Processing and Seat Delivery](../backend/background-execution.md) for source authentication, durable queue, per-source grants, inbox and information center boundaries.

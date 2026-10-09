@@ -34,7 +34,7 @@ async function login(app: FastifyInstance, username: string) {
 }
 type Client = Awaited<ReturnType<typeof login>>;
 
-async function setup(contextFailure?: 'missing-scope' | 'missing-context' | 'unspecified-scope') {
+async function setup(contextFailure?: 'missing-scope' | 'missing-context' | 'unspecified-scope' | 'assessment-without-scope') {
   const dir = await mkdtemp(join(tmpdir(), 'axon-context-background-'));
   cleanup.push(() => rm(dir, {recursive: true, force: true}));
   const mock = createMockContextServer({token: env.CONTEXT_TOKEN});
@@ -70,6 +70,10 @@ async function setup(contextFailure?: 'missing-scope' | 'missing-context' | 'uns
   };
   if (contextFailure === 'missing-scope') background.profiles[0].contextScopeId = 'missing-scope';
   if (contextFailure === 'unspecified-scope') delete background.profiles[0].contextScopeId;
+  if (contextFailure === 'assessment-without-scope') {
+    delete background.profiles[0].contextScopeId;
+    background.profiles[0].tools = ['information_record_task_assessment'];
+  }
   const app = await createApp(lab, false, {config: background, env}, {config: contextConfig, env: contextFailure === 'missing-context' ? {} : env}); cleanup.push(() => app.close());
   const store = new BackgroundStore(lab.access!.db);
   for (const source of background.sources) for (const seat of ['a', 'c']) store.grant('seat', seat, source.sourceId, 'manage');
@@ -168,7 +172,7 @@ describe('background multi-source permission and evidence integration', () => {
     expect((await f.a.call(`/api/information/jobs/${job.id}`)).json<InformationJobDetail>().snapshot).toEqual(jobDetail.snapshot);
   });
 
-  it.each(['missing-scope', 'missing-context', 'unspecified-scope'] as const)('isolates %s configuration failures from legacy queue management and execution', async contextFailure => {
+  it.each(['missing-scope', 'missing-context', 'unspecified-scope', 'assessment-without-scope'] as const)('isolates %s configuration failures from legacy queue management and execution', async contextFailure => {
     const f = await setup(contextFailure);
     expect(Boolean(f.lab.context)).toBe(contextFailure !== 'missing-context');
     const access = await f.a.call('/api/information/access'); expect(access.statusCode, access.body).toBe(200);

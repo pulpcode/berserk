@@ -985,3 +985,13 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .context-evidence-records span { display: block; color: var(--muted); line-height: 1.6; }
 .task-context-editor select { font: inherit; color: var(--text); background: var(--surface); padding: 10px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; }
 .task-context-editor small { font-weight: 400; }
+
+.task-association-list { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 12px; }
+.task-association-list > li, .task-suggestion { border: 1px solid var(--line); border-radius: 8px; padding: 14px; overflow-wrap: anywhere; }
+.task-association-list p, .task-suggestion p { margin: 8px 0; }
+.task-association-list .information-actions { justify-content: flex-start; }
+.task-association-list .information-actions > span { color: var(--muted); font-size: 12px; }
+.task-suggestion { margin-bottom: 14px; background: var(--surface); }
+.task-suggestion h4 { margin: 0 0 12px; font-size: 14px; }
+.task-link-editor { margin-top: 16px; }
+.task-information .information-list button > span { overflow-wrap: anywhere; }

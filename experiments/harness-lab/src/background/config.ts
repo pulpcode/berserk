@@ -13,7 +13,7 @@ export interface BackgroundConfig {
   sources: BackgroundSourceConfig[]; profiles: BackgroundProfileSnapshot[];
 }
 const idPattern = /^[a-zA-Z0-9_-]{1,64}$/;
-const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent', 'information_search', 'information_read', 'situation_query', 'task_search', 'task_read']);
+const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent', 'information_search', 'information_read', 'situation_query', 'task_search', 'task_read', 'information_record_task_assessment']);
 const fail = () => new Error('后台配置无效，请核对来源、处理方案及容量；凭证只通过环境变量提供。');
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw fail();

@@ -34,13 +34,14 @@
     {
       "id": "context-analysis",
       "name": "多源综合分析",
-      "goal": "根据收到的更新，按需查询报告正文与历史、当前态势及 Axon 活动公共任务，综合说明变化、任务相关性和可能影响。比较目标、资源条件与有效时间，区分事实、建议及资料缺口，并标明来源和修订。不要修改任务或自动分派。",
+      "goal": "根据收到的更新，按需查询报告正文与历史、当前态势及 Axon 活动公共任务，综合说明变化、任务相关性和可能影响。比较目标、资源条件与有效时间，区分事实、建议及资料缺口，并标明来源和修订。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。不要修改任务或自动分派。",
       "tools": [
         "information_search",
         "information_read",
         "situation_query",
         "task_search",
-        "task_read"
+        "task_read",
+        "information_record_task_assessment"
       ],
       "contextScopeId": "demo-context",
       "instructions": "",

@@ -12,6 +12,12 @@ import { atomicWrite, checkDirectory, Mutex, readControlled } from '../resources
 import type { PiLab } from '../pi/lab.js';
 import { createBackgroundExecutor, snapshotBackgroundProfile } from '../pi/background-runner.js';
 import { BackgroundStore } from './store.js';
+import { TaskLinkService } from './task-links.js';
+import type { BackgroundAnalysisOrigin } from '../contracts/task-information.js';
+import { loadControlledSkills } from '../resources/service.js';
+import { newWorkspace } from '../workspaces/store.js';
+import { loadAgentRoles } from '../pi/roles.js';
+import { agentInfo } from '../pi/composer-input.js';
 import { type BackgroundConfig, validateRuleScope } from './config.js';
 import { BackgroundFiles } from './files.js';
 import type { BackgroundExecutor } from './executor.js';
@@ -35,9 +41,16 @@ export function page<T>(items: T[], query: InformationFilter = {}): BackgroundPa
   const offset = query.offset ?? 0, limit = query.limit ?? 25;
   return {items: items.slice(offset, offset + limit), total: items.length, offset, limit};
 }
-function finalText(snapshot: SessionSnapshot | null, requestId: string): string {
+/** Keep public analysis emitted before a recording tool, without treating it as the final answer. */
+export function processingText(snapshot: SessionSnapshot | null, requestId: string): string {
   const id = snapshot?.turns?.find(turn => turn.requestId === requestId)?.finalMessageId;
-  return id ? snapshot!.messages.find(message => message.id === id)?.text ?? '' : '';
+  if (!id || !snapshot) return '';
+  const end = snapshot.messages.findIndex(message => message.id === id && message.requestId === requestId && message.role === 'assistant' && !message.isError);
+  if (end < 0) return '';
+  const final = snapshot.messages[end].text;
+  const earlier = snapshot.messages.slice(0, end).filter(message => message.requestId === requestId
+    && message.role === 'assistant' && !message.isError && message.text.trim()).map(message => message.text);
+  return earlier.length ? `## 处理过程中的说明\n\n${earlier.join('\n\n---\n\n')}\n\n## 最终答复\n\n${final}` : final;
 }
 /** A seat can continue its session later; job detail still shows only this execution. */
 function requestSnapshot(snapshot: SessionSnapshot, requestId: string): SessionSnapshot {
@@ -56,6 +69,7 @@ function requestSnapshot(snapshot: SessionSnapshot, requestId: string): SessionS
 export class BackgroundService {
   readonly store: BackgroundStore;
   readonly files: BackgroundFiles;
+  readonly taskLinks: TaskLinkService;
   private readonly admission = new Mutex();
   private readonly active = new Map<string, Promise<void>>();
   private readonly outputLocks = new Map<string, Mutex>();
@@ -68,11 +82,40 @@ export class BackgroundService {
     this.store = new BackgroundStore(lab.access.db);
     this.files = new BackgroundFiles(lab.config.dataDir, lab.files.maxFileBytes, lab.files.maxAttachments, 'python3', () => new Set(this.store.listEvents().flatMap(event => event.files.map(file => file.id))));
     this.executor = executor ?? createBackgroundExecutor(lab);
+    this.taskLinks = new TaskLinkService(lab.access, this.store, {
+      canRead: (actor, event, job) => this.canReadTaskInformation(actor, event, job),
+      sourceName: sourceId => this.source(sourceId).name,
+      analysisSummaries: (actor, taskId, eventId, jobId) => this.store.listActions().filter(action =>
+        action.kind === 'analysis' && action.seatId === actor.seatId && action.origin?.kind === 'task_information'
+        && action.origin.taskSpaceId === taskId && action.origin.eventId === eventId && action.origin.jobId === jobId
+      ).map(action => this.analysisSummary(actor, action)),
+      readContent: async (actor, event, job) => {
+        const snapshot = await this.executor.read(job), text = await this.eventText(event);
+        if (!this.canReadTaskInformation(actor, event, job)) throw notFound();
+        return {text, resultText: processingText(snapshot, job.requestId), resultFiles: job.result?.files ?? [], queryMessages: queryEvidence(snapshot, job.requestId)};
+      },
+    });
   }
   async initialize() {
     await this.files.initialize();
     this.store.recoverRunning();
     this.lab.setModelConcurrency(this.config.modelConcurrency);
+    this.lab.taskInformation = {
+      list: (seatId, taskId, params, signal) => {
+        signal?.throwIfAborted();
+        return this.taskLinks.list(this.seatIdentity(seatId), taskId, params);
+      },
+      read: async (seatId, taskId, params, signal) => {
+        signal?.throwIfAborted();
+        const actor = this.seatIdentity(seatId);
+        const detail = await this.taskLinks.detail(actor, taskId, params.eventId, params.jobId);
+        signal?.throwIfAborted();
+        return {eventId: detail.eventId, jobId: detail.jobId, taskId, title: detail.title, sourceId: detail.sourceId,
+          analysisAt: detail.analysisAt, section: params.section, text: params.section === 'original' ? detail.text : detail.resultText,
+          sourceReference: sourceReference(detail.event), queryReferences: queryReferences(detail.queryMessages ?? []),
+          files: params.section === 'original' ? detail.event.files : detail.resultFiles};
+      },
+    };
     this.lab.backgroundHooks = {
       isSessionReserved: (sessionId, jobId) => { const reserved = this.store.sessionReservation(sessionId); return (!!reserved && reserved.id !== jobId) || this.store.listActions({status:'preparing'}).some(action => action.kind === 'analysis' && action.sessionId === sessionId); },
       isActive: () => this.active.size > 0,
@@ -97,7 +140,7 @@ export class BackgroundService {
   }
   private configuredProfileScope(profile: BackgroundProfileSnapshot): ContextScopeSnapshot | undefined {
     if (!profile.contextScopeId) {
-      if (profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE','查询方案须配置业务资料范围。',503);
+      if (profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE','查询方案须配置业务资料范围。',503);
       return undefined;
     }
     if (!this.lab.context) throw new RequestError('CONTEXT_UNAVAILABLE','业务资料配置不可用。',503);
@@ -116,6 +159,19 @@ export class BackgroundService {
   private canReadJob(actor: Identity, job: BackgroundJob): boolean {
     try { this.assertContext(actor.seatId, this.jobScope(job)); return true; } catch { return false; }
   }
+  private seatIdentity(seatId: string): Identity {
+    const actor = this.lab.access!.identityForSeat(seatId);
+    if (!actor) throw notFound(); return actor;
+  }
+  private canReadTaskInformation(actor: Identity, event: BackgroundEvent, job: BackgroundJob): boolean {
+    const current = this.lab.access!.identity(actor.userId);
+    if (!current || current.seatId !== actor.seatId || job.eventId !== event.id || job.sourceId !== event.sourceId
+      || job.kind !== 'preprocess' || job.status !== 'succeeded') return false;
+    const source = this.config.sources.find(source => source.sourceId === job.sourceId);
+    if (!source || !this.canReadJob(current, job)) return false;
+    return !!this.store.effectivePermission(current, source.sourceId) || (source.allowedRecipientSeatIds.includes(current.seatId)
+      && this.store.listDeliveries(job.id).some(delivery => delivery.recipientSeatId === current.seatId && delivery.status === 'delivered'));
+  }
   private canReadEvent(actor: Identity, event: BackgroundEvent): boolean {
     try {
       this.assertContext(actor.seatId, event.ruleSnapshot?.profile.contextScope);
@@ -128,7 +184,7 @@ export class BackgroundService {
       payloadHash:'',files:[],revision:event.revision,initialJobId:event.initialJobId,contentRestricted:true};
   }
   private jobProjection(actor: Identity, job: BackgroundJob): BackgroundJob {
-    if (this.canReadJob(actor,job)) return job;
+    if (this.canReadJob(actor,job)) return job.status === 'succeeded' ? job : {...job,taskAssessment:undefined,taskSuggestionCreation:undefined};
     return {id:job.id,kind:job.kind,eventId:job.eventId,sourceId:job.sourceId,status:job.status,phase:job.phase,
       revision:job.revision,createdAt:job.createdAt,startedAt:job.startedAt,endedAt:job.endedAt,requestId:job.requestId};
   }
@@ -247,8 +303,8 @@ export class BackgroundService {
     const event = this.store.getEvent(id); this.permission(actor, event.sourceId);
     const jobs = this.store.listJobs().filter(job => job.eventId === id && job.kind === 'preprocess');
     if (!this.canReadEvent(actor,event)) return {...this.eventProjection(actor,event),jobs:jobs.map(job => this.jobProjection(actor,job)),deliveries:this.store.listDeliveries().filter(delivery => delivery.eventId === id).map(delivery => this.deliveryProjection(actor,delivery)),text:'',results:[],analyses:[]};
-    const results = await Promise.all(jobs.filter(job => job.result).map(async job => ({jobId: job.id, text: finalText(await this.executor.read(job), job.requestId), files: job.result!.files})));
-    return {...event, text: await this.eventText(event), jobs, deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === id), results,
+    const results = await Promise.all(jobs.filter(job => job.result).map(async job => ({jobId: job.id, text: processingText(await this.executor.read(job), job.requestId), files: job.result!.files})));
+    return {...event, text: await this.eventText(event), jobs:jobs.map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === id), results,
       analyses: this.store.listActions().filter(action => action.kind === 'analysis' && action.eventId === id).map(action => this.analysisSummary(actor, action))};
   }
   private allowedInbox(actor: Identity, id: string): InboxItem {
@@ -266,8 +322,8 @@ export class BackgroundService {
   async inboxDetail(actor: Identity, id: string): Promise<InboxDetail> {
     const item = this.allowedInbox(actor, id);
     const snapshot = await this.executor.read(item.job);
-    return {...item, queryMessages:queryEvidence(snapshot,item.job.requestId), profileName:this.store.getJob(item.job.id).ruleSnapshot?.profile.name,
-      text: await this.eventText(item.event), resultText: finalText(snapshot, item.job.requestId), resultFiles: item.job.result?.files ?? [],
+    return {...item, taskLinks: this.taskLinks.links(actor,item.event.id,item.job.id), queryMessages:queryEvidence(snapshot,item.job.requestId), profileName:this.store.getJob(item.job.id).ruleSnapshot?.profile.name,
+      text: await this.eventText(item.event), resultText: processingText(snapshot, item.job.requestId), resultFiles: item.job.result?.files ?? [],
       analyses: this.store.listActions().filter(action => action.kind === 'analysis' && action.deliveryId === id && action.seatId === actor.seatId).map(action => this.analysisSummary(actor, action))};
   }
   async openFile(actor: Identity, scope: 'event'|'inbox', id: string, fileId: string) {
@@ -305,7 +361,7 @@ export class BackgroundService {
     // Async native/file reads must not turn a revoked grant into a content response.
     if (center) this.permission(actor,job.sourceId);
     if (job.kind === 'seat_analysis') this.lab.access!.get(job.taskSpaceId!,actor.seatId);
-    return {...summary,profileName:job.ruleSnapshot?.profile.name,...(snapshot ? {snapshot:requestSnapshot(snapshot,job.requestId),text:finalText(snapshot,job.requestId)} : {}),
+    return {...summary,...(job.kind === 'preprocess' && job.status === 'succeeded' ? {taskLinks:this.taskLinks.links(actor,job.eventId,job.id)} : {}),profileName:job.ruleSnapshot?.profile.name,...(snapshot ? {snapshot:requestSnapshot(snapshot,job.requestId),text:processingText(snapshot,job.requestId)} : {}),
       files:job.result?.files ?? [],...(input ? {input} : {}),...(job.retryOfJobId ? {retryOfJobId:job.retryOfJobId} : {})};
   }
   async cancel(actor: Identity, id: string, revision: number) {
@@ -370,19 +426,61 @@ export class BackgroundService {
       void this.pump(); return job;
     });
   }
+  private resolveAnalysisOrigin(actor: Identity, origin: BackgroundAnalysisOrigin, write = false) {
+    if (origin.kind === 'inbox') return this.allowedInbox(actor, origin.deliveryId);
+    return this.taskLinks.resolve(actor, origin.taskSpaceId, origin.eventId, origin.jobId, write);
+  }
+  private async taskOptions(actor: Identity, taskId: string) {
+    const task = this.lab.access!.get(taskId, actor.seatId, true);
+    const workspace = this.lab.workspaces.list(actor.seatId).workspaces.find(item => item.taskSpaceId === taskId);
+    const ids = workspace ? this.lab.workspaces.get(workspace.id, actor.seatId).skillIds : newWorkspace(task.title).skillIds;
+    const skills = (await loadControlledSkills(ids)).map(({id,name,description,version,hash}) => ({id,name,description,version,hash}));
+    return {skills, agents: (await loadAgentRoles(this.lab.config.agentRolesDir)).map(agentInfo)};
+  }
   async analysisOptions(actor: Identity, deliveryId: string, taskId: string) {
-    this.allowedInbox(actor,deliveryId); const task = this.lab.access!.get(taskId,actor.seatId,true);
-    const workspace = await this.lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title);
-    return {skills:(await this.lab.resources.info(workspace.id,actor.seatId)).skills,agents:await this.lab.agents(workspace.id,actor.seatId)};
+    this.allowedInbox(actor, deliveryId);
+    const result = await this.taskOptions(actor, taskId);
+    this.allowedInbox(actor, deliveryId); this.lab.access!.get(taskId, actor.seatId, true);
+    return result;
+  }
+  async analysisOptionsTask(actor: Identity, taskId: string, eventId: string, jobId: string) {
+    const origin: BackgroundAnalysisOrigin = {kind:'task_information',taskSpaceId:taskId,eventId,jobId};
+    this.resolveAnalysisOrigin(actor, origin, true);
+    const result = await this.taskOptions(actor, taskId);
+    this.resolveAnalysisOrigin(actor, origin, true); return result;
+  }
+  async openTaskFile(actor: Identity, taskId: string, eventId: string, jobId: string, fileId: string) {
+    const {event,job} = this.taskLinks.resolve(actor, taskId, eventId, jobId);
+    const file = [...event.files,...(job.result?.files ?? [])].find(item => item.id === fileId);
+    if (!file) throw notFound();
+    const opened = await this.files.copies.open(fixedFile(file));
+    try {this.taskLinks.resolve(actor, taskId, eventId, jobId); return opened;}
+    catch (error) {opened.stream.destroy(); throw error;}
   }
   findAnalysis(actor: Identity, deliveryId: string, clientActionId: string) {
     this.allowedInbox(actor,deliveryId); const action = this.store.findAction(actor.userId,clientActionId);
     if (!action || action.kind !== 'analysis' || action.deliveryId !== deliveryId) return null; return action;
   }
-  async analyse(actor: Identity, deliveryId: string, input: BackgroundAnalysisInput): Promise<BackgroundAction> {
+  findTaskAnalysis(actor: Identity, taskId: string, eventId: string, jobId: string, clientActionId: string) {
+    this.taskLinks.resolve(actor, taskId, eventId, jobId);
+    const action = this.store.findAction(actor.userId, clientActionId);
+    const origin = action?.origin;
+    if (!action || action.kind !== 'analysis' || origin?.kind !== 'task_information' || origin.taskSpaceId !== taskId
+      || origin.eventId !== eventId || origin.jobId !== jobId) return null;
+    return action;
+  }
+  analyse(actor: Identity, deliveryId: string, input: BackgroundAnalysisInput): Promise<BackgroundAction> {
+    return this.analyseOrigin(actor, {kind:'inbox',deliveryId}, input);
+  }
+  analyseTask(actor: Identity, taskId: string, eventId: string, jobId: string, input: Omit<BackgroundAnalysisInput,'taskSpaceId'>): Promise<BackgroundAction> {
+    return this.analyseOrigin(actor, {kind:'task_information',taskSpaceId:taskId,eventId,jobId}, {...input,taskSpaceId:taskId});
+  }
+  private async analyseOrigin(actor: Identity, origin: BackgroundAnalysisOrigin, input: BackgroundAnalysisInput): Promise<BackgroundAction> {
     return this.admission.run(async () => {
-      const item = this.allowedInbox(actor,deliveryId);
-      const digest = hash([deliveryId,input]);
+      const item = this.resolveAnalysisOrigin(actor,origin,true);
+      const deliveryId = origin.kind === 'inbox' ? origin.deliveryId : undefined;
+      // Preserve existing inbox action hashes for resumable preparations.
+      const digest = hash([origin.kind === 'inbox' ? deliveryId : origin,input]);
       let action = this.store.findAction(actor.userId,input.clientActionId);
       if (action && (action.kind !== 'analysis' || action.inputHash !== digest)) throw conflict('同一次发起的内容已变化，请先核对原结果。');
       if (action?.status === 'completed') return action;
@@ -400,15 +498,16 @@ export class BackgroundService {
           if (input.skillIds?.[0]) { const skill = await this.lab.resources.readSkill(workspace.id,input.skillIds[0],actor.seatId); selection.skill = {id:skill.id,hash:skill.hash}; }
           if (input.agentIds?.[0]) { const agents = await this.lab.agents(workspace.id,actor.seatId); const agent = agents.find(agent => agent.name === input.agentIds![0]); if (!agent) throw new RequestError('INVALID_INPUT','Agent 不存在。'); selection.agent = {name:agent.name,hash:agent.hash}; }
           const resultSnapshot = input.includeResult ? await this.executor.read(item.job) : null;
-          const resultText = finalText(resultSnapshot,item.job.requestId);
+          const resultText = processingText(resultSnapshot,item.job.requestId);
           const draft = `${input.goal.trim()}\n\n来源信息：${item.event.title}\n${sourceReference(item.event)}${queryReferences(queryEvidence(resultSnapshot,item.job.requestId))}\n${resultText ? `\n已有处理结果（资料内容）：\n${resultText}\n` : ''}${files.length ? '\n所选附件已导入本工作区，请按需读取。' : ''}`;
           if (draft.length > 16000) throw new RequestError('INPUT_TOO_LONG','处理结果较长，请取消直接带入结果，或先进入对话分步分析。',413);
           prepared = {draft,selection};
           for (const file of files) await this.files.copies.assertValid(fixedFile(file));
         }
+        this.resolveAnalysisOrigin(actor,origin,true);
         if (!action) {
           const id = randomUUID();
-          action = this.store.beginAction({id,userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'analysis',inputHash:digest,eventId:item.event.id,deliveryId,taskSpaceId:task.id,
+          action = this.store.beginAction({id,userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'analysis',inputHash:digest,eventId:item.event.id,deliveryId,origin,taskSpaceId:task.id,
             workspaceId:workspace.id,sessionId:randomUUID(),requestId:randomUUID(),analysis:input,...prepared,imports:files.map(file => ({fileId:file.id,path:`收到的信息/${id}/${file.id.slice(0,8)}-${file.name}`,completed:false}))});
         }
         if (!action.workspaceId) action = this.store.updateAction(action.id,action.revision,{workspaceId:workspace.id});
@@ -419,9 +518,10 @@ export class BackgroundService {
         }
         await this.lab.createSession(workspace.id,actor.seatId,undefined,action.sessionId);
         if (!action.fileRefs) action = this.store.updateAction(action.id,action.revision,{...prepared,fileRefs:action.imports!.map(planned => { const file = files.find(file => file.id === planned.fileId)!; return {path:planned.path,name:file.name,size:file.size}; })});
+        this.resolveAnalysisOrigin(actor,origin,true);
         if (input.mode === 'conversation') return this.store.updateAction(action.id,action.revision,{status:'completed'});
         const job: BackgroundJob = {id:randomUUID(),kind:'seat_analysis',eventId:item.event.id,sourceId:item.event.sourceId,status:'queued',revision:1,createdAt:new Date().toISOString(),userId:actor.userId,seatId:actor.seatId,
-          contextScope:this.jobScope(this.store.getJob(item.job.id)),taskSpaceId:task.id,workspaceId:workspace.id,sessionId:action.sessionId,requestId:action.requestId!,deliveryId,actionId:action.id};
+          contextScope:this.jobScope(this.store.getJob(item.job.id)),taskSpaceId:task.id,workspaceId:workspace.id,sessionId:action.sessionId,requestId:action.requestId!,deliveryId,origin:action.origin,actionId:action.id};
         const accepted = this.store.enqueueAnalysis(action.id,action.revision,job,this.config.backlogLimit); void this.pump(); return accepted;
       } finally {release();}
     });
@@ -453,13 +553,19 @@ export class BackgroundService {
       } else {
         const actor = this.lab.access!.identity(job.userId!);
         if (!actor || actor.seatId !== job.seatId) throw new RequestError('BACKGROUND_ACTOR_REVOKED','发起账号或席位已失效。',403);
-        this.lab.access!.get(job.taskSpaceId!,actor.seatId,true); this.allowedInbox(actor,job.deliveryId!);
+        this.lab.access!.get(job.taskSpaceId!,actor.seatId,true);
+        this.resolveAnalysisOrigin(actor,job.origin ?? {kind:'inbox',deliveryId:job.deliveryId!},true);
         const action = this.store.getAction(job.actionId!); text = action.draft!; selection = action.selection;
         files = await this.lab.files.resolveInputs(job.workspaceId!,{fileRefs:action.fileRefs},actor.seatId);
       }
       // Cancellation admitted during file preparation must stop before any model/tool work.
       if (this.stopping || this.store.getJob(job.id).cancelRequestedAt) throw new RequestError('BACKGROUND_STOPPED','处理已停止。',409);
-      const result = await this.executor.execute(job,{text,directory,files,profile,selection,publish:(input,signal) => this.publish(job,input,signal),onEvent:event => {
+      const result = await this.executor.execute(job,{text,directory,files,profile,selection,recordTaskAssessment:(input,evidence,toolCallId,signal) => {
+        signal?.throwIfAborted();
+        if (this.stopping) throw conflict('处理已停止。');
+        this.assertRecipients(this.store.getJob(job.id).ruleSnapshot!);
+        return this.taskLinks.recordAssessment(job.id,input,evidence,toolCallId,signal);
+      },publish:(input,signal) => this.publish(job,input,signal),onEvent:event => {
         const phase = event.type === 'text.delta' ? 'generating' : event.type === 'tool.started' ? 'tool' : event.type === 'context.compaction_started' ? 'compacting' : event.type === 'subagent.updated' && event.subagent.status === 'running' ? 'subagent' : event.type === 'tool.completed' || event.type === 'context.compaction_completed' ? 'preparing' : undefined;
         if (phase) this.store.setPhase(job.id,phase);
       }});
@@ -507,5 +613,6 @@ export class BackgroundService {
     await Promise.all([...this.active.keys()].map(id => this.executor.cancel(this.store.getJob(id))));
     await Promise.allSettled([...this.active.values()]);
     this.lab.backgroundHooks = undefined;
+    this.lab.taskInformation = undefined;
   }
 }

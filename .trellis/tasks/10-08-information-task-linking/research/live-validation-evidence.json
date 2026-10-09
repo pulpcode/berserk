@@ -1,0 +1,1739 @@
+[
+  {
+    "name": "multiple",
+    "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-context-live-LhuhYQ/multiple-S2h902",
+    "model": "deepseek-flash",
+    "taskIds": {
+      "A": "1bd5d5b2-2897-4e45-8209-43424a594588",
+      "B": "550a77a2-62a3-4b0a-84da-0a5b79a47aad",
+      "C": "fe632855-9aa3-49bf-865e-7af95e0e7c05"
+    },
+    "initialTasks": [
+      {
+        "id": "fe632855-9aa3-49bf-865e-7af95e0e7c05",
+        "title": "东区补给方案",
+        "goal": "在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "updatedByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "createdAt": "2026-10-09T02:04:32.077Z",
+        "updatedAt": "2026-10-09T02:04:32.077Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-east-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-east"
+            ],
+            "time": {
+              "from": "2026-10-01T01:45:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "550a77a2-62a3-4b0a-84da-0a5b79a47aad",
+        "title": "西区设备转移方案",
+        "goal": "在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "updatedByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "createdAt": "2026-10-09T02:04:32.076Z",
+        "updatedAt": "2026-10-09T02:04:32.076Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:50:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "1bd5d5b2-2897-4e45-8209-43424a594588",
+        "title": "西区补给方案",
+        "goal": "在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "updatedByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+        "createdAt": "2026-10-09T02:04:32.074Z",
+        "updatedAt": "2026-10-09T02:04:32.074Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:40:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "eventName": "E1",
+        "input": {
+          "sourceMessageId": "intel-msg-0001",
+          "title": "西区通道限制信息更新",
+          "text": "报告 report-west-01 更新至修订 2。关联对象 situation/road/road-west-01；限制时段为 2026-10-01T09:20:00+08:00 至 2026-10-01T10:10:00+08:00。请查询报告正文及历史。",
+          "subjectId": "report-west-01",
+          "occurredAt": "2026-10-01T09:20:00+08:00"
+        },
+        "job": {
+          "id": "816597de-8bbe-4bdb-a2aa-3449d671a1fc",
+          "eventId": "947ec9f5-925a-4f2d-8fce-1845b4930802",
+          "sourceId": "mock-intel-source",
+          "kind": "preprocess",
+          "status": "succeeded",
+          "revision": 32,
+          "createdAt": "2026-10-09T02:04:32.744Z",
+          "sessionId": "48b040b0-07e8-4f7f-964c-d15a3493e259",
+          "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+          "ruleSnapshot": {
+            "rule": {
+              "name": "固定投递验证",
+              "sourceId": "mock-intel-source",
+              "profileId": "synthesis",
+              "recipientSeatIds": [
+                "seat-a",
+                "seat-b"
+              ],
+              "enabled": true,
+              "id": "9dc4b03b-d614-4a51-8696-9b660ec2f723",
+              "revision": 1,
+              "createdAt": "2026-10-09T02:04:32.203Z",
+              "updatedAt": "2026-10-09T02:04:32.203Z",
+              "createdByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565",
+              "updatedByUserId": "bbabadd7-e8a4-4bdc-81c3-ed9d02bfa565"
+            },
+            "profile": {
+              "id": "synthesis",
+              "name": "多源综合分析",
+              "goal": "根据收到的更新，自主查询报告正文与历史、当前态势和 Axon 活动公共任务，综合说明变化、可能影响哪些任务及依据，区分事实、建议和资料缺口。比较任务的目标、资源条件与有效时间。结论用中文，列出来源与版本；不要修改任务或自动分派。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。",
+              "tools": [
+                "information_search",
+                "information_read",
+                "situation_query",
+                "task_search",
+                "task_read",
+                "information_record_task_assessment"
+              ],
+              "contextScopeId": "demo-context",
+              "skillIds": [],
+              "agentIds": [],
+              "instructions": "",
+              "resources": [],
+              "skills": [],
+              "agents": [],
+              "contextScope": {
+                "scopeId": "demo-context",
+                "systemIds": [
+                  "intel",
+                  "situation"
+                ]
+              }
+            }
+          },
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "6ebec1f5-c54e-4e8a-81c3-bbb852d03b52",
+          "startedAt": "2026-10-09T02:04:32.764Z",
+          "taskAssessment": {
+            "recordedAt": "2026-10-09T02:04:38.329Z",
+            "toolCallId": "call_00_8YeMFhPmhMucj4tf46fK3169",
+            "items": [
+              {
+                "taskSpaceId": "1bd5d5b2-2897-4e45-8209-43424a594588",
+                "taskRevision": 1,
+                "reason": "该任务目标为2026-10-01 09:40 开始执行、至少需 3 辆车、使用西区道路与车辆池。报告 report-west-01 修订2 所述限制时段 09:20–10:10 完全覆盖其 09:40 开始时间，直接命中其业务引用 road-west-01。车辆池当前可用 4 辆，满足≥3 辆需求，但受限制时段影响通行条件。"
+              },
+              {
+                "taskSpaceId": "550a77a2-62a3-4b0a-84da-0a5b79a47aad",
+                "taskRevision": 1,
+                "reason": "该任务目标为2026-10-01 09:50 开始执行、至少需 1 辆车、使用西区道路与车辆池。限制时段 09:20–10:10 完全覆盖其 09:50 开始时间，命中其业务引用 road-west-01。车辆池可用 4 辆可满足≥1 辆需求。"
+              }
+            ]
+          },
+          "usage": {
+            "modelAttempts": 4,
+            "replyAttempts": 4,
+            "compactionAttempts": 0,
+            "toolCalls": 12,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 6724,
+              "output": 2902,
+              "cacheRead": 15744,
+              "cacheWrite": 0,
+              "totalTokens": 25370
+            }
+          },
+          "result": {
+            "sessionId": "48b040b0-07e8-4f7f-964c-d15a3493e259",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "finalMessageId": "7e27c9e0",
+            "files": []
+          },
+          "endedAt": "2026-10-09T02:04:46.467Z"
+        },
+        "queries": [
+          {
+            "id": "58a2936a",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:34.760Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"items\":[{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}},{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":2,\"title\":\"西区通道限制更新\",\"summary\":\"西区通道 09:20 至 10:10 临时受限。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T09:18:00+08:00\",\"publishedAt\":\"2026-10-01T09:20:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:20:00+08:00\",\"to\":\"2026-10-01T10:10:00+08:00\"}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_gHfY2C0EACJQqXFGkPZM6166",
+            "isError": false
+          },
+          {
+            "id": "804878ab",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:34.767Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":2,\"title\":\"西区通道限制更新\",\"summary\":\"西区通道 09:20 至 10:10 临时受限。\",\"content\":\"本报告更新此前观测：西区通道在 09:20 至 10:10 临时受限。此前截至 08:50 的记录未报告此限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T09:18:00+08:00\",\"publishedAt\":\"2026-10-01T09:20:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:20:00+08:00\",\"to\":\"2026-10-01T10:10:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_01_0MdI93Ud8k14VCx9OtDW6126",
+            "isError": false
+          },
+          {
+            "id": "87f038c8",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\",\"revision\":1},\"queriedAt\":\"2026-10-09T02:04:34.773Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"content\":\"截至 2026-10-01 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_02_gnImyWlfMe0ABHOgyHaW9259",
+            "isError": false
+          },
+          {
+            "id": "cf12aa1a",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:34.781Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},\"name\":\"西区通道\",\"properties\":{}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-b3c3e2e3-3a2c-4f2e-9818-cd83ddca0e0c-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_03_LsmBzUHQ3pyHu9Lm0BKf6369",
+            "isError": false
+          },
+          {
+            "id": "abf0126f",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"西区通道\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:34.786Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_04_w4dUJRe8LDEJdeRr6OUn4143",
+            "isError": false
+          },
+          {
+            "id": "f4ed60d1",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:34.790Z\",\"data\":{\"items\":[{\"id\":\"1bd5d5b2-2897-4e45-8209-43424a594588\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.074Z\",\"updatedAt\":\"2026-10-09T02:04:32.074Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[],\"textFields\":[]}},{\"id\":\"550a77a2-62a3-4b0a-84da-0a5b79a47aad\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.076Z\",\"updatedAt\":\"2026-10-09T02:04:32.076Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[],\"textFields\":[]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_05_NqJFWsqtqxomN5bz8yGw7058",
+            "isError": false
+          },
+          {
+            "id": "5ffa1d08",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"1bd5d5b2-2897-4e45-8209-43424a594588\"},\"queriedAt\":\"2026-10-09T02:04:36.458Z\",\"data\":{\"item\":{\"id\":\"1bd5d5b2-2897-4e45-8209-43424a594588\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.074Z\",\"updatedAt\":\"2026-10-09T02:04:32.074Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_00_Xx7wGmuUcVkTOqCT5rLV3486",
+            "isError": false
+          },
+          {
+            "id": "a9434127",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"550a77a2-62a3-4b0a-84da-0a5b79a47aad\"},\"queriedAt\":\"2026-10-09T02:04:36.461Z\",\"data\":{\"item\":{\"id\":\"550a77a2-62a3-4b0a-84da-0a5b79a47aad\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.076Z\",\"updatedAt\":\"2026-10-09T02:04:32.076Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_01_rqPqt5u4F458Odne1tyQ0031",
+            "isError": false
+          },
+          {
+            "id": "ac9571b1",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:36.466Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},\"name\":\"西区可用车辆\",\"properties\":{\"availableCount\":4,\"unit\":\"辆\"}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-b3c3e2e3-3a2c-4f2e-9818-cd83ddca0e0c-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_02_It5p46K0DGToMDMZ01T83322",
+            "isError": false
+          },
+          {
+            "id": "4d407b44",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"areaIds\":[\"zone-west\"],\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:36.470Z\",\"data\":{\"items\":[{\"id\":\"1bd5d5b2-2897-4e45-8209-43424a594588\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.074Z\",\"updatedAt\":\"2026-10-09T02:04:32.074Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[\"zone-west\"],\"textFields\":[]}},{\"id\":\"550a77a2-62a3-4b0a-84da-0a5b79a47aad\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.076Z\",\"updatedAt\":\"2026-10-09T02:04:32.076Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[\"zone-west\"],\"textFields\":[]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_03_aKSXp81STA1R9YKDy81c6193",
+            "isError": false
+          },
+          {
+            "id": "9e2920e9",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"mode\":\"changes\"},\"queriedAt\":\"2026-10-09T02:04:36.475Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"nextAfter\":\"situation-b3c3e2e3-3a2c-4f2e-9818-cd83ddca0e0c-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_04_WpEXWSHbWE6t7yJNdQ380760",
+            "isError": false
+          },
+          {
+            "id": "5273169d",
+            "requestId": "3aba0146-418e-4f92-accc-c2682d77d440",
+            "role": "tool",
+            "text": "{\"status\":\"recorded\",\"assessment\":{\"recordedAt\":\"2026-10-09T02:04:38.329Z\",\"toolCallId\":\"call_00_8YeMFhPmhMucj4tf46fK3169\",\"items\":[{\"taskSpaceId\":\"1bd5d5b2-2897-4e45-8209-43424a594588\",\"taskRevision\":1,\"reason\":\"该任务目标为2026-10-01 09:40 开始执行、至少需 3 辆车、使用西区道路与车辆池。报告 report-west-01 修订2 所述限制时段 09:20–10:10 完全覆盖其 09:40 开始时间，直接命中其业务引用 road-west-01。车辆池当前可用 4 辆，满足≥3 辆需求，但受限制时段影响通行条件。\"},{\"taskSpaceId\":\"550a77a2-62a3-4b0a-84da-0a5b79a47aad\",\"taskRevision\":1,\"reason\":\"该任务目标为2026-10-01 09:50 开始执行、至少需 1 辆车、使用西区道路与车辆池。限制时段 09:20–10:10 完全覆盖其 09:50 开始时间，命中其业务引用 road-west-01。车辆池可用 4 辆可满足≥1 辆需求。\"}]},\"published\":false,\"message\":\"任务判断已记录，本次分析成功结束后展示。\"}",
+            "toolName": "information_record_task_assessment",
+            "toolCallId": "call_00_8YeMFhPmhMucj4tf46fK3169",
+            "isError": false
+          }
+        ],
+        "final": "# 西区通道限制信息更新 — 综合说明\n\n## 一、事实（资料正文与版本）\n\n**报告 report-west-01 修订历史**（来源：intel 系统，查询 asOf 2026-10-01T09:20:00+08:00）\n\n| 版本 | 标题 | 摘要 | 观测时间 | 发布时间 | 有效期 |\n|---|---|---|---|---|---|\n| rev.1 | 西区通道观测记录 | 截至观测时刻未报告西区通道限制 | 2026-10-01 08:50 | 2026-10-01 08:55 | 09:00–11:00 |\n| rev.2（最新） | 西区通道限制更新 | 西区通道 09:20 至 10:10 临时受限 | 2026-10-01 09:18 | 2026-10-01 09:20 | 09:20–10:10 |\n\n- 关联对象：situation/road/road-west-01（西区通道），区域 zone-west。\n- rev.2 正文明确自身是更新件：\"本次更新此前观测……此前截至 08:50 的记录未报告此限制。\"即**从\"无限制\"更正为\"09:20–10:10 临时受限\"**，属于实质性状态翻转，而非仅新增说明。\n- rev.2 的有效期（09:20–10:10）比 rev.1（09:00–11:00）更短，说明这是一个**临时、约 50 分钟**的限制窗口。\n\n**当前态势**（来源：situation 系统，current，asOf 2026-10-01T09:00:00+08:00）\n- road-west-01「西区通道」：revision 1，有效 09:00–11:00，区域 zone-west，**properties 为空**（态势对象本身未携带\"受限/畅通\"字段）。\n- vehicles-west-01「西区可用车辆」：availableCount = 4 辆，有效 09:00–11:00。\n- road-west-01 的变化记录（changes）返回**空**，nextAfter 游标 seq-100。\n\n## 二、可能影响的任务及依据\n\n来源：Axon 活动公共任务（task_search 按 areaIds=[zone-west] 与 businessRefs=road-west-01 均命中同样两条）\n\n**1. 西区补给方案**（taskId 1bd5d5b2-…-594588，revision 1，active）\n- 目标：2026-10-01 **09:40 开始**执行，**至少需 3 辆车**，使用西区道路与车辆池。\n- 关注范围：区域 zone-west；时间 01:40–02:30 UTC（= 09:40–10:30 +08:00）；主题 车辆/通行。\n- 依据：业务引用含 road-west-01；限制时段 09:20–10:10 **完整覆盖其 09:40 开始时刻**；车辆需求 3 辆 ≤ 当前可用 4 辆，**资源条件在数量上满足**，但通行通道受限。\n\n**2. 西区设备转移方案**（taskId 550a77a2-…-a47aad，revision 1，active）\n- 目标：2026-10-01 **09:50 开始**执行，**至少需 1 辆车**，使用西区道路与车辆池。\n- 关注范围：区域 zone-west；时间 01:50–02:30 UTC（= 09:50–10:30 +08:00）；主题 车辆/通行。\n- 依据：业务引用含 road-west-01；限制时段 09:20–10:10 **完整覆盖其 09:50 开始时刻**；需求 1 辆 ≤ 可用 4 辆，**资源条件满足**。\n\n**目标 / 资源 / 有效时间对比**\n\n| 项目 | 补给方案 | 设备转移方案 |\n|---|---|---|\n| 执行开始 | 09:40 | 09:50 |\n| 车辆门槛 | ≥3 辆 | ≥1 辆 |\n| 关注时间窗（+08:00） | 09:40–10:30 | 09:50–10:30 |\n| 是否落在限制窗口内 | 是（开始即受限） | 是（开始即受限） |\n| 车辆池可用量 | 4 辆（均满足） | 4 辆（均满足） |\n| 受限时段覆盖度 | 09:40–10:10 落在限制内，10:10 后恢复 | 09:50–10:10 落在限制内，10:10 后恢复 |\n\n两条任务**开始时刻均早于限制解除时刻 10:10**；补给方案的关注时间窗结束于 10:30，其后 20 分钟已脱离限制。二者共用同一区域与同一车辆池（4 辆），存在**并发资源竞争**（3 + 1 = 4 辆，刚好等于可用上限，无余量）。\n\n## 三、建议（模型判断，非事实、非指令）\n\n1. **优先核对两条任务的实际通行需求**：限制是否属于\"完全封锁\"还是\"降速/部分通行\"，决定任务可否按原时刻执行；rev.2 正文仅称\"临时受限\"，未给出通行能力细节。\n2. **时间上可考虑将开始时刻推迟至 10:10 之后**（如 10:15 前后），使执行落在限制解除后，且仍在各自关注时间窗（截至 10:30）之内 —— 但该推迟需由任务侧确认，本次不代为修改。\n3. **资源并发提醒**：若两任务都在窗口内启动，合计恰好占满 4 辆可用车，建议错峰或预留缓冲。\n4. 态势对象 properties 为空，**不宜据态势推断通道是否受限**；应以报告 rev.2 为准，并持续关注是否有 rev.3 更新。\n5. 本次**不修改任务、不自动分派**，以下仅为归口记录。\n\n## 四、任务归口判断（已记录，未创建/未分派）\n\n- 已关联 **西区补给方案**、**西区设备转移方案** 各 revision 1，理由：两者业务引用均含 road-west-01，且关注时间窗覆盖限制时段 09:20–10:10。\n- **暂不提出新建公共任务**：本次信息可由上述两条既有活动任务承接，无需独立工作目标，故不满足\"新建建议须有独立工作目标\"的条件。\n\n## 五、资料缺口\n\n1. **限制性质未明**：rev.2 未说明受限类型（封闭 / 单向 / 降速）、原因与是否可能延长。\n2. **限制解除确认缺失**：无 10:10 之后的状态更新或恢复通行报告（信息截至 asOf 09:20）。\n3. **态势侧无对应变化**：road-west-01 changes 为空、properties 为空，态势系统未反映该限制，存在**源间不一致**（intel 有、situation 无）。\n4. **车辆池细节不足**：仅有 availableCount=4，缺少车型、位置、是否含司机等，无法判断 3+1 并发是否可行。\n5. 两条任务的执行方式、路线、是否可等待等业务约束未在任务记录中体现，**其受影响程度需任务负责人确认**。\n\n## 六、来源与版本清单\n\n- intel / report-west-01 rev.1（观测 2026-10-01 08:50，发布 08:55）\n- intel / report-west-01 rev.2（观测 2026-10-01 09:18，发布 09:20，最新）\n- situation / road-west-01 current（revision 1，asOf 09:00）\n- situation / vehicles-west-01 current（revision 1，availableCount 4，asOf 09:00）\n- situation / road-west-01 changes（空，nextAfter seq-100）\n- axon 任务 1bd5d5b2-2897-4e45-8209-43424a594588（rev.1，active）\n- axon 任务 550a77a2-62a3-4b0a-84da-0a5b79a47aad（rev.1，active）\n- 任务判断记录：recorded（published=false，未创建任务、未分派）",
+        "semanticCheck": {
+          "expected": "existing-tasks",
+          "expectedTaskIds": [
+            "1bd5d5b2-2897-4e45-8209-43424a594588",
+            "550a77a2-62a3-4b0a-84da-0a5b79a47aad"
+          ],
+          "actualTaskIds": [
+            "1bd5d5b2-2897-4e45-8209-43424a594588",
+            "550a77a2-62a3-4b0a-84da-0a5b79a47aad"
+          ],
+          "matches": true
+        },
+        "deliveries": [
+          {
+            "id": "3a1ea2c9-b74d-4273-a582-7f4e9aa24d3f",
+            "eventId": "947ec9f5-925a-4f2d-8fce-1845b4930802",
+            "jobId": "816597de-8bbe-4bdb-a2aa-3449d671a1fc",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-b",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:04:46.467Z",
+            "updatedAt": "2026-10-09T02:04:46.474Z",
+            "deliveredAt": "2026-10-09T02:04:46.474Z"
+          },
+          {
+            "id": "7e9520fc-244c-4322-a7f4-4ec6e28d7f11",
+            "eventId": "947ec9f5-925a-4f2d-8fce-1845b4930802",
+            "jobId": "816597de-8bbe-4bdb-a2aa-3449d671a1fc",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-a",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:04:46.467Z",
+            "updatedAt": "2026-10-09T02:04:46.482Z",
+            "deliveredAt": "2026-10-09T02:04:46.482Z"
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&reportId=report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01?revision=1",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-west-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/changes?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%5D",
+            "status": 200
+          }
+        ],
+        "usage": {
+          "modelAttempts": 4,
+          "replyAttempts": 4,
+          "compactionAttempts": 0,
+          "toolCalls": 12,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 6724,
+            "output": 2902,
+            "cacheRead": 15744,
+            "cacheWrite": 0,
+            "totalTokens": 25370
+          }
+        }
+      }
+    ],
+    "jobCount": 1,
+    "tasksUnchanged": true,
+    "completed": true
+  },
+  {
+    "name": "existing",
+    "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-context-live-LhuhYQ/existing-ohjKo9",
+    "model": "deepseek-flash",
+    "taskIds": {
+      "A": "4161e2b0-8bf4-432c-ab42-00e83b25cc51",
+      "C": "85086410-d36f-40a9-a341-0afc528dbfdf"
+    },
+    "initialTasks": [
+      {
+        "id": "85086410-d36f-40a9-a341-0afc528dbfdf",
+        "title": "东区补给方案",
+        "goal": "在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca",
+        "updatedByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca",
+        "createdAt": "2026-10-09T02:04:32.081Z",
+        "updatedAt": "2026-10-09T02:04:32.081Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-east-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-east"
+            ],
+            "time": {
+              "from": "2026-10-01T01:45:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "4161e2b0-8bf4-432c-ab42-00e83b25cc51",
+        "title": "西区补给方案",
+        "goal": "在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca",
+        "updatedByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca",
+        "createdAt": "2026-10-09T02:04:32.080Z",
+        "updatedAt": "2026-10-09T02:04:32.080Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:40:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "eventName": "E1",
+        "input": {
+          "sourceMessageId": "intel-msg-0001",
+          "title": "西区通道限制信息更新",
+          "text": "报告 report-west-01 更新至修订 2。关联对象 situation/road/road-west-01；限制时段为 2026-10-01T09:20:00+08:00 至 2026-10-01T10:10:00+08:00。请查询报告正文及历史。",
+          "subjectId": "report-west-01",
+          "occurredAt": "2026-10-01T09:20:00+08:00"
+        },
+        "job": {
+          "id": "1d1a1508-ede3-4ed9-8ee2-b7bbad75cdfd",
+          "eventId": "84ccd02a-f9cc-484f-9dfd-8ea26f922d10",
+          "sourceId": "mock-intel-source",
+          "kind": "preprocess",
+          "status": "succeeded",
+          "revision": 28,
+          "createdAt": "2026-10-09T02:04:32.772Z",
+          "sessionId": "2bbbb97f-73ff-406a-ad04-5ab12e6ceb94",
+          "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+          "ruleSnapshot": {
+            "rule": {
+              "name": "固定投递验证",
+              "sourceId": "mock-intel-source",
+              "profileId": "synthesis",
+              "recipientSeatIds": [
+                "seat-a",
+                "seat-b"
+              ],
+              "enabled": true,
+              "id": "24e9d3d7-84cc-4a85-8c1d-27dae87593e9",
+              "revision": 1,
+              "createdAt": "2026-10-09T02:04:32.356Z",
+              "updatedAt": "2026-10-09T02:04:32.356Z",
+              "createdByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca",
+              "updatedByUserId": "6bff5652-e29a-4a58-b1f9-1558a46f1aca"
+            },
+            "profile": {
+              "id": "synthesis",
+              "name": "多源综合分析",
+              "goal": "根据收到的更新，自主查询报告正文与历史、当前态势和 Axon 活动公共任务，综合说明变化、可能影响哪些任务及依据，区分事实、建议和资料缺口。比较任务的目标、资源条件与有效时间。结论用中文，列出来源与版本；不要修改任务或自动分派。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。",
+              "tools": [
+                "information_search",
+                "information_read",
+                "situation_query",
+                "task_search",
+                "task_read",
+                "information_record_task_assessment"
+              ],
+              "contextScopeId": "demo-context",
+              "skillIds": [],
+              "agentIds": [],
+              "instructions": "",
+              "resources": [],
+              "skills": [],
+              "agents": [],
+              "contextScope": {
+                "scopeId": "demo-context",
+                "systemIds": [
+                  "intel",
+                  "situation"
+                ]
+              }
+            }
+          },
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "86d5dd0c-c1f4-4ae4-8646-abbc2e238ab7",
+          "startedAt": "2026-10-09T02:04:32.774Z",
+          "taskAssessment": {
+            "recordedAt": "2026-10-09T02:04:37.907Z",
+            "toolCallId": "call_00_ZY2wwONyY1tjm12Ddubv3274",
+            "items": [
+              {
+                "taskSpaceId": "4161e2b0-8bf4-432c-ab42-00e83b25cc51",
+                "taskRevision": 1,
+                "reason": "报告 report-west-01 修订2 关联对象 situation/road/road-west-01，正是活动公共任务「西区补给方案」的 businessRefs 关注通道；任务目标为 2026-10-01 09:40 起执行、至少需 3 辆车、使用西区道路与车辆池。修订2 的限制时段 09:20–10:10 与任务执行时间 09:40 完全重叠，直接影响该任务的通行资源条件；任务关注的西区车辆池 situation/resource/vehicles-west-01 当前可用 4 辆，满足≥3辆需求。据此判断本更新与既有任务直接相关，应归口该任务，暂不需新建公共任务。"
+              }
+            ]
+          },
+          "usage": {
+            "modelAttempts": 4,
+            "replyAttempts": 4,
+            "compactionAttempts": 0,
+            "toolCalls": 10,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 5726,
+              "output": 2528,
+              "cacheRead": 14336,
+              "cacheWrite": 0,
+              "totalTokens": 22590
+            }
+          },
+          "result": {
+            "sessionId": "2bbbb97f-73ff-406a-ad04-5ab12e6ceb94",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "finalMessageId": "f89a0373",
+            "files": []
+          },
+          "endedAt": "2026-10-09T02:04:44.606Z"
+        },
+        "queries": [
+          {
+            "id": "6272cdf1",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:34.881Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":2,\"title\":\"西区通道限制更新\",\"summary\":\"西区通道 09:20 至 10:10 临时受限。\",\"content\":\"本报告更新此前观测：西区通道在 09:20 至 10:10 临时受限。此前截至 08:50 的记录未报告此限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T09:18:00+08:00\",\"publishedAt\":\"2026-10-01T09:20:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:20:00+08:00\",\"to\":\"2026-10-01T10:10:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_00_vk2GbCtk3lnVRBD6y0LU6726",
+            "isError": false
+          },
+          {
+            "id": "56c08d3f",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\",\"revision\":1},\"queriedAt\":\"2026-10-09T02:04:34.886Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"content\":\"截至 2026-10-01 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_01_qbCOsLgsH85yDVzq8rEK3548",
+            "isError": false
+          },
+          {
+            "id": "7c98c528",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:34.892Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:20:00+08:00\",\"items\":[{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}},{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":2,\"title\":\"西区通道限制更新\",\"summary\":\"西区通道 09:20 至 10:10 临时受限。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T09:18:00+08:00\",\"publishedAt\":\"2026-10-01T09:20:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:20:00+08:00\",\"to\":\"2026-10-01T10:10:00+08:00\"}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_02_3ZXbj78IFGWkQFRJEKxI4085",
+            "isError": false
+          },
+          {
+            "id": "2d0bec50",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:34.899Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},\"name\":\"西区通道\",\"properties\":{}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-b7de6a40-a6d6-4558-b5ac-90de04feebc7-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_03_r6w5nIUloU7tMs5gE30U8088",
+            "isError": false
+          },
+          {
+            "id": "d4511758",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"businessRefs\":[{\"systemId\":\"intel\",\"objectType\":\"report\",\"objectId\":\"report-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:34.903Z\",\"data\":{\"items\":[{\"id\":\"4161e2b0-8bf4-432c-ab42-00e83b25cc51\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.080Z\",\"updatedAt\":\"2026-10-09T02:04:32.080Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[],\"textFields\":[]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_04_wCEjDV76oYusJ6hOhcnz0224",
+            "isError": false
+          },
+          {
+            "id": "92184580",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"西区 通道 限制\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:34.906Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_05_CzK64fqOF9Dc7fjr1ukx8668",
+            "isError": false
+          },
+          {
+            "id": "4d4a31e9",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"4161e2b0-8bf4-432c-ab42-00e83b25cc51\"},\"queriedAt\":\"2026-10-09T02:04:36.545Z\",\"data\":{\"item\":{\"id\":\"4161e2b0-8bf4-432c-ab42-00e83b25cc51\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:32.080Z\",\"updatedAt\":\"2026-10-09T02:04:32.080Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_00_ak44WciQIf4uJysuir1Z5164",
+            "isError": false
+          },
+          {
+            "id": "5ec4ef92",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"}],\"from\":\"2026-10-01T08:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\",\"mode\":\"changes\"},\"queriedAt\":\"2026-10-09T02:04:36.549Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"nextAfter\":\"situation-b7de6a40-a6d6-4558-b5ac-90de04feebc7-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_01_rJM5MWM4b4tfttcK9wVb3365",
+            "isError": false
+          },
+          {
+            "id": "5fc5328d",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:36.553Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},\"name\":\"西区可用车辆\",\"properties\":{\"availableCount\":4,\"unit\":\"辆\"}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-b7de6a40-a6d6-4558-b5ac-90de04feebc7-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_02_pKtWyNLiHr8TGeG0wsgG3904",
+            "isError": false
+          },
+          {
+            "id": "d1584e90",
+            "requestId": "7955131b-e5aa-48bb-b1d2-f68e9f534ed3",
+            "role": "tool",
+            "text": "{\"status\":\"recorded\",\"assessment\":{\"recordedAt\":\"2026-10-09T02:04:37.907Z\",\"toolCallId\":\"call_00_ZY2wwONyY1tjm12Ddubv3274\",\"items\":[{\"taskSpaceId\":\"4161e2b0-8bf4-432c-ab42-00e83b25cc51\",\"taskRevision\":1,\"reason\":\"报告 report-west-01 修订2 关联对象 situation/road/road-west-01，正是活动公共任务「西区补给方案」的 businessRefs 关注通道；任务目标为 2026-10-01 09:40 起执行、至少需 3 辆车、使用西区道路与车辆池。修订2 的限制时段 09:20–10:10 与任务执行时间 09:40 完全重叠，直接影响该任务的通行资源条件；任务关注的西区车辆池 situation/resource/vehicles-west-01 当前可用 4 辆，满足≥3辆需求。据此判断本更新与既有任务直接相关，应归口该任务，暂不需新建公共任务。\"}]},\"published\":false,\"message\":\"任务判断已记录，本次分析成功结束后展示。\"}",
+            "toolName": "information_record_task_assessment",
+            "toolCallId": "call_00_ZY2wwONyY1tjm12Ddubv3274",
+            "isError": false
+          }
+        ],
+        "final": "# 西区通道限制信息更新 — 综合分析\n\n## 一、事实（可核验资料）\n\n**报告正文与历史**\n| 版本 | 标题 | 观测时间 | 发布时间 | 有效时段 | 内容要点 |\n|---|---|---|---|---|---|\n| rev.1 | 西区通道观测记录 | 2026-10-01 08:50 | 08:55 | 09:00–11:00 | 截至 08:50 未报告西区通道限制 |\n| rev.2 | 西区通道限制更新 | 2026-10-01 09:18 | 09:20 | 09:20–10:10 | 西区通道 09:20 至 10:10 临时受限；明确更正 rev.1「未报告」的状态 |\n\n- 关联对象：`situation/road/road-west-01`（西区通道）；区域 `zone-west`。\n- 来源标识：`{\"sourceId\":\"mock-intel-source\",\"systemId\":\"intel\",\"subjectId\":\"report-west-01\",\"occurredAt\":\"2026-10-01T09:20:00+08:00\"}`。\n\n**当前态势**\n- `situation/road/road-west-01`（西区通道）：rev.1，生效 09:00，有效 09:00–11:00，属性为空，态势侧**未体现限制字段**。\n- `situation/resource/vehicles-west-01`（西区可用车辆）：rev.1，有效 09:00–11:00，`availableCount = 4 辆`。\n- 08:00–11:00 区间内 road-west-01 与 vehicles-west-01 的 changes 查询**返回空集**（nextAfter 序列号 100 未推进）。\n\n**活动公共任务**（仅命中 1 条）\n- `4161e2b0-8bf4-432c-ab42-00e83b25cc51`｜西区补给方案｜state=active｜rev.1\n- 目标：2026-10-01 09:40 开始执行，至少需要 3 辆车，使用西区道路与车辆池。\n- businessRefs：`situation/resource/vehicles-west-01`、`situation/road/road-west-01`；focus：zone-west，01:40–02:30 UTC（＝09:40–10:30 北京时间），topics 车辆/通行。\n\n## 二、任务目标、资源条件与有效时间的比对\n\n| 维度 | 任务要求 | 资料现状 | 是否冲突 |\n|---|---|---|---|\n| 通道可用性 | 09:40 起使用西区道路 | rev.2：09:20–10:10 受限 | **冲突**：任务执行起点 09:40 落在限制窗口内 |\n| 车辆数 | ≥3 辆 | 西区可用 4 辆 | 不冲突（余 1 辆冗余） |\n| 时间窗 | 执行 09:40–10:30；focus 至 02:30 UTC | 限制 09:20–10:10 | **部分重叠**：09:40–10:10 约 30 分钟处于受限段 |\n| 态势一致性 | 需通行可用 | 态势 road 对象无限制标记，08:00–11:00 无 changes | **资料缺口**：态势未反映该限制 |\n\n## 三、变化与可能影响（事实 + 推断，已标注）\n\n- **事实**：本通道状态在 rev.1→rev.2 之间由「未报告限制」变为「09:20–10:10 临时受限」，且 rev.2 观测时间（09:18）晚于 rev.1（08:50）。\n- **推断（非事实）**：该限制窗口覆盖任务 09:40 启动时刻，可能影响「西区补给方案」的车辆调度与通行安排。此为基于时间重叠的推断，报告未说明限制原因、范围、是否影响载具通行，也未说明是否需改道。\n- **未受影响项**：车辆池 4 辆 ≥ 需求 3 辆，按当前快照资源充足；此为静态快照，不排除执行前变动。\n\n## 四、归口判断（已记录，未修改任务、未自动分派）\n\n- **归口**：关联既有任务 `4161e2b0-8bf4-432c-ab42-00e83b25cc51`（西区补给方案）。\n- **依据**：其 businessRefs 直接包含 `road-west-01`；限制时段与任务执行时段重叠。\n- **不新建公共任务**：该更新有明确承接方，无需新工作目标。\n- 说明：以上仅为判断记录，任务本身与分派状态均未变更。\n\n## 五、资料缺口与建议（建议供参考，非指令）\n\n**缺口**\n1. 态势系统 road-west-01 无限制属性、changes 为空，态势与特情报告**不一致**，无法从态势侧独立验证限制。\n2. 报告未给出限制原因、影响范围、是否全面封闭、是否有替代路线。\n3. 车辆池数据为 09:00 快照，无 09:20 后变更记录。\n\n**建议（需人工确认）**\n1. 以特情报告 rev.2 为准更新对 `road-west-01` 的通行判断，并向态势侧核对限制登记缺失。\n2. 请任务方确认 09:40 启动是否需要顺延至 10:10 之后，或改走替代通道。\n3. 执行前复核西区车辆池实时可用数（当前快照 4 辆）。\n\n## 六、来源与版本\n\n- `intel/report-west-01` rev.2（asOf 2026-10-01T09:20+08:00）与 rev.1（asOf 2026-10-01T08:50+08:00）— 正文已读取\n- `intel` 报告索引：report-west-01，2 条修订（rev.1、rev.2），hasMore=false\n- `situation/road/road-west-01` current rev.1（asOf 2026-10-01T09:00+08:00）\n- `situation/resource/vehicles-west-01` current rev.1（asOf 2026-10-01T09:00+08:00）\n- `situation` changes 查询（08:00–11:00）：空，nextAfter=…-seq-100\n- `axon` 任务 4161e2b0-8bf4-432c-ab42-00e83b25cc51 rev.1，state=active\n- 本次查询时间戳：2026-10-09T02:04:3x UTC\n\n（本环境文件执行未启用；未修改任何任务，未执行分派。）",
+        "semanticCheck": {
+          "expected": "existing-tasks",
+          "expectedTaskIds": [
+            "4161e2b0-8bf4-432c-ab42-00e83b25cc51"
+          ],
+          "actualTaskIds": [
+            "4161e2b0-8bf4-432c-ab42-00e83b25cc51"
+          ],
+          "matches": true
+        },
+        "deliveries": [
+          {
+            "id": "eae4526b-ddad-4436-896d-4cbd3fe0a95e",
+            "eventId": "84ccd02a-f9cc-484f-9dfd-8ea26f922d10",
+            "jobId": "1d1a1508-ede3-4ed9-8ee2-b7bbad75cdfd",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-b",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:04:44.606Z",
+            "updatedAt": "2026-10-09T02:04:44.612Z",
+            "deliveredAt": "2026-10-09T02:04:44.612Z"
+          },
+          {
+            "id": "04d81ce4-467c-4d8c-8678-de5071e746e6",
+            "eventId": "84ccd02a-f9cc-484f-9dfd-8ea26f922d10",
+            "jobId": "1d1a1508-ede3-4ed9-8ee2-b7bbad75cdfd",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-a",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:04:44.606Z",
+            "updatedAt": "2026-10-09T02:04:44.617Z",
+            "deliveredAt": "2026-10-09T02:04:44.617Z"
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01?revision=1",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&reportId=report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/changes?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-west-01%22%7D%5D&from=2026-10-01T08%3A00%3A00%2B08%3A00&to=2026-10-01T11%3A00%3A00%2B08%3A00",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-west-01%22%7D%5D",
+            "status": 200
+          }
+        ],
+        "usage": {
+          "modelAttempts": 4,
+          "replyAttempts": 4,
+          "compactionAttempts": 0,
+          "toolCalls": 10,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 5726,
+            "output": 2528,
+            "cacheRead": 14336,
+            "cacheWrite": 0,
+            "totalTokens": 22590
+          }
+        }
+      }
+    ],
+    "jobCount": 1,
+    "tasksUnchanged": true,
+    "completed": true
+  },
+  {
+    "name": "new-task",
+    "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-context-live-LhuhYQ/new-task-oB8ShI",
+    "model": "deepseek-flash",
+    "taskIds": {
+      "A": "2cb2d683-1ff5-4035-b99c-e1d99bda8b1f",
+      "B": "d8be0384-0ab7-49c0-9cfd-b8a546c8a881",
+      "C": "842826d2-822f-42ab-91ae-6e8ddda70228"
+    },
+    "initialTasks": [
+      {
+        "id": "842826d2-822f-42ab-91ae-6e8ddda70228",
+        "title": "东区补给方案",
+        "goal": "在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "updatedByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "createdAt": "2026-10-09T02:04:47.962Z",
+        "updatedAt": "2026-10-09T02:04:47.962Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-east-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-east"
+            ],
+            "time": {
+              "from": "2026-10-01T01:45:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "d8be0384-0ab7-49c0-9cfd-b8a546c8a881",
+        "title": "西区设备转移方案",
+        "goal": "在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "updatedByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "createdAt": "2026-10-09T02:04:47.961Z",
+        "updatedAt": "2026-10-09T02:04:47.961Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:50:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "2cb2d683-1ff5-4035-b99c-e1d99bda8b1f",
+        "title": "西区补给方案",
+        "goal": "在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "updatedByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+        "createdAt": "2026-10-09T02:04:47.960Z",
+        "updatedAt": "2026-10-09T02:04:47.960Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:40:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "eventName": "E1",
+        "input": {
+          "sourceMessageId": "new-request-0001",
+          "title": "访客接待须知编制需求",
+          "text": "综合事务部门来文：拟编制一份访客接待须知。请形成 Markdown 文稿，说明预约信息、到访登记、联系人以及离场事项；资料未明确的要求应标注待确认。交付日期为 2026-10-03。",
+          "subjectId": "visitor-guidance",
+          "occurredAt": "2026-10-01T09:20:00+08:00"
+        },
+        "job": {
+          "id": "8d934b51-1649-49d4-8f93-f230cb1da29f",
+          "eventId": "e617bfd5-ef05-451d-b6c2-c2ba9c20db8f",
+          "sourceId": "mock-intel-source",
+          "kind": "preprocess",
+          "status": "succeeded",
+          "revision": 39,
+          "createdAt": "2026-10-09T02:04:48.313Z",
+          "sessionId": "cf0ffe09-bd2a-42eb-b602-666dc9880b7e",
+          "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+          "ruleSnapshot": {
+            "rule": {
+              "name": "固定投递验证",
+              "sourceId": "mock-intel-source",
+              "profileId": "synthesis",
+              "recipientSeatIds": [
+                "seat-a",
+                "seat-b"
+              ],
+              "enabled": true,
+              "id": "5020e741-f6cf-4aee-b2f3-767cffe5b6c2",
+              "revision": 1,
+              "createdAt": "2026-10-09T02:04:48.070Z",
+              "updatedAt": "2026-10-09T02:04:48.070Z",
+              "createdByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020",
+              "updatedByUserId": "3c3300da-3a98-4691-b5c1-f74783ac8020"
+            },
+            "profile": {
+              "id": "synthesis",
+              "name": "多源综合分析",
+              "goal": "根据收到的更新，自主查询报告正文与历史、当前态势和 Axon 活动公共任务，综合说明变化、可能影响哪些任务及依据，区分事实、建议和资料缺口。比较任务的目标、资源条件与有效时间。结论用中文，列出来源与版本；不要修改任务或自动分派。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。",
+              "tools": [
+                "information_search",
+                "information_read",
+                "situation_query",
+                "task_search",
+                "task_read",
+                "information_record_task_assessment"
+              ],
+              "contextScopeId": "demo-context",
+              "skillIds": [],
+              "agentIds": [],
+              "instructions": "",
+              "resources": [],
+              "skills": [],
+              "agents": [],
+              "contextScope": {
+                "scopeId": "demo-context",
+                "systemIds": [
+                  "intel",
+                  "situation"
+                ]
+              }
+            }
+          },
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "77be67da-8b41-4082-abd7-d4bac67c0e23",
+          "startedAt": "2026-10-09T02:04:48.335Z",
+          "taskAssessment": {
+            "recordedAt": "2026-10-09T02:05:04.171Z",
+            "toolCallId": "call_00_spRtDJJvtZ3o9vC0KKe55521",
+            "items": [],
+            "emptyReason": "收到的资料为「访客接待须知编制需求」（intel/subjectId visitor-guidance，2026-10-01T09:20）。已查询 axon 全部活动公共任务共 3 个：西区补给方案（2cb2d683，09:40 起，≥3 辆车，西区道路与车辆池）、东区补给方案（842826d2，09:45 起，≥2 辆车，东区）、西区设备转移方案（d8be0384，09:50 起，≥1 辆车，西区）。三者目标均为车辆调度与区域通行，关注范围 zone-west/zone-east、时间 09:40–10:30；本资料目标为 Markdown 文稿编制、交付期 2026-10-03，无区域与资源依赖。目标、资源条件、有效时间均不重叠，归入任一任务均会污染其关注范围，故暂不归口。同时该需求为一次性文稿交付，且预约方式、登记字段、联系人、离场流程等关键要素均未在资料中明确，独立工作目标尚不成立，故暂不提出新建公共任务建议；如后续明确对外接待流程规范这一持续性目标，可再评估新建。本次未修改或分派任何任务。"
+          },
+          "usage": {
+            "modelAttempts": 8,
+            "replyAttempts": 8,
+            "compactionAttempts": 0,
+            "toolCalls": 16,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 5074,
+              "output": 3541,
+              "cacheRead": 41728,
+              "cacheWrite": 0,
+              "totalTokens": 50343
+            }
+          },
+          "result": {
+            "sessionId": "cf0ffe09-bd2a-42eb-b602-666dc9880b7e",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "finalMessageId": "52d66bb3",
+            "files": []
+          },
+          "endedAt": "2026-10-09T02:05:06.145Z"
+        },
+        "queries": [
+          {
+            "id": "f037d931",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"subjectId\":\"visitor-guidance\"},\"queriedAt\":\"2026-10-09T02:04:49.192Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_1kPUYDO8gu83rJIyK9BC9954",
+            "isError": false
+          },
+          {
+            "id": "4b39ea29",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"访客接待\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:49.196Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_01_IlJdYdzMGwWJJtieuZKi4503",
+            "isError": false
+          },
+          {
+            "id": "9b564193",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"query\":\"访客\"},\"queriedAt\":\"2026-10-09T02:04:50.135Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_CafyBPpw5HCyI3lLYsHk9960",
+            "isError": false
+          },
+          {
+            "id": "6a16d7b4",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"query\":\"接待须知\"},\"queriedAt\":\"2026-10-09T02:04:50.139Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_01_CgFOXKXOI2zHUdQKbE1O4508",
+            "isError": false
+          },
+          {
+            "id": "bf980c95",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"访客\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:50.142Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_02_1VdazE4RGSdNdS2TGCQl9910",
+            "isError": false
+          },
+          {
+            "id": "48880da3",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"接待须知\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:50.145Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_03_nrTO05rGHID9BPQR3K8U1244",
+            "isError": false
+          },
+          {
+            "id": "da63a946",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":50},\"queriedAt\":\"2026-10-09T02:04:50.828Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}],\"limit\":50,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_OAKmacbIy7E5L2NSQeZ41027",
+            "isError": false
+          },
+          {
+            "id": "0bed06ff",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:50.831Z\",\"data\":{\"items\":[{\"id\":\"2cb2d683-1ff5-4035-b99c-e1d99bda8b1f\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.960Z\",\"updatedAt\":\"2026-10-09T02:04:47.960Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}},{\"id\":\"842826d2-822f-42ab-91ae-6e8ddda70228\",\"title\":\"东区补给方案\",\"goal\":\"在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.962Z\",\"updatedAt\":\"2026-10-09T02:04:47.962Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"}],\"focus\":{\"areaIds\":[\"zone-east\"],\"time\":{\"from\":\"2026-10-01T01:45:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}},{\"id\":\"d8be0384-0ab7-49c0-9cfd-b8a546c8a881\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.961Z\",\"updatedAt\":\"2026-10-09T02:04:47.961Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_01_M9DkvOe6M3YXyjW8oZSn7885",
+            "isError": false
+          },
+          {
+            "id": "40acd1f5",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:52.178Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"content\":\"截至 2026-10-01 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_00_N0jKCnhr3HVMlgsBaK2x7777",
+            "isError": false
+          },
+          {
+            "id": "86152df3",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:52.182Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-east\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},\"name\":\"东区可用车辆\",\"properties\":{\"availableCount\":5,\"unit\":\"辆\"}},{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},\"name\":\"西区可用车辆\",\"properties\":{\"availableCount\":4,\"unit\":\"辆\"}},{\"revision\":1,\"areaIds\":[\"zone-east\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"},\"name\":\"东区通道\",\"properties\":{}},{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},\"name\":\"西区通道\",\"properties\":{}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-e969c3d0-8baf-4d5f-9f39-2c8d8031f949-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_01_iZJL2BYzcUC9pQkC4TWO4756",
+            "isError": false
+          },
+          {
+            "id": "573520e6",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"from\":\"2026-10-01T08:00:00+08:00\",\"to\":\"2026-10-01T10:00:00+08:00\",\"mode\":\"changes\"},\"queriedAt\":\"2026-10-09T02:04:52.186Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"nextAfter\":\"situation-e969c3d0-8baf-4d5f-9f39-2c8d8031f949-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_02_NRTnlA8lAuG4sn6uxlLu9532",
+            "isError": false
+          },
+          {
+            "id": "15749459",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"2cb2d683-1ff5-4035-b99c-e1d99bda8b1f\"},\"queriedAt\":\"2026-10-09T02:04:53.092Z\",\"data\":{\"item\":{\"id\":\"2cb2d683-1ff5-4035-b99c-e1d99bda8b1f\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.960Z\",\"updatedAt\":\"2026-10-09T02:04:47.960Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_00_e2JzVEd9a3CdK3auigH63677",
+            "isError": false
+          },
+          {
+            "id": "a2dfe4a3",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"842826d2-822f-42ab-91ae-6e8ddda70228\"},\"queriedAt\":\"2026-10-09T02:04:53.094Z\",\"data\":{\"item\":{\"id\":\"842826d2-822f-42ab-91ae-6e8ddda70228\",\"title\":\"东区补给方案\",\"goal\":\"在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.962Z\",\"updatedAt\":\"2026-10-09T02:04:47.962Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"}],\"focus\":{\"areaIds\":[\"zone-east\"],\"time\":{\"from\":\"2026-10-01T01:45:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_01_62SxWwgMmcXpvaUoReDb4639",
+            "isError": false
+          },
+          {
+            "id": "3c534839",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"d8be0384-0ab7-49c0-9cfd-b8a546c8a881\"},\"queriedAt\":\"2026-10-09T02:04:53.097Z\",\"data\":{\"item\":{\"id\":\"d8be0384-0ab7-49c0-9cfd-b8a546c8a881\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.961Z\",\"updatedAt\":\"2026-10-09T02:04:47.961Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_02_l7Cx5TJG7GzxZMup3mxf6334",
+            "isError": false
+          },
+          {
+            "id": "b3d446a4",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "Validation failed for tool \"information_record_task_assessment\":\n  - relations: must have required properties relations\n\nReceived arguments:\n{\n  \"emptyReason\": \"收到的资料为「访客接待须知编制需求」（intel/subjectId visitor-guidance，2026-10-01T09:20）。已查询 axon 全部活动公共任务共 3 个：西区补给方案（2cb2d683，09:40 起，≥3 辆车，西区道路与车辆池）、东区补给方案（842826d2，09:45 起，≥2 辆车，东区）、西区设备转移方案（d8be0384，09:50 起，≥1 辆车，西区）。三者目标均为车辆调度与区域通行，关注范围 zone-west/zone-east、时间 09:40–10:30；本资料目标为 Markdown 文稿编制、交付期 2026-10-03，无区域与资源依赖。目标、资源条件、有效时间均不重叠，归入任一任务均会污染其关注范围，故暂不归口。同时该需求为一次性文稿交付，且预约方式、登记字段、联系人、离场流程等关键要素均未在资料中明确，独立工作目标尚不成立，故暂不提出新建公共任务建议；如后续明确对外接待流程规范这一持续性目标，可再评估新建。本次未修改或分派任何任务。\"\n}",
+            "toolName": "information_record_task_assessment",
+            "toolCallId": "call_00_PjiHNNQHcuFniwzysAzp5251",
+            "isError": true
+          },
+          {
+            "id": "ad1abbd9",
+            "requestId": "159ccdb8-d653-4280-b9a3-5e5d436c835c",
+            "role": "tool",
+            "text": "{\"status\":\"recorded\",\"assessment\":{\"recordedAt\":\"2026-10-09T02:05:04.171Z\",\"toolCallId\":\"call_00_spRtDJJvtZ3o9vC0KKe55521\",\"items\":[],\"emptyReason\":\"收到的资料为「访客接待须知编制需求」（intel/subjectId visitor-guidance，2026-10-01T09:20）。已查询 axon 全部活动公共任务共 3 个：西区补给方案（2cb2d683，09:40 起，≥3 辆车，西区道路与车辆池）、东区补给方案（842826d2，09:45 起，≥2 辆车，东区）、西区设备转移方案（d8be0384，09:50 起，≥1 辆车，西区）。三者目标均为车辆调度与区域通行，关注范围 zone-west/zone-east、时间 09:40–10:30；本资料目标为 Markdown 文稿编制、交付期 2026-10-03，无区域与资源依赖。目标、资源条件、有效时间均不重叠，归入任一任务均会污染其关注范围，故暂不归口。同时该需求为一次性文稿交付，且预约方式、登记字段、联系人、离场流程等关键要素均未在资料中明确，独立工作目标尚不成立，故暂不提出新建公共任务建议；如后续明确对外接待流程规范这一持续性目标，可再评估新建。本次未修改或分派任何任务。\"},\"published\":false,\"message\":\"任务判断已记录，本次分析成功结束后展示。\"}",
+            "toolName": "information_record_task_assessment",
+            "toolCallId": "call_00_spRtDJJvtZ3o9vC0KKe55521",
+            "isError": false
+          }
+        ],
+        "final": "任务判断已记录（**暂不归口**，未关联任何任务，也未提出新建建议）。以上分析结论不变，要点复述：\n\n**核心结论**：收到的「访客接待须知编制需求」与当前查询到的 3 个活动公共任务（西区补给、东区补给、西区设备转移）在**目标、资源条件、有效时间**三个维度均不重叠——前者是 2026-10-03 交付的文稿编制，后者是 09:40–10:30 窗口内的车辆与通行调度。按现有资料，**无任务受影响**。\n\n**资料缺口（需向来源方确认）**：预约渠道与时限、到访登记字段、联系人及联系方式、离场核销流程、适用范围（区域/访客类别）、归口部门与审批层级、是否需与门禁及车辆通行衔接、文稿生效与版本管理方式。资料中均未明确，已按要求标注为待确认，不作推断。\n\n**已执行**：intel 报告索引（主题/关键词/全量）、报告正文与修订、situation current、situation changes（08:00–10:00）、axon 公共任务检索与逐个读取、任务判断记录。**未执行**：未修改任务、未自动分派、未新建任务、未编造资料要求。",
+        "semanticCheck": {
+          "expected": "new-task-suggestion",
+          "expectedTaskIds": [],
+          "actualTaskIds": [],
+          "matches": false
+        },
+        "deliveries": [
+          {
+            "id": "b679ce1d-a26f-4cf4-b98a-3c9a20f0ecfb",
+            "eventId": "e617bfd5-ef05-451d-b6c2-c2ba9c20db8f",
+            "jobId": "8d934b51-1649-49d4-8f93-f230cb1da29f",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-b",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:05:06.145Z",
+            "updatedAt": "2026-10-09T02:05:06.150Z",
+            "deliveredAt": "2026-10-09T02:05:06.150Z"
+          },
+          {
+            "id": "717a45a0-4acc-4bfc-9930-5b5683700c50",
+            "eventId": "e617bfd5-ef05-451d-b6c2-c2ba9c20db8f",
+            "jobId": "8d934b51-1649-49d4-8f93-f230cb1da29f",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-a",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:05:06.145Z",
+            "updatedAt": "2026-10-09T02:05:06.154Z",
+            "deliveredAt": "2026-10-09T02:05:06.154Z"
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&subjectId=visitor-guidance",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&query=%E8%AE%BF%E5%AE%A2",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&query=%E6%8E%A5%E5%BE%85%E9%A1%BB%E7%9F%A5",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=50",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-east-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-west-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-east-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/changes?limit=20&from=2026-10-01T08%3A00%3A00%2B08%3A00&to=2026-10-01T10%3A00%3A00%2B08%3A00",
+            "status": 200
+          }
+        ],
+        "usage": {
+          "modelAttempts": 8,
+          "replyAttempts": 8,
+          "compactionAttempts": 0,
+          "toolCalls": 16,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 5074,
+            "output": 3541,
+            "cacheRead": 41728,
+            "cacheWrite": 0,
+            "totalTokens": 50343
+          }
+        }
+      }
+    ],
+    "jobCount": 1,
+    "tasksUnchanged": true,
+    "completed": true
+  },
+  {
+    "name": "reference",
+    "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-context-live-LhuhYQ/reference-pMHSoL",
+    "model": "deepseek-flash",
+    "taskIds": {
+      "A": "07d2c124-4247-491a-9720-b70eb73ffdab",
+      "B": "1be4da6d-6832-4996-8433-3f094b227c33",
+      "C": "15f3d71b-3da4-467b-8544-bc9c7c062cd3"
+    },
+    "initialTasks": [
+      {
+        "id": "15f3d71b-3da4-467b-8544-bc9c7c062cd3",
+        "title": "东区补给方案",
+        "goal": "在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "updatedByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "createdAt": "2026-10-09T02:04:47.966Z",
+        "updatedAt": "2026-10-09T02:04:47.966Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-east-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-east"
+            ],
+            "time": {
+              "from": "2026-10-01T01:45:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "1be4da6d-6832-4996-8433-3f094b227c33",
+        "title": "西区设备转移方案",
+        "goal": "在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "updatedByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "createdAt": "2026-10-09T02:04:47.965Z",
+        "updatedAt": "2026-10-09T02:04:47.965Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:50:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      },
+      {
+        "id": "07d2c124-4247-491a-9720-b70eb73ffdab",
+        "title": "西区补给方案",
+        "goal": "在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。",
+        "visibility": "public",
+        "ownerSeatId": "seat-a",
+        "state": "active",
+        "revision": 1,
+        "createdByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "updatedByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+        "createdAt": "2026-10-09T02:04:47.965Z",
+        "updatedAt": "2026-10-09T02:04:47.965Z",
+        "context": {
+          "businessRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "vehicles-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "road-west-01"
+            }
+          ],
+          "focus": {
+            "areaIds": [
+              "zone-west"
+            ],
+            "time": {
+              "from": "2026-10-01T01:40:00.000Z",
+              "to": "2026-10-01T02:30:00.000Z"
+            },
+            "topics": [
+              "车辆",
+              "通行"
+            ]
+          }
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "eventName": "E1",
+        "input": {
+          "sourceMessageId": "reference-0001",
+          "title": "公制长度单位换算资料",
+          "text": "本条内容为一般参考资料：1 千米等于 1000 米，1 米等于 100 厘米。资料发布时间为 2026-10-01，不涉及具体地域、道路、人员、资源数量或正在办理事项。",
+          "subjectId": "length-units",
+          "occurredAt": "2026-10-01T09:20:00+08:00"
+        },
+        "job": {
+          "id": "59e6cc07-0a26-4a1a-a916-530e6c7a7387",
+          "eventId": "1f9a1e20-072b-4012-ae07-ca28bd95143f",
+          "sourceId": "mock-intel-source",
+          "kind": "preprocess",
+          "status": "succeeded",
+          "revision": 36,
+          "createdAt": "2026-10-09T02:04:48.339Z",
+          "sessionId": "7c36949f-ebc3-4e6c-848d-3d3b285c7286",
+          "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+          "ruleSnapshot": {
+            "rule": {
+              "name": "固定投递验证",
+              "sourceId": "mock-intel-source",
+              "profileId": "synthesis",
+              "recipientSeatIds": [
+                "seat-a",
+                "seat-b"
+              ],
+              "enabled": true,
+              "id": "599cc8b1-6a02-4b13-a6fc-c4f24c44be75",
+              "revision": 1,
+              "createdAt": "2026-10-09T02:04:48.079Z",
+              "updatedAt": "2026-10-09T02:04:48.079Z",
+              "createdByUserId": "a7aef321-7635-4171-a5e4-44370641b157",
+              "updatedByUserId": "a7aef321-7635-4171-a5e4-44370641b157"
+            },
+            "profile": {
+              "id": "synthesis",
+              "name": "多源综合分析",
+              "goal": "根据收到的更新，自主查询报告正文与历史、当前态势和 Axon 活动公共任务，综合说明变化、可能影响哪些任务及依据，区分事实、建议和资料缺口。比较任务的目标、资源条件与有效时间。结论用中文，列出来源与版本；不要修改任务或自动分派。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。",
+              "tools": [
+                "information_search",
+                "information_read",
+                "situation_query",
+                "task_search",
+                "task_read",
+                "information_record_task_assessment"
+              ],
+              "contextScopeId": "demo-context",
+              "skillIds": [],
+              "agentIds": [],
+              "instructions": "",
+              "resources": [],
+              "skills": [],
+              "agents": [],
+              "contextScope": {
+                "scopeId": "demo-context",
+                "systemIds": [
+                  "intel",
+                  "situation"
+                ]
+              }
+            }
+          },
+          "model": "deepseek-flash",
+          "modelSettingsVersion": "262f6733-67c2-48dc-90f2-244a5f81c7e7",
+          "startedAt": "2026-10-09T02:04:48.341Z",
+          "taskAssessment": {
+            "recordedAt": "2026-10-09T02:04:55.403Z",
+            "toolCallId": "call_00_Vvo0VhFqQQc5xfLxnLzv0724",
+            "items": [],
+            "emptyReason": "本次资料为公制长度单位换算的一般参考资料（1千米=1000米、1米=100厘米），不涉及具体地域、道路、人员、资源数量或正在办理事项。经查询：intel 系统按 subjectId=length-units 及其 objectRef 检索均无报告记录；situation 系统按该主题查询无对象，且以西区/东区对象与时间窗（2026-10-01 08:00–10:00）查询变化记录为空；活动公共任务共 3 条（西区补给方案、东区补给方案、西区设备转移方案），其业务引用分别指向 zone-west/zone-east 的道路与车辆池，关注主题为“车辆、通行”。本资料既不属于任何任务的目标与关注范围，也不改变任务所需的资源条件或有效时间，无法承接独立工作目标，故暂不归口，也不建议新建公共任务。"
+          },
+          "usage": {
+            "modelAttempts": 7,
+            "replyAttempts": 7,
+            "compactionAttempts": 0,
+            "toolCalls": 15,
+            "unknownUsageAttempts": 0,
+            "actual": {
+              "input": 4843,
+              "output": 2644,
+              "cacheRead": 33664,
+              "cacheWrite": 0,
+              "totalTokens": 41151
+            }
+          },
+          "result": {
+            "sessionId": "7c36949f-ebc3-4e6c-848d-3d3b285c7286",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "finalMessageId": "789d22a0",
+            "files": []
+          },
+          "endedAt": "2026-10-09T02:05:01.754Z"
+        },
+        "queries": [
+          {
+            "id": "79b23e7f",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"subjectId\":\"length-units\"},\"queriedAt\":\"2026-10-09T02:04:49.204Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_TqWXYziW99QDZkDxpdPA8059",
+            "isError": false
+          },
+          {
+            "id": "beea9d7b",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"query\":\"length-units\",\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:49.209Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_01_tSlgVA1XrkrzKX0KH7Oy3953",
+            "isError": false
+          },
+          {
+            "id": "bce2e984",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"query\":\"公制长度单位换算 资料\",\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:49.213Z\",\"data\":{\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_02_PhynuhCrixeQsHT60XB28381",
+            "isError": false
+          },
+          {
+            "id": "f9de0840",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"intel\",\"objectType\":\"subject\",\"objectId\":\"length-units\"}]},\"queriedAt\":\"2026-10-09T02:04:50.514Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_3TVfraJmbOLfiF1oDcsl3429",
+            "isError": false
+          },
+          {
+            "id": "d04a11b0",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"limit\":20},\"queriedAt\":\"2026-10-09T02:04:50.517Z\",\"data\":{\"items\":[{\"id\":\"07d2c124-4247-491a-9720-b70eb73ffdab\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.965Z\",\"updatedAt\":\"2026-10-09T02:04:47.965Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}},{\"id\":\"15f3d71b-3da4-467b-8544-bc9c7c062cd3\",\"title\":\"东区补给方案\",\"goal\":\"在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.966Z\",\"updatedAt\":\"2026-10-09T02:04:47.966Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"}],\"focus\":{\"areaIds\":[\"zone-east\"],\"time\":{\"from\":\"2026-10-01T01:45:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}},{\"id\":\"1be4da6d-6832-4996-8433-3f094b227c33\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.965Z\",\"updatedAt\":\"2026-10-09T02:04:47.965Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}},\"matches\":{\"businessRefs\":[],\"areaIds\":[],\"textFields\":[]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false}}",
+            "toolName": "task_search",
+            "toolCallId": "call_01_JU1FmlpJitIjlJE3z0Fs5216",
+            "isError": false
+          },
+          {
+            "id": "895e1989",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"mode\":\"changes\",\"after\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"},\"queriedAt\":\"2026-10-09T02:04:50.520Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"nextAfter\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_02_G22obMZXNCGhH0NYJyD94544",
+            "isError": false
+          },
+          {
+            "id": "fb9df041",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"limit\":50},\"queriedAt\":\"2026-10-09T02:04:51.481Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}],\"limit\":50,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0}}",
+            "toolName": "information_search",
+            "toolCallId": "call_00_VePkBBDyDJLn6qIPzqSJ9257",
+            "isError": false
+          },
+          {
+            "id": "eb429d31",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"07d2c124-4247-491a-9720-b70eb73ffdab\"},\"queriedAt\":\"2026-10-09T02:04:51.483Z\",\"data\":{\"item\":{\"id\":\"07d2c124-4247-491a-9720-b70eb73ffdab\",\"title\":\"西区补给方案\",\"goal\":\"在2026-10-01 09:40 开始执行，至少需要 3 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.965Z\",\"updatedAt\":\"2026-10-09T02:04:47.965Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:40:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_01_KQRCbiDtqAA5iXdJGVLd9039",
+            "isError": false
+          },
+          {
+            "id": "62718c11",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"15f3d71b-3da4-467b-8544-bc9c7c062cd3\"},\"queriedAt\":\"2026-10-09T02:04:51.486Z\",\"data\":{\"item\":{\"id\":\"15f3d71b-3da4-467b-8544-bc9c7c062cd3\",\"title\":\"东区补给方案\",\"goal\":\"在2026-10-01 09:45 开始执行，至少需要 2 辆车。使用东区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.966Z\",\"updatedAt\":\"2026-10-09T02:04:47.966Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"}],\"focus\":{\"areaIds\":[\"zone-east\"],\"time\":{\"from\":\"2026-10-01T01:45:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_02_mEmFcoICQVAfiuOYBRBs4572",
+            "isError": false
+          },
+          {
+            "id": "3593eadf",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"1be4da6d-6832-4996-8433-3f094b227c33\"},\"queriedAt\":\"2026-10-09T02:04:51.489Z\",\"data\":{\"item\":{\"id\":\"1be4da6d-6832-4996-8433-3f094b227c33\",\"title\":\"西区设备转移方案\",\"goal\":\"在2026-10-01 09:50 开始执行，至少需要 1 辆车。使用西区道路与车辆池。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-09T02:04:47.965Z\",\"updatedAt\":\"2026-10-09T02:04:47.965Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"focus\":{\"areaIds\":[\"zone-west\"],\"time\":{\"from\":\"2026-10-01T01:50:00.000Z\",\"to\":\"2026-10-01T02:30:00.000Z\"},\"topics\":[\"车辆\",\"通行\"]}}}}}",
+            "toolName": "task_read",
+            "toolCallId": "call_03_5DaKHxzIFzudZL1P7uUv8419",
+            "isError": false
+          },
+          {
+            "id": "eca525c3",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"intel\",\"query\":{\"systemId\":\"intel\",\"reportId\":\"report-west-01\"},\"queriedAt\":\"2026-10-09T02:04:52.618Z\",\"data\":{\"systemId\":\"intel\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"item\":{\"reportId\":\"report-west-01\",\"subjectId\":\"report-west-01\",\"revision\":1,\"title\":\"西区通道观测记录\",\"summary\":\"截至观测时刻未报告西区通道限制。\",\"content\":\"截至 2026-10-01 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"}],\"areaIds\":[\"zone-west\"],\"observedAt\":\"2026-10-01T08:50:00+08:00\",\"publishedAt\":\"2026-10-01T08:55:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"}}}}",
+            "toolName": "information_read",
+            "toolCallId": "call_00_rpP0WJY9nz8tArIsgdMS2949",
+            "isError": false
+          },
+          {
+            "id": "32e27491",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:52.622Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-west-01\"},\"name\":\"西区可用车辆\",\"properties\":{\"availableCount\":4,\"unit\":\"辆\"}},{\"revision\":1,\"areaIds\":[\"zone-west\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-west-01\"},\"name\":\"西区通道\",\"properties\":{}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_01_nPngE4MWe7XCnI2btFDX2272",
+            "isError": false
+          },
+          {
+            "id": "afb19bae",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"}],\"mode\":\"current\"},\"queriedAt\":\"2026-10-09T02:04:53.746Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[{\"revision\":1,\"areaIds\":[\"zone-east\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"vehicles-east-01\"},\"name\":\"东区可用车辆\",\"properties\":{\"availableCount\":5,\"unit\":\"辆\"}},{\"revision\":1,\"areaIds\":[\"zone-east\"],\"effectiveAt\":\"2026-10-01T09:00:00+08:00\",\"validTime\":{\"from\":\"2026-10-01T09:00:00+08:00\",\"to\":\"2026-10-01T11:00:00+08:00\"},\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"road-east-01\"},\"name\":\"东区通道\",\"properties\":{}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_00_FDrN3zxUP4ifQ9kNBUPn7706",
+            "isError": false
+          },
+          {
+            "id": "964f1540",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"from\":\"2026-10-01T08:00:00+08:00\",\"to\":\"2026-10-01T10:00:00+08:00\",\"mode\":\"changes\"},\"queriedAt\":\"2026-10-09T02:04:53.751Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-01T09:00:00+08:00\",\"items\":[],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"nextAfter\":\"situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100\"}}",
+            "toolName": "situation_query",
+            "toolCallId": "call_01_X2INYYPRcWNvWKGL6K4M8349",
+            "isError": false
+          },
+          {
+            "id": "4c3aabd9",
+            "requestId": "c342d5f6-b3da-470b-839f-690186b967e1",
+            "role": "tool",
+            "text": "{\"status\":\"recorded\",\"assessment\":{\"recordedAt\":\"2026-10-09T02:04:55.403Z\",\"toolCallId\":\"call_00_Vvo0VhFqQQc5xfLxnLzv0724\",\"items\":[],\"emptyReason\":\"本次资料为公制长度单位换算的一般参考资料（1千米=1000米、1米=100厘米），不涉及具体地域、道路、人员、资源数量或正在办理事项。经查询：intel 系统按 subjectId=length-units 及其 objectRef 检索均无报告记录；situation 系统按该主题查询无对象，且以西区/东区对象与时间窗（2026-10-01 08:00–10:00）查询变化记录为空；活动公共任务共 3 条（西区补给方案、东区补给方案、西区设备转移方案），其业务引用分别指向 zone-west/zone-east 的道路与车辆池，关注主题为“车辆、通行”。本资料既不属于任何任务的目标与关注范围，也不改变任务所需的资源条件或有效时间，无法承接独立工作目标，故暂不归口，也不建议新建公共任务。\"},\"published\":false,\"message\":\"任务判断已记录，本次分析成功结束后展示。\"}",
+            "toolName": "information_record_task_assessment",
+            "toolCallId": "call_00_Vvo0VhFqQQc5xfLxnLzv0724",
+            "isError": false
+          }
+        ],
+        "final": "# 处理结论：该资料与当前任务无关，暂不归口\n\n## 一、事实（查询所得）\n\n**1. 待处理资料本身**\n- 内容为一般参考资料：1 千米 = 1000 米，1 米 = 100 厘米。\n- 自述发布时间 2026-10-01，明确声明\"不涉及具体地域、道路、人员、资源数量或正在办理事项\"。\n- 来源标识：`{\"sourceId\":\"mock-intel-source\",\"systemId\":\"intel\",\"subjectId\":\"length-units\",\"occurredAt\":\"2026-10-01T09:20:00+08:00\"}`\n\n**2. 报告正文与历史（intel 系统）**\n- 按 `subjectId=length-units` 检索：**0 条**索引记录（`hasMore=false`）。\n- 按 objectRef（objectType=subject, objectId=length-units）检索：**0 条**。\n- 该系统全量索引（limit=50）仅 1 条既有报告：`report-west-01`《西区通道观测记录》revision 1，观测时间 2026-10-01 08:50，发布时间 08:55，有效时间 09:00–11:00，摘要\"截至观测时刻未报告西区通道限制\"。\n- 结论：本次\"换算资料\"没有对应的正文报告或历史修订可读（无 reportId 可读取）。资料中出现的 09:20 时间与 `report-west-01` 无关联。\n\n**3. 当前态势（situation 系统）**\n- 按主题查询 `length-units`：无对象，`unknownRefs` 为空。\n- 变化记录（`after` 游标 = seq-100，以及时间窗 2026-10-01 08:00–10:00）：**均为 0 条**，游标未推进（nextAfter 仍为 seq-100）。\n- 现有对象状态（revision 1，有效时间均 2026-10-01 09:00–11:00）：\n  - `vehicles-west-01` 西区可用车辆：availableCount = 4 辆（zone-west）\n  - `road-west-01` 西区通道：无属性\n  - `vehicles-east-01` 东区可用车辆：availableCount = 5 辆（zone-east）\n  - `road-east-01` 东区通道：无属性\n\n**4. 活动公共任务（axon，共 3 条，均 active、revision 1）**\n\n| 任务 | 目标 | 业务引用 | 关注区域/时间 | 资源要求 |\n|---|---|---|---|---|\n| 西区补给方案 `07d2c124…` | 2026-10-01 09:40 开始执行 | vehicles-west-01、road-west-01 | zone-west；09:40–10:30 | ≥3 辆车 |\n| 东区补给方案 `15f3d71b…` | 2026-10-01 09:45 开始执行 | vehicles-east-01、road-east-01 | zone-east；09:45–10:30 | ≥2 辆车 |\n| 西区设备转移方案 `1be4da6d…` | 2026-10-01 09:50 开始执行 | vehicles-west-01、road-west-01 | zone-west；09:50–10:30 | ≥1 辆车 |\n\n注：任务时间以 UTC 存储（01:40–02:30Z），换算为 +08:00 即 09:40–10:30，与目标描述一致。\n\n**任务间比较**\n- 资源条件：西区两条任务共用 `vehicles-west-01`，合计需 ≥4 辆，恰等于当前可用 4 辆，**无余量**；东区单独任务需 ≥2 辆，可用 5 辆，余量充足。\n- 有效时间：西区两任务（09:40、09:50）与东区任务（09:45）高度重叠，且均落在态势与报告的有效期（09:00–11:00）内。\n- 上述比较仅为客观条件对照，不构成对任务的调整建议。\n\n## 二、判断\n\n**归口结论：暂不归口（不关联任何现有任务，也不建议新建公共任务）。**\n\n依据：\n1. 资料无地域、无道路、无人员、无资源数量、无在办事项，与三条任务的业务引用（西/东区道路与车辆池）和关注主题（\"车辆\"\"通行\"）**无交集**；任务检索按关键词\"公制长度单位换算 资料\"返回 0 条，进一步佐证无匹配。\n2. 资料为通用单位换算常识，不改变任何任务的目标、资源条件或有效时间，无法形成独立工作目标，因此不满足新建公共任务的门槛。\n3. 该资料无需处置动作，可作为背景常识留档即可。\n\n## 三、资料缺口与不确定性\n\n- **无正文/历史版本可核**：`subjectId=length-units` 在 intel 系统中不存在任何索引，故无法列出\"来源与版本\"的报告级版本号；本说明中该资料的唯一版本信息来自投递标识（`sourceId=mock-intel-source`、`occurredAt=2026-10-01T09:20:00+08:00`），而非报告 revision。\n- **态势无对应变化**：查询窗口 08:00–10:00 变化记录为空，无法从态势侧交叉验证该资料的发布是否引发任何对象变更；`road-west-01`、`road-east-01` 的通道属性为空，通道可用性仅有 `report-west-01`（有效至 11:00，声明\"未报告限制\"且不保证后续通行）作为唯一文字依据。\n- **系统时间基准**：各系统 asOf 均为 2026-10-01T09:00:00+08:00，而查询动作发生在 2026-10-09；资料中 09:20 落在该 asOf 之后，属\"索引未覆盖时段\"，故不能据此推断 09:00 之后有任何新增报告。\n- 未执行任何任务修改、未自动分派；任务判断已记录为\"暂不归口\"，本轮分析结束后展示，不影响投递。",
+        "semanticCheck": {
+          "expected": "no-association",
+          "expectedTaskIds": [],
+          "actualTaskIds": [],
+          "matches": true
+        },
+        "deliveries": [
+          {
+            "id": "9d084742-4e93-41e6-9334-bb4cff7298c3",
+            "eventId": "1f9a1e20-072b-4012-ae07-ca28bd95143f",
+            "jobId": "59e6cc07-0a26-4a1a-a916-530e6c7a7387",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-b",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:05:01.754Z",
+            "updatedAt": "2026-10-09T02:05:01.759Z",
+            "deliveredAt": "2026-10-09T02:05:01.759Z"
+          },
+          {
+            "id": "a128490c-90bd-4796-b385-5613db724e8d",
+            "eventId": "1f9a1e20-072b-4012-ae07-ca28bd95143f",
+            "jobId": "59e6cc07-0a26-4a1a-a916-530e6c7a7387",
+            "sourceId": "mock-intel-source",
+            "recipientSeatId": "seat-a",
+            "status": "delivered",
+            "revision": 2,
+            "createdAt": "2026-10-09T02:05:01.754Z",
+            "updatedAt": "2026-10-09T02:05:01.765Z",
+            "deliveredAt": "2026-10-09T02:05:01.765Z"
+          }
+        ],
+        "requests": [
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&subjectId=length-units",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&query=length-units",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22intel%22%2C%22objectType%22%3A%22subject%22%2C%22objectId%22%3A%22length-units%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/changes?limit=20&after=situation-d63e2a3c-e596-4530-bf23-9586dee430b3-seq-100",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports?limit=50",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/intel/reports/report-west-01",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-west-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-west-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/objects?limit=20&objectRefs=%5B%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22road%22%2C%22objectId%22%3A%22road-east-01%22%7D%2C%7B%22systemId%22%3A%22situation%22%2C%22objectType%22%3A%22resource%22%2C%22objectId%22%3A%22vehicles-east-01%22%7D%5D",
+            "status": 200
+          },
+          {
+            "method": "GET",
+            "path": "/situation/changes?limit=20&from=2026-10-01T08%3A00%3A00%2B08%3A00&to=2026-10-01T10%3A00%3A00%2B08%3A00",
+            "status": 200
+          }
+        ],
+        "usage": {
+          "modelAttempts": 7,
+          "replyAttempts": 7,
+          "compactionAttempts": 0,
+          "toolCalls": 15,
+          "unknownUsageAttempts": 0,
+          "actual": {
+            "input": 4843,
+            "output": 2644,
+            "cacheRead": 33664,
+            "cacheWrite": 0,
+            "totalTokens": 41151
+          }
+        }
+      }
+    ],
+    "jobCount": 1,
+    "tasksUnchanged": true,
+    "completed": true
+  }
+]

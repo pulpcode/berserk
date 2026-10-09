@@ -46,12 +46,12 @@ export function InformationText({ children }: { children: string }) {
     table: ({ children }) => <div className="markdown-table" role="region" aria-label="信息表格" tabIndex={0}><table>{children}</table></div>,
   }}>{children}</Markdown></div>;
 }
-export function InformationFiles({ files, base }: { files: BackgroundFile[]; base: string }) {
+export function InformationFiles({ files, base, query = '' }: { files: BackgroundFile[]; base: string; query?: string }) {
   const { request, url } = useApi(); const [error, setError] = useState(''); const [busy, setBusy] = useState('');
   async function download(file: BackgroundFile) {
     if (busy) return; setBusy(file.id); setError('');
     try {
-      const response = await checkResponse(await request(url(`${base}/${encodeURIComponent(file.id)}`), { cache: 'no-store' }));
+      const response = await checkResponse(await request(url(`${base}/${encodeURIComponent(file.id)}${query ? `?${query}` : ''}`), { cache: 'no-store' }));
       const blob = URL.createObjectURL(await response.blob()); const link = document.createElement('a');
       link.href = blob; link.download = file.name; link.click(); window.setTimeout(() => URL.revokeObjectURL(blob), 1000);
     } catch (reason) { setError(informationError(reason)); } finally { setBusy(''); }

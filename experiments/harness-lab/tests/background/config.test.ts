@@ -50,4 +50,11 @@ describe('background deployment catalog', () => {
     expect(() => validateRuleScope(config, {...rule, recipientSeatIds: []})).toThrow('范围');
     expect(() => validateRuleScope(config, {...rule, profileId: 'other'})).toThrow('范围');
   });
+  it('allows explicit task assessment recording without granting seat history reads to service profiles', () => {
+    const config = parseBackgroundConfig({...fixture(), profiles: [{...fixture().profiles[0], tools: ['task_search', 'information_record_task_assessment'], contextScopeId: 'demo'}]});
+    expect(config.profiles[0].tools).toContain('information_record_task_assessment');
+    for (const tool of ['task_information_list', 'task_information_read']) {
+      expect(() => parseBackgroundConfig({...fixture(), profiles: [{...fixture().profiles[0], tools: [tool]}]})).toThrow();
+    }
+  });
 });

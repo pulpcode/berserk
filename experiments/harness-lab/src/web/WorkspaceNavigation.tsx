@@ -1,6 +1,6 @@
 import { useApi } from './api';
 import { useState } from 'react';
-import { Activity, ArrowUpRight, ChevronDown, CircleAlert, ClipboardPlus, Folder, FolderPlus, MessageSquare, Plus } from 'lucide-react';
+import { Activity, ArrowUpRight, ChevronDown, CircleAlert, ClipboardPlus, Folder, FolderPlus, FileText, MessageSquare, Plus } from 'lucide-react';
 import type { SessionActivity, Workspace } from '../contracts/index';
 
 export function activityStatus(session: SessionActivity) {
@@ -51,6 +51,8 @@ interface NavigationProps {
   createWorkspace?: () => void;
   publicAllowed?: boolean;
   showTask?: (id:string) => void;
+  showInformation?: (id:string) => void;
+  informationTaskId?: string;
   workspaces: Workspace[];
   activities: SessionActivity[];
   unread: Record<string, boolean>;
@@ -65,7 +67,7 @@ interface NavigationProps {
   showActivity: () => void;
 }
 
-export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,showTask,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
+export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,showTask,showInformation,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
@@ -103,6 +105,7 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspa
             {activeCount > 0 && <span className="group-count running" aria-label={`${activeCount} 个处理中`} title={`${activeCount} 个处理中`}>{activeCount}</span>}
             {attentionCount > 0 && <span className="group-count attention" aria-label={`${attentionCount} 个需关注`} title={`${attentionCount} 个需关注`}>{attentionCount}</span>}
             <button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>
+            {taskMode && <button className="icon-button" aria-label={`相关信息：${workspace.name}`} title="相关信息" aria-current={informationTaskId === workspace.taskSpaceId ? 'page' : undefined} onClick={()=>showInformation?.(workspace.id)}><FileText size={14} aria-hidden="true" /></button>}
             {taskMode && <button className="icon-button" aria-label={`${taskMeta?.[workspace.id]?.visibility==='private'?'空间说明':'任务说明'}：${workspace.name}`} title={taskMeta?.[workspace.id]?.visibility==='private'?'空间说明':'任务说明'} onClick={()=>showTask?.(workspace.id)}><ArrowUpRight size={14}/></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">

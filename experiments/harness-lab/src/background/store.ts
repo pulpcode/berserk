@@ -1,10 +1,12 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { Identity } from '../contracts/access.js';
+import type { TaskAssessment, TaskSuggestionCreation } from '../contracts/task-information.js';
 import type { BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
+import { validAnalysisOrigin, validSuggestionCreation, validTaskAssessment, validateTaskLinkIntegrity } from './task-links.js';
 
 const now = () => new Date().toISOString();
 const conflict = (message = '记录已变化，请查看最新状态后重试。') => new RequestError('BACKGROUND_CONFLICT', message, 409);
@@ -24,6 +26,13 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     if (!value || typeof value !== 'object' || value.id !== row.id || !Number.isSafeInteger(value.revision) || value.revision < 1) throw stateError();
     // Queries and permissions use SQL columns; JSON must describe the same record.
     const data = value as Record<string, unknown>;
+    if (data.taskAssessment !== undefined && (data.kind !== 'preprocess' || !validTaskAssessment(data.taskAssessment))) throw stateError();
+    if (data.taskSuggestionCreation !== undefined && (data.status !== 'succeeded' || !(data.taskAssessment as TaskAssessment | undefined)?.newTaskSuggestion || !validSuggestionCreation(data.taskSuggestionCreation))) throw stateError();
+    if (data.origin !== undefined && !validAnalysisOrigin(data.origin)) throw stateError();
+    const origin = data.origin as BackgroundAction['origin'];
+    if (origin?.kind === 'task_information' && (origin.eventId !== data.eventId || origin.taskSpaceId !== data.taskSpaceId)) throw stateError();
+    if (origin?.kind === 'inbox' && origin.deliveryId !== data.deliveryId) throw stateError();
+    if (origin && data.kind === 'preprocess') throw stateError();
     for (const field of ['id','eventId','jobId','initialJobId','sessionId','requestId','taskSpaceId','workspaceId','deliveryId','actionId','retryOfJobId','ruleId']) {
       if (data[field] !== undefined && (typeof data[field] !== 'string' || !UUID.test(data[field]))) throw stateError();
     }
@@ -68,10 +77,12 @@ function normalizeRule(input: InformationRuleInput): InformationRuleInput {
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
     const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if (version === 3) {
+    if (version === 3 || version === 4) {
       const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
       if (tables.some(table => !actual.has(table))) throw stateError();
-      this.validateIntegrity();
+      if (version === 4 && !actual.has('information_task_overrides')) throw stateError();
+      this.validateIntegrity(version === 4);
+      if (version === 3) this.upgradeTaskLinks();
       return;
     }
     if (version !== 2) throw stateError();
@@ -91,11 +102,26 @@ export class BackgroundStore {
         PRAGMA user_version=3;
       `);
     });
+    this.upgradeTaskLinks();
   }
 
-  private validateIntegrity() {
+  private upgradeTaskLinks() {
+    this.transaction(() => {
+      this.db.exec(`CREATE TABLE information_task_overrides(
+        event_id TEXT NOT NULL REFERENCES background_events(id),
+        task_id TEXT NOT NULL REFERENCES task_spaces(id),
+        job_id TEXT NOT NULL REFERENCES background_jobs(id),
+        data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(event_id,task_id));
+        CREATE INDEX information_task_overrides_task ON information_task_overrides(task_id,event_id);
+        PRAGMA user_version=4;`);
+      this.validateIntegrity();
+    });
+  }
+
+  private validateIntegrity(taskLinks = true) {
     const actualIndexes = new Set(this.db.prepare("SELECT name FROM sqlite_master WHERE type='index'").all().map(row => String(row.name)));
     if (indexes.some(index => !actualIndexes.has(index)) || this.db.prepare('PRAGMA foreign_key_check').all().length) throw stateError();
+    if (taskLinks && !actualIndexes.has('information_task_overrides_task')) throw stateError();
     const events = new Map(this.listEvents().map(event => [event.id,event]));
     const jobs = new Map(this.listJobs().map(job => [job.id,job]));
     for (const event of events.values()) {
@@ -119,13 +145,14 @@ export class BackgroundStore {
     for (const job of jobs.values()) {
       if (job.actionId) {
         const action = actions.get(job.actionId);
-        if (!action || action.kind !== 'analysis' || action.jobId !== job.id || action.eventId !== job.eventId || action.userId !== job.userId || action.seatId !== job.seatId || action.sessionId !== job.sessionId || action.requestId !== job.requestId || action.taskSpaceId !== job.taskSpaceId || action.workspaceId !== job.workspaceId) throw stateError();
+        if (!action || action.kind !== 'analysis' || action.jobId !== job.id || action.eventId !== job.eventId || action.userId !== job.userId || action.seatId !== job.seatId || action.sessionId !== job.sessionId || action.requestId !== job.requestId || action.taskSpaceId !== job.taskSpaceId || action.workspaceId !== job.workspaceId || JSON.stringify(action.origin) !== JSON.stringify(job.origin)) throw stateError();
       }
     }
     for (const row of this.db.prepare('SELECT key FROM background_controls').all()) this.getControl(String(row.key));
+    if (taskLinks) validateTaskLinkIntegrity(this.db, jobs);
   }
 
-  private transaction<T>(fn: () => T): T {
+  transaction<T>(fn: () => T): T {
     this.db.exec('BEGIN IMMEDIATE');
     try { const result = fn(); this.db.exec('COMMIT'); return result; }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
@@ -240,6 +267,14 @@ export class BackgroundStore {
   }
   private saveJob(job: BackgroundJob): BackgroundJob {
     this.db.prepare('UPDATE background_jobs SET status=?,session_id=?,data=? WHERE id=?').run(job.status, job.sessionId ?? null, JSON.stringify(job), job.id); return job;
+  }
+  /** TaskLinkService owns the outer transaction and validates the request's observed tasks. */
+  saveTaskAssessmentInTransaction(job: BackgroundJob, assessment: TaskAssessment) {
+    return this.saveJob({...job, taskAssessment: assessment, revision: job.revision + 1});
+  }
+  /** Stored with task, task_actions and manual include by the same outer transaction. */
+  saveTaskSuggestionCreationInTransaction(job: BackgroundJob, creation: TaskSuggestionCreation) {
+    return this.saveJob({...job, taskSuggestionCreation: creation, revision: job.revision + 1});
   }
   recoverRunning(): BackgroundJob[] {
     return this.transaction(() => this.db.prepare("SELECT * FROM background_jobs WHERE status='running'").all().map(row => {

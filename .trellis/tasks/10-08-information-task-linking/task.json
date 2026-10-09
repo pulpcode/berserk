@@ -1,0 +1,59 @@
+{
+  "id": "information-task-linking",
+  "name": "information-task-linking",
+  "title": "信息自动归口与任务内接续处理",
+  "description": "实施已审阅的信息任务判断、多任务关联、新建公共任务建议与人工创建、任务内查询及接续。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "information-task-linking",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-08",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "09-21-w09-a-background-jobs",
+  "relatedFiles": [
+    ".trellis/tasks/10-08-information-task-linking/review.md",
+    ".trellis/tasks/10-08-information-task-linking/prd.md",
+    ".trellis/tasks/10-08-information-task-linking/design.md",
+    ".trellis/tasks/10-08-information-task-linking/implement.md",
+    ".trellis/tasks/10-08-information-task-linking/acceptance.md",
+    ".trellis/tasks/10-08-information-task-linking/research/current-state.md",
+    ".trellis/tasks/10-08-information-task-linking/verification.md",
+    ".trellis/tasks/10-08-information-task-linking/test-guide.md",
+    ".trellis/tasks/10-08-information-task-linking/research/live-validation.md"
+  ],
+  "notes": "2026-10-09 补充 Agent 建议新建公共任务、人员确认创建并关联；不自动建任务，不新增建议审批流程。",
+  "meta": {
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
+    "desktopOnly": true,
+    "baseImplementationCommit": "5257aaa",
+    "contextManifestsCurated": true,
+    "reviewFocus": [
+      "自动关联直接展示、人工按需纠正",
+      "新建公共任务仅提出建议，人员编辑确认后创建并关联",
+      "公共任务管理权与个人空间收录权限",
+      "固定分析版本、引用展示及按需导入"
+    ],
+    "implementationStartedAt": "2026-10-09",
+    "qualityStatus": "passed",
+    "implementationCompletedAt": "2026-10-09",
+    "userAcceptanceStatus": "pending",
+    "realModelAssessmentCases": {
+      "baselinePassed": 3,
+      "baselineTotal": 4,
+      "revalidationPassed": 6,
+      "revalidationTotal": 6
+    }
+  }
+}

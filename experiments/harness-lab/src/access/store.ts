@@ -26,7 +26,7 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3].includes(version)) {
+    if([2,3,4].includes(version)) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
       return;
@@ -46,6 +46,10 @@ export class AccessStore {
   identity(id: string): Identity | undefined {
     const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
     return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings } as unknown as Identity : undefined;
+  }
+  identityForSeat(seatId: string): Identity | undefined {
+    const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);
+    return row ? this.identity(String(row.id)) : undefined;
   }
   async authenticate(username: string, password: string) {
     const row = this.db.prepare('SELECT id,salt,password_hash,enabled FROM accounts WHERE username=?').get(username);
@@ -99,18 +103,23 @@ export class AccessStore {
     return row ? [this.get(String(row.task_id),actor.seatId)] : [];
   }
   create(actor: Identity, input: TaskInput): TaskSpace {
+    this.db.exec('BEGIN IMMEDIATE');
+    try { const task = this.createInTransaction(actor, input); this.db.exec('COMMIT'); return task; }
+    catch (error) { this.db.exec('ROLLBACK'); throw error; }
+  }
+  /** Caller owns the transaction, so information linkage and creation share one commit. */
+  createInTransaction(actor: Identity, input: TaskInput, origin?: {eventId: string; jobId: string; reason: string}): TaskSpace {
     if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，工作任务还需要目标说明。');
     if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
     const context = input.context === undefined ? undefined : normalizeTaskContext(input.context);
     // Keep legacy no-context creation receipts replayable without migrating task_actions.
-    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context ? [context] : [])]);
+    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context ? [context] : []),...(origin ? [origin] : [])]);
     const old = this.db.prepare('SELECT input,task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,input.clientActionId);
     if (old) { if (old.input !== digest) throw conflict('同一次创建的内容已变化，请先核对任务列表。'); return this.get(String(old.task_id),actor.seatId); }
     const time = new Date().toISOString();
     const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {})};
-    this.db.exec('BEGIN IMMEDIATE');
-    try { this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task)); this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id); this.db.exec('COMMIT'); }
-    catch(error) { this.db.exec('ROLLBACK'); throw error; }
+    this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task));
+    this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id);
     return task;
   }
   update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false): TaskSpace {

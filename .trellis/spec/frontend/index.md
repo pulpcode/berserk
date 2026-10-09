@@ -12,6 +12,8 @@ This directory contains guidelines for frontend development. Fill in each file w
 
 ## Pre-Development and Quality Check
 
+Read [Information-to-Task Contract](../backend/task-information.md) for task information views, retained conflict drafts, suggestion creation receipts and fixed task/event/job continuation.
+
 Read [Multi-source Context Queries](../backend/context-analysis.md) for the implemented capability-validation contracts, task context, query evidence and fixed scope checks.
 
 Read [Information Processing and Seat Delivery](../backend/background-execution.md) for source authentication, durable queue, per-source grants, inbox and information center boundaries.

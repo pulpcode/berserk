@@ -37,12 +37,12 @@ function success(store: BackgroundStore, queued: BackgroundJob) {
 }
 
 describe('durable background metadata', () => {
-  it('upgrades v2 additively, reopens v3, and rejects missing registered tables', async () => {
+  it('upgrades v2 additively, reopens v4, and rejects missing registered tables', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'axon-v3-migration-')); let db: DatabaseSync | undefined = await openDatabase(dir);
     disposers.push(async () => { db?.close(); await rm(dir, {recursive: true, force: true}); });
     new AccessStore(db); db.prepare('INSERT INTO works VALUES(?,?)').run('existing', '{"existing":true}');
     db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run('a', '席位 A', 1, 1);
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(3);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(4);
     expect(db.prepare('SELECT data FROM works WHERE id=?').get('existing')?.data).toBe('{"existing":true}');
     db.close(); db = await openDatabase(dir); const access = new AccessStore(db); new BackgroundStore(db);
     expect(access.allSeatIds()).toEqual(['a']);

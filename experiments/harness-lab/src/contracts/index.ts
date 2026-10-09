@@ -192,6 +192,7 @@ export interface CompactionSummary {
   modelSettingsVersion?: string;
   usage?: TokenUsage | null;
 }
+export type * from './task-information.js';
 export interface CompactionDetail extends CompactionSummary {
   sessionId: string;
   summary: string;

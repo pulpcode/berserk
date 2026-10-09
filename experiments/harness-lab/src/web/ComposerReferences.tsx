@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState, type KeyboardEvent, type Ref, type RefObject } from 'react';
+import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type KeyboardEvent, type Ref, type RefObject } from 'react';
 import { ArrowLeft, BookOpen, Bot, ChevronRight, FileText, Folder, Upload, X } from 'lucide-react';
 import type { AgentInfo, LoadedComposerSelection, SkillFile, SkillInfo, WorkspaceResources } from '../contracts/index';
 import type { FileEntry, FileList } from '../contracts/files';
@@ -47,6 +47,15 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   const [state, setState] = useState<Picker>();
   const picker = enabled && state?.scope === scope ? state : undefined;
   const root = useRef<HTMLDivElement>(null);
+  const pendingCaret = useRef<{ scope: string; text: string; position: number } | undefined>(undefined);
+  // Restore once with the controlled-text commit, before another keystroke can arrive.
+  useLayoutEffect(() => {
+    const pending = pendingCaret.current; pendingCaret.current = undefined;
+    const input = textarea.current;
+    if (pending && enabled && pending.scope === scope && input?.isConnected && input.value === pending.text) {
+      input.focus(); input.setSelectionRange(pending.position, pending.position);
+    }
+  });
   const [result, setResult] = useState<{ key: string; options: Option[]; files?: FileList; error?: string }>();
   const [retry, setRetry] = useState(0);
   const [detail, setDetail] = useState<{ scope: string; file: SkillFile }>();
@@ -103,30 +112,34 @@ export function ComposerReferences({ control, scope, workspaceId, enabled, fileE
   function finish() {
     const fragment = picker?.fragment;
     let caret = textarea.current?.selectionStart ?? text.length;
+    let nextText = text;
     if (fragment && text.slice(fragment.start, fragment.end) === fragment.text) {
-      setText(text.slice(0, fragment.start) + text.slice(fragment.end)); caret = fragment.start;
+      nextText = text.slice(0, fragment.start) + text.slice(fragment.end); caret = fragment.start;
+      setText(nextText);
     }
+    pendingCaret.current = { scope, text: nextText, position: caret };
     setState(undefined);
-    requestAnimationFrame(() => { const input = textarea.current; if (input?.isConnected) { input.focus(); input.setSelectionRange(caret, caret); } });
   }
   function navigate(directory: string) {
     if (!picker) return;
     if (picker.fragment) {
       const fragmentText = `@${directory ? `${directory}/` : ''}`;
       const start = picker.fragment.start, end = start + fragmentText.length;
-      setText(text.slice(0, start) + fragmentText + text.slice(picker.fragment.end));
+      const nextText = text.slice(0, start) + fragmentText + text.slice(picker.fragment.end);
+      pendingCaret.current = { scope, text: nextText, position: end };
+      setText(nextText);
       setState({ ...picker, directory: '', query: fragmentText.slice(1), offset: 0, index: 0, fragment: { start, end, text: fragmentText } });
-      requestAnimationFrame(() => { const input = textarea.current; if (input?.isConnected) { input.focus(); input.setSelectionRange(end, end); } });
     } else setState({ ...picker, directory, query: '', offset: 0, index: 0 });
   }
   function backToCategories() {
     if (!picker) return;
     const fragment = picker.fragment;
     if (fragment) {
-      setText(text.slice(0, fragment.start) + '@' + text.slice(fragment.end));
+      const nextText = text.slice(0, fragment.start) + '@' + text.slice(fragment.end);
       const end = fragment.start + 1;
+      pendingCaret.current = { scope, text: nextText, position: end };
+      setText(nextText);
       setState({ ...picker, mode: 'categories', query: '', directory: '', offset: 0, index: 0, fragment: { start: fragment.start, end, text: '@' } });
-      requestAnimationFrame(() => { const input = textarea.current; if (input?.isConnected) { input.focus(); input.setSelectionRange(end, end); } });
     } else setState({ ...picker, mode: 'categories', query: '', directory: '', offset: 0, index: 0 });
   }
   function choose(option: Option) {

@@ -1,4 +1,5 @@
 import type { ContextScopeSnapshot } from './context.js';
+import type { BackgroundAnalysisOrigin, TaskAssessment, TaskLinksView, TaskSuggestionCreation } from './task-information.js';
 import type { ComposerSelection, PublicMessage, SessionSnapshot, SkillFile, UsageSummary } from './index.js';
 
 export type BackgroundJobKind = 'preprocess' | 'seat_analysis';
@@ -48,6 +49,9 @@ export interface BackgroundJob {
   contextScope?: ContextScopeSnapshot;
   userId?: string; seatId?: string; taskSpaceId?: string; workspaceId?: string;
   deliveryId?: string; actionId?: string;
+  origin?: BackgroundAnalysisOrigin;
+  taskAssessment?: TaskAssessment;
+  taskSuggestionCreation?: TaskSuggestionCreation;
   model?: string; modelSettingsVersion?: string; result?: BackgroundResultRef; usage?: UsageSummary;
   error?: { code: string; message: string };
 }
@@ -76,7 +80,7 @@ export interface BackgroundAnalysisSummary {
   createdAt: string; endedAt?: string; jobId?: string; sessionId?: string;
 }
 export interface InboxItem { sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob }
-export interface InboxDetail extends InboxItem { queryMessages?: PublicMessage[]; profileName?: string; text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[] }
+export interface InboxDetail extends InboxItem { queryMessages?: PublicMessage[]; profileName?: string; text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[]; taskLinks?: TaskLinksView }
 export interface BackgroundAnalysisInput {
   clientActionId: string; taskSpaceId: string; goal: string;
   mode: 'conversation' | 'background'; includeResult: boolean; fileIds: string[];
@@ -87,6 +91,7 @@ export interface BackgroundAction {
   kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule';
   inputHash: string; status: 'preparing' | 'completed'; revision: number; createdAt: string; updatedAt: string;
   eventId?: string; deliveryId?: string; taskSpaceId?: string; workspaceId?: string;
+  origin?: BackgroundAnalysisOrigin;
   sessionId?: string; requestId?: string; jobId?: string; ruleId?: string;
   analysis?: BackgroundAnalysisInput;
   selection?: ComposerSelection;
@@ -107,6 +112,7 @@ export interface InformationJobSummary {
   error?: {code: string; message: string};
 }
 export interface InformationJobDetail extends InformationJobSummary {
+  taskLinks?: TaskLinksView;
   profileName?: string; text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot;
   input?: {title: string; text: string; files: BackgroundFile[]};
   retryOfJobId?: string;

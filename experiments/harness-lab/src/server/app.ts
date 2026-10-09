@@ -5,6 +5,7 @@ import { BackgroundService } from '../background/service.js';
 import { loadBackgroundConfig, type BackgroundConfig } from '../background/config.js';
 import type { BackgroundExecutor } from '../background/executor.js';
 import { backgroundRoutes } from './background-routes.js';
+import { taskInformationRoutes } from './task-information-routes.js';
 import { randomUUID } from 'node:crypto';
 import { registerAuth, identityOf } from './auth.js';
 import { taskRoutes } from './task-routes.js';
@@ -59,6 +60,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab, taskId => background?.store.hasTaskReservations(taskId) ?? false); }
   else app.get('/api/auth/session',async()=>({mode:'test'}));
   if (lab.access) await backgroundRoutes(app,background,backgroundOptions?.env);
+  if (background) await taskInformationRoutes(app,background);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
   await app.register(async scoped => {
@@ -70,6 +72,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
     app.get('/information',(_request,reply)=>reply.sendFile('index.html'));
+    app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;
 }

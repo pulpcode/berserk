@@ -20,7 +20,7 @@ export async function snapshotBackgroundProfile(lab: PiLab, profile: BackgroundP
   const skills = await loadControlledSkills(profile.skillIds);
   if (profile.contextScopeId && !lab.context) throw new RequestError('CONTEXT_UNAVAILABLE', '业务资料配置不可用，未启动综合查询。', 503);
   const contextScope = profile.contextScopeId ? lab.context!.scopeSnapshot(profile.contextScopeId) : undefined;
-  if (!contextScope && profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE', '查询方案须配置业务资料范围。', 503);
+  if (!contextScope && profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE', '查询方案须配置业务资料范围。', 503);
   return { ...structuredClone(profile), skills, agents, ...(contextScope ? {contextScope} : {}) };
 }
 
@@ -66,7 +66,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, job.id), roles: input.profile.agents!, tools: input.profile.tools,
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
-          publish: input.publish });
+          publish: input.publish, recordTaskAssessment: input.recordTaskAssessment });
         running.set(job.id, prepared.cancel);
         if (cancelled) prepared.cancel();
         await prepared.run(input.onEvent);

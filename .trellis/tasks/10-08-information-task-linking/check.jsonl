@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "复用多源查询、实际证据与资料范围"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "复用消息、作业、投递和人员接续"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "公共任务、个人空间、登录和工作区权限"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "保留草稿、迟到响应及会话状态"}
+{"file": ".trellis/tasks/10-08-information-task-linking/research/current-state.md", "reason": "当前代码依据和改动边界"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "核对权限、版本、事务、接续与语义验证边界"}

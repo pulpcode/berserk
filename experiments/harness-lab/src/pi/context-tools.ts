@@ -2,7 +2,7 @@ import { defineTool } from '@earendil-works/pi-coding-agent';
 import { Type } from 'typebox';
 import type { ContextPrincipal } from '../contracts/context.js';
 import type { ContextService } from '../context/service.js';
-import type { TaskQueryService } from '../context/task-query.js';
+import type { TaskQueryItem, TaskQueryService } from '../context/task-query.js';
 import { RequestError } from '../contracts/errors.js';
 
 const id = Type.String({minLength: 1, maxLength: 128});
@@ -14,17 +14,19 @@ const time = {from: Type.Optional(Type.String({maxLength: 64})), to: Type.Option
 
 /** Host queries return their actual response to Pi; native tool history is the evidence store. */
 export function contextTools(context: ContextService, tasks: TaskQueryService | undefined, principal: ContextPrincipal,
-  controller: AbortController, authorize: () => void) {
+  controller: AbortController, authorize: () => void,
+  observeTasks?: (items: TaskQueryItem[], searched: boolean) => void) {
   const visibleIds = principal.kind === 'seat' ? context.catalog(principal.seatId).systems.map(system => system.id) : principal.scope.systemIds;
   const systems = context.config.systems.filter(system => visibleIds.includes(system.id));
   const catalog = (adapter: 'mock-information-http' | 'mock-situation-http') => systems.filter(system => system.adapter === adapter)
     .map(system => `${system.id}（${system.name}）`).join('；') || '无';
-  const execute = async (work: (signal: AbortSignal) => unknown, signal?: AbortSignal) => {
+  const execute = async <T>(work: (signal: AbortSignal) => T | Promise<T>, signal?: AbortSignal, observe?: (result: T) => void) => {
     const scoped = signal ? AbortSignal.any([controller.signal, signal]) : controller.signal;
     scoped.throwIfAborted(); authorize();
     try {
       const result = await work(scoped);
       scoped.throwIfAborted(); authorize();
+      observe?.(result);
       return {content: [{type: 'text' as const, text: JSON.stringify(result)}], details: {}};
     } catch (error) {
       scoped.throwIfAborted();
@@ -47,10 +49,10 @@ export function contextTools(context: ContextService, tasks: TaskQueryService | 
     ...(tasks ? [
       defineTool({name: 'task_search', label: '查询相关任务', description: '查询可见活动任务的目标与关注范围。businessRefs、areaIds、query 按并集查找候选，返回命中原因；候选不代表受影响，需结合任务时间和业务资料判断。服务身份仅查活动公共任务，不读取任务文件或会话。',
         parameters: Type.Object({businessRefs: Type.Optional(refs), areaIds: Type.Optional(Type.Array(id, {maxItems: 10})), query: filters.query, limit: filters.limit, cursor: filters.cursor}, {additionalProperties: false}), executionMode: 'sequential',
-        execute: (_id, params, signal) => execute(scoped => tasks.search(params, principal, scoped), signal)}),
+        execute: (_id, params, signal) => execute(scoped => tasks.search(params, principal, scoped), signal, result => observeTasks?.(result.data.items, true))}),
       defineTool({name: 'task_read', label: '读取任务', description: '按 taskId 读取获准任务的目标、业务引用和关注范围；不创建工作区或读取文件、聊天。',
         parameters: Type.Object({taskId: Type.String({format: 'uuid'})}, {additionalProperties: false}), executionMode: 'sequential',
-        execute: (_id, params, signal) => execute(scoped => tasks.read(params.taskId, principal, scoped), signal)}),
+        execute: (_id, params, signal) => execute(scoped => tasks.read(params.taskId, principal, scoped), signal, result => observeTasks?.([result.data.item], false))}),
     ] : []),
   ];
 }

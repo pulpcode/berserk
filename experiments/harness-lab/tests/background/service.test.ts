@@ -232,6 +232,32 @@ describe('information intake and native background service', () => {
     expect(context.lab.list(action.workspaceId!,'b')).toHaveLength(1); expect(context.fake.calls).toHaveLength(1);
   });
 
+  it('resumes legacy inbox preparations without adding incompatible job origin metadata', async () => {
+    const context = await setup(), a = await login(context.app, 'a'), b = await login(context.app, 'b');
+    const {deliveries} = await delivered(context, a);
+    const delivery = deliveries.find(item => item.recipientSeatId === 'b')!, target = await task(b);
+    context.store.setControl('queue', 0, false, a.auth.identity!.userId);
+    const input = {clientActionId: randomUUID(), taskSpaceId: target.id, goal: '接续旧操作', mode: 'background', includeResult: true, fileIds: []};
+    const original = BackgroundStore.prototype.updateAction;
+    const spy = vi.spyOn(BackgroundStore.prototype, 'updateAction').mockImplementation(function (this: BackgroundStore, ...args) {
+      if (args[2].fileRefs) throw new Error('interrupted preparation');
+      return original.apply(this, args);
+    });
+    expect((await b.call(`/api/inbox/${delivery.id}/analyses`, input)).statusCode).toBe(500); spy.mockRestore();
+    const action = context.store.findAction(b.auth.identity!.userId, input.clientActionId)!;
+    expect(action.status).toBe('preparing');
+    // v3 actions did not have origin; deliveryId is their persisted source identity.
+    context.lab.access!.db.prepare("UPDATE background_actions SET data=json_remove(data,'$.origin') WHERE id=?").run(action.id);
+    expect(() => new BackgroundStore(context.lab.access!.db)).not.toThrow();
+    const response = await b.call(`/api/inbox/${delivery.id}/analyses`, input);
+    expect(response.statusCode, response.body).toBe(200);
+    const resumed = response.json<BackgroundAction>(), job = context.store.getJob(resumed.jobId!);
+    expect(resumed.sessionId).toBe(action.sessionId);
+    expect(job).toMatchObject({status: 'queued', deliveryId: delivery.id});
+    expect(job.origin).toBeUndefined();
+    expect(() => new BackgroundStore(context.lab.access!.db)).not.toThrow();
+  });
+
   it('runs user-confirmed analysis after logout and limits center visibility to public execution metadata', async () => {
     const context = await setup({reply: (_context, index) => ({text: index === 0 ? '预处理完成' : 'PRIVATE_SEAT_B_ANALYSIS', delayMs: index === 1 ? 120 : undefined})});
     const a = await login(context.app, 'a'), b = await login(context.app, 'b'); const {event, deliveries} = await delivered(context, a);

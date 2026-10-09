@@ -56,6 +56,7 @@ test('typed references select using keyboard, preserve prose, show historical Sk
   const env = await setup(page);
   try {
     await page.goto('/');
+    await expect(input(page)).toBeEnabled();
     await input(page).pressSequentially('请处理 @plans/');
     await input(page).press('Enter');
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();

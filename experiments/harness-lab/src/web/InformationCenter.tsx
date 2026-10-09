@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Columns3, List, RefreshCw, Workflow } from 'lucide-react';
-import type { TaskSpace } from '../contracts/access';
+import type { Identity, TaskSpace } from '../contracts/access';
 import type { BackgroundDelivery, BackgroundEventDetail, BackgroundEventSummary, BackgroundPage, InformationCapabilities, InformationJobDetail, InformationJobSummary } from '../contracts/background';
+import { TaskAssociations } from './TaskAssociations';
 import { useApi } from './api';
 import { InformationRules } from './InformationRules';
 import { Message } from './ChatMessage';
@@ -23,7 +24,7 @@ function locationUrl(route: Location) {
   const params = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value !== 0).map(([key, value]) => [key, String(value)]));
   return `/information?${params}`;
 }
-export function InformationCenter({ visible, capabilities, refreshAccess, tasks, openSession, navigationError, clearNavigationError }: { visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
+export function InformationCenter({ visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError }: { visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
   const { api, domId } = useApi();
   const [route, setRoute] = useState(initialLocation);
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [busy, setBusy] = useState(false); const [refreshKey, setRefreshKey] = useState(0);
@@ -127,6 +128,7 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
           {shownJob.error && <section><h3>执行错误</h3><p className="resource-error">{shownJob.error.message}</p></section>}
           {shownJob.text !== undefined && <section><h3>处理结果</h3>{shownJob.profileName && <p className="resource-help">处理方案：{shownJob.profileName}</p>}<InformationText>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
           <ContextEvidence messages={shownJob.snapshot?.messages}/>
+          {identity && shownJob.kind==='preprocess' && shownJob.status==='succeeded' && <TaskAssociations key={`links:${shownJob.id}`} eventId={shownJob.eventId} jobId={shownJob.id} visible={visible} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={refresh} />}
           {shownJob.kind === 'preprocess' && <section><h3>本次投递</h3>{deliveries(shownJob.deliveries || [], shownJob.sourceId)}</section>}
           {shownJob.snapshot && <details className="information-original"><summary>查看执行过程</summary>
             {shownJob.snapshot.commandPolicies?.map((record, index) => <div className="information-command-policy" key={`${record.requestId}:${record.toolCallId}:${index}`}>
