@@ -1,0 +1,47 @@
+{
+  "id": "work-inbox-overview",
+  "name": "work-inbox-overview",
+  "title": "统一席位待办与工作总览设计",
+  "description": "在独立 worktree 完成入口整合、席位待办与工作总览待审方案；补充投递审批为可选兼容项，不开展产品实现。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "work-inbox-overview",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-09",
+  "completedAt": null,
+  "branch": "codex/work-inbox-overview-design",
+  "base_branch": "main",
+  "worktree_path": "/Users/lau/.codex/worktrees/work-inbox-overview-design/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/10-09-work-inbox-overview/review.md",
+    ".trellis/tasks/10-09-work-inbox-overview/prd.md",
+    ".trellis/tasks/10-09-work-inbox-overview/research/current-state.md",
+    ".trellis/tasks/10-09-work-inbox-overview/design.md",
+    ".trellis/tasks/10-09-work-inbox-overview/implement.md",
+    ".trellis/tasks/10-09-work-inbox-overview/acceptance.md",
+    ".trellis/tasks/10-09-work-inbox-overview/research/frontend-contract-notes.md",
+    ".trellis/tasks/10-09-work-inbox-overview/research/validation.md"
+  ],
+  "notes": "仅设计，待用户审阅。补充投递审批为可选兼容项；本次不修改产品代码或主工作区。",
+  "meta": {
+    "designStatus": "awaiting-review",
+    "implementationApproved": false,
+    "implementationComplete": false,
+    "baseCommit": "4fd95651101f68f5e9a5f396b06db12099452a7b",
+    "contextManifestsCurated": true,
+    "optionalIntegration": "analysis-seat-routing",
+    "reviewChoices": [
+      "信息显式阅处及重新列入待办",
+      "历史信息未登记且不倒灌待办",
+      "独立跨席位只读摘要授权"
+    ]
+  }
+}

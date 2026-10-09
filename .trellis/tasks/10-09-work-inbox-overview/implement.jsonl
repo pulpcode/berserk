@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/backend/task-access.md", "reason": "登录、席位、公共任务及私有工作区权限边界"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "交接权威状态、双方权限、固定文件、确认及回执"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "来源授权、信息投递、后台运行与幂等"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "信息多任务关联和接续的固定上下文"}
+{"file": ".trellis/spec/backend/hitl.md", "reason": "原对话提问和确认，不能从新列表重放"}
+{"file": ".trellis/tasks/10-09-work-inbox-overview/research/frontend-contract-notes.md", "reason": "原前端规格超过单文件注入上限；本摘要保留导航、轮询、草稿、未读和信息接续约束并指向原文"}
+{"file": ".trellis/tasks/10-09-work-inbox-overview/research/current-state.md", "reason": "基线证据、main 在途接口与可选审批关系"}
