@@ -11,7 +11,7 @@ import { TaskAssociations } from './TaskAssociations';
 import { AnalysisHistory, InformationFiles, InformationPagination, InformationText, informationTime, useInformationQuery } from './information-ui';
 
 function readSelection() { const params = new URLSearchParams(location.search); return { eventId: params.get('eventId') || '', jobId: params.get('jobId') || '' }; }
-export function TaskInformation({ taskId, visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask }: { taskId: string; visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{id:string;name:string}>; prepared: (action: BackgroundAction, current: () => boolean) => Promise<void>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
+export function TaskInformation({ taskId, visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask }: { taskId: string; visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{id:string;name:string}>; prepared: (action: BackgroundAction, current: () => boolean, sendNow?: boolean) => Promise<boolean>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
   const { domId } = useApi();
   const [selection, setSelection] = useState(readSelection); const [search, setSearch] = useState(''); const [sourceId, setSourceId] = useState(''); const [offset, setOffset] = useState(0);
   const base = `/api/tasks/${encodeURIComponent(taskId)}/information`;

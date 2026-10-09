@@ -109,7 +109,7 @@ test('context conflicts retain the full draft; catalog failure and ordinary text
   } finally { await env.close(); }
 });
 
-test('inbox shows native query evidence and prepares a question without rerunning the analysis', async ({ page }) => {
+test('inbox shows native query evidence and sends the explicit question without rerunning preprocessing', async ({ page }) => {
   const env = await setup(true); await env.attach(page);
   try {
     const received = await env.app.inject({ method: 'POST', url: '/api/integrations/incoming/events', headers: { host: '127.0.0.1', authorization: `Bearer ${env.token}` }, payload: { sourceMessageId: randomUUID(), title: '综合研判测试信息', text: '请检查业务资料变化。' } });
@@ -124,19 +124,20 @@ test('inbox shows native query evidence and prepares a question without rerunnin
     });
     await login(page); await page.getByRole('button', { name: '收到的信息', exact: true }).click(); await page.getByRole('button', { name: /综合研判测试信息/ }).click();
     const calls = env.fake.calls.length;
-    await expect(page.getByRole('heading', { name: '处理结果', exact: true })).toBeVisible(); await expect(page.getByRole('heading', { name: '提问与处理' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '处理结果', exact: true })).toBeVisible(); await expect(page.getByRole('heading', { name: '继续处理' })).toBeVisible();
     await page.getByText('查询依据 · 1 次查询', { exact: true }).click(); await page.getByText('报告正文 · external · 1 条记录', { exact: true }).click();
     await expect(page.locator('.context-evidence-records')).toContainText('record-01'); await expect(page.locator('.context-evidence-records')).toContainText('版本 2');
     await page.getByText('实际查询条件与返回内容', { exact: true }).click(); await expect(page.locator('.context-evidence pre')).toContainText('当次查询保存的资料正文');
-    await expect(page.getByRole('button', { name: '进入对话', exact: true })).toBeDisabled();
-    await page.getByLabel('会话保存位置').selectOption(env.task.id); await expect(page.getByRole('button', { name: '进入对话', exact: true })).toBeDisabled();
+    await expect(page.getByRole('button', { name: '发送并进入对话', exact: true })).toBeDisabled();
+    await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id); await expect(page.getByRole('button', { name: '发送并进入对话', exact: true })).toBeDisabled();
     await page.getByLabel('问题或工作要求').fill('请解释这个结论的依据，并列出需要核实的问题');
+    await page.getByText('更多选项', { exact: true }).click();
     await expect(page.getByText('可查询系统：业务资料系统')).toBeVisible();
     await page.screenshot({ path: 'test-results/context-inbox-desktop.png', fullPage: true });
     expect(env.fake.calls).toHaveLength(calls);
-    await page.getByRole('button', { name: '进入对话', exact: true }).click();
-    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue(/请解释这个结论的依据/);
-    expect(env.fake.calls).toHaveLength(calls); expect(env.store!.listJobs()).toHaveLength(1);
+    await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('');
+    await expect.poll(() => env.fake.calls.length).toBe(calls + 1); expect(env.store!.listJobs()).toHaveLength(1);
   } finally { await env.close(); }
 });
 
@@ -151,7 +152,7 @@ test('late prepared conversation reads preserve a newer inbox selection and the 
     await expect.poll(() => env.store!.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
     await login(page); await page.getByRole('button', { name: '收到的信息', exact: true }).click();
     await page.getByRole('button', { name: /接续原信息/ }).click();
-    await page.getByLabel('会话保存位置').selectOption(env.task.id);
+    await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id);
     await page.getByLabel('问题或工作要求').fill('保留原信息的后续问题');
     const calls = env.fake.calls.length;
     await page.route('**/api/sessions/*', async route => {
@@ -159,19 +160,21 @@ test('late prepared conversation reads preserve a newer inbox selection and the 
       await new Promise<void>(resolve => { release = resolve; });
       await route.fallback();
     }, { times: 1 });
-    await page.getByRole('button', { name: '进入对话', exact: true }).click();
+    await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
     await expect.poll(() => Boolean(release)).toBe(true);
     await page.getByRole('button', { name: /新选择的信息/ }).click();
     const selectedUrl = page.url();
     await expect(page.getByRole('heading', { name: '新选择的信息', exact: true })).toBeVisible();
     release!(); release = undefined;
-    await expect(page.getByLabel('会话保存位置')).toBeEnabled();
+    await expect(page.getByLabel('处理位置', { exact: true })).toBeEnabled();
     expect(page.url()).toBe(selectedUrl);
     await expect(page.getByLabel('问题或工作要求')).toHaveValue('');
     expect(env.fake.calls).toHaveLength(calls);
     await page.getByRole('button', { name: /接续原信息/ }).click();
-    await page.getByRole('button', { name: '查询本次结果', exact: true }).click();
-    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue(/保留原信息的后续问题/);
+    await expect(page.getByLabel('问题或工作要求')).toBeEnabled();
+    await expect(page.getByLabel('问题或工作要求')).toHaveValue('保留原信息的后续问题');
+    await expect(page.getByRole('button', { name: '查询本次结果', exact: true })).toHaveCount(0);
+    expect(env.fake.calls).toHaveLength(calls);
     expect(env.fake.calls).toHaveLength(calls);
     expect(env.store!.listActions().filter(action => action.kind === 'analysis')).toHaveLength(1);
   } finally { release?.(); await env.close(); }

@@ -252,27 +252,38 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       else setCreationError(message);
     }
   }
-  async function preparedAnalysis(action: BackgroundAction, originCurrent: () => boolean) {
-    if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return;
+  async function preparedAnalysis(action: BackgroundAction, originCurrent: () => boolean, sendNow = false): Promise<boolean> {
+    if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return false;
     const captured = navigationRequest.current;
     const current = () => captured === navigationRequest.current && originCurrent();
     const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(action.sessionId)}`);
-    if (!current()) return;
+    if (!current()) return false;
+    await chat.refreshActivity();
+    if (!current()) return false;
     chat.adopt(session);
-    if (!action.jobId) {
+    let freshDraft = false;
+    if (!action.jobId && !session.messages.length && !session.active && !session.lastResult && !chat.hasDraft(session.id)) {
       const resources = action.selection?.skill ? await api<WorkspaceResources>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/resources`) : undefined;
       const roles = action.selection?.agent ? await api<AgentInfo[]>(`/api/workspaces/${encodeURIComponent(action.workspaceId)}/agents`) : undefined;
-      if (!current()) return;
+      if (!current()) return false;
       const skill = resources?.skills.find(item => item.id === action.selection?.skill?.id);
       const role = roles?.find(item => item.name === action.selection?.agent?.name);
-      if (chat.prepareDraft(session.id, action.draft || '')) {
-        if (skill && action.selection?.skill) chat.prepareSelection(session.id, 'skill', { ...skill, hash: action.selection.skill.hash });
-        if (role && action.selection?.agent) chat.prepareSelection(session.id, 'agent', { ...role, hash: action.selection.agent.hash });
-        for (const file of action.fileRefs || []) chat.attachments.reference(session.id, action.workspaceId, { ...file, name: file.name || file.path.split('/').at(-1) || file.path }, fileLimits?.maxAttachments || 20);
+      if (!chat.hasDraft(session.id)) {
+        if (action.selection?.skill && !skill) throw new Error('所选 Skill 已不可用，未发送消息。请核对后重新选择。');
+        if (action.selection?.agent && !role) throw new Error('所选 Agent 已不可用，未发送消息。请核对后重新选择。');
+        freshDraft = chat.prepareDraft(session.id, action.draft || '');
+        if (freshDraft) {
+          if (skill && action.selection?.skill) chat.prepareSelection(session.id, 'skill', { ...skill, hash: action.selection.skill.hash });
+          if (role && action.selection?.agent) chat.prepareSelection(session.id, 'agent', { ...role, hash: action.selection.agent.hash });
+          for (const file of action.fileRefs || []) chat.attachments.reference(session.id, action.workspaceId, { ...file, name: file.name || file.path.split('/').at(-1) || file.path }, fileLimits?.maxAttachments || 20);
+        }
       }
     }
-    await chat.refreshActivity(); directory.refresh();
-    if (current()) selectSession(session.id);
+    directory.refresh();
+    selectSession(session.id);
+    // Only the new explicit send action starts a request. Query/reopen never replays it.
+    if (sendNow && freshDraft) void chat.send(session.id);
+    return freshDraft;
   }
   function newChat() { rememberPosition(); setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {

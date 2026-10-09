@@ -389,15 +389,20 @@ export function useChat() {
     finally { creatingRef.current = null; setCreating(false); }
   }, [MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
-  const send = useCallback(async () => {
-    const text = (draftsRef.current[draftKey] || '').trim();
-    const files = attachments.current(draftKey);
-    const picks = composerSelections.current(draftKey);
-    if (!text || files.some(file => file.status !== 'ready') || !selectedModel?.configured || !selectedModel.contextReady || modelsError || modelErrors[draftKey] || modelLocks.current.has(draftKey)) return;
-    const id = selected || await create();
-    if (!id || streams.current.has(id) || snapshotsRef.current[id]?.active || activitiesRef.current.find(item => item.id === id)?.active) return;
+  const send = useCallback(async (targetSessionId?: string) => {
+    // Continuation may send before navigation renders; every input belongs to its explicit target.
+    const key = targetSessionId || draftKey;
+    const modelId = (targetSessionId ? snapshotsRef.current[targetSessionId]?.modelId : selectedModelId) || models?.defaultModelId;
+    const model = models?.models.find(item => item.id === modelId);
+    const text = (draftsRef.current[key] || '').trim();
+    const files = attachments.current(key);
+    const picks = composerSelections.current(key);
+    if (!text || files.some(file => file.status !== 'ready') || !model?.configured || !model.contextReady || modelsError || modelErrors[key] || modelLocks.current.has(key)) return;
+    const id = targetSessionId || selected || await create();
+    if (!id || streams.current.has(id)) return;
     const before = snapshotsRef.current[id];
-    if (!before) return;
+    const activity = activitiesRef.current.find(item => item.id === id);
+    if (!before || before.active || before.backgroundJob || activity?.active || activity?.backgroundJob) return;
     const token = Symbol();
     const stream = { token, requestId: undefined as string | undefined, terminal: false };
     streams.current.set(id, stream);
@@ -465,7 +470,7 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModel, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -483,9 +488,14 @@ export function useChat() {
     }
   }, [api, put, selected]);
 
+  function hasDraft(id: string) {
+    const selection = composerSelections.current(id);
+    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.skill || selection.agent);
+  }
+
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
-    activities, activityError, activityConnectionError, refreshActivity, markRead, noteNavigation, adopt: put,
-    prepareDraft: (id: string, text: string) => { if (Object.hasOwn(draftsRef.current, id)) return false; draft(id, text); return true; },
+    activities, activityError, activityConnectionError, refreshActivity, markRead, noteNavigation, adopt: put, hasDraft,
+    prepareDraft: (id: string, text: string) => { if (hasDraft(id)) return false; draft(id, text); return true; },
     prepareSelection: (id: string, kind: 'skill' | 'agent', value: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(id, kind, value),
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && !item.backgroundJob && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
     select: (id: string) => {

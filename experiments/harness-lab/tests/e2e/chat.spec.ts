@@ -783,13 +783,13 @@ test('新建对话先选项目，取消不创建，折叠项目加号直接创�
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
     expect(mock.sessions.get('new-1')?.workspaceId).toBe('w2');
     await page.getByRole('button', { name: '折叠项目：默认工作区' }).click();
-    await page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 默认工作区 中新建对话', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
     expect(mock.sessions.get('new-2')?.workspaceId).toBe('w1');
     expect(mock.counts.creates).toBe(2);
     await page.getByRole('textbox', { name: '发送消息' }).fill('保留在默认项目的草稿');
     mock.faults.holdCreate = true;
-    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话', exact: true }).click();
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
     await page.getByRole('button', { name: '会话 D', exact: true }).click();
     await page.getByRole('textbox', { name: '发送消息' }).fill('D 的独立草稿');
@@ -892,12 +892,12 @@ test('跨项目创建失败可见，全部动态保护后续选择，手机新�
   try {
     await page.goto('/');
     mock.faults.create = true;
-    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
     await expect(page.getByRole('alert')).toContainText('在「另一工作区」中创建对话未完成');
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('默认工作区');
     mock.faults.create = false;
     mock.faults.holdCreate = true;
-    await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
     await page.getByRole('button', { name: '全部动态', exact: true }).click();
     mock.faults.releaseCreate!();

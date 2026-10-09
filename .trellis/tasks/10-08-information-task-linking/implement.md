@@ -26,7 +26,7 @@
 - 席位主 Agent 增加 task_information_list/read，复用当前身份和任务；不增加子 Agent 或自动服务历史读取权限。
 - `background/service.ts` 将 analyse 的来源授权和后续准备分开，支持 inbox 与 task_information；BackgroundAction / seat_analysis 新 origin 保持旧记录兼容，领取执行时再校验。
 - 复用现有文件副本、导入计划、取消、幂等和原生会话；analysis-options 改为未建工作区时可读取默认受控能力，不为浏览创建目录。
-- 验证：只读无副作用、精确版本、附件作用域、幂等不重复制、两个任务／席位文件隔离、前台草稿不自动发送、后台显式确认及旧收件路径。
+- 验证：只读无副作用、精确版本、附件作用域、幂等不重复制、两个任务／席位文件隔离、前台仅明确发送操作启动模型、查询与重开不重发、后台显式确认及旧收件路径。
 
 ## P4 现有工作台接入
 
@@ -57,3 +57,5 @@ npm run test:e2e -- --workers=1 --output=/tmp/axon-task-linking-e2e
 完成代码及验证 → 用户查看本机／隔离结果 → 按授权中文提交 → 备份并更新线上 → 用户验收。此次设计不授权发布、重处理现有消息或创建线上测试数据。
 
 主要风险点：共享数据库版本检查、任务／来源权限组合、finishJob 与原生结果核验、Inbox 的 action 重试与迟到导航。迁移前保留可恢复备份；历史任务、会话和消息不要求迁移重写。
+
+用户验收期间追加的接续界面优化按 [continuation-ui.md](research/continuation-ui.md) 实施并回归，变更不包含线上发布。

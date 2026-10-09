@@ -9,7 +9,7 @@ import { InformationContinuation } from './InformationContinuation';
 import { TaskAssociations } from './TaskAssociations';
 import { AnalysisHistory, InformationFiles, InformationPagination, InformationText, informationTime, useInformationQuery } from './information-ui';
 
-export function Inbox({ visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask }: { visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{ id: string; name: string }>; prepared: (action: BackgroundAction, current: () => boolean) => Promise<void>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
+export function Inbox({ visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask }: { visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{ id: string; name: string }>; prepared: (action: BackgroundAction, current: () => boolean, sendNow?: boolean) => Promise<boolean>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
   const { domId } = useApi();
   const [selected, setSelected] = useState(() => location.pathname === '/inbox' ? new URLSearchParams(location.search).get('id') || '' : '');
   const [search, setSearch] = useState(''); const [offset, setOffset] = useState(0);

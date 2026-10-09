@@ -50,8 +50,8 @@ test('login, public/private task navigation, lazy workspace, archive and two ind
     await login(page,'a');await expect(page.getByLabel('测试席位')).toHaveCount(0);await createTask(page,'联合任务','public');await createTask(page,'席位 A 私有','private');
     await login(b,'b');await expect(b.getByRole('button',{name:'任务说明：联合任务'})).toBeVisible();await expect(b.getByRole('button',{name:/席位 A 私有/})).toHaveCount(0);expect(env.lab.workspaces.listAll()).toHaveLength(0);
     await b.getByRole('button',{name:'任务说明：联合任务'}).click();await expect(b.getByLabel('目标与说明')).toHaveValue('综合资料编制计划');await b.keyboard.press('Escape');expect(env.lab.workspaces.listAll()).toHaveLength(0);
-    await page.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.getByRole('textbox',{name:'发送消息'}).fill('A 未发送草稿');
-    await b.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await b.getByRole('textbox',{name:'发送消息'}).fill('帮我处理');await b.getByRole('button',{name:'发送消息',exact:true}).click();await expect(b.getByText('当前任务处理完成',{exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('A 未发送草稿');expect(env.lab.workspaces.listAll()).toHaveLength(2);
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.getByRole('textbox',{name:'发送消息'}).fill('A 未发送草稿');
+    await b.locator('.workspace-group-heading').filter({ has: b.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await b.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await b.getByRole('textbox',{name:'发送消息'}).fill('帮我处理');await b.getByRole('button',{name:'发送消息',exact:true}).click();await expect(b.getByText('当前任务处理完成',{exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('A 未发送草稿');expect(env.lab.workspaces.listAll()).toHaveLength(2);
     await page.getByRole('button',{name:'任务说明：联合任务'}).click();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'归档任务',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeDisabled();
     await expect(page.getByRole('button',{name:'任务说明：联合任务'})).toHaveCount(0);await page.getByRole('button',{name:'工作任务 · 已归档 · 任务说明',exact:true}).click();await page.getByRole('button',{name:'重新开启',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.screenshot({path:'test-results/access-desktop.png',fullPage:true});
   } finally {await env.close();await second.close();}
@@ -59,7 +59,7 @@ test('login, public/private task navigation, lazy workspace, archive and two ind
 test('same-browser logout and identity change clear private drafts in both tabs',async({page,context})=>{
   const env=await setup();await env.attach(page);const other=await context.newPage();await env.attach(other);
   try {
-    await login(page,'a');await createTask(page,'私有笔记','private');await page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}).click();await page.getByRole('textbox',{name:'发送消息'}).fill('只属于 A 的草稿');await other.goto('/');await expectAccount(other, 'a');
+    await login(page,'a');await createTask(page,'私有笔记','private');await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}).click();await page.getByRole('textbox',{name:'发送消息'}).fill('只属于 A 的草稿');await other.goto('/');await expectAccount(other, 'a');
     await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await page.getByLabel('账号',{exact:true}).fill('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expectAccount(other, 'b');await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('');await expect(other.getByRole('button',{name:/私有笔记/})).toHaveCount(0);
   } finally {await env.close();await other.close();}
 });
@@ -189,7 +189,7 @@ test('task catalog groups fold independently and creation stays accessible acros
     await login(page, 'a');
     await createTask(page, '分组中的工作任务', 'public');
     await createTask(page, '分组中的个人空间', 'private');
-    await page.getByRole('button', { name: '在项目 分组中的个人空间 中新建对话', exact: true }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 分组中的个人空间 中新建对话', exact: true }) }).hover(); await page.getByRole('button', { name: '在项目 分组中的个人空间 中新建对话', exact: true }).click();
     const draft = page.getByRole('textbox', { name: '发送消息', exact: true });
     await draft.fill('折叠分组时保留当前草稿');
     const writesBeforeFolding = writes;
@@ -280,7 +280,7 @@ test('directory outages show one content status, preserve navigation and drafts,
   try {
     await login(page, 'a');
     await createTask(page, '断连保留任务', 'public');
-    await page.getByRole('button', { name: '在项目 断连保留任务 中新建对话' }).click();
+    await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 断连保留任务 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 断连保留任务 中新建对话' }).click();
     const composer = page.getByRole('textbox', { name: '发送消息' });
     await composer.fill('断连期间保留的草稿');
     page.on('request', request => { if (new URL(request.url()).pathname.startsWith('/api/') && request.method() !== 'GET') writes++; });

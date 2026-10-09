@@ -220,7 +220,7 @@ test('pending cancellation follows an attachment moved from project draft into a
   app.controls.hold = true; await attach(page); await expect.poll(() => Boolean(app.controls.release)).toBe(true);
   app.controls.holdDelete = true; await page.getByRole('button', { name: '取消上传 数据.csv' }).click();
   await expect.poll(() => Boolean(app.controls.releaseDelete)).toBe(true);
-  await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
+  await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
   await expect(page.getByRole('button', { name: '新对话', exact: true })).toBeVisible();
   await app.controls.releaseDelete!(); await expect(page.getByLabel('消息附件').getByRole('listitem')).toHaveCount(0);
   expect(app.sent).toHaveLength(0); expect(app.contents.size).toBe(0);

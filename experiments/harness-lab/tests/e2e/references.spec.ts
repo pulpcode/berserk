@@ -170,7 +170,7 @@ test('seat-scoped drafts survive refresh, delayed directories cannot leak, and f
     await expect(picks(page)).toContainText('analyst'); await expect(picks(page)).not.toContainText('资料综合写作');
     expect(env.messages[0]).toHaveProperty('skill'); expect(env.messages[0]).not.toHaveProperty('agent');
     await page.reload(); await expect(picks(page)).toContainText('analyst'); await expect(input(page)).toHaveValue('下一轮草稿');
-    await visible(page).getByRole('button', { name: '在项目 默认工作区 中新建对话' }).click();
+    await visible(page).locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 默认工作区 中新建对话' }) }).hover(); await visible(page).getByRole('button', { name: '在项目 默认工作区 中新建对话' }).click();
     await expect(picks(page)).toHaveCount(0); await expect(input(page)).toHaveValue('');
     expect(env.paths.filter(path => path.includes('/agents')).every(path => path.startsWith('/api/test-seats/'))).toBe(true);
   } finally { await env.close(); }
