@@ -29,7 +29,8 @@
     ".trellis/tasks/10-08-information-task-linking/research/current-state.md",
     ".trellis/tasks/10-08-information-task-linking/verification.md",
     ".trellis/tasks/10-08-information-task-linking/test-guide.md",
-    ".trellis/tasks/10-08-information-task-linking/research/live-validation.md"
+    ".trellis/tasks/10-08-information-task-linking/research/live-validation.md",
+    ".trellis/tasks/10-08-information-task-linking/server-test-guide.md"
   ],
   "notes": "2026-10-09 补充 Agent 建议新建公共任务、人员确认创建并关联；不自动建任务，不新增建议审批流程。",
   "meta": {
@@ -54,6 +55,9 @@
       "baselineTotal": 4,
       "revalidationPassed": 6,
       "revalidationTotal": 6
-    }
+    },
+    "deploymentStatus": "deployed",
+    "deployedCommit": "45a9a921ce1856f1ce4a574a6913947f3445d6cf",
+    "deployedAt": "2026-10-09T02:45:09Z"
   }
 }

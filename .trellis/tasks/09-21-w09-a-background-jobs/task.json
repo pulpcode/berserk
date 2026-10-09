@@ -2,7 +2,7 @@
   "id": "w09-a-background-jobs",
   "name": "w09-a-background-jobs",
   "title": "任务与后台作业分阶段规划",
-  "description": "前两增量已实现部署；第三增量多源综合研判能力验证已实现部署，待用户验收；第四增量信息自动归口、新建公共任务建议与任务内接续处理已获批准实施，未部署。动态席位路由后置。",
+  "description": "前两增量已实现部署；第三增量多源综合研判能力验证已实现部署，待用户验收；第四增量信息自动归口、新建公共任务建议与任务内接续处理已实现部署，待用户验收。动态席位路由后置。",
   "status": "planning",
   "dev_type": "fullstack",
   "scope": "background-jobs",
