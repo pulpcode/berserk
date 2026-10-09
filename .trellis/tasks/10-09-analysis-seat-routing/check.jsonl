@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "沿用来源接入、快照、作业终态、投递和幂等"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "保持任务关联与信息权限、人员接续边界"}
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "保持资料范围、服务身份及查询证据"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "沿用席位账号、任务工作区边界；新增统一职责时不隐式迁移身份"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "规范入口；按实施步骤直接读取相关段落，避免长文件注入截断"}
+{"file": ".trellis/tasks/10-09-analysis-seat-routing/research/current-state.md", "reason": "已核对的代码依据及变更边界"}
+{"file": ".trellis/tasks/10-09-analysis-seat-routing/design.md", "reason": "待审设计，获准后才作为实现依据"}
