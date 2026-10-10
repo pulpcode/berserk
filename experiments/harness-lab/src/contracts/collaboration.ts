@@ -37,8 +37,20 @@ const review = { kind: Type.Literal('review'), workItemId: uuid, expectedRevisio
 export const workPrepareSchema = Type.Union([Type.Object(assign, strict), Type.Object(claim, strict), Type.Object(submit, strict), Type.Object(review, strict)]);
 export type WorkPrepareInput = Static<typeof workPrepareSchema>;
 /** Model inputs omit the task/workspace identity captured by the host. */
-export const workActionSchema = Type.Union([
+const historicalWorkActionSchema = Type.Union([
   Type.Object({ kind: assign.kind, payload: Type.Omit(assign.payload, ['workspaceId'], strict) }, strict),
+  Type.Object(claim, strict),
+  Type.Object({ ...submit, payload: Type.Omit(submit.payload, ['workspaceId'], strict) }, strict),
+  Type.Object(review, strict),
+]);
+/** Read-only compatibility for native records written before explicit attachment selection. */
+export const historicalWorkActionToolSchema = Type.Object({ action: historicalWorkActionSchema }, strict);
+export const workActionSchema = Type.Union([
+  Type.Object({ kind: assign.kind, payload: Type.Object({
+    ...Type.Omit(assign.payload, ['workspaceId', 'inputPaths', 'goal']).properties,
+    goal: Type.String({ minLength: 1, maxLength: 12000, description: '接收方的业务目标、约束与交付要求；不自行增设工具使用禁令。' }),
+    inputPaths: Type.Array(path, { maxItems: 100, description: '随工作交接的当前工作区文件路径，准备时保存固定副本；必须填写，无附件明确填写 []。' }),
+  }, strict) }, strict),
   Type.Object(claim, strict),
   Type.Object({ ...submit, payload: Type.Omit(submit.payload, ['workspaceId'], strict) }, strict),
   Type.Object(review, strict),

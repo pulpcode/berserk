@@ -1,7 +1,7 @@
 import { mkdtemp, rm, writeFile, readFile, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -68,6 +68,11 @@ describe('Pi collaboration tools and native HITL', () => {
     const work = lab.collaboration!.list(other)[0]; expect(work.state).toBe('assigned');
     expect(await bytes(lab, other.seatId, fixed.files[0].fileId)).toBe('确认时的任务书');
     expect(fake.calls).toHaveLength(2);
+    const result = fake.calls[1].context.messages.find(message => message.role === 'toolResult' && message.toolName === 'work_item_action');
+    const receipt = lab.collaboration!.getAction(actor, fixed.operationId).receipt!;
+    expect(result).toMatchObject({ isError: false, details: { ...receipt, committed: true, files: fixed.files } });
+    if (result?.role !== 'toolResult' || result.content[0]?.type !== 'text') throw Error('missing tool result');
+    expect(JSON.parse(result.content[0].text)).toEqual({ ...receipt, committed: true, files: fixed.files });
     const names = fake.calls[0].context.tools!.map(tool => tool.name);
     expect(names).toContain('work_item_action'); expect(names).not.toContain('work_item_prepare'); expect(names).not.toContain('work_item_commit');
     const schema = fake.calls[0].context.tools!.find(tool => tool.name === 'work_item_action')!.parameters;
@@ -75,7 +80,9 @@ describe('Pi collaboration tools and native HITL', () => {
     const target = lab.workspaces.list(other.seatId).workspaces.find(w => w.taskSpaceId === workspace.taskSpaceId)!;
     for (const file of fixed.files) {
       const imported = await lab.collaboration!.importFile(other, file.fileId, target.id);
-      expect(await readFile(join(lab.files.filesDirectory(target.id, other.seatId), imported.path), 'utf8')).toBe(await bytes(lab, other.seatId, file.fileId));
+      const importedBytes = await readFile(join(lab.files.filesDirectory(target.id, other.seatId), imported.path));
+      expect(importedBytes.toString()).toBe(await bytes(lab, other.seatId, file.fileId));
+      expect(createHash('sha256').update(importedBytes).digest('hex')).toBe(file.hash);
     }
     expect(lab.collaboration!.list(other)).toHaveLength(1);
     const calls = fake.calls.length; await lab.close(); const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
@@ -87,11 +94,12 @@ describe('Pi collaboration tools and native HITL', () => {
 
   it.each(['reject', 'cancel'])('%s does not hand off files and ends uncommitted preparations', async decision => {
     const { lab } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: input } }] } : { text: '未分派' });
-    const input: WorkActionInput = { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '不要产生效果' } };
+    const input: WorkActionInput = { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '不要产生效果' } };
     const session = await lab.createSession(); const run = lab.start(session.id, '分派'); const done = run.run(() => {}); const item = await wait(lab, session.id);
     if (decision === 'cancel') lab.cancel(session.id, run.requestId); else lab.respondInteraction(session.id, item.interactionId, approve(item, 'reject'));
     await done;
     expect(lab.collaboration!.list(actor)).toEqual([]);
+    expect(lab.get(session.id).messages.filter(message => message.role === 'tool').some(message => message.text.includes('"committed":true'))).toBe(false);
     expect(lab.collaboration!.getAction(actor, item.action.handoff!.operationId).status).toBe('expired');
     expect(lab.get(session.id).interactions?.[0].status).toBe(decision === 'cancel' ? 'cancelled' : 'rejected');
   });
@@ -161,6 +169,22 @@ describe('Pi collaboration tools and native HITL', () => {
     expect(lab.collaboration!.read(actor, assigned.workItemId).submissions).toHaveLength(2);
   });
 
+  it.each([{ inputPaths: [] }, { inputPaths: ['原稿.md'] }])('requires explicit selection before confirmation and accepts a corrected $inputPaths selection', async ({ inputPaths }) => {
+    const { lab, fake } = await setup((_context, index) => index < 2 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理', ...(index ? { inputPaths } : {}) } } } }] } : { text: '完成' });
+    const workspace = lab.workspaces.get(); await writeFile(join(lab.files.filesDirectory(workspace.id), '原稿.md'), '原稿');
+    const prepare = vi.spyOn(lab.collaboration!, 'prepare');
+    const session = await lab.createSession(); const done = lab.start(session.id, '分派').run(() => {}); const item = await wait(lab, session.id);
+    expect(prepare).toHaveBeenCalledTimes(1);
+    expect(lab.get(session.id).interactions).toHaveLength(1);
+    expect(lab.collaboration!.list(other)).toEqual([]);
+    expect(fake.calls[1].context.messages.find(message => message.role === 'toolResult')).toMatchObject({ isError: true, content: [{ type: 'text', text: expect.stringContaining('inputPaths') }] });
+    expect(item.action.handoff!.files).toHaveLength(inputPaths.length);
+    lab.respondInteraction(session.id, item.interactionId, approve(item)); await done;
+    expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(fake.calls[2].context.messages.findLast(message => message.role === 'toolResult')).toMatchObject({ details: { committed: true, files: item.action.handoff!.files } });
+    expect(lab.collaboration!.read(other, lab.collaboration!.list(other)[0].id).inputFiles).toEqual(item.action.handoff!.files);
+  });
+
   it('returns missing-file errors without a card and permits a corrected call in the same Pi request', async () => {
     const { lab, fake } = await setup((_context, index) => index < 2 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理', inputPaths: [index ? '原稿.md' : '不存在.md'] } } } }] } : { text: '完成' });
     const workspace = lab.workspaces.get(); await writeFile(join(lab.files.filesDirectory(workspace.id), '原稿.md'), '原稿');
@@ -173,7 +197,7 @@ describe('Pi collaboration tools and native HITL', () => {
   });
 
   it.each(['recipient', 'missing', 'path', 'extra'])('rejects invalid %s input before displaying a card', async kind => {
-    const input = { kind: 'assign', payload: { assigneeSeatId: kind === 'recipient' ? 'unknown-seat' : other.seatId, title: '工作', goal: '处理', ...(kind === 'missing' ? { inputPaths: ['不存在.md'] } : kind === 'path' ? { inputPaths: ['../private'] } : {}) }, ...(kind === 'extra' ? { taskSpaceId: randomUUID() } : {}) };
+    const input = { kind: 'assign', payload: { assigneeSeatId: kind === 'recipient' ? 'unknown-seat' : other.seatId, title: '工作', goal: '处理', inputPaths: [], ...(kind === 'missing' ? { inputPaths: ['不存在.md'] } : kind === 'path' ? { inputPaths: ['../private'] } : {}) }, ...(kind === 'extra' ? { taskSpaceId: randomUUID() } : {}) };
     const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: input } }] } : { text: '请修正输入' });
     const session = await lab.createSession(); await lab.start(session.id, '分派').run(() => {});
     expect(lab.get(session.id).interactions).toEqual([]); expect(lab.collaboration!.list(other)).toEqual([]);
@@ -197,7 +221,7 @@ describe('Pi collaboration tools and native HITL', () => {
   });
 
   it('does not present a preparation that expired before the card', async () => {
-    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '原操作已失效' });
+    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '原操作已失效' });
     const prepare = lab.collaboration!.prepare.bind(lab.collaboration!);
     vi.spyOn(lab.collaboration!, 'prepare').mockImplementation(async (...args) => {
       const result = await prepare(...args); const origin = args[2];
@@ -241,7 +265,7 @@ describe('Pi collaboration tools and native HITL', () => {
   });
 
   it('cancels in the approval callback before authorizing or executing', async () => {
-    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应调用' });
+    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应调用' });
     const commit = vi.spyOn(lab.collaboration!, 'commitAgent');
     const session = await lab.createSession(); const run = lab.start(session.id, '分派');
     const done = run.run(event => { if (event.type === 'interaction.updated' && event.interaction.status === 'approved') lab.cancel(session.id, run.requestId); });
@@ -252,7 +276,7 @@ describe('Pi collaboration tools and native HITL', () => {
   });
 
   it.each(['RESOURCE_STATE_INVALID', 'FILE_OPERATION_FAILED', 'DATABASE_FAILURE'])('stops on %s infrastructure failures instead of letting the model continue', async code => {
-    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应继续' });
+    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应继续' });
     vi.spyOn(lab.collaboration!, 'prepare').mockRejectedValue(code === 'DATABASE_FAILURE' ? new Error('DB failed') : new RequestError(code, '内部故障', 409));
     const session = await lab.createSession(); await lab.start(session.id, '分派').run(() => {});
     expect(lab.get(session.id).lastResult?.status).toBe('failed'); expect(fake.calls).toHaveLength(1);
@@ -260,7 +284,7 @@ describe('Pi collaboration tools and native HITL', () => {
   });
 
   it.each(['before', 'after'] as const)('stops on a commit failure %s the transaction and preserves the actual receipt', async boundary => {
-    const { lab, fake, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应继续' });
+    const { lab, fake, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '不应继续' });
     const commit = lab.collaboration!.commitAgent.bind(lab.collaboration!);
     vi.spyOn(lab.collaboration!, 'commitAgent').mockImplementation(async (...args) => {
       if (boundary === 'after') await commit(...args);
@@ -283,7 +307,7 @@ describe('Pi collaboration tools and native HITL', () => {
   it.each(['completed', 'waiting', 'approved'] as const)('reads old prepare/commit %s history and continues with only the new tool registered', async boundary => {
     const { lab, fake, config } = await setup((_context, index) => index === 0
       ? { tools: [{ name: 'work_item_commit', arguments: { operationId: 'ff47ee75-a455-4116-912f-e62eada6707a' } }] }
-      : index === 1 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '新交接', goal: '新授权' } } } }] } : { text: '完成' });
+      : index === 1 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '新交接', goal: '新授权' } } } }] } : { text: '完成' });
     const session = await lab.createSession(); const directory = join(config.dataDir, 'sessions');
     const path = join(directory, (await readdir(directory))[0]); await lab.close();
     // Captured from baseline 047ab63 using the real Pi loop and deterministic model.
@@ -309,8 +333,42 @@ describe('Pi collaboration tools and native HITL', () => {
     expect(reopened.get(session.id).interactions?.[1]).toMatchObject({ status: 'approved', execution: 'succeeded' });
   });
 
+  it.each(['completed', 'waiting', 'approved'] as const)('reads historical action without inputPaths at %s and preserves history across refresh/restart', async boundary => {
+    const { lab, fake, config } = await setup((_context, index) => index % 2 === 0
+      ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] }
+      : { text: '完成' });
+    const session = await lab.createSession(); const done = lab.start(session.id, '分派').run(() => {}); const item = await wait(lab, session.id);
+    lab.respondInteraction(session.id, item.interactionId, approve(item)); await done; await lab.close();
+    const directory = join(config.dataDir, 'sessions'); const path = join(directory, (await readdir(directory))[0]);
+    // Recreate the previous native wire shape: the actual call, policy and card all omitted inputPaths;
+    // successful results contained only WorkReceipt. No stored approval is reused for execution.
+    const entries = (await readFile(path, 'utf8')).trim().split('\n').map(line => JSON.parse(line, (key, value) => key === 'inputPaths' || key === 'committed' ? undefined : value));
+    for (const entry of entries) {
+      if (entry.type !== 'message' || entry.message.role !== 'toolResult' || entry.message.toolName !== 'work_item_action') continue;
+      delete entry.message.details.files;
+      entry.message.content = [{ type: 'text', text: JSON.stringify(entry.message.details) }];
+    }
+    const cut = boundary === 'completed' ? entries.length : entries.findIndex(entry => entry.type === 'custom' && entry.customType === (boundary === 'waiting' ? INTERACTION_REQUESTED : INTERACTION_RESOLVED)) + 1;
+    const original = entries.slice(0, cut).map(entry => JSON.stringify(entry)).join('\n') + '\n'; await writeFile(path, original);
+    const restored = await PiLab.create(config, fake.runtime); cleanup.push(() => restored.close());
+    for (let refresh = 0; refresh < 2; refresh++) {
+      expect(restored.get(session.id).recoveryWarning).toBeUndefined();
+      expect(restored.get(session.id).interactions?.[0]).toMatchObject(boundary === 'completed' ? { status: 'approved', execution: 'succeeded' } : boundary === 'waiting' ? { status: 'expired' } : { status: 'approved', execution: 'unknown' });
+    }
+    expect(await readFile(path, 'utf8')).toBe(original);
+    const count = restored.collaboration!.list(other).length;
+    const next = restored.start(session.id, '另行分派纯文字工作').run(() => {}); const card = await wait(restored, session.id);
+    expect(restored.collaboration!.list(other)).toHaveLength(count);
+    expect(card.action.parameters).toMatchObject({ action: { payload: { inputPaths: [] } } });
+    restored.respondInteraction(session.id, card.interactionId, approve(card)); await next;
+    expect(restored.collaboration!.list(other)).toHaveLength(count + 1);
+    await restored.close(); const reopened = await PiLab.create(config, fake.runtime); cleanup.push(() => reopened.close());
+    expect(reopened.get(session.id).recoveryWarning).toBeUndefined();
+    expect(reopened.get(session.id).interactions?.[1]).toMatchObject({ status: 'approved', execution: 'succeeded' });
+  });
+
   it('rejects altered new action parameters, policy and receipt linkage during replay', async () => {
-    const { lab, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '完成' });
+    const { lab, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '处理' } } } }] } : { text: '完成' });
     const session = await lab.createSession(); const done = lab.start(session.id, '分派').run(() => {}); const item = await wait(lab, session.id);
     lab.respondInteraction(session.id, item.interactionId, approve(item)); await done;
     const directory = join(config.dataDir, 'sessions'); const entries = SessionManager.open(join(directory, (await readdir(directory))[0]), directory).getBranch();

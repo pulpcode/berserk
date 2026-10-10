@@ -29,7 +29,7 @@ export function scopedWorkAction(service: CollaborationService, actor: ActorCont
   if (!workspace.taskSpaceId) throw new RequestError('WORK_NOT_FOUND', '当前工作区没有可交接的项目。', 404);
   const value = structuredClone(parameters.action);
   if (value.kind === 'assign') return { ...value, taskSpaceId: workspace.taskSpaceId,
-    payload: { ...value.payload, workspaceId: workspace.id, ...(value.payload.inputPaths ? { inputPaths: value.payload.inputPaths.map(relative) } : {}) } };
+    payload: { ...value.payload, workspaceId: workspace.id, inputPaths: value.payload.inputPaths.map(relative) } };
   if (service.read(actor, value.workItemId).taskSpaceId !== workspace.taskSpaceId) {
     throw new RequestError('WORK_NOT_FOUND', '操作不属于当前会话项目，请进入对应项目会话。', 404);
   }
@@ -63,7 +63,7 @@ export function collaborationTools(service: CollaborationService, options: Optio
         if (Boolean(params.workItemId) === Boolean(params.operationId)) throw new RequestError('INVALID_INPUT', '请选择一个工作编号或操作编号查询。');
         return params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
       }, signal) }),
-    defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，等待用户批准后执行；成功返回交接回执。文件来自当前工作区，交接使用固定副本。工作编号与 expectedRevision 从工作详情取得；需要澄清的业务信息先询问。',
+    defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，本次调用等待用户批准后执行；成功返回 committed=true、交接回执及实际文件清单，表示已执行。文件来自当前工作区，交接使用固定副本。工作编号与 expectedRevision 从工作详情取得；需要澄清的业务信息先询问。',
       parameters: workActionToolSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(async scopedSignal => {
         const approved = options.takeApproval(toolCallId);
@@ -71,7 +71,11 @@ export function collaborationTools(service: CollaborationService, options: Optio
           options.fail();
           throw new RequestError('CONFIRMATION_REQUIRED', '该调用未获得对应内容的确认。', 409);
         }
-        try { return await service.commitAgent(actor, approved.operationId, approved.grant, scopedSignal); }
+        try {
+          const files = service.getAction(actor, approved.operationId).files;
+          const receipt = await service.commitAgent(actor, approved.operationId, approved.grant, scopedSignal);
+          return { ...receipt, committed: true, files };
+        }
         catch (error) {
           if (!scopedSignal.aborted && !recoverableWorkError(error)) options.fail();
           const code = error instanceof RequestError ? error.code : 'WORK_ACTION_FAILED';

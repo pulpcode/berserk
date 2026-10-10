@@ -636,7 +636,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
       ? '\n可用 task_information_list 查询获准任务的关联信息，按需用 task_information_read 读取指定版本的原文或分析；省略 taskId 时使用当前任务。' : '';
     const workContext = !role && !active.background && this.collaboration ? `
 当前席位：${record.seatId}。当前工作区：${record.workspaceId}。当前项目：${this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId}。
-当前启用席位（id 为分派参数，name 为显示名称）：${JSON.stringify(this.access?.seats() ?? this.config.testSeats ?? [])}。业务操作使用 work_item_action，核对内容后等待网页明确确认再执行；ask_user 仅澄清对象，不授权提交。资料文件使用 handoff_import_file 导入当前目录后按需读取。不要仅凭聊天回复宣称已分派或上报，须以工具回执为准。
+当前启用席位（id 为分派参数，name 为显示名称）：${JSON.stringify(this.access?.seats() ?? this.config.testSeats ?? [])}。业务操作使用 work_item_action，该调用内部核对内容、等待网页确认并执行，成功回执表示操作已完成；ask_user 仅澄清对象，不授权提交。资料文件使用 handoff_import_file 导入当前目录后按需读取。不要仅凭聊天回复宣称已分派或上报，须以工具回执为准。
 ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_item_read 查询最新状态）：${JSON.stringify({ id: work.id, title: work.title, goal: work.goal, state: work.state, revision: work.revision, creatorSeatId: work.creatorSeatId, assigneeSeatId: work.assigneeSeatId, inputFiles: work.inputFiles, latestSubmissionId: work.latestSubmissionId, latestReview: work.submissions.at(-1)?.review })}` : '本会话尚未关联分派工作；如用户指的是已有工作，先查询，存在多个可能对象时询问。'}` : '';
     const loader = new DefaultResourceLoader({
       cwd: '/workspace', agentDir: this.agentDir, settingsManager,

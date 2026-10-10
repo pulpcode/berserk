@@ -1,0 +1,29 @@
+{
+  "id": "handoff-explicit-files",
+  "name": "handoff-explicit-files",
+  "title": "修复分派附件遗漏与交接回执表达",
+  "description": "新Agent分派明确附件选择，返回真实文件回执，保留旧原生历史兼容。",
+  "status": "in_progress",
+  "dev_type": "backend",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-10",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "批准范围代码已完成；678 单元/集成和35浏览器测试通过。真实七组3通过，3额外澄清、1夹具冲突；修正单轮后已交接初稿但另附相关要求，严格一份断言未过。自然流程未宣称稳定；未部署，保留线上坏单。",
+  "meta": {
+    "implementationApproved": true,
+    "baselineCommit": "5caa67f"
+  }
+}

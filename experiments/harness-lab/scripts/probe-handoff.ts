@@ -14,11 +14,11 @@ import type { WorkActionInput } from '../src/contracts/collaboration.js';
 // No arguments retains the original full handoff/return/resubmit/restart probe.
 const args = process.argv.slice(2);
 if (args.includes('--help')) {
-  console.info('npm run probe:handoff -- [--attachments baseline|verify]\nbaseline: 1 个自然多轮场景；verify: 3 个自然多轮 + 单文件、纯文字、明确两份及成果回传。全部使用新隔离数据，逐项保留失败，不自动重跑。');
+  console.info('npm run probe:handoff -- [--attachments baseline|verify|single-turn]\nbaseline: 1 个自然多轮场景；verify: 3 个自然多轮 + 单文件、纯文字、明确两份及成果回传 + 单轮初稿分派；single-turn: 只运行单轮初稿分派。全部使用新隔离数据，逐项保留失败，不自动重跑。');
   process.exit(0);
 }
 const attachmentMode = args[0] === '--attachments' ? args[1] : undefined;
-assert.ok(args.length === 0 || (args.length === 2 && ['baseline', 'verify'].includes(attachmentMode ?? '')), '参数应为 --attachments baseline 或 --attachments verify。');
+assert.ok(args.length === 0 || (args.length === 2 && ['baseline', 'verify', 'single-turn'].includes(attachmentMode ?? '')), '参数应为 --attachments baseline、verify 或 single-turn。');
 
 const config = loadConfig({...process.env,LAB_AUTH_MODE:'test'});
 assert.ok(config.apiKey, '模型凭证尚未配置。'); assert.ok(config.execution?.enabled, '需要真实 Docker 执行环境。');
@@ -141,7 +141,7 @@ interface AttachmentFixture {
   draft:{name:string; content:string; marker:string};
   requirements:{name:string; content:string; marker:string};
   resultName:string;
-  selection:'natural'|'one'|'none'|'explicit';
+  selection:'natural'|'one'|'none'|'explicit'|'single-turn';
 }
 function fixture(label:string, title:string, requirement:string, selection:AttachmentFixture['selection']):AttachmentFixture {
   const marker = `测试文稿：${title}`;
@@ -157,6 +157,11 @@ const attachmentFixtures = [
   fixture('仅交一份', '培训安排说明', '培训结束后保留签到记录。', 'one'),
   fixture('纯文字任务', '来访登记说明', '保留来访日期和接待人。', 'none'),
   fixture('明确双附件与成果回传', '活动结束检查说明', '活动结束时记录场地、检查人和遗留事项。', 'explicit'),
+  {
+    label: '单轮初稿分派', selection: 'single-turn', resultName: '补给方案_v1.md',
+    draft: { name: '补给方案_初稿.md', marker: '测试文稿：补给方案', content: '# 补给方案\n测试文稿：补给方案\n本文件仅用于流程测试。\n已知条件：西区补给需要 3 辆车，当前可用 2 辆；运输时间为 09:30 至 10:30，道路 09:00 至 10:00 限行。\n初步安排：按原定时间使用 3 辆车运输。\n' },
+    requirements: { name: '补给方案_修订要求.md', marker: '本次要求：核对车辆与时间条件', content: '# 修订要求\n本次要求：核对车辆与时间条件，指出初步安排的问题，提出调整建议，未知条件列为待核实，不虚构额外车辆或路线。保留初稿，另存补给方案_v1.md，形成后提交分派方审阅。不查询外部制度。\n' },
+  } satisfies AttachmentFixture,
 ];
 const digest = (bytes:Buffer) => createHash('sha256').update(bytes).digest('hex');
 function traceFor(sessionId:string) {
@@ -186,7 +191,7 @@ async function attachmentScenario(item:AttachmentFixture) {
     result.workspaceId = a.id;
     for (const file of [item.draft,item.requirements,{name:'绿植养护记录.txt',content:'绿萝每周浇水一次。这是另一件工作的备忘，与文稿修订无关。\n'}]) await upload(a.id,file.name,file.content);
     const sender = await lab.createSession(a.id,'test-seat');
-    if (item.selection !== 'none') {
+    if (item.selection !== 'none' && item.selection !== 'single-turn') {
       await scenario('test-seat',sender.id,`请先读取当前工作区的《${item.draft.name}》和《${item.requirements.name}》，简短说明需要修改什么。先不修改或分派。`,`${item.label} / A 先读两份文稿`);
       const text = traceFor(sender.id).results.filter(value => !value.isError).map(value => value.text).join('\n');
       for (const file of [item.draft,item.requirements]) assert.ok(text.includes(file.marker), `模型未通过工具实际读取 ${file.name}`);
@@ -195,20 +200,23 @@ async function attachmentScenario(item:AttachmentFixture) {
     const prompt = item.selection === 'natural' ? '直接全部分派给 B 去执行' : item.selection === 'one'
       ? `请把这项修订工作分派给席位 B。只附上《${item.draft.name}》，把修订要求写进工作说明，不附其他文件。`
       : item.selection === 'none' ? '请分派给席位 B 一项纯文字工作：拟三条会议室使用提醒。无需参考资料，也不附任何文件。'
+      : item.selection === 'single-turn' ? `请将完善补给方案的工作分派给席位 B，附上《${item.draft.name}》这份初稿。请结合本任务相关信息完善，保留初稿，另存补给方案_v1.md，形成后提交我审阅。`
       : `请把这项修订工作分派给席位 B，附上《${item.draft.name}》和《${item.requirements.name}》。`;
     await scenario('test-seat',sender.id,prompt,`${item.label} / A 分派`,'assign');
     const works = lab.collaboration!.list({seatId:'seat-b'}).filter(work => work.taskSpaceId === a.taskSpaceId);
     assert.equal(works.length,1,'每个独立场景只能创建一项分派工作');
     const work = await json<WorkDetail>('seat-b',`/work-items/${works[0].id}`);
     result.work = work;
-    const expected = item.selection === 'none' ? [] : item.selection === 'one' ? [item.draft] : [item.draft,item.requirements];
+    const expected = item.selection === 'none' ? [] : ['one', 'single-turn'].includes(item.selection) ? [item.draft] : [item.draft,item.requirements];
     const sorted = (names:string[]) => names.toSorted();
     assert.deepEqual(sorted(work.inputFiles.map(file => file.name)),sorted(expected.map(file => file.name)), '实际附件必须恰为用户选择的资料，不能漏传或附上无关文件');
     const trace = traceFor(sender.id);
     const committed = trace.results.find(value => value.toolName === 'work_item_action' && !value.isError &&
       work.id === (value.details as WorkReceipt).workItemId);
     assert.ok(committed,'缺少本工作真实工具回执');
-    const receipt = committed.details as WorkReceipt;
+    const receipt = committed.details as WorkReceipt & {committed:boolean;files:HandoffFile[]};
+    assert.equal(receipt.committed,true,'工具成功结果明确表示交接已经提交');
+    assert.deepEqual(receipt.files,work.inputFiles,'模型获得的实际附件清单应与工作输入一致');
     const confirmed = lab.collaboration!.getAction({seatId:'test-seat'},receipt.operationId);
     assert.equal(confirmed.status,'committed');
     assert.ok(confirmed.receipt,'交接必须保存实际业务回执');
@@ -227,7 +235,7 @@ async function attachmentScenario(item:AttachmentFixture) {
     assert.deepEqual(card.action.parameters,call.arguments,'确认参数与原始模型调用一致');
     assert.equal(card.action.handoff?.operationId,receipt.operationId);
     assert.deepEqual(card.action.handoff?.files,work.inputFiles,'卡片实际附件与交接文件一致');
-    const paths = action.payload.inputPaths ?? [];
+    const paths = action.payload.inputPaths;
     assert.ok(Array.isArray(paths),'真实附件参数应为路径数组');
     assert.deepEqual(sorted(paths.map(path => path.replace(/^\/workspace\//,''))),sorted(expected.map(file => file.name)), '实际调用选择的路径必须与本场景资料一致');
     assert.deepEqual(confirmed.files,work.inputFiles,'准备时的固定附件应与确认交接后的工作输入相同');
@@ -279,7 +287,9 @@ async function attachmentScenario(item:AttachmentFixture) {
   }
 }
 async function attachmentProbe() {
-  for (const item of attachmentMode === 'baseline' ? attachmentFixtures.slice(0,1) : attachmentFixtures) await attachmentScenario(item);
+  const selected = attachmentMode === 'baseline' ? attachmentFixtures.slice(0,1)
+    : attachmentMode === 'single-turn' ? attachmentFixtures.filter(item => item.selection === 'single-turn') : attachmentFixtures;
+  for (const item of selected) await attachmentScenario(item);
   assert.ok(modelInputCount > 0,'没有捕获真实模型输入，不能完成说明核对');
   checks.push(`保存全部 ${attachmentCases.length} 个场景及 ${modelInputCount} 次实际模型请求，未自动重跑失败场景`);
   const failed = attachmentCases.filter(item => !item.passed);

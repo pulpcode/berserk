@@ -3,7 +3,7 @@ import { Type } from 'typebox';
 import { Check } from 'typebox/value';
 import type { SessionEntry, ExtensionFactory } from '@earendil-works/pi-coding-agent';
 import type { CommandPolicyRecord, Interaction, InteractionAnswer, InteractionResponse, QuestionInteraction } from '../contracts/index.js';
-import { handoffConfirmationSchema, workActionToolSchema } from '../contracts/collaboration.js';
+import { handoffConfirmationSchema, historicalWorkActionToolSchema } from '../contracts/collaboration.js';
 import { RequestError } from '../contracts/errors.js';
 import { stateError } from '../resources/files.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
@@ -114,7 +114,7 @@ function decodeInteraction(value: unknown): Interaction {
     if (item.toolName === 'work_item_commit' || item.toolName === 'work_item_action') {
       const validParameters = item.toolName === 'work_item_commit'
         ? isDeepStrictEqual(item.action.parameters, { operationId: item.action.handoff?.operationId })
-        : Check(workActionToolSchema, item.action.parameters) && item.action.parameters.action.kind === item.action.handoff?.kind;
+        : Check(historicalWorkActionToolSchema, item.action.parameters) && item.action.parameters.action.kind === item.action.handoff?.kind;
       if (!item.action.handoff || !validParameters
         || item.action.command !== undefined || item.action.cwd !== undefined || item.action.title !== item.action.handoff.title
         || item.action.description !== item.action.handoff.description) throw stateError();

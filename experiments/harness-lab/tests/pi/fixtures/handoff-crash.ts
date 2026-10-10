@@ -10,7 +10,7 @@ const fake = await fakeRuntime(config, (_context, index) => {
   throw new Error('Must terminate before next model attempt');
 });
 const lab = await PiLab.create(config, fake.runtime);
-const input: WorkActionInput = {kind:'assign',payload:{assigneeSeatId:'seat-b',title:'中断边界',goal:'准确核对业务效果'}};
+const input: WorkActionInput = {kind:'assign',payload:{inputPaths:[],assigneeSeatId:'seat-b',title:'中断边界',goal:'准确核对业务效果'}};
 const commit = lab.collaboration!.commitAgent.bind(lab.collaboration!);
 lab.collaboration!.commitAgent = async (...args) => {
   if (boundary === 'before') process.kill(process.pid, 'SIGKILL');
