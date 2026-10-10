@@ -134,7 +134,7 @@ test('formal root workbench remains in browser history when entering an existing
     await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('项目对话未发送草稿');
     await page.goto('/');
     await expect(page.getByRole('heading', { name: '工作待办', exact: true })).toBeVisible();
-    await page.getByRole('button', { name: `进入项目：${env.task.title}`, exact: true }).click();
+    await page.locator('.session-item').first().click();
     await expect(page).toHaveURL(/\?session=/);
     await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('项目对话未发送草稿');
     await page.goBack();

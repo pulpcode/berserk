@@ -48,12 +48,12 @@ test('login, public/private task navigation, lazy workspace, archive and two ind
   const env=await setup();const second=await browser.newContext();const b=await second.newPage();await env.attach(page);await env.attach(b);
   try {
     await login(page,'a');await expect(page.getByLabel('测试席位')).toHaveCount(0);await createTask(page,'联合任务','public');await createTask(page,'席位 A 私有','private');
-    await login(b,'b');await expect(b.getByRole('button',{name:'任务说明：联合任务'})).toBeVisible();await expect(b.getByRole('button',{name:/席位 A 私有/})).toHaveCount(0);expect(env.lab.workspaces.listAll()).toHaveLength(0);
-    await b.getByRole('button',{name:'任务说明：联合任务'}).click();await expect(b.getByLabel('目标与说明')).toHaveValue('综合资料编制计划');await b.keyboard.press('Escape');expect(env.lab.workspaces.listAll()).toHaveLength(0);
+    await login(b,'b');await expect(b.getByRole('button',{name:'进入项目：联合任务'})).toBeVisible();await expect(b.getByRole('button',{name:/席位 A 私有/})).toHaveCount(0);expect(env.lab.workspaces.listAll()).toHaveLength(0);
+    await b.getByRole('button', { name: '进入项目：联合任务', exact: true }).click();await b.getByRole('button', { name: '任务说明', exact: true }).click();await expect(b.locator('.task-description')).toContainText('综合资料编制计划');await b.keyboard.press('Escape');expect(env.lab.workspaces.listAll()).toHaveLength(0);
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.getByRole('textbox',{name:'发送消息'}).fill('A 未发送草稿');
     await b.locator('.workspace-group-heading').filter({ has: b.getByRole('button',{name:'在项目 联合任务 中新建对话'}) }).hover(); await b.getByRole('button',{name:'在项目 联合任务 中新建对话'}).click();await b.getByRole('textbox',{name:'发送消息'}).fill('帮我处理');await b.getByRole('button',{name:'发送消息',exact:true}).click();await expect(b.getByText('当前任务处理完成',{exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('A 未发送草稿');expect(env.lab.workspaces.listAll()).toHaveLength(2);
-    await page.getByRole('button',{name:'任务说明：联合任务'}).click();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'归档任务',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeDisabled();
-    await expect(page.getByRole('button',{name:'任务说明：联合任务'})).toHaveCount(0);await page.getByRole('button',{name:'工作任务 · 已归档 · 任务说明',exact:true}).click();await page.getByRole('button',{name:'重新开启',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.screenshot({path:'test-results/access-desktop.png',fullPage:true});
+    const conversationUrl = page.url(); await page.getByRole('button', { name: '进入项目：联合任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'归档任务',exact:true}).click();await expect(page.getByRole('dialog')).toBeHidden();await page.goto(conversationUrl);await expect(page.getByRole('textbox',{name:'发送消息'})).toBeDisabled();
+    await expect(page.getByRole('button',{name:'进入项目：联合任务'})).toHaveCount(0);await page.getByRole('button',{name:'工作任务 · 已归档 · 任务说明',exact:true}).click();await page.getByRole('button',{name:'重新开启',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toBeEnabled();await page.screenshot({path:'test-results/access-desktop.png',fullPage:true});
   } finally {await env.close();await second.close();}
 });
 test('same-browser logout and identity change clear private drafts in both tabs',async({page,context})=>{
@@ -103,7 +103,7 @@ test('catalog managers maintain all work tasks while every seat owns its persona
       expect(createBox!.x).toBeGreaterThan(headerBox!.x + headerBox!.width / 2);
     }
     await expect(page.getByRole('button', { name: /C 的个人资料/ })).toHaveCount(0);
-    await page.getByRole('button', { name: '任务说明：跨席位管理任务', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：跨席位管理任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     await expect(page.getByRole('dialog', { name: '任务说明', exact: true })).toBeVisible();
     await expect(page.getByLabel('任务名称', { exact: true })).toBeEnabled();
     await expect(page.getByRole('button', { name: '归档任务', exact: true })).toBeVisible();
@@ -129,33 +129,32 @@ test('catalog managers maintain all work tasks while every seat owns its persona
     await expect(member.getByRole('button', { name: '新建工作任务', exact: true })).toHaveCount(0);
     await expect(member.getByRole('button', { name: '新建个人空间', exact: true })).toBeVisible();
     await expect(member.getByRole('button', { name: /[AC] 的个人资料/ })).toHaveCount(0);
-    await member.getByRole('button', { name: '任务说明：跨席位管理任务', exact: true }).click();
-    await expect(member.getByLabel('任务名称', { exact: true })).toBeDisabled();
-    await expect(member.getByLabel('目标与说明', { exact: true })).toBeDisabled();
-    await expect(member.getByLabel('目标与说明', { exact: true })).toHaveValue('由另一管理席位更新的目标');
+    await member.getByRole('button', { name: '进入项目：跨席位管理任务', exact: true }).click();await member.getByRole('button', { name: '任务说明', exact: true }).click();
+    await expect(member.getByRole('button', { name: '编辑说明', exact: true })).toHaveCount(0);
+    await expect(member.locator('.task-description')).toContainText('由另一管理席位更新的目标');
     await expect(member.getByRole('button', { name: '保存说明', exact: true })).toHaveCount(0);
     await expect(member.getByRole('button', { name: '归档任务', exact: true })).toHaveCount(0);
     await member.keyboard.press('Escape');
 
     await createTask(member, 'B 的个人资料', 'private');
-    await member.getByRole('button', { name: '空间说明：B 的个人资料', exact: true }).click();
+    await member.getByRole('button', { name: '进入项目：B 的个人资料', exact: true }).click();await member.getByRole('button', { name: '空间说明', exact: true }).click();await member.getByRole('button', { name: '编辑说明', exact: true }).click();
     await expect(member.getByRole('dialog', { name: '空间说明', exact: true })).toBeVisible();
     await expect(member.getByLabel('空间名称', { exact: true })).toBeEnabled();
     await member.getByLabel('空间名称', { exact: true }).fill('B 的个人笔记');
     await member.getByRole('button', { name: '保存说明', exact: true }).click();
     await expect(member.getByRole('dialog')).toBeHidden();
-    await member.getByRole('button', { name: '空间说明：B 的个人笔记', exact: true }).click();
+    await member.getByRole('button', { name: '进入项目：B 的个人笔记', exact: true }).click();await member.getByRole('button', { name: '空间说明', exact: true }).click();await member.getByRole('button', { name: '编辑说明', exact: true }).click();
     member.once('dialog', dialog => dialog.accept());
     await member.getByRole('button', { name: '归档空间', exact: true }).click();
     await expect(member.getByRole('dialog')).toBeHidden();
-    await expect(member.getByRole('button', { name: '空间说明：B 的个人笔记', exact: true })).toHaveCount(0);
+    await expect(member.getByRole('button', { name: '进入项目：B 的个人笔记', exact: true })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /B 的个人/ })).toHaveCount(0);
 
-    await page.getByRole('button', { name: '任务说明：跨席位管理任务', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：跨席位管理任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     page.once('dialog', dialog => dialog.accept());
     await page.getByRole('button', { name: '归档任务', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeHidden();
-    await expect(page.getByRole('button', { name: '任务说明：跨席位管理任务', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '进入项目：跨席位管理任务', exact: true })).toHaveCount(0);
     await member.route('**/api/auth/logout', route => route.fulfill({
       status: 503,
       json: { error: { code: 'TEMPORARILY_UNAVAILABLE', message: '退出暂时失败，请重试' } },

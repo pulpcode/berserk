@@ -79,13 +79,26 @@ test('multi-task information is visible without workspace creation; task continu
     await expect(page.getByRole('heading', { name: '后续处理', exact: true })).toHaveCount(0);
     await page.getByLabel('问题或工作要求').fill('收件入口独立草稿');
     await continuation.screenshot({ path: '/tmp/axon-continuation-compact.png' });
-    await page.getByRole('button',{name:'相关信息：联合分析任务',exact:true}).click();
+    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();
     await expect(page.getByRole('complementary',{name:'会话与资料'})).toBeVisible();
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     const detail=page.locator('.task-information .information-detail');
     await expect(detail.getByRole('heading',{name:'道路通行信息',exact:true})).toBeVisible();
     expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0); expect(env.fake.calls).toHaveLength(calls);
     const url=page.url();expect(url).toContain(`eventId=${eventId}`);expect(url).toContain(`jobId=${job.id}`);
+    await expect(page.locator('.workspace-group-heading').getByRole('button', { name: /相关信息：|任务说明：/ })).toHaveCount(0);
+    await page.getByRole('button', { name: '任务说明', exact: true }).click();
+    await expect(page.locator('.task-description')).toContainText('综合收到资料形成分析');
+    await expect(page).toHaveURL(/tab=description/);
+    await page.reload();
+    await expect(page.locator('.task-description')).toBeVisible();
+    await page.goBack();
+    await expect(detail.getByRole('heading',{name:'道路通行信息',exact:true})).toBeVisible();
+    await page.getByRole('button', { name: '任务说明', exact: true }).click();
+    await page.getByRole('button', { name: '相关信息', exact: true }).click();
+    await expect(page).toHaveURL(url);
+    await page.screenshot({ path: '/private/tmp/axon-task-page.png', fullPage: true });
+
     await page.reload();await expect(detail.getByRole('heading',{name:'道路通行信息',exact:true})).toBeVisible();expect(page.url()).toBe(url);
     await expect(detail.getByLabel('处理位置', { exact: true })).toHaveCount(0);
     await detail.getByLabel('问题或工作要求').fill('针对联合分析任务继续核实');
@@ -96,7 +109,7 @@ test('multi-task information is visible without workspace creation; task continu
     expect(action.taskSpaceId).toBe(env.task.id);expect(action.origin?.kind).toBe('task_information');
     expect(env.lab.get(action.sessionId!, 'a').messages.filter(message => message.role === 'user')).toHaveLength(1);
     await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('对话里的下一条草稿');
-    await page.getByRole('button',{name:'相关信息：设备转移任务',exact:true}).click();
+    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('设备转移任务');
     await expect(page.locator('.workspace-header').getByRole('button',{name:'项目资料',exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
@@ -220,7 +233,7 @@ test('manual link conflict keeps draft and requires reading the latest decision 
     await editor.getByRole('button',{name:'查看最新关联'}).click();await expect(editor.locator('.task-comparison')).toContainText('原始自动关联理由');await expect(editor.getByLabel('关联理由')).toHaveValue('我正在编辑的关联理由');
     await editor.getByRole('button',{name:'已核对，继续编辑'}).click();await editor.getByRole('button',{name:'保存关联'}).click();await expect(editor).toHaveCount(0);await expect(page.locator('.task-association-list')).toContainText('人工保留');
     await page.getByRole('button',{name:'调整关联',exact:true}).click();await editor.getByLabel('处理方式').selectOption('exclude');await editor.getByRole('button',{name:'保存关联'}).click();await expect(page.locator('.task-association-list')).toContainText('已移除');
-    await page.getByRole('button',{name:'相关信息：联合分析任务',exact:true}).click();await expect(page.locator('.task-information')).toContainText('当前没有符合条件的获准关联信息');
+    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await expect(page.locator('.task-information')).toContainText('当前没有符合条件的获准关联信息');
   }finally{await env.close();}
 });
 
@@ -229,7 +242,7 @@ test('a late prepared-session response cannot leave the newly selected task or o
   try{
     await env.receive();await expect.poll(()=>env.store.listDeliveries().filter(item=>item.status==='delivered').length).toBe(2);
     assess(env,{items:[{taskSpaceId:env.task.id,taskRevision:env.task.revision,reason:'与本任务相关'},{taskSpaceId:env.second.id,taskRevision:env.second.revision,reason:'与设备转移相关'}]});
-    await login(page,'a');await page.getByRole('button',{name:'相关信息：联合分析任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
+    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await page.getByRole('textbox',{name:'问题或工作要求',exact:true}).fill('旧任务准备中的目标');
     let held=false;
     await page.route('**/api/sessions/*',async route=>{
@@ -237,10 +250,10 @@ test('a late prepared-session response cannot leave the newly selected task or o
       await route.fallback();
     });
     await page.getByRole('button',{name:'发送并进入对话',exact:true}).click();await expect.poll(()=>Boolean(release)).toBe(true);
-    await page.getByRole('button',{name:'相关信息：设备转移任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
+    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await page.getByRole('textbox',{name:'问题或工作要求',exact:true}).fill('新任务正在编辑的内容');
     const response=page.waitForResponse(result=>/\/api\/sessions\/[^/]+$/.test(new URL(result.url()).pathname));release!();await response;
-    await expect(page.getByRole('heading',{name:'设备转移任务 · 相关信息'})).toBeVisible();await expect(page.getByRole('textbox',{name:'问题或工作要求',exact:true})).toHaveValue('新任务正在编辑的内容');
+    await expect(page.getByRole('heading',{name:'设备转移任务',exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'问题或工作要求',exact:true})).toHaveValue('新任务正在编辑的内容');
     expect(env.store.listActions().filter(item=>item.kind==='analysis')).toHaveLength(1);
   }finally{release?.();await env.close();}
 });
@@ -288,7 +301,7 @@ test('source choices cover later pages and remain available when switching direc
     const older={...env.store.getEvent(olderId),receivedAt:'2020-01-01T00:00:00.000Z'};
     env.store.db.prepare('UPDATE background_events SET received_at=?,data=? WHERE id=?').run(older.receivedAt,JSON.stringify(older),older.id);
     for(const job of env.store.listJobs())env.store.transaction(()=>env.store.saveTaskAssessmentInTransaction(job,{items:[{taskSpaceId:env.task.id,taskRevision:env.task.revision,reason:'与联合分析任务相关'}],recordedAt:new Date().toISOString(),toolCallId:'fixture-assessment'}));
-    await login(page,'a');await page.getByRole('button',{name:'相关信息：联合分析任务',exact:true}).click();
+    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();
     const panel=page.locator('.task-information');const source=panel.getByRole('combobox',{name:'来源',exact:true});
     await expect(panel.locator('.information-list li')).toHaveCount(25);
     await expect(panel.getByRole('button',{name:/较早态势信息/})).toHaveCount(0);

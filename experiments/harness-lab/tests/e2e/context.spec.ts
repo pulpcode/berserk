@@ -50,7 +50,7 @@ async function login(page: Page) {
 test('task context saves generic references, open time ranges and explicit clearing without creating a workspace', async ({ page }) => {
   const env = await setup(); await env.attach(page);
   try {
-    await login(page); await page.getByRole('button', { name: '任务说明：上下文验证任务', exact: true }).click();
+    await login(page); await page.getByRole('button', { name: '进入项目：上下文验证任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     await expect(page.getByLabel('对象编号', { exact: true })).toHaveValue('001');
     await page.getByLabel('对象编号', { exact: true }).fill('');
     await page.getByRole('button', { name: '保存说明', exact: true }).click();
@@ -73,7 +73,7 @@ test('task context saves generic references, open time ranges and explicit clear
     const saved = env.lab.access!.get(env.task.id, 'a');
     expect(saved.context).toEqual({ businessRefs: [{ systemId: 'external', objectType: 'record', objectId: '00042', label: '原始对象' }], focus: { areaIds: ['area-01', 'area-02'], topics: ['时间比较', '补充核实'], time: { from: '2026-10-01T01:00:00.000Z' } } });
     expect(env.lab.workspaces.listAll()).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
-    await page.getByRole('button', { name: '任务说明：上下文验证任务', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：上下文验证任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     await page.getByRole('button', { name: '移除第 1 项业务引用' }).click();
     for (const name of ['关注区域编码', '关注主题', '开始时间（含时区）']) await page.getByLabel(name).fill('');
     await page.getByRole('button', { name: '保存说明', exact: true }).click(); await expect(page.getByRole('dialog')).toBeHidden();
@@ -86,7 +86,7 @@ test('context conflicts retain the full draft; catalog failure and ordinary text
   const puts: Record<string, unknown>[] = [];
   page.on('request', req => { if (req.method() === 'PUT' && new URL(req.url()).pathname === `/api/tasks/${env.task.id}`) puts.push(req.postDataJSON()); });
   try {
-    await login(page); await page.getByRole('button', { name: '任务说明：上下文验证任务', exact: true }).click();
+    await login(page); await page.getByRole('button', { name: '进入项目：上下文验证任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     await page.getByLabel('对象编号', { exact: true }).fill('local-edit');
     env.lab.access!.update(env.actor, env.task.id, env.task.revision, { title: env.task.title, goal: '另一窗口修改目标', context: { businessRefs: [{ systemId: 'external', objectType: 'record', objectId: 'remote-edit' }], focus: { topics: ['另一窗口主题'] } } });
     await page.getByRole('button', { name: '保存说明', exact: true }).click();
@@ -99,7 +99,7 @@ test('context conflicts retain the full draft; catalog failure and ordinary text
     const retained = env.lab.access!.get(env.task.id, 'a').context;
     expect(retained?.businessRefs?.[0]?.objectId).toBe('local-edit');
     await page.route('**/api/context/catalog', route => route.fulfill({ status: 503, json: { error: { code: 'UNAVAILABLE', message: '目录暂不可用' } } }));
-    await page.getByRole('button', { name: '任务说明：上下文验证任务', exact: true }).click();
+    await page.getByRole('button', { name: '进入项目：上下文验证任务', exact: true }).click();await page.getByRole('button', { name: '任务说明', exact: true }).click();await page.getByRole('button', { name: '编辑说明', exact: true }).click();
     await expect(page.getByText('业务系统列表暂不可用，已填写的内容仍保留。', { exact: false })).toBeVisible();
     await expect(page.getByLabel('对象编号', { exact: true })).toHaveValue('local-edit');
     await page.getByLabel('目标与说明').fill('只更新说明，不改关注范围');
