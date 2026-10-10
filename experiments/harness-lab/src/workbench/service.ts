@@ -38,6 +38,11 @@ export class WorkbenchService {
       });
       items.push(...information);
     } catch { sections.information = 'error'; }
+    if (this.background) try {
+      const background = this.background, reviews = background.workbenchReviews(actor);
+      sections.delivery_review = reviews.available ? 'available' : 'unavailable';
+      items.push(...reviews.items.map((review):WorkbenchItem => ({key:`delivery_review:${review.id}`,id:review.id,kind:'delivery_review',title:review.title,state:review.status,bucket:review.status === 'pending' ? 'actionable' : 'done',label:review.status === 'pending' ? '待我批准' : review.status === 'approved' ? '已批准' : '不予补充',source:review.sourceName,updatedAt:review.updatedAt,tasks:background.taskLinks.effectiveTasks(actor,review.eventId,review.jobId),jobId:review.jobId,analysisAt:background.store.getJob(review.jobId).createdAt})));
+    } catch { sections.delivery_review = 'error'; }
     items = items.filter(item => (!filter.kind || item.kind === filter.kind) && (!filter.taskId || item.tasks.some(task => task.id === filter.taskId)) && (!filter.search || item.title.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase())));
     items.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt) || a.key.localeCompare(b.key));
     const incomplete = filter.kind ? sections[filter.kind] === 'error' : Object.values(sections).includes('error');

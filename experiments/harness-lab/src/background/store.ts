@@ -1,8 +1,9 @@
+import { upgradeSeatColumns } from '../access/schema.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { Identity } from '../contracts/access.js';
 import type { TaskAssessment, TaskSuggestionCreation } from '../contracts/task-information.js';
-import type { InboxHandling, BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
+import type { InboxHandling, BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundDeliveryReview, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, DeliveryReviewDecisionInput, InformationPermission, InformationRule, InformationRuleInput, RecipientSuggestion, RecipientSuggestionInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
@@ -18,6 +19,39 @@ const tables = ['background_events', 'background_jobs', 'background_deliveries',
 export const backgroundHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string; searchContentEventIds?: string[]};
 export type NewBackgroundAction = Omit<BackgroundAction, 'id' | 'status' | 'revision' | 'createdAt' | 'updatedAt'> & {id?: string};
+const seatIdValid = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{1,64}$/.test(value);
+const reasonValid = (value: unknown): value is string => typeof value === 'string' && !!value.trim() && value.length <= 1500;
+function recipientsValid(value: unknown): value is RecipientSuggestionInput['recipients'] {
+  return Array.isArray(value) && value.length <= 100 && value.every(item => item && typeof item === 'object'
+    && Object.keys(item).every(key => ['seatId', 'reason'].includes(key)) && seatIdValid(item.seatId) && reasonValid(item.reason))
+    && new Set(value.map(item => item.seatId)).size === value.length;
+}
+export function validRecipientSuggestionInput(value: unknown): value is RecipientSuggestionInput {
+  if (!value || typeof value !== 'object') return false;
+  const input = value as RecipientSuggestionInput;
+  return Object.keys(input).every(key => ['recipients', 'noAdditionalReason'].includes(key)) && recipientsValid(input.recipients)
+    && (input.recipients.length ? input.noAdditionalReason === undefined : reasonValid(input.noAdditionalReason));
+}
+function validSuggestion(value: unknown): value is RecipientSuggestion {
+  if (!value || typeof value !== 'object') return false;
+  const {toolCallId, recordedAt, ...input} = value as RecipientSuggestion;
+  return typeof toolCallId === 'string' && !!toolCallId && typeof recordedAt === 'string' && Number.isFinite(Date.parse(recordedAt)) && validRecipientSuggestionInput(input);
+}
+function validCandidateSnapshot(snapshot: BackgroundRuleSnapshot) {
+  const config = snapshot.rule.supplementaryDelivery, frozen = snapshot.supplementaryDelivery;
+  if (!config) return frozen === undefined;
+  if (!frozen || !seatIdValid(frozen.reviewerSeatId) || !Array.isArray(config.candidateSeatIds) || !config.candidateSeatIds.length
+    || config.candidateSeatIds.length > 100 || new Set(config.candidateSeatIds).size !== config.candidateSeatIds.length || !Array.isArray(frozen.candidates)
+    || frozen.candidates.length !== config.candidateSeatIds.length || new Set(frozen.candidates.map(seat => seat.id)).size !== frozen.candidates.length) return false;
+  return frozen.candidates.every(seat => seatIdValid(seat.id) && config.candidateSeatIds.includes(seat.id) && !snapshot.rule.recipientSeatIds.includes(seat.id)
+    && seat.id !== frozen.reviewerSeatId && typeof seat.name === 'string' && !!seat.name.trim() && typeof seat.responsibility === 'string'
+    && !!seat.responsibility.trim() && seat.responsibility.length <= 1000 && Number.isSafeInteger(seat.responsibilityRevision) && seat.responsibilityRevision > 0);
+}
+function assertCandidateRecipients(job: BackgroundJob, recipients: RecipientSuggestionInput['recipients']) {
+  const snapshot = job.ruleSnapshot;
+  if (!snapshot?.supplementaryDelivery || !validCandidateSnapshot(snapshot) || !recipientsValid(recipients)
+    || recipients.some(recipient => !snapshot.supplementaryDelivery!.candidates.some(candidate => candidate.id === recipient.seatId))) throw conflict('补充席位不在本次作业候选范围内。');
+}
 
 function decode<T extends {id: string; revision: number}>(row: Record<string, unknown> | undefined): T {
   if (!row) throw missing();
@@ -27,13 +61,15 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     // Queries and permissions use SQL columns; JSON must describe the same record.
     const data = value as Record<string, unknown>;
     if (data.taskAssessment !== undefined && (data.kind !== 'preprocess' || !validTaskAssessment(data.taskAssessment))) throw stateError();
+    if (data.recipientSuggestion !== undefined && (data.kind !== 'preprocess' || !validSuggestion(data.recipientSuggestion))) throw stateError();
+    if (data.recipientSuggestionError !== undefined && (typeof data.recipientSuggestionError !== 'string' || !data.recipientSuggestionError)) throw stateError();
     if (data.taskSuggestionCreation !== undefined && (data.status !== 'succeeded' || !(data.taskAssessment as TaskAssessment | undefined)?.newTaskSuggestion || !validSuggestionCreation(data.taskSuggestionCreation))) throw stateError();
     if (data.origin !== undefined && !validAnalysisOrigin(data.origin)) throw stateError();
     const origin = data.origin as BackgroundAction['origin'];
     if (origin?.kind === 'task_information' && (origin.eventId !== data.eventId || origin.taskSpaceId !== data.taskSpaceId)) throw stateError();
     if (origin?.kind === 'inbox' && origin.deliveryId !== data.deliveryId) throw stateError();
     if (origin && data.kind === 'preprocess') throw stateError();
-    for (const field of ['id','eventId','jobId','initialJobId','sessionId','requestId','taskSpaceId','workspaceId','deliveryId','actionId','retryOfJobId','ruleId']) {
+    for (const field of ['id','eventId','jobId','initialJobId','sessionId','requestId','taskSpaceId','workspaceId','deliveryId','actionId','retryOfJobId','ruleId','reviewId']) {
       if (data[field] !== undefined && (typeof data[field] !== 'string' || !UUID.test(data[field]))) throw stateError();
     }
     if (data.sourceId !== undefined && (typeof data.sourceId !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(data.sourceId))) throw stateError();
@@ -47,7 +83,7 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
         || !Array.isArray(value.systemIds) || !value.systemIds.length || value.systemIds.some(id => !contextId(id)) || new Set(value.systemIds).size !== value.systemIds.length) throw stateError();
     }
     if (profile?.contextScopeId && profile.contextScope?.scopeId !== profile.contextScopeId) throw stateError();
-    const columns: Record<string, string> = {source_id:'sourceId', message_id:'sourceMessageId', payload_hash:'payloadHash', received_at:'receivedAt', initial_job_id:'initialJobId', event_id:'eventId', job_id:'jobId', kind:'kind', status:'status', created_at:'createdAt', session_id:'sessionId', seat_id:'seatId', task_id:'taskSpaceId', user_id:'userId', client_action_id:'clientActionId'};
+    const columns: Record<string, string> = {source_id:'sourceId', message_id:'sourceMessageId', payload_hash:'payloadHash', received_at:'receivedAt', initial_job_id:'initialJobId', event_id:'eventId', job_id:'jobId', reviewer_seat_id:'reviewerSeatId', kind:'kind', status:'status', created_at:'createdAt', session_id:'sessionId', seat_id:'seatId', task_id:'taskSpaceId', user_id:'userId', client_action_id:'clientActionId'};
     for (const [column, field] of Object.entries(columns)) {
       const property = column === 'seat_id' && 'job_id' in row ? 'recipientSeatId' : field;
       if (column in row && row[column] !== (data[property] ?? null)) throw stateError();
@@ -70,25 +106,31 @@ function pagination(filter: {offset?: number; limit?: number}) {
 }
 function normalizeRule(input: InformationRuleInput): InformationRuleInput {
   if (!input || typeof input.name !== 'string' || !input.name.trim() || input.name.trim().length > 100 || typeof input.sourceId !== 'string' || typeof input.profileId !== 'string' || !Array.isArray(input.recipientSeatIds) || !input.recipientSeatIds.length || input.recipientSeatIds.length > 100 || input.recipientSeatIds.some(id => !/^[a-zA-Z0-9_-]{1,64}$/.test(id)) || new Set(input.recipientSeatIds).size !== input.recipientSeatIds.length || typeof input.enabled !== 'boolean') throw new RequestError('INVALID_INPUT', '请填写有效规则、处理方案及接收席位。');
-  return {name: input.name.trim(), sourceId: input.sourceId, profileId: input.profileId, recipientSeatIds: [...input.recipientSeatIds], enabled: input.enabled, ...(input.publicTaskId ? {publicTaskId: input.publicTaskId} : {})};
+  const supplementary = input.supplementaryDelivery;
+  if (supplementary !== undefined && (!supplementary || Object.keys(supplementary).some(key => key !== 'candidateSeatIds') || !Array.isArray(supplementary.candidateSeatIds)
+    || !supplementary.candidateSeatIds.length || supplementary.candidateSeatIds.length > 100 || supplementary.candidateSeatIds.some(id => !seatIdValid(id) || input.recipientSeatIds.includes(id))
+    || new Set(supplementary.candidateSeatIds).size !== supplementary.candidateSeatIds.length)) throw new RequestError('INVALID_INPUT', '请选择不重复且不在固定名单中的补充候选席位。');
+  return {name: input.name.trim(), sourceId: input.sourceId, profileId: input.profileId, recipientSeatIds: [...input.recipientSeatIds], enabled: input.enabled, ...(input.publicTaskId ? {publicTaskId: input.publicTaskId} : {}), ...(supplementary ? {supplementaryDelivery: {candidateSeatIds: [...supplementary.candidateSeatIds]}} : {})};
 }
 
 /** Queue/rules/delivery metadata only. The owning service performs current authorization and file checks. */
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
     const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if (version === 3 || version === 4 || version === 6) {
-      const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
-      if (tables.some(table => !actual.has(table))) throw stateError();
+    const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
+    const anyBackground = [...actual].some(name => name.startsWith('background_'));
+    const fresh = !anyBackground && [2,5,7].includes(version);
+    if (!fresh) {
+      if (![3,4,5,6,8].includes(version) || tables.some(table => !actual.has(table))) throw stateError();
       if (version >= 4 && !actual.has('information_task_overrides')) throw stateError();
-      this.validateIntegrity(version >= 4);
-      if (version === 3) this.upgradeTaskLinks();
-      if (version < 6) this.upgradeHandling(); else this.validateHandling();
-      return;
+      if ([5,8].includes(version) && !actual.has('background_delivery_reviews')) throw stateError();
+      if ([6,8].includes(version) && !actual.has('inbox_handling')) throw stateError();
+      this.validateIntegrity(version >= 4,actual.has('background_delivery_reviews'));
+      if (actual.has('inbox_handling')) this.validateHandling();
     }
-    if (version !== 2 && version !== 5) throw stateError();
     this.transaction(() => {
-      db.exec(`
+      upgradeSeatColumns(db,version,!fresh);
+      if (fresh) db.exec(`
         CREATE TABLE background_events(id TEXT PRIMARY KEY, source_id TEXT NOT NULL, message_id TEXT NOT NULL, payload_hash TEXT NOT NULL, received_at TEXT NOT NULL, initial_job_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)), UNIQUE(source_id,message_id));
         CREATE TABLE background_jobs(id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES background_events(id), source_id TEXT NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('preprocess','seat_analysis')), status TEXT NOT NULL CHECK(status IN ('queued','running','succeeded','failed','cancelled','interrupted')), created_at TEXT NOT NULL, session_id TEXT, seat_id TEXT, task_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)));
         CREATE INDEX background_jobs_queue ON background_jobs(status,created_at);
@@ -100,22 +142,26 @@ export class BackgroundStore {
         CREATE TABLE information_grants(subject_kind TEXT NOT NULL CHECK(subject_kind IN ('account','seat')), subject_id TEXT NOT NULL, source_id TEXT NOT NULL, permission TEXT NOT NULL CHECK(permission IN ('view','manage')), PRIMARY KEY(subject_kind,subject_id,source_id));
         CREATE TABLE background_actions(id TEXT PRIMARY KEY, user_id TEXT NOT NULL, client_action_id TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('preparing','completed')), task_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)), UNIQUE(user_id,client_action_id));
         CREATE TABLE background_controls(key TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
-        PRAGMA user_version=3;
       `);
+      if (!actual.has('information_task_overrides')) db.exec(`CREATE TABLE information_task_overrides(
+        event_id TEXT NOT NULL REFERENCES background_events(id),
+        task_id TEXT NOT NULL REFERENCES task_spaces(id),
+        job_id TEXT NOT NULL REFERENCES background_jobs(id),
+        data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(event_id,task_id));
+        CREATE INDEX information_task_overrides_task ON information_task_overrides(task_id,event_id);`);
+      if (!actual.has('background_delivery_reviews')) db.exec(`CREATE TABLE background_delivery_reviews(
+        id TEXT PRIMARY KEY, job_id TEXT NOT NULL UNIQUE REFERENCES background_jobs(id),
+        event_id TEXT NOT NULL REFERENCES background_events(id), source_id TEXT NOT NULL, reviewer_seat_id TEXT NOT NULL,
+        status TEXT NOT NULL CHECK(status IN ('pending','approved','declined')), created_at TEXT NOT NULL,
+        data TEXT NOT NULL CHECK(json_valid(data)));
+        CREATE INDEX background_delivery_reviews_pending ON background_delivery_reviews(reviewer_seat_id,status,created_at);`);
+      if (!actual.has('inbox_handling')) db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
+        INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';`);
+      this.validateIntegrity(true,true); this.validateHandling();
+      db.exec('PRAGMA user_version=8');
     });
-    this.upgradeTaskLinks();
-    this.upgradeHandling();
   }
 
-  private upgradeHandling() {
-    this.transaction(() => {
-      if (!this.db.prepare('PRAGMA table_info(seats)').all().some(row => row.name === 'view_work_overview')) this.db.exec('ALTER TABLE seats ADD COLUMN view_work_overview INTEGER NOT NULL DEFAULT 0 CHECK(view_work_overview IN (0,1))');
-      this.db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
-        INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';
-        PRAGMA user_version=6;`);
-      this.validateHandling();
-    });
-  }
   private validateHandling() {
     if (!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='inbox_handling'").get()) throw stateError();
     if (this.db.prepare("SELECT 1 FROM background_deliveries d LEFT JOIN inbox_handling h ON h.delivery_id=d.id WHERE (d.status='delivered' AND h.delivery_id IS NULL) OR (d.status!='delivered' AND h.delivery_id IS NOT NULL) LIMIT 1").get()) throw stateError();
@@ -153,23 +199,11 @@ export class BackgroundStore {
     });
   }
 
-  private upgradeTaskLinks() {
-    this.transaction(() => {
-      this.db.exec(`CREATE TABLE information_task_overrides(
-        event_id TEXT NOT NULL REFERENCES background_events(id),
-        task_id TEXT NOT NULL REFERENCES task_spaces(id),
-        job_id TEXT NOT NULL REFERENCES background_jobs(id),
-        data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(event_id,task_id));
-        CREATE INDEX information_task_overrides_task ON information_task_overrides(task_id,event_id);
-        PRAGMA user_version=4;`);
-      this.validateIntegrity();
-    });
-  }
-
-  private validateIntegrity(taskLinks = true) {
+  private validateIntegrity(taskLinks = true, reviews = false) {
     const actualIndexes = new Set(this.db.prepare("SELECT name FROM sqlite_master WHERE type='index'").all().map(row => String(row.name)));
     if (indexes.some(index => !actualIndexes.has(index)) || this.db.prepare('PRAGMA foreign_key_check').all().length) throw stateError();
     if (taskLinks && !actualIndexes.has('information_task_overrides_task')) throw stateError();
+    if (reviews && !actualIndexes.has('background_delivery_reviews_pending')) throw stateError();
     const events = new Map(this.listEvents().map(event => [event.id,event]));
     const jobs = new Map(this.listJobs().map(job => [job.id,job]));
     for (const event of events.values()) {
@@ -182,14 +216,44 @@ export class BackgroundStore {
     for (const job of jobs.values()) {
       if (events.get(job.eventId)?.sourceId !== job.sourceId || !job.requestId) throw stateError();
       if (job.kind === 'preprocess' && (!job.ruleSnapshot || job.ruleSnapshot.rule.sourceId !== job.sourceId || job.ruleSnapshot.rule.profileId !== job.ruleSnapshot.profile.id)) throw stateError();
+      if (job.ruleSnapshot && !validCandidateSnapshot(job.ruleSnapshot)) throw stateError();
+      if (job.recipientSuggestion) assertCandidateRecipients(job, job.recipientSuggestion.recipients);
       if (job.status === 'succeeded' && (!job.result || job.result.sessionId !== job.sessionId || job.result.requestId !== job.requestId || !Array.isArray(job.result.files))) throw stateError();
     }
-    for (const delivery of this.listDeliveries()) {
+    const reviewMap = new Map((reviews ? this.listDeliveryReviews() : []).map(review => [review.id, review]));
+    if (reviews) for (const job of jobs.values()) {
+      if (job.status === 'succeeded' && job.recipientSuggestion?.recipients.length && !job.recipientSuggestionError
+        && ![...reviewMap.values()].some(review => review.jobId === job.id)) throw stateError();
+    }
+    for (const review of reviewMap.values()) {
+      const job = jobs.get(review.jobId);
+      if (!job || job.kind !== 'preprocess' || job.status !== 'succeeded' || job.eventId !== review.eventId || job.sourceId !== review.sourceId
+        || job.ruleSnapshot?.supplementaryDelivery?.reviewerSeatId !== review.reviewerSeatId || !job.recipientSuggestion?.recipients.length || job.recipientSuggestionError) throw stateError();
+      if (review.status === 'approved') assertCandidateRecipients(job, review.recipients!);
+    }
+    const deliveries = this.listDeliveries();
+    for (const delivery of deliveries) {
       const job = jobs.get(delivery.jobId);
-      if (!job || job.kind !== 'preprocess' || job.status !== 'succeeded' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId || !job.ruleSnapshot?.rule.recipientSeatIds.includes(delivery.recipientSeatId)) throw stateError();
+      if (!job || job.kind !== 'preprocess' || job.status !== 'succeeded' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId) throw stateError();
+      if (delivery.reviewId) {
+        const review = reviewMap.get(delivery.reviewId);
+        if (!review || review.jobId !== job.id || review.status !== 'approved' || !review.recipients?.some(recipient => recipient.seatId === delivery.recipientSeatId)) throw stateError();
+      } else if (!job.ruleSnapshot?.rule.recipientSeatIds.includes(delivery.recipientSeatId)) throw stateError();
+    }
+    for (const review of reviewMap.values()) {
+      if (review.status === 'approved' && review.recipients!.some(recipient => !deliveries.some(delivery => delivery.reviewId === review.id && delivery.recipientSeatId === recipient.seatId))) throw stateError();
     }
     this.listRules();
     const actions = new Map(this.listActions().map(action => [action.id,action]));
+    for (const action of actions.values()) {
+      if (action.kind !== 'delivery_review') continue;
+      const review = action.reviewId ? reviewMap.get(action.reviewId) : undefined;
+      if (!review || review.status === 'pending' || action.status !== 'completed' || action.jobId !== review.jobId || action.eventId !== review.eventId
+        || action.userId !== review.decidedByUserId || action.seatId !== review.reviewerSeatId) throw stateError();
+    }
+    for (const review of reviewMap.values()) {
+      if (review.status !== 'pending' && [...actions.values()].filter(action => action.kind === 'delivery_review' && action.reviewId === review.id).length !== 1) throw stateError();
+    }
     for (const job of jobs.values()) {
       if (job.actionId) {
         const action = actions.get(job.actionId);
@@ -296,18 +360,24 @@ export class BackgroundStore {
       return this.saveJob({...job, cancelRequestedAt: time, ...(job.status === 'queued' ? {status: 'cancelled' as const, endedAt: time, phase: undefined} : {}), revision: job.revision + 1});
     });
   }
-  finishJob(id: string, revision: number, result: Pick<BackgroundJob, 'status' | 'result' | 'usage' | 'error'>): BackgroundJob {
+  finishJob(id: string, revision: number, result: Pick<BackgroundJob, 'status' | 'result' | 'usage' | 'error'>, options: {recipientSuggestionVerified?: boolean; recipientSuggestionError?: string} = {}): BackgroundJob {
     return this.transaction(() => {
       const job = this.getJob(id);
       if (job.revision !== revision || !active.has(job.status) || active.has(result.status) || (job.status === 'queued' && result.status === 'succeeded')) throw conflict();
       const status = job.cancelRequestedAt ? 'cancelled' : result.status;
       if (status === 'succeeded' && (!result.result || result.result.sessionId !== job.sessionId || result.result.requestId !== job.requestId)) throw conflict('结果与本次执行不一致。');
-      const next = this.saveJob({...job, ...result, status, phase: undefined, endedAt: now(), revision: job.revision + 1});
+      const suggestionError = job.recipientSuggestion && !options.recipientSuggestionVerified ? options.recipientSuggestionError ?? '未核实到本次分析的成功建议工具结果，未提交补充投递审批。' : undefined;
+      const next = this.saveJob({...job, ...result, status, phase: undefined, recipientSuggestionError: suggestionError, endedAt: now(), revision: job.revision + 1});
       if (next.status === 'succeeded' && next.kind === 'preprocess') {
         if (!next.ruleSnapshot) throw conflict('预处理缺少固定规则。');
         for (const seatId of next.ruleSnapshot.rule.recipientSeatIds) {
-          const delivery: BackgroundDelivery = {id: randomUUID(), eventId: next.eventId, jobId: next.id, sourceId: next.sourceId, recipientSeatId: seatId, status: 'pending', revision: 1, createdAt: next.endedAt!, updatedAt: next.endedAt!};
-          this.db.prepare('INSERT INTO background_deliveries VALUES(?,?,?,?,?,?,?,?)').run(delivery.id, delivery.eventId, delivery.jobId, delivery.sourceId, seatId, delivery.status, delivery.createdAt, JSON.stringify(delivery));
+          this.insertDelivery(next, seatId, next.endedAt!);
+        }
+        if (options.recipientSuggestionVerified && next.recipientSuggestion?.recipients.length) {
+          assertCandidateRecipients(next, next.recipientSuggestion.recipients);
+          const review: BackgroundDeliveryReview = {id: randomUUID(), jobId: next.id, eventId: next.eventId, sourceId: next.sourceId,
+            reviewerSeatId: next.ruleSnapshot.supplementaryDelivery!.reviewerSeatId, status: 'pending', revision: 1, createdAt: next.endedAt!, updatedAt: next.endedAt!};
+          this.db.prepare('INSERT INTO background_delivery_reviews VALUES(?,?,?,?,?,?,?,?)').run(review.id, review.jobId, review.eventId, review.sourceId, review.reviewerSeatId, review.status, review.createdAt, JSON.stringify(review));
         }
       }
       return next;
@@ -315,6 +385,16 @@ export class BackgroundStore {
   }
   private saveJob(job: BackgroundJob): BackgroundJob {
     this.db.prepare('UPDATE background_jobs SET status=?,session_id=?,data=? WHERE id=?').run(job.status, job.sessionId ?? null, JSON.stringify(job), job.id); return job;
+  }
+  /** The service has checked current scope rights; this synchronous CAS binds the recorded tool result to the running job. */
+  saveRecipientSuggestion(id: string, revision: number, suggestion: RecipientSuggestion): BackgroundJob {
+    return this.transaction(() => {
+      const job = this.getJob(id);
+      if (job.status !== 'running' || job.kind !== 'preprocess' || job.cancelRequestedAt || job.revision !== revision) throw conflict();
+      if (!validSuggestion(suggestion)) throw new RequestError('INVALID_INPUT', '请提供完整补充建议和逐席位理由，或说明无需补充。');
+      assertCandidateRecipients(job, suggestion.recipients);
+      return this.saveJob({...job, recipientSuggestion: suggestion, revision: job.revision + 1});
+    });
   }
   /** TaskLinkService owns the outer transaction and validates the request's observed tasks. */
   saveTaskAssessmentInTransaction(job: BackgroundJob, assessment: TaskAssessment) {
@@ -339,6 +419,65 @@ export class BackgroundStore {
   }
 
   getDelivery(id: string) { return decode<BackgroundDelivery>(this.db.prepare('SELECT * FROM background_deliveries WHERE id=?').get(id)); }
+  private insertDelivery(job: BackgroundJob, seatId: string, time: string, reviewId?: string) {
+    const delivery: BackgroundDelivery = {id: randomUUID(), eventId: job.eventId, jobId: job.id, sourceId: job.sourceId,
+      recipientSeatId: seatId, status: 'pending', revision: 1, createdAt: time, updatedAt: time, ...(reviewId ? {reviewId} : {})};
+    this.db.prepare('INSERT INTO background_deliveries VALUES(?,?,?,?,?,?,?,?)').run(delivery.id, delivery.eventId, delivery.jobId, delivery.sourceId, seatId, delivery.status, delivery.createdAt, JSON.stringify(delivery));
+    return delivery;
+  }
+  private decodeReview(row: Record<string, unknown> | undefined): BackgroundDeliveryReview {
+    const review = decode<BackgroundDeliveryReview>(row);
+    if (!seatIdValid(review.reviewerSeatId) || !['pending', 'approved', 'declined'].includes(review.status)
+      || !Number.isFinite(Date.parse(review.createdAt)) || !Number.isFinite(Date.parse(review.updatedAt))) throw stateError();
+    if (review.status === 'pending') {
+      if (review.revision !== 1 || review.decidedAt !== undefined || review.decidedByUserId !== undefined || review.recipients !== undefined || review.reason !== undefined) throw stateError();
+    } else {
+      if (review.revision !== 2 || !review.decidedAt || !Number.isFinite(Date.parse(review.decidedAt)) || !review.decidedByUserId) throw stateError();
+      if (review.status === 'approved' ? !recipientsValid(review.recipients) || !review.recipients.length || review.reason !== undefined : !reasonValid(review.reason) || review.recipients !== undefined) throw stateError();
+    }
+    return review;
+  }
+  getDeliveryReview(id: string): BackgroundDeliveryReview { return this.decodeReview(this.db.prepare('SELECT * FROM background_delivery_reviews WHERE id=?').get(id)); }
+  reviewForJob(jobId: string): BackgroundDeliveryReview | undefined {
+    const row = this.db.prepare('SELECT * FROM background_delivery_reviews WHERE job_id=?').get(jobId);
+    return row ? this.decodeReview(row) : undefined;
+  }
+  listDeliveryReviews(filter: {sourceIds?: string[]; reviewerSeatId?: string; status?: BackgroundDeliveryReview['status']; jobId?: string} = {}): BackgroundDeliveryReview[] {
+    const clauses: string[] = [], values: SQLInputValue[] = [];
+    if (filter.sourceIds) {
+      if (!filter.sourceIds.length) return [];
+      clauses.push(`source_id IN (${filter.sourceIds.map(() => '?').join(',')})`); values.push(...filter.sourceIds);
+    }
+    if (filter.reviewerSeatId) { clauses.push('reviewer_seat_id=?'); values.push(filter.reviewerSeatId); }
+    if (filter.status) { clauses.push('status=?'); values.push(filter.status); }
+    if (filter.jobId) { clauses.push('job_id=?'); values.push(filter.jobId); }
+    return this.db.prepare(`SELECT * FROM background_delivery_reviews${clauses.length ? ` WHERE ${clauses.join(' AND ')}` : ''} ORDER BY rowid DESC`).all(...values).map(row => this.decodeReview(row));
+  }
+  /** Current result/scope checks are owned by the service. The decision, deliveries and retry receipt commit together. */
+  decideDeliveryReview(id: string, input: DeliveryReviewDecisionInput, actor: Pick<Identity, 'userId' | 'seatId'>): BackgroundDeliveryReview {
+    if (!input || !UUID.test(input.clientActionId) || !Number.isSafeInteger(input.revision) || input.revision < 1
+      || !['approve', 'decline'].includes(input.decision) || Object.keys(input).some(key => !['clientActionId', 'revision', 'decision', 'recipients', 'reason'].includes(key))
+      || (input.decision === 'approve' ? !recipientsValid(input.recipients) || !input.recipients.length || input.reason !== undefined : !reasonValid(input.reason) || input.recipients !== undefined)) throw new RequestError('INVALID_INPUT', '请提供批准名单及理由，或不予补充的说明。');
+    const inputHash = backgroundHash({reviewId: id, ...input});
+    return this.transaction(() => {
+      const review = this.getDeliveryReview(id);
+      if (review.reviewerSeatId !== actor.seatId || this.effectivePermission(actor, review.sourceId) !== 'manage') throw new RequestError('FORBIDDEN', '仅本次指定总体席可批准补充投递。', 403);
+      const action: NewBackgroundAction = {...actor, clientActionId: input.clientActionId, inputHash, kind: 'delivery_review', reviewId: id, jobId: review.jobId, eventId: review.eventId};
+      const previous = this.findAction(actor.userId, input.clientActionId);
+      if (previous) { this.assertSameAction(previous, action); if (previous.reviewId !== id || previous.status !== 'completed') throw conflict(); return review; }
+      if (review.status !== 'pending' || review.revision !== input.revision) throw conflict();
+      const job = this.getJob(review.jobId);
+      if (job.status !== 'succeeded' || job.kind !== 'preprocess' || !job.result) throw conflict('本次分析没有完整成功结果。');
+      if (input.decision === 'approve') assertCandidateRecipients(job, input.recipients);
+      const time = now();
+      const next: BackgroundDeliveryReview = {...review, revision: review.revision + 1, updatedAt: time, decidedAt: time, decidedByUserId: actor.userId,
+        ...(input.decision === 'approve' ? {status: 'approved', recipients: input.recipients.map(item => ({seatId: item.seatId, reason: item.reason.trim()}))} : {status: 'declined', reason: input.reason.trim()})};
+      this.db.prepare('UPDATE background_delivery_reviews SET status=?,data=? WHERE id=?').run(next.status, JSON.stringify(next), next.id);
+      for (const recipient of next.recipients ?? []) this.insertDelivery(job, recipient.seatId, time, next.id);
+      this.insertCompletedAction(action);
+      return next;
+    });
+  }
   updateDelivery(id: string, revision: number, status: BackgroundDelivery['status'], error?: BackgroundDelivery['error']) {
     return this.transaction(() => {
       const delivery = this.getDelivery(id);
@@ -376,7 +515,7 @@ export class BackgroundStore {
     return this.transaction(() => {
       const rule = this.getRule(id); if (rule.revision !== revision || rule.sourceId !== value.sourceId) throw conflict();
       const enabled = this.enabledRule(value.sourceId); if (value.enabled && enabled && enabled.id !== id) throw conflict('该来源已有启用规则，请先停用原规则。');
-      const next = {...rule, ...value, publicTaskId: value.publicTaskId, revision: rule.revision + 1, updatedAt: now(), updatedByUserId: userId};
+      const next = {...rule, ...value, publicTaskId: value.publicTaskId, supplementaryDelivery: value.supplementaryDelivery, revision: rule.revision + 1, updatedAt: now(), updatedByUserId: userId};
       this.db.prepare('UPDATE information_rules SET enabled=?,data=? WHERE id=?').run(Number(next.enabled), JSON.stringify(next), id); return next;
     });
   }

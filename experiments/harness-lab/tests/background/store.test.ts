@@ -37,12 +37,12 @@ function success(store: BackgroundStore, queued: BackgroundJob) {
 }
 
 describe('durable background metadata', () => {
-  it('upgrades v2 additively, reopens v4, and rejects missing registered tables', async () => {
+  it('upgrades v2 additively, reopens v8, and rejects missing registered tables', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'axon-v3-migration-')); let db: DatabaseSync | undefined = await openDatabase(dir);
     disposers.push(async () => { db?.close(); await rm(dir, {recursive: true, force: true}); });
     new AccessStore(db); db.prepare('INSERT INTO works VALUES(?,?)').run('existing', '{"existing":true}');
     db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run('a', '席位 A', 1, 1);
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
     expect(db.prepare('SELECT data FROM works WHERE id=?').get('existing')?.data).toBe('{"existing":true}');
     db.close(); db = await openDatabase(dir); const access = new AccessStore(db); new BackgroundStore(db);
     expect(access.allSeatIds()).toEqual(['a']);
@@ -285,9 +285,9 @@ describe('explicit seat inbox handling', () => {
   it('migrates only historical delivered rows as legacy and treats later delivery as pending', async () => {
     const {db,store} = await setup(); const {j} = accept(store); success(store,j);
     const first = store.listDeliveries()[0]!, later = store.listDeliveries()[1]!; store.updateDelivery(first.id,1,'delivered');
-    db.exec('DROP TABLE inbox_handling; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=4;');
+    db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=4;');
     const access = new AccessStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
     const next = new BackgroundStore(db);
     expect(next.handling(first.id)).toMatchObject({state:'legacy',revision:1});
     expect(next.handling(first.id).updatedByUserId).toBeUndefined();
@@ -303,16 +303,17 @@ describe('explicit seat inbox handling', () => {
     const dir = await mkdtemp(join(tmpdir(),'axon-auth-only-')); let db = await openDatabase(dir);
     disposers.push(async () => {db.close(); await rm(dir,{recursive:true,force:true});});
     new AccessStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(5);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(7);
     expect(db.prepare("SELECT name FROM sqlite_master WHERE name='inbox_handling'").get()).toBeUndefined();
+    db.exec('ALTER TABLE seats DROP COLUMN responsibility; ALTER TABLE seats DROP COLUMN responsibility_revision; PRAGMA user_version=5;');
     db.close(); db = await openDatabase(dir); const access = new AccessStore(db);
     const id = await access.saveAccount({username:'overall',displayName:'总体',seatId:'overall',seatName:'总体席',password:'handling-password-123',createPublicTask:true,manageModelSettings:true});
     expect(access.identity(id)?.viewWorkOverview).toBe(false);
     db.exec('ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=2;');
     const migrated = new AccessStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(5);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(7);
     expect(migrated.identity(id)).toMatchObject({seatId:'overall',viewWorkOverview:false});
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
     expect(new BackgroundStore(db).listDeliveries()).toEqual([]);
     db.exec('ALTER TABLE seats DROP COLUMN view_work_overview');
     expect(() => new AccessStore(db)).toThrow();

@@ -30,7 +30,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     } catch { lab.contextUnavailable = true; }
   }
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
-  if (!backgroundConfig && lab.access && [3,4,6].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
+  if (!backgroundConfig && lab.access && [3,4,5,6,8].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
     const existing = new BackgroundStore(lab.access.db);
     if (existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
       throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);

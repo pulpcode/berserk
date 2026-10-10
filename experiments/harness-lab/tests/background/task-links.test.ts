@@ -245,9 +245,9 @@ describe('task assessment storage and effective relationships', () => {
 
   it('migrates v3 additively and validates persisted judgments, overrides, indexes and creation receipts', async () => {
     const s = await setup(), task = s.task(), {event, job} = s.running(); s.finish(job);
-    s.db.exec('DROP TABLE inbox_handling; DROP TABLE information_task_overrides; PRAGMA user_version=3;');
+    s.db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; DROP TABLE information_task_overrides; PRAGMA user_version=3;');
     new BackgroundStore(s.db);
-    expect(s.db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    expect(s.db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
     expect(s.access.get(task.id, s.a.seatId).title).toBe(task.title); expect(s.store.getEvent(event.id).id).toBe(event.id);
     s.links.update(s.a, event.id, task.id, {mode: 'include', revision: 0, jobId: job.id, reason: '旧消息人工收录'});
     expect(() => new BackgroundStore(s.db)).not.toThrow();

@@ -169,10 +169,10 @@ test('job board uses independent pages, retains filters and restores drawer deep
     const column = page.getByRole('region', { name: '排队中作业', exact: true });
     await expect(column.getByLabel('排队中共 12 项')).toBeVisible(); await expect(column.locator('.information-job-card')).toHaveCount(10);
     await column.locator('.information-job-card').last().click();
-    const scrollTop = await page.locator('.information-center-body').evaluate(element => element.scrollTop);
+    const scrollTop = await page.locator('.information-center-body:visible').evaluate(element => element.scrollTop);
     expect(scrollTop).toBeGreaterThan(100); await page.keyboard.press('Escape');
     await expect(column.locator('.information-job-card').last()).toBeFocused();
-    expect(await page.locator('.information-center-body').evaluate(element => element.scrollTop)).toBe(scrollTop);
+    expect(await page.locator('.information-center-body:visible').evaluate(element => element.scrollTop)).toBe(scrollTop);
     await page.getByRole('navigation', { name: '排队中分页', exact: true }).getByRole('button', { name: '下一页' }).click();
     await expect(column.locator('.information-job-card')).toHaveCount(2);
     await expect(page.getByRole('region', { name: '异常／已停止作业', exact: true }).getByText('暂无作业')).toBeVisible();

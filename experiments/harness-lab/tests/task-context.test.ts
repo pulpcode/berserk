@@ -47,7 +47,7 @@ describe('task context persistence and access', () => {
     expect(task.context).toEqual({businessRefs: [{...road, label: '西区通道'}], focus: {areaIds: ['zone-west'], time: {from: '2026-10-01T01:00:00.000Z', to: '2026-10-01T03:00:00.000Z'}, topics: ['物资', '运输']}});
     expect(access.create(a, {...request, context: {focus: {topics: ['运输', '物资'], time: {to: '2026-10-01T03:00:00Z', from: '2026-10-01T01:00:00Z'}, areaIds: ['zone-west']}, businessRefs: [{...road, label: '西区通道'}]}}).id).toBe(task.id);
     expect(() => access.create(a, {...request, context: {businessRefs: [{...road, objectId: 'another-road'}]}})).toThrow(expect.objectContaining({code: 'TASK_CONFLICT'}));
-    expect(Number(db.prepare('PRAGMA user_version').get()!.user_version)).toBe(5);
+    expect(Number(db.prepare('PRAGMA user_version').get()!.user_version)).toBe(7);
     expect(new AccessStore(db).get(task.id, a.seatId)).toEqual(task);
     expect(new AccessStore(db).get(old.id, a.seatId).context).toBeUndefined();
   });

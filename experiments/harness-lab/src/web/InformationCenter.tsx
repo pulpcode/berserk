@@ -4,6 +4,7 @@ import type { Identity, TaskSpace } from '../contracts/access';
 import type { BackgroundDelivery, BackgroundEventDetail, BackgroundEventSummary, BackgroundPage, InformationCapabilities, InformationJobDetail, InformationJobSummary } from '../contracts/background';
 import { TaskAssociations } from './TaskAssociations';
 import { useApi } from './api';
+import { DeliveryReviews, DeliveryReviewStatus } from './DeliveryReviews';
 import { WorkOverview } from './WorkOverview';
 import { InformationRules } from './InformationRules';
 import { Message } from './ChatMessage';
@@ -76,11 +77,12 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
       <nav className="information-tabs" aria-label="工作总览栏目" inert={detailOpen || undefined}>
         {identity?.viewWorkOverview && <button aria-current={route.tab === 'work' ? 'page' : undefined} onClick={() => navigate({ tab: 'work', id: '', offset: 0, status: '' })}>席位工作</button>}
         {allowed && ([['events', '信息流转'], ['jobs', '处理运行'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}
+        {capabilities?.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>补充投递审批</button>}
       </nav>
-      {route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} /> : route.tab === 'reviews' ? <p className="information-empty">投递审批能力尚未启用。</p> : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
-      <div className="information-center-body" inert={detailOpen || undefined}>
+      {route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
+      <div className="information-center-body" hidden={route.tab === 'reviews'} inert={detailOpen || undefined}>
         {capabilities.queue.blockedReason && <p className="information-queue-notice" role="status">{capabilities.queue.blockedReason}</p>}
-        {route.tab !== 'rules' && <>
+        {route.tab !== 'rules' && route.tab !== 'reviews' && <>
           <div className="information-toolbar">
             <label>来源<select value={route.sourceId} onChange={e => navigate({ sourceId: e.target.value, ...firstPages, id: '' }, true)}><option value="">全部获准来源</option>{capabilities.sources.map(item => <option key={item.sourceId} value={item.sourceId}>{item.name}</option>)}</select></label>
             {(route.tab === 'events' || route.view === 'list') && <label>处理状态<select value={route.status} onChange={e => navigate({ status: e.target.value, ...firstPages, id: '' }, true)}><option value="">全部状态</option>{route.tab === 'events' && <option value="unmatched">未匹配规则</option>}{(['queued', 'running', 'succeeded', 'failed', 'cancelled', 'interrupted'] as const).map(id => <option key={id} value={id}>{jobLabels[id]}</option>)}</select></label>}
@@ -103,7 +105,8 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
         </>}
         <InformationRules visible={visible && route.tab === 'rules'} capabilities={capabilities} tasks={tasks} selectedId={route.tab === 'rules' ? route.id : ''} select={id => navigate({ id })} />
       </div>
-      {visible && route.id && route.tab !== 'rules' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
+      <DeliveryReviews visible={visible && route.tab === 'reviews'} selectedId={route.tab === 'reviews' ? route.id : ''} status={route.tab === 'reviews' ? route.status : 'pending'} offset={route.offset} capabilities={capabilities} select={id => navigate({id})} filter={status => navigate({status,id:'',offset:0})} page={offset => navigate({offset,id:''})} changed={refreshAccess} />
+      {visible && route.id && route.tab !== 'rules' && route.tab !== 'reviews' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
         {feedback}{detailError && <p className="resource-error" role="alert">{detailError}<button onClick={refresh}>重新读取详情</button></p>}
         {route.tab === 'events' ? !shownEvent ? !detailError && <p role="status">正在读取信息…</p> : <>
           <header><h2>{shownEvent.title}</h2><p>{sourceName(shownEvent.sourceId)} · {informationTime(shownEvent.receivedAt)}</p></header>
@@ -133,6 +136,7 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
           {shownJob.text !== undefined && <section><h3>处理结果</h3>{shownJob.profileName && <p className="resource-help">处理方案：{shownJob.profileName}</p>}<InformationText>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
           <ContextEvidence messages={shownJob.snapshot?.messages}/>
           {identity && shownJob.kind==='preprocess' && shownJob.status==='succeeded' && <TaskAssociations key={`links:${shownJob.id}`} eventId={shownJob.eventId} jobId={shownJob.id} visible={visible} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={refresh} />}
+          {shownJob.kind === 'preprocess' && <DeliveryReviewStatus job={shownJob} open={id => navigate({tab:'reviews',id,status:'',offset:0})} />}
           {shownJob.kind === 'preprocess' && <section><h3>本次投递</h3>{deliveries(shownJob.deliveries || [], shownJob.sourceId)}</section>}
           {shownJob.snapshot && <details className="information-original"><summary>查看执行过程</summary>
             {shownJob.snapshot.commandPolicies?.map((record, index) => <div className="information-command-policy" key={`${record.requestId}:${record.toolCallId}:${index}`}>

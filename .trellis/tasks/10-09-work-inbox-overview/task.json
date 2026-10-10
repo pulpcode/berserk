@@ -31,9 +31,10 @@
     ".trellis/tasks/10-09-work-inbox-overview/research/validation.md",
     ".trellis/tasks/10-09-work-inbox-overview/prototype/README.md",
     ".trellis/tasks/10-09-work-inbox-overview/prototype/axon-work-preview.html",
-    ".trellis/tasks/10-09-work-inbox-overview/research/implementation-validation.md"
+    ".trellis/tasks/10-09-work-inbox-overview/research/implementation-validation.md",
+    ".trellis/tasks/10-09-work-inbox-overview/research/main-integration.md"
   ],
-  "notes": "2026-10-10 用户批准后在独立 worktree 完成基础实施与验证，待审阅；未合并、推送或部署。补充审批模块未适用。",
+  "notes": "用户已审阅本地效果并授权合并 main；已整合385d201的席位职责及补充审批，验证后合并。未推送或部署。",
   "meta": {
     "designStatus": "approved",
     "implementationApproved": true,
@@ -46,6 +47,8 @@
       "历史信息未登记且不倒灌待办",
       "独立跨席位只读摘要授权"
     ],
-    "verificationStatus": "passed"
+    "verificationStatus": "passed",
+    "integratedMainCommit": "385d20144a028759536a47616fbe49a8e8a2f4f4",
+    "approvalIntegration": "implemented"
   }
 }

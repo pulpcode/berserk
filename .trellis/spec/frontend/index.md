@@ -14,6 +14,8 @@ This directory contains guidelines for frontend development. Fill in each file w
 
 Read [Unified Workbench and Work Overview](../backend/workbench.md) for explicit inbox handling, cross-seat summary authorization, migrations and navigation.
 
+Read [Seat Responsibilities and Supplementary Delivery](../backend/seat-delivery.md) for integrated schema v7/v8, central duties, fixed delivery, overall-seat review and supplementary receipts.
+
 Read [Information-to-Task Contract](../backend/task-information.md) for task information views, retained conflict drafts, suggestion creation receipts and fixed task/event/job continuation.
 
 Read [Multi-source Context Queries](../backend/context-analysis.md) for the implemented capability-validation contracts, task context, query evidence and fixed scope checks.

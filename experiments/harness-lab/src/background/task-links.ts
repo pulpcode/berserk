@@ -199,6 +199,7 @@ export class TaskLinkService {
     const current = this.resolve(actor, taskId, eventId, jobId);
     const job = {...current.job}, event = {...current.event};
     delete job.ruleSnapshot; delete event.ruleSnapshot;
+    delete job.recipientSuggestion; delete job.recipientSuggestionError;
     return {...current.item, event, job, ...content, analyses: this.dependencies.analysisSummaries?.(current.actor, taskId, eventId, jobId) ?? []};
   }
   /** Current task associations for one delivered analysis, excluding editor-only decisions. */

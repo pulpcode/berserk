@@ -10,10 +10,11 @@ export interface BackgroundSourceConfig {
 }
 export interface BackgroundConfig {
   enabled: boolean; concurrency: number; modelConcurrency: number; backlogLimit: number;
+  deliveryReviewSeatId?: string;
   sources: BackgroundSourceConfig[]; profiles: BackgroundProfileSnapshot[];
 }
 const idPattern = /^[a-zA-Z0-9_-]{1,64}$/;
-const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent', 'information_search', 'information_read', 'situation_query', 'task_search', 'task_read', 'information_record_task_assessment']);
+const tools = new Set(['read', 'write', 'edit', 'ls', 'find', 'bash', 'file_output', 'source_list', 'source_read', 'skill_read', 'subagent', 'information_search', 'information_read', 'situation_query', 'task_search', 'task_read', 'information_record_task_assessment', 'information_suggest_recipients']);
 const fail = () => new Error('后台配置无效，请核对来源、处理方案及容量；凭证只通过环境变量提供。');
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw fail();
@@ -38,7 +39,7 @@ function limit(value: unknown, fallback: number, max: number): number {
 }
 
 export function parseBackgroundConfig(value: unknown): BackgroundConfig {
-  const raw = record(value); fields(raw, ['enabled', 'concurrency', 'modelConcurrency', 'backlogLimit', 'sources', 'profiles']);
+  const raw = record(value); fields(raw, ['enabled', 'concurrency', 'modelConcurrency', 'backlogLimit', 'sources', 'profiles', 'deliveryReviewSeatId']);
   if (raw.enabled !== undefined && typeof raw.enabled !== 'boolean') throw fail();
   if (!Array.isArray(raw.sources) || !Array.isArray(raw.profiles) || raw.sources.length > 100 || raw.profiles.length > 100) throw fail();
   const profiles = raw.profiles.map(item => {
@@ -63,7 +64,7 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
     return {...(s.systemId === undefined ? {} : {systemId: identifier(s.systemId)}), sourceId: identifier(s.sourceId), name: text(s.name, 100), credentialRef, allowedProfileIds, allowedRecipientSeatIds};
   });
   if (new Set(sources.map(s => s.sourceId)).size !== sources.length || new Set(profiles.map(p => p.id)).size !== profiles.length || new Set(sources.map(s => s.credentialRef)).size !== sources.length) throw fail();
-  return {enabled: raw.enabled === true, concurrency: limit(raw.concurrency, 1, 32), modelConcurrency: limit(raw.modelConcurrency, 2, 64), backlogLimit: limit(raw.backlogLimit, 100, 100_000), sources, profiles};
+  return {...(raw.deliveryReviewSeatId === undefined ? {} : {deliveryReviewSeatId: identifier(raw.deliveryReviewSeatId)}), enabled: raw.enabled === true, concurrency: limit(raw.concurrency, 1, 32), modelConcurrency: limit(raw.modelConcurrency, 2, 64), backlogLimit: limit(raw.backlogLimit, 100, 100_000), sources, profiles};
 }
 
 /** Absent configuration leaves existing services and schema untouched. No token values are stored. */
@@ -90,5 +91,5 @@ export function authenticateSource(config: BackgroundConfig, sourceId: string, a
 /** The caller also validates source management grants and current seat/task state. */
 export function validateRuleScope(config: BackgroundConfig, input: InformationRuleInput) {
   const source = config.sources.find(item => item.sourceId === input.sourceId);
-  if (!source || !source.allowedProfileIds.includes(input.profileId) || !input.recipientSeatIds.length || input.recipientSeatIds.some(id => !source.allowedRecipientSeatIds.includes(id))) throw new RequestError('RULE_SCOPE_INVALID', '处理方案或接收席位不在来源允许的范围内。', 400);
+  if (!source || !source.allowedProfileIds.includes(input.profileId) || !input.recipientSeatIds.length || [...input.recipientSeatIds, ...(input.supplementaryDelivery?.candidateSeatIds ?? [])].some(id => !source.allowedRecipientSeatIds.includes(id))) throw new RequestError('RULE_SCOPE_INVALID', '处理方案或接收席位不在来源允许的范围内。', 400);
 }

@@ -345,7 +345,7 @@ npm run background:admin -- list --data-dir /绝对路径/数据目录 --service
 
 “执行完成”表示 Agent 正常结束，不保证业务目标全部达成；部分结果或无法完成的正常答复也可能投递。查看详情可分别核对实际答复、受阻命令和投递结果。技术失败、取消和中断不新增结果投递；旧失败记录保持原状。明确重新预处理会创建新作业，沿用原输入和规则快照，不增加权限。
 
-新增 SQLite 元数据以 schema v3 保存，Pi 原生历史不迁移、不另存一份聊天。文件位于 `background/events`（固定正文）、`background/files`（固定输入与交付副本）、`background/jobs/<id>`（预处理工作文件、原生会话和日志）；人员分析仍在原任务 × 席位目录。运行中异常退出后标为中断，不自动重放工具；排队项重启后重新校验再领取。
+信息处理增量最初使用 schema v3；当前背景数据使用 schema v8（含任务关联、补充投递审批及信息处理记录），仅认证数据使用 v7，Pi 原生历史不迁移、不另存一份聊天。文件位于 `background/events`（固定正文）、`background/files`（固定输入与交付副本）、`background/jobs/<id>`（预处理工作文件、原生会话和日志）；人员分析仍在原任务 × 席位目录。运行中异常退出后标为中断，不自动重放工具；排队项重启后重新校验再领取。
 
 `npm run probe:background` 使用临时账号／任务和新临时目录，调用真实模型与 Docker 验证上传、Python 处理、双席位投递、前台接手、后台分析及续聊，并完成 A 分派两份附件、B 签收修订并提交 A 的流程。`npm run probe:background -- --feedback` 单独验证后台命令受阻后继续读取。两者保存 `validation.json`，不启动生产监听器，不自动批准 shell；交接验收只确认脚本核对过的本次合成工作。发布需另行更新服务；回退前保留新收到的数据，使用匹配的旧程序与完整备份。
 
@@ -369,4 +369,35 @@ npm run background:admin -- list --data-dir /绝对路径/数据目录 --service
 
 `/overview` 沿用原来源权限查看信息流转与处理运行。跨席位公共工作摘要另需显式 `viewWorkOverview`，不会因席位名称或任务管理权限自动获得，也不授予交接正文、文件或私有对话访问。离线账号管理 `account ... --view-work-overview --service-stopped` 可授予该能力；省略此参数时关闭。工作操作仍限原发起者和承办者。
 
-升级前停止服务并备份整个数据目录。认证独立数据升级为 schema v5；已启用背景数据升级为 v6（处理表、默认关闭的总览能力），首次启用背景也升级为 v6。已有 delivered 收件标为“历史未登记”，在全部列表可查，不伪造历史处理事实；在途记录首次送达后仍是待处理。数据库版本和缺失表/列经过各入口校验，不静默重建。回滚须恢复匹配的旧代码及整份备份，不能仅降级二进制或数据库。补充投递审批是可选集成，当前基线未提供该模块。
+升级前停止服务并备份整个数据目录。认证独立数据升级为 schema v7；已启用背景数据升级为 v8（审批、处理表、席位职责和默认关闭的总览能力），首次启用背景也升级为 v8。已有 delivered 收件标为“历史未登记”，在全部列表可查，不伪造历史处理事实；在途记录首次送达后仍是待处理。数据库版本和缺失表/列经过各入口校验，不静默重建。回滚须恢复匹配的旧代码及整份备份，不能仅降级二进制或数据库。补充投递审批按现有规则、指定审批席位与来源权限接入同一待办和总览；未启用时不阻塞基础流程。
+
+## 四席位与补充投递审批
+
+固定接收名单仍由规则确定，成功分析后照常投递。开启补充建议的规则会将候选席位职责提供给同一 Pi 作业；Agent 提出的名单须由指定总体席批准，不自动发送。等待批准只保留数据库记录，不占用后台执行资源。审批与送达状态分别展示。
+
+配置示例：`fixtures/background-seat-routing.example.json`（含总体席 ID、双源 Profile 和工具），搭配 `fixtures/context-seat-routing.example.json`（四席位的演示资料访问范围）。两者分别供 `LAB_BACKGROUND_CONFIG`、`LAB_CONTEXT_CONFIG` 使用；修改实际地址及环境变量引用后再启用。示例不自动创建账号或规则，也不会修改旧 A／B 数据。
+
+| 账号建议名 | 席位 ID | 名称 | 职责文件 |
+| --- | --- | --- | --- |
+| overall | seat-overall | 总体席 | fixtures/seat-responsibilities/overall.md |
+| intelligence | seat-intelligence | 情报席 | fixtures/seat-responsibilities/intelligence.md |
+| planning | seat-planning | 筹划席 | fixtures/seat-responsibilities/planning.md |
+| situation | seat-situation | 态势席 | fixtures/seat-responsibilities/situation.md |
+
+用现有 `access:admin account` 开通账号，总体席加 `--manage-tasks --manage-model`，其他席位不加。然后在服务停止时统一维护职责，例如：
+
+```sh
+npm run access:admin -- seat --data-dir /绝对路径/数据目录 --seat seat-overall --seat-name 总体席 --responsibility-file fixtures/seat-responsibilities/overall.md --service-stopped
+```
+
+按同样方式维护另外三席。此命令不改密码或注销会话；名称、职责实际改变才增加职责版本。旧空职责席位可继续使用原功能，但不能作为智能补充候选。给总体席授予对应来源 `manage` 权限，例如：
+
+```sh
+npm run background:admin -- grant --data-dir /绝对路径/数据目录 --source mock-intel-source --seat seat-overall --permission manage --service-stopped
+```
+
+态势来源同样授权。启动服务后，在“处理与投递规则”中选择固定接收席位，并开启补充建议、选择候选；职责只读展示。候选受来源和资料权限限制，不能包含固定接收席位或总体席。
+
+总体席在“工作待办”或“工作总览 → 待批准投递”查看分析与建议，可在候选内调整并批准，或不予补充。每项分析只作一次决定；已批准不代表已送达，发送失败沿原投递入口重试，无需重跑模型。普通收件可展开“为何收到”。
+
+真实模型验证：`npm run probe:recipients` 使用独立临时目录、合成四席位和资料，保留全部调用及判断；不会部署、发送生产消息或改写模型结果。工具调用通过、审批通过和判断质量分别记录；不进行多种分析架构的对比实验。

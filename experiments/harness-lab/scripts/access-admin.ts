@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { mkdir, rename, lstat, copyFile, writeFile } from 'node:fs/promises';
+import { mkdir, rename, lstat, copyFile, writeFile, readFile } from 'node:fs/promises';
 import { resolve, dirname, isAbsolute } from 'node:path';
 import { emitKeypressEvents } from 'node:readline';
 import { openDatabase } from '../src/access/database.js';
@@ -33,9 +33,14 @@ if(command==='reset') {
       const envPath=resolve('.env.auth.local');
       if(!await lstat(envPath).catch(()=>null))await writeFile(envPath,`LAB_AUTH_MODE=login\nLAB_SESSION_SECRET=${randomBytes(48).toString('base64url')}\nLAB_DATA_DIR=${dataDir}\n`,{flag:'wx',mode:0o600});
       console.info('账号已保存，旧登录已失效。签名配置位于被 Git 忽略的 .env.auth.local；密码未写入配置文件。');
+    } else if(command==='seat') {
+      const seatId=value('--seat'), file=value('--responsibility-file');
+      if(!seatId || !file)throw new Error('需要 --seat 与 --responsibility-file（UTF-8 职责文件）。');
+      const seat=store.updateSeat(seatId,{name:value('--seat-name'),responsibility:await readFile(resolve(file),'utf8')});
+      console.info(`${seat.name}职责已保存，版本 ${seat.responsibilityRevision}；账号和密码保持不变。`);
     } else if(command==='disable') {
       const username=value('--username');if(!username)throw new Error('需要 --username。');store.disable(username);console.info('账号已停用，旧登录已失效。');
-    } else throw new Error('使用 account（开通/重置）、disable 或 reset；参数说明见 README。');
+    } else throw new Error('使用 account（开通/重置）、seat（名称/职责）、disable 或 reset；参数说明见 README。');
   } finally {db.close();}
 }
 async function hiddenPassword(label:string):Promise<string> {

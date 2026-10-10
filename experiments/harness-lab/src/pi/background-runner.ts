@@ -64,9 +64,9 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         }
         if (!input.profile) throw new RequestError('BACKGROUND_PROFILE_MISSING', '后台处理方案快照缺失。', 409);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
-          text: input.text, files: input.files, resources: resources(input.profile, job.id), roles: input.profile.agents!, tools: input.profile.tools,
+          text: input.text, files: input.files, resources: resources(input.profile, job.id), roles: input.profile.agents!, tools: input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
-          publish: input.publish, recordTaskAssessment: input.recordTaskAssessment });
+          publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);
         if (cancelled) prepared.cancel();
         await prepared.run(input.onEvent);

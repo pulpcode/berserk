@@ -71,4 +71,4 @@ flowchart LR
 
 ## 8. 实施结果
 
-基础方案已在本分支实现，详见 [实施与验证记录](research/implementation-validation.md)。原型是历史设计参考；当前产品页面采用精简状态图标及“待处理／已处理”用词。补充审批未适用，main 未修改。
+基础方案已在本分支实现，详见 [实施与验证记录](research/implementation-validation.md)。原型是历史设计参考；当前产品页面采用精简状态图标及“待处理／已处理”用词。随后已整合 main 的四席位职责与补充审批，两入口复用原审批记录。当前数据契约为 v7/v8，见 [main 整合记录](research/main-integration.md)。
