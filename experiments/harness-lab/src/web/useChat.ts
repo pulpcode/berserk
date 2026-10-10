@@ -119,6 +119,7 @@ export function useChat() {
     noteNavigation();
     workspaceRef.current = id; setWorkspaceId(id);
     try { sessionStorage.setItem(storageKey('berserk.workspace'), id); } catch { /* Keep selection in memory. */ }
+    return selectionsRef.current[id] || '';
   }, [noteNavigation, storageKey]);
   const [drafts, setDrafts] = useState(() => stored(DRAFT_KEY));
   const draftsRef = useRef(drafts);

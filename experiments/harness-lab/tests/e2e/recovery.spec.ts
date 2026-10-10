@@ -52,7 +52,7 @@ test('interrupted saved input stays in history; only an explicit new message con
   const { state } = await fixture(page);
   const composer = page.getByRole('textbox', { name: '发送消息' });
   await expect(page.getByText(notice, { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: '中断会话', exact: true })).toContainText('已中断');
+  await expect(page.getByRole('button', { name: '中断会话', exact: true }).getByRole('img', { name: '已中断' })).toBeVisible();
   await expect(composer).toHaveValue('');
   await expect(page.getByText('此前附件.txt', { exact: true })).toHaveCount(0);
   await expect(page.getByLabel('有新回复未读')).toHaveCount(0);
@@ -60,11 +60,10 @@ test('interrupted saved input stays in history; only an explicit new message con
   await page.reload();
   await expect(page.getByRole('article', { name: '你的消息' })).toHaveText('此前发送的内容');
   await expect(composer).toHaveValue('');
-  await page.getByRole('button', { name: '全部动态', exact: true }).click();
-  await page.getByRole('button', { name: '需关注', exact: true }).click();
-  await expect(page.getByRole('button', { name: '打开会话：中断会话' })).toContainText('已中断');
-  await expect(page.getByRole('button', { name: '打开会话：另一会话' })).toHaveCount(0);
-  await page.getByRole('button', { name: '打开会话：中断会话' }).click();
+  await page.getByRole('button', { name: '另一会话', exact: true }).click();
+  await expect(page.getByRole('button', { name: '中断会话', exact: true }).getByRole('img', { name: '已中断' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '另一会话', exact: true }).getByRole('img')).toHaveCount(0);
+  await page.getByRole('button', { name: '中断会话', exact: true }).click();
   expect(state.sends).toHaveLength(0); expect(state.otherWrites).toBe(0);
   await composer.fill('先检查现有文件，再继续');
   await page.getByRole('button', { name: '发送消息', exact: true }).click();

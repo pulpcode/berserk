@@ -63,7 +63,7 @@ async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], wit
 async function login(page: Page, name: string) {
   await page.goto('/'); await page.getByLabel('账号', { exact: true }).fill(name); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '登录', exact: true })).toHaveCount(0); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
 }
-async function inbox(page: Page) { await page.getByRole('button', { name: '收到的信息', exact: true }).click(); await page.locator('.information-inbox .information-list').getByRole('button', { name: /道路通行信息/ }).click(); }
+async function inbox(page: Page) { await page.getByRole('button', { name: '工作待办', exact: true }).click(); await page.locator('.workbench-list').getByRole('button', { name: /道路通行信息/ }).click(); }
 
 test('one preprocessing reaches two seats; explicit continuation sends once to its own session, background requires confirmation', async ({ page, browser }) => {
   const env = await setup(); const context = await browser.newContext(); const b = await context.newPage(); await env.attach(page); await env.attach(b);
@@ -71,9 +71,9 @@ test('one preprocessing reaches two seats; explicit continuation sends once to i
     await env.receive(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
     const initialCalls = env.fake.calls.length; expect(initialCalls).toBeGreaterThan(0);
     await login(page, 'a'); await login(b, 'b');
-    await expect(page.getByRole('button', { name: '信息处理中心', exact: true })).toBeVisible(); await expect(b.getByRole('button', { name: '信息处理中心', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '工作总览', exact: true })).toBeVisible(); await expect(b.getByRole('button', { name: '工作总览', exact: true })).toHaveCount(0);
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }).click(); await page.getByRole('textbox', { name: '发送消息' }).fill('保留在原对话的草稿');
-    await page.getByRole('button', { name: '信息处理中心', exact: true }).click(); await expect(page.getByRole('heading', { name: '信息处理中心' })).toBeVisible(); await expect(page.getByRole('complementary', { name: '会话与资料' })).toBeVisible(); await expect(page.getByRole('button', { name: '返回工作台', exact: true })).toHaveCount(0); await page.locator('.session-item.selected').click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('保留在原对话的草稿');
+    await page.getByRole('button', { name: '工作总览', exact: true }).click(); await expect(page.getByRole('heading', { name: '工作总览' })).toBeVisible(); await expect(page.getByRole('complementary', { name: '会话与资料' })).toBeVisible(); await expect(page.getByRole('button', { name: '返回工作台', exact: true })).toHaveCount(0); await page.locator('.session-item').first().click(); await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('保留在原对话的草稿');
     await inbox(page); await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id); await page.getByRole('textbox', { name: '问题或工作要求', exact: true }).fill('请确认道路信息对任务的影响'); await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
     await expect.poll(() => env.fake.calls.length).toBe(initialCalls + 1);
     await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('');
@@ -92,7 +92,7 @@ test('one preprocessing reaches two seats; explicit continuation sends once to i
     await inbox(b); await b.getByLabel('处理位置', { exact: true }).selectOption(env.task.id); await b.getByRole('textbox', { name: '问题或工作要求', exact: true }).fill('席位 B 私有分析目标');
     await b.getByRole('button', { name: '后台处理', exact: true }).click(); await expect(b.getByRole('dialog', { name: '确认后台分析' })).toBeVisible(); expect(env.store.listJobs().filter(item => item.kind === 'seat_analysis')).toHaveLength(0);
     await b.getByRole('button', { name: '确认提交后台分析', exact: true }).click(); await expect.poll(() => env.store.listJobs().find(item => item.kind === 'seat_analysis')?.status).toBe('succeeded');
-    await page.getByRole('button', { name: '信息处理中心', exact: true }).click(); await page.getByRole('button', { name: '后台作业', exact: true }).click(); await page.getByRole('button', { name: '刷新记录', exact: true }).click(); await page.locator(`[data-information-id="${env.store.listJobs().find(item => item.kind === 'seat_analysis')!.id}"]`).click();
+    await page.getByRole('button', { name: '工作总览', exact: true }).click(); await page.getByRole('button', { name: '处理运行', exact: true }).click(); await page.getByRole('button', { name: '刷新记录', exact: true }).click(); await page.locator(`[data-information-id="${env.store.listJobs().find(item => item.kind === 'seat_analysis')!.id}"]`).click();
     const detail = page.getByRole('complementary', { name: '后台作业详情' }); await expect(detail).toContainText('席位 B'); await expect(detail).not.toContainText('席位 B 私有分析目标'); await expect(detail.getByRole('button', { name: '进入关联对话' })).toHaveCount(0);
     await page.screenshot({ path: 'test-results/information-center-desktop.png', fullPage: true });
   } finally { await env.close(); await context.close(); }
@@ -101,20 +101,20 @@ test('one preprocessing reaches two seats; explicit continuation sends once to i
 test('rule creation processes unmatched input only on explicit action; conflicts preserve draft and show separate latest values', async ({ page }) => {
   const env = await setup(false); await env.attach(page);
   try {
-    await env.receive(); expect(env.fake.calls).toHaveLength(0); await login(page, 'a'); await page.getByRole('button', { name: '信息处理中心', exact: true }).click();
+    await env.receive(); expect(env.fake.calls).toHaveLength(0); await login(page, 'a'); await page.getByRole('button', { name: '工作总览', exact: true }).click();
     await page.getByRole('button', { name: '处理与投递规则', exact: true }).click(); await page.getByRole('button', { name: '新建规则', exact: true }).click(); await page.getByLabel('规则名称').fill('网页投递规则'); await page.getByLabel('席位 A', { exact: true }).check(); await page.getByLabel('席位 B', { exact: true }).check(); await page.getByRole('button', { name: '保存规则', exact: true }).click(); await expect(page.locator('.information-rules').getByRole('status')).toContainText('规则已保存'); expect(env.fake.calls).toHaveLength(0);
     await page.getByLabel('规则名称').fill('正在编辑的名称'); const rule = env.store.listRules()[0]!; env.store.updateRule(env.actor.userId, rule.id, rule.revision, { ...env.ruleInput, name: '其他人保存的名称' });
     await page.getByRole('button', { name: '保存规则', exact: true }).click(); await expect(page.getByRole('alert')).toContainText('编辑已保留'); await page.getByRole('button', { name: '查看最新规则', exact: true }).click(); await expect(page.locator('.task-comparison')).toContainText('其他人保存的名称'); await expect(page.getByLabel('规则名称')).toHaveValue('正在编辑的名称');
     await page.getByRole('button', { name: '已核对，继续合并编辑', exact: true }).click(); await page.getByRole('button', { name: '保存规则', exact: true }).click();
-    await page.getByRole('button', { name: '信息记录', exact: true }).click(); await page.getByRole('button', { name: '道路通行信息', exact: true }).click(); await page.getByRole('button', { name: '按当前规则处理', exact: true }).click(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
+    await page.getByRole('button', { name: '信息流转', exact: true }).click(); await page.getByRole('button', { name: '道路通行信息', exact: true }).click(); await page.getByRole('button', { name: '按当前规则处理', exact: true }).click(); await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
   } finally { await env.close(); }
 });
 
 test('view-only source permissions show no mutation controls; ungranted seat direct URL is denied', async ({ page, browser }) => {
   const env = await setup(); const context = await browser.newContext(); const b = await context.newPage(); await env.attach(page); await env.attach(b);
   try {
-    await env.receive(); await login(page, 'c'); await page.getByRole('button', { name: '信息处理中心', exact: true }).click(); await page.getByRole('combobox', { name: '来源', exact: true }).selectOption('incoming'); await expect(page.getByRole('button', { name: '停止此来源接收' })).toHaveCount(0); await expect(page.getByRole('button', { name: '暂停领取后台作业' })).toHaveCount(0); await page.getByRole('button', { name: '处理与投递规则', exact: true }).click(); await expect(page.getByRole('button', { name: '新建规则', exact: true })).toHaveCount(0); await page.getByRole('button', { name: /资料预处理并投递/ }).click(); await expect(page.getByLabel('规则名称')).toBeDisabled();
-    await login(b, 'b'); await b.goto('/information'); await expect(b.getByRole('heading', { name: '没有信息处理中心的访问权限' })).toBeVisible(); await expect(b.getByRole('button', { name: '信息记录', exact: true })).toHaveCount(0);
+    await env.receive(); await login(page, 'c'); await page.getByRole('button', { name: '工作总览', exact: true }).click(); await page.getByRole('combobox', { name: '来源', exact: true }).selectOption('incoming'); await expect(page.getByRole('button', { name: '停止此来源接收' })).toHaveCount(0); await expect(page.getByRole('button', { name: '暂停领取后台作业' })).toHaveCount(0); await page.getByRole('button', { name: '处理与投递规则', exact: true }).click(); await expect(page.getByRole('button', { name: '新建规则', exact: true })).toHaveCount(0); await page.getByRole('button', { name: /资料预处理并投递/ }).click(); await expect(page.getByLabel('规则名称')).toBeDisabled();
+    await login(b, 'b'); await b.goto('/information'); await expect(b.getByRole('heading', { name: '没有工作总览的访问权限' })).toBeVisible(); await expect(b.getByRole('button', { name: '信息流转', exact: true })).toHaveCount(0);
   } finally { await env.close(); await context.close(); }
 });
 
@@ -161,7 +161,8 @@ test('job board uses independent pages, retains filters and restores drawer deep
     const queue = env.store.getControl('queue'); env.store.setControl('queue', queue.revision, false, env.actor.userId);
     for (let index = 0; index < 12; index++) await env.receive(`批次信息 ${index + 1}`);
     await env.receive('其他信息');
-    await login(page, 'a'); await page.getByRole('button', { name: '信息处理中心', exact: true }).click();
+    await login(page, 'a'); await page.getByRole('button', { name: '工作总览', exact: true }).click();
+    await page.getByRole('button', { name: '处理运行', exact: true }).click();
     await expect(page.getByRole('button', { name: '看板', exact: true })).toHaveAttribute('aria-pressed', 'true');
     await page.getByRole('combobox', { name: '来源', exact: true }).selectOption('incoming');
     await page.getByRole('searchbox', { name: '搜索', exact: true }).fill('批次信息');
@@ -237,10 +238,10 @@ test('opening information keeps the running chat and next draft; sidebar directl
     await login(page, 'a'); await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 联合分析任务 中新建对话' }).click();
     const composer = page.getByRole('textbox', { name: '发送消息', exact: true }); await composer.fill('正在处理的请求'); await page.getByRole('button', { name: '发送消息', exact: true }).click();
     await expect.poll(() => env.fake.calls.length).toBe(1); await composer.fill('下一条独立草稿');
-    await page.getByRole('button', { name: '信息处理中心', exact: true }).click();
+    await page.getByRole('button', { name: '工作总览', exact: true }).click();
     await expect(page.getByRole('complementary', { name: '会话与资料' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '看板', exact: true })).toBeVisible(); expect(env.fake.calls[0]!.aborted).toBe(false);
-    await page.locator('.session-item.selected').click(); await expect(composer).toHaveValue('下一条独立草稿');
+    await expect(page.getByRole('button', { name: '信息流转', exact: true })).toHaveAttribute('aria-current', 'page'); expect(env.fake.calls[0]!.aborted).toBe(false);
+    await page.locator('.session-item').first().click(); await expect(composer).toHaveValue('下一条独立草稿');
     await expect(page.getByText('本次处理已经结束。', { exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled(); await expect(composer).toHaveValue('下一条独立草稿'); expect(env.fake.calls).toHaveLength(1);
   } finally { await env.close(); }
@@ -268,11 +269,11 @@ test('linked conversation failures stay visible in the drawer; late failures can
     await expect(detail.getByRole('alert')).toContainText('关联会话暂时无法读取'); expect(page.url()).toBe(url);
     await detail.getByRole('button', { name: '关闭提示', exact: true }).click(); await expect(detail.getByRole('alert')).toHaveCount(0);
     hold = true; await detail.getByRole('button', { name: '进入关联对话', exact: true }).click(); await expect.poll(() => Boolean(release)).toBe(true);
-    await detail.getByRole('button', { name: '关闭后台作业详情', exact: true }).click(); await page.getByRole('button', { name: '信息记录', exact: true }).click();
+    await detail.getByRole('button', { name: '关闭后台作业详情', exact: true }).click(); await page.getByRole('button', { name: '信息流转', exact: true }).click();
     const failure = page.waitForResponse(response => response.url().endsWith(`/api/sessions/${job.sessionId}`) && response.status() === 503); release!(); await failure;
-    await expect(page.getByRole('button', { name: '信息记录', exact: true })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('button', { name: '信息流转', exact: true })).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('alert')).toHaveCount(0);
-    failing = false; await page.getByRole('button', { name: '后台作业', exact: true }).click(); await page.locator(`[data-information-id="${job.id}"]`).click();
+    failing = false; await page.getByRole('button', { name: '处理运行', exact: true }).click(); await page.locator(`[data-information-id="${job.id}"]`).click();
     await detail.getByRole('button', { name: '进入关联对话', exact: true }).click(); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeVisible();
     expect(new URL(page.url()).pathname).toBe('/');
   } finally { release?.(); await env.close(); }
@@ -394,7 +395,7 @@ test('reopening during an in-flight submission reconciles once after its uncerta
     env.loseNextPreparationResponse();
     await page.getByRole('button', { name: '发送并进入对话', exact: true }).click();
     await expect.poll(() => Boolean(release)).toBe(true);
-    await page.getByRole('button', { name: '信息处理中心', exact: true }).click();
+    await page.getByRole('button', { name: '工作总览', exact: true }).click();
     await inbox(page);
     await expect(page.getByLabel('问题或工作要求')).toBeDisabled(); expect(reads).toBe(0);
     release!(); release = undefined;
@@ -428,7 +429,7 @@ test('failed or unfinished read-only recovery keeps its protection; a completed 
     await expect(page.getByLabel('问题或工作要求')).toBeDisabled();
     await expect(page.getByLabel('问题或工作要求')).toHaveValue('待核对操作不应重复创建');
     const refresh = page.waitForResponse(response => new URL(response.url()).pathname.startsWith('/api/inbox/') && !response.url().includes('analyses'));
-    await page.getByRole('button', { name: '刷新收件', exact: true }).click(); await refresh;
+    await page.getByRole('button', { name: '刷新待办', exact: true }).click(); await refresh;
     expect(reads).toBe(1);
     recovery = 'preparing';
     await page.getByRole('button', { name: '查询本次结果', exact: true }).click();

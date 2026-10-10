@@ -1,0 +1,23 @@
+import { useEffect, useRef } from 'react';
+import type { TaskSpace } from '../contracts/access';
+import type { WorkOverviewItem, WorkOverviewPage } from '../contracts/workbench';
+import { InformationPagination, informationTime, useInformationQuery } from './information-ui';
+import { workStateLabel } from './WorkInbox';
+
+type Route = { id: string; taskId: string; seatId: string; status: string; search: string; offset: number };
+export function WorkOverview({ visible, allowed, route, navigate, tasks, seats, openWork }: { visible: boolean; allowed: boolean; route: Route; navigate: (change: Partial<Route>, replace?: boolean) => void; tasks: TaskSpace[]; seats: Array<{id: string; name: string}>; openWork: (id: string) => void }) {
+  const query = new URLSearchParams({ offset: String(route.offset), limit: '25', ...(route.taskId ? { taskId: route.taskId } : {}), ...(route.seatId ? { seatId: route.seatId } : {}), ...(route.status ? { status: route.status } : {}), ...(route.search ? { search: route.search } : {}) });
+  const list = useInformationQuery<WorkOverviewPage>(`/api/work-overview/items?${query}`, visible && allowed, 10000);
+  const detail = useInformationQuery<WorkOverviewItem>(route.id ? `/api/work-overview/items/${encodeURIComponent(route.id)}` : undefined, visible && allowed, 10000);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const detailId = detail.data?.id;
+  useEffect(() => { if (route.id && detailId) heading.current?.focus(); }, [route.id, detailId]);
+  if (!allowed) return <p className="information-empty">当前席位没有跨席位工作摘要查看权限。</p>;
+  const next = (item: WorkOverviewItem) => item.state === 'completed' ? '已完成' : item.state === 'submitted' ? `${item.creatorSeatName} 验收` : `${item.assigneeSeatName} ${item.state === 'assigned' ? '签收' : item.state === 'returned' ? '修改' : '办理'}`;
+  return <div className="work-overview">
+    <p className="resource-help">查看谁负责、进行到哪一步，以及下一步需要谁处理。</p>
+    <div className="information-toolbar"><label>工作任务<select value={route.taskId} onChange={event => navigate({ taskId: event.target.value, offset: 0, id: '' }, true)}><option value="">全部公共任务</option>{tasks.filter(task => task.visibility === 'public').map(task => <option key={task.id} value={task.id}>{task.title}</option>)}</select></label><label>相关席位<select value={route.seatId} onChange={event => navigate({ seatId: event.target.value, offset: 0, id: '' }, true)}><option value="">全部席位</option>{seats.map(seat => <option key={seat.id} value={seat.id}>{seat.name}</option>)}</select></label><label>工作状态<select value={route.status} onChange={event => navigate({ status: event.target.value, offset: 0, id: '' }, true)}><option value="">全部状态</option>{Object.entries(workStateLabel).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label><label>搜索工作<input type="search" value={route.search} onChange={event => navigate({ search: event.target.value, offset: 0, id: '' }, true)} /></label><button onClick={() => { list.refresh(); detail.refresh(); }}>刷新工作</button></div>
+    {(list.error || detail.error) && <p className="resource-error" role="alert">{list.error || detail.error}</p>}
+    {route.id ? <section className="work-overview-summary"><button onClick={() => navigate({ id: '' })}>返回工作列表</button>{detail.data ? <><h2 ref={heading} tabIndex={-1}>{detail.data.title}</h2><p>{detail.data.taskTitle} · {workStateLabel[detail.data.state]}</p><dl className="information-metadata"><dt>发起席位</dt><dd>{detail.data.creatorSeatName}</dd><dt>承办席位</dt><dd>{detail.data.assigneeSeatName}</dd><dt>下一步</dt><dd>{next(detail.data)}</dd><dt>提交次数</dt><dd>{detail.data.submissionCount}</dd><dt>最近提交</dt><dd>{informationTime(detail.data.latestSubmittedAt)}</dd></dl>{detail.data.participant ? <button onClick={() => openWork(detail.data!.id)}>进入工作详情</button> : <p className="resource-help">仅展示工作摘要；正文、文件和办理操作由参与席位查看。</p>}</> : !detail.error && <p role="status">正在读取工作摘要…</p>}</section> : <><div className="information-table-scroll"><table className="information-table"><thead><tr><th>工作</th><th>分派双方</th><th>当前状态</th><th>下一步</th><th>更新时间</th></tr></thead><tbody>{list.data?.items.map(item => <tr key={item.id}><td><button className="information-row-link" onClick={() => navigate({ id: item.id })}>{item.title}</button><small>{item.taskTitle}</small></td><td>{item.creatorSeatName} → {item.assigneeSeatName}</td><td>{workStateLabel[item.state]}</td><td>{next(item)}</td><td>{informationTime(item.updatedAt)}</td></tr>)}</tbody></table></div>{list.data?.items.length === 0 && <p className="information-empty">暂无符合条件的工作。</p>}<InformationPagination page={list.data} change={offset => navigate({ offset })} /></>}
+  </div>;
+}

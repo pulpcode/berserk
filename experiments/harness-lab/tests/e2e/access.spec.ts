@@ -60,7 +60,7 @@ test('same-browser logout and identity change clear private drafts in both tabs'
   const env=await setup();await env.attach(page);const other=await context.newPage();await env.attach(other);
   try {
     await login(page,'a');await createTask(page,'私有笔记','private');await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}).click();await page.getByRole('textbox',{name:'发送消息'}).fill('只属于 A 的草稿');await other.goto('/');await expectAccount(other, 'a');
-    await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await page.getByLabel('账号',{exact:true}).fill('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expectAccount(other, 'b');await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('');await expect(other.getByRole('button',{name:/私有笔记/})).toHaveCount(0);
+    await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await page.getByLabel('账号',{exact:true}).fill('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expectAccount(other, 'b');await createTask(page,'B 的独立空间','private');await page.locator('.workspace-group-heading').filter({has:page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'})}).hover();await page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('');await expect(other.getByRole('button',{name:/私有笔记/})).toHaveCount(0);
   } finally {await env.close();await other.close();}
 });
 
@@ -321,7 +321,7 @@ test('task read errors remain scoped instead of reporting a disconnected service
     await expect(status).not.toContainText('无法连接服务');
     await expect(page.getByText('internal diagnostics')).toHaveCount(0);
     await expect(page.getByRole('button', { name: '进入项目：读取失败保留任务' })).toBeVisible();
-    await page.getByRole('button', { name: '收到的信息', exact: true }).click();
+    await page.getByRole('button', { name: '工作待办', exact: true }).click();
     await expect(status).toBeVisible();
     failing = false;
     await expect(status).toHaveCount(0, { timeout: 10000 });

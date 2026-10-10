@@ -1,3 +1,5 @@
+import { WorkbenchService } from '../workbench/service.js';
+import { workbenchRoutes } from './workbench-routes.js';
 import { loadContextConfig, type ContextConfig } from '../context/config.js';
 import { ContextService } from '../context/service.js';
 import { BackgroundStore } from '../background/store.js';
@@ -28,7 +30,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     } catch { lab.contextUnavailable = true; }
   }
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
-  if (!backgroundConfig && lab.access && Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version) >= 3) {
+  if (!backgroundConfig && lab.access && [3,4,6].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
     const existing = new BackgroundStore(lab.access.db);
     if (existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
       throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);
@@ -59,7 +61,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   });
   if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab, taskId => background?.store.hasTaskReservations(taskId) ?? false); }
   else app.get('/api/auth/session',async()=>({mode:'test'}));
-  if (lab.access) await backgroundRoutes(app,background,backgroundOptions?.env);
+  if (lab.access) { await backgroundRoutes(app,background,backgroundOptions?.env); await workbenchRoutes(app,new WorkbenchService(lab.access,lab.collaboration,background)); }
   if (background) await taskInformationRoutes(app,background);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());
@@ -71,7 +73,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    app.get('/information',(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;

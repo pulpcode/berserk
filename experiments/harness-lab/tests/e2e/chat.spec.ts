@@ -604,7 +604,7 @@ test('失败请求不展示调试资料入口，准备失败恢复草稿且刷�
   } finally { await mock.close(); }
 });
 
-test('分组侧栏与全部动态持续汇总未打开会话，未读回复用蓝点显示并在阅读后清除', async ({ page }) => {
+test('分组侧栏持续汇总未打开会话，未读回复用蓝点显示并在阅读后清除', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const c = mock.sessions.get('C')!;
@@ -612,35 +612,33 @@ test('分组侧栏与全部动态持续汇总未打开会话，未读回复用�
     mock.sessions.get('D')!.lastResult = { requestId: 'failed-d', status: 'failed' };
     await page.goto('/');
     const group = page.getByRole('region', { name: '另一工作区', exact: true });
-    await expect(group.getByRole('button', { name: '会话 C', exact: true })).toContainText('读取资料');
-    await expect(page.locator('#activity-counts')).toHaveText('1 个处理中 · 0 个新回复 · 1 个异常');
+    await expect(group.getByRole('button', { name: '会话 C', exact: true }).getByRole('img', { name: '读取资料' })).toBeVisible();
+    await expect(page.locator('.conversation-indicator.running')).toHaveCount(1);
+    await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
     expect(mock.counts.sessionReads).not.toContain('C');
     expect(mock.counts.sessionReads).not.toContain('D');
     const originalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
     await page.getByRole('button', { name: '折叠项目：另一工作区' }).click();
     await expect(group.getByLabel('1 个处理中', { exact: true })).toBeVisible();
     await expect(group.getByRole('button', { name: '会话 C', exact: true })).toBeHidden();
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    const overview = page.locator('.activity-overview');
-    await overview.getByRole('button', { name: '处理中', exact: true }).click();
-    await expect(overview.getByRole('button', { name: /^打开会话：/ })).toHaveCount(1);
-    await expect(overview.getByRole('button', { name: '打开会话：会话 C' })).toContainText('另一工作区');
     c.messages.push({ id: 'external-answer', role: 'assistant', requestId: 'external-c', text: '来自后台的 C 回复' });
     mock.finish('C');
-    await expect(overview.getByText('目前没有正在处理的会话。')).toBeVisible();
-    await overview.getByRole('button', { name: '需关注', exact: true }).click();
-    await expect(overview.getByRole('button', { name: /^打开会话：/ })).toHaveCount(2);
-    await expect(overview.getByRole('button', { name: '打开会话：会话 C' }).getByRole('img', { name: '有新回复未读' })).toBeVisible();
-    await expect(overview).not.toContainText('本轮完成');
+    await expect(group.getByLabel('1 个处理中', { exact: true })).toHaveCount(0);
+    await expect(group.locator('.group-count.attention')).toBeVisible();
+    await page.getByRole('button', { name: '展开项目：另一工作区' }).click();
+    const cButton = group.getByRole('button', { name: '会话 C', exact: true });
+    await expect(cButton.getByRole('img', { name: '有新回复未读' })).toBeVisible();
+    await expect(cButton).toHaveText('会话 C');
+    await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveCount(0);
     await page.reload();
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await overview.getByRole('button', { name: '需关注', exact: true }).click();
-    await expect(overview.getByRole('button', { name: '打开会话：会话 C' }).getByRole('img', { name: '有新回复未读' })).toBeVisible();
-    await overview.getByRole('button', { name: '打开会话：会话 C' }).click();
+    await expect(cButton.getByRole('img', { name: '有新回复未读' })).toBeVisible();
+    await cButton.click();
     await expect(page.getByText('来自后台的 C 回复', { exact: true })).toBeVisible();
-    await expect(page.locator('#activity-counts')).toHaveText('0 个处理中 · 0 个新回复 · 1 个异常');
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
+    await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
     await page.reload();
-    await expect(page.locator('#activity-counts')).toHaveText('0 个处理中 · 0 个新回复 · 1 个异常');
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
+    await expect(page.locator('.conversation-indicator.failed')).toHaveCount(1);
     const finalOrder = await page.locator('.workspace-groups .session-item').allTextContents();
     expect(originalOrder.map(text => text.slice(0, 4))).toEqual(finalOrder.map(text => text.slice(0, 4)));
     expect(mock.counts.sends).toBe(0);
@@ -659,10 +657,10 @@ test('旧动态请求不覆盖新流状态，更新失败保留状态并可恢�
     await input.fill('慢速回复'); await input.press('Enter');
     await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
     mock.faults.releaseActivity!();
-    await expect(page.locator('#activity-counts')).toContainText('1 个处理中');
+    await expect(page.locator('.conversation-indicator.running')).toHaveCount(1);
     mock.faults.activity = true;
     await expect(page.getByRole('status', { name: '数据更新状态' })).toBeVisible();
-    await expect(page.locator('#activity-counts')).toContainText('1 个处理中');
+    await expect(page.locator('.conversation-indicator.running')).toHaveCount(1);
     await input.fill('保留草稿');
     mock.faults.activity = false;
     await expect(page.getByRole('status', { name: '数据更新状态' })).toHaveCount(0);
@@ -673,7 +671,7 @@ test('旧动态请求不覆盖新流状态，更新失败保留状态并可恢�
   } finally { await mock.close(); }
 });
 
-test('切换会话和全部动态保留阅读位置，阅读旧内容不误标新回复已读', async ({ page }) => {
+test('切换会话保留阅读位置，阅读旧内容不误标新回复已读', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     const a = mock.sessions.get('A')!;
@@ -686,33 +684,31 @@ test('切换会话和全部动态保留阅读位置，阅读旧内容不误标�
     await page.getByRole('button', { name: '会话 C', exact: true }).click();
     await page.getByRole('button', { name: '会话 A', exact: true }).click();
     await expect.poll(() => conversation.evaluate(element => element.scrollTop)).toBeCloseTo(120, 0);
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await page.getByRole('button', { name: '打开会话：会话 A', exact: true }).click();
+    await page.getByRole('button', { name: '会话 B', exact: true }).click();
+    await page.getByRole('button', { name: '会话 A', exact: true }).click();
     await expect.poll(() => conversation.evaluate(element => element.scrollTop)).toBeCloseTo(120, 0);
     await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('A 阅读草稿');
     a.messages.push({ id: 'new-answer', role: 'assistant', requestId: 'new-a', text: '新的最后一条回复' });
     a.lastResult = { requestId: 'new-a', status: 'succeeded' }; a.updatedAt = new Date().toISOString();
-    await expect(page.locator('#activity-counts')).toContainText('1 个新回复');
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
     await expect.poll(() => conversation.evaluate(element => element.scrollTop)).toBeCloseTo(120, 0);
     await expect(page.getByText('新的最后一条回复', { exact: true })).toHaveCount(1);
     await conversation.evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
-    await expect(page.locator('#activity-counts')).toContainText('0 个新回复');
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
     expect(mock.counts.sends).toBe(0);
   } finally { await mock.close(); }
 });
 
-test('窄屏可从全部动态进入其他工作区，会话列表折叠可用且页面不溢出', async ({ page }) => {
+test('窄屏可从侧栏进入其他工作区，会话列表折叠可用且页面不溢出', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     mock.sessions.get('C')!.active = { requestId: 'background', status: 'responding', phase: 'generating' };
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
     await page.getByRole('button', { name: '打开会话列表' }).click();
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await page.locator('.activity-overview').getByRole('button', { name: '处理中', exact: true }).click();
-    await expect(page.getByRole('button', { name: '打开会话：会话 C' })).toContainText('生成回复');
+    await expect(page.getByRole('button', { name: '会话 C', exact: true }).getByRole('img', { name: '生成回复' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
-    await page.getByRole('button', { name: '打开会话：会话 C' }).click();
+    await page.getByRole('button', { name: '会话 C', exact: true }).click();
     await expect(page.locator('.workspace-name')).toHaveText('另一工作区');
     await expect(page.getByRole('button', { name: '停止回复' })).toBeVisible();
     await page.getByRole('button', { name: '打开会话列表' }).click();
@@ -751,7 +747,7 @@ test('刷新后摘要先于正文到达，停止按钮等待同一请求的正�
     mock.faults.holdSessionRead = true;
     await page.goto('/');
     await expect.poll(() => Boolean(mock.faults.releaseSessionRead)).toBe(true);
-    await expect(page.locator('#activity-counts')).toContainText('1 个处理中');
+    await expect(page.locator('.conversation-indicator.running')).toHaveCount(1);
     await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeDisabled();
     await expect(page.getByText('正在读取会话…', { exact: true })).toBeVisible();
     mock.faults.holdSessionRead = false; mock.faults.releaseSessionRead!();
@@ -887,7 +883,7 @@ test('模型配置读取可重试，冲突和失败保留填写内容并要求�
   } finally { await mock.close(); }
 });
 
-test('跨项目创建失败可见，全部动态保护后续选择，手机新建聚焦输入且设置遮挡不误读', async ({ page }) => {
+test('跨项目创建失败可见，切换会话保护后续选择，手机新建聚焦输入且设置遮挡不误读', async ({ page }) => {
   const mock = await mockApi(page);
   try {
     await page.goto('/');
@@ -899,12 +895,12 @@ test('跨项目创建失败可见，全部动态保护后续选择，手机新�
     mock.faults.holdCreate = true;
     await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }) }).hover(); await page.getByRole('button', { name: '在项目 另一工作区 中新建对话' }).click();
     await expect.poll(() => Boolean(mock.faults.releaseCreate)).toBe(true);
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
+    await page.getByRole('button', { name: '会话 B', exact: true }).click();
     mock.faults.releaseCreate!();
     await expect(page.getByRole('button', { name: '在项目 另一工作区 中新建对话' })).toBeEnabled();
     expect(await page.evaluate(() => sessionStorage.getItem('berserk.workspace'))).toBe('w1');
-    await expect(page.locator('.header-title')).toHaveText('全部动态');
-    await page.getByRole('button', { name: '打开会话：会话 A', exact: true }).click();
+    await expect(page.getByRole('button', { name: '会话 B', exact: true })).toHaveAttribute('aria-current', 'page');
+    await page.getByRole('button', { name: '会话 A', exact: true }).click();
     await page.setViewportSize({ width: 375, height: 812 });
     await page.getByRole('button', { name: '打开会话列表' }).click();
     await page.getByRole('button', { name: '新建对话', exact: true }).click();
@@ -1011,14 +1007,13 @@ test('压缩状态跨项目可见，摘要完成不终结请求或产生未读�
     mock.event('A', { type: 'context.compaction_started', sessionId: 'A', requestId, reason: 'threshold' });
     await expect(page.locator('.request-status')).toHaveText('正在压缩上下文');
     await input.fill('A 的下一轮草稿');
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await expect(page.locator('.activity-row').filter({ hasText: '会话 A' })).toContainText('正在压缩上下文');
+    await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '正在压缩上下文' })).toBeVisible();
     await page.getByRole('button', { name: '会话 C', exact: true }).click();
     await input.fill('C 的独立草稿');
     const detail: CompactionDetail = { id: 'compact-A', sessionId: 'A', requestId, createdAt: new Date().toISOString(), reason: 'threshold', tokensBefore: 20000, tokensAfter: 5000, summary: 'A 的摘要', firstKeptEntryId: 'user-retained' };
     mock.compactions.set(detail.id, detail); session.latestCompaction = detail; session.active!.phase = 'generating';
     mock.event('A', { type: 'context.compaction_completed', sessionId: 'A', requestId, compaction: detail });
-    await expect(page.getByRole('button', { name: /^会话 A/ })).toContainText('生成回复');
+    await expect(page.getByRole('button', { name: /^会话 A/ }).getByRole('img', { name: '生成回复' })).toBeVisible();
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(0);
     await expect(input).toHaveValue('C 的独立草稿');
     await page.getByRole('button', { name: /^会话 A/ }).click();
@@ -1154,12 +1149,11 @@ test('子任务完成不结束父请求或产生蓝点，跨项目草稿独立�
     mock.event('A', { type: 'subagent.updated', sessionId: 'A', requestId, subagent: childTask('other-request', 'foreign-child', '不属于当前请求') });
     await expect(page.locator('[data-subagent-id="foreign-child"]')).toHaveCount(0);
     await input.fill('A 的后续草稿');
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await expect(page.locator('.activity-row').filter({ hasText: '会话 A' })).toContainText('子任务处理中');
+    await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '子任务处理中' })).toBeVisible();
     await page.getByRole('button', { name: '会话 C', exact: true }).click();
     await input.fill('C 的独立草稿');
     mock.updateChild('A', { ...child, status: 'succeeded', result: '检查完成，主 Agent 仍需综合。' });
-    await expect(page.getByRole('button', { name: /^会话 A/ })).toContainText('准备资料');
+    await expect(page.getByRole('button', { name: /^会话 A/ }).getByRole('img', { name: '准备资料' })).toBeVisible();
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(0);
     await expect(page.locator('.subagent-card')).toHaveCount(0);
     await expect(input).toHaveValue('C 的独立草稿');
@@ -1507,7 +1501,7 @@ test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦�
     const input = page.getByRole('textbox', { name: '发送消息' });
     await input.fill('图标导航保留草稿');
     await page.getByRole('button', { name: '折叠侧边栏', exact: true }).click();
-    for (const name of ['新建对话', '新建项目', '全部动态', '设置']) {
+    for (const name of ['新建对话', '新建项目', '设置']) {
       const button = page.getByRole('button', { name, exact: true });
       await expect(button).toBeVisible();
       await expect(button).toHaveAttribute('title', name);
@@ -1541,9 +1535,7 @@ test('折叠侧栏保留导航图标，顶部项目资料可打开并恢复焦�
     await expect(page.getByRole('dialog', { name: '新建对话' })).toBeVisible();
     await page.getByRole('button', { name: '取消', exact: true }).click();
     expect(mock.counts.creates).toBe(0);
-    await page.getByRole('button', { name: '全部动态', exact: true }).click();
-    await expect(page.getByRole('heading', { name: '全部动态' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveAttribute('aria-current', 'page');
+    await expect(page.getByRole('button', { name: '全部动态', exact: true })).toHaveCount(0);
     await expect(resources).toBeVisible();
     await expect(resources).toBeEnabled();
     await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
@@ -1587,3 +1579,41 @@ test('折叠侧栏顶部默认显示 Logo，悬停或键盘聚焦切换为展开
     expect(mock.counts.sends).toBe(0);
   } finally { await mock.close(); }
 });
+
+for (const action of ['create', 'workspace'] as const) {
+  test(`显式对话链接后${action === 'create' ? '新建对话' : '切换项目'}不会被旧 session 参数抢回`, async ({ page }) => {
+    const mock = await mockApi(page);
+    try {
+      await page.goto('/?session=A');
+      await expect(page.getByRole('button', { name: '会话 A', exact: true })).toHaveAttribute('aria-current', 'page');
+      await page.getByRole('textbox', { name: '发送消息' }).fill('A 的原草稿');
+      if (action === 'create') {
+        await page.getByRole('button', { name: '新建对话', exact: true }).click();
+        await page.getByLabel('选择项目').selectOption('w2');
+        await page.getByRole('button', { name: '创建对话', exact: true }).click();
+        await expect(page).toHaveURL(/\?session=new-1$/);
+        await expect(page.getByRole('dialog')).toHaveCount(0);
+      } else {
+        await page.getByRole('button', { name: '进入项目：另一工作区', exact: true }).click();
+        await expect(page).not.toHaveURL(/\?session=A$/);
+      }
+      await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
+      await page.getByRole('textbox', { name: '发送消息' }).fill('另一项目的新草稿');
+      await expect.poll(() => page.evaluate(() => sessionStorage.getItem('berserk.workspace'))).toBe('w2');
+      await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('另一项目的新草稿');
+      await page.getByRole('button', { name: '会话 A', exact: true }).click();
+      await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('A 的原草稿');
+      if (action === 'create') {
+        await page.goBack();
+        await expect(page).toHaveURL(/\?session=new-1$/);
+        await expect(page.locator('.workspace-header .workspace-name')).toHaveText('另一工作区');
+        await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('另一项目的新草稿');
+        await page.goForward();
+        await expect(page).toHaveURL(/\?session=A$/);
+        await expect(page.getByRole('textbox', { name: '发送消息' })).toHaveValue('A 的原草稿');
+      }
+      expect(mock.counts.sends).toBe(0);
+      expect(mock.counts.creates).toBe(action === 'create' ? 1 : 0);
+    } finally { await mock.close(); }
+  });
+}

@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Unified Workbench and Work Overview](./workbench.md) for explicit inbox handling, cross-seat summary authorization, migrations and navigation.
+
 Read [Information-to-Task Contract](./task-information.md) for schema v4, task judgments, human task creation, permission-filtered associations and task-based continuation.
 
 Read [Multi-source Context Queries](../backend/context-analysis.md) for the implemented capability-validation contracts, task context, query evidence and fixed scope checks.

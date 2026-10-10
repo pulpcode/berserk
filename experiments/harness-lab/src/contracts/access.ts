@@ -3,6 +3,8 @@ export interface Identity {
   /** Legacy name: create and manage all public task metadata; never grants workspace access. */
   createPublicTask: boolean;
   manageModelSettings: boolean;
+  /** Explicit read-only public work summaries; no file or mutation authority. */
+  viewWorkOverview?: boolean;
 }
 export interface AuthSession {
   mode: 'login' | 'test'; csrf?: string; viewId?: string; identity?: Identity;

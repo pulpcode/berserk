@@ -22,7 +22,7 @@ async function setup() {
   const access = new AccessStore(db), store = new BackgroundStore(db);
   const actors = {} as Record<'a' | 'b' | 'c', Identity>;
   for (const name of ['a', 'b', 'c'] as const) {
-    const id = randomUUID(); db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run(name, `席位 ${name}`, name === 'c' ? 0 : 1, 0);
+    const id = randomUUID(); db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run(name, `席位 ${name}`, name === 'c' ? 0 : 1, 0);
     db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(id, name, name, name, 'test-only', 'test-only'); actors[name] = access.identity(id)!;
   }
   store.grant('seat', 'a', 'intel', 'manage'); store.grant('seat', 'b', 'intel', 'view');
@@ -119,10 +119,14 @@ describe('task assessment storage and effective relationships', () => {
     const newer = s.running(old.event); s.record(newer.job, relations(b), [b]); s.finish(newer.job); s.finish(old.job);
     expect(s.links.list(s.a, a.id).items).toEqual([]);
     expect(s.links.list(s.a, b.id).items[0].jobId).toBe(newer.job.id);
+    expect(s.links.effectiveTasks(s.a,old.event.id,old.job.id)).toEqual([]);
+    expect(s.links.effectiveTasks(s.a,newer.event.id,newer.job.id)).toEqual([{id:b.id,title:b.title}]);
     const failed = s.running(old.event); s.record(failed.job, relations(a), [a]); s.finish(failed.job, 'failed');
     const interrupted = s.running(old.event); s.record(interrupted.job, relations(a), [a]); s.finish(interrupted.job, 'interrupted');
     const missing = s.running(old.event); s.finish(missing.job);
     expect(s.links.list(s.a, b.id).items[0].jobId).toBe(newer.job.id);
+    expect(s.links.effectiveTasks(s.a,old.event.id,old.job.id)).toEqual([]);
+    expect(s.links.effectiveTasks(s.a,newer.event.id,newer.job.id)).toEqual([{id:b.id,title:b.title}]);
     s.scopeDenied.add(`b:${newer.job.id}`);
     expect(s.links.list(s.b, a.id).items[0].jobId).toBe(old.job.id);
     const empty = s.running(old.event); s.record(empty.job, {relations: [], emptyReason: '任务条件已改变，不再相关'}); s.finish(empty.job);
@@ -241,9 +245,9 @@ describe('task assessment storage and effective relationships', () => {
 
   it('migrates v3 additively and validates persisted judgments, overrides, indexes and creation receipts', async () => {
     const s = await setup(), task = s.task(), {event, job} = s.running(); s.finish(job);
-    s.db.exec('DROP TABLE information_task_overrides; PRAGMA user_version=3;');
+    s.db.exec('DROP TABLE inbox_handling; DROP TABLE information_task_overrides; PRAGMA user_version=3;');
     new BackgroundStore(s.db);
-    expect(s.db.prepare('PRAGMA user_version').get()?.user_version).toBe(4);
+    expect(s.db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
     expect(s.access.get(task.id, s.a.seatId).title).toBe(task.title); expect(s.store.getEvent(event.id).id).toBe(event.id);
     s.links.update(s.a, event.id, task.id, {mode: 'include', revision: 0, jobId: job.id, reason: '旧消息人工收录'});
     expect(() => new BackgroundStore(s.db)).not.toThrow();

@@ -41,8 +41,8 @@ describe('durable background metadata', () => {
     const dir = await mkdtemp(join(tmpdir(), 'axon-v3-migration-')); let db: DatabaseSync | undefined = await openDatabase(dir);
     disposers.push(async () => { db?.close(); await rm(dir, {recursive: true, force: true}); });
     new AccessStore(db); db.prepare('INSERT INTO works VALUES(?,?)').run('existing', '{"existing":true}');
-    db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run('a', '席位 A', 1, 1);
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(4);
+    db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run('a', '席位 A', 1, 1);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
     expect(db.prepare('SELECT data FROM works WHERE id=?').get('existing')?.data).toBe('{"existing":true}');
     db.close(); db = await openDatabase(dir); const access = new AccessStore(db); new BackgroundStore(db);
     expect(access.allSeatIds()).toEqual(['a']);
@@ -227,7 +227,7 @@ describe('durable background metadata', () => {
 
   it('combines account/seat grants only for an enabled current identity', async () => {
     const {store, db} = await setup(); const id = randomUUID();
-    db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run('a', 'A', 0, 0);
+    db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run('a', 'A', 0, 0);
     db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,?)').run(id, 'a', 'A', 'a', 'salt', 'hash', 1);
     const actor = {userId: id, seatId: 'a'};
     store.grant('seat', 'a', 'special', 'view'); store.grant('account', id, 'special', 'manage');
@@ -237,5 +237,84 @@ describe('durable background metadata', () => {
     expect(store.effectivePermission({...actor, seatId: 'b'}, 'special')).toBeUndefined();
     db.prepare('UPDATE accounts SET enabled=0 WHERE id=?').run(id);
     expect(store.permissions(actor).size).toBe(0);
+  });
+});
+
+describe('explicit seat inbox handling', () => {
+  async function recipient(db: DatabaseSync, seatId = 'a') {
+    const access = new AccessStore(db);
+    const id = await access.saveAccount({username:seatId,displayName:seatId,seatId,seatName:seatId,password:'handling-password-123',createPublicTask:false,manageModelSettings:false});
+    return access.identity(id)!;
+  }
+  it('records only delivered items, independently per seat, with CAS and durable exact receipts', async () => {
+    const context = await setup(); const {db,store} = context; const a = await recipient(db), b = await recipient(db,'b');
+    const {j} = accept(store); success(store,j);
+    const [da,dbb] = ['a','b'].map(seat => store.listDeliveries().find(d => d.recipientSeatId === seat)!);
+    expect(() => store.handling(da.id)).toThrow();
+    store.updateDelivery(da.id,da.revision,'delivered'); store.updateDelivery(dbb.id,dbb.revision,'delivered');
+    expect(store.handling(da.id)).toMatchObject({state:'pending',revision:1});
+    const input = {state:'completed' as const,revision:1,clientActionId:randomUUID()};
+    const receipt = store.handleInbox(a,da.id,input);
+    expect(receipt).toMatchObject({state:'completed',revision:2,updatedByUserId:a.userId});
+    expect(store.handling(dbb.id).state).toBe('pending');
+    expect(() => store.handleInbox(b,da.id,input)).toThrow();
+    expect(store.handleInbox(a,da.id,input)).toEqual(receipt);
+    expect(() => store.handleInbox(a,da.id,{...input,state:'pending'})).toThrow('相同操作');
+    expect(() => store.handleInbox(a,da.id,{...input,clientActionId:randomUUID()})).toThrow('处理状态');
+    store.updateDelivery(da.id,da.revision,'delivered');
+    expect(store.handling(da.id)).toEqual(receipt);
+    const reopened = await context.reopen();
+    expect(reopened.handleInbox(a,da.id,input)).toEqual(receipt);
+    const pending = reopened.handleInbox(a,da.id,{state:'pending',revision:2,clientActionId:randomUUID()});
+    expect(pending.revision).toBe(3);
+    expect(reopened.handleInbox(a,da.id,input)).toEqual(receipt);
+    expect(reopened.handling(da.id)).toEqual(pending);
+    const rerun = job(reopened.getEvent(j.eventId),j.ruleSnapshot); reopened.enqueueJob(rerun,100); success(reopened,rerun);
+    const fresh = reopened.listDeliveries(rerun.id).find(d => d.recipientSeatId === 'a')!;
+    reopened.updateDelivery(fresh.id,fresh.revision,'delivered');
+    expect(reopened.handling(fresh.id)).toMatchObject({state:'pending',revision:1});
+    expect(reopened.handling(da.id)).toEqual(pending);
+  });
+  it('atomically rolls back handling if receipt persistence fails', async () => {
+    const {db,store} = await setup(), a = await recipient(db); const {j} = accept(store); success(store,j);
+    const delivery = store.listDeliveries().find(d => d.recipientSeatId === 'a')!; store.updateDelivery(delivery.id,1,'delivered');
+    db.exec("CREATE TRIGGER fail_handling_receipt BEFORE INSERT ON background_actions WHEN json_extract(NEW.data,'$.kind')='inbox_handle' BEGIN SELECT RAISE(ABORT,'receipt unavailable'); END;");
+    expect(() => store.handleInbox(a,delivery.id,{state:'completed',revision:1,clientActionId:randomUUID()})).toThrow('receipt unavailable');
+    expect(store.handling(delivery.id)).toMatchObject({state:'pending',revision:1});
+  });
+  it('migrates only historical delivered rows as legacy and treats later delivery as pending', async () => {
+    const {db,store} = await setup(); const {j} = accept(store); success(store,j);
+    const first = store.listDeliveries()[0]!, later = store.listDeliveries()[1]!; store.updateDelivery(first.id,1,'delivered');
+    db.exec('DROP TABLE inbox_handling; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=4;');
+    const access = new AccessStore(db);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    const next = new BackgroundStore(db);
+    expect(next.handling(first.id)).toMatchObject({state:'legacy',revision:1});
+    expect(next.handling(first.id).updatedByUserId).toBeUndefined();
+    next.updateDelivery(later.id,1,'delivered');
+    expect(next.handling(later.id).state).toBe('pending');
+    expect(access.seats()).toEqual([]);
+    new AccessStore(db); new BackgroundStore(db);
+    db.exec('DROP TABLE inbox_handling');
+    expect(() => new BackgroundStore(db)).toThrow();
+    expect(() => new AccessStore(db)).toThrow();
+  });
+  it('keeps auth-only upgrades independent, validates missing capabilities and supports first background enable', async () => {
+    const dir = await mkdtemp(join(tmpdir(),'axon-auth-only-')); let db = await openDatabase(dir);
+    disposers.push(async () => {db.close(); await rm(dir,{recursive:true,force:true});});
+    new AccessStore(db);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(5);
+    expect(db.prepare("SELECT name FROM sqlite_master WHERE name='inbox_handling'").get()).toBeUndefined();
+    db.close(); db = await openDatabase(dir); const access = new AccessStore(db);
+    const id = await access.saveAccount({username:'overall',displayName:'总体',seatId:'overall',seatName:'总体席',password:'handling-password-123',createPublicTask:true,manageModelSettings:true});
+    expect(access.identity(id)?.viewWorkOverview).toBe(false);
+    db.exec('ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=2;');
+    const migrated = new AccessStore(db);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(5);
+    expect(migrated.identity(id)).toMatchObject({seatId:'overall',viewWorkOverview:false});
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(6);
+    expect(new BackgroundStore(db).listDeliveries()).toEqual([]);
+    db.exec('ALTER TABLE seats DROP COLUMN view_work_overview');
+    expect(() => new AccessStore(db)).toThrow();
   });
 });

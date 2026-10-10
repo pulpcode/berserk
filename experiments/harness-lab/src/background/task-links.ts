@@ -201,6 +201,12 @@ export class TaskLinkService {
     delete job.ruleSnapshot; delete event.ruleSnapshot;
     return {...current.item, event, job, ...content, analyses: this.dependencies.analysisSummaries?.(current.actor, taskId, eventId, jobId) ?? []};
   }
+  /** Current task associations for one delivered analysis, excluding editor-only decisions. */
+  effectiveTasks(actor: Identity, eventId: string, jobId: string): Array<{id:string;title:string}> {
+    const authorized = this.authorize(actor,eventId,jobId); actor = authorized.actor;
+    const jobs = this.store.listJobs(), decisions = new Map(this.overrides(eventId).map(value => [value.taskSpaceId,value]));
+    return this.access.list(actor.seatId).filter(task => this.effective(actor,task,authorized.event,jobs,decisions.get(task.id))?.jobId === jobId).map(task => ({id:task.id,title:task.title}));
+  }
   links(actor: Identity, eventId: string, jobId: string): TaskLinksView {
     const authorized = this.authorize(actor, eventId, jobId); actor = authorized.actor;
     const {job, event} = authorized, tasks = this.access.list(actor.seatId), decisions = new Map(this.overrides(eventId).map(value => [value.taskSpaceId, value]));

@@ -189,7 +189,7 @@ export class BackgroundService {
       revision:job.revision,createdAt:job.createdAt,startedAt:job.startedAt,endedAt:job.endedAt,requestId:job.requestId};
   }
   private deliveryProjection(actor: Identity, delivery: BackgroundDelivery): BackgroundDelivery {
-    return this.canReadJob(actor,this.store.getJob(delivery.jobId)) ? delivery : {...delivery,error:undefined};
+    return this.canReadJob(actor,this.store.getJob(delivery.jobId)) ? {...delivery,...(delivery.status === 'delivered' ? {handling:this.store.handling(delivery.id)} : {})} : {...delivery,error:undefined};
   }
   deliveries(actor: Identity, query: InformationFilter) {
     return page(this.store.listDeliveries().filter(delivery => this.store.effectivePermission(actor,delivery.sourceId)
@@ -304,19 +304,35 @@ export class BackgroundService {
     const jobs = this.store.listJobs().filter(job => job.eventId === id && job.kind === 'preprocess');
     if (!this.canReadEvent(actor,event)) return {...this.eventProjection(actor,event),jobs:jobs.map(job => this.jobProjection(actor,job)),deliveries:this.store.listDeliveries().filter(delivery => delivery.eventId === id).map(delivery => this.deliveryProjection(actor,delivery)),text:'',results:[],analyses:[]};
     const results = await Promise.all(jobs.filter(job => job.result).map(async job => ({jobId: job.id, text: processingText(await this.executor.read(job), job.requestId), files: job.result!.files})));
-    return {...event, text: await this.eventText(event), jobs:jobs.map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === id), results,
+    return {...event, text: await this.eventText(event), jobs:jobs.map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === id).map(delivery => this.deliveryProjection(actor,delivery)), results,
       analyses: this.store.listActions().filter(action => action.kind === 'analysis' && action.eventId === id).map(action => this.analysisSummary(actor, action))};
   }
   private allowedInbox(actor: Identity, id: string): InboxItem {
+    const current = this.lab.access!.identity(actor.userId);
+    if (!current || current.seatId !== actor.seatId) throw notFound();
     const delivery = this.store.getDelivery(id);
     if (delivery.recipientSeatId !== actor.seatId || delivery.status !== 'delivered' || !this.source(delivery.sourceId).allowedRecipientSeatIds.includes(actor.seatId)) throw notFound();
     const event = this.store.getEvent(delivery.eventId), job = this.store.getJob(delivery.jobId);
     this.assertContext(actor.seatId,this.jobScope(job));
     delete event.ruleSnapshot; delete job.ruleSnapshot;
-    return {delivery,event,job,sourceName:this.source(delivery.sourceId).name};
+    return {delivery,event,job,handling:this.store.handling(id),sourceName:this.source(delivery.sourceId).name};
+  }
+  inboxHandling(actor: Identity, id: string, clientActionId?: string) {
+    this.allowedInbox(actor,id);
+    const action = clientActionId ? this.store.findAction(actor.userId,clientActionId) : undefined;
+    if (action && (action.kind !== 'inbox_handle' || action.deliveryId !== id || action.seatId !== actor.seatId)) throw notFound();
+    return {handling:this.store.handling(id),...(action?.handling ? {receipt:action.handling} : {})};
+  }
+  handleInbox(actor: Identity, id: string, input: {state:'pending'|'completed';revision:number;clientActionId:string}) {
+    this.allowedInbox(actor,id);
+    const receipt = this.store.handleInbox(actor,id,input);
+    return {handling:this.store.handling(id),receipt};
+  }
+  inboxItems(actor: Identity): InboxItem[] {
+    return this.store.listDeliveries().filter(delivery => delivery.status === 'delivered' && delivery.recipientSeatId === actor.seatId && this.config.sources.some(source => source.sourceId === delivery.sourceId && source.allowedRecipientSeatIds.includes(actor.seatId))).filter(delivery => this.canReadJob(actor,this.store.getJob(delivery.jobId))).map(delivery => this.allowedInbox(actor, delivery.id));
   }
   inbox(actor: Identity, query: InformationFilter): BackgroundPage<InboxItem> {
-    const items = this.store.listDeliveries().filter(delivery => delivery.status === 'delivered' && delivery.recipientSeatId === actor.seatId && this.config.sources.some(source => source.sourceId === delivery.sourceId && source.allowedRecipientSeatIds.includes(actor.seatId))).filter(delivery => this.canReadJob(actor,this.store.getJob(delivery.jobId))).map(delivery => this.allowedInbox(actor, delivery.id));
+    const items = this.inboxItems(actor);
     return page(items.filter(item => (!query.sourceId || item.event.sourceId === query.sourceId) && (!query.search || item.event.title.includes(query.search))), query);
   }
   async inboxDetail(actor: Identity, id: string): Promise<InboxDetail> {

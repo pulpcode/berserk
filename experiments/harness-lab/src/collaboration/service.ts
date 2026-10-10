@@ -8,6 +8,8 @@ import { filePath } from '../files/service.js';
 import { Mutex, parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID, WorkspaceStore } from '../workspaces/store.js';
 import { HandoffFiles } from './files.js';
+import type { Identity } from '../contracts/access.js';
+import type { WorkOverviewItem } from '../contracts/workbench.js';
 import { openDatabase } from '../access/database.js';
 
 export type PreparationOrigin = { source: 'page'; clientActionId: string } | { source: 'agent'; sessionId: string; requestId: string; toolCallId: string };
@@ -128,6 +130,18 @@ export class CollaborationService {
   }
   list(actor: ActorContext): WorkItem[] {
     this.actor(actor); return this.db.prepare('SELECT data FROM works ORDER BY rowid DESC').all().map(row => parse<WorkItem>(row)).filter(work => work.creatorSeatId === actor.seatId || work.assigneeSeatId === actor.seatId);
+  }
+  overview(actor: Identity): WorkOverviewItem[] {
+    const access = this.workspaces.access;
+    // Re-read current capabilities, including for direct service callers.
+    const current = access?.identity(actor.userId);
+    if (!access || !current?.viewWorkOverview || current.seatId !== actor.seatId) throw new RequestError('FORBIDDEN','当前席位没有工作总览权限。',403);
+    const tasks = new Map(access.list(actor.seatId).filter(task => task.visibility === 'public').map(task => [task.id,task]));
+    const names = new Map(access.db.prepare('SELECT id,name FROM seats').all().map(row => [String(row.id),String(row.name)]));
+    return this.db.prepare('SELECT data FROM works').all().map(row => parse<WorkItem>(row)).filter(work => tasks.has(work.taskSpaceId)).map(work => {
+      const submissions = this.db.prepare('SELECT data FROM submissions WHERE work_id=? ORDER BY rowid DESC').all(work.id).map(row => parse<Submission>(row));
+      return {id:work.id,title:work.title,taskSpaceId:work.taskSpaceId,taskTitle:tasks.get(work.taskSpaceId)!.title,creatorSeatId:work.creatorSeatId,assigneeSeatId:work.assigneeSeatId,creatorSeatName:names.get(work.creatorSeatId) ?? work.creatorSeatId,assigneeSeatName:names.get(work.assigneeSeatId) ?? work.assigneeSeatId,state:work.state,createdAt:work.createdAt,updatedAt:work.updatedAt,submissionCount:submissions.length,...(submissions[0] ? {latestSubmittedAt:submissions[0].createdAt} : {}),participant:[work.creatorSeatId,work.assigneeSeatId].includes(actor.seatId)};
+    });
   }
   private work(actor: ActorContext, id: string): WorkItem {
     this.actor(actor); const row = this.db.prepare('SELECT data FROM works WHERE id=?').get(id); if (!row) throw notFound();

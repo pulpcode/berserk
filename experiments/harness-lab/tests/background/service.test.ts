@@ -84,9 +84,9 @@ async function task(client: Client, title = '个人分析任务') {
 }
 
 describe('information intake and native background service', () => {
-  it('leaves the established formal service and v2 schema unchanged without background configuration', async () => {
+  it('leaves the established formal service with auth-only schema without background configuration', async () => {
     const context = await setup({absent: true}); const a = await login(context.app, 'a');
-    expect(context.lab.access!.db.prepare('PRAGMA user_version').get()?.user_version).toBe(2);
+    expect(context.lab.access!.db.prepare('PRAGMA user_version').get()?.user_version).toBe(5);
     expect((await a.call('/api/information/access')).json().enabled).toBe(false);
     expect((await a.call('/api/inbox')).json().items).toEqual([]);
     expect((await context.source('events', message())).statusCode).not.toBe(202);
@@ -429,4 +429,67 @@ describe('information intake and native background service', () => {
     expect(store.listJobs()).toHaveLength(2); expect(store.listDeliveries()).toHaveLength(2); expect(context.fake.calls).toHaveLength(2);
     expect(lab.get(action.sessionId!, 'b').messages.filter(item => item.role === 'user')).toHaveLength(1);
   });
+});
+
+describe('inbox handling and workbench integration', () => {
+  it('keeps reading separate from explicit handling, enforces identity and recovers exact receipts', async () => {
+    const context = await setup(), a = await login(context.app,'a'), b = await login(context.app,'b');
+    const result = await delivered(context,a);
+    const da = result.deliveries.find(d => d.recipientSeatId === 'a')!, db = result.deliveries.find(d => d.recipientSeatId === 'b')!;
+    const route = `/api/inbox/${da.id}/handling`;
+    expect((await a.call(`/api/inbox/${da.id}`)).json().handling.state).toBe('pending');
+    expect((await a.call('/api/workbench/items')).json()).toMatchObject({total:1,items:[{kind:'information',id:da.id,label:'待处理'}]});
+    expect((await b.call(route)).statusCode).toBe(404);
+    const input = {state:'completed',revision:1,clientActionId:randomUUID()};
+    expect((await b.call(route,input,'PUT')).statusCode).toBe(404);
+    expect((await a.call(route,{...input,seatId:'b'},'PUT')).statusCode).toBe(400);
+    const updated = await a.call(route,input,'PUT'); expect(updated.statusCode,updated.body).toBe(200);
+    expect(updated.json().handling).toMatchObject({state:'completed',revision:2});
+    expect((await a.call(route,input,'PUT')).json()).toEqual(updated.json());
+    expect((await a.call(`${route}?clientActionId=${input.clientActionId}`)).json()).toEqual(updated.json());
+    expect((await a.call(route,{...input,clientActionId:randomUUID()},'PUT')).statusCode).toBe(409);
+    expect((await a.call('/api/workbench/items')).json().total).toBe(0);
+    expect((await a.call('/api/workbench/items?bucket=done')).json().total).toBe(1);
+    expect((await b.call(`/api/inbox/${db.id}/handling`)).json().handling.state).toBe('pending');
+    expect((await a.call(`/api/information/events/${result.event.id}`)).json().deliveries.find((d:{id:string}) => d.id === da.id).handling.state).toBe('completed');
+    context.background.sources[0].allowedRecipientSeatIds = ['b'];
+    expect((await a.call(route)).statusCode).toBe(404);
+    expect((await a.call(route,{state:'pending',revision:2,clientActionId:randomUUID()},'PUT')).statusCode).toBe(404);
+    expect((await a.call('/api/workbench/items?bucket=all')).json().total).toBe(0);
+  });
+});
+
+it('aggregates all authorized sources before stable paging, deduplicates multi-task information and reports partial failures', async () => {
+  const context = await setup(), a = await login(context.app,'a'), b = await login(context.app,'b');
+  const result = await delivered(context,a);
+  const taskInput = {title:'统一办理任务',goal:'核对',visibility:'public',clientActionId:randomUUID()};
+  const first = (await a.call('/api/tasks',taskInput)).json<TaskSpace>();
+  const second = (await a.call('/api/tasks',{...taskInput,clientActionId:randomUUID(),title:'第二任务'})).json<TaskSpace>();
+  for (const task of [first,second]) {
+    const response = await a.call(`/api/information/events/${result.event.id}/task-links/${task.id}`,{mode:'include',revision:0,jobId:result.job.id,reason:'明确关联'},'PUT');
+    expect(response.statusCode,response.body).toBe(200);
+  }
+  const time = new Date().toISOString();
+  for (let index=0;index<55;index++) {
+    const work = {id:randomUUID(),taskSpaceId:first.id,creatorSeatId:'b',assigneeSeatId:'a',title:`交接 ${index}`,goal:'不能用于搜索的私有目标',inputFileIds:[],state:'assigned',revision:1,createdAt:time,updatedAt:time};
+    context.lab.access!.db.prepare('INSERT INTO works VALUES(?,?)').run(work.id,JSON.stringify(work));
+  }
+  const page1 = (await a.call('/api/workbench/items?limit=25')).json();
+  const page2 = (await a.call('/api/workbench/items?limit=25&offset=25')).json();
+  const page3 = (await a.call('/api/workbench/items?limit=25&offset=50')).json();
+  expect(page1.total).toBe(56); expect(page1.counts.actionable).toBe(56);
+  const all = [...page1.items,...page2.items,...page3.items];
+  expect(new Set(all.map(item => item.key)).size).toBe(56);
+  expect(all.filter(item => item.kind === 'information')).toHaveLength(1);
+  expect(all.find(item => item.kind === 'information')).toMatchObject({jobId:result.job.id,analysisAt:result.job.createdAt,tasks:expect.arrayContaining([{id:first.id,title:first.title},{id:second.id,title:second.title}])});
+  expect((await a.call(`/api/workbench/items?taskId=${second.id}`)).json().total).toBe(1);
+  expect((await b.call('/api/workbench/items?kind=work')).json()).toMatchObject({total:0,counts:{actionable:0,following:55,done:0,all:55}});
+  expect((await a.call('/api/workbench/items?kind=information')).json().total).toBe(1);
+  expect((await a.call('/api/workbench/items?search=不能用于搜索')).json().total).toBe(0);
+  const excluded = await a.call(`/api/information/events/${result.event.id}/task-links/${second.id}`,{mode:'exclude',revision:1,jobId:result.job.id,reason:'已移除关联'},'PUT');
+  expect(excluded.statusCode,excluded.body).toBe(200);
+  expect((await a.call(`/api/workbench/items?taskId=${second.id}`)).json().total).toBe(0);
+  expect((await a.call('/api/workbench/items?kind=information')).json().items[0].tasks).toEqual([{id:first.id,title:first.title}]);
+  vi.spyOn(context.lab.collaboration!,'list').mockImplementationOnce(() => {throw new Error('database read unavailable');});
+  expect((await a.call('/api/workbench/items')).json()).toMatchObject({sections:{work:'error',information:'available'},counts:{actionable:null,following:null,done:null,all:null},items:[{kind:'information'}]});
 });

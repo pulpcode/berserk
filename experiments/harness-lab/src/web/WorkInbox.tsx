@@ -21,7 +21,8 @@ function restore(key: string): Persisted {
 }
 const message = (reason: unknown) => reason instanceof Error ? reason.message : '操作未完成，请查询最新状态后重试。';
 
-export function WorkInbox({ visible, control, seats, seatId, workspaces, activities, maxFiles, createSession, openSession, refreshActivity, adoptSession }: {
+export function WorkInbox({ visible, control, seats, seatId, workspaces, activities, maxFiles, createSession, openSession, refreshActivity, adoptSession, embedded = false, selectedId, select, changed, refreshKey }: {
+  refreshKey?: string; embedded?: boolean; selectedId?: string; select?: (id: string) => void; changed?: () => void;
   visible: boolean; control: Ref<WorkInboxHandle>; seats: TestSeat[]; seatId: string; workspaces: Workspace[]; activities: SessionActivity[]; maxFiles: number;
   createSession: (workspaceId: string, workItemId?: string) => Promise<string | null>;
   openSession: (id: string) => void; refreshActivity: () => Promise<void>; adoptSession: (snapshot: SessionSnapshot) => void;
@@ -36,8 +37,10 @@ export function WorkInbox({ visible, control, seats, seatId, workspaces, activit
   }, [key]);
   const [items, setItems] = useState<WorkItem[]>([]);
   const [filter, setFilter] = useState<'mine' | 'review' | 'sent' | 'all'>('mine');
-  const [selected, setSelected] = useState('');
-  const [detail, setDetail] = useState<WorkDetail>();
+  const [localSelected, setSelected] = useState('');
+  const selected = selectedId ?? localSelected;
+  const [loadedDetail, setDetail] = useState<WorkDetail>();
+  const detail = loadedDetail?.id === selected ? loadedDetail : undefined;
   const [assignWorkspaceId, setAssignWorkspaceId] = useState('');
   const [assignOpen, setAssignOpen] = useState(false);
   const assignTrigger = useRef<HTMLButtonElement>(null);
@@ -53,6 +56,11 @@ export function WorkInbox({ visible, control, seats, seatId, workspaces, activit
   const [sessionChoice, setSessionChoice] = useState('');
   const [returnOpen, setReturnOpen] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [previousSelected, setPreviousSelected] = useState(selected);
+  if (previousSelected !== selected) { setPreviousSelected(selected); setSessionChoice(''); setReturnOpen(false); setSubmitOpen(false); setError(''); setNotice(''); }
+  const detailHeading = useRef<HTMLHeadingElement>(null);
+  const loadedId = detail?.id;
+  useEffect(() => { if (visible && loadedId) detailHeading.current?.focus(); }, [visible, loadedId]);
   const refreshToken = useRef(0);
   const visibleRef = useRef(visible);
   useEffect(() => { visibleRef.current = visible; }, [visible]);
@@ -81,15 +89,16 @@ export function WorkInbox({ visible, control, seats, seatId, workspaces, activit
     setReturnOpen(false); setSubmitOpen(false); setSessionChoice('');
     if (owner) { setAssignWorkspaceId(owner); setAssignOpen(true); }
   } }), []);
+  useEffect(() => { navigation.current++; }, [selectedId]);
   useEffect(() => {
     if (!selected || !visible) return;
     let current = true;
-    readDetail(selected).then(value => { if (current) setDetail(value); }).catch((reason: unknown) => { if (current) setError(message(reason)); });
+    readDetail(selected).then(value => { if (current) setDetail(value); }).catch((reason: unknown) => { if (current) { if (reason instanceof ApiFailure && [401, 403, 404].includes(reason.status)) setDetail(undefined); setError(message(reason)); } });
     return () => { current = false; };
-  }, [selected, visible, items, readDetail]);
+  }, [selected, visible, items, readDetail, refreshKey]);
   async function showReceipt(receipt: WorkReceipt, capturedNavigation: number) {
     if (capturedNavigation !== navigation.current || !visibleRef.current) { await refresh(); return; }
-    setSelected(receipt.workItemId); setNotice(`操作已完成：${workStateLabel[receipt.state]}。`);
+    setSelected(receipt.workItemId); select?.(receipt.workItemId); changed?.(); setNotice(`操作已完成：${workStateLabel[receipt.state]}。`);
     setAssignOpen(false); setSubmitOpen(false); setReturnOpen(false);
     await refreshActivity().catch(() => {}); await refresh();
     const value = await readDetail(receipt.workItemId);
@@ -164,19 +173,19 @@ export function WorkInbox({ visible, control, seats, seatId, workspaces, activit
     } catch (reason) { setError(message(reason)); }
     finally { lock.current = false; setBusy(false); }
   }
-  function selectWork(id: string) { navigation.current++; setSelected(id); setDetail(undefined); setSessionChoice(''); setReturnOpen(false); setSubmitOpen(false); setError(''); setNotice(''); }
-  const filtered = items.filter(item => filter === 'all' ? true : filter === 'sent' ? item.creatorSeatId === seatId : filter === 'review' ? item.creatorSeatId === seatId && item.state === 'submitted' : item.assigneeSeatId === seatId && item.state !== 'completed');
+  function selectWork(id: string) { select?.(id); navigation.current++; setSelected(id); setDetail(undefined); setSessionChoice(''); setReturnOpen(false); setSubmitOpen(false); setError(''); setNotice(''); }
+  const filtered = items.filter(item => filter === 'all' ? true : filter === 'sent' ? item.creatorSeatId === seatId : filter === 'review' ? item.creatorSeatId === seatId && item.state === 'submitted' : item.assigneeSeatId === seatId && ['assigned', 'working', 'returned'].includes(item.state));
   const currentSubmission = detail?.submissions.find(item => item.id === detail.latestSubmissionId);
   const canWork = detail?.assigneeSeatId === seatId && (detail.state === 'working' || detail.state === 'returned');
   const canReview = detail?.creatorSeatId === seatId && detail.state === 'submitted' && currentSubmission;
-  return <section id={domId('work-inbox')} tabIndex={-1} className="work-inbox" hidden={!visible} aria-label="工作待办">
-    <header className="work-inbox-header"><div><h1>工作待办</h1><p>从分派到交接，在各自项目中开展工作。</p></div><button disabled={loading} onClick={() => void refresh()}><RefreshCw size={16} aria-hidden="true" />刷新待办</button></header>
+  return <section id={domId('work-inbox')} tabIndex={-1} className={`work-inbox${embedded ? ' work-embedded' : ''}`} hidden={!visible} aria-label="工作待办">
+    {!embedded && <header className="work-inbox-header"><div><h1>工作待办</h1><p>从分派到交接，在各自项目中开展工作。</p></div><button disabled={loading} onClick={() => void refresh()}><RefreshCw size={16} aria-hidden="true" />刷新待办</button></header>}
     {error && <p className="resource-error" role="alert">{error}</p>}{notice && <p className="resource-success" role="status">{notice}</p>}
     {drafts.pending && <div className="work-pending" role="status"><span>{needsQuery ? '有一项操作需要查询结果。' : '有一项操作尚待核对。'}</span><button disabled={busy} onClick={() => void queryAction()}>查询结果</button>{action && <button onClick={() => setConfirmOpen(true)}>继续确认</button>}{queriedMissing && <><button disabled={busy} onClick={() => void prepare(drafts.pending!.input, drafts.pending!.input)}>重试原准备请求</button><button disabled={busy} onClick={dismissCompleted}>放弃未成功的准备</button></>}</div>}
     <div className={`work-columns${selected ? ' has-selection' : ''}`}>
-      <div className="work-list-pane"><div className="work-filters" aria-label="待办分类">{([['mine', '待我办理'], ['review', '待我验收'], ['sent', '我发起的'], ['all', '全部']] as const).map(([id, label]) => <button key={id} aria-pressed={filter === id} onClick={() => setFilter(id)}>{label}<span>{items.filter(item => id === 'all' ? true : id === 'sent' ? item.creatorSeatId === seatId : id === 'review' ? item.creatorSeatId === seatId && item.state === 'submitted' : item.assigneeSeatId === seatId && item.state !== 'completed').length}</span></button>)}</div><ul className="work-list">{filtered.map(item => <li key={item.id}><button aria-current={selected === item.id ? 'true' : undefined} onClick={() => selectWork(item.id)}><strong>{item.title}</strong><span>{workStateLabel[item.state]}</span><small>{workspaces.find(workspace => workspace.taskSpaceId === item.taskSpaceId)?.name || '项目'} · {seatName(item.creatorSeatId)} → {seatName(item.assigneeSeatId)}</small></button></li>)}</ul>{!loading && !filtered.length && <p className="work-empty"><Inbox size={24} aria-hidden="true" />暂时没有这类工作。</p>}</div>
+      {!embedded && <div className="work-list-pane"><div className="work-filters" aria-label="待办分类">{([['mine', '待我办理'], ['review', '待我验收'], ['sent', '我发起的'], ['all', '全部']] as const).map(([id, label]) => <button key={id} aria-pressed={filter === id} onClick={() => setFilter(id)}>{label}<span>{items.filter(item => id === 'all' ? true : id === 'sent' ? item.creatorSeatId === seatId : id === 'review' ? item.creatorSeatId === seatId && item.state === 'submitted' : item.assigneeSeatId === seatId && ['assigned', 'working', 'returned'].includes(item.state)).length}</span></button>)}</div><ul className="work-list">{filtered.map(item => <li key={item.id}><button aria-current={selected === item.id ? 'true' : undefined} onClick={() => selectWork(item.id)}><strong>{item.title}</strong><span>{workStateLabel[item.state]}</span><small>{workspaces.find(workspace => workspace.taskSpaceId === item.taskSpaceId)?.name || '项目'} · {seatName(item.creatorSeatId)} → {seatName(item.assigneeSeatId)}</small></button></li>)}</ul>{!loading && !filtered.length && <p className="work-empty"><Inbox size={24} aria-hidden="true" />暂时没有这类工作。</p>}</div>}
       <div className="work-detail-pane">{!selected ? <div className="work-empty"><p>选择一项工作查看目标、资料与进度。</p><label>选择项目<select value={assignWorkspaceId} onChange={event => setAssignWorkspaceId(event.target.value)}><option value="">请选择项目</option>{workspaces.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><button ref={assignTrigger} disabled={!assignWorkspaceId} onClick={() => setAssignOpen(true)}><Plus size={16} aria-hidden="true" />分派工作</button></div> : !detail ? <p role="status">正在读取工作详情…</p> : <>
-        <button className="work-back" onClick={() => selectWork('')}><ArrowLeft size={16} aria-hidden="true" />返回列表</button><header><span className="work-state">{workStateLabel[detail.state]}</span><h2>{detail.title}</h2><p>{seatName(detail.creatorSeatId)} → {seatName(detail.assigneeSeatId)}</p></header><p className="work-goal">{detail.goal}</p>
+        <button className="work-back" onClick={() => selectWork('')}><ArrowLeft size={16} aria-hidden="true" />返回列表</button><header><span className="work-state">{workStateLabel[detail.state]}</span><h2 ref={detailHeading} tabIndex={-1}>{detail.title}</h2><p>{seatName(detail.creatorSeatId)} → {seatName(detail.assigneeSeatId)}</p></header><p className="work-goal">{detail.goal}</p>
         <section><h3>输入资料（{detail.inputFiles.length} 个）</h3>{detail.inputFiles.length > 0 ? <HandoffFiles files={detail.inputFiles} workspaceId={workspace?.id} /> : <p className="resource-help">本次分派未附文件</p>}</section>
         {detail.assigneeSeatId === seatId && detail.state === 'assigned' && <button className="primary-action" disabled={busy} onClick={() => void prepare({ kind: 'claim', workItemId: detail.id, expectedRevision: detail.revision, payload: {} })}>开始办理</button>}
         {detail.state !== 'assigned' && workspace && <section className="work-conversation"><h3>办理对话</h3><label>选择对话<select value={sessionChoice} onChange={event => setSessionChoice(event.target.value)}><option value="">新建关联对话</option>{eligibleSessions.map(item => <option key={item.id} value={item.id} disabled={Boolean(item.active)}>{item.title}{item.active ? '（正在处理）' : detail.sessionIds.includes(item.id) ? '（已关联）' : '（关联此对话）'}</option>)}</select></label><button disabled={busy} onClick={() => void beginConversation()}>{sessionChoice ? '进入对话' : '新建对话办理'}</button></section>}

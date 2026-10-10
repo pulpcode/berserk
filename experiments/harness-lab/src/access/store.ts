@@ -1,3 +1,4 @@
+import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import type { Identity, TaskContext, TaskInput, TaskSpace } from '../contracts/access.js';
@@ -26,9 +27,10 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3,4].includes(version)) {
+    if([2,3,4,5,6].includes(version)) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
+      this.upgradeOverview(version);
       return;
     }
     if(version!==1)throw stateError();
@@ -40,12 +42,34 @@ export class AccessStore {
       CREATE TABLE IF NOT EXISTS task_spaces(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
       CREATE TABLE IF NOT EXISTS task_actions(user_id TEXT NOT NULL, action_id TEXT NOT NULL, input TEXT NOT NULL, task_id TEXT NOT NULL REFERENCES task_spaces(id), PRIMARY KEY(user_id,action_id));
       PRAGMA user_version=2; COMMIT;`);
+    this.upgradeOverview(2);
   }
+  private upgradeOverview(version: number) {
+    // Existing background databases complete their durable migration even when
+    // sources are temporarily disabled; schema integrity is never optional.
+    if (version === 3 || version === 4) { new BackgroundStore(this.db); return; }
+    const columns = this.db.prepare('PRAGMA table_info(seats)').all();
+    const present = columns.some(row => row.name === 'view_work_overview');
+    if (version >= 5) {
+      if (!present) throw stateError();
+      if (version === 6) new BackgroundStore(this.db);
+      else if (this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name LIKE 'background_%'").get()) throw stateError();
+      return;
+    }
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      if (!present) this.db.exec('ALTER TABLE seats ADD COLUMN view_work_overview INTEGER NOT NULL DEFAULT 0 CHECK(view_work_overview IN (0,1))');
+      // Auth-only v5 remains valid without background tables.
+      if (version === 2) this.db.exec('PRAGMA user_version=5');
+      this.db.exec('COMMIT');
+    } catch (error) { this.db.exec('ROLLBACK'); throw error; }
+  }
+  seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }
   allSeatIds() { return this.db.prepare('SELECT id FROM seats').all().map(row=>String(row.id)); }
   seats() { return this.db.prepare('SELECT s.id,s.name FROM seats s JOIN accounts a ON a.seat_id=s.id WHERE a.enabled=1').all() as unknown as Array<{id:string;name:string}>; }
   identity(id: string): Identity | undefined {
-    const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
-    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings } as unknown as Identity : undefined;
+    const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings,s.view_work_overview viewWorkOverview FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
+    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview } as unknown as Identity : undefined;
   }
   identityForSeat(seatId: string): Identity | undefined {
     const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);
@@ -57,7 +81,7 @@ export class AccessStore {
     const hash = row ? Buffer.from(String(row.password_hash), 'hex') : Buffer.alloc(64);
     return row?.enabled && hash.length === key.length && timingSafeEqual(hash, key) ? this.identity(String(row.id)) : undefined;
   }
-  async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean}) {
+  async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean;viewWorkOverview?:boolean}) {
     if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !/^[a-zA-Z0-9_-]{1,64}$/.test(input.seatId) || !input.displayName.trim() || !input.seatName.trim() || input.password.length < 12 || input.password.length > 256) throw new Error('账号、席位或密码无效；密码须为 12～256 个字符。');
     const previous = this.db.prepare('SELECT id,seat_id FROM accounts WHERE username=?').get(input.username);
     if (previous && previous.seat_id !== input.seatId) throw new Error('本期不支持账号换岗。');
@@ -65,7 +89,7 @@ export class AccessStore {
     const id = previous ? String(previous.id) : randomUUID();
     this.db.exec('BEGIN IMMEDIATE');
     try {
-      this.db.prepare('INSERT INTO seats VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings));
+      this.db.prepare('INSERT INTO seats(id,name,create_public,manage_model,view_work_overview) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model,view_work_overview=excluded.view_work_overview').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings),Number(input.viewWorkOverview ?? false));
       this.db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1) ON CONFLICT(id) DO UPDATE SET display_name=excluded.display_name,salt=excluded.salt,password_hash=excluded.password_hash,enabled=1').run(id,input.username,input.displayName,input.seatId,salt,hash);
       this.db.prepare('DELETE FROM auth_sessions WHERE user_id=?').run(id); this.db.exec('COMMIT');
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }

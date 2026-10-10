@@ -122,9 +122,9 @@ test('inbox shows native query evidence and sends the explicit question without 
       const req = route.request(); const response = await env.app.inject({ method: 'GET', url: `/api/inbox/${delivery.id}`, headers: { ...req.headers(), host: '127.0.0.1' } });
       await route.fulfill({ status: response.statusCode, json: { ...response.json(), profileName: '通用综合分析', queryMessages: [message] } });
     });
-    await login(page); await page.getByRole('button', { name: '收到的信息', exact: true }).click(); await page.getByRole('button', { name: /综合研判测试信息/ }).click();
+    await login(page); await page.getByRole('button', { name: '工作待办', exact: true }).click(); await page.getByRole('button', { name: /综合研判测试信息/ }).click();
     const calls = env.fake.calls.length;
-    await expect(page.getByRole('heading', { name: '处理结果', exact: true })).toBeVisible(); await expect(page.getByRole('heading', { name: '继续处理' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '系统分析结果', exact: true })).toBeVisible(); await expect(page.getByRole('heading', { name: '继续处理' })).toBeVisible();
     await page.getByText('查询依据 · 1 次查询', { exact: true }).click(); await page.getByText('报告正文 · external · 1 条记录', { exact: true }).click();
     await expect(page.locator('.context-evidence-records')).toContainText('record-01'); await expect(page.locator('.context-evidence-records')).toContainText('版本 2');
     await page.getByText('实际查询条件与返回内容', { exact: true }).click(); await expect(page.locator('.context-evidence pre')).toContainText('当次查询保存的资料正文');
@@ -150,7 +150,7 @@ test('late prepared conversation reads preserve a newer inbox selection and the 
       expect(received.statusCode).toBe(202);
     }
     await expect.poll(() => env.store!.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
-    await login(page); await page.getByRole('button', { name: '收到的信息', exact: true }).click();
+    await login(page); await page.getByRole('button', { name: '工作待办', exact: true }).click();
     await page.getByRole('button', { name: /接续原信息/ }).click();
     await page.getByLabel('处理位置', { exact: true }).selectOption(env.task.id);
     await page.getByLabel('问题或工作要求').fill('保留原信息的后续问题');
@@ -193,14 +193,14 @@ test('rules disclose safe query systems and restricted job detail keeps only sta
     await expect.poll(() => env.store!.listJobs()[0]?.status).toBe('succeeded');
     const job = env.store!.listJobs()[0]!;
     await page.route(`**/api/information/jobs/${job.id}`, route => route.fulfill({ json: { id: job.id, kind: 'preprocess', sourceId: job.sourceId, eventId: job.eventId, status: 'succeeded', revision: job.revision, createdAt: job.createdAt, endedAt: job.endedAt, contentRestricted: true } }));
-    await login(page); await page.getByRole('button', { name: '信息处理中心', exact: true }).click();
+    await login(page); await page.getByRole('button', { name: '工作总览', exact: true }).click();
     await page.getByRole('button', { name: '处理与投递规则', exact: true }).click(); await page.getByRole('button', { name: /验证处理规则/ }).click();
     await expect(page.getByText('允许查询的系统：业务资料系统')).toBeVisible();
     await expect(page.getByText('展示归属只用于分类，不限定可能涉及的任务，也不扩大查询权限。')).toBeVisible();
     brokenProfile = true; await page.reload();
     await expect(page.getByRole('alert')).toContainText('此处理方案暂不可用');
     await expect(page.getByRole('button', { name: '保存规则', exact: true })).toBeDisabled();
-    await expect(page.getByRole('button', { name: '后台作业', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '处理运行', exact: true })).toBeVisible();
     await page.goto(`/information?tab=jobs&id=${job.id}`);
     const detail = page.getByRole('complementary', { name: '后台作业详情' });
     await expect(detail).toContainText('无该资料范围访问权限'); await expect(detail).toContainText('执行完成');

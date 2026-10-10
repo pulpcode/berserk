@@ -224,3 +224,35 @@ it('backs up old data intact before clean initialization and never overwrites a 
   expect(()=>execFileSync(process.execPath,args,{stdio:'pipe'})).toThrow();
   expect(await readFile(join(backup,'sessions','old.jsonl'),'utf8')).toBe('exact old history\n');
 });
+
+describe('authorized workbench and public overview', () => {
+  it('keeps overview explicit and read-only, with filtered counts and no private payload', async () => {
+    const {app,lab,fake} = await setup();
+    const a = await login(app,'a'), b = await login(app,'b'), c = await login(app,'c');
+    expect(a.auth.identity?.viewWorkOverview).toBe(false);
+    expect((await a.call('/api/work-overview/items')).statusCode).toBe(403);
+    const task = (await a.call('/api/tasks',input())).json<TaskSpace>();
+    const workspace = (await a.call(`/api/tasks/${task.id}/workspace`,{})).json();
+    const prepared = (await a.call('/api/work-items/prepare',{clientActionId:randomUUID(),kind:'assign',taskSpaceId:task.id,payload:{workspaceId:workspace.id,assigneeSeatId:'b',title:'共享摘要',goal:'PRIVATE_GOAL',inputPaths:[]}})).json();
+    const committed = (await a.call(`/api/work-actions/${prepared.operationId}/commit`,{confirm:true})).json();
+    const before = lab.workspaces.listAll().length;
+    expect((await b.call('/api/workbench/items')).json()).toMatchObject({total:1,counts:{actionable:1,following:0,done:0,all:1},sections:{work:'available',information:'unavailable',delivery_review:'unavailable'},items:[{id:committed.workItemId,label:'待签收'}]});
+    expect((await a.call('/api/workbench/items?bucket=following')).json().total).toBe(1);
+    expect((await c.call('/api/workbench/items?bucket=all')).json().total).toBe(0);
+    expect((await b.call('/api/workbench/items?search=PRIVATE_GOAL')).json().total).toBe(0);
+    expect((await b.call(`/api/workbench/items?taskId=${randomUUID()}`)).json().total).toBe(0);
+    lab.access!.db.prepare('UPDATE seats SET view_work_overview=1 WHERE id=?').run('c');
+    const overview = await c.call('/api/work-overview/items');
+    expect(overview.statusCode,overview.body).toBe(200);
+    expect(overview.json()).toMatchObject({total:1,items:[{id:committed.workItemId,participant:false,submissionCount:0,taskTitle:task.title}]});
+    for (const field of ['PRIVATE_GOAL','inputFileIds','sessionIds','submissions','goal']) expect(overview.body).not.toContain(field);
+    expect((await c.call(`/api/work-overview/items/${committed.workItemId}`)).json().id).toBe(committed.workItemId);
+    expect((await c.call(`/api/work-items/${committed.workItemId}`)).statusCode).toBe(404);
+    expect((await c.call('/api/work-items/prepare',{clientActionId:randomUUID(),kind:'claim',workItemId:committed.workItemId,expectedRevision:1,payload:{}})).statusCode).toBe(404);
+    expect((await c.call('/api/work-overview/items?seatId=c')).json().total).toBe(0);
+    expect((await c.call('/api/work-overview/items?search=PRIVATE_GOAL')).json().total).toBe(0);
+    expect(lab.workspaces.listAll()).toHaveLength(before); expect(fake.calls).toEqual([]);
+    lab.access!.db.prepare('UPDATE seats SET view_work_overview=0 WHERE id=?').run('c');
+    expect((await c.call(`/api/work-overview/items/${committed.workItemId}`)).statusCode).toBe(403);
+  });
+});

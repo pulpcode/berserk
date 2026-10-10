@@ -55,7 +55,11 @@ export interface BackgroundJob {
   model?: string; modelSettingsVersion?: string; result?: BackgroundResultRef; usage?: UsageSummary;
   error?: { code: string; message: string };
 }
+export interface InboxHandling { deliveryId: string; state: 'pending' | 'completed' | 'legacy'; revision: number; updatedAt: string; updatedByUserId?: string }
+export interface InboxHandlingResult { handling: InboxHandling; receipt?: InboxHandling }
 export interface BackgroundDelivery {
+  /** Read projection, never persisted into delivery JSON. */
+  handling?: InboxHandling;
   id: string; eventId: string; jobId: string; sourceId: string; recipientSeatId: string;
   status: 'pending' | 'delivered' | 'failed'; revision: number;
   createdAt: string; updatedAt: string; deliveredAt?: string; error?: { code: string; message: string };
@@ -79,7 +83,7 @@ export interface BackgroundAnalysisSummary {
   status: 'preparing' | 'conversation_ready' | BackgroundJobStatus;
   createdAt: string; endedAt?: string; jobId?: string; sessionId?: string;
 }
-export interface InboxItem { sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob }
+export interface InboxItem { handling: InboxHandling; sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob }
 export interface InboxDetail extends InboxItem { queryMessages?: PublicMessage[]; profileName?: string; text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[]; taskLinks?: TaskLinksView }
 export interface BackgroundAnalysisInput {
   clientActionId: string; taskSpaceId: string; goal: string;
@@ -88,7 +92,8 @@ export interface BackgroundAnalysisInput {
 }
 export interface BackgroundAction {
   id: string; userId: string; seatId: string; clientActionId: string;
-  kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule';
+  kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule' | 'inbox_handle';
+  handling?: InboxHandling;
   inputHash: string; status: 'preparing' | 'completed'; revision: number; createdAt: string; updatedAt: string;
   eventId?: string; deliveryId?: string; taskSpaceId?: string; workspaceId?: string;
   origin?: BackgroundAnalysisOrigin;

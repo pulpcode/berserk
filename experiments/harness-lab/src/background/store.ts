@@ -2,7 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { Identity } from '../contracts/access.js';
 import type { TaskAssessment, TaskSuggestionCreation } from '../contracts/task-information.js';
-import type { BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
+import type { InboxHandling, BackgroundAction, BackgroundControl, BackgroundDelivery, BackgroundEvent, BackgroundJob, BackgroundJobStatus, BackgroundPage, BackgroundPhase, BackgroundRuleSnapshot, InformationPermission, InformationRule, InformationRuleInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
@@ -77,15 +77,16 @@ function normalizeRule(input: InformationRuleInput): InformationRuleInput {
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
     const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if (version === 3 || version === 4) {
+    if (version === 3 || version === 4 || version === 6) {
       const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
       if (tables.some(table => !actual.has(table))) throw stateError();
-      if (version === 4 && !actual.has('information_task_overrides')) throw stateError();
-      this.validateIntegrity(version === 4);
+      if (version >= 4 && !actual.has('information_task_overrides')) throw stateError();
+      this.validateIntegrity(version >= 4);
       if (version === 3) this.upgradeTaskLinks();
+      if (version < 6) this.upgradeHandling(); else this.validateHandling();
       return;
     }
-    if (version !== 2) throw stateError();
+    if (version !== 2 && version !== 5) throw stateError();
     this.transaction(() => {
       db.exec(`
         CREATE TABLE background_events(id TEXT PRIMARY KEY, source_id TEXT NOT NULL, message_id TEXT NOT NULL, payload_hash TEXT NOT NULL, received_at TEXT NOT NULL, initial_job_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)), UNIQUE(source_id,message_id));
@@ -103,6 +104,53 @@ export class BackgroundStore {
       `);
     });
     this.upgradeTaskLinks();
+    this.upgradeHandling();
+  }
+
+  private upgradeHandling() {
+    this.transaction(() => {
+      if (!this.db.prepare('PRAGMA table_info(seats)').all().some(row => row.name === 'view_work_overview')) this.db.exec('ALTER TABLE seats ADD COLUMN view_work_overview INTEGER NOT NULL DEFAULT 0 CHECK(view_work_overview IN (0,1))');
+      this.db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
+        INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';
+        PRAGMA user_version=6;`);
+      this.validateHandling();
+    });
+  }
+  private validateHandling() {
+    if (!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='inbox_handling'").get()) throw stateError();
+    if (this.db.prepare("SELECT 1 FROM background_deliveries d LEFT JOIN inbox_handling h ON h.delivery_id=d.id WHERE (d.status='delivered' AND h.delivery_id IS NULL) OR (d.status!='delivered' AND h.delivery_id IS NOT NULL) LIMIT 1").get()) throw stateError();
+    for (const row of this.db.prepare('SELECT delivery_id FROM inbox_handling').all()) this.handling(String(row.delivery_id));
+    if (this.db.prepare('PRAGMA foreign_key_check').all().length) throw stateError();
+    for (const action of this.listActions().filter(item => item.kind === 'inbox_handle')) {
+      const delivery = action.deliveryId ? this.getDelivery(action.deliveryId) : undefined;
+      const receipt = action.handling;
+      if (!delivery || delivery.recipientSeatId !== action.seatId || !receipt || receipt.deliveryId !== delivery.id || !['pending','completed'].includes(receipt.state) || !Number.isSafeInteger(receipt.revision) || receipt.revision < 2 || receipt.updatedByUserId !== action.userId || !Number.isFinite(Date.parse(receipt.updatedAt)) || action.inputHash !== backgroundHash([delivery.id,receipt.state,receipt.revision-1]) || action.status !== 'completed') throw stateError();
+    }
+  }
+  handling(id: string): InboxHandling {
+    const row = this.db.prepare('SELECT * FROM inbox_handling WHERE delivery_id=?').get(id);
+    if (!row || (row.updated_by_user_id !== null && (typeof row.updated_by_user_id !== 'string' || !UUID.test(row.updated_by_user_id))) || !['pending','completed','legacy'].includes(String(row.state)) || !Number.isSafeInteger(row.revision) || Number(row.revision) < 1 || !Number.isFinite(Date.parse(String(row.updated_at)))) throw stateError();
+    return {deliveryId:id,state:row.state as InboxHandling['state'],revision:Number(row.revision),updatedAt:String(row.updated_at),...(row.updated_by_user_id ? {updatedByUserId:String(row.updated_by_user_id)} : {})};
+  }
+  handleInbox(actor: Identity, id: string, input: {state:'pending'|'completed';revision:number;clientActionId:string}): InboxHandling {
+    if (!['pending','completed'].includes(input.state) || !Number.isSafeInteger(input.revision) || input.revision < 1 || !UUID.test(input.clientActionId)) throw new RequestError('INVALID_INPUT','处理参数无效。');
+    return this.transaction(() => {
+      const delivery = this.getDelivery(id);
+      if (delivery.recipientSeatId !== actor.seatId || delivery.status !== 'delivered') throw missing();
+      const inputHash = backgroundHash([id,input.state,input.revision]);
+      const previous = this.findAction(actor.userId,input.clientActionId);
+      if (previous) {
+        this.assertSameAction(previous,{userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'inbox_handle',inputHash});
+        if (!previous.handling) throw stateError();
+        return previous.handling;
+      }
+      const current = this.handling(id);
+      if (current.revision !== input.revision) throw conflict('处理状态已变化，请重新读取后确认。');
+      const handling: InboxHandling = {deliveryId:id,state:input.state,revision:current.revision+1,updatedAt:now(),updatedByUserId:actor.userId};
+      this.db.prepare('UPDATE inbox_handling SET state=?,revision=?,updated_at=?,updated_by_user_id=? WHERE delivery_id=?').run(handling.state,handling.revision,handling.updatedAt,actor.userId,id);
+      this.insertCompletedAction({userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'inbox_handle',inputHash,deliveryId:id,handling});
+      return handling;
+    });
   }
 
   private upgradeTaskLinks() {
@@ -298,7 +346,9 @@ export class BackgroundStore {
       if (delivery.revision !== revision || (status === 'pending' && delivery.status !== 'failed')) throw conflict();
       const time = now();
       const next = {...delivery, status, error, updatedAt: time, revision: delivery.revision + 1, ...(status === 'delivered' ? {deliveredAt: time} : {})};
-      this.db.prepare('UPDATE background_deliveries SET status=?,data=? WHERE id=?').run(status, JSON.stringify(next), id); return next;
+      this.db.prepare('UPDATE background_deliveries SET status=?,data=? WHERE id=?').run(status, JSON.stringify(next), id);
+      if (status === 'delivered') this.db.prepare("INSERT INTO inbox_handling VALUES(?,'pending',1,?,NULL) ON CONFLICT(delivery_id) DO NOTHING").run(id,time);
+      return next;
     });
   }
 

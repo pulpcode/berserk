@@ -1,6 +1,6 @@
 import { useApi } from './api';
 import { useState } from 'react';
-import { Activity, ArrowUpRight, ChevronDown, CircleAlert, ClipboardPlus, Folder, FolderPlus, FileText, MessageSquare, Plus } from 'lucide-react';
+import { Activity, ArrowUpRight, ChevronDown, ClipboardPlus, Folder, FolderPlus, LoaderCircle, FileText, MessageSquare, Plus } from 'lucide-react';
 import type { SessionActivity, Workspace } from '../contracts/index';
 
 export function activityStatus(session: SessionActivity) {
@@ -31,17 +31,16 @@ export function activityStatus(session: SessionActivity) {
 }
 
 function needsAttention(session: SessionActivity, unread: Record<string, boolean>) {
-  return Boolean(session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation' || session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted')) || unread[session.id]);
+  return Boolean((session.active?.status !== 'stopping' && (session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation')) || session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted')) || unread[session.id]);
 }
 
 function Status({ session, unread = false, id }: { session: SessionActivity; unread?: boolean; id?: string }) {
-  const failed = !session.active && !session.backgroundJob && (session.recoveryWarning || (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'));
-  const label = activityStatus(session);
-  if (!label) return unread ? <span id={id} className="unread-dot" role="img" aria-label="有新回复未读" title="有新回复未读" /> : null;
-  return <span id={id} className={`activity-status${session.active || session.backgroundJob ? ' running' : failed ? ' attention' : ''}`}>
-    {session.active || session.backgroundJob ? <span className="status-dot" /> : failed ? <CircleAlert size={12} aria-hidden="true" /> : null}
-    <span>{label}</span>{unread && <span className="unread-dot" role="img" aria-label="有新回复未读" title="有新回复未读" />}
-  </span>;
+  const waiting = session.active?.status !== 'stopping' && (session.active?.phase === 'waiting_answer' || session.active?.phase === 'waiting_confirmation');
+  const failed = !session.active && !session.backgroundJob && (session.recoveryWarning || session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted');
+  const running = Boolean(session.active || session.backgroundJob);
+  const label = waiting || failed || running ? activityStatus(session) : unread ? '有新回复未读' : '';
+  if (!label) return null;
+  return <span id={id} className={`conversation-indicator${waiting ? ' waiting' : failed ? ' failed' : running ? ' running' : ' unread'}`} role="img" aria-label={label} title={label}>{running && !waiting ? <LoaderCircle size={14} aria-hidden="true" /> : <span />}</span>;
 }
 
 interface NavigationProps {
@@ -64,21 +63,14 @@ interface NavigationProps {
   createSession: (workspaceId: string) => void;
   enterWorkspace: (id: string) => void;
   selectSession: (id: string) => void;
-  showActivity: () => void;
+  showActivity?: () => void;
 }
 
-export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,showTask,showInformation,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession, showActivity }: NavigationProps) {
+export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,showTask,showInformation,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
-  const running = activities.filter(session => session.active || session.backgroundJob).length;
-  const fresh = activities.filter(session => unread[session.id]).length;
-  const errors = activities.filter(session => session.recoveryWarning || (!session.active && !session.backgroundJob && (session.lastResult?.status === 'failed' || session.lastResult?.status === 'interrupted'))).length;
   return <>
-    <button className={`activity-entry${activityView ? ' selected' : ''}`} onClick={showActivity} aria-current={activityView ? 'page' : undefined} aria-label="全部动态" title="全部动态" aria-describedby={domId('activity-counts')}>
-      <Activity size={17} aria-hidden="true" /><span>全部动态</span><ArrowUpRight size={14} aria-hidden="true" />
-    </button>
-    <p id={domId('activity-counts')} className="activity-counts" role="status" aria-live="polite" aria-atomic="true">{running} 个处理中 · {fresh} 个新回复 · {errors} 个异常</p>
     <nav className="workspace-groups" aria-label="会话列表">
       {loading && !workspaces.length && <p className="sidebar-empty">正在加载项目…</p>}
       {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=>{
@@ -110,7 +102,7 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspa
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">
             {sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
-              <span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span>{!activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>{activityStatus(session) && <Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} />}</span>
+              <span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span><Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} /></span></span>
             </button>) : <p className="sidebar-empty">还没有对话</p>}
           </div>
         </section>;

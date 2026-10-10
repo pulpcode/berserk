@@ -302,9 +302,9 @@ test('SSE question receives attention without unread dot or animation; mobile co
   await page.getByRole('textbox', { name: '发送消息' }).fill('提问'); await page.getByRole('button', { name: '发送消息', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Agent 提问' })).toHaveCount(1);
   await expect(page.locator('.thinking')).toHaveCount(0); await expect(page.getByLabel('有新回复未读')).toHaveCount(0);
-  await page.getByRole('button', { name: '全部动态', exact: true }).click(); await page.getByRole('button', { name: '需关注', exact: true }).click();
-  await expect(page.getByRole('button', { name: '打开会话：会话 A' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '打开会话：会话 B' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '待回答' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '会话 A', exact: true })).toHaveText('会话 A');
+  await expect(page.getByRole('button', { name: '会话 B', exact: true }).getByRole('img')).toHaveCount(0);
   a.interactions = [confirmation()]; a.active = { requestId: 'r1', status: 'responding', phase: 'waiting_confirmation' };
   await page.setViewportSize({ width: 375, height: 812 }); await page.reload();
   await expect(page.getByRole('region', { name: '操作确认' })).toBeVisible();

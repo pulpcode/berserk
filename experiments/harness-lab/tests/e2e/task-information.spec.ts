@@ -58,7 +58,7 @@ async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], ext
 async function login(page: Page, name: string) {
   await page.goto('/'); await page.getByLabel('账号', { exact: true }).fill(name); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '登录', exact: true })).toHaveCount(0); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
 }
-async function inbox(page: Page) { await page.getByRole('button', { name: '收到的信息', exact: true }).click(); await page.locator('.information-inbox .information-list').getByRole('button', { name: /道路通行信息/ }).click(); }
+async function inbox(page: Page) { await page.getByRole('button', { name: '工作待办', exact: true }).click(); await page.locator('.workbench-list').getByRole('button', { name: /道路通行信息/ }).click(); }
 
 function assess(env: Awaited<ReturnType<typeof setup>>, input: Pick<TaskAssessment, 'items'|'newTaskSuggestion'|'emptyReason'>) {
   const job = env.store.listJobs().find(item=>item.kind==='preprocess')!;
@@ -101,7 +101,7 @@ test('multi-task information is visible without workspace creation; task continu
     await expect(page.locator('.workspace-header').getByRole('button',{name:'项目资料',exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await expect(page.locator('.task-information').getByLabel('问题或工作要求')).toHaveValue('');
-    await page.locator('.session-item.selected').click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toHaveValue('对话里的下一条草稿');
+    await page.locator('.session-item').first().click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toHaveValue('对话里的下一条草稿');
     await inbox(page);await expect(page.getByRole('textbox',{name:'问题或工作要求',exact:true})).toHaveValue('收件入口独立草稿');
     await page.screenshot({path:'test-results/task-information-desktop.png',fullPage:true});
   } finally { await env.close(); }
