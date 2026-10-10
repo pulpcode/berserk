@@ -421,3 +421,34 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 15: 任务内方案修订验证实施与线上准备
+
+**Date**: 2026-10-10
+**Task**: 任务内方案修订验证实施与线上准备
+**Branch**: `main`
+
+### Summary
+
+新增恢复事件、隔离试验驱动和测试材料；新版接管4315，E1/E2真实分析成功，人工审批与完整方案修订验收待用户执行。
+
+### Main Changes
+
+- 未新增产品流程机制；保留原线上数据和独立试验证据。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] typecheck/lint/build通过；全量首轮672项通过、1项新测试断言失败、新驱动2项通过；浏览器152通过2超时，access单独6项复测通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户总体席批准两条补充投递，分派至筹划席；第一稿提交后再发送E4，不提前推进。

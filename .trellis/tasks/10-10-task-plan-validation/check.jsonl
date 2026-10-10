@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "REST 模拟资料和查询契约"}
+{"file": ".trellis/spec/backend/workbench.md", "reason": "统一待办与合并后的状态和权限"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "文件交接与人工确认"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "任务信息关联与授权"}
+{"file": ".trellis/spec/backend/files-execution.md", "reason": "真实 Docker 文件执行"}
+{"file": ".trellis/spec/backend/seat-delivery.md", "reason": "固定投递与总体席审批"}

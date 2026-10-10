@@ -95,6 +95,47 @@ describe('independent mock HTTP contracts', () => {
     expect((await service.query('information_search', {systemId: 'intel', objectRefs: [road, ref('road', 'other')], areaIds: ['zone-west'], query: '  临时受限  '}, seat)).data).toMatchObject({items: [{revision: 2}]});
     expect(mock.requests.some(r => /objectRefs=/.test(r.path))).toBe(true);
   });
+  it('adds recovery through HTTP with immutable history and unchanged situation facts', async () => {
+    const {mock, service, get} = await setup();
+    mock.advance('intel'); mock.advance('situation');
+    const previous = await get('/intel/reports/report-west-01?revision=2');
+    const situation = await get('/situation/objects');
+    const before = mock.snapshot();
+    const page = await get('/intel/reports?reportId=report-west-01&limit=1');
+    const events = ['E1', 'E2', 'E3'].map(name => mock.event(name as 'E1' | 'E2' | 'E3'));
+    mock.advance('recovery');
+    const latest = data<InformationDetail>(await service.query('information_read', {systemId: 'intel', reportId: 'report-west-01'}, seat));
+    expect(latest).toMatchObject({asOf: '2026-10-01T09:35:00+08:00', item: {revision: 3,
+      observedAt: '2026-10-01T09:35:00+08:00', publishedAt: '2026-10-01T09:35:00+08:00',
+      validTime: {from: '2026-10-01T09:35:00+08:00', to: '2026-10-01T11:00:00+08:00'}}});
+    expect(latest.item.content).toContain('限制已解除');
+    expect(latest.item.content).toContain('修订 2');
+    expect((await get('/intel/reports/report-west-01?revision=2')).body.item).toEqual(previous.body.item);
+    expect((await get('/intel/reports/report-west-01?revision=1')).body.item).toEqual(before.reports[0]);
+    expect((await get('/intel/reports?reportId=report-west-01')).body.items.map((r: {revision: number}) => r.revision)).toEqual([1, 2, 3]);
+    expect(await get('/situation/objects')).toEqual(situation);
+    expect(mock.snapshot().changes).toEqual(before.changes);
+    expect((await get(`/intel/reports?reportId=report-west-01&limit=1&cursor=${page.body.nextCursor}`)).status).toBe(409);
+    const recoveryPage = await get('/intel/reports?reportId=report-west-01&limit=1');
+    const recovered = mock.snapshot(); mock.advance('recovery');
+    expect(mock.snapshot()).toEqual(recovered);
+    expect((await get(`/intel/reports?reportId=report-west-01&limit=1&cursor=${recoveryPage.body.nextCursor}`)).status).toBe(200);
+    expect(['E1', 'E2', 'E3'].map(name => mock.event(name as 'E1' | 'E2' | 'E3'))).toEqual(events);
+    expect(mock.event('E4')).toMatchObject({sourceMessageId: 'intel-msg-0003', subjectId: 'report-west-01', occurredAt: latest.item.publishedAt});
+    expect(mock.event('E4').text).toContain('修订 3');
+    expect(mock.event('E4').text).not.toContain('限制已解除');
+    expect(new Set([...events, mock.event('E4')].map(event => event.sourceMessageId)).size).toBe(4);
+    mock.reset(); expect((await get('/intel/reports/report-west-01?revision=3')).status).toBe(404);
+  });
+  it('rejects recovery without both source prerequisites or after contract without changing facts', async () => {
+    const {mock} = await setup();
+    for (const stages of [[], ['intel'], ['situation'], ['intel', 'contract']] as const) {
+      mock.reset(); for (const stage of stages) mock.advance(stage);
+      const before = mock.snapshot();
+      expect(() => mock.advance('recovery')).toThrow('恢复阶段要求');
+      expect(mock.snapshot()).toEqual(before);
+    }
+  });
   it('filters observed time using half-open endpoints and reports unknown times instead of treating them as matches', async () => {
     const {service, mock} = await setup(); mock.advance('intel'); mock.advance('contract');
     expect((await service.query('information_search', {systemId: 'intel', from: '2026-10-01T09:00:00+08:00', to: '2026-10-01T09:18:00+08:00'}, seat)).data).toMatchObject({items: [], timeUnknownCount: 1});

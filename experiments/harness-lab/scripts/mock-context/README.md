@@ -32,3 +32,12 @@ npx tsx scripts/mock-context/control.ts requests
 变化游标含实例代次，须读取实际 `changeCursor/nextAfter` 或 event E2 的内容，不要硬编码文档中的 seq-100/101。reset 后旧变化游标失效；推进/重置后旧分页游标失效。`requests` 只记录方法、路径和 HTTP 状态，不记录认证头。
 
 测试可导入 `createMockContextServer({token})`，调用 `listen()` 获得真实 HTTP 地址；控制函数仅由测试进程持有。退出后调用 `close()`。
+
+方案修订验证使用独立实例，在 `advance intel` 和 `advance situation` 后，按验证进度再执行：
+
+```sh
+npx tsx scripts/mock-context/control.ts advance recovery
+npx tsx scripts/mock-context/control.ts event E4
+```
+
+`recovery` 增加 `report-west-01` 修订 3：09:35 观测并发布，确认道路限制提前解除。保留修订 1/2，最新查询和特情 `asOf` 推进至 09:35；车辆仍为修订 2、2 辆，态势游标和道路对象不变。重复推进不追加修订。缺少 intel/situation 前置阶段或已进入 contract 的车辆修订 3 时，推进明确失败且不改变任何事实。E4 使用独立消息 ID `intel-msg-0003`，正文需查询报告；E1/E2/E3 含义保持原样。`event` 本身不检查或推进事实阶段，先推进事实再发送通知。

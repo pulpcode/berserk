@@ -1,0 +1,41 @@
+{
+  "id": "task-plan-validation",
+  "name": "task-plan-validation",
+  "title": "任务内综合研判与方案修订验证",
+  "description": "基于已合并的工作待办和工作总览，验证多条信息、任务目标、方案文件与席位交接的完整流程；按实际缺口做最小修复。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "task-plan-validation",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-10",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/10-10-task-plan-validation/review.md",
+    ".trellis/tasks/10-10-task-plan-validation/prd.md",
+    ".trellis/tasks/10-10-task-plan-validation/design.md",
+    ".trellis/tasks/10-10-task-plan-validation/implement.md",
+    ".trellis/tasks/10-10-task-plan-validation/research/current-state.md"
+  ],
+  "notes": "用户于 2026-10-10 批准实施，随后批准全面更新线上服务以节省占用；保留旧数据与回退文件，使用独立验证数据。",
+  "meta": {
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
+    "baselineCommit": "f40bf3a",
+    "desktopOnly": true,
+    "validationFirst": true,
+    "contextManifestsCurated": true,
+    "acceptanceStatus": "awaiting-manual-end-to-end-validation"
+  }
+}

@@ -16,6 +16,11 @@ export function updatedReport(): InformationReport {
     content: '本报告更新此前观测：西区通道在 09:20 至 10:10 临时受限。此前截至 08:50 的记录未报告此限制。',
     observedAt: at('09:18'), publishedAt: at('09:20'), validTime: {from: at('09:20'), to: at('10:10')}};
 }
+export function recoveryReport(): InformationReport {
+  return {...reports()[0], revision: 3, title: '西区通道限制解除', summary: '09:35 新观测确认西区通道限制已提前解除。',
+    content: '09:35 新观测确认西区通道限制已解除，早于修订 2 预计的 10:10 结束时间。本修订修正修订 2 对 09:35 之后限制持续的预期，不否定此前已发生的限制；仅描述本次道路观测。',
+    observedAt: at('09:35'), publishedAt: at('09:35'), validTime: {from: at('09:35'), to: at('11:00')}};
+}
 export function unknownReport(): InformationReport {
   return {reportId: 'report-unknown-01', subjectId: 'report-unknown-01', revision: 1,
     title: '待核实通道信息', summary: '西区一处通道临时受限，对象编号有待核实。',

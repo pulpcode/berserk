@@ -1,5 +1,6 @@
 import { chmod, unlink } from 'node:fs/promises';
 import { createServer } from 'node:net';
+import { RequestError } from '../../src/contracts/errors.js';
 import { createMockContextServer, type MockEventName, type MockStage } from './server.js';
 
 const token = process.env.MOCK_CONTEXT_API_TOKEN;
@@ -22,14 +23,14 @@ const control = createServer(socket => {
       const [action, value, enabled] = args as string[];
       let result: unknown = {ok: true};
       if (action === 'reset') mock.reset();
-      else if (action === 'advance' && ['intel', 'situation', 'unknown', 'contract'].includes(value)) mock.advance(value as MockStage);
+      else if (action === 'advance' && ['intel', 'situation', 'unknown', 'contract', 'recovery'].includes(value)) mock.advance(value as MockStage);
       else if (action === 'unavailable' && ['intel', 'situation'].includes(value) && ['on', 'off'].includes(enabled)) mock.setUnavailable(value as 'intel' | 'situation', enabled === 'on');
-      else if (action === 'event' && ['E1', 'E2', 'E3'].includes(value)) result = mock.event(value as MockEventName);
+      else if (action === 'event' && ['E1', 'E2', 'E3', 'E4'].includes(value)) result = mock.event(value as MockEventName);
       else if (action === 'requests') result = mock.requests;
       else if (action === 'status') result = {url, changeCursor: mock.snapshot().changeCursor};
       else throw new Error('无效控制指令。');
       socket.end(`${JSON.stringify(result)}\n`);
-    } catch { socket.end(`${JSON.stringify({error: '模拟控制指令无效。'})}\n`); }
+    } catch (error) { socket.end(`${JSON.stringify({error: error instanceof RequestError ? error.message : '模拟控制指令无效。'})}\n`); }
   });
 });
 if (socketPath) {

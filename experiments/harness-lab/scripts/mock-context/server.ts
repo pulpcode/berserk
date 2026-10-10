@@ -4,10 +4,10 @@ import type { AddressInfo } from 'node:net';
 import { RequestError } from '../../src/contracts/errors.js';
 import type { ContextFilters, ContextRef, InformationReport, SituationChange, SituationQueryParams } from '../../src/contracts/context.js';
 import { normalizeContextQuery } from '../../src/context/validation.js';
-import { at, objects, reports, updatedReport, unknownReport, vehicleRef } from './fixtures.js';
+import { at, objects, reports, recoveryReport, updatedReport, unknownReport, vehicleRef } from './fixtures.js';
 
-export type MockStage = 'intel' | 'situation' | 'unknown' | 'contract';
-export type MockEventName = 'E1' | 'E2' | 'E3';
+export type MockStage = 'intel' | 'situation' | 'unknown' | 'contract' | 'recovery';
+export type MockEventName = 'E1' | 'E2' | 'E3' | 'E4';
 export interface MockNotification {sourceMessageId: string; title: string; text: string; subjectId: string; occurredAt: string}
 const sameRef = (a: ContextRef, b: ContextRef) => a.systemId === b.systemId && a.objectType === b.objectType && a.objectId === b.objectId;
 const fail = (code: string, message: string, status = 400) => new RequestError(code, message, status);
@@ -46,6 +46,14 @@ export function createMockContextServer(options: {token: string}) {
   function advance(stage: MockStage) {
     if (stage === 'intel') {
       if (!reportData.some(r => r.reportId === 'report-west-01' && r.revision === 2)) { reportData.push(updatedReport()); intelGeneration++; if (intelAsOf < at('09:20')) intelAsOf = at('09:20'); }
+    } else if (stage === 'recovery') {
+      if (reportData.some(r => r.reportId === 'report-west-01' && r.revision === 3)) return;
+      const vehicles = objectData.find(item => sameRef(item.ref, vehicleRef));
+      if (!reportData.some(r => r.reportId === 'report-west-01' && r.revision === 2)
+        || vehicles?.revision !== 2 || !('availableCount' in vehicles.properties) || vehicles.properties.availableCount !== 2) {
+        throw fail('INVALID_STAGE', '恢复阶段要求先推进 intel 和 situation，且车辆仍为修订 2（2 辆）；不能用于 contract 阶段。');
+      }
+      reportData.push(recoveryReport()); intelGeneration++; intelAsOf = at('09:35');
     } else if (stage === 'unknown') {
       if (!reportData.some(r => r.reportId === 'report-unknown-01')) { reportData.push(unknownReport()); intelGeneration++; intelAsOf = at('09:35'); }
     } else if (stage === 'situation') {
@@ -66,6 +74,8 @@ export function createMockContextServer(options: {token: string}) {
       text: `对象 situation/resource/vehicles-west-01 的修订由 1 更新为 2，可用车辆由 4 辆变为 2 辆。变化游标从 ${changeCursor(100)} 推进至 ${changeCursor(101)}；请查询变化详情。`, subjectId: 'vehicles-west-01', occurredAt: at('09:30')};
     if (name === 'E3') return {sourceMessageId: 'intel-msg-0002', title: '待核实通道信息',
       text: '报告 report-unknown-01 修订 1 引用 situation/road/road-unknown-99，区域 zone-west，有效时间为 2026-10-01T09:35:00+08:00 至 2026-10-01T10:10:00+08:00。请查询报告正文。', subjectId: 'report-unknown-01', occurredAt: at('09:35')};
+    if (name === 'E4') return {sourceMessageId: 'intel-msg-0003', title: '西区通道报告再次更新',
+      text: '报告 report-west-01 更新至修订 3，观测及发布时间为 2026-10-01T09:35:00+08:00。关联对象 situation/road/road-west-01；请查询报告正文并比较历史修订。', subjectId: 'report-west-01', occurredAt: at('09:35')};
     throw fail('INVALID_ARGUMENT', '未知模拟通知。');
   }
   function page<T>(items: T[], params: ContextFilters, systemId: 'intel' | 'situation', path: string, timeUnknownCount = 0) {

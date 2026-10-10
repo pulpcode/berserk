@@ -35,7 +35,8 @@
     "mock:context": "tsx --env-file-if-exists=.env.local scripts/mock-context/main.ts",
     "mock:context:control": "tsx scripts/mock-context/control.ts",
     "probe:context": "tsx --env-file-if-exists=.env.local scripts/probe-context.ts",
-    "probe:recipients": "tsx --env-file-if-exists=.env.local scripts/probe-recipients.ts"
+    "probe:recipients": "tsx --env-file-if-exists=.env.local scripts/probe-recipients.ts",
+    "probe:task-plan": "tsx --env-file-if-exists=.env.local scripts/probe-task-plan.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
