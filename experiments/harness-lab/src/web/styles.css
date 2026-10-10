@@ -1035,3 +1035,12 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
   .continuation-options { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .continuation-actions button { flex: 1 1 auto; }
 }
+
+.delivery-candidate + .delivery-candidate { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+.delivery-candidate .resource-help { margin: 4px 0 10px; }
+.delivery-suggestions { padding-left: 20px; }
+.delivery-suggestions li + li { margin-top: 12px; }
+.delivery-suggestions p { margin: 4px 0; }
+
+.delivery-candidate > label:not(.information-check), .delivery-review-form details > label { display: flex; flex-direction: column; gap: 6px; }
+.delivery-candidate textarea, .delivery-review-form details textarea { width: 100%; min-height: 80px; padding: 10px; border: 1px solid var(--line); border-radius: var(--control-radius); resize: vertical; }

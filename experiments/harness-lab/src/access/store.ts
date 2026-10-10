@@ -26,9 +26,10 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3,4].includes(version)) {
+    if([2,3,4,5].includes(version)) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
+      this.ensureSeatResponsibilities(version);
       return;
     }
     if(version!==1)throw stateError();
@@ -40,9 +41,30 @@ export class AccessStore {
       CREATE TABLE IF NOT EXISTS task_spaces(id TEXT PRIMARY KEY, data TEXT NOT NULL CHECK(json_valid(data)));
       CREATE TABLE IF NOT EXISTS task_actions(user_id TEXT NOT NULL, action_id TEXT NOT NULL, input TEXT NOT NULL, task_id TEXT NOT NULL REFERENCES task_spaces(id), PRIMARY KEY(user_id,action_id));
       PRAGMA user_version=2; COMMIT;`);
+    this.ensureSeatResponsibilities(2);
+  }
+  private ensureSeatResponsibilities(version: number) {
+    const columns = new Set(this.db.prepare('PRAGMA table_info(seats)').all().map(row => String(row.name)));
+    if (version >= 5 && (!columns.has('responsibility') || !columns.has('responsibility_revision'))) throw stateError();
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      if (!columns.has('responsibility')) this.db.exec("ALTER TABLE seats ADD COLUMN responsibility TEXT NOT NULL DEFAULT ''");
+      if (!columns.has('responsibility_revision')) this.db.exec('ALTER TABLE seats ADD COLUMN responsibility_revision INTEGER NOT NULL DEFAULT 1');
+      this.db.exec('COMMIT');
+    } catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
   allSeatIds() { return this.db.prepare('SELECT id FROM seats').all().map(row=>String(row.id)); }
-  seats() { return this.db.prepare('SELECT s.id,s.name FROM seats s JOIN accounts a ON a.seat_id=s.id WHERE a.enabled=1').all() as unknown as Array<{id:string;name:string}>; }
+  seats() { return this.db.prepare('SELECT s.id,s.name,s.responsibility,s.responsibility_revision responsibilityRevision FROM seats s JOIN accounts a ON a.seat_id=s.id WHERE a.enabled=1').all() as unknown as Array<{id:string;name:string;responsibility:string;responsibilityRevision:number}>; }
+  updateSeat(seatId: string, input: {name?: string; responsibility: string}) {
+    const responsibility = input.responsibility.trim();
+    if (!responsibility || responsibility.length > 1000 || (input.name !== undefined && (!input.name.trim() || input.name.trim().length > 100))) throw new Error('请填写席位职责（1～1,000 字符）和有效名称（最多100字符）。');
+    const seat = this.db.prepare('SELECT name,responsibility,responsibility_revision FROM seats WHERE id=?').get(seatId);
+    if (!seat) throw new Error('席位不存在，请先开通账号。');
+    const name = input.name?.trim() ?? String(seat.name);
+    const revision = Number(seat.responsibility_revision) + Number(name !== seat.name || responsibility !== seat.responsibility);
+    this.db.prepare('UPDATE seats SET name=?,responsibility=?,responsibility_revision=? WHERE id=?').run(name,responsibility,revision,seatId);
+    return {id:seatId,name,responsibility,responsibilityRevision:revision};
+  }
   identity(id: string): Identity | undefined {
     const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
     return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings } as unknown as Identity : undefined;
@@ -65,7 +87,7 @@ export class AccessStore {
     const id = previous ? String(previous.id) : randomUUID();
     this.db.exec('BEGIN IMMEDIATE');
     try {
-      this.db.prepare('INSERT INTO seats VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings));
+      this.db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model,responsibility_revision=seats.responsibility_revision+CASE WHEN seats.name<>excluded.name THEN 1 ELSE 0 END').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings));
       this.db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1) ON CONFLICT(id) DO UPDATE SET display_name=excluded.display_name,salt=excluded.salt,password_hash=excluded.password_hash,enabled=1').run(id,input.username,input.displayName,input.seatId,salt,hash);
       this.db.prepare('DELETE FROM auth_sessions WHERE user_id=?').run(id); this.db.exec('COMMIT');
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }

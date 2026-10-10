@@ -3,7 +3,7 @@ import { Readable } from 'node:stream';
 import { authenticateSource } from '../background/config.js';
 import type { BackgroundService, IncomingInformation, InformationFilter } from '../background/service.js';
 import { page } from '../background/service.js';
-import type { BackgroundAnalysisInput, BackgroundJobStatus, InformationRuleInput } from '../contracts/background.js';
+import type { BackgroundAnalysisInput, BackgroundJobStatus, InformationRuleInput, DeliveryReviewDecisionInput } from '../contracts/background.js';
 import { RequestError } from '../contracts/errors.js';
 import { identityOf } from './auth.js';
 import { sendFile } from './file-response.js';
@@ -26,7 +26,7 @@ function filter(query:Query):InformationFilter {
   if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 200) throw new RequestError('INVALID_INPUT','分页参数无效。');
   return {...query,offset,limit};
 }
-const ruleFields = {name:{type:'string',minLength:1,maxLength:100},sourceId:id,profileId:id,recipientSeatIds:{type:'array',minItems:1,maxItems:100,uniqueItems:true,items:id},publicTaskId:uuid,enabled:{type:'boolean'}};
+const ruleFields = {name:{type:'string',minLength:1,maxLength:100},sourceId:id,profileId:id,recipientSeatIds:{type:'array',minItems:1,maxItems:100,uniqueItems:true,items:id},supplementaryDelivery:body({candidateSeatIds:{type:'array',minItems:1,maxItems:100,uniqueItems:true,items:id}}),publicTaskId:uuid,enabled:{type:'boolean'}};
 const ruleRequired = ['name','sourceId','profileId','recipientSeatIds','enabled'];
 
 export async function backgroundRoutes(app:FastifyInstance, background?:BackgroundService, env:NodeJS.ProcessEnv = process.env) {
@@ -67,6 +67,9 @@ export async function backgroundRoutes(app:FastifyInstance, background?:Backgrou
     return background.deliveries(actor,q);
   });
   app.post<{Params:{id:string};Body:{clientActionId:string}}>('/api/information/deliveries/:id/retry',{schema:{params:params(),querystring:empty,body:actionBody}},request => background.retryDelivery(identityOf(request),request.params.id,request.body.clientActionId));
+  app.get<{Querystring:Query}>('/api/information/delivery-reviews',{schema:{querystring:{...listQuery,properties:{...listQuery.properties,status:{enum:['pending','approved','declined']}}}}},request => background.deliveryReviews(identityOf(request),filter(request.query)));
+  app.get<{Params:{id:string}}>('/api/information/delivery-reviews/:id',{schema:{params:params(),querystring:empty}},request => background.deliveryReviewDetail(identityOf(request),request.params.id));
+  app.post<{Params:{id:string};Body:DeliveryReviewDecisionInput}>('/api/information/delivery-reviews/:id/decision',{schema:{params:params(),querystring:empty,body:body({clientActionId:uuid,revision:{type:'integer',minimum:1},decision:{enum:['approve','decline']},recipients:{type:'array',minItems:1,maxItems:100,items:body({seatId:id,reason:{type:'string',minLength:1,maxLength:1500}})},reason:{type:'string',minLength:1,maxLength:1500}},['clientActionId','revision','decision'])}},request => background.decideDeliveryReview(identityOf(request),request.params.id,request.body));
   app.get<{Querystring:Query}>('/api/information/rules',{schema:{querystring:{...listQuery,properties:{...listQuery.properties,clientActionId:uuid}}}},request => background.rules(identityOf(request),{...filter(request.query),clientActionId:request.query.clientActionId}));
   app.get<{Params:{id:string}}>('/api/information/rules/:id',{schema:{params:params(),querystring:empty}},request => {const rule=background.store.getRule(request.params.id); background.permission(identityOf(request),rule.sourceId); return rule;});
   app.post<{Body:InformationRuleInput & {clientActionId:string}}>('/api/information/rules',{schema:{querystring:empty,body:body({...ruleFields,clientActionId:uuid},[...ruleRequired,'clientActionId'])}},request => {const {clientActionId,...input}=request.body; return background.saveRule(identityOf(request),input,{clientActionId});});

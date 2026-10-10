@@ -6,7 +6,7 @@ Read when changing task assessment, information associations, task suggestions o
 
 ## 2. Signatures
 
-- Application SQLite schema v4 adds `information_task_overrides(event_id, task_id, job_id, data)` with a unique event/task pair. Upgrade v3 additively; keep account, handoff, background and native history data. All database owners must accept the same version.
+- The current application version is v5 (see [seat delivery](seat-delivery.md)); the v4 increment adds `information_task_overrides(event_id, task_id, job_id, data)` with a unique event/task pair. Upgrade v3 additively; keep account, handoff, background and native history data. All database owners must accept the same version.
 - `TaskLinkService.recordAssessment(jobId, input, observed, toolCallId, signal?)` binds model output to its actual preprocessing job and observed task revisions.
 - `TaskLinkService.list/detail/resolve/links/update/createFromSuggestion` serve all readers and mutations.
 - `GET /api/tasks/:taskId/information` accepts query/sourceId/offset/limit and returns `TaskInformationPage`: page items/count plus `sources: [{id,name}]` from the full authorized effective set before filtering/pagination. Detail and files require `jobId`.

@@ -28,7 +28,7 @@ async function setup() {
   const actors = {} as Record<'a' | 'b' | 'c', Identity>;
   for (const name of ['a', 'b', 'c'] as const) {
     const id = randomUUID();
-    db.prepare('INSERT INTO seats VALUES(?,?,?,?)').run(name, `席位 ${name}`, name === 'c' ? 0 : 1, 0);
+    db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run(name, `席位 ${name}`, name === 'c' ? 0 : 1, 0);
     db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(id, name, name, name, 'unused-test-salt', 'unused-test-hash');
     actors[name] = access.identity(id)!;
   }

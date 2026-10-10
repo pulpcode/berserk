@@ -2,8 +2,8 @@
   "id": "analysis-seat-routing",
   "name": "analysis-seat-routing",
   "title": "业务席位与补充投递审批",
-  "description": "梳理总体、情报、筹划、态势四席位职责；保留固定投递，同一 Pi 后台分析提出补充建议，由总体席批准后投递。本轮仅更新待审方案。",
-  "status": "planning",
+  "description": "梳理四席位职责，保留固定投递，同一 Pi 后台分析提出补充建议，由总体席批准后投递；本地实现与验证完成，已部署，待用户验收。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "analysis-seat-routing",
   "package": null,
@@ -26,25 +26,33 @@
     ".trellis/tasks/10-09-analysis-seat-routing/design.md",
     ".trellis/tasks/10-09-analysis-seat-routing/implement.md",
     ".trellis/tasks/10-09-analysis-seat-routing/acceptance.md",
-    ".trellis/tasks/10-09-analysis-seat-routing/research/current-state.md"
+    ".trellis/tasks/10-09-analysis-seat-routing/research/current-state.md",
+    ".trellis/tasks/10-09-analysis-seat-routing/research/validation.md",
+    ".trellis/tasks/10-09-analysis-seat-routing/research/validation-live.md",
+    ".trellis/tasks/10-09-analysis-seat-routing/server-test-guide.md"
   ],
-  "notes": "本轮仅设计文档；不激活开发，不修改产品代码、线上规则或历史数据。",
+  "notes": "设计基线提交 4fd9565；本期本地实现与验证完成，工作区代码快照已发布到腾讯服务器 4315，已准备真实分析结果和待总体席批准事项。原 A/B 及历史保留；实现、验证与部署文档随本轮中文提交一并保存。",
   "meta": {
-    "designStatus": "awaiting-review",
-    "implementationApproved": false,
-    "implementationComplete": false,
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
     "desktopOnly": true,
     "contextManifestsCurated": true,
-    "pendingProductDecisions": [
-      "四席位具体职责边界及通过管理脚本统一维护的方式",
-      "总体席审批页面、候选内调整及每作业一次决定的交互",
-      "新四席位与既有 A/B 身份并存，不隐式迁移私有数据"
-    ],
+    "pendingProductDecisions": [],
     "confirmedDirection": [
       "固定投递保持独立，补充建议经总体席批准后发送",
       "初步建立总体席（兼管理员席）、情报席、筹划席、态势席",
       "同一 Pi 作业开展分析和席位建议，不新增必经 Router 模型请求",
       "暂不进行架构基线对比，发现效果问题后再讨论"
-    ]
+    ],
+    "deployed": true,
+    "userAcceptance": "pending",
+    "deployment": {
+      "date": "2026-10-09",
+      "port": 4315,
+      "snapshot": "working-tree-20261009-seat-routing",
+      "sourceId": "seat-routing-demo",
+      "reviewId": "ead9311c-d69d-4685-ad2b-1ad5561d3803"
+    }
   }
 }

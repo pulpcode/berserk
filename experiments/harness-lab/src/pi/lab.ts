@@ -1,6 +1,7 @@
 import { contextTools } from './context-tools.js';
 import { taskAssessmentTool, taskInformationTools, type TaskInformationReader } from './task-information-tools.js';
-import type { RecordTaskAssessment } from '../background/executor.js';
+import { recipientSuggestionTool } from './recipient-tools.js';
+import type { RecordTaskAssessment, RecordRecipientSuggestion } from '../background/executor.js';
 import { ContextService } from '../context/service.js';
 import { TaskQueryService } from '../context/task-query.js';
 import type { ContextPrincipal } from '../contracts/context.js';
@@ -56,6 +57,7 @@ export interface PreprocessInput {
   tools: string[]; files: FileRef[];
   contextPrincipal?: Extract<ContextPrincipal, {kind: 'service'}>;
   recordTaskAssessment?: RecordTaskAssessment;
+  recordRecipientSuggestion?: RecordRecipientSuggestion;
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
 }
 export interface PreprocessReference { jobId: string; sessionId: string; directory: string }
@@ -394,6 +396,7 @@ export class PiLab {
     if (this.settingsUpdating) throw settingsBusy();
     if (this.serviceRecords.get(input.sessionId)?.active) throw new RequestError('SESSION_BUSY', '后台会话正在执行。', 409);
     if (!this.config.apiKey || !this.config.contextReady) throw new RequestError('MODEL_NOT_CONFIGURED', '请先配置模型及上下文容量。', 503);
+    if (input.tools.includes('information_suggest_recipients') && !input.recordRecipientSuggestion) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE', '补充建议记录服务不可用，未启动模型。', 503);
     if (input.tools.includes('information_record_task_assessment') && !input.recordTaskAssessment) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '任务判断记录服务不可用，未启动模型。', 503);
     for (const name of ['files', 'logs', 'sessions']) { await mkdir(join(directory, name), { recursive: true, mode: 0o700 }); await checkDirectory(join(directory, name)); }
     const manager = await this.prepareNativeSession(join(directory, 'sessions'), input.sessionId);
@@ -680,7 +683,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const assessment = !role && active.service?.recordTaskAssessment && active.service.tools.includes('information_record_task_assessment')
       ? [taskAssessmentTool(active.service.recordTaskAssessment, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest)] : [];
 
-    const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment,
+    const recipients = !role && active.service?.recordRecipientSuggestion && active.service.tools.includes('information_suggest_recipients')
+      ? [recipientSuggestionTool(active.service.recordRecipientSuggestion, active.controller, authorizeRequest)] : [];
+    const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients,
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {

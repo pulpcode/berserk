@@ -13,6 +13,7 @@ export interface BackgroundFile {
 }
 export interface InformationRuleInput {
   name: string; sourceId: string; profileId: string; recipientSeatIds: string[];
+  supplementaryDelivery?: {candidateSeatIds: string[]};
   publicTaskId?: string; enabled: boolean;
 }
 export interface InformationRule extends InformationRuleInput {
@@ -29,7 +30,36 @@ export interface BackgroundProfileSnapshot {
   skills?: SkillFile[];
   agents?: Array<{name: string; description: string; systemPrompt: string; tools: readonly string[]; hash: string}>;
 }
-export interface BackgroundRuleSnapshot { rule: InformationRule; profile: BackgroundProfileSnapshot }
+export interface RecipientCandidate {
+  id: string; name: string; responsibility: string; responsibilityRevision: number;
+}
+export type SeatResponsibilitySnapshot = RecipientCandidate;
+export interface RecipientSuggestionInput {
+  recipients: Array<{seatId: string; reason: string}>;
+  noAdditionalReason?: string;
+}
+export interface RecipientSuggestion extends RecipientSuggestionInput { toolCallId: string; recordedAt: string }
+export interface BackgroundRuleSnapshot {
+  rule: InformationRule; profile: BackgroundProfileSnapshot;
+  supplementaryDelivery?: {reviewerSeatId: string; candidates: RecipientCandidate[]};
+}
+export interface BackgroundDeliveryReview {
+  id: string; jobId: string; eventId: string; sourceId: string; reviewerSeatId: string;
+  status: 'pending' | 'approved' | 'declined'; revision: number; createdAt: string; updatedAt: string;
+  decidedAt?: string; decidedByUserId?: string;
+  recipients?: Array<{seatId: string; reason: string}>; reason?: string;
+}
+export type DeliveryReviewDecisionInput = {clientActionId: string; revision: number} & (
+  {decision: 'approve'; recipients: Array<{seatId: string; reason: string}>; reason?: never} |
+  {decision: 'decline'; reason: string; recipients?: never}
+);
+export interface DeliveryReviewSummary extends BackgroundDeliveryReview {
+  title: string; sourceName: string; fixedRecipientSeatIds: string[]; suggestion: RecipientSuggestion;
+}
+export interface DeliveryReviewDetail extends DeliveryReviewSummary {
+  candidates: Array<RecipientCandidate & {available: boolean; unavailableReason?: string}>;
+  canDecide: boolean; jobDetail: InformationJobDetail;
+}
 export interface BackgroundEvent {
   id: string; sourceId: string; sourceMessageId: string; title: string;
   systemId?: string;
@@ -52,11 +82,14 @@ export interface BackgroundJob {
   origin?: BackgroundAnalysisOrigin;
   taskAssessment?: TaskAssessment;
   taskSuggestionCreation?: TaskSuggestionCreation;
+  recipientSuggestion?: RecipientSuggestion;
+  recipientSuggestionError?: string;
   model?: string; modelSettingsVersion?: string; result?: BackgroundResultRef; usage?: UsageSummary;
   error?: { code: string; message: string };
 }
 export interface BackgroundDelivery {
   id: string; eventId: string; jobId: string; sourceId: string; recipientSeatId: string;
+  reviewId?: string;
   status: 'pending' | 'delivered' | 'failed'; revision: number;
   createdAt: string; updatedAt: string; deliveredAt?: string; error?: { code: string; message: string };
 }
@@ -68,7 +101,9 @@ export interface InformationSource {
 export interface InformationProfile { id: string; name: string; goal: string; configurationError?: string; contextScope?: ContextScopeSnapshot & {systemNames?: string[]} }
 export interface InformationCapabilities {
   enabled: boolean; sources: InformationSource[]; profiles: InformationProfile[];
-  seats: Array<{ id: string; name: string }>; canManageQueue: boolean; queue: BackgroundControl & {blockedReason?: string};
+  seats: Array<{ id: string; name: string; responsibility?: string; responsibilityRevision?: number }>;
+  deliveryReviewSeatId?: string; canReviewDeliveries?: boolean; pendingDeliveryReviews?: number;
+  canManageQueue: boolean; queue: BackgroundControl & {blockedReason?: string};
 }
 export interface BackgroundPage<T> { items: T[]; total: number; offset: number; limit: number }
 export interface BackgroundEventSummary extends BackgroundEvent { contentRestricted?: boolean; jobs: BackgroundJob[]; deliveries: BackgroundDelivery[] }
@@ -79,7 +114,10 @@ export interface BackgroundAnalysisSummary {
   status: 'preparing' | 'conversation_ready' | BackgroundJobStatus;
   createdAt: string; endedAt?: string; jobId?: string; sessionId?: string;
 }
-export interface InboxItem { sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob }
+export interface InboxItem {
+  sourceName?: string; delivery: BackgroundDelivery; event: BackgroundEvent; job: BackgroundJob;
+  deliveryReason?: {kind: 'fixed' | 'supplementary'; reason?: string; approvedBySeatId?: string};
+}
 export interface InboxDetail extends InboxItem { queryMessages?: PublicMessage[]; profileName?: string; text: string; resultText: string; resultFiles: BackgroundFile[]; analyses: BackgroundAnalysisSummary[]; taskLinks?: TaskLinksView }
 export interface BackgroundAnalysisInput {
   clientActionId: string; taskSpaceId: string; goal: string;
@@ -88,11 +126,11 @@ export interface BackgroundAnalysisInput {
 }
 export interface BackgroundAction {
   id: string; userId: string; seatId: string; clientActionId: string;
-  kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule';
+  kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule' | 'delivery_review';
   inputHash: string; status: 'preparing' | 'completed'; revision: number; createdAt: string; updatedAt: string;
   eventId?: string; deliveryId?: string; taskSpaceId?: string; workspaceId?: string;
   origin?: BackgroundAnalysisOrigin;
-  sessionId?: string; requestId?: string; jobId?: string; ruleId?: string;
+  sessionId?: string; requestId?: string; jobId?: string; ruleId?: string; reviewId?: string;
   analysis?: BackgroundAnalysisInput;
   selection?: ComposerSelection;
   /** Relative destination paths selected once, before copying; retry uses the same plan. */
@@ -112,6 +150,7 @@ export interface InformationJobSummary {
   error?: {code: string; message: string};
 }
 export interface InformationJobDetail extends InformationJobSummary {
+  deliveryReview?: BackgroundDeliveryReview; recipientSuggestion?: RecipientSuggestion; recipientSuggestionError?: string;
   taskLinks?: TaskLinksView;
   profileName?: string; text?: string; files?: BackgroundFile[]; snapshot?: SessionSnapshot;
   input?: {title: string; text: string; files: BackgroundFile[]};

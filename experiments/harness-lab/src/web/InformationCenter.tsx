@@ -4,6 +4,7 @@ import type { Identity, TaskSpace } from '../contracts/access';
 import type { BackgroundDelivery, BackgroundEventDetail, BackgroundEventSummary, BackgroundPage, InformationCapabilities, InformationJobDetail, InformationJobSummary } from '../contracts/background';
 import { TaskAssociations } from './TaskAssociations';
 import { useApi } from './api';
+import { DeliveryReviews, DeliveryReviewStatus } from './DeliveryReviews';
 import { InformationRules } from './InformationRules';
 import { Message } from './ChatMessage';
 import { ContextEvidence, isContextEvidence } from './ContextEvidence';
@@ -11,14 +12,14 @@ import type { ChatFocusTransfer } from './useChatItemFocus';
 import { AnalysisHistory, deliveryLabels, InformationFiles, InformationPagination, InformationText, informationError, informationTime, jobLabels, useInformationQuery } from './information-ui';
 import { InformationDrawer, InformationJobColumn, JobDeliverySummary, JobStatus, jobColumns, jobPhases, jobTitle } from './InformationJobs';
 
-type Tab = 'events' | 'jobs' | 'rules';
+type Tab = 'events' | 'jobs' | 'rules' | 'reviews';
 type Location = { tab: Tab; id: string; sourceId: string; status: string; search: string; offset: number; view: 'board' | 'list'; queued: number; running: number; succeeded: number; stopped: number };
 const firstPages = { offset: 0, queued: 0, running: 0, succeeded: 0, stopped: 0 };
 function initialLocation(): Location {
   const params = new URLSearchParams(location.pathname === '/information' ? location.search : '');
   const tab = params.get('tab');
   const offset = (key: string) => Math.max(0, Math.floor(Number(params.get(key)) || 0));
-  return { tab: tab === 'events' || tab === 'rules' ? tab : !tab && params.has('id') ? 'events' : 'jobs', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
+  return { tab: tab === 'events' || tab === 'rules' || tab === 'reviews' ? tab : !tab && params.has('id') ? 'events' : 'jobs', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
 }
 function locationUrl(route: Location) {
   const params = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value !== 0).map(([key, value]) => [key, String(value)]));
@@ -73,10 +74,10 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
   return <section id={domId('information-center')} tabIndex={-1} className="information-center" hidden={!visible} aria-label="信息处理中心">
     <header className="information-center-header" inert={detailOpen || undefined}><div><Workflow size={22} aria-hidden="true" /><h1>信息处理中心</h1></div></header>
     {!capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed ? <div className="information-empty"><h2>没有信息处理中心的访问权限</h2><p>可从左侧查看投递给本席位的信息。</p></div> : <>
-      <nav className="information-tabs" aria-label="信息中心栏目" inert={detailOpen || undefined}>{([['events', '信息记录'], ['jobs', '后台作业'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}</nav>
-      <div className="information-center-body" inert={detailOpen || undefined}>
+      <nav className="information-tabs" aria-label="信息中心栏目" inert={detailOpen || undefined}>{([['events', '信息记录'], ['jobs', '后台作业'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}{capabilities.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>待批准投递{capabilities.pendingDeliveryReviews ? `（${capabilities.pendingDeliveryReviews}）` : ''}</button>}</nav>
+      <div className="information-center-body" hidden={route.tab === 'reviews'} inert={detailOpen || undefined}>
         {capabilities.queue.blockedReason && <p className="information-queue-notice" role="status">{capabilities.queue.blockedReason}</p>}
-        {route.tab !== 'rules' && <>
+        {route.tab !== 'rules' && route.tab !== 'reviews' && <>
           <div className="information-toolbar">
             <label>来源<select value={route.sourceId} onChange={e => navigate({ sourceId: e.target.value, ...firstPages, id: '' }, true)}><option value="">全部获准来源</option>{capabilities.sources.map(item => <option key={item.sourceId} value={item.sourceId}>{item.name}</option>)}</select></label>
             {(route.tab === 'events' || route.view === 'list') && <label>处理状态<select value={route.status} onChange={e => navigate({ status: e.target.value, ...firstPages, id: '' }, true)}><option value="">全部状态</option>{route.tab === 'events' && <option value="unmatched">未匹配规则</option>}{(['queued', 'running', 'succeeded', 'failed', 'cancelled', 'interrupted'] as const).map(id => <option key={id} value={id}>{jobLabels[id]}</option>)}</select></label>}
@@ -99,7 +100,8 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
         </>}
         <InformationRules visible={visible && route.tab === 'rules'} capabilities={capabilities} tasks={tasks} selectedId={route.tab === 'rules' ? route.id : ''} select={id => navigate({ id })} />
       </div>
-      {visible && route.id && route.tab !== 'rules' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
+      <DeliveryReviews visible={visible && route.tab === 'reviews'} selectedId={route.tab === 'reviews' ? route.id : ''} status={route.tab === 'reviews' ? route.status : 'pending'} offset={route.offset} capabilities={capabilities} select={id => navigate({id})} filter={status => navigate({status,id:'',offset:0})} page={offset => navigate({offset,id:''})} changed={refreshAccess} />
+      {visible && route.id && route.tab !== 'rules' && route.tab !== 'reviews' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
         {feedback}{detailError && <p className="resource-error" role="alert">{detailError}<button onClick={refresh}>重新读取详情</button></p>}
         {route.tab === 'events' ? !shownEvent ? !detailError && <p role="status">正在读取信息…</p> : <>
           <header><h2>{shownEvent.title}</h2><p>{sourceName(shownEvent.sourceId)} · {informationTime(shownEvent.receivedAt)}</p></header>
@@ -129,6 +131,7 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
           {shownJob.text !== undefined && <section><h3>处理结果</h3>{shownJob.profileName && <p className="resource-help">处理方案：{shownJob.profileName}</p>}<InformationText>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
           <ContextEvidence messages={shownJob.snapshot?.messages}/>
           {identity && shownJob.kind==='preprocess' && shownJob.status==='succeeded' && <TaskAssociations key={`links:${shownJob.id}`} eventId={shownJob.eventId} jobId={shownJob.id} visible={visible} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={refresh} />}
+          {shownJob.kind === 'preprocess' && <DeliveryReviewStatus job={shownJob} open={id => navigate({tab:'reviews',id,status:'',offset:0})} />}
           {shownJob.kind === 'preprocess' && <section><h3>本次投递</h3>{deliveries(shownJob.deliveries || [], shownJob.sourceId)}</section>}
           {shownJob.snapshot && <details className="information-original"><summary>查看执行过程</summary>
             {shownJob.snapshot.commandPolicies?.map((record, index) => <div className="information-command-policy" key={`${record.requestId}:${record.toolCallId}:${index}`}>

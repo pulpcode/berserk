@@ -1,0 +1,59 @@
+{
+  "enabled": true,
+  "concurrency": 1,
+  "modelConcurrency": 2,
+  "sources": [
+    {
+      "sourceId": "mock-intel-source",
+      "systemId": "intel",
+      "name": "模拟特情通知",
+      "credentialRef": "MOCK_INTEL_SOURCE_TOKEN",
+      "allowedProfileIds": [
+        "context-analysis"
+      ],
+      "allowedRecipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation"
+      ]
+    },
+    {
+      "sourceId": "mock-situation-source",
+      "systemId": "situation",
+      "name": "模拟态势通知",
+      "credentialRef": "MOCK_SITUATION_SOURCE_TOKEN",
+      "allowedProfileIds": [
+        "context-analysis"
+      ],
+      "allowedRecipientSeatIds": [
+        "seat-overall",
+        "seat-intelligence",
+        "seat-planning",
+        "seat-situation"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "context-analysis",
+      "name": "多源综合分析",
+      "goal": "根据收到的更新，按需查询报告正文与历史、当前态势及 Axon 活动公共任务，综合说明变化、任务相关性和可能影响。比较目标、资源条件与有效时间，区分事实、建议及资料缺口，并标明来源和修订。结合已查询的任务记录关联；若需独立开展工作且无合适任务承接，提出新建公共任务建议；否则说明暂不归口原因。不要修改任务或自动分派。",
+      "tools": [
+        "information_search",
+        "information_read",
+        "situation_query",
+        "task_search",
+        "task_read",
+        "information_record_task_assessment",
+        "information_suggest_recipients"
+      ],
+      "contextScopeId": "demo-context",
+      "instructions": "",
+      "skillIds": [],
+      "agentIds": [],
+      "resources": []
+    }
+  ],
+  "deliveryReviewSeatId": "seat-overall"
+}

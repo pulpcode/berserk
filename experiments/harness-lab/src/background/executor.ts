@@ -1,4 +1,4 @@
-import type { BackgroundJob, BackgroundProfileSnapshot } from '../contracts/background.js';
+import type { BackgroundJob, BackgroundProfileSnapshot, RecipientSuggestionInput, RecipientSuggestion } from '../contracts/background.js';
 import type { FileOutput, FileRef, SessionSnapshot, StreamEvent, ComposerSelection } from '../contracts/index.js';
 import type { TaskAssessment, TaskAssessmentInput } from '../contracts/task-information.js';
 
@@ -8,11 +8,15 @@ export type RecordTaskAssessment = (input: TaskAssessmentInput, evidence: TaskAs
   {status: 'recorded' | 'unchanged'; assessment: TaskAssessment; published: false}
   | Promise<{status: 'recorded' | 'unchanged'; assessment: TaskAssessment; published: false}>;
 
+export type RecordRecipientSuggestion = (input: RecipientSuggestionInput, toolCallId: string, signal?: AbortSignal) =>
+  {suggestion: RecipientSuggestion; published: false} | Promise<{suggestion: RecipientSuggestion; published: false}>;
+
 /** Adapter boundary: background queue owns admission; the Pi adapter owns native execution/history. */
 export interface BackgroundExecutionInput {
   text: string; directory: string; files: FileRef[]; profile?: BackgroundProfileSnapshot;
   selection?: ComposerSelection;
   recordTaskAssessment?: RecordTaskAssessment;
+  recordRecipientSuggestion?: RecordRecipientSuggestion;
   onEvent(event: StreamEvent): void;
   publish(input: {sessionId: string; requestId: string; toolCallId: string; path: string}, signal?: AbortSignal): Promise<FileOutput>;
 }

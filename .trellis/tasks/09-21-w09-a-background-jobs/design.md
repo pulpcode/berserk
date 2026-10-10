@@ -8,7 +8,7 @@
 | 第二增量需求与具体设计 | [信息处理与席位投递](../09-21-background-execution/review.md) |
 | 第三增量能力验证实现 | [多源上下文接入与自动综合研判](../09-23-multisource-context-analysis/review.md) |
 | 第四增量实现与验证 | [信息自动归口与任务内接续处理](../10-08-information-task-linking/review.md) |
-| 第五增量待审设计 | [业务席位与补充投递审批](../10-09-analysis-seat-routing/review.md) |
+| 第五增量实现设计 | [业务席位与补充投递审批](../10-09-analysis-seat-routing/review.md) |
 | 原后台作业详细讨论 | [2026-09-21 原稿快照](research/snapshots/2026-09-21-background-proposal/README.md) |
 
 原完整草案保持原字节，存档状态由快照 README 统一说明。后续设计可以引用其中研究，但需重新确认实际需求、权限与接口，不从原稿直接实施。

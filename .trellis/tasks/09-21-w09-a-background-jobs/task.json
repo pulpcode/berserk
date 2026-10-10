@@ -2,7 +2,7 @@
   "id": "w09-a-background-jobs",
   "name": "w09-a-background-jobs",
   "title": "任务与后台作业分阶段规划",
-  "description": "前两增量已实现部署；第三增量多源综合研判能力验证、第四增量信息归口与任务内接续已实现部署，待用户验收。第五增量业务席位与补充投递审批已形成待审方案，未实施。",
+  "description": "前两增量已实现部署；第三增量多源综合研判能力验证、第四增量信息归口与任务内接续已实现部署，待用户验收。第五增量业务席位与补充投递审批已完成本地实现与验证，已部署，待用户验收。",
   "status": "planning",
   "dev_type": "fullstack",
   "scope": "background-jobs",
@@ -50,7 +50,7 @@
       "W08-A",
       "W09-A"
     ],
-    "proposal": "来源继续选择 Profile 和固定接收席位；第五增量梳理四席位职责、Agent 补充建议及总体席批准流程，独立待审，未获实施批准。",
+    "proposal": "来源继续选择 Profile 和固定接收席位；第五增量梳理四席位职责、Agent 补充建议及总体席批准流程，已按用户批准完成本地实现，已部署，待用户验收。",
     "pendingProductDecisions": [],
     "implementationTarget": false,
     "snapshot": "research/snapshots/2026-09-21-background-proposal/README.md"
