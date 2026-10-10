@@ -46,6 +46,35 @@ async function bytes(lab: PiLab, seatId: string, fileId: string) {
 }
 
 describe('Pi collaboration tools and native HITL', () => {
+  it('imports work inputs before opening receiver conversations, supports retry and never overwrites changed files', async () => {
+    const { lab, fake } = await setup(() => ({ text: 'unused' }));
+    const source = lab.workspaces.get();
+    await writeFile(join(lab.files.filesDirectory(source.id), '初稿.md'), '固定初稿');
+    const receipt = await page(lab, actor.seatId, { kind: 'assign', taskSpaceId: source.taskSpaceId, payload: { workspaceId: source.id, assigneeSeatId: other.seatId, title: '修订', goal: '保留初稿', inputPaths: ['初稿.md'] } });
+    const work = lab.collaboration!.read(other, receipt.workItemId);
+    const target = lab.workspaces.list(other.seatId).workspaces.find(w => w.taskSpaceId === source.taskSpaceId)!;
+    const file = work.inputFiles[0];
+    const path = join(lab.files.filesDirectory(target.id, other.seatId), `收到资料/${work.id}/${file.fileId}/${file.name}`);
+    const session = await lab.createSession(target.id, other.seatId, work.id);
+    expect(await readFile(path, 'utf8')).toBe('固定初稿');
+    await lab.bindWorkItem(session.id, work.id, other.seatId);
+    expect(fake.calls).toHaveLength(0);
+    await rm(path);
+    const existing = await lab.createSession(target.id, other.seatId);
+    await lab.bindWorkItem(existing.id, work.id, other.seatId);
+    expect(await readFile(path, 'utf8')).toBe('固定初稿');
+    await writeFile(path, '人员修改内容');
+    await expect(lab.bindWorkItem(existing.id, work.id, other.seatId)).rejects.toThrow(/内容不同/);
+    await expect(lab.createSession(target.id, other.seatId, work.id)).rejects.toThrow(/内容不同/);
+    expect(await readFile(path, 'utf8')).toBe('人员修改内容');
+    await rm(path);
+    await lab.bindWorkItem(existing.id, work.id, other.seatId);
+    expect(await readFile(path, 'utf8')).toBe('固定初稿');
+    const unrelated = await lab.workspaces.create('另一任务', undefined, other.seatId);
+    await expect(lab.createSession(unrelated.id, other.seatId, work.id)).rejects.toThrow(/不属于/);
+    expect(fake.calls).toHaveLength(0);
+  });
+
   it('prepares fixed input bytes, authorizes one exact call, and restores scoped native history without replay', async () => {
     const { lab, fake, config } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: input } }] } : { text: '分派已完成' });
     const workspace = lab.workspaces.get();
@@ -125,7 +154,7 @@ describe('Pi collaboration tools and native HITL', () => {
     expect(fake.calls[0].context.systemPrompt).toContain(target.id);
     expect(fake.calls[0].context.systemPrompt).not.toContain('A的私有方案');
     expect(lab.get(session.id, other.seatId).workItemId).toBe(work.id);
-    expect(() => lab.bindWorkItem(session.id, work.id, other.seatId)).toThrow(/结束/);
+    await expect(lab.bindWorkItem(session.id, work.id, other.seatId)).rejects.toThrow(/结束/);
     lab.respondInteraction(session.id, item.interactionId, approve(item), other.seatId); await done;
     expect(lab.get(session.id, other.seatId).lastResult?.status).toBe('succeeded');
     expect(await bytes(lab, actor.seatId, item.action.handoff!.files[0].fileId)).toBe('B的方案');

@@ -348,6 +348,7 @@ export class PiLab {
     if (workItemId) {
       const work = this.requireCollaboration().read({ seatId }, workItemId);
       if (work.taskSpaceId !== workspace.taskSpaceId) throw new RequestError('WORK_NOT_FOUND', '工作不属于当前项目。', 404);
+      await this.importWorkInputs(workItemId, workspaceId, seatId);
     }
     const manager = await this.prepareNativeSession(this.sessionDir, sessionId);
     const id = manager.getSessionId();
@@ -436,12 +437,20 @@ export class PiLab {
     return this.collaboration;
   }
 
-  bindWorkItem(id: string, workItemId: string, seatId = this.config.seatId ?? 'test-seat'): SessionSnapshot {
+  async bindWorkItem(id: string, workItemId: string, seatId = this.config.seatId ?? 'test-seat'): Promise<SessionSnapshot> {
     const record = this.record(id, seatId);
     this.access?.get(this.workspaces.get(record.workspaceId,seatId).taskSpaceId,seatId,true);
     if (record.active) throw new RequestError('SESSION_BUSY', '请在当前回复结束后关联工作。', 409);
     this.requireCollaboration().bindSession({ seatId }, id, workItemId);
+    await this.importWorkInputs(workItemId, record.workspaceId, seatId);
     return this.snapshot(record);
+  }
+
+  private async importWorkInputs(workItemId: string, workspaceId: string, seatId: string): Promise<void> {
+    const service = this.requireCollaboration();
+    const work = service.read({ seatId }, workItemId);
+    if (work.assigneeSeatId !== seatId) return;
+    for (const file of work.inputFiles) await service.importFile({ seatId }, file.fileId, workspaceId);
   }
 
   private stop(record: RecordState, active: Active, reason: NonNullable<Active['reason']>, message?: string): void {
