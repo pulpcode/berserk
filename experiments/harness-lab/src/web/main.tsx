@@ -117,7 +117,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   async function createWorkspace() {
     if (workspaceCreatingRef.current || !workspaceName.trim()) return;
     workspaceCreatingRef.current = true; setWorkspaceCreating(true); setWorkspaceError('');
-    try { await chat.createWorkspace(workspaceName.trim()); setWorkspaceForm(false); setWorkspaceName(''); setSidebarOpen(false); setView('chat'); }
+    try { await chat.createWorkspace(workspaceName.trim()); history.pushState(null, '', '/'); consumedSessionLink.current = ''; navigationRequest.current++; setWorkspaceForm(false); setWorkspaceName(''); setSidebarOpen(false); setView('chat'); }
     catch (error) { setWorkspaceError(error instanceof Error ? error.message : '项目创建失败，请核对列表后重试。'); }
     finally { workspaceCreatingRef.current = false; setWorkspaceCreating(false); }
   }

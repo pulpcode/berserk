@@ -361,6 +361,7 @@ test('工作区隔离运行中的流、会话历史、选择与草稿，新建�
     await page.getByLabel('项目名称').fill('新方案');
     await page.getByRole('button', { name: '创建项目', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('新方案');
+    await expect(page).toHaveURL(/\/$/);
     await expect(page.getByRole('heading', { name: '今天，我们一起处理什么？' })).toBeVisible();
     await input.fill('新方案的消息'); await input.press('Enter');
     await expect(page.getByText('new-1 的回复', { exact: true })).toBeVisible();
