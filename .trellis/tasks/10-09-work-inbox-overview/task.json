@@ -28,7 +28,9 @@
     ".trellis/tasks/10-09-work-inbox-overview/implement.md",
     ".trellis/tasks/10-09-work-inbox-overview/acceptance.md",
     ".trellis/tasks/10-09-work-inbox-overview/research/frontend-contract-notes.md",
-    ".trellis/tasks/10-09-work-inbox-overview/research/validation.md"
+    ".trellis/tasks/10-09-work-inbox-overview/research/validation.md",
+    ".trellis/tasks/10-09-work-inbox-overview/prototype/README.md",
+    ".trellis/tasks/10-09-work-inbox-overview/prototype/axon-work-preview.html"
   ],
   "notes": "仅设计，待用户审阅。补充投递审批为可选兼容项；本次不修改产品代码或主工作区。",
   "meta": {
@@ -39,7 +41,7 @@
     "contextManifestsCurated": true,
     "optionalIntegration": "analysis-seat-routing",
     "reviewChoices": [
-      "信息显式阅处及重新列入待办",
+      "信息显式处理及重新列入待办",
       "历史信息未登记且不倒灌待办",
       "独立跨席位只读摘要授权"
     ]

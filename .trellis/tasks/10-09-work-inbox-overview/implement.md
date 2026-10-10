@@ -4,7 +4,7 @@
 
 ## 1. 实施前核对
 
-- [ ] 记录用户对 [审阅入口](review.md) 中阅处、历史记录与总览边界的决定，必要时修改 PRD／设计／验收并重新审阅。
+- [ ] 记录用户对 [审阅入口](review.md) 中处理、历史记录与总览边界的决定，必要时修改 PRD／设计／验收并重新审阅。
 - [ ] 在本 worktree 审核 main 新提交，记录集成 SHA；不能复制另一会话未提交文件，不在主工作区切分支、stash 或执行迁移。
 - [ ] 核对席位目录与能力字段、最新 schema 版本、background_actions 严格类型、信息内容权限、审批能力是否已落地。
 - [ ] 若 main 尚无补充投递审批，按基础方案实现；仅将可选适配列为未适用，不阻塞基础质量门槛。
@@ -14,7 +14,7 @@
 
 | 阶段 | 工作 | 主要影响位置 | 完成依据 |
 | --- | --- | --- | --- |
-| P1 阅处与只读权限 | inbox_handling、历史迁移、幂等阅处接口、显式 viewWorkOverview；更新各 DB 入口 | access/database、access/store、contracts/access、background/store/service、scripts/access-admin、server/background-routes | AT04～07、AT11、AT13、AT18 |
+| P1 处理与只读权限 | inbox_handling、历史迁移、幂等处理接口、显式 viewWorkOverview；更新各 DB 入口 | access/database、access/store、contracts/access、background/store/service、scripts/access-admin、server/background-routes | AT04～07、AT11、AT13、AT18 |
 | P2 待办与摘要查询 | 复用授权查询形成持久事项投影；统一过滤／排序／分页与部分失败状态；只读总体工作摘要 | 新的轻量 workbench 服务／契约／路由，collaboration/service 的受控摘要方法 | AT01～03、AT06、AT11～14、AT19 |
 | P3 统一待办与导航 | 列表／详情复用；迁移旧入口；对话提醒归位；保留草稿和未读 | web/main、WorkInbox、Inbox、WorkspaceNavigation、useChat 的必要对接、现有样式 | AT01～10、AT17、AT20 |
 | P4 工作总览 | 增加席位工作，沿用原信息、作业和配置；按能力决定栏目 | InformationCenter 外壳与摘要列表，InformationJobs／Rules 必要对接 | AT11～14、AT19 |
@@ -28,8 +28,8 @@
 | 冲突面 | 接入要求 |
 | --- | --- |
 | access/store、database、access-admin | 保留 main 的职责字段与命令，在其最终版本上增补本需求权限；默认关闭新能力 |
-| background/store、contracts/background、service | 迁移版本顺接；保留建议证据、审批、任务关联和完整性校验；阅处不覆盖原 delivery.status |
-| Inbox | 保留“为何收到”、任务关联、接续保护和原文件读取；仅抽出可复用详情并加入阅处 |
+| background/store、contracts/background、service | 迁移版本顺接；保留建议证据、审批、任务关联和完整性校验；处理不覆盖原 delivery.status |
+| Inbox | 保留“为何收到”、任务关联、接续保护和原文件读取；仅抽出可复用详情并加入处理 |
 | InformationCenter、InformationRules | 保留原来源权限、可选审批及规则配置，修改外壳路由时同步消除旧 location effect |
 | main、WorkspaceNavigation、useChat | 保留当前请求与草稿状态归属；删除动态页面不删除 activity API 或轮询 |
 
@@ -51,10 +51,10 @@ npm run test:e2e
 
 重点新增行为测试：
 
-- 阅处事务与回执：新／历史投递、重试、重新分析、并发、响应丢失、重启与当前权限撤销。
+- 处理事务与回执：新／历史投递、重试、重新分析、并发、响应丢失、重启与当前权限撤销。
 - 交接摘要：普通席位无旁观权限；只读总体可看公共摘要但不能读文件／私有会话或代验收；过滤、搜索、计数不泄露。
 - 聚合完整性：跨模块大于一页、同时间排序、类型／任务筛选、多任务收件去重、部分失败不报零。
-- E2E：普通席位完成信息阅处和交接，总体查看进度；旧链接直达、返回、刷新、信息接续切换、确认期间导航、折叠任务等待提醒。
+- E2E：普通席位完成信息处理和交接，总体查看进度；旧链接直达、返回、刷新、信息接续切换、确认期间导航、折叠任务等待提醒。
 - 可选审批：存在／不存在／未授权／暂时失败四种状态；复用决定后两入口收敛；固定投递不等待。
 - 兼容：无外部来源仍能办理交接，旧单席位／测试席位的现有聊天及交接路径不受损。
 

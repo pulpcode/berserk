@@ -23,6 +23,6 @@
 - API client 绑定本次登录 viewId／席位，换身份后旧 client 中止；迟到回调不读取全局可变席位。
 - public 任务的会话与文件仍按任务 × 席位隔离；任务目录可见不等于其他席位历史可见。
 - 浏览详情、相关信息和能力选项不能创建工作区、复制文件或启动模型。
-- 禁止把后台作业、回复成功、阅处完成和工作验收的不同状态相互推导。
+- 禁止把后台作业、回复成功、处理完成和工作验收的不同状态相互推导。
 
 实施者需重点阅读原文的 workspace/activity/read markers、conversation creation/navigation、information continuation 和 async origin reconciliation 相关段落，并以实施基线版本为准。

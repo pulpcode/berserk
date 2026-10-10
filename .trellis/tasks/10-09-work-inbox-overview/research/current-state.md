@@ -21,7 +21,7 @@
 | 交接只允许发起人／承办人读取，不能直接用于总体跨席位阅读 | `src/collaboration/service.ts:129`、`:132`、`:139` |
 | 发起人验收，承办人签收／提交，聊天不直接修改工作状态 | `src/collaboration/service.ts:177`；`.trellis/spec/backend/task-handoff.md` |
 | 收件依据 delivered + 当前席位，读取时校验资料范围 | `src/background/service.ts:310`、`:318`、`:322` |
-| 投递有 pending/delivered/failed，无人员阅处状态 | `src/contracts/background.ts:58`、`:82` |
+| 投递有 pending/delivered/failed，无人员处理状态 | `src/contracts/background.ts:58`、`:82` |
 | 同一作业同一接收席位投递唯一 | `src/background/store.ts:95`，`UNIQUE(job_id,seat_id)` |
 | 动态只读当前席位会话，可投影待回答、待确认、失败与恢复提示 | `src/pi/lab.ts:486`；`src/web/WorkspaceNavigation.tsx:6`、`:33`、`:122` |
 | 已有全局 activity 轮询、草稿、未读成功回复标记 | `src/web/useChat.ts`；`.trellis/spec/frontend/harness-lab.md:23` |
@@ -44,7 +44,7 @@
 
 ## 4. 两个需要新增能力的具体原因
 
-1. 既有 delivered、分析成功和会话未读都无法表达“本席位人员已完成阅处”，因此提出每个投递一份最小阅处记录；不建设通用待办数据库。
+1. 既有 delivered、分析成功和会话未读都无法表达“本席位人员已完成处理”，因此提出每个投递一份最小处理记录；不建设通用待办数据库。
 2. 原交接详情严格限双方，总体读取跨席位进度没有现成权限。因此提出独立的只读摘要能力，默认关闭；不放宽原详情和文件路由。
 
 ## 5. 设计方法

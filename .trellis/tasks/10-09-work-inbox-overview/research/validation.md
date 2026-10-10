@@ -19,4 +19,4 @@
 
 ## 审阅状态
 
-任务保持 planning，implementationApproved=false。信息阅处方式、历史默认处理、总览摘要范围为本版待审建议；没有把设计文件完成当作产品实现或用户批准。后续产品验证与发布门槛见 [实施步骤](../implement.md)。
+任务保持 planning，implementationApproved=false。信息处理方式、历史默认处理、总览摘要范围为本版待审建议；没有把设计文件完成当作产品实现或用户批准。后续产品验证与发布门槛见 [实施步骤](../implement.md)。
