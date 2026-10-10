@@ -1618,3 +1618,34 @@ for (const action of ['create', 'workspace'] as const) {
     } finally { await mock.close(); }
   });
 }
+
+test('首轮处理中动态标题更新后，流事件和详情轮询不会恢复新会话标题', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    mock.sessions.get('A')!.title = '新会话';
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息' });
+    await input.fill('慢速回复'); await input.press('Enter');
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    const session = mock.sessions.get('A')!;
+    session.title = '请结合本任务的相关信息';
+    const title = page.locator('.session-item.selected .session-title');
+    await expect(title).toHaveText(session.title);
+    // Observe every title mutation, including brief regressions hidden by a later poll.
+    await title.evaluate(element => {
+      element.setAttribute('data-title-regressions', '0');
+      new MutationObserver(() => {
+        if (element.textContent === '新会话') element.setAttribute('data-title-regressions', String(Number(element.getAttribute('data-title-regressions')) + 1));
+      }).observe(element, { childList: true, characterData: true, subtree: true });
+    });
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId: session.active!.requestId, delta: '，继续处理' });
+    await expect(page.getByText('A 的回复，继续处理', { exact: true })).toBeVisible();
+    const reads = mock.counts.sessionReads.length;
+    await expect.poll(() => mock.counts.sessionReads.length).toBeGreaterThan(reads + 1);
+    await expect(title).toHaveAttribute('data-title-regressions', '0');
+    await expect(title).toHaveText(session.title);
+    mock.finish('A');
+    await expect(page.getByRole('button', { name: '停止回复' })).toHaveCount(0);
+    await expect(title).toHaveText(session.title);
+  } finally { await mock.close(); }
+});

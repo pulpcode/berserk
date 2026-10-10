@@ -186,7 +186,7 @@ export function useChat() {
       const stream = streams.current.get(id);
       if (stream && !stream.terminal && result.active) {
         const current = snapshotsRef.current[id];
-        if (current && result.active.requestId === stream.requestId) put({ ...current, interactions: result.interactions, active: result.active });
+        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, interactions: result.interactions, active: result.active });
         return;
       }
       // Polling may observe completion before the final SSE frame arrives.
@@ -254,11 +254,17 @@ export function useChat() {
           return (before[item.id] || 0) === (revisions.current[item.id] || 0)
             && (!stream || stream.terminal || (item.active && item.active.requestId === stream.requestId));
         });
+        let nextSnapshots = snapshotsRef.current;
         for (const item of incoming) {
           if (!sameActivity(item, activitiesRef.current.find(old => old.id === item.id))) {
             revisions.current[item.id] = (revisions.current[item.id] || 0) + 1;
           }
+          // Keep accepted title metadata in the stream's cached snapshot too.
+          // Otherwise its next event republishes the pre-send title to navigation.
+          const snapshot = nextSnapshots[item.id];
+          if (snapshot && snapshot.title !== item.title) nextSnapshots = { ...nextSnapshots, [item.id]: { ...snapshot, title: item.title } };
         }
+        if (nextSnapshots !== snapshotsRef.current) { snapshotsRef.current = nextSnapshots; setSnapshots(nextSnapshots); }
         activitiesRef.current = mergeById(activitiesRef.current, incoming);
         setActivities(activitiesRef.current);
         setSessions(previous => mergeById(previous, incoming));
