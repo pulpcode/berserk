@@ -40,6 +40,7 @@ test('global and task maps query union, keep stale source data, use only fixture
   await page.getByRole('button',{name:'态势地图',exact:true}).click();await expect(page.getByText('6 个对象',{exact:true})).toBeVisible();
   await expect(page.locator('.situation-simulation-label')).toHaveText('模拟态势');await expect(page.locator('.situation-attribution')).toContainText('OpenStreetMap');
   await page.getByText('对象列表 · 6',{exact:true}).click();await page.getByRole('button',{name:/西区通道 可通行/}).click();await expect(page.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();
+  await page.screenshot({path:test.info().outputPath('global-map-floating.png')});
   await expect.poll(env.tiles).toBeGreaterThan(0);await expect(page.locator('.situation-map-error')).toHaveCount(0);expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);
   await page.getByRole('button',{name:'进入项目：地图验证任务',exact:true}).click();await page.getByRole('button',{name:'态势',exact:true}).click();await expect(page.getByText('4 个对象',{exact:true})).toBeVisible();
   expect(env.queries.some(query=>Array.isArray(query.objectRefs)&&!query.areaIds)).toBe(true);expect(env.queries.some(query=>Array.isArray(query.areaIds)&&!query.objectRefs)).toBe(true);

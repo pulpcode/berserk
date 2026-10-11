@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 import type { BackgroundDeliveryReview, BackgroundPage, DeliveryReviewDecisionInput, DeliveryReviewDetail, DeliveryReviewSummary, InformationCapabilities, InformationJobDetail } from '../contracts/background';
@@ -56,7 +57,7 @@ function DeliveryReviewForm({ value, seatName, refresh }: { value: DeliveryRevie
     if (decision === 'approve' && (!selected.length || unavailable || selected.some(id => !reasons[id]?.trim()))) { setError('请选择可投递的席位，并填写各席位的接收理由。'); return; }
     if (decision === 'decline' && !declineReason.trim()) { setError('请填写不予补充的原因。'); return; }
     const body = decision === 'approve' ? { decision, revision: value.revision, recipients: selected.map(seatId => ({seatId,reason:reasons[seatId].trim()})) } : { decision, revision: value.revision, reason: declineReason.trim() };
-    const key = JSON.stringify(body); const clientActionId = actions.current.get(key) || crypto.randomUUID(); actions.current.set(key, clientActionId);
+    const key = JSON.stringify(body); const clientActionId = actions.current.get(key) || randomUUID(); actions.current.set(key, clientActionId);
     setSubmitted({...body,clientActionId} as DeliveryReviewDecisionInput);
     lock.current = true; setBusy(true); setError(''); setNotice('');
     try {

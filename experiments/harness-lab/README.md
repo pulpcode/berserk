@@ -208,7 +208,9 @@ npm run probe:execution
 ssh -N -L 4315:127.0.0.1:4315 tencent-server
 ```
 
-浏览器访问 http://127.0.0.1:4315 （使用独立本地端口，避免与本地开发服务冲突）。SSH 凭证只保存在本机 SSH 配置中；API Key 仅写入服务器 `.env.local` 或受控模型设置，均不提交 Git。
+浏览器访问 http://127.0.0.1:4315 （使用独立本地端口，避免与本地开发服务冲突）。
+
+如需开发组通过 IP 直连测试，可在正式登录模式下设置 `LAB_LISTEN_HOST=0.0.0.0` 和 `LAB_PUBLIC_ORIGIN=http://服务器IP:4315`，并放行对应 TCP 端口。外部 Host 和 Origin 仅接受该明确配置，原 loopback 入口继续可用；匿名测试模式禁止启用外部入口。该方式使用明文 HTTP，仅用于已确认访问范围和备案适用条件的测试；长期公网服务应配置 HTTPS。前端 UUID 通过共享 `random-uuid.ts` 在 HTTP 下使用 `crypto.getRandomValues()`。SSH 凭证只保存在本机 SSH 配置中；API Key 仅写入服务器 `.env.local` 或受控模型设置，均不提交 Git。
 
 发布源码包必须包含 `public/`；Vite 会将其中的 Logo 和 favicon 复制到 `dist/`。替换线上 `dist/` 前核对这批静态文件完整；发布后检查 `/brand/axon-app-icon.svg`、`/brand/axon-wordmark.svg` 和 `/favicon.ico` 的 HTTP 状态、图片类型及内容，不能只检查首页和 JS 文件。
 

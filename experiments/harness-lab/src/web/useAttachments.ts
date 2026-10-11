@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Upload } from '../contracts/files';
 import { useApi, checkResponse } from './api';
@@ -93,7 +94,7 @@ export function useAttachments() {
     const count = state.current[owner]?.length || 0;
     if (count + files.length > limits.maxAttachments) { setNotice(previous => ({ ...previous, [owner]: `每条消息最多关联 ${limits.maxAttachments} 个文件。` })); return; }
     setNotice(previous => ({ ...previous, [owner]: '' }));
-    const items: DraftAttachment[] = files.map(file => ({ id: crypto.randomUUID(), workspaceId, name: file.name, size: file.size, status: file.size > limits.maxFileBytes ? 'failed' : 'uploading', progress: 0, ...(file.size > limits.maxFileBytes ? { error: `文件超过 ${(limits.maxFileBytes / 1024 / 1024).toFixed(0)} MiB 上限，请移除此引用并选择较小文件。` } : {}) }));
+    const items: DraftAttachment[] = files.map(file => ({ id: randomUUID(), workspaceId, name: file.name, size: file.size, status: file.size > limits.maxFileBytes ? 'failed' : 'uploading', progress: 0, ...(file.size > limits.maxFileBytes ? { error: `文件超过 ${(limits.maxFileBytes / 1024 / 1024).toFixed(0)} MiB 上限，请移除此引用并选择较小文件。` } : {}) }));
     update(current => ({ ...current, [owner]: [...(current[owner] || []), ...items] }));
     items.forEach((item, index) => { if (item.status !== 'failed') { localFiles.current.set(item.id, files[index]!); void transfer(item); } });
   }, [transfer, update]);
@@ -119,7 +120,7 @@ export function useAttachments() {
   const reference = useCallback((owner: string, workspaceId: string, file: { name: string; path: string; size?: number }, maxAttachments: number) => {
     if (state.current[owner]?.some(item => item.path === file.path && item.workspaceId === workspaceId)) { setNotice(previous => ({ ...previous, [owner]: '此文件已关联到当前消息。' })); return true; }
     if ((state.current[owner]?.length || 0) >= maxAttachments) { setNotice(previous => ({ ...previous, [owner]: `每条消息最多关联 ${maxAttachments} 个文件。` })); return false; }
-    update(current => ({ ...current, [owner]: [...(current[owner] || []), { id: crypto.randomUUID(), workspaceId, name: file.name, path: file.path, size: file.size || 0, status: 'ready', progress: 100 }] })); return true;
+    update(current => ({ ...current, [owner]: [...(current[owner] || []), { id: randomUUID(), workspaceId, name: file.name, path: file.path, size: file.size || 0, status: 'ready', progress: 100 }] })); return true;
   }, [update]);
   return { all, notice, add, remove, retry: transfer, move, consume, recover, clearSubmitted, reference, current: (owner: string) => state.current[owner] || [] };
 }

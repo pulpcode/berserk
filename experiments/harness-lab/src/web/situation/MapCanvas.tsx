@@ -17,7 +17,7 @@ export default function MapCanvas({ objects, selected, config, select }: { objec
       instance = new Map({ container: container.current, style: { version: 8, sources: { basemap: { type: 'raster', tiles: config.tiles, tileSize: config.tileSize } }, layers: [{ id: 'background', type: 'background', paint: { 'background-color': '#e8efeb' } }, { id: 'basemap', type: 'raster', source: 'basemap' }] }, center: [0,0], zoom: 1, attributionControl: false });
     } catch { let alive=true;queueMicrotask(()=>{if(alive)setError('地图暂不可用，请通过对象列表查看与引用。');});return()=>{alive=false;}; }
     map.current = instance;fitted.current='';
-    instance.addControl(new NavigationControl(), 'top-left');
+    instance.addControl(new NavigationControl(), 'bottom-left');
     const update = () => {
       const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
       (instance.getSource('objects') as GeoJSONSource | undefined)?.setData({ type:'FeatureCollection', features });

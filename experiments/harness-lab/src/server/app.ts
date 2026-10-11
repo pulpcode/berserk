@@ -41,13 +41,15 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   const app = Fastify({ logger: false, bodyLimit: 128 * 1024, ajv: { customOptions: { removeAdditional: false, coerceTypes: false } } });
   app.addHook('onClose', async () => { await background?.close(); await lab.close(); });
   if (background) { await background.initialize(); app.addHook('onReady', () => background.start()); }
+  const publicHost = lab.config.publicOrigin ? new URL(lab.config.publicOrigin).host : undefined;
+  const trustedOrigins = new Set([`http://127.0.0.1:${lab.config.port}`, `http://localhost:${lab.config.port}`, 'http://127.0.0.1:5173', 'http://localhost:5173', ...(lab.config.publicOrigin ? [lab.config.publicOrigin] : [])]);
   app.addHook('onRequest', async (request, reply) => {
     const host = request.headers.host?.split(':')[0];
-    if (host !== '127.0.0.1' && host !== 'localhost') {
-      return reply.code(403).send({ error: { code: 'LOCAL_ONLY', message: '仅允许本地访问。' } });
+    if (host !== '127.0.0.1' && host !== 'localhost' && !(publicHost && request.headers.host === publicHost)) {
+      return reply.code(403).send({ error: { code: 'LOCAL_ONLY', message: '访问地址不受信任。' } });
     }
     const origin = request.headers.origin;
-    if (origin && ![`http://127.0.0.1:${lab.config.port}`, `http://localhost:${lab.config.port}`, 'http://127.0.0.1:5173', 'http://localhost:5173'].includes(origin)) {
+    if (origin && !trustedOrigins.has(origin)) {
       return reply.code(403).send({ error: { code: 'ORIGIN_REJECTED', message: '请求来源不受信任。' } });
     }
     reply.header('Cache-Control', 'no-store');

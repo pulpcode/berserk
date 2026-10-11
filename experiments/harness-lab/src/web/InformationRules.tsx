@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { Plus, RefreshCw } from 'lucide-react';
 import type { TaskSpace } from '../contracts/access';
@@ -20,14 +21,14 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
     if (!visible || !selectedId || selectedId === editor?.key) return;
     let current = true;
     api<InformationRule>(`/api/information/rules/${encodeURIComponent(selectedId)}`).then(rule => {
-      if (current) setEditor({ key: rule.id, base: rule, draft: inputOf(rule), clientActionId: crypto.randomUUID(), conflict: false });
+      if (current) setEditor({ key: rule.id, base: rule, draft: inputOf(rule), clientActionId: randomUUID(), conflict: false });
     }).catch(reason => { if (current) setError(informationError(reason)); });
     return () => { current = false; };
   }, [api, visible, selectedId, editor?.key]);
   function open(rule?: InformationRule) {
     if (editor && JSON.stringify(editor.draft) !== JSON.stringify(editor.base ? inputOf(editor.base) : emptyInput(managed[0]?.sourceId || '', managed[0]?.allowedProfileIds[0] || '')) && !window.confirm('切换规则会放弃当前未保存的编辑，是否继续？')) return;
     generation.current++; setError(''); setNotice(''); select(rule?.id || '');
-    setEditor({ key: rule?.id || 'new', base: rule, draft: rule ? inputOf(rule) : emptyInput(managed[0]?.sourceId || '', managed[0]?.allowedProfileIds[0] || ''), clientActionId: crypto.randomUUID(), conflict: false });
+    setEditor({ key: rule?.id || 'new', base: rule, draft: rule ? inputOf(rule) : emptyInput(managed[0]?.sourceId || '', managed[0]?.allowedProfileIds[0] || ''), clientActionId: randomUUID(), conflict: false });
   }
   function change(value: Partial<InformationRuleInput>) { generation.current++; setEditor(current => current && ({ ...current, draft: { ...current.draft, ...value } })); }
   async function save() {

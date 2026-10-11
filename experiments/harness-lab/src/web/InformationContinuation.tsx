@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Check, ChevronDown, Clock3, Folder, Paperclip, Send, SlidersHorizontal } from 'lucide-react';
 import type { TaskSpace } from '../contracts/access';
@@ -67,7 +68,7 @@ export function InformationContinuation({ scope, visible, base, jobId: sourceJob
   }, [changed, openPrepared, releasePending]);
   async function submit(mode: BackgroundAnalysisInput['mode'], retry = false) {
     if (lock.current || task?.state !== 'active' || draft.pending && !retry) return;
-    const input: BackgroundAnalysisInput = retry && draft.pending ? draft.pending : { clientActionId: crypto.randomUUID(), mode, taskSpaceId: task.id, goal: draft.goal.trim(), includeResult: draft.includeResult, fileIds: draft.fileIds, skillIds: draft.skillIds, agentIds: draft.agentIds };
+    const input: BackgroundAnalysisInput = retry && draft.pending ? draft.pending : { clientActionId: randomUUID(), mode, taskSpaceId: task.id, goal: draft.goal.trim(), includeResult: draft.includeResult, fileIds: draft.fileIds, skillIds: draft.skillIds, agentIds: draft.agentIds };
     update({ ...draft, pending: input }); lock.current = true; setBusy(true); setError(''); setNotice(''); setConfirm(false); setAction(undefined); setJobId('');
     const current = guard();
     try {

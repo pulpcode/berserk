@@ -16,6 +16,8 @@ export interface LabConfig extends ResolvedModelParameters {
   /** Controlled fixture directory override for isolated integration tests. */
   agentRolesDir?: string;
   port: number;
+  listenHost?: '127.0.0.1' | '0.0.0.0';
+  publicOrigin?: string;
   agentRunTimeoutMs: number;
   httpIdleTimeoutMs: number;
   llmRequestTimeoutMs?: number;
@@ -77,8 +79,19 @@ export function parseTestSeats(raw: string | undefined, seatId: string): LabConf
   } catch { throw new Error('LAB_TEST_SEATS 必须为两个不同的 {id,name} 席位组成的 JSON 数组，且包含 LAB_SEAT_ID。'); }
 }
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
+  const listenHost = env.LAB_LISTEN_HOST ?? '127.0.0.1';
+  if (listenHost !== '127.0.0.1' && listenHost !== '0.0.0.0') throw new Error('LAB_LISTEN_HOST 必须为 127.0.0.1 或 0.0.0.0。');
+  const publicOrigin = env.LAB_PUBLIC_ORIGIN;
+  if (publicOrigin !== undefined) {
+    try {
+      const url = new URL(publicOrigin);
+      if (url.protocol !== 'http:' || url.origin !== publicOrigin || url.hostname === '0.0.0.0') throw new Error();
+    } catch { throw new Error('LAB_PUBLIC_ORIGIN 必须为完整 HTTP 来源（协议、主机及可选端口），不含路径或凭证。'); }
+  }
+  if (listenHost === '0.0.0.0' && !publicOrigin) throw new Error('对外监听必须配置 LAB_PUBLIC_ORIGIN。');
   const mode = env.LAB_AUTH_MODE ?? 'login';
   if (!['login', 'test'].includes(mode)) throw new Error('LAB_AUTH_MODE 必须为 login 或 test。');
+  if (mode === 'test' && (listenHost !== '127.0.0.1' || publicOrigin)) throw new Error('对外访问必须使用正式登录模式。');
   if (mode === 'login' && (!env.LAB_SESSION_SECRET || env.LAB_SESSION_SECRET.length < 32)) throw new Error('请运行 access:admin 初始化账号及本地登录签名配置；正式服务不允许匿名启动。');
   if (mode === 'login' && env.LAB_TEST_SEATS) throw new Error('正式登录模式不能启用 LAB_TEST_SEATS，请移除该配置。');
   const seatId = env.LAB_SEAT_ID ?? 'test-seat';
@@ -92,7 +105,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   if (env.LLM_MAX_OUTPUT_TOKENS !== undefined) parameters.maxOutputTokens = integer(env, 'LLM_MAX_OUTPUT_TOKENS', 0, 1, 2_000_000);
   const legacy = ['REQUEST_TIMEOUT_MS', 'MAX_TOOL_CALLS', 'MAX_OUTPUT_TOKENS'].filter(name => env[name] !== undefined);
   if (legacy.length) console.warn(`已忽略旧实验配置：${legacy.join('、')}。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。`);
-  return { ...identity, ...resolveModelParameters(identity, parameters),
+  return { ...identity, ...resolveModelParameters(identity, parameters), listenHost, publicOrigin,
     apiKey: env.LLM_API_KEY?.trim() || '', dataDir: resolve(env.LAB_DATA_DIR || '.local'),
     ...(mode === 'login' ? { auth: { secret: env.LAB_SESSION_SECRET!, sessionMs: integer(env, 'LAB_SESSION_HOURS', 8, 1, 168) * 3600000 } } : {}),
     seatId, testSeats: parseTestSeats(env.LAB_TEST_SEATS, seatId), hitlDemoEnabled: env.LAB_HITL_DEMO_ENABLED === 'true',

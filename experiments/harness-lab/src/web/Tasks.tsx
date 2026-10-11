@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import type { Identity, TaskSpace } from '../contracts/access';
 import type { NewTaskSuggestion, TaskLinksView, TaskSuggestionCreateResult } from '../contracts/task-information';
@@ -14,7 +15,7 @@ export function TaskPanel({identity,task,visibility,suggestion,showInformation,c
   const [context,setContext]=useState(()=>contextDraft(task?.context)); const [contextDirty,setContextDirty]=useState(false); const [contextErrors,setContextErrors]=useState<Record<string,string>>({});
   const [needsQuery,setNeedsQuery]=useState(false);
   const [error,setError]=useState(''); const [busy,setBusy]=useState(false); const pending=useRef(false);
-  const [latest,setLatest]=useState<TaskSpace>(); const [actionId]=useState(()=>crypto.randomUUID());
+  const [latest,setLatest]=useState<TaskSpace>(); const [actionId]=useState(()=>randomUUID());
   const isPublic=(base?.visibility || visibility)==='public';
   const canManage=isPublic ? identity.createPublicTask : !base || base.ownerSeatId===identity.seatId;
   const kind=isPublic?'任务':'空间';

@@ -76,6 +76,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const informationTask = directory.tasks.find(task => task.id === informationTaskId);
   const [informationEntry,setInformationEntry]=useState(0);
   const mapCatalog = useInformationQuery<ContextCatalog>('/api/context/catalog', seatActive, 60000);
+  const [mapToolbarTarget,setMapToolbarTarget]=useState<HTMLDivElement | null>(null);
   const mapConfig = useInformationQuery<MapConfig>('/api/context/map-config', seatActive, 60000);
   const [mapObject,setMapObject] = useState<SituationObject>();
   const [mapWorkspace,setMapWorkspace] = useState('');
@@ -364,6 +365,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     <main hidden={view === 'information'} className="workspace" inert={sidebarOpen || undefined}>
       <header className="workspace-header">
         <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'work' ? '工作待办' : view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : snapshot?.title || '新对话'}</span></div>
+        {view === 'situation' && <div className="map-titlebar-slot" ref={setMapToolbarTarget}/>}
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title : undefined}>{view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title || '相关任务' : '所有项目'}</span>
         <div className="workspace-tools" role="group" aria-label="项目工具">
           {seats.length > 0 && view === 'chat' && (!identity || currentTask?.visibility==='public') && <button className="files-trigger" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}>分派工作</button>}
@@ -376,7 +378,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       {creationError && <div className="notice error-notice activity-error" role="alert"><CircleAlert size={16} aria-hidden="true" /><span>{creationError}</span><button onClick={() => setCreationError('')}>关闭提示</button></div>}
       {seats.length > 0 && <Workbench capabilities={information.data} activityWorkspaces={chat.workspaces} identity={identity} tasks={directory.tasks} information={{ savedTask: directory.saved, openTask: showTaskInformation, tasks: directory.tasks, workspaces: chat.workspaces, seats, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} visible={seatActive && view === 'work'} control={workControl} seatId={seatId!} seats={seats} workspaces={identity ? chat.workspaces.filter(w=>directory.tasks.some(t=>t.id===w.taskSpaceId && t.visibility==='public' && t.state==='active')) : chat.workspaces} activities={chat.activities} maxFiles={fileLimits?.maxAttachments || 20} createSession={chat.create} openSession={selectSession} refreshActivity={chat.refreshActivity} adoptSession={chat.adopt} />}
       {identity && informationTaskId && <TaskInformation key={`${informationTaskId}:${informationEntry}`} taskId={informationTaskId} editTask={()=>{if(informationTask)setTaskPanel({task:informationTask,visibility:informationTask.visibility});}} visible={seatActive && view === 'task_information'} identity={identity} tasks={directory.tasks} workspaces={chat.workspaces} seats={seats} prepared={preparedAnalysis} openSession={id=>void openInformationSession(id)} savedTask={directory.saved} openTask={showTaskInformation} />}
-      {seatActive && view === 'situation' && <Suspense fallback={<p role="status">正在加载态势地图…</p>}><SituationView key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/></Suspense>}
+      {seatActive && view === 'situation' && <Suspense fallback={<p role="status">正在加载态势地图…</p>}><SituationView toolbarTarget={mapToolbarTarget} key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/></Suspense>}
       {seatActive && view === 'simulation' && <Suspense fallback={<p role="status">正在读取模拟控制…</p>}><Simulation/></Suspense>}
       {view !== 'chat' ? null : <>
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}

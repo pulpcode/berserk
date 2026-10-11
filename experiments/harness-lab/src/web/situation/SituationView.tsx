@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ContextCatalog, ContextQueryResult, MapConfig, SituationObject, SituationQueryParams, ContextRef, InformationDetail } from '../../contracts/context';
 import type { TaskContext } from '../../contracts/access';
@@ -5,8 +7,8 @@ import { checkResponse, useApi } from '../api';
 import { refKey, type MapReference } from './evidence';
 import { objectStatus, readSituation, taskQueries, uniqueObjects, type SourceResult } from './map-data';
 const Canvas = lazy(()=>import('./MapCanvas'));
-export interface SituationViewProps { taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
-export default function SituationView({ taskContext, taskMode=false, initial, compact=false, reference }: SituationViewProps) {
+export interface SituationViewProps { toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
+export default function SituationView({ toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference }: SituationViewProps) {
   const client=useApi(); const [catalog,setCatalog]=useState<ContextCatalog>(); const [config,setConfig]=useState<MapConfig>(); const [setupError,setSetupError]=useState('');
   const [source,setSource]=useState(initial?.ref.systemId || ''); const [area,setArea]=useState(''); const [kind,setKind]=useState(''); const [all,setAll]=useState(!taskMode); const [revision,setRevision]=useState(0);
   const [selected,setSelected]=useState(initial ? refKey(initial.ref) : ''); const [sourceState,setSourceState]=useState<{key:string;values:Record<string,SourceResult>}>(); const [errorState,setErrorState]=useState<{key:string;values:Record<string,string>}>(); const [busy,setBusy]=useState(false);
@@ -58,8 +60,8 @@ export default function SituationView({ taskContext, taskMode=false, initial, co
   const objects=useMemo(()=>uniqueObjects(Object.values(sources).flatMap(value=>value.items)).filter(item=>(!kind || item.ref.objectType===kind) && layers.includes(item.ref.objectType)),[sources,kind,layers]);
   const chosen=objects.find(item=>refKey(item.ref)===selected);
   const referencesMissing=Object.values(sources).flatMap(result=>result.unknownRefs);
-  return <section className={`situation-view${compact?' compact':''}`} aria-label="态势地图">
-    {!compact && !taskMode && <header className="information-heading"><div><h1>态势地图</h1><p>模拟态势 · {taskMode?'任务关注范围，不代表已确认的影响':'当前获准资料'}</p></div></header>}
+  const toolbar = <div className={`situation-toolbar${toolbarTarget?' in-titlebar':''}`}>
+    {!toolbarTarget && !compact && !taskMode && <header className="information-heading"><div><h1>态势地图</h1><p>模拟态势 · {taskMode?'任务关注范围，不代表已确认的影响':'当前获准资料'}</p></div></header>}
     {taskMode && <p className="resource-help">任务关注范围 · 不代表已确认的影响</p>}
     {setupError && <p role="alert" className="resource-error">{setupError}</p>}
     {!initial && <div className="situation-filters"><label>来源<select value={source} onChange={e=>{setSource(e.target.value);setArea('');}}><option value="">全部获准来源</option>{systems.map(system=><option key={system.id} value={system.id}>{system.name}</option>)}</select></label><label>区域<select value={area?JSON.stringify([source,area]):''} onChange={e=>{const [systemId,areaId]=e.target.value?JSON.parse(e.target.value):['',''];setSource(systemId);setArea(areaId);setAll(true);}}><option value="">全部区域</option>{systems.filter(s=>!source || s.id===source).flatMap(s=>s.areas.map(a=><option key={`${s.id}:${a.id}`} value={JSON.stringify([s.id,a.id])}>{s.name} · {a.name}</option>))}</select></label><label>对象类型<select value={kind} onChange={e=>setKind(e.target.value)}><option value="">全部类型</option><option value="road">道路</option><option value="resource">资源池</option><option value="area">区域</option></select></label></div>}
@@ -67,10 +69,13 @@ export default function SituationView({ taskContext, taskMode=false, initial, co
     {taskMode && !all && !hasRange && !area && <p className="resource-help">尚未设置态势范围，请选择区域或查看全部获准态势。</p>}
     {Object.entries(errors).filter(([,error])=>error).map(([id,error])=><p key={id} className="resource-error" role="alert">{id}：更新失败，已加载的内容可能过时。{error}</p>)}
     {referencesMissing.length>0 && <p className="resource-error">未找到对象：{referencesMissing.map(ref=>ref.objectId).join('、')}</p>}
-    <div className="situation-layers" aria-label="显示图层">{[['road','道路'],['resource','资源池'],['area','区域']].map(([id,label])=><label key={id}><input type="checkbox" checked={layers.includes(id)} onChange={e=>setLayers(old=>e.target.checked?[...old,id]:old.filter(item=>item!==id))}/>{label}</label>)}</div>
+    <details className="situation-layer-menu"><summary>图层</summary><div className="situation-layers" aria-label="显示图层">{[['road','道路'],['resource','资源池'],['area','区域']].map(([id,label])=><label key={id}><input type="checkbox" checked={layers.includes(id)} onChange={e=>setLayers(old=>e.target.checked?[...old,id]:old.filter(item=>item!==id))}/>{label}</label>)}</div></details>
+    </div>;
+  return <section className={`situation-view${compact?' compact':''}${toolbarTarget?' titlebar-map':''}`} aria-label="态势地图">
+    {toolbarTarget ? createPortal(toolbar,toolbarTarget) : toolbar}
     <div className="situation-content"><div className="situation-map-and-list">{config ? <Suspense fallback={<p role="status">正在加载地图…</p>}><Canvas objects={objects} selected={selected} config={config} select={setSelected}/></Suspense> : <p role="status">正在读取底图配置…</p>}
     <details open={compact || undefined} className="situation-object-list"><summary>对象列表 · {objects.length}</summary><ul>{objects.map(item=><li key={refKey(item.ref)}><button aria-pressed={selected===refKey(item.ref)} onClick={()=>setSelected(refKey(item.ref))}><strong>{item.name}</strong><span>{objectStatus(item)}{!item.geometry?' · 暂无位置':''}</span></button></li>)}</ul>{!objects.length && !busy && !Object.values(errors).some(Boolean) && <p>当前范围没有对象。</p>}</details></div>
-    <div className="situation-detail">{chosen ? <><h2>{chosen.name}</h2><p>{objectStatus(chosen)}</p>{!chosen.geometry && <p>暂无位置，可继续查询或引用。</p>}{initial && <p className="resource-help">{initial.revision?`依据版本 ${initial.revision}；`:'报告关联对象；'}地图显示当前态势，当前版本 {chosen.revision}。</p>}<dl><dt>来源</dt><dd>{catalog?.systems.find(s=>s.id===chosen.ref.systemId)?.name || chosen.ref.systemId}</dd><dt>对象编号</dt><dd>{chosen.ref.objectId}</dd><dt>修订</dt><dd>{chosen.revision}</dd><dt>业务生效时间</dt><dd>{chosen.effectiveAt || '未提供'}</dd><dt>有效时段</dt><dd>{chosen.validTime?`${chosen.validTime.from || '未限定'} ～ ${chosen.validTime.to || '未限定'}`:'未提供'}</dd><dt>本次查询时间</dt><dd>{sources[chosen.ref.systemId]?.queriedAt}</dd><dt>来源资料截止时间</dt><dd>{sources[chosen.ref.systemId]?.asOf}</dd></dl>{'restrictionNote' in chosen.properties && <p>{chosen.properties.restrictionNote}</p>}<button className="primary-action" onClick={()=>reference(chosen)}>引用到对话</button></> : <p className="resource-help">选择地图对象或列表条目查看详情。</p>}</div></div>
+    <div className="situation-detail" hidden={!compact && !chosen}>{chosen ? <><div className="situation-detail-heading"><h2>{chosen.name}</h2><button className="icon-button" aria-label="关闭对象详情" onClick={()=>setSelected('')}><X size={18} aria-hidden="true"/></button></div><p>{objectStatus(chosen)}</p>{!chosen.geometry && <p>暂无位置，可继续查询或引用。</p>}{initial && <p className="resource-help">{initial.revision?`依据版本 ${initial.revision}；`:'报告关联对象；'}地图显示当前态势，当前版本 {chosen.revision}。</p>}<dl><dt>来源</dt><dd>{catalog?.systems.find(s=>s.id===chosen.ref.systemId)?.name || chosen.ref.systemId}</dd><dt>对象编号</dt><dd>{chosen.ref.objectId}</dd><dt>修订</dt><dd>{chosen.revision}</dd><dt>业务生效时间</dt><dd>{chosen.effectiveAt || '未提供'}</dd><dt>有效时段</dt><dd>{chosen.validTime?`${chosen.validTime.from || '未限定'} ～ ${chosen.validTime.to || '未限定'}`:'未提供'}</dd><dt>本次查询时间</dt><dd>{sources[chosen.ref.systemId]?.queriedAt}</dd><dt>来源资料截止时间</dt><dd>{sources[chosen.ref.systemId]?.asOf}</dd></dl>{'restrictionNote' in chosen.properties && <p>{chosen.properties.restrictionNote}</p>}<button className="primary-action" onClick={()=>reference(chosen)}>引用到对话</button></> : <p className="resource-help">选择地图对象或列表条目查看详情。</p>}</div></div>
   </section>;
 }
 export type { ContextRef };

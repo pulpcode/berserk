@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Columns3, List, Menu, RefreshCw, Workflow } from 'lucide-react';
 import type { Identity, TaskSpace } from '../contracts/access';
@@ -49,7 +50,7 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
   async function mutate(path: string, body: object, method: 'POST' | 'PUT' = 'POST', dedup = false) {
     if (lock.current) return;
     lock.current = true; setBusy(true); setError(''); setNotice('');
-    const clientActionId = actionIds.current.get(path) || crypto.randomUUID(); if (dedup) actionIds.current.set(path, clientActionId);
+    const clientActionId = actionIds.current.get(path) || randomUUID(); if (dedup) actionIds.current.set(path, clientActionId);
     try { await api(path, dedup ? { ...body, clientActionId } : body, method); actionIds.current.delete(path); setNotice('操作已完成，已刷新当前记录。'); refresh(); }
     catch (reason) { setError(`${informationError(reason)} 请核对当前状态后重试。`); refresh(); }
     finally { lock.current = false; setBusy(false); }

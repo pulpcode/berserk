@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Inbox as InboxIcon, RefreshCw } from 'lucide-react';
 import type { Identity, TaskSpace } from '../contracts/access';
@@ -75,7 +76,7 @@ export function InboxHandlingControl({ id, initial, changed }: { id: string; ini
   }
   async function update(state: 'pending' | 'completed', retry?: Request) {
     if (lock.current || !current || (pending && !retry)) return;
-    const request = retry || { state, revision: current.revision, clientActionId: crypto.randomUUID() };
+    const request = retry || { state, revision: current.revision, clientActionId: randomUUID() };
     lock.current = true; retain(request); setBusy(true); setQueried(false); setError('');
     try {
       const result = await api<Result>(`/api/inbox/${encodeURIComponent(id)}/handling`, request, 'PUT');

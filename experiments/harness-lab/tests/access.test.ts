@@ -14,12 +14,12 @@ import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
 
 const cleanups:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const fn of cleanups.splice(0).reverse())await fn();});
-async function setup(managers = ['a']) {
+async function setup(managers = ['a'], publicOrigin?: string) {
   const dir=await mkdtemp(join(tmpdir(),'axon-access-'));cleanups.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir);const store=new AccessStore(db);
   for(const name of ['a','b','c'])await store.saveAccount({username:name,displayName:name,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:managers.includes(name),manageModelSettings:name==='a'});
   db.close();
-  const config=testConfig(dir,{seatId:'a',auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
+  const config=testConfig(dir,{seatId:'a',publicOrigin,auth:{secret:'test-only-signing-key-at-least-32-characters',sessionMs:28800000}});
   const fake=await fakeRuntime(config,()=>({text:'任务处理完成'})); const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);cleanups.push(()=>app.close());
   return {app,lab,dir,config,fake};
 }
@@ -36,6 +36,25 @@ async function login(app:FastifyInstance,name:string) {
 }
 const input=(visibility:'public'|'private'='public')=>({title:'联合任务',goal:'汇总资料形成计划',visibility,clientActionId:randomUUID()});
 describe('authenticated task scopes',()=>{
+  it('allows explicit HTTP access without weakening login, CSRF or origin checks', async () => {
+    const origin='http://192.0.2.10:4310',host='192.0.2.10:4310';
+    const {app}=await setup(['a'],origin);
+    for(const headers of [{host:'untrusted.example'},{host:'192.0.2.10:4311'},{host,origin:'http://untrusted.example'},{host,origin:'null'}]) {
+      expect((await app.inject({url:'/api/auth/session',headers})).statusCode).toBe(403);
+    }
+    expect((await app.inject({url:'/api/tasks',headers:{host}})).statusCode).toBe(401);
+    const boot=await app.inject({url:'/api/auth/session',headers:{host}});
+    expect(boot.statusCode).toBe(200);
+    const cookie=boot.cookies.map(c=>`${c.name}=${c.value}`).join('; ');
+    const payload={username:'a',password:'test-password-123'};
+    expect((await app.inject({method:'POST',url:'/api/auth/login',headers:{host,origin,cookie},payload})).statusCode).toBe(403);
+    const logged=await app.inject({method:'POST',url:'/api/auth/login',headers:{host,origin,cookie,'x-csrf-token':boot.json<AuthSession>().csrf!},payload});
+    expect(logged.statusCode,logged.body).toBe(200);
+    const auth=logged.json<AuthSession>();
+    const headers={host,origin,cookie:logged.cookies.map(c=>`${c.name}=${c.value}`).join('; '),'x-csrf-token':auth.csrf!,'x-axon-view':auth.viewId!};
+    expect((await app.inject({method:'POST',url:'/api/tasks',headers,payload:input('private')})).statusCode).toBe(200);
+    expect((await app.inject('/api/health')).statusCode).toBe(200);
+  });
   it('limits model configuration to managers while every seat can select a safe model for its own idle conversations', async () => {
     const { app, lab, config } = await setup();
     const a = await login(app, 'a'), b = await login(app, 'b');

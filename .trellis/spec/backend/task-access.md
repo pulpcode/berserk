@@ -14,7 +14,7 @@ Read for authentication, task metadata, workspace access or account provisioning
 
 ## 3. Contracts
 
-Official `@fastify/cookie@11.1.2` / `@fastify/session@11.1.3`, opaque signed HttpOnly SameSite=strict cookie, SQLite store and absolute expiry. HTTP secure=false is permitted only behind the existing loopback Host/Origin enforcement. No public registration or default password. Node scrypt uses random salt, N=131072/r=8/p=1 and constant-time comparison. Login attempts are limited by source and account, with at most two concurrent password derivations. Reset/disable revokes existing sessions.
+Official `@fastify/cookie@11.1.2` / `@fastify/session@11.1.3`, opaque signed HttpOnly SameSite=strict cookie, SQLite store and absolute expiry. HTTP secure=false is used for loopback and explicitly authorized direct-HTTP demonstrations with a configured public Origin; this does not encrypt credentials or cookies. Retain exact Host/Origin enforcement, login, CSRF and seat permissions. Long-term public HTTPS deployment requires separate secure-cookie configuration. No public registration or default password. Node scrypt uses random salt, N=131072/r=8/p=1 and constant-time comparison. Login attempts are limited by source and account, with at most two concurrent password derivations. Reset/disable revokes existing sessions.
 
 Only bootstrap/auth, static resources and minimal health are anonymous. Mutations require trusted Origin plus matching CSRF; business mutations also require `x-axon-view` matching the authenticated browser view. This marker conveys no authority. Read calls supplying it reject stale identities. SSE closes after login invalidation while accepted work continues under its captured seat. Invalid login does not cancel an Agent request.
 

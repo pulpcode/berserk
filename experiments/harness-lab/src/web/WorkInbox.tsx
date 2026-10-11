@@ -1,3 +1,4 @@
+import { randomUUID } from './random-uuid';
 import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
 import { ArrowLeft, Inbox, Plus, RefreshCw } from 'lucide-react';
 import type { SessionActivity, SessionSnapshot, Workspace } from '../contracts/index';
@@ -122,7 +123,7 @@ export function WorkInbox({ visible, control, seats, seatId, workspaces, activit
   async function prepare(input: WorkPrepareInput, retry?: PageWorkPrepareInput) {
     if (lock.current) return;
     if (draftsRef.current.pending && !retry) { setError('还有一项操作需要核对，请先继续确认或取消本次操作。'); return; }
-    const request: PageWorkPrepareInput = retry || { ...input, clientActionId: crypto.randomUUID() };
+    const request: PageWorkPrepareInput = retry || { ...input, clientActionId: randomUUID() };
     updateDrafts(current => ({ ...current, pending: { input: request } }));
     lock.current = true; setBusy(true); setError(''); setNotice(''); setAction(undefined);
     try {
