@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "复用现有查询、身份、原生历史和 HTTP 约束"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "对象选择与既有 composer 输入、历史、取消的兼容"}
+{"file": ".trellis/spec/backend/workbench.md", "reason": "沿用已合并工作台和导航权限边界"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口；实施前按其索引完整读取草稿与迟到响应相关约束"}
+{"file": ".trellis/tasks/10-11-situation-map-interaction/research/current-state.md", "reason": "本期核对过的实现依据与技术参考"}

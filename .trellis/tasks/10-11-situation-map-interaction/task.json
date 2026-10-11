@@ -1,0 +1,39 @@
+{
+  "id": "situation-map-interaction",
+  "name": "situation-map-interaction",
+  "title": "态势模拟与地图交互接入",
+  "description": "态势模拟与地图交互接入的待审设计：独立模拟源、在线 OSM 底图、Axon 地图三入口、回答对象定位、对象引用及验收计划；未开始编码。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "situation-map-interaction",
+  "package": null,
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-11",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/10-11-situation-map-interaction/design.md",
+    ".trellis/tasks/10-11-situation-map-interaction/implement.md",
+    ".trellis/tasks/10-11-situation-map-interaction/integration-contract.md",
+    ".trellis/tasks/10-11-situation-map-interaction/prd.md",
+    ".trellis/tasks/10-11-situation-map-interaction/research/current-state.md",
+    ".trellis/tasks/10-11-situation-map-interaction/review.md"
+  ],
+  "notes": "2026-10-11 用户审阅后授权整理 Git 并开始实施。在线 OSM 底图、正文对象定位及测试控制均纳入本期；不含线上发布。",
+  "meta": {
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "baselineCommit": "aa58851",
+    "desktopOnly": true,
+    "capabilityValidationOnly": true
+  }
+}
