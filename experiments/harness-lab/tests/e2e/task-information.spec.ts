@@ -79,7 +79,7 @@ test('multi-task information is visible without workspace creation; task continu
     await expect(page.getByRole('heading', { name: '后续处理', exact: true })).toHaveCount(0);
     await page.getByLabel('问题或工作要求').fill('收件入口独立草稿');
     await continuation.screenshot({ path: '/tmp/axon-continuation-compact.png' });
-    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();
+    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();
     await expect(page.getByRole('complementary',{name:'会话与资料'})).toBeVisible();
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     const detail=page.locator('.task-information .information-detail');
@@ -100,6 +100,8 @@ test('multi-task information is visible without workspace creation; task continu
     await page.screenshot({ path: '/private/tmp/axon-task-page.png', fullPage: true });
 
     await page.reload();await expect(detail.getByRole('heading',{name:'道路通行信息',exact:true})).toBeVisible();expect(page.url()).toBe(url);
+    const legacyLink = new URL(url); legacyLink.searchParams.delete('tab'); await page.goto(legacyLink.href);
+    await expect(detail.getByRole('heading', { name: '道路通行信息', exact: true })).toBeVisible();
     await expect(detail.getByLabel('处理位置', { exact: true })).toHaveCount(0);
     await detail.getByLabel('问题或工作要求').fill('针对联合分析任务继续核实');
     await detail.getByRole('button',{name:'发送并进入对话',exact:true}).click();
@@ -109,11 +111,11 @@ test('multi-task information is visible without workspace creation; task continu
     expect(action.taskSpaceId).toBe(env.task.id);expect(action.origin?.kind).toBe('task_information');
     expect(env.lab.get(action.sessionId!, 'a').messages.filter(message => message.role === 'user')).toHaveLength(1);
     await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('对话里的下一条草稿');
-    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();
+    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();
     await expect(page.locator('.workspace-header .workspace-name')).toHaveText('设备转移任务');
     await expect(page.locator('.workspace-header').getByRole('button',{name:'项目资料',exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
-    await expect(page.locator('.task-information').getByLabel('问题或工作要求')).toHaveValue('');
+    await expect(page.locator('.task-information .information-detail').getByLabel('问题或工作要求')).toHaveValue('');
     await page.locator('.session-item').first().click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toHaveValue('对话里的下一条草稿');
     await inbox(page);await expect(page.getByRole('textbox',{name:'问题或工作要求',exact:true})).toHaveValue('收件入口独立草稿');
     await page.screenshot({path:'test-results/task-information-desktop.png',fullPage:true});
@@ -233,7 +235,7 @@ test('manual link conflict keeps draft and requires reading the latest decision 
     await editor.getByRole('button',{name:'查看最新关联'}).click();await expect(editor.locator('.task-comparison')).toContainText('原始自动关联理由');await expect(editor.getByLabel('关联理由')).toHaveValue('我正在编辑的关联理由');
     await editor.getByRole('button',{name:'已核对，继续编辑'}).click();await editor.getByRole('button',{name:'保存关联'}).click();await expect(editor).toHaveCount(0);await expect(page.locator('.task-association-list')).toContainText('人工保留');
     await page.getByRole('button',{name:'调整关联',exact:true}).click();await editor.getByLabel('处理方式').selectOption('exclude');await editor.getByRole('button',{name:'保存关联'}).click();await expect(page.locator('.task-association-list')).toContainText('已移除');
-    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await expect(page.locator('.task-information')).toContainText('当前没有符合条件的获准关联信息');
+    await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();await expect(page.locator('.task-information')).toContainText('当前没有符合条件的获准关联信息');
   }finally{await env.close();}
 });
 
@@ -242,7 +244,7 @@ test('a late prepared-session response cannot leave the newly selected task or o
   try{
     await env.receive();await expect.poll(()=>env.store.listDeliveries().filter(item=>item.status==='delivered').length).toBe(2);
     assess(env,{items:[{taskSpaceId:env.task.id,taskRevision:env.task.revision,reason:'与本任务相关'},{taskSpaceId:env.second.id,taskRevision:env.second.revision,reason:'与设备转移相关'}]});
-    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
+    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await page.getByRole('textbox',{name:'问题或工作要求',exact:true}).fill('旧任务准备中的目标');
     let held=false;
     await page.route('**/api/sessions/*',async route=>{
@@ -250,7 +252,7 @@ test('a late prepared-session response cannot leave the newly selected task or o
       await route.fallback();
     });
     await page.getByRole('button',{name:'发送并进入对话',exact:true}).click();await expect.poll(()=>Boolean(release)).toBe(true);
-    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
+    await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await page.getByRole('textbox',{name:'问题或工作要求',exact:true}).fill('新任务正在编辑的内容');
     const response=page.waitForResponse(result=>/\/api\/sessions\/[^/]+$/.test(new URL(result.url()).pathname));release!();await response;
     await expect(page.getByRole('heading',{name:'设备转移任务',exact:true})).toBeVisible();await expect(page.getByRole('textbox',{name:'问题或工作要求',exact:true})).toHaveValue('新任务正在编辑的内容');
@@ -301,7 +303,7 @@ test('source choices cover later pages and remain available when switching direc
     const older={...env.store.getEvent(olderId),receivedAt:'2020-01-01T00:00:00.000Z'};
     env.store.db.prepare('UPDATE background_events SET received_at=?,data=? WHERE id=?').run(older.receivedAt,JSON.stringify(older),older.id);
     for(const job of env.store.listJobs())env.store.transaction(()=>env.store.saveTaskAssessmentInTransaction(job,{items:[{taskSpaceId:env.task.id,taskRevision:env.task.revision,reason:'与联合分析任务相关'}],recordedAt:new Date().toISOString(),toolCallId:'fixture-assessment'}));
-    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();
+    await login(page,'a');await page.getByRole('button',{name:'进入项目：联合分析任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();
     const panel=page.locator('.task-information');const source=panel.getByRole('combobox',{name:'来源',exact:true});
     await expect(panel.locator('.information-list li')).toHaveCount(25);
     await expect(panel.getByRole('button',{name:/较早态势信息/})).toHaveCount(0);
@@ -330,6 +332,133 @@ test('task and personal-space plus controls appear on hover or keyboard focus wi
     await expect(rowPlus).toHaveCSS('opacity', '1');
     await page.mouse.move(1200, 850); await rowPlus.focus(); await expect(rowPlus).toHaveCSS('opacity', '1');
     await rowPlus.press('Enter'); await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toBeEnabled();
+    expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
+
+test('task home describes before provisioning, remembers disclosure, sends a real first message and preserves the previous draft', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    await login(page, 'a');
+    await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
+    await page.goto(`/tasks/${env.task.id}/information`);
+    const home = page.locator('.task-home');
+    await expect(home.getByRole('heading', { name: '新建对话' })).toBeVisible();
+    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'true');
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
+    await home.getByRole('button', { name: '目标与说明', exact: true }).click();
+    await home.getByLabel('问题或工作要求').fill('梳理联合任务的第一步');
+    await page.reload();
+    await expect(home.getByRole('button', { name: '目标与说明', exact: true })).toHaveAttribute('aria-expanded', 'false');
+    await expect(home.getByLabel('问题或工作要求')).toHaveValue('梳理联合任务的第一步');
+    await home.getByRole('button', { name: '目标与说明', exact: true }).click();
+    await page.screenshot({ path: '/tmp/axon-task-home-desktop.png', fullPage: true });
+    await home.getByRole('button', { name: '发送并开始对话' }).click();
+    await expect(page).toHaveURL(/\?session=/);
+    await expect.poll(() => env.fake.calls.length).toBe(1);
+    const firstUrl = page.url();
+    await page.getByRole('textbox', { name: '发送消息', exact: true }).fill('原对话下一条草稿');
+    await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+    await expect(home.getByLabel('问题或工作要求')).toHaveValue('');
+    await home.getByLabel('问题或工作要求').fill('开启另一条独立讨论');
+    await home.getByRole('button', { name: '发送并开始对话' }).click();
+    await expect.poll(() => env.fake.calls.length).toBe(2);
+    expect(page.url()).not.toBe(firstUrl);
+    await page.goto(firstUrl);
+    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('原对话下一条草稿');
+    await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+    await page.setViewportSize({ width: 375, height: 812 });
+    await expect(home.getByLabel('问题或工作要求')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: '/tmp/axon-task-home-mobile.png', fullPage: true });
+  } finally { await env.close(); }
+});
+
+test('task home retains failed preparation and late creation cannot navigate away from another task', async ({ page }) => {
+  const env = await setup(); await env.attach(page); let release: (() => void) | undefined;
+  try {
+    await login(page, 'a'); await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
+    const home = page.locator('.task-home');
+    await home.getByLabel('问题或工作要求').fill('保留并发送这个问题');
+    let fail = true;
+    await page.route(`**/api/tasks/${env.task.id}/workspace`, async route => {
+      if (fail) { fail = false; await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'TEST', message: '测试准备失败' } }) }); }
+      else { await new Promise<void>(resolve => { release = resolve; }); await route.fallback(); }
+    });
+    await home.getByRole('button', { name: '发送并开始对话' }).click();
+    await expect(home.getByRole('alert')).toContainText('测试准备失败');
+    await expect(home.getByLabel('问题或工作要求')).toHaveValue('保留并发送这个问题');
+    await home.getByRole('button', { name: '发送并开始对话' }).click();
+    await expect.poll(() => Boolean(release)).toBe(true);
+    await page.getByRole('button', { name: '进入项目：设备转移任务', exact: true }).click();
+    release!();
+    await expect.poll(() => env.fake.calls.length).toBe(1);
+    await expect(page.getByRole('heading', { name: '设备转移任务', exact: true })).toBeVisible();
+    await expect(home.getByLabel('问题或工作要求')).toHaveValue('');
+    await home.getByLabel('问题或工作要求').fill('另一个任务的草稿');
+    await page.reload(); await expect(home.getByLabel('问题或工作要求')).toHaveValue('另一个任务的草稿');
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(1);
+  } finally { release?.(); await env.close(); }
+});
+
+test('archived task home is readonly and long descriptions expand without creating work', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    const longTask = env.lab.access!.create(env.actor, { title: '长说明归档任务', goal: '目标与背景说明。'.repeat(50), visibility: 'public', clientActionId: randomUUID() });
+    await login(page, 'a'); await page.getByRole('button', { name: '进入项目：长说明归档任务', exact: true }).click();
+    const home = page.locator('.task-home');
+    await home.getByRole('button', { name: '展开全文', exact: true }).click();
+    await expect(home.locator('.task-description-body')).toContainText(longTask.goal);
+    await page.getByRole('button', { name: '编辑说明', exact: true }).click();
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByRole('button', { name: '归档任务', exact: true }).click();
+    await expect(home.getByLabel('问题或工作要求')).toBeDisabled();
+    await expect(home.getByRole('button', { name: '发送并开始对话' })).toBeDisabled();
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0); expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
+
+test('task home blocks unavailable models and a rejected first send remains recoverable in its new conversation', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    await login(page, 'a'); await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
+    const home = page.locator('.task-home');
+    await home.getByLabel('问题或工作要求').fill('发送失败也要保留的问题');
+    await page.route('**/api/models', route => route.fulfill({ json: { defaultModelId: 'missing', models: [{ id: 'missing', model: '未配置模型', provider: 'test', configured: false, contextReady: false }] } }));
+    await page.reload(); await expect(home.getByRole('button', { name: '发送并开始对话' })).toBeDisabled();
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
+    await page.unroute('**/api/models'); await page.reload();
+    let sends = 0;
+    await page.route('**/api/sessions/*/messages', async route => { sends++; await route.fulfill({ status: 503, json: { error: { code: 'TEST_SEND', message: '测试发送暂时失败' } } }); });
+    await home.getByRole('button', { name: '发送并开始对话' }).click();
+    await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue('发送失败也要保留的问题');
+    await expect(page.getByRole('alert').filter({ hasText: '测试发送暂时失败' })).toContainText('测试发送暂时失败');
+    expect(sends).toBe(1); expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
+
+test('repeated task home model choices belong to new sessions and cannot alter the previous session', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    const profiles = [];
+    for (const model of ['home-choice-one', 'home-choice-two']) profiles.push(await env.lab.updateModelProfile({ provider: 'test-local', model, baseUrl: 'https://no-network.invalid', apiKey: 'test-home-model-key', contextWindow: 32768, maxOutputTokens: 2048, expectedVersion: env.lab.modelSettings().version }, undefined, true));
+    // Exercise admission and model persistence, rejecting messages before any provider/network work.
+    await page.route('**/api/sessions/*/messages', route => route.fulfill({ status: 503, json: { error: { code: 'TEST_MODEL', message: '测试暂不发送到模型' } } }));
+    await login(page, 'a'); await page.getByRole('button', { name: '进入项目：联合分析任务', exact: true }).click();
+    const home = page.locator('.task-home'); const ids: string[] = [];
+    for (const profile of profiles) {
+      await home.getByRole('combobox', { name: '选择模型' }).selectOption(profile.id);
+      await home.getByLabel('问题或工作要求').fill(`使用 ${profile.model} 开始讨论`);
+      await home.getByRole('button', { name: '发送并开始对话' }).click();
+      await expect(page).toHaveURL(/\?session=/);
+      const id = new URL(page.url()).searchParams.get('session')!; ids.push(id);
+      await expect(page.getByRole('textbox', { name: '发送消息', exact: true })).toHaveValue(`使用 ${profile.model} 开始讨论`);
+      expect(env.lab.get(id, 'a').modelId).toBe(profile.id);
+      await page.getByRole('button', { name: '查看任务说明', exact: true }).click();
+    }
+    expect(new Set(ids).size).toBe(2);
+    expect(env.lab.get(ids[0]!, 'a').modelId).toBe(profiles[0]!.id);
+    expect(env.lab.get(ids[1]!, 'a').modelId).toBe(profiles[1]!.id);
     expect(env.fake.calls).toHaveLength(0);
   } finally { await env.close(); }
 });

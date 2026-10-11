@@ -1094,3 +1094,32 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .task-page-tabs button[aria-current="page"] { background: var(--accent-soft); font-weight: 600; }
 .task-description { max-width: 800px; padding: 8px 0 24px; }
 .task-description h2 { font-size: 16px; }
+
+/* Task entry: read the brief and begin a conversation in one place. */
+.task-home { max-width: 880px; margin: 0 auto 32px; display: grid; gap: 24px; }
+.task-home-meta { display: flex; align-items: center; gap: 10px; }
+.task-home-meta span { border: 1px solid var(--line); border-radius: 20px; padding: 2px 9px; font-size: 12px; }
+.task-home .task-description { max-width: none; padding: 20px 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.task-description-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.task-home .task-description-heading h2 { margin: 0; }
+.task-description-heading h2 button { border: 0; padding-left: 0; font-weight: 600; background: transparent; }
+.task-description-heading svg.is-collapsed { transform: rotate(-90deg); }
+.task-description-body { margin-top: 14px; overflow-wrap: anywhere; }
+
+.task-description-more { margin-top: 12px; }
+.task-home-composer { display: grid; gap: 12px; border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--surface); }
+.task-home-composer h2, .task-home-composer p { margin: 0; }
+.task-home-composer > p { color: var(--muted); line-height: 1.6; }
+.task-home-composer > label { margin-top: 8px; font-size: 13px; font-weight: 500; }
+.task-home-composer textarea { resize: vertical; min-height: 120px; width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 10px; font: inherit; line-height: 1.6; background: var(--surface); color: inherit; }
+.task-home-composer-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.task-home-composer-actions .model-picker { min-width: 0; }
+.task-home-composer-actions .primary-action { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .task-information.information-inbox { padding: 20px 16px; }
+  .task-home { gap: 16px; }
+  .task-home .task-description, .task-home-composer { padding: 16px; }
+  .task-home-composer-actions { flex-wrap: wrap; }
+  .task-home-composer-actions .primary-action { width: 100%; }
+  .task-page-tabs { gap: 4px; }
+}

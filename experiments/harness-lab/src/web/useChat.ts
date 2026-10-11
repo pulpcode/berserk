@@ -303,11 +303,11 @@ export function useChat() {
     void request.finally(() => { if (modelListRequest.current === request) modelListRequest.current = null; }).catch(() => {});
     return request;
   }, [api]);
-  const chooseModel = useCallback(async (modelId: string) => {
-    const target = movedDrafts.current.get(draftKey) || draftKey;
+  const chooseModel = useCallback(async (modelId: string, owner = draftKey) => {
+    const target = movedDrafts.current.get(owner) || owner;
     const model = models?.models.find(item => item.id === modelId);
     if (!model?.configured || !model.contextReady || creatingRef.current || modelLocks.current.has(target)) return;
-    if (target.startsWith('workspace:')) {
+    if (target.startsWith('workspace:') || target.startsWith('task-home:')) {
       draftModelsRef.current = { ...draftModelsRef.current, [target]: modelId };
       setDraftModels(draftModelsRef.current); persist(MODEL_DRAFT_KEY, draftModelsRef.current);
       return;
@@ -369,21 +369,21 @@ export function useChat() {
     return workspace;
   }, [api, selectWorkspace]);
 
-  const create = useCallback(async (targetWorkspaceId = workspaceId, workItemId?: string): Promise<string | null> => {
+  const create = useCallback(async (targetWorkspaceId = workspaceId, workItemId?: string, options?: { draftKey: string; navigate: false }): Promise<string | null> => {
     if (creatingRef.current || !targetWorkspaceId) return null;
     const navigation = navigationRevision.current;
     creatingRef.current = targetWorkspaceId; setCreating(true);
     try {
-      const modelId = draftModelsRef.current[`workspace:${targetWorkspaceId}`];
+      const key = options?.draftKey || `workspace:${targetWorkspaceId}`;
+      const modelId = draftModelsRef.current[key];
       const snapshot = await api<SessionSnapshot>('/api/sessions', { workspaceId: targetWorkspaceId, ...(workItemId ? { workItemId } : {}), ...(modelId ? { modelId } : {}) });
       put(snapshot);
       // A delayed creation may populate its project, but must not undo later navigation.
-      if (navigationRevision.current === navigation) {
+      if (!options && navigationRevision.current === navigation) {
         selectForWorkspace(targetWorkspaceId, snapshot.id);
         selectWorkspace(targetWorkspaceId);
-      } else if (!selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
-      const key = `workspace:${targetWorkspaceId}`;
-      movedDrafts.current.set(key, snapshot.id);
+      } else if (!options && !selectionsRef.current[targetWorkspaceId]) selectForWorkspace(targetWorkspaceId, snapshot.id);
+      if (!options) movedDrafts.current.set(key, snapshot.id);
       if (draftModelsRef.current[key]) {
         const next = { ...draftModelsRef.current }; delete next[key];
         draftModelsRef.current = next; setDraftModels(next); persist(MODEL_DRAFT_KEY, next);
@@ -392,7 +392,7 @@ export function useChat() {
       if (draftsRef.current[key]) { draft(snapshot.id, draftsRef.current[key]); draft(key, ''); }
       setErrors(previous => ({ ...previous, [key]: '' }));
       return snapshot.id;
-    } catch (error) { setErrors(previous => ({ ...previous, [`workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
+    } catch (error) { setErrors(previous => ({ ...previous, [options?.draftKey || `workspace:${targetWorkspaceId}`]: reason(error) })); return null; }
     finally { creatingRef.current = null; setCreating(false); }
   }, [MODEL_DRAFT_KEY, workspaceId, api, put, selectForWorkspace, moveAttachments, moveSelections, selectWorkspace, draft]);
 
@@ -502,6 +502,7 @@ export function useChat() {
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,
     activities, activityError, activityConnectionError, refreshActivity, markRead, noteNavigation, adopt: put, hasDraft,
+    drafts, draftModels, setScopedDraft: draft,
     prepareDraft: (id: string, text: string) => { if (hasDraft(id)) return false; draft(id, text); return true; },
     prepareSelection: (id: string, kind: 'skill' | 'agent', value: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(id, kind, value),
     unread: Object.fromEntries(activities.map(item => [item.id, Boolean(!item.active && !item.backgroundJob && item.lastResult?.status === 'succeeded' && readResults[item.id] !== item.lastResult.requestId)])),
