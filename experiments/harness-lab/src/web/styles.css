@@ -88,12 +88,12 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .suggestions strong { font-size: 12px; font-weight: 500; }
 .suggestions button > span { font-size: 11px; color: var(--muted); margin-top: 7px; }
 .suggestions button > svg:last-child { position: absolute; right: 17px; top: 18px; color: #8a928e; }
-.message-list { max-width: 760px; margin: 0 auto; padding: 35px 0; }
+.message-list { --reply-inset: 36px; max-width: 760px; margin: 0 auto; padding: 35px 0; }
 .message { font-size: 14px; line-height: 1.9; margin-bottom: 30px; overflow-wrap: anywhere; }
 .message.user { display: flex; justify-content: flex-end; }
 .message.user .message-content { max-width: 87%; border-radius: 14px 14px 4px 14px; padding: 12px 18px; background: #f0f2f3; }
 .message.user p { margin: 0; white-space: pre-wrap; }
-.assistant .message-content { padding-left: 36px; }
+.assistant .message-content { padding-left: var(--reply-inset, 36px); }
 .message-content p { margin: 0 0 16px; }
 .message-content p:last-child { margin-bottom: 0; }
 .message-content h1, .message-content h2, .message-content h3 { font-size: 18px; margin: 24px 0 12px; line-height: 1.5; letter-spacing: 0; }
@@ -199,7 +199,7 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
   .suggestions button { padding: 14px; }
   .suggestions button > span { line-height: 1.6; font-size: 10px; }
   .suggestions button > svg:last-child { right: 13px; top: 15px; }
-  .message-list { padding: 24px 0; }
+  .message-list { --reply-inset: 0px; padding: 24px 0; }
   .message { font-size: 15px; }
   .message.user .message-content { max-width: 94%; padding: 10px 15px; }
   .assistant .message-content { padding-left: 0; }
@@ -508,6 +508,7 @@ input, select { font: inherit; }
 .historical-file a { color: var(--accent); }
 
 .interaction-card { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 18px 0; background: var(--surface); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; min-width: 0; }
+.message-list > .interaction-card { margin-left: var(--reply-inset); }
 .interaction-card > header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--accent); }
 .interaction-status { margin-left: auto; font-size: 12px; color: var(--text); }
 .interaction-questions fieldset { min-width: 0; border: 0; padding: 0; margin: 18px 0; }

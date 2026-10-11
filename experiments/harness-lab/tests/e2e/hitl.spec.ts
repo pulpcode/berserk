@@ -351,3 +351,33 @@ test('accepted stream failure and waiting refresh never restore the already sent
   await expect(page.getByLabel('填写回答', { exact: true })).toHaveValue('问题回答草稿');
   expect(state.sends).toBe(1); expect(state.posts).toHaveLength(0);
 });
+
+for (const kind of ['confirmation', 'question'] as const) test(`${kind} cards align with reply content at desktop and narrow widths`, async ({ page }) => {
+  const item = kind === 'confirmation' ? confirmation() : question();
+  const { a, state } = await fixture(page, item);
+  a.messages.unshift({ id: 'previous-reply', role: 'assistant', text: '请核对以下内容后继续。' });
+  await page.reload();
+  const card = page.locator('.message-list > .interaction-card');
+  const reply = page.locator('.message-list > .assistant .message-content > p');
+  for (const width of [1280, 800, 375]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(card).toBeVisible();
+    const cardBox = (await card.boundingBox())!;
+    const replyBox = (await reply.boundingBox())!;
+    expect(Math.abs(cardBox.x - replyBox.x)).toBeLessThan(1);
+    expect(Math.abs(cardBox.width - replyBox.width)).toBeLessThan(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    if (kind === 'confirmation') await page.screenshot({ path: test.info().outputPath(`aligned-confirmation-${width}.png`), fullPage: true });
+  }
+  if (kind === 'confirmation') {
+    a.interactions = [{ ...confirmation(), status: 'approved', execution: 'succeeded' }];
+    await page.reload();
+    const history = card.locator('.confirmation-history');
+    await expect(history).not.toHaveAttribute('open');
+    await history.locator('summary').click();
+    await expect(history).toHaveAttribute('open', '');
+    expect(Math.abs((await card.boundingBox())!.x - (await reply.boundingBox())!.x)).toBeLessThan(1);
+  }
+  expect(state.posts).toHaveLength(0);
+  expect(state.sends).toBe(0);
+});
