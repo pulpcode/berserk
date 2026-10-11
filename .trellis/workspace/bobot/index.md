@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 15
-- **Last Active**: 2026-10-10
+- **Total Sessions**: 16
+- **Last Active**: 2026-10-11
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~454 | Active |
+| `journal-1.md` | ~489 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 16 | 2026-10-11 | 态势地图与模拟控制实施及验证 | `99612f0`, `0670019` | `main` |
 | 15 | 2026-10-10 | 任务内方案修订验证实施与线上准备 | - | `main` |
 | 14 | 2026-09-22 | 实现单工具工作交接与确认衔接 | - | `main` |
 | 13 | 2026-09-22 | 发布信息处理与席位投递阶段 | `08f708f`, `baaedba` | `main` |
