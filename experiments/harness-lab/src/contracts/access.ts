@@ -9,6 +9,8 @@ export interface Identity {
 export interface AuthSession {
   mode: 'login' | 'test'; csrf?: string; viewId?: string; identity?: Identity;
   seats?: Array<{id: string; name: string}>;
+  /** Public login choices contain no account details, responsibilities or permissions. */
+  loginSeats?: Array<{id: string; name: string}>;
 }
 export interface TaskBusinessRef {
   systemId: string;

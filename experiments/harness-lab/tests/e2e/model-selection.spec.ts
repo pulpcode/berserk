@@ -50,7 +50,7 @@ async function setup() {
 }
 async function login(page: Page, username: string) {
   await page.goto('/');
-  await page.getByLabel('账号', { exact: true }).fill(username);
+  await page.getByLabel('席位', { exact: true }).selectOption(username);
   await page.getByLabel('密码', { exact: true }).fill(password);
   await page.getByRole('button', { name: '登录', exact: true }).click();
   await expect(page.getByRole('button', { name: '登录', exact: true })).toHaveCount(0);

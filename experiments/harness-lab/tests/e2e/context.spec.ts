@@ -44,7 +44,7 @@ async function setup(background = false) {
   return { lab, actor, task, fake, store, app, token, attach, close: async () => { for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank'); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
 }
 async function login(page: Page) {
-  await page.goto('/'); await page.getByLabel('账号', { exact: true }).fill('a'); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
+  await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption('a'); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
 }
 
 test('task context saves generic references, open time ranges and explicit clearing without creating a workspace', async ({ page }) => {

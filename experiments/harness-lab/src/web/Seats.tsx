@@ -40,7 +40,7 @@ function clearPrivateState() {
 export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
   const [state,setState]=useState<AuthSession>(); const [error,setError]=useState('');
   const [reload,setReload]=useState(0); const [busy,setBusy]=useState(false);
-  const [username,setUsername]=useState(''); const [password,setPassword]=useState(''); const [show,setShow]=useState(false);
+  const [seatId,setSeatId]=useState(''); const [password,setPassword]=useState(''); const [show,setShow]=useState(false);
   const [channel]=useState(()=>typeof BroadcastChannel==='undefined' ? undefined : new BroadcastChannel('axon-login'));
   useEffect(()=>{
     let current=true;
@@ -61,9 +61,9 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     window.addEventListener('focus',verify); return ()=>window.removeEventListener('focus',verify);
   },[client,state?.identity]);
   async function login() {
-    if(!state?.csrf || busy)return;setBusy(true);setError('');
+    if(!state?.csrf || busy || !state.loginSeats?.some(seat=>seat.id===seatId))return;setBusy(true);setError('');
     try {
-      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':state.csrf},body:JSON.stringify({username,password})});
+      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':state.csrf},body:JSON.stringify({seatId,password})});
       const body=await response.json(); if(!response.ok)throw new Error(body.error?.message || '登录未完成。');
       clearPrivateState();setPassword('');setState(body as AuthSession);channel?.postMessage('changed');
       history.replaceState(null,'','/');
@@ -78,11 +78,15 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
   if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
   return <main className="login-page"><form className="login-card" onSubmit={e=>{e.preventDefault();void login();}}>
     <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1><p>进入你的席位工作台</p>
-    <label htmlFor="login-user">账号</label><input id="login-user" autoComplete="username" value={username} onChange={e=>setUsername(e.target.value)} maxLength={64} required/>
-    <label htmlFor="login-password">密码</label><input id="login-password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} required/>
+    <label htmlFor="login-seat">席位</label><select id="login-seat" name="seatId" autoComplete="username" value={seatId} onChange={e=>{setSeatId(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !state?.loginSeats?.length} required>
+      <option value="" disabled>{!state?'正在加载席位…':state.loginSeats?.length?'请选择席位':'暂无可用席位'}</option>
+      {state?.loginSeats?.map(seat=><option key={seat.id} value={seat.id}>{seat.name}</option>)}
+    </select>
+    {state && !state.loginSeats?.length && <p role="status">暂无可用席位，请联系管理员。</p>}
+    <label htmlFor="login-password">密码</label><input id="login-password" name="password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} disabled={busy} required/>
     <label className="show-password"><input type="checkbox" checked={show} onChange={e=>setShow(e.target.checked)}/>显示密码</label>
     {error && <p role="alert" className="resource-error">{error}</p>}
-    <button className="primary-action" disabled={busy || !state} type="submit">{busy?'正在登录…':'登录'}</button>
+    <button className="primary-action" disabled={busy || !state?.loginSeats?.some(seat=>seat.id===seatId) || !password} type="submit">{busy?'正在登录…':'登录'}</button>
     {!state && <button type="button" onClick={()=>setReload(x=>x+1)}>重新连接</button>}
   </form></main>;
 }

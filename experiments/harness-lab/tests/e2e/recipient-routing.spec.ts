@@ -46,7 +46,7 @@ async function setup() {
   return {lab,store,fake,attach,receive,lose:()=>{loseResponse=true;},reject:()=>{rejectDecision=true;},close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
 }
 async function login(page:Page,name:string) {
-  await page.goto('/');await page.getByLabel('账号',{exact:true}).fill(name);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'设置',exact:true})).toBeVisible();
+  await page.goto('/');await page.getByLabel('席位', { exact: true }).selectOption(`seat-${name}`);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'设置',exact:true})).toBeVisible();
 }
 async function rule(page:Page) {
   await page.getByRole('button',{name:'工作总览',exact:true}).click();await page.getByRole('button',{name:'处理与投递规则',exact:true}).click();await page.getByRole('button',{name:'新建规则',exact:true}).click();

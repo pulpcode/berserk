@@ -32,7 +32,7 @@ async function setup(page:Page,simulation=false){
   const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...req.headers(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
   await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,value])=>value!==undefined).map(([key,value])=>[key,String(value)])),body:response.rawPayload});
  });
- await page.goto('/');await page.getByLabel('账号',{exact:true}).fill('a');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'态势地图',exact:true})).toBeVisible();
+ await page.goto('/');await page.getByLabel('席位', { exact: true }).selectOption('a');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'态势地图',exact:true})).toBeVisible();
  return {lab,fake,queries,task,road,tiles:()=>tiles,publicTiles:()=>publicTiles,offline:()=>{failSource=true;},close:async()=>{await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await source.close();await rm(dir,{recursive:true,force:true});}};
 }
 test('global and task maps query union, keep stale source data, use only fixture tiles and never call model when browsing',async({page})=>{

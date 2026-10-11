@@ -41,7 +41,7 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
     if(entry.count>8) throw new RequestError('LOGIN_LIMIT','尝试次数较多，请一分钟后重试。',429);
   };
   const result = (request: FastifyRequest): AuthSession => ({mode:'login',csrf:request.session.csrf,viewId:request.session.viewId,
-    ...(request.identity ? {identity:request.identity,seats:access.seats()} : {})});
+    ...(request.identity ? {identity:request.identity,seats:access.seats()} : {loginSeats:access.seats().map(({id,name})=>({id,name}))})});
   app.addHook('onRequest', async request => {
     const path=request.url.split('?')[0];
     if(!path.startsWith('/api/')) return;
@@ -63,12 +63,14 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
     request.session.expiresAt ??= Date.now()+config.sessionMs;
     return result(request);
   });
-  app.post<{Body:{username:string;password:string}}>('/api/auth/login',{schema:{body:{type:'object',additionalProperties:false,required:['username','password'],properties:{username:{type:'string',minLength:1,maxLength:64},password:{type:'string',minLength:1,maxLength:256}}}}},async request => {
-    throttle(`ip:${request.ip}`); throttle(`account:${request.body.username}`);
+  app.post<{Body:{username?:string;seatId?:string;password:string}}>('/api/auth/login',{schema:{body:{type:'object',additionalProperties:false,required:['password'],oneOf:[{required:['username']},{required:['seatId']}],properties:{username:{type:'string',minLength:1,maxLength:64},seatId:{type:'string',pattern:'^[a-zA-Z0-9_-]{1,64}$'},password:{type:'string',minLength:1,maxLength:256}}}}},async request => {
+    throttle(`ip:${request.ip}`);
+    const username=request.body.seatId ? access.identityForSeat(request.body.seatId)?.username ?? '' : request.body.username!;
+    throttle(`account:${username || `unknown-seat:${request.body.seatId}`}`);
     if(checking>=2) throw new RequestError('LOGIN_LIMIT','登录服务忙，请稍后重试。',429);
     checking++; let identity:Identity|undefined;
-    try {identity=await access.authenticate(request.body.username,request.body.password);} finally {checking--;}
-    if(!identity) throw new RequestError('INVALID_CREDENTIALS','账号或密码不正确。',401);
+    try {identity=await access.authenticate(username,request.body.password);} finally {checking--;}
+    if(!identity) throw new RequestError('INVALID_CREDENTIALS','席位或密码不正确。',401);
     await request.session.regenerate();
     request.session.userId=identity.userId; request.session.csrf=randomBytes(32).toString('hex'); request.session.viewId=randomBytes(24).toString('hex'); request.session.expiresAt=Date.now()+config.sessionMs;
     request.identity=identity; return result(request);

@@ -19,8 +19,27 @@ async function setup(secondManager = false) {
   });};
   return {lab,attach,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
 }
+test('seat login supports errors, password clearing and a narrow viewport', async ({ page }) => {
+  const env=await setup();await env.attach(page);
+  try {
+    await page.setViewportSize({width:375,height:812});await page.goto('/');
+    const seat=page.getByLabel('席位',{exact:true}),password=page.getByLabel('密码',{exact:true}),submit=page.getByRole('button',{name:'登录',exact:true});
+    await expect(seat).toHaveValue('');await expect(submit).toBeDisabled();
+    await expect(seat.locator('option')).toHaveText(['请选择席位','席位 a','席位 b']);
+    await seat.selectOption('a');await password.fill('wrong-password');await submit.click();
+    await expect(page.getByRole('alert')).toHaveText('席位或密码不正确。');await expect(seat).toHaveValue('a');
+    await seat.selectOption('b');await expect(password).toHaveValue('');await expect(page.getByRole('alert')).toHaveCount(0);
+    const bounds=await page.locator('.login-card').boundingBox();expect(bounds!.x).toBeGreaterThanOrEqual(0);expect(bounds!.x+bounds!.width).toBeLessThanOrEqual(375);
+    await password.fill('test-password-123');await password.press('Enter');await expect(submit).toHaveCount(0);
+  } finally {await env.close();}
+});
+test('empty seat choices cannot submit a login', async ({ page }) => {
+  await page.route('**/api/auth/session',route=>route.fulfill({json:{mode:'login',csrf:'test',loginSeats:[]}}));
+  await page.goto('/');await expect(page.getByRole('status')).toHaveText('暂无可用席位，请联系管理员。');
+  await expect(page.getByLabel('席位',{exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'登录',exact:true})).toBeDisabled();
+});
 async function login(page:Page,name:string) {
-  await page.goto('/');await page.getByLabel('账号',{exact:true}).fill(name);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'登录',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'设置',exact:true})).toBeVisible();
+  await page.goto('/');await page.getByLabel('席位', { exact: true }).selectOption(name);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'登录',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'设置',exact:true})).toBeVisible();
 }
 async function expectAccount(page: Page, name: string) {
   await page.getByRole('button', { name: '设置', exact: true }).click();
@@ -60,7 +79,7 @@ test('same-browser logout and identity change clear private drafts in both tabs'
   const env=await setup();await env.attach(page);const other=await context.newPage();await env.attach(other);
   try {
     await login(page,'a');await createTask(page,'私有笔记','private');await page.locator('.workspace-group-heading').filter({ has: page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}) }).hover(); await page.getByRole('button',{name:'在项目 私有笔记 中新建对话'}).click();await page.getByRole('textbox',{name:'发送消息'}).fill('只属于 A 的草稿');await other.goto('/');await expectAccount(other, 'a');
-    await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await page.getByLabel('账号',{exact:true}).fill('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expectAccount(other, 'b');await createTask(page,'B 的独立空间','private');await page.locator('.workspace-group-heading').filter({has:page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'})}).hover();await page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('');await expect(other.getByRole('button',{name:/私有笔记/})).toHaveCount(0);
+    await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await page.getByLabel('席位', { exact: true }).selectOption('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expectAccount(other, 'b');await createTask(page,'B 的独立空间','private');await page.locator('.workspace-group-heading').filter({has:page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'})}).hover();await page.getByRole('button',{name:'在项目 B 的独立空间 中新建对话'}).click();await expect(page.getByRole('textbox',{name:'发送消息'})).toHaveValue('');await expect(other.getByRole('button',{name:/私有笔记/})).toHaveCount(0);
   } finally {await env.close();await other.close();}
 });
 

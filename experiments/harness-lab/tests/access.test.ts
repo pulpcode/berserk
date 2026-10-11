@@ -36,6 +36,25 @@ async function login(app:FastifyInstance,name:string) {
 }
 const input=(visibility:'public'|'private'='public')=>({title:'联合任务',goal:'汇总资料形成计划',visibility,clientActionId:randomUUID()});
 describe('authenticated task scopes',()=>{
+  it('publishes only enabled seat labels and authenticates the selected seat with its own password', async () => {
+    const {app,lab}=await setup();
+    await lab.access!.saveAccount({username:'different-login',displayName:'隐藏账号名称',seatId:'seat-d',seatName:'演示席',password:'different-password-123',createPublicTask:false,manageModelSettings:false});
+    lab.access!.disable('c');
+    const boot=await app.inject('/api/auth/session');
+    expect(boot.json<AuthSession>().loginSeats).toEqual([{id:'a',name:'席位 a'},{id:'b',name:'席位 b'},{id:'seat-d',name:'演示席'}]);
+    for(const hidden of ['different-login','隐藏账号名称','responsibility','manageModelSettings','password_hash','salt']) expect(boot.body).not.toContain(hidden);
+    const headers={cookie:boot.cookies.map(c=>`${c.name}=${c.value}`).join('; '),origin:'http://localhost:4310','x-csrf-token':boot.json<AuthSession>().csrf!};
+    const attempt=(payload:object)=>app.inject({url:'/api/auth/login',method:'POST',headers,payload});
+    for(const payload of [{seatId:'missing',password:'test-password-123'},{seatId:'c',password:'test-password-123'},{seatId:'seat-d',password:'test-password-123'}]) {
+      const response=await attempt(payload);expect(response.statusCode).toBe(401);expect(response.json().error).toEqual({code:'INVALID_CREDENTIALS',message:'席位或密码不正确。'});
+    }
+    expect((await attempt({seatId:'seat-d',username:'a',password:'test-password-123'})).statusCode).toBe(400);
+    const logged=await attempt({seatId:'seat-d',password:'different-password-123'});
+    expect(logged.statusCode,logged.body).toBe(200);
+    expect(logged.json<AuthSession>().identity).toMatchObject({username:'different-login',seatId:'seat-d',seatName:'演示席',manageModelSettings:false});
+    expect(logged.json<AuthSession>().loginSeats).toBeUndefined();
+    expect(logged.cookies[0].value).not.toBe(boot.cookies[0].value);
+  });
   it('allows explicit HTTP access without weakening login, CSRF or origin checks', async () => {
     const origin='http://192.0.2.10:4310',host='192.0.2.10:4310';
     const {app}=await setup(['a'],origin);
