@@ -1,6 +1,6 @@
 # 态势地图人工测试指南
 
-本轮实现尚未更新线上服务。以下命令在 `experiments/harness-lab/` 执行，创建全新本机实例，不混用旧任务。
+线上已于 2026-10-11 更新，详见 [线上测试指南](server-test-guide.md)。以下命令在 `experiments/harness-lab/` 执行，创建全新本机实例，不混用旧任务。
 
 ```bash
 npm run build
