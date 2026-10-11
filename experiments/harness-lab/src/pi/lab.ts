@@ -1,3 +1,4 @@
+import { loadComposerContext } from '../context/composer.js';
 import { contextTools } from './context-tools.js';
 import { taskAssessmentTool, taskInformationTools, type TaskInformationReader } from './task-information-tools.js';
 import { recipientSuggestionTool } from './recipient-tools.js';
@@ -998,6 +999,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       if (!child) {
         active.roles = active.service?.roles ?? await loadAgentRoles(this.config.agentRolesDir, active.controller.signal);
         active.selections = resolveComposerSelection(active.input ?? {}, snapshot, active.roles);
+        if (active.input?.contextRefs) {
+          const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', seatId: record.seatId}, active.controller.signal);
+          if (context) active.selections = {...active.selections, context};
+        }
       }
       active.controller.signal.throwIfAborted();
       record.manager.appendCustomEntry(RESOURCE_ENTRY, requestRecord(active.id, snapshot, Boolean(child) || Boolean(active.background)));

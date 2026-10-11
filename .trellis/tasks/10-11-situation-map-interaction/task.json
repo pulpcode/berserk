@@ -2,8 +2,8 @@
   "id": "situation-map-interaction",
   "name": "situation-map-interaction",
   "title": "态势模拟与地图交互接入",
-  "description": "态势模拟与地图交互接入的待审设计：独立模拟源、在线 OSM 底图、Axon 地图三入口、回答对象定位、对象引用及验收计划；未开始编码。",
-  "status": "planning",
+  "description": "已实施态势模拟与地图交互接入：独立持久模拟源、MapLibre 在线底图、三处地图入口、对象引用和模拟控制。工程及真实模型验证已记录，真实在线底图人工验收待进行。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "situation-map-interaction",
   "package": null,
@@ -28,12 +28,13 @@
     ".trellis/tasks/10-11-situation-map-interaction/research/current-state.md",
     ".trellis/tasks/10-11-situation-map-interaction/review.md"
   ],
-  "notes": "2026-10-11 用户审阅后授权整理 Git 并开始实施。在线 OSM 底图、正文对象定位及测试控制均纳入本期；不含线上发布。",
+  "notes": "2026-10-11 用户审阅后授权整理 Git 并开始实施。在线 OSM 底图、正文对象定位及测试控制均纳入本期；不含线上发布。 工程验证与真实模型闭环已完成；保留任务等待在线 OSM 人工验收，未部署、未自动批准业务。",
   "meta": {
     "designStatus": "approved",
     "implementationApproved": true,
-    "baselineCommit": "aa58851",
+    "baselineCommit": "99612f0",
     "desktopOnly": true,
-    "capabilityValidationOnly": true
+    "capabilityValidationOnly": true,
+    "implementationStatus": "ready_for_manual_acceptance"
   }
 }

@@ -1,4 +1,5 @@
 import type { PublicMessage } from '../contracts';
+import { EvidenceMapLinks } from './situation/MapContext';
 import { informationTime } from './information-ui';
 
 const queries: Record<string, string> = { information_search: '报告检索', information_read: '报告正文', situation_query: '态势查询', task_search: '任务检索', task_read: '任务详情' };
@@ -25,7 +26,7 @@ function QueryEvidence({ message }: { message: PublicMessage }) {
   const items = data && (Array.isArray(data.items) ? data.items : data.item ? [data.item] : []);
   return <details className="context-evidence-query">
     <summary>{queries[message.toolName!]}{source ? ` · ${source === 'axon' ? 'Axon 任务' : source}` : ''}{items ? ` · ${items.length} 条记录` : ''}</summary>
-    <p className="resource-help">查询时间：{queriedAt ? informationTime(queriedAt) : '未提供'}</p>
+    <EvidenceMapLinks messages={[message]}/><p className="resource-help">查询时间：{queriedAt ? informationTime(queriedAt) : '未提供'}</p>
     {items && <ul className="context-evidence-records">{items.map((item, index) => <li key={index}>{description(item)}</li>)}</ul>}
     {data?.hasMore === true && <p className="resource-help">本次仅返回一页，仍有后续记录。</p>}
     {Array.isArray(data?.unknownRefs) && data.unknownRefs.length > 0 && <p className="resource-help">未找到的对象：{data.unknownRefs.map(reference).join('；')}</p>}

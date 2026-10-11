@@ -33,10 +33,14 @@ export interface InformationReportIndex {
 }
 export interface InformationReport extends InformationReportIndex { content: string }
 export interface InformationDetail { systemId: string; asOf: string; item: InformationReport }
+export type Position = [number, number];
+export type SituationGeometry = {type: 'Point'; coordinates: Position} | {type: 'LineString'; coordinates: Position[]} | {type: 'Polygon'; coordinates: Position[][]};
+export interface RoadProperties {passability: 'open' | 'restricted' | 'closed' | 'unknown'; restrictionNote?: string}
 export interface SituationObject {
   ref: ContextRef; name: string; revision: number; areaIds: string[];
   effectiveAt: string | null; validTime: ContextTimeRange | null;
-  properties: {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | Record<string, never>;
+  geometry?: SituationGeometry | null;
+  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | Record<string, never>;
 }
 export interface SituationChange {
   cursor: string; effectiveAt: string | null; before: SituationObject; after: SituationObject;
@@ -44,6 +48,9 @@ export interface SituationChange {
 export interface SituationCurrent extends ContextPage<SituationObject> { unknownRefs: ContextRef[]; changeCursor: string }
 export interface SituationChanges extends ContextPage<SituationChange> { unknownRefs: ContextRef[]; nextAfter: string | null }
 export type ContextData = ContextPage<InformationReportIndex> | InformationDetail | SituationCurrent | SituationChanges;
+export interface MapReference { ref: ContextRef; revision?: number; href: string }
+export interface MapConfig { providerId: string; tiles: string[]; tileSize: number; attributionText: string; attributionUrl: string; simulationEnabled?: boolean }
+export interface LoadedContextSelection { refs: ContextRef[]; queries: ContextQueryResult[] }
 export interface ContextQueryResult {
-  systemId: string; query: ContextQueryParams; queriedAt: string; data: ContextData;
+  systemId: string; query: ContextQueryParams; queriedAt: string; data: ContextData; mapReferences?: MapReference[];
 }

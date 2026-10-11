@@ -1,3 +1,4 @@
+import { contextRoutes } from './context-routes.js';
 import { WorkbenchService } from '../workbench/service.js';
 import { workbenchRoutes } from './workbench-routes.js';
 import { loadContextConfig, type ContextConfig } from '../context/config.js';
@@ -50,6 +51,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
       return reply.code(403).send({ error: { code: 'ORIGIN_REJECTED', message: '请求来源不受信任。' } });
     }
     reply.header('Cache-Control', 'no-store');
+    reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
     reply.header('X-Content-Type-Options', 'nosniff');
   });
   app.setErrorHandler<FastifyError>((error, _request, reply) => {
@@ -69,11 +71,12 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     const scope = apiScope(lab.config);
     scoped.addHook('onRequest', async request => { scope.seat(request); });
     await registerApi(scoped, lab, scope);
+    await contextRoutes(scoped,lab,scope,background,contextOptions?.env);
   });
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    for (const path of ['/information','/inbox','/work','/overview']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;
@@ -139,6 +142,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }, async request => lab.cancel(request.params.id, request.body.requestId, scope.seat(request)));
   app.post<{ Params: { id: string }; Body: ComposerSelection & { text: string; uploadIds?: string[]; fileRefs?: { path: string }[] } }>(`${scope.base}/sessions/:id/messages`, {
     schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 },
+      contextRefs: { type: 'array', maxItems: 20, items: {type:'object',additionalProperties:false,required:['systemId','objectType','objectId'],properties:{systemId:{type:'string',minLength:1,maxLength:128},objectType:{enum:['road','resource','area']},objectId:{type:'string',minLength:1,maxLength:128}}} },
       uploadIds: { type: 'array', maxItems: 100, items: uuid },
       fileRefs: { type: 'array', maxItems: 100, items: { type: 'object', additionalProperties: false, required: ['path'], properties: { path: { type: 'string', minLength: 1, maxLength: 4096 } } } },
       skill: { type: 'object', additionalProperties: false, required: ['id', 'hash'], properties: { id: { type: 'string', minLength: 1, maxLength: 80 }, hash: { type: 'string', pattern: '^[0-9a-f]{64}$' } } },
@@ -147,7 +151,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }, async (request, reply) => {
     const text = request.body.text.trim();
     if (!text) throw new RequestError('EMPTY_MESSAGE', '请输入消息。');
-    const execution = lab.start(request.params.id, text, { uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request));
+    const execution = lab.start(request.params.id, text, { contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request));
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });

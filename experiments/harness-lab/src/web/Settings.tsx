@@ -4,14 +4,15 @@ import type { Identity } from '../contracts/access';
 import { ModelCatalogSettings } from './ModelCatalogSettings';
 import { Panel } from './Resources';
 
-export function SettingsPanel({ identity, logout, logoutError, close, saved }: {
-  identity?: Identity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
+export function SettingsPanel({ identity, logout, logoutError, close, saved, simulation }: {
+  simulation?: () => void; identity?: Identity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
 }) {
   const modelAllowed = !identity || identity.manageModelSettings;
   const [section, setSection] = useState<'model' | 'account'>(modelAllowed ? 'model' : 'account');
   return <Panel title="设置" className="settings-panel" close={close}>
     <div className="settings-layout">
       <nav className="settings-nav" aria-label="设置分类">
+        {simulation && <button type="button" onClick={simulation}>模拟验证</button>}
         {modelAllowed && <button type="button" aria-current={section === 'model' ? 'page' : undefined} onClick={() => setSection('model')}><Cpu size={17} aria-hidden="true" />模型</button>}
         {identity && <button type="button" aria-current={section === 'account' ? 'page' : undefined} onClick={() => setSection('account')}><UserRound size={17} aria-hidden="true" />账户</button>}
       </nav>

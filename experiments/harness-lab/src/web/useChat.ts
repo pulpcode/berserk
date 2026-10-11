@@ -497,7 +497,7 @@ export function useChat() {
 
   function hasDraft(id: string) {
     const selection = composerSelections.current(id);
-    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.skill || selection.agent);
+    return Object.hasOwn(draftsRef.current, id) || attachments.current(id).length > 0 || Boolean(selection.skill || selection.agent || selection.contextRefs?.length);
   }
 
   return { info, refreshInfo, models, selectedModel, selectedModelId, chooseModel, refreshModels, modelsError, modelError: modelErrors[draftKey] || '', modelSaving: modelSaving[draftKey] || false, sessions: sessions.filter(item => item.workspaceId === workspaceId), snapshots, selected,

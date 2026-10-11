@@ -1,7 +1,10 @@
 import { RequestError } from '../contracts/errors.js';
 
-export interface ContextHttpOptions { timeoutMs?: number; maxBytes?: number; fetch?: typeof fetch }
+export interface ContextHttpOptions { timeoutMs?: number; maxBytes?: number; fetch?: typeof fetch; method?: 'GET' | 'POST'; body?: unknown }
 const sourceErrors: Record<string, {message: string; status: number}> = {
+  ACTION_CONFLICT: {message: '操作编号已用于不同内容，请核对原操作。', status: 409},
+  CONFLICT: {message: '模拟资料已变化或操作编号冲突，请刷新核对。', status: 409},
+  REVISION_CONFLICT: {message: '模拟资料版本已变化，请刷新核对。', status: 409},
   INVALID_ARGUMENT: {message: '来源不接受本次查询参数。', status: 400},
   UNSUPPORTED_FILTER: {message: '来源不支持本次过滤条件。', status: 400},
   INVALID_CURSOR: {message: '分页游标无效，请重新查询第一页。', status: 400},
@@ -22,10 +25,10 @@ export async function readContextJson(url: URL, token: string, signal?: AbortSig
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? 15_000);
   const maxBytes = options.maxBytes ?? 256 * 1024;
   try {
-    const response = await (options.fetch ?? fetch)(url, {headers: {Authorization: `Bearer ${token}`, Accept: 'application/json'}, redirect: 'manual', signal: controller.signal});
+    const response = await (options.fetch ?? fetch)(url, {method: options.method ?? 'GET', ...(options.body !== undefined ? {body: JSON.stringify(options.body)} : {}), headers: {Authorization: `Bearer ${token}`, Accept: 'application/json', ...(options.body !== undefined ? {'Content-Type':'application/json'} : {})}, redirect: 'manual', signal: controller.signal});
     if (response.status >= 300 && response.status < 400) { await response.body?.cancel(); throw new RequestError('CONTEXT_INVALID_RESPONSE', '来源返回了不允许的重定向。', 502); }
     const length = response.headers.get('content-length');
-    if (length !== null && Number(length) > maxBytes) { await response.body?.cancel(); throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', '来源响应超过 256 KiB，未读取部分资料。', 502); }
+    if (length !== null && Number(length) > maxBytes) { await response.body?.cancel(); throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', `来源响应超过 ${Math.floor(maxBytes / 1024)} KiB，未读取部分资料。`, 502); }
     if (!/^application\/json(?:\s*;|$)/i.test(response.headers.get('content-type') ?? '')) { await response.body?.cancel(); throw new RequestError('CONTEXT_INVALID_RESPONSE', '来源未返回 JSON 数据。', 502); }
     const chunks: Uint8Array[] = []; let size = 0;
     const reader = response.body?.getReader();
@@ -34,7 +37,7 @@ export async function readContextJson(url: URL, token: string, signal?: AbortSig
       for (;;) {
         const {done, value} = await reader.read(); if (done) break;
         size += value.byteLength;
-        if (size > maxBytes) { await reader.cancel(); throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', '来源响应超过 256 KiB，未读取部分资料。', 502); }
+        if (size > maxBytes) { await reader.cancel(); throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', `来源响应超过 ${Math.floor(maxBytes / 1024)} KiB，未读取部分资料。`, 502); }
         chunks.push(value);
       }
     } finally { reader.releaseLock(); }

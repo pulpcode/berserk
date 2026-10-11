@@ -4,6 +4,9 @@ import type { AddressInfo } from 'node:net';
 import { RequestError } from '../../src/contracts/errors.js';
 import type { ContextFilters, ContextRef, InformationReport, SituationChange, SituationQueryParams } from '../../src/contracts/context.js';
 import { normalizeContextQuery } from '../../src/context/validation.js';
+import { simulationPersistence } from './persistence.js';
+import { createControlApi, type NotificationTarget, type StoredAction } from './control-api.js';
+import { mapFixtures } from './map-fixtures.js';
 import { at, objects, reports, recoveryReport, updatedReport, unknownReport, vehicleRef } from './fixtures.js';
 
 export type MockStage = 'intel' | 'situation' | 'unknown' | 'contract' | 'recovery';
@@ -23,19 +26,41 @@ function byTime<T>(items: T[], time: (item: T) => string | null, from?: string, 
 }
 
 /** Independent HTTP source. Control methods exist only in this process/test driver. */
-export function createMockContextServer(options: {token: string}) {
+export function createMockContextServer(options: {token: string; controlToken?: string; databasePath?: string; instanceId?: string; day?: string; targets?: NotificationTarget[]}) {
   if (!options.token.trim()) throw new Error('MOCK_CONTEXT_API_TOKEN is required');
-  let epoch = randomUUID(), intelGeneration = 0, situationGeneration = 0;
+  let epoch: string = randomUUID(); let intelGeneration = 0, situationGeneration = 0;
   let reportData = reports(), objectData = objects(), changes: SituationChange[] = [];
   let intelAsOf = at('09:00'), situationAsOf = at('09:00');
+  const persistence = simulationPersistence(options.databasePath);
+  const instanceId = options.instanceId ?? 'legacy';
+  let actions: StoredAction[] = [];
+  const saved = persistence.load() as {instanceId:string; epoch:string; intelGeneration:number; situationGeneration:number; reportData:typeof reportData; objectData:typeof objectData; changes:typeof changes; intelAsOf:string; situationAsOf:string; actions:StoredAction[]} | undefined;
+  if (saved) {
+    if(saved.instanceId!==instanceId)throw new Error('Simulation database belongs to another instance');
+    ({epoch,intelGeneration,situationGeneration,reportData,objectData,changes,intelAsOf,situationAsOf,actions}=saved);
+  } else if(options.instanceId) {
+    const scene=mapFixtures(instanceId,options.day??new Date().toISOString().slice(0,10));reportData=scene.reports;objectData=scene.objects;intelAsOf=situationAsOf=scene.asOf;
+  }
+  const snapshotState = () => ({instanceId,epoch,intelGeneration,situationGeneration,reportData,objectData,changes,intelAsOf,situationAsOf,actions});
+  let committed = structuredClone(snapshotState());
+  const save = () => {
+    try {persistence.save(snapshotState()); committed = structuredClone(snapshotState());}
+    catch (error) {
+      ({epoch,intelGeneration,situationGeneration,reportData,objectData,changes,intelAsOf,situationAsOf,actions}=structuredClone(committed));
+      throw error;
+    }
+  };
+  save();
+  if(options.controlToken && options.controlToken===options.token)throw new Error('Control token must differ from query token');
   const unavailable = new Set<string>();
   const requests: Array<{method: string; path: string; status: number}> = [];
   const cursors = new Map<string, {epoch: string; generation: number; key: string; offset: number}>();
   const changeCursor = (seq: number) => `situation-${epoch}-seq-${seq}`;
   const head = () => changeCursor(100 + changes.length);
   function reset() {
+    if(options.instanceId)throw fail('INVALID_STAGE','地图实例请使用新的数据目录，不能重置编号。');
     epoch = randomUUID(); intelGeneration = situationGeneration = 0;
-    reportData = reports(); objectData = objects(); changes = []; intelAsOf = situationAsOf = at('09:00'); unavailable.clear();
+    reportData = reports(); objectData = objects(); changes = []; intelAsOf = situationAsOf = at('09:00'); unavailable.clear(); save();
   }
   function updateVehicles(count: number, time: string) {
     const index = objectData.findIndex(item => sameRef(item.ref, vehicleRef)), before = structuredClone(objectData[index]);
@@ -44,6 +69,7 @@ export function createMockContextServer(options: {token: string}) {
     situationGeneration++; situationAsOf = at(time);
   }
   function advance(stage: MockStage) {
+    if(options.instanceId)throw fail('INVALID_STAGE','地图实例使用 HTTP 控制修改。');
     if (stage === 'intel') {
       if (!reportData.some(r => r.reportId === 'report-west-01' && r.revision === 2)) { reportData.push(updatedReport()); intelGeneration++; if (intelAsOf < at('09:20')) intelAsOf = at('09:20'); }
     } else if (stage === 'recovery') {
@@ -66,6 +92,7 @@ export function createMockContextServer(options: {token: string}) {
           summary: '观测时间未提供。', content: '西区通道的这份记录没有提供观测时间或有效时段，尚需核实。', observedAt: null, validTime: null}); intelGeneration++;
       }
     } else throw fail('INVALID_ARGUMENT', '未知模拟阶段。');
+    save();
   }
   function event(name: MockEventName): MockNotification {
     if (name === 'E1') return {sourceMessageId: 'intel-msg-0001', title: '西区通道限制信息更新',
@@ -147,15 +174,23 @@ export function createMockContextServer(options: {token: string}) {
     const result = page(timed.items, filters, 'situation', url.pathname, timed.timeUnknownCount);
     return {...result, unknownRefs, nextAfter: result.hasMore ? null : head()};
   }
-  const server = createServer((req, res) => {
+  const control = createControlApi({instanceId,targets:options.targets??[],state:()=>({objects:objectData,reports:reportData,actions}),save,
+    updateObject(after) {const index=objectData.findIndex(o=>sameRef(o.ref,after.ref)),before=structuredClone(objectData[index]); changes.push({cursor:changeCursor(101+changes.length),effectiveAt:after.effectiveAt,before,after});objectData[index]=after;situationGeneration++;situationAsOf=new Date().toISOString();},
+    updateReport(report) {reportData.push(report);intelGeneration++;intelAsOf=new Date().toISOString();},
+  });
+  const server = createServer(async (req, res) => {
     const path = req.url ?? '/', method = req.method ?? 'GET';
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     let status = 200, body: unknown;
     try {
-      const supplied = Buffer.from(req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : ''), expected = Buffer.from(options.token);
+      const isControl = path.startsWith('/control/');
+      if(isControl&&!options.controlToken)throw fail('NOT_FOUND','控制未启用。',404);
+      const supplied = Buffer.from(req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : ''), expected = Buffer.from(isControl ? options.controlToken! : options.token);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) throw fail('UNAUTHORIZED', '查询凭证无效。', 401);
-      if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
-      body = query(new URL(path, 'http://127.0.0.1'));
+      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);} else {
+        if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
+        body = query(new URL(path, 'http://127.0.0.1'));
+      }
     } catch (error) {
       status = error instanceof RequestError ? error.statusCode : 400;
       body = {error: {code: error instanceof RequestError ? error.code : 'INVALID_ARGUMENT', message: error instanceof RequestError ? error.message : '查询参数无效。'}};
@@ -171,6 +206,6 @@ export function createMockContextServer(options: {token: string}) {
       await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, host, () => {server.removeListener('error', reject); resolve(); }); });
       return `http://${host}:${(server.address() as AddressInfo).port}`;
     },
-    async close() { if (!server.listening) return; await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); },
+    async close() { if (server.listening) await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); persistence.close(); },
   };
 }

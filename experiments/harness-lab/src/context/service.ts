@@ -1,3 +1,4 @@
+import { mapReferences } from './map-references.js';
 import { RequestError } from '../contracts/errors.js';
 import type { ContextCatalog, ContextPrincipal, ContextQueryResult, ContextScopeSnapshot, ContextTool } from '../contracts/context.js';
 import { assertContextCredentials, parseContextConfig, type ContextConfig } from './config.js';
@@ -29,7 +30,7 @@ export class ContextService {
     return {systems: this.config.systems.filter(s => ids.has(s.id)).map(s => ({id: s.id, name: s.name,
       objectTypes: s.adapter === 'mock-information-http' ? ['report'] : ['road', 'resource', 'area'],
       capabilities: s.adapter === 'mock-information-http' ? ['information_search', 'information_read'] : ['situation_current', 'situation_changes'],
-      areas: [{id: 'zone-west', name: '西区'}, {id: 'zone-east', name: '东区'}],
+      areas: s.areas ?? [],
     }))};
   }
   async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal): Promise<ContextQueryResult> {
@@ -51,6 +52,6 @@ export class ContextService {
     const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, this.httpOptions);
     signal?.throwIfAborted();
     const data = decodeContextResponse(tool, params, raw);
-    return {systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data};
+    return {systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data, mapReferences: mapReferences(data)};
   }
 }

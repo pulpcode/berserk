@@ -77,6 +77,8 @@ async function addModel(page: Page) {
 async function enter(page: Page, name: 'A' | 'B') {
   await page.getByRole('button', { name: `进入项目：模型项目 ${name}`, exact: true }).click();
   await expect(page.locator('.workspace-header .workspace-name')).toHaveText(`模型项目 ${name}`);
+  // The project title opens task details; explicitly enter its existing conversation.
+  await page.getByRole('region', { name: `模型项目 ${name}`, exact: true }).getByRole('button', { name: '新会话', exact: true }).click();
   await expect(composer(page)).toBeEnabled();
 }
 

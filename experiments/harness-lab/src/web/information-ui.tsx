@@ -4,6 +4,8 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { BackgroundAnalysisSummary, BackgroundFile, BackgroundJobStatus, BackgroundPage } from '../contracts/background';
 import { ApiFailure, checkResponse, useApi } from './api';
+import type { PublicMessage } from '../contracts';
+import { MapLink } from './situation/MapContext';
 import { fileSize } from './Files';
 
 export const jobLabels: Record<BackgroundJobStatus | 'preparing' | 'conversation_ready', string> = {
@@ -39,10 +41,10 @@ export function useInformationQuery<T>(path: string | undefined, visible: boolea
   }, [api, path, visible, interval, revision]);
   return { data: result && result.path === path ? result.data : undefined, error: failure && failure.path === path ? failure.message : '', denied: failure?.path === path && failure?.denied, refresh };
 }
-export function InformationText({ children }: { children: string }) {
+export function InformationText({ children, evidence = [] }: { children: string; evidence?: PublicMessage[] }) {
   return <div className="information-text"><Markdown remarkPlugins={[remarkGfm]} components={{
     img: ({ alt }) => <span>[图片：{alt || '未加载'}]</span>,
-    a: ({ children }) => <span>{children}</span>,
+    a: ({ href, children }) => <MapLink href={href} messages={evidence}>{children}</MapLink>,
     table: ({ children }) => <div className="markdown-table" role="region" aria-label="信息表格" tabIndex={0}><table>{children}</table></div>,
   }}>{children}</Markdown></div>;
 }

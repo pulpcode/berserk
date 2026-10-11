@@ -7,7 +7,7 @@ Read when changing composer file references, explicit Skill loading, role select
 ## 2. Signatures
 
 - Scoped `GET /workspaces/:id/agents` returns `{name,description,hash}[]` from existing controlled roles.
-- `POST /sessions/:id/messages` accepts optional `skill:{id,hash}` and `agent:{name,hash}`, alongside existing text/uploadIds/fileRefs. Reject extra fields; clients cannot supply Skill content, system prompts or permissions.
+- `POST /sessions/:id/messages` accepts optional `skill:{id,hash}`, `agent:{name,hash}`, and `contextRefs:ContextRef[]`, alongside existing text/uploadIds/fileRefs. Reject extra fields; clients cannot supply Skill content, source object bodies, system prompts or permissions.
 - `resolveComposerSelection` validates against the request resource snapshot and roles. `snapshotSkill` is shared with `skill_read`.
 - `PublicMessage.selections` contains the resolved Skill (including body) and/or role metadata for historical display.
 
@@ -16,6 +16,8 @@ Read when changing composer file references, explicit Skill loading, role select
 Resolve uploads and references in the captured seat's session workspace, deduplicate by resolved path, then apply the existing combined file limit. Same filenames in different directories remain distinct. File metadata is not a frozen business handoff or proof of reading.
 
 Explicit Skill selection loads the controlled body before `AgentSession.prompt`, without a synthetic `skill_read` call. No selection preserves ordinary on-demand tools. AGENTS.md, permissions and operation confirmation retain their existing authority.
+
+Map object references use complete `{systemId,objectType,objectId}` keys, at most 20, deduplicated independently of file limits. Before prompting, the host reads all selected current objects through `ContextService` as the authenticated seat. Missing/forbidden objects or failed queries stop preparation; do not silently send partial selections. Store the validated references and actual query envelopes (256 KiB combined limit) in the existing native custom input. `PublicMessage.selections.context` projects these facts on reopen. This is material supplied by the host, not a fabricated model tool call. Validate stored query/ref coverage and timestamps; never reload current facts to replace history. Old records without context retain their existing representation. See [Situation Map](./situation-map.md).
 
 Persist `berserk.composer-input.v1` through Pi's public custom-message API with `display:false`, owning workspace/session/request IDs and resolved selections. Save ordinary user text separately. Native history decoding validates ownership, hashes, body, ordering and duplicate records. Old histories require no migration. Normal Pi compaction can summarize this input; full JSONL remains available.
 

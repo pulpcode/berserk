@@ -75,9 +75,9 @@ function report(value: unknown, detail: boolean) {
   nullableTime(r.observedAt); nullableTime(r.publishedAt); timeRange(r.validTime);
   if (detail) contextText(r.content, 64_000, true);
 }
-function situationObject(value: unknown, systemId: string): SituationObject {
+export function situationObject(value: unknown, systemId: string): SituationObject {
   const keys = ['ref', 'name', 'revision', 'areaIds', 'effectiveAt', 'validTime', 'properties'];
-  const r = contextRecord(value, keys, keys), ref = contextRef(r.ref);
+  const r = contextRecord(value, [...keys, 'geometry'], keys), ref = contextRef(r.ref);
   if (ref.systemId !== systemId || !['road', 'resource', 'area'].includes(ref.objectType)) throw invalid();
   contextText(r.name, 200); contextInteger(r.revision); textList(r.areaIds); nullableTime(r.effectiveAt); timeRange(r.validTime);
   if (ref.objectType === 'resource') {
@@ -86,7 +86,26 @@ function situationObject(value: unknown, systemId: string): SituationObject {
   } else if (ref.objectType === 'area') {
     const p = contextRecord(r.properties, ['memberRefs'], ['memberRefs']);
     for (const member of refList(p.memberRefs)) if (member.systemId !== systemId || !['road', 'resource', 'area'].includes(member.objectType)) throw invalid();
-  } else contextRecord(r.properties, []);
+  } else {
+    const p = contextRecord(r.properties, ['passability', 'restrictionNote']);
+    if (Object.keys(p).length && !['open', 'restricted', 'closed', 'unknown'].includes(String(p.passability))) throw invalid();
+    if (p.restrictionNote !== undefined) contextText(p.restrictionNote, 1000, true);
+  }
+  if (r.geometry !== undefined && r.geometry !== null) {
+    const g = contextRecord(r.geometry, ['type', 'coordinates'], ['type', 'coordinates']);
+    const position = (v: unknown) => {
+      if (!Array.isArray(v) || v.length !== 2 || v.some(n => typeof n !== 'number' || !Number.isFinite(n)) || Math.abs(v[0]) > 180 || Math.abs(v[1]) > 90) throw invalid();
+      return v;
+    };
+    if (ref.objectType === 'resource' && g.type === 'Point') position(g.coordinates);
+    else if (ref.objectType === 'road' && g.type === 'LineString') {
+      if (array(g.coordinates, 200, position).length < 2) throw invalid();
+    } else if (ref.objectType === 'area' && g.type === 'Polygon') {
+      if (!Array.isArray(g.coordinates) || g.coordinates.length !== 1) throw invalid();
+      const ring = array(g.coordinates[0], 200, position);
+      if (ring.length < 4 || JSON.stringify(ring[0]) !== JSON.stringify(ring.at(-1))) throw invalid();
+    } else throw invalid();
+  }
   return value as SituationObject;
 }
 const sameRef = (a: ContextRef, b: ContextRef) => a.systemId === b.systemId && a.objectType === b.objectType && a.objectId === b.objectId;

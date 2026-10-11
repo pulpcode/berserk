@@ -36,13 +36,13 @@ export function contextTools(context: ContextService, tasks: TaskQueryService | 
   };
   return [
     defineTool({name: 'information_search', label: '查询报告',
-      description: `查询业务系统报告索引与历史修订，分页返回。支持的 systemId：${catalog('mock-information-http')}。组合筛选取交集；from/to 筛选观测时间。索引不等于正文，正文用 information_read。`,
+      description: `查询业务系统报告索引与历史修订，分页返回。支持的 systemId：${catalog('mock-information-http')}。组合筛选取交集；from/to 筛选观测时间。索引不等于正文，正文用 information_read。回答提及对象时，可将 mapReferences 中的 href 原样用于 Markdown 链接，格式为 [对象名称](href)。`,
       parameters: Type.Object({systemId: id, ...filters, reportId: Type.Optional(id), subjectId: Type.Optional(id), ...time}, {additionalProperties: false}), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(scoped => context.query('information_search', params, principal, scoped), signal)}),
-    defineTool({name: 'information_read', label: '读取报告', description: `按 systemId、reportId 读取完整报告。支持的 systemId：${catalog('mock-information-http')}。revision 指定历史修订，省略时返回最新修订；返回实际修订、业务时间和对象引用。`,
+    defineTool({name: 'information_read', label: '读取报告', description: `按 systemId、reportId 读取完整报告。支持的 systemId：${catalog('mock-information-http')}。revision 指定历史修订，省略时返回最新修订；返回实际修订、业务时间和对象引用。回答提及对象时，可将 mapReferences 中的 href 原样用于 Markdown 链接，格式为 [对象名称](href)。`,
       parameters: Type.Object({systemId: id, reportId: id, revision: Type.Optional(Type.Integer({minimum: 1}))}, {additionalProperties: false}), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(scoped => context.query('information_read', params, principal, scoped), signal)}),
-    defineTool({name: 'situation_query', label: '查询态势', description: `查询当前对象状态（current）或变化记录（changes）。支持的 systemId：${catalog('mock-situation-http')}。changes 可用 after 变化游标或 from/to 业务时间范围，不能混用；cursor 仅用于翻页，末页 nextAfter 用于下次增量查询。unknownRefs 表示未找到的对象，不能推断其状态。`,
+    defineTool({name: 'situation_query', label: '查询态势', description: `查询当前对象状态（current）或变化记录（changes）。支持的 systemId：${catalog('mock-situation-http')}。changes 可用 after 变化游标或 from/to 业务时间范围，不能混用；cursor 仅用于翻页，末页 nextAfter 用于下次增量查询。unknownRefs 表示未找到的对象，不能推断其状态。回答提及对象时，可将 mapReferences 中的 href 原样用于 Markdown 链接，格式为 [对象名称](href)。`,
       parameters: Type.Object({systemId: id, mode: Type.Union([Type.Literal('current'), Type.Literal('changes')]), ...filters, ...time,
         after: Type.Optional(Type.String({minLength: 1, maxLength: 2048}))}, {additionalProperties: false}), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(scoped => context.query('situation_query', params, principal, scoped), signal)}),

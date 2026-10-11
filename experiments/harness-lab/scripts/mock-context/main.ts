@@ -1,3 +1,6 @@
+import { readFile } from 'node:fs/promises';
+import { join, isAbsolute } from 'node:path';
+import type { NotificationTarget } from './control-api.js';
 import { chmod, unlink } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { RequestError } from '../../src/contracts/errors.js';
@@ -5,7 +8,25 @@ import { createMockContextServer, type MockEventName, type MockStage } from './s
 
 const token = process.env.MOCK_CONTEXT_API_TOKEN;
 if (!token) throw new Error('请配置 MOCK_CONTEXT_API_TOKEN。');
-const mock = createMockContextServer({token});
+let targets: NotificationTarget[] = [];
+const notificationConfig=process.env.MOCK_CONTEXT_NOTIFICATION_CONFIG;
+if(notificationConfig) {
+  if(!isAbsolute(notificationConfig))throw new Error('Notification config must be absolute');
+  const raw:unknown=JSON.parse(await readFile(notificationConfig,'utf8'));
+  if(!Array.isArray(raw))throw new Error('Invalid notification config');
+  targets=raw.map((entry:unknown)=>{
+    if(!entry||typeof entry!=='object')throw new Error('Invalid notification target');
+    const r=entry as Record<string,unknown>;
+    if(Object.keys(r).some(k=>!['systemId','sourceId','url','tokenEnv'].includes(k)) || !['intel','situation'].includes(String(r.systemId)) || typeof r.sourceId!=='string'||typeof r.url!=='string'||typeof r.tokenEnv!=='string')throw new Error('Invalid notification target');
+    const url=new URL(r.url);if(!['http:','https:'].includes(url.protocol)||url.username||url.password||url.search||url.hash||url.pathname!=='/')throw new Error('Notification URL must be an origin');
+    const value=process.env[r.tokenEnv];if(!value||value===token||value===process.env.MOCK_CONTEXT_CONTROL_TOKEN)throw new Error('Notification token missing or shared with query/control');
+    return {systemId:String(r.systemId),sourceId:r.sourceId,url:r.url,token:value};
+  });
+  if(new Set(targets.map(t=>t.systemId)).size!==targets.length)throw new Error('Duplicate notification system');
+}
+const dataDir=process.env.MOCK_CONTEXT_DATA_DIR;
+if(dataDir&&!isAbsolute(dataDir))throw new Error('MOCK_CONTEXT_DATA_DIR must be absolute');
+const mock = createMockContextServer({token,controlToken:process.env.MOCK_CONTEXT_CONTROL_TOKEN,databasePath:dataDir?join(dataDir,'simulation.sqlite'):undefined,instanceId:process.env.MOCK_CONTEXT_INSTANCE_ID,day:process.env.MOCK_CONTEXT_DAY,targets});
 const port = Number(process.env.MOCK_CONTEXT_PORT ?? 4401);
 if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('MOCK_CONTEXT_PORT 无效。');
 const url = await mock.listen(port);

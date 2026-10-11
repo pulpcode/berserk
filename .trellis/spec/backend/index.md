@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Situation Map and Mock Controls](./situation-map.md) for spatial queries, object references, online tiles and isolated simulation controls.
+
 Read [Unified Workbench and Work Overview](./workbench.md) for explicit inbox handling, cross-seat summary authorization, migrations and navigation.
 
 Read [Seat Responsibilities and Supplementary Delivery](../backend/seat-delivery.md) for integrated schema v7/v8, central duties, fixed delivery, overall-seat review and supplementary receipts.

@@ -36,7 +36,8 @@
     "mock:context:control": "tsx scripts/mock-context/control.ts",
     "probe:context": "tsx --env-file-if-exists=.env.local scripts/probe-context.ts",
     "probe:recipients": "tsx --env-file-if-exists=.env.local scripts/probe-recipients.ts",
-    "probe:task-plan": "tsx --env-file-if-exists=.env.local scripts/probe-task-plan.ts"
+    "probe:task-plan": "tsx --env-file-if-exists=.env.local scripts/probe-task-plan.ts",
+    "probe:situation-map": "tsx --env-file-if-exists=.env.local scripts/probe-situation-map.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",
@@ -46,6 +47,7 @@
     "@fastify/static": "10.1.3",
     "fastify": "5.12.5",
     "lucide-react": "1.46.0",
+    "maplibre-gl": "6.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-markdown": "10.1.0",

@@ -1,16 +1,19 @@
 import { useCallback, useRef, useState } from 'react';
 import type { AgentInfo, ComposerSelection, SkillInfo } from '../contracts/index';
 import { useApi } from './api';
+import type { ContextRef } from '../contracts/context';
+import { isRef, refKey } from './situation/evidence';
 
-export interface DraftSelection { skill?: SkillInfo; agent?: AgentInfo }
+export interface DraftSelection { skill?: SkillInfo; agent?: AgentInfo; contextRefs?: ContextRef[] }
 type SelectionMap = Record<string, DraftSelection>;
 function load(key: string): SelectionMap {
   try {
     const value: unknown = JSON.parse(sessionStorage.getItem(key) || '{}');
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
     return Object.fromEntries(Object.entries(value).filter(([, item]) => item && typeof item === 'object').map(([id, item]) => {
-      const { skill, agent } = item as DraftSelection;
+      const { skill, agent, contextRefs } = item as DraftSelection;
       return [id, {
+        ...(Array.isArray(contextRefs) ? {contextRefs: contextRefs.filter(isRef).slice(0,20)} : {}),
         ...(skill && ['id', 'name', 'description', 'version', 'hash'].every(key => typeof skill[key as keyof SkillInfo] === 'string') ? { skill } : {}),
         ...(agent && ['name', 'description', 'hash'].every(key => typeof agent[key as keyof AgentInfo] === 'string') ? { agent } : {}),
       }];
@@ -19,7 +22,7 @@ function load(key: string): SelectionMap {
 }
 function save(key: string, value: SelectionMap) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* Keep in-memory editing usable. */ } }
 export function selectionInput(value: DraftSelection): ComposerSelection {
-  return { ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
+  return { ...(value.contextRefs?.length ? {contextRefs:value.contextRefs} : {}), ...(value.skill ? { skill: { id: value.skill.id, hash: value.skill.hash } } : {}), ...(value.agent ? { agent: { name: value.agent.name, hash: value.agent.hash } } : {}) };
 }
 export function useComposerSelections() {
   const { storageKey } = useApi();
@@ -37,6 +40,7 @@ export function useComposerSelections() {
   const set = useCallback((owner: string, kind: 'skill' | 'agent', value?: SkillInfo | AgentInfo) => {
     update(old => ({ ...old, [owner]: { ...old[owner], [kind]: value } }));
   }, [update]);
+  const setContextRefs = useCallback((owner: string, refs: ContextRef[]) => update(old => ({...old,[owner]:{...old[owner],contextRefs:[...new Map(refs.map(ref=>[refKey(ref),ref])).values()].slice(0,20)}})),[update]);
   const move = useCallback((from: string, to: string) => update(old => ({ ...old, [to]: { ...old[from], ...old[to] }, [from]: {} })), [update]);
   const clearSubmitted = useCallback((owner: string) => {
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
@@ -46,22 +50,23 @@ export function useComposerSelections() {
     submitted.current = { ...submitted.current, [owner]: value }; save(sentKey, submitted.current);
     recoverable.current = { ...recoverable.current, [owner]: {} }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
     update(old => ({ ...old, [owner]: {
+      ...(old[owner]?.contextRefs !== value.contextRefs ? {contextRefs:old[owner]?.contextRefs} : {}),
       ...(old[owner]?.skill !== value.skill ? { skill: old[owner]?.skill } : {}),
       ...(old[owner]?.agent !== value.agent ? { agent: old[owner]?.agent } : {}),
     } }));
   }, [sentKey, recoveryKey, update, setRecovery]);
   const recover = useCallback((owner: string, allowAutomatic: boolean) => {
     const value = submitted.current[owner];
-    if (!value?.skill && !value?.agent) return;
+    if (!value?.skill && !value?.agent && !value?.contextRefs?.length) return;
     // Restore automatically only into empty slots; keep the original choice for
     // the existing explicit recovery action when a newer draft already exists.
     recoverable.current = { ...recoverable.current, [owner]: value }; save(recoveryKey, recoverable.current); setRecovery(recoverable.current);
-    if (allowAutomatic) update(old => ({ ...old, [owner]: old[owner]?.skill || old[owner]?.agent ? old[owner] : { ...value, ...old[owner] } }));
+    if (allowAutomatic) update(old => ({ ...old, [owner]: old[owner]?.skill || old[owner]?.agent || old[owner]?.contextRefs?.length ? old[owner] : { ...value, ...old[owner] } }));
     submitted.current = { ...submitted.current, [owner]: {} }; save(sentKey, submitted.current);
   }, [recoveryKey, sentKey, update, setRecovery]);
   const restore = useCallback((owner: string) => {
     const recovered = recoverable.current[owner];
-    update(old => ({ ...old, [owner]: recovered?.skill || recovered?.agent ? recovered : submitted.current[owner] || {} }));
+    update(old => ({ ...old, [owner]: recovered?.skill || recovered?.agent || recovered?.contextRefs?.length ? recovered : submitted.current[owner] || {} }));
   }, [update]);
-  return { all, recovery, set, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
+  return { all, recovery, set, setContextRefs, move, consume, recover, restore, clearSubmitted, current: (owner: string) => current.current[owner] || {} };
 }

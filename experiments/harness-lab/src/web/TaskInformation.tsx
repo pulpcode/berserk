@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { ArrowLeft, FileText, RefreshCw } from 'lucide-react';
 import type { Identity, TaskSpace } from '../contracts/access';
 import type { BackgroundAction } from '../contracts/background';
 import type { TaskInformationDetail, TaskInformationPage } from '../contracts/task-information';
 import type { Workspace } from '../contracts/index';
+import { useSituationMap } from './situation/MapContext';
+const SituationView=lazy(()=>import('./situation/SituationView'));
 import { useApi } from './api';
 import { ContextEvidence } from './ContextEvidence';
 import { InformationContinuation } from './InformationContinuation';
@@ -13,13 +15,13 @@ import { AnalysisHistory, InformationFiles, InformationPagination, InformationTe
 
 function readSelection() { const params = new URLSearchParams(location.search); return { eventId: params.get('eventId') || '', jobId: params.get('jobId') || '' }; }
 export function TaskInformation({ taskId, visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask, editTask }: { taskId: string; editTask: () => void; visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{id:string;name:string}>; prepared: (action: BackgroundAction, current: () => boolean, sendNow?: boolean) => Promise<boolean>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
-  const { domId } = useApi();
+  const { domId } = useApi(); const map=useSituationMap();
   const [selection, setSelection] = useState(readSelection); const [search, setSearch] = useState(''); const [sourceId, setSourceId] = useState(''); const [offset, setOffset] = useState(0);
-  const [tab, setTab] = useState(() => new URLSearchParams(location.search).get('tab') === 'description' ? 'description' : 'information');
+  const [tab, setTab] = useState(() => ['description','situation'].includes(new URLSearchParams(location.search).get('tab') || '') ? new URLSearchParams(location.search).get('tab')! : 'information');
   function changeTab(next: string) {
     if (next === tab) return;
     const query = new URLSearchParams(location.search);
-    if (next === 'description') query.set('tab', next); else query.delete('tab');
+    if (next !== 'information') query.set('tab', next); else query.delete('tab');
     history.pushState(null, '', `${location.pathname}${query.size ? `?${query}` : ''}`);
     setTab(next);
   }
@@ -34,14 +36,15 @@ export function TaskInformation({ taskId, visible, identity, tasks, workspaces, 
     history.pushState(null, '', `/tasks/${encodeURIComponent(taskId)}/information${eventId ? `?${new URLSearchParams({ eventId, jobId })}` : ''}`);
   }
   useEffect(() => {
-    const pop = () => { if (location.pathname === `/tasks/${encodeURIComponent(taskId)}/information`) { setSelection(readSelection()); setTab(new URLSearchParams(location.search).get('tab') === 'description' ? 'description' : 'information'); } };
+    const pop = () => { if (location.pathname === `/tasks/${encodeURIComponent(taskId)}/information`) { setSelection(readSelection()); setTab(['description','situation'].includes(new URLSearchParams(location.search).get('tab') || '') ? new URLSearchParams(location.search).get('tab')! : 'information'); } };
     window.addEventListener('popstate', pop); return () => window.removeEventListener('popstate', pop);
   }, [taskId]);
   const sourceChoices = new Map(list.data?.sources?.map(source => [source.id, source.name]) ?? list.data?.items.map(item => [item.sourceId, item.sourceName || item.sourceId]));
   if (sourceId && !sourceChoices.has(sourceId)) sourceChoices.set(sourceId, sourceId);
   return <section id={domId('task-information')} className="information-inbox task-information" hidden={!visible} tabIndex={-1} aria-label="任务详情">
     <header className="information-heading"><div><h1>{task?.title || '任务'}</h1><p>查看关联依据，结合本任务继续提问或开展工作。{task?.state === 'archived' ? '此任务已归档。' : ''}</p></div>{tab === 'information' && <button onClick={() => { list.refresh(); detail.refresh(); }}><RefreshCw size={16} aria-hidden="true" />刷新相关信息</button>}</header>
-    <nav className="task-page-tabs" aria-label="任务详情页签">{([['information','相关信息'],['description',task?.visibility === 'private' ? '空间说明' : '任务说明']] as const).map(([id,label]) => <button key={id} aria-current={tab === id ? 'page' : undefined} onClick={()=>changeTab(id)}>{label}</button>)}</nav>
+    <nav className="task-page-tabs" aria-label="任务详情页签">{([['information','相关信息'],['situation','态势'],['description',task?.visibility === 'private' ? '空间说明' : '任务说明']] as const).map(([id,label]) => <button key={id} aria-current={tab === id ? 'page' : undefined} onClick={()=>changeTab(id)}>{label}</button>)}</nav>
+    {visible && tab === 'situation' && <Suspense fallback={<p role="status">正在加载态势…</p>}><SituationView taskMode taskContext={task?.context} reference={map.reference}/></Suspense>}
     <div hidden={tab !== 'description'} className="task-description">
       {task ? <><h2>目标与说明</h2><InformationText>{task.goal || '暂无说明'}</InformationText><TaskContextSummary context={task.context}/><p className="resource-help">{task.state === 'archived' ? '已归档' : '进行中'}</p>{(task.visibility === 'public' ? identity.createPublicTask : task.ownerSeatId === identity.seatId) && <button onClick={editTask}>编辑说明</button>}</> : <p role="status">正在读取任务说明…</p>}
     </div>
@@ -54,7 +57,7 @@ export function TaskInformation({ taskId, visible, identity, tasks, workspaces, 
         {detail.error && <p className="resource-error" role="alert">{detail.error} 当前详情不能继续处理。<button onClick={() => { detail.refresh(); list.refresh(); }}>重新读取</button></p>}
         {!value ? !detail.error && <p role="status">正在读取信息…</p> : <>
           <header><h2>{value.title}</h2><p>{value.sourceName || value.sourceId} · 分析于 {informationTime(value.analysisAt)}</p><p>{value.reason}</p>{value.taskChanged && <p className="resource-help">任务说明已更新，关联依据为旧版本。</p>}</header>
-          <section><h3>处理结果</h3><InformationText>{value.resultText || '此次处理没有文字答复。'}</InformationText><InformationFiles files={value.resultFiles} base={`${detailBase}/files`} query={new URLSearchParams({ jobId: value.jobId }).toString()} /><ContextEvidence messages={value.queryMessages} /></section>
+          <section><h3>处理结果</h3><InformationText evidence={value.queryMessages}>{value.resultText || '此次处理没有文字答复。'}</InformationText><InformationFiles files={value.resultFiles} base={`${detailBase}/files`} query={new URLSearchParams({ jobId: value.jobId }).toString()} /><ContextEvidence messages={value.queryMessages} /></section>
           <details className="information-original"><summary>查看原文与附件</summary><InformationText>{value.text}</InformationText><InformationFiles files={value.event.files} base={`${detailBase}/files`} query={new URLSearchParams({ jobId: value.jobId }).toString()} /></details>
           <TaskAssociations key={`links:${value.eventId}:${value.jobId}`} eventId={value.eventId} jobId={value.jobId} visible={visible && tab === 'information'} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={() => { list.refresh(); detail.refresh(); }} />
           <InformationContinuation key={`${taskId}:${value.eventId}:${value.jobId}`} scope={`task:${taskId}:${value.eventId}:${value.jobId}`} visible={visible && tab === 'information'} base={detailBase} jobId={value.jobId} fixedTaskId={taskId} tasks={tasks} workspaces={workspaces} files={value.event.files} resultFiles={value.resultFiles} prepared={prepared} openSession={openSession} changed={() => { list.refresh(); detail.refresh(); }} />

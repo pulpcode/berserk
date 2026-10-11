@@ -12,6 +12,8 @@ This directory contains guidelines for frontend development. Fill in each file w
 
 ## Pre-Development and Quality Check
 
+Read [Situation Map and Mock Controls](../backend/situation-map.md) for shared map entries, evidence links, object drafts, tile failures and simulation permissions.
+
 Read [Unified Workbench and Work Overview](../backend/workbench.md) for explicit inbox handling, cross-seat summary authorization, migrations and navigation.
 
 Read [Seat Responsibilities and Supplementary Delivery](../backend/seat-delivery.md) for integrated schema v7/v8, central duties, fixed delivery, overall-seat review and supplementary receipts.
