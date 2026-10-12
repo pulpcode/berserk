@@ -509,3 +509,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 18: 消息排队与引导交互上线
+
+**Date**: 2026-10-12
+**Task**: 消息排队与引导交互上线
+**Branch**: `main`
+
+### Summary
+
+实现 Pi 原生排队与引导及紧凑 Queue UI；335 项单元集成和 61 项浏览器回归通过。用户授权后中文提交并更新 tencent-server 唯一 4315 服务，发布前无活动请求，停服备份，公网健康、四席位登录、队列回执查询、十个源码哈希与三份历史完整性校验通过。未推送远端仓库。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9fafae0` | (see git log) |
+
+### Status
+
+[OK] **Completed**
