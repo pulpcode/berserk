@@ -283,7 +283,7 @@ test('Chinese composition filters the browsed directory and caret movement aband
   } finally { await env.close(); }
 });
 
-for (const newerText of ['新的目标', '原始目标']) test(`late preparation failure preserves choices and explicit recovery restores text with Skill (${newerText})`, async ({ page }) => {
+for (const newerText of ['新的目标', '原始目标']) test(`busy input keeps text editable and defers selection changes until failure settles (${newerText})`, async ({ page }) => {
   const env = await setup(page);
   try {
     await page.goto('/'); await selectSkill(page, 'review'); await selectAgent(page); await input(page).fill('原始目标');
@@ -291,8 +291,13 @@ for (const newerText of ['新的目标', '原始目标']) test(`late preparation
     env.controls.delayReply = 1200;
     await visible(page).getByRole('button', { name: '发送消息', exact: true }).click();
     await expect.poll(() => env.messages.length).toBe(1);
-    await selectSkill(page); await input(page).fill(newerText);
+    await expect(visible(page).getByRole('button', { name: '添加附件' })).toBeDisabled();
+    await input(page).fill(newerText);
     await expect(visible(page).getByRole('alert')).toContainText('重新选择');
+    // Rich choices are editable again after settlement. Explicitly replace any recovered original choices.
+    await selectSkill(page);
+    const removeAgent = visible(page).getByRole('button', { name: '移除 Agents', exact: true });
+    if (await removeAgent.count()) await removeAgent.click();
     await expect(input(page)).toHaveValue(newerText); await expect(picks(page)).toContainText('资料综合写作'); await expect(picks(page)).not.toContainText('analyst');
     await page.reload();
     await expect(input(page)).toHaveValue(newerText); await expect(picks(page)).toContainText('资料综合写作');

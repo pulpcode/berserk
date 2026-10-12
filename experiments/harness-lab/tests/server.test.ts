@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -60,7 +61,7 @@ describe('local API with real Pi sessions', () => {
     expect(reply.statusCode).toBe(200);
     expect(reply.headers['content-type']).toContain('text/event-stream');
     const stream = events(reply.payload);
-    expect(stream.map(event => event.type)).toEqual(['response.started', 'resources.loaded', 'text.delta', 'response.completed']);
+    expect(stream.filter(event => event.type !== 'input.queue').map(event => event.type)).toEqual(['response.started', 'resources.loaded', 'text.delta', 'response.completed']);
     expect(stream.every(event => event.sessionId === a.id && event.requestId === stream[0].requestId)).toBe(true);
     const history = (await app.inject(`/api/sessions/${a.id}`)).json<SessionSnapshot>();
     expect(history.messages.map(message => message.text)).toEqual(['记住请求标记', '实际 Pi 回复']);
@@ -93,6 +94,35 @@ describe('local API with real Pi sessions', () => {
     expect(stale.statusCode).toBe(409);
     expect(stale.json().error.code).toBe('STALE_REQUEST');
     expect(calls).toHaveLength(1);
+  });
+
+  it('accepts pure-text intake once, rejects stale or privileged fields, and exposes stop recovery without a second stream', async () => {
+    const {app, lab, calls} = await setup(() => ({waitForAbort: true}));
+    const session = await lab.createSession(); const request = lab.start(session.id, '初始');
+    const work = request.run(() => {});
+    await vi.waitFor(() => expect(lab.get(session.id).inputQueue?.available).toBe(true));
+    const body = {submissionId: randomUUID(), expectedRequestId: request.requestId, mode: 'followUp', text: '保留'};
+    const url = `/api/sessions/${session.id}/inputs`;
+    for (const extra of [{uploadIds: []}, {skill: {}}, {contextRefs: []}, {seatId: 'other'}]) {
+      expect((await app.inject({method: 'POST', url, payload: {...body, ...extra}})).statusCode).toBe(400);
+    }
+    expect((await app.inject({method: 'POST', url, payload: {...body, expectedRequestId: randomUUID()}})).statusCode).toBe(409);
+    const accepted = await app.inject({method: 'POST', url, payload: body});
+    expect(accepted.statusCode).toBe(200); expect(accepted.json().receipt.status).toBe('pending');
+    expect(accepted.headers['content-type']).toContain('application/json');
+    await app.inject({method: 'POST', url, payload: body});
+    expect(lab.get(session.id).inputQueue?.items).toHaveLength(1);
+    expect((await app.inject({method: 'POST', url, payload: {...body, text: '不同'}})).statusCode).toBe(409);
+    expect((await app.inject({method: 'POST', url, payload: body, headers: {origin: 'https://attacker.example'}})).statusCode).toBe(403);
+    const receipt = await app.inject(`${url}/${body.submissionId}`);
+    expect(receipt.json().receipt.status).toBe('pending'); expect(calls).toHaveLength(1);
+    lab.cancel(session.id, request.requestId); await work;
+    expect((await app.inject(`${url}/${body.submissionId}`)).json().receipt.status).toBe('returned');
+    const take = {actionId: randomUUID(), expectedRequestId: request.requestId, pendingRevision: 0, action: 'takeback'};
+    const result = await app.inject({method: 'POST', url: `${url}/${body.submissionId}/actions`, payload: take});
+    expect(result.statusCode).toBe(200); expect(result.json().receipt.status).toBe('takenBack');
+    expect((await app.inject({method: 'POST', url: `${url}/${body.submissionId}/actions`, payload: take})).json().receipt.status).toBe('takenBack');
+    expect((await app.inject(`${url}/${randomUUID()}`)).json().receipt).toBeNull();
   });
 
   it('rejects malformed bodies, unknown sessions and unsafe origins before any model request', async () => {

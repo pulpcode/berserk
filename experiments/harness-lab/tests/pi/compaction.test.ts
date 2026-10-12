@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm, readdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -153,6 +154,26 @@ describe('native recovery and sustained work', () => {
     expect(events.filter(event => event.type.startsWith('response.') && event.type !== 'response.started')).toHaveLength(1);
     expect(lab.get(session.id).messages.filter(message => message.role === 'user' && message.text === '恢复唯一输入')).toHaveLength(1);
     expect(calls.filter(call => isSummary(call.context)).length).toBeGreaterThan(0);
+  });
+
+  it('retains queued input through native overflow recovery with one actual consumption', async () => {
+    let answers = 0;
+    const {lab, session} = await setup(context => {
+      if (isSummary(context)) return {text: summary};
+      return ++answers === 1 ? {error: 'context_length_exceeded'} : {text: '完成'};
+    }, true, {contextWindow: 131072, compactionReserveTokens: 16384});
+    const request = lab.start(session.id, '恢复'); let sent = false; const submissionId = randomUUID();
+    const events: StreamEvent[] = [];
+    await request.run(event => {
+      events.push(event);
+      if (event.type === 'input.queue' && event.queue.available && !sent) {
+        sent = true; lab.submitInput(session.id, {submissionId, expectedRequestId: request.requestId, mode: 'followUp', text: '压缩后的后续'});
+      }
+    });
+    expect(answers).toBe(3);
+    expect(lab.get(session.id).lastResult?.status).toBe('succeeded');
+    expect(events.filter(event => event.type === 'input.consumed')).toHaveLength(1);
+    expect(lab.get(session.id).messages.filter(message => message.role === 'user' && message.text === '压缩后的后续')).toHaveLength(1);
   });
 
   it('compacts a long tool turn repeatedly with dual native summaries, preserves original tool text and never replays tools', async () => {

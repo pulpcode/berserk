@@ -55,7 +55,7 @@ export async function fakeRuntime(config: LabConfig, reply: (context: Context, i
           message.content.push(toolCall);
           stream.push({ type: 'toolcall_end', contentIndex: message.content.length - 1, toolCall, partial: message });
         }
-        message.stopReason = (plan.tools?.length || plan.toolIds?.length) ? 'toolUse' : plan.length ? 'length' : 'stop';
+        message.stopReason = plan.length ? 'length' : (plan.tools?.length || plan.toolIds?.length) ? 'toolUse' : 'stop';
         stream.push({ type: 'done', reason: message.stopReason, message });
       };
       if (plan.delayMs) setTimeout(emitReply, plan.delayMs); else queueMicrotask(emitReply);

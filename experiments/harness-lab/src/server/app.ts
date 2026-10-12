@@ -1,3 +1,4 @@
+import type { InputSubmission, InputAction } from '../contracts/index.js';
 import { contextRoutes } from './context-routes.js';
 import { WorkbenchService } from '../workbench/service.js';
 import { workbenchRoutes } from './workbench-routes.js';
@@ -142,6 +143,21 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   app.post<{ Params: { id: string }; Body: { requestId: string } }>(`${scope.base}/sessions/:id/cancel`, {
     schema: { params, body: { type: 'object', properties: { requestId: { type: 'string', format: 'uuid' } }, required: ['requestId'], additionalProperties: false } },
   }, async request => lab.cancel(request.params.id, request.body.requestId, scope.seat(request)));
+  app.post<{Params: {id: string}; Body: InputSubmission}>(`${scope.base}/sessions/:id/inputs`, {schema: {
+    params, querystring: settingsQuery, body: {type: 'object', additionalProperties: false,
+      required: ['submissionId', 'expectedRequestId', 'mode', 'text'], properties: {
+        submissionId: uuid, expectedRequestId: uuid, mode: {enum: ['steer', 'followUp']}, text: {type: 'string', minLength: 1, maxLength: 16000},
+      }},
+  }}, async request => lab.submitInput(request.params.id, request.body, scope.seat(request)));
+  app.get<{Params: {id: string; submissionId: string}}>(`${scope.base}/sessions/:id/inputs/:submissionId`, {schema: {
+    params: scope.params({id: uuid, submissionId: uuid}), querystring: settingsQuery,
+  }}, async request => lab.inputReceipt(request.params.id, request.params.submissionId, scope.seat(request)));
+  app.post<{Params: {id: string; submissionId: string}; Body: InputAction}>(`${scope.base}/sessions/:id/inputs/:submissionId/actions`, {schema: {
+    params: scope.params({id: uuid, submissionId: uuid}), querystring: settingsQuery,
+    body: {type: 'object', additionalProperties: false, required: ['actionId', 'expectedRequestId', 'pendingRevision', 'action'], properties: {
+      actionId: uuid, expectedRequestId: uuid, pendingRevision: {type: 'integer', minimum: 0}, action: {enum: ['steer', 'delete', 'takeback', 'undo']},
+    }},
+  }}, async request => lab.actOnInput(request.params.id, request.params.submissionId, request.body, scope.seat(request)));
   app.post<{ Params: { id: string }; Body: ComposerSelection & { text: string; uploadIds?: string[]; fileRefs?: { path: string }[] } }>(`${scope.base}/sessions/:id/messages`, {
     schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 },
       contextRefs: { type: 'array', maxItems: 20, items: {type:'object',additionalProperties:false,required:['systemId','objectType','objectId'],properties:{systemId:{type:'string',minLength:1,maxLength:128},objectType:{enum:['road','resource','area']},objectId:{type:'string',minLength:1,maxLength:128}}} },

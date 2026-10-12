@@ -67,7 +67,23 @@ export interface SessionActivity extends SessionSummary {
   recoveryWarning?: string;
   statusUpdatedAt: string;
 }
+/** Volatile receipts: acceptance is not native consumption or durable storage. */
+export type InputMode = 'steer' | 'followUp';
+export interface InputReceipt {
+  submissionId: string; requestId: string; text: string; mode: InputMode;
+  status: 'pending' | 'consumed' | 'returned' | 'deleted' | 'takenBack';
+}
+export interface InputQueueState {
+  requestId?: string; revision: number; available: boolean; reason?: string; items: InputReceipt[];
+}
+export interface InputSubmission { submissionId: string; expectedRequestId: string; mode: InputMode; text: string }
+export interface InputAction {
+  actionId: string; expectedRequestId: string; pendingRevision: number;
+  action: 'steer' | 'delete' | 'takeback' | 'undo';
+}
+export interface InputResult { receipt: InputReceipt | null; queue: InputQueueState }
 export interface SessionSnapshot extends SessionSummary {
+  inputQueue?: InputQueueState;
   modelId?: string;
   backgroundJob?: BackgroundJobReservation;
   turns?: ConversationTurn[];
@@ -136,6 +152,8 @@ export type StreamEvent = {
   requestId: string;
 } & (
   | { type: 'response.started' }
+  | { type: 'input.queue'; queue: InputQueueState }
+  | { type: 'input.consumed'; submissionId: string; text: string }
   | { type: 'context.compaction_started'; reason: CompactionReason }
   | { type: 'context.compaction_completed'; compaction: CompactionSummary }
   | { type: 'resources.loaded'; resources: WorkspaceResources }

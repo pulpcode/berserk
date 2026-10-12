@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Interaction, InteractionResponse, AppInfo, ModelChoices, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
+import type { InputQueueState, Interaction, InteractionResponse, AppInfo, ModelChoices, PublicMessage, SessionSnapshot, SessionSummary, SessionActivity, ActivityOverview, StreamEvent, Workspace, InstructionUpdate } from '../contracts/index';
 import { isConnectionFailure, useApi } from './api';
 import { clearInteractionDraft, type InteractionSubmission } from './InteractionCard';
+import { randomUUID } from './random-uuid';
+import { useInputQueue } from './useInputQueue';
 import { useAttachments } from './useAttachments';
 import { useComposerSelections, selectionInput } from './useComposerSelections';
 
@@ -56,6 +58,8 @@ function mergeInteraction(previous: Interaction | undefined, incoming: Interacti
 export function useChat() {
   const { api, sendMessage, storageKey } = useApi();
   const DRAFT_KEY = storageKey('berserk.drafts');
+  const DRAFT_VERSION_KEY = storageKey('berserk.draft-versions');
+  const draftVersions = useRef(stored(DRAFT_VERSION_KEY));
   const SENT_KEY = storageKey('berserk.submitted');
   const READ_KEY = storageKey('berserk.read-results');
   const attachments = useAttachments();
@@ -130,10 +134,12 @@ export function useChat() {
   const submittedRef = useRef(submitted);
 
   const draft = useCallback((id: string, text: string) => {
+    draftVersions.current[id] = randomUUID();
+    persist(DRAFT_VERSION_KEY, draftVersions.current);
     draftsRef.current = { ...draftsRef.current, [id]: text };
     setDrafts(draftsRef.current);
     persist(DRAFT_KEY, draftsRef.current);
-  }, [DRAFT_KEY]);
+  }, [DRAFT_KEY, DRAFT_VERSION_KEY]);
   const rememberSubmitted = useCallback((id: string, text: string) => {
     submittedRef.current = { ...submittedRef.current, [id]: text };
     setSubmitted(submittedRef.current);
@@ -176,6 +182,14 @@ export function useChat() {
     }
   }, [recover, rememberSubmitted, clearSubmittedAttachments, clearSubmittedSelections]);
 
+  const applyInputQueue = useCallback((id: string, inputQueue: InputQueueState) => {
+    const current = snapshotsRef.current[id];
+    if (current && (!current.inputQueue || inputQueue.revision >= current.inputQueue.revision)) put({ ...current, inputQueue });
+  }, [put]);
+  const getDraft = useCallback((id: string) => draftsRef.current[id] || '', []);
+  const getDraftVersion = useCallback((id: string) => draftVersions.current[id] || '', []);
+  const inputQueue = useInputQueue({ snapshots, apply: applyInputQueue, getDraft, getDraftVersion, setDraft: draft });
+
   const refresh = useCallback(async (id: string) => {
     if (modelLocks.current.has(id)) return;
     const revision = revisions.current[id] || 0;
@@ -186,7 +200,7 @@ export function useChat() {
       const stream = streams.current.get(id);
       if (stream && !stream.terminal && result.active) {
         const current = snapshotsRef.current[id];
-        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, interactions: result.interactions, active: result.active });
+        if (current && result.active.requestId === stream.requestId) put({ ...current, title: result.title, interactions: result.interactions, active: result.active, inputQueue: result.inputQueue });
         return;
       }
       // Polling may observe completion before the final SSE frame arrives.
@@ -439,6 +453,10 @@ export function useChat() {
         if (event.interaction.sessionId !== id || event.interaction.requestId !== event.requestId) return;
         applyInteraction(event.interaction); return;
       }
+      if (event.type === 'input.queue') { applyInputQueue(id, event.queue); return; }
+      if (event.type === 'input.consumed') {
+        messages = [...messages, { id: event.submissionId, role: 'user', requestId: event.requestId, text: event.text }];
+      }
       if (event.type === 'text.delta') {
         const last = messages.at(-1);
         if (last?.role === 'assistant') messages = [...messages.slice(0, -1), { ...last, text: last.text + event.delta }];
@@ -477,7 +495,7 @@ export function useChat() {
       if (streams.current.get(id)?.token === token) streams.current.delete(id);
       await refresh(id);
     }
-  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInteraction, sendMessage, recover, refresh]);
+  }, [draftKey, attachments, composerSelections, consumeSelections, selectedModelId, models, modelsError, modelErrors, selected, create, rememberSubmitted, consumeAttachments, draft, put, applyInputQueue, applyInteraction, sendMessage, recover, refresh]);
 
   const cancel = useCallback(async () => {
     const current = snapshotsRef.current[selected];
@@ -511,7 +529,7 @@ export function useChat() {
       if (owner) { selectForWorkspace(owner, id); selectWorkspace(owner); }
     }, workspaces, workspaceId,
     workspace: workspaces.find(item => item.id === workspaceId), selectWorkspace, createWorkspace,
-    loading, creating, create, send, cancel, draftKey, attachments, composerSelections,
+    loading, creating, create, send, cancel, draftKey, attachments, composerSelections, inputQueue,
     resolveDraftOwner: () => movedDrafts.current.get(draftKey) || draftKey,
     setComposerSelection: (kind: 'skill' | 'agent', value?: Parameters<typeof composerSelections.set>[2]) => composerSelections.set(movedDrafts.current.get(draftKey) || draftKey, kind, value),
     interactionSubmissions, respondInteraction, queryInteraction,

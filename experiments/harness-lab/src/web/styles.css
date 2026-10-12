@@ -1123,3 +1123,31 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
   .task-home-composer-actions .primary-action { width: 100%; }
   .task-page-tabs { gap: 4px; }
 }
+
+/* Native message queue, attached to the composer without a separate process card. */
+.input-queue { border: 1px solid #d9dedb; border-bottom: 0; border-radius: 16px 16px 0 0; background: #fafbfaff; margin: 0 12px -10px; padding: 4px 10px 14px; }
+.input-queue ul { list-style: none; padding: 0; margin: 0; }
+.input-queue-row { display: flex; align-items: center; gap: 6px; min-width: 0; color: #65716b; position: relative; }
+.input-queue-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #27352d; font-size: 14px; }
+.input-queue .icon-button { width: 32px; height: 36px; min-height: 36px; padding: 0; flex-shrink: 0; }
+.input-queue .queue-guide { display: flex; align-items: center; gap: 4px; padding: 0 6px; min-height: 36px; flex-shrink: 0; }
+.input-queue-label { font-size: 12px; white-space: nowrap; }
+.queue-more { position: relative; }
+.queue-menu { position: absolute; right: 0; bottom: 100%; z-index: 20; padding: 4px; background: white; border: 1px solid #d9dedb; border-radius: 10px; box-shadow: 0 4px 16px #0001; white-space: nowrap; }
+.queue-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12px; margin-bottom: 8px; color: #56665c; }
+.queue-notice button, .queue-expand { font-size: 12px; }
+.composer-toolbar .queue-submit { flex-shrink: 0; }
+@media (max-width: 767px), (pointer: coarse) {
+  .input-queue { margin-inline: 4px; padding-inline: 6px; }
+  .input-queue .icon-button { width: 44px; height: 44px; min-height: 44px; }
+  .input-queue .queue-guide { min-height: 44px; }
+  .composer-footnote { flex-wrap: wrap; gap: 4px; }
+}
+.composer-toolbar .composer-stop { width: 40px; height: 40px; min-width: 40px; min-height: 40px; padding: 0; border-radius: 50%; background: #1f2923; color: white; border-color: #1f2923; flex-shrink: 0; justify-content: center; }
+.composer-toolbar .composer-stop:hover:not(:disabled) { background: #344239; color: white; }
+@media (max-width: 767px), (pointer: coarse) { .composer-toolbar .composer-stop { width: 44px; height: 44px; min-width: 44px; min-height: 44px; } }
+.queue-send-picker { position: relative; display: flex; align-items: center; flex-shrink: 0; }
+.queue-send-picker > button:first-child { padding-inline: 8px; }
+.queue-send-picker > .icon-button { width: 32px; height: 40px; min-height: 40px; padding: 0; }
+.queue-send-picker .queue-menu button { display: flex; gap: 5px; align-items: center; }
+@media (max-width: 767px), (pointer: coarse) { .queue-send-picker > .icon-button { width: 44px; height: 44px; min-height: 44px; } }

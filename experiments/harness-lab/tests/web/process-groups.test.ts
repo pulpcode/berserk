@@ -8,6 +8,12 @@ const interaction: Interaction = { schemaVersion: 1, interactionId: 'q', workspa
 const file: FileOutput = { path: 'report.md', name: 'report.md', size: 10, hash: 'hash', downloadId: 'download', workspaceId: 'w1', sessionId: 's1', requestId: 'r1', toolCallId: 'output', createdAt: '' };
 
 describe('conversation presentation boundaries', () => {
+  it('keeps each reply visible when native follow-ups share a host request', () => {
+    const snapshot = base([msg('u1', 'user'), msg('reply1', 'assistant'), msg('u2', 'user'), msg('final', 'assistant')]);
+    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'message', 'message', 'message']);
+    snapshot.active = { requestId: 'r1', status: 'responding' };
+    expect(chatBlocks(snapshot).map(item => item.kind)).toEqual(['message', 'message', 'message', 'message']);
+  });
   it('keeps final reply separate and counts only mapped evidence', () => {
     const snapshot = base([msg('user', 'user'), msg('note', 'assistant'), msg('read', 'tool', { toolName: 'read' }), msg('child-result', 'tool', { toolName: 'subagent', toolCallId: 'child-call' }), msg('final', 'assistant')]);
     snapshot.subagents = [child, child];

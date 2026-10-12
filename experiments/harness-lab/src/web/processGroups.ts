@@ -22,11 +22,20 @@ export function chatBlocks(snapshot: SessionSnapshot): ChatBlock[] {
   for (const file of files) if (!usedFiles.has(file.downloadId)) items.push({ kind: 'file', key: `file:${file.downloadId}`, file });
   const finals = new Map((snapshot.turns || []).filter(turn => turn.status === 'succeeded' && turn.requestId !== snapshot.active?.requestId && snapshot.messages.some(message => message.id === turn.finalMessageId && message.requestId === turn.requestId && message.role === 'assistant' && message.text.trim())).map(turn => [turn.requestId, turn.finalMessageId]));
   const lastMessage = new Map<string, string>();
-  for (const message of snapshot.messages) if (message.requestId) lastMessage.set(message.requestId, message.id);
+  const segmentEnds = new Set<string>();
+  for (const message of snapshot.messages) if (message.requestId) {
+    // Pi follow-ups share a host request. Keep the preceding reply visible at each user boundary.
+    if (message.role === 'user') {
+      const previous = lastMessage.get(message.requestId);
+      if (previous) segmentEnds.add(previous);
+    }
+    lastMessage.set(message.requestId, message.id);
+  }
+  for (const id of lastMessage.values()) segmentEnds.add(id);
   const blocks: ChatBlock[] = [];
   for (const item of items) {
     const requestId = requestOf(item);
-    const process = requestId && (item.kind === 'subagent' ? ['running', 'stopping', 'succeeded'].includes(item.child.status) : item.kind === 'message' && (item.message.role === 'tool' ? !item.message.isError && !item.message.resultMissing && item.message.toolName !== 'file_output' && item.message.toolName !== 'subagent' : item.message.role === 'assistant' && item.message.id !== finals.get(requestId) && item.message.id !== lastMessage.get(requestId)));
+    const process = requestId && (item.kind === 'subagent' ? ['running', 'stopping', 'succeeded'].includes(item.child.status) : item.kind === 'message' && (item.message.role === 'tool' ? !item.message.isError && !item.message.resultMissing && item.message.toolName !== 'file_output' && item.message.toolName !== 'subagent' : item.message.role === 'assistant' && item.message.id !== finals.get(requestId) && !segmentEnds.has(item.message.id)));
     if (!process || !requestId) { blocks.push(item); continue; }
     const previous = blocks.at(-1);
     const group: ProcessGroup = previous?.kind === 'process' && previous.requestId === requestId ? previous : { kind: 'process', key: `process:${requestId}:${item.key}`, requestId, items: [], collapsible: finals.has(requestId), tools: 0, agents: 0, notes: 0 };

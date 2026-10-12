@@ -101,7 +101,7 @@ files.output SSE and terminal snapshots carry validated FileOutput metadata; ren
 
 ### Interaction and accessibility
 
-Enter sends only outside IME composition; Shift+Enter inserts a newline. During a reply keep the composer editable for the next draft but disallow submission until the request settles. Stop uses the exact active request ID and remains stopping until settlement. If an active summary arrives before the matching conversation snapshot, show reading/busy state and disable Stop until snapshot request ID matches; the current cancel path depends on that snapshot. Stop disappearing alone does not imply the send form is ready: loaded conversation, configuration and settled request are all required. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.
+Enter sends only outside IME composition; Shift+Enter inserts a newline. During a foreground reply keep the composer editable and use the native input queue contract below for plain-text additions; rich drafts wait until settlement. Stop uses the exact active request ID and remains stopping until settlement. If an active summary arrives before the matching conversation snapshot, show reading/busy state and disable Stop until snapshot request ID matches; the current cancel path depends on that snapshot. Stop disappearing alone does not imply the send form is ready: loaded conversation, configuration and settled request are all required. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.
 
 Use semantic labelled controls, visible focus, a polite status region, reduced-motion support and the narrow-screen sidebar drawer. Resource dialogs support Escape and restore focus to the originating control when it still exists. Ctrl/⌘+S saves instructions only outside IME composition and with a valid save/merge state. Show conflict comparison columns vertically on narrow screens without page overflow.
 
@@ -308,3 +308,44 @@ Conversation-level question and confirmation cards share the reply content inset
 ### UUIDs in direct HTTP demonstrations
 
 Use `randomUUID()` from `src/web/random-uuid.ts` for client action and draft attachment IDs. Public HTTP origins do not expose native `crypto.randomUUID()`; the shared helper uses native UUIDs when available and otherwise generates UUID v4 with `crypto.getRandomValues()`. Do not use `Math.random()` or mutate the browser Crypto object. `tests/random-uuid.test.ts` covers the native path and HTTP fallback format/uniqueness.
+
+
+## Foreground message queue
+
+### 1. Scope / Trigger
+
+Applies to `InputQueue`, `QueueSend`, `useInputQueue`, `useChat` and conversation presentation. Queue UI attaches above the composer, shows up to three text rows, and expands on demand; no separate processing cards. Existing HITL and process history remain.
+
+### 2. Signatures
+
+`POST /api/sessions/:id/inputs` accepts `InputSubmission {submissionId, expectedRequestId, mode: 'steer'|'followUp', text}`. `GET /inputs/:submissionId` and `POST /inputs/:submissionId/actions` return `InputResult {receipt, queue}`. Actions supply `{actionId, expectedRequestId, pendingRevision, action: 'steer'|'delete'|'takeback'|'undo'}`. See backend harness contract for Pi scheduling and admission boundaries.
+
+### 3. Contracts
+
+Busy Enter queues; Ctrl/Cmd+Enter or the send menu guides; row “引导” converts an existing pending item. Shift+Enter and IME do not submit. Disable rich-input selection while busy; retained attachments/Skill/Agent/map references block addition with an explanation. Preserve an independent stop icon.
+
+`useInputQueue` stores unresolved operation IDs and text in seat-partitioned sessionStorage, never automatically retries a write. An accepted receipt clears the draft only if its captured **draft version and text** still match; retyping identical text counts as a new draft. UUID creation uses `random-uuid.ts` for public HTTP compatibility. Queue action locks are per session; delayed results stay attached to that session.
+
+`input.queue` updates the pending projection. `input.consumed` inserts a normal user message before further assistant text on the existing SSE stream. A host request can contain multiple native user messages: preserve each user boundary and preceding reply in `processGroups`. Monotonic queue revisions reject old mutation/SSE projections; normal GETs retain existing snapshot revision guards and can clear missing queue state after server restart.
+
+Returned items append to the owning draft without replacement, are marked locally by submission ID, and acknowledged using takeback; refresh does not append them again. Unknown receipt is not evidence that a message was never accepted. Memory receipts and queues do not promise recovery across service restarts.
+
+### 4. Validation & Error Matrix
+
+- Unavailable native phase, stopping, background reservation or stale target: keep draft, show server reason; never create a new run implicitly.
+- HTTP 4xx mutation rejection: preserve draft, release local mutation lock.
+- Transport/5xx uncertainty: keep operation ID and draft, expose “查询状态”; do not resend.
+- Null receipt: keep uncertainty until explicit user acknowledgement; do not infer failure.
+- Late successful acknowledgement: clear only the exact submitted draft version.
+
+### 5. Good / Base / Bad Cases
+
+Good: submit identical text twice with different IDs, then delete only one. Base: idle Enter retains the existing normal send flow. Bad: matching queue items or clearing a changed draft by text equality alone.
+
+### 6. Tests Required
+
+`tests/e2e/message-queue.spec.ts` uses real PiLab/API with a fake provider to verify duplicate text, guide, deletion/undo, takeback/stop, reload, lost acknowledgements, retyped drafts, IME, keyboard/menu and 375px layout. It removes native `crypto.randomUUID` to exercise public HTTP fallback. `tests/web/process-groups.test.ts` keeps multiple replies visible within one host request. Existing chat/reference E2E must remain green.
+
+### 7. Wrong vs Correct
+
+Wrong: `if (draft.trim() === submittedText) clearDraft()` after an async acknowledgement. Correct: require both the captured persisted draft version and submitted text to match, so a newly retyped identical draft is preserved.

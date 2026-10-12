@@ -1,3 +1,5 @@
+import { MessageIntake } from './message-intake.js';
+import type { InputSubmission, InputAction, InputResult } from '../contracts/index.js';
 import { loadComposerContext } from '../context/composer.js';
 import { contextTools } from './context-tools.js';
 import { taskAssessmentTool, taskInformationTools, type TaskInformationReader } from './task-information-tools.js';
@@ -100,6 +102,7 @@ interface Active {
   grants?: Map<string, ApprovedWorkAction>;
 }
 interface RecordState {
+  intake?: MessageIntake;
   service?: { directory: string };
   manager: SessionManager;
   session?: AgentSession;
@@ -458,6 +461,7 @@ export class PiLab {
     active.reason ||= reason;
     active.failure ||= message;
     active.status = 'stopping';
+    record.intake?.stop();
     record.statusUpdatedAt = new Date().toISOString();
     active.controller.abort();
     this.collaboration?.endRequest(record.manager.getSessionId(), active.id);
@@ -523,6 +527,23 @@ export class PiLab {
     return this.snapshot(this.record(id, seatId));
   }
 
+  submitInput(id: string, input: InputSubmission, seatId?: string): InputResult {
+    const record = this.record(id, seatId);
+    if (!record.intake) throw new RequestError('INPUT_UNAVAILABLE', '当前会话尚未准备好接收追加消息。', 409);
+    return record.intake.submit(input);
+  }
+
+  inputReceipt(id: string, submissionId: string, seatId?: string): InputResult {
+    const record = this.record(id, seatId);
+    return record.intake?.lookup(submissionId) ?? {receipt: null, queue: {revision: 0, available: false, reason: '接收记录不可用，请核对对话；不会自动重发。', items: []}};
+  }
+
+  actOnInput(id: string, submissionId: string, action: InputAction, seatId?: string): InputResult {
+    const record = this.record(id, seatId);
+    if (!record.intake) throw new RequestError('INPUT_CONFLICT', '消息接收记录不可用，请核对对话。', 409);
+    return record.intake.act(submissionId, action);
+  }
+
   /** Verify the native commit before a separate durable job can claim success. */
   async readSavedSession(id: string, seatId?: string): Promise<SessionSnapshot> {
     const current = this.record(id, seatId);
@@ -545,6 +566,7 @@ export class PiLab {
     const selections = composerHistory(entries, record.workspaceId, id);
     const interrupted = new Map(unfinishedRequests(entries).filter(request => request.requestId !== record.active?.id).map(request => [request.requestId, request]));
     let requestId: string | undefined;
+    const inputRequests = new Set<string>();
     for (const entry of entries) {
       if (entry.type === 'custom' && entry.customType === RESOURCE_ENTRY) requestId = (entry.data as { requestId: string }).requestId;
       if (entry.type === 'custom' && entry.customType === RESULT_ENTRY) requestId = undefined;
@@ -556,9 +578,10 @@ export class PiLab {
       if (text || message.role === 'toolResult') messages.push({
         id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text,
         ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError } : {}),
-        ...(message.role === 'user' && requestId && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
-        ...(message.role === 'user' && requestId && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
+        ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
+        ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
+      if (message.role === 'user' && requestId) inputRequests.add(requestId);
       if (message.role === 'assistant' && requestId) for (const [index, block] of message.content.entries()) {
         if (block.type === 'toolCall' && interrupted.get(requestId)?.pendingTools.has(block.id)) messages.push({
           id: `missing-${entry.id}-${index}`, requestId, role: 'tool', toolName: publicToolName(block.name),
@@ -584,6 +607,7 @@ export class PiLab {
     return {
       ...this.summary(record), modelId: record.service ? 'default' : selectedModelId(entries, record.workspaceId, id), ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), id, workspaceId: record.workspaceId, title: messages.find(message => message.role === 'user')?.text.slice(0, 40) || '新会话',
       updatedAt: entries.at(-1)?.timestamp || record.manager.getHeader()!.timestamp,
+      ...(record.intake ? {inputQueue: record.intake.state()} : {}),
       messages, active: requestState(record.active), turns: conversationTurns(entries, messages, record.active?.id),
       interactions: interactions.interactions,
       ...(interactions.commandPolicies.length ? { commandPolicies: interactions.commandPolicies } : {}),
@@ -1064,6 +1088,14 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
               text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError });
           }
         });
+        if (!child && !active.background) {
+          record.intake ??= new MessageIntake();
+          record.intake.bind(active.id, session, () => active.reason ? '正在停止，请稍候。'
+            : active.compacting ? '正在整理上下文，请稍候。'
+            : active.waiting ? '请先回答或确认当前问题。' : undefined,
+          () => emit({...base, type: 'input.queue', queue: record.intake!.state()}),
+          receipt => emit({...base, type: 'input.consumed', submissionId: receipt.submissionId, text: receipt.text}));
+        }
         await session.prompt(text, { expandPromptTemplates: false });
         const last = session.messages.at(-1);
         if (last?.role === 'assistant') {
@@ -1093,6 +1125,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             model: active.model.config.model, modelSettingsVersion: active.model.version });
         }
       }
+      record.intake?.finish();
       unsubscribe?.(); active.compacting = false;
       record.session?.dispose(); record.session = undefined;
       const status = active.reason === 'cancelled' ? 'cancelled' : active.reason || failure ? 'failed' : 'succeeded';

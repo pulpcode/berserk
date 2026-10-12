@@ -1651,3 +1651,34 @@ test('首轮处理中动态标题更新后，流事件和详情轮询不会恢�
     await expect(title).toHaveText(session.title);
   } finally { await mock.close(); }
 });
+
+test('追加消息消费事件分隔连续回复，刷新后的原生历史保持同样顺序', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息', exact: true });
+    await input.fill('慢速回复'); await input.press('Enter');
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    const session = mock.sessions.get('A')!;
+    const requestId = session.active!.requestId;
+    session.inputQueue = { requestId, revision: 1, available: true, items: [{ requestId, submissionId: 'queued-1', text: '后续问题', mode: 'followUp', status: 'pending' }] };
+    mock.event('A', { type: 'input.queue', sessionId: 'A', requestId, queue: session.inputQueue });
+    await expect(page.locator('.input-queue-row')).toContainText('后续问题');
+    session.messages.push({ id: 'native-followup', role: 'user', requestId, text: '后续问题' }, { id: 'native-second-reply', role: 'assistant', requestId, text: '后续回答' });
+    session.inputQueue = { requestId, revision: 2, available: false, items: [] };
+    mock.event('A', { type: 'input.consumed', sessionId: 'A', requestId, submissionId: 'queued-1', text: '后续问题' });
+    mock.event('A', { type: 'input.queue', sessionId: 'A', requestId, queue: session.inputQueue });
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId, delta: '后续回答' });
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    await expect(page.getByText('后续问题', { exact: true })).toBeVisible();
+    await expect(page.getByText('后续回答', { exact: true })).toBeVisible();
+    await expect(page.locator('.input-queue-row')).toHaveCount(0);
+    await expect(page.getByText('A 的回复后续回答', { exact: true })).toHaveCount(0);
+    mock.finish('A');
+    await page.reload();
+    await expect(page.getByText('A 的回复', { exact: true })).toBeVisible();
+    await expect(page.getByText('后续问题', { exact: true })).toBeVisible();
+    await expect(page.getByText('后续回答', { exact: true })).toBeVisible();
+    expect(mock.counts.sends).toBe(1);
+  } finally { await mock.close(); }
+});
