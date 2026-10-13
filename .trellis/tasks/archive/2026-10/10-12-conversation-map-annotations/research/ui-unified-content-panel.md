@@ -37,3 +37,13 @@ SituationView 保留查询与展示子集状态，SourceTree 使用稳定DOM por
 - 多层与来源树桌面/350px截图已目检；来源树截图保留在Codex visualization目录 unified-source-tree-1440.png、unified-source-tree-350.png。
 
 最终冻结后 typecheck、全部受影响文件 ESLint、生产 build 通过；最后焦点调整后 layer-tree 专项再次1/1通过。构建仅保留既有的大 chunk 提示。
+
+## 线上发布与验收
+
+- 实现提交：66d0892；2026-10-13 16:12:02（Asia/Singapore）更新 http://49.232.156.14:4315/。
+- 仅更新9个前端源码文件及构建产物；服务PID 4110772保持，未重启。静态入口原子替换，保留旧哈希资源。
+- 更新前备份：`/home/ubuntu/axon-map-release-e073df6/backup/unified-map-ui-20261013T081200Z/code.tar.gz`。
+- 发布证据目录：`/home/ubuntu/axon-map-release-e073df6/updates/unified-map-ui-20261013`。发布包SHA256：`47547e8b11232b2fc6f57302b481a8c5c50a4db22473e8cb1445983caac99f1d`。
+- 四席位访问及标注读取接口通过；数据库版本10、完整性ok，无活动后台任务。健康检查ok，17个静态文件HTTP内容与构建结果一致。
+- 线上只读浏览器验收通过：会话/全局统一入口、桌面1440/1280与手机375、地图放大还原、悬浮图层面板、来源和标注眼睛右侧同列；旧来源筛选/对象列表浮块已移除，页面错误0。未发送模型消息或修改线上标注。
+- 线上截图已目检，保存至Codex visualization目录：unified-map-online-1440.png、unified-map-online-375.png、unified-map-online-global-1440.png。

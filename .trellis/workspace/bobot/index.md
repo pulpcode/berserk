@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 20
+- **Total Sessions**: 21
 - **Last Active**: 2026-10-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~583 | Active |
+| `journal-1.md` | ~614 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 21 | 2026-10-13 | 统一图层对象面板与线上发布 | `66d0892` | `main` |
 | 20 | 2026-10-13 | 图层树交互重整与线上发布 | `55a4c77` | `main` |
 | 19 | 2026-10-13 | 会话标注提交与三栏地图工作区上线 | `cbf0628`, `68611d6` | `main` |
 | 18 | 2026-10-12 | 消息排队与引导交互上线 | `9fafae0` | `main` |
