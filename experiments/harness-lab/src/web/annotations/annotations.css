@@ -10,11 +10,12 @@
 .annotation-main { position:absolute; inset:0; min-width:0; min-height:0; }
 .annotation-main>.situation-view { height:100%; }
 .annotation-floating-panel,.annotation-detail,.annotation-overlap { position:absolute; z-index:5; width:min(340px,calc(100% - 24px)); max-height:calc(100% - var(--annotation-panel-top) - 52px); overflow:auto; overscroll-behavior:contain; background:var(--surface,#fff); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 28px #182e2426; padding:12px; }
-.annotation-sidebar { top:var(--annotation-panel-top); left:12px; width:min(400px,calc(100% - 24px)); }
+.annotation-sidebar { --control-height:32px; padding:8px; top:var(--annotation-panel-top); left:12px; width:min(400px,calc(100% - 24px)); }
 .annotation-management { top:var(--annotation-panel-top); right:12px; }
 .annotation-editor-panel { top:var(--annotation-panel-top); right:12px; z-index:7; }
 .annotation-floating-panel[hidden] { display:none; }
 .annotation-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
+.annotation-sidebar>.annotation-panel-heading { margin-bottom:2px; }
 .annotation-panel-heading>strong,.annotation-panel-heading>h3 { margin:0; font-size:14px; }
 .annotation-panel-heading>button { flex:none; }
 .annotation-layer-group,.annotation-browser,.annotation-publication,.annotation-current-confirm { border-bottom:1px solid var(--line); padding:10px 0; margin-bottom:10px; }
@@ -70,3 +71,5 @@
 
 .annotation-workspace .situation-view.unified-map .situation-detail,
 .annotation-workspace .situation-view.unified-map .situation-source-error { top:var(--annotation-panel-top); max-height:calc(100% - var(--annotation-panel-top) - 52px); }
+
+@media (max-width:767px), (pointer:coarse) { .annotation-sidebar { --control-height:44px; } }

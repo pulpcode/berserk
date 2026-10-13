@@ -1,8 +1,8 @@
 /* A shared four-column grid keeps every visibility control in one column. */
-.annotation-tree-group { padding:6px 0; margin-bottom:6px; }
+.annotation-layer-group.annotation-tree-group { padding:0; margin:0; border-bottom:0; }
 .annotation-tree-row { display:grid; grid-template-columns:minmax(0,1fr) var(--control-height) var(--control-height) var(--control-height); align-items:center; gap:3px; min-width:0; }
 .annotation-tree-row .icon-button { width:var(--control-height); height:var(--control-height); min-height:var(--control-height); padding:0; }
-.annotation-tree-disclosure { display:flex; align-items:center; gap:4px; width:100%; min-width:0; border:0; background:transparent; text-align:left; }
+.annotation-tree-disclosure { min-height:var(--control-height); padding:4px 6px; display:flex; align-items:center; gap:4px; width:100%; min-width:0; border:0; background:transparent; text-align:left; }
 .annotation-tree-disclosure>span,.annotation-tree-label { display:block; min-width:0; overflow-wrap:anywhere; }
 .annotation-tree-row strong { font-size:12px; font-weight:500; }
 .annotation-tree-row small { display:block; font-size:11px; line-height:1.5; color:var(--muted); }
