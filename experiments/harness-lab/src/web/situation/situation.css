@@ -90,7 +90,8 @@
 .task-information:not([hidden]):has(> .situation-view) { display:flex; flex-direction:column; overflow:hidden; }
 .task-information > .situation-view:not(.compact) { min-height:400px; margin:0 -32px -26px; }
 
-.workspace-header:has(.map-titlebar-slot) { padding:12px 20px; gap:18px; }
+.workspace-header:has(.map-titlebar-slot) { padding:5px 20px; gap:18px; }
+@media(max-width:767px) { .workspace-header:has(.map-titlebar-slot) { padding-top:3px; padding-bottom:3px; } }
 .workspace-header:has(.map-titlebar-slot) > .workspace-name,
 .workspace-header:has(.map-titlebar-slot) > .workspace-tools { display:none; }
 .map-titlebar-slot { flex:1; min-width:0; }

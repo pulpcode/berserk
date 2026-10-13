@@ -15,3 +15,11 @@
 - 309 文件发布包 SHA256：`cafdde2c780566ea2159fce4a8afbf693b427c9f7318bdc53b8da9b02b4985a2`。线上基线、暂存文件哈希与 15 个静态资源 HTTP 字节一致。
 - 四席位登录与标注读取正常，数据库 schema 10、完整性 ok。实际 Chrome 验证四个工具按钮均为 40×40px，顶部位置相同、20px / 1.75 图标；1440/1280px 地图操作正常、无水平溢出及页面错误。
 - 线上截图：`/Users/lau/.codex/visualizations/2026/10/12/01a12f1c-b5f9-7ac3-bba6-669f26cef98b/header-tools-online-1440.png`。
+
+## 顶部栏高度追加反馈（2026-10-13）
+
+- 用户要求参考 Codex 压缩顶部栏纵向高度。桌面由 77px 收至 52px 最小高度，上下留白 5px；手机最小高度 52px、上下留白 3px。独立地图标题栏同步，保留现有水平留白、40px / 44px 点击区域和自然换行。
+- 仅修改两份 CSS。类型检查、完整 Lint/依赖边界、本地与远端构建、diff check 通过；独立静态审阅无问题。4 项既有浏览器回归通过（23.3 秒），涵盖地图分栏、独立地图及窄屏文件/分派界面。
+- 2026-10-13 14:44:14（Asia/Singapore）更新线上；PID 4110772 未重启。发布目录 `updates/compact-header-ui-20261013`，备份 `/home/ubuntu/axon-map-release-e073df6/backup/compact-header-ui-20261013T064413Z/code.tar.gz`。回滚恢复前端源码和 dist 备份，无数据迁移。
+- 发布包 SHA256：`b1c2d8af86a419a4d4816012032f588baaf1ffa025665eb54e6a9e85b299db27`。基线哈希及 15 个静态资源一致；四席位与数据库完整性正常。
+- 真实 Chrome 实测顶部栏 52px，四个按钮仍为 40×40px，地图画布由 822px 增至 847px；1440/1280px 布局、打开及放大还原通过，页面错误为 0。截图 `compact-header-online-1440.png` 位于既有可视化输出目录。

@@ -68,7 +68,7 @@ svg { flex-shrink: 0; }
 .sidebar-footer small { display: block; color: var(--muted); margin-top: 3px; font-size: 10px; }
 .local-avatar { border: 1px solid #d3d9df; border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; color: #64727e; font-size: 11px; }
 .workspace { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.workspace-header { min-height: 77px; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 16px 34px; border-bottom: 1px solid #f0f1f3; }
+.workspace-header { min-height: 52px; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 5px 34px; border-bottom: 1px solid #f0f1f3; }
 .workspace-tools { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .header-title { display: flex; align-items: center; gap: 9px; min-width: 0; font-size: 13px; font-weight: 500; }
 .header-title > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -178,7 +178,7 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
   .sidebar-collapsed .sidebar .sidebar-footer { flex-direction: column; gap: 4px; padding: 8px 0 12px; }
 }
 @media (min-width: 1600px) { .app-shell { grid-template-columns: 290px minmax(0, 1fr); } .sidebar { padding-left: 22px; padding-right: 22px; } }
-@media (max-width: 1000px) { .app-shell { grid-template-columns: 238px minmax(0, 1fr); } .sidebar { padding-left: 12px; padding-right: 12px; } .button-hint { display: none; } .workspace-header { padding: 15px 24px; } .conversation-scroll { padding: 0 24px; } .composer-dock { padding-left: 24px; padding-right: 24px; } .empty-state { padding-top: 8vh; } }
+@media (max-width: 1000px) { .app-shell { grid-template-columns: 238px minmax(0, 1fr); } .sidebar { padding-left: 12px; padding-right: 12px; } .button-hint { display: none; } .workspace-header { padding: 5px 24px; } .conversation-scroll { padding: 0 24px; } .composer-dock { padding-left: 24px; padding-right: 24px; } .empty-state { padding-top: 8vh; } }
 @media (max-width: 767px) {
   .app-shell { display: block; }
   .workspace { height: 100%; }
@@ -188,7 +188,7 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
   .sidebar-scrim { display: block; position: fixed; inset: 0; background: #17231acc; z-index: 20; border: 0; border-radius: 0; padding: 0; }
   .mobile-only { display: inline-flex; }
   .sidebar-brand .mobile-only { margin-left: auto; }
-  .workspace-header { min-height: 65px; padding: 10px 15px 10px 7px; gap: 8px; }
+  .workspace-header { min-height: 52px; padding: 3px 15px 3px 7px; gap: 8px; }
   .header-title { font-size: 12px; }
   .conversation-scroll { padding: 0 20px; }
   .empty-state { padding: 45px 0 28px; }
