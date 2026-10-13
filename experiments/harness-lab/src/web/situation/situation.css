@@ -5,21 +5,17 @@
 .conversation-map-workspace[hidden], .conversation-map-workspace > [hidden] { display:none; }
 .situation-side-panel { display:flex; flex-direction:column; flex:1; min-width:0; min-height:0; background:var(--surface,#fff); overflow:hidden; }
 .map-workspace-controls { display:flex; flex:none; align-items:center; gap:4px; margin-left:auto; }
-.open-situation-map { display:inline-flex; flex:none; align-items:center; gap:6px; }
 .situation-side-panel > .situation-view { flex:1; min-height:0; }
 .map-splitter { position:relative; flex:0 0 8px; cursor:col-resize; background:var(--surface,#fff); border-left:1px solid var(--line); border-right:1px solid var(--line); touch-action:none; }
 .map-splitter span { position:absolute; top:calc(50% - 20px); left:2px; width:2px; height:40px; border-radius:2px; background:var(--muted); }
 .map-splitter:is(:hover,:focus-visible) { background:var(--accent-soft); }
 .map-splitter:focus-visible { outline:2px solid var(--control-focus); outline-offset:-2px; }
-.workspace-header:has(.open-situation-map) { gap:12px; }
-.workspace-header:has(.open-situation-map) .header-title { flex:1; }
 .map-narrow-hint { flex:none; padding:8px 12px; margin:0; color:var(--muted); font-size:12px; border-bottom:1px solid var(--line); }
 .layout-split .conversation-scroll { padding-left:18px; padding-right:18px; }
 .layout-split .composer-dock { padding-left:16px; padding-right:16px; }
 .layout-split .suggestions { grid-template-columns:minmax(0,1fr); }
 .layout-split .empty-state { padding-top:40px; }
 .layout-split .empty-state h1 { font-size:24px; }
-@media(max-width:1100px) { .workspace-header:has(.open-situation-map) .workspace-name { display:none; } }
 .situation-view, .simulation-view { padding:24px; overflow:auto; min-height:0; flex:1; }
 .situation-view.compact { padding:12px; }
 .situation-filters, .situation-actions, .situation-layers { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:14px; }

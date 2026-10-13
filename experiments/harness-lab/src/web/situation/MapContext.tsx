@@ -51,7 +51,7 @@ export function SituationProvider({children,reference,navigationKey,annotations}
 
 export function OpenSituationMap({disabled=false}:{disabled?:boolean}) {
   const {layout,chooseLayout}=useSituationMap();
-  return <button type="button" className="open-situation-map" aria-label="打开态势地图" title="打开态势地图" aria-expanded={layout!=='conversation'} data-map-layout-control disabled={disabled} onClick={()=>{if(layout==='conversation')chooseLayout('split');}}><MapIcon size={18} aria-hidden="true"/>态势地图</button>;
+  return <button type="button" className="icon-button workspace-tool open-situation-map" aria-label="打开态势地图" title="打开态势地图" aria-expanded={layout!=='conversation'} data-map-layout-control disabled={disabled} onClick={()=>{if(layout==='conversation')chooseLayout('split');}}><MapIcon size={20} strokeWidth={1.75} aria-hidden="true"/></button>;
 }
 
 // Layout changes hide the existing panes; only business navigation replaces their scope.
