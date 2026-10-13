@@ -552,3 +552,32 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 20: 图层树交互重整与线上发布
+
+**Date**: 2026-10-13
+**Task**: 图层树交互重整与线上发布
+**Branch**: `main`
+
+### Summary
+
+按审阅方案实现来源/会话/参考分组、统一右侧显隐列、独立绘制目标、按需新建与回执恢复；13项浏览器验收和静态检查通过，已无重启更新线上服务。
+
+### Main Changes
+
+- 延续已归档的10-12会话地图标注任务，记录图层树与右侧显隐交互及上线备份。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `55a4c77` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、lint、build通过；annotation/situation/chat浏览器13/13通过；四席位与15个线上静态资源核验通过。
+
+### Status
+
+[OK] **Completed**
