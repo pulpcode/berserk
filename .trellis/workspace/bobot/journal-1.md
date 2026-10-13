@@ -701,3 +701,32 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 25: 地图绘制工具图标化与上线
+
+**Date**: 2026-10-13
+**Task**: 地图绘制工具图标化与上线
+**Branch**: `main`
+
+### Summary
+
+将底部绘制工具精简为单行悬浮图标，悬停显示说明，目标图层简写，绘制提示按需显示。
+
+### Main Changes
+
+- 保留工具可访问名称、选中禁用状态、未保存恢复和目标隐藏时暂停/恢复；仅面向桌面。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d1dc928` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、受影响文件ESLint、构建及3项实际绘制/坐标/CAS/恢复浏览器回归通过；四席位接口和数据库完整性通过。
+
+### Status
+
+[OK] **Completed**
