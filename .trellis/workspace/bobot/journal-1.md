@@ -612,3 +612,32 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 22: 精简地图分组并默认折叠上线
+
+**Date**: 2026-10-13
+**Task**: 精简地图分组并默认折叠上线
+**Branch**: `main`
+
+### Summary
+
+按用户明确要求初始仅展示来源态势和本会话标注，收起子层、筛选与绘制说明，移除组标题冗余统计。
+
+### Main Changes
+
+- 默认折叠分组与子图层，保留右侧显隐按钮；已更新线上服务，未重启。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9d7125e` | (see git log) |
+
+### Testing
+
+- [OK] 13项地图浏览器回归、typecheck、受影响文件ESLint、build通过。线上四席位与桌面/手机只读检查通过，页面错误0。
+
+### Status
+
+[OK] **Completed**

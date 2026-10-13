@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 21
+- **Total Sessions**: 22
 - **Last Active**: 2026-10-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~614 | Active |
+| `journal-1.md` | ~643 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 22 | 2026-10-13 | 精简地图分组并默认折叠上线 | `9d7125e` | `main` |
 | 21 | 2026-10-13 | 统一图层对象面板与线上发布 | `66d0892` | `main` |
 | 20 | 2026-10-13 | 图层树交互重整与线上发布 | `55a4c77` | `main` |
 | 19 | 2026-10-13 | 会话标注提交与三栏地图工作区上线 | `cbf0628`, `68611d6` | `main` |
