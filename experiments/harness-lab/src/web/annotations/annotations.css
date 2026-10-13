@@ -10,7 +10,7 @@
 .annotation-main { position:absolute; inset:0; min-width:0; min-height:0; }
 .annotation-main>.situation-view { height:100%; }
 .annotation-floating-panel,.annotation-detail,.annotation-overlap { position:absolute; z-index:5; width:min(340px,calc(100% - 24px)); max-height:calc(100% - var(--annotation-panel-top) - 52px); overflow:auto; overscroll-behavior:contain; background:var(--surface,#fff); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 28px #182e2426; padding:12px; }
-.annotation-sidebar { top:var(--annotation-panel-top); left:12px; }
+.annotation-sidebar { top:var(--annotation-panel-top); left:12px; width:min(400px,calc(100% - 24px)); }
 .annotation-management { top:var(--annotation-panel-top); right:12px; }
 .annotation-editor-panel { top:var(--annotation-panel-top); right:12px; z-index:7; }
 .annotation-floating-panel[hidden] { display:none; }
@@ -75,3 +75,31 @@
 .annotation-workspace .situation-view.floating-map .situation-detail,
 .annotation-workspace .situation-view.floating-map .situation-source-error { top:var(--annotation-panel-top); max-height:calc(100% - var(--annotation-panel-top) - 52px); }
 .annotation-workspace .situation-view.floating-map :is(.annotation-source-controls,.situation-object-list)>summary { min-height:var(--control-height); }
+
+/* A shared four-column grid keeps every visibility control in one column. */
+.annotation-tree-group { padding:6px 0; margin-bottom:6px; }
+.annotation-tree-row { display:grid; grid-template-columns:minmax(0,1fr) var(--control-height) var(--control-height) var(--control-height); align-items:center; gap:3px; min-width:0; }
+.annotation-tree-row .icon-button { width:var(--control-height); height:var(--control-height); min-height:var(--control-height); padding:0; }
+.annotation-tree-disclosure { display:flex; align-items:center; gap:4px; width:100%; min-width:0; border:0; background:transparent; text-align:left; }
+.annotation-tree-disclosure>span,.annotation-tree-label { display:block; min-width:0; overflow-wrap:anywhere; }
+.annotation-tree-row strong { font-size:12px; font-weight:500; }
+.annotation-tree-row small { display:block; font-size:11px; line-height:1.5; color:var(--muted); }
+.annotation-tree-label { padding:5px 8px; }
+.annotation-tree-layer>.annotation-tree-row>.annotation-tree-disclosure { padding-left:12px; }
+.annotation-tree-target,.annotation-tree-more { display:flex; align-items:center; justify-content:center; min-width:0; }
+.annotation-target-badge { color:var(--accent); background:var(--accent-soft); border-radius:6px; padding:3px; text-align:center; font-size:10px; line-height:13px; }
+.annotation-tree-eye[aria-pressed=false] { opacity:.65; }
+.annotation-tree-eye[aria-pressed=mixed] { color:var(--accent); }
+.annotation-tree-menu { padding:8px; margin:4px 0 8px; border:1px solid var(--line); border-radius:8px; background:var(--surface); font-size:12px; overflow-wrap:anywhere; }
+.annotation-tree-menu>button:not(.icon-button) { display:block; width:100%; text-align:left; margin:3px 0; }
+.annotation-tree-menu-close { float:right; }
+.annotation-tree-menu>p { margin:0 0 8px; padding-right:40px; }
+.annotation-tree-group .annotation-tree-objects { margin:0; padding-left:22px; }
+.annotation-tree-objects[hidden] { display:none; }
+.annotation-tree-objects>li.resource-help { margin:4px 0 8px; font-size:12px; }
+.annotation-layer-create { padding:8px; margin:6px 0; border:1px solid var(--line); border-radius:8px; }
+.annotation-drawing-target { padding-top:6px; font-size:12px; overflow-wrap:anywhere; }
+.annotation-drawing-target p { margin:6px 0; }
+
+.annotation-tree-eye { position:relative; }
+.annotation-eye-partial { position:absolute; right:6px; bottom:6px; width:5px; height:5px; border-radius:50%; background:currentColor; }

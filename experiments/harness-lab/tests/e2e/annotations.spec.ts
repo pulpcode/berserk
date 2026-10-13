@@ -34,10 +34,12 @@ async function setup(page:Page){
  await expect(page.locator('.annotation-heading')).toBeVisible();await openLayers(page);
  return {lab,actor,task,session,second,requests,errors,dropNextAction:()=>{dropAction=true;},tiles:()=>tiles,fake,close:async()=>{page.on('dialog',dialog=>dialog.accept());await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await rm(dir,{recursive:true,force:true});}};
 }
-async function openLayers(page:Page){if(!await page.getByLabel('新图层名称').isVisible())await page.getByRole('button',{name:'标注图层',exact:true}).click();await expect(page.getByLabel('新图层名称')).toBeVisible();}
+async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'标注图层',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
 async function openVersions(page:Page){if(!await page.locator('.annotation-management').isVisible())await page.getByRole('button',{name:'版本与发布',exact:true}).click();}
-async function pickOwn(page:Page,name:string){await openLayers(page);const group=page.getByRole('region',{name:/^本会话标注 /});const row=group.locator('details').filter({has:page.getByRole('checkbox',{name:'集合点',exact:true})});if(await row.getAttribute('open')===null)await row.locator('summary').press('Enter');await group.getByRole('button',{name,exact:true}).click();}
-async function layer(page:Page){await openLayers(page);await page.getByLabel('新图层名称').fill('集合点');await page.getByRole('button',{name:'添加图层',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');}
+async function pickOwn(page:Page,name:string){await openLayers(page);const group=page.getByRole('region',{name:/^本会话标注 /});const row=group.locator('.annotation-tree-layer').filter({has:page.getByRole('button',{name:/^(展开|收起)集合点$/})});const toggle=row.getByRole('button',{name:/^(展开|收起)集合点$/});if(await toggle.getAttribute('aria-expanded')==='false')await toggle.click();await group.getByRole('button',{name,exact:true}).click();}
+async function addLayer(page:Page,name:string){await openLayers(page);await page.getByRole('region',{name:/^本会话标注 /}).getByRole('button',{name:'新建图层',exact:true}).click();await page.getByLabel('新图层名称').fill(name);await page.getByRole('button',{name:'添加图层',exact:true}).click();await expect(page.getByLabel('新图层名称')).not.toBeVisible();}
+async function layer(page:Page){await addLayer(page,'集合点');await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');}
+async function groupMore(group:import('@playwright/test').Locator){const button=group.locator(':scope > .annotation-tree-row .annotation-tree-more > button');if(await button.getAttribute('aria-expanded')==='false')await button.click();}
 async function point(page:Page,name='集合点 A') {await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);}
 
 test('independent drafts, fixed publication, current selection and native annotation reference',async({page})=>{
@@ -46,7 +48,7 @@ test('independent drafts, fixed publication, current selection and native annota
   await openVersions(page);await page.getByText('标注集名称与发布',{exact:true}).click();await page.getByLabel('发布名称',{exact:true}).fill('集合点发布版');await page.getByRole('button',{name:'发布此保存修订'}).click();await expect(page.getByRole('alert')).toContainText('任务当前标注保持不变');
   expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(0);
   await page.getByText('我的草稿与已发布版本',{exact:true}).click();await page.getByRole('button',{name:'添加发布版参考'}).click();await openLayers(page);await expect(page.getByRole('region',{name:'参考标注 集合点发布版'})).toBeVisible();
-  const reference=page.getByRole('region',{name:'参考标注 集合点发布版'});await expect(reference.getByRole('checkbox',{name:'集合点',exact:true})).not.toBeChecked();await expect(reference.getByRole('button',{name:'删除对象'})).toHaveCount(0);
+  const reference=page.getByRole('region',{name:'参考标注 集合点发布版'});await expect(reference.getByRole('button',{name:'显示集合点',exact:true})).toHaveAttribute('aria-pressed','false');await expect(reference.getByRole('button',{name:'删除对象'})).toHaveCount(0);
   await openVersions(page);await page.getByRole('button',{name:'比较并设为当前'}).click();await page.getByRole('button',{name:'设为当前标注',exact:true}).click();expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(1);
   const first=env.lab.annotations!.binding(env.actor,env.session.id);const pub=env.lab.annotations!.current(env.actor,env.task.id).publication!;
   const secondBinding=env.lab.annotations!.binding(env.actor,env.second.id);env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),baseRef:{publicationId:pub.publicationId},expectedBindingRevision:secondBinding.bindingRevision});
@@ -69,7 +71,7 @@ test('official Terra Draw supports point line polygon Chinese labels, edit and c
   await page.getByRole('button',{name:'放置文字',exact:true}).click();await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');await expect(page.locator('.annotation-label')).toContainText('新文字注记');
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);const doc=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,5).document;expect(doc.layers[0]!.features.map(item=>item.kind)).toEqual(['point','line','polygon','text']);
   await pickOwn(page,'新文字注记 text');await page.getByRole('button',{name:'拖动及顶点编辑'}).click();const updatedBox=(await canvas.boundingBox())!;const cx=updatedBox.x+updatedBox.width/2,cy=updatedBox.y+updatedBox.height/2;await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+45,cy+20,{steps:5});await page.mouse.up();await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');
-  await page.reload();await openLayers(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');await expect(page.locator('canvas')).toBeVisible();await page.getByRole('button',{name:'定位此组',exact:true}).click();await expect(page.locator('.annotation-marker')).toHaveCount(4);expect(env.errors).toEqual([]);await page.waitForTimeout(750);await page.screenshot({path:test.info().outputPath('terra-draw-maplibre-6.4.png')});
+  await page.reload();await openLayers(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');await expect(page.locator('canvas')).toBeVisible();await groupMore(page.getByRole('region',{name:/^本会话标注 /}));await page.getByRole('button',{name:'定位此组',exact:true}).click();await expect(page.locator('.annotation-marker')).toHaveCount(4);expect(env.errors).toEqual([]);await page.waitForTimeout(750);await page.screenshot({path:test.info().outputPath('terra-draw-maplibre-6.4.png')});
  }finally{await env.close();}
 });
 
@@ -129,7 +131,7 @@ test('three columns resize by keyboard and pointer while map fills available hei
     const tools=['标注图层','版本与发布','刷新标注','放大地图','关闭态势地图'];
     const layers=panel.getByRole('button',{name:'标注图层',exact:true});
     const versions=panel.getByRole('button',{name:'版本与发布',exact:true});
-    await layers.click();await expect(panel.getByLabel('新图层名称')).toBeVisible();
+    await layers.click();await expect(panel.locator('.annotation-sidebar')).toBeVisible();
     for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
     await panel.getByRole('button',{name:'关闭标注图层',exact:true}).press('Escape');await expect(layers).toBeFocused();
     await versions.click();await expect(panel.locator('.annotation-management')).toBeVisible();
@@ -165,7 +167,7 @@ test('overlapping draft and publication objects select their exact read-only gro
  const env=await setup(page);try{
   await layer(page);await point(page,'重叠 A');await point(page,'重叠 B');
   await openVersions(page);await page.getByText('标注集名称与发布',{exact:true}).click();await page.getByLabel('发布名称',{exact:true}).fill('重叠发布版');await page.getByRole('button',{name:'发布此保存修订'}).click();await expect(page.getByRole('alert')).toContainText('任务当前标注保持不变');
-  await page.getByText('我的草稿与已发布版本',{exact:true}).click();await page.getByRole('button',{name:'添加发布版参考'}).click();await openLayers(page);const ref=page.getByRole('region',{name:'参考标注 重叠发布版'});await ref.getByRole('checkbox',{name:'集合点',exact:true}).check();await ref.getByRole('button',{name:'定位此组'}).click();
+  await page.getByText('我的草稿与已发布版本',{exact:true}).click();await page.getByRole('button',{name:'添加发布版参考'}).click();await openLayers(page);const ref=page.getByRole('region',{name:'参考标注 重叠发布版'});await ref.getByRole('button',{name:'显示集合点',exact:true}).click();await groupMore(ref);await ref.getByRole('button',{name:'定位此组'}).click();
   await expect.poll(async()=>{const box=(await page.locator('.maplibregl-canvas').boundingBox())!;await page.mouse.click(box.x+box.width/2,box.y+box.height/2);return page.locator('.annotation-overlap > button').count();}).toBe(4);
   await page.locator('.annotation-overlap').getByRole('button',{name:'重叠发布版 · 集合点 · 重叠 B',exact:true}).click();await expect(page.locator('.annotation-detail')).toContainText('重叠发布版');await expect(page.locator('.annotation-detail h3')).toContainText('重叠 B');await expect(page.getByRole('button',{name:'编辑属性与坐标'})).toHaveCount(0);await expect(page.getByRole('button',{name:'复制到编辑图层'})).toBeVisible();expect(env.errors).toEqual([]);await page.screenshot({path:test.info().outputPath('overlap-read-only-reference.png')});
  }finally{await env.close();}
@@ -182,5 +184,42 @@ test('explicit saved reference stays read-only and fixed when the current draft 
   await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await expect(detail.getByRole('heading')).toHaveText('固定旧集合点');await expect(detail).toContainText('r2');expect(fixedReads).toBe(readsBefore);
   await pickOwn(page,'Agent 更新后的集合点 point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('收起后仍保留的输入');
   await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).not.toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('收起后仍保留的输入');expect(env.errors).toEqual([]);expect(env.fake.calls).toHaveLength(0);
+ }finally{await env.close();}
+});
+
+
+test('layer tree separates expansion visibility and drawing target, including empty layers and fixed references',async({page},testInfo)=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);await addLayer(page,'备用区');await addLayer(page,'空白图层');
+  const sidebar=page.locator('.annotation-sidebar');const own=page.getByRole('region',{name:/^本会话标注 /});
+  const target=sidebar.locator('.annotation-drawing-target');
+  await expect(target).toContainText('新标注将添加到：空白图层');
+  await expect(own.locator(':scope > .annotation-tree-row')).toContainText('3 个图层 · 1 个对象 · 已显示 3/3 层');
+  await own.getByRole('button',{name:'展开集合点',exact:true}).click();await own.getByRole('button',{name:'收起集合点',exact:true}).click();
+  await own.getByRole('button',{name:'隐藏备用区',exact:true}).click();await expect(target).toContainText('新标注将添加到：空白图层');
+  await expect(own.getByRole('button',{name:'显示本会话标注',exact:true})).toHaveAttribute('aria-pressed','mixed');
+  await own.getByRole('button',{name:'收起本会话标注',exact:true}).click();await expect(own.locator(':scope > .annotation-tree-row')).toContainText('已显示 2/3 层');
+  await own.getByRole('button',{name:'显示本会话标注',exact:true}).click();await own.getByRole('button',{name:'展开本会话标注',exact:true}).click();
+  await expect(target).toContainText('新标注将添加到：空白图层');
+  const revision=env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision;
+  await page.getByRole('button',{name:'绘制线',exact:true}).click();await openLayers(page);
+  page.once('dialog',dialog=>dialog.dismiss());await own.getByRole('button',{name:'隐藏空白图层',exact:true}).click();await expect(own.getByRole('button',{name:'隐藏空白图层',exact:true})).toHaveAttribute('aria-pressed','true');
+  page.once('dialog',dialog=>dialog.accept());await own.getByRole('button',{name:'隐藏空白图层',exact:true}).click();await expect(target).toContainText('绘制已暂停');await expect(page.getByRole('button',{name:'绘制线',exact:true})).toBeDisabled();
+  await target.getByRole('button',{name:'显示并继续',exact:true}).click();await expect(page.getByRole('button',{name:'绘制线',exact:true})).toBeEnabled();
+  await own.getByRole('button',{name:'隐藏集合点',exact:true}).click();await own.getByRole('button',{name:'设为绘制目标：集合点',exact:true}).click();await expect(target).toContainText('新标注将添加到：集合点');await expect(own.getByRole('button',{name:'隐藏集合点',exact:true})).toHaveAttribute('aria-pressed','true');
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(revision);
+  // A lost add response must not select a speculative target or allow a duplicate write.
+  await own.getByRole('button',{name:'新建图层',exact:true}).click();await page.getByLabel('新图层名称').fill('回执确认层');env.dropNextAction();await page.getByRole('button',{name:'添加图层',exact:true}).click();
+  await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();await expect(page.getByLabel('新图层名称')).toHaveValue('回执确认层');await expect(page.getByRole('button',{name:'添加图层',exact:true})).toBeDisabled();await expect(target).toContainText('新标注将添加到：集合点');
+  await page.getByRole('button',{name:'查询保存回执',exact:true}).click();await expect(target).toContainText('新标注将添加到：回执确认层');await expect(own.getByRole('button',{name:'隐藏回执确认层',exact:true})).toHaveAttribute('aria-pressed','true');await expect(page.getByLabel('新图层名称')).not.toBeVisible();
+  await openVersions(page);await page.getByText('标注集名称与发布',{exact:true}).click();await page.getByLabel('发布名称',{exact:true}).fill('图层固定参考');await page.getByRole('button',{name:'发布此保存修订'}).click();await page.getByText('我的草稿与已发布版本',{exact:true}).click();await page.getByRole('button',{name:'添加发布版参考'}).click();await openLayers(page);
+  const ref=page.getByRole('region',{name:'参考标注 图层固定参考'});await expect(ref).toContainText('4 个图层 · 1 个对象 · 已显示 0/4 层');await expect(ref.getByRole('button',{name:/设为绘制目标/})).toHaveCount(0);await expect(ref.getByRole('button',{name:'新建图层',exact:true})).toHaveCount(0);
+  await page.screenshot({path:testInfo.outputPath('annotation-layer-tree-desktop.png')});
+  await page.setViewportSize({width:350,height:900});
+  const eyes=await sidebar.locator('.annotation-tree-eye:visible').evaluateAll(elements=>elements.map(element=>element.getBoundingClientRect().x));expect(Math.max(...eyes)-Math.min(...eyes)).toBeLessThan(1);
+  expect(await sidebar.evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
+  await groupMore(own);const more=own.locator(':scope > .annotation-tree-row .annotation-tree-more > button');await more.press('Escape');await expect(more).toBeFocused();await expect(sidebar).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('annotation-layer-tree-350.png')});
+  expect(env.fake.calls).toHaveLength(0);expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });
