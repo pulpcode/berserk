@@ -38,19 +38,20 @@ async function setup(page:Page,simulation=false,missingGeometry=false){
  return {lab,fake,queries,task,road,tiles:()=>tiles,publicTiles:()=>publicTiles,offline:()=>{failSource=true;},online:()=>{failSource=false;},close:async()=>{await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await source.close();await rm(dir,{recursive:true,force:true});}};
 }
 async function openContents(page:Page){const button=page.getByRole('button',{name:'图层与对象',exact:true});if(await button.getAttribute('aria-expanded')!=='true')await button.click();await expect(page.getByRole('complementary',{name:'图层与对象',exact:true})).toBeVisible();}
-async function openFilters(page:Page){await openContents(page);const details=page.locator('.source-query-controls');if(await details.getAttribute('open')===null)await details.locator('summary').click();}
-async function pickSource(page:Page,category:string,name:RegExp){await openContents(page);const tree=page.getByRole('region',{name:'来源态势',exact:true});const button=tree.getByRole('button',{name:new RegExp(`^(展开|收起)${category}$`)});if(await button.getAttribute('aria-expanded')==='false')await button.click();await tree.getByRole('button',{name}).click();}
-function sourceCount(root:Page|Locator,count:number){return root.locator('.situation-source-tree > .annotation-tree-row').getByText(`${count} 个对象`,{exact:true});}
+async function openFilters(page:Page){await openContents(page);await expandSource(page);const details=page.locator('.source-query-controls');if(await details.getAttribute('open')===null)await details.locator('summary').click();}
+async function pickSource(page:Page,category:string,name:RegExp){await openContents(page);await expandSource(page);const tree=page.getByRole('region',{name:'来源态势',exact:true});const button=tree.getByRole('button',{name:new RegExp(`^(展开|收起)${category}$`)});if(await button.getAttribute('aria-expanded')==='false')await button.click();await tree.getByRole('button',{name}).click();}
+function sourceObjects(root:Page|Locator){return root.locator('.situation-source-tree .source-tree-objects > li > button');}
+async function expandSource(page:Page){const button=page.getByRole('button',{name:'展开来源态势',exact:true});if(await button.isVisible())await button.click();}
 test('global and task maps query union, keep stale source data, use only fixture tiles and never call model when browsing',async({page})=>{
  const env=await setup(page);try{
-  await page.getByRole('button',{name:'态势地图',exact:true}).click();await openContents(page);await expect(sourceCount(page,6)).toBeVisible();
+  await page.getByRole('button',{name:'态势地图',exact:true}).click();await openContents(page);await expect(sourceObjects(page)).toHaveCount(6);
   await expect(page.locator('.situation-simulation-label')).toHaveText('模拟态势');await expect(page.locator('.situation-attribution')).toContainText('OpenStreetMap');
   await pickSource(page,'道路',/西区通道 可通行/);await expect(page.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();
   await page.screenshot({path:test.info().outputPath('global-map-floating.png')});
   await expect.poll(env.tiles).toBeGreaterThan(0);await expect(page.locator('.situation-map-error')).toHaveCount(0);expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);
-  await page.getByRole('button',{name:'进入项目：地图验证任务',exact:true}).click();await page.getByRole('button',{name:'态势',exact:true}).click();await openContents(page);await expect(sourceCount(page,4)).toBeVisible();expect((await page.locator('.maplibregl-canvas').boundingBox())!.height).toBeGreaterThan(500);
+  await page.getByRole('button',{name:'进入项目：地图验证任务',exact:true}).click();await page.getByRole('button',{name:'态势',exact:true}).click();await openContents(page);await expect(sourceObjects(page)).toHaveCount(4);expect((await page.locator('.maplibregl-canvas').boundingBox())!.height).toBeGreaterThan(500);
   expect(env.queries.some(query=>Array.isArray(query.objectRefs)&&!query.areaIds)).toBe(true);expect(env.queries.some(query=>Array.isArray(query.areaIds)&&!query.objectRefs)).toBe(true);
-  env.offline();await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();await expect(page.locator('.source-query-error:visible')).toContainText('模拟来源离线');await openContents(page);await expect(sourceCount(page,4)).toBeVisible();
+  env.offline();await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();await expect(page.locator('.source-query-error:visible')).toContainText('模拟来源离线');await openContents(page);await expect(sourceObjects(page)).toHaveCount(4);
   await page.screenshot({path:test.info().outputPath('task-map-desktop.png')});expect(env.fake.calls).toHaveLength(0);
  }finally{await env.close();}
 });
@@ -60,13 +61,13 @@ test('object draft loads native context on explicit send; verified answer opens 
   await page.getByRole('dialog',{name:'引用并提问'}).getByRole('combobox').selectOption(`task:${env.task.id}`);await page.getByRole('button',{name:'创建对话草稿'}).click();
   await expect(page.getByLabel('本次引用的地图对象')).toContainText(env.road.objectId);expect(env.fake.calls).toHaveLength(0);
   await page.getByRole('button',{name:'打开态势地图',exact:true}).click();
-  const panel=page.getByRole('complementary',{name:'地图工作区'});await openContents(page);await expect(sourceCount(panel,4)).toBeVisible();await openFilters(page);await panel.getByRole('button',{name:'查看全部获准态势',exact:true}).click();await expect(sourceCount(panel,6)).toBeVisible();await pickSource(page,'资源池',/西区可用车辆/);await panel.getByRole('button',{name:'引用到对话',exact:true}).click();await expect(page.getByLabel('本次引用的地图对象')).toContainText('ui-vehicles-west-01');await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();expect(env.fake.calls).toHaveLength(0);
+  const panel=page.getByRole('complementary',{name:'地图工作区'});await openContents(page);await expect(sourceObjects(panel)).toHaveCount(4);await openFilters(page);await panel.getByRole('button',{name:'查看全部获准态势',exact:true}).click();await expect(sourceObjects(panel)).toHaveCount(6);await pickSource(page,'资源池',/西区可用车辆/);await panel.getByRole('button',{name:'引用到对话',exact:true}).click();await expect(page.getByLabel('本次引用的地图对象')).toContainText('ui-vehicles-west-01');await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();expect(env.fake.calls).toHaveLength(0);
   const input=page.getByRole('textbox',{name:'发送消息'});await input.fill('这条道路当前情况如何？');await page.reload();await expect(input).toHaveValue('这条道路当前情况如何？');await expect(page.getByLabel('本次引用的地图对象')).toContainText(env.road.objectId);
   await expect(page.getByRole('button',{name:'发送消息',exact:true})).toBeEnabled();await input.press('Enter');await expect(page.getByLabel('Axon 的回复')).toContainText('可供进一步分析');expect(env.fake.calls).toHaveLength(1);
   await expect(page.getByLabel('Axon 的回复').getByRole('button',{name:'无依据道路'})).toHaveCount(0);
   await input.fill('还需要哪些资料？');await page.getByLabel('Axon 的回复').getByRole('button',{name:'西区通道'}).click();await expect(page.getByRole('complementary',{name:'地图工作区'})).toBeVisible();await expect(input).toHaveValue('还需要哪些资料？');await expect(input).toBeEditable();await expect(page.getByRole('complementary',{name:'地图工作区'}).getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();await expect(page.getByRole('complementary',{name:'地图工作区'}).locator('canvas')).toBeVisible();await page.screenshot({path:test.info().outputPath('map-sidepanel-1440.png')});await page.setViewportSize({width:1280,height:960});await page.screenshot({path:test.info().outputPath('map-sidepanel-1280.png')});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await openFilters(page);await panel.getByRole('button',{name:'返回范围浏览',exact:true}).click();await expect(sourceCount(panel,4)).toBeVisible();await expect(panel.getByRole('combobox',{name:'来源',exact:true})).toBeVisible();
-  await panel.getByRole('button',{name:'隐藏道路',exact:true}).click();await page.getByLabel('Axon 的回复').getByRole('button',{name:'西区通道'}).click();await openContents(page);await expect(sourceCount(panel,1)).toBeVisible();await expect(panel.getByRole('button',{name:'隐藏道路',exact:true})).toHaveAttribute('aria-pressed','true');await panel.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await expect(panel.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(input).toHaveValue('还需要哪些资料？');
+  await openFilters(page);await panel.getByRole('button',{name:'返回范围浏览',exact:true}).click();await expect(sourceObjects(panel)).toHaveCount(4);await expect(panel.getByRole('combobox',{name:'来源',exact:true})).toBeVisible();
+  await panel.getByRole('button',{name:'隐藏道路',exact:true}).click();await page.getByLabel('Axon 的回复').getByRole('button',{name:'西区通道'}).click();await openContents(page);await expect(sourceObjects(panel)).toHaveCount(1);await expect(panel.getByRole('button',{name:'隐藏道路',exact:true})).toHaveAttribute('aria-pressed','true');await panel.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await expect(panel.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(input).toHaveValue('还需要哪些资料？');
   expect(env.publicTiles()).toBe(0);await page.screenshot({path:test.info().outputPath('map-linked-chat.png')});
  }finally{await env.close();}
 });
@@ -86,25 +87,31 @@ test('unified source tree retains hidden objects, scope and keyboard access, inc
  const env=await setup(page,false,true);try{
   await page.setViewportSize({width:1440,height:960});await page.getByRole('button',{name:'态势地图',exact:true}).click();await openContents(page);
   const tree=page.getByRole('region',{name:'来源态势',exact:true});const panel=page.getByRole('complementary',{name:'图层与对象',exact:true});
-  await expect(sourceCount(page,6)).toBeVisible();await expect(tree.locator(':scope > .annotation-tree-row')).toContainText('地图显示 5');
-  for(const category of ['道路','资源池','区域'])await tree.getByRole('button',{name:`展开${category}`,exact:true}).click();
+  await expect(sourceObjects(page)).toHaveCount(6);
+  await expect(tree.locator(':scope > .annotation-tree-row')).toHaveText('来源态势');
+  await expect(tree.getByRole('button',{name:'展开来源态势',exact:true})).toHaveAttribute('aria-expanded','false');
+  await expect(tree.locator('.annotation-tree-layer:visible')).toHaveCount(0);
+  await expect(tree.locator('.source-scope-summary')).not.toBeVisible();
+  await expandSource(page);
+  await expect(tree.locator('.source-tree-objects > li > button:visible')).toHaveCount(0);
+  for(const category of ['道路','资源池','区域']){const disclosure=tree.getByRole('button',{name:`展开${category}`,exact:true});await expect(disclosure).toHaveAttribute('aria-expanded','false');await disclosure.click();}
   await expect(tree.locator('.source-tree-objects > li > button')).toHaveCount(6);
-  await tree.getByRole('button',{name:'隐藏道路',exact:true}).click();await expect(sourceCount(page,6)).toBeVisible();await expect(tree.locator(':scope > .annotation-tree-row')).toContainText('地图显示 3');
+  await tree.getByRole('button',{name:'隐藏道路',exact:true}).click();await expect(sourceObjects(page)).toHaveCount(6);
   const west=tree.getByRole('button',{name:/西区通道 可通行/});await west.press('Enter');await expect(page.getByRole('button',{name:'关闭对象详情',exact:true})).toBeFocused();await expect(panel).not.toBeVisible();
   await page.getByRole('button',{name:'显示并定位',exact:true}).click();await page.getByRole('button',{name:'关闭对象详情',exact:true}).click();await expect(west).toBeFocused();await expect(tree.getByRole('button',{name:'隐藏道路',exact:true})).toHaveAttribute('aria-pressed','true');
-  await tree.getByRole('button',{name:'隐藏来源态势',exact:true}).click();await expect(tree.locator(':scope > .annotation-tree-row')).toContainText('地图显示 0');await expect(tree.locator('.source-tree-objects > li > button')).toHaveCount(6);
+  await tree.getByRole('button',{name:'隐藏来源态势',exact:true}).click();await expect(tree.locator('.source-tree-objects > li > button')).toHaveCount(6);
   await tree.getByRole('button',{name:'显示来源态势',exact:true}).click();
-  await openFilters(page);await page.getByRole('combobox',{name:'区域',exact:true}).selectOption(JSON.stringify(['situation','ui-zone-west']));await expect(sourceCount(page,3)).toBeVisible();await tree.locator('.source-query-controls>summary').click();await expect(tree.locator('.source-scope-summary')).toContainText('西区');
-  await openFilters(page);await page.getByRole('combobox',{name:'区域',exact:true}).selectOption('');await expect(sourceCount(page,6)).toBeVisible();await tree.locator('.source-query-controls>summary').click();
+  await openFilters(page);await page.getByRole('combobox',{name:'区域',exact:true}).selectOption(JSON.stringify(['situation','ui-zone-west']));await expect(sourceObjects(page)).toHaveCount(3);await tree.locator('.source-query-controls>summary').click();await expect(tree.locator('.source-scope-summary')).toContainText('西区');
+  await openFilters(page);await page.getByRole('combobox',{name:'区域',exact:true}).selectOption('');await expect(sourceObjects(page)).toHaveCount(6);await tree.locator('.source-query-controls>summary').click();
   await expect(page.locator('.situation-object-list,.annotation-source-controls,.situation-layer-menu')).toHaveCount(0);await expect(page.getByRole('button',{name:'图层与对象',exact:true})).toHaveCount(1);
   await page.screenshot({path:testInfo.outputPath('unified-source-tree-1440.png')});await page.setViewportSize({width:350,height:900});
   const eyes=await tree.locator('.annotation-tree-eye').evaluateAll(elements=>elements.map(element=>element.getBoundingClientRect().x));expect(Math.max(...eyes)-Math.min(...eyes)).toBeLessThan(1);expect(await panel.evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
   await page.screenshot({path:testInfo.outputPath('unified-source-tree-350.png')});
-  env.offline();await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();await expect(tree.getByRole('alert')).toContainText('已加载的内容可能过时');await expect(sourceCount(page,6)).toBeVisible();await page.getByRole('combobox',{name:'来源',exact:true}).click({trial:true});
+  env.offline();await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();await expect(tree.getByRole('alert')).toContainText('已加载的内容可能过时');await expect(sourceObjects(page)).toHaveCount(6);await page.getByRole('combobox',{name:'来源',exact:true}).click({trial:true});
   await pickSource(page,'道路',/西区通道 可通行/);await expect(page.locator('.situation-detail').getByRole('alert')).toContainText('已加载的内容可能过时');await expect(page.locator('.situation-source-error')).toHaveCount(0);await page.getByRole('button',{name:'引用到对话',exact:true}).click({trial:true});await page.getByRole('button',{name:'关闭对象详情',exact:true}).click();
   await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await expect(page.locator('.situation-source-error')).toContainText('模拟来源离线');await openContents(page);await expect(page.locator('.situation-source-error')).toHaveCount(0);
   env.online();await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(this:HTMLCanvasElement,type,...args){if(String(type).includes('webgl'))return null;return original.call(this,type,...args);} as typeof original;});await page.reload();
-  await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await expect(panel).toBeVisible();await expect(sourceCount(page,6)).toBeVisible();
+  await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await expect(panel).toBeVisible();await expect(sourceObjects(page)).toHaveCount(6);
   await pickSource(page,'资源池',/西区可用车辆/);await expect(page.getByText('暂无位置，可继续查询或引用。')).toBeVisible();await expect(page.getByRole('button',{name:/^(显示并定位|定位对象)$/})).toHaveCount(0);await page.getByRole('button',{name:'引用到对话',exact:true}).click();await expect(page.getByRole('dialog',{name:'引用并提问'})).toBeVisible();expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);
  }finally{await env.close();}
 });
