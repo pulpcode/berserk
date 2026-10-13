@@ -123,13 +123,39 @@ test('three columns resize by keyboard and pointer while map fills available hei
   await page.goto(`/?session=${env.session.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();
   await expect(page.getByRole('group',{name:'工作区布局'})).toHaveCount(0);await expect(page.locator('.map-panel-heading')).toHaveCount(0);await expect(page.getByRole('button',{name:'本会话地图标注',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'引用地图对象',exact:true})).toHaveCount(0);
   const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await expect(separator).toBeVisible();const panel=page.getByRole('complementary',{name:'地图工作区'});const canvas=panel.locator('.maplibregl-canvas');await expect(canvas).toBeVisible();
+  const verifyFloatingTools=async()=>{
+    const layout=(await panel.locator('.annotation-layout').boundingBox())!;
+    expect(Math.abs((await canvas.boundingBox())!.y-layout.y)).toBeLessThan(2);
+    const tools=['标注图层','版本与发布','刷新标注','放大地图','关闭态势地图'];
+    const layers=panel.getByRole('button',{name:'标注图层',exact:true});
+    const versions=panel.getByRole('button',{name:'版本与发布',exact:true});
+    await layers.click();await expect(panel.getByLabel('新图层名称')).toBeVisible();
+    for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
+    await panel.getByRole('button',{name:'关闭标注图层',exact:true}).press('Escape');await expect(layers).toBeFocused();
+    await versions.click();await expect(panel.locator('.annotation-management')).toBeVisible();
+    for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
+    await panel.getByRole('button',{name:'关闭版本与发布',exact:true}).press('Escape');await expect(versions).toBeFocused();
+    const source=panel.locator('.annotation-source-controls>summary');await source.click();
+    for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
+    await source.press('Escape');await expect(source).toBeFocused();
+  };
+  await verifyFloatingTools();
+  // The transparent gap between status and actions remains an actual map gesture surface.
+  expect(await panel.locator('.annotation-heading').evaluate(header=>{
+    const status=header.querySelector('.annotation-map-status')!.getBoundingClientRect();
+    const actions=header.querySelector('.annotation-heading-actions')!.getBoundingClientRect();
+    return document.elementFromPoint((status.right+actions.left)/2,status.top+status.height/2)?.closest('.annotation-heading')===null;
+  })).toBe(true);
   const before=(await panel.boundingBox())!;expect((await canvas.boundingBox())!.height).toBeGreaterThan(650);
   await separator.focus();await separator.press('ArrowLeft');await expect.poll(async()=>(await panel.boundingBox())!.width).toBeGreaterThan(before.width);
   const split=(await separator.boundingBox())!;await page.mouse.move(split.x+split.width/2,split.y+split.height/2);await page.mouse.down();await page.mouse.move(split.x+80,split.y+split.height/2,{steps:5});await page.mouse.up();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeLessThan(before.width);
   const resized=(await panel.boundingBox())!.width;await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeGreaterThan(resized);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).not.toBeVisible();await page.getByRole('button',{name:'还原地图',exact:true}).click();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeCloseTo(resized,0);
   await separator.focus();await separator.press('Home');await separator.press('End');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:test.info().outputPath('three-column-resize-1440.png')});await page.setViewportSize({width:1280,height:900});await page.getByRole('button',{name:'打开态势地图',exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('three-column-resize-1280.png')});
-  await page.setViewportSize({width:800,height:900});await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect(canvas).toBeVisible();await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(env.errors).toEqual([]);expect(env.fake.calls).toHaveLength(0);
+  await page.setViewportSize({width:800,height:900});await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect(canvas).toBeVisible();await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.setViewportSize({width:350,height:900});await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await verifyFloatingTools();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('floating-map-toolbar-350.png')});
+  expect(env.errors).toEqual([]);expect(env.fake.calls).toHaveLength(0);
  }finally{await env.close();}
 });
 
