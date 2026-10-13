@@ -672,3 +672,32 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 24: 移除地图模拟态势固定标签并上线
+
+**Date**: 2026-10-13
+**Task**: 移除地图模拟态势固定标签并上线
+**Branch**: `main`
+
+### Summary
+
+确认紧凑面板已完成，按用户要求移除固定模拟标签及无用样式，保留底图署名。
+
+### Main Changes
+
+- 移除固定标签，画布可访问名称使用态势地图画布。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1b193bb` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、受影响文件ESLint、生产构建、桌面地图回归通过。
+
+### Status
+
+[OK] **Completed**

@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 23
+- **Total Sessions**: 24
 - **Last Active**: 2026-10-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~674 | Active |
+| `journal-1.md` | ~703 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 24 | 2026-10-13 | 移除地图模拟态势固定标签并上线 | `1b193bb` | `main` |
 | 23 | 2026-10-13 | 紧凑图层面板与桌面端产品约定 | `fdefc7f`, `9286437` | `main` |
 | 22 | 2026-10-13 | 精简地图分组并默认折叠上线 | `9d7125e` | `main` |
 | 21 | 2026-10-13 | 统一图层对象面板与线上发布 | `66d0892` | `main` |
