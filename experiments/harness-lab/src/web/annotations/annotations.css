@@ -71,5 +71,3 @@
 
 .annotation-workspace .situation-view.unified-map .situation-detail,
 .annotation-workspace .situation-view.unified-map .situation-source-error { top:var(--annotation-panel-top); max-height:calc(100% - var(--annotation-panel-top) - 52px); }
-
-@media (max-width:767px), (pointer:coarse) { .annotation-sidebar { --control-height:44px; } }

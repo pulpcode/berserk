@@ -10,6 +10,10 @@ This directory contains guidelines for frontend development. Fill in each file w
 
 ---
 
+## Target Platform
+
+This product targets desktop browsers only (user decision, 2026-10-13). Do not add mobile-specific design, code, refactors or acceptance work unless explicitly requested. Desktop window resizing, split panes and narrow map panels remain in scope. This decision supersedes earlier phone-specific requirements in specs and generic UI skills; do not opportunistically remove existing compatibility code.
+
 ## Pre-Development and Quality Check
 
 Read [Conversation Map Annotations](../backend/map-annotations.md) for annotation layer groups, independent editing, fixed version references and save-conflict behavior.

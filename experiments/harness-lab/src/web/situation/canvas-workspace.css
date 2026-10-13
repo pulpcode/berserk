@@ -40,5 +40,3 @@
 .situation-detail-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; }
 .situation-view.unified-map .situation-detail-heading h2 { margin:0; }
 .situation-detail-heading .icon-button { flex:none; }
-
-@media (max-width:767px), (pointer:coarse) { .situation-content-panel { --control-height:44px; } }
