@@ -57,3 +57,15 @@ SituationView 保留查询与展示子集状态，SourceTree 使用稳定DOM por
 2026-10-13 16:36:03（Asia/Singapore）完成前端更新，PID4110772未重启。备份：`/home/ubuntu/axon-map-release-e073df6/backup/collapsed-map-ui-20261013T083601Z/code.tar.gz`；发布证据位于`updates/collapsed-map-ui-20261013`。四席位及标注读取检查通过，数据库完整性ok。
 
 线上只读浏览器通过1440/1280桌面、375手机及全局地图验证：会话初始两行、组默认折叠、展开后子图层仍收起、眼睛同列，页面错误0。
+
+## 2026-10-13 图层面板密度
+
+用户反馈两行仍留白过大。去除旧section样式叠加的组padding/margin/border，面板padding缩至8px、标题下间距2px，桌面局部控件32px，窄屏/触屏44px。全局与会话图层面板同步，其他工具栏与详情保持。实现提交fdefc7f；两项已有图层/来源树浏览器回归2/2通过，生产构建通过。
+
+已确认MapCanvas中的“模拟态势”为无条件渲染的span，无控制行为，也不代表逐对象数据性质。向用户解释并建议移除常驻标签、由具体来源说明性质；本次未修改该标签。
+
+2026-10-13 16:41:46（Asia/Singapore）上线，备份`/home/ubuntu/axon-map-release-e073df6/backup/compact-map-ui-20261013T084144Z/code.tar.gz`，发布证据`updates/compact-map-ui-20261013`，PID4110772未重启。四席位和标注接口检查通过，数据库完整性ok。
+
+用户随后明确产品只面向桌面浏览器，不需手机端额外设计/编码/验收。已写入根AGENTS.md及前端索引（优先于旧手机要求），本轮新增的两条手机/触控专用media规则已撤回；保留桌面窗口及分栏窄面板适配，未清理既有兼容代码。提交9286437。桌面面板实测116px；最终验证仅关注桌面场景。
+
+最终版本于16:44:06上线，备份`backup/desktop-map-ui-20261013T084404Z/code.tar.gz`，证据`updates/desktop-map-ui-20261013`。仅桌面1440/1280、会话/全局地图、放大还原验证通过，页面错误0，默认面板高度116px。
