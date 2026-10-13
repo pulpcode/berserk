@@ -1682,3 +1682,34 @@ test('追加消息消费事件分隔连续回复，刷新后的原生历史保�
     expect(mock.counts.sends).toBe(1);
   } finally { await mock.close(); }
 });
+
+test('地图聚焦时继续接收回复但不误标已读，返回对话保留草稿与阅读位置', async ({ page }) => {
+  const mock = await mockApi(page);
+  try {
+    const session = mock.sessions.get('A')!;
+    session.messages = Array.from({ length: 20 }, (_, index) => ({ id: `map-history-${index}`, role: 'assistant' as const, text: `地图前历史 ${index}\n\n${'需要继续阅读的内容。'.repeat(12)}` }));
+    await page.goto('/');
+    const input = page.getByRole('textbox', { name: '发送消息', exact: true });
+    const conversation = page.getByLabel('对话内容', { exact: true });
+    await input.fill('慢速回复'); await input.press('Enter');
+    await expect(page.getByRole('button', { name: '停止回复' })).toBeVisible();
+    await conversation.evaluate(element => { element.scrollTop = 120; element.dispatchEvent(new Event('scroll')); });
+    await input.fill('地图查看期间保留的草稿');
+    const modes = page.getByRole('group', { name: '工作区布局' });
+    await modes.getByRole('button', { name: '地图', exact: true }).click();
+    await expect(input).not.toBeVisible();
+    const requestId = session.active!.requestId;
+    session.messages.push({ id: 'map-hidden-answer', role: 'assistant', requestId, text: '地图聚焦期间收到的新回复' });
+    mock.event('A', { type: 'text.delta', sessionId: 'A', requestId, delta: '地图聚焦期间收到的新回复' });
+    mock.finish('A');
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
+    await expect(page.getByText('地图聚焦期间收到的新回复', { exact: true })).toHaveCount(1);
+    await modes.getByRole('button', { name: '对话', exact: true }).click();
+    await expect(input).toHaveValue('地图查看期间保留的草稿');
+    await expect.poll(() => conversation.evaluate(element => element.scrollTop)).toBeCloseTo(120, 0);
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
+    await conversation.evaluate(element => { element.scrollTop = element.scrollHeight; element.dispatchEvent(new Event('scroll')); });
+    await expect(page.locator('.conversation-indicator.unread')).toHaveCount(0);
+    expect(mock.counts.sends).toBe(1);
+  } finally { await mock.close(); }
+});

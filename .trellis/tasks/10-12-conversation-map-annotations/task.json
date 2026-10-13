@@ -26,6 +26,6 @@
     ".trellis/tasks/10-12-conversation-map-annotations/implement.md",
     ".trellis/tasks/10-12-conversation-map-annotations/research/evidence.md"
   ],
-  "notes": "2026-10-13 实现及交叉审阅完成。冻结后 typecheck/lint/build、745项单元集成、浏览器用例并集177项（含复跑）、用户授权的12轮隔离真实模型验收通过。已准备单项中文提交计划，待用户确认；未部署、通知、暂存或提交，未归档其他任务。 2026-10-13 用户明确授权后已发布到既有 49.232.156.14:4315：完整停服备份、v8→v10 迁移、四席位登录与标注读取、业务表/历史/模拟数据完整性以及全部新静态资源验证通过，详见 research/deployment.md。仍未 Git 提交或推送。",
+  "notes": "2026-10-13 会话独立地图标注已完成并部署，基线提交 cbf0628。随后按用户审阅的三栏 UI 设计完成前端优化：745 单元集成通过，浏览器通过并集180项（全量178/179加定向复跑和新增隐藏聊天专项），类型/Lint/构建通过。11:35 已无重启发布至 49.232.156.14:4315，四席位登录、标注读取、静态资源及真实浏览器验证通过；详见 research/ui-validation.md 与 ui-deployment.md。准备单独记录 UI 增量提交，未推送。",
   "meta": {}
 }

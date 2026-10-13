@@ -310,6 +310,18 @@ Conversation-level question and confirmation cards share the reply content inset
 Use `randomUUID()` from `src/web/random-uuid.ts` for client action and draft attachment IDs. Public HTTP origins do not expose native `crypto.randomUUID()`; the shared helper uses native UUIDs when available and otherwise generates UUID v4 with `crypto.getRandomValues()`. Do not use `Math.random()` or mutate the browser Crypto object. `tests/random-uuid.test.ts` covers the native path and HTTP fallback format/uniqueness.
 
 
+### Conversation and map workspace
+
+`SituationProvider` owns the conversation/split/map layout and source or fixed annotation selection. `SituationWorkspace` keeps the conversation and opened map panes mounted across layout changes; hiding a pane must retain composer drafts, unsaved annotation forms, drawing state, layer visibility and camera position. Scope the map to the current seat/task/session and business navigation. Only the active page host mounts the shared map panel, including the work overview's evidence links.
+
+The conversation header provides one layout control group. Split layout uses a bounded pointer- and keyboard-adjustable separator; narrow work areas show one surface with an explicit route back to the conversation. Layout controls are local presentation actions, not business navigation and not grounds to discard edits. Hidden conversation panes keep receiving existing SSE state, but must not mark replies read, move the saved scroll position or automatically fold process content. Restore scrolling and read checks when the conversation becomes visible.
+
+The unified `AnnotationWorkspace` combines source situation and annotations. Source evidence still queries current authorized facts and labels the historical basis; provide a way back to task/all-source browsing. Annotation evidence keeps its fixed revision independently of the editable draft, including when both initially have the same revision. Parent rerenders must not refetch/refit an unchanged deep-link reference; later reference requests supersede earlier selection/fit responses without changing the write target.
+
+The canvas fills the available map area. Layer, management, source and object panels are bounded overlays with accessible close controls; uncovered map areas retain pointer interaction. Closing an editor panel hides its retained form and provides a resume action. Coordinate editing and object lists remain available without WebGL. Keep errors visible when filter panels are closed, and keep map controls/attribution accessible.
+
+`tests/e2e/annotations.spec.ts` and `situation-map.spec.ts` own UI regressions for layout/draft retention, reference behavior, keyboard resizing, source failures and fallback lists. The existing chat/navigation tests remain the authority for stream and read-marker behavior; explicitly test hidden map-focused chat when changing those visibility guards.
+
 ## Foreground message queue
 
 ### 1. Scope / Trigger

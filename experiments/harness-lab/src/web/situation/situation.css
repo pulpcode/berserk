@@ -1,8 +1,38 @@
-.situation-layout { display:flex; height:100dvh; min-width:0; }
-.situation-layout > .app-shell { flex:1; min-width:0; }
-.situation-side-panel { width:410px; flex:none; border-left:1px solid var(--line); background:var(--surface,#fff); overflow:auto; }
-.situation-side-panel > header { display:flex; gap:8px; align-items:center; padding:16px; position:sticky; top:0; background:white; z-index:3; }
-.situation-side-panel > header strong { flex:1; }
+/* Navigation stays in the app shell; conversation and map share its work area. */
+.conversation-map-workspace { display:flex; flex:1; min-height:0; min-width:0; overflow:hidden; }
+.conversation-pane { display:flex; flex-direction:column; flex:1; min-height:0; min-width:0; overflow:hidden; }
+.conversation-map-workspace.layout-split:not(.narrow-map-workspace) > .conversation-pane { flex:0 0 var(--conversation-width); }
+.conversation-map-workspace[hidden], .conversation-map-workspace > [hidden] { display:none; }
+.situation-side-panel { display:flex; flex-direction:column; flex:1; min-width:0; min-height:0; background:var(--surface,#fff); overflow:hidden; }
+.map-panel-heading { flex:none; display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:48px; padding:5px 12px; border-bottom:1px solid var(--line); }
+.map-panel-heading strong { font-size:12px; font-weight:500; }
+.map-panel-heading > div { display:flex; align-items:center; gap:4px; }
+.map-panel-heading button { min-height:32px; padding:4px 8px; font-size:12px; }
+.map-panel-heading .icon-button { width:32px; height:32px; min-height:32px; }
+.situation-side-panel > .situation-view { flex:1; min-height:0; }
+.map-splitter { position:relative; flex:0 0 8px; cursor:col-resize; background:var(--surface,#fff); border-left:1px solid var(--line); border-right:1px solid var(--line); touch-action:none; }
+.map-splitter span { position:absolute; top:calc(50% - 20px); left:2px; width:2px; height:40px; border-radius:2px; background:var(--muted); }
+.map-splitter:is(:hover,:focus-visible) { background:var(--accent-soft); }
+.map-splitter:focus-visible { outline:2px solid var(--control-focus); outline-offset:-2px; }
+.map-layout-controls { display:flex; flex:none; align-items:center; gap:2px; padding:3px; border:1px solid var(--line); border-radius:var(--control-radius); background:var(--surface,#fff); }
+.map-layout-controls button { min-height:32px; padding:5px 12px; font-size:12px; border-color:transparent; }
+.map-layout-controls button[aria-pressed=true] { background:var(--accent-soft); color:var(--accent); }
+.workspace-header:has(.map-layout-controls) { gap:12px; }
+.workspace-header:has(.map-layout-controls) .header-title { flex:1; }
+.map-narrow-hint { flex:none; padding:8px 12px; margin:0; color:var(--muted); font-size:12px; border-bottom:1px solid var(--line); }
+.layout-split .conversation-scroll { padding-left:18px; padding-right:18px; }
+.layout-split .composer-dock { padding-left:16px; padding-right:16px; }
+.layout-split .suggestions { grid-template-columns:minmax(0,1fr); }
+.layout-split .empty-state { padding-top:40px; }
+.layout-split .empty-state h1 { font-size:24px; }
+@media(max-width:1100px) { .workspace-header:has(.map-layout-controls) .workspace-name { display:none; } }
+@media(max-width:767px) {
+  .workspace-header:has(.map-layout-controls) { flex-wrap:wrap; }
+  .workspace-header:has(.map-layout-controls) .header-title { flex-basis:calc(100% - 120px); }
+  .workspace-header:has(.map-layout-controls) .workspace-tools { order:1; }
+  .workspace-header:has(.map-layout-controls) .map-layout-controls { order:2; margin-left:auto; }
+  .map-layout-controls button { min-height:36px; padding:5px 12px; }
+}
 .situation-view, .simulation-view { padding:24px; overflow:auto; min-height:0; flex:1; }
 .situation-view.compact { padding:12px; }
 .situation-filters, .situation-actions, .situation-layers { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:14px; }
@@ -45,13 +75,12 @@
 .simulation-notifications { padding:0; list-style:none; }
 .simulation-notifications li { border-top:1px solid var(--line); padding:16px 0; display:grid; gap:8px; }
 .simulation-notifications small { overflow-wrap:anywhere; }
-@media(min-width:780px) and (max-width:1400px) { .has-map-panel .app-shell { grid-template-columns:190px minmax(0,1fr); } .has-map-panel .conversation-scroll { padding-left:16px; padding-right:16px; } .has-map-panel .composer-dock { padding-left:16px; padding-right:16px; } .situation-side-panel { width:360px; } }
 .situation-filters select, .simulation-editor input, .simulation-editor select, .simulation-editor textarea { border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:var(--surface,#fff); color:inherit; font:inherit; min-height:38px; }
 .situation-filters select:focus-visible, .simulation-editor :is(input,select,textarea):focus-visible { outline:2px solid var(--accent,#416858); outline-offset:2px; }
 .situation-layers input { accent-color:var(--accent,#416858); }
 .situation-view .maplibregl-ctrl-group button { min-height:29px; height:29px; width:29px; border-radius:0; padding:0; }
 
-/* Full-page maps fill the work area; conversation side panels stay compact. */
+/* Source-only maps fill their work area. */
 .situation-view:not(.compact) { position:relative; isolation:isolate; display:grid; grid-template-columns:minmax(0,1fr) 320px; grid-template-rows:auto minmax(0,1fr); padding:0; overflow:hidden; min-height:560px; }
 .situation-view:not(.compact) .situation-content,
 .situation-view:not(.compact) .situation-map-and-list { display:contents; }
@@ -95,3 +124,5 @@
 .workspace-header:has(.map-titlebar-slot) { position:relative; z-index:2; }
 .situation-view.titlebar-map { grid-template-rows:20px minmax(0,1fr); }
 .compact .situation-layer-menu { margin-bottom:12px; }
+
+.conversation-pane > .information-center { flex:1; height:auto; min-height:0; }
