@@ -1,3 +1,4 @@
+import './layer-tree.css';
 import { useRef, useState, type ReactNode } from 'react';
 import { ChevronDown, ChevronRight, Eye, EyeOff, MoreHorizontal, Pencil, X } from 'lucide-react';
 import type { AnnotationLayer, AnnotationVersion } from '../../contracts/annotations';

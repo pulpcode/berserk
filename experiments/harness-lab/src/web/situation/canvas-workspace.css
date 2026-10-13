@@ -1,26 +1,43 @@
-/* Scoped to the unified conversation/task map; existing global map layouts remain independent. */
-.situation-view.floating-map { position:relative; display:block; isolation:isolate; padding:0; min-height:0; min-width:0; overflow:hidden; }
-.situation-view.floating-map .situation-content,.situation-view.floating-map .situation-map-and-list { display:contents; }
-.situation-view.floating-map .situation-canvas-wrap { position:absolute; inset:0; height:100%; border:0; border-radius:0; z-index:-1; }
-.situation-view.floating-map .annotation-source-controls { position:absolute; left:12px; top:12px; z-index:3; padding:0 10px; border:1px solid var(--line); border-radius:9px; background:var(--surface,#fff); box-shadow:0 3px 14px #182e2412; max-width:calc(100% - 24px); }
-.situation-view.floating-map .annotation-source-controls>summary { cursor:pointer; font-size:12px; padding:9px 0; min-height:32px; }
-.situation-view.floating-map .annotation-source-controls[open] { width:300px; max-height:calc(100% - 130px); overflow:auto; }
-.situation-view.floating-map .situation-toolbar { position:static; margin:0; padding:8px 0; border:0; border-radius:0; box-shadow:none; background:transparent; }
-.situation-view.floating-map .situation-filters { display:grid; margin:0; gap:8px; }
-.situation-view.floating-map .situation-filters label { display:grid; }
-.situation-view.floating-map .situation-filters select { width:100%; max-width:none; }
-.situation-view.floating-map .situation-actions { display:flex; margin:10px 0; flex-wrap:wrap; }
-.situation-view.floating-map .situation-toolbar .resource-help { font-size:12px; }
-.situation-view.floating-map .situation-layer-menu[open] .situation-layers { position:static; border:0; box-shadow:none; margin:0; padding:4px 0; }
-.situation-view.floating-map .situation-object-list { position:absolute; top:12px; left:190px; z-index:2; width:fit-content; max-width:calc(100% - 202px); margin:0; padding:0 10px; background:var(--surface,#fff); border:1px solid var(--line); border-radius:9px; box-shadow:0 3px 14px #182e2412; }
-.situation-view.floating-map .situation-object-list>summary { cursor:pointer; font-size:12px; padding:9px 0; min-height:32px; }
-.situation-view.floating-map .situation-object-list[open] { top:58px; left:12px; width:300px; max-width:calc(100% - 24px); max-height:calc(100% - 180px); overflow:auto; }
-.situation-view.floating-map .situation-object-list ul { max-height:none; margin:0 0 10px; }
-.situation-view.floating-map .situation-detail { position:absolute; z-index:4; top:58px; right:12px; width:300px; max-width:calc(100% - 24px); max-height:calc(100% - 190px); margin:0; padding:12px; border:1px solid var(--line); border-radius:12px; overflow:auto; background:var(--surface,#fff); box-shadow:0 8px 28px #182e2426; }
-.situation-view.floating-map .situation-detail[hidden] { display:none; }
-.situation-view.floating-map .situation-detail h2 { font-size:15px; }
-.situation-view.floating-map .situation-detail p,.situation-view.floating-map .situation-object-info { font-size:12px; margin:8px 0; }
-.situation-view.floating-map .situation-object-info>summary { cursor:pointer; padding:8px 0; }
-.situation-view.floating-map .situation-simulation-label { top:auto; bottom:10px; left:54px; right:auto; }
-.situation-view.floating-map .situation-source-error { position:absolute; z-index:3; top:58px; left:12px; right:12px; width:fit-content; max-width:calc(100% - 24px); padding:8px 10px; background:var(--surface,#fff); border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--danger,#a43c32); }
-.situation-view.floating-map .situation-map-error { bottom:156px; z-index:3; }
+/* The source-only and annotation canvases share one content panel. */
+.situation-view.unified-map { container:situation-map / inline-size; position:relative; display:block; isolation:isolate; padding:0; min-height:0; min-width:0; overflow:hidden; }
+.situation-view.unified-map .situation-content,.situation-view.unified-map .situation-map-and-list { display:contents; }
+.situation-view.unified-map .situation-canvas-wrap { position:absolute; inset:0; height:100%; border:0; border-radius:0; z-index:-1; }
+.situation-view.unified-map .situation-toolbar { position:absolute; top:8px; right:12px; z-index:10; display:flex; align-items:center; gap:6px; margin:0; padding:4px; border:1px solid var(--line); border-radius:10px; background:var(--surface,#fff); box-shadow:0 3px 14px #182e2412; }
+.situation-map-title { padding:0 8px; font-size:13px; }
+.situation-toolbar button.icon-button { width:var(--control-height); height:var(--control-height); min-height:var(--control-height); padding:0; }
+.situation-toolbar button[aria-expanded=true] { color:var(--accent); background:var(--accent-soft); }
+.situation-view.unified-map .situation-detail,.situation-content-panel { position:absolute; z-index:5; top:66px; right:12px; width:min(340px,calc(100% - 24px)); max-width:calc(100% - 24px); max-height:calc(100% - 118px); margin:0; padding:12px; border:1px solid var(--line); border-radius:12px; overflow:auto; overscroll-behavior:contain; background:var(--surface,#fff); box-shadow:0 8px 28px #182e2426; }
+.situation-content-panel { left:12px; right:auto; width:min(400px,calc(100% - 24px)); }
+.situation-view.titlebar-map .situation-content-panel,.situation-view.titlebar-map .situation-detail { top:12px; max-height:calc(100% - 64px); }
+.situation-view.unified-map .situation-detail[hidden],.situation-content-panel[hidden] { display:none; }
+.situation-view.unified-map .situation-detail h2 { font-size:15px; }
+.situation-view.unified-map .situation-detail p,.situation-view.unified-map .situation-object-info { font-size:12px; margin:8px 0; }
+.situation-view.unified-map .situation-object-info>summary { cursor:pointer; padding:8px 0; }
+.situation-view.unified-map .situation-simulation-label { top:auto; bottom:10px; left:54px; right:auto; }
+.situation-view.unified-map .situation-source-error { position:absolute; z-index:6; top:66px; right:12px; width:fit-content; max-width:calc(100% - 24px); max-height:150px; overflow:auto; padding:8px 10px; background:var(--surface,#fff); border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--danger,#a43c32); }
+.situation-view.unified-map .situation-source-error button { margin-left:8px; }
+.situation-view.unified-map .situation-map-error { bottom:156px; z-index:3; }
+.situation-content-panel .annotation-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; font-size:14px; }
+.situation-source-tree { border-bottom:1px solid var(--line); }
+.source-scope-summary { margin:4px 8px 8px; font-size:12px; color:var(--muted); overflow-wrap:anywhere; }
+.source-query-controls { margin:0 6px 8px; font-size:12px; }
+.source-query-controls>summary { cursor:pointer; padding:8px 0; }
+.situation-source-tree .situation-filters { display:grid; margin:8px 0; gap:8px; }
+.situation-source-tree .situation-filters label { display:grid; gap:4px; }
+.situation-source-tree .situation-filters select { width:100%; max-width:none; min-width:0; }
+.situation-source-tree .situation-actions { display:flex; gap:6px; margin:8px 0; flex-wrap:wrap; }
+.situation-source-tree .resource-help { font-size:12px; }
+.situation-source-tree .source-tree-objects { list-style:none; max-height:240px; overflow:auto; }
+.source-tree-objects>li>button { width:100%; display:flex; flex-direction:column; align-items:flex-start; gap:4px; text-align:left; margin:3px 0; font-size:12px; overflow-wrap:anywhere; }
+.source-tree-objects>li>button[aria-pressed=true] { background:var(--accent-soft); }
+.source-tree-objects strong { font-weight:500; }
+.source-tree-objects small { color:var(--muted); font-size:11px; }
+@container situation-map (max-width:400px) { .situation-source-tree,.situation-content-panel { --control-height:44px; } }
+.source-query-error { padding:8px; border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--danger,#a43c32); overflow-wrap:anywhere; }
+.source-query-error button { margin-top:6px; }
+.situation-source-tree .annotation-tree-disclosure { min-height:var(--control-height); }
+.situation-source-tree .annotation-tree-disclosure:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+.situation-detail-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.situation-view.unified-map .situation-detail-heading h2 { margin:0; }
+.situation-detail-heading .icon-button { flex:none; }

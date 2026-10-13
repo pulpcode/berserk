@@ -8,6 +8,7 @@ import { AccessStore } from '../../src/access/store';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 
 test.setTimeout(60000);
 async function setup(page:Page){
@@ -34,7 +35,7 @@ async function setup(page:Page){
  await expect(page.locator('.annotation-heading')).toBeVisible();await openLayers(page);
  return {lab,actor,task,session,second,requests,errors,dropNextAction:()=>{dropAction=true;},tiles:()=>tiles,fake,close:async()=>{page.on('dialog',dialog=>dialog.accept());await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await rm(dir,{recursive:true,force:true});}};
 }
-async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'标注图层',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
+async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'图层与对象',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
 async function openVersions(page:Page){if(!await page.locator('.annotation-management').isVisible())await page.getByRole('button',{name:'版本与发布',exact:true}).click();}
 async function pickOwn(page:Page,name:string){await openLayers(page);const group=page.getByRole('region',{name:/^本会话标注 /});const row=group.locator('.annotation-tree-layer').filter({has:page.getByRole('button',{name:/^(展开|收起)集合点$/})});const toggle=row.getByRole('button',{name:/^(展开|收起)集合点$/});if(await toggle.getAttribute('aria-expanded')==='false')await toggle.click();await group.getByRole('button',{name,exact:true}).click();}
 async function addLayer(page:Page,name:string){await openLayers(page);await page.getByRole('region',{name:/^本会话标注 /}).getByRole('button',{name:'新建图层',exact:true}).click();await page.getByLabel('新图层名称').fill(name);await page.getByRole('button',{name:'添加图层',exact:true}).click();await expect(page.getByLabel('新图层名称')).not.toBeVisible();}
@@ -57,7 +58,7 @@ test('independent drafts, fixed publication, current selection and native annota
   await page.goto(`/?session=${env.second.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await openLayers(page);await pickOwn(page,'集合点 B point');await page.getByRole('button',{name:'放大地图',exact:true}).click();await page.getByRole('button',{name:'引用此对象'}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();await expect(page.getByLabel('本次引用的标注版本')).toContainText('r1');
   await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('比较这些集合点');await page.getByRole('button',{name:'发送消息',exact:true}).click();await expect(page.getByLabel('本条消息引用的标注版本')).toBeVisible();expect(env.requests.find(item=>item.path.endsWith('/messages'))?.body.annotationRefs).toEqual([expect.objectContaining({objectIds:expect.arrayContaining([expect.any(String)])})]);
   await page.getByLabel('本条消息引用的标注版本').getByRole('button').click();await expect(page.getByRole('complementary',{name:'地图工作区'})).toBeVisible();await expect.poll(env.tiles).toBeGreaterThan(0);await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');await expect(page.getByText(/固定引用范围：1 个对象/)).toBeVisible();await expect(page.locator('.annotation-marker').first()).toBeVisible();expect(env.errors).toEqual([]);
-  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await pickOwn(page,'集合点 B point');await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('本会话可编辑');await page.getByLabel('本条消息引用的标注版本').getByRole('button').click();await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await page.getByRole('button',{name:'关闭标注图层',exact:true}).click();await page.screenshot({path:test.info().outputPath('annotation-reference-1440.png')});await page.setViewportSize({width:1280,height:960});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('annotation-reference-1280.png')});
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await pickOwn(page,'集合点 B point');await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('本会话可编辑');await page.getByLabel('本条消息引用的标注版本').getByRole('button').click();await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');if(await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.screenshot({path:test.info().outputPath('annotation-reference-1440.png')});await page.setViewportSize({width:1280,height:960});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('annotation-reference-1280.png')});
  }finally{await env.close();}
 });
 
@@ -78,7 +79,7 @@ test('official Terra Draw supports point line polygon Chinese labels, edit and c
 test('CAS retains form and no WebGL still permits explicit coordinate editing',async({page})=>{
  await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(this:HTMLCanvasElement,type,...args){if(String(type).includes('webgl'))return null;return original.call(this,type,...args);} as typeof original;});
  const env=await setup(page);try{
-  await layer(page);await expect(page.getByText('地图暂不可用，请通过对象列表查看与引用。')).toBeVisible();await point(page);
+  await layer(page);await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await point(page);
   await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留我的修改');
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:binding.draft!.headRevision,operations:[{op:'rename_set',title:'Agent 已更新'}]});
   await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();
@@ -128,18 +129,18 @@ test('three columns resize by keyboard and pointer while map fills available hei
   const verifyFloatingTools=async()=>{
     const layout=(await panel.locator('.annotation-layout').boundingBox())!;
     expect(Math.abs((await canvas.boundingBox())!.y-layout.y)).toBeLessThan(2);
-    const tools=['标注图层','版本与发布','刷新标注','放大地图','关闭态势地图'];
-    const layers=panel.getByRole('button',{name:'标注图层',exact:true});
+    const tools=['图层与对象','版本与发布','刷新标注','放大地图','关闭态势地图'];
+    const layers=panel.getByRole('button',{name:'图层与对象',exact:true});
     const versions=panel.getByRole('button',{name:'版本与发布',exact:true});
     await layers.click();await expect(panel.locator('.annotation-sidebar')).toBeVisible();
     for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
-    await panel.getByRole('button',{name:'关闭标注图层',exact:true}).press('Escape');await expect(layers).toBeFocused();
+    await panel.getByRole('button',{name:'关闭图层与对象',exact:true}).press('Escape');await expect(layers).toBeFocused();
     await versions.click();await expect(panel.locator('.annotation-management')).toBeVisible();
     for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
     await panel.getByRole('button',{name:'关闭版本与发布',exact:true}).press('Escape');await expect(versions).toBeFocused();
-    const source=panel.locator('.annotation-source-controls>summary');await source.click();
+    await layers.click();const source=panel.locator('.source-query-controls>summary');await source.click();
     for(const name of tools)await panel.getByRole('button',{name,exact:true}).click({trial:true});
-    await source.press('Escape');await expect(source).toBeFocused();
+    await source.press('Escape');await expect(source).toBeFocused();await expect(panel.locator('.source-query-controls')).not.toHaveAttribute('open','');await source.press('Escape');await expect(layers).toBeFocused();
   };
   await verifyFloatingTools();
   // The transparent gap between status and actions remains an actual map gesture surface.
@@ -220,6 +221,13 @@ test('layer tree separates expansion visibility and drawing target, including em
   expect(await sidebar.evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
   await groupMore(own);const more=own.locator(':scope > .annotation-tree-row .annotation-tree-more > button');await more.press('Escape');await expect(more).toBeFocused();await expect(sidebar).toBeVisible();
   await page.screenshot({path:testInfo.outputPath('annotation-layer-tree-350.png')});
+  // Both trees use one active detail: closing an annotation must not revive the previous source object.
+  const sourceItem=mapFixtures('selection','2026-10-11').objects.find(item=>item.ref.objectType==='resource')!;
+  await page.route('**/api/context/catalog',route=>route.fulfill({json:{systems:[{id:'situation',name:'选择回归来源',objectTypes:['resource'],capabilities:['situation_current'],areas:[]}]}}));
+  await page.route('**/api/context/situation',route=>route.fulfill({json:{systemId:'situation',query:route.request().postDataJSON(),queriedAt:'2026-10-13T00:00:00Z',data:{items:[sourceItem],hasMore:false,nextCursor:null,unknownRefs:[],changeCursor:'1',asOf:'2026-10-13T00:00:00Z'}}}));
+  await page.locator('.source-query-controls > summary').click();await page.getByRole('button',{name:'刷新态势',exact:true}).click();await page.getByRole('button',{name:'查看全部获准态势',exact:true}).click();
+  await page.getByRole('region',{name:'来源态势',exact:true}).getByRole('button',{name:'展开资源池',exact:true}).click();await page.getByRole('region',{name:'来源态势',exact:true}).getByRole('button',{name:new RegExp(sourceItem.name)}).click();await expect(page.locator('.situation-detail')).toBeVisible();
+  await pickOwn(page,'集合点 A point');await expect(page.locator('.situation-detail')).not.toBeVisible();await expect(page.getByRole('region',{name:'标注对象操作'})).toBeVisible();await page.getByRole('button',{name:'关闭标注对象',exact:true}).click();await expect(sidebar).toBeVisible();await expect(page.locator('.situation-detail')).not.toBeVisible();
   expect(env.fake.calls).toHaveLength(0);expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });
