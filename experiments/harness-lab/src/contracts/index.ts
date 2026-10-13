@@ -1,3 +1,4 @@
+import type { AnnotationContext, AnnotationSelection, LoadedAnnotationSelection } from './annotations.js';
 import type { ContextRef, LoadedContextSelection } from './context.js';
 import type { CommandPolicyRecord, Interaction } from './interactions.js';
 export type * from './interactions.js';
@@ -181,8 +182,8 @@ export interface InstructionUpdate {
 export interface SkillInfo { id: string; name: string; description: string; version: string; hash: string }
 export interface SkillFile extends SkillInfo { content: string }
 export interface AgentInfo { name: string; description: string; hash: string }
-export interface ComposerSelection { contextRefs?: ContextRef[]; skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
-export interface LoadedComposerSelection { context?: LoadedContextSelection; skill?: SkillFile; agent?: AgentInfo }
+export interface ComposerSelection { annotationRefs?: AnnotationSelection[]; contextRefs?: ContextRef[]; skill?: { id: string; hash: string }; agent?: { name: string; hash: string } }
+export interface LoadedComposerSelection { annotationContext?: AnnotationContext; annotationRefs?: LoadedAnnotationSelection[]; context?: LoadedContextSelection; skill?: SkillFile; agent?: AgentInfo }
 export interface WorkspaceResources { workspaceId: string; instructions: InstructionInfo[]; sources: SourceInfo[]; skills: SkillInfo[] }
 export type RequestResourcesRecord = { task?: {id:string;title:string;goal:string;visibility:'public'|'private'}; compactions?: CompactionSummary[]; usageSummary?: UsageSummary } & ({
   status: 'available'; requestId: string; workspaceId: string; instructions: InstructionFile[];

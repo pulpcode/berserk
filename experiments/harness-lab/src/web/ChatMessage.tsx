@@ -6,6 +6,7 @@ import type { PublicMessage } from '../contracts/index';
 import { HistoricalFile } from './Files';
 import { useChatItemFocus, type ChatFocusTransfer } from './useChatItemFocus';
 import { MapLink, EvidenceMapLinks } from './situation/MapContext';
+import { AnnotationHistoryLinks } from './situation/MapContext';
 import { SelectionHistory } from './ComposerReferences';
 const MarkdownEvidence = createContext<PublicMessage[]>([]);
 function EvidenceLink({href,children}:{href?:string;children?:ReactNode}) {
@@ -30,6 +31,6 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
     <EvidenceMapLinks messages={[message]}/><div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
   </details>;
   return <article ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
-    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownEvidence.Provider value={evidence}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown></MarkdownEvidence.Provider>}</div>
+    <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownEvidence.Provider value={evidence}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown></MarkdownEvidence.Provider>}</div>
   </article>;
 }

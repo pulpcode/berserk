@@ -1,3 +1,4 @@
+import { checkAnnotationTables } from '../annotations/store.js';
 import { upgradeSeatColumns } from '../access/schema.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
@@ -117,14 +118,15 @@ function normalizeRule(input: InformationRuleInput): InformationRuleInput {
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
     const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
+    if ([9,10].includes(version)) checkAnnotationTables(db);
     const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
     const anyBackground = [...actual].some(name => name.startsWith('background_'));
-    const fresh = !anyBackground && [2,5,7].includes(version);
+    const fresh = !anyBackground && [2,5,7,9].includes(version);
     if (!fresh) {
-      if (![3,4,5,6,8].includes(version) || tables.some(table => !actual.has(table))) throw stateError();
+      if (![3,4,5,6,8,10].includes(version) || tables.some(table => !actual.has(table))) throw stateError();
       if (version >= 4 && !actual.has('information_task_overrides')) throw stateError();
-      if ([5,8].includes(version) && !actual.has('background_delivery_reviews')) throw stateError();
-      if ([6,8].includes(version) && !actual.has('inbox_handling')) throw stateError();
+      if ([5,8,10].includes(version) && !actual.has('background_delivery_reviews')) throw stateError();
+      if ([6,8,10].includes(version) && !actual.has('inbox_handling')) throw stateError();
       this.validateIntegrity(version >= 4,actual.has('background_delivery_reviews'));
       if (actual.has('inbox_handling')) this.validateHandling();
     }
@@ -158,7 +160,7 @@ export class BackgroundStore {
       if (!actual.has('inbox_handling')) db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
         INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';`);
       this.validateIntegrity(true,true); this.validateHandling();
-      db.exec('PRAGMA user_version=8');
+      db.exec(`PRAGMA user_version=${version >= 9 ? 10 : 8}`);
     });
   }
 

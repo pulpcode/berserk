@@ -1,3 +1,5 @@
+import { annotationRoutes } from './annotation-routes.js';
+import { annotationSelectionSchema } from '../pi/annotation-tools.js';
 import type { InputSubmission, InputAction } from '../contracts/index.js';
 import { contextRoutes } from './context-routes.js';
 import { WorkbenchService } from '../workbench/service.js';
@@ -31,8 +33,9 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
       if (config) lab.context = new ContextService(config, contextOptions?.env);
     } catch { lab.contextUnavailable = true; }
   }
+  if (lab.annotations) lab.annotations.context = lab.context;
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
-  if (!backgroundConfig && lab.access && [3,4,5,6,8].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
+  if (!backgroundConfig && lab.access && [3,4,5,6,8,10].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
     const existing = new BackgroundStore(lab.access.db);
     if (existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
       throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);
@@ -74,6 +77,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     const scope = apiScope(lab.config);
     scoped.addHook('onRequest', async request => { scope.seat(request); });
     await registerApi(scoped, lab, scope);
+    if (lab.annotations) await annotationRoutes(scoped, lab.annotations, scope, request => lab.annotations!.actorForSeat(scope.seat(request), lab.access ? identityOf(request).userId : undefined));
     await contextRoutes(scoped,lab,scope,background,contextOptions?.env);
   });
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
@@ -148,7 +152,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       required: ['submissionId', 'expectedRequestId', 'mode', 'text'], properties: {
         submissionId: uuid, expectedRequestId: uuid, mode: {enum: ['steer', 'followUp']}, text: {type: 'string', minLength: 1, maxLength: 16000},
       }},
-  }}, async request => lab.submitInput(request.params.id, request.body, scope.seat(request)));
+  }}, async request => lab.submitInput(request.params.id, request.body, scope.seat(request), lab.access ? identityOf(request).userId : undefined));
   app.get<{Params: {id: string; submissionId: string}}>(`${scope.base}/sessions/:id/inputs/:submissionId`, {schema: {
     params: scope.params({id: uuid, submissionId: uuid}), querystring: settingsQuery,
   }}, async request => lab.inputReceipt(request.params.id, request.params.submissionId, scope.seat(request)));
@@ -160,6 +164,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }}, async request => lab.actOnInput(request.params.id, request.params.submissionId, request.body, scope.seat(request)));
   app.post<{ Params: { id: string }; Body: ComposerSelection & { text: string; uploadIds?: string[]; fileRefs?: { path: string }[] } }>(`${scope.base}/sessions/:id/messages`, {
     schema: { params, body: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 16000 },
+      annotationRefs: { type: 'array', maxItems: 20, items: annotationSelectionSchema },
       contextRefs: { type: 'array', maxItems: 20, items: {type:'object',additionalProperties:false,required:['systemId','objectType','objectId'],properties:{systemId:{type:'string',minLength:1,maxLength:128},objectType:{enum:['road','resource','area']},objectId:{type:'string',minLength:1,maxLength:128}}} },
       uploadIds: { type: 'array', maxItems: 100, items: uuid },
       fileRefs: { type: 'array', maxItems: 100, items: { type: 'object', additionalProperties: false, required: ['path'], properties: { path: { type: 'string', minLength: 1, maxLength: 4096 } } } },
@@ -169,7 +174,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
   }, async (request, reply) => {
     const text = request.body.text.trim();
     if (!text) throw new RequestError('EMPTY_MESSAGE', '请输入消息。');
-    const execution = lab.start(request.params.id, text, { contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request));
+    const execution = lab.start(request.params.id, text, { annotationRefs: request.body.annotationRefs, contextRefs: request.body.contextRefs, uploadIds: request.body.uploadIds, fileRefs: request.body.fileRefs, skill: request.body.skill, agent: request.body.agent }, scope.seat(request), undefined, lab.access ? identityOf(request).userId : undefined);
     reply.hijack();
     const stream = reply.raw;
     stream.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' });

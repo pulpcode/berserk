@@ -1,5 +1,5 @@
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
-import { COMPOSER_INPUT, composerInputText, decodeComposerInput, validSkill as skill } from './composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
@@ -122,11 +122,11 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       } else if (currentRequest && !message.isError) throw stateError();
     }
     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
-      if (entry.customType === COMPOSER_INPUT) {
-        const input = decodeComposerInput(entry.details, workspaceId, parentSessionId);
+      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2].includes(entry.customType)) {
+        const input = decodeComposerInput(entry.details, workspaceId, parentSessionId, entry.customType);
         const resources = requests.get(input.requestId);
         if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false
-          || entry.content !== composerInputText(input) || (readonly && input.agent)
+          || entry.content !== recordedComposerText(input, entry.customType) || (readonly && (input.agent || input.annotationContext || input.annotationRefs))
           || (input.skill && !resources?.skills.some(skill => skill.id === input.skill!.id && skill.hash === input.skill!.hash && skill.version === input.skill!.version
             && skill.name === input.skill!.name && skill.description === input.skill!.description))) throw stateError();
         composerInputs.add(input.requestId);

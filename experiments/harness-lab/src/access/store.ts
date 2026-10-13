@@ -1,3 +1,4 @@
+import { checkAnnotationTables } from '../annotations/store.js';
 import { upgradeSeatColumns } from './schema.js';
 import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
@@ -28,7 +29,7 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3,4,5,6,7,8].includes(version)) {
+    if([2,3,4,5,6,7,8,9,10].includes(version)) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
       this.upgradeOverview(version);
@@ -46,11 +47,12 @@ export class AccessStore {
     this.upgradeOverview(2);
   }
   private upgradeOverview(version: number) {
+    if ([9,10].includes(version)) checkAnnotationTables(this.db);
     const hasBackground = !!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name GLOB 'background_*'").get();
-    if (hasBackground || [3,4,6,8].includes(version)) { new BackgroundStore(this.db); return; }
-    if (![2,5,7].includes(version)) throw stateError();
+    if (hasBackground || [3,4,6,8,10].includes(version)) { new BackgroundStore(this.db); return; }
+    if (![2,5,7,9].includes(version)) throw stateError();
     this.db.exec('BEGIN IMMEDIATE');
-    try { upgradeSeatColumns(this.db,version,false); this.db.exec('PRAGMA user_version=7; COMMIT'); }
+    try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${version === 9 ? 9 : 7}; COMMIT`); }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
   seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }

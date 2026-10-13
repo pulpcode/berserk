@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Conversation Map Annotations](./map-annotations.md) for session-owned drafts, fixed references, publications, task-current selection and minimal model context.
+
 Read [Situation Map and Mock Controls](./situation-map.md) for spatial queries, object references, online tiles and isolated simulation controls.
 
 Read [Unified Workbench and Work Overview](./workbench.md) for explicit inbox handling, cross-seat summary authorization, migrations and navigation.

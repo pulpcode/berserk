@@ -1,0 +1,31 @@
+{
+  "id": "conversation-map-annotations",
+  "name": "conversation-map-annotations",
+  "title": "会话独立地图标注与任务版本发布",
+  "description": "实现已审阅的会话独立地图标注：固定修订、跨会话引用、图层编辑、发布与任务当前设定。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "harness-lab",
+  "package": "experiments/harness-lab",
+  "priority": "P1",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-12",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/10-12-conversation-map-annotations/prd.md",
+    ".trellis/tasks/10-12-conversation-map-annotations/design.md",
+    ".trellis/tasks/10-12-conversation-map-annotations/implement.md",
+    ".trellis/tasks/10-12-conversation-map-annotations/research/evidence.md"
+  ],
+  "notes": "2026-10-13 实现及交叉审阅完成。冻结后 typecheck/lint/build、745项单元集成、浏览器用例并集177项（含复跑）、用户授权的12轮隔离真实模型验收通过。已准备单项中文提交计划，待用户确认；未部署、通知、暂存或提交，未归档其他任务。 2026-10-13 用户明确授权后已发布到既有 49.232.156.14:4315：完整停服备份、v8→v10 迁移、四席位登录与标注读取、业务表/历史/模拟数据完整性以及全部新静态资源验证通过，详见 research/deployment.md。仍未 Git 提交或推送。",
+  "meta": {}
+}

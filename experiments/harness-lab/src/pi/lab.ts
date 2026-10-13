@@ -1,3 +1,5 @@
+import { AnnotationService, type AnnotationActor } from '../annotations/service.js';
+import { annotationTools } from './annotation-tools.js';
 import { MessageIntake } from './message-intake.js';
 import type { InputSubmission, InputAction, InputResult } from '../contracts/index.js';
 import { loadComposerContext } from '../context/composer.js';
@@ -11,7 +13,7 @@ import type { ContextPrincipal } from '../contracts/context.js';
 import { MODEL_SELECTION, selectedModelId } from './model-selection.js';
 import { AccessStore } from '../access/store.js';
 import { openDatabase, assertDataMode } from '../access/database.js';
-import { COMPOSER_INPUT, agentInfo, composerHistory, composerInputText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
+import { composerInputType, agentInfo, composerHistory, recordedComposerText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
 import { isDeepStrictEqual } from 'node:util';
 import { randomUUID, createHash } from 'node:crypto';
 import { mkdir, readdir, writeFile, lstat } from 'node:fs/promises';
@@ -94,6 +96,7 @@ interface Active {
   files?: FileRef[];
   input?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] };
   selections?: LoadedComposerSelection;
+  annotationActor?: AnnotationActor;
   onFile?: (file: FileOutput) => void;
   onInteraction?: (interaction: Interaction) => void;
   waiting?: { interaction: Interaction; resolve: (interaction: Interaction) => void; reject: (error: Error) => void; cleanup: () => void };
@@ -169,6 +172,7 @@ export class PiLab {
   readonly files: FileService;
   collaboration?: CollaborationService;
   access?: AccessStore;
+  annotations?: AnnotationService;
   context?: ContextService;
   contextUnavailable = false;
   taskInformation?: TaskInformationReader;
@@ -194,8 +198,8 @@ export class PiLab {
     config = { ...config, ...settings.config() };
     if (!runtime) runtime = await configuredRuntime(config);
     else if (config.apiKey) await runtime.setRuntimeApiKey(config.provider, config.apiKey);
-    const database = config.auth ? await openDatabase(config.dataDir) : undefined;
-    const access = database ? new AccessStore(database) : undefined;
+    const database = config.auth || config.testSeats ? await openDatabase(config.dataDir) : undefined;
+    const access = config.auth && database ? new AccessStore(database) : undefined;
     if (access && !access.seats().length) { database!.close(); throw new Error('尚未配置启用账号，请先运行 access:admin。'); }
     const workspaces = await WorkspaceStore.open(config.dataDir, config.seatId, !!access);
     if (access) {
@@ -216,6 +220,10 @@ export class PiLab {
       seatIds: access?.allSeatIds() ?? config.testSeats!.map(seat => seat.id), maxFileBytes: config.fileLimits?.maxFileBytes,
       maxAttachments: config.fileLimits?.maxAttachments,
     }, database);
+    if (database) {
+      lab.annotations = new AnnotationService(database, workspaces, access);
+      lab.annotations.isSessionBusy = sessionId => !!lab.records.get(sessionId)?.active || !!lab.backgroundHooks?.isSessionReserved(sessionId);
+    }
     if (execution || config.execution?.enabled) {
       lab.execution = execution ?? new DockerExecutionService({ ...config.execution, memoryMiB: config.execution?.memoryMb,
         instanceId: createHash('sha256').update(config.dataDir).digest('hex').slice(0, 24),
@@ -527,8 +535,9 @@ export class PiLab {
     return this.snapshot(this.record(id, seatId));
   }
 
-  submitInput(id: string, input: InputSubmission, seatId?: string): InputResult {
+  submitInput(id: string, input: InputSubmission, seatId?: string, userId?: string): InputResult {
     const record = this.record(id, seatId);
+    if (userId && record.active?.annotationActor && userId !== record.active.annotationActor.userId) throw new RequestError('IDENTITY_CHANGED', '当前请求属于原操作账号，请等待结束后发送。', 409);
     if (!record.intake) throw new RequestError('INPUT_UNAVAILABLE', '当前会话尚未准备好接收追加消息。', 409);
     return record.intake.submit(input);
   }
@@ -720,6 +729,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const recipients = !role && active.service?.recordRecipientSuggestion && active.service.tools.includes('information_suggest_recipients')
       ? [recipientSuggestionTool(active.service.recordRecipientSuggestion, active.controller, authorizeRequest)] : [];
     const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients,
+      ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
+        actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
+        requestId: active.id, signal: active.controller.signal, check: authorizeRequest,
+      }) : []),
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {
@@ -968,7 +981,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     }
   }
 
-  start(id: string, text: string, input: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] } = {}, seatId?: string, internal?: BackgroundRequestOptions): { requestId: string; run: (listener: Listener) => Promise<void> } {
+  start(id: string, text: string, input: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] } = {}, seatId?: string, internal?: BackgroundRequestOptions, actorUserId?: string): { requestId: string; run: (listener: Listener) => Promise<void> } {
     if (this.settingsUpdating) throw settingsBusy();
     const record = this.record(id, seatId);
     if (record.active) throw new RequestError('SESSION_BUSY', '当前会话正在回复，请结束或停止后再发送。', 409);
@@ -981,6 +994,11 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const active: Active = { model, id: internal?.requestId ?? randomUUID(), background: internal?.background, status: 'responding', phase: 'preparing', acceptedAt: Date.now(),
       input: structuredClone(input), work: this.collaboration?.workForSession({ seatId: record.seatId }, id),
       compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
+    if (!active.background && this.annotations) {
+      active.annotationActor = this.annotations.actorForSeat(record.seatId, actorUserId);
+      const annotationContext = this.annotations.automaticContext(active.annotationActor, id);
+      if (annotationContext) active.selections = {annotationContext};
+    }
     active.releaseTask = this.workspaces.acquireWrite(record.workspaceId, record.seatId);
     this.collaboration?.beginRequest(id, active.id);
     record.active = active; record.result = null;
@@ -1022,11 +1040,19 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }
       if (!child) {
         active.roles = active.service?.roles ?? await loadAgentRoles(this.config.agentRolesDir, active.controller.signal);
-        active.selections = resolveComposerSelection(active.input ?? {}, snapshot, active.roles);
+        active.selections = {...active.selections, ...resolveComposerSelection(active.input ?? {}, snapshot, active.roles)};
+        if (!Object.keys(active.selections).length) active.selections = undefined;
         if (active.input?.contextRefs) {
           const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', seatId: record.seatId}, active.controller.signal);
           if (context) active.selections = {...active.selections, context};
         }
+        if (active.input?.annotationRefs?.length) {
+          if (!this.annotations || !active.annotationActor || active.background) throw new RequestError('ANNOTATION_UNAVAILABLE', '当前请求不可引用标注。', 403);
+          const taskId = this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!;
+          const annotationRefs = this.annotations.resolveSelections(active.annotationActor, taskId, active.input.annotationRefs);
+          active.selections = {...active.selections, annotationRefs};
+        }
+        if (Buffer.byteLength(JSON.stringify({context: active.selections?.context, annotationRefs: active.selections?.annotationRefs})) > 256 * 1024) throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', '引用资料合计超过 256 KiB，请减少选择后发送。', 413);
       }
       active.controller.signal.throwIfAborted();
       record.manager.appendCustomEntry(RESOURCE_ENTRY, requestRecord(active.id, snapshot, Boolean(child) || Boolean(active.background)));
@@ -1038,8 +1064,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       record.session = session;
       if (active.files?.length) await session.sendCustomMessage({ customType: FILE_INPUT, display: false,
         content: fileReferenceText(active.files), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, files: active.files } });
-      if (active.selections) await session.sendCustomMessage({ customType: COMPOSER_INPUT, display: false,
-        content: composerInputText(active.selections), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
+      if (active.selections) await session.sendCustomMessage({ customType: composerInputType(active.selections), display: false,
+        content: recordedComposerText(active.selections), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
       if (!active.reason) {
         unsubscribe = session.subscribe(event => {
           if (record.active !== active || active.reason) return;

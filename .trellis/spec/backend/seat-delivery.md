@@ -6,7 +6,7 @@ Read when changing seat duties, background recipient suggestions, review decisio
 
 ## 2. Signatures
 
-- The original review schema v5 added `background_delivery_reviews` and seat `responsibility` / `responsibility_revision`. The integrated application uses v7 for authentication-only databases and v8 for background databases, preserving review decisions and explicit inbox handling. See [Workbench](workbench.md) for legacy layout migration and integrity requirements. Back up before migration and restore a matching backup for older code.
+- The original review schema v5 added `background_delivery_reviews` and seat `responsibility` / `responsibility_revision`. The authentication/background migration stages use v7/v8. With conversation annotations initialized, the integrated application advances these to v9/v10 while preserving review decisions and explicit inbox handling; see [Map annotations](map-annotations.md). Constructors must not downgrade the terminal version. See [Workbench](workbench.md) for legacy layout migration and integrity requirements. Back up before migration and restore a matching backup for older code.
 - `npm run access:admin -- seat --data-dir DIR --seat ID --responsibility-file FILE [--seat-name NAME] --service-stopped` changes duties/name, not account credentials or history. An actual change increments the revision.
 - `information_suggest_recipients({recipients:[{seatId,reason}],noAdditionalReason?})` records a proposal for the current preprocessing request.
 - `GET /api/information/delivery-reviews?status=pending&offset=0&limit=25` and `GET /api/information/delivery-reviews/:id` return authorized summaries/details.

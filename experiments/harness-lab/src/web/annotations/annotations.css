@@ -1,0 +1,42 @@
+.annotation-workspace { flex:1; min-width:0; padding:16px; overflow:auto; color:var(--ink); }
+.annotation-heading,.annotation-actions,.annotation-editor-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.annotation-heading { margin-bottom:14px; } .annotation-heading>span { color:var(--muted); font-size:12px; flex:1; }
+.annotation-layout { display:grid; grid-template-columns:280px minmax(0,1fr); gap:16px; }
+.annotation-sidebar,.annotation-main { min-width:0; }
+.annotation-sidebar { display:flex; flex-direction:column; gap:12px; }
+.annotation-layer-group,.annotation-browser,.annotation-feature-form,.annotation-detail,.annotation-publication,.annotation-current-confirm,.annotation-conflict { border:1px solid var(--line); background:var(--surface,#fff); border-radius:10px; padding:12px; margin-bottom:12px; }
+.annotation-layer-group header { display:grid; gap:4px; margin-bottom:10px; }
+.annotation-layer-group header span,.annotation-layer-group summary>span,.annotation-browser small { display:block; font-size:12px; color:var(--muted); overflow-wrap:anywhere; }
+.annotation-workspace button { min-height:30px; padding:5px 8px; font-size:12px; }
+.annotation-workspace button:focus-visible,.annotation-workspace :is(input,textarea,select):focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.annotation-workspace label { display:grid; gap:5px; font-size:13px; margin:7px 0; }
+.annotation-workspace label:has(input[type=checkbox]) { display:flex; align-items:center; gap:6px; }
+.annotation-workspace :is(input:not([type=checkbox]):not([type=color]),textarea,select) { min-width:0; width:100%; border:1px solid var(--line); border-radius:6px; background:var(--surface,#fff); color:inherit; padding:7px; font:inherit; }
+.annotation-workspace summary { cursor:pointer; font-size:13px; padding:6px 0; }
+.annotation-layer-group ul { list-style:none; padding:0; max-height:210px; overflow:auto; }
+.annotation-layer-group li>button { display:flex; width:100%; justify-content:space-between; text-align:left; gap:8px; margin:3px 0; }
+.annotation-layer-group small { color:var(--muted); } .annotation-actions { margin:7px 0; }
+.annotation-workspace pre { max-height:190px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+.annotation-workspace fieldset { border:0; padding:0; min-width:0; }
+.annotation-style-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.annotation-editor-toolbar { padding:10px; border:1px solid var(--line); border-radius:8px; font-size:12px; }
+.annotation-workspace .situation-view.compact { padding:12px 0; }
+.annotation-workspace .situation-canvas-wrap { height:420px; }
+.annotation-workspace .situation-toolbar .resource-help { font-size:12px; }
+.annotation-workspace.compact { padding:10px; }
+.annotation-workspace.compact .annotation-layout { display:flex; flex-direction:column; }
+.annotation-workspace.compact .annotation-sidebar { max-height:280px; overflow:auto; }
+.annotation-workspace.compact .situation-canvas-wrap { height:300px; }
+.annotation-workspace.compact .situation-filters select { max-width:210px; }
+.annotation-marker { display:flex; flex-direction:column; align-items:center; pointer-events:none; }
+.annotation-symbol { display:block; flex:none; } .annotation-symbol.circle { border-radius:50%; } .annotation-symbol.triangle { clip-path:polygon(50% 0,100% 100%,0 100%); }
+.annotation-label { font:13px/1.5 sans-serif; background:#fffffff0; border-radius:3px; padding:1px 4px; white-space:nowrap; }
+.annotation-browser>div { border-top:1px solid var(--line); padding:10px 0; }
+.annotation-browser strong { font-size:13px; overflow-wrap:anywhere; }
+.annotation-conflict { border-width:2px; } .annotation-current-confirm h3,.annotation-detail h3 { font-size:15px; overflow-wrap:anywhere; }
+@media(max-width:1000px) { .annotation-layout { grid-template-columns:minmax(190px,240px) minmax(0,1fr); } }
+@media(max-width:700px) { .annotation-layout { display:flex;flex-direction:column-reverse; } }
+
+.annotation-source-controls { margin:0 0 10px; }
+.annotation-source-controls>summary { color:var(--muted); }
+.annotation-source-controls[open] .situation-toolbar { margin-top:12px; }
