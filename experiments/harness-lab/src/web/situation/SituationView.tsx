@@ -2,15 +2,15 @@ import type { AnnotationMapState } from '../annotations/map-runtime';
 import { createPortal } from 'react-dom';
 import './canvas-workspace.css';
 import { X } from 'lucide-react';
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { ContextCatalog, ContextQueryResult, MapConfig, SituationObject, SituationQueryParams, ContextRef, InformationDetail } from '../../contracts/context';
 import type { TaskContext } from '../../contracts/access';
 import { checkResponse, useApi } from '../api';
 import { refKey, type MapReference } from './evidence';
 import { objectStatus, readSituation, taskQueries, uniqueObjects, type SourceResult } from './map-data';
 const Canvas = lazy(()=>import('./MapCanvas'));
-export interface SituationViewProps { focusRequest?: number; floating?: boolean; selectSource?: () => void; collapseFilters?: boolean; annotations?: AnnotationMapState; sourceVisible?: boolean; toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
-export default function SituationView({ toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference, annotations, sourceVisible=true, collapseFilters=false, floating=false, selectSource, focusRequest }: SituationViewProps) {
+export interface SituationViewProps { workspaceControls?: ReactNode; focusRequest?: number; floating?: boolean; selectSource?: () => void; collapseFilters?: boolean; annotations?: AnnotationMapState; sourceVisible?: boolean; toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
+export default function SituationView({ workspaceControls, toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference, annotations, sourceVisible=true, collapseFilters=false, floating=false, selectSource, focusRequest }: SituationViewProps) {
   const [listOpen,setListOpen]=useState(false);const [dismissedInitial,setDismissedInitial]=useState('');
   const client=useApi(); const [catalog,setCatalog]=useState<ContextCatalog>(); const [config,setConfig]=useState<MapConfig>(); const [setupError,setSetupError]=useState('');
   const [source,setSource]=useState(initial?.ref.systemId || ''); const [area,setArea]=useState(''); const [kind,setKind]=useState(''); const [all,setAll]=useState(!taskMode); const [revision,setRevision]=useState(0);
@@ -65,7 +65,8 @@ export default function SituationView({ toolbarTarget, taskContext, taskMode=fal
   const chosen=objects.find(item=>refKey(item.ref)===selected);
   const referencesMissing=Object.values(sources).flatMap(result=>result.unknownRefs);
   const toolbar = <div className={`situation-toolbar${toolbarTarget?' in-titlebar':''}`}>
-    {!toolbarTarget && !compact && !taskMode && <header className="information-heading"><div><h1>态势地图</h1><p>模拟态势 · {taskMode?'任务关注范围，不代表已确认的影响':'当前获准资料'}</p></div></header>}
+    {(toolbarTarget || compact || taskMode) && workspaceControls}
+    {!toolbarTarget && !compact && !taskMode && <header className="information-heading"><div><h1>态势地图</h1><p>模拟态势 · {taskMode?'任务关注范围，不代表已确认的影响':'当前获准资料'}</p></div>{workspaceControls}</header>}
     {taskMode && <p className="resource-help">任务关注范围 · 不代表已确认的影响</p>}
     {setupError && <p role="alert" className="resource-error">{setupError}</p>}
     {!stableInitial && <div className="situation-filters"><label>来源<select value={source} onChange={e=>{setSource(e.target.value);setArea('');}}><option value="">全部获准来源</option>{systems.map(system=><option key={system.id} value={system.id}>{system.name}</option>)}</select></label><label>区域<select value={area?JSON.stringify([source,area]):''} onChange={e=>{const [systemId,areaId]=e.target.value?JSON.parse(e.target.value):['',''];setSource(systemId);setArea(areaId);setAll(true);}}><option value="">全部区域</option>{systems.filter(s=>!source || s.id===source).flatMap(s=>s.areas.map(a=><option key={`${s.id}:${a.id}`} value={JSON.stringify([s.id,a.id])}>{s.name} · {a.name}</option>))}</select></label><label>对象类型<select value={kind} onChange={e=>setKind(e.target.value)}><option value="">全部类型</option><option value="road">道路</option><option value="resource">资源池</option><option value="area">区域</option></select></label></div>}

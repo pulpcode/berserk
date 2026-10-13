@@ -1,5 +1,5 @@
 import { createContext, lazy, Suspense, useContext, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { MapPin, X } from 'lucide-react';
+import { Map as MapIcon, MapPin, Maximize2, Minimize2, X } from 'lucide-react';
 import type { SituationObject } from '../../contracts/context';
 import type { AnnotationSelection, AnnotationRef } from '../../contracts/annotations';
 import type { TaskContext } from '../../contracts/access';
@@ -22,7 +22,7 @@ export function SituationProvider({children,reference,navigationKey,annotations}
   const trigger=useRef<HTMLElement|null>(null);
   const current=selection?.navigationKey===navigationKey?selection:undefined;
   const layout=current?.layout || 'conversation';
-  function chooseLayout(next:WorkspaceLayout){setSelection(previous=>next==='conversation' && previous?.navigationKey!==navigationKey?previous:{...((previous?.navigationKey===navigationKey)?previous:{}),navigationKey,layout:next});if(next==='conversation')requestAnimationFrame(()=>{const target=trigger.current?.isConnected && trigger.current.getClientRects().length?trigger.current:Array.from(document.querySelectorAll<HTMLElement>('.map-layout-controls button')).find(button=>button.getClientRects().length);target?.focus();});}
+  function chooseLayout(next:WorkspaceLayout){if(layout==='conversation' && next!=='conversation')trigger.current=document.activeElement as HTMLElement;setSelection(previous=>next==='conversation' && previous?.navigationKey!==navigationKey?previous:{...((previous?.navigationKey===navigationKey)?previous:{}),navigationKey,layout:next});if(next==='conversation')requestAnimationFrame(()=>{const target=trigger.current?.isConnected && trigger.current.getClientRects().length?trigger.current:Array.from(document.querySelectorAll<HTMLElement>('.open-situation-map')).find(button=>button.getClientRects().length);target?.focus();});}
   function reveal(change:Partial<MapSelection>){
     trigger.current=document.activeElement as HTMLElement;
     setSelection(previous=>{
@@ -39,20 +39,24 @@ export function SituationProvider({children,reference,navigationKey,annotations}
   }
   const sourceReference=(item:SituationObject)=>{reference(item);afterReference();};
   const annotationReference=(ref:AnnotationSelection)=>{annotations?.reference(ref);afterReference();};
+  const workspaceControls=<div className="map-workspace-controls" role="group" aria-label="地图窗口控制">
+    <button type="button" className="icon-button" aria-label={layout==='map'?'还原地图':'放大地图'} title={layout==='map'?'还原地图':'放大地图'} data-map-layout-control onClick={()=>chooseLayout(layout==='map'?'split':'map')}>{layout==='map'?<Minimize2 size={18} aria-hidden="true"/>:<Maximize2 size={18} aria-hidden="true"/>}</button>
+    <button type="button" className="icon-button" aria-label="关闭态势地图" title="关闭态势地图" data-map-layout-control onClick={()=>chooseLayout('conversation')}><X size={18} aria-hidden="true"/></button>
+  </div>;
   const panel=current?<Suspense fallback={<p role="status">正在打开地图…</p>}>{annotations
-    ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
-    : <SituationView key={navigationKey} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
+    ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} workspaceControls={workspaceControls} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
+    : <SituationView key={navigationKey} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
   return <MapContext.Provider value={{open:item=>reveal({source:item}),reference:sourceReference,openAnnotations:item=>reveal({annotation:item}),annotationReference,derive:annotations?.derive || (async()=>{}),openSession:annotations?.openSession || (()=>{}),layout,chooseLayout,panel}}>{children}</MapContext.Provider>;
 }
 
-export function MapLayoutControls({disabled=false}:{disabled?:boolean}) {
+export function OpenSituationMap({disabled=false}:{disabled?:boolean}) {
   const {layout,chooseLayout}=useSituationMap();
-  return <div className="map-layout-controls" role="group" aria-label="工作区布局">{([['conversation','对话'],['split','协同'],['map','地图']] as const).map(([value,label])=><button key={value} type="button" data-map-layout-control aria-pressed={layout===value} disabled={disabled && value!=='conversation'} onClick={()=>chooseLayout(value)}>{label}</button>)}</div>;
+  return <button type="button" className="open-situation-map" aria-label="打开态势地图" title="打开态势地图" aria-expanded={layout!=='conversation'} data-map-layout-control disabled={disabled} onClick={()=>{if(layout==='conversation')chooseLayout('split');}}><MapIcon size={18} aria-hidden="true"/>态势地图</button>;
 }
 
 // Layout changes hide the existing panes; only business navigation replaces their scope.
 export function SituationWorkspace({children,active=true}:{children:ReactNode;active?:boolean}) {
-  const {layout,panel,chooseLayout}=useSituationMap();
+  const {layout,panel}=useSituationMap();
   const root=useRef<HTMLDivElement>(null);
   const [width,setWidth]=useState(0);
   const [chatFraction,setChatFraction]=useState(.37);
@@ -78,8 +82,7 @@ export function SituationWorkspace({children,active=true}:{children:ReactNode;ac
       onKeyDown={event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();resize(event.key==='Home'?320:event.key==='End'?available-420:fraction*available+(event.key==='ArrowLeft'?-24:24));}}
     ><span/></div>
     {active && <aside className="situation-side-panel" aria-label="地图工作区" hidden={mapHidden}>
-      <header className="map-panel-heading"><strong>地图工作区</strong><div><button type="button" data-map-layout-control onClick={()=>chooseLayout(layout==='map'?'split':'map')}>{layout==='map'?'返回协同':'展开地图'}</button><button type="button" className="icon-button" aria-label="收起地图" data-map-layout-control onClick={()=>chooseLayout('conversation')}><X size={18}/></button></div></header>
-      {narrow && <p className="map-narrow-hint">窗口较窄，切换“对话”查看消息与输入。</p>}
+      {narrow && <p className="map-narrow-hint">窗口较窄，关闭地图即可返回对话。</p>}
       {panel}
     </aside>}
   </div>;

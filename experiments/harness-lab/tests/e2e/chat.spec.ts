@@ -1695,8 +1695,8 @@ test('地图聚焦时继续接收回复但不误标已读，返回对话保留�
     await expect(page.getByRole('button', { name: '停止回复' })).toBeVisible();
     await conversation.evaluate(element => { element.scrollTop = 120; element.dispatchEvent(new Event('scroll')); });
     await input.fill('地图查看期间保留的草稿');
-    const modes = page.getByRole('group', { name: '工作区布局' });
-    await modes.getByRole('button', { name: '地图', exact: true }).click();
+    await page.getByRole('button', { name: '打开态势地图', exact: true }).click();
+    await page.getByRole('button', { name: '放大地图', exact: true }).click();
     await expect(input).not.toBeVisible();
     const requestId = session.active!.requestId;
     session.messages.push({ id: 'map-hidden-answer', role: 'assistant', requestId, text: '地图聚焦期间收到的新回复' });
@@ -1704,7 +1704,7 @@ test('地图聚焦时继续接收回复但不误标已读，返回对话保留�
     mock.finish('A');
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);
     await expect(page.getByText('地图聚焦期间收到的新回复', { exact: true })).toHaveCount(1);
-    await modes.getByRole('button', { name: '对话', exact: true }).click();
+    await page.getByRole('button', { name: '关闭态势地图', exact: true }).click();
     await expect(input).toHaveValue('地图查看期间保留的草稿');
     await expect.poll(() => conversation.evaluate(element => element.scrollTop)).toBeCloseTo(120, 0);
     await expect(page.locator('.conversation-indicator.unread')).toHaveCount(1);

@@ -28,7 +28,7 @@ import type { Workspace } from '../contracts/index';
 import { Seats, type SeatView } from './Seats';
 import { ComposerReferences, type ComposerReferenceHandle } from './ComposerReferences';
 import { ChatPresentation, type ProcessChoices } from './ChatPresentation';
-import { MapLayoutControls, SituationProvider, SituationWorkspace } from './situation/MapContext';
+import { OpenSituationMap, SituationProvider, SituationWorkspace } from './situation/MapContext';
 import { parseMapHref, refKey } from './situation/evidence';
 import type { ContextCatalog, MapConfig, SituationObject } from '../contracts/context';
 import './situation/situation.css';
@@ -436,7 +436,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
         <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'work' ? '工作待办' : view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : snapshot?.title || '新对话'}</span></div>
         {view === 'situation' && <div className="map-titlebar-slot" ref={setMapToolbarTarget}/>}
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title : undefined}>{view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title || '相关任务' : '所有项目'}</span>
-        {view === 'chat' && <MapLayoutControls disabled={!chat.workspaceId || chat.loading}/>}
+        {view === 'chat' && <OpenSituationMap disabled={!chat.workspaceId || chat.loading}/>}
         <div className="workspace-tools" role="group" aria-label="项目工具">
           {seats.length > 0 && view === 'chat' && (!identity || currentTask?.visibility==='public') && <button className="files-trigger" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}>分派工作</button>}
           {fileLimits?.enabled && view === 'chat' && <button className="icon-button workspace-tool" aria-label="项目文件" title="项目文件" onClick={() => setFilesOpen(true)} disabled={!chat.workspaceId} aria-haspopup="dialog" aria-expanded={filesOpen}><FolderOpen size={20} strokeWidth={1.75} aria-hidden="true" /></button>}

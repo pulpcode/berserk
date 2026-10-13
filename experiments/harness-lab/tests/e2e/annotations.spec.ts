@@ -52,8 +52,8 @@ test('independent drafts, fixed publication, current selection and native annota
   const secondBinding=env.lab.annotations!.binding(env.actor,env.second.id);env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),baseRef:{publicationId:pub.publicationId},expectedBindingRevision:secondBinding.bindingRevision});
   await page.goto(`/situation?taskId=${env.task.id}&sessionId=${env.second.id}`);await openLayers(page);await pickOwn(page,'集合点 A point');await point(page,'集合点 B');
   expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(first.draft!.headRevision);
-  await page.goto(`/?session=${env.second.id}`);await page.getByRole('group',{name:'工作区布局'}).getByRole('button',{name:'协同',exact:true}).click();await openLayers(page);await pickOwn(page,'集合点 B point');await page.getByRole('group',{name:'工作区布局'}).getByRole('button',{name:'地图',exact:true}).click();await page.getByRole('button',{name:'引用此对象'}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();await expect(page.getByLabel('本次引用的标注版本')).toContainText('r1');
-  await page.getByRole('group',{name:'工作区布局'}).getByRole('button',{name:'对话',exact:true}).click();await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('比较这些集合点');await page.getByRole('button',{name:'发送消息',exact:true}).click();await expect(page.getByLabel('本条消息引用的标注版本')).toBeVisible();expect(env.requests.find(item=>item.path.endsWith('/messages'))?.body.annotationRefs).toEqual([expect.objectContaining({objectIds:expect.arrayContaining([expect.any(String)])})]);
+  await page.goto(`/?session=${env.second.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await openLayers(page);await pickOwn(page,'集合点 B point');await page.getByRole('button',{name:'放大地图',exact:true}).click();await page.getByRole('button',{name:'引用此对象'}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();await expect(page.getByLabel('本次引用的标注版本')).toContainText('r1');
+  await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('比较这些集合点');await page.getByRole('button',{name:'发送消息',exact:true}).click();await expect(page.getByLabel('本条消息引用的标注版本')).toBeVisible();expect(env.requests.find(item=>item.path.endsWith('/messages'))?.body.annotationRefs).toEqual([expect.objectContaining({objectIds:expect.arrayContaining([expect.any(String)])})]);
   await page.getByLabel('本条消息引用的标注版本').getByRole('button').click();await expect(page.getByRole('complementary',{name:'地图工作区'})).toBeVisible();await expect.poll(env.tiles).toBeGreaterThan(0);await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');await expect(page.getByText(/固定引用范围：1 个对象/)).toBeVisible();await expect(page.locator('.annotation-marker').first()).toBeVisible();expect(env.errors).toEqual([]);
   await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await pickOwn(page,'集合点 B point');await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('本会话可编辑');await page.getByLabel('本条消息引用的标注版本').getByRole('button').click();await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await page.getByRole('button',{name:'关闭标注图层',exact:true}).click();await page.screenshot({path:test.info().outputPath('annotation-reference-1440.png')});await page.setViewportSize({width:1280,height:960});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('annotation-reference-1280.png')});
  }finally{await env.close();}
@@ -101,17 +101,18 @@ test('layout modes preserve unsaved editing and browser back still guards busine
   await layer(page);await point(page);
   // Enter a real conversation through the application's sidebar, then change only layout.
   await page.locator('.group-sessions .session-item').first().click();
-  await expect(page.getByRole('group',{name:'工作区布局'})).toBeVisible();
-  const modes=page.getByRole('group',{name:'工作区布局'});
-  await modes.getByRole('button',{name:'协同',exact:true}).click();await openLayers(page);
+  await expect(page.getByRole('button',{name:'打开态势地图',exact:true})).toBeVisible();
+
+  await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await openLayers(page);
   // Both sessions share a task; ensure this selected conversation has its own draft.
   const selectedId=new URL(page.url()).searchParams.get('session')!;if(!env.lab.annotations!.binding(env.actor,selectedId).draft){await layer(page);await point(page);}
   const input=page.getByRole('textbox',{name:'发送消息',exact:true});await input.fill('布局切换保留我的提问');
   await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('切换布局仍保留');
   const originalUrl=page.url();let dialogs=0;const reject=(dialog:import('@playwright/test').Dialog)=>{dialogs++;void dialog.dismiss();};page.on('dialog',reject);
-  await modes.getByRole('button',{name:'地图',exact:true}).click();await expect(input).not.toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');
-  await modes.getByRole('button',{name:'对话',exact:true}).click();await expect(input).toHaveValue('布局切换保留我的提问');await expect(page.getByRole('complementary',{name:'地图工作区'})).not.toBeVisible();
-  await modes.getByRole('button',{name:'协同',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');expect(dialogs).toBe(0);expect(page.url()).toBe(originalUrl);
+  await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect(input).not.toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');
+  await page.getByRole('button',{name:'还原地图',exact:true}).click();await expect(input).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');
+  await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(input).toHaveValue('布局切换保留我的提问');await expect(page.getByRole('complementary',{name:'地图工作区'})).not.toBeVisible();await expect(page.getByRole('button',{name:'打开态势地图',exact:true})).toBeFocused();
+  await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');expect(dialogs).toBe(0);expect(page.url()).toBe(originalUrl);
   await page.goBack();await expect(page).toHaveURL(originalUrl);await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('切换布局仍保留');expect(dialogs).toBe(1);page.off('dialog',reject);
   await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);await page.goBack();await expect(page).not.toHaveURL(originalUrl);expect(env.fake.calls).toHaveLength(0);expect(env.errors).toEqual([]);
  }finally{await env.close();}
@@ -119,15 +120,16 @@ test('layout modes preserve unsaved editing and browser back still guards busine
 
 test('three columns resize by keyboard and pointer while map fills available height',async({page})=>{
  const env=await setup(page);try{
-  await page.goto(`/?session=${env.session.id}`);const modes=page.getByRole('group',{name:'工作区布局'});await modes.getByRole('button',{name:'协同',exact:true}).click();
-  await expect(page.getByRole('button',{name:'本会话地图标注',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'引用地图对象',exact:true})).toHaveCount(0);
+  await page.goto(`/?session=${env.session.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();
+  await expect(page.getByRole('group',{name:'工作区布局'})).toHaveCount(0);await expect(page.locator('.map-panel-heading')).toHaveCount(0);await expect(page.getByRole('button',{name:'本会话地图标注',exact:true})).toHaveCount(0);await expect(page.getByRole('button',{name:'引用地图对象',exact:true})).toHaveCount(0);
   const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await expect(separator).toBeVisible();const panel=page.getByRole('complementary',{name:'地图工作区'});const canvas=panel.locator('.maplibregl-canvas');await expect(canvas).toBeVisible();
   const before=(await panel.boundingBox())!;expect((await canvas.boundingBox())!.height).toBeGreaterThan(650);
   await separator.focus();await separator.press('ArrowLeft');await expect.poll(async()=>(await panel.boundingBox())!.width).toBeGreaterThan(before.width);
   const split=(await separator.boundingBox())!;await page.mouse.move(split.x+split.width/2,split.y+split.height/2);await page.mouse.down();await page.mouse.move(split.x+80,split.y+split.height/2,{steps:5});await page.mouse.up();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeLessThan(before.width);
-  await separator.press('Home');await separator.press('End');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await page.screenshot({path:test.info().outputPath('three-column-resize-1440.png')});await page.setViewportSize({width:1280,height:900});await modes.getByRole('button',{name:'协同',exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('three-column-resize-1280.png')});
-  await page.setViewportSize({width:800,height:900});await modes.getByRole('button',{name:'地图',exact:true}).click();await expect(canvas).toBeVisible();await modes.getByRole('button',{name:'对话',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(env.errors).toEqual([]);expect(env.fake.calls).toHaveLength(0);
+  const resized=(await panel.boundingBox())!.width;await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeGreaterThan(resized);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).not.toBeVisible();await page.getByRole('button',{name:'还原地图',exact:true}).click();await expect.poll(async()=>(await panel.boundingBox())!.width).toBeCloseTo(resized,0);
+  await separator.focus();await separator.press('Home');await separator.press('End');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:test.info().outputPath('three-column-resize-1440.png')});await page.setViewportSize({width:1280,height:900});await page.getByRole('button',{name:'打开态势地图',exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('three-column-resize-1280.png')});
+  await page.setViewportSize({width:800,height:900});await page.getByRole('button',{name:'放大地图',exact:true}).click();await expect(canvas).toBeVisible();await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await expect(page.getByRole('textbox',{name:'发送消息',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(env.errors).toEqual([]);expect(env.fake.calls).toHaveLength(0);
  }finally{await env.close();}
 });
 
