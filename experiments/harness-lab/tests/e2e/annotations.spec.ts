@@ -66,8 +66,11 @@ test('independent drafts, fixed publication, current selection and native annota
 test('official Terra Draw supports point line polygon Chinese labels, edit and cleanup on MapLibre 6.4',async({page})=>{
  const env=await setup(page);try{
   await layer(page);const canvas=page.locator('.maplibregl-canvas');await expect(canvas).toBeVisible();await expect.poll(env.tiles).toBeGreaterThan(0);
+  const toolbar=page.getByRole('group',{name:'标注绘制工具'});
+  for(const name of ['绘制点','绘制线','绘制面','放置文字','坐标新增']){const tool=toolbar.getByRole('button',{name,exact:true});await expect(tool).toHaveText('');await expect(tool).toHaveAttribute('title',name);}
+  expect((await toolbar.boundingBox())!.height).toBeLessThanOrEqual(44);await expect(toolbar.locator('.annotation-toolbar-target')).toHaveAttribute('title','当前绘制图层：集合点');
   const box=(await canvas.boundingBox())!;const x=box.x+box.width/2,y=box.y+box.height/2;
-  await page.getByRole('button',{name:'绘制点',exact:true}).click();await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+  await page.getByRole('button',{name:'绘制点',exact:true}).click();await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveAttribute('aria-pressed','true');await expect(toolbar.getByRole('status')).toContainText('点击地图放置');await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
   await page.getByRole('button',{name:'绘制线',exact:true}).click();await page.mouse.click(x-60,y-30);page.once('dialog',dialog=>dialog.dismiss());await page.getByRole('button',{name:'工作待办',exact:true}).click();await expect(page.getByRole('button',{name:'退出绘制'})).toBeVisible();await page.mouse.click(x+40,y+20);await page.mouse.dblclick(x+100,y+50);await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');
   await page.getByRole('button',{name:'绘制面',exact:true}).click();await page.mouse.click(x-90,y-80);await page.mouse.click(x+80,y-80);await page.mouse.click(x+80,y+80);await page.mouse.dblclick(x-90,y+80);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
   await page.getByRole('button',{name:'放置文字',exact:true}).click();await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');await expect(page.locator('.annotation-label')).toContainText('新文字注记');

@@ -34,9 +34,14 @@
 .annotation-actions { margin:7px 0; }
 .annotation-workspace fieldset { border:0; padding:0; min-width:0; }
 .annotation-style-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.annotation-editor-toolbar { position:absolute; z-index:4; bottom:44px; left:54px; right:12px; width:fit-content; max-width:calc(100% - 66px); padding:8px; border:1px solid var(--line); background:var(--surface,#fff); box-shadow:0 4px 20px #182e241a; border-radius:10px; font-size:12px; }
-.annotation-editor-toolbar>span:first-child { flex-basis:100%; color:var(--muted); }
-.annotation-editor-toolbar>span:last-child:empty { display:none; }
+.annotation-editor-toolbar { --control-height:32px; position:absolute; z-index:4; bottom:32px; left:54px; right:12px; width:fit-content; max-width:calc(100% - 66px); gap:2px; padding:4px; border:1px solid var(--line); background:var(--surface,#fff); box-shadow:0 4px 20px #182e241a; border-radius:10px; font-size:12px; }
+.annotation-editor-toolbar>button.icon-button { position:relative; width:32px; height:32px; min-height:32px; padding:0; }
+.annotation-toolbar-target { display:flex; align-items:center; gap:4px; min-width:0; max-width:120px; padding:0 6px; color:var(--muted); border-right:1px solid var(--line); }
+.annotation-toolbar-target>svg { flex:none; }
+.annotation-toolbar-target>span { max-width:72px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.annotation-toolbar-target>small { flex:none; font-size:10px; }
+.annotation-toolbar-unsaved { position:absolute; right:4px; top:4px; width:5px; height:5px; border-radius:50%; background:var(--accent); }
+.annotation-draw-hint { position:absolute; left:0; bottom:calc(100% + 6px); max-width:100%; padding:4px 8px; border:1px solid var(--line); border-radius:6px; color:var(--muted); background:var(--surface,#fff); font-size:11px; pointer-events:none; }
 .annotation-detail,.annotation-overlap { top:var(--annotation-panel-top); right:12px; max-width:310px; }
 .annotation-detail p { margin:8px 0; font-size:12px; }
 .annotation-detail dl { font-size:12px; display:grid; gap:4px; }
