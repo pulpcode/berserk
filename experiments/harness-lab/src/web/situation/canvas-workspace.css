@@ -13,7 +13,6 @@
 .situation-view.unified-map .situation-detail h2 { font-size:15px; }
 .situation-view.unified-map .situation-detail p,.situation-view.unified-map .situation-object-info { font-size:12px; margin:8px 0; }
 .situation-view.unified-map .situation-object-info>summary { cursor:pointer; padding:8px 0; }
-.situation-view.unified-map .situation-simulation-label { top:auto; bottom:10px; left:54px; right:auto; }
 .situation-view.unified-map .situation-source-error { position:absolute; z-index:6; top:66px; right:12px; width:fit-content; max-width:calc(100% - 24px); max-height:150px; overflow:auto; padding:8px 10px; background:var(--surface,#fff); border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--danger,#a43c32); }
 .situation-view.unified-map .situation-source-error button { margin-left:8px; }
 .situation-view.unified-map .situation-map-error { bottom:156px; z-index:3; }

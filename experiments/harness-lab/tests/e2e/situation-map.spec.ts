@@ -45,7 +45,7 @@ async function expandSource(page:Page){const button=page.getByRole('button',{nam
 test('global and task maps query union, keep stale source data, use only fixture tiles and never call model when browsing',async({page})=>{
  const env=await setup(page);try{
   await page.getByRole('button',{name:'态势地图',exact:true}).click();await openContents(page);await expect(sourceObjects(page)).toHaveCount(6);
-  await expect(page.locator('.situation-simulation-label')).toHaveText('模拟态势');await expect(page.locator('.situation-attribution')).toContainText('OpenStreetMap');
+  await expect(page.locator('.situation-simulation-label')).toHaveCount(0);await expect(page.locator('.situation-canvas')).toHaveAttribute('aria-label','态势地图画布');await expect(page.locator('.situation-attribution')).toContainText('OpenStreetMap');
   await pickSource(page,'道路',/西区通道 可通行/);await expect(page.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();
   await page.screenshot({path:test.info().outputPath('global-map-floating.png')});
   await expect.poll(env.tiles).toBeGreaterThan(0);await expect(page.locator('.situation-map-error')).toHaveCount(0);expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);

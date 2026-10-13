@@ -25,7 +25,6 @@
 .situation-content { display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:20px; }
 .situation-canvas-wrap { position:relative; height:440px; min-width:0; background:#e8efeb; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
 .situation-canvas { height:100%; width:100%; }
-.situation-simulation-label { position:absolute; right:10px; top:10px; background:white; padding:5px 9px; border-radius:6px; font-size:12px; pointer-events:none; }
 .situation-attribution { position:absolute; bottom:0; right:0; background:#fffffff0; padding:3px 6px; color:#284e42; font-size:11px; }
 .situation-map-error { position:absolute; left:8px; right:8px; bottom:28px; padding:10px; background:white; font-size:12px; }
 .situation-map-error button { margin-left:8px; }

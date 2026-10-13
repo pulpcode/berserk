@@ -59,8 +59,8 @@ export default function MapCanvas({ objects, selected, config, select, annotatio
     return () => { updater.current=()=>{}; resize.disconnect(); annotationRuntime.destroy(); instance.remove(); map.current=undefined; };
   }, [config, retry]);
   useEffect(()=>{updater.current();},[objects,selected,annotations,focusRequest,deferFocus]);
-  return <div className="situation-canvas-wrap"><div ref={container} className="situation-canvas" aria-label="模拟态势地图"/>
-    <span className="situation-simulation-label">模拟态势</span><a className="situation-attribution" href={config.attributionUrl} target="_blank" rel="noreferrer">{config.attributionText}</a>
+  return <div className="situation-canvas-wrap"><div ref={container} className="situation-canvas" aria-label="态势地图画布"/>
+    <a className="situation-attribution" href={config.attributionUrl} target="_blank" rel="noreferrer">{config.attributionText}</a>
     {error && <div className="situation-map-error" role="status">{error}<button onClick={()=>{setError('');setRetry(value=>value+1);}}>重试底图</button></div>}
   </div>;
 }

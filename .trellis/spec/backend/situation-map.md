@@ -2,7 +2,7 @@
 
 ## 1. Scope / Trigger
 
-Read for changes to spatial source data, map UI, object references, and simulation controls. This is a capability-validation scene, not a final operational data model. MapLibre renders online OSM raster tiles and synthetic overlays. No routing engine, geographic access model, source-write Agent tool, or Pi core change is introduced.
+Read for changes to spatial source data, map UI, object references, and simulation controls. This is a capability-validation scene, not a final operational data model. MapLibre renders online OSM raster tiles and synthetic overlays. Do not render an unconditional “模拟态势” canvas badge or label the shared canvas as simulated; dataset provenance belongs to its actual source, while basemap attribution remains visible. No routing engine, geographic access model, source-write Agent tool, or Pi core change is introduced.
 
 ## 2. Signatures
 
