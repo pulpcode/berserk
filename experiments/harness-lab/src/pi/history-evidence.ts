@@ -7,6 +7,7 @@ import { validCompactionSummary } from './compaction-history.js';
 import { SUBAGENT_START, SUBAGENT_RESULT, subagentHistory, validUsage, addUsage } from './subagent-history.js';
 import { emptyUsage } from './controlled-stream.js';
 import { hashContent, stateError } from '../resources/files.js';
+import { controlledSkillIds } from '../resources/service.js';
 import { UUID } from '../workspaces/store.js';
 import { CHANGE_ENTRY, RESOURCE_ENTRY, RESULT_ENTRY, SKILL_ENTRY } from './resource-tools.js';
 import { FILE_INPUT, FILE_OUTPUT, decodeFileInput, decodeFileOutput, fileReferenceText } from './file-history.js';
@@ -23,7 +24,7 @@ function change(value: unknown): value is InstructionUpdate {
 }
 export function decodeResourceRecord(value: unknown, workspaceId: string, readonly = false): Extract<RequestResourcesRecord, { status: 'available' }> {
   const instructionsReadonly = readonly || (object(value) && JSON.stringify(value.editableFileIds) === '[]');
-  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > 2 || !value.skills.every(item => skill(item, false)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
+  if (!object(value) || value.status !== 'available' || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || value.workspaceId !== workspaceId || !Array.isArray(value.instructions) || value.instructions.length !== 2 || !value.instructions.every(item => instruction(item, instructionsReadonly)) || new Set(value.instructions.map(file => file.fileId)).size !== 2 || !Array.isArray(value.skills) || value.skills.length > controlledSkillIds.length || !value.skills.every(item => skill(item, false)) || new Set(value.skills.map(item => item.id)).size !== value.skills.length || !Array.isArray(value.readSkills) || !value.readSkills.every(item => skill(item, true)) || JSON.stringify(value.editableFileIds) !== (instructionsReadonly ? '[]' : '["workspace"]')) throw stateError();
   if (!keys(value, ['task', 'status', 'requestId', 'workspaceId', 'instructions', 'skills', 'readSkills', 'editableFileIds'])) throw stateError();
   if (value.task !== undefined && (!object(value.task) || !keys(value.task,['id','title','goal','visibility']) || typeof value.task.id !== 'string' || !UUID.test(value.task.id) || typeof value.task.title !== 'string' || typeof value.task.goal !== 'string' || !['public','private'].includes(String(value.task.visibility)))) throw stateError();
   const record = structuredClone(value) as Extract<RequestResourcesRecord, { status: 'available' }>;

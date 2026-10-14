@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 26
-- **Last Active**: 2026-10-13
+- **Total Sessions**: 28
+- **Last Active**: 2026-10-14
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~764 | Active |
+| `journal-1.md` | ~831 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 28 | 2026-10-14 | 实现地图宿主修订管理并完成固定十一案验收 | - | `main` |
+| 27 | 2026-10-14 | 实现地图来源标注并完成隔离复测 | `ac50ba1` | `main` |
 | 26 | 2026-10-13 | 完成 Agent 与框架三轮场景验证并记录质量缺口 | - | `main` |
 | 25 | 2026-10-13 | 地图绘制工具图标化与上线 | `d1dc928` | `main` |
 | 24 | 2026-10-13 | 移除地图模拟态势固定标签并上线 | `1b193bb` | `main` |

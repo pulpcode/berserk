@@ -8,7 +8,13 @@ import { atomicWrite, hashContent, Mutex, readControlled, type WriteHooks } from
 const skills = [
   { id: 'synthesis', name: '资料综合写作', description: '综合多份资料形成有来源、可执行的方案。', version: '1' },
   { id: 'review', name: '结果检查', description: '根据资料检查草稿的事实、约束与可执行性。', version: '1' },
+  { id: 'map-annotations', name: '态势标绘', description: '查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。', version: '1' },
 ];
+export const controlledSkillIds: readonly string[] = skills.map(skill => skill.id);
+/** Add the deployed map method without migrating the strict legacy workspace index. */
+export function effectiveSkillIds(workspaceSkillIds: readonly string[]): string[] {
+  return [...new Set([...workspaceSkillIds, 'map-annotations'])];
+}
 /** Deployment-owned fixed Skills, independent of any seat workspace. */
 export async function loadControlledSkills(ids: readonly string[], signal?: AbortSignal): Promise<SkillFile[]> {
   return Promise.all(ids.map(async id => {
@@ -74,7 +80,7 @@ export class ResourceService {
   }
   async readSkill(workspaceId: string, id: string, seatId?: string): Promise<SkillFile> {
     const workspace = this.workspaces.get(workspaceId, seatId);
-    if (!workspace.skillIds.includes(id)) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
+    if (!effectiveSkillIds(workspace.skillIds).includes(id)) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
     return (await loadControlledSkills([id]))[0];
   }
   snapshot(workspaceId: string, signal?: AbortSignal, seatId?: string): Promise<ResourceSnapshot> {
@@ -86,7 +92,7 @@ export class ResourceService {
         const content = (await readControlled(join(this.workspaces.directory(workspaceId, seatId), 'sources', `${source.id}.md`), 32768))!;
         return { ...source, content, hash: hashContent(content) };
       }));
-      const loadedSkills = await Promise.all(workspace.skillIds.map(id => this.readSkill(workspaceId, id, seatId)));
+      const loadedSkills = await loadControlledSkills(effectiveSkillIds(workspace.skillIds), signal);
       signal?.throwIfAborted();
       const task = this.workspaces.access?.get(workspace.taskSpaceId, workspace.seatId);
       return { workspaceId, instructions, sources, skills: loadedSkills, ...(task ? { task: { id:task.id,title:task.title,goal:task.goal,visibility:task.visibility } } : {}) };

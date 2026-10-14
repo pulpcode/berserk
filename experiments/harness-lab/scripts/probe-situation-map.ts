@@ -134,7 +134,7 @@ export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,
       recipientSeatIds:['seat-intelligence'],supplementaryDelivery:{candidateSeatIds:['seat-planning','seat-situation']},enabled:true,
     });
     await save(join(dataDir,'manifest.json'),manifest);
-    return {manifest,stop};
+    return {manifest,stop,lab};
   } catch (error) {await stop();throw error;}
 }
 

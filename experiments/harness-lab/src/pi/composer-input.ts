@@ -4,7 +4,7 @@ import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { AgentInfo, ComposerSelection, FileRef, LoadedComposerSelection } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import { hashContent, stateError } from '../resources/files.js';
-import { snapshotSkill, type ResourceSnapshot } from '../resources/service.js';
+import { controlledSkillIds, snapshotSkill, type ResourceSnapshot } from '../resources/service.js';
 import { UUID } from '../workspaces/store.js';
 import type { AgentRole } from './roles.js';
 
@@ -16,7 +16,7 @@ const object = (value: unknown): value is Record<string, unknown> => !!value && 
 const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
 const hash = (value: unknown) => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
 export function validSkill(value: unknown, content: boolean): boolean {
-  if (!object(value) || !exact(value, ['id', 'name', 'description', 'version', 'hash', ...(content ? ['content'] : [])]) || !['synthesis', 'review'].includes(String(value.id)) || typeof value.name !== 'string' || typeof value.description !== 'string' || typeof value.version !== 'string' || !hash(value.hash)) return false;
+  if (!object(value) || !exact(value, ['id', 'name', 'description', 'version', 'hash', ...(content ? ['content'] : [])]) || !controlledSkillIds.includes(String(value.id)) || typeof value.name !== 'string' || typeof value.description !== 'string' || typeof value.version !== 'string' || !hash(value.hash)) return false;
   return !content || (typeof value.content === 'string' && Buffer.byteLength(value.content) <= 16384 && hashContent(value.content) === value.hash);
 }
 export function validAgentInfo(value: unknown): value is AgentInfo {

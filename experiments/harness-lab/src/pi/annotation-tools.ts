@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { defineTool } from '@earendil-works/pi-coding-agent';
 import { Type, type Static } from 'typebox';
 import type { AnnotationService, AnnotationActor } from '../annotations/service.js';
+import { AnnotationRequestState } from './annotation-state.js';
 import { RequestError } from '../contracts/errors.js';
 
 const strict = { additionalProperties: false };
@@ -43,25 +44,33 @@ const operations = Type.Array(Type.Union([
 const operationsRef = Type.Unsafe<Static<typeof operations>>({$ref: '#/$defs/operations'});
 const actionSchemas = [
   Type.Object({action: Type.Literal('create_draft'), baseRef: Type.Union([annotationRefSchema, Type.Null()]), title: Type.Optional(name), operations: Type.Optional(operationsRef)}, strict),
-  Type.Object({action: Type.Literal('apply'), expectedRevision: revision, operations: operationsRef}, strict),
+  Type.Object({action: Type.Literal('apply'), operations: operationsRef}, strict),
   Type.Object({action: Type.Literal('publish'), revision, title: name, note: Type.Optional(Type.String({maxLength: 4000}))}, strict),
 ] as const;
-const currentSchema = Type.Object({action: Type.Literal('set_current'), publicationId: uuid, expectedCurrentSequence: Type.Integer({minimum: 0})}, strict);
+const currentSchema = Type.Object({action: Type.Literal('set_current'), publicationId: uuid}, strict);
 const pagination = {offset: Type.Optional(Type.Integer({minimum: 0})), limit: Type.Optional(Type.Integer({minimum: 1, maximum: 100}))};
+export const annotationFromSourceSchema = Type.Object({items: Type.Array(Type.Object({
+  mode: Type.Union([Type.Literal('add'),Type.Literal('refresh')], {description:'add 新建来源标注；refresh 明确重新采用来源几何，替换此前人工调整的几何。'}),
+  sourceRef: Type.Object({systemId:id,objectType:id,objectId:id}, {...strict,description:'situation_query 返回的完整来源对象 ref；区域标签不一定是对象 ID。'}),
+  layerId: Type.String({pattern:'^[A-Za-z0-9_.:-]{1,128}$',description:'本会话草稿中已存在的目标图层 ID。'}),
+  objectId: Type.String({pattern:'^[A-Za-z0-9_.:-]{1,128}$',description:'add 时取未使用的标注 ID；refresh 时使用该图层内既有标注 ID，保持对象身份。'}),
+}, strict), {minItems: 1, maxItems: 20})}, strict);
 /** Stable per native call; unknown effects are inspected through a receipt, never replayed by the host. */
 export function annotationActionId(requestId: string, toolCallId: string): string {
   const value = createHash('sha256').update(JSON.stringify([requestId, toolCallId])).digest('hex');
   return `${value.slice(0,8)}-${value.slice(8,12)}-5${value.slice(13,16)}-a${value.slice(17,20)}-${value.slice(20,32)}`;
 }
-export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void}) {
-  const execute = async <T>(work: (signal: AbortSignal) => T, signal?: AbortSignal) => {
+export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState}) {
+  const state = scope.state ?? new AnnotationRequestState();
+  const execute = async <T>(work: (signal: AbortSignal) => T | Promise<T>, signal?: AbortSignal) => {
     const scoped = signal ? AbortSignal.any([scope.signal, signal]) : scope.signal;
-    scoped.throwIfAborted(); scope.check();
     try {
-      const result = work(scoped);
+      scoped.throwIfAborted(); scope.check();
+      const result = await work(scoped);
       scoped.throwIfAborted(); scope.check();
       return {content: [{type: 'text' as const, text: JSON.stringify(result)}], details: {}};
     } catch (error) {
+      state.invalidate();
       scoped.throwIfAborted();
       if (error instanceof RequestError) throw new Error(`${error.code}: ${error.message}`);
       throw error;
@@ -73,14 +82,24 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
   return [
     defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有元信息、不含几何。不会切换本会话编辑目标。分页读取。',
       parameters: Type.Object(pagination, strict), executionMode: 'sequential',
-      execute: (_id, params, signal) => execute(() => ({...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)}), signal)}),
-    defineTool({name: 'annotation_read', label: '读取固定标注', description: '读取明确固定版本。默认仅摘要。查询个别对象而未知ID时，先不带fields读取摘要定位，再按objectIds读取所需字段；不要为单对象问题读取整图几何。仅在需要时选择 geometry/note/attributes/style/sourceRefs/originFeatureRef，按对象或图层缩小范围。hasMore 时尚未读完。compare 比较两个固定版本；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。',
+      execute: (_id, params, signal) => execute(() => {
+        const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
+        state.observeCurrent(result.current.sequence); return result;
+      }, signal)}),
+    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。默认仅摘要。查询个别对象而未知ID时，先不带fields读取摘要定位，再按objectIds读取所需字段；不要为单对象问题读取整图几何。仅在需要时选择 geometry/note/attributes/style/sourceRefs/originFeatureRef，按对象或图层缩小范围。hasMore 时尚未读完。compare 比较两个固定版本；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。',
       parameters: Type.Union([
+        Type.Object({mode: Type.Literal('draft'), ...selection, fields: Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {uniqueItems: true})), ...pagination}, strict),
         Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...selection, fields: Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {uniqueItems: true})), ...pagination}, strict),
         Type.Object({mode: Type.Literal('compare'), left: annotationRefSchema, right: annotationRefSchema, ...pagination}, strict),
         Type.Object({mode: Type.Literal('receipt'), clientActionId: uuid}, strict),
         Type.Object({mode: Type.Literal('receipt'), requestId: uuid, toolCallId: Type.String({minLength: 1, maxLength: 256})}, strict),
       ], {type: 'object'}), executionMode: 'sequential', execute: (_id, params, signal) => execute(() => {
+        if (params.mode === 'draft') {
+          const binding = service.binding(scope.actor, scope.sessionId);
+          const result = binding.draft ? service.read(scope.actor, scope.taskId, {ref: {setId: binding.draft.setId, revision: binding.draft.headRevision}, layerIds: params.layerIds, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit}) : null;
+          state.observeDraft(binding);
+          return result ? {status: 'draft', ...result} : {status: 'empty', bindingRevision: binding.bindingRevision, baseRef: binding.baseRef, writable: binding.writable};
+        }
         if (params.mode === 'compare') return service.compare(scope.actor, scope.taskId, params.left, params.right, params.offset, params.limit);
         if (params.mode === 'receipt') {
           const receipt=service.receipt(scope.actor, 'clientActionId' in params ? params.clientActionId : annotationActionId(params.requestId, params.toolCallId));
@@ -89,14 +108,33 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         }
         return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit});
       }, signal)}),
-    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '仅操作当前会话自己的草稿。首次编辑明确空白 null 或固定 baseRef；保存基于已读取 expectedRevision，成功后使用返回新修订。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行，set_current 仅在用户明确要求设为任务当前时执行；先调用annotation_list读取current.sequence作为expectedCurrentSequence，不猜测序号；已有当前版本时先比较再设定；两者独立，无审批，也不通知、不修改现实来源。图层和对象ID由模型取唯一短标识。',
+    defineTool({name:'annotation_from_source',label:'按来源生成或刷新标注',
+      description:'将已查询的来源对象精确标到本会话已有草稿和图层中；宿主重新查询并核对来源修订，保存原几何及本次真实查询时间，无需抄写坐标或时间。来源缺几何/修订变化时明确失败，不估算。add 使用来源名称；refresh 要求目标恰有一个匹配来源且几何类型兼容，保留标注ID、名称、样式、说明、属性及其他来源引用，只替换几何与该来源修订/时间。业务说明和属性不会自动更新，变化详情按需 situation_query 后另用 annotation_action 编辑。自定义规划区域使用 annotation_action；意图不清先澄清。1～20 项 items 整批原子保存；先读取本会话 draft 并查询来源，收到结果后再保存，版本条件由宿主维护。结果 fromSources[].queriedAt 是本工具新查询的 UTC 原值，不是此前查询时间；说明文件可按固定修订读取 sourceRefs，勿只改时区后缀。不发布、不设为任务当前。',
+      parameters:annotationFromSourceSchema,executionMode:'sequential',
+      execute:(toolCallId,params,signal)=>execute(async scoped => {
+        const clientActionId = annotationActionId(scope.requestId, toolCallId);
+        const replay = service.hostReplay(scope.actor, scope.sessionId, {...params, action: 'from_source', clientActionId});
+        if (replay) return {...replay.receipt, replayed: true};
+        const basis = state.draftBasis();
+        const items = params.items.map(item => ({...item, expectedSourceRevision: state.sourceRevision(item.sourceRef)}));
+        const result = await service.fromSourcesFromHost(scope.actor, scope.sessionId, {clientActionId, expectedRevision: basis.revision, items}, basis, scoped, scope.check);
+        state.committed(result.receipt, result.replayed);
+        return {...result.receipt, ...(result.replayed ? {replayed: true} : {})};
+      },signal)}),
+    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '仅操作当前会话自己的草稿。首次编辑明确空白 null 或固定 baseRef；先 annotation_read mode:draft 读取，收到结果后再编辑；版本条件由宿主管理。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行，set_current 仅在用户明确要求设为任务当前时执行；先调用 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定；两者独立，无审批，也不通知、不修改现实来源。图层和对象ID由模型取唯一短标识。',
       parameters: actionSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(scoped => {
         const clientActionId = annotationActionId(scope.requestId, toolCallId);
-        if ('action' in params && params.action === 'set_current') {
-          return service.setCurrent(scope.actor, scope.taskId, {publicationId: params.publicationId, expectedCurrentSequence: params.expectedCurrentSequence, clientActionId}, scoped);
-        }
-        return service.action(scope.actor, scope.sessionId, {...params, clientActionId}, scoped);
+        const replay = service.hostReplay(scope.actor, scope.sessionId, {...params, clientActionId});
+        if (replay) return {...replay.receipt, replayed: true};
+        state.assertWritable();
+        const result = params.action === 'set_current'
+          ? service.setCurrentFromHost(scope.actor, scope.sessionId, {publicationId: params.publicationId, expectedCurrentSequence: state.currentSequence(), clientActionId}, scoped)
+          : params.action === 'apply'
+            ? service.actionFromHost(scope.actor, scope.sessionId, {...params, clientActionId, expectedRevision: state.draftBasis().revision}, state.draftBasis(), scoped)
+            : service.actionFromHost(scope.actor, scope.sessionId, {...params, clientActionId}, params.action === 'create_draft' ? state.emptyBasis() : undefined, scoped);
+        state.committed(result.receipt, result.replayed);
+        return {...result.receipt, ...(result.replayed ? {replayed: true} : {})};
       }, signal)}),
   ];
 }

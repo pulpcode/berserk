@@ -1,5 +1,6 @@
 import { AnnotationService, type AnnotationActor } from '../annotations/service.js';
 import { annotationTools } from './annotation-tools.js';
+import { AnnotationRequestState, isAnnotationWrite } from './annotation-state.js';
 import { MessageIntake } from './message-intake.js';
 import type { InputSubmission, InputAction, InputResult } from '../contracts/index.js';
 import { loadComposerContext } from '../context/composer.js';
@@ -97,6 +98,7 @@ interface Active {
   input?: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] };
   selections?: LoadedComposerSelection;
   annotationActor?: AnnotationActor;
+  annotationState?: AnnotationRequestState;
   onFile?: (file: FileOutput) => void;
   onInteraction?: (interaction: Interaction) => void;
   waiting?: { interaction: Interaction; resolve: (interaction: Interaction) => void; reject: (error: Error) => void; cleanup: () => void };
@@ -707,6 +709,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const readonlyFiles = active.sandbox ? workspaceFileTools(active.sandbox) : [];
     const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', seatId: record.seatId};
     if (this.access && !this.contextTasks) this.contextTasks = new TaskQueryService(this.access);
+    const annotationState = !role && !active.background && this.annotations && active.annotationActor ? new AnnotationRequestState() : undefined;
+    active.annotationState = annotationState;
+    active.controller.signal.addEventListener('abort', () => annotationState?.invalidate(), {once: true});
     const observedTasks = new Map<string, number>();
     let queriedTasks = false;
     const authorizeRequest = () => {
@@ -720,7 +725,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     }, (items, searched) => {
       queriedTasks ||= searched;
       for (const task of items) observedTasks.set(task.id, task.revision);
-    }) : [];
+    }, result => annotationState?.observeSources(result)) : [];
     const taskReads = !role && !active.service && this.taskInformation ? taskInformationTools(this.taskInformation,
       record.seatId, this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId, active.controller, authorizeRequest) : [];
     const assessment = !role && active.service?.recordTaskAssessment && active.service.tools.includes('information_record_task_assessment')
@@ -731,7 +736,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients,
       ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
         actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
-        requestId: active.id, signal: active.controller.signal, check: authorizeRequest,
+        requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState,
       }) : []),
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
@@ -766,7 +771,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       try {
         // Pi's original hook may transform validated arguments; authorize its final values.
         const original = await originalBefore?.(context, signal);
-        if (original?.block) return original;
+        if (original?.block) {
+          if (isAnnotationWrite(context.toolCall.name)) annotationState?.invalidate();
+          return original;
+        }
         if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
         const { toolCall } = context;
         if (toolCall.name !== 'bash' && toolCall.name !== 'confirmation_demo' && toolCall.name !== 'work_item_action') return original;
@@ -821,12 +829,20 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       let original: Awaited<ReturnType<NonNullable<typeof originalAfter>>>;
       try { original = await originalAfter?.(context); }
       catch (error) {
+        if (context.toolCall.name.startsWith('annotation_') || context.toolCall.name === 'situation_query') {
+          annotationState?.invalidate();
+          this.stop(record, active, 'failure', '地图工具结果处理失败，请核对原操作回执；不继续后续写入。');
+          throw error;
+        }
         if (!active.policies?.has(context.toolCall.id)) throw error;
         // Pi converts hook failures into an unmarked error result even after
         // execution. Retain the actual result and stop further work instead.
         this.stop(record, active, 'failure', '工具结果处理失败，已停止本次请求；已执行的操作不会撤销，请核对实际结果。');
       }
       const { toolCall, result } = context;
+      const mapResult = toolCall.name.startsWith('annotation_') || toolCall.name === 'situation_query';
+      if (mapResult && (context.isError || original?.isError
+        || (original?.content && !isDeepStrictEqual(original.content, result.content)))) annotationState?.invalidate();
       const policy = active.policies?.get(toolCall.id);
       if (policy) return { ...original, details: { ...(result.details as object ?? {}), ...((original?.details as object) ?? {}), commandPolicy: policy, executionStarted: true } };
       if (toolCall.name !== 'subagent') return original;
@@ -836,6 +852,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     session.agent.streamFunction = (selected, context, options) => {
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
       const purpose = active.compacting ? 'compaction' : 'reply';
+      if (purpose === 'reply') annotationState?.beginInference();
       setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating');
       return controlledStream(runtime, config, selected, context, options, purpose, requestReminder, active.controller.signal, active.usage,
         this.modelPermits ? { permits: this.modelPermits, waiting: () => setPhase(record, active, 'preparing'), started: () => setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating') } : undefined);
@@ -1075,6 +1092,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             setPhase(record, active, 'compacting');
             emit({ ...base, type: 'context.compaction_started', reason: event.reason === 'manual' ? 'unknown' : event.reason });
           } else if (event.type === 'compaction_end') {
+            active.annotationState?.invalidate();
             active.compacting = false;
             if (!event.result || event.aborted || event.errorMessage) {
               const error = event.errorMessage || '';
@@ -1108,6 +1126,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             const child = (event.partialResult as { details?: { subagent?: SubagentSummary } })?.details?.subagent;
             if (child && active.subagents?.get(child.subagentId)?.toolCallId === event.toolCallId && child.parentRequestId === active.id) emit({ ...base, type: 'subagent.updated', subagent: child });
           } else if (event.type === 'tool_execution_end') {
+            if (event.isError && isAnnotationWrite(event.toolName)) active.annotationState?.invalidate();
             setPhase(record, active, 'preparing');
             const result = event.result as { content?: Array<{ type: string; text?: string }> };
             emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName),
@@ -1120,7 +1139,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             : active.compacting ? '正在整理上下文，请稍候。'
             : active.waiting ? '请先回答或确认当前问题。' : undefined,
           () => emit({...base, type: 'input.queue', queue: record.intake!.state()}),
-          receipt => emit({...base, type: 'input.consumed', submissionId: receipt.submissionId, text: receipt.text}));
+          receipt => { active.annotationState?.invalidate(); emit({...base, type: 'input.consumed', submissionId: receipt.submissionId, text: receipt.text}); });
         }
         await session.prompt(text, { expandPromptTemplates: false });
         const last = session.messages.at(-1);

@@ -51,6 +51,54 @@
       "desktopTestsPassed": 12,
       "productChanges": false,
       "deployed": false
+    },
+    "sourceAnnotationImprovement": {
+      "status": "implemented_validated_with_findings",
+      "baselineCommit": "ac50ba1",
+      "scope": "地图来源查询、来源上图和标注修订；排除工作交接工具",
+      "plan": "agent-tool-improvements/prd.md",
+      "completedAt": "2026-10-14",
+      "report": "agent-tool-improvements/validation.md",
+      "review": "agent-tool-improvements/review.md",
+      "targetedTestsPassed": 86,
+      "desktopTestsPassed": 13,
+      "protocolRunsCompleted": 3,
+      "specialCasesObserved": 4,
+      "fullBusinessAcceptance": false,
+      "deployed": false,
+      "remainingFindings": [
+        "连续来源添加复用旧草稿修订导致CAS拒绝",
+        "自定义区域未遵守指定图层",
+        "模型生成地图链接格式及时间术语仍有问题"
+      ]
+    },
+    "agentMapWorkflow": {
+      "status": "implemented_validated_with_findings",
+      "plannedAt": "2026-10-14",
+      "implementationApproved": true,
+      "approvedPrinciple": "程序已知的机械参数由宿主管理，保留基于已读状态的冲突检测",
+      "plan": "agent-map-workflow/prd.md",
+      "design": "agent-map-workflow/design.md",
+      "implementationPlan": "agent-map-workflow/implement.md",
+      "research": "agent-map-workflow/research.md",
+      "deployed": false,
+      "approvedAt": "2026-10-14",
+      "implementationComplete": true,
+      "completedAt": "2026-10-14",
+      "report": "agent-map-workflow/validation.md",
+      "review": "agent-map-workflow/review.md",
+      "desktopTestsPassed": 14,
+      "realModelCases": 11,
+      "protocolRunsCompleted": 3,
+      "layerIntentPassed": 6,
+      "layerIntentCases": 8,
+      "fullBusinessAcceptance": false,
+      "remainingFindings": [
+        "失败清空多类依据，但恢复提示只指出单项，空草稿案出现8次保护性拒绝",
+        "地图Skill可用的7案仅2案读取，对照未证明Skill效果",
+        "未指定唯一目标层的2案均未先澄清",
+        "正文仍出现空间量级、草稿可见性和已保存字段表述错误"
+      ]
     }
   }
 }

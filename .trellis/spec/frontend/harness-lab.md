@@ -328,6 +328,12 @@ The single “图层与对象” entry contains source filters, source category/
 
 `tests/e2e/annotations.spec.ts` and `situation-map.spec.ts` own UI regressions for layout/draft retention, reference behavior, keyboard resizing, source failures and fallback lists. The existing chat/navigation tests remain the authority for stream and read-marker behavior; explicitly test hidden map-focused chat when changing those visibility guards.
 
+### Structured map result entries
+
+`EvidenceMapLinks` derives source links from actual query payloads and fixed annotation links from successful native annotation receipts, including old single-source and new batch metadata. Never derive success or object IDs from assistant prose. Missing/error/malformed results produce no successful annotation entry. Replay and receipt reads are labeled as original actions, not new writes.
+
+Render entries beside tool results and a succeeded turn's authoritative finalMessageId. Final-answer evidence is restricted to that requestId. Deduplicate fixed versions/objects; show three entries at rest, expandable up to 100. Opening fixed annotation selections uses the existing read-only reference path without changing the draft edit target. Source links query currently authorized data and identify historical evidence revisions separately. Existing Markdown links still require evidence matching; no permissive malformed href fallback. All loading retains backend permission checks. The entries identify queried/changed content, not sentence-level proof of the prose.
+
 ## Foreground message queue
 
 ### 1. Scope / Trigger

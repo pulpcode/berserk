@@ -240,3 +240,33 @@ test('layer tree separates expansion visibility and drawing target, including em
   expect(env.fake.calls).toHaveLength(0);expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });
+
+test('structured receipt buttons open fixed read-only targets and stay scoped to the final request after reload',async({page})=>{
+ const env=await setup(page);try{
+  const service=env.lab.annotations!;
+  const first=service.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,title:'入口验证',operations:[{op:'add_layer',layer:{layerId:'points',name:'集合点',order:0,defaultVisible:true,features:[{objectId:'point-a',name:'固定集合点',kind:'point',geometry:{type:'Point',coordinates:[103.82,1.30]}}]}}]});
+  const firstRef=first.ref!;if(!('setId' in firstRef))throw new Error('Expected private ref');
+  service.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'point-a',changes:{name:'最新集合点'}}]});
+  const requestId=randomUUID(), otherRequestId=randomUUID();
+  const snapshot={...env.session,active:null,lastResult:{requestId:otherRequestId,status:'succeeded'},turns:[{requestId,status:'succeeded',finalMessageId:'answer'},{requestId:otherRequestId,status:'succeeded',finalMessageId:'later-answer'}],messages:[
+   {id:'user',role:'user',requestId,text:'添加集合点'},
+   {id:'receipt',role:'tool',requestId,toolName:'annotation_action',text:JSON.stringify({...first,objectIds:['point-a']})},
+   {id:'answer',role:'assistant',requestId,text:'已添加集合点。'},
+   {id:'later-user',role:'user',requestId:otherRequestId,text:'继续讨论'},
+   {id:'later-answer',role:'assistant',requestId:otherRequestId,text:'本轮没有修改。'},
+  ]};
+  await page.route(`**/api/sessions/${env.session.id}`,route=>route.fulfill({json:snapshot}));
+  await page.goto(`/?session=${env.session.id}`);
+  const answer=page.getByLabel('Axon 的回复').filter({hasText:'已添加集合点。'});
+  await expect(answer.getByRole('button',{name:/查看本次标注/})).toHaveCount(1);
+  await expect(page.getByLabel('Axon 的回复').filter({hasText:'本轮没有修改。'}).getByRole('button',{name:/查看本次标注/})).toHaveCount(0);
+  await answer.getByRole('button',{name:/查看本次标注/}).click();
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('固定集合点');
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');
+  expect(service.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+  await page.reload();await answer.getByRole('button',{name:/查看本次标注/}).click();
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('固定集合点');
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});

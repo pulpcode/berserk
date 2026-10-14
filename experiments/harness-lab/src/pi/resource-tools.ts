@@ -66,7 +66,7 @@ export function resourceTools(snapshot: ResourceSnapshot, resources: ResourceSer
         try { manager.appendCustomEntry(CHANGE_ENTRY, { requestId, change: result }); } catch { uncertain(); }
         return result;
       }, signal, timeouts.instructions_update) }),
-    defineTool({ name: 'skill_read', label: '读取 Skill', description: '按需读取 synthesis（资料综合写作）或 review（结果检查），Skill 提供方法，不扩大能力。', parameters: Type.Object({ id: Type.String() }, { additionalProperties: false }), executionMode: 'sequential',
+    defineTool({ name: 'skill_read', label: '读取 Skill', description: '按需读取本请求可用 Skill 的正文；可用 ID 与适用场景见资源目录。Skill 提供方法，不扩大工具或权限。', parameters: Type.Object({ id: Type.String() }, { additionalProperties: false }), executionMode: 'sequential',
       execute: (_id, params, signal) => execute(async () => {
         const skill = snapshotSkill(snapshot, params.id);
         manager.appendCustomEntry(SKILL_ENTRY, { requestId, skill });

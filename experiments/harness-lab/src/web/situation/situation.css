@@ -75,3 +75,7 @@
 
 
 .conversation-pane > .information-center { flex:1; height:auto; min-height:0; }
+.evidence-map-more { flex-basis:100%; min-width:0; }
+.evidence-map-more > summary { cursor:pointer; font-size:12px; padding:4px 0; }
+.evidence-map-more > .evidence-map-links { max-height:220px; overflow:auto; }
+.evidence-map-links button { max-width:100%; overflow-wrap:anywhere; text-align:left; }

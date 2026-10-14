@@ -1,4 +1,4 @@
-import type { ContextRef, SituationGeometry } from './context.js';
+import type { ContextRef, ContextTimeRange, SituationGeometry } from './context.js';
 
 /** Immutable version selectors. No implicit latest lookup is accepted. */
 export type AnnotationRef = { setId: string; revision: number } | { publicationId: string };
@@ -56,10 +56,33 @@ export type AnnotationAction =
   | { action: 'publish'; clientActionId: string; revision: number; title: string; note?: string };
 export interface AnnotationBaseInput { clientActionId: string; expectedBindingRevision: number; baseRef: AnnotationRef | null }
 export interface AnnotationCurrentInput { clientActionId: string; publicationId: string; expectedCurrentSequence: number }
+/** Coordinates, source timestamps and actor/session authority are resolved by the host. */
+export interface AnnotationFromSourceInput {
+  clientActionId: string; mode: 'add' | 'refresh'; sourceRef: ContextRef; expectedSourceRevision: number;
+  expectedRevision: number; layerId: string; objectId: string;
+}
+export type AnnotationSourceItem = Omit<AnnotationFromSourceInput, 'clientActionId' | 'expectedRevision'>;
+export interface AnnotationFromSourcesInput { clientActionId: string; expectedRevision: number; items: AnnotationSourceItem[] }
+/** Internal adapter intent; never accepted by the HTTP mutation routes. */
+export type AnnotationHostIntent = Exclude<AnnotationAction, {action:'apply'}>
+  | Omit<Extract<AnnotationAction, {action:'apply'}>, 'expectedRevision'>
+  | {action:'from_source'; clientActionId:string; items:Array<Omit<AnnotationSourceItem,'expectedSourceRevision'>>}
+  | {action:'set_current'; clientActionId:string; publicationId:string};
+export type AnnotationEditBasis = {setId:string; revision:number} | {bindingRevision:number; baseRef:AnnotationRef|null};
+export interface AnnotationHostResult { receipt: AnnotationReceipt; replayed: boolean }
+export interface AnnotationFromSourceResult {
+  mode: 'add' | 'refresh'; layerId: string; objectId: string; sourceRef: ContextRef;
+  sourceRevision: number; queriedAt: string; effectiveAt: string | null; validTime: ContextTimeRange | null;
+}
 export interface AnnotationReceipt {
-  clientActionId: string; action: AnnotationAction['action'] | 'set_current' | 'set_base'; taskId: string;
+  clientActionId: string; action: AnnotationAction['action'] | 'set_current' | 'set_base' | 'from_source'; taskId: string;
   sessionId?: string; committedAt: string; ref?: AnnotationRef; hash?: string;
   binding?: AnnotationBinding; publication?: AnnotationPublication; current?: AnnotationCurrent;
+  fromSource?: AnnotationFromSourceResult;
+  fromSources?: AnnotationFromSourceResult[];
+  beforeRef?: {setId:string; revision:number} | null;
+  afterRef?: {setId:string; revision:number};
+  objectIds?: string[];
 }
 export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef';
 export interface AnnotationReadInput {

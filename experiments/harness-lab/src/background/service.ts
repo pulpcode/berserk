@@ -15,7 +15,7 @@ import { createBackgroundExecutor, snapshotBackgroundProfile } from '../pi/backg
 import { BackgroundStore, validRecipientSuggestionInput } from './store.js';
 import { TaskLinkService } from './task-links.js';
 import type { BackgroundAnalysisOrigin } from '../contracts/task-information.js';
-import { loadControlledSkills } from '../resources/service.js';
+import { effectiveSkillIds, loadControlledSkills } from '../resources/service.js';
 import { newWorkspace } from '../workspaces/store.js';
 import { loadAgentRoles } from '../pi/roles.js';
 import { agentInfo } from '../pi/composer-input.js';
@@ -581,7 +581,7 @@ export class BackgroundService {
     const task = this.lab.access!.get(taskId, actor.seatId, true);
     const workspace = this.lab.workspaces.list(actor.seatId).workspaces.find(item => item.taskSpaceId === taskId);
     const ids = workspace ? this.lab.workspaces.get(workspace.id, actor.seatId).skillIds : newWorkspace(task.title).skillIds;
-    const skills = (await loadControlledSkills(ids)).map(({id,name,description,version,hash}) => ({id,name,description,version,hash}));
+    const skills = (await loadControlledSkills(effectiveSkillIds(ids))).map(({id,name,description,version,hash}) => ({id,name,description,version,hash}));
     return {skills, agents: (await loadAgentRoles(this.lab.config.agentRolesDir)).map(agentInfo)};
   }
   async analysisOptions(actor: Identity, deliveryId: string, taskId: string) {

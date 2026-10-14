@@ -762,3 +762,70 @@
 ### Next Steps
 
 - 审阅实测问题，优先改善几何依据读取、证据时间保留、工具错误可定位性；不因操作链路成功归档父任务。
+
+
+## Session 27: 实现地图来源标注并完成隔离复测
+
+**Date**: 2026-10-14
+**Task**: 实现地图来源标注并完成隔离复测
+**Branch**: `main`
+
+### Summary
+
+先提交验证基线，再实现 annotation_from_source；86定向测试与13桌面回归通过，三轮主流程和四专项完成，保留CAS参数、目标图层和链接表达缺口；未部署，改进代码待审阅。
+
+### Main Changes
+
+- 新增按来源复制及保ID刷新，复用ContextService与AnnotationService事务；不改工作交接工具
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `ac50ba1` | (see git log) |
+
+### Testing
+
+- [OK] 86个唯一定向用例；13个桌面用例（初轮3超时，原阈值单worker复跑通过）；typecheck/lint/build通过
+- [OK] DeepSeek本机隔离3轮主流程+4专项；12次来源保存几何与时间一致，未追加模型批次
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅agent-tool-improvements/validation.md；决定是否继续处理连续写入修订、指定图层与引用链接质量
+
+
+## Session 28: 实现地图宿主修订管理并完成固定十一案验收
+
+**Date**: 2026-10-14
+**Task**: 实现地图宿主修订管理并完成固定十一案验收
+**Branch**: `main`
+
+### Summary
+
+按批准设计实现请求内读取依据、原子来源批量、部署地图 Skill 和结构化地图入口；确定性/桌面检查通过，固定模型批次保留剩余缺口；未提交未部署。
+
+### Main Changes
+
+- 宿主管理机械修订，成功写入立即推进，外部变化及失败保持冲突保护；新读取须进入下一次推理。
+- 来源批量1～20项、受控地图Skill兼容旧历史、真实回执生成固定版本地图入口；相关规范与验收报告落盘。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] typecheck/lint/build通过；15文件广回归190/191后压缩夹具修正，最终边界与probe24/24；独立审阅149不同用例通过（存在重叠，不累加）。
+- [OK] 地图桌面E2E14/14；DeepSeek固定11案：主流程3/3结构化结果正确，图层意图6/8；无草稿起步8次保护性拒绝。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅agent-map-workflow/validation.md中的恢复提示、Skill触发、未指定层澄清及正文事实问题；全面业务验收未通过，未上线。

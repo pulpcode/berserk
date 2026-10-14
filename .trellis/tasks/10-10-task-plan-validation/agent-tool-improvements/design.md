@@ -1,10 +1,10 @@
 # Agent 工具与来源标注改进设计
 
-状态：待审阅。需求及事实以 [PRD](prd.md) 为准，本文不表示已实现。
+状态：用户已批准地图范围实施，工作交接改造已排除。需求及事实以 [PRD](prd.md) 为准。
 
 ## 1. 边界
 
-继续使用 Pi 原生工具注册、调用校验、beforeToolCall/执行、原生历史及现有确认 UI。宿主沿用 ContextService、CollaborationService、AnnotationService，不增加 MCP、执行引擎、查询缓存表或授权账本。
+继续使用 Pi 原生工具注册、调用校验、beforeToolCall/执行、原生历史及现有确认 UI。宿主沿用 ContextService、AnnotationService，不增加 MCP、执行引擎、查询缓存表或授权账本。
 
 模型决定“查谁、做什么、如何解释”；来源对象的几何与引用值由宿主确定性读取。操作仍绑定宿主已经认证的用户、席位、任务及会话。模型参数不提供 actor、权限或目标会话。
 
@@ -18,35 +18,13 @@
 - 明确当前模拟适配器的 query 是文本包含匹配，多词串并非自动分词搜索；无命中是本次查询结果。来源失败用实际错误表达，不包装为空列表。
 - 几何和来源时间仍按需读取。只加入与实际接口有关的简短说明，不把本次西区用例答案写入系统提示。
 
-## 3. R2：交接工具拆分，业务流程不变
+## 3. R2：工作交接不在本期范围
 
-建议给新模型请求提供四个用途单一的工具（名称为拟定）：
-
-| 工具 | 模型参数概要 | 复用现有动作 |
-| --- | --- | --- |
-| work_item_assign | assigneeSeatId、title、goal、inputPaths | assign |
-| work_item_claim | workItemId、expectedRevision | claim |
-| work_item_submit | workItemId、expectedRevision、path | submit |
-| work_item_review | workItemId、expectedRevision、submissionId、decision、reason? | review |
-
-每个参数表采用严格的平铺对象，不再让模型同时面对四种 action/payload 结构。比如复核缺少 submissionId，原生校验只检查复核结构，没有其他分支占用错误列表。字段说明写明 workItemId/expectedRevision/latestSubmissionId 来自 work_item_read；不能猜测提交编号或静默替换旧提交。
-
-宿主将已验证参数转成既有服务 DTO，保留原始工具名及参数到 Pi 历史。确认前 prepare 固定文件，确认与 toolCallId、原参数、operationId 和 grant 绑定；执行时消费同一授权并返回真实回执。后台及只读子会话仍无写工具。
-
-本设计选择拆分而非全局增大错误数量：后者会增加其他分支噪声，不能针对验收动作定位问题。选择保留原生校验而非绕过它后自建一套解释器，符合当前 Pi 集成约定。工具数量增加带来的 schema 字节/token 与选择成本纳入复测，不先断言开销必然减少。
-
-兼容事项：
-
-- 新请求不同时注册旧 work_item_action 和四个新工具，避免重复入口；旧工具记录及更早 prepare/commit 记录保持可读。
-- 更新确认/策略记录允许的工具名、历史重建、grant 消费及恢复检查；旧记录不能被改写为新调用或当成新授权重放。
-- HTTP 页面 API、工作状态机和持久化业务 DTO 保持现状；前端需要的调整限于新工具的正常显示及已有确认卡识别。
-- 发布时先排空在途调用；新工具历史写入后，不能假定旧二进制可读。保留停机备份，回退须使用经验证可读新历史的版本，或在明确数据恢复方案下操作。当前规划不执行发布。
-
-主要影响位置：`src/contracts/collaboration.ts`、`src/pi/collaboration-tools.ts`、`src/pi/interactions.ts`、`src/pi/lab.ts` 及对应测试。确需更新浏览器 toolName 判别的位置由实现时全仓检索确定。
+按用户审阅意见，取消本期拆分分派、签收、提交、复核工具的计划。原始方案保留在 Git 基线 ac50ba1，相关问题记录仍有效，后续独立处理。本次不修改工作服务、确认卡或历史兼容。
 
 ## 4. R3/R4：按来源生成或刷新标注
 
-建议新增一个专用 Pi 工具 `annotation_from_source`，承接已有查询与标注服务。首次先用现有能力创建本会话草稿和图层；这个工具不隐式创建草稿或切换基线。
+新增一个专用 Pi 工具 `annotation_from_source`，承接已有查询与标注服务。首次先用现有能力创建本会话草稿和图层；这个工具不隐式创建草稿或切换基线。
 
 参数采用同一平铺结构：
 

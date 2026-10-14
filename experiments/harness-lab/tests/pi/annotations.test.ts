@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
 import { COMPOSER_INPUT, COMPOSER_INPUT_V2, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
 import type { AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
 import { createApp } from '../../src/server/app.js';
@@ -36,7 +37,9 @@ async function ask(lab: PiLab, session: string, annotationRefs?: AnnotationSelec
 describe('annotation input and native tools', () => {
   it('uses provider-compatible object roots and homogeneous coordinate arrays while the service rejects invalid latitude', async () => {
     const {lab, session, actor, taskId} = await setup();
-    const tools = annotationTools(lab.annotations!, {actor, taskId, sessionId: session.id, requestId: randomUUID(), signal: new AbortController().signal, check: () => {}});
+    const state = new AnnotationRequestState();
+    state.observeDraft(lab.annotations!.binding(actor, session.id)); state.beginInference();
+    const tools = annotationTools(lab.annotations!, {actor, taskId, sessionId: session.id, requestId: randomUUID(), signal: new AbortController().signal, check: () => {}, state});
     const inspect = (node: unknown) => {
       if (!node || typeof node !== 'object') return;
       if (!Array.isArray(node) && 'type' in node && node.type === 'array' && 'items' in node) expect(Array.isArray(node.items)).toBe(false);
@@ -47,7 +50,7 @@ describe('annotation input and native tools', () => {
       const schema = JSON.parse(JSON.stringify(tool.parameters)); expect(schema.type).toBe('object'); inspect(schema);
     }
     const action = tools.find(tool => tool.name === 'annotation_action')!;
-    await expect(action.execute('bad-latitude', {action: 'apply', expectedRevision: 1, operations: [{op: 'add_object', layerId: 'meeting',
+    await expect(action.execute('bad-latitude', {action: 'apply', operations: [{op: 'add_object', layerId: 'meeting',
       feature: {objectId: 'invalid', kind: 'point', name: '无效点', geometry: {type: 'Point', coordinates: [120,91]}}}]} as never, undefined, undefined, {} as never)).rejects.toThrow('坐标');
     expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(1);
   });
@@ -98,8 +101,8 @@ describe('annotation input and native tools', () => {
     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();
   });
 
-  it('rejects stale agent saves and keeps own-session write target even with a reference to another draft', async () => {
-    const {lab, session, actor, draft, taskId} = await setup((_context,index) => index === 0 ? {tools: [{name: 'annotation_action', arguments: {action: 'apply', expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]}}]} : {text: '冲突已保留'});
+  it('requires a current draft read and keeps own-session write target even with a reference to another draft', async () => {
+    const {lab, session, actor, draft, taskId} = await setup((_context,index) => index === 0 ? {tools: [{name: 'annotation_action', arguments: {action: 'apply', operations: [{op: 'delete_object', objectId: 'a'}]}}]} : {text: '冲突已保留'});
     const other = await lab.createSession(session.workspaceId, 'alpha');
     const otherDraft = lab.annotations!.action(actor, other.id, {action: 'create_draft', clientActionId: randomUUID(), baseRef: draft.ref});
     const request = lab.start(session.id, '删除我草稿中的 A', {annotationRefs: [otherDraft.ref!]}, 'alpha');
@@ -134,11 +137,13 @@ describe('annotation input and native tools', () => {
 
   it('deduplicates native call actions, checks cancellation, and exposes no foreign session authority fields', async () => {
     const {lab, session, actor, taskId} = await setup(); const controller = new AbortController(); const requestId = randomUUID();
-    const tools = annotationTools(lab.annotations!, {actor, taskId, sessionId: session.id, requestId, signal: controller.signal, check: () => {}});
+    const state = new AnnotationRequestState();
+    state.observeDraft(lab.annotations!.binding(actor, session.id)); state.beginInference();
+    const tools = annotationTools(lab.annotations!, {actor, taskId, sessionId: session.id, requestId, signal: controller.signal, check: () => {}, state});
     const action = tools.find(tool => tool.name === 'annotation_action')!;
-    const params = {action: 'apply', expectedRevision: 1, operations: [{op: 'rename_set', title: '重试一次'}]};
+    const params = {action: 'apply', operations: [{op: 'rename_set', title: '重试一次'}]};
     const first = await action.execute('retry-call', params as never, undefined, undefined, {} as never); const second = await action.execute('retry-call', params as never, undefined, undefined, {} as never);
-    expect(second).toEqual(first); expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(2);
+    expect(JSON.parse((second.content[0] as {text: string}).text)).toEqual({...JSON.parse((first.content[0] as {text: string}).text), replayed: true}); expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(2);
     expect(lab.annotations!.receipt(actor, annotationActionId(requestId, 'retry-call'))?.ref).toBeDefined();
     const read = tools.find(tool => tool.name === 'annotation_read')!;
     const recovered = await read.execute('inspect-receipt', {mode: 'receipt', requestId, toolCallId: 'retry-call'} as never, undefined, undefined, {} as never);
@@ -196,7 +201,7 @@ describe('annotation input and native tools', () => {
     const config = testConfig(dir, {seatId: 'alpha', auth: {secret: 'test-only-signing-key-at-least-32-characters', sessionMs: 28800000}});
     let replace: () => void = () => {};
     const fake = await fakeRuntime(config, (_context, index) => {
-      if (index === 0) { replace(); return {tools: [{name: 'annotation_action', arguments: {action: 'apply', expectedRevision: 1, operations: [{op: 'rename_set', title: '不应写入'}]}}]}; }
+      if (index === 0) { replace(); return {tools: [{name: 'annotation_read', arguments: {mode: 'draft'}}]}; }
       return {text: '账号已失效'};
     });
     const lab = await PiLab.create(config, fake.runtime); clean.push(() => lab.close());

@@ -1,4 +1,4 @@
-import type { AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationDocument, AnnotationFeature, AnnotationLayer, AnnotationOperation, AnnotationReadInput, AnnotationRef, AnnotationSelection } from '../contracts/annotations.js';
+import type { AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationDocument, AnnotationFeature, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationLayer, AnnotationOperation, AnnotationReadInput, AnnotationRef, AnnotationSelection } from '../contracts/annotations.js';
 import type { Position } from '../contracts/context.js';
 import { RequestError } from '../contracts/errors.js';
 import { UUID } from '../workspaces/store.js';
@@ -140,6 +140,40 @@ export function action(value: unknown): AnnotationAction {
   }
 }
 export function base(value: unknown): AnnotationBaseInput {const object=record(value,['clientActionId','expectedBindingRevision','baseRef']); return {clientActionId:uuid(object.clientActionId),expectedBindingRevision:integer(object.expectedBindingRevision),baseRef:object.baseRef===null ? null : ref(object.baseRef)};}
+export function fromSource(value: unknown): AnnotationFromSourceInput {
+  const input=record(value,['clientActionId','mode','sourceRef','expectedSourceRevision','expectedRevision','layerId','objectId']);
+  if(input.mode!=='add' && input.mode!=='refresh') throw invalid();
+  const source=record(input.sourceRef,['systemId','objectType','objectId']);
+  return {clientActionId:uuid(input.clientActionId),mode:input.mode,
+    sourceRef:{systemId:id(source.systemId),objectType:id(source.objectType),objectId:id(source.objectId)},
+    expectedSourceRevision:integer(input.expectedSourceRevision,1),expectedRevision:integer(input.expectedRevision,1),
+    layerId:id(input.layerId),objectId:id(input.objectId)};
+}
+export function fromSources(value: unknown): AnnotationFromSourcesInput {
+  const input=record(value,['clientActionId','expectedRevision','items']);
+  const clientActionId=uuid(input.clientActionId),expectedRevision=integer(input.expectedRevision,1);
+  if(!Array.isArray(input.items) || input.items.length<1 || input.items.length>20) throw invalid('来源对象数量须为 1～20。');
+  const items=input.items.map(value=>{
+    const item=record(value,['mode','sourceRef','expectedSourceRevision','layerId','objectId']);
+    const {clientActionId: _action,expectedRevision: _revision,...normalized}=fromSource({...item,clientActionId,expectedRevision});
+    void _action; void _revision; return normalized;
+  });
+  if(new Set(items.map(item=>item.objectId)).size!==items.length) throw invalid('同一批次不能重复操作同一标注 ID。');
+  return {clientActionId,expectedRevision,items};
+}
+export function hostIntent(value: unknown): AnnotationHostIntent {
+  const input=record(value,['action','clientActionId','baseRef','title','operations','revision','note','items','publicationId'],['action','clientActionId']);
+  if(input.action==='from_source') {
+    record(input,['action','clientActionId','items']);
+    if(!Array.isArray(input.items)) throw invalid();
+    const normalized=fromSources({clientActionId:input.clientActionId,expectedRevision:1,items:input.items.map(item=>({...record(item,['mode','sourceRef','layerId','objectId']),expectedSourceRevision:1}))});
+    return {action:'from_source',clientActionId:normalized.clientActionId,items:normalized.items.map(({expectedSourceRevision,...item})=>{void expectedSourceRevision;return item;})};
+  }
+  if(input.action==='set_current') {record(input,['action','clientActionId','publicationId']);return {action:'set_current',clientActionId:uuid(input.clientActionId),publicationId:uuid(input.publicationId)};}
+  const normalized=action(input.action==='apply' ? {...input,expectedRevision:1} : input);
+  if(normalized.action!=='apply') return normalized;
+  const {expectedRevision,...intent}=normalized;void expectedRevision;return intent;
+}
 export function current(value: unknown): AnnotationCurrentInput {const object=record(value,['clientActionId','publicationId','expectedCurrentSequence']); return {clientActionId:uuid(object.clientActionId),publicationId:uuid(object.publicationId),expectedCurrentSequence:integer(object.expectedCurrentSequence)};}
 export function readInput(value: unknown): AnnotationReadInput {
   const object=record(value,['ref','layerIds','objectIds','fields','offset','limit'],['ref']);
