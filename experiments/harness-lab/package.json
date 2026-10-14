@@ -37,7 +37,8 @@
     "probe:context": "tsx --env-file-if-exists=.env.local scripts/probe-context.ts",
     "probe:recipients": "tsx --env-file-if-exists=.env.local scripts/probe-recipients.ts",
     "probe:task-plan": "tsx --env-file-if-exists=.env.local scripts/probe-task-plan.ts",
-    "probe:situation-map": "tsx --env-file-if-exists=.env.local scripts/probe-situation-map.ts"
+    "probe:situation-map": "tsx --env-file-if-exists=.env.local scripts/probe-situation-map.ts",
+    "probe:agent-framework": "tsx --env-file-if-exists=.env.local scripts/probe-agent-framework.ts"
   },
   "dependencies": {
     "@earendil-works/pi-ai": "0.85.1",

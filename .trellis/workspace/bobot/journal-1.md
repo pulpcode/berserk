@@ -730,3 +730,35 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 26: 完成 Agent 与框架三轮场景验证并记录质量缺口
+
+**Date**: 2026-10-13
+**Task**: 完成 Agent 与框架三轮场景验证并记录质量缺口
+**Branch**: `main`
+
+### Summary
+
+新增合成场景驱动、材料和定向测试；3轮真实DeepSeek链路完成，分别保留几何依据、工具参数与来源时间问题，未宣布完整业务验收通过。
+
+### Main Changes
+
+- 验证脚本、合成材料、边界组合测试和确认守卫测试；无产品代码改动，无部署。
+- 报告：.trellis/tasks/10-10-task-plan-validation/research/agent-framework-validation.md；本机原始证据：.local/agent-framework-e2e/。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 84个不同定向用例、12个桌面用例、包级typecheck/lint通过；3轮主流程和E04/E05真实模型观察完成。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅实测问题，优先改善几何依据读取、证据时间保留、工具错误可定位性；不因操作链路成功归档父任务。

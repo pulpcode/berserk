@@ -36,6 +36,21 @@
     "desktopOnly": true,
     "validationFirst": true,
     "contextManifestsCurated": true,
-    "acceptanceStatus": "awaiting-manual-end-to-end-validation"
+    "acceptanceStatus": "awaiting-manual-end-to-end-validation",
+    "agentFrameworkE2E": {
+      "approvedAt": "2026-10-13",
+      "status": "validated_with_findings",
+      "plan": "agent-framework-e2e-plan.md",
+      "baselineCommit": "908bf64",
+      "isolatedOnly": true,
+      "completedAt": "2026-10-13",
+      "report": "research/agent-framework-validation.md",
+      "protocolRunsCompleted": 3,
+      "fullBusinessAcceptance": false,
+      "targetedTestsPassed": 84,
+      "desktopTestsPassed": 12,
+      "productChanges": false,
+      "deployed": false
+    }
   }
 }
