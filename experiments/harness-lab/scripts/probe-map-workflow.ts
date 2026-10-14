@@ -1,4 +1,4 @@
-/** Fixed diagnostic batch: 3 source flows + 4 paired layer intents. Never auto-answer or retry cases. */
+/** Fixed diagnostic batches. Recovery reuses the three-step source flow with no pre-created drafts. */
 import {createHash,randomUUID} from 'node:crypto';
 import {appendFile,cp,mkdir,readFile,writeFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
@@ -26,18 +26,28 @@ export function layerScenario(kind:LayerCase) {
     :`请在地图上添加名为“临时集合区”的面。${description}暂不发布。`;
   return {layers,prompt,expectClarification:kind==='duplicate'||kind==='unspecified',targetName:kind==='new'?'现场观察':'资源讨论'};
 }
-export function workflowCases() {
-  return [...[1,2,3].map(run=>({kind:'main' as const,run,skill:true})),
+export function workflowCases(recovery=false) {
+  const main=[1,2,3].map(run=>({kind:'main' as const,run,skill:true}));
+  return recovery?main:[...main,
     ...layerCases.flatMap(kind=>[true,false].map(skill=>({kind,run:1,skill})))];
 }
+export function mainScenario(run:number,recovery=false) {
+  if(![1,2,3].includes(run))throw new Error('Only the three fixed main scenarios are supported');
+  const layerName=['通道核对记录','资源核实','现场讨论'][run-1],emptyDraft=recovery||run===3;
+  const original=`请查询本任务西区现有的区域、道路和车辆对象，将三个来源对象一起放到本会话地图的“${layerName}”图层中${emptyDraft?'，当前还没有草稿，请创建空白草稿和这个图层':''}。区域采用来源已有边界，不另行估算。说明实际依据的版本和时间，暂不发布。`;
+  const prompt=recovery&&run===1?`本会话当前还没有草稿。请建一份空白地图草稿和“${layerName}”图层，查找本任务西区现有的区域、道路及车辆，把这三个来源对象一起加入该图层。区域边界直接采用已有资料，不要估算；交代依据的版本与时间，只保存草稿，先不发布。`
+    :recovery&&run===2?`我想在本会话地图中核实西区的区域、道路和车辆。当前还没有草稿，请新建空白草稿，在“${layerName}”图层一起放入查询到的这三个来源对象，区域使用来源原有边界。请说明实际参考了什么版本、什么时间的资料，这一步不要发布。`:original;
+  return {layerName,emptyDraft,prompt};
+}
 export function workflowOptions(args:string[]) {
-  let port=4343,prepareOnly=false;
+  let port=4343,prepareOnly=false,recovery=false;
   for(let i=0;i<args.length;i++) {
     if(args[i]==='--prepare-only')prepareOnly=true;
+    else if(args[i]==='--recovery')recovery=true;
     else if(args[i]==='--port'&&/^\d+$/.test(args[i+1]??'')&&Number(args[i+1])>1023&&Number(args[i+1])<65536)port=Number(args[++i]);
-    else throw new Error('用法：--port 4343 [--prepare-only]；固定 11 案，无重试选项');
+    else throw new Error('用法：--port 4343 [--prepare-only] [--recovery]；默认固定 11 案，恢复复测固定 3 案，无重试选项');
   }
-  return {port,prepareOnly};
+  return {port,prepareOnly,recovery};
 }
 async function runCase(spec:ReturnType<typeof workflowCases>[number],options:ReturnType<typeof workflowOptions>,collection:string) {
   const id=`${spec.kind}-${spec.run}-${spec.skill?'skill':'no-skill'}`,evidence=join(collection,id);
@@ -73,21 +83,21 @@ async function runCase(spec:ReturnType<typeof workflowCases>[number],options:Ret
     const initial=await setRoad(m,false);
     const workspace=await mapTrialRequest<{id:string}>(m,`/api/tasks/${m.tasks.supply}/workspace`,'planning','POST',{});
     const session=await mapTrialRequest<{id:string}>(m,'/api/sessions','planning','POST',{workspaceId:workspace.id});
-    const layerName=['通道核对记录','资源核实','现场讨论'][spec.run-1];
+    const main=mainScenario(spec.run,options.recovery),{layerName}=main;
     const scenario=spec.kind==='main'?null:layerScenario(spec.kind);
     let preparation:unknown=null;
-    if(spec.kind!=='main'||spec.run!==3)preparation=await mapTrialRequest(m,`/api/sessions/${session.id}/annotation/actions`,'planning','POST',{
+    if(spec.kind!=='main'||!main.emptyDraft)preparation=await mapTrialRequest(m,`/api/sessions/${session.id}/annotation/actions`,'planning','POST',{
       clientActionId:randomUUID(),action:'create_draft',baseRef:null,title:'合成标绘诊断',operations:(scenario?.layers??[{layerId:`target-${spec.run}`,name:layerName,order:0,defaultVisible:true,features:[]}]).map(layer=>({op:'add_layer',layer})),
     });
     const before=await mapState(m,session.id);
     const skill=await lab.resources.readSkill(workspace.id,'map-annotations','seat-planning');
     await save(join(evidence,'baseline.json'),{spec,sessionId:session.id,trialId:m.trialId,taskId:task.id,dataDir:m.dataDir,initial,preparation,before,model:config.model,provider:config.provider,
-      skillHash:skill.hash,skillAvailable:spec.skill,scriptHash:hash(await readFile(fileURLToPath(import.meta.url))),prepareOnly:options.prepareOnly,
-      notes:['Synthetic fresh formal accounts/task/session; no notifications or work handoff.','Skill-off only filters request resource snapshot; tool definitions and model settings remain the same.','Each pending question is recorded and cancelled; no automatic answers, correction prompts, or repeated cases.','Main 3 begins without a draft; main 1/2 and layer pairs have explicitly prepared empty layers.']});
+      skillHash:skill.hash,skillAvailable:spec.skill,scriptHash:hash(await readFile(fileURLToPath(import.meta.url))),prepareOnly:options.prepareOnly,recovery:options.recovery,
+      notes:['Synthetic fresh formal accounts/task/session; no notifications or work handoff.','Skill-off only filters request resource snapshot; tool definitions and model settings remain the same.','Each pending question is recorded and cancelled; no automatic answers, correction prompts, or repeated cases.',options.recovery?'All three recovery cases begin without a draft; main-3 keeps its original business prompt, main-1/2 vary task/layer names and business wording.':'Main 3 begins without a draft; main 1/2 and layer pairs have explicitly prepared empty layers.']});
     console.info(JSON.stringify({id,evidence,status:'prepared'}));
     if(options.prepareOnly){result.status='prepared';return result;}
     label='S01';
-    const prompt=scenario?.prompt??`请查询本任务西区现有的区域、道路和车辆对象，将三个来源对象一起放到本会话地图的“${layerName}”图层中${spec.run===3?'，当前还没有草稿，请创建空白草稿和这个图层':''}。区域采用来源已有边界，不另行估算。说明实际依据的版本和时间，暂不发布。`;
+    const prompt=scenario?.prompt??main.prompt;
     const first=await ask(m,evidence,label,session.id,prompt);
     const readSkill=(record:typeof first)=>record.toolResults.some(t=>t.toolName==='skill.read'&&!t.isError&&t.text.includes('map-annotations'));
     if(scenario) {
@@ -131,9 +141,10 @@ async function runCase(spec:ReturnType<typeof workflowCases>[number],options:Ret
   return result;
 }
 async function main() {
-  const options=workflowOptions(process.argv.slice(2)),collection=join(packageRoot,'../../.local/agent-map-workflow',new Date().toISOString().replaceAll(':','-'));
-  await mkdir(collection,{recursive:true,mode:0o700});await save(join(collection,'plan.json'),{options,cases:workflowCases()});console.info(JSON.stringify({collection,options}));
-  const results=[];for(const spec of workflowCases())results.push(await runCase(spec,options,collection));
+  const options=workflowOptions(process.argv.slice(2)),collection=join(packageRoot,options.recovery?'../../.local/agent-map-recovery':'../../.local/agent-map-workflow',new Date().toISOString().replaceAll(':','-'));
+  const cases=workflowCases(options.recovery);
+  await mkdir(collection,{recursive:true,mode:0o700});await save(join(collection,'plan.json'),{options,cases});console.info(JSON.stringify({collection,options}));
+  const results=[];for(const spec of cases)results.push(await runCase(spec,options,collection));
   await save(join(collection,'runs.json'),results);if(results.some(r=>r.status==='incomplete'))process.exitCode=1;
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(String(e));process.exitCode=1;});

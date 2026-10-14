@@ -1,87 +1,99 @@
-import type { AnnotationBinding, AnnotationReceipt, AnnotationRef } from '../contracts/annotations.js';
+import type { AnnotationBinding, AnnotationReceipt } from '../contracts/annotations.js';
 import type { ContextQueryResult, ContextRef, SituationCurrent } from '../contracts/context.js';
 import { RequestError } from '../contracts/errors.js';
+import { AnnotationError, type AnnotationResourceIssue } from '../annotations/errors.js';
 
 type DraftBasis = {setId: string; revision: number; hash: string};
-type EmptyBasis = {bindingRevision: number; baseRef: AnnotationRef | null};
+type Observation = {draft?: DraftBasis | null; sources?: Map<string, number>; current?: number; receipt?: AnnotationReceipt};
 const sourceKey = (ref: ContextRef) => JSON.stringify([ref.systemId, ref.objectType, ref.objectId]);
-export const isAnnotationWrite = (name: string) => name === 'annotation_action' || name === 'annotation_from_source';
+export const isMapTool = (name: string) => name.startsWith('annotation_') || name === 'situation_query';
 
-/** One host request only. Never restores authority from transcript text or latest head. */
+/** One authenticated host request. Observations are not authority or a persistent transcript. */
 export class AnnotationRequestState {
-  private draft?: DraftBasis | EmptyBasis;
-  private pendingDraft?: DraftBasis | EmptyBasis;
+  private draft?: DraftBasis;
   private sources = new Map<string, number>();
-  private pendingSources = new Map<string, number>();
   private current?: number;
-  private pendingCurrent?: number;
-  private blocked = false;
+  private pending = new Map<string, Observation>();
+  private paused = false;
+  private uncertain = new Set<string>();
+  private completedWrites = new Map<string, string>();
 
-  /** Called only before a normal model inference, after completed results enter its context. */
+  /** Only normal inference may consume completed, unaltered tool results. */
   beginInference() {
-    if (this.pendingDraft) { this.draft = this.pendingDraft; this.blocked = false; }
-    if (this.pendingCurrent !== undefined) { this.current = this.pendingCurrent; this.blocked = false; }
-    for (const [key, revision] of this.pendingSources) this.sources.set(key, revision);
-    this.pendingDraft = undefined; this.pendingCurrent = undefined; this.pendingSources.clear();
+    for (const observation of this.pending.values()) {
+      if ('draft' in observation) this.draft = observation.draft ?? undefined;
+      if (observation.current !== undefined) this.current = observation.current;
+      for (const [key, revision] of observation.sources ?? []) this.sources.set(key, revision);
+      if (observation.receipt && this.uncertain.delete(observation.receipt.clientActionId)) {
+        // Receipt confirms the original effect, not the current editable head. Require a fresh read.
+        if (observation.receipt.action === 'set_current') this.current = undefined;
+        else this.draft = undefined;
+      }
+    }
+    this.pending.clear(); this.completedWrites.clear(); this.paused = false;
   }
+  /** Context/lifecycle reset only. Unknown effects survive compaction until reconciled. */
   invalidate() {
-    this.draft = undefined; this.pendingDraft = undefined;
-    this.current = undefined; this.pendingCurrent = undefined;
-    this.sources.clear(); this.pendingSources.clear(); this.blocked = true;
+    this.draft = undefined; this.current = undefined; this.sources.clear(); this.pending.clear(); this.paused = true;
   }
-  observeDraft(binding: AnnotationBinding) {
-    this.pendingDraft = binding.draft ? {setId: binding.draft.setId, revision: binding.draft.headRevision, hash: binding.draft.hash}
-      : {bindingRevision: binding.bindingRevision, baseRef: structuredClone(binding.baseRef)};
+  pause() { this.paused = true; }
+  rejectResult(callId: string) {
+    this.pending.delete(callId); this.pause();
+    const actionId = this.completedWrites.get(callId);
+    if (actionId) this.markUncertain(actionId);
   }
-  observeCurrent(sequence: number) { this.pendingCurrent = sequence; }
-  observeSources(result: ContextQueryResult) {
-    // Report references and change history are not current object reads.
+  markUncertain(actionId: string) { this.uncertain.add(actionId); this.pause(); }
+  noteWrite(callId: string, actionId: string) { this.completedWrites.set(callId, actionId); }
+  observeDraft(binding: AnnotationBinding, callId = 'draft') {
+    this.pending.set(callId, {draft: binding.draft ? {setId: binding.draft.setId, revision: binding.draft.headRevision, hash: binding.draft.hash} : null});
+  }
+  observeCurrent(sequence: number, callId = 'current') { this.pending.set(callId, {current: sequence}); }
+  observeReceipt(receipt: AnnotationReceipt, callId: string) { this.pending.set(callId, {receipt}); }
+  observeSources(result: ContextQueryResult, callId = 'sources') {
     if (!('mode' in result.query) || result.query.mode !== 'current' || !('items' in result.data)) return;
     const items = (result.data as SituationCurrent).items;
-    const keys = new Set([...this.sources.keys(), ...this.pendingSources.keys(), ...items.map(item => sourceKey(item.ref))]);
+    const keys = new Set([...this.sources.keys(), ...[...this.pending.values()].flatMap(item => [...item.sources?.keys() ?? []]), ...items.map(item => sourceKey(item.ref))]);
     if (keys.size > 500) throw new RequestError('ANNOTATION_SOURCE_LIMIT', '本轮来源依据超过 500 个对象，请缩小查询范围并开始新请求。', 413);
-    for (const item of items) this.pendingSources.set(sourceKey(item.ref), item.revision);
+    this.pending.set(callId, {sources: new Map(items.map(item => [sourceKey(item.ref), item.revision]))});
   }
   assertWritable() {
-    if (this.blocked) throw new RequestError('ANNOTATION_READ_REQUIRED', '编辑依据已失效；请重新读取本会话草稿或任务当前设定，收到结果后再操作。', 409);
+    if (this.uncertain.size) throw new AnnotationError('ANNOTATION_RESULT_UNCERTAIN', '原操作结果尚未核对。请先 annotation_read mode:receipt 查询以下动作；未找到回执不能视为未执行。确认后重新读取相关草稿或当前设定。', {outcome: 'unknown', clientActionIds: [...this.uncertain]});
+    if (this.paused) throw new AnnotationError('ANNOTATION_BATCH_PAUSED', '本次模型输出的后续地图写入已暂停；请先处理前一个错误，再决定后续操作。已成功保存的操作不会撤销，已有读取记录保留。', {outcome: 'not_committed'});
   }
-  draftBasis(): DraftBasis {
+  /** Aggregate only already-known gaps; do not query extra sources to manufacture error detail. */
+  requireDraftAndSources(refs: ContextRef[] = []) {
     this.assertWritable();
-    if (!this.draft || !('setId' in this.draft)) throw new RequestError('ANNOTATION_READ_REQUIRED', '请先 annotation_read mode:draft 读取本会话草稿，收到结果后再修改。', 409);
-    return {...this.draft};
+    const resources: AnnotationResourceIssue[] = this.draft ? [] : [{kind: 'draft', state: 'missing'}];
+    refs.forEach((ref, itemIndex) => { if (!this.sources.has(sourceKey(ref))) resources.push({kind: 'source', state: 'missing', ref, itemIndex}); });
+    if (resources.length) throw new AnnotationError(this.draft ? 'SOURCE_READ_REQUIRED' : 'ANNOTATION_READ_REQUIRED', '缺少已读依据；请按 resources 补读本会话 draft 或 situation_query current 来源，收到结果后再保存。其他已读记录保留。', {outcome: 'not_committed', resources});
   }
-  emptyBasis(): EmptyBasis {
-    this.assertWritable();
-    if (!this.draft || 'setId' in this.draft) throw new RequestError('ANNOTATION_READ_REQUIRED', '请先 annotation_read mode:draft 确认本会话尚无草稿，收到结果后再创建。', 409);
-    return structuredClone(this.draft);
-  }
+  draftBasis(): DraftBasis { this.requireDraftAndSources(); return {...this.draft!}; }
   currentSequence() {
     this.assertWritable();
-    if (this.current === undefined) throw new RequestError('ANNOTATION_CURRENT_READ_REQUIRED', '请先 annotation_list 读取任务当前设定，收到结果后再采用。', 409);
+    if (this.current === undefined) throw new AnnotationError('ANNOTATION_CURRENT_READ_REQUIRED', '请先 annotation_list 读取任务当前设定，收到结果后再采用。', {outcome: 'not_committed', resources: [{kind: 'current', state: 'missing'}]});
     return this.current;
   }
   sourceRevision(ref: ContextRef) {
     const revision = this.sources.get(sourceKey(ref));
-    if (revision === undefined) throw new RequestError('SOURCE_READ_REQUIRED', '请先 situation_query mode:current 查询目标来源对象，收到结果后再保存。', 409);
+    if (revision === undefined) throw new AnnotationError('SOURCE_READ_REQUIRED', '请先 situation_query mode:current 查询目标来源对象，收到结果后再保存。', {outcome: 'not_committed', resources: [{kind: 'source', state: 'missing', ref}]});
     return revision;
   }
   committed(receipt: AnnotationReceipt, replayed: boolean) {
     if (replayed) return;
     if (receipt.action === 'set_current' && receipt.current) {
-      this.current = receipt.current.sequence; this.pendingCurrent = undefined;
+      this.current = receipt.current.sequence;
+      for (const observation of this.pending.values()) delete observation.current;
     }
-    if (receipt.action !== 'create_draft' && receipt.action !== 'apply' && receipt.action !== 'from_source') return;
-    const after = receipt.afterRef;
-    const before = receipt.beforeRef;
-    const valid = receipt.action === 'create_draft'
-      ? this.draft && !('setId' in this.draft) && before === null
-      : this.draft && 'setId' in this.draft && before && 'setId' in before
-        && before.setId === this.draft.setId && before.revision === this.draft.revision;
+    if (!['create_draft', 'apply', 'from_source'].includes(receipt.action)) return;
+    const after = receipt.afterRef, before = receipt.beforeRef;
+    const valid = receipt.action === 'create_draft' ? before === null
+      : this.draft && before && 'setId' in before && before.setId === this.draft.setId && before.revision === this.draft.revision;
     if (!valid || !after || !('setId' in after) || !receipt.hash) {
-      this.invalidate(); throw new RequestError('ANNOTATION_RESULT_UNCERTAIN', '保存结果与本轮编辑依据不一致，请查询原操作回执并重新读取。', 409);
+      this.markUncertain(receipt.clientActionId);
+      throw new AnnotationError('ANNOTATION_RESULT_UNCERTAIN', '保存结果与本轮编辑依据不一致，请查询原操作回执并重新读取。', {outcome: 'unknown', clientActionIds: [receipt.clientActionId]});
     }
     this.draft = {...after, hash: receipt.hash};
-    // A read from earlier in this same tool batch must never rewind our own committed head.
-    this.pendingDraft = undefined;
+    // A prior read in the same batch must not rewind the confirmed commit chain.
+    for (const observation of this.pending.values()) delete observation.draft;
   }
 }

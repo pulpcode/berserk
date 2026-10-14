@@ -9,15 +9,21 @@ import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationTools } from '../../src/pi/annotation-tools.js';
 import { fakeRuntime, testConfig } from './fake-runtime.js';
 
-const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content'}));
+const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content' | 'before' | 'mutate'}));
 // Inject only a public SDK hook before the host chains it; the native loop and tools remain real.
 vi.mock('@earendil-works/pi-coding-agent', async importOriginal => {
   const sdk = await importOriginal<typeof import('@earendil-works/pi-coding-agent')>();
   return {...sdk, createAgentSession: async (...args: Parameters<typeof sdk.createAgentSession>) => {
     const result = await sdk.createAgentSession(...args), original = result.session.agent.afterToolCall;
+    const before = result.session.agent.beforeToolCall;
+    result.session.agent.beforeToolCall = async (context, signal) => {
+      if (context.toolCall.name === fault.tool && fault.mode === 'before') return {block: true, reason: 'synthetic before rejection'};
+      return before?.(context, signal);
+    };
     result.session.agent.afterToolCall = async context => {
       const prior = await original?.(context);
-      if (context.toolCall.name !== fault.tool) return prior;
+      if (context.toolCall.name !== fault.tool || fault.mode === 'before') return prior;
+      if (fault.mode === 'mutate') { context.result.content = [{type:'text',text:'mutated in place'}]; return prior; }
       if (fault.mode === 'throw') throw new Error('synthetic original hook failure');
       if (fault.mode === 'content') return {...prior, content: [{type: 'text', text: 'overridden tool result'}]};
       return {...prior, isError: true};
@@ -83,4 +89,37 @@ it('clears direct adapter bases if cancellation arrives after commit but before 
   await expect(action.execute('cancelled', write.arguments as never, undefined, undefined, {} as never)).rejects.toThrow();
   expect(() => state.draftBasis()).toThrow('重新读取');
   expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(2);
+});
+
+
+it.each(['error','content','before','mutate'] as const)('preserves earlier confirmed reads when a later query has a %s hook failure', async mode => {
+  const {lab,session,actor}=await setup((_context,index)=>{
+    if(index===1) { fault.tool='situation_query';fault.mode=mode; }
+    if(index===2) fault.tool='';
+    return [
+      {tools:[read,query]}, {tools:[query,write]}, {tools:[{name:'annotation_from_source',arguments:{items:[{mode:'add',sourceRef,layerId:'target',objectId:'saved'}]}}]}, {text:'结束'},
+    ][index]!;
+  });
+  await lab.start(session.id,'标注',{},'alpha').run(()=>{});
+  const messages=lab.get(session.id,'alpha').messages;
+  expect(messages.find(message=>message.toolName==='annotation_action')).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_BATCH_PAUSED')});
+  expect(messages.find(message=>message.toolName==='annotation_from_source')).toMatchObject({isError:false});
+  expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(2);
+});
+
+it.each(['error','content','mutate'] as const)('requires receipt reconciliation when a committed write result is %s', async mode => {
+  let requestId='';
+  const {lab,session,actor}=await setup((_context,index)=>{
+    if(index===1){fault.tool='annotation_action';fault.mode=mode;}
+    if(index===2)fault.tool='';
+    return [{tools:[read]}, {tools:[write,write]}, {tools:[read]}, {tools:[write]},
+      {tools:[{name:'annotation_read',arguments:{mode:'receipt',requestId,toolCallId:'call-2-0'}}]},
+      {tools:[read]}, {tools:[write]}, {text:'结束'},
+    ][index]!;
+  });
+  const request=lab.start(session.id,'编辑',{},'alpha');requestId=request.requestId;await request.run(()=>{});
+  const writes=lab.get(session.id,'alpha').messages.filter(message=>message.toolName==='annotation_action');
+  expect(writes[1]).toMatchObject({isError:true});expect(writes[2]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_RESULT_UNCERTAIN')});
+  expect(writes[3]).toMatchObject({isError:false});
+  expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(3);
 });

@@ -5,6 +5,7 @@ import type { ContextService } from '../context/service.js';
 import type { Identity } from '../contracts/access.js';
 import type { AnnotationAction, AnnotationBaseInput, AnnotationBinding, AnnotationChange, AnnotationComparison, AnnotationContext, AnnotationCurrent, AnnotationCurrentInput, AnnotationDocument, AnnotationDraft, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationHostResult, AnnotationEditBasis, AnnotationFromSourceResult, AnnotationListing, AnnotationOperation, AnnotationPage, AnnotationPublication, AnnotationReadInput, AnnotationReadResult, AnnotationReceipt, AnnotationRef, AnnotationSelection, AnnotationVersion, LoadedAnnotationSelection } from '../contracts/annotations.js';
 import { RequestError } from '../contracts/errors.js';
+import { AnnotationError } from './errors.js';
 import type { ContextRef } from '../contracts/context.js';
 import { stateError } from '../resources/files.js';
 import type { WorkspaceStore } from '../workspaces/store.js';
@@ -23,6 +24,7 @@ interface ActionOptions {
 }
 const missing = () => new RequestError('ANNOTATION_NOT_FOUND','标注不存在或无权访问。',404);
 const conflict = (message: string) => new RequestError('ANNOTATION_CONFLICT',message,409);
+const stale = (kind: 'draft' | 'binding' | 'current', message: string) => new AnnotationError('ANNOTATION_CONFLICT',message,{outcome:'not_committed',resources:[{kind,state:'stale'}]});
 const hash = (value: unknown) => createHash('sha256').update(validate.canonical(value)).digest('hex');
 const parse = <T>(row: Record<string, unknown> | undefined): T | undefined => { if(!row) return undefined; try {return JSON.parse(String(row.data)) as T;} catch {throw stateError();} };
 const pagination = <T>(items: T[],offset=0,limit=50): AnnotationPage<T> => {const valid=validate.page(offset,limit); return {items:items.slice(valid.offset,valid.offset+valid.limit),...valid,total:items.length,hasMore:items.length>valid.offset+valid.limit};};
@@ -237,17 +239,17 @@ export class AnnotationService {
     const saved=parse<AnnotationReceipt>(this.db.prepare('SELECT data FROM annotation_actions WHERE user_id=? AND action_id=?').get(actor.userId,clientActionId));
     if(saved) this.assertReceiptAccess(actor,saved); return saved ?? null;
   }
-  private mutation(actor: AnnotationActor,taskId: string,sessionId: string | undefined,input: {clientActionId:string},work: ()=>AnnotationReceipt,signal?: AbortSignal): AnnotationReceipt {
+  private mutation(actor: AnnotationActor,taskId: string,sessionId: string | undefined,input: {clientActionId:string},work: ()=>AnnotationReceipt,signal?: AbortSignal,onCommitted?: ()=>void): AnnotationReceipt {
     this.task(actor,taskId); signal?.throwIfAborted();
     const digest=hash({taskId,sessionId,input});
     const previous=this.db.prepare('SELECT digest,data FROM annotation_actions WHERE user_id=? AND action_id=?').get(actor.userId,input.clientActionId);
     if(previous) {const result=parse<AnnotationReceipt>(previous)!;this.assertReceiptAccess(actor,result);if(previous.digest!==digest) throw conflict('同一动作标识已用于不同内容。');return result;}
     const release=this.access?.acquire(taskId,actor.seatId);
-    try {return this.store.transaction(()=>{
+    try {const result=this.store.transaction(()=>{
       this.task(actor,taskId,true); if(sessionId) this.session(actor,sessionId,true); signal?.throwIfAborted();
       const result=work(); signal?.throwIfAborted();
       this.db.prepare('INSERT INTO annotation_actions VALUES(?,?,?,?,?,?)').run(actor.userId,input.clientActionId,taskId,sessionId ?? null,digest,JSON.stringify(result)); return result;
-    });} finally {release?.();}
+    });onCommitted?.();return result;} finally {release?.();}
   }
   setBase(actor: AnnotationActor,sessionId: string,input: AnnotationBaseInput,signal?: AbortSignal): AnnotationReceipt {
     const normalized=validate.base(input),workspace=this.session(actor,sessionId);
@@ -297,15 +299,19 @@ export class AnnotationService {
     return {receipt,replayed:true};
   }
   /** Host-only CAS adapter; public HTTP action() never accepts basis or intent overrides. */
-  actionFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationAction,basis?: AnnotationEditBasis,signal?: AbortSignal): AnnotationHostResult {
+  actionFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationAction,basis?: AnnotationEditBasis,signal?: AbortSignal,onCommitted?: ()=>void): AnnotationHostResult {
     const normalized=validate.action(input);
     const {expectedRevision: _revision,...rawIntent}=normalized.action==='apply' ? normalized : {...normalized,expectedRevision:undefined};
     void _revision;
     const intent=validate.hostIntent(rawIntent),prior=this.hostReplay(actor,sessionId,intent);
     signal?.throwIfAborted(); if(prior) return prior;
+    if(normalized.action==='create_draft') {
+      const binding=this.binding(actor,sessionId);
+      basis={bindingRevision:binding.bindingRevision,baseRef:binding.baseRef};
+    }
     this.assertBasis(actor,sessionId,normalized,basis);
     let committed=false;
-    const receipt=this.applyAction(actor,sessionId,normalized,signal,{basis,receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;}});
+    const receipt=this.applyAction(actor,sessionId,normalized,signal,{basis,receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;onCommitted?.();}});
     return {receipt,replayed:!committed};
   }
   private assertBasis(actor: AnnotationActor,sessionId: string,input: AnnotationAction,basis?: AnnotationEditBasis) {
@@ -313,10 +319,10 @@ export class AnnotationService {
     const binding=this.binding(actor,sessionId);
     if(input.action==='create_draft') {
       if(!basis || !('bindingRevision' in basis)) throw new RequestError('ANNOTATION_READ_REQUIRED','请先读取本会话草稿状态。');
-      if(binding.draft || binding.bindingRevision!==basis.bindingRevision || validate.canonical(binding.baseRef)!==validate.canonical(basis.baseRef)) throw conflict('会话草稿或基线已变化，请重新读取。');
+      if(binding.draft || binding.bindingRevision!==basis.bindingRevision || validate.canonical(binding.baseRef)!==validate.canonical(basis.baseRef)) throw stale('binding','会话草稿或基线已变化，请重新读取。');
     } else {
       if(!basis || !('setId' in basis)) throw new RequestError('ANNOTATION_READ_REQUIRED','请先读取本会话草稿。');
-      if(binding.draft?.setId!==basis.setId || basis.revision!==input.expectedRevision || binding.draft.headRevision!==basis.revision) throw conflict('草稿已有新修订，请查看后重新编辑。');
+      if(binding.draft?.setId!==basis.setId || basis.revision!==input.expectedRevision || binding.draft.headRevision!==basis.revision) throw stale('draft','草稿已有新修订，请查看后重新编辑。');
     }
   }
   /** Legacy explicit-CAS API retained for existing service callers. */
@@ -325,14 +331,14 @@ export class AnnotationService {
     const {clientActionId,expectedRevision,...item}=normalized;
     return this.copySources(actor,sessionId,{clientActionId,expectedRevision,items:[item]},signal,check,{receiptInput:normalized},true);
   }
-  async fromSourcesFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationFromSourcesInput,basis: AnnotationEditBasis,signal?: AbortSignal,check?: ()=>void): Promise<AnnotationHostResult> {
+  async fromSourcesFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationFromSourcesInput,basis: AnnotationEditBasis,signal?: AbortSignal,check?: ()=>void,onCommitted?: ()=>void): Promise<AnnotationHostResult> {
     const normalized=validate.fromSources(input);
     const intent=validate.hostIntent({action:'from_source',clientActionId:normalized.clientActionId,items:normalized.items.map(({expectedSourceRevision,...item})=>{void expectedSourceRevision;return item;})});
     signal?.throwIfAborted(); check?.();
     const prior=this.hostReplay(actor,sessionId,intent); if(prior) return prior;
     this.assertBasis(actor,sessionId,{action:'apply',clientActionId:normalized.clientActionId,expectedRevision:normalized.expectedRevision,operations:[]},basis);
     let committed=false;
-    const receipt=await this.copySources(actor,sessionId,normalized,signal,check,{basis,receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;}});
+    const receipt=await this.copySources(actor,sessionId,normalized,signal,check,{basis,receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;onCommitted?.();}});
     return {receipt,replayed:!committed};
   }
   private async copySources(actor: AnnotationActor,sessionId: string,normalized: AnnotationFromSourcesInput,signal?: AbortSignal,check?: ()=>void,options: ActionOptions={},legacy=false): Promise<AnnotationReceipt> {
@@ -344,7 +350,7 @@ export class AnnotationService {
     this.allowedSystems(actor,normalized.items.map(item=>item.sourceRef.systemId));
     const set=this.setForSession(sessionId);
     if(!set) throw missing();
-    if(set.headRevision!==normalized.expectedRevision) throw conflict('草稿已有新修订，请查看后重新编辑。');
+    if(set.headRevision!==normalized.expectedRevision) throw stale('draft','草稿已有新修订，请查看后重新编辑。');
     const saved=this.accessible(actor,taskId,{setId:set.setId,revision:set.headRevision});
     // Validate every target before any network request; the saved document is immutable.
     const targets=normalized.items.map((item,itemIndex)=>{
@@ -372,7 +378,7 @@ export class AnnotationService {
         if(matches.length===0) throw new RequestError('ANNOTATION_SOURCE_NOT_FOUND','未查询到指定来源对象；未生成标注。',404);
         if(matches.length!==1 || result.data.hasMore) throw new RequestError('CONTEXT_INVALID_RESPONSE','来源对象查询不唯一或未完整返回；未生成标注。',502);
         const source=matches[0];
-        if(source.revision!==item.expectedSourceRevision) throw conflict('来源对象修订已变化，请重新查询并评估后再操作。');
+        if(source.revision!==item.expectedSourceRevision) throw new AnnotationError('ANNOTATION_CONFLICT','来源对象修订已变化，请重新查询并评估后再操作。',{outcome:'not_committed',resources:[{kind:'source',state:'stale',ref:item.sourceRef,itemIndex}]});
         if(!source.geometry) throw new RequestError('ANNOTATION_SOURCE_GEOMETRY_MISSING','来源对象没有几何；未估算或生成标注。');
         const sourceRef={...source.ref,revision:source.revision,queriedAt:result.queriedAt};
         const kind=source.geometry.type==='Point' ? 'point' : source.geometry.type==='LineString' ? 'line' : 'polygon';
@@ -389,7 +395,7 @@ export class AnnotationService {
   private sourceItemError(error: unknown,itemIndex: number,legacy: boolean) {
     if(legacy || !(error instanceof RequestError)) return error;
     // Index refers to caller input only; preserve safe authorization errors without source content.
-    return Object.assign(new RequestError(error.code,`来源项 ${itemIndex+1}：${error.message}`,error.statusCode),{itemIndex});
+    return Object.assign(new AnnotationError(error.code,`来源项 ${itemIndex+1}：${error.message}`,{...(error instanceof AnnotationError ? error.recovery : {outcome:'not_committed' as const}),itemIndex},error.statusCode),{itemIndex});
   }
   private applyAction(actor: AnnotationActor,sessionId: string,normalized: AnnotationAction,signal?: AbortSignal,options: ActionOptions={}): AnnotationReceipt {
     const workspace=this.session(actor,sessionId),taskId=workspace.taskSpaceId,receiptInput=options.receiptInput ?? normalized;
@@ -402,7 +408,7 @@ export class AnnotationService {
     let baseRef=binding?.baseRef ?? null;
     if(normalized.action==='create_draft') {
       if(set) throw conflict('本会话已有草稿，请基于它的明确修订编辑。');
-      if(normalized.baseRef!==undefined) {if(binding && validate.canonical(normalized.baseRef)!==validate.canonical(binding.baseRef)) throw conflict('创建基线与会话绑定不一致，请先显式更换基线。');baseRef=normalized.baseRef;}
+      if(normalized.baseRef!==undefined) {if(binding && validate.canonical(normalized.baseRef)!==validate.canonical(binding.baseRef)) throw stale('binding','创建基线与会话绑定不一致，请先显式更换基线。');baseRef=normalized.baseRef;}
       else if(!binding) throw validate.invalid('首次创建须明确选择空白 baseRef:null 或固定版本。');
       const source=baseRef ? this.accessible(actor,taskId,baseRef) : undefined;
       const initial=source ? structuredClone(source.document) : {schemaVersion:1 as const,title:normalized.title ?? '会话标注',layers:[]};
@@ -411,7 +417,7 @@ export class AnnotationService {
     } else {
       if(!set) throw missing();
       const saved=this.accessible(actor,taskId,{setId:set.setId,revision:normalized.action==='publish' ? normalized.revision : set.headRevision});
-      if(normalized.action==='apply') {if(set.headRevision!==normalized.expectedRevision) throw conflict('草稿已有新修订，请查看后重新编辑。');prepared=this.prepareChanges(actor,taskId,saved.document,normalized.operations,saved.requiredSystemIds);}
+      if(normalized.action==='apply') {if(set.headRevision!==normalized.expectedRevision) throw stale('draft','草稿已有新修订，请查看后重新编辑。');prepared=this.prepareChanges(actor,taskId,saved.document,normalized.operations,saved.requiredSystemIds);}
     }
     return this.mutation(actor,taskId,sessionId,receiptInput,()=>{
       if(options.basis) this.assertBasis(actor,sessionId,normalized,options.basis);
@@ -422,12 +428,11 @@ export class AnnotationService {
         const prior=parse<StoredPublication>(this.db.prepare("SELECT data FROM annotation_publications WHERE set_id=? AND revision=? AND json_extract(data,'$.title')=? AND json_extract(data,'$.note')=? ORDER BY rowid LIMIT 1").get(latest.setId,normalized.revision,normalized.title,normalized.note ?? ''));
         const published: StoredPublication=prior ?? {publicationId:randomUUID(),taskId,setId:latest.setId,revision:normalized.revision,title:normalized.title,note:normalized.note ?? '',hash:hash(this.publicDocument(saved.document)),publishedByUserId:actor.userId,publishedAt:time};
         if(!prior) this.db.prepare('INSERT INTO annotation_publications VALUES(?,?,?,?,?)').run(published.publicationId,taskId,latest.setId,normalized.revision,JSON.stringify(published));
-        options.committed?.();
         return {clientActionId:normalized.clientActionId,action:'publish',taskId,sessionId,committedAt:time,ref:{publicationId:published.publicationId},hash:published.hash,publication:this.publicationDTO(published)};
       }
       if(normalized.action==='create_draft' && latest) throw conflict('本会话已创建草稿。');
-      if(normalized.action==='apply' && (!latest || latest.headRevision!==normalized.expectedRevision)) throw conflict('草稿已有新修订，请查看后重新编辑。');
-      if(validate.canonical(this.rawBinding(sessionId))!==validate.canonical(binding)) throw conflict('基线已变化。');
+      if(normalized.action==='apply' && (!latest || latest.headRevision!==normalized.expectedRevision)) throw stale('draft','草稿已有新修订，请查看后重新编辑。');
+      if(validate.canonical(this.rawBinding(sessionId))!==validate.canonical(binding)) throw stale('binding','基线已变化。');
       this.allowedSystems(actor,prepared!.requiredSystemIds);
       if(baseRef) this.accessible(actor,taskId,baseRef);
       const next: StoredSet=latest ? {...latest,headRevision:latest.headRevision+1,updatedAt:time,title:prepared!.document.title,hash:hash(prepared!.document)} : {setId:randomUUID(),ownerSessionId:sessionId,ownerSeatId:actor.seatId,taskId,workspaceId:workspace.id,headRevision:1,title:prepared!.document.title,hash:hash(prepared!.document),baseRef,createdAt:time,updatedAt:time,createdByUserId:actor.userId};
@@ -437,17 +442,16 @@ export class AnnotationService {
       if(!binding) this.putBinding({sessionId,taskId,workspaceId:workspace.id,ownerSeatId:actor.seatId,baseRef,bindingRevision:1});
       const existingIds=new Set(prepared!.document.layers.flatMap(layer=>layer.features.map(feature=>feature.objectId)));
       const objectIds=[...new Set((normalized.operations ?? []).flatMap(operation=>operation.op==='add_object' ? [operation.feature.objectId] : operation.op==='copy_object' ? [operation.newObjectId] : operation.op==='update_object' ? [operation.objectId] : operation.op==='add_layer' ? operation.layer.features.map(feature=>feature.objectId) : []).filter(id=>existingIds.has(id)))];
-      options.committed?.();
       return {clientActionId:normalized.clientActionId,action:options.fromSource || options.fromSources ? 'from_source' : normalized.action,taskId,sessionId,committedAt:time,ref:{setId:next.setId,revision:next.headRevision},hash:next.hash,binding:this.binding(actor,sessionId),
         beforeRef:latest ? {setId:latest.setId,revision:latest.headRevision} : null,afterRef:{setId:next.setId,revision:next.headRevision},objectIds,
         ...(options.fromSource ? {fromSource:options.fromSource} : {}),...(options.fromSources ? {fromSources:options.fromSources} : {})};
-    },signal);
+    },signal,options.committed);
   }
-  setCurrentFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationCurrentInput,signal?: AbortSignal): AnnotationHostResult {
+  setCurrentFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationCurrentInput,signal?: AbortSignal,onCommitted?: ()=>void): AnnotationHostResult {
     const normalized=validate.current(input),intent=validate.hostIntent({action:'set_current',clientActionId:normalized.clientActionId,publicationId:normalized.publicationId});
     signal?.throwIfAborted(); const prior=this.hostReplay(actor,sessionId,intent); if(prior) return prior;
     const workspace=this.session(actor,sessionId);let committed=false;
-    const receipt=this.applyCurrent(actor,workspace.taskSpaceId,normalized,signal,{receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;}},sessionId);
+    const receipt=this.applyCurrent(actor,workspace.taskSpaceId,normalized,signal,{receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;onCommitted?.();}},sessionId);
     return {receipt,replayed:!committed};
   }
   setCurrent(actor: AnnotationActor,taskId: string,input: AnnotationCurrentInput,signal?: AbortSignal): AnnotationReceipt {
@@ -459,11 +463,10 @@ export class AnnotationService {
     return this.mutation(actor,taskId,sessionId,options.receiptInput ?? normalized,()=>{
       if(!this.canSetCurrent(actor,taskId)) throw new RequestError('FORBIDDEN','当前席位无权设定任务当前标注。',403);
       const publication=this.publicationDTO(this.publication(actor,normalized.publicationId,taskId).published),current=this.current(actor,taskId),time=new Date().toISOString();
-      if(current.sequence!==normalized.expectedCurrentSequence) throw conflict('任务当前标注已更新，请比较后重新选择。');
+      if(current.sequence!==normalized.expectedCurrentSequence) throw stale('current','任务当前标注已更新，请比较后重新选择。');
       const next=current.publication?.publicationId===normalized.publicationId ? current : {taskId,sequence:current.sequence+1,publication,selectedAt:time,selectedByUserId:actor.userId};
       if(next!==current) this.db.prepare('INSERT INTO task_annotation_selections VALUES(?,?,?,?)').run(taskId,next.sequence,normalized.publicationId,JSON.stringify(next));
-      options.committed?.();
       return {clientActionId:normalized.clientActionId,action:'set_current',taskId,...(sessionId ? {sessionId} : {}),committedAt:time,ref:{publicationId:normalized.publicationId},hash:publication.hash,current:next};
-    },signal);
+    },signal,options.committed);
   }
 }

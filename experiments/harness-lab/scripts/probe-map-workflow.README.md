@@ -16,3 +16,14 @@ LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx sc
 证据保存在 `.local/agent-map-workflow/<时间>/`：计划、每案基线与 Skill/script hash、实际模型 JSON 正文（无认证头）、来源响应、每步 SSE/会话状态/工具结果/用量、前后草稿、原生历史副本及结果。完整证据仅留本机，不提交认证数据。执行前另存生产代码/夹具 hash，实际工具 schema 可从模型输入去重提取。
 
 准备阶段失败应保留，修复驱动后先 `--prepare-only`；未发送模型的准备错误单独报告，不冒称模型失败，也不隐藏在模型成功率里。真实模型开始后不根据输出临时修改提示或重复用例。
+
+## 读取依据与恢复机制复测
+
+```sh
+LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx scripts/probe-map-workflow.ts --recovery --prepare-only --port 4357
+LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx scripts/probe-map-workflow.ts --recovery --port 4357
+```
+
+`--recovery` 固定执行 3 个主流程，全部从没有草稿开始；main-3 保留原业务提示，另两案沿用相同步骤，改变任务/图层名称和业务措辞。不预建图层，不增加工具顺序、修订号或纠错提示。原默认 11 案保持不变；复测结果保存在独立 `.local/agent-map-recovery/<时间>/`，不可覆盖原批次。
+
+重点检查原 main-3 的草稿/来源交替拒绝是否消失；另行统计模型普通参数错误、读取次数、实际调用和用量，不把保存成功等同首次顺畅。三个案例都执行查询并创建/导入、发布固定版本、来源变化后刷新三个步骤。此批次不重新做四对图层 Skill 诊断，不用其结果推断 Skill 的因果效果或全面业务成功率。

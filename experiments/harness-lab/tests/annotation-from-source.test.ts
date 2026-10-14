@@ -248,13 +248,11 @@ it('reports fresh versus concurrent replay accurately without double committing 
   expect(first.replayed).toBe(false);expect(second).toEqual({receipt:first.receipt,replayed:true});expect(head().revision).toBe(2);
 });
 
-it('guards observed empty bindings and isolates host replay by session and normalized intent',async()=>{
+it('creates from a fixed baseline without empty-read authority and isolates host replay by session and intent',async()=>{
   const {service,actor,session,second,head}=await setup();
-  const empty={bindingRevision:0,baseRef:null};
   const create={action:'create_draft' as const,clientActionId:randomUUID(),baseRef:null,title:'新草稿'};
-  expect(()=>service.actionFromHost(actor,second,create)).toThrow('先读取');
   service.setBase(actor,second,{clientActionId:randomUUID(),expectedBindingRevision:0,baseRef:head()});
-  expect(()=>service.actionFromHost(actor,second,create,empty)).toThrow('基线已变化');
+  expect(()=>service.actionFromHost(actor,second,create)).toThrow('不一致');
   const binding=service.binding(actor,second),basis={bindingRevision:binding.bindingRevision,baseRef:binding.baseRef};
   const actual={...create,baseRef:binding.baseRef};const first=service.actionFromHost(actor,second,actual,basis);
   expect(first.replayed).toBe(false);expect(first.receipt.beforeRef).toBeNull();expect(first.receipt.afterRef?.revision).toBe(1);
@@ -307,4 +305,22 @@ it('rechecks authorization for a host replay and rejects stale empty-state creat
   const create={action:'create_draft' as const,clientActionId:randomUUID(),baseRef:null};
   service.action(actor,second,{...create,clientActionId:randomUUID()});
   expect(()=>service.actionFromHost(actor,second,create,{bindingRevision:0,baseRef:null})).toThrow('草稿或基线已变化');
+});
+
+it.each(['binding','create','cancel','revoke'] as const)('rechecks direct creation after preparation when another client changes %s',async condition=>{
+  const {service,actor,second,head,db,access}=await setup(condition==='revoke');
+  const create={action:'create_draft' as const,clientActionId:randomUUID(),baseRef:null,title:'Agent 创建'};
+  const controller=new AbortController(),transaction=service.store.transaction.bind(service.store);
+  vi.spyOn(service.store,'transaction').mockImplementationOnce(work=>{
+    if(condition==='binding')service.setBase(actor,second,{clientActionId:randomUUID(),baseRef:head(),expectedBindingRevision:0});
+    if(condition==='create')service.action(actor,second,{...create,clientActionId:randomUUID(),title:'另一客户端'});
+    if(condition==='cancel')controller.abort();
+    if(condition==='revoke')access!.disable('original');
+    return transaction(work);
+  });
+  expect(()=>service.actionFromHost(actor,second,create,undefined,controller.signal)).toThrow();
+  expect(db.prepare('SELECT 1 FROM annotation_actions WHERE action_id=?').get(create.clientActionId)).toBeUndefined();
+  const rows=db.prepare('SELECT data FROM annotation_sets WHERE owner_session_id=?').all(second);
+  expect(rows).toHaveLength(condition==='create' ? 1 : 0);
+  if(condition==='create')expect(JSON.parse(String(rows[0].data))).toMatchObject({title:'另一客户端',headRevision:1});
 });

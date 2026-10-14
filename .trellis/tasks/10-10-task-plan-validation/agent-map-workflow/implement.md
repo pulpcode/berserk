@@ -1,92 +1,92 @@
-# 实施与验证顺序
+# 读取依据与失败恢复：实施和验证清单
 
-状态：已实施并完成本期检查（2026-10-14），真实模型仍有未达标项，见 [验收报告](validation.md)；不部署。目标、范围、验收见 [PRD](prd.md)，接口与兼容见 [设计](design.md)。
+日期：2026-10-14。状态：**实现、独立审阅及固定真实模型复测完成，保留已披露问题。** 以下勾选只表示实际完成的工作。
 
-## 0. 保留基线
+基线：`e9a01b4`（完善地图标注工具与会话工作流）。上一阶段完成清单可在该提交查看，实际结果仍见 [validation.md](validation.md) 与 [review.md](review.md)。本次依据 [PRD](prd.md) 的 RC1～RC8 和 [设计](design.md)，新结果另存，旧报告不覆盖。
 
-- [x] 审阅当前尚未提交的上一阶段改进；保存其真实模型与桌面失败证据，不重写旧报告。
-- [x] 实施前记录代码 hash/提交边界；不能把 ac50ba1 错称为已经包含来源工具实现。
-- [x] 阅读 backend map-annotations/harness-lab/context-analysis/conversation-references、frontend 相关 spec。
+## 0. 开工条件与范围
 
-## 1. 先证明宿主时序
+- [x] 用户明确批准最新修订设计实施，并要求完成后用原场景复测。
+- [x] 开工时核对工作区变化、Pi 版本、当前 hooks；加载本次相关 backend spec（未改前端）。批准方案与原已实施 spec 的差异按本稿范围处理，不自行扩大。
+- [x] 保留 e9a01b4 与旧固定批次证据，记录新实现边界；不推送、不部署，除非后续另有指令。
 
-- [x] 使用项目当前 Pi SDK、真实 loop 和假 provider，证明公开 hooks 可区分同一 assistantMessage、新读取与本链成功写入。
-- [x] 证明新读取在下一次推理后成为依据，同输出 read+write 不提前获得依据；已读后的三个写入逐次 CAS 并立即推进本链条件，外部插入和失败阻断后续。
-- [x] 覆盖原生重试、压缩、follow-up/steer、取消与 hooks 异常；保留已有 hooks，不调整 Pi internals、不改 provider 设置。
-- [x] 若顺序无法可靠成立，暂停适配并回到设计，不降级为“执行时取最新 head”。
+主要责任文件：`experiments/harness-lab/src/pi/annotation-state.ts`、`annotation-tools.ts`、`lab.ts`，必要的 `context-tools.ts`；`src/annotations/service.ts` 及实际需要的错误契约；现有地图 Skill 与相关测试。没有需求时不改 Web 布局、HTTP 参数或数据库结构。
 
-## 2. 宿主依据与来源批量
+## 1. 先固定可复现边界
 
-责任文件：src/pi/annotation-tools.ts、src/pi/context-tools.ts、src/pi/lab.ts，必要的小型请求内辅助文件；src/annotations/service.ts、validation.ts、src/contracts/annotations.ts。
+- [x] RC1：无 draft read 直接创建；固定基线创建；已存在草稿、绑定不匹配、准备后绑定改变、并发创建、撤权/取消，失败均无额外修订。
+- [x] RC2/RC3：读取来源后创建/参数失败仍保留来源；草稿冲突后来源保留；单个来源变化后草稿及其他来源保留；缺多项时一次列出已知缺项。
+- [x] RC4：真实 Pi loop + 假 provider，三写第二项失败后第三项未执行；下次推理修正普通参数即可用保留依据，不能因全局 blocked 要求无关重读。
+- [x] RC5：覆盖 schema 拒绝、before hook 拒绝、after hook 标错/替换、tool_execution_end；新的失败观察不提升，不删除旧确认依据。
+- [x] RC6：同请求 steer/follow-up、新请求、重启、取消、成功/失败压缩分别断言，不混用一种 invalidate 路径。
+- [x] RC7：已提交后回执或钩子异常、旧回执重放、无回执的未决状态；不得重复创建或错误报告未保存。
 
-- [x] 增加 read draft 模式和请求内已观察状态；固定历史 read 不切换编辑依据。
-- [x] 模型 apply/from_source/set_current 移除机械条件；宿主从已读结果注入，服务及 HTTP 的显式 CAS 保留。
-- [x] 来源 items 1～20 原子写入；一次副作用、一次回执、一个修订；各来源再查时仍核对已观察修订。
-- [x] 保留刷新 ID/业务字段、不改变旧发布与另一会话、请求前后授权检查。
-- [x] 幂等摘要使用原始意图，回执留实际读写依据；相同调用返回旧结果、改变意图冲突，不重放。
-- [x] 不新增全局缓存、表、自动恢复和对象级合并。
+测试应断言实际草稿内容/修订、来源记录和是否执行后续工具，不只断言内部方法名。新规则需要替换旧的“所有失败都全量失效”断言，不能删去真正的并发/授权保护。
 
-## 3. Skill 与历史兼容
+## 2. 创建路径（RC1）
 
-责任文件：fixtures/skills/map-annotations/SKILL.md（拟新增）、src/resources/service.ts、src/pi/resource-tools.ts、composer-input.ts、history-evidence.ts 及对应 tests；核查相关目录 UI/公开资源 DTO。
+- [x] 取消模型创建前必须观察 empty 的要求；保留显式 null/固定 baseRef。
+- [x] 服务捕获并核对当前绑定和无草稿条件，在同一现有事务提交前重检，保留每会话唯一草稿、固定基线访问和动作回执。
+- [x] 不将 create 自动转成 apply，不覆盖/追加已有草稿，不自动采用最新任务标注。
+- [x] 创建成功根据可信回执建立草稿依据；不能继续依赖旧 emptyBasis 才允许 committed 更新。
+- [x] 同一动作幂等返回保持原意图校验和当前权限检查；旧回执不推进当前编辑版本。
 
-- [x] 实现部署级附加 Skill 的统一可见集合，不改写现有 workspace-index 的两个固定基础 Skill。
-- [x] 按领域语义编写紧凑正文，不写测试名称、坐标或答案；工具保留自身必要契约。
-- [x] 扩展严格受控 Skill ID/数量；旧记录正文/hash/类型不改；显式 picker 与按需 skill_read 一致。
-- [x] 两 Skill 旧历史、三 Skill 新历史、混合历史、旧 explicit composer 及新的选择均能重开；非法 ID/错误 hash/越请求引用仍拒绝。
-- [x] 子 Agent/后台不因获得 Skill 而获得写工具；检查 profile 快照和父子历史比对。
-- [x] 明确旧二进制不能直接读取新 Skill 历史的回退限制，不在本阶段上线。
+## 3. 按资源保留与错误恢复（RC2/RC3/RC4/RC7）
 
-## 4. 结构化结果入口
+- [x] 去除普通错误触发的全量清空；独立保存草稿、完整来源引用和任务当前序号，使用时仍由服务核对。
+- [x] 将同一 assistant 输出的写入暂停与依据记录分开；普通错误在下一次正常推理恢复执行资格，但并不跳过缺失或过期依据。
+- [x] 结果不确定使用原动作回执核对；不要仅因下一次推理或读到当前草稿就声称原动作已确定，也不要无回执就换 ID 重放。
+- [x] 明确错误类别、相关资源/项、提交状态和必要恢复步骤；不匹配中文错误字符串决定状态迁移，不新建通用错误引擎。
+- [x] 在已授权范围一次返回已知缺项；网络/权限错误保持真实原因，不额外探测无权来源。
+- [x] 来源记录上限拒绝不得破坏已有记录；继续 1～20 项准备后原子保存，保留真实几何和 UTC 时间。
 
-责任文件：src/web/situation/evidence.ts、MapContext.tsx、ChatMessage.tsx、ContextEvidence.tsx（仅必要处）及相关桌面 tests。
+## 4. Pi 钩子与上下文生命周期（RC4/RC5/RC6）
 
-- [x] 来源查询继续显示实际证据入口；标注回执生成固定版本/对象选择；处理旧单对象和新批量普通 toolResult。
-- [x] 成功请求最终回答旁展示有界、去重、可折叠入口；限定同 requestId，不把旧 receipt 当作新动作。
-- [x] 原生历史重开仍可派生入口，不增加持久 UI 索引；权限撤销/坏数据/缺失结果不能产生越权访问。
-- [x] 正确旧 Markdown 保持工作；即使正文 href 错误或无链接，结构化结果仍可点击；当前来源与固定标注的时间语义区分。
-- [x] 仅桌面普通窗口、三栏和窄地图面板，不增加手机验收。
+- [x] 联合修改工具 execute catch、before/after hook、tool_execution_end、input.consumed、compaction、abort，避免残留第二条全量清空路径。
+- [x] 新观察只在成功、完整的结果进入下一次正常推理后生效；结果被改坏时只丢弃该调用新观察，不能暴露未交给模型的来源修订。
+- [x] 成功本链写入仍可即时推进机械条件；同输出 read/query 不提前授权预生成写入。
+- [x] 同请求补充输入保留记录并等待下一次推理处理意图；不解除尚未返回模型的批次暂停、不改变捕获身份。
+- [x] 新请求/重启不恢复请求缓存；成功压缩采用保守按需重读，失败压缩及取消沿用停止逻辑。
+- [x] 保留 Pi 原生 sequential、重试和原 hooks，不修改 SDK/内核/provider，不引入自有调度或跨请求缓存。
 
-## 5. 确定性验收矩阵
+## 5. 说明、兼容与规范
 
-必须覆盖：
+- [x] 修改工具描述及 map-annotations Skill 中与创建/恢复规则冲突的文字，保留按需读取、来源保真和图层澄清要求；不强制每次加载整份 Skill。
+- [x] 保留 HTTP 显式 CAS、旧工具历史/回执、既有地图入口；结构化错误不得被 UI 误认成成功写入结果。
+- [x] 验证请求/用户/席位/任务/会话隔离及读后撤权；授权固定参考不会切换可写目标。
+- [x] 验证通过后再同步 `.trellis/spec/backend/map-annotations.md` 等实际受影响规范，同步实际契约。
 
-- [x] 初始未读、成功读草稿、固定历史/他会话读取、未建草稿/baseline、成功写后继续、外部手工保存、旧 head 冲突。
-- [x] 批量全部成功、第二项缺几何/离线/修订改变、重复 target ID、撤权、取消、内容容量、来源重查后用户保存；任何失败整批无写入。
-- [x] 同输出多写入/read-write、失败/成功回执、相同 ID 改意图、权限撤销后回执读取、断连/重启不重放。
-- [ ] 业务意图全部达标：已有命名层/新层/同名澄清及固定参考已验证；真实模型多候选无目标 0/2，保留未通过。点/线/面/文字沿用既有几何及桌面回归，不冒称四类均有新的真实模型专项。
-- [x] 新旧历史/Skill 混合、说明摘要不含全图、压缩后必须重读、普通聊天无需地图 Skill。
-- [x] malformed Markdown、无 Markdown、回执缺失、重复来源、多个保存版本、跨请求混入、历史来源与当前状态差异。
+## 6. 确定性检查
 
-在 experiments/harness-lab、Node 24：
+在 `experiments/harness-lab`、Node 24 执行，实际命令如下（测试拆为 12 文件产品回归和 1 文件驱动检查，合计 157 项）：
 
 ```sh
 npm run typecheck
 npm run lint
-npm test -- tests/annotation-from-source.test.ts tests/annotations.test.ts tests/annotations-acceptance.test.ts tests/pi/annotations.test.ts tests/pi/annotation-source-history.test.ts tests/context-http.test.ts tests/agent-framework-boundaries.test.ts tests/probe-source-annotations.test.ts
+npm test -- tests/annotations.test.ts tests/annotations-acceptance.test.ts tests/annotation-from-source.test.ts tests/pi/annotations.test.ts tests/pi/annotation-source-history.test.ts tests/pi/annotation-workflow.test.ts tests/pi/annotation-hook-boundaries.test.ts tests/pi/compaction.test.ts tests/pi/message-intake-lab.test.ts tests/pi/recovery.test.ts tests/annotation-map-evidence.test.ts tests/pi/map-skill.test.ts tests/probe-map-workflow.test.ts
 npm run build
-CI=1 AXON_E2E_PORT=5299 npx playwright test tests/e2e/annotations.spec.ts tests/e2e/situation-map.spec.ts --workers=1
+git diff --check
 ```
 
-新增时序/Skill兼容/结果引用用例加入实际命令；相关现有资源与历史测试按影响范围纳入。使用固定本地瓦片和独立端口，不复用已启动旧页面。
+- [x] 上述检查通过；如重命名/新增测试，记录实际命令和结果，不机械保持过时命令。
+- [x] 对同请求补充输入、压缩和原 hooks 重点复核：原先安全要求仍成立，但不再靠全量遗忘实现。
+- [x] 仅在桌面流程或工具结果呈现实际受影响时补跑对应桌面 E2E；不新增手机检查，不重复无关验收。
 
-## 6. 固定真实模型验证计划（实施后执行）
+## 7. 固定真实模型复测（RC8）
 
-沿用已授权的本机 DeepSeek 与合成来源，不传业务资料或凭据到第三方执行服务器。执行前固定语料、模型设置、工具定义/Skill hash；每案独立账号/任务/会话，无人工纠错和自动审批。计划 11 个独立 case，不因失败追加批次：
+- [x] 开工后冻结新代码、schema、Skill hash、模型配置和独立合成资料，沿用现有已授权真实模型验证范围，不发送实际业务资料。
+- [x] 沿用原主流程业务步骤，固定 3 个独立无草稿起步案例（原 main-3 加 2 个名称/措辞变体），都不预建草稿/图层；提示中不写正确工具顺序或机械版本。
+- [x] 核对来源查询、首次创建、三对象批量上图、明确发布、来源变化后保 ID 刷新；检查实际几何、时间、图层、旧发布/当前指针；会话隔离另由确定性测试覆盖。
+- [x] 记录首次合法调用率、各类错误、连续拒绝、重读对象、工具/模型调用数与 token。重点判定是否仍有宿主全量清空导致的交替拒绝；不能用最终成功掩盖中间循环。
+- [x] 任一失败原样保留，不追加运行挑选成功结果。模型自行参数错误、Skill 未加载、图层意图或正文错误分别评分，不承诺本期全部解决。
 
-- 3 轮完整地图主流程：换用不同任务/图层/对象名称，查询三个来源并一次导入、明确发布、来源变化后保 ID 刷新。至少一轮从没有草稿开始，不全靠预建层。评分包含实际几何、时间、来源版本、一个批次一个修订、旧发布/任务当前不变。
-- 4 对图层意图变体（共 8 案）：指定已有层、明确创建新层、同名层歧义、未给唯一层的歧义。每个变体分别用同一新版工具/模型配置，在地图 Skill 可用和不可用两种隔离测试配置下运行；只改变 Skill 暴露。歧义案记录 ask_user 后取消，不替用户选择。
+原 main-3 与新 3 案是有限诊断样本，不据此宣称普遍成功率。若新代码、模型或语料改变，另标批次，不把不同条件混成同一对照。
 
-对照要分开记录 Skill 是否被发现/读取、读取后是否遵守、业务效果以及调用/用量成本。4 对只是诊断样本，不宣称有统计显著性或证明唯一原因。layerId 通过真实读取工具返回；业务提示不提供正确 ID 或工具序列，不写固定答案。
+## 8. 交付与回退
 
-几何缺失/来源离线的服务边界在确定性测试及上一阶段证据中保持；本批次不声称又做了新的模型专项。任何新发现保留，另行讨论，不暗中换模型、调整提示后选择最好结果。
+- [x] 新结果保存到 `recovery-validation.md`，必要的审阅保存到 `recovery-review.md`；旧 validation/review 不覆盖，本轮不预建完成报告。
+- [x] 报告哪些 RC 通过、哪些未执行/未通过，保留已知图层与正文质量问题。仅恢复机制通过不等于全面业务验收。
+- [x] 确认没有表迁移、旧历史改写或新的外部权限；需要回退时依据已提交基线和明确差异处理，不自动重置用户工作区。
+- [x] 用户另行要求后再提交新实现或安排部署；本轮未执行提交或部署。
 
-## 7. 交付与审阅
-
-交付改进代码、短地图 Skill、实际工具契约、兼容测试、固定批次完整证据、逐案语义报告。源码检查通过、模型流程完成、业务意图遵循分别评分。未执行的项目不得预先打勾。
-
-不在本阶段自动提交上一阶段代码、不部署。用户已审阅并授权实施，交付时如实报告全部检查和模型行为。
-
-## 实际交付
-
-代码/规范/驱动已完成；确定性检查和桌面 14/14 通过。固定 11 案已执行，主流程 3/3 完成，图层意图 6/8；Skill 读取 2/7 个可用 case，空草稿起步出现 8 次保护性拒绝。完整记录见 [validation.md](validation.md)，审阅见 [review.md](review.md)。没有因模型失败更改语料追加批次，不标记全面业务验收通过。
+实际批次、全部错误、对照数据及未覆盖边界见 [recovery-validation.md](recovery-validation.md)；独立审阅见 [recovery-review.md](recovery-review.md)。本清单完成不代表全面业务验收或线上发布。

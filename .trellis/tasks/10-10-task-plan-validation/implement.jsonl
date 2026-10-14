@@ -9,6 +9,6 @@
 {"file": ".trellis/spec/backend/task-access.md", "reason": "正式账号与任务权限"}
 {"file": ".trellis/tasks/10-10-task-plan-validation/agent-framework-e2e-plan.md", "reason": "用户已批准的端到端场景及边界"}
 {"file": ".trellis/tasks/10-10-task-plan-validation/agent-tool-improvements/prd.md", "reason": "已批准收窄为地图标绘来源改进，工作交接排除"}
-{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/design.md", "reason": "已批准并实施：宿主编辑依据、批量来源、地图Skill与结构化引用；验证结论见同目录validation.md"}
-{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/research.md", "reason": "已核对代码与官方资料；Skill严格历史兼容和Pi工具批次边界"}
+{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/design.md", "reason": "用户已批准恢复机制修订：按资源保留依据、创建条件、批次暂停和原场景复测；上一阶段基线 e9a01b4"}
+{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/research.md", "reason": "固定第三方 Claude Code 快照与本地失败证据；区分参考原则、本项目适配和当前待审授权边界"}
 {"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/validation.md", "reason": "2026-10-14实际检查和固定11案模型结果，包含未达标项与回退限制"}

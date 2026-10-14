@@ -27,11 +27,11 @@
     ".trellis/tasks/10-10-task-plan-validation/implement.md",
     ".trellis/tasks/10-10-task-plan-validation/research/current-state.md"
   ],
-  "notes": "用户于 2026-10-10 批准实施，随后批准全面更新线上服务以节省占用；保留旧数据与回退文件，使用独立验证数据。",
+  "notes": "用户于 2026-10-10 批准实施，随后批准全面更新线上服务以节省占用；保留旧数据与回退文件，使用独立验证数据。 2026-10-14：当前实现已提交 e9a01b4；用户要求仅更新读取依据与失败恢复方案，待审阅后再开工。父任务回到 planning，历史已实施/验收结果保留在相应 meta 与基线提交；本次未授权实现或部署。 随后用户明确批准本修订实施，并要求用原场景复测、展示验证结果。 本次恢复实现和三例固定真实模型复测完成，报告与证据已落盘；未提交或部署。",
   "meta": {
     "designStatus": "approved",
     "implementationApproved": true,
-    "implementationComplete": true,
+    "implementationComplete": false,
     "baselineCommit": "f40bf3a",
     "desktopOnly": true,
     "validationFirst": true,
@@ -98,6 +98,39 @@
         "地图Skill可用的7案仅2案读取，对照未证明Skill效果",
         "未指定唯一目标层的2案均未先澄清",
         "正文仍出现空间量级、草稿可见性和已保存字段表述错误"
+      ],
+      "implementationCommit": "e9a01b43f18ee4e3cbed6745bdc76804e61f2976",
+      "approvedDesignCommit": "e9a01b43f18ee4e3cbed6745bdc76804e61f2976"
+    },
+    "agentMapRecovery": {
+      "status": "implemented_validated_with_findings",
+      "plannedAt": "2026-10-14",
+      "implementationApproved": true,
+      "implementationComplete": true,
+      "baselineCommit": "e9a01b43f18ee4e3cbed6745bdc76804e61f2976",
+      "scope": "按资源保留读取依据、区分创建与修改、精确错误恢复、Pi批次暂停与生命周期",
+      "plan": "agent-map-workflow/prd.md",
+      "design": "agent-map-workflow/design.md",
+      "implementationPlan": "agent-map-workflow/implement.md",
+      "research": "agent-map-workflow/research.md",
+      "deployed": false,
+      "authorization": "用户明确要求按审阅方案实施，并用原场景复测；本轮不包含提交新实现或部署。",
+      "approvedAt": "2026-10-14",
+      "completedAt": "2026-10-14",
+      "report": "agent-map-workflow/recovery-validation.md",
+      "review": "agent-map-workflow/recovery-review.md",
+      "targetedTestsPassed": 157,
+      "realModelCases": 3,
+      "protocolRunsCompleted": 3,
+      "structuredResultsPassed": 3,
+      "toolErrors": 3,
+      "alternatingReadRejections": 0,
+      "fullBusinessAcceptance": false,
+      "remainingFindings": [
+        "来源查询顶层 systemId 两次漏填，模型自行恢复",
+        "一次新请求刷新前未读草稿，补读后成功且来源依据保留",
+        "正文仍混淆对话研判与发布版内容、业务时间字段归属",
+        "未重测歧义图层与复杂空间推理，不能宣称全面业务验收"
       ]
     }
   }
