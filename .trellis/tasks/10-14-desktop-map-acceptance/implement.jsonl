@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "草稿归属、固定引用、发布采用、CAS和读取依据恢复的既有契约"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "正式身份与任务权限；公共管理权限不扩大私有读取"}
+{"file": ".trellis/spec/backend/agent-scenario-validation.md", "reason": "隔离真实模型、精确交互、证据保留和语义验收"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "桌面平台约定，不增加手机端验收"}
+{"file": ".trellis/tasks/10-14-desktop-map-acceptance/design.md", "reason": "本轮八场景、步骤、正常交互和通过标准"}
+{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/recovery-validation.md", "reason": "原恢复机制基线；文字歧义的本轮解释见新PRD，不照搬为已证明失败"}
