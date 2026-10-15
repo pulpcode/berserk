@@ -21,6 +21,13 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "第一阶段范围已确认；架构与实施方案待用户继续审阅。仅保存规划文档，尚未批准实施。设计依据主线 d79a561，worktree 产品基线 efe2fb6，编码前重新核查并同步。",
-  "meta": {}
+  "notes": "第一阶段范围已确认，架构与实施方案待审阅，尚未批准空间分析实施。按用户要求以 8b6029c 提交方案，再以 0e5e457 合入 codex/map-basemaps@a79f1ae。复核确认架构可行并补充前端适配约定；main@d79a561 的结果投影尚未同步，map-query-scope 候选字段不是本任务前置条件。",
+  "meta": {
+    "implementationApproved": false,
+    "implementationComplete": false,
+    "reviewedProductBaseline": "0e5e457",
+    "mergedBasemapCommit": "a79f1ae",
+    "mainProjectionToIntegrate": "d79a561",
+    "basemapFeasibilityReview": "research/basemap-merge-review.md"
+  }
 }

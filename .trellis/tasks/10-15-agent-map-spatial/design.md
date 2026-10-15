@@ -4,7 +4,7 @@
 > 日期：2026-10-15。
 > 配套文档：[范围与验收](prd.md) · [实施计划](implement.md)。
 > 工作分支：`codex/agent-map-spatial`。
-> 本方案依据上一轮核查的主线 `d79a561`；规划 worktree 仍停留在 `efe2fb6`，本次仅写文档，没有合并或修改产品代码。
+> 当前合并基线：`0e5e457`，已将底图分支 `codex/map-basemaps@a79f1ae` 合入本分支。Pi 结果投影仍依据主线 `d79a561`，尚未同步至本分支；本轮未实现空间分析功能。
 > 本轮补充：方法选择规则见第 4 节，参考依据与自建边界见第 14 节，效果评测见实施计划第 4 节；架构图保持不变。
 
 ## 1. 设计结论
@@ -14,6 +14,8 @@
 `SpatialAnalysisService` 是现有后端中的代码模块，随现有后端部署。第一阶段不新增独立空间服务器、MCP 服务、第二套 Agent 循环或分析结果数据库。
 
 本方案服务于已确认的基础测量、空间关系、范围查询、邻近排序、缓冲范围、组合分析与结果展示。路网计算和专业作业决策不在本期。
+
+底图合并后的复核结论：核心架构仍可行。新底图已提供稳定地图实例、`basemap:*` / `business:*` 隔离和 `business:anchor`；空间分析接入需落实第 9.3 节的图层、点击、定位和文字约定。详细依据与验证边界见 [底图合并可行性复核](research/basemap-merge-review.md)。
 
 ## 2. 架构说明图
 
@@ -54,7 +56,7 @@ flowchart TB
 
 ## 3. 现有代码依据与复用边界
 
-代码依据以主线 `d79a561` 为准，行号用于审阅定位，实施前重新核查。
+Pi 结果投影相关代码依据主线 `d79a561`；底图与画布依据当前合并基线 `0e5e457`。主线中的投影能力尚未进入当前分支，表中“已有”不代表全部已在本 worktree 可用。行号用于审阅定位，实施前重新核查。
 
 | 位置 | 已有能力 | 本方案如何复用 |
 | --- | --- | --- |
@@ -67,11 +69,13 @@ flowchart TB
 | `experiments/harness-lab/src/annotations/validation.ts:43` | 几何校验，写入仅支持单环面 | 不把复杂面静默降级保存 |
 | `experiments/harness-lab/src/pi/annotation-results.ts` | 模型 content 与界面 details 的分离 | 空间结果采用同一分工，不改旧回执语义 |
 | `experiments/harness-lab/src/web/situation/evidence.ts` | 从真实查询/回执生成地图入口 | 新增经过校验的分析结果入口，不解析助手散文当作几何 |
-| `experiments/harness-lab/src/web/situation/MapCanvas.tsx` | 共享 MapLibre 画布与标绘运行时 | 添加独立分析图层，与底图切换工作协调 |
+| `experiments/harness-lab/src/web/situation/MapCanvas.tsx:29` | 稳定 MapLibre 实例，底图和标绘各自运行时 | 添加独立分析图层，不通过配置变化重建地图 |
+| `experiments/harness-lab/src/web/situation/basemap-runtime.ts:24` | 仅管理底图源与图层，切换可见性、隔离重试和旧请求错误 | 分析运行时只管理 analysis:*，不调用底图清理 |
+| `experiments/harness-lab/src/contracts/map.ts:1` | 底图 WGS84 / Web Mercator XYZ 约定和新旧配置兼容 | 复用配置；计算仍读取业务 GeoJSON，不从瓦片取分析候选 |
 
 相关规范： [空间来源与地图](../../spec/backend/situation-map.md)、[标绘与版本](../../spec/backend/map-annotations.md)、[会话引用](../../spec/backend/conversation-references.md)、[多源上下文](../../spec/backend/context-analysis.md)。
 
-工作树内部分规范仍属于较早基线；实施前需先同步已合入主线的变化，不能把较早文件作为最新实现依据。
+工作树已包含底图规范更新，但尚未同步主线结果投影规范；实施前合入相关主线改动并复核共享规范，不能把本分支当前文件误当作全部主线能力。
 
 ## 4. Skill 如何设计
 
@@ -300,6 +304,15 @@ Pi SDK、SessionManager 和原生历史访问保持在 `src/pi/` 内，浏览器
 
 沿用现有地图面板与真实工具结果入口，增加独立分析结果组及 `analysis:*` 渲染标识。支持定位、显示、隐藏、清除临时显示，并明确显示计算时间或结果范围。
 
+底图合并后按以下已核实接口接入；这些是未来实现约定，当前尚未新增分析运行时：
+
+- 在现有地图实例中创建和销毁分析运行时；只清理自己持有的 analysis:* 源、图层和标记。底图切换或重试不调用 `setStyle`、不重新挂载 MapCanvas、不恢复或重置绘制器。
+- 以固定 `business:anchor` 和业务图层作为插入依据，不依赖带代次的 basemap 图层 ID。分析范围填充置于 anchor 上方、业务对象下方；描边、高亮与标绘的顺序须明确，编辑控制点保持可见。对象刷新、标绘重绘和分析开关后均检查层序。
+- 点击命中按图层身份识别分析结果，不复用标绘的 `group/objectId` 作为分析身份。协调现有 MapCanvas 和标绘点击处理，避免分析点击落入既有空白清选分支；绘制期间遵循现有交互禁用规则。
+- 分析定位纳入已有 focusRequest/deferFocus 约定，用户明确打开或定位结果时才移动视角；不让异步分析完成触发第二套自动 fitBounds。
+- 纯影像首开时路网可能从未加载，不能假设路网已经设置字形。分析标签优先复用现有 DOM 标记/文字方式；若采用 MapLibre symbol，须单独明确共用字形配置及失败降级，不以加载道路底图作为分析标签的前提。
+- 底图覆盖提示、加载错误与分析数据完整性分别表达。底图覆盖范围或原生缩放不用于裁剪分析候选；底图失败不等于计算失败或没有对象。
+
 来源对象、草稿、只读参考和分析结果保留各自身份。缓冲范围可使用中性半透明样式，匹配对象通过描边或高亮表达，不覆盖既有业务颜色含义。
 
 用户打开或定位结果时才调整视角；计算完成不强行中断绘制。清除图层只是清除本地显示，不删除原生会话结果。身份、会话、任务切换时丢弃不再适用的迟到响应和临时显示。
@@ -323,11 +336,11 @@ Pi SDK、SessionManager 和原生历史访问保持在 `src/pi/` 内，浏览器
 
 | 并行工作 | 已核查状态 | 本任务衔接方式 |
 | --- | --- | --- |
-| map-result-projection | 已进入主线 d79a561 | 沿用 content/details 分离和严格历史取证，不复制另一套回执机制 |
-| map-query-scope | 上一轮核查时为待审规划 | 复用其实际范围/计数语义；是否合入需在实施前重新确认 |
-| map-basemaps | 独立 codex/map-basemaps worktree 有未提交实现 | 由其负责地图实例和 basemap:* 生命周期；本任务接入独立 analysis:* 图层 |
+| map-result-projection | 主线 d79a561 已实现；当前分支尚未包含 | 正式实施前同步，沿用 content/details 分离和严格历史取证 |
+| map-query-scope | 主线 7c43e45 仅提交收窄后的方案；query.scope 是隔离候选，counts 改名暂缓 | 不依赖候选字段存在；依据实际查询参数、分页和版本确定分析范围；另行定义必要的计算完整性 |
+| map-basemaps | 已合入 05ea07d 与 a79f1ae，合并提交 0e5e457 | 直接遵循稳定实例、business:anchor、basemap:* / business:* 契约，新增独立 analysis:* |
 
-当前独立空间分析分支位于 efe2fb6。正式编码前先检查主线及其他 worktree 状态，再同步已经完成并提交的相关基线；不复制其他会话未提交文件，不修改其他会话任务文档。
+本轮仅将指定底图分支合入空间分析分支，没有合入或修改 main。正式编码前重新检查主线和其他 worktree 状态，同步已完成并提交的相关主线基线；不复制其他会话未提交文件，不修改其他会话任务文档。
 
 重点共享位置包括 MapCanvas、contracts/index、PiLab 工具结果投影、resources/service 和标绘回执消费者。计算与输入解析优先放入新增 spatial 模块，减少交叉编辑。
 
