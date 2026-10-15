@@ -1,4 +1,4 @@
-import type { MapConfig } from '../contracts/context.js';
+import { isBasemapView, type BasemapSourceMetadata, type MapConfig, type RoadBasemap } from '../contracts/map.js';
 import { isAbsolute } from 'node:path';
 import { readControlled } from '../resources/files.js';
 
@@ -24,6 +24,25 @@ function id(value: unknown): string {
 function list(value: unknown): string[] {
   if (!Array.isArray(value) || value.length > 100) throw fail();
   const result = value.map(id); if (new Set(result).size !== result.length) throw fail(); return result;
+}
+const metadataKeys = ['providerId','name','coordinateSystem','projection','scheme','bounds','minZoom','maxZoom','attributions'];
+function publicUrl(value: unknown, allowHash = false): string {
+  const result = text(value,2048), url = new URL(result);
+  if (!['http:','https:'].includes(url.protocol) || url.username || url.password || (!allowHash && url.hash)) throw fail();
+  return result;
+}
+function tileUrls(value: unknown): string[] {
+  if (!Array.isArray(value) || !value.length || value.length > 4) throw fail();
+  return value.map(item => { const url=publicUrl(item); if (!['{z}','{x}','{y}'].every(token=>url.includes(token))) throw fail(); return url; });
+}
+function metadata(raw: Record<string,unknown>): BasemapSourceMetadata {
+  if (raw.coordinateSystem !== 'wgs84' || raw.projection !== 'web-mercator' || raw.scheme !== 'xyz') throw fail();
+  const bounds=raw.bounds;
+  if (!Array.isArray(bounds) || bounds.length !== 4 || bounds.some(value=>typeof value !== 'number' || !Number.isFinite(value)) || bounds[0] < -180 || bounds[2] > 180 || bounds[0] >= bounds[2] || bounds[1] < -85.051129 || bounds[3] > 85.051129 || bounds[1] >= bounds[3]) throw fail();
+  if (typeof raw.minZoom !== 'number' || typeof raw.maxZoom !== 'number' || !Number.isInteger(raw.minZoom) || !Number.isInteger(raw.maxZoom) || raw.minZoom < 0 || raw.maxZoom > 24 || raw.minZoom > raw.maxZoom) throw fail();
+  if (!Array.isArray(raw.attributions) || !raw.attributions.length || raw.attributions.length > 8) throw fail();
+  const attributions=raw.attributions.map(value=>{const a=object(value,['text','url']);return {text:text(a.text,500),url:publicUrl(a.url,true)};});
+  return {providerId:id(raw.providerId),name:text(raw.name,100),coordinateSystem:'wgs84',projection:'web-mercator',scheme:'xyz',bounds:bounds as BasemapSourceMetadata['bounds'],minZoom:raw.minZoom,maxZoom:raw.maxZoom,attributions};
 }
 export function parseContextConfig(value: unknown): ContextConfig {
   const raw = object(value, ['systems', 'scopes', 'simulation', 'map']);
@@ -57,11 +76,22 @@ export function parseContextConfig(value: unknown): ContextConfig {
   }
   let map: MapConfig | undefined;
   if (raw.map !== undefined) {
-    const m = object(raw.map,['providerId','tiles','tileSize','attributionText','attributionUrl']);
-    if (!Array.isArray(m.tiles) || m.tiles.length !== 1 || ![256,512].includes(Number(m.tileSize))) throw fail();
-    const tiles = m.tiles.map(value => text(value,2048));
-    for (const value of [...tiles,text(m.attributionUrl,2048)]) { const url = new URL(value); if (!['http:','https:'].includes(url.protocol) || url.username || url.password) throw fail(); }
-    map = {providerId:id(m.providerId),tiles,tileSize:Number(m.tileSize),attributionText:text(m.attributionText,500),attributionUrl:text(m.attributionUrl,2048)};
+    const m = object(raw.map,['defaultView','imagery','roads','providerId','tiles','tileSize','attributionText','attributionUrl']);
+    if ('imagery' in m || 'roads' in m || 'defaultView' in m) {
+      object(m,['defaultView','imagery','roads']);
+      if (!isBasemapView(m.defaultView)) throw fail();
+      const imagery = object(m.imagery,[...metadataKeys,'tiles','tileSize']);
+      if (imagery.tileSize !== 256 && imagery.tileSize !== 512) throw fail();
+      const roads = object(m.roads,[...metadataKeys,'url','tiles','glyphs']);
+      if ((roads.url === undefined) === (roads.tiles === undefined)) throw fail();
+      const roadSource: RoadBasemap = {...metadata(roads),glyphs:publicUrl(roads.glyphs),...(roads.url === undefined ? {tiles:tileUrls(roads.tiles)} : {url:publicUrl(roads.url)})};
+      if (!roadSource.glyphs.includes('{fontstack}') || !roadSource.glyphs.includes('{range}')) throw fail();
+      map = {defaultView:m.defaultView,imagery:{...metadata(imagery),tiles:tileUrls(imagery.tiles),tileSize:imagery.tileSize},roads:roadSource};
+    } else {
+      object(m,['providerId','tiles','tileSize','attributionText','attributionUrl']);
+      if (m.tileSize !== 256 && m.tileSize !== 512) throw fail();
+      map = {providerId:id(m.providerId),tiles:tileUrls(m.tiles),tileSize:m.tileSize,attributionText:text(m.attributionText,500),attributionUrl:publicUrl(m.attributionUrl,true)};
+    }
   }
   return {systems, scopes,...(simulation ? {simulation} : {}),...(map ? {map} : {})};
 }

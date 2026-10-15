@@ -15,7 +15,6 @@
 .situation-view.unified-map .situation-object-info>summary { cursor:pointer; padding:8px 0; }
 .situation-view.unified-map .situation-source-error { position:absolute; z-index:6; top:66px; right:12px; width:fit-content; max-width:calc(100% - 24px); max-height:150px; overflow:auto; padding:8px 10px; background:var(--surface,#fff); border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--danger,#a43c32); }
 .situation-view.unified-map .situation-source-error button { margin-left:8px; }
-.situation-view.unified-map .situation-map-error { bottom:156px; z-index:3; }
 .situation-content-panel .annotation-panel-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:2px; font-size:14px; }
 .source-scope-summary { margin:4px 8px 8px; font-size:12px; color:var(--muted); overflow-wrap:anywhere; }
 .source-query-controls { margin:0 6px 8px; font-size:12px; }

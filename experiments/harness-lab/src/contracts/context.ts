@@ -49,7 +49,7 @@ export interface SituationCurrent extends ContextPage<SituationObject> { unknown
 export interface SituationChanges extends ContextPage<SituationChange> { unknownRefs: ContextRef[]; nextAfter: string | null }
 export type ContextData = ContextPage<InformationReportIndex> | InformationDetail | SituationCurrent | SituationChanges;
 export interface MapReference { ref: ContextRef; revision?: number; href: string }
-export interface MapConfig { providerId: string; tiles: string[]; tileSize: number; attributionText: string; attributionUrl: string; simulationEnabled?: boolean }
+export type { MapConfig } from './map.js';
 export interface LoadedContextSelection { refs: ContextRef[]; queries: ContextQueryResult[] }
 export interface ContextQueryResult {
   systemId: string; query: ContextQueryParams; queriedAt: string; data: ContextData; mapReferences?: MapReference[];

@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import type { VectorTileSource } from 'maplibre-gl';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -9,9 +10,10 @@ import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
+import { basemapFixture, captureMap, localVectorTiles, mapSnapshot } from './basemap-fixtures';
 
 test.setTimeout(60000);
-async function setup(page:Page){
+async function setup(page:Page, basemap?: (origin:string)=>unknown){
  const dir=await mkdtemp(join(tmpdir(),'axon-annotations-web-'));const db=await openDatabase(dir);const access=new AccessStore(db);
  const userId=await access.saveAccount({username:'a',displayName:'地图验证',seatId:'a',seatName:'总体席',password:'test-password-123',createPublicTask:true,manageModelSettings:true});const actor=access.identity(userId)!;
  const task=access.create(actor,{title:'标注验证任务',goal:'独立草稿与固定发布',visibility:'public',clientActionId:randomUUID()});db.close();
@@ -23,6 +25,7 @@ async function setup(page:Page){
  await page.route('https://tile.openstreetmap.org/**',route=>route.abort());
  await page.route('**/test-tiles/**',route=>{tiles++;return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAADIElEQVR4nO3UMQ0AIBDAwPevlZCgAGQw9IbbO3XW2Rdomt8BwD8GAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEPFcg416T4n38AAAAASUVORK5CYII=','base64')});});
  await page.route('**/api/**',async route=>{const req=route.request();const url=new URL(req.url());
+  if(url.pathname==='/api/context/map-config' && basemap)return route.fulfill({json:basemap(url.origin)});
   if(url.pathname==='/api/context/map-config')return route.fulfill({json:{providerId:'test',tiles:[`${url.origin}/test-tiles/{z}/{x}/{y}.png`],tileSize:256,attributionText:'本地验证瓦片',attributionUrl:'https://www.openstreetmap.org/copyright',simulationEnabled:false}});
   if(req.postDataJSON())requests.push({path:url.pathname,body:req.postDataJSON()});
   const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...req.headers(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
@@ -32,7 +35,7 @@ async function setup(page:Page){
  await page.goto('/');await page.getByLabel('席位',{exact:true}).selectOption('a');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();
  await expect(page.getByRole('button',{name:'进入项目：标注验证任务'})).toBeVisible();
  await page.goto(`/situation?taskId=${task.id}&sessionId=${session.id}`);
- await expect(page.locator('.annotation-heading')).toBeVisible();await openLayers(page);
+ await expect(page.locator('.annotation-heading')).toBeVisible();await expect(page.locator('.maplibregl-canvas').or(page.getByText('地图暂不可用，请通过图层与对象查看与引用。'))).toBeVisible();await openLayers(page);
  return {lab,actor,task,session,second,requests,errors,dropNextAction:()=>{dropAction=true;},tiles:()=>tiles,fake,close:async()=>{page.on('dialog',dialog=>dialog.accept());await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await rm(dir,{recursive:true,force:true});}};
 }
 async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'图层与对象',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
@@ -268,5 +271,80 @@ test('structured receipt buttons open fixed read-only targets and stay scoped to
   await page.reload();await answer.getByRole('button',{name:/查看本次标注/}).click();
   await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('固定集合点');
   await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('basemap switches preserve selected annotations, camera, visibility, and unfinished line/polygon through failure and retry',async({page})=>{
+ await captureMap(page);const vector=await localVectorTiles(page);const env=await setup(page,basemapFixture);
+ try{
+  await layer(page);await point(page);await pickOwn(page,'集合点 A point');
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('集合点 A');
+  await expect.poll(()=>page.evaluate(()=>Boolean(window.__basemapTestMap?.loaded()))).toBe(true);
+  const canvas=page.locator('.maplibregl-canvas'),original=await canvas.elementHandle();
+  const saved=env.lab.annotations!.binding(env.actor,env.session.id);
+  const before=await mapSnapshot(page);
+  const switcher=page.getByRole('group',{name:'底图视图'});
+  for(const name of ['路网','混合','影像','混合','路网','影像'])await switcher.getByRole('button',{name,exact:true}).click();
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('集合点 A');
+  expect(await canvas.evaluate((element,old)=>element===old,original)).toBe(true);
+  expect(await mapSnapshot(page)).toEqual(before);
+  expect(env.lab.annotations!.binding(env.actor,env.session.id)).toEqual(saved);
+  await page.getByRole('button',{name:'关闭标注对象',exact:true}).click();
+  if(await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  const box=(await canvas.boundingBox())!,x=box.x+box.width/2,y=box.y+box.height/2;
+  await page.getByRole('button',{name:'绘制线',exact:true}).click();await page.mouse.click(x-100,y-50);
+  const first=await page.evaluate(({x,y})=>window.__basemapTestMap!.unproject([x,y]).toArray(),{x:box.width/2-100,y:box.height/2-50});
+  const drawingCamera=await mapSnapshot(page);
+  vector.offline();await switcher.getByRole('button',{name:'路网',exact:true}).click();
+  // Force a new basemap request while retaining TerraDraw and its first vertex.
+  await page.evaluate(()=>{const map=window.__basemapTestMap!;for(const id of Object.keys(map.getStyle().sources))if(id.includes('roads'))(map.getSource(id) as VectorTileSource).setTiles([`${location.origin}/basemap-vector/{z}/{x}/{y}.pbf?failure=1`]);});
+  await expect(page.locator('.situation-map-feedback')).toContainText('加载失败');
+  await page.screenshot({path:test.info().outputPath('basemap-failure-drawing-retained.png')});
+  vector.online();await page.getByRole('button',{name:'重试底图',exact:true}).click();
+  await expect.poll(vector.requests).toBeGreaterThan(0);await expect(page.getByRole('button',{name:'重试底图',exact:true})).toHaveCount(0);
+  for(const name of ['混合','影像','路网'])await switcher.getByRole('button',{name,exact:true}).click();
+  expect(await mapSnapshot(page)).toEqual(drawingCamera);
+  await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+110,y+60);
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');
+  const lineVersion=env.lab.annotations!.binding(env.actor,env.session.id).draft!;
+  const line=env.lab.annotations!.privateVersion(env.actor,lineVersion.setId,3).document.layers[0]!.features.find(f=>f.kind==='line')!;
+  expect(line.geometry.type).toBe('LineString');if(line.geometry.type==='LineString'){expect(line.geometry.coordinates[0][0]).toBeCloseTo(first[0],8);expect(line.geometry.coordinates[0][1]).toBeCloseTo(first[1],8);}
+  await page.getByRole('button',{name:'绘制面',exact:true}).click();
+  await page.mouse.click(x-90,y-70);await page.mouse.click(x+90,y-70);
+  await switcher.getByRole('button',{name:'混合',exact:true}).click();await switcher.getByRole('button',{name:'影像',exact:true}).click();
+  await page.mouse.click(x+90,y+70);await page.mouse.dblclick(x-90,y+70);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
+  const final=env.lab.annotations!.binding(env.actor,env.session.id).draft!;
+  expect(env.lab.annotations!.privateVersion(env.actor,final.setId,4).document.layers[0]!.features.map(f=>f.kind)).toEqual(['point','line','polygon']);
+  await openLayers(page);await expandGroup(page,'本会话标注');await page.getByRole('button',{name:'隐藏集合点',exact:true}).click();
+  await switcher.getByRole('button',{name:'路网',exact:true}).click();await switcher.getByRole('button',{name:'混合',exact:true}).click();
+  await expect(page.getByRole('button',{name:'显示集合点',exact:true})).toHaveAttribute('aria-pressed','false');await expect(page.locator('.annotation-marker')).toHaveCount(0);
+  await page.getByRole('button',{name:'显示集合点',exact:true}).click();await page.reload();
+  await expect(switcher.getByRole('button',{name:'混合',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');expect(env.errors).toEqual([]);
+  await page.screenshot({path:test.info().outputPath('basemap-retained-annotations.png')});
+ }finally{await env.close();}
+});
+
+test('solid annotation strokes remain painted after hybrid source switches and narrow map controls do not overlap credits',async({page})=>{
+ await captureMap(page);await localVectorTiles(page);const env=await setup(page,origin=>({...basemapFixture(origin),defaultView:'hybrid'}));
+ try{
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'solid',name:'实线验证',order:0,defaultVisible:true,features:[{objectId:'line',kind:'line',name:'实线',geometry:{type:'LineString',coordinates:[[116.39,39.904],[116.41,39.904]]},style:{color:'#b34d48',width:4}},{objectId:'area',kind:'polygon',name:'区域',geometry:{type:'Polygon',coordinates:[[[116.394,39.898],[116.406,39.898],[116.406,39.902],[116.394,39.902],[116.394,39.898]]]},style:{color:'#b34d48',width:4}}]}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');
+  await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  for(const name of ['影像','路网','混合','路网','混合']){
+   await page.getByRole('group',{name:'底图视图'}).getByRole('button',{name,exact:true}).click();
+   await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.loaded())).toBe(true);
+   const strokes=await page.evaluate(()=>window.__basemapTestMap!.getStyle().layers.filter(layer=>layer.id.startsWith('annotation:')&&layer.type==='line'&&/:solid(?::halo)?$/.test(layer.id)).map(layer=>({id:layer.id,dash:window.__basemapTestMap!.getPaintProperty(layer.id,'line-dasharray')})));
+   expect(strokes).toHaveLength(2);expect(strokes.every(layer=>layer.dash===undefined)).toBe(true);
+   const buffer=await page.locator('.maplibregl-canvas').screenshot();
+   const red=await page.evaluate(async encoded=>{const image=new Image();image.src=`data:image/png;base64,${encoded}`;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const context=canvas.getContext('2d')!;context.drawImage(image,0,0);const data=context.getImageData(0,0,canvas.width,canvas.height).data;let count=0;for(let i=0;i<data.length;i+=4)if(Math.abs(data[i]-179)<3&&Math.abs(data[i+1]-77)<3&&Math.abs(data[i+2]-72)<3)count++;return count;},buffer.toString('base64'));
+   expect(red,`${name} must paint the solid red annotation strokes`).toBeGreaterThan(500);
+  }
+  await page.goto(`/?session=${env.session.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();
+  await page.setViewportSize({width:1280,height:900});const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await separator.focus();await separator.press('End');
+  await expect(page.getByRole('group',{name:'底图视图'})).toBeVisible();
+  const overlap=await page.evaluate(()=>{const box=(selector:string)=>document.querySelector(selector)!.getBoundingClientRect();const a=box('.annotation-editor-toolbar'),b=box('.situation-basemap-switch'),c=box('.situation-attribution');const intersect=(a:DOMRect,b:DOMRect)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;return {toolbarCredits:intersect(a,c),switchCredits:intersect(b,c),toolbarSwitch:intersect(a,b)};});
+  expect(overlap).toEqual({toolbarCredits:false,switchCredits:false,toolbarSwitch:false});
+  await page.screenshot({path:test.info().outputPath('basemap-narrow-controls.png')});expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });

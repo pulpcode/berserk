@@ -7,6 +7,7 @@ import { AccessStore } from '../../src/access/store';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { basemapFixture, localVectorTiles } from './basemap-fixtures';
 async function setup(secondManager = false) {
   const dir=await mkdtemp(join(tmpdir(),'axon-web-access-'));const db=await openDatabase(dir);const store=new AccessStore(db);
   for(const name of ['a','b',...(secondManager?['c']:[])])await store.saveAccount({username:name,displayName:`用户 ${name}`,seatId:name,seatName:`席位 ${name}`,password:'test-password-123',createPublicTask:name!=='b',manageModelSettings:name==='a'});
@@ -344,4 +345,21 @@ test('task read errors remain scoped instead of reporting a disconnected service
     failing = false;
     await expect(status).toHaveCount(0, { timeout: 10000 });
   } finally { await env.close(); }
+});
+
+
+test('basemap preference survives logout and stays isolated between accounts',async({page})=>{
+  const env=await setup();await env.attach(page);await localVectorTiles(page);
+  await page.route('**/api/context/catalog',route=>route.fulfill({json:{systems:[{id:'basemap-test',name:'底图偏好测试',objectTypes:['road'],capabilities:['situation_current'],areas:[]}]}}));
+  await page.route('**/api/context/situation',route=>route.fulfill({json:{systemId:'basemap-test',data:{systemId:'basemap-test',asOf:new Date().toISOString(),items:[],limit:100,nextCursor:null,hasMore:false,timeUnknownCount:0,unknownRefs:[]}}}));
+  await page.route('**/api/context/map-config',route=>route.fulfill({json:basemapFixture(new URL(route.request().url()).origin)}));
+  await page.route('**/test-tiles/**',route=>route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==','base64')}));
+  const openMap=async()=>{await page.getByRole('button',{name:'态势地图',exact:true}).click();await expect(page.getByRole('group',{name:'底图视图'})).toBeVisible();};
+  const view=(name:string)=>page.getByRole('group',{name:'底图视图'}).getByRole('button',{name,exact:true});
+  try{
+    await login(page,'a');await openMap();await expect(view('影像')).toHaveAttribute('aria-pressed','true');await view('路网').click();
+    await logout(page);await login(page,'b');await openMap();await expect(view('影像')).toHaveAttribute('aria-pressed','true');await view('混合').click();
+    await logout(page);await login(page,'a');await openMap();await expect(view('路网')).toHaveAttribute('aria-pressed','true');
+    await page.reload();await expect(view('路网')).toHaveAttribute('aria-pressed','true');
+  }finally{await env.close();}
 });

@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import type { PiLab } from '../pi/lab.js';
 import type { BackgroundService } from '../background/service.js';
-import type { MapConfig } from '../contracts/context.js';
+import { defaultMapConfig, normalizeMapConfig } from '../contracts/map.js';
 import { RequestError } from '../contracts/errors.js';
 import { readContextJson } from '../context/http.js';
 import { contextRecord, contextRef } from '../context/validation.js';
@@ -15,7 +15,6 @@ async function readWithSignal<T>(request: FastifyRequest, reply: FastifyReply, w
   finally { request.raw.off('aborted', abort); reply.raw.off('close', abort); }
 }
 const empty = {type:'object',additionalProperties:false};
-const osm: MapConfig = {providerId:'osm-standard',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attributionText:'© OpenStreetMap contributors',attributionUrl:'https://www.openstreetmap.org/copyright'};
 export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: ReturnType<typeof apiScope>, background?: BackgroundService, env: NodeJS.ProcessEnv = process.env) {
   const context = () => { if (!lab.context) throw new RequestError('CONTEXT_UNAVAILABLE','业务资料查询不可用。',503); return lab.context; };
   const simulation = (request: FastifyRequest) => {
@@ -30,7 +29,7 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
   };
   app.get(`${scope.base}/context/map-config`,{schema:{querystring:empty}},request => {
     let simulationEnabled = false; try {simulation(request);simulationEnabled=true;} catch { /* Optional control capability. */ }
-    return {...(lab.context?.config.map ?? osm),simulationEnabled};
+    return {...normalizeMapConfig(lab.context?.config.map ?? defaultMapConfig),simulationEnabled};
   });
   for (const [path,tool] of [['situation','situation_query'],['reports/search','information_search']] as const) {
     app.post(`${scope.base}/context/${path}`,{schema:{querystring:empty}},async (request,reply) => readWithSignal(request,reply,signal=>context().query(tool, request.body,{kind:'seat',seatId:scope.seat(request)},signal)));

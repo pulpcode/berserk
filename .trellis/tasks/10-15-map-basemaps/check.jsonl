@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/backend/situation-map.md", "reason": "Map config and failures"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "Retained editor and WGS84 invariants"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "Map workspace state and identity storage"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse existing mechanisms"}

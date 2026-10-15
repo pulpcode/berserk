@@ -50,7 +50,7 @@
 .annotation-overlap>button { display:block; width:100%; text-align:left; margin:6px 0; }
 .annotation-feature-form h3 { font-size:14px; margin:8px 0; }
 .annotation-marker { display:flex; flex-direction:column; align-items:center; pointer-events:none; }
-.annotation-symbol { display:block; flex:none; }
+.annotation-symbol { display:block; flex:none; filter:drop-shadow(1px 0 0 white) drop-shadow(-1px 0 0 white) drop-shadow(0 1px 0 white) drop-shadow(0 -1px 0 white); }
 .annotation-symbol.circle { border-radius:50%; }
 .annotation-symbol.triangle { clip-path:polygon(50% 0,100% 100%,0 100%); }
 .annotation-label { font:13px/1.5 sans-serif; background:#fffffff0; border-radius:3px; padding:1px 4px; white-space:nowrap; }
@@ -66,6 +66,14 @@
   .annotation-map-status { justify-self:start; }
   .annotation-heading-actions { justify-self:end; }
   .annotation-editor-toolbar { left:48px; max-width:calc(100% - 60px); gap:4px; }
+}
+/* Desktop split panes reserve 56px for credits, then distinct basemap/drawing rows.
+   Feedback clears a wrapped drawing row and its placement hint. */
+@container annotation-workspace (max-width:600px) {
+  .annotation-editor-toolbar { bottom:114px; }
+  .annotation-toolbar-target { max-width:88px; }
+  .annotation-toolbar-target>span { max-width:48px; }
+  .situation-map-feedback { bottom:246px; }
 }
 @media(pointer:coarse) { .annotation-workspace button { min-height:44px; } }
 /* Task tab uses the same canvas height contract as the conversation workspace. */

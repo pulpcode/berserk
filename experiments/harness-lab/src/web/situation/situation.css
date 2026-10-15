@@ -26,8 +26,6 @@
 .situation-canvas-wrap { position:relative; height:440px; min-width:0; background:#e8efeb; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
 .situation-canvas { height:100%; width:100%; }
 .situation-attribution { position:absolute; bottom:0; right:0; background:#fffffff0; padding:3px 6px; color:#284e42; font-size:11px; }
-.situation-map-error { position:absolute; left:8px; right:8px; bottom:28px; padding:10px; background:white; font-size:12px; }
-.situation-map-error button { margin-left:8px; }
 .situation-detail { min-width:0; overflow-wrap:anywhere; }
 .situation-detail h2 { font-size:18px; margin-top:0; }
 .situation-detail dl { font-size:12px; line-height:1.7; }
@@ -79,3 +77,14 @@
 .evidence-map-more > summary { cursor:pointer; font-size:12px; padding:4px 0; }
 .evidence-map-more > .evidence-map-links { max-height:220px; overflow:auto; }
 .evidence-map-links button { max-width:100%; overflow-wrap:anywhere; text-align:left; }
+
+.situation-basemap-switch { position:absolute; bottom:66px; right:10px; display:flex; gap:2px; padding:3px; border:1px solid var(--line); border-radius:8px; background:var(--surface,#fff); box-shadow:0 2px 8px #182e2426; }
+.situation-basemap-switch button { min-width:46px; min-height:30px; padding:4px 9px; border:0; border-radius:5px; background:transparent; font-size:12px; color:var(--text,#253d34); }
+.situation-basemap-switch button[aria-pressed=true] { background:var(--accent-soft,#e4eeea); color:var(--accent,#2d5f4d); font-weight:600; }
+.situation-basemap-switch button:focus-visible { outline:2px solid var(--accent,#2d5f4d); outline-offset:1px; }
+.situation-attribution { max-width:calc(100% - 52px); max-height:56px; overflow:auto; text-align:right; line-height:1.35; overflow-wrap:anywhere; }
+.situation-attribution a { color:inherit; display:inline; }
+.situation-attribution a+a::before { content:' · '; white-space:pre; }
+.situation-map-feedback { position:absolute; bottom:110px; right:10px; max-width:min(350px,calc(100% - 60px)); max-height:100px; overflow:auto; padding:7px 9px; border:1px solid var(--line); border-radius:6px; background:#fffffff2; color:#34483f; font-size:12px; line-height:1.5; }
+.situation-map-feedback p { margin:0; }
+.situation-map-feedback button { min-height:28px; margin:4px 0; padding:2px 8px; font-size:12px; }

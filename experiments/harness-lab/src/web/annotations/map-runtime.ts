@@ -3,6 +3,7 @@ import { TerraDraw, TerraDrawLineStringMode, TerraDrawPointMode, TerraDrawPolygo
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw-maplibre-gl-adapter';
 import type { AnnotationFeature, AnnotationVersion } from '../../contracts/annotations';
 import type { SituationGeometry } from '../../contracts/context';
+import { BUSINESS_ANCHOR } from '../situation/basemap-style';
 
 export interface AnnotationMapGroup { key: string; version: AnnotationVersion; visibleLayers: string[] }
 export interface AnnotationMapEdit { mode: 'point' | 'line' | 'polygon' | 'text' | 'select'; feature?: AnnotationFeature }
@@ -26,7 +27,7 @@ export function createAnnotationRuntime(map: LibreMap, read: () => AnnotationMap
   map.on('click', click);
   function update() {
     // GeoJSON sources can still be loading after the style is ready.
-    if (!map.getLayer('basemap')) return;
+    if (!map.getLayer(BUSINESS_ANCHOR)) return;
     const state = read(); cleanupLayers();
     for (const group of state?.groups || []) for (const layer of [...group.version.document.layers].sort((a,b) => a.order-b.order)) {
       if (!group.visibleLayers.includes(layer.layerId)) continue;
@@ -34,8 +35,11 @@ export function createAnnotationRuntime(map: LibreMap, read: () => AnnotationMap
       const features = layer.features.map(feature => ({ type: 'Feature' as const, geometry: feature.geometry, properties: {group: group.key, layerId: layer.layerId, objectId: feature.objectId, color: feature.style?.color || '#416858', fill: feature.style?.fillColor || feature.style?.color || '#416858', opacity: feature.style?.opacity ?? 0.35, width: feature.style?.width ?? 3, size: feature.style?.size ?? 7, lineStyle: feature.style?.lineStyle || 'solid'} }));
       map.addSource(id, {type: 'geojson', data: {type: 'FeatureCollection', features}}); sources.push(id);
       map.addLayer({id: `${id}:fill`, type:'fill', source:id, filter:['==',['geometry-type'],'Polygon'], paint:{'fill-color':['get','fill'],'fill-opacity':['get','opacity']}}); layers.push(`${id}:fill`);
-      for (const [style,dash] of [['solid',[1,0]],['dashed',[3,2]],['dotted',[1,2]]] as const) {
-        const line = `${id}:${style}`; map.addLayer({id:line,type:'line',source:id,filter:['all',['!=',['geometry-type'],'Point'],['==',['get','lineStyle'],style]],paint:{'line-color':['get','color'],'line-width':['get','width'],'line-dasharray':[...dash]}}); layers.push(line);
+      for (const [style,dash] of [['solid',undefined],['dashed',[3,2]],['dotted',[1,2]]] as const) {
+        // A solid stroke must bypass the dash atlas; [1, 0] can disappear after other layers change.
+        const dashPaint = dash ? {'line-dasharray':[...dash]} : {};
+        const outline = `${id}:${style}:halo`; map.addLayer({id:outline,type:'line',source:id,filter:['all',['!=',['geometry-type'],'Point'],['==',['get','lineStyle'],style]],paint:{'line-color':'#ffffff','line-width':['+',['get','width'],3],...dashPaint}}); layers.push(outline);
+        const line = `${id}:${style}`; map.addLayer({id:line,type:'line',source:id,filter:['all',['!=',['geometry-type'],'Point'],['==',['get','lineStyle'],style]],paint:{'line-color':['get','color'],'line-width':['get','width'],...dashPaint}}); layers.push(line);
       }
       map.addLayer({id:`${id}:point`,type:'circle',source:id,filter:['==',['geometry-type'],'Point'],paint:{'circle-color':['get','color'],'circle-radius':['get','size'],'circle-opacity':0}}); layers.push(`${id}:point`);
       for (const feature of layer.features) {
