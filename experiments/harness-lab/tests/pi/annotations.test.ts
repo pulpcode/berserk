@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { AgentSession } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
 import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
 import type { AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
@@ -15,7 +16,7 @@ import { AccessStore } from '../../src/access/store.js';
 import type { LabConfig } from '../../src/server/config.js';
 
 const clean: Array<() => Promise<unknown>> = [];
-afterEach(async () => { for (const fn of clean.splice(0).reverse()) await fn(); });
+afterEach(async () => { vi.restoreAllMocks(); for (const fn of clean.splice(0).reverse()) await fn(); });
 async function setup(reply: Parameters<typeof fakeRuntime>[1] = () => ({text: '收到'}), overrides: Partial<LabConfig> = {}) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-annotations-pi-')); clean.push(() => rm(dir, {recursive: true, force: true}));
   const config = testConfig(dir, {seatId: 'alpha', testSeats: [{id: 'alpha', name: '甲'}, {id: 'bravo', name: '乙'}], ...overrides});
@@ -35,6 +36,51 @@ async function ask(lab: PiLab, session: string, annotationRefs?: AnnotationSelec
 }
 
 describe('annotation input and native tools', () => {
+  it('matches the adoption description to actual formal task permissions and schema', async () => {
+    const dir=await mkdtemp(join(tmpdir(),'axon-annotation-description-'));clean.push(()=>rm(dir,{recursive:true,force:true}));
+    const db=await openDatabase(dir),access=new AccessStore(db);
+    for(const seatId of ['manager','reader'])await access.saveAccount({username:seatId,displayName:seatId,seatId,seatName:seatId,password:'annotations-test-password',createPublicTask:seatId==='manager',manageModelSettings:false});
+    const manager=access.identityForSeat('manager')!,reader=access.identityForSeat('reader')!;
+    const task=access.create(manager,{clientActionId:randomUUID(),title:'公共任务',goal:'核对权限',visibility:'public'});db.close();
+    const config=testConfig(dir,{seatId:'manager',auth:{secret:'annotation-description-test-secret-32',sessionMs:28800000}});
+    const lab=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'收到'}))).runtime);clean.push(()=>lab.close());
+    for(const actor of [manager,reader]) {
+      const workspace=await lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title),session=await lab.createSession(workspace.id,actor.seatId);
+      const tools=annotationTools(lab.annotations!,{actor,taskId:task.id,sessionId:session.id,requestId:randomUUID(),signal:new AbortController().signal,check:()=>{}});
+      const action=tools.find(tool=>tool.name==='annotation_action')!,allowed=actor===manager;
+      expect(lab.annotations!.canSetCurrent(actor,task.id)).toBe(allowed);
+      expect(JSON.stringify(action.parameters).includes('set_current')).toBe(allowed);
+      expect(action.description.includes('当前席位可以 set_current')).toBe(allowed);
+      expect(action.description.includes('当前席位不能设为任务当前')).toBe(!allowed);
+      if(!allowed)expect(action.description).not.toContain('set_current');
+    }
+  });
+  it('reopens a native v1/v2/v3 conversation and appends new map requests as v3 without rewriting old input', async () => {
+    const {lab,session,config,draft}=await setup();const skill=await lab.resources.readSkill(session.workspaceId,'review','alpha');
+    for(let i=0;i<3;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
+    const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]);await lab.close();
+    const entries=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
+    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V3);expect(inputs).toHaveLength(3);
+    inputs[0].customType=COMPOSER_INPUT;delete inputs[0].details.annotationContext;delete inputs[0].details.annotationRefs;
+    inputs[1].customType=COMPOSER_INPUT_V2;
+    for(const entry of inputs.slice(0,2))entry.content=recordedComposerText(entry.details,entry.customType);
+    const old=entries.map(entry=>JSON.stringify(entry)).join('\n')+'\n';await writeFile(file,old);
+    const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>next.close());
+    expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(3);
+    await ask(next,session.id);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
+    const after=await readFile(file,'utf8');expect(after.startsWith(old)).toBe(true);
+    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V3)).toHaveLength(2);
+  });
+  it('preserves cancelled v3 preparation without executing it or replaying selections on continuation', async () => {
+    const {lab,session,config,draft,calls}=await setup();const request=lab.start(session.id,'检查固定参考',{annotationRefs:[draft.ref!]},'alpha');
+    const original=AgentSession.prototype.sendCustomMessage;
+    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V3)lab.cancel(session.id,request.requestId,'alpha');});
+    await request.run(()=>{});spy.mockRestore();expect(calls).toHaveLength(0);expect(lab.get(session.id,'alpha').messages).toHaveLength(0);
+    await lab.close();const fake=await fakeRuntime(config,()=>({text:'新请求'}));const next=await PiLab.create(config,fake.runtime);clean.push(()=>next.close());
+    expect(next.get(session.id,'alpha').lastResult?.status).toBe('cancelled');
+    const continued=await ask(next,session.id);expect(continued.lastResult?.status).toBe('succeeded');expect(fake.calls).toHaveLength(1);
+    expect(continued.messages.find(m=>m.role==='user')?.selections?.annotationRefs).toBeUndefined();
+  });
   it('uses provider-compatible object roots and homogeneous coordinate arrays while the service rejects invalid latitude', async () => {
     const {lab, session, actor, taskId} = await setup();
     const state = new AnnotationRequestState();
@@ -95,7 +141,7 @@ describe('annotation input and native tools', () => {
     lab.annotations!.action(actor, session.id, {action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]});
     expect(lab.annotations!.read(actor, taskId, {ref, objectIds: ['a']}).objects.items).toHaveLength(1);
     const path = join(config.dataDir, 'sessions', (await readdir(join(config.dataDir, 'sessions')))[0]);
-    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V2);
+    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V3);
     await lab.close(); const reopened = await PiLab.create(config, (await fakeRuntime(config, () => ({text: '继续'}))).runtime); clean.push(() => reopened.close());
     expect(reopened.get(session.id, 'alpha').messages).toEqual(snapshot.messages);
     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();

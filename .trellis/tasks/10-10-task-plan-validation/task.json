@@ -19,7 +19,8 @@
   "pr_url": null,
   "subtasks": [],
   "children": [
-    "10-14-desktop-map-acceptance"
+    "10-14-desktop-map-acceptance",
+    "10-14-map-result-reporting"
   ],
   "parent": null,
   "relatedFiles": [
@@ -29,7 +30,7 @@
     ".trellis/tasks/10-10-task-plan-validation/implement.md",
     ".trellis/tasks/10-10-task-plan-validation/research/current-state.md"
   ],
-  "notes": "用户于 2026-10-10 批准实施，随后批准全面更新线上服务以节省占用；保留旧数据与回退文件，使用独立验证数据。 2026-10-14：当前实现已提交 e9a01b4；用户要求仅更新读取依据与失败恢复方案，待审阅后再开工。父任务回到 planning，历史已实施/验收结果保留在相应 meta 与基线提交；本次未授权实现或部署。 随后用户明确批准本修订实施，并要求用原场景复测、展示验证结果。 本次恢复实现和三例固定真实模型复测完成，报告与证据已落盘；未提交或部署。 随后按用户要求提交恢复改造为 9dc1250；下一阶段桌面完整使用验收已创建规划子任务 10-14-desktop-map-acceptance，待审阅，不启动实施。 用户随后批准桌面验收实施，子任务已完成真实桌面批次，结果待审阅；详见子任务validation/review。",
+  "notes": "用户于 2026-10-10 批准实施，随后批准全面更新线上服务以节省占用；保留旧数据与回退文件，使用独立验证数据。 2026-10-14：当前实现已提交 e9a01b4；用户要求仅更新读取依据与失败恢复方案，待审阅后再开工。父任务回到 planning，历史已实施/验收结果保留在相应 meta 与基线提交；本次未授权实现或部署。 随后用户明确批准本修订实施，并要求用原场景复测、展示验证结果。 本次恢复实现和三例固定真实模型复测完成，报告与证据已落盘；未提交或部署。 随后按用户要求提交恢复改造为 9dc1250；下一阶段桌面完整使用验收已创建规划子任务 10-14-desktop-map-acceptance，待审阅，不启动实施。 用户随后批准桌面验收实施，子任务已完成真实桌面批次，结果待审阅；详见子任务validation/review。 用户要求先提交桌面验收，已提交 b201934；随后仅整理地图结果说明一致性改进及原场景复测方案，子任务 10-14-map-result-reporting 保持 planning，待审阅后实施。 随后用户批准地图结果说明改进实施及原场景复测；十环境54请求完成，核心操作通过，4条明确错误说明及若干歧义/精度观察保留，子任务进入review，未提交或部署。",
   "meta": {
     "designStatus": "approved",
     "implementationApproved": true,
@@ -148,7 +149,25 @@
       "scenariosCompleted": 8,
       "mainFlowPassed": 3,
       "productChanges": false,
-      "deployed": false
+      "deployed": false,
+      "validationCommit": "b201934a15f3cf35ba0b278fcd51c0840464560b"
+    },
+    "mapResultReporting": {
+      "task": "10-14-map-result-reporting",
+      "status": "implemented_validated_with_findings",
+      "implementationApproved": true,
+      "implementationComplete": true,
+      "baselineCommit": "b201934a15f3cf35ba0b278fcd51c0840464560b",
+      "plan": "../10-14-map-result-reporting/design.md",
+      "implementationPlan": "../10-14-map-result-reporting/implement.md",
+      "validationStatus": "operations_pass_reporting_failed",
+      "deployed": false,
+      "report": "../10-14-map-result-reporting/validation.md",
+      "review": "../10-14-map-result-reporting/desktop-semantic-review.md",
+      "realModelEnvironments": 10,
+      "businessRequests": 54,
+      "confirmedIncorrectResponses": 4,
+      "acceptancePassed": false
     }
   }
 }

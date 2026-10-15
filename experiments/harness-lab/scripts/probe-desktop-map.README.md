@@ -9,6 +9,15 @@ LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx sc
 
 准备调试可加 `--prepare-case main-1|ambiguity|collaboration|main-2|main-3`，必须同时带 `--prepare-only`；正式运行固定五个独立环境，不能缩减、重试挑选或自动批准。准备模式在消息入口及提供方 HTTP 入口均阻止模型调用。
 
+结果说明复测可用 `--reporting-recheck`，固定执行 `collaboration-1`、`collaboration-2` 两个全新环境，各自复用完整 B01→B02→C01→C02 流程、原业务输入与操作员规则。它不是另两轮完整八场景验收，不改变默认五环境，不提供失败重试。可与 `--prepare-only` 组合，不能与 `--prepare-case` 混用：
+
+```sh
+LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx scripts/probe-desktop-map.ts --reporting-recheck --prepare-only --port 4361
+LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx scripts/probe-desktop-map.ts --reporting-recheck --port 4361
+```
+
+每轮请求另存 `visibleEvidence`：按实际 requestId 保留用户输入、中途助手说明、最终答复和问题/答复。它不评分、不改写文本、不进入模型上下文；完整 snapshot、工具结果和原生历史继续保留。语义审阅须包含确认前说明，不能只看最终答复。
+
 正式次序：main-1（A01→A02→A03）、ambiguity（A04）、collaboration（B01→B02→C01→C02）、main-2、main-3（各 A01→A02）。每个环境使用新账号、数据库、任务及来源；一个环境内会话共享任务。筹划席浏览器的两个页面共享同一个账号身份；总体席使用独立 context。所有发送、人工编辑、引用、发布版采用通过实际 UI/HTTP。API 仅用于明确的初始化、独立快照核对和 C02 正式认证拒绝对照，不将初始化算作模型完成。
 
 地图仍由 MapLibre 渲染，唯一被 browser route 替换的是 map-config 与固定本地瓦片。来源树定位后，通过已知夹具几何计算屏幕位置并实际点击地图验证来源选择；业务 API 不 mock。坐标新增用现有表单。截图保持桌面 1440×960 和 1280×900，不验收手机。

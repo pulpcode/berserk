@@ -76,7 +76,9 @@ Use `focus.areaIds` for regional discovery and returned complete refs for exact 
 
 Automatic draft context only includes current set/revision, baseline and writability. It must not grow with the number of layers or objects. Explicit annotationRefs are validated references with bounded host-derived descriptive metadata; they do not automatically load geometry or all object properties. Old contextRefs keep their existing send-time external source semantics.
 
-Use the native composer-input compatibility branch for new records. Preserve the exact v1 content generator and strict decoding. Native tool results record actual read fields; no synthetic tool success, second transcript, summary cache or memory system. Re-read a fixed revision after native compaction when exact data is needed.
+New inputs containing `context`, `annotationContext` or `annotationRefs` use `berserk.composer-input.v3`; method/role-only inputs remain v1. Preserve exact v1/v2 content generators and strict decoding: persisted text is compared byte-for-byte. V3 uses the same bounded data fields, directs map entries to existing UI evidence, and does not request handwritten placeholder URLs. Both history readers recognize v3 and reject unknown versions; request ownership, ordering, Skill snapshots and readonly child restrictions remain enforced. A rollback must retain v3 readers for already-saved records. Native tool results record actual read fields; no synthetic tool success, second transcript, summary cache or memory system. Re-read a fixed revision after native compaction when exact data is needed.
+
+Tool descriptions follow the same `canSetCurrent` decision as the action schema. A successful edit receipt proves that action's effect; absent `current` does not mean `publication:null`. Task-current claims require an actual current read or adoption result; actor fields do not establish an unreturned operation session. The map Skill distinguishes source facts, discussion and saved fields, with targeted reading only when evidence is insufficient. These are reporting instructions, not automatic prose verification; receipts and UI entries remain unchanged.
 
 Model tool JSON Schema uses object roots, standard `$defs`/`$ref` reuse and fixed-length numeric arrays for WGS84 positions. DeepSeek rejected draft-07 tuple `items: [schema, schema]` with HTTP 400 in the live acceptance trial; use one numeric `items` schema with `minItems=maxItems=2`. The shared service still enforces longitude ±180 and latitude ±90 before every write. Do not loosen business geometry validation, alter Pi internals, or change provider settings to mask a schema rejection.
 
@@ -99,6 +101,7 @@ Capture the draft revision when a form or geometry edit begins. A background ref
 | Stale draft/current sequence or action ID reused with other input | Conflict; preserve user edits; no automatic overwrite |
 | Invalid geometry, extra authority fields, ambiguous selector | Reject before effects |
 | Oversized content/result | Explicit size failure; no silent geometry/selection truncation |
+| Unknown composer version, altered persisted text or request ownership | Reject history; never rewrite old records or relax validation to load them |
 | Archived task | New mutation rejected; authorized fixed versions remain readable |
 | Source permission revoked | Reads, copies, publications and receipt lookup recheck permissions |
 | Lost mutation response / altered committed result | Block writes until original receipt is delivered, then read affected state; absent receipt does not authorize retry |
@@ -123,6 +126,8 @@ Use fixed local tile fixtures for automated browser tests; no public tile scans.
 
 `pi/annotation-workflow.test.ts` verifies actual native-loop read visibility, sequential writes, external CAS conflicts, invalid calls, replay, cancellation, compaction and input consumption. `annotation-map-evidence.test.ts` and desktop annotations tests cover fixed receipt entries, request boundaries, malformed results and read-only opening. Real-model Skill/layer diagnostics are separately recorded by `probe-map-workflow.ts`; `--recovery` runs three isolated empty-draft source→publish→refresh flows, preserving the original main-3 prompt and all failures. Deterministic success does not establish model compliance. Recovery tests cover retained records, aggregated missing resources, create races, hook mutations, post-commit RequestError and missing-receipt blocking.
 
+`pi/composer-input.test.ts` checks fixed pre-change v1/v2 samples, v3 strict decoding and mixed evidence. `pi/annotations.test.ts` reopens and continues mixed native histories, cancels v3 preparation, checks bounded context and matches formal task permissions to descriptions/schema. Keep fixed historical expected text independent of the new generator.
+
 ## 7. Wrong vs Correct
 
 Wrong: clone a publication's underlying private snapshot and only redact its ordinary GET response. Correct: apply the same stable public projection to cross-seat derivation while inheriting source restrictions.
@@ -134,3 +139,5 @@ Wrong: compare objects by short ID across unrelated sets. Correct: establish com
 Wrong: infer a source polygon from a region name or replace `Z` with `+08:00` while retaining the same clock time. Correct: discover the actual object, copy through `annotation_from_source`, and preserve source timestamps or convert the instant correctly. A user-requested custom area can use ordinary editing without pretending to be an existing boundary.
 
 Wrong: erase all observations on any tool error and require alternating draft/source rereads. Correct: retain confirmed observations, pause the current output, and identify only missing/stale resources. Unknown commit outcomes require original receipt reconciliation rather than treating every exception as no effect.
+
+Wrong: equate a working map button or a successful save with an accurate explanation of task-current state. Correct: evaluate saved effects and visible narrative against their respective evidence, including pre-confirmation prose.

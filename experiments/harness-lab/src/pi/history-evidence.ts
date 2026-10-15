@@ -1,5 +1,5 @@
 import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
 import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
@@ -123,7 +123,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
       } else if (currentRequest && !message.isError) throw stateError();
     }
     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
-      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2].includes(entry.customType)) {
+      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3].includes(entry.customType)) {
         const input = decodeComposerInput(entry.details, workspaceId, parentSessionId, entry.customType);
         const resources = requests.get(input.requestId);
         if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false

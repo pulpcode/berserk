@@ -1,8 +1,23 @@
 import {describe,it,expect} from 'vitest';
 import type {Interaction} from '../src/contracts/interactions';
-import {desktopOptions,desktopCases,clarificationChoice,seedLayers,recoveryStalled,validateOperatorAnswer,operatorQuestionAllowed} from '../scripts/probe-desktop-map';
+import type {SessionSnapshot} from '../src/contracts/index';
+import {desktopOptions,desktopCases,desktopRunCases,visibleRequestEvidence,clarificationChoice,seedLayers,recoveryStalled,validateOperatorAnswer,operatorQuestionAllowed} from '../scripts/probe-desktop-map';
 const question=(prompt:string,options?:Array<{id:string;label:string}>):Interaction=>({kind:'question',schemaVersion:1,interactionId:'i',workspaceId:'w',sessionId:'s',requestId:'r',toolCallId:'t',toolName:'ask_user',createdAt:'2026-10-14T00:00:00Z',status:'pending',questions:[{id:'q',prompt,options}]});
 describe('desktop acceptance driver boundaries',()=>{
+ it('adds exactly two independent collaboration environments without changing the default or allowing case selection',()=>{
+  expect(desktopRunCases(desktopOptions([]))).toEqual(desktopCases);
+  for(const args of [['--reporting-recheck'],['--reporting-recheck','--prepare-only']])expect(desktopRunCases(desktopOptions(args))).toEqual(['collaboration-1','collaboration-2']);
+  expect(desktopOptions(['--reporting-recheck','--prepare-only']).prepareOnly).toBe(true);
+  for(const args of [['--reporting-recheck','--prepare-only','--prepare-case','collaboration'],['--prepare-only','--prepare-case','main-1','--reporting-recheck'],['--reporting-recheck','--runs','3']])expect(()=>desktopOptions(args)).toThrow();
+ });
+ it('retains intermediate claims, final prose and resolved questions only for the actual request',()=>{
+  const pending=question('确认前问题'),resolved={...pending,status:'answered',answers:[{questionId:'q',text:'按原目标'}]} as Interaction;
+  const snapshot={messages:[{id:'old',requestId:'old',role:'assistant',text:'旧答复'},{id:'u',requestId:'r',role:'user',text:'原请求'},{id:'m',requestId:'r',role:'assistant',text:'确认前说明'},{id:'t',requestId:'r',role:'tool',text:'回执'},{id:'f',requestId:'r',role:'assistant',text:'最终说明'}],turns:[{requestId:'r',status:'succeeded',finalMessageId:'f'}],interactions:[resolved]} as SessionSnapshot;
+  const result=visibleRequestEvidence(snapshot,'r',[pending]);
+  expect(result.messages.map(m=>[m.text,m.position])).toEqual([['原请求','user'],['确认前说明','intermediate'],['最终说明','final']]);
+  expect(result.interactions).toEqual([resolved]);expect(result.semanticReview).toBe('pending_review');
+  expect(visibleRequestEvidence(snapshot,undefined,[pending]).messages).toEqual([]);
+ });
  it('fixes three independent main chains and keeps preparation zero-model explicit',()=>{expect(desktopCases).toEqual(['main-1','ambiguity','collaboration','main-2','main-3']);expect(desktopOptions([])).toEqual({port:4361,prepareOnly:false});expect(desktopOptions(['--prepare-only','--port','4363'])).toEqual({port:4363,prepareOnly:true});for(const args of [['--retry'],['--approve-all'],['--runs','1'],['--port','80'],['--prepare-case','main-1']])expect(()=>desktopOptions(args)).toThrow();});
  it('only answers the exact predeclared clarification target, never permissions',()=>{expect(clarificationChoice(question('请选择集合点所在图层',[{id:'a',label:'现场讨论'},{id:'b',label:'保障讨论'}]))).toEqual({optionId:'a',label:'现场讨论'});expect(clarificationChoice(question('哪个集合点？'))).toEqual({text:'修改“现场讨论”图层里的集合点。'});expect(clarificationChoice(question('是否授权发布现场讨论图层？'))).toBeNull();expect(clarificationChoice(question('选择图层',[{id:'a',label:'现场讨论'},{id:'b',label:'现场讨论另一个'}]))).toBeNull();expect(clarificationChoice(question('需要什么帮助？'))).toBeNull();expect(clarificationChoice(question('哪个图层？',[{id:'a',label:'现场讨论并发布'}]))).toBeNull();const confirmation={...question(''),kind:'confirmation'} as Interaction;expect(clarificationChoice(confirmation)).toBeNull();});
  it('stops only unchanged consecutive failures in the same request',()=>{const calls=new Map([['a','x'],['b','x'],['c','x'],['d','y']]);const msg=(id:string,requestId='r',isError=true)=>({id,toolCallId:id,requestId,isError,role:'tool' as const,text:'error'});expect(recoveryStalled([msg('a'),msg('b'),msg('c')],calls,'r')).toBe(true);expect(recoveryStalled([msg('a'),msg('b'),msg('d')],calls,'r')).toBe(false);expect(recoveryStalled([msg('a'),msg('b','r',false),msg('c')],calls,'r')).toBe(false);expect(recoveryStalled([msg('a','old'),msg('b'),msg('c')],calls,'r')).toBe(false);});

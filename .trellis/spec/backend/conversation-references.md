@@ -25,6 +25,8 @@ Map object references use complete `{systemId,objectType,objectId}` keys, at mos
 
 Persist `berserk.composer-input.v1` through Pi's public custom-message API with `display:false`, owning workspace/session/request IDs and resolved selections. Save ordinary user text separately. Native history decoding validates ownership, hashes, body, ordering and duplicate records. Old histories require no migration. Normal Pi compaction can summarize this input; full JSONL remains available.
 
+New map-bearing selections use `berserk.composer-input.v3` while method/role-only inputs retain v1; existing annotation-bearing v2 histories remain readable with their exact original text. See [Map Annotations](./map-annotations.md) for the version routing and rollback contract. Do not modify old template output to update instructions for new requests.
+
 When the parent calls the selected role, `selectedChildInput` forwards the Skill body and file references in addition to the actual task. Other roles do not receive that automatic selection. Children retain their readonly tool whitelist; an analyst can use an already loaded Skill without acquiring `skill_read`. Do not copy parent history into child context. Do not overwrite the parent-generated task or add hidden retries/forced dispatch.
 
 Cancellation between saving custom input and saving user text can leave input history without an associated user message. Preserve native history, render only associated selections and never replay the request automatically. Historical context can still influence a model; absence of host replay is not a guarantee of semantic forgetting.
