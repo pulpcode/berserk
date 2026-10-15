@@ -44,7 +44,7 @@ const operations = Type.Array(Type.Union([
 ]), {minItems: 1, maxItems: 100});
 const operationsRef = Type.Unsafe<Static<typeof operations>>({$ref: '#/$defs/operations'});
 const actionSchemas = [
-  Type.Object({action: Type.Literal('create_draft'), baseRef: Type.Union([annotationRefSchema, Type.Null()]), title: Type.Optional(name), operations: Type.Optional(operationsRef)}, strict),
+  Type.Object({action: Type.Literal('create_draft'), baseRef: Type.Union([annotationRefSchema, Type.Null()], {description: '新草稿的固定派生基线；null 从空白创建。该引用不证明此版本曾被或正在被任务采用。'}), title: Type.Optional(name), operations: Type.Optional(operationsRef)}, strict),
   Type.Object({action: Type.Literal('apply'), operations: operationsRef}, strict),
   Type.Object({action: Type.Literal('publish'), revision, title: name, note: Type.Optional(Type.String({maxLength: 4000}))}, strict),
 ] as const;
@@ -89,7 +89,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
   const actionSchema = Type.Union([...actionSchemas, currentSchema], {type: 'object', $defs: {geometry, style, feature, operations}});
   if (!canSetCurrent) actionSchema.anyOf.splice(-1, 1);
   return [
-    defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有元信息、不含几何。当前设定只证明本次读取时的状态，历史回答不代表实时状态。采用者字段不证明操作所属会话，也不等于发布者。不会切换本会话编辑目标。分页读取。',
+    defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有元信息、不含几何。current.publication 是任务独立选择的发布版；current.publication:null 才表示读取时尚未设置，缺少 current 只是未提供状态。基线、草稿修订和历史回答都不能代替本次查询。采用者字段不证明操作所属会话，也不等于发布者。不会切换本会话编辑目标。分页读取。',
       parameters: Type.Object(pagination, strict), executionMode: 'sequential',
       execute: (callId, params, signal) => execute(callId, () => {
         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
@@ -133,7 +133,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         state.committed(result.receipt, result.replayed);
         return {...result.receipt, ...(result.replayed ? {replayed: true} : {})};
       },signal)}),
-    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。动作回执只证明该动作返回的效果；缺少 current 字段不表示任务没有当前版本。需要回答任务当前状态时用 annotation_list 核实。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
+    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。只报告本次实际效果，无需顺带总结任务当前。若要说明任务当前，以本次 annotation_list 查询或本次实际成功采用回执为依据，分别说明读取或提交时状态；历史回答、旧动作回执及 replayed:true 都不能代替。未提供 current 不能推断为没有当前版本或基线正在被采用。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
       parameters: actionSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(toolCallId, (scoped, dispatch, committed) => {
         const clientActionId = annotationActionId(scope.requestId, toolCallId);

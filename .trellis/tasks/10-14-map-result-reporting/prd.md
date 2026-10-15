@@ -43,3 +43,8 @@
 本轮不增加：回执字段或数据库表、跨请求状态缓存、全局事实台账、回答拦截器、第二个审核 Agent、自动重写答案、每轮强制读回、操作者身份映射服务、UI 结果卡片、MCP 迁移、模型切换、手机验收、推送或部署。后续如证实回执本身缺少必要事实，再单独提交范围变更。
 
 用户已明确批准本版方案实施和原场景复测。实现与确定性检查已完成，真实模型结果见 validation.md；通过条件保持本稿原定标准。
+
+
+## 2026-10-15 后续最小改进
+
+用户已批准继续实施。上一轮结论及记录保留；本轮范围以 [base-current-followup.md](base-current-followup.md) 为准，实施见 [base-current-implementation.md](base-current-implementation.md)，检查见 [base-current-review.md](base-current-review.md)，原场景复测见 [base-current-validation.md](base-current-validation.md)。

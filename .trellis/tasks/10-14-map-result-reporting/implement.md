@@ -82,3 +82,8 @@ LAB_EXECUTION_ENABLED=false node --env-file-if-exists=.env.local --import tsx sc
 - 已写出 v3 后：回退行为时保留 v3 历史读取支持，不直接恢复不认识 v3 的旧程序，不放松历史校验。
 
 实际命令与确定性检查见 implementation-notes.md；真实批次、失败和语义判定见 validation.md。
+
+
+## 2026-10-15 后续最小改进
+
+用户已批准继续实施。上一轮结论及记录保留；本轮范围以 [base-current-followup.md](base-current-followup.md) 为准，实施见 [base-current-implementation.md](base-current-implementation.md)，检查见 [base-current-review.md](base-current-review.md)，原场景复测见 [base-current-validation.md](base-current-validation.md)。

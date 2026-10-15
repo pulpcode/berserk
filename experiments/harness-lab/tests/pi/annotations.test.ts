@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AgentSession } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
 import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
 import type { AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
@@ -55,26 +55,26 @@ describe('annotation input and native tools', () => {
       if(!allowed)expect(action.description).not.toContain('set_current');
     }
   });
-  it('reopens a native v1/v2/v3 conversation and appends new map requests as v3 without rewriting old input', async () => {
+  it('reopens a native v1/v2/v3/v4 conversation and appends new map requests as v4 without rewriting old input', async () => {
     const {lab,session,config,draft}=await setup();const skill=await lab.resources.readSkill(session.workspaceId,'review','alpha');
-    for(let i=0;i<3;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
+    for(let i=0;i<4;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
     const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]);await lab.close();
     const entries=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
-    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V3);expect(inputs).toHaveLength(3);
+    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V4);expect(inputs).toHaveLength(4);
     inputs[0].customType=COMPOSER_INPUT;delete inputs[0].details.annotationContext;delete inputs[0].details.annotationRefs;
-    inputs[1].customType=COMPOSER_INPUT_V2;
-    for(const entry of inputs.slice(0,2))entry.content=recordedComposerText(entry.details,entry.customType);
+    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;
+    for(const entry of inputs.slice(0,3))entry.content=recordedComposerText(entry.details,entry.customType);
     const old=entries.map(entry=>JSON.stringify(entry)).join('\n')+'\n';await writeFile(file,old);
     const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>next.close());
-    expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(3);
+    expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(4);
     await ask(next,session.id);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
     const after=await readFile(file,'utf8');expect(after.startsWith(old)).toBe(true);
-    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V3)).toHaveLength(2);
+    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V4)).toHaveLength(2);
   });
-  it('preserves cancelled v3 preparation without executing it or replaying selections on continuation', async () => {
+  it('preserves cancelled v4 preparation without executing it or replaying selections on continuation', async () => {
     const {lab,session,config,draft,calls}=await setup();const request=lab.start(session.id,'检查固定参考',{annotationRefs:[draft.ref!]},'alpha');
     const original=AgentSession.prototype.sendCustomMessage;
-    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V3)lab.cancel(session.id,request.requestId,'alpha');});
+    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V4)lab.cancel(session.id,request.requestId,'alpha');});
     await request.run(()=>{});spy.mockRestore();expect(calls).toHaveLength(0);expect(lab.get(session.id,'alpha').messages).toHaveLength(0);
     await lab.close();const fake=await fakeRuntime(config,()=>({text:'新请求'}));const next=await PiLab.create(config,fake.runtime);clean.push(()=>next.close());
     expect(next.get(session.id,'alpha').lastResult?.status).toBe('cancelled');
@@ -109,6 +109,21 @@ describe('annotation input and native tools', () => {
     const input = JSON.stringify(calls[0].context.messages);
     expect(input).toContain(JSON.stringify(draft.ref).replaceAll('"', '\\"'));
     expect(input).not.toContain('集合图层'); expect(input).not.toContain('业务备注'); expect(input).not.toContain('coordinates');
+    expect(input).toContain('baseRef 是草稿的固定派生基线');
+    expect(input).toContain('draft.revision 是本会话草稿修订');
+    expect(input).toContain('writable 仅表示草稿可编辑，不代表任务采用权限');
+    expect(input).toContain('未提供任务当前采用状态');
+    expect(input).not.toContain('所选 Skill 正文已经加载');
+    expect(lab.getRequestResources(session.id, request.requestId, 'alpha')).toMatchObject({readSkills: []});
+    expect(lab.get(session.id, 'alpha').messages.some(message => message.role === 'tool')).toBe(false);
+    const action = calls[0].context.tools!.find(tool => tool.name === 'annotation_action')!;
+    const list = calls[0].context.tools!.find(tool => tool.name === 'annotation_list')!;
+    expect(action.description).toContain('无需顺带总结任务当前');
+    expect(action.description).toContain('本次实际成功采用回执');
+    expect(action.description).toContain('旧动作回执及 replayed:true 都不能代替');
+    expect(JSON.stringify(action.parameters)).toContain('该引用不证明此版本曾被或正在被任务采用');
+    expect(list.description).toContain('current.publication:null 才表示读取时尚未设置');
+
     const snapshot = await ask(lab, session.id);
     expect(snapshot.messages.filter(message => message.role === 'user').at(-1)?.selections?.annotationContext?.draft?.revision).toBe(2);
   });
@@ -141,7 +156,7 @@ describe('annotation input and native tools', () => {
     lab.annotations!.action(actor, session.id, {action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]});
     expect(lab.annotations!.read(actor, taskId, {ref, objectIds: ['a']}).objects.items).toHaveLength(1);
     const path = join(config.dataDir, 'sessions', (await readdir(join(config.dataDir, 'sessions')))[0]);
-    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V3);
+    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V4);
     await lab.close(); const reopened = await PiLab.create(config, (await fakeRuntime(config, () => ({text: '继续'}))).runtime); clean.push(() => reopened.close());
     expect(reopened.get(session.id, 'alpha').messages).toEqual(snapshot.messages);
     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();

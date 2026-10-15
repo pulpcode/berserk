@@ -2,7 +2,7 @@
   "id": "map-result-reporting",
   "name": "map-result-reporting",
   "title": "地图操作结果说明一致性改进",
-  "description": "已按审阅方案实施，并完成原场景十环境复测；核心操作通过，回答准确性有局部改善但未达全部验收标准。",
+  "description": "2026-10-15 最小改进完成：原场景7环境45请求操作通过，三条协同链未复现基线当当前；另有4条最终说明错误，完整记录待审。",
   "status": "review",
   "dev_type": "backend",
   "scope": "map-result-reporting",
@@ -29,9 +29,14 @@
     ".trellis/tasks/10-14-map-result-reporting/implementation-notes.md",
     ".trellis/tasks/10-14-map-result-reporting/validation.md",
     ".trellis/tasks/10-14-map-result-reporting/review.md",
-    ".trellis/tasks/10-14-map-result-reporting/desktop-semantic-review.md"
+    ".trellis/tasks/10-14-map-result-reporting/desktop-semantic-review.md",
+    ".trellis/tasks/10-14-map-result-reporting/base-current-followup.md",
+    ".trellis/tasks/10-14-map-result-reporting/base-current-implementation.md",
+    ".trellis/tasks/10-14-map-result-reporting/base-current-review.md",
+    ".trellis/tasks/10-14-map-result-reporting/base-current-semantic-review.md",
+    ".trellis/tasks/10-14-map-result-reporting/base-current-validation.md"
   ],
-  "notes": "2026-10-14 用户批准实施和原场景复测。142单元/集成+14桌面E2E、typecheck/lint/build通过。十隔离环境54请求核心操作通过；4条确定错误回答（1次继承身份、3次baseRef/current混淆），另有来源字段歧义与327ms手写时间精度损失。按停止线保留证据待用户审阅，未追加prompt修补、提交、部署或推送。",
+  "notes": "2026-10-14 用户批准实施和原场景复测。142单元/集成+14桌面E2E、typecheck/lint/build通过。十隔离环境54请求核心操作通过；4条确定错误回答（1次继承身份、3次baseRef/current混淆），另有来源字段歧义与327ms手写时间精度损失。按停止线保留证据待用户审阅，未追加prompt修补、提交、部署或推送。\n2026-10-15 先提交4c84f4f，再实施v4上下文/工具说明最小改进。143自动测试、原桌面及2协同复测完成，344冻结文件未变。三链9重点无基线/current错误，但其他4条最终转述错误及1中途自纠正；新修改未提交、推送或部署。",
   "meta": {
     "designStatus": "approved",
     "implementationApproved": true,
@@ -73,6 +78,37 @@
       "2026-10-14T13-43-20.935Z",
       "2026-10-14T13-47-12.134Z",
       "2026-10-14T13-50-43.025Z"
-    ]
+    ],
+    "baseCurrentFollowup": {
+      "status": "review",
+      "baselineCommit": "4c84f4f",
+      "approved": true,
+      "implementationComplete": true,
+      "targetedTestsPassed": 143,
+      "liveEnvironments": 7,
+      "businessRequests": 45,
+      "assistantMessagesReviewed": 127,
+      "modelCalls": 148,
+      "toolCalls": 114,
+      "toolErrors": 0,
+      "totalTokens": 2287354,
+      "collaborationChains": 3,
+      "targetObservations": 9,
+      "baseCurrentConfusions": 0,
+      "confirmedIncorrectFinalResponses": 4,
+      "selfCorrectedIntermediateErrors": 1,
+      "targetAcceptancePassed": true,
+      "overallReportingAcceptancePassed": false,
+      "freezeUnchanged": true,
+      "frozenFiles": 344,
+      "report": "base-current-validation.md",
+      "semanticReview": "base-current-semantic-review.md",
+      "liveBatches": [
+        "2026-10-15T03-48-32.382Z",
+        "2026-10-15T03-54-33.007Z"
+      ],
+      "deployed": false,
+      "newChangesCommitted": false
+    }
   }
 }

@@ -206,3 +206,8 @@ v3 仅是这次文案变化所需的持久记录兼容版本，不建立第二�
 | [Codex 工具适配指导](https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide#tools) / [Skill 评估](https://developers.openai.com/blog/eval-skills) | 模型与工具形式有关，定制能力需评估；分开检查结果与效率 | 原模型、原业务输入下观察组合改动，不把它当作模型能力对照实验 |
 
 本轮方案的选择属于针对当前证据的工程判断，并非宣称照搬了某个成熟 Agent 的完整事实校验机制。
+
+
+## 2026-10-15 后续最小改进
+
+用户已批准继续实施。上一轮结论及记录保留；本轮范围以 [base-current-followup.md](base-current-followup.md) 为准，实施见 [base-current-implementation.md](base-current-implementation.md)，检查见 [base-current-review.md](base-current-review.md)，原场景复测见 [base-current-validation.md](base-current-validation.md)。
