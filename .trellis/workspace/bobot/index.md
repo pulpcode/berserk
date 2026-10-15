@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 30
+- **Total Sessions**: 32
 - **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~895 | Active |
+| `journal-1.md` | ~964 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 32 | 2026-10-15 | 完成冻结代码的真实交接模型测评 | - | `codex/handoff-reliability` |
+| 31 | 2026-10-15 | 完成交接可靠性首轮审计与保护测试 | - | `codex/handoff-reliability` |
 | 30 | 2026-10-15 | 完成地图查询范围两模型同输入对照 | - | `main` |
 | 29 | 2026-10-15 | 实施收窄地图工具契约并完成固定对照复测 | `7c43e45` | `main` |
 | 28 | 2026-10-14 | 实现地图宿主修订管理并完成固定十一案验收 | - | `main` |

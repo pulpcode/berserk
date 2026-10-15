@@ -22,10 +22,10 @@ const seats = [{ id: 'test-seat', name: '席位 A' }, { id: 'seat-b', name: '席
 const actor = { seatId: 'test-seat' };
 const other = { seatId: 'seat-b' };
 function barrier() { let resolve!: () => void; const promise = new Promise<void>(done => { resolve = done; }); return { promise, resolve }; }
-async function setup(reply: (context: Context, index: number) => Reply) {
+async function setup(reply: (context: Context, index: number) => Reply, agentRunTimeoutMs = 0) {
   const dataDir = await mkdtemp(join(tmpdir(), 'axon-handoff-pi-'));
   cleanup.push(() => rm(dataDir, { recursive: true, force: true }));
-  const config = testConfig(dataDir, { seatId: actor.seatId, testSeats: seats });
+  const config = testConfig(dataDir, { seatId: actor.seatId, testSeats: seats, agentRunTimeoutMs });
   const fake = await fakeRuntime(config, reply);
   const lab = await PiLab.create(config, fake.runtime); cleanup.push(() => lab.close());
   return { dataDir, config, fake, lab };
@@ -131,6 +131,20 @@ describe('Pi collaboration tools and native HITL', () => {
     expect(lab.get(session.id).messages.filter(message => message.role === 'tool').some(message => message.text.includes('"committed":true'))).toBe(false);
     expect(lab.collaboration!.getAction(actor, item.action.handoff!.operationId).status).toBe('expired');
     expect(lab.get(session.id).interactions?.[0].status).toBe(decision === 'cancel' ? 'cancelled' : 'rejected');
+  });
+
+  it('expires a pending work action at the whole-request deadline and rejects late approval', async () => {
+    const input: WorkActionInput = { kind: 'assign', payload: { inputPaths: [], assigneeSeatId: other.seatId, title: '工作', goal: '等待确认' } };
+    const { lab, fake } = await setup((_context, index) => index === 0 ? { tools: [{ name: 'work_item_action', arguments: { action: input } }] } : { text: '不应继续' }, 1800);
+    const commit = vi.spyOn(lab.collaboration!, 'commitAgent');
+    const session = await lab.createSession(); const done = lab.start(session.id, '分派').run(() => {}); const item = await wait(lab, session.id);
+    await done;
+    expect(lab.get(session.id).lastResult).toMatchObject({ status: 'failed', message: expect.stringContaining('超时') });
+    expect(lab.get(session.id).interactions?.[0]).toMatchObject({ status: 'cancelled', reason: expect.stringContaining('超时') });
+    const action = lab.collaboration!.getAction(actor, item.action.handoff!.operationId);
+    expect(action.status).toBe('expired'); expect(action.receipt).toBeUndefined();
+    expect(() => lab.respondInteraction(session.id, item.interactionId, approve(item))).toThrow(/已结束/);
+    expect(commit).not.toHaveBeenCalled(); expect(lab.collaboration!.list(other)).toEqual([]); expect(fake.calls).toHaveLength(1);
   });
 
   it('assignee uses its own files and work context, and receipt queries do not re-execute a submission', async () => {

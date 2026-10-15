@@ -229,6 +229,24 @@ describe('authenticated task scopes',()=>{
       expect((await a.call(`/api/tasks/${task.id}/archive`,{revision:1})).statusCode).toBe(409);
     }
   });
+  it('rejects committed action receipt reads and replay after the account is disabled',async()=>{
+    const {app,lab}=await setup();const a=await login(app,'a');
+    const task=(await a.call('/api/tasks',input())).json<TaskSpace>();
+    const workspace=(await a.call(`/api/tasks/${task.id}/workspace`,{})).json();
+    const clientActionId=randomUUID();
+    const prepared=await a.call('/api/work-items/prepare',{clientActionId,kind:'assign',taskSpaceId:task.id,payload:{workspaceId:workspace.id,assigneeSeatId:'b',title:'正式交接',goal:'完成汇总',inputPaths:[]}});
+    expect(prepared.statusCode,prepared.body).toBe(200);const action=prepared.json();
+    const committed=await a.call(`/api/work-actions/${action.operationId}/commit`,{confirm:true});
+    expect(committed.statusCode,committed.body).toBe(200);const receipt=committed.json();
+    expect(receipt.workItemId).toBeTruthy();
+    expect((await a.call(`/api/work-actions/${action.operationId}`)).json().receipt).toEqual(receipt);
+    expect((await a.call(`/api/work-actions?clientActionId=${clientActionId}`)).json().receipt).toEqual(receipt);
+    lab.access!.disable('a');
+    expect((await a.call(`/api/work-actions/${action.operationId}`)).statusCode).toBe(401);
+    expect((await a.call(`/api/work-actions?clientActionId=${clientActionId}`)).statusCode).toBe(401);
+    expect((await a.call(`/api/work-actions/${action.operationId}/commit`,{confirm:true})).statusCode).toBe(401);
+    expect(lab.collaboration!.list({seatId:'b'}).map(work=>work.id)).toEqual([receipt.workItemId]);
+  });
   it('revokes expired/reset sessions and retains hashed credentials only',async()=>{
     const {app,lab,dir}=await setup();const a=await login(app,'a');
     lab.access!.db.prepare('UPDATE auth_sessions SET expires=0 WHERE user_id=?').run(a.auth.identity!.userId);

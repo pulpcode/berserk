@@ -12,7 +12,7 @@
   "assignee": "bobot",
   "createdAt": "2026-09-22",
   "completedAt": null,
-  "branch": null,
+  "branch": "codex/handoff-reliability",
   "base_branch": "main",
   "worktree_path": null,
   "commit": null,
@@ -27,7 +27,13 @@
     ".trellis/tasks/09-22-handoff-attachment-integrity/design.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/implement.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/research/evidence.md",
-    ".trellis/tasks/09-22-handoff-attachment-integrity/verification.md"
+    ".trellis/tasks/09-22-handoff-attachment-integrity/verification.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/audit.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/plan.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/verification.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/review.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/live-evaluation.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/live-answer-review.md"
   ],
   "notes": "实施前提交 ef25acf。已完成说明、UI和验证代码；真实明确双附件回传及单附件通过，三组自然多轮和纯文字未完成，保留证据与待审建议。用户要求更新线上供测试，已部署当前实现，任务仍不归档。",
   "meta": {
@@ -43,6 +49,27 @@
       "deployedAt": "2026-09-22T09:15:34Z",
       "record": ".trellis/tasks/09-22-handoff-attachment-integrity/research/deployment.json",
       "includesWorkingTreeChanges": true
+    },
+    "reliabilityAudit20261015": {
+      "stage": "P0-P1",
+      "status": "live_evaluation_review",
+      "productImplementationApproved": false,
+      "paidModelEvaluationApproved": true,
+      "baseline": "fdba343ec996f1f9515f84883e9fc9d4f0f39bf1",
+      "directory": ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15",
+      "auditComplete": true,
+      "protectionTestsPassed": true,
+      "knownIssuesClosed": false,
+      "liveEvaluationComplete": true,
+      "fullWorkflowAcceptancePassed": false,
+      "liveEvaluationSummary": {
+        "cases": 30,
+        "clearAssignmentsCompleted": 13,
+        "clearAssignmentCases": 20,
+        "ambiguityClarified": 5,
+        "backgroundExecutionPassed": 5,
+        "providerCalls": 171
+      }
     }
   }
 }
