@@ -1,6 +1,6 @@
-import { validateStyleMin } from '@maplibre/maplibre-gl-style-spec';
+import { createExpression, featureFilter, validateStyleMin } from '@maplibre/maplibre-gl-style-spec';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { LayerSpecification, Map as LibreMap, SourceSpecification } from 'maplibre-gl';
+import type { LayerSpecification, LineLayerSpecification, Map as LibreMap, SourceSpecification } from 'maplibre-gl';
 import { defaultMapConfig, normalizeMapConfig } from '../src/contracts/map.js';
 import { parseContextConfig } from '../src/context/config.js';
 import { BUSINESS_ANCHOR, roadLayers } from '../src/web/situation/basemap-style.js';
@@ -83,6 +83,59 @@ function fakeMap() {
 }
 it('validates both complete OMT styles, including camera expressions and symbol filters',()=>{
   for(const hybrid of [false,true])expect(validateStyleMin({version:8,glyphs:defaultMapConfig.roads.glyphs,sources:{omt:{type:'vector',url:defaultMapConfig.roads.url}},layers:roadLayers('omt',hybrid)})).toEqual([]);
+});
+describe('progressive hybrid road detail',()=>{
+  const hybrid=roadLayers('omt',true), road=roadLayers('omt',false);
+  const matching=(layers:LayerSpecification[],category:string,zoom:number,type:'line'|'symbol')=>layers.filter(layer=>
+    layer.type===type && layer['source-layer']===(type==='line'?'transportation':'transportation_name') && zoom>=(layer.minzoom ?? 0) && zoom<(layer.maxzoom ?? 25) &&
+    featureFilter(layer.filter,'filter').filter({zoom},{type:'LineString',properties:{class:category}}));
+  it.each([
+    ['minor',13,'minor'],['service',14,'service'],['track',15,'paths'],['path',15,'paths'],
+  ] as const)('reveals %s at z%d without mixing categories into major roads', (category,threshold,suffix)=>{
+    expect(matching(hybrid,category,threshold-0.01,'line')).toEqual([]);
+    expect(matching(hybrid,category,threshold,'line').map(layer=>layer.id)).toEqual([`omt:hybrid:${suffix}-casing`,`omt:hybrid:${suffix}-lines`]);
+    expect(matching(hybrid,category,20,'line').map(layer=>layer.id)).toEqual([`omt:hybrid:${suffix}-casing`,`omt:hybrid:${suffix}-lines`]);
+  });
+  it('keeps detailed strokes thin and below major roads, with dashed paths and no solid dash arrays',()=>{
+    const widthAt=(line:LineLayerSpecification,zoom:number)=>{
+      const parsed=createExpression(line.paint!['line-width'],'line-width');
+      if(parsed.result==='error')throw new Error(JSON.stringify(parsed.value));
+      return parsed.value.evaluate({zoom});
+    };
+    for(const [suffix,maxWidth] of [['minor',1.8],['service',1.4],['paths',1]] as const) {
+      const line=hybrid.find((layer):layer is LineLayerSpecification=>layer.type==='line' && layer.id===`omt:hybrid:${suffix}-lines`)!;
+      const casing=hybrid.find((layer):layer is LineLayerSpecification=>layer.type==='line' && layer.id===`omt:hybrid:${suffix}-casing`)!;
+      for(const zoom of [13,14,15,16,18,22]) {
+        expect(widthAt(line,zoom)).toBeGreaterThan(0);
+        expect(widthAt(line,zoom)).toBeLessThanOrEqual(maxWidth);
+        expect(widthAt(casing,zoom)).toBeGreaterThan(widthAt(line,zoom));
+        expect(widthAt(casing,zoom)).toBeLessThan(3);
+      }
+      expect(line.paint!['line-opacity']).toBeLessThanOrEqual(0.55);
+      expect(casing.paint!['line-opacity']).toBeLessThan(line.paint!['line-opacity'] as number);
+      expect(line.paint!['line-dasharray']).toEqual(suffix==='paths'?[2,3]:undefined);
+      expect(casing.paint!['line-dasharray']).toEqual(suffix==='paths'?[2,3]:undefined);
+      expect(hybrid.indexOf(line)).toBeLessThan(hybrid.findIndex(layer=>layer.id==='omt:hybrid:road-casing'));
+    }
+  });
+  it('reveals sparse minor and service names later while omitting track/path names',()=>{
+    for(const [category,threshold] of [['minor',15],['service',16]] as const) {
+      expect(matching(hybrid,category,threshold-0.01,'symbol')).toEqual([]);
+      const labels=matching(hybrid,category,threshold,'symbol');
+      expect(labels.map(layer=>layer.id)).toEqual([`omt:hybrid:${category}-label`]);
+      expect(labels[0].layout).toMatchObject({'text-allow-overlap':false,'symbol-spacing':500,'text-padding':20});
+    }
+    expect(matching(hybrid,'path',20,'symbol')).toEqual([]);
+    expect(matching(hybrid,'track',20,'symbol')).toEqual([]);
+  });
+  it('retains the road-view hierarchy and existing major hybrid roads',()=>{
+    expect(road.map(layer=>layer.id)).toEqual(['background','landuse','park','water','waterway','building','road-casing','road-lines','road-label','place-label'].map(id=>`omt:road:${id}`));
+    for(const category of ['motorway','trunk','primary','secondary','tertiary','minor','service','track','path'])
+      expect(matching(road,category,12,'line').map(layer=>layer.id)).toEqual(['omt:road:road-casing','omt:road:road-lines']);
+    for(const category of ['motorway','trunk','primary','secondary','tertiary'])
+      expect(matching(hybrid,category,12,'line').map(layer=>layer.id)).toEqual(['omt:hybrid:road-casing','omt:hybrid:road-lines']);
+    expect(matching(hybrid,'rail',20,'line')).toEqual([]);
+  });
 });
 describe('basemap isolation',()=>{
   it('lazily loads vectors and retains source/editor identities across rapid switches',()=>{

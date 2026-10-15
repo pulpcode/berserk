@@ -348,3 +348,32 @@ test('solid annotation strokes remain painted after hybrid source switches and n
   await page.screenshot({path:test.info().outputPath('basemap-narrow-controls.png')});expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });
+
+test('hybrid progressively reveals minor service and path roads below business overlays across source overzoom',async({page})=>{
+ await captureMap(page);await localVectorTiles(page,'basemap-road-hierarchy.pbf');
+ const env=await setup(page,origin=>({...basemapFixture(origin),defaultView:'hybrid'}));
+ try{
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'hierarchy',name:'道路层级验证',order:0,defaultVisible:true,features:[{objectId:'rescue-line',kind:'line',name:'合成业务线',geometry:{type:'LineString',coordinates:[[0,-.006],[0,.006]]},style:{color:'#b34d48',width:5}}]}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');
+  if(await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),original=await canvas.elementHandle();
+  const paintedClasses=()=>page.evaluate(()=>[...new Set(window.__basemapTestMap!.queryRenderedFeatures().filter(f=>f.layer.id.includes(':hybrid:')&&f.sourceLayer==='transportation').map(f=>String(f.properties.class)))].sort());
+  for(const [zoom,expected] of [[12.75,['primary']],[13.25,['minor','primary']],[14.25,['minor','primary','service']],[15.25,['minor','path','primary','service','track']],[16.25,['minor','path','primary','service','track']]] as const){
+   await page.evaluate(zoom=>window.__basemapTestMap!.jumpTo({center:[0,0],zoom}),zoom);
+   await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.loaded())).toBe(true);
+   await expect.poll(paintedClasses,{message:`hybrid road classes at zoom ${zoom}`}).toEqual([...expected]);
+  }
+  await expect(page.getByText('测试路网 原生细节最高 14 级；当前为放大显示。', {exact:true})).toBeVisible();
+  const before=await mapSnapshot(page),saved=env.lab.annotations!.binding(env.actor,env.session.id);
+  const controls=page.getByRole('group',{name:'底图视图'});
+  for(const view of ['路网','混合','影像','混合'])await controls.getByRole('button',{name:view,exact:true}).click();
+  await expect.poll(paintedClasses).toEqual(['minor','path','primary','service','track']);
+  expect(await mapSnapshot(page)).toEqual(before);expect(env.lab.annotations!.binding(env.actor,env.session.id)).toEqual(saved);
+  expect(await canvas.evaluate((element,old)=>element===old,original)).toBe(true);
+  expect(await page.evaluate(()=>{const layers=window.__basemapTestMap!.getStyle().layers,anchor=layers.findIndex(layer=>layer.id==='business:anchor');return layers.every((layer,index)=>!layer.id.startsWith('basemap:')||index<anchor);})).toBe(true);
+  const screenshot=await canvas.screenshot();
+  const red=await page.evaluate(async encoded=>{const image=new Image();image.src=`data:image/png;base64,${encoded}`;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const context=canvas.getContext('2d')!;context.drawImage(image,0,0);const data=context.getImageData(0,0,canvas.width,canvas.height).data;let count=0;for(let i=0;i<data.length;i+=4)if(Math.abs(data[i]-179)<3&&Math.abs(data[i+1]-77)<3&&Math.abs(data[i+2]-72)<3)count++;return count;},screenshot.toString('base64'));
+  expect(red,'business stroke remains visible over the full detail road hierarchy').toBeGreaterThan(500);
+  await page.screenshot({path:test.info().outputPath('hybrid-progressive-road-hierarchy.png')});expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});

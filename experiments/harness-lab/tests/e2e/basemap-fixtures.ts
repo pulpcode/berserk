@@ -21,8 +21,8 @@ export async function mapSnapshot(page: Page) {
       annotationSources:Object.fromEntries(Object.entries(map.getStyle().sources).filter(([id])=>id.startsWith('annotation:')))};
   });
 }
-export async function localVectorTiles(page: Page) {
-  const body=await readFile(new URL('../fixtures/basemap-vector.pbf',import.meta.url));
+export async function localVectorTiles(page: Page, fixture: 'basemap-vector.pbf' | 'basemap-road-hierarchy.pbf' = 'basemap-vector.pbf') {
+  const body=await readFile(new URL(`../fixtures/${fixture}`,import.meta.url));
   let requests=0,fail=false,delay=0;
   await page.route('**/basemap-vector/**',async route=>{requests++;if(delay)await new Promise(resolve=>setTimeout(resolve,delay));if(fail)return route.fulfill({status:503,body:'offline'});return route.fulfill({contentType:'application/x-protobuf',body});});
   return {requests:()=>requests,offline:()=>{fail=true;},online:()=>{fail=false;},delay:(ms:number)=>{delay=ms;}};

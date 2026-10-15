@@ -18,3 +18,6 @@
 
 ## Authorization
 用户明确要求简短方案后直接实施，免去再次规划批准；工作限定独立 codex/map-basemaps worktree。
+
+## Follow-up: progressive hybrid roads (2026-10-15)
+User approved revealing minor roads at higher zoom, then service roads and tracks/paths with restrained strokes below business overlays. Keep the isolated codex/map-basemaps branch and update the existing local preview. Do not commit or merge this follow-up. No source/provider, business geometry, persistence or road-view redesign.
