@@ -88,7 +88,9 @@ The existing busy queue remains text-only. Rich annotation selections remain in 
 
 Business layers are distinct from MapLibre rendering layers. Source, own draft and read-only reference groups carry explicit labels and versions. Do not encode draft/publication/current status by replacing business colors, line styles or symbols. Reference groups are opt-in visible; overlapping objects require disambiguation.
 
-Viewport visibility, isolate, selection and zoom are local view state. Explicitly saving default visibility/order changes document content. Looking at a reference never changes the edit target. Unfinished geometry remains a local buffer; conflicts and failed saves retain it. Identity/task/session changes invalidate late responses. Editor-only handles never enter a publication as lifecycle styling.
+Solid annotation strokes omit `line-dasharray`; the degenerate `[1,0]` dash disappeared after a road-to-hybrid switch despite unchanged sources and rendered-feature queries. Verify visible pixels as well as retained data when changing basemap rendering.
+
+Viewport visibility, isolate, selection and zoom are local view state. Explicitly saving default visibility/order changes document content. Looking at a reference never changes the edit target. Unfinished geometry remains a local buffer; conflicts and failed saves retain it. Basemap view/config/retry changes retain the same MapLibre and TerraDraw instances. Runtime readiness uses the permanent `business:anchor`, never a provider layer name. Basemap resource changes must not restore/restart the editor or rewrite annotation IDs, coordinates or revisions. Identity/task/session changes invalidate late responses. Editor-only handles never enter a publication as lifecycle styling.
 
 Capture the draft revision when a form or geometry edit begins. A background refresh may show a newer saved head but must not silently replace that edit's expectedRevision. Only an explicit conflict-review action may advance the edit base.
 

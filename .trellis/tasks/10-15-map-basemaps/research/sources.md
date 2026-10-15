@@ -1,0 +1,7 @@
+# Source evidence
+Read-only boat references: /Users/lau/workspace/boat/route-map-service/server/regions.js (OMT styling), scripts/build-vector-tiles.sh (tilemaker recipes), /Users/lau/workspace/boat/map-service/server/map-package.js (Esri URL). No boat files modified.
+Official OpenFreeMap docs: https://openfreemap.org/quick_start/ and https://github.com/hyperknot/openfreemap . Fetched live /planet: OpenMapTiles version 3.16.0, minzoom 0, maxzoom 14, bounds [-180,-85.05113,180,85.05113]. URL https://tiles.openfreemap.org/planet is stable TileJSON. Attribution OpenFreeMap, © OpenMapTiles, © OpenStreetMap contributors; link all three. /styles/positron glyphs https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf. Snapshot metadata in /tmp/berserk-planet.json, original style /tmp/berserk-positron.json.
+
+Esri metadata: https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer?f=pjson reports Web Mercator wkid 102100/latestWkid 3857, 256px tiles and LOD 0–23. Application intentionally uses conservative z0–19, not a uniform spatial-resolution claim. Public attribution: Source: Esri, Vantor, Earthstar Geographics, and the GIS User Community. Item: https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9 . Live metadata alone does not establish local imagery age or uniform offshore detail.
+
+Real Chrome acceptance on 2026-10-15 loaded Qingdao and Sydney city, port and offshore positions in all three views. See verification.md and ignored local evidence under experiments/harness-lab/.local/basemap-acceptance.

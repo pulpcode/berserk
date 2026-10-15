@@ -87,7 +87,10 @@ export function createApiClient(seatId?: string, auth?: AuthSession, invalid?: (
     seatId, headers, request, dispose: () => controller.abort(),
     url,
     domId: (id: string) => seatId ? `${id}-${seatId}` : id,
-    storageKey: (key: string) => auth ? `${key}:login:${auth.viewId}` : seatId ? `${key}:seat:${seatId}` : key,
+    // Only non-sensitive visual preferences may opt into a stable user scope.
+    storageKey: (key: string, scope: 'login' | 'user-preference' = 'login') => auth
+      ? scope === 'user-preference' && auth.identity ? `${key}:user:${auth.identity.userId}` : `${key}:login:${auth.viewId}`
+      : seatId ? `${key}:seat:${seatId}` : key,
     api: async <T,>(path: string, body?: object, method: 'POST' | 'PUT' = 'POST'): Promise<T> => {
       const response=await checkResponse(await request(url(path),body===undefined ? {cache:'no-store'} : {method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}));
       return response.json() as Promise<T>;

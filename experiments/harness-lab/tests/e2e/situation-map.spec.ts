@@ -13,8 +13,9 @@ import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 import type { SituationCurrent } from '../../src/contracts/context';
 import type { SimulationAction } from '../../src/contracts/simulation';
 import { mapHref } from '../../src/web/situation/evidence';
+import { basemapFixture, captureMap, localVectorTiles, mapSnapshot } from './basemap-fixtures';
 
-async function setup(page:Page,simulation=false,missingGeometry=false){
+async function setup(page:Page,simulation=false,missingGeometry=false,basemap?: (origin:string)=>unknown){
  const dir=await mkdtemp(join(tmpdir(),'axon-map-web-'));
  const source=createMockContextServer({token:'map-query-token',controlToken:'map-control-token',databasePath:join(dir,'source.sqlite'),instanceId:'ui',day:'2026-10-11'});const base=await source.listen();
  const db=await openDatabase(dir);const access=new AccessStore(db);const userId=await access.saveAccount({username:'a',displayName:'地图验证',seatId:'a',seatName:'总体席',password:'test-password-123',createPublicTask:true,manageModelSettings:true});const actor=access.identity(userId)!;
@@ -28,6 +29,7 @@ async function setup(page:Page,simulation=false,missingGeometry=false){
  await page.route('**/test-tiles/**',route=>{tiles++;return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAADIElEQVR4nO3UMQ0AIBDAwPevlZCgAGQw9IbbO3XW2Rdomt8BwD8GAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEPFcg416T4n38AAAAASUVORK5CYII=','base64')});});
  await page.route('**/api/**',async route=>{
   const req=route.request();const url=new URL(req.url());
+  if(url.pathname==='/api/context/map-config' && basemap)return route.fulfill({json:basemap(url.origin)});
   if(url.pathname==='/api/context/map-config')return route.fulfill({json:{providerId:'test',tiles:[`${url.origin}/test-tiles/{z}/{x}/{y}.png`],tileSize:256,attributionText:'© OpenStreetMap contributors',attributionUrl:'https://www.openstreetmap.org/copyright',simulationEnabled:simulation}});
   if(url.pathname==='/api/context/situation'){queries.push(req.postDataJSON());if(failSource)return route.fulfill({status:503,json:{error:{code:'SOURCE_OFFLINE',message:'模拟来源离线'}}});}
   const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...req.headers(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
@@ -113,5 +115,29 @@ test('unified source tree retains hidden objects, scope and keyboard access, inc
   env.online();await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(this:HTMLCanvasElement,type,...args){if(String(type).includes('webgl'))return null;return original.call(this,type,...args);} as typeof original;});await page.reload();
   await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await expect(panel).toBeVisible();await expect(sourceObjects(page)).toHaveCount(6);
   await pickSource(page,'资源池',/西区可用车辆/);await expect(page.getByText('暂无位置，可继续查询或引用。')).toBeVisible();await expect(page.getByRole('button',{name:/^(显示并定位|定位对象)$/})).toHaveCount(0);await page.getByRole('button',{name:'引用到对话',exact:true}).click();await expect(page.getByRole('dialog',{name:'引用并提问'})).toBeVisible();expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);
+ }finally{await env.close();}
+});
+
+test('basemap config refresh retains camera, business selection and hidden categories; reports regional coverage and remembers view',async({page})=>{
+ await captureMap(page);await localVectorTiles(page);let regional=false;
+ const env=await setup(page,false,false,origin=>{const config=basemapFixture(origin);return regional?{...config,defaultView:'road',roads:{...config.roads,bounds:[140,-40,155,-20]}}:config;});
+ try{
+  await page.getByRole('button',{name:'态势地图',exact:true}).click();
+  await pickSource(page,'道路',/西区通道 可通行/);await expect(page.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();
+  await openContents(page);await expandSource(page);await page.getByRole('button',{name:'隐藏资源池',exact:true}).click();await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  await expect.poll(()=>page.evaluate(()=>Boolean(window.__basemapTestMap?.loaded()))).toBe(true);
+  const before=await mapSnapshot(page);const canvas=await page.locator('.maplibregl-canvas').elementHandle();
+  const controls=page.getByRole('group',{name:'底图视图'});
+  for(const name of ['路网','混合','影像','路网','混合'])await controls.getByRole('button',{name,exact:true}).click();
+  expect(await mapSnapshot(page)).toEqual(before);await expect(page.getByRole('heading',{name:'西区通道',exact:true})).toBeVisible();
+  regional=true;await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();
+  await expect(page.getByText(/超出.*覆盖范围/)).toBeVisible();
+  await expect(page.getByRole('button',{name:'显示资源池',exact:true})).toHaveAttribute('aria-pressed','false');
+  await expect(controls.getByRole('button',{name:'混合',exact:true})).toHaveAttribute('aria-pressed','true');
+  expect(await mapSnapshot(page)).toEqual(before);
+  expect(await page.locator('.maplibregl-canvas').evaluate((element,old)=>element===old,canvas)).toBe(true);
+  expect(env.fake.calls).toHaveLength(0);
+  await page.screenshot({path:test.info().outputPath('regional-basemap-coverage.png')});
+  await page.reload();await expect(controls.getByRole('button',{name:'混合',exact:true})).toHaveAttribute('aria-pressed','true');
  }finally{await env.close();}
 });
