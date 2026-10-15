@@ -9,7 +9,7 @@ import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationTools } from '../../src/pi/annotation-tools.js';
 import { fakeRuntime, testConfig } from './fake-runtime.js';
 
-const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content' | 'before' | 'mutate'}));
+const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content' | 'before' | 'mutate' | 'details' | 'legacy' | 'hash'}));
 // Inject only a public SDK hook before the host chains it; the native loop and tools remain real.
 vi.mock('@earendil-works/pi-coding-agent', async importOriginal => {
   const sdk = await importOriginal<typeof import('@earendil-works/pi-coding-agent')>();
@@ -23,6 +23,9 @@ vi.mock('@earendil-works/pi-coding-agent', async importOriginal => {
     result.session.agent.afterToolCall = async context => {
       const prior = await original?.(context);
       if (context.toolCall.name !== fault.tool || fault.mode === 'before') return prior;
+      if (fault.mode === 'hash') { const value=(context.result.details as {annotationResult?:{receipt:{hash:string}}})?.annotationResult; if(value)value.receipt.hash = 'f'.repeat(64); return prior; }
+      if (fault.mode === 'details') { (context.result.details as {annotationResult:unknown}).annotationResult = {schemaVersion:99}; return prior; }
+      if (fault.mode === 'legacy') { const data=JSON.parse((context.result.content[0] as {text:string}).text).data; return {...prior,content:[{type:'text',text:JSON.stringify(data)}]}; }
       if (fault.mode === 'mutate') { context.result.content = [{type:'text',text:'mutated in place'}]; return prior; }
       if (fault.mode === 'throw') throw new Error('synthetic original hook failure');
       if (fault.mode === 'content') return {...prior, content: [{type: 'text', text: 'overridden tool result'}]};
@@ -107,7 +110,7 @@ it.each(['error','content','before','mutate'] as const)('preserves earlier confi
   expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(2);
 });
 
-it.each(['error','content','mutate'] as const)('requires receipt reconciliation when a committed write result is %s', async mode => {
+it.each(['error','content','mutate','details','legacy','hash'] as const)('requires receipt reconciliation when a committed write result is %s', async mode => {
   let requestId='';
   const {lab,session,actor}=await setup((_context,index)=>{
     if(index===1){fault.tool='annotation_action';fault.mode=mode;}
@@ -119,6 +122,7 @@ it.each(['error','content','mutate'] as const)('requires receipt reconciliation 
   });
   const request=lab.start(session.id,'编辑',{},'alpha');requestId=request.requestId;await request.run(()=>{});
   const writes=lab.get(session.id,'alpha').messages.filter(message=>message.toolName==='annotation_action');
+  expect(writes[0].annotationResult).toBeNull();
   expect(writes[1]).toMatchObject({isError:true});expect(writes[2]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_RESULT_UNCERTAIN')});
   expect(writes[3]).toMatchObject({isError:false});
   expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(3);

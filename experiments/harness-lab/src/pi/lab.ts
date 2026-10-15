@@ -1,3 +1,4 @@
+import { extractAnnotationResult } from '../contracts/annotation-results.js';
 import { AnnotationService, type AnnotationActor } from '../annotations/service.js';
 import { annotationTools } from './annotation-tools.js';
 import { AnnotationRequestState, isMapTool } from './annotation-state.js';
@@ -588,7 +589,7 @@ export class PiLab {
         .filter(block => block.type === 'text').map(block => block.text).join('\n');
       if (text || message.role === 'toolResult') messages.push({
         id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text,
-        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError } : {}),
+        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text) } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
@@ -828,6 +829,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     session.agent.afterToolCall = async context => {
       const mapResult = isMapTool(context.toolCall.name);
       const actualContent = mapResult ? structuredClone(context.result.content) : undefined;
+      const actualDetails = mapResult ? structuredClone(context.result.details) : undefined;
       const actualError = context.isError;
       let original: Awaited<ReturnType<NonNullable<typeof originalAfter>>>;
       try { original = await originalAfter?.(context); }
@@ -844,7 +846,12 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }
       const { toolCall, result } = context;
       if (mapResult && (actualError || context.isError || original?.isError
-        || !isDeepStrictEqual(original?.content ?? result.content, actualContent))) annotationState?.rejectResult(toolCall.id);
+        || !isDeepStrictEqual(original?.content ?? result.content, actualContent)
+        || !isDeepStrictEqual(original?.details ?? result.details, actualDetails))) {
+        annotationState?.rejectResult(toolCall.id);
+        // Changed delivery cannot retain a successful structured receipt.
+        if (toolCall.name.startsWith('annotation_')) return {...original, details: {annotationResult: null}};
+      }
       const policy = active.policies?.get(toolCall.id);
       if (policy) return { ...original, details: { ...(result.details as object ?? {}), ...((original?.details as object) ?? {}), commandPolicy: policy, executionStarted: true } };
       if (toolCall.name !== 'subagent') return original;
@@ -1131,9 +1138,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           } else if (event.type === 'tool_execution_end') {
             if (event.isError && isMapTool(event.toolName)) active.annotationState?.rejectResult(event.toolCallId);
             setPhase(record, active, 'preparing');
-            const result = event.result as { content?: Array<{ type: string; text?: string }> };
+            const result = event.result as { content?: Array<{ type: string; text?: string }>; details?: unknown };
             emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName),
-              text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError });
+              text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError, annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '') });
           }
         });
         if (!child && !active.background) {

@@ -1,3 +1,5 @@
+import { annotationToolResult } from './annotation-results.js';
+import type { AnnotationReadInput } from '../contracts/annotations.js';
 import { createHash } from 'node:crypto';
 import { defineTool } from '@earendil-works/pi-coding-agent';
 import { Type, type Static } from 'typebox';
@@ -63,7 +65,7 @@ export function annotationActionId(requestId: string, toolCallId: string): strin
 }
 export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState}) {
   const state = scope.state ?? new AnnotationRequestState();
-  const execute = async <T>(callId: string, work: (signal: AbortSignal, dispatch: () => void, committed: () => void) => T | Promise<T>, signal?: AbortSignal) => {
+  const execute = async <T>(callId: string, work: (signal: AbortSignal, dispatch: () => void, committed: () => void) => T | Promise<T>, signal?: AbortSignal, toolName = 'annotation_action', query?: Partial<AnnotationReadInput> & {mode?: string}) => {
     const scoped = signal ? AbortSignal.any([scope.signal, signal]) : scope.signal;
     let dispatched = false, effectCommitted = false;
     const clientActionId = annotationActionId(scope.requestId, callId);
@@ -71,7 +73,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
       scoped.throwIfAborted(); scope.check();
       const result = await work(scoped, () => { dispatched = true; }, () => { effectCommitted = true; state.noteWrite(callId, clientActionId); });
       scoped.throwIfAborted(); scope.check();
-      return {content: [{type: 'text' as const, text: JSON.stringify(result)}], details: {}};
+      return annotationToolResult(result, toolName, query);
     } catch (error) {
       state.rejectResult(callId);
       if (scoped.aborted) { state.invalidate(); scoped.throwIfAborted(); }
@@ -89,13 +91,13 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
   const actionSchema = Type.Union([...actionSchemas, currentSchema], {type: 'object', $defs: {geometry, style, feature, operations}});
   if (!canSetCurrent) actionSchema.anyOf.splice(-1, 1);
   return [
-    defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有元信息、不含几何。current.publication 是任务独立选择的发布版；current.publication:null 才表示读取时尚未设置，缺少 current 只是未提供状态。基线、草稿修订和历史回答都不能代替本次查询。采用者字段不证明操作所属会话，也不等于发布者。不会切换本会话编辑目标。分页读取。',
+    defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有元信息、不含几何。current.publication 是任务独立选择的发布版；current.publication:null 才表示读取时尚未设置，缺少 current 只是未提供状态。基线、草稿修订和历史回答都不能代替本次查询。采用者字段不证明操作所属会话，也不等于发布者。不会切换本会话编辑目标。drafts/publications 分别是可见草稿/发布版分页，不是地图对象清单。',
       parameters: Type.Object(pagination, strict), executionMode: 'sequential',
       execute: (callId, params, signal) => execute(callId, () => {
         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
         state.observeCurrent(result.current.sequence, callId); return result;
-      }, signal)}),
-    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。默认仅摘要。查询个别对象而未知ID时，先不带fields读取摘要定位，再按objectIds读取所需字段；不要为单对象问题读取整图几何。仅在需要时选择 geometry/note/attributes/style/sourceRefs/originFeatureRef，按对象或图层缩小范围。hasMore 时尚未读完。compare 比较两个固定版本；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
+      }, signal, 'annotation_list')}),
+    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。默认仅摘要。查询个别对象而未知ID时，先不带fields读取摘要定位，再按objectIds读取所需字段；不要为单对象问题读取整图几何。仅在需要时选择 geometry/note/attributes/style/sourceRefs/originFeatureRef，按对象或图层缩小范围。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页。未请求字段不代表字段为空。compare 比较两个固定版本，changes.total/counts 是变化项数量，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
       parameters: Type.Union([
         Type.Object({mode: Type.Literal('draft'), ...selection, fields: Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {uniqueItems: true})), ...pagination}, strict),
         Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...selection, fields: Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {uniqueItems: true})), ...pagination}, strict),
@@ -117,7 +119,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
           return receipt;
         }
         return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit});
-      }, signal)}),
+      }, signal, 'annotation_read', params)}),
     defineTool({name:'annotation_from_source',label:'按来源生成或刷新标注',
       description:'将已查询的来源对象精确标到本会话已有草稿和图层中；宿主重新查询并核对来源修订，保存原几何及本次真实查询时间，无需抄写坐标或时间。来源缺几何/修订变化时明确失败，不估算。add 使用来源名称；refresh 要求目标恰有一个匹配来源且几何类型兼容，保留标注ID、名称、样式、说明、属性及其他来源引用，只替换几何与该来源修订/时间。业务说明和属性不会自动更新，变化详情按需 situation_query 后另用 annotation_action 编辑。自定义规划区域使用 annotation_action；意图不清先澄清。1～20 项 items 整批原子保存；已有草稿须先读取本会话 draft；本轮新建成功的草稿无需重复读取。来源须先查询并收到结果再保存，版本条件由宿主维护。结果 fromSources[].queriedAt 是本工具新查询的 UTC 原值，不是此前查询时间；说明文件可按固定修订读取 sourceRefs，勿只改时区后缀。不发布、不设为任务当前。',
       parameters:annotationFromSourceSchema,executionMode:'sequential',
@@ -132,8 +134,8 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         const result = await service.fromSourcesFromHost(scope.actor, scope.sessionId, {clientActionId, expectedRevision: basis.revision, items}, basis, scoped, scope.check, committed);
         state.committed(result.receipt, result.replayed);
         return {...result.receipt, ...(result.replayed ? {replayed: true} : {})};
-      },signal)}),
-    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。只报告本次实际效果，无需顺带总结任务当前。若要说明任务当前，以本次 annotation_list 查询或本次实际成功采用回执为依据，分别说明读取或提交时状态；历史回答、旧动作回执及 replayed:true 都不能代替。未提供 current 不能推断为没有当前版本或基线正在被采用。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
+      },signal,'annotation_from_source')}),
+    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。只报告本次实际效果，无需顺带总结任务当前。若要说明任务当前，以本次 annotation_list 查询或本次实际成功采用回执为依据，分别说明读取或提交时状态；历史回答、旧动作回执及 replayed:true 都不能代替。未提供 current 不能推断为没有当前版本或基线正在被采用。按实际读取范围说明业务结果；地图入口由界面提供，无须顺带复述技术标识。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
       parameters: actionSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(toolCallId, (scoped, dispatch, committed) => {
         const clientActionId = annotationActionId(scope.requestId, toolCallId);

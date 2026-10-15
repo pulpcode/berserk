@@ -47,7 +47,7 @@ it('runs three source writes from one assistant output sequentially using its ow
   const snapshot = lab.get(session.id, 'alpha');
   const results = snapshot.messages.filter(message => message.toolName === 'annotation_from_source');
   expect(results).toHaveLength(3); expect(results.filter(message => message.isError).map(message => message.text)).toEqual([]);
-  const receipts = results.map(message => JSON.parse(message.text));
+  const receipts = results.map(message => JSON.parse(message.text).data);
   expect(receipts.map(receipt => [receipt.beforeRef.revision, receipt.afterRef.revision])).toEqual([[1,2],[2,3],[3,4]]);
   const features = lab.annotations!.version(actor, taskId, receipts[2].afterRef).document.layers[0].features;
   expect(features.map(feature => feature.geometry)).toEqual(objects.map(object => object.geometry));
@@ -108,7 +108,7 @@ it('creates without reading empty state and advances immediately for a following
   await lab.start(session.id, '创建空白地图', {}, 'alpha').run(() => {});
   const writes = lab.get(session.id, 'alpha').messages.filter(message => message.toolName === 'annotation_action');
   expect(writes.map(message => Boolean(message.isError))).toEqual([false,false]);
-  expect(JSON.parse(writes[0].text).beforeRef).toBeNull();
+  expect(JSON.parse(writes[0].text).data.beforeRef).toBeNull();
   expect(lab.annotations!.binding(actor, session.id).draft).toMatchObject({headRevision: 2, title: '新标题'});
 });
 
@@ -121,7 +121,7 @@ it('keeps replay receipts identifiable and never uses an old receipt to rewind t
   const execute = (callId: string, title: string) => action.execute(callId, rename(title).arguments as never, undefined, undefined, {} as never);
   await execute('a', 'A'); await execute('b', 'B');
   const replay = await execute('a', 'A');
-  expect(JSON.parse((replay.content[0] as {text: string}).text)).toMatchObject({replayed: true, afterRef: {revision: 2}});
+  expect(JSON.parse((replay.content[0] as {text: string}).text).data).toMatchObject({replayed: true, afterRef: {revision: 2}});
   await execute('c', 'C'); expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(4);
   state.invalidate(); state.beginInference(); await execute('a', 'A');
   await expect(execute('d', 'D')).rejects.toThrow('ANNOTATION_READ_REQUIRED');
@@ -242,7 +242,7 @@ it('pauses after the second schema failure, retains the first commit and resumes
   const writes=lab.get(session.id,'alpha').messages.filter(message=>message.toolName==='annotation_action');
   expect(writes.map(message=>Boolean(message.isError))).toEqual([false,true,true,false]);
   expect(writes[2].text).toContain('ANNOTATION_BATCH_PAUSED');
-  expect(JSON.parse(writes[3].text)).toMatchObject({beforeRef:{revision:2},afterRef:{revision:3}});
+  expect(JSON.parse(writes[3].text).data).toMatchObject({beforeRef:{revision:2},afterRef:{revision:3}});
   expect(lab.annotations!.binding(actor,session.id).draft).toMatchObject({title:'修正后继续',headRevision:3});
 });
 

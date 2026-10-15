@@ -1,0 +1,41 @@
+import { expect, it } from 'vitest';
+import { annotationToolResult } from '../src/pi/annotation-results.js';
+import { extractAnnotationResult, projectAnnotationResult } from '../src/contracts/annotation-results.js';
+import { annotationMapEntries } from '../src/web/situation/evidence.js';
+import type { PublicMessage } from '../src/contracts/index.js';
+const id = '00000000-0000-4000-8000-000000000001';
+const hash = 'a'.repeat(64);
+const receipt = {clientActionId:id, taskId:id, sessionId:id, committedAt:'2026-10-15T00:00:00Z',action:'publish',ref:{publicationId:id},hash,publication:{publicationId:id,hash,title:'发布版'}};
+it('projects only known annotation metadata, preserves original receipts and business hash attributes', () => {
+ const input = {...receipt,binding:{draft:{hash,baseRef:{publicationId:id}}},draft:{hash},current:{publication:{hash}},drafts:{items:[{hash}]},publications:{items:[{hash}]},objects:{items:[{attributes:{hash:'business'},note:hash,sourceRefs:[{queriedAt:'2026-10-15T01:02:03.004Z'}]}]}};
+ const before=structuredClone(input), projected=projectAnnotationResult(input);
+ expect(input).toEqual(before);
+ expect(projected).toMatchObject({binding:{draft:{baseRef:receipt.ref}},objects:input.objects});
+ for(const path of ['hash','binding.draft.hash','draft.hash','current.publication.hash','publication.hash','drafts.items.0.hash','publications.items.0.hash']) expect(projected).not.toHaveProperty(path);
+ const result=annotationToolResult(receipt,'annotation_action');
+ expect(result.details.annotationResult?.receipt.hash).toBe(hash);
+ expect(result.content[0].text).not.toContain(hash);
+ expect(JSON.parse(result.content[0].text)).toMatchObject({format:'annotation.model-result.v1',data:{ref:receipt.ref,publication:{title:'发布版'}}});
+});
+it.each([{}, {objectIds:['north'],fields:['note']}, {layerIds:['roads'],fields:[]}, {fields:['style','attributes']}])('echoes original selectors without inventing omitted fields: %j', query => {
+ const actual={hash,ref:{setId:id,revision:1},objects:{items:[],offset:3,limit:2,total:5,hasMore:false}};
+ const result=annotationToolResult(actual,'annotation_read',{mode:'read',...query} as never);
+ expect(JSON.parse(result.content[0].text).data).toEqual({ref:actual.ref,objects:actual.objects,query});
+ expect(result.details).toEqual({});
+ expect(annotationToolResult({status:'empty'},'annotation_read',{mode:'draft'}).content[0].text).not.toContain('query');
+});
+it('requires valid paired metadata, keeps legacy receipts, and never falls back from missing/damaged new results', () => {
+ const result=annotationToolResult(receipt,'annotation_action');
+ const message:PublicMessage={id:'tool',requestId:id,role:'tool',toolName:'annotation_action',text:result.content[0].text,annotationResult:result.details.annotationResult};
+ expect(annotationMapEntries([message])).toEqual([{selection:{publicationId:id},publication:true,original:false}]);
+ expect(annotationMapEntries([{...message,text:JSON.stringify(receipt),annotationResult:undefined}])).toHaveLength(1);
+ for(const variant of [{annotationResult:undefined},{annotationResult:null},{isError:true},{resultMissing:true as const},{role:'assistant' as const},{text:JSON.stringify({format:'annotation.model-result.v2',data:receipt})},{text:JSON.stringify({format:'annotation.model-result.v1',data:{...receipt,ref:{publicationId:'other'}}})}]) expect(annotationMapEntries([{...message,...variant}])).toEqual([]);
+ expect(extractAnnotationResult({annotationResult:{...result.details.annotationResult,schemaVersion:2}},'annotation_action')).toBeNull();
+ expect(extractAnnotationResult({annotationResult:{...result.details.annotationResult,origin:'receipt_read'}},'annotation_action')).toBeNull();
+ const replay=annotationToolResult({...receipt,replayed:true},'annotation_action');
+ expect(replay.details.annotationResult?.origin).toBe('replay');
+ expect(annotationMapEntries([{...message,text:replay.content[0].text,annotationResult:replay.details.annotationResult}])[0]?.original).toBe(true);
+ const read=annotationToolResult(receipt,'annotation_read');
+ expect(read.details.annotationResult?.origin).toBe('receipt_read');
+ expect(annotationMapEntries([{...message,toolName:'annotation_read',text:read.content[0].text,annotationResult:read.details.annotationResult}])[0]?.original).toBe(true);
+});

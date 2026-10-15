@@ -6,9 +6,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AgentSession, SessionManager } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { createApp } from '../../src/server/app.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
 import legacyInputs from './fixtures/composer-input-legacy.json';
 import v3Inputs from './fixtures/composer-input-v3.json';
+import v4Inputs from './fixtures/composer-input-v4.json';
 import { FILE_INPUT } from '../../src/pi/file-history.js';
 import { CHILD_ORIGIN, SUBAGENT_START } from '../../src/pi/subagent-history.js';
 import { validateHistoryEvidence } from '../../src/pi/history-evidence.js';
@@ -230,7 +231,7 @@ describe('composer HTTP scope and ordinary file input limits', () => {
   });
 });
 
-describe('map input v4 and fixed legacy evidence', () => {
+describe('map input v5 and fixed legacy evidence', () => {
   const samples = legacyInputs.fixtures;
   const source = samples[0].record as ComposerInputRecord;
   const annotation = samples[2].record as ComposerInputRecord;
@@ -244,10 +245,10 @@ describe('map input v4 and fixed legacy evidence', () => {
     manager.appendCustomMessageEntry(type, text, false, record);
     return JSON.parse(JSON.stringify(manager.getBranch())) as ReturnType<typeof manager.getBranch>;
   };
-  it('keeps byte-exact v1/v2 and fixed v3 source/annotation/method templates from their baselines', () => {
+  it('keeps byte-exact v1/v2 and fixed v3/v4 source/annotation/method templates from their baselines', () => {
     expect(legacyInputs.baseline).toBe('b201934a15f3cf35ba0b278fcd51c0840464560b');
     expect(v3Inputs.baseline).toBe('4c84f4f');
-    for (const sample of [...samples,...v3Inputs.fixtures]) {
+    for (const sample of [...samples,...v3Inputs.fixtures,...v4Inputs.fixtures]) {
       const record=decodeComposerInput(sample.record,sample.record.workspaceId,sample.record.sessionId,sample.type);
       expect(recordedComposerText(record,sample.type)).toBe(sample.text);
       const entries=native(record,sample.type,sample.text);
@@ -255,18 +256,18 @@ describe('map input v4 and fixed legacy evidence', () => {
       expect(composerHistory(entries,record.workspaceId,record.sessionId).has(record.requestId)).toBe(true);
     }
   });
-  it('routes all new map selections to v4 while leaving method-only and role-only inputs on v1', () => {
+  it('routes all new map selections to v5 while leaving method-only and role-only inputs on v1', () => {
     for(const selection of [{context:source.context},{annotationRefs:annotation.annotationRefs},{annotationContext:{sessionId:source.sessionId,draft:null,baseRef:null,writable:true}}, {...source,...method,annotationRefs:annotation.annotationRefs}]) {
-      expect(composerInputType(selection)).toBe(COMPOSER_INPUT_V4);
+      expect(composerInputType(selection)).toBe(COMPOSER_INPUT_V5);
       const text=recordedComposerText(selection);
       expect(text).not.toContain('(href)');expect(text).toContain('地图入口由界面');
-      expect(decodeComposerInput({...source,context:undefined,...selection},source.workspaceId,source.sessionId,COMPOSER_INPUT_V4)).toMatchObject(selection);
+      expect(decodeComposerInput({...source,context:undefined,...selection},source.workspaceId,source.sessionId,COMPOSER_INPUT_V5)).toMatchObject(selection);
     }
     expect(composerInputType({skill:method.skill})).toBe(COMPOSER_INPUT);
     expect(composerInputType({agent:method.agent})).toBe(COMPOSER_INPUT);
     expect(()=>decodeComposerInput(method,method.workspaceId,method.sessionId,COMPOSER_INPUT_V4)).toThrow();
   });
-  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
+  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4,COMPOSER_INPUT_V5])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
     const record={...source,annotationRefs:annotation.annotationRefs,skill:method.skill};
     const text=recordedComposerText(record,type),entries=native(record,type,text);
     expect(validateHistoryEvidence(entries,record.workspaceId,record.sessionId)?.status).toBe('interrupted');
@@ -275,7 +276,7 @@ describe('map input v4 and fixed legacy evidence', () => {
       {...record,permissions:['write']},{...record,annotationRefs:[{...annotation.annotationRefs![0],geometry:{}}]},
     ];
     for(const bad of corruptions)expect(()=>decodeComposerInput(bad,record.workspaceId,record.sessionId,type)).toThrow();
-    for(const type of ['berserk.composer-input.v5','berserk.composer-input.v4-extra']) {
+    for(const type of ['berserk.composer-input.v6','berserk.composer-input.v4-extra']) {
       expect(()=>decodeComposerInput(record,record.workspaceId,record.sessionId,type)).toThrow();
       expect(()=>recordedComposerText(record,type)).toThrow();
       expect(()=>composerHistory(native(record,type,text),record.workspaceId,record.sessionId)).toThrow();
@@ -294,9 +295,9 @@ describe('map input v4 and fixed legacy evidence', () => {
     const oversized={...record,context:{...source.context!,queries:Array(100).fill(source.context!.queries[0])}};
     expect(()=>decodeComposerInput(oversized,record.workspaceId,record.sessionId,type)).toThrow();
   });
-  it('reads mixed fixed v1/v2/v3 and new v4 native history without rewriting old entries', () => {
+  it('reads mixed fixed v1/v2/v3/v4 and new v5 native history without rewriting old entries', () => {
     const manager=SessionManager.inMemory('/workspace');
-    for(const sample of [samples[0],samples[2],{...v3Inputs.fixtures[0],record:{...source,requestId:method.requestId}},{type:COMPOSER_INPUT_V4,record:{...source,requestId:'00000000-0000-4000-8000-000000000099'},text:recordedComposerText(source)}]) {
+    for(const sample of [samples[0],samples[2],{...v3Inputs.fixtures[0],record:{...source,requestId:method.requestId}},{type:COMPOSER_INPUT_V4,record:{...source,requestId:'00000000-0000-4000-8000-000000000099'},text:recordedComposerText(source,COMPOSER_INPUT_V4)},{type:COMPOSER_INPUT_V5,record:{...source,requestId:'00000000-0000-4000-8000-000000000098'},text:recordedComposerText(source,COMPOSER_INPUT_V5)}]) {
       const record=sample.record as ComposerInputRecord;
       for(const entry of native(record,sample.type,sample.text)) {
         if(entry.type==='custom')manager.appendCustomEntry(entry.customType,entry.data);
@@ -307,7 +308,7 @@ describe('map input v4 and fixed legacy evidence', () => {
     }
     const before=JSON.stringify(manager.getBranch()),entries=JSON.parse(before);
     expect(validateHistoryEvidence(entries,source.workspaceId,source.sessionId)?.status).toBe('succeeded');
-    expect(composerHistory(entries,source.workspaceId,source.sessionId).size).toBe(4);
+    expect(composerHistory(entries,source.workspaceId,source.sessionId).size).toBe(5);
     expect(JSON.stringify(entries)).toBe(before);
   });
 });

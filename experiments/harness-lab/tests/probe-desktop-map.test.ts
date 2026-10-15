@@ -1,9 +1,18 @@
 import {describe,it,expect} from 'vitest';
 import type {Interaction} from '../src/contracts/interactions';
 import type {SessionSnapshot} from '../src/contracts/index';
-import {desktopOptions,desktopCases,desktopRunCases,visibleRequestEvidence,clarificationChoice,seedLayers,recoveryStalled,validateOperatorAnswer,operatorQuestionAllowed} from '../scripts/probe-desktop-map';
+import {comparisonOfPublications,desktopOptions,desktopCases,desktopRunCases,visibleRequestEvidence,clarificationChoice,seedLayers,recoveryStalled,validateOperatorAnswer,operatorQuestionAllowed} from '../scripts/probe-desktop-map';
 const question=(prompt:string,options?:Array<{id:string;label:string}>):Interaction=>({kind:'question',schemaVersion:1,interactionId:'i',workspaceId:'w',sessionId:'s',requestId:'r',toolCallId:'t',toolName:'ask_user',createdAt:'2026-10-14T00:00:00Z',status:'pending',questions:[{id:'q',prompt,options}]});
 describe('desktop acceptance driver boundaries',()=>{
+ it('recognizes actual fixed-version comparison in new and legacy results, not errors or unknown wrappers',()=>{
+  const data={left:{publicationId:'P1'},right:{publicationId:'P2'},counts:{note:1}};
+  const msg={id:'t',role:'tool' as const,toolName:'annotation_read',text:JSON.stringify(data)};
+  expect(comparisonOfPublications(msg,'P1','P2')).toBe(true);
+  const projected={...msg,text:JSON.stringify({format:'annotation.model-result.v1',data})};
+  expect(comparisonOfPublications(projected,'P2','P1')).toBe(true);
+  expect(comparisonOfPublications(projected,'P1','P3')).toBe(false);
+  for(const bad of [{...projected,isError:true},{...projected,resultMissing:true as const},{...projected,toolName:'annotation_action'},{...projected,text:'broken'},{...projected,text:JSON.stringify({format:'unknown',data})},{...projected,text:JSON.stringify({format:'annotation.model-result.v1',data:{...data,counts:undefined}})}])expect(comparisonOfPublications(bad,'P1','P2')).toBe(false);
+ });
  it('adds exactly two independent collaboration environments without changing the default or allowing case selection',()=>{
   expect(desktopRunCases(desktopOptions([]))).toEqual(desktopCases);
   for(const args of [['--reporting-recheck'],['--reporting-recheck','--prepare-only']])expect(desktopRunCases(desktopOptions(args))).toEqual(['collaboration-1','collaboration-2']);

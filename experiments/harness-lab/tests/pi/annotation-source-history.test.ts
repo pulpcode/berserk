@@ -41,7 +41,7 @@ it('runs source import through native Pi, reopens its exact history and recovers
   const snapshot = lab.get(session.id, 'alpha'); expect(snapshot.lastResult?.status).toBe('succeeded');
   const message = snapshot.messages.find(item => item.role === 'tool' && item.toolName === 'annotation_from_source')!;
   expect(message.isError).not.toBe(true);
-  const receipt = JSON.parse(message.text) as AnnotationReceipt;
+  const receipt = message.annotationResult!.receipt as AnnotationReceipt;
   expect(receipt).toMatchObject({action: 'from_source', sessionId: session.id, fromSources: [{sourceRef, sourceRevision: 2}]});
   expect(receipt.fromSources![0].queriedAt).toMatch(/Z$/);
   expect(message.text).not.toContain('coordinates');
@@ -61,7 +61,7 @@ it('runs source import through native Pi, reopens its exact history and recovers
   await reopened.start(session.id, '核对刚才实际保存的版本。', {}, 'alpha').run(() => {});
   const after = reopened.get(session.id, 'alpha'); expect(after.lastResult?.status).toBe('succeeded');
   const recovered = after.messages.findLast(item => item.role === 'tool' && item.toolName === 'annotation_read')!;
-  expect(recovered.isError).not.toBe(true); expect(JSON.parse(recovered.text)).toEqual(receipt);
+  expect(recovered.isError).not.toBe(true); expect(recovered.annotationResult?.receipt).toEqual(receipt);
   expect(fetch).toHaveBeenCalledTimes(2);
   expect(reopened.annotations!.binding(actor, session.id).draft?.headRevision).toBe(2);
   expect(reopened.annotations!.version(actor, receipt.taskId, receipt.ref!).document.layers[0].features[0].geometry).toEqual(original.geometry);

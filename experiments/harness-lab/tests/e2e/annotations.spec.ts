@@ -8,15 +8,16 @@ import { AccessStore } from '../../src/access/store';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { annotationToolResult } from '../../src/pi/annotation-results';
 import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 
 test.setTimeout(60000);
-async function setup(page:Page){
+async function setup(page:Page, reply: Parameters<typeof fakeRuntime>[1] = ()=>({text:'已收到固定标注引用。'})){
  const dir=await mkdtemp(join(tmpdir(),'axon-annotations-web-'));const db=await openDatabase(dir);const access=new AccessStore(db);
  const userId=await access.saveAccount({username:'a',displayName:'地图验证',seatId:'a',seatName:'总体席',password:'test-password-123',createPublicTask:true,manageModelSettings:true});const actor=access.identity(userId)!;
  const task=access.create(actor,{title:'标注验证任务',goal:'独立草稿与固定发布',visibility:'public',clientActionId:randomUUID()});db.close();
  const config=testConfig(dir,{seatId:'a',auth:{secret:'annotations-browser-secret-at-least-thirty-two-characters',sessionMs:28800000}});
- const fake=await fakeRuntime(config,()=>({text:'已收到固定标注引用。'}));const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab,false);
+ const fake=await fakeRuntime(config,reply);const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab,false);
  const workspace=await lab.workspaces.ensureWorkspace(task.id,'a',task.title);const session=await lab.createSession(workspace.id,'a');const second=await lab.createSession(workspace.id,'a');
  let tiles=0;let dropAction=false;const requests:Array<{path:string;body:Record<string,unknown>}> = [];const errors:string[]=[];
  page.on('pageerror',error=>errors.push(error.message));
@@ -241,16 +242,17 @@ test('layer tree separates expansion visibility and drawing target, including em
  }finally{await env.close();}
 });
 
-test('structured receipt buttons open fixed read-only targets and stay scoped to the final request after reload',async({page})=>{
+for (const format of ['legacy','structured'] as const) test(`${format} receipt buttons open fixed read-only targets and stay scoped to the final request after reload`,async({page})=>{
  const env=await setup(page);try{
   const service=env.lab.annotations!;
   const first=service.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,title:'入口验证',operations:[{op:'add_layer',layer:{layerId:'points',name:'集合点',order:0,defaultVisible:true,features:[{objectId:'point-a',name:'固定集合点',kind:'point',geometry:{type:'Point',coordinates:[103.82,1.30]}}]}}]});
   const firstRef=first.ref!;if(!('setId' in firstRef))throw new Error('Expected private ref');
   service.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'point-a',changes:{name:'最新集合点'}}]});
   const requestId=randomUUID(), otherRequestId=randomUUID();
+  const projected=annotationToolResult({...first,objectIds:['point-a']},'annotation_action');
   const snapshot={...env.session,active:null,lastResult:{requestId:otherRequestId,status:'succeeded'},turns:[{requestId,status:'succeeded',finalMessageId:'answer'},{requestId:otherRequestId,status:'succeeded',finalMessageId:'later-answer'}],messages:[
    {id:'user',role:'user',requestId,text:'添加集合点'},
-   {id:'receipt',role:'tool',requestId,toolName:'annotation_action',text:JSON.stringify({...first,objectIds:['point-a']})},
+   {id:'receipt',role:'tool',requestId,toolName:'annotation_action',text:format==='legacy'?JSON.stringify({...first,objectIds:['point-a']}):projected.content[0].text,...(format==='structured'?{annotationResult:projected.details.annotationResult}:{})},
    {id:'answer',role:'assistant',requestId,text:'已添加集合点。'},
    {id:'later-user',role:'user',requestId:otherRequestId,text:'继续讨论'},
    {id:'later-answer',role:'assistant',requestId:otherRequestId,text:'本轮没有修改。'},
@@ -268,5 +270,27 @@ test('structured receipt buttons open fixed read-only targets and stay scoped to
   await page.reload();await answer.getByRole('button',{name:/查看本次标注/}).click();
   await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('固定集合点');
   await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('native streamed publication result and reloaded history open the same fixed version',async({page})=>{
+ const env=await setup(page,(_context,index)=>index===0?{tools:[{name:'annotation_action',arguments:{action:'publish',revision:1,title:'流式发布版'}}]}:{text:'已发布固定标注。'});
+ try{
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'points',name:'位置',order:0,defaultVisible:true,features:[{objectId:'north',kind:'point',name:'流式固定对象',geometry:{type:'Point',coordinates:[103.82,1.30]}}]}}]});
+  await page.goto(`/?session=${env.session.id}`);
+  await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('发布当前标注');await page.getByRole('button',{name:'发送消息',exact:true}).click();
+  const reply=page.getByLabel('Axon 的回复').filter({hasText:'已发布固定标注。'}),button=reply.getByRole('button',{name:/查看发布标注/});
+  const selectPublished=async()=>{await openLayers(page);await expandGroup(page,'参考标注 流式发布版');const group=page.getByRole('region',{name:'参考标注 流式发布版'});const layer=group.getByRole('button',{name:'展开位置',exact:true});if(await layer.isVisible())await layer.click();await group.getByRole('button',{name:'流式固定对象 point',exact:true}).click();};
+  await expect(button).toBeVisible();await button.click();await selectPublished();
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('流式固定对象');
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');
+  const snapshot=env.lab.get(env.session.id,'a'),receipt=snapshot.messages.find(message=>message.toolName==='annotation_action')!.annotationResult!.receipt;
+  expect(receipt.ref).toHaveProperty('publicationId');expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(0);
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'north',changes:{name:'后续草稿对象'}}]});
+  await page.reload();await expect(button).toBeVisible();await button.click();await selectPublished();
+  await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('流式固定对象');
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+  expect(env.lab.get(env.session.id,'a').messages.find(message=>message.toolName==='annotation_action')!.annotationResult!.receipt).toEqual(receipt);
+  expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });

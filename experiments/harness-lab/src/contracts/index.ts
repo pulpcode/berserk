@@ -1,3 +1,4 @@
+import type { AnnotationResult } from './annotation-results.js';
 import type { AnnotationContext, AnnotationSelection, LoadedAnnotationSelection } from './annotations.js';
 import type { ContextRef, LoadedContextSelection } from './context.js';
 import type { CommandPolicyRecord, Interaction } from './interactions.js';
@@ -16,6 +17,7 @@ export interface PublicMessage {
   toolCallId?: string;
   /** UI-only notice for an interrupted call, not a persisted tool result. */
   resultMissing?: true;
+  annotationResult?: AnnotationResult | null;
   attachments?: FileRef[];
   selections?: LoadedComposerSelection;
 }
@@ -161,7 +163,7 @@ export type StreamEvent = {
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }

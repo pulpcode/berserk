@@ -1,6 +1,7 @@
 import type { ContextRef, ContextQueryResult } from '../../contracts/context';
 import type { PublicMessage } from '../../contracts';
-import type { AnnotationRef, AnnotationSelection } from '../../contracts/annotations';
+import { extractAnnotationResult, receiptMapEntry, type AnnotationMapEntry } from '../../contracts/annotation-results';
+export type { AnnotationMapEntry } from '../../contracts/annotation-results';
 export interface MapReference { ref: ContextRef; revision?: number; href: string }
 export const refKey = (ref: ContextRef) => JSON.stringify([ref.systemId, ref.objectType, ref.objectId]);
 export function isRef(value: unknown): value is ContextRef {
@@ -53,16 +54,8 @@ export function verifiedReference(href: string | undefined, evidence: MapReferen
   return candidate && evidence.find(item => refKey(item.ref) === refKey(candidate.ref) && item.revision === candidate.revision);
 }
 
-export interface AnnotationMapEntry { selection: AnnotationSelection; original: boolean; publication: boolean }
 const record = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 const positiveRevision = (value: unknown): value is number => Number.isSafeInteger(value) && Number(value) > 0;
-const uuid = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
-const objectId = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_.:-]{1,128}$/.test(value);
-function fixedRef(value: unknown): AnnotationRef | undefined {
-  if (!record(value)) return;
-  if (uuid(value.publicationId) && value.setId === undefined && value.revision === undefined) return {publicationId:value.publicationId};
-  if (uuid(value.setId) && positiveRevision(value.revision) && value.publicationId === undefined) return {setId:value.setId,revision:value.revision};
-}
 /** A native successful receipt is evidence; assistant prose and arbitrary read payloads are not. */
 export function annotationMapEntries(messages: PublicMessage[]): AnnotationMapEntry[] {
   const entries = new Map<string, AnnotationMapEntry>();
@@ -70,27 +63,12 @@ export function annotationMapEntries(messages: PublicMessage[]): AnnotationMapEn
     if (message.role !== 'tool' || message.isError || message.resultMissing || !['annotation_action','annotation_from_source','annotation_read'].includes(message.toolName || '')) continue;
     try {
       const value: unknown = JSON.parse(message.text);
-      if (!record(value) || !uuid(value.clientActionId) || !uuid(value.taskId) || typeof value.committedAt !== 'string' || !Number.isFinite(Date.parse(value.committedAt))) continue;
-      if (!['create_draft','apply','from_source','publish','set_current'].includes(String(value.action))) continue;
-      if (message.toolName === 'annotation_from_source' && value.action !== 'from_source') continue;
-      if (message.toolName === 'annotation_action' && value.action === 'from_source') continue;
-      if (value.replayed !== undefined && typeof value.replayed !== 'boolean') continue;
-      const publication = value.action === 'publish' || value.action === 'set_current';
-      const ref = fixedRef(value.ref);
-      if (!ref || publication !== ('publicationId' in ref)) continue;
-      // Conflicting receipt metadata must not manufacture a target.
-      if (value.afterRef !== undefined && JSON.stringify(fixedRef(value.afterRef)) !== JSON.stringify(ref)) continue;
-      const sources = value.fromSources !== undefined ? value.fromSources : value.fromSource !== undefined ? [value.fromSource] : undefined;
-      if (value.action === 'from_source' && (!Array.isArray(sources) || !sources.length || sources.length > 20 || !sources.every(item => record(item) && ['add','refresh'].includes(String(item.mode)) && objectId(item.objectId) && objectId(item.layerId) && isRef(item.sourceRef) && positiveRevision(item.sourceRevision) && typeof item.queriedAt === 'string' && Number.isFinite(Date.parse(item.queriedAt))))) continue;
-      let ids: string[] | undefined;
-      if (value.objectIds !== undefined) {
-        if (!Array.isArray(value.objectIds) || value.objectIds.length > 500 || !value.objectIds.every(objectId)) continue;
-        ids = [...new Set(value.objectIds)];
-      } else if (value.action === 'from_source') {
-        if (!Array.isArray(sources)) continue;
-        ids = [...new Set(sources.map(item => (item as {objectId:string}).objectId))];
-      }
-      const original = message.toolName === 'annotation_read' || value.replayed === true;
+      const structured = extractAnnotationResult({annotationResult:message.annotationResult},message.toolName!, false, message.text);
+      const modern = record(value) && typeof value.format === 'string' && value.format.startsWith('annotation.model-result.');
+      const entry = structured ? receiptMapEntry(structured.receipt,message.toolName!) : message.annotationResult !== undefined || modern ? undefined : receiptMapEntry(value,message.toolName!);
+      if (!entry) continue;
+      const {original,publication} = entry;
+      const {objectIds:ids,...ref} = entry.selection;
       const key = JSON.stringify([ref,original]);
       const previous = entries.get(key);
       // A whole-version receipt subsumes object-specific selections of the same fixed version.
