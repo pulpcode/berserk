@@ -1,0 +1,7 @@
+{"file": ".trellis/spec/backend/index.md", "reason": "后端规范索引；实施前须另行完整分段读取大型 harness-lab 规范"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "受控 Skill、显式引用与历史兼容"}
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "来源权限、真实查询、分页及时间依据"}
+{"file": ".trellis/spec/backend/situation-map.md", "reason": "空间对象、地图证据与共享画布"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "固定版本、草稿写入、CAS、幂等与回执"}
+{"file": ".trellis/spec/backend/agent-scenario-validation.md", "reason": "隔离真实模型探测与语义验证"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "桌面前端规范索引；实施前须另行完整分段读取大型 harness-lab 规范"}
