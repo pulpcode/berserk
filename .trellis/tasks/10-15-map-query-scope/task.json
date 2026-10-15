@@ -1,0 +1,87 @@
+{
+  "id": "map-query-scope",
+  "name": "map-query-scope",
+  "title": "地图工具契约与回答边界：收窄后的最小改进",
+  "description": "待审阅：必做通用工具契约、准确且完整的报告规则及测试整理；scope仅隔离候选对照，changeCounts改名暂缓。新增3个自然业务题，重点案例固定3次，不实施。",
+  "status": "planning",
+  "dev_type": "backend",
+  "scope": "map-query-scope",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-10-task-plan-validation",
+  "relatedFiles": [
+    ".trellis/tasks/10-15-map-query-scope/prd.md",
+    ".trellis/tasks/10-15-map-query-scope/design.md",
+    ".trellis/tasks/10-15-map-query-scope/implement.md",
+    ".trellis/tasks/10-15-map-query-scope/research.md",
+    ".trellis/tasks/10-15-map-query-scope/validation-cases.md",
+    ".trellis/tasks/10-15-map-query-scope/implement.jsonl",
+    ".trellis/tasks/10-15-map-query-scope/check.jsonl"
+  ],
+  "notes": "2026-10-15 用户要求先提交当前Git，再落盘最小改进方案。已提交上一轮实现及复测为d79a561；本任务仅规划，等待用户审阅后明确批准实施。未修改产品、未调用真实模型、未部署；上一轮失败记录保留，不归档为全面验收完成。 本轮按用户要求收窄并更新方案：M1/M2/M3必做，E1 scope候选，D1 changeCounts暂缓；加入未参与既往修复的H01–H03与固定3次重复。A/B构建及题目先冻结，候选不自动默认启用，仍等待审阅，不开始实施。",
+  "meta": {
+    "designStatus": "pending_review",
+    "implementationApproved": false,
+    "implementationComplete": false,
+    "baselineCommit": "d79a561",
+    "desktopOnly": true,
+    "preserveServiceReceiptContract": true,
+    "required": [
+      "M1_tool_contract_clarity",
+      "M2_grounded_complete_reporting",
+      "M3_validation_design"
+    ],
+    "candidate": [
+      "E1_query_scope_isolated_comparison"
+    ],
+    "deferred": [
+      "D1_counts_to_changeCounts"
+    ],
+    "originalBusinessRequests": 57,
+    "newBusinessCases": [
+      "H01",
+      "H02",
+      "H03"
+    ],
+    "fixedRepetitionsPerKeyCase": 3,
+    "requiredA": {
+      "businessRequests": 75,
+      "controlledExplanations": 9
+    },
+    "candidateB": {
+      "businessRequests": 9,
+      "controlledExplanations": 6,
+      "businessCases": [
+        "G02-order",
+        "H01",
+        "H02"
+      ],
+      "diagnosticCases": [
+        "Q01",
+        "Q02"
+      ]
+    },
+    "totalIncludingCandidate": {
+      "businessRequests": 84,
+      "controlledExplanations": 15,
+      "caseExecutions": 99
+    },
+    "newCasesAreStrictBlindTest": false,
+    "freezeBeforeModelRuns": true,
+    "separateBusinessAndBoundaryScoring": true,
+    "scoreAccuracyAndCompleteness": true,
+    "candidateDefaultAdoptionApproved": false,
+    "deployed": false
+  }
+}
