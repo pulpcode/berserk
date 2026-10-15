@@ -1,0 +1,730 @@
+{
+  "reviewStatus": "frozen_before_unblinding",
+  "method": "Independent full-text and generated-tool-call review against blind inputs and rubric. No generated calls executed; no API calls; no sample identity/order inferred.",
+  "blindingDisclosure": "Mandatory trellis-check role fallback loaded existing task check.jsonl, PRD/design/implement and referenced existing specs/research/prior validation before sample review. This exposed historical baseline context, but no comparison plan, manifest, runs, blind-map, current sample identities or order were inspected. Therefore identity/order blind, not completely background-naive.",
+  "inputHashes": {
+    "answers/01b7a45b4e04.json": "b721376d9605cb78b49deeea0b4908611f89e1592ade5862bb3284da0727bd03",
+    "answers/08b16e3f7b08.json": "9474709171c3b0347554ed5c98cb3bc18dcd7eb6a0206c6bb49909986fad20ac",
+    "answers/1f3539b0dd24.json": "e3a689173a188bcad05b3cd542e74bd72b264eb2d769845702a618435790e679",
+    "answers/218cafcb6717.json": "a86aa4d8f152f0f9eba834ed34658f68ad65d91076e72b9982399f98da576e63",
+    "answers/2e218cd72c18.json": "61728bcf8604492a5190d79848df4bd91829d2f31cfcdf77345baa9a81f09df3",
+    "answers/551ba0099f2c.json": "37cc9d989963dbf9bd50b1858a28105deccc1497f7f5e78cceb8e2f0b1939e11",
+    "answers/698e557d9826.json": "be0ee353cf16fcc0da61105b317b5d148ce75c5dab026d19c770cb14c84c2050",
+    "answers/7166367ee3ca.json": "00f7d44946c13abe677ae5eb64c0d40abee71433b66b65f40e761143354fa0a8",
+    "answers/7d090a485d7a.json": "aa26e41c132d8c43535c6da7917c7f925cee673e54a59639a0cb0bae1b00353d",
+    "answers/7e0311fd7e8f.json": "404162ca20a0eee0dcc92019245b6ae6f98f21bb14a8d363139548002444d69a",
+    "answers/89f963eac4b4.json": "00a0eb62bea9142546e2a83a1af119f1ec5d0568bb737ed2d220277ecca98f37",
+    "answers/8a062675b311.json": "6ca6788edb8a1c2246e478b40703a9402a14aedc24e94188f62fe1a990cc9e9b",
+    "answers/8ee4be7d6153.json": "48dce1a4ac8eac90814e223f8719a64b105d3a63aa1228a66242cda7fa993362",
+    "answers/961de3c21efc.json": "08ad0f262d7f9d19fff8608a7f2c72a5b2e539b6954052b1b488d4be6ca0aa42",
+    "answers/9df77fa23132.json": "f7a028461ed71e3e5499b903b771261fb494dfa6fe43e4ead90bad836b2085ce",
+    "answers/a57f17d32b34.json": "e12f2d8858034facfce38d6d12b380352a2e6cf7b92a407a7ccce3974f645b7d",
+    "answers/adae88f67b98.json": "7643649e8e5a5d9cccaf008f23732a94324b315f273f60c06ba9a6bb5e3caffb",
+    "answers/bd8449efa83d.json": "34886d7c3ec43571d0cd69b2fc52e1eb00035ca983ef79fb795054534063ca56",
+    "answers/bdf60bb70e04.json": "c9170b4bf46c6e3470d78ec02c4027bf880296a589c097d24dcf640d9eaa17e3",
+    "answers/c64d52e1577e.json": "73d02903c0b17a337ad7c190c14bcf2889df49b4c8cd3f224c888e05717412ca",
+    "answers/ec12377d1e40.json": "d3bcba1e3fa0afa4c15553e4c0b70306b6de1b553fbc1eaf07cfe4866d48cb00",
+    "answers/edd2e41aed35.json": "e0bc237b00293405767a2ce64f2268c3ef53dadf185d813b7f79390782fbfe84",
+    "answers/f85ddaf263b2.json": "e92775ad0377d7f636063d7f5d5c0463c80af067b39a4b97f7a310c46198d63e",
+    "answers/fe63100d1d8a.json": "127addaae68ec58b96d4682160a0a241fc80082d7df35ec288d26285b8fe27fc",
+    "inputs/C1.json": "81ca0840a998d37dfe1800f8b28484d3e52a724396a964c97d8b84cf19e9280a",
+    "inputs/C2.json": "28b552cd06e59c91f677f160319332ad8c4a10d227380397b3e34eaed898162e",
+    "inputs/C3.json": "eca67c9a4fcd6b72cb68cb02cf4f9d8f218324586884109240f9579d2e5efda8",
+    "inputs/C4.json": "06a587ab2f5c9a7f9dd5304cc63f1722d5ed8969a89aa09d82d22adac6a53ea6",
+    "rubric.md": "23afd8332c59ff2ace33eaadeb2911b2868588875f77a3c12a9492f43a06d82d"
+  },
+  "definitions": {
+    "necessaryFollowup": "Whether an additional read is needed to correctly finish the actual user request; does not mean the sample performed it.",
+    "effectiveNecessaryFollowup": "Whether the generated assistant step includes a valid useful necessary tool call.",
+    "completeness": "Separates having supplied the requested content from whether the whole answer is factually correct; C1 can supply the note comparison but fail due to added claims.",
+    "ambiguities": "Plausible contextual reading prevents treating isolated phrases as confirmed contradictions; exact phrases retained for sensitivity review.",
+    "toolErrors": "Only generated calls in the reviewed output, not errors inherited in the fixed input."
+  },
+  "countsByCase": {
+    "C1": {
+      "correct_answer": 2,
+      "incorrect": 4
+    },
+    "C2": {
+      "incorrect": 6
+    },
+    "C3": {
+      "correct_answer": 6
+    },
+    "C4": {
+      "correct_answer": 6
+    }
+  },
+  "samples": [
+    {
+      "sampleId": "01b7a45b4e04",
+      "caseId": "C1",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "备注对照准确；明确乙不在用户引用比较范围，没有声称乙在引用整版不存在。"
+    },
+    {
+      "sampleId": "08b16e3f7b08",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "「仓储设施」图层的第 4～5 项摘要",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该筛选范围内的仓储设施对象共 7 个",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "1f3539b0dd24",
+      "caseId": "C1",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "引用版本对象清单中无同名对象，故无可比对应项",
+          "reason": "可被读作整版无乙，但前一句明确限定“引用摘要只含point-a”，后句为未纳入比较。按完整段落可合理理解为返回的所选清单无乙，未出现整版不存在的明确断言，保留歧义而不硬计事实错误。"
+        },
+        {
+          "quote": "唯一差异",
+          "reason": "标题、开头和结尾均限定备注及所读摘要字段，因此不将此词扩读成所有未读字段均相同。"
+        }
+      ],
+      "rationale": "甲备注比较完整正确；关于乙的“清单中无同名对象”存在范围歧义，但紧邻句已限定引用摘要，按保守且连贯的解释不判整版不存在。"
+    },
+    {
+      "sampleId": "218cafcb6717",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "仓储设施图层（layerId `storage`）按保存顺序第 4～5 项摘要",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层在本次筛选下共 7 个对象（total=7）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "2e218cd72c18",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "读取的是当前会话自己草稿的实时状态（`status: draft`）",
+          "reason": "可合理指读取当时的草稿状态；正文明确setId和revision1，没有断言后续自动同步，不单凭“实时”判错。"
+        },
+        {
+          "quote": "这不是固定版本",
+          "reason": "严格来说返回已有固定ref和revision1，应写成“不是显式指定ref的read模式”。但工具契约本身以draft当前草稿与read明确固定版本对比，结合紧邻版本号，可合理理解为操作方式差别；记录术语歧义，不升级为确定的内容/范围错误。"
+        }
+      ],
+      "rationale": "三项解释目标均准确完整；开头关于固定版本的术语欠精确，记录可产生误读的歧义，而非仅凭关键词判错。"
+    },
+    {
+      "sampleId": "551ba0099f2c",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "本会话地图\"仓储设施\"图层（storage）按保存顺序的第 4～5 项摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "图层\"仓储设施\"当前共有 7 个对象（total=7）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "698e557d9826",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "**仓储设施**图层（layerId `storage`）第 4～5 项摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层共有 **7** 个对象",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "末尾询问继续第6～7项或额外字段；并未修复当前错页，且建立在错误的图层数量上。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "7166367ee3ca",
+      "caseId": "C1",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "引用版本中不存在该对象，故无可比项",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。"
+    },
+    {
+      "sampleId": "7d090a485d7a",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    },
+    {
+      "sampleId": "7e0311fd7e8f",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。"
+    },
+    {
+      "sampleId": "89f963eac4b4",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "补充完整图层清单、维修对象与版本背景，均有输入证据；当前采用措辞另记歧义。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "来源为自动会话草稿上下文，非任务当前采用版本",
+          "reason": "没有current查询依据，若理解为已确认未采用则无依据；但整句在说明数据来源，且draft与任务当前publication是不同入口，可理解为“本数据不代表任务当前采用版本”。保留歧义，不认定其明确断言当前采用内容与本草稿不同。"
+        }
+      ],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    },
+    {
+      "sampleId": "8a062675b311",
+      "caseId": "C1",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "本会话的 point-b（集合点乙）在所选引用版本中不存在（该版本按 point-a 筛选读取，total=1）",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。"
+    },
+    {
+      "sampleId": "8ee4be7d6153",
+      "caseId": "C1",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "“集合点乙”仅存在于本会话草稿，引用版本未列出该对象",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。"
+    },
+    {
+      "sampleId": "961de3c21efc",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。"
+    },
+    {
+      "sampleId": "9df77fa23132",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "要确认其他图层具体对象，则需按相应图层 ID 再读",
+          "reason": "若第一次全图摘要已经完整返回，未必还需要按层重读；这是条件式建议的效率措辞，并未执行或拒绝当前解释任务，不作为工具错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。"
+    },
+    {
+      "sampleId": "a57f17d32b34",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "另列维修层及对象，先前完整摘要支持，但超出用户只展示本页的要求。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    },
+    {
+      "sampleId": "adae88f67b98",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "items 采用默认分页（offset 0、limit 50）",
+          "reason": "参数实际显式给出0和50，只是数值恰与默认一致；未改变实际分页解释，记轻微术语不精确而不判实质事实错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。"
+    },
+    {
+      "sampleId": "bd8449efa83d",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "另列维修层及对象、baseRef背景，证据支持但超出用户只展示本页的要求。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    },
+    {
+      "sampleId": "bdf60bb70e04",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "这一页展示的是「仓储设施」图层（layerId: storage）中的第 4～5 项对象",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该「仓储设施」图层共有 **7 个对象**",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "c64d52e1577e",
+      "caseId": "C2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "“仓储设施”图层（第4～5项）摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层共 7 个对象（`total:7`）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。"
+    },
+    {
+      "sampleId": "ec12377d1e40",
+      "caseId": "C3",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "因此，在 `repair` 图层内这 2 个对象已经是全部可返回对象",
+          "reason": "单独由hasMore=false不能推出已读前页；本例实际offset0、total2且返回两项，结论在完整上下文中有依据，不机械判末页推全量错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。"
+    },
+    {
+      "sampleId": "edd2e41aed35",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    },
+    {
+      "sampleId": "f85ddaf263b2",
+      "caseId": "C1",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "引用版本中只有 point-a 这一个对象",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。"
+    },
+    {
+      "sampleId": "fe63100d1d8a",
+      "caseId": "C4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。"
+    }
+  ],
+  "verification": {
+    "sampleCoverage": "24/24; six per case; all error quotes matched source text",
+    "newToolCalls": 0,
+    "writeAttempts": 0,
+    "technicalFailures": 0,
+    "lint": "Report JSON syntax/quote checks pass; application lint not applicable to this isolated semantic report.",
+    "typeCheck": "Report structural assertions pass; application TypeScript check not applicable (no product code owned or modified).",
+    "tests": "Sample coverage, enum, required value types, source quote correspondence and hashes verified."
+  }
+}

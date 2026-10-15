@@ -829,3 +829,69 @@
 ### Next Steps
 
 - 审阅agent-map-workflow/validation.md中的恢复提示、Skill触发、未指定层澄清及正文事实问题；全面业务验收未通过，未上线。
+
+
+## Session 29: 实施收窄地图工具契约并完成固定对照复测
+
+**Date**: 2026-10-15
+**Task**: 实施收窄地图工具契约并完成固定对照复测
+**Branch**: `main`
+
+### Summary
+
+先提交方案再实施M1/M2/M3；72测试及12桌面回归通过。冻结A/B后实际97案例、244条可见文字；存在9条明确错误、意外澄清与H01范围歧义。scope收益未证实，不采用、不部署；任务保留review，实施变更待审阅。
+
+### Main Changes
+
+- 工具契约与单条报告规则整理，counts保留；增加固定业务/诊断驱动与三次重复。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `7c43e45` | (see git log) |
+
+### Testing
+
+- [OK] lint、typecheck、build通过；9文件72测试和串行桌面12项通过；A/B354文件冻结前后一致。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅validation.md及semantic-review.md；不自动追加prompt、改题补跑或采用scope。
+
+
+## Session 30: 完成地图查询范围两模型同输入对照
+
+**Date**: 2026-10-15
+**Task**: 完成地图查询范围两模型同输入对照
+**Branch**: `main`
+
+### Summary
+
+固定四份原始输入，仅替换model，Flash与Pro各12次非思考单步调用；24次均完成，先盲评后解盲。两者各5次明确错误，Pro附加歧义较少但未满足核心改善判据。产品未改、模型未切换、未部署；报告待审阅。
+
+### Main Changes
+
+- 新增一次性原始provider输入重放、冻结审计、匿名评分及解盲报告。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 重放驱动5项测试通过；24份实际请求除model外相同，模型输出工具未执行；旧workspace/A/B冻结文件一致，git diff检查通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅model-comparison/validation.md；不自动追加提示词、试验或模型切换。
+
+2026-10-15 补记：按用户要求新增 `10-15-map-query-scope/issues.md`，分别记录 MAP-Q01 局部读取扩大、MAP-Q02 未筛选分页误述、MAP-Q03 附加状态歧义及证据/关闭标准。用户授权提交当前实现、测试和报告；不追加模型调用、不部署，问题保持未解决。提交前核对产品/A/B冻结及匿名评分不变，沿用已通过检查。

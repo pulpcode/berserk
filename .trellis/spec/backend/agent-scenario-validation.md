@@ -50,6 +50,10 @@ Bad: counting file existence as semantic success, calling scripted acceptance in
 - Reuse annotation/access/source/Pi and desktop tests for their existing mechanisms. Do not claim deterministic providers prove live reasoning.
 - Keep live-provider, Docker, API, desktop and fault observations separate. State unexecuted variants and whether actual compaction occurred. Bytes are not tokens.
 
+`scripts/probe-map-query-cases.ts` and `probe-map-query-scope.ts` supply frozen readonly fixtures and scheduled entries for query-contract validation. The reviewed schedule fixes three repetitions, separates business completion from tool-path coverage and controlled interpretation, and refuses overwriting an entry's evidence directory. New cases must stay outside product prompts, Skills and runtime workspaces. Controlled interpretations use genuine service/tool output and explicitly driver-issued SDK history, with no subsequent callable tools; they are prompted diagnostics, not autonomous-query evidence. Tests inspect the actual provider payload for exact result delivery, absent hidden fixture fields and unchanged model parameters. Report missing outputs, preparation faults, factual errors, omissions, redundant reads and self-recovery separately; never rerun failures into apparent success or claim three repetitions establish general reliability.
+
+A natural case must make its intended data ownership discoverable from the actual model-visible task/session context, not only from hidden fixture preparation. If a question omits whether it concerns source situation or conversation annotations while the task points elsewhere, record routing ambiguity and business non-completion separately; do not silently clarify and rerun. For result-field experiments, record whether the model actually received the experimental field. Also score the entire visible answer: a correct requested count can coexist with an incorrect unsolicited whole-document or current-version claim.
+
 ## 7. Wrong vs Correct
 
 Wrong: infer the imported path from whether the model happened to call an import tool, or declare the whole chain passed because its last work item is completed.

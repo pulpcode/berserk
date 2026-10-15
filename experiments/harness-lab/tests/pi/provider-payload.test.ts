@@ -78,7 +78,7 @@ it('inserts one fixed system snapshot immediately before the current user on the
 });
 
 it('keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references', async () => {
-  const payloads: Array<{messages: WireMessage[]}> = [];
+  const payloads: Array<{messages: WireMessage[]; tools: Array<{function: {name: string; description: string; parameters: {anyOf: Array<{required?: string[]; properties: Record<string, {description?: string}>}>}}}>}> = [];
   let publicationId = '';
   vi.stubGlobal('fetch', async (input: Request | string | URL, init?: RequestInit) => {
     payloads.push(JSON.parse(String(init?.body ?? (input instanceof Request ? await input.text() : ''))));
@@ -98,7 +98,8 @@ it('keeps annotation receipts in native details and UI while the actual provider
   const session=await lab.createSession(undefined,'alpha'),actor=lab.annotations!.actorForSeat('alpha');
   const draft=lab.annotations!.action(actor,session.id,{clientActionId:'00000000-0000-4000-8000-000000000021',action:'create_draft',baseRef:null,operations:[{op:'add_layer',layer:{layerId:'points',name:'位置',order:0,defaultVisible:true,features:[{objectId:'north',name:'北点',kind:'point',geometry:{type:'Point',coordinates:[103,1]},note:'业务备注',attributes:{hash:'business-hash'}}]}}]});
   const events: import('../../src/contracts/index.js').StreamEvent[]=[];
-  await lab.start(session.id,'发布当前标注',{annotationRefs:[{...draft.ref!,objectIds:['north']}]},'alpha').run(event=>events.push(event));
+  const request=lab.start(session.id,'发布当前标注',{annotationRefs:[{...draft.ref!,objectIds:['north']}]},'alpha');
+  await request.run(event=>events.push(event));
   const snapshot=lab.get(session.id,'alpha');expect(snapshot.lastResult?.status).toBe('succeeded');
   const publication=snapshot.messages.find(message=>message.toolName==='annotation_action')!;
   expect(publication.annotationResult?.origin).toBe('write');
@@ -109,6 +110,28 @@ it('keeps annotation receipts in native details and UI while the actual provider
   expect(wire).not.toContain(receipt.hash!);expect(wire).not.toContain(draft.hash!);expect(wire).not.toContain('annotationResult');
   expect(wire).toContain('business-hash');expect(wire).toContain(publicationId);expect(wire).toContain('业务备注');
   expect(wire).toContain('不是整个版本的对象清单');expect(wire).toContain('筛选后分页前');
+  // Verify descriptions survive native schema conversion without loading the optional Skill.
+  expect(lab.getRequestResources(session.id,request.requestId,'alpha')).toMatchObject({readSkills:[]});
+  const definitions=payloads[0].tools.map(tool=>tool.function);
+  const readDefinition=definitions.find(tool=>tool.name==='annotation_read')!;
+  for(const branch of readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)) {
+    for(const optional of ['layerIds','objectIds','fields']) expect(branch.required??[]).not.toContain(optional);
+    expect(branch.properties.fields.description).toContain('基础摘要始终包含 objectId/name/kind/layerId');
+    expect(branch.properties.fields.description).toContain('省略或空数组均仅返回摘要');
+    expect(branch.properties.fields.description).toContain('未请求字段不代表字段为空');
+    expect(branch.properties.layerIds.description).toContain('摘要中的 layers 定位 ID');
+    expect(branch.properties.layerIds.description).toContain('已有摘要足以回答时无需重复读取');
+    expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 时取交集');
+    expect(branch.properties.layerIds.description).toContain('同时指定 objectIds 时取交集');
+  }
+  expect(readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)).toHaveLength(2);
+  expect(readDefinition.description).toContain('未指定 layerIds/objectIds 时，在该固定版本的全部对象中分页');
+  expect(readDefinition.description).toContain('可涉及标题、图层和对象，不是对象总数');
+  expect(definitions.find(tool=>tool.name==='annotation_list')!.description).toContain('发布说明 note 不是对象备注');
+  const reportDefinition=definitions.find(tool=>tool.name==='annotation_action')!;
+  expect(reportDefinition.description).toContain('完成用户要求的结果说明与必要分析');
+  expect(reportDefinition.description).toContain('区分已核实事实、推断与建议');
+  expect(reportDefinition.description).toContain('依据不足时按需核对或说明不确定');
   const read=payloads.at(-1)!.messages.filter(message=>message.role==='tool').map(message=>JSON.parse(textOf(message))).find(value=>value.data?.objects);
   expect(read.data.query).toEqual({objectIds:['north'],fields:['note','attributes']});
   expect(read.data.objects.total).toBe(1);

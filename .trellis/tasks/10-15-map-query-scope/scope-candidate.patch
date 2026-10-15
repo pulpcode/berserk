@@ -1,0 +1,10 @@
+--- a/experiments/harness-lab/src/pi/annotation-results.ts
++++ b/experiments/harness-lab/src/pi/annotation-results.ts
+@@ -5,6 +5,7 @@
+   const data = projectAnnotationResult(actual);
+   if (object(data) && object(data.objects) && (query?.mode === 'read' || query?.mode === 'draft')) {
+     data.query = Object.fromEntries(['objectIds','layerIds','fields'].filter(key => query[key as keyof typeof query] !== undefined).map(key => [key, structuredClone(query[key as keyof typeof query])]));
++    (data.query as Record<string, unknown>).scope = query.objectIds ? 'objects' : query.layerIds ? 'layers' : 'all_objects';
+   }
+   const replayed = object(actual) && actual.replayed === true;
+   const annotationResult = extractAnnotationResult({annotationResult:{schemaVersion:1,origin:toolName === 'annotation_read' ? 'receipt_read' : replayed ? 'replay' : 'write',receipt:actual}}, toolName);

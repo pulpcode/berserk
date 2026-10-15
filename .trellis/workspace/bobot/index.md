@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 28
-- **Last Active**: 2026-10-14
+- **Total Sessions**: 30
+- **Last Active**: 2026-10-15
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~831 | Active |
+| `journal-1.md` | ~895 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,8 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 30 | 2026-10-15 | 完成地图查询范围两模型同输入对照 | - | `main` |
+| 29 | 2026-10-15 | 实施收窄地图工具契约并完成固定对照复测 | `7c43e45` | `main` |
 | 28 | 2026-10-14 | 实现地图宿主修订管理并完成固定十一案验收 | - | `main` |
 | 27 | 2026-10-14 | 实现地图来源标注并完成隔离复测 | `ac50ba1` | `main` |
 | 26 | 2026-10-13 | 完成 Agent 与框架三轮场景验证并记录质量缺口 | - | `main` |
