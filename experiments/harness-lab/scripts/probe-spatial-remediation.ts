@@ -51,6 +51,12 @@ export function validateRemediationSources(hashes:Record<RemediationVariant,Sour
   assert.deepEqual(changes('V2','V4'),[],'V4 differs through synthetic preparation only');
   return {tools,skill};
 }
+/** Only the host's failed result is authoritative; never inspect assistant prose for quota. */
+export function isProviderQuotaFailure(value:unknown):boolean {
+  if(!value||typeof value!=='object'||Array.isArray(value))return false;
+  const result=value as Record<string,unknown>;
+  return result.status==='failed'&&typeof result.message==='string'&&result.message.startsWith('insufficient_quota:');
+}
 async function main(){
   const args=process.argv.slice(2);let manifest='',output='',prepareOnly=false,port=4391,repeats:2|3=3;
   for(let i=0;i<args.length;i++){
@@ -75,8 +81,8 @@ async function main(){
     fullDiagnosticScheduled:schedule.length,schedule:entries,runtimes:plan.runtimes,hashes,differences,
     startedAt:new Date().toISOString(),semanticReview:'pending_review',modelAcceptancePassed:false,
     backgroundAblation:{changed:['synthetic task title','synthetic task goal','seat responsibility text'],preserved:['businessRefs','focus areas/time/topics','access and data'],claim:'Narrative-background ablation only, not removal of all task context.'},
-    stoppingRule:'Stop on source drift, spawn failure/missing result, or three consecutive incomplete entries with zero provider calls; recorded model failures remain in the batch, no automatic retries.'});
-  const outcomes:Array<{id:string;variant:RemediationVariant;status:string;exitCode:number|null;providerCalls:number|null}>=[];
+    stoppingRule:'Stop on source drift, spawn failure/missing result, provider quota exhaustion, or three consecutive incomplete entries with zero provider calls; recorded model failures remain in the batch, no automatic retries.'});
+  const outcomes:Array<{id:string;variant:RemediationVariant;status:string;exitCode:number|null;providerCalls:number|null;failureCategory?:string}>=[];
   const attempts:Array<{id:string;startedAt:string}>=[];let stopReason='',preparationFailures=0;
   const unchanged=async()=>{
     for(const id of remediationVariants)if(JSON.stringify(await spatialEvidenceHashes(roots[id]))!==JSON.stringify(hashes[id]))return false;
@@ -93,13 +99,18 @@ async function main(){
         {cwd:root,env:process.env,stdio:'inherit'});
       child.once('error',()=>resolveExit(null));child.once('exit',resolveExit);
     });
-    let status='missing_result',providerCalls:number|null=null;
+    let status='missing_result',providerCalls:number|null=null,quotaFailure=false;
     try{
       const result=JSON.parse(await readFile(join(trialOutput,'result.json'),'utf8')) as {status:string;providerCalls?:number};
       status=result.status;providerCalls=result.providerCalls??null;
     }catch{/* Missing evidence remains explicit, never infer a successful run. */}
+    try{
+      const final=JSON.parse(await readFile(join(trialOutput,'final-state.json'),'utf8')) as {snapshot?:{lastResult?:unknown}};
+      quotaFailure=isProviderQuotaFailure(final.snapshot?.lastResult);
+    }catch{/* No host result means quota cannot be inferred from prose or missing evidence. */}
+    if(quotaFailure)stopReason='provider_quota_exhausted';
     if(!await unchanged()){status='source_drift';stopReason='source_drift';await save(`${entry.id}-source-drift.json`,{id:entry.id,detectedAt:new Date().toISOString()});}
-    outcomes.push({id:entry.id,variant:entry.variant,status,exitCode,providerCalls});
+    outcomes.push({id:entry.id,variant:entry.variant,status,exitCode,providerCalls,...(quotaFailure?{failureCategory:'provider_quota_exhausted'}:{})});
     preparationFailures=status==='incomplete'&&providerCalls===0?preparationFailures+1:0;
     if(exitCode===null||status==='missing_result')stopReason ||= 'runner_failure';
     if(preparationFailures>=3)stopReason ||= 'repeated_preparation_failure';

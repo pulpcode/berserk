@@ -1,6 +1,6 @@
 import {describe,expect,it} from 'vitest';
 import {mapTrialBackground} from '../scripts/probe-situation-map.js';
-import {remediationCaseIds,remediationSchedule,parseRemediationRuntimes,validateRemediationSources,type RemediationVariant} from '../scripts/probe-spatial-remediation.js';
+import {remediationCaseIds,remediationSchedule,parseRemediationRuntimes,validateRemediationSources,isProviderQuotaFailure,type RemediationVariant} from '../scripts/probe-spatial-remediation.js';
 
 describe('isolated spatial remediation diagnostics',()=>{
   it('freezes all 180 independent entries with 36 per condition and no best-of selection',()=>{
@@ -46,6 +46,13 @@ describe('isolated spatial remediation diagnostics',()=>{
     const staleCatalog=structuredClone(hashes);for(const id of ['V2','V3','V4'] as const)staleCatalog[id][3].sha256='old';
     expect(()=>validateRemediationSources(staleCatalog)).toThrow();
     expect(()=>validateRemediationSources({...hashes,V3:[...hashes.V3,{file:'unexpected.ts',sha256:'x'}]})).toThrow();
+  });
+  it('stops on an authoritative provider quota failure without treating assistant claims as infrastructure',()=>{
+    expect(isProviderQuotaFailure({status:'failed',message:'insufficient_quota: 模型额度不足，请检查账户后重试。'})).toBe(true);
+    expect(isProviderQuotaFailure({status:'succeeded',message:'insufficient_quota: 模型自行声称'})).toBe(false);
+    expect(isProviderQuotaFailure({status:'failed',message:'Other execution error'})).toBe(false);
+    expect(isProviderQuotaFailure({role:'assistant',text:'insufficient_quota: no calls left'})).toBe(false);
+    expect(isProviderQuotaFailure(undefined)).toBe(false);
   });
   it('preserves default preparation text and neutralizes only synthetic business text',()=>{
     const original={title:'业务任务',goal:'需要3辆车',responsibility:'筹划资源配置'};
