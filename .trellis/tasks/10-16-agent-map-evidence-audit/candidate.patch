@@ -1,0 +1,228 @@
+diff --git a/experiments/harness-lab/src/pi/annotation-results.ts b/experiments/harness-lab/src/pi/annotation-results.ts
+index e8e0283..a8e27b5 100644
+--- a/experiments/harness-lab/src/pi/annotation-results.ts
++++ b/experiments/harness-lab/src/pi/annotation-results.ts
+@@ -1,10 +1,28 @@
+ import type { AnnotationReadInput } from '../contracts/annotations.js';
+ import { ANNOTATION_MODEL_FORMAT, extractAnnotationResult, projectAnnotationResult } from '../contracts/annotation-results.js';
+ const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
++// Describe the accepted execution parameters, never the intended scope in user prose.
++export function describeAnnotationRead(actual: unknown, query: Partial<AnnotationReadInput>): string | undefined {
++  if (!object(actual) || !object(actual.objects)) return undefined;
++  const page = actual.objects;
++  if (!Array.isArray(page.items) || typeof page.hasMore !== 'boolean'
++    || ![page.total, page.offset, page.limit].every(value => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0)
++    || (page.limit as number) < 1) return undefined;
++  const fields = query.fields ?? [];
++  if (fields.length > 6 || fields.some(field => !['geometry', 'note', 'attributes', 'style', 'sourceRefs', 'originFeatureRef'].includes(field))) return undefined;
++  const layers = query.layerIds === undefined ? '未限制' : `${query.layerIds.length} 个 ID（见 query.layerIds）`;
++  const objects = query.objectIds === undefined ? '未限制' : `${query.objectIds.length} 个 ID（见 query.objectIds）`;
++  const intersection = query.layerIds !== undefined && query.objectIds !== undefined ? '；取交集' : '';
++  return `图层筛选：${layers}；对象筛选：${objects}${intersection}。\n`
++    + `字段投影：基础摘要${fields.length ? ` + ${fields.join('、')}` : ''}。\n`
++    + `本次筛选匹配对象数：${page.total}；本页 offset=${page.offset}、limit=${page.limit}、返回=${page.items.length}、hasMore=${page.hasMore}。`;
++}
+ export function annotationToolResult(actual: unknown, toolName: string, query?: Partial<AnnotationReadInput> & {mode?: string}) {
+-  const data = projectAnnotationResult(actual);
++  let data = projectAnnotationResult(actual);
+   if (object(data) && object(data.objects) && (query?.mode === 'read' || query?.mode === 'draft')) {
+     data.query = Object.fromEntries(['objectIds','layerIds','fields'].filter(key => query[key as keyof typeof query] !== undefined).map(key => [key, structuredClone(query[key as keyof typeof query])]));
++    const readSummary = toolName === 'annotation_read' ? describeAnnotationRead(data, query) : undefined;
++    if (readSummary !== undefined) data = {readSummary, ...data};
+   }
+   const replayed = object(actual) && actual.replayed === true;
+   const annotationResult = extractAnnotationResult({annotationResult:{schemaVersion:1,origin:toolName === 'annotation_read' ? 'receipt_read' : replayed ? 'replay' : 'write',receipt:actual}}, toolName);
+diff --git a/experiments/harness-lab/tests/annotation-results.test.ts b/experiments/harness-lab/tests/annotation-results.test.ts
+index dc65d59..861c1fc 100644
+--- a/experiments/harness-lab/tests/annotation-results.test.ts
++++ b/experiments/harness-lab/tests/annotation-results.test.ts
+@@ -1,5 +1,13 @@
+-import { expect, it } from 'vitest';
+-import { annotationToolResult } from '../src/pi/annotation-results.js';
++import { randomUUID } from 'node:crypto';
++import { mkdtemp, rm } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { afterEach, expect, it } from 'vitest';
++import { annotationToolResult, describeAnnotationRead } from '../src/pi/annotation-results.js';
++import { openDatabase } from '../src/access/database.js';
++import { AnnotationService } from '../src/annotations/service.js';
++import { WorkspaceStore } from '../src/workspaces/store.js';
++import type { AnnotationReadInput } from '../src/contracts/annotations.js';
+ import { extractAnnotationResult, projectAnnotationResult } from '../src/contracts/annotation-results.js';
+ import { annotationMapEntries } from '../src/web/situation/evidence.js';
+ import type { PublicMessage } from '../src/contracts/index.js';
+@@ -20,10 +28,87 @@ it('projects only known annotation metadata, preserves original receipts and bus
+ it.each([{}, {objectIds:['north'],fields:['note']}, {layerIds:['roads'],fields:[]}, {fields:['style','attributes']}])('echoes original selectors without inventing omitted fields: %j', query => {
+  const actual={hash,ref:{setId:id,revision:1},objects:{items:[],offset:3,limit:2,total:5,hasMore:false}};
+  const result=annotationToolResult(actual,'annotation_read',{mode:'read',...query} as never);
+- expect(JSON.parse(result.content[0].text).data).toEqual({ref:actual.ref,objects:actual.objects,query});
++ const data=JSON.parse(result.content[0].text).data;
++ expect(Object.keys(data)[0]).toBe('readSummary');
++ expect(data).toEqual({readSummary:expect.any(String),ref:actual.ref,objects:actual.objects,query});
+  expect(result.details).toEqual({});
+  expect(annotationToolResult({status:'empty'},'annotation_read',{mode:'draft'}).content[0].text).not.toContain('query');
+ });
++
++const cleanup: Array<()=>Promise<unknown>|void> = [];
++afterEach(async()=>{for(const close of cleanup.splice(0).reverse()) await close();});
++async function readFixture() {
++ const dir=await mkdtemp(join(tmpdir(),'annotation-summary-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
++ const db=await openDatabase(dir);cleanup.push(()=>db.close());
++ const workspaces=await WorkspaceStore.open(dir,'a'),workspace=workspaces.get(),session=randomUUID();
++ await workspaces.bind(session,workspace.id);
++ const service=new AnnotationService(db,workspaces),actor=service.actorForSeat('a');
++ const saved=service.action(actor,session,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[
++  {op:'add_layer',layer:{layerId:'a',name:'甲层',order:0,defaultVisible:true,features:Array.from({length:4},(_,i)=>({objectId:`a${i}`,name:`甲${i}`,kind:'point' as const,geometry:{type:'Point' as const,coordinates:[103,1] as [number,number]},note:'隐藏备注',style:{color:'#aabbcc'},attributes:{hash:'business'}}))}},
++  {op:'add_layer',layer:{layerId:'b',name:'乙层',order:1,defaultVisible:true,features:[{objectId:'b0',name:'乙',kind:'point',geometry:{type:'Point',coordinates:[104,1]}}]}},
++  {op:'add_layer',layer:{layerId:'empty',name:'空层',order:2,defaultVisible:true,features:[]}},
++ ]});
++ const read=(query:Partial<AnnotationReadInput>={})=>{
++  const actual=service.read(actor,workspace.taskSpaceId,{ref:saved.ref!,...query});
++  const result=annotationToolResult(actual,'annotation_read',{mode:'read',...query});
++  return {actual,data:JSON.parse(result.content[0].text).data};
++ };
++ return {read};
++}
++it('describes actual service filters, intersections, defaults and pages without changing the read',async()=>{
++ const {read}=await readFixture();
++ const all=read();
++ expect(all.actual.objects.total).toBe(5);
++ expect(all.data.readSummary).toBe('图层筛选：未限制；对象筛选：未限制。\n字段投影：基础摘要。\n本次筛选匹配对象数：5；本页 offset=0、limit=50、返回=5、hasMore=false。');
++ expect(read({fields:[]}).data.readSummary).toBe(all.data.readSummary);
++ const selection=read({layerIds:['a'],objectIds:['a1','a3'],fields:['attributes','style']});
++ expect(selection.actual.objects.items.map(item=>item.objectId)).toEqual(['a1','a3']);
++ expect(selection.data.readSummary).toContain('图层筛选：1 个 ID（见 query.layerIds）；对象筛选：2 个 ID（见 query.objectIds）；取交集');
++ expect(selection.data.readSummary).toContain('字段投影：基础摘要 + attributes、style');
++ expect(selection.data.objects.items[0].attributes.hash).toBe('business');
++ expect(selection.data.objects.items[0]).not.toHaveProperty('note');
++ expect(selection.data.readSummary).not.toMatch(/隐藏备注|备注为空/);
++ expect(()=>read({layerIds:['a'],objectIds:['b0']})).toThrow();
++ expect(()=>read({objectIds:['missing']})).toThrow();
++ expect(()=>read({layerIds:['missing']})).toThrow();
++ const unfilteredPage=read({offset:1,limit:2});
++ expect(unfilteredPage.data.query).toEqual({});
++ expect(unfilteredPage.data.readSummary).toContain('图层筛选：未限制；对象筛选：未限制');
++ expect(unfilteredPage.data.readSummary).toContain('匹配对象数：5；本页 offset=1、limit=2、返回=2、hasMore=true');
++ const tail=read({layerIds:['a'],offset:3,limit:2});
++ expect(tail.data.readSummary).toContain('匹配对象数：4；本页 offset=3、limit=2、返回=1、hasMore=false');
++ const beyond=read({layerIds:['a'],offset:12,limit:3});
++ expect(beyond.data.readSummary).toContain('匹配对象数：4；本页 offset=12、limit=3、返回=0、hasMore=false');
++ const empty=read({layerIds:['empty']});
++ expect(empty.data.readSummary).toContain('匹配对象数：0；本页 offset=0、limit=50、返回=0、hasMore=false');
++ const note=read({objectIds:['b0'],fields:['note']});
++ expect(note.data.readSummary).toContain('字段投影：基础摘要 + note');
++ expect(note.data.objects.items[0]).not.toHaveProperty('note');
++ for(const result of [all,selection,unfilteredPage,tail,beyond,empty,note]) {
++  const {readSummary,query,...unchanged}=result.data;
++  expect(unchanged).toEqual(projectAnnotationResult(result.actual));
++  expect(query).toBeDefined();expect(Buffer.byteLength(readSummary)).toBeLessThanOrEqual(1024);
++ }
++});
++it('bounds summary text independently of IDs and object content; does not invent a page for malformed results',()=>{
++ const actual={objects:{items:[{name:'不应复述的名称',note:'不应复述的备注'}],offset:Number.MAX_SAFE_INTEGER,limit:100,total:500,hasMore:false}};
++ const summary=describeAnnotationRead(actual,{layerIds:Array(500).fill('untrusted-id'),objectIds:Array(500).fill('untrusted-id'),fields:['geometry','note','attributes','style','sourceRefs','originFeatureRef']})!;
++ expect(Buffer.byteLength(summary)).toBeLessThanOrEqual(1024);
++ expect(summary).not.toMatch(/untrusted|不应复述/);
++ for(const objects of [{},null,{...actual.objects,offset:-1},{...actual.objects,total:NaN},{...actual.objects,hasMore:undefined},{...actual.objects,items:null}]) expect(describeAnnotationRead({objects},{})).toBeUndefined();
++});
++it.each([
++ ['annotation_read','draft',{status:'empty'}],
++ ['annotation_read','compare',{counts:{added:0,removed:0,changed:1},changes:{items:[]}}],
++ ['annotation_list',undefined,{drafts:{items:[]},publications:{items:[]}}],
++ ['annotation_read','receipt',receipt],
++ ...['create_draft','apply','publish','set_current'].map(action=>['annotation_action',undefined,{...receipt,action}] as const),
++ ['annotation_from_source',undefined,{...receipt,action:'apply',fromSources:[]}],
++] as const)('keeps the non-object branch %s/%s byte-identical', (toolName,mode,actual)=>{
++ const result=annotationToolResult(actual,toolName,{mode});
++ expect(result.content[0].text).toBe(JSON.stringify({format:'annotation.model-result.v1',data:projectAnnotationResult(actual)}));
++ expect(result.content[0].text).not.toContain('readSummary');
++});
+ it('requires valid paired metadata, keeps legacy receipts, and never falls back from missing/damaged new results', () => {
+  const result=annotationToolResult(receipt,'annotation_action');
+  const message:PublicMessage={id:'tool',requestId:id,role:'tool',toolName:'annotation_action',text:result.content[0].text,annotationResult:result.details.annotationResult};
+diff --git a/experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts b/experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts
+index 92c1d0c..f846314 100644
+--- a/experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts
++++ b/experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts
+@@ -9,7 +9,7 @@ import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
+ import { annotationTools } from '../../src/pi/annotation-tools.js';
+ import { fakeRuntime, testConfig } from './fake-runtime.js';
+ 
+-const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content' | 'before' | 'mutate' | 'details' | 'legacy' | 'hash'}));
++const fault = vi.hoisted(() => ({tool: '', mode: 'error' as 'error' | 'throw' | 'content' | 'before' | 'mutate' | 'details' | 'legacy' | 'hash' | 'readSummary' | 'readArgs'}));
+ // Inject only a public SDK hook before the host chains it; the native loop and tools remain real.
+ vi.mock('@earendil-works/pi-coding-agent', async importOriginal => {
+   const sdk = await importOriginal<typeof import('@earendil-works/pi-coding-agent')>();
+@@ -18,11 +18,16 @@ vi.mock('@earendil-works/pi-coding-agent', async importOriginal => {
+     const before = result.session.agent.beforeToolCall;
+     result.session.agent.beforeToolCall = async (context, signal) => {
+       if (context.toolCall.name === fault.tool && fault.mode === 'before') return {block: true, reason: 'synthetic before rejection'};
++      if (context.toolCall.name === fault.tool && fault.mode === 'readArgs') Object.assign(context.args as Record<string,unknown>,{layerIds:['target'],offset:12,limit:3,fields:['style']});
+       return before?.(context, signal);
+     };
+     result.session.agent.afterToolCall = async context => {
+       const prior = await original?.(context);
+-      if (context.toolCall.name !== fault.tool || fault.mode === 'before') return prior;
++      if (context.toolCall.name !== fault.tool || fault.mode === 'before' || fault.mode === 'readArgs') return prior;
++      if (fault.mode === 'readSummary') {
++        const block=context.result.content[0] as {text:string},value=JSON.parse(block.text);
++        value.data.readSummary='图层筛选：被原 hook 改写';block.text=JSON.stringify(value);return prior;
++      }
+       if (fault.mode === 'hash') { const value=(context.result.details as {annotationResult?:{receipt:{hash:string}}})?.annotationResult; if(value)value.receipt.hash = 'f'.repeat(64); return prior; }
+       if (fault.mode === 'details') { (context.result.details as {annotationResult:unknown}).annotationResult = {schemaVersion:99}; return prior; }
+       if (fault.mode === 'legacy') { const data=JSON.parse((context.result.content[0] as {text:string}).text).data; return {...prior,content:[{type:'text',text:JSON.stringify(data)}]}; }
+@@ -82,6 +87,28 @@ it('invalidates an unseen successful read when the original hook replaces its co
+   expect(lab.get(session.id, 'alpha').messages.find(message => message.toolName === 'annotation_action')).toMatchObject({isError: true});
+   expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(1);
+ });
++it('uses arguments transformed by the original before hook in the actual read summary',async()=>{
++  fault.tool='annotation_read';fault.mode='readArgs';
++  const {lab,session}=await setup((_context,index)=>index===0?{tools:[read]}:{text:'结束'});
++  await lab.start(session.id,'读取草稿',{},'alpha').run(()=>{});
++  const message=lab.get(session.id,'alpha').messages.find(item=>item.toolName==='annotation_read')!;
++  expect(message.isError).toBe(false);
++  const data=JSON.parse(message.text).data;
++  expect(data.query).toEqual({layerIds:['target'],fields:['style']});
++  expect(data.objects).toEqual({items:[],offset:12,limit:3,total:0,hasMore:false});
++  expect(data.readSummary).toBe('图层筛选：1 个 ID（见 query.layerIds）；对象筛选：未限制。\n字段投影：基础摘要 + style。\n本次筛选匹配对象数：0；本页 offset=12、limit=3、返回=0、hasMore=false。');
++});
++it('rejects the pending edit basis when the original after hook changes only readSummary',async()=>{
++  fault.tool='annotation_read';fault.mode='readSummary';
++  const {lab,session,actor}=await setup((_context,index)=>index===0?{tools:[read]}:index===1?{tools:[write]}:{text:'停止'});
++  await lab.start(session.id,'编辑',{},'alpha').run(()=>{});
++  const messages=lab.get(session.id,'alpha').messages;
++  const received=JSON.parse(messages.find(message=>message.toolName==='annotation_read')!.text).data;
++  expect(received.readSummary).toBe('图层筛选：被原 hook 改写');
++  expect(received.objects).toEqual({items:[],offset:0,limit:50,total:0,hasMore:false});
++  expect(messages.find(message=>message.toolName==='annotation_action')).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_READ_REQUIRED')});
++  expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(1);
++});
+ it('clears direct adapter bases if cancellation arrives after commit but before the final execution check', async () => {
+   const {lab, session, actor, taskId} = await setup(() => ({text: 'unused'}));
+   const state = new AnnotationRequestState(), controller = new AbortController();
+diff --git a/experiments/harness-lab/tests/pi/provider-payload.test.ts b/experiments/harness-lab/tests/pi/provider-payload.test.ts
+index 7a86853..b212369 100644
+--- a/experiments/harness-lab/tests/pi/provider-payload.test.ts
++++ b/experiments/harness-lab/tests/pi/provider-payload.test.ts
+@@ -135,6 +135,12 @@ it('keeps annotation receipts in native details and UI while the actual provider
+   const read=payloads.at(-1)!.messages.filter(message=>message.role==='tool').map(message=>JSON.parse(textOf(message))).find(value=>value.data?.objects);
+   expect(read.data.query).toEqual({objectIds:['north'],fields:['note','attributes']});
+   expect(read.data.objects.total).toBe(1);
++  expect(Object.keys(read.data)[0]).toBe('readSummary');
++  expect(read.data.readSummary).toBe('图层筛选：未限制；对象筛选：1 个 ID（见 query.objectIds）。\n字段投影：基础摘要 + note、attributes。\n本次筛选匹配对象数：1；本页 offset=0、limit=50、返回=1、hasMore=false。');
++  for(const payload of payloads.slice(1)) {
++    expect(payload.tools).toEqual(payloads[0].tools);
++    expect(payload.messages.filter(message=>message.role==='system')).toEqual(payloads[0].messages.filter(message=>message.role==='system'));
++  }
+   const native=(await Promise.all((await readdir(join(dir,'sessions'))).map(file=>readFile(join(dir,'sessions',file),'utf8')))).join('\n');
+   expect(native).toContain(receipt.hash!);expect(native).toContain('berserk.composer-input.v5');
+   await lab.close();
+@@ -142,5 +148,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
+   expect(reopened.get(session.id,'alpha').messages).toEqual(snapshot.messages);
+   await reopened.start(session.id,'继续核对',{},'alpha').run(()=>{});
+   expect(JSON.stringify(payloads.at(-1))).not.toContain(receipt.hash!);
++  const reopenedRead=payloads.at(-1)!.messages.filter(message=>message.role==='tool').map(message=>JSON.parse(textOf(message))).find(value=>value.data?.objects);
++  expect(reopenedRead).toEqual(read);
+   expect(reopened.get(session.id,'alpha').messages.find(message=>message.toolName==='annotation_action')?.annotationResult).toEqual(publication.annotationResult);
+ });
