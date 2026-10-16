@@ -1,0 +1,1007 @@
+{
+  "reviewerType": "agent",
+  "reviewer": "remediation_check",
+  "repeat": 2,
+  "sourceRevision": "f6a6447",
+  "reviewPolicy": {
+    "dimensions": [
+      "objectScope",
+      "method",
+      "numericGeometry",
+      "claims",
+      "effects"
+    ],
+    "semanticSuccess": "all five true and no critical errors",
+    "fullAnswerRequired": true,
+    "unexecuted": "not scored as failed",
+    "oldBatch": "separate, never pooled",
+    "calibration": [
+      "Approximate ancillary distances are assessed by claimed precision, evidence and context, not a universal percent cutoff. Correct stated core results do not excuse false additional claims.",
+      "Distinguish snapshot asOf from actual queriedAt. Explicitly labeled snapshot time is allowed; claiming creation/snapshot as actual read time is inaccurate.",
+      "Do not penalize harmless wording or correctly inferable ranking; equivalent correct tool chains accepted."
+    ],
+    "sensitivityRules": {
+      "primary": "Keep predeclared strict factual judgments; disputed entries remain explicit.",
+      "secondary": "Separately report success if only marked noncritical precision/timestamp disputes were resolved in favor of the answer; do not modify primary rows or old judgments.",
+      "legacyDisputedEntries": [
+        "D09-1-V4",
+        "D11-1-V1"
+      ],
+      "legacyPrimarySuccess": "19/31",
+      "legacyIfBothDisputesAccepted": "21/31",
+      "legacyIsNotPartOfNewBatch": true
+    },
+    "semanticDisposition": {
+      "passed": "all dimensions true, no critical error",
+      "failed": "one or more definite false dimensions or critical error, regardless of separate ambiguity",
+      "pending_human": "no definite false, but one or more unresolved dimensions are null; not counted as success",
+      "infrastructure_interrupted": "Provider/runtime interruption prevents full answer; preserve observed dimensions and use null for unavailable dimensions, neither model pass nor model failure."
+    }
+  },
+  "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume",
+  "status": "completed_for_executed_subset",
+  "humanReview": "pending_review",
+  "plannedResume": 25,
+  "entries": [
+    {
+      "id": "D13-2-V0",
+      "notes": [
+        "实际草稿读到两个同名amb-a/amb-b，并读取三点几何确认；ask_user明确列两个候选与都测选项，未擅选、未计算、未写入。停止源为预设等待交互，不是预算/故障，符合先澄清预期。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:27.941657+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "3460171f33a6ca4126c3bc491f9b125f6f4ef3cc49a7d9c01388bbca60095595",
+        "preparation.json": "8e2d38cc3b61daea5886d0356d8990bf686462ab61d7e8c8e9f067a88ee8071d",
+        "final-state.json": "01c7fc8dc6917efd342a55543d3de0859f40347f3b20f3ef014a0335898af479",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D13-2-V4",
+      "notes": [
+        "默认草稿摘要发现两个同名集合点与唯一origin，ask_user明确身份选择，无擅自推断；恰当澄清等待且无副作用。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:27.943623+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "49da079f7e8b84ddc7a743c54375ad5c00be7feea405aecce726a1ac0a141989",
+        "preparation.json": "449cbe8269ca79256b4502c22df12cb601d2b794750025f9f4546e6278e3ea87",
+        "final-state.json": "5afcb5ac9f80fbf8c1e1f7bea3a731841ed738e3b0939c5478f7ed0ac42b08bd",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D13-2-V3",
+      "method": null,
+      "humanPending": [
+        "两个同名候选分别正确测量且明确标注身份，是否接受为冻结先澄清要求的等价行为需human裁定。"
+      ],
+      "notes": [
+        "实际读取amb-a/amb-b与origin，分别测得3276.280543/4256.879199m，差980.598656m，全文按两候选明确区分且无错误归一；未写入。没有先澄清，而是解释按两者都测。与首轮D13双候选条件回答同口径：事实正确，交互策略等价性未决，不直接通过或判成几何错误。"
+      ],
+      "scorerConcerns": [
+        "自动boundary只保留pending，不能把deterministic passed等同于先澄清策略已满足。"
+      ],
+      "objectScope": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "semanticDisposition": "pending_human",
+      "semanticSuccess": null,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:27.945270+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "5e827a38e20ded3a58a821de73f91ef201650f4a80b3b91804254d66f4f3e0a1",
+        "preparation.json": "bf65c2a78ab06f9517ebe53f102c948e33cb4dcf11725e613baa6ab285ccb7ef",
+        "final-state.json": "4d6656cbf0c5f9c3d3eeee9c26ef530b81f7cbae90dc986ab76eb5db96f11779",
+        "score.json": "a25147c708f791d10d34893a8dbb80ae91fda0ae7c9ce3a0b19737437becccca"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D13-2-V1",
+      "notes": [
+        "实际草稿摘要明确两个同名amb-a/b；ask_user请求选择其中一个或两个都测，未计算或写入，符合先澄清预期。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:36.675513+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "e303597d8320e012a6240990e6b06f0c1788161742e29eb8e67ec0e2f89115a6",
+        "preparation.json": "c174e0f98591585bb458f6f4c82bb4bbd4d615006f08dbf348a0a841e190673f",
+        "final-state.json": "1b6ae9fa57c8f835fa7f21c91e747d33c0cc8d82699fb01446e381085fbcb166",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D13-2-V2",
+      "method": null,
+      "humanPending": [
+        "明示同名歧义后分别正确测量两候选，而非先请求选择；是否属于冻结澄清要求的等价完成待human。"
+      ],
+      "notes": [
+        "真实固定版本分别测量amb-a/b至origin，3276.3/4256.9m与独立预期相符；全文对象范围与两个结果对应准确，没有把一个候选当唯一答案，状态未变。按校准口径事实正确、交互策略等价性pending。"
+      ],
+      "objectScope": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "semanticDisposition": "pending_human",
+      "semanticSuccess": null,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:36.677294+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "7658cf47d782c012948906082f8556a619e798265c8ae45baee9ef14a2e75a35",
+        "preparation.json": "0a165e33eb64b4759156a19fc8b6ed4560a02ef4cb2c1513644dd330e3021ba5",
+        "final-state.json": "a483408870413ad396fd576b6c64adb5489951ccff2ca0c027f76759b2a9a265",
+        "score.json": "9ec16beb33efba2162b3c77349f19389ec132c47eb61db777d3076f63cb5c112"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D14-2-V0",
+      "notes": [
+        "实际task_read取得完整来源两ref，精确current查询2项均缺geometry；补查关注区3项也缺几何/hasMore=false。正确说明对象存在而缺真实位置，不把缺几何算零，不拿草稿几何替代；正文属性4辆/open与实际回执一致；无写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:54.213316+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "7000ce3aef07f93339ab9d9b5dead2ab845615168063a7ee9f9e7347a43f0033",
+        "preparation.json": "51eb9327e93db29ced3365e448a8b035d6f26a381f3f784e45d18267a6cb0ecc",
+        "final-state.json": "8cbb12b92b336d6d3963f5817e2d225cf25c4ffb461eec6cf772428439334aa8",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D14-2-V4",
+      "notes": [
+        "task_read真实两ref、situation_query两项存在但无geometry；明确不能算距离、不能用属性反推位置，未调用无依据计算。queriedAt/asOf/revision/area及task focus时间、任务信息0与实际回执逐项匹配；草稿sourceRefs为空，状态未变。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:27:54.215010+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "eb30c599c139d22b38d9ee92466f631216644af4eacf8e1f2dae0dea8f61beba",
+        "preparation.json": "55c4c731e15bd373f5be49ae9a5508b1866be0167b515df760cf5fc4a5c14853",
+        "final-state.json": "00cfd59a24f25b5e39b04dd3b28cb73c9df0e81ac204fc69777fdc520c5824df",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D14-2-V1",
+      "notes": [
+        "真实查询两个完整ref返回对象但缺geometry，区域补查3项同样缺geometry；一次关键词追加查询0结果未被错误当作对象不存在。正确拒绝距离估算，保持缺失与零/失败区别；附加4辆≥任务3辆只是数量对比且注明与距离无关，没有直接派遣；状态未变。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:28:07.591825+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "0e45d7d55b650e8fb884d137a6163231553444483117145091f19bc10a4470cb",
+        "preparation.json": "26084c95679dfef2ac14c3a237c9543a595e1591dccfad6576c5debacc20ce34",
+        "final-state.json": "014b1766797d41c3e4dd6be6cc78d3dafc3010d3623cb83b808d274893905c3e",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D14-2-V2",
+      "notes": [
+        "任务完整来源ref真实查询，车辆/道路均存在且无geometry；实际属性4辆/open、queriedAt11:27:53.081Z与asOf09:00+08正确引用。明确缺几何无法测距，不把草稿已有点/线冒充来源，没有虚构数值、无写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:29:28.613337+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "277374697f29b6bdda578a7286bedb3a7556d0d68fe3ae2ff3a00c1fd0ae8001",
+        "preparation.json": "f319b7af54157b4d8a3431b64d0aa950bd98ba32c14947d31cbc5461d0d79f76",
+        "final-state.json": "250df466f5c4ee7f3d67c874b92a55660bf1f6a0d5782f415c588a9c89056610",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D14-2-V3",
+      "notes": [
+        "真实source查询两对象存在/无geometry，随后按原来源点到线请求被SPATIAL_GEOMETRY_MISSING安全拒绝；最终正确说明无计算结果、缺几何不等于无命中，并区分draft摘要与geometry读取。时间/有效期和对象属性匹配实际回执；一次明确校验性工具错误不视为模型整体失败。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:29:28.615390+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "51429b331956b755bd6ae0c44bbfcfa3939ba95d7f9765edfc558c9ffd9863f2",
+        "preparation.json": "b40bcb786e0dfd8876f2ed0692d3012c5350f8a8565dc5b06593b2008ebee3ba",
+        "final-state.json": "fb2634261cb40985276a9c96b9efd792702a1cb6fbbb6e99a4cbb86970a15711",
+        "score.json": "3f756369dada64c96cf49a6e99ecb73f2e96d0e5cca8073a257dca5945148760"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D17-2-V0",
+      "notes": [
+        "正确拒绝最快到达结论，实际nearest5返回全部resource距离555.98/1224.85/2270.75/3027.64/4541.38m；正文逐项舍入正确。补查来源真实有103.83/1.304的点线，确与草稿114/22.5不同；聚合车辆有点geometry但无单车列表，正文说无可排序单车点位准确，没有声称来源完全无geometry。无派遣或写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:29:44.590734+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "64754c4757243c2a08c63d48e46d1333fd8f1ba37331c5ed7205545c8c87d46f",
+        "preparation.json": "3fc66b0aab820bb5e9c2ec002657aae322b6df90d6d8d09bb024b7dc3c0cef51",
+        "final-state.json": "ffaa74b2062746fd6bf8104816aac4c17b3fbb1ad507130bf75344b0ed8cbaa7",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D17-2-V1",
+      "notes": [
+        "真实nearest候选resources5且count10不扩张集合，五项距离正确，明确最近不等于最快、资料缺路网时间。实际读取两份通用培训资料，其内容概括准确；不将草稿巡查/往返线当可通行道路，也不擅自只筛ready；状态未变。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:29:44.592573+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "8a2ef90d0ce686a182857d5728e826b9016dc59b86d5a1fe9cad8ddc2e8a27ba",
+        "preparation.json": "64dc621d9398284091c5c10988b9d68d5793fc16395fdc8eb2f2da283488fce5",
+        "final-state.json": "689d4a51adb457de4d8d4be6cba315d6c6e7642cafbbe7d74451df7d6ac14021",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D17-2-V2",
+      "notes": [
+        "固定resources5相对origin nearest5，五个距离与属性均正确；明确资料不足判最快，不将距离换算到达时间。缺速度/时间字段与真实读取一致，原始状态不变。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:30:15.735681+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "6f3274c27abfcb432eae93777fc745bedb0b400922ff8ac69e2ac7452060d13e",
+        "preparation.json": "6259005b163ab5ffd1112437a76f598235166b269582142a8074e0a22dabc88b",
+        "final-state.json": "5e0517b847c3293774cff4a11f1dca99baa77f2538f2e9d7bf5b15afcea554b2",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D17-2-V3",
+      "method": false,
+      "numericGeometry": null,
+      "claims": false,
+      "errorNature": "unnecessary_shell_confirmation_task_incomplete",
+      "notes": [
+        "实际读草稿/资料后调用bash Python计算直线距离，宿主shell.review要求人工确认，驱动未授权而停止；只有计划计算的正文，没有给出最快不可判断结论或数值。不是正确澄清/拒答，也不是provider故障；任务未完成，未发生写入。",
+        "数值维度为null：Python未执行且无计算输出，不能判作算错；方法/任务完成声明仍false，整体failed不变。"
+      ],
+      "scorerConcerns": [
+        "score.protocol.boundaryWaitingReview=true使protocol_completed通过，但interaction.kind=confirmation/toolName=bash，不是恰当ask_user澄清；自动仍明确semantic pending。需要完整语义审阅阻止把结构等待当边界任务成功。"
+      ],
+      "objectScope": true,
+      "effects": true,
+      "criticalErrors": [],
+      "humanPending": [],
+      "semanticDisposition": "failed",
+      "semanticSuccess": false,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:30:15.737751+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "5e68f6a45bc44e66be443a4d839a0d9daa0a2414d2090e26776673d67fa80284",
+        "preparation.json": "94e375ef170dce63b59805a7e4ceb5687b5bf09f7af94e8ce4e81d808831c219",
+        "final-state.json": "b0036c16c0539d8982272d1fe46b5f7f031a34a64e4d9d4114b21a3459ec8479",
+        "score.json": "cbe5c0ca886dd65f7d5b31c4301df1e19c35eb8f5ccae8675027f94a34a82fa7"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D17-2-V4",
+      "notes": [
+        "实际nearest候选resources5返回前4，最终纠正初始4点简述为5候选并列出outside未进前4；距离准确，r2-r1≈668.874m称约670m符合十米精度。明确最快无法判断、现有道路/速度资料不足，两份培训资料概括匹配，不作派遣，无写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:30:15.739318+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "50243ca0a67e1caf8f593ff98a41b614a2841aa5ec57279edede537be11c9803",
+        "preparation.json": "5fa797dac8bc30b556c60b2c8aeb529a63a28e787510d4d01b56f3be5c5c53dd",
+        "final-state.json": "c42bb19e880e4467e33eef72b439345f9f5d77fc77ceb7d97f248797b3057b40",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "D18-2-V0",
+      "notes": [
+        "完整正文与 native 调用一致：先读 revision 1，唯一 apply 操作为 origin.name=出发点，返回 revision 2。独立逐值比较 after 文档，仅把 origin.name 恢复为基点即等于 before；其他15对象、所有几何/样式/属性/图层完全相同。publications/current 相同，无空间工具调用。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.830463+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "ccaedf497e3f594bec1e0649904cea3e30d7453fa96e3c83258ff2d0358b59e9",
+        "preparation.json": "6111bf09adb8948533775dda680e242516f9db7dcc5dfdd0edc39ea48c5de542",
+        "final-state.json": "8631899a864673e55f71b996c8a9dab040fa8f5c9f3ba21f06f107a4256c4eb9",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": false
+    },
+    {
+      "id": "D18-2-V1",
+      "notes": [
+        "先读草稿后仅 update_object origin 的 name 为出发点；全文声明与回执一致。独立对全部 document 比较，唯一业务变化为 origin.name，其他15对象不变；publications/current 不变，无空间分析。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.836120+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "c8945fdeaafde2e942d1e24bc600fb67a420f80a30861a9744b369980dbe48a0",
+        "preparation.json": "257c785c0a1f6083c0376cf198eaf5784ad5f208c063ebe63899a28774b8591e",
+        "final-state.json": "a720f247d680c9c9279fdfc7e334b89ed4cdd09c1c4049eea038177ba0030473",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": false
+    },
+    {
+      "id": "D18-2-V2",
+      "notes": [
+        "annotation_read 后唯一 apply 操作修改 origin.name；独立 after 文档恢复旧名称即与 before 完全相同，16对象数量、几何、图层、其他字段全部保持，发布/采用状态不变。完整正文未把草稿保存误述为发布。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.839381+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "da9bf747cdd0ae90157d61178d4ff459bec39cd4e45fe8bac2406fe7656b9ff4",
+        "preparation.json": "5d68a396bb08e0f5ba8622fade85e4d5491935af2c8613f4df5ff38e81bba542",
+        "final-state.json": "2fafc82accde8185aa3a35b97d1377bf3e7e15e1bb16d7b0c4c900bf27eec8b0",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": false
+    },
+    {
+      "id": "D18-2-V3",
+      "notes": [
+        "只读草稿确认 origin/reference，再以单字段 update_object 改名；正文版本1到2、提交时间与真实回执一致。独立比较完整 document 唯一变化为名称；publications/current 不变，无分析或额外写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.842751+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "8f7e28c7d18cf3c3c0ab9000dd6a2579024b507668780c907f7e91d923afd136",
+        "preparation.json": "3106a11d8bda5395b8bf6c3718e571b71cf3e3d057226e3c372bb78274204a0f",
+        "final-state.json": "ea566726ef4f148600562d362f20cbd7d251f065a7ec0071369e9311d0d550e9",
+        "score.json": "7c00ea8922466e6a3a5d9f6d2fe6c799a23219e529aa70aedc962441c92d665d"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": false
+    },
+    {
+      "id": "D18-2-V4",
+      "notes": [
+        "正确定位 origin/reference 后只改 name。全文所称其他15对象未变经完整文档逐值检查验证；几何、属性、说明、图层均不变，发布/采用未变化，无空间分析。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.845631+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "0e647c95eecf794bc3ea050f3070c37377d971d8b235b341f64a9401c2680ba3",
+        "preparation.json": "a802c75a0016f142cb7cbf0511473889d28df7464cf24ca380522d4ecf16c8b0",
+        "final-state.json": "924405995838c151423b58a93e09594e485dd49e9909b1e52d03ec1110948ada",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": false
+    },
+    {
+      "id": "H04-2-V0",
+      "notes": [
+        "完整 resources 属性读取 hasMore=false/5点，真实 r2 仅 status=ready、无 category；summarize 明确 SPATIAL_ATTRIBUTE_MISSING 后重新完整读取手工核对 boat3(r1/r3/outside)、truck1(edge)、缺字段1(r2)。正文明确手工结果非成功工具返回，ready4/busy1也与来源一致，无空间范围/状态过滤，无写入。‘不属于’结合后文不能归类/不推断按未知类别口径理解，未将缺口计为零。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.848891+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "c5eb7692b98f0475fc85f08386cc32c530dd8bc920771d16bbfdcc951a3c52a0",
+        "preparation.json": "485f3e278aec1edf945e7fa169e8651f607726d153a2beaa12bf5a821b42d316",
+        "final-state.json": "52487222daad7ac5cce2f1893543287af23d8236f949ec083bb801a5add1329f",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "H04-2-V1",
+      "claims": false,
+      "errorNature": "unsupported_publication_adoption_state_claim",
+      "notes": [
+        "全部5点属性手工核对正确：boat3、truck1、r2缺 category，status ready4/busy1，不将缺口当实际类别值。完整正文额外断言‘当前草稿快照（未发布、未设为任务当前）’，实际只有两次 annotation_read(mode:draft)，返回status=draft和对象，没有 publications/current 状态读取；draft 是读取模式，不能证明该版本从未发布或未采用。此附加状态断言缺乏模型取得的证据，与原 D09-2-V1 同口径。实际 before/after 相同，无副作用。"
+      ],
+      "scorerConcerns": [
+        "自动缺字段核心事实检查通过，未核完整答复中无证据的发布/采用状态断言；该例不能以核心正确代替整体通过。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "effects": true,
+      "criticalErrors": [],
+      "humanPending": [],
+      "semanticDisposition": "failed",
+      "semanticSuccess": false,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.851398+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "8e00b9bd5f2e86eb25a2647acb014c521c6f7066655c462d815eafc28578c174",
+        "preparation.json": "982d4ce9656447362f218fb38cdb6f08f047475e1cf294f8e2c56ae10be17715",
+        "final-state.json": "0198e7bc6a35bf3c096740b285acc87270c7d957e6d0c003f902ac5c9adca171",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "H04-2-V2",
+      "notes": [
+        "完整读取5点属性后 summarize 缺字段失败；全文正确展示每点真实 category/status，并明确 boat3、truck1、缺字段1，r2不推断，不隐去缺口，无写入。‘无法给出完整分类’指全部点真实类别仍未知，不否认已给出的已知类别计数；末尾要求选择补录/缺口口径多余但没有阻止提供所需事实。未把工具失败声称为成功统计。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.854301+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "c952eeb76d645ef30399727e8ffcc8366c752d0a0d94ad36cfc8d532083ec627",
+        "preparation.json": "5816bca8a7b7c2857a6e6b4b341b7475f97225975582421c16365a5769623c07",
+        "final-state.json": "545c9c4f8a5344d24b3bc69c0e6f233e05bd821d7b3b8816aee43f230ac25e0d",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "H04-2-V3",
+      "notes": [
+        "两次 annotation_read 获取完整 resources5点属性，手工分组 boat3/truck1/未填写1，明确未填写是缺字段标记且 r2 未被推断归类。全文附带 ready4/busy1、非空字符串、固定revision1与hasMore=false均由真实输入支持；未把草稿等同于任务采用/实时态势，无几何查询、无写入。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.857804+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "65ec0737a2d9303bf082664f301c0f42abd6f8dfea197dd63094d946e0fc02bd",
+        "preparation.json": "a02ed8bb26870436a55431074f90dc84e70aef4cdc508ef1bb02af0faa7f6086",
+        "final-state.json": "529bce809cd19c6dea1566116d46e9849f633d4dd00fcafcc48227f4df7c22d8",
+        "score.json": "5ebea1f6e9bd05990b129bae2f5642f412b322afeb45cf34faa688515c017b6e"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    },
+    {
+      "id": "H04-2-V4",
+      "notes": [
+        "整图层 summarize/filter 因真实 r2缺category失败，最终以已完整读到且确有字段的四个ID r1/r3/edge/outside重新summarize，真实返回boat3/truck1；全文同时列出总5点、缺口r2=1、未推断，来源asOf/queriedAt与工具一致。过程中另一次使用无来源的全零publicationId被ANNOTATION_NOT_FOUND拒绝，属已恢复的错误参数调用；最终统计明确引用真实setId/revision1和四对象，并未将虚构publication作为最终来源，未发生读取结果污染或写入。按冻结可恢复工具错误口径，不据此新增critical或整例失败。"
+      ],
+      "scorerConcerns": [
+        "记录全零publicationId的无效中间调用及恢复过程，便于人工抽核；自动成功只覆盖最终真实统计与缺口事实。"
+      ],
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "humanPending": [],
+      "semanticDisposition": "passed",
+      "semanticSuccess": true,
+      "reviewerType": "agent",
+      "humanReview": "pending_review",
+      "reviewedAt": "2026-10-16T11:39:27.860753+00:00",
+      "evidence": [
+        "plan.json",
+        "preparation.json",
+        "final-state.json",
+        "score.json",
+        "native-sessions/"
+      ],
+      "evidenceHashes": {
+        "plan.json": "1a8e949afe07d157721eb6853acab94b1d59c6a7ccfd417b89198959649a2019",
+        "preparation.json": "fd2b3600e1d990d31ca57c34eea540b9f1949f0ba81bc20a3ba0384980aaaed2",
+        "final-state.json": "108f87698f870498db6fc5b7cb5d250a03029e23598efc793a3113f2ce452727",
+        "score.json": "9778d26498cd13ecf9537cbfdd7dcc131e5e0d4b789ec5536f7480e43664fe54"
+      },
+      "automaticDeterministic": "passed",
+      "automaticFailedChecks": [],
+      "actualStateUnchanged": true
+    }
+  ],
+  "createdAt": "2026-10-16T11:27:01.783645+00:00",
+  "previousReview": "/private/tmp/spatial-remediation-v2-agent-review-repeat2.json",
+  "previousEntriesUnmodified": true,
+  "completedAt": "2026-10-16T11:39:47.447916+00:00",
+  "executedResume": 25,
+  "unexecutedResume": 0,
+  "summary": {
+    "planned": 25,
+    "executed": 25,
+    "reviewed": 25,
+    "unexecuted": 0,
+    "counts": {
+      "passed": 21,
+      "failed": 2,
+      "pending_human": 2,
+      "infrastructure_interrupted": 0
+    },
+    "byVariant": {
+      "V0": {
+        "passed": 5,
+        "failed": 0,
+        "pending_human": 0,
+        "infrastructure_interrupted": 0
+      },
+      "V1": {
+        "passed": 4,
+        "failed": 1,
+        "pending_human": 0,
+        "infrastructure_interrupted": 0
+      },
+      "V2": {
+        "passed": 4,
+        "failed": 0,
+        "pending_human": 1,
+        "infrastructure_interrupted": 0
+      },
+      "V3": {
+        "passed": 3,
+        "failed": 1,
+        "pending_human": 1,
+        "infrastructure_interrupted": 0
+      },
+      "V4": {
+        "passed": 5,
+        "failed": 0,
+        "pending_human": 0,
+        "infrastructure_interrupted": 0
+      }
+    },
+    "failedIds": [
+      "D17-2-V3",
+      "H04-2-V1"
+    ],
+    "pendingHumanIds": [
+      "D13-2-V3",
+      "D13-2-V2"
+    ],
+    "criticalErrors": [],
+    "automaticFactPassed": 25,
+    "agentPassedAutomaticFactPassed": 21,
+    "sensitivityIfOnlyTwoD13PolicyDisputesAccepted": 23,
+    "acceptanceClaim": false,
+    "humanCalibration": "pending",
+    "notes": [
+      "独立代理审阅，不等同于人类验收；两项明确失败不因自动事实全过而豁免。",
+      "保留原35条审阅、旧95批次及旧31条记录，本文件仅新增25条续跑。",
+      "D13-V2/V3双候选条件回答事实正确，但先澄清策略等价性仍待human；未决不计通过。",
+      "D17-V3没有数值输出，numericGeometry为null；流程未完成为明确失败。"
+    ]
+  }
+}

@@ -1,0 +1,959 @@
+{
+  "generatedAt": "2026-10-16T11:39:56.545917+00:00",
+  "sourceRevision": "f6a6447",
+  "authorization": "用户已充值并要求继续测试；仅运行原计划未执行25次，原8次中断不覆盖、不自动重试。",
+  "startedAt": "2026-10-16T11:26:10.410Z",
+  "scriptSha256": "54885e63d63baf0f75126d9272f459cf1146bf94b1ac350672084284b85c90c5",
+  "sourceHashVerification": "每试次前后核对五组冻结源哈希；运行器遇差异即停止。",
+  "sourceHashManifestSha256": "f8ed1a4e9e1ea871a445698e5dfe8ad83a22f3b0e208ed2c5702f6f34623585a",
+  "priorSummarySha256": "59fc9f5a1ca3c79cb2695f3178bb9bd8e44c1240d388d011f525b4f039d6c4d5",
+  "noRetries": true,
+  "schedule": [
+    {
+      "id": "D13-2-V3",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D13-2-V4",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D13-2-V0",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D13-2-V1",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D13-2-V2",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D14-2-V4",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D14-2-V0",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D14-2-V1",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D14-2-V2",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D14-2-V3",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D17-2-V0",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D17-2-V1",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D17-2-V2",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D17-2-V3",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D17-2-V4",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D18-2-V1",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D18-2-V2",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D18-2-V3",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D18-2-V4",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D18-2-V0",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "H04-2-V2",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "H04-2-V3",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "H04-2-V4",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "H04-2-V0",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "H04-2-V1",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original"
+    }
+  ],
+  "batchResult": {
+    "scheduled": 25,
+    "executed": 25,
+    "outcomes": [
+      {
+        "id": "D13-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D13-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 2,
+        "failureCategory": null
+      },
+      {
+        "id": "D13-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D13-2-V1",
+        "variant": "V1",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 2,
+        "failureCategory": null
+      },
+      {
+        "id": "D13-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D14-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D14-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D14-2-V1",
+        "variant": "V1",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D14-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D14-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D17-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      },
+      {
+        "id": "D17-2-V1",
+        "variant": "V1",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D17-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D17-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D17-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D18-2-V1",
+        "variant": "V1",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D18-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D18-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D18-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "D18-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "H04-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "H04-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      },
+      {
+        "id": "H04-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 6,
+        "failureCategory": null
+      },
+      {
+        "id": "H04-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "H04-2-V1",
+        "variant": "V1",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 3,
+        "failureCategory": null
+      }
+    ],
+    "unrun": [],
+    "stopReason": "",
+    "previousBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2",
+    "modelAcceptancePassed": false,
+    "semanticReview": "pending_review"
+  },
+  "restartEvidence": {
+    "restartedAt": "2026-10-16T11:32:26.251Z",
+    "reason": "执行会话中断，确认无遗留进程；22项已完成，H04-2-V4仅记录派发意向，无试次目录，后3项无模型调用证据。用户要求重试继续。",
+    "previousProgress": {
+      "scheduled": 25,
+      "executed": 22,
+      "outcomes": [
+        {
+          "id": "D13-2-V3",
+          "variant": "V3",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D13-2-V4",
+          "variant": "V4",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 2,
+          "failureCategory": null
+        },
+        {
+          "id": "D13-2-V0",
+          "variant": "V0",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D13-2-V1",
+          "variant": "V1",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 2,
+          "failureCategory": null
+        },
+        {
+          "id": "D13-2-V2",
+          "variant": "V2",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D14-2-V4",
+          "variant": "V4",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D14-2-V0",
+          "variant": "V0",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D14-2-V1",
+          "variant": "V1",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D14-2-V2",
+          "variant": "V2",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D14-2-V3",
+          "variant": "V3",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D17-2-V0",
+          "variant": "V0",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 5,
+          "failureCategory": null
+        },
+        {
+          "id": "D17-2-V1",
+          "variant": "V1",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D17-2-V2",
+          "variant": "V2",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D17-2-V3",
+          "variant": "V3",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D17-2-V4",
+          "variant": "V4",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "D18-2-V1",
+          "variant": "V1",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D18-2-V2",
+          "variant": "V2",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D18-2-V3",
+          "variant": "V3",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D18-2-V4",
+          "variant": "V4",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "D18-2-V0",
+          "variant": "V0",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        },
+        {
+          "id": "H04-2-V2",
+          "variant": "V2",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 4,
+          "failureCategory": null
+        },
+        {
+          "id": "H04-2-V3",
+          "variant": "V3",
+          "status": "recorded",
+          "exitCode": 0,
+          "providerCalls": 3,
+          "failureCategory": null
+        }
+      ],
+      "stopReason": "",
+      "semanticReview": "pending_review"
+    },
+    "previousAttempts": [
+      {
+        "id": "D13-2-V3",
+        "startedAt": "2026-10-16T11:26:10.502Z"
+      },
+      {
+        "id": "D13-2-V4",
+        "startedAt": "2026-10-16T11:26:25.434Z"
+      },
+      {
+        "id": "D13-2-V0",
+        "startedAt": "2026-10-16T11:26:35.502Z"
+      },
+      {
+        "id": "D13-2-V1",
+        "startedAt": "2026-10-16T11:26:44.783Z"
+      },
+      {
+        "id": "D13-2-V2",
+        "startedAt": "2026-10-16T11:26:52.901Z"
+      },
+      {
+        "id": "D14-2-V4",
+        "startedAt": "2026-10-16T11:27:04.739Z"
+      },
+      {
+        "id": "D14-2-V0",
+        "startedAt": "2026-10-16T11:27:17.665Z"
+      },
+      {
+        "id": "D14-2-V1",
+        "startedAt": "2026-10-16T11:27:31.411Z"
+      },
+      {
+        "id": "D14-2-V2",
+        "startedAt": "2026-10-16T11:27:45.484Z"
+      },
+      {
+        "id": "D14-2-V3",
+        "startedAt": "2026-10-16T11:27:57.746Z"
+      },
+      {
+        "id": "D17-2-V0",
+        "startedAt": "2026-10-16T11:28:13.429Z"
+      },
+      {
+        "id": "D17-2-V1",
+        "startedAt": "2026-10-16T11:28:29.648Z"
+      },
+      {
+        "id": "D17-2-V2",
+        "startedAt": "2026-10-16T11:28:45.112Z"
+      },
+      {
+        "id": "D17-2-V3",
+        "startedAt": "2026-10-16T11:28:59.005Z"
+      },
+      {
+        "id": "D17-2-V4",
+        "startedAt": "2026-10-16T11:29:08.973Z"
+      },
+      {
+        "id": "D18-2-V1",
+        "startedAt": "2026-10-16T11:29:23.219Z"
+      },
+      {
+        "id": "D18-2-V2",
+        "startedAt": "2026-10-16T11:29:33.242Z"
+      },
+      {
+        "id": "D18-2-V3",
+        "startedAt": "2026-10-16T11:29:43.369Z"
+      },
+      {
+        "id": "D18-2-V4",
+        "startedAt": "2026-10-16T11:29:52.604Z"
+      },
+      {
+        "id": "D18-2-V0",
+        "startedAt": "2026-10-16T11:30:02.501Z"
+      },
+      {
+        "id": "H04-2-V2",
+        "startedAt": "2026-10-16T11:30:12.021Z"
+      },
+      {
+        "id": "H04-2-V3",
+        "startedAt": "2026-10-16T11:30:25.204Z"
+      },
+      {
+        "id": "H04-2-V4",
+        "startedAt": "2026-10-16T11:30:35.900Z"
+      }
+    ],
+    "scriptSha256": "88273cf727828209615bb791756b10dc6893aee0369df737826e7512361ecd19"
+  },
+  "rawEvidence": [
+    {
+      "id": "D13-2-V3",
+      "files": {
+        "plan.json": "5e827a38e20ded3a58a821de73f91ef201650f4a80b3b91804254d66f4f3e0a1",
+        "preparation.json": "bf65c2a78ab06f9517ebe53f102c948e33cb4dcf11725e613baa6ab285ccb7ef",
+        "final-state.json": "4d6656cbf0c5f9c3d3eeee9c26ef530b81f7cbae90dc986ab76eb5db96f11779",
+        "score.json": "a25147c708f791d10d34893a8dbb80ae91fda0ae7c9ce3a0b19737437becccca",
+        "result.json": "9255d1bb813e971cc8fe3a2763b74af7616853869b55b7a6a665a5f1342a658b"
+      }
+    },
+    {
+      "id": "D13-2-V4",
+      "files": {
+        "plan.json": "49da079f7e8b84ddc7a743c54375ad5c00be7feea405aecce726a1ac0a141989",
+        "preparation.json": "449cbe8269ca79256b4502c22df12cb601d2b794750025f9f4546e6278e3ea87",
+        "final-state.json": "5afcb5ac9f80fbf8c1e1f7bea3a731841ed738e3b0939c5478f7ed0ac42b08bd",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b",
+        "result.json": "a3c9138fed0ef94c3dd54f9f9327f772aec84868ab7198652a60d30b551e88f0"
+      }
+    },
+    {
+      "id": "D13-2-V0",
+      "files": {
+        "plan.json": "3460171f33a6ca4126c3bc491f9b125f6f4ef3cc49a7d9c01388bbca60095595",
+        "preparation.json": "8e2d38cc3b61daea5886d0356d8990bf686462ab61d7e8c8e9f067a88ee8071d",
+        "final-state.json": "01c7fc8dc6917efd342a55543d3de0859f40347f3b20f3ef014a0335898af479",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b",
+        "result.json": "843853efad9b736ee2789bdccc4ef1e7d4f5dcef86a61768460e038bb982ac5d"
+      }
+    },
+    {
+      "id": "D13-2-V1",
+      "files": {
+        "plan.json": "e303597d8320e012a6240990e6b06f0c1788161742e29eb8e67ec0e2f89115a6",
+        "preparation.json": "c174e0f98591585bb458f6f4c82bb4bbd4d615006f08dbf348a0a841e190673f",
+        "final-state.json": "1b6ae9fa57c8f835fa7f21c91e747d33c0cc8d82699fb01446e381085fbcb166",
+        "score.json": "23d25716577159fbfcd448b96d56e6026b0e3482656d55ea3ee31f7c709b9c5b",
+        "result.json": "6189a677bee489c31fd3a846b626fbc52bcc0ec21a2cc5efbe814d7251b14f3c"
+      }
+    },
+    {
+      "id": "D13-2-V2",
+      "files": {
+        "plan.json": "7658cf47d782c012948906082f8556a619e798265c8ae45baee9ef14a2e75a35",
+        "preparation.json": "0a165e33eb64b4759156a19fc8b6ed4560a02ef4cb2c1513644dd330e3021ba5",
+        "final-state.json": "a483408870413ad396fd576b6c64adb5489951ccff2ca0c027f76759b2a9a265",
+        "score.json": "9ec16beb33efba2162b3c77349f19389ec132c47eb61db777d3076f63cb5c112",
+        "result.json": "29e82a080af07b7502c176b51327f81d08f2e94689acee51c361fc0b99f1e194"
+      }
+    },
+    {
+      "id": "D14-2-V4",
+      "files": {
+        "plan.json": "eb30c599c139d22b38d9ee92466f631216644af4eacf8e1f2dae0dea8f61beba",
+        "preparation.json": "55c4c731e15bd373f5be49ae9a5508b1866be0167b515df760cf5fc4a5c14853",
+        "final-state.json": "00cfd59a24f25b5e39b04dd3b28cb73c9df0e81ac204fc69777fdc520c5824df",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e",
+        "result.json": "dc4949c825b16c364a03f1bb8c3acba1c85d05a8307d66d738f15974437a52e4"
+      }
+    },
+    {
+      "id": "D14-2-V0",
+      "files": {
+        "plan.json": "7000ce3aef07f93339ab9d9b5dead2ab845615168063a7ee9f9e7347a43f0033",
+        "preparation.json": "51eb9327e93db29ced3365e448a8b035d6f26a381f3f784e45d18267a6cb0ecc",
+        "final-state.json": "8cbb12b92b336d6d3963f5817e2d225cf25c4ffb461eec6cf772428439334aa8",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e",
+        "result.json": "52acea51259b4c7461d6ab0ca8ed44140e8a1a017605062d60e8d3628ae94dae"
+      }
+    },
+    {
+      "id": "D14-2-V1",
+      "files": {
+        "plan.json": "0e45d7d55b650e8fb884d137a6163231553444483117145091f19bc10a4470cb",
+        "preparation.json": "26084c95679dfef2ac14c3a237c9543a595e1591dccfad6576c5debacc20ce34",
+        "final-state.json": "014b1766797d41c3e4dd6be6cc78d3dafc3010d3623cb83b808d274893905c3e",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e",
+        "result.json": "e3be7b34745080453f4b6df1febe425f376125f86b7e779c9162dfc167f43440"
+      }
+    },
+    {
+      "id": "D14-2-V2",
+      "files": {
+        "plan.json": "277374697f29b6bdda578a7286bedb3a7556d0d68fe3ae2ff3a00c1fd0ae8001",
+        "preparation.json": "f319b7af54157b4d8a3431b64d0aa950bd98ba32c14947d31cbc5461d0d79f76",
+        "final-state.json": "250df466f5c4ee7f3d67c874b92a55660bf1f6a0d5782f415c588a9c89056610",
+        "score.json": "81d80e385a2fb701e6239195c6be89faa99ceaa0a590d375c89d64470663760e",
+        "result.json": "9ad6bb92a80a0055e41c4513f45a8f17c43f1fbc3e6267296e6c16fa2ba68108"
+      }
+    },
+    {
+      "id": "D14-2-V3",
+      "files": {
+        "plan.json": "51429b331956b755bd6ae0c44bbfcfa3939ba95d7f9765edfc558c9ffd9863f2",
+        "preparation.json": "b40bcb786e0dfd8876f2ed0692d3012c5350f8a8565dc5b06593b2008ebee3ba",
+        "final-state.json": "fb2634261cb40985276a9c96b9efd792702a1cb6fbbb6e99a4cbb86970a15711",
+        "score.json": "3f756369dada64c96cf49a6e99ecb73f2e96d0e5cca8073a257dca5945148760",
+        "result.json": "ce1d934e8c302e266c5f4d6656c39b85e92496421caccea3a408ebdd1475f86e"
+      }
+    },
+    {
+      "id": "D17-2-V0",
+      "files": {
+        "plan.json": "64754c4757243c2a08c63d48e46d1333fd8f1ba37331c5ed7205545c8c87d46f",
+        "preparation.json": "3fc66b0aab820bb5e9c2ec002657aae322b6df90d6d8d09bb024b7dc3c0cef51",
+        "final-state.json": "ffaa74b2062746fd6bf8104816aac4c17b3fbb1ad507130bf75344b0ed8cbaa7",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c",
+        "result.json": "25abe981a77cb391e2a1d2ee33beb6f9c42fc85d70829d591b3e3263fe6f777b"
+      }
+    },
+    {
+      "id": "D17-2-V1",
+      "files": {
+        "plan.json": "8a2ef90d0ce686a182857d5728e826b9016dc59b86d5a1fe9cad8ddc2e8a27ba",
+        "preparation.json": "64dc621d9398284091c5c10988b9d68d5793fc16395fdc8eb2f2da283488fce5",
+        "final-state.json": "689d4a51adb457de4d8d4be6cba315d6c6e7642cafbbe7d74451df7d6ac14021",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c",
+        "result.json": "ba8a92732bd7b844861a23e01a9a9c6799aa6fffc656b5823c63e4ae61e227c5"
+      }
+    },
+    {
+      "id": "D17-2-V2",
+      "files": {
+        "plan.json": "6f3274c27abfcb432eae93777fc745bedb0b400922ff8ac69e2ac7452060d13e",
+        "preparation.json": "6259005b163ab5ffd1112437a76f598235166b269582142a8074e0a22dabc88b",
+        "final-state.json": "5e0517b847c3293774cff4a11f1dca99baa77f2538f2e9d7bf5b15afcea554b2",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c",
+        "result.json": "fcd94c1f96c499ca6fb1c53cff960f21ee427511790944b43da14510c9f9e543"
+      }
+    },
+    {
+      "id": "D17-2-V3",
+      "files": {
+        "plan.json": "5e68f6a45bc44e66be443a4d839a0d9daa0a2414d2090e26776673d67fa80284",
+        "preparation.json": "94e375ef170dce63b59805a7e4ceb5687b5bf09f7af94e8ce4e81d808831c219",
+        "final-state.json": "b0036c16c0539d8982272d1fe46b5f7f031a34a64e4d9d4114b21a3459ec8479",
+        "score.json": "cbe5c0ca886dd65f7d5b31c4301df1e19c35eb8f5ccae8675027f94a34a82fa7",
+        "result.json": "b893daa13608fd30f7668473ca1f78b59365a2f7581d97b243417acdcd80fb2c"
+      }
+    },
+    {
+      "id": "D17-2-V4",
+      "files": {
+        "plan.json": "50243ca0a67e1caf8f593ff98a41b614a2841aa5ec57279edede537be11c9803",
+        "preparation.json": "5fa797dac8bc30b556c60b2c8aeb529a63a28e787510d4d01b56f3be5c5c53dd",
+        "final-state.json": "c42bb19e880e4467e33eef72b439345f9f5d77fc77ceb7d97f248797b3057b40",
+        "score.json": "64baafd0272be9f7243674ce9fb2ece26696c1bc05bb4f710869dc5c2b887f8c",
+        "result.json": "89c98e962dc94ef8f78b5b12e027dfdd4dc43c62e7202b788e4410adc8b32b20"
+      }
+    },
+    {
+      "id": "D18-2-V1",
+      "files": {
+        "plan.json": "c8945fdeaafde2e942d1e24bc600fb67a420f80a30861a9744b369980dbe48a0",
+        "preparation.json": "257c785c0a1f6083c0376cf198eaf5784ad5f208c063ebe63899a28774b8591e",
+        "final-state.json": "a720f247d680c9c9279fdfc7e334b89ed4cdd09c1c4049eea038177ba0030473",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45",
+        "result.json": "f266a57ca158d48ac8f1dcad530d901faebcf14783600bbc0d7b075dd79d0c9d"
+      }
+    },
+    {
+      "id": "D18-2-V2",
+      "files": {
+        "plan.json": "da9bf747cdd0ae90157d61178d4ff459bec39cd4e45fe8bac2406fe7656b9ff4",
+        "preparation.json": "5d68a396bb08e0f5ba8622fade85e4d5491935af2c8613f4df5ff38e81bba542",
+        "final-state.json": "2fafc82accde8185aa3a35b97d1377bf3e7e15e1bb16d7b0c4c900bf27eec8b0",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45",
+        "result.json": "d57b12861b77ca0236ae9b69f4e05c21be52016759e4d88cf7826a1ed1c80bfd"
+      }
+    },
+    {
+      "id": "D18-2-V3",
+      "files": {
+        "plan.json": "8f7e28c7d18cf3c3c0ab9000dd6a2579024b507668780c907f7e91d923afd136",
+        "preparation.json": "3106a11d8bda5395b8bf6c3718e571b71cf3e3d057226e3c372bb78274204a0f",
+        "final-state.json": "ea566726ef4f148600562d362f20cbd7d251f065a7ec0071369e9311d0d550e9",
+        "score.json": "7c00ea8922466e6a3a5d9f6d2fe6c799a23219e529aa70aedc962441c92d665d",
+        "result.json": "a51f52a20fb5323e49a298f97ae24990f51152560d5785d3c90320a5195425d3"
+      }
+    },
+    {
+      "id": "D18-2-V4",
+      "files": {
+        "plan.json": "0e647c95eecf794bc3ea050f3070c37377d971d8b235b341f64a9401c2680ba3",
+        "preparation.json": "a802c75a0016f142cb7cbf0511473889d28df7464cf24ca380522d4ecf16c8b0",
+        "final-state.json": "924405995838c151423b58a93e09594e485dd49e9909b1e52d03ec1110948ada",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45",
+        "result.json": "2beef7d6bd0bad3e28db8cba55e32ac17be9e4395f85a8eeec318add842a1077"
+      }
+    },
+    {
+      "id": "D18-2-V0",
+      "files": {
+        "plan.json": "ccaedf497e3f594bec1e0649904cea3e30d7453fa96e3c83258ff2d0358b59e9",
+        "preparation.json": "6111bf09adb8948533775dda680e242516f9db7dcc5dfdd0edc39ea48c5de542",
+        "final-state.json": "8631899a864673e55f71b996c8a9dab040fa8f5c9f3ba21f06f107a4256c4eb9",
+        "score.json": "1971318a8c8e2ba8f6f8d82dafd4b4b4d3ea4558fc8bc44b8746bffd80d1fb45",
+        "result.json": "929b3331e2d4e91475ed10dcf1bcd11b049565605a0c56f4bf2f6e4e8e9d1a49"
+      }
+    },
+    {
+      "id": "H04-2-V2",
+      "files": {
+        "plan.json": "c952eeb76d645ef30399727e8ffcc8366c752d0a0d94ad36cfc8d532083ec627",
+        "preparation.json": "5816bca8a7b7c2857a6e6b4b341b7475f97225975582421c16365a5769623c07",
+        "final-state.json": "545c9c4f8a5344d24b3bc69c0e6f233e05bd821d7b3b8816aee43f230ac25e0d",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b",
+        "result.json": "bc6630d9f55f52afdcbcc20ec36e5cc10d78ba90eda834697cd208339aad9d55"
+      }
+    },
+    {
+      "id": "H04-2-V3",
+      "files": {
+        "plan.json": "65ec0737a2d9303bf082664f301c0f42abd6f8dfea197dd63094d946e0fc02bd",
+        "preparation.json": "a02ed8bb26870436a55431074f90dc84e70aef4cdc508ef1bb02af0faa7f6086",
+        "final-state.json": "529bce809cd19c6dea1566116d46e9849f633d4dd00fcafcc48227f4df7c22d8",
+        "score.json": "5ebea1f6e9bd05990b129bae2f5642f412b322afeb45cf34faa688515c017b6e",
+        "result.json": "131904a6937ff927b2f437553c8d2c47fe4441ca99219f85c45199e44bb66543"
+      }
+    },
+    {
+      "id": "H04-2-V4",
+      "files": {
+        "plan.json": "1a8e949afe07d157721eb6853acab94b1d59c6a7ccfd417b89198959649a2019",
+        "preparation.json": "fd2b3600e1d990d31ca57c34eea540b9f1949f0ba81bc20a3ba0384980aaaed2",
+        "final-state.json": "108f87698f870498db6fc5b7cb5d250a03029e23598efc793a3113f2ce452727",
+        "score.json": "9778d26498cd13ecf9537cbfdd7dcc131e5e0d4b789ec5536f7480e43664fe54",
+        "result.json": "690ae989e5d04999a24780bbc0ab9f2087c05133f69c7dd30f70add4d60643c3"
+      }
+    },
+    {
+      "id": "H04-2-V0",
+      "files": {
+        "plan.json": "c5eb7692b98f0475fc85f08386cc32c530dd8bc920771d16bbfdcc951a3c52a0",
+        "preparation.json": "485f3e278aec1edf945e7fa169e8651f607726d153a2beaa12bf5a821b42d316",
+        "final-state.json": "52487222daad7ac5cce2f1893543287af23d8236f949ec083bb801a5add1329f",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b",
+        "result.json": "dff695aaf7a67c3177d15ceeaa86c772073becfb8a9d4543d29d5cad76807864"
+      }
+    },
+    {
+      "id": "H04-2-V1",
+      "files": {
+        "plan.json": "8e00b9bd5f2e86eb25a2647acb014c521c6f7066655c462d815eafc28578c174",
+        "preparation.json": "982d4ce9656447362f218fb38cdb6f08f047475e1cf294f8e2c56ae10be17715",
+        "final-state.json": "0198e7bc6a35bf3c096740b285acc87270c7d957e6d0c003f902ac5c9adca171",
+        "score.json": "d7167ce55529f9308a4c5bf806eabfdc65a67ae4348a8fd206a4431b4dfb105b",
+        "result.json": "1303dcfbc332618be3fab475d4f4ee11c7e54ea1989b0ff6b1857f305ecc3ff0"
+      }
+    }
+  ]
+}
