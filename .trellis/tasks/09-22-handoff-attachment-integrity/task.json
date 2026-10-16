@@ -33,7 +33,11 @@
     ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/verification.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/review.md",
     ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/live-evaluation.md",
-    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/live-answer-review.md"
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-15/live-answer-review.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-16/plan.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-16/review.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-16/results.md",
+    ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-16/answer-review.md"
   ],
   "notes": "实施前提交 ef25acf。已完成说明、UI和验证代码；真实明确双附件回传及单附件通过，三组自然多轮和纯文字未完成，保留证据与待审建议。用户要求更新线上供测试，已部署当前实现，任务仍不归档。",
   "meta": {
@@ -70,6 +74,41 @@
         "backgroundExecutionPassed": 5,
         "providerCalls": 171
       }
+    },
+    "handoffDescriptionAB20261016": {
+      "status": "stage_closed_with_remaining_issues",
+      "implementationApproved": true,
+      "paidEvaluationApproved": true,
+      "baseline": "75fc7f169cc82c34db989c0fb7ee5dda75bf9845",
+      "directory": ".trellis/tasks/09-22-handoff-attachment-integrity/reliability-2026-10-16",
+      "productScope": "仅 work_item_action 与模型 title 两处说明",
+      "samples": 50,
+      "clearAssignments": {
+        "A": {
+          "total": 20,
+          "structuralCompleted": 13,
+          "blockingClarifications": 7
+        },
+        "B": {
+          "total": 20,
+          "structuralCompleted": 17,
+          "blockingClarifications": 3
+        }
+      },
+      "ambiguityTargetClarification": {
+        "A": 5,
+        "B": 5
+      },
+      "substantiveAnswerErrorCases": {
+        "A": 1,
+        "B": 3
+      },
+      "providerCalls": 309,
+      "acceptancePassed": false,
+      "fullWorkflowEvaluated": false,
+      "deployed": false,
+      "stageClosedAt": "2026-10-16",
+      "followupDeferredByUser": true
     }
   }
 }

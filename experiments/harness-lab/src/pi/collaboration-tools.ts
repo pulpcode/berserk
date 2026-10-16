@@ -63,7 +63,7 @@ export function collaborationTools(service: CollaborationService, options: Optio
         if (Boolean(params.workItemId) === Boolean(params.operationId)) throw new RequestError('INVALID_INPUT', '请选择一个工作编号或操作编号查询。');
         return params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
       }, signal) }),
-    defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，本次调用等待用户批准后执行；成功返回 committed=true、交接回执及实际文件清单，表示已执行。文件来自当前工作区，交接使用固定副本。工作编号与 expectedRevision 从工作详情取得；需要澄清的业务信息先询问。',
+    defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，本次调用等待用户批准后执行；成功返回 committed=true、交接回执及实际文件清单，表示已执行。文件来自当前工作区，交接使用固定副本。assign 新建分派，依据已有对话和资料确定接收席位、工作目标与附件，不需要已有工作编号或修订号。claim、submit、review 操作已有工作，工作编号与 expectedRevision 从工作详情取得。当现有信息不足以确定接收对象、工作范围或附件选择时，先澄清。',
       parameters: workActionToolSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(async scopedSignal => {
         const approved = options.takeApproval(toolCallId);

@@ -48,6 +48,7 @@ export const historicalWorkActionToolSchema = Type.Object({ action: historicalWo
 export const workActionSchema = Type.Union([
   Type.Object({ kind: assign.kind, payload: Type.Object({
     ...Type.Omit(assign.payload, ['workspaceId', 'inputPaths', 'goal']).properties,
+    title: { ...assign.payload.properties.title, description: '工作的简短名称，可根据已明确的工作目标拟定；用户指定名称时沿用。' },
     goal: Type.String({ minLength: 1, maxLength: 12000, description: '接收方的业务目标、约束与交付要求；不自行增设工具使用禁令。' }),
     inputPaths: Type.Array(path, { maxItems: 100, description: '随工作交接的当前工作区文件路径，准备时保存固定副本；必须填写，无附件明确填写 []。' }),
   }, strict) }, strict),
