@@ -16,6 +16,8 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [Foreground Spatial Analysis](../backend/spatial-analysis.md) for bounded calculations, native result evidence, exact-result saves and independent analysis map layers.
+
 Read [Conversation Map Annotations](../backend/map-annotations.md) for annotation layer groups, independent editing, fixed version references and save-conflict behavior.
 
 Read [Situation Map and Mock Controls](../backend/situation-map.md) for shared map entries, evidence links, object drafts, tile failures and simulation permissions.

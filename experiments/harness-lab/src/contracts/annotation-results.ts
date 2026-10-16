@@ -19,10 +19,11 @@ function fixedRef(value: unknown): AnnotationRef | undefined {
 const sourceRef = (value: unknown) => record(value) && ['systemId','objectType','objectId'].every(key => typeof value[key] === 'string' && Boolean(value[key].trim()) && value[key].length <= 128) && ['road','resource','area'].includes(String(value.objectType));
 /** Shared strict projection for legacy receipts and native structured results. */
 export function receiptMapEntry(value: unknown, toolName: string): AnnotationMapEntry | undefined {
-  if (!['annotation_action','annotation_from_source','annotation_read'].includes(toolName)) return;
+  if (!['annotation_action','annotation_from_source','annotation_from_analysis','annotation_read'].includes(toolName)) return;
   if (!record(value) || !uuid(value.clientActionId) || !uuid(value.taskId) || typeof value.committedAt !== 'string' || !Number.isFinite(Date.parse(value.committedAt))) return;
   if (!['create_draft','apply','from_source','publish','set_current'].includes(String(value.action)) || value.outcome !== undefined) return;
   if (toolName === 'annotation_from_source' && value.action !== 'from_source') return;
+  if (toolName === 'annotation_from_analysis' && (value.action !== 'apply' || !record(value.fromAnalysis) || typeof value.fromAnalysis.resultRef !== 'string' || !value.fromAnalysis.resultRef.startsWith('spatial:'))) return;
   if (toolName === 'annotation_action' && value.action === 'from_source') return;
   if (value.replayed !== undefined && typeof value.replayed !== 'boolean') return;
   const publication = value.action === 'publish' || value.action === 'set_current';

@@ -162,7 +162,12 @@ export function fromSources(value: unknown): AnnotationFromSourcesInput {
   return {clientActionId,expectedRevision,items};
 }
 export function hostIntent(value: unknown): AnnotationHostIntent {
-  const input=record(value,['action','clientActionId','baseRef','title','operations','revision','note','items','publicationId'],['action','clientActionId']);
+  const input=record(value,['action','clientActionId','baseRef','title','operations','revision','note','items','publicationId','resultRef','itemId','layerId','objectId','name'],['action','clientActionId']);
+  if(input.action==='from_analysis') {
+    record(input,['action','clientActionId','resultRef','itemId','layerId','objectId','name'],['action','clientActionId','resultRef','layerId','objectId','name']);
+    if(typeof input.resultRef!=='string' || !input.resultRef.startsWith('spatial:') || input.resultRef.length>1024 || (input.itemId!==undefined && (typeof input.itemId!=='string' || input.itemId.length>1024))) throw invalid();
+    return {action:'from_analysis',clientActionId:uuid(input.clientActionId),resultRef:input.resultRef,...(input.itemId!==undefined?{itemId:input.itemId}:{}),layerId:id(input.layerId),objectId:id(input.objectId),name:string(input.name,120)};
+  }
   if(input.action==='from_source') {
     record(input,['action','clientActionId','items']);
     if(!Array.isArray(input.items)) throw invalid();

@@ -1,3 +1,4 @@
+import type { SpatialResult } from '../contracts/spatial.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
 import type { AccessStore } from '../access/store.js';
@@ -21,6 +22,7 @@ interface ActionOptions {
   receiptInput?: {clientActionId:string; hostIntent?:AnnotationHostIntent}; basis?: AnnotationEditBasis;
   fromSource?: AnnotationFromSourceResult; fromSources?: AnnotationFromSourceResult[];
   committed?: ()=>void;
+  requiredSystemIds?: string[]; fromAnalysis?: {resultRef:string;itemId?:string};
 }
 const missing = () => new RequestError('ANNOTATION_NOT_FOUND','标注不存在或无权访问。',404);
 const conflict = (message: string) => new RequestError('ANNOTATION_CONFLICT',message,409);
@@ -314,6 +316,30 @@ export class AnnotationService {
     const receipt=this.applyAction(actor,sessionId,normalized,signal,{basis,receiptInput:{clientActionId:intent.clientActionId,hostIntent:intent},committed:()=>{committed=true;onCommitted?.();}});
     return {receipt,replayed:!committed};
   }
+  /** Host-only exact derived geometry; model supplies only result/target intent. */
+  fromAnalysisFromHost(actor:AnnotationActor,sessionId:string,intent:Extract<AnnotationHostIntent,{action:'from_analysis'}>,result:SpatialResult,basis:AnnotationEditBasis,signal?:AbortSignal,onCommitted?:()=>void):AnnotationHostResult {
+    const normalized=validate.hostIntent(intent) as typeof intent;
+    signal?.throwIfAborted(); const prior=this.hostReplay(actor,sessionId,normalized);if(prior) return prior;
+    const workspace=this.session(actor,sessionId,true);
+    if(result.resultRef!==normalized.resultRef) throw new RequestError('SPATIAL_RESULT_INVALID','分析结果与请求引用不一致。');
+    const item=normalized.itemId?result.items.find(i=>i.id===normalized.itemId):undefined;
+    const geometry=normalized.itemId?item?.geometry:result.geometry;
+    if(!geometry) throw new RequestError('SPATIAL_GEOMETRY_MISSING','请指定已生成范围或结果中的真实对象。');
+    if(geometry.type==='MultiPolygon' || (geometry.type==='Polygon' && geometry.coordinates.length!==1)) throw new RequestError('SPATIAL_SAVE_UNSUPPORTED','当前标绘不能无损保存多面或含孔面；未删除任何部分。');
+    const systems=new Set<string>();
+    for(const p of result.provenance) {
+      if(p.input.kind==='source') systems.add(p.input.systemId);
+      if(p.input.kind==='annotation') this.accessible(actor,workspace.taskSpaceId,p.input.ref).requiredSystemIds.forEach(id=>systems.add(id));
+    }
+    this.allowedSystems(actor,[...systems]);
+    if(!('setId' in basis)) throw new RequestError('ANNOTATION_READ_REQUIRED','请先读取本会话草稿。');
+    const feature={objectId:normalized.objectId,name:normalized.name,kind:geometry.type==='Point'?'point' as const:geometry.type==='LineString'?'line' as const:'polygon' as const,geometry,
+      ...(item?.source?{sourceRefs:[{...item.source.ref,revision:item.source.revision,queriedAt:item.source.queriedAt}]}:{})};
+    const action=validate.action({action:'apply',clientActionId:normalized.clientActionId,expectedRevision:basis.revision,operations:[{op:'add_object',layerId:normalized.layerId,feature}]});
+    this.assertBasis(actor,sessionId,action,basis);let committed=false;
+    const receipt=this.applyAction(actor,sessionId,action,signal,{basis,requiredSystemIds:[...systems],fromAnalysis:{resultRef:normalized.resultRef,...(normalized.itemId?{itemId:normalized.itemId}:{})},receiptInput:{clientActionId:normalized.clientActionId,hostIntent:normalized},committed:()=>{committed=true;onCommitted?.();}});
+    return {receipt,replayed:!committed};
+  }
   private assertBasis(actor: AnnotationActor,sessionId: string,input: AnnotationAction,basis?: AnnotationEditBasis) {
     if(input.action==='publish') return;
     const binding=this.binding(actor,sessionId);
@@ -417,7 +443,7 @@ export class AnnotationService {
     } else {
       if(!set) throw missing();
       const saved=this.accessible(actor,taskId,{setId:set.setId,revision:normalized.action==='publish' ? normalized.revision : set.headRevision});
-      if(normalized.action==='apply') {if(set.headRevision!==normalized.expectedRevision) throw stale('draft','草稿已有新修订，请查看后重新编辑。');prepared=this.prepareChanges(actor,taskId,saved.document,normalized.operations,saved.requiredSystemIds);}
+      if(normalized.action==='apply') {if(set.headRevision!==normalized.expectedRevision) throw stale('draft','草稿已有新修订，请查看后重新编辑。');prepared=this.prepareChanges(actor,taskId,saved.document,normalized.operations,[...saved.requiredSystemIds,...(options.requiredSystemIds ?? [])]);}
     }
     return this.mutation(actor,taskId,sessionId,receiptInput,()=>{
       if(options.basis) this.assertBasis(actor,sessionId,normalized,options.basis);
@@ -444,7 +470,7 @@ export class AnnotationService {
       const objectIds=[...new Set((normalized.operations ?? []).flatMap(operation=>operation.op==='add_object' ? [operation.feature.objectId] : operation.op==='copy_object' ? [operation.newObjectId] : operation.op==='update_object' ? [operation.objectId] : operation.op==='add_layer' ? operation.layer.features.map(feature=>feature.objectId) : []).filter(id=>existingIds.has(id)))];
       return {clientActionId:normalized.clientActionId,action:options.fromSource || options.fromSources ? 'from_source' : normalized.action,taskId,sessionId,committedAt:time,ref:{setId:next.setId,revision:next.headRevision},hash:next.hash,binding:this.binding(actor,sessionId),
         beforeRef:latest ? {setId:latest.setId,revision:latest.headRevision} : null,afterRef:{setId:next.setId,revision:next.headRevision},objectIds,
-        ...(options.fromSource ? {fromSource:options.fromSource} : {}),...(options.fromSources ? {fromSources:options.fromSources} : {})};
+        ...(options.fromSource ? {fromSource:options.fromSource} : {}),...(options.fromSources ? {fromSources:options.fromSources} : {}),...(options.fromAnalysis ? {fromAnalysis:options.fromAnalysis} : {})};
     },signal,options.committed);
   }
   setCurrentFromHost(actor: AnnotationActor,sessionId: string,input: AnnotationCurrentInput,signal?: AbortSignal,onCommitted?: ()=>void): AnnotationHostResult {

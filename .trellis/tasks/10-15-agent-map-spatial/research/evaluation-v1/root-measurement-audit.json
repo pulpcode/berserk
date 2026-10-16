@@ -1,0 +1,6484 @@
+{
+  "groups": {
+    "A": {
+      "scheduled": 72,
+      "executed": 72,
+      "reviewed": 72,
+      "rawDeterministicPassed": 48,
+      "reviewDimensionsPassed": 34,
+      "originalCombinedPassed": 30,
+      "dimensions": {
+        "objectScope": 67,
+        "method": 59,
+        "numericGeometry": 58,
+        "claims": 36,
+        "effects": 72
+      },
+      "criticalEntries": [
+        "D11-2-A"
+      ],
+      "skillRequired": 51,
+      "skillLoadedBefore": 0,
+      "skillRequiredWithoutD18": 48,
+      "skillLoadedBeforeWithoutD18": 0,
+      "heldoutReviewDimensionsPassed": 7,
+      "elapsedMs": 932253,
+      "providerCalls": 327
+    },
+    "B": {
+      "scheduled": 72,
+      "executed": 72,
+      "reviewed": 72,
+      "rawDeterministicPassed": 60,
+      "reviewDimensionsPassed": 43,
+      "originalCombinedPassed": 42,
+      "dimensions": {
+        "objectScope": 70,
+        "method": 69,
+        "numericGeometry": 69,
+        "claims": 43,
+        "effects": 72
+      },
+      "criticalEntries": [
+        "D10-2-B"
+      ],
+      "skillRequired": 51,
+      "skillLoadedBefore": 51,
+      "skillRequiredWithoutD18": 48,
+      "skillLoadedBeforeWithoutD18": 48,
+      "heldoutReviewDimensionsPassed": 11,
+      "elapsedMs": 861319,
+      "providerCalls": 303
+    },
+    "C": {
+      "scheduled": 72,
+      "executed": 72,
+      "reviewed": 72,
+      "rawDeterministicPassed": 56,
+      "reviewDimensionsPassed": 40,
+      "originalCombinedPassed": 37,
+      "dimensions": {
+        "objectScope": 70,
+        "method": 67,
+        "numericGeometry": 67,
+        "claims": 41,
+        "effects": 70
+      },
+      "criticalEntries": [
+        "H01-1-C"
+      ],
+      "skillRequired": 51,
+      "skillLoadedBefore": 28,
+      "skillRequiredWithoutD18": 48,
+      "skillLoadedBeforeWithoutD18": 28,
+      "heldoutReviewDimensionsPassed": 11,
+      "elapsedMs": 940983,
+      "providerCalls": 332
+    }
+  },
+  "rows": [
+    {
+      "id": "D01-1-A",
+      "caseId": "D01",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9726,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-1-B",
+      "caseId": "D01",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 11452,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-1-C",
+      "caseId": "D01",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9534,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-1-A",
+      "caseId": "D02",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10178,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-1-B",
+      "caseId": "D02",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9337,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-1-C",
+      "caseId": "D02",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 10758,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-1-A",
+      "caseId": "D03",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10913,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-1-B",
+      "caseId": "D03",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9106,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-1-C",
+      "caseId": "D03",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10667,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-1-A",
+      "caseId": "D04",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8471,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-1-B",
+      "caseId": "D04",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 8715,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-1-C",
+      "caseId": "D04",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9538,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-1-A",
+      "caseId": "D05",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 15576,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-1-B",
+      "caseId": "D05",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9814,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-1-C",
+      "caseId": "D05",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 13050,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-1-A",
+      "caseId": "D06",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 15031,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-1-B",
+      "caseId": "D06",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 10886,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-1-C",
+      "caseId": "D06",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10285,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-1-A",
+      "caseId": "D07",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 18909,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-1-B",
+      "caseId": "D07",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13848,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-1-C",
+      "caseId": "D07",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14106,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-1-A",
+      "caseId": "D08",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9187,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-1-B",
+      "caseId": "D08",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11243,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-1-C",
+      "caseId": "D08",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12038,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-1-A",
+      "caseId": "D09",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14896,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-1-B",
+      "caseId": "D09",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15816,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-1-C",
+      "caseId": "D09",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 17868,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-1-A",
+      "caseId": "D10",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11679,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-1-B",
+      "caseId": "D10",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 10183,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-1-C",
+      "caseId": "D10",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12190,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-1-A",
+      "caseId": "D11",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14496,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-1-B",
+      "caseId": "D11",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "exact_selected_objects",
+        "reuses_fixed_result"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 10106,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-1-C",
+      "caseId": "D11",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15079,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-1-A",
+      "caseId": "D12",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 15773,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-1-B",
+      "caseId": "D12",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11368,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-1-C",
+      "caseId": "D12",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "save_uses_exact_preview",
+        "trusted_save_tool"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 12636,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": false
+      }
+    },
+    {
+      "id": "D13-1-A",
+      "caseId": "D13",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 12048,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-1-B",
+      "caseId": "D13",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 8878,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-1-C",
+      "caseId": "D13",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14281,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-1-A",
+      "caseId": "D14",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13232,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-1-B",
+      "caseId": "D14",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14171,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-1-C",
+      "caseId": "D14",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16303,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-1-A",
+      "caseId": "D15",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 15824,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-1-B",
+      "caseId": "D15",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11898,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-1-C",
+      "caseId": "D15",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12732,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-1-A",
+      "caseId": "D16",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14724,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-1-B",
+      "caseId": "D16",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 9641,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-1-C",
+      "caseId": "D16",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 21902,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-1-A",
+      "caseId": "D17",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13624,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-1-B",
+      "caseId": "D17",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15309,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-1-C",
+      "caseId": "D17",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 19681,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-1-A",
+      "caseId": "D18",
+      "repeat": 1,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 6936,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-1-B",
+      "caseId": "D18",
+      "repeat": 1,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 7377,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-1-C",
+      "caseId": "D18",
+      "repeat": 1,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 7763,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-1-A",
+      "caseId": "H01",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8814,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-1-B",
+      "caseId": "H01",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 10204,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-1-C",
+      "caseId": "H01",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "no_unrequested_write"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [
+        "Unrequested annotation_from_analysis save attempted with placeholder resultRef despite explicit analysis-only. Tool rejected SPATIAL_RESULT_NOT_FOUND; no actual map write or leak occurred."
+      ],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 16390,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": false
+      }
+    },
+    {
+      "id": "H02-1-A",
+      "caseId": "H02",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 21707,
+      "providerCalls": 9,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-1-B",
+      "caseId": "H02",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12934,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-1-C",
+      "caseId": "H02",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 19078,
+      "providerCalls": 9,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-1-A",
+      "caseId": "H03",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14425,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-1-B",
+      "caseId": "H03",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16468,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-1-C",
+      "caseId": "H03",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16346,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-1-A",
+      "caseId": "H04",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8704,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-1-B",
+      "caseId": "H04",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 9110,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-1-C",
+      "caseId": "H04",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 10061,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-1-A",
+      "caseId": "H05",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11752,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-1-B",
+      "caseId": "H05",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 8421,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-1-C",
+      "caseId": "H05",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 10944,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-1-A",
+      "caseId": "H06",
+      "repeat": 1,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9117,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-1-B",
+      "caseId": "H06",
+      "repeat": 1,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 8530,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-1-C",
+      "caseId": "H06",
+      "repeat": 1,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8668,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-2-B",
+      "caseId": "D01",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9114,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-2-C",
+      "caseId": "D01",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8620,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-2-A",
+      "caseId": "D01",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8817,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-2-B",
+      "caseId": "D02",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 10228,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-2-C",
+      "caseId": "D02",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 8402,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-2-A",
+      "caseId": "D02",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 12002,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-2-B",
+      "caseId": "D03",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9417,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-2-C",
+      "caseId": "D03",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9164,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-2-A",
+      "caseId": "D03",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10366,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-2-B",
+      "caseId": "D04",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 8184,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-2-C",
+      "caseId": "D04",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 7842,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-2-A",
+      "caseId": "D04",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 12142,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-2-B",
+      "caseId": "D05",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 14610,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-2-C",
+      "caseId": "D05",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 13726,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-2-A",
+      "caseId": "D05",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 14641,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-2-B",
+      "caseId": "D06",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 16269,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-2-C",
+      "caseId": "D06",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 16856,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-2-A",
+      "caseId": "D06",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8140,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-2-B",
+      "caseId": "D07",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15304,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-2-C",
+      "caseId": "D07",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14816,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-2-A",
+      "caseId": "D07",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 17300,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-2-B",
+      "caseId": "D08",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 10617,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-2-C",
+      "caseId": "D08",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12267,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-2-A",
+      "caseId": "D08",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13551,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-2-B",
+      "caseId": "D09",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15246,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-2-C",
+      "caseId": "D09",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 15389,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-2-A",
+      "caseId": "D09",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14894,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-2-B",
+      "caseId": "D10",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [
+        "伪述实际工具回执顺序：真实nearest count2=[r1,north]、count5=[r1,north,tie-a,tie-b,r2]，终答明确声称工具count2选tie-a、count5为r1/tie-a/tie-b/north/r2。"
+      ],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 17495,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-2-C",
+      "caseId": "D10",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13145,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-2-A",
+      "caseId": "D10",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13674,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-2-B",
+      "caseId": "D11",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14884,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-2-C",
+      "caseId": "D11",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15108,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-2-A",
+      "caseId": "D11",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "filter_before_nearest"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [
+        "虚假固定几何复用声明：续问最终filter实际target=annotation origin、distanceM=1500，未引用旧buffer.geometry；终答却断言‘本次直接引用该固定结果，未重新计算’。"
+      ],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 39069,
+      "providerCalls": 14,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-2-B",
+      "caseId": "D12",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 10415,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-2-C",
+      "caseId": "D12",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 10735,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-2-A",
+      "caseId": "D12",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11892,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-2-B",
+      "caseId": "D13",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12106,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-2-C",
+      "caseId": "D13",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13320,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-2-A",
+      "caseId": "D13",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13801,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-2-B",
+      "caseId": "D14",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15063,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-2-C",
+      "caseId": "D14",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14577,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-2-A",
+      "caseId": "D14",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 16747,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-2-B",
+      "caseId": "D15",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 20113,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-2-C",
+      "caseId": "D15",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 15970,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-2-A",
+      "caseId": "D15",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14415,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-2-B",
+      "caseId": "D16",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 19803,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-2-C",
+      "caseId": "D16",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16993,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-2-A",
+      "caseId": "D16",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8207,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-2-B",
+      "caseId": "D17",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13566,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-2-C",
+      "caseId": "D17",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 16549,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-2-A",
+      "caseId": "D17",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13086,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-2-B",
+      "caseId": "D18",
+      "repeat": 2,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 7118,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-2-C",
+      "caseId": "D18",
+      "repeat": 2,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 7770,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-2-A",
+      "caseId": "D18",
+      "repeat": 2,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 7197,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-2-B",
+      "caseId": "H01",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9968,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-2-C",
+      "caseId": "H01",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9526,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-2-A",
+      "caseId": "H01",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9170,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-2-B",
+      "caseId": "H02",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14180,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-2-C",
+      "caseId": "H02",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13043,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-2-A",
+      "caseId": "H02",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_category_counts",
+        "filter_before_summary"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 20925,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-2-B",
+      "caseId": "H03",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16182,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-2-C",
+      "caseId": "H03",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 20881,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-2-A",
+      "caseId": "H03",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 17008,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-2-B",
+      "caseId": "H04",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11275,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-2-C",
+      "caseId": "H04",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9337,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-2-A",
+      "caseId": "H04",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9605,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-2-B",
+      "caseId": "H05",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11122,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-2-C",
+      "caseId": "H05",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 10090,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-2-A",
+      "caseId": "H05",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "boundary_included"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9412,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-2-B",
+      "caseId": "H06",
+      "repeat": 2,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 7886,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-2-C",
+      "caseId": "H06",
+      "repeat": 2,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8734,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-2-A",
+      "caseId": "H06",
+      "repeat": 2,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 7928,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-3-C",
+      "caseId": "D01",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9868,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-3-A",
+      "caseId": "D01",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 10734,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D01-3-B",
+      "caseId": "D01",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 10426,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-3-C",
+      "caseId": "D02",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9747,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-3-A",
+      "caseId": "D02",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9996,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D02-3-B",
+      "caseId": "D02",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 8492,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-3-C",
+      "caseId": "D03",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9101,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-3-A",
+      "caseId": "D03",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9941,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D03-3-B",
+      "caseId": "D03",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9430,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-3-C",
+      "caseId": "D04",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "independent_numeric_oracle"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 6949,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-3-A",
+      "caseId": "D04",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8748,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D04-3-B",
+      "caseId": "D04",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 7572,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-3-C",
+      "caseId": "D05",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 15709,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-3-A",
+      "caseId": "D05",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "boundary_included"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8157,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D05-3-B",
+      "caseId": "D05",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 9193,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-3-C",
+      "caseId": "D06",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 23337,
+      "providerCalls": 10,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-3-A",
+      "caseId": "D06",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 14423,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D06-3-B",
+      "caseId": "D06",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 11575,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-3-C",
+      "caseId": "D07",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12959,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-3-A",
+      "caseId": "D07",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 19265,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D07-3-B",
+      "caseId": "D07",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13945,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-3-C",
+      "caseId": "D08",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12279,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-3-A",
+      "caseId": "D08",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9713,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D08-3-B",
+      "caseId": "D08",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16179,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-3-C",
+      "caseId": "D09",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14389,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-3-A",
+      "caseId": "D09",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 23075,
+      "providerCalls": 9,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D09-3-B",
+      "caseId": "D09",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16332,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-3-C",
+      "caseId": "D10",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 15842,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-3-A",
+      "caseId": "D10",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11526,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D10-3-B",
+      "caseId": "D10",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14497,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-3-C",
+      "caseId": "D11",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "reuses_fixed_result"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 19817,
+      "providerCalls": 8,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-3-A",
+      "caseId": "D11",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "protocol_completed",
+        "method_coverage",
+        "exact_selected_objects",
+        "reuses_fixed_result"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 17247,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D11-3-B",
+      "caseId": "D11",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13833,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-3-C",
+      "caseId": "D12",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13315,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-3-A",
+      "caseId": "D12",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14440,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D12-3-B",
+      "caseId": "D12",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13418,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-3-C",
+      "caseId": "D13",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13977,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-3-A",
+      "caseId": "D13",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8785,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D13-3-B",
+      "caseId": "D13",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 6682,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-3-C",
+      "caseId": "D14",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14863,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-3-A",
+      "caseId": "D14",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 16903,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D14-3-B",
+      "caseId": "D14",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14594,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-3-C",
+      "caseId": "D15",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13315,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-3-A",
+      "caseId": "D15",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 15778,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D15-3-B",
+      "caseId": "D15",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 13680,
+      "providerCalls": 5,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-3-C",
+      "caseId": "D16",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "method_coverage",
+        "exact_selected_objects"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 17628,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-3-A",
+      "caseId": "D16",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11377,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D16-3-B",
+      "caseId": "D16",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11021,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-3-C",
+      "caseId": "D17",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 11281,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-3-A",
+      "caseId": "D17",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 13500,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D17-3-B",
+      "caseId": "D17",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14801,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-3-C",
+      "caseId": "D18",
+      "repeat": 3,
+      "condition": "C",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 7334,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-3-A",
+      "caseId": "D18",
+      "repeat": 3,
+      "condition": "A",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 8216,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "D18-3-B",
+      "caseId": "D18",
+      "repeat": 3,
+      "condition": "B",
+      "split": "development",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 8168,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-3-C",
+      "caseId": "H01",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 9331,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-3-A",
+      "caseId": "H01",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "elapsedMs": 8917,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H01-3-B",
+      "caseId": "H01",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "elapsedMs": 8215,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-3-C",
+      "caseId": "H02",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 14591,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-3-A",
+      "caseId": "H02",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 14257,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H02-3-B",
+      "caseId": "H02",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "failed",
+      "failedChecks": [
+        "fixed_identity_version_and_geometry"
+      ],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": true,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 16592,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-3-C",
+      "caseId": "H03",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 19345,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-3-A",
+      "caseId": "H03",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 17686,
+      "providerCalls": 7,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H03-3-B",
+      "caseId": "H03",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 17472,
+      "providerCalls": 6,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-3-C",
+      "caseId": "H04",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 10312,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-3-A",
+      "caseId": "H04",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9318,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H04-3-B",
+      "caseId": "H04",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": true,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 9438,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-3-C",
+      "caseId": "H05",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 11686,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-3-A",
+      "caseId": "H05",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 10598,
+      "providerCalls": 3,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H05-3-B",
+      "caseId": "H05",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 12180,
+      "providerCalls": 4,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-3-C",
+      "caseId": "H06",
+      "repeat": 3,
+      "condition": "C",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9250,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-3-A",
+      "caseId": "H06",
+      "repeat": 3,
+      "condition": "A",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": false,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "elapsedMs": 9922,
+      "providerCalls": 2,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      }
+    },
+    {
+      "id": "H06-3-B",
+      "caseId": "H06",
+      "repeat": 3,
+      "condition": "B",
+      "split": "heldout",
+      "status": "recorded",
+      "deterministic": "passed",
+      "failedChecks": [],
+      "reviewed": true,
+      "reviewDimensionsPassed": true,
+      "criticalErrors": [],
+      "identityCorrectionVerified": null,
+      "hasAdjudication": false,
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "elapsedMs": 8604,
+      "providerCalls": 1,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      }
+    }
+  ],
+  "unexplainedReviewPasses": []
+}

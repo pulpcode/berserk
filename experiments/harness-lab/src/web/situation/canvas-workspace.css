@@ -38,3 +38,15 @@
 .situation-detail-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; }
 .situation-view.unified-map .situation-detail-heading h2 { margin:0; }
 .situation-detail-heading .icon-button { flex:none; }
+
+.analysis-panel { padding:8px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; font-size:12px; }
+.analysis-panel header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+.analysis-panel header span,.analysis-panel small { color:var(--muted); }
+.analysis-panel .analysis-value { font-size:16px; font-variant-numeric:tabular-nums; }
+.analysis-panel .situation-actions { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+.analysis-panel details summary { padding:8px 0; cursor:pointer; }
+.analysis-panel ul { margin:6px 0; padding-left:18px; }
+.analysis-panel .analysis-items { list-style:none; padding:0; max-height:230px; overflow:auto; }
+.analysis-items li { display:flex; gap:4px; margin:4px 0; }
+.analysis-items li>button:first-child { flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; text-align:left; overflow-wrap:anywhere; }
+.analysis-items button[aria-pressed=true] { background:var(--accent-soft); }

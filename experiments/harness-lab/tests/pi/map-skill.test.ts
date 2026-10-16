@@ -25,7 +25,7 @@ describe('deployed map Skill and native compatibility',()=>{
   it('exposes one effective catalog without rewriting the legacy workspace index',async()=>{
     const f=await setup(),path=join(f.dir,'workspace-index.json'),before=await readFile(path,'utf8');
     const info=await f.lab.resources.info(f.session.workspaceId);
-    expect(info.skills.map(s=>s.id)).toEqual(['synthesis','review','map-annotations']);
+    expect(info.skills.map(s=>s.id)).toEqual(['synthesis','review','map-annotations','spatial-analysis']);
     const body=await f.lab.resources.readSkill(f.session.workspaceId,'map-annotations');
     expect(body.hash).toBe(hashContent(body.content)); expect(Buffer.byteLength(body.content)).toBeLessThan(16384);
     expect(body.content).toContain('新增对象不等于新建图层');
@@ -55,7 +55,7 @@ describe('deployed map Skill and native compatibility',()=>{
     await f.lab.start(f.session.id,'检查资料',{skill:review}).run(()=>{}); await f.lab.close();
     const file=join(f.dir,'sessions',(await readdir(join(f.dir,'sessions')))[0]);
     const lines=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
-    for(const line of lines)if(line.customType===RESOURCE_ENTRY)line.data.skills=line.data.skills.filter((s:{id:string})=>s.id!=='map-annotations');
+    for(const line of lines)if(line.customType===RESOURCE_ENTRY)line.data.skills=line.data.skills.filter((s:{id:string})=>!['map-annotations','spatial-analysis'].includes(s.id));
     const old=lines.map(line=>JSON.stringify(line)).join('\n')+'\n'; await writeFile(file,old);
     const next=await PiLab.create(f.config,(await fakeRuntime(f.config,()=>({text:'新标绘答复'}))).runtime); cleanup.push(()=>next.close());
     expect(next.get(f.session.id).recoveryWarning).toBeUndefined();
@@ -72,7 +72,7 @@ describe('deployed map Skill and native compatibility',()=>{
   it('retains strict ID, body hash, resource membership and duplicate checks for new records',async()=>{
     const f=await setup(),snapshot=await f.lab.resources.snapshot(f.session.workspaceId),skill=snapshot.skills.find(s=>s.id==='map-annotations')!;
     const record=requestRecord(randomUUID(),snapshot);
-    expect(decodeResourceRecord(record,f.session.workspaceId).skills).toHaveLength(3);
+    expect(decodeResourceRecord(record,f.session.workspaceId).skills).toHaveLength(4);
     expect(()=>decodeResourceRecord({...record,skills:[...record.skills,record.skills[0]]},f.session.workspaceId)).toThrow();
     expect(()=>decodeResourceRecord({...record,readSkills:[{...skill,content:skill.content+'fake'}]},f.session.workspaceId)).toThrow();
     expect(()=>decodeResourceRecord({...record,skills:record.skills.filter(s=>s.id!=='map-annotations'),readSkills:[skill]},f.session.workspaceId)).toThrow();
@@ -92,5 +92,50 @@ describe('deployed map Skill and native compatibility',()=>{
     expect(f.lab.get(f.session.id).lastResult?.status).toBe('succeeded');
     expect(JSON.stringify(f.calls[1].context.messages)).toContain('新增对象不等于新建图层');
     expect(f.calls[1].context.tools?.map(t=>t.name)).toEqual(['source_list','source_read','instructions_read']);
+  });
+});
+
+
+describe('spatial Skill uses the existing native resource path', () => {
+  it('keeps the catalog lightweight and loads exact content only after skill_read', async () => {
+    const f = await setup((_context, index): Reply => index === 1
+      ? { tools: [{ name: 'skill_read', arguments: { id: 'spatial-analysis' } }] }
+      : { text: '已读取方法' });
+    const skill = await f.lab.resources.readSkill(f.session.workspaceId, 'spatial-analysis');
+    expect(Buffer.byteLength(skill.content)).toBeLessThan(16384);
+    await f.lab.start(f.session.id, '你好').run(() => {});
+    expect(f.calls[0].context.systemPrompt).toContain('spatial-analysis');
+    expect(JSON.stringify(f.calls[0].context)).not.toContain(skill.content);
+    const request = f.lab.start(f.session.id, '请读取空间分析方法');
+    await request.run(() => {});
+    const result = f.calls[2].context.messages.find(message => message.role === 'toolResult' && message.toolName === 'skill_read');
+    expect(result?.content).toEqual([{ type: 'text', text: JSON.stringify(skill) }]);
+    expect(f.lab.getRequestResources(f.session.id, request.requestId)).toMatchObject({ readSkills: [skill] });
+    const before = f.lab.get(f.session.id);
+    await f.lab.close();
+    const next = await PiLab.create(f.config, (await fakeRuntime(f.config, () => ({ text: '继续' }))).runtime);
+    cleanup.push(() => next.close());
+    expect(next.get(f.session.id).messages).toEqual(before.messages);
+    expect(next.getRequestResources(f.session.id, request.requestId)).toMatchObject({ readSkills: [skill] });
+  });
+
+  it('delivers explicit spatial content without synthetic read calls and preserves strict metadata validation', async () => {
+    const f = await setup();
+    const skill = await f.lab.resources.readSkill(f.session.workspaceId, 'spatial-analysis');
+    await f.lab.start(f.session.id, '按所选方法检查输入', { skill: { id: skill.id, hash: skill.hash } }).run(() => {});
+    const snapshot = f.lab.get(f.session.id);
+    expect(snapshot.lastResult?.status).toBe('succeeded');
+    expect(snapshot.messages[0].selections?.skill).toEqual(skill);
+    expect(f.calls[0].context.messages[0].content).toEqual([{ type: 'text', text: composerInputText({ skill }) }]);
+    expect(snapshot.messages.some(message => message.toolName === 'skill.read')).toBe(false);
+    const resources = await f.lab.resources.snapshot(f.session.workspaceId);
+    const record = requestRecord(randomUUID(), resources);
+    expect(decodeResourceRecord({ ...record, readSkills: [skill] }, f.session.workspaceId).readSkills).toEqual([skill]);
+    expect(() => decodeResourceRecord({ ...record, skills: record.skills.filter(item => item.id !== skill.id), readSkills: [skill] }, f.session.workspaceId)).toThrow();
+    expect(validSkill({ ...skill, content: skill.content + 'changed' }, true)).toBe(false);
+    await f.lab.close();
+    const next = await PiLab.create(f.config, (await fakeRuntime(f.config, () => ({ text: '继续' }))).runtime);
+    cleanup.push(() => next.close());
+    expect(next.get(f.session.id).messages).toEqual(snapshot.messages);
   });
 });

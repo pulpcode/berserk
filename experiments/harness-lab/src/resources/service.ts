@@ -8,12 +8,13 @@ import { atomicWrite, hashContent, Mutex, readControlled, type WriteHooks } from
 const skills = [
   { id: 'synthesis', name: '资料综合写作', description: '综合多份资料形成有来源、可执行的方案。', version: '1' },
   { id: 'review', name: '结果检查', description: '根据资料检查草稿的事实、约束与可执行性。', version: '1' },
+  { id: 'spatial-analysis', name: '空间分析', description: '测距、面积、包含相交、缓冲、范围筛选、邻近排序、分类统计与组合分析的方法；分析既有对象，不提供道路导航或专业调度决策。', version: '1' },
   { id: 'map-annotations', name: '态势标绘', description: '查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。', version: '1' },
 ];
 export const controlledSkillIds: readonly string[] = skills.map(skill => skill.id);
-/** Add the deployed map method without migrating the strict legacy workspace index. */
+/** Add deployed map methods without migrating the strict legacy workspace index. */
 export function effectiveSkillIds(workspaceSkillIds: readonly string[]): string[] {
-  return [...new Set([...workspaceSkillIds, 'map-annotations'])];
+  return [...new Set([...workspaceSkillIds, 'map-annotations', 'spatial-analysis'])];
 }
 /** Deployment-owned fixed Skills, independent of any seat workspace. */
 export async function loadControlledSkills(ids: readonly string[], signal?: AbortSignal): Promise<SkillFile[]> {

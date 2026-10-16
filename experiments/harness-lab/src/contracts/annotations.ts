@@ -66,6 +66,7 @@ export interface AnnotationFromSourcesInput { clientActionId: string; expectedRe
 /** Internal adapter intent; never accepted by the HTTP mutation routes. */
 export type AnnotationHostIntent = Exclude<AnnotationAction, {action:'apply'}>
   | Omit<Extract<AnnotationAction, {action:'apply'}>, 'expectedRevision'>
+  | {action:'from_analysis';clientActionId:string;resultRef:string;itemId?:string;layerId:string;objectId:string;name:string}
   | {action:'from_source'; clientActionId:string; items:Array<Omit<AnnotationSourceItem,'expectedSourceRevision'>>}
   | {action:'set_current'; clientActionId:string; publicationId:string};
 export type AnnotationEditBasis = {setId:string; revision:number} | {bindingRevision:number; baseRef:AnnotationRef|null};
@@ -80,6 +81,7 @@ export interface AnnotationReceipt {
   binding?: AnnotationBinding; publication?: AnnotationPublication; current?: AnnotationCurrent;
   fromSource?: AnnotationFromSourceResult;
   fromSources?: AnnotationFromSourceResult[];
+  fromAnalysis?: {resultRef:string;itemId?:string};
   beforeRef?: {setId:string; revision:number} | null;
   afterRef?: {setId:string; revision:number};
   objectIds?: string[];

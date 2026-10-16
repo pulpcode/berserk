@@ -1,4 +1,5 @@
 import type { ContextRef, ContextQueryResult } from '../../contracts/context';
+import { extractSpatialResult, type SpatialResult } from '../../contracts/spatial';
 import type { PublicMessage } from '../../contracts';
 import { extractAnnotationResult, receiptMapEntry, type AnnotationMapEntry } from '../../contracts/annotation-results';
 export type { AnnotationMapEntry } from '../../contracts/annotation-results';
@@ -60,7 +61,7 @@ const positiveRevision = (value: unknown): value is number => Number.isSafeInteg
 export function annotationMapEntries(messages: PublicMessage[]): AnnotationMapEntry[] {
   const entries = new Map<string, AnnotationMapEntry>();
   for (const message of messages) {
-    if (message.role !== 'tool' || message.isError || message.resultMissing || !['annotation_action','annotation_from_source','annotation_read'].includes(message.toolName || '')) continue;
+    if (message.role !== 'tool' || message.isError || message.resultMissing || !['annotation_action','annotation_from_source','annotation_from_analysis','annotation_read'].includes(message.toolName || '')) continue;
     try {
       const value: unknown = JSON.parse(message.text);
       const structured = extractAnnotationResult({annotationResult:message.annotationResult},message.toolName!, false, message.text);
@@ -82,4 +83,18 @@ export function annotationMapEntries(messages: PublicMessage[]): AnnotationMapEn
 /** Do not borrow earlier requests' successful effects for a later answer. */
 export function requestMapEvidence(message: PublicMessage, preceding: PublicMessage[]): PublicMessage[] {
   return message.role === 'assistant' && message.requestId ? preceding.filter(item => item.requestId === message.requestId) : [];
+}
+
+/** Spatial geometry comes only from a verified native result belonging to this request. */
+export function spatialMapEntries(messages: PublicMessage[]): SpatialResult[] {
+  const results = new Map<string, SpatialResult>();
+  for (const message of messages) {
+    if (message.role !== 'tool' || message.isError || message.resultMissing || message.toolName !== 'spatial_analyze') continue;
+    const result = extractSpatialResult({ spatialResult: message.spatialResult }, message.toolName, false, message.text);
+    // A read preserves its origin but carries separately verified host delivery ownership.
+    // Both request and tool call must match the public message; arbitrary prior refs are not authority.
+    const delivery = result?.delivery || result;
+    if (result && delivery && delivery.requestId === message.requestId && delivery.toolCallId === message.toolCallId) results.set(result.resultRef, result);
+  }
+  return [...results.values()];
 }

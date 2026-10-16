@@ -90,7 +90,7 @@ describe('task information HTTP/native Pi integration',()=>{
       expect(resultText).toContain('完整分析正文');expect(resultText).toContain('## 处理过程中的说明');expect(resultText).toContain('## 最终答复');
       expect(resultText).toContain('分析结果');expect(detail.body).not.toContain('PRIVATE_SERVICE_CONFIG');
       expect(await f.lab.taskInformation!.read('b',publicTask.id,{eventId:event.id,jobId:job.id,section:'analysis'})).toMatchObject({text:resultText});
-      const options=await f.b.call(`${listUrl(publicTask.id)}/${event.id}/analysis-options`,{jobId:job.id});expect(options.statusCode,options.body).toBe(200);expect(options.json().skills).toHaveLength(3);
+      const options=await f.b.call(`${listUrl(publicTask.id)}/${event.id}/analysis-options`,{jobId:job.id});expect(options.statusCode,options.body).toBe(200);expect(options.json().skills).toHaveLength(4);
     }
     expect((await f.a.call(listUrl(east.id))).json().total).toBe(0);
     expect((await f.c.call(listUrl(west.id))).json().total).toBe(0);

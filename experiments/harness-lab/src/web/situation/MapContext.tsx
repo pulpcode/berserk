@@ -4,18 +4,22 @@ import type { SituationObject } from '../../contracts/context';
 import type { AnnotationSelection, AnnotationRef } from '../../contracts/annotations';
 import type { TaskContext } from '../../contracts/access';
 import { annotationKey, annotationLabel } from '../annotations/helpers';
+import type { SpatialResult } from '../../contracts/spatial';
+import type { AnalysisMapState } from './analysis-runtime';
+import { analysisLabels, analysisValue } from './AnalysisPanel';
 import type { PublicMessage } from '../../contracts';
-import { annotationMapEntries, messageReferences, verifiedReference, type MapReference } from './evidence';
+import { annotationMapEntries, spatialMapEntries, messageReferences, verifiedReference, type MapReference } from './evidence';
 const AnnotationWorkspace=lazy(()=>import('../annotations/AnnotationWorkspace'));
 const SituationView=lazy(()=>import('./SituationView'));
 type WorkspaceLayout = 'conversation' | 'split' | 'map';
-type MapSelection = { navigationKey: string; source?: MapReference; annotation?: AnnotationSelection; sourceFocusRequest?: number; annotationFocusRequest?: number; layout: WorkspaceLayout };
+type MapSelection = { analysis?: { result: SpatialResult; visible: boolean; selected?: string; focusItem?: string; focusRequest: number }; navigationKey: string; source?: MapReference; annotation?: AnnotationSelection; sourceFocusRequest?: number; annotationFocusRequest?: number; layout: WorkspaceLayout };
 const MapContext=createContext<{
+  openAnalysis:(result:SpatialResult)=>void;
   open:(reference?:MapReference)=>void; reference:(item:SituationObject)=>void;
   openAnnotations:(ref?:AnnotationSelection)=>void; annotationReference:(ref:AnnotationSelection)=>void;
   derive:(taskId:string,ref:AnnotationRef)=>Promise<void>; openSession:(id:string)=>void;
   layout:WorkspaceLayout; chooseLayout:(layout:WorkspaceLayout)=>void; panel?:ReactNode;
-}>({open:()=>{},reference:()=>{},openAnnotations:()=>{},annotationReference:()=>{},derive:async()=>{},openSession:()=>{},layout:'conversation',chooseLayout:()=>{}});
+}>({openAnalysis:()=>{},open:()=>{},reference:()=>{},openAnnotations:()=>{},annotationReference:()=>{},derive:async()=>{},openSession:()=>{},layout:'conversation',chooseLayout:()=>{}});
 export const useSituationMap=()=>useContext(MapContext);
 export function SituationProvider({children,reference,navigationKey,annotations}:{children:ReactNode;reference:(item:SituationObject)=>void;navigationKey:string;annotations?:{taskId:string;sessionId?:string;taskContext?:TaskContext;archived?:boolean;refreshKey?:string;reference:(ref:AnnotationSelection)=>void;derive:(taskId:string,ref:AnnotationRef)=>Promise<void>;openSession:(id:string)=>void}}) {
   const [selection,setSelection]=useState<MapSelection>();
@@ -43,10 +47,18 @@ export function SituationProvider({children,reference,navigationKey,annotations}
     <button type="button" className="icon-button" aria-label={layout==='map'?'还原地图':'放大地图'} title={layout==='map'?'还原地图':'放大地图'} data-map-layout-control onClick={()=>chooseLayout(layout==='map'?'split':'map')}>{layout==='map'?<Minimize2 size={18} aria-hidden="true"/>:<Maximize2 size={18} aria-hidden="true"/>}</button>
     <button type="button" className="icon-button" aria-label="关闭态势地图" title="关闭态势地图" data-map-layout-control onClick={()=>chooseLayout('conversation')}><X size={18} aria-hidden="true"/></button>
   </div>;
+  const changeAnalysis=(change:(state:NonNullable<MapSelection['analysis']>)=>MapSelection['analysis'])=>setSelection(previous=>previous?.navigationKey===navigationKey && previous.analysis?{...previous,analysis:change(previous.analysis)}:previous);
+  const analysis:AnalysisMapState|undefined=current?.analysis?{...current.analysis,
+    toggle:()=>changeAnalysis(state=>({...state,visible:!state.visible})),
+    clear:()=>changeAnalysis(()=>undefined),
+    pick:selected=>changeAnalysis(state=>({...state,selected})),
+    locate:focusItem=>changeAnalysis(state=>({...state,visible:true,selected:focusItem,focusItem,focusRequest:state.focusRequest+1})),
+  }:undefined;
+  const openAnalysis=(result:SpatialResult)=>reveal({analysis:{result,visible:true,focusRequest:(current?.analysis?.focusRequest || 0)+1}});
   const panel=current?<Suspense fallback={<p role="status">正在打开地图…</p>}>{annotations
-    ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} workspaceControls={workspaceControls} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
-    : <SituationView key={navigationKey} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
-  return <MapContext.Provider value={{open:item=>reveal({source:item}),reference:sourceReference,openAnnotations:item=>reveal({annotation:item}),annotationReference,derive:annotations?.derive || (async()=>{}),openSession:annotations?.openSession || (()=>{}),layout,chooseLayout,panel}}>{children}</MapContext.Provider>;
+    ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} analysis={analysis} workspaceControls={workspaceControls} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
+    : <SituationView key={navigationKey} analysis={analysis} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
+  return <MapContext.Provider value={{openAnalysis,open:item=>reveal({source:item}),reference:sourceReference,openAnnotations:item=>reveal({annotation:item}),annotationReference,derive:annotations?.derive || (async()=>{}),openSession:annotations?.openSession || (()=>{}),layout,chooseLayout,panel}}>{children}</MapContext.Provider>;
 }
 
 export function OpenSituationMap({disabled=false}:{disabled?:boolean}) {
@@ -100,7 +112,9 @@ export function EvidenceMapLinks({messages}:{messages:PublicMessage[]}) {
   const map=useSituationMap();
   const refs=[...new Map(messageReferences(messages).map(item=>[item.href,item])).values()];
   const annotations=annotationMapEntries(messages);
+  const spatial=spatialMapEntries(messages);
   const buttons=[
+    ...spatial.map(result=><button key={result.resultRef} title="打开本次固定分析结果" onClick={()=>map.openAnalysis(result)}><MapPin size={13} aria-hidden="true"/>{analysisLabels[result.operation]} · {analysisValue(result)}</button>),
     ...refs.map(item=><button key={item.href} title="打开当前来源态势；历史证据版本单独显示" onClick={()=>map.open(item)}><MapPin size={13} aria-hidden="true"/>在地图查看 · {item.ref.objectId}{item.revision?` · 证据版本 ${item.revision}`:''}</button>),
     ...annotations.map(item=><button key={`${annotationKey(item.selection)}:${item.original}`} onClick={()=>map.openAnnotations(item.selection)}><MapPin size={13} aria-hidden="true"/>{item.original?'查看原动作结果':item.publication?'查看发布标注':'查看本次标注'} · {annotationLabel(item.selection)}{item.selection.objectIds?` · ${item.selection.objectIds.length} 个对象`:''}</button>),
   ];

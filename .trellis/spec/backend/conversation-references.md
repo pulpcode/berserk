@@ -15,9 +15,9 @@ Read when changing composer file references, explicit Skill loading, role select
 
 Resolve uploads and references in the captured seat's session workspace, deduplicate by resolved path, then apply the existing combined file limit. Same filenames in different directories remain distinct. File metadata is not a frozen business handoff or proof of reading.
 
-The disk workspace index keeps the legacy `synthesis`/`review` pair. `effectiveSkillIds` adds the deployed `map-annotations` method for foreground resource info, snapshot, readSkill and conversation continuation choices. Background execution still loads only its explicit Profile skillIds; child tool whitelists are unchanged. Skill availability never grants annotation tools. The model sees catalog metadata until explicit selection or `skill_read` supplies the controlled body.
+The disk workspace index keeps the legacy `synthesis`/`review` pair. `effectiveSkillIds` adds the deployed `map-annotations` and `spatial-analysis` methods for foreground resource info, snapshot, readSkill and conversation continuation choices. Background execution still loads only its explicit Profile skillIds; child tool whitelists are unchanged. Skill availability never grants annotation tools. The model sees catalog metadata until explicit selection or `skill_read` supplies the controlled body.
 
-Native resource/composer decoders accept only the three controlled IDs (at most three catalog entries), retaining body/hash/request ownership checks and unchanged old record text. Old two-Skill and new three-Skill histories must reopen together. Older binaries are not valid rollback targets for new Skill histories without a compatibility build or restoring a stopped pre-upgrade backup.
+Native resource/composer decoders accept only the four controlled IDs (at most four catalog entries), retaining body/hash/request ownership checks and unchanged old record text. Old two-/three-Skill and new four-Skill histories must reopen together. Older binaries are not valid rollback targets for new Skill histories without a compatibility build or restoring a stopped pre-upgrade backup.
 
 Explicit Skill selection loads the controlled body before `AgentSession.prompt`, without a synthetic `skill_read` call. No selection preserves ordinary on-demand tools. AGENTS.md, permissions and operation confirmation retain their existing authority.
 
@@ -52,6 +52,8 @@ Good: reviewer receives a selected review method and file paths, actually reads 
 Bad: reporting a completed delegation from a selection tag, trusting browser-supplied Skill text, adding child write tools, or counting uploads and references separately before deduplication.
 
 ## 6. Tests Required
+
+`tests/pi/map-skill.test.ts` also verifies the spatial catalog, exact explicit/on-demand body delivery, strict metadata rejection and restart without rewriting the legacy workspace index. This establishes delivery correctness, not live-model method-selection quality.
 
 `tests/pi/composer-input.test.ts` exercises the actual Pi loop with deterministic model output: controlled loading, selected child inputs, permissions, invalid selections, file deduplication, preparation/cancel boundaries, compaction and restart. Existing subagent/history/recovery tests remain required. `tests/e2e/references.spec.ts` covers browser drafts, candidates and submission.
 

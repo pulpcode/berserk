@@ -181,7 +181,7 @@ describe('workspace resource API', () => {
     expect((await app.inject('/api/sessions')).json()).toEqual([]);
     expect((await app.inject(`/api/sessions?workspaceId=${id}`)).json()).toMatchObject([{ id: session.id, workspaceId: id }]);
     const info = (await app.inject(`/api/workspaces/${id}/resources`)).json();
-    expect(info).toMatchObject({ workspaceId: id, sources: [{ id: 'meeting-notes' }, { id: 'resource-brief' }], skills: [{ id: 'synthesis' }, { id: 'review' }, { id: 'map-annotations' }] });
+    expect(info).toMatchObject({ workspaceId: id, sources: [{ id: 'meeting-notes' }, { id: 'resource-brief' }], skills: [{ id: 'synthesis' }, { id: 'review' }, { id: 'map-annotations' }, { id: 'spatial-analysis' }] });
     expect((await app.inject('/api/info')).json()).not.toHaveProperty('sources');
     const path = `/api/workspaces/${id}/instructions/workspace`;
     const original = (await app.inject(path)).json();

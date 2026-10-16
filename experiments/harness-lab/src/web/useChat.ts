@@ -463,7 +463,7 @@ export function useChat() {
         else messages = [...messages, { id: `stream-assistant-${assistantNumber++}`, role: 'assistant', requestId: event.requestId, text: event.delta }];
       }
       if (event.type === 'tool.started') messages = [...messages, { id: event.toolCallId, toolCallId: event.toolCallId, role: 'tool', requestId: event.requestId, toolName: event.toolName, text: '' }];
-      if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError, annotationResult: event.annotationResult } : message);
+      if (event.type === 'tool.completed') messages = messages.map(message => message.id === event.toolCallId ? { ...message, text: event.text, isError: event.isError, annotationResult: event.annotationResult, spatialResult: event.spatialResult } : message);
       let fileOutputs = current.fileOutputs;
       if (event.type === 'files.output') {
         if (event.file.workspaceId !== current.workspaceId || event.file.sessionId !== id || event.file.requestId !== event.requestId) return;
