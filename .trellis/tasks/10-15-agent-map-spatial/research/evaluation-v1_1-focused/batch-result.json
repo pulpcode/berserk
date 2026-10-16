@@ -1,0 +1,54 @@
+{
+  "scheduled": 9,
+  "executed": 9,
+  "unrun": [],
+  "outcomes": [
+    {
+      "id": "D11-1-A",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-1-B",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-1-C",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-2-B",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-2-C",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-2-A",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-3-C",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-3-A",
+      "exitCode": 0,
+      "status": "recorded"
+    },
+    {
+      "id": "D11-3-B",
+      "exitCode": 0,
+      "status": "recorded"
+    }
+  ],
+  "sourceDrift": false,
+  "semanticReview": "pending_review"
+}

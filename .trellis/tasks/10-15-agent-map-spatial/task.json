@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。",
+  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。",
   "meta": {
     "implementationApproved": true,
     "implementationComplete": false,
@@ -31,6 +31,13 @@
     "mergedMainCommit": "75fc7f169cc82c34db989c0fb7ee5dda75bf9845",
     "integratedMainProjection": "d79a561",
     "mainMergeReview": "research/main-merge-review.md",
-    "implementationBaseline": "1b783a2"
+    "implementationBaseline": "1b783a2",
+    "engineeringImplemented": true,
+    "baselineEvaluationComplete": true,
+    "baselineEvaluationCommit": "5910928",
+    "modelAcceptancePassed": false,
+    "baselineEvaluationReport": "research/model-evaluation-v1.md",
+    "focusedEvaluationComplete": true,
+    "focusedEvaluationReport": "research/model-evaluation-v1_1-focused.md"
   }
 }

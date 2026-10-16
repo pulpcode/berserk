@@ -42,6 +42,41 @@ describe('frozen spatial ABC evaluator',()=>{
     const actual=observation({tools:[{name:'annotation_action',args:{}}]});const score=scoreSpatialFacts(spec('D13'),actual);expect(score.criticalFailures).toContain('no_unrequested_write');
     actual.after.publications=[{}] as unknown as SpatialObservation['after']['publications'];expect(scoreSpatialFacts(spec('D13'),actual).criticalFailures).toContain('no_publication_or_adoption');
   });
+  it('accepts only an earlier verified result geometry with an explicit matching geometry scope',()=>{
+    const geometry:NonNullable<SpatialResult['geometry']>={type:'Polygon',coordinates:[[[114,22.5],[114.01,22.5],[114.01,22.51],[114,22.5]]]};
+    const origin=item('origin');
+    const buffer=result('buffer',{resultRef:'spatial:request:buffer',toolCallId:'buffer',items:[origin],geometry});
+    const derived={id:buffer.resultRef,name:'buffer',geometry:structuredClone(geometry),properties:{}};
+    const filtered=result('filter',{resultRef:'spatial:request:filter',toolCallId:'filter',items:[origin],referenceItems:[derived],scope:[{kind:'result',resultRef:buffer.resultRef,geometry:true}]});
+    const actual=(results:SpatialResult[])=>{
+      const state=observation();
+      state.before.version={ref:{setId:'set',revision:1},title:'fixed',hash:'before',createdAt:'2026-10-16T00:00:00Z',document:{schemaVersion:1,title:'fixed',layers:[{layerId:'reference',name:'reference',order:0,defaultVisible:true,features:[{objectId:'origin',name:'origin',kind:'point',geometry:origin.geometry}]}]}};
+      state.after=structuredClone(state.before);state.results=results;
+      return scoreSpatialFacts(spec('D13'),state).checks.find(check=>check.name==='fixed_identity_version_and_geometry')!;
+    };
+    expect(actual([buffer,filtered])).toMatchObject({passed:true,critical:true});
+    expect(actual([buffer,{...filtered,items:[derived],referenceItems:[]}]).passed).toBe(true);
+    // Missing, implicit, unrelated and differently keyed result scopes cannot authenticate geometry.
+    for(const scope of [[],[{kind:'result' as const,resultRef:buffer.resultRef}],[{kind:'result' as const,resultRef:buffer.resultRef,geometry:false}],[{kind:'result' as const,resultRef:'spatial:request:other',geometry:true}]]){
+      expect(actual([buffer,{...filtered,scope}]).passed).toBe(false);
+    }
+    expect(actual([buffer,{...filtered,referenceItems:[{...derived,id:'spatial:request:forged'}]}]).passed).toBe(false);
+    const changed=structuredClone(geometry);changed.coordinates[0][1][0]=114.02;
+    expect(actual([buffer,{...filtered,referenceItems:[{...derived,geometry:changed}]}]).passed).toBe(false);
+    expect(actual([filtered,buffer]).passed).toBe(false); // Future reference.
+    expect(actual([{...filtered,resultRef:buffer.resultRef,geometry}]).passed).toBe(false); // Self reference.
+    expect(actual([{...buffer,geometry:undefined},filtered]).passed).toBe(false);
+    expect(actual([buffer,{...buffer,geometry:changed},{...filtered,referenceItems:[{...derived,geometry:changed}]}]).passed).toBe(false); // Duplicate-origin laundering.
+    // A valid-looking derived item never masks a broken annotation identity/version/geometry.
+    for(const invalid of [{...origin,annotation:{...origin.annotation,ref:{setId:'foreign',revision:1}}},{...origin,annotation:{...origin.annotation,ref:{setId:'set',revision:2}}},{...origin,geometry:{type:'Point' as const,coordinates:[115,22.5] as [number,number]}}]){
+      expect(actual([{...buffer,items:[invalid]},filtered]).passed).toBe(false);
+      expect(actual([buffer,{...filtered,items:[invalid]}]).passed).toBe(false);
+    }
+    // Existing source-backed evidence remains accepted; an unbacked item does not.
+    const sourced={...origin,annotation:undefined,source:{ref:{systemId:'fixture',objectType:'resource',objectId:'origin'},revision:1,queriedAt:'2026-10-16T00:00:00Z'}};
+    expect(actual([{...buffer,items:[sourced]},filtered]).passed).toBe(true);
+    expect(actual([{...buffer,items:[{...origin,annotation:undefined}]},filtered]).passed).toBe(false);
+  });
   it('changes only the A snapshot and denies direct spatial Skill read',async()=>{
     const skills=[{id:'review'},{id:'spatial-analysis'}];
     const resources={snapshot:async()=>({workspaceId:'w',instructions:[],sources:[],skills}),readSkill:async(_w:string,id:string)=>({id})} as unknown as ResourceService;
@@ -85,6 +120,19 @@ describe('frozen spatial ABC evaluator',()=>{
   });
   it('counts a fixed result read as the same computation, not a new buffer',()=>{
     const r=result('buffer');expect(uniqueSpatialResults([{id:'one',role:'tool',text:'',spatialResult:r},{id:'two',role:'tool',text:'',spatialResult:structuredClone(r)}])).toEqual([r]);
+  });
+  it('retains original result order across valid reads and rejects same-ref evidence replacement before scoring',()=>{
+    const buffer=result('buffer',{resultRef:'spatial:first:buffer',geometry:{type:'Point',coordinates:[114,22.5]}});
+    const filtered=result('filter',{resultRef:'spatial:first:filter',scope:[{kind:'result',resultRef:buffer.resultRef,geometry:true}]});
+    const read={...structuredClone(buffer),delivery:{requestId:'second',toolCallId:'read'}};
+    const message=(id:string,spatialResult:SpatialResult):PublicMessage=>({id,role:'tool',toolName:'spatial_analyze',text:'',spatialResult});
+    const history=[message('buffer',buffer),message('filter',filtered)];
+    const collected=uniqueSpatialResults([...history,message('read',read)]);
+    expect(collected.map(item=>item.resultRef)).toEqual([buffer.resultRef,filtered.resultRef]);
+    expect(collected[0].delivery).toEqual(read.delivery);
+    for(const changed of [{...read,geometry:{type:'Point' as const,coordinates:[115,22.5] as [number,number]}},{...read,scope:[{kind:'result' as const,resultRef:'spatial:forged:call',geometry:true}]},{...read,items:[item('forged')]}]){
+      expect(()=>uniqueSpatialResults([...history,message('altered-read',changed)])).toThrow('Conflicting evidence');
+    }
   });
   it('deduplicates actual provider call IDs across repeated history while retaining parameters',()=>{
     const payload={messages:[{role:'assistant',content:null,tool_calls:[{id:'x',function:{name:'spatial_analyze',arguments:'{"operation":"nearest"}'}}]}]};

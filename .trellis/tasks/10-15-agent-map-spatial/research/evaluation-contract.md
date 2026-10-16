@@ -39,3 +39,7 @@ node --import tsx scripts/probe-spatial-report.ts --input /private/tmp/new-batch
 ## 首次模型运行前的评测器复核
 
 2026-10-16：D11 的加载统计按完整两轮原生消息与各请求资源记录核验成功读取及正确hash，不再只看最后一轮readSkills；失败或迟到的读取不算分析前加载。批次在启动子进程前持久记录attempt，汇总将准备失败、已启动但无result、未运行区分；无法确定是否已调用模型时明确unknown。216计划分母不变。源码哈希覆盖全部src、fixtures和scripts（含HTTP/权限、mock源、席位职责和传递辅助脚本）及package/lock/tsconfig；试次执行期间发生漂移则保留原始结果并标记source_drift，禁止计为语义通过。这些修正发生在首个真实模型调用前，不修改冻结用例、oracle或产品Skill。
+
+## 2026-10-16 执行更新
+
+以上“未执行”是冻结时记录。现已执行216/216，全部独立代理审阅，结果见 [v1报告](model-evaluation-v1.md)；AC10未通过。源码快照5910928。原始记录、评分缺陷和失败完整保留，有限修正及追加9次D11与首轮分开。

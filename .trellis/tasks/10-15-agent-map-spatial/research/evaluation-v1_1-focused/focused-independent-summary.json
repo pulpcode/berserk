@@ -1,0 +1,227 @@
+{
+  "reviewer": "agent:spatial_check",
+  "rows": [
+    {
+      "id": "D11-1-A",
+      "condition": "A",
+      "reviewPassed": true,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-1-B",
+      "condition": "B",
+      "reviewPassed": true,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-1-C",
+      "condition": "C",
+      "reviewPassed": true,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-2-A",
+      "condition": "A",
+      "reviewPassed": false,
+      "dimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      },
+      "rawPassed": false,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": false,
+      "correctResources": false,
+      "independentPolygonSelectedDraftIds": [],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-2-B",
+      "condition": "B",
+      "reviewPassed": false,
+      "dimensions": {
+        "objectScope": false,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-2-C",
+      "condition": "C",
+      "reviewPassed": false,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-3-A",
+      "condition": "A",
+      "reviewPassed": true,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-3-B",
+      "condition": "B",
+      "reviewPassed": false,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "D11-3-C",
+      "condition": "C",
+      "reviewPassed": false,
+      "dimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      },
+      "rawPassed": true,
+      "bufferCount": 1,
+      "exactOldGeometry": true,
+      "correctBufferOrigin": true,
+      "correctResources": true,
+      "independentPolygonSelectedDraftIds": [
+        "r1",
+        "r2"
+      ],
+      "writeAttempts": [],
+      "unchanged": true,
+      "loadedBefore": false,
+      "criticalErrors": []
+    }
+  ]
+}

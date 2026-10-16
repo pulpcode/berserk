@@ -105,3 +105,26 @@ it('preserves source business time separately from query and snapshot time',asyn
   expect(result.items[0].source).toMatchObject({effectiveAt:item.effectiveAt,validTime:item.validTime});
   expect(result.provenance[0].asOf).toBe('2026-10-16T00:00:00Z');expect(result.items[0].source?.queriedAt).toMatch(/Z$/);
 });
+
+it('requires an explicit generated-result selection while preserving fixed reads and ordinary item chains',async()=>{
+  const s=await setup([{items:[point('a')]}]);
+  const buffer=await s.service.analyze({operation:'buffer',input:s.input,distanceM:100},s.scope,randomUUID(),'buffer');
+  const original=structuredClone(buffer),scope={...s.scope,resolveResult:()=>buffer};
+  const input={kind:'result' as const,resultRef:buffer.resultRef};
+  await expect(s.service.inputs.read(input,scope)).rejects.toMatchObject({code:'SPATIAL_AMBIGUOUS',message:expect.stringContaining('geometry:true')});
+  expect((await s.service.inputs.read({...input,geometry:true},scope)).items).toEqual([{id:buffer.resultRef,name:'分析范围',geometry:buffer.geometry,properties:{}}]);
+  expect((await s.service.inputs.read({...input,geometry:false},scope)).items).toEqual(buffer.items);
+  expect((await s.service.inputs.read({...input,itemIds:[buffer.items[0].id]},scope)).items).toEqual(buffer.items);
+  await expect(s.service.inputs.read({...input,itemIds:['absent']},scope)).rejects.toMatchObject({code:'SPATIAL_OBJECT_NOT_FOUND'});
+  expect(await s.service.analyze({operation:'read',resultRef:buffer.resultRef},scope,randomUUID(),'read')).toEqual(original);
+  const summary=await s.service.analyze({operation:'summarize',input:{...input,geometry:false},field:'unit'},scope,randomUUID(),'sum');
+  const summaryScope={...scope,resolveResult:()=>summary};
+  expect((await s.service.inputs.read({kind:'result',resultRef:summary.resultRef},summaryScope)).items).toEqual(buffer.items);
+  await expect(s.service.inputs.read({kind:'result',resultRef:summary.resultRef,geometry:true},summaryScope)).rejects.toMatchObject({code:'SPATIAL_GEOMETRY_MISSING'});
+  expect(buffer).toEqual(original);expect(s.fetch).toHaveBeenCalledTimes(1);
+  expect(buffer.method).toContain('32 segments per quadrant');
+  expect(buffer.limitations.join(' ')).toContain('线缓冲总边数随形状变化');
+  s.context.config.scopes[0].seatIds=[];
+  await expect(s.service.inputs.read(input,scope)).rejects.toMatchObject({code:'SPATIAL_FORBIDDEN'});
+  await expect(s.service.analyze({operation:'read',resultRef:buffer.resultRef},scope,randomUUID(),'denied-read')).rejects.toMatchObject({code:'SPATIAL_FORBIDDEN'});
+});

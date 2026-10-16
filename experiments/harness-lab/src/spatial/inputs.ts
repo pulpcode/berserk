@@ -22,6 +22,7 @@ export class SpatialInputs {
     if(input.kind==='result') {
       const result=scope.resolveResult(input.resultRef);this.authorize(result,scope);
       provenance=structuredClone(result.provenance);
+      if(result.geometry && input.geometry===undefined && !input.itemIds) throw spatialError('AMBIGUOUS','该结果同时包含生成范围和原对象。沿用固定范围请指定 geometry:true；使用原对象请指定 geometry:false 或 itemIds。无需重算范围或额外确认。');
       if(input.geometry) {
         if(input.itemIds || !result.geometry) throw spatialError('GEOMETRY_MISSING','该结果未生成独立范围；可指定结果中的对象。');
         items=[{id:result.resultRef,name:'分析范围',geometry:structuredClone(result.geometry),properties:{}}];

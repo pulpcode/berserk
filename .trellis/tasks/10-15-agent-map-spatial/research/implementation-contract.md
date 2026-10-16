@@ -16,3 +16,12 @@
 - 前端使用 contracts/spatial.ts 的 SpatialResult 与 extractSpatialResult；PublicMessage/SSE spatialResult 可选，旧历史保持可读。回退版本必须保留新 Skill/结果读取。
 
 实际结果附 parameters 原操作条件；跨请求 read 保留原始身份和快照，另加 delivery 当前 request/toolCall 绑定。历史展示重检结构化证据权限并隐藏不可读工具正文；旧助手文字保持历史。若原生历史中有来源权限已撤销的分析结果，拒绝新请求进入模型，避免从原生上下文重新提供受限事实。
+
+## 首轮开发集验证后的输入消歧（2026-10-16）
+
+首轮冻结源码与216次证据保留在5910928。本次仅根据开发集D11的固定结果复用失败收紧输入选择，不改Skill、评测夹具或旧历史：
+
+- 当可信结果同时带有顶层geometry与items时，后续result输入必须明确geometry:true使用原生成范围，或geometry:false / itemIds使用原对象。两者都未指定返回SPATIAL_AMBIGUOUS及可直接修正的提示，不再静默取原点。即使items为空，含独立geometry的结果仍要求明确选择。
+- 权限检查先于消歧。没有顶层geometry的集合结果仍允许省略选择；geometry:true但没有生成范围继续GEOMETRY_MISSING。
+- read仍直接返回固定原结果，不需要此选择，不重查来源；共享历史解码不新增动态选择要求，旧结果参数和原生记录保持可读。明确选择不重算，也不增加用户审批。
+- AEQD缓冲说明精确到每象限32段；点缓冲通常128边，线缓冲总边数取决于实际形状。历史method/limitations保持原文；只影响新计算输出与当前工具说明。

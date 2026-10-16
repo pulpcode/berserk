@@ -115,3 +115,32 @@ it('keeps ordinary spatial parameter/data failures recoverable in a later reques
   await s.lab.start(s.session.id,'我知道字段缺失，继续讨论',{},'alpha').run(()=>{});
   expect(s.lab.get(s.session.id,'alpha').lastResult?.status).toBe('succeeded');
 });
+
+it('delivers result-selection ambiguity and recovers with the same fixed geometry in the native loop',async()=>{
+  let resultRef='',sawActionableError=false;
+  const s=await setup((context,index)=>{
+    if(index===0)return {tools:[{name:'spatial_analyze',arguments:{operation:'buffer',input:s.input,distanceM:500}}]};
+    if(index===1)resultRef=lastResult(context).resultRef;
+    if(index===2){
+      const error=context.messages.findLast(m=>m.role==='toolResult');
+      expect(error?.role).toBe('toolResult');
+      if(error?.role==='toolResult'){
+        const text=error.content.filter(c=>c.type==='text').map(c=>c.text).join('\n');
+        expect(error.isError).toBe(true);expect(text).toContain('SPATIAL_AMBIGUOUS');
+        expect(text).toContain('geometry:true');expect(text).toContain('geometry:false');
+        sawActionableError=true;
+      }
+    }
+    if(index===1 || index===2)return {tools:[{name:'spatial_analyze',arguments:{operation:'filter',input:{kind:'annotation',ref:s.ref,objectIds:['near','far']},spatial:{target:{kind:'result',resultRef,...(index===2?{geometry:true}:{})},relation:'contains'}}}]};
+    return {text:'已使用同一固定范围筛选，未重算或保存。'};
+  });
+  await s.lab.start(s.session.id,'生成范围后沿用它筛选，只分析',{},'alpha').run(()=>{});
+  const snapshot=s.lab.get(s.session.id,'alpha'),results=snapshot.messages.filter(m=>m.toolName==='spatial_analyze');
+  expect(sawActionableError).toBe(true);expect(snapshot.lastResult?.status).toBe('succeeded');
+  expect(results.map(m=>m.isError)).toEqual([false,true,false]);
+  expect(results[1].spatialResult).toBeNull();
+  expect(results[2].spatialResult?.referenceItems?.[0].geometry).toEqual(results[0].spatialResult?.geometry);
+  expect(results[2].spatialResult?.items.map(i=>i.annotation?.objectId)).toEqual(['near']);
+  expect(results[2].spatialResult?.scope[1]).toEqual({kind:'result',resultRef,geometry:true});
+  expect(s.lab.annotations!.binding(s.actor,s.session.id).draft?.headRevision).toBe(1);
+});

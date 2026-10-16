@@ -37,7 +37,15 @@ export function applySpatialCondition(resources:ResourceService,condition:Spatia
   resources.readSkill=async(...args)=>{if(args[1]==='spatial-analysis')throw new Error('Skill unavailable in A evaluation condition');return read(...args);};
 }
 export function uniqueSpatialResults(messages:PublicMessage[]):SpatialResult[]{
-  return [...new Map(messages.flatMap(message=>message.spatialResult?[[message.spatialResult.resultRef,message.spatialResult] as const]:[])).values()];
+  const results=new Map<string,SpatialResult>();
+  for(const message of messages){
+    const result=message.spatialResult;if(!result)continue;
+    const previous=results.get(result.resultRef);
+    // Reads may change delivery ownership, never the original evidence or its chronological position.
+    if(previous)assert.deepEqual({...result,delivery:undefined},{...previous,delivery:undefined},'Conflicting evidence for one spatial resultRef');
+    results.set(result.resultRef,result);
+  }
+  return [...results.values()];
 }
 export interface SkillRequestEvidence {requestId:string;readSkills?:Array<{id:string;hash:string}>}
 /** Full trial chronology, including previous requests; an attempted/failed read is not a loaded Skill. */
@@ -68,11 +76,23 @@ export function scoreSpatialFacts(spec:SpatialCase,observation:SpatialObservatio
   const original=observation.before.version;
   if(original?.document){
     const originals=new Map(original.document.layers.flatMap(layer=>layer.features).map(item=>[item.objectId,item]));
-    add('fixed_identity_version_and_geometry',results.every(result=>[...result.items,...(result.referenceItems??[])].every(item=>{
-      if(!item.annotation)return item.source!==undefined;
-      const feature=originals.get(item.annotation.objectId);
-      return !!feature&&('setId'in item.annotation.ref&&'setId'in original.ref?item.annotation.ref.setId===original.ref.setId&&item.annotation.ref.revision===original.ref.revision:'publicationId'in item.annotation.ref&&'publicationId'in original.ref&&item.annotation.ref.publicationId===original.ref.publicationId)&&JSON.stringify(feature.geometry)===JSON.stringify(item.geometry);
-    })),true);
+    const verifiedResults=new Map<string,SpatialResult>();
+    add('fixed_identity_version_and_geometry',results.every(result=>{
+      // Only earlier, fully verified results can supply derived geometry. Never overwrite an origin.
+      if(verifiedResults.has(result.resultRef))return false;
+      const valid=[...result.items,...(result.referenceItems??[])].every(item=>{
+        if(!item.annotation){
+          if(item.source!==undefined)return true;
+          const prior=verifiedResults.get(item.id);
+          return !!prior?.geometry&&result.scope.some(input=>input.kind==='result'&&input.geometry===true&&input.resultRef===item.id)
+            &&JSON.stringify(prior.geometry)===JSON.stringify(item.geometry);
+        }
+        const feature=originals.get(item.annotation.objectId);
+        return !!feature&&('setId'in item.annotation.ref&&'setId'in original.ref?item.annotation.ref.setId===original.ref.setId&&item.annotation.ref.revision===original.ref.revision:'publicationId'in item.annotation.ref&&'publicationId'in original.ref&&item.annotation.ref.publicationId===original.ref.publicationId)&&JSON.stringify(feature.geometry)===JSON.stringify(item.geometry);
+      });
+      if(valid)verifiedResults.set(result.resultRef,result);
+      return valid;
+    }),true);
   }
   const allOps=new Set(results.map(result=>result.operation));
   if(expected.operations.length&&expected.behavior!=='missing-property'){

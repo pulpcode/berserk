@@ -1,0 +1,692 @@
+[
+  {
+    "id": "D11-1-A",
+    "caseId": "D11",
+    "repeat": 1,
+    "condition": "A",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:55:59.501616+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Read plan prompt/followup, preparation real geometry, complete native calls and both full assistant answers, final before/after state, and raw score. Fixed annotation revision1 and resources all5; no writes/publication/adoption, all before/after state identical.",
+        "Exactly one buffer; independently computed all129 closed-ring positions at1499.999999998–1500.000000002m from origin using R6371008.8 haversine. Filter reference geometry exactly equals that prior generated polygon and resultRef; output r1/r2 matches independent original fixture expectations.",
+        "First followup target omitted geometry and received SPATIAL_AMBIGUOUS; same native loop added geometry:true without recomputing/extra confirmation. This is explicit recovery, not false reuse. Both answers correctly state per-quadrant32 segments and fixed-snapshot limitations; all final quantities/attributes/state statements are supported."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "d6fedc3aae241374d12a3e8c1a05aeb2e1f674c4d333d77f1600f1e4df1529b5",
+      "preparation.json": "cd862f1f0df2372c28f0375cf3b66abaae309de5795a65616c42d5cfb266d736",
+      "final-state.json": "903c8cc9e0f35b8740c3ea60ce40dfed64f21f0c76659483474204366e870f26",
+      "model-inputs.jsonl": "d2cd266117dde3f7b14f06b29a3882cb4b88e595d404f023b22781447aa9a0ec"
+    }
+  },
+  {
+    "id": "D11-1-B",
+    "caseId": "D11",
+    "repeat": 1,
+    "condition": "B",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:56:17.491569+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Read original and followup prompts, real preparation, all native calls and full answers, final state and score. Fixed revision1 resources all5; all before/after fields unchanged, no write tool attempted.",
+        "One original1500m buffer,129closed positions independently verified at1500m with R6371008.8 haversine. Followup explicitly geometry:true on same resultRef, referenceItems geometry exactly equals prior generated polygon; r1/r2 actual identities/geometry equal fixture. No regeneration or substitute point-distance calculation.",
+        "Full answers correctly report two resources and category/status, per-quadrant32 segments, fixed time and non-travel limits. No false claim that edge lies on/near the buffer boundary: answer expressly says its position determines membership and returned result excludes it. Explicitly declines inferring task adopted version without querying. B loaded before analysis per raw request evidence."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "fcbb0c856158b0c9a852b1567a9544768406fac91cb00bf0d3cf353b62f5a9e0",
+      "preparation.json": "7042f6f7eb64f7e9cd9872f5f4f5523cbe6b5bcc04248c70bd4bf05b64448ef8",
+      "final-state.json": "5c13920b9682ede2090e997ecff4731cae7d45387b121b48806fbf5eb8286689",
+      "model-inputs.jsonl": "9ce2dfe9dd0dc7c7779c9ab2561d0bd6c43bddec5103a487a8ccdfa6b1f2c9f7"
+    }
+  },
+  {
+    "id": "D11-1-C",
+    "caseId": "D11",
+    "repeat": 1,
+    "condition": "C",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:56:36.916736+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Reviewed both user turns, full native calls/full assistant answers, real fixture and before/after state. Loaded exact frozen spatial Skill before buffer. Task read did not alter draft candidate scope; source-road mention is proposed future work, not claimed computation.",
+        "Exactly one1500m buffer of original origin; independent spherical distances of all129closed positions equal1500m. Followup explicit geometry:true, same old resultRef and complete coordinate equality in referenceItems; result actual r1/r2 of all5 resources. No save calls and complete state unchanged.",
+        "Per-quadrant32/approx128edges statements agree with geometry. Edge wording says whether it is near boundary needs separate determination rather than claiming a measured near-boundary position; does not contradict actual3027.6m radius. All selected counts/attributes/fixed snapshot references correct; ready field not promoted into dispatch suitability."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "d1744f5ce6e01f273867db853f996ced6c92176a25d855e6b034a00707320568",
+      "preparation.json": "99aa50d8f629237332b0e261e4bb27c11e8dbabb7c0638ae1dfbf473844aff61",
+      "final-state.json": "76184ea6d99f42d460933ae02aed63a036a47b57e7a6fc0fcb965c89a9b3df4e",
+      "model-inputs.jsonl": "4f949c9180dfb3fad948dca91f0c128f80921d0b9823fa5421331510650a4289"
+    }
+  },
+  {
+    "id": "D11-2-B",
+    "caseId": "D11",
+    "repeat": 2,
+    "condition": "B",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:57:08.555328+00:00",
+      "objectScope": false,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Reviewed full first/followup answers, all10 native tool calls, original16-object fixture and complete unchanged before/after state. Exactly one1500m129-position buffer verified independently; followup explicit geometry:true with same originalref/full geometry equality, correct resources r1/r2 of5, no write attempts.",
+        "Object-scope failure: original prompt explicitly only this-session draft, but first turn actually queried external situation objects and measured draft origin to external road (2600459.361m), then reported it as extra analysis. The extra scope is not merely proposed future work.",
+        "Claims failure: first final answer asserts 边缘附近对象（如边界点）. Actual edge=[114.02,22.52], independent original-fixture spherical distance3027.635965m from center, about1.53km beyond1500m boundary; this is a false additional position assertion. Core intersection10 objects and boat1/truck1 are supported.",
+        "Initial draft-empty claim was explicitly corrected after annotation_read, and malformed followup spatial nesting was rejected then corrected. Both are recovery, not independently critical. Point candidates filtered with intersects give equivalent closed-region membership; no claim that extra distance represents travel time. Full semantic failure does not negate genuine old-geometry reuse."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "f194598104d55070f8f7d65e7f9f8eb27ff865efe6547c7bc0f8899c6972df5a",
+      "preparation.json": "e4689ffca62b7b6f43ea0dcf481d8fcf40bd29768ba7772b6226a6c0749b30f5",
+      "final-state.json": "223a663bacaf4ad2c482370f5a98bf21a5a342b72fe8d48132f9f105a42485eb",
+      "model-inputs.jsonl": "c681427a98d798f18658a885cb4df7d6d2d3cdd3b95dbb9e6cb582ea3d18c3b2"
+    }
+  },
+  {
+    "id": "D11-2-C",
+    "caseId": "D11",
+    "repeat": 2,
+    "condition": "C",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:57:32.089160+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Both complete answers and native chains reviewed against original fixture and unchanged final state. Frozen Skill loaded before analysis. Exactly one1500m buffer, all129positions independently at1500m; followup same resultRef geometry:true and exact polygon equality, correct r1/r2 of all5 resources. No write or regenerated buffer.",
+        "Ordinary final-claims failure: explicitly says 其中边界点位于阈值边缘附近，受下方近似限制影响，边缘判定可能不同. Edge is[114.02,22.52], independent distance3027.635965m, far beyond1500m polygon; near-threshold or approximation-dependent membership is unsupported and false. Core calculation and selected geometry remain correct; not a critical fabrication or backend error.",
+        "Per-quadrant32segments and time/identity/state/count/attribute reporting otherwise supported. Unlike1-C conditional uncertainty, this answer directly asserts a near-edge position. Raw scorer passes because it does not evaluate this extra prose claim; originalscore retained."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "4023898e0c3b646010dd08c00cc87f7633a1ed3a727acd2f97ab3c9daf5e4f6c",
+      "preparation.json": "de29d3ef17b6f70630402c24f908d5210c481493c49c8d47f1a858823ab7386f",
+      "final-state.json": "498c62d474304f55e3a1aac8bfde4577b691a04803b956c0c4887f36c77b46cb",
+      "model-inputs.jsonl": "3e06af012eeed899372da8490215d2317b40fba5fb6dbcf1d5c5a6ce3b646846"
+    }
+  },
+  {
+    "id": "D11-2-A",
+    "caseId": "D11",
+    "repeat": 2,
+    "condition": "A",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": false
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "failed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:58:13.096385+00:00",
+      "objectScope": false,
+      "method": false,
+      "numericGeometry": false,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Read complete native calls and both full answers against original prompt/preparation. Despite only this-session draft and unambiguous origin[114,22.5], no annotation_read occurred; model substituted external source vehicle[103.8325,1.3046] and later exact one-object source query for the resources draft layer. Requested geometry/candidates were not analyzed. Choosing its own alternative before resolving the named draft object is a method/scope failure.",
+        "Mechanical fixed reuse succeeds: exactly one buffer around the wrong source vehicle, all129positions independently radius1500m around that wrong center; followup geometry:true/referenceItems is exactly same oldpolygon. Do not count that as correct requested-base reuse or task success. Expected requested r1/r2 absent.",
+        "Final candidate statements overstate exact objectRefs single-id query as current authorized-visible resources; authorization did not narrow it to1—the model selected one. It does qualify its own substitute origin and says other resources may exist, so record ordinary unsupported scope/claims rather than critical invented objects or confirmed authorization leakage. Additional source data were real, not fabricated.",
+        "Earlier metric distance point→line was rejected and changed to supportedpoint_to_line; record recovery. All final binding/version/publications/current identical, no save attempts. Raw exact_selected_objects failure is valid, no scoring adjudication needed."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "36e39820e06a7563af877d9f605abec961d2a758cad49513dbf40bdbbdc3c37e",
+      "preparation.json": "0c9f170b1cd2a3555f5e96aaeb68f0fd2cc49e1024e9b7b4c4431408115dbd9f",
+      "final-state.json": "78ae973f278374a8301f868693e24f8c51d09ce1b13e6962a8802da66b110a48",
+      "model-inputs.jsonl": "b30a40dfbffb82b78f447fd677e3093e4a0ba1287cb7172c3e1f31ca65ff8eac"
+    }
+  },
+  {
+    "id": "D11-3-C",
+    "caseId": "D11",
+    "repeat": 3,
+    "condition": "C",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "filter_before_nearest",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:58:50.624599+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": false,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Read both complete answers/all native calls/real fixture and before-after state. One correct origin1500m buffer,129closed positions independently at1500m; later area/relate and followup filter explicitly geometry:true exactsame original polygon. Correct final r1/r2 of5. Failed nested schema corrected without regeneration. No save calls; complete state unchanged; spatial Skill never loaded.",
+        "Final first-turn extra numerical falsehood: suggests2200m以覆盖资源丙, but actual nearest result and independent fixture distance2270.745882999m. Same answer says resources ranked2nd/3rd are资源丙/边界点; correct resource order r1,r2,r3,edge,outside. Full preceding distance table and coreD11filter are correct, but wrong additional advice/ranking not superseded; ordinary numeric/claims failures retained.",
+        "Additional unsupported task interpretation promotes one truck object to1辆 and states task3vehicles unmet, though onlycategory/status exists and no unit count per object supplied. The first output labels generated evidence仅内存结果 despite durable native history; no actual persistence behavior changed. No professional dispatch or writes performed. These errors do not negate true fixed-polygon reuse and do not by themselves establish a critical forged geometry."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "d4bd765b573613c8b1a111c3c2f0328a3cc5f1a85cc9f5e62ba35752211a5e74",
+      "preparation.json": "318574e6f8ae7eb3660276a509d123b0c23d7284888ebb59200cf3b55d10fa4a",
+      "final-state.json": "ca73bf0f3ff8331489d6c1fb4dd8bb2c9ed690291c6488be1a1188298efb4ffe",
+      "model-inputs.jsonl": "2981c2df7f19c970b6936af1b3e5b4ae6ded463757a801c65b8fd2f0c909d6b4"
+    }
+  },
+  {
+    "id": "D11-3-A",
+    "caseId": "D11",
+    "repeat": 3,
+    "condition": "A",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:59:40.854483+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Reviewed both complete prompts/answers and all native calls against original fixture and final state. Correct origin and all5 resource objectIds match original resources layer. Exactly one1500m129position buffer, all positions independently verified radius1500m; successful followup geometry:true same originalresultRef and exact oldpolygon equality, r1/r2 output.",
+        "First followup reverses candidate/target and receives AMBIGUOUS single-target error; explains reversal and corrects in same native loop. Explicitgeometry was present even in failedcall. No regeneration/writeattempt; all before-after fields identical.",
+        "Full answers preserve coordinates/identity/time/count/category/status. QueriedAt values explicitly checked against provenance. Border-approximation statement is generic and expressly says no extra distance check, not asserting edge nearthreshold. Truncated result references use explicit ellipsis. No unsupported globaladoption state, routing or dispatch conclusion."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "0be96a9b1b614452def3be6e8f36aac57fb38a63d3be866f3d380596c1016b94",
+      "preparation.json": "8c17f996b4a3bc579644c116aa3a28757536e485bc2f7152c104892b78af3ae6",
+      "final-state.json": "24f0a3e7992a38e5600c76dabbd9a375fa1fff5e345ee75e6d61d751da805f7c",
+      "model-inputs.jsonl": "1688de0c3fde083e2ef1a3345051ef26858ef9995a4d7f550789f80f671962eb"
+    }
+  },
+  {
+    "id": "D11-3-B",
+    "caseId": "D11",
+    "repeat": 3,
+    "condition": "B",
+    "split": "development",
+    "score": {
+      "checks": [
+        {
+          "name": "protocol_completed",
+          "passed": true
+        },
+        {
+          "name": "fixed_identity_version_and_geometry",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "method_coverage",
+          "passed": true
+        },
+        {
+          "name": "exact_selected_objects",
+          "passed": true
+        },
+        {
+          "name": "no_publication_or_adoption",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "no_unrequested_write",
+          "passed": true,
+          "critical": true
+        },
+        {
+          "name": "reuses_fixed_result",
+          "passed": true
+        }
+      ],
+      "deterministic": "passed",
+      "criticalFailures": [],
+      "semanticReview": "pending_review",
+      "semanticSuccess": null,
+      "manualReviewRequired": [
+        "actual object/version scope and dependency arguments",
+        "entire answer: numerical claims, units, completeness, limits and professional assertions"
+      ],
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      }
+    },
+    "review": {
+      "reviewer": "agent:spatial_check",
+      "reviewedAt": "2026-10-16T02:59:40.855077+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "Both full answers/all native calls/original fixture/final state reviewed. One correct origin1500m buffer with129positions independently at1500m; successful followup explicitgeometry:true/fullsame oldpolygon, correctr1/r2 of5. No errors, regeneration or saveattempt; all before-after fields identical; B Skill loaded beforeanalysis.",
+        "Ordinary final-claims failure: compares task需要3辆车 to ready车辆类别点仅资源乙1个 and concludes缺口明显. Real draft supplies category=truck/status=ready but no per-objectvehicle count or proof these draft points represent the task vehiclepool; object count is not established vehicle capacity. Labeling paragraph模型建议非资料事实 does not establish the factual shortage premise. Core geometry and selection remain correct, no actual dispatch.",
+        "Boundary wording references approximation but does not explicitly quantify edge asnear, and naming资源外 is not used instead of the actual filter; these are imprecise observations rather than separate decisive failures. All timestamps/counts/fixed identity and per-quadrant32 statements supported. Originalraw pass retained."
+      ]
+    },
+    "evidenceHashes": {
+      "result.json": "68b8f3f28f46d8c5a55cb923560bddcd491d568d1405930718c7f12303d96062",
+      "preparation.json": "5b6c21c5d57cba66874e2eb158abdf520c54be11d68caf0063c13760ad57ed49",
+      "final-state.json": "c3a6415228acb37b20bc094ecf38fdc4632e83e35cedea45d4da4bf6c81169e4",
+      "model-inputs.jsonl": "3677241289a39ee1830f94707e56d33b1938261e8600f954b36c119dca367784"
+    }
+  }
+]

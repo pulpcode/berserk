@@ -10,8 +10,8 @@ import type { SpatialGeometry, SpatialRelation, SpatialRequest } from '../contra
 import { spatialError, validateGeometry, positions } from './validation.js';
 import type { Position } from '../contracts/context.js';
 
-export const METHOD='Turf 7.2.0; sphere R=6371008.8m; WGS84 planar topology; buffer AEQD 32 steps';
-export const LIMITATIONS=['球面距离/面积不是测绘级椭球测量；拓扑按经纬度线段。','缓冲为 32 steps 圆弧近似，与精确距离阈值边缘可能不同。','最近表示地理距离，不代表路程、时间、可通行或专业适用性。'];
+export const METHOD='Turf 7.2.0; sphere R=6371008.8m; WGS84 planar topology; buffer AEQD 32 segments per quadrant (point buffers usually 128 edges)';
+export const LIMITATIONS=['球面距离/面积不是测绘级椭球测量；拓扑按经纬度线段。','缓冲圆弧每象限近似为 32 段；点缓冲通常为 128 边，线缓冲总边数随形状变化。近似边缘与精确距离阈值可能不同。','最近表示地理距离，不代表路程、时间、可通行或专业适用性。'];
 const unsupported=()=>spatialError('UNSUPPORTED_GEOMETRY','该操作不支持这组几何类型；请核对对象与方法。');
 export function measure(metric:Extract<SpatialRequest,{operation:'measure'}>['metric'],a:SpatialGeometry,b?:SpatialGeometry):number {
   if(metric==='distance' && a.type==='Point' && b?.type==='Point') return distance(a,b,{units:'meters'});
