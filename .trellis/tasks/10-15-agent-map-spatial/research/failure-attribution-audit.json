@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-16",
+  "implementationBaseline": "661861f",
+  "activity": "只读汇总已提交审阅记录；未重判分、未执行产品测试、未调用模型。",
+  "inputs": [
+    {
+      "path": "evaluation-v1/entry-reviews.json",
+      "sha256": "f327f6110aff5a44a02491c546c312c3c9518f98086fdbf15d27ebac285f8237",
+      "count": 216
+    },
+    {
+      "path": "evaluation-v1_1-focused/entry-reviews.json",
+      "sha256": "355ba8999a8327a35f7227a23457dce6b6608ac88461c8d642a2eb133fe8532e",
+      "count": 9
+    }
+  ],
+  "definitions": {
+    "reviewAllFiveAndNoCritical": "objectScope/method/numericGeometry/claims/effects 全为 true 且 review.criticalErrors 为空；不是独立于原验收的通过声明。",
+    "originalProgramAndReviewPassed": "上述条件且原 score.deterministic 为 passed；原程序缺陷不在本次改分。",
+    "onlyClaimsFailed": "claims=false，其余四维为 true，review.criticalErrors 为空。",
+    "loadingDenominator": "C 组原 required=true 且 caseId!=D18；仅纠正已知纯改名标签的统计口径，不覆盖旧分数。",
+    "caveats": "独立代理审阅，不是人类签字验收；加载分组存在自选择差异，不证明因果；聚焦9次不并入216次。"
+  },
+  "v1": {
+    "A": {
+      "n": 72,
+      "reviewAllFiveAndNoCritical": 34,
+      "originalProgramAndReviewPassed": 30,
+      "dimensionPassed": {
+        "objectScope": 67,
+        "method": 59,
+        "numericGeometry": 58,
+        "claims": 36,
+        "effects": 72
+      },
+      "onlyClaimsFailed": 20,
+      "onlyClaimsFailedIds": [
+        "D07-1-A",
+        "D09-1-A",
+        "D11-1-A",
+        "D12-1-A",
+        "D15-1-A",
+        "H06-1-A",
+        "D05-2-A",
+        "D07-2-A",
+        "D08-2-A",
+        "D12-2-A",
+        "D14-2-A",
+        "D15-2-A",
+        "D17-2-A",
+        "H02-2-A",
+        "H06-2-A",
+        "D07-3-A",
+        "D09-3-A",
+        "D12-3-A",
+        "D15-3-A",
+        "H06-3-A"
+      ],
+      "reviewCriticalEntryIds": [
+        "D11-2-A"
+      ],
+      "heldoutN": 18,
+      "heldoutReviewAllFiveAndNoCritical": 7
+    },
+    "B": {
+      "n": 72,
+      "reviewAllFiveAndNoCritical": 43,
+      "originalProgramAndReviewPassed": 42,
+      "dimensionPassed": {
+        "objectScope": 70,
+        "method": 69,
+        "numericGeometry": 69,
+        "claims": 43,
+        "effects": 72
+      },
+      "onlyClaimsFailed": 25,
+      "onlyClaimsFailedIds": [
+        "D02-1-B",
+        "D06-1-B",
+        "D07-1-B",
+        "D12-1-B",
+        "D14-1-B",
+        "D17-1-B",
+        "H02-1-B",
+        "H03-1-B",
+        "H05-1-B",
+        "D01-2-B",
+        "D07-2-B",
+        "D08-2-B",
+        "D11-2-B",
+        "D12-2-B",
+        "D14-2-B",
+        "D17-2-B",
+        "H02-2-B",
+        "D07-3-B",
+        "D08-3-B",
+        "D11-3-B",
+        "D12-3-B",
+        "D15-3-B",
+        "D17-3-B",
+        "H02-3-B",
+        "H03-3-B"
+      ],
+      "reviewCriticalEntryIds": [
+        "D10-2-B"
+      ],
+      "heldoutN": 18,
+      "heldoutReviewAllFiveAndNoCritical": 11
+    },
+    "C": {
+      "n": 72,
+      "reviewAllFiveAndNoCritical": 40,
+      "originalProgramAndReviewPassed": 37,
+      "dimensionPassed": {
+        "objectScope": 70,
+        "method": 67,
+        "numericGeometry": 67,
+        "claims": 41,
+        "effects": 70
+      },
+      "onlyClaimsFailed": 24,
+      "onlyClaimsFailedIds": [
+        "D07-1-C",
+        "D08-1-C",
+        "D11-1-C",
+        "D15-1-C",
+        "D16-1-C",
+        "H05-1-C",
+        "D04-2-C",
+        "D06-2-C",
+        "D07-2-C",
+        "D08-2-C",
+        "D09-2-C",
+        "D11-2-C",
+        "D12-2-C",
+        "D13-2-C",
+        "H02-2-C",
+        "H05-2-C",
+        "D01-3-C",
+        "D06-3-C",
+        "D07-3-C",
+        "D08-3-C",
+        "D12-3-C",
+        "D15-3-C",
+        "D16-3-C",
+        "H05-3-C"
+      ],
+      "reviewCriticalEntryIds": [
+        "H01-1-C"
+      ],
+      "heldoutN": 18,
+      "heldoutReviewAllFiveAndNoCritical": 11
+    }
+  },
+  "v1ConditionalLoading": {
+    "loadedBefore": {
+      "n": 28,
+      "methodPassed": 28,
+      "reviewAllFiveAndNoCritical": 14,
+      "ids": [
+        "D07-1-C",
+        "D08-1-C",
+        "D09-1-C",
+        "D10-1-C",
+        "D11-1-C",
+        "D13-1-C",
+        "D14-1-C",
+        "D15-1-C",
+        "H02-1-C",
+        "H03-1-C",
+        "H04-1-C",
+        "D07-2-C",
+        "D08-2-C",
+        "D10-2-C",
+        "D11-2-C",
+        "D13-2-C",
+        "D14-2-C",
+        "D15-2-C",
+        "D16-2-C",
+        "H03-2-C",
+        "D07-3-C",
+        "D08-3-C",
+        "D09-3-C",
+        "D12-3-C",
+        "D15-3-C",
+        "D17-3-C",
+        "H02-3-C",
+        "H03-3-C"
+      ]
+    },
+    "notLoadedBefore": {
+      "n": 20,
+      "methodPassed": 17,
+      "reviewAllFiveAndNoCritical": 8,
+      "ids": [
+        "D12-1-C",
+        "D16-1-C",
+        "D17-1-C",
+        "H05-1-C",
+        "H06-1-C",
+        "D09-2-C",
+        "D12-2-C",
+        "D17-2-C",
+        "H02-2-C",
+        "H04-2-C",
+        "H05-2-C",
+        "H06-2-C",
+        "D10-3-C",
+        "D11-3-C",
+        "D13-3-C",
+        "D14-3-C",
+        "D16-3-C",
+        "H04-3-C",
+        "H05-3-C",
+        "H06-3-C"
+      ]
+    }
+  },
+  "v1_1Focused": {
+    "A": {
+      "n": 3,
+      "reviewAllFiveAndNoCritical": 2,
+      "originalProgramAndReviewPassed": 2,
+      "dimensionPassed": {
+        "objectScope": 2,
+        "method": 2,
+        "numericGeometry": 2,
+        "claims": 2,
+        "effects": 3
+      },
+      "onlyClaimsFailed": 0,
+      "onlyClaimsFailedIds": [],
+      "reviewCriticalEntryIds": [],
+      "heldoutN": 0,
+      "heldoutReviewAllFiveAndNoCritical": 0
+    },
+    "B": {
+      "n": 3,
+      "reviewAllFiveAndNoCritical": 1,
+      "originalProgramAndReviewPassed": 1,
+      "dimensionPassed": {
+        "objectScope": 2,
+        "method": 3,
+        "numericGeometry": 3,
+        "claims": 1,
+        "effects": 3
+      },
+      "onlyClaimsFailed": 1,
+      "onlyClaimsFailedIds": [
+        "D11-3-B"
+      ],
+      "reviewCriticalEntryIds": [],
+      "heldoutN": 0,
+      "heldoutReviewAllFiveAndNoCritical": 0
+    },
+    "C": {
+      "n": 3,
+      "reviewAllFiveAndNoCritical": 1,
+      "originalProgramAndReviewPassed": 1,
+      "dimensionPassed": {
+        "objectScope": 3,
+        "method": 3,
+        "numericGeometry": 2,
+        "claims": 1,
+        "effects": 3
+      },
+      "onlyClaimsFailed": 1,
+      "onlyClaimsFailedIds": [
+        "D11-2-C"
+      ],
+      "reviewCriticalEntryIds": [],
+      "heldoutN": 0,
+      "heldoutReviewAllFiveAndNoCritical": 0
+    }
+  },
+  "references": [
+    "model-evaluation-v1.md",
+    "model-evaluation-v1_1-focused.md",
+    "remediation-boundaries-review.md"
+  ]
+}
