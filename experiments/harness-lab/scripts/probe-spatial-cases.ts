@@ -8,6 +8,7 @@ export interface SpatialCase {
     counts?:Record<string,number>; behavior?:string; allowWrites?:'save'|'rename'; relation?:boolean};
   fault?:'missing-geometry'|'source-unavailable';
 }
+export const SPATIAL_FIXTURE_VERSION='spatial-fixtures.v2';
 const R=6371008.8, rad=Math.PI/180;
 /** Independent analytic spherical rectangle (not a production/Turf import). */
 export const rectangleArea=(latitude:number)=>R*R*(.02*rad)*(Math.sin((latitude+.02)*rad)-Math.sin(latitude*rad));
@@ -33,7 +34,7 @@ export const spatialCases:readonly SpatialCase[]=[
   dev('D15','boundary','请在任务关注西区全部来源资源中找最近基点的资源，只分析。',['M5','M9'],{operations:[],behavior:'source-unavailable'},{fault:'source-unavailable'}),
   dev('D16','boundary','空区内有没有资源图层的点？只分析。',['M3','M9'],{operations:['filter'],objectIds:[]}),
   dev('D17','boundary','哪一个资源点最快到达基点？现有资料足够判断吗？只分析。',['M5','M10'],{operations:[],behavior:'no-travel-time'}),
-  dev('D18','boundary','把基点改名为出发点，其他内容保持不变，不需要空间分析，不发布。',['M10'],{operations:[],allowWrites:'rename',behavior:'rename-only'}),
+  dev('D18','boundary','把基点改名为出发点，其他内容保持不变，不需要空间分析，不发布。',['M10'],{operations:[],allowWrites:'rename',behavior:'rename-only'},{requiresSkill:false}),
   {id:'H01',split:'heldout',category:'basic',region:'australia',prompt:'仅针对本会话地图草稿：潮位站到北侧灯标的地理距离是多少米？只分析。',rules:['M1'],requiresSkill:false,expected:{operations:['measure'],value:meridianDistance(.01),tolerance:1}},
   {id:'H02',split:'heldout',category:'composition',region:'china',prompt:'仅针对本会话地图草稿：把集合码头1500米内资源图层的点按类别统计，并展示范围，不保存。',rules:['M6','M7','M8'],requiresSkill:true,expected:{operations:['buffer','filter','summarize'],counts:{boat:1,truck:1}}},
   {id:'H03',split:'heldout',category:'composition',region:'australia',prompt:'仅针对本会话地图草稿：排除封闭区内的资源后，返回距潮位站最近的两个ready资源点，只分析。',rules:['M4','M5','M8'],requiresSkill:true,expected:{operations:['filter','nearest'],objectIds:['r2','r3']}},
@@ -49,7 +50,7 @@ export function spatialCaseLayers(spec:SpatialCase):AnnotationLayer[]{
   const point=(id:string,name:string,dx:number,dy:number,attributes?:AnnotationFeature['attributes']):AnnotationFeature=>({objectId:id,name,kind:'point',geometry:{type:'Point',coordinates:[x+dx,y+dy]},...(attributes?{attributes}:{})});
   const polygon=(id:string,name:string,a:number,b:number,c:number,d:number):AnnotationFeature=>({objectId:id,name,kind:'polygon',geometry:{type:'Polygon',coordinates:[[[x+a,y+b],[x+c,y+b],[x+c,y+d],[x+a,y+d],[x+a,y+b]]]}});
   const layer=(layerId:string,name:string,order:number,features:AnnotationFeature[]):AnnotationLayer=>({layerId,name,order,defaultVisible:true,features});
-  return [layer('reference','参照对象',0,[point('origin',names[0],0,0),point('north',names[1],0,.01),
+  const layers=[layer('reference','参照对象',0,[point('origin',names[0],0,0),point('north',names[1],0,.01),
     {objectId:'line',name:'巡查线',kind:'line',geometry:{type:'LineString',coordinates:[[x-.01,y+.01],[x+.01,y+.01]]}},
     {objectId:'return-line',name:'往返线',kind:'line',geometry:{type:'LineString',coordinates:[[x,y],[x,y+.02],[x,y]]}},
     polygon('region',names[2],0,0,.02,.02),polygon('excluded',names[3],-.001,.001,.001,.007),polygon('empty','空区',.04,.04,.05,.05),
@@ -58,4 +59,6 @@ export function spatialCaseLayers(spec:SpatialCase):AnnotationLayer[]{
       point('r3','资源丙',.015,.015,{status:'ready',category:'boat'}),point('edge',names[4],.02,.02,{status:'ready',category:'truck'}),
       point('outside','资源外',.03,.03,{status:'busy',category:'boat'})]),
     layer('ties','并列',2,[point('tie-b','并列乙',0,.01),point('tie-a','并列甲',0,-.01)]),layer('derived','派生',3,[])];
+  if(spec.id==='H04')delete layers.find(item=>item.layerId==='resources')!.features[1].attributes!.category;
+  return layers;
 }

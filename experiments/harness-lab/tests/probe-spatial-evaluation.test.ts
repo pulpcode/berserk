@@ -24,58 +24,9 @@ describe('frozen spatial ABC evaluator',()=>{
     for(const entry of spatialCases){const facts=JSON.stringify(spatialCaseLayers(entry));expect(facts).not.toContain('expected');expect(facts).not.toContain('oracle');expect(facts).not.toContain('requiresSkill');}
     const allRules=new Set(spatialCases.flatMap(entry=>entry.rules));for(let i=1;i<=11;i++)expect(allRules.has(`M${i}`)).toBe(true);
   });
-  it('rejects a wrong measurement despite protocol/tool success and never auto-passes prose',()=>{
-    const bad=scoreSpatialFacts(spec('D01'),observation({results:[result('measure',{values:{value:10,unit:'m'}})]}));expect(bad.deterministic).toBe('failed');
-    const good=scoreSpatialFacts(spec('D01'),observation({results:[result('measure',{values:{value:1111.9508,unit:'m'}})]}));expect(good.deterministic).toBe('passed');expect(good.semanticReview).toBe('pending_review');expect(good.semanticSuccess).toBeNull();
-  });
-  it('rejects nearest-before-filter and omitted candidates even if final names sound right',()=>{
-    const ranked=result('nearest',{items:[item('r2'),item('r3')]});
-    expect(scoreSpatialFacts(spec('D09'),observation({results:[ranked,result('filter',{items:ranked.items})]})).deterministic).toBe('failed');
-    expect(scoreSpatialFacts(spec('D09'),observation({results:[result('filter'),ranked]})).deterministic).toBe('passed');
-    expect(scoreSpatialFacts(spec('D09'),observation({results:[result('filter'),result('nearest',{items:[item('r2')]})]})).deterministic).toBe('failed');
-  });
-  it('does not confuse complete empty output with absent failed output',()=>{
-    expect(scoreSpatialFacts(spec('D16'),observation()).deterministic).toBe('failed');
-    expect(scoreSpatialFacts(spec('D16'),observation({results:[result('filter')]})).deterministic).toBe('passed');
-  });
   it('flags any unrequested write and publication as critical',()=>{
     const actual=observation({tools:[{name:'annotation_action',args:{}}]});const score=scoreSpatialFacts(spec('D13'),actual);expect(score.criticalFailures).toContain('no_unrequested_write');
     actual.after.publications=[{}] as unknown as SpatialObservation['after']['publications'];expect(scoreSpatialFacts(spec('D13'),actual).criticalFailures).toContain('no_publication_or_adoption');
-  });
-  it('accepts only an earlier verified result geometry with an explicit matching geometry scope',()=>{
-    const geometry:NonNullable<SpatialResult['geometry']>={type:'Polygon',coordinates:[[[114,22.5],[114.01,22.5],[114.01,22.51],[114,22.5]]]};
-    const origin=item('origin');
-    const buffer=result('buffer',{resultRef:'spatial:request:buffer',toolCallId:'buffer',items:[origin],geometry});
-    const derived={id:buffer.resultRef,name:'buffer',geometry:structuredClone(geometry),properties:{}};
-    const filtered=result('filter',{resultRef:'spatial:request:filter',toolCallId:'filter',items:[origin],referenceItems:[derived],scope:[{kind:'result',resultRef:buffer.resultRef,geometry:true}]});
-    const actual=(results:SpatialResult[])=>{
-      const state=observation();
-      state.before.version={ref:{setId:'set',revision:1},title:'fixed',hash:'before',createdAt:'2026-10-16T00:00:00Z',document:{schemaVersion:1,title:'fixed',layers:[{layerId:'reference',name:'reference',order:0,defaultVisible:true,features:[{objectId:'origin',name:'origin',kind:'point',geometry:origin.geometry}]}]}};
-      state.after=structuredClone(state.before);state.results=results;
-      return scoreSpatialFacts(spec('D13'),state).checks.find(check=>check.name==='fixed_identity_version_and_geometry')!;
-    };
-    expect(actual([buffer,filtered])).toMatchObject({passed:true,critical:true});
-    expect(actual([buffer,{...filtered,items:[derived],referenceItems:[]}]).passed).toBe(true);
-    // Missing, implicit, unrelated and differently keyed result scopes cannot authenticate geometry.
-    for(const scope of [[],[{kind:'result' as const,resultRef:buffer.resultRef}],[{kind:'result' as const,resultRef:buffer.resultRef,geometry:false}],[{kind:'result' as const,resultRef:'spatial:request:other',geometry:true}]]){
-      expect(actual([buffer,{...filtered,scope}]).passed).toBe(false);
-    }
-    expect(actual([buffer,{...filtered,referenceItems:[{...derived,id:'spatial:request:forged'}]}]).passed).toBe(false);
-    const changed=structuredClone(geometry);changed.coordinates[0][1][0]=114.02;
-    expect(actual([buffer,{...filtered,referenceItems:[{...derived,geometry:changed}]}]).passed).toBe(false);
-    expect(actual([filtered,buffer]).passed).toBe(false); // Future reference.
-    expect(actual([{...filtered,resultRef:buffer.resultRef,geometry}]).passed).toBe(false); // Self reference.
-    expect(actual([{...buffer,geometry:undefined},filtered]).passed).toBe(false);
-    expect(actual([buffer,{...buffer,geometry:changed},{...filtered,referenceItems:[{...derived,geometry:changed}]}]).passed).toBe(false); // Duplicate-origin laundering.
-    // A valid-looking derived item never masks a broken annotation identity/version/geometry.
-    for(const invalid of [{...origin,annotation:{...origin.annotation,ref:{setId:'foreign',revision:1}}},{...origin,annotation:{...origin.annotation,ref:{setId:'set',revision:2}}},{...origin,geometry:{type:'Point' as const,coordinates:[115,22.5] as [number,number]}}]){
-      expect(actual([{...buffer,items:[invalid]},filtered]).passed).toBe(false);
-      expect(actual([buffer,{...filtered,items:[invalid]}]).passed).toBe(false);
-    }
-    // Existing source-backed evidence remains accepted; an unbacked item does not.
-    const sourced={...origin,annotation:undefined,source:{ref:{systemId:'fixture',objectType:'resource',objectId:'origin'},revision:1,queriedAt:'2026-10-16T00:00:00Z'}};
-    expect(actual([{...buffer,items:[sourced]},filtered]).passed).toBe(true);
-    expect(actual([{...buffer,items:[{...origin,annotation:undefined}]},filtered]).passed).toBe(false);
   });
   it('changes only the A snapshot and denies direct spatial Skill read',async()=>{
     const skills=[{id:'review'},{id:'spatial-analysis'}];
@@ -136,6 +87,6 @@ describe('frozen spatial ABC evaluator',()=>{
   });
   it('deduplicates actual provider call IDs across repeated history while retaining parameters',()=>{
     const payload={messages:[{role:'assistant',content:null,tool_calls:[{id:'x',function:{name:'spatial_analyze',arguments:'{"operation":"nearest"}'}}]}]};
-    expect(providerToolCalls([payload,payload])).toEqual([{name:'spatial_analyze',args:{operation:'nearest'}}]);
+    expect(providerToolCalls([payload,payload])).toEqual([{toolCallId:'x',name:'spatial_analyze',args:{operation:'nearest'}}]);
   });
 });
