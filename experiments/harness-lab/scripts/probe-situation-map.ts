@@ -58,7 +58,14 @@ export async function mapTrialRequest<T>(manifest:MapTrialManifest,path:string,s
   return response.json() as Promise<T>;
 }
 
-export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,serveWeb=true) {
+export interface MapTrialOptions {background?:'original'|'neutral'}
+/** Neutral diagnostics change only synthetic task text/seat duties; data ownership and access stay fixed. */
+export function mapTrialBackground(options:MapTrialOptions,original:{title:string;goal:string;responsibility:string}) {
+  return options.background==='neutral'
+    ? {title:'空间资料核对任务',goal:'空间资料核对合成测试。',responsibility:'合成测试席位。'}
+    : original;
+}
+export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,serveWeb=true,options:MapTrialOptions={}) {
   const dataDir=await mkdtemp(join(tmpdir(),'axon-map-')); await chmod(dataDir,0o700);
   const trialId=`map-${randomUUID().slice(0,8)}`;
   const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
@@ -109,14 +116,17 @@ export async function startMapTrial(port=4321,env:NodeJS.ProcessEnv=process.env,
       for (const [index,seat] of seats.entries()) {
         credentials.accounts[seat]={username:seat,password:randomBytes(18).toString('hex')};
         await access.saveAccount({...credentials.accounts[seat],displayName:seatNames[index],seatId:`seat-${seat}`,seatName:seatNames[index],createPublicTask:seat==='overall',manageModelSettings:seat==='overall',viewWorkOverview:seat==='overall'});
-        access.updateSeat(`seat-${seat}`,{responsibility:await readFile(join(packageRoot,'fixtures/seat-responsibilities',`${seat}.md`),'utf8')});
+        const responsibility=await readFile(join(packageRoot,'fixtures/seat-responsibilities',`${seat}.md`),'utf8');
+        access.updateSeat(`seat-${seat}`,{responsibility:mapTrialBackground(options,{title:'',goal:'',responsibility}).responsibility});
       }
       const actor=access.identityForSeat('seat-overall')!;
       for (const [key,title,zone,count,time] of [
         ['supply','西区补给任务','west',3,'09:40'],['transfer','西区设备转移任务','west',1,'10:20'],['control','东区对照任务','east',2,'09:45'],
       ] as const) {
-        tasks[key]=access.create(actor,{clientActionId:randomUUID(),title:`【地图验证 ${trialId}】${title}`,visibility:'public',
-          goal:`合成测试：在 ${day} ${time} 开始办理，至少需要 ${count} 辆车，关注${zone==='west'?'西':'东'}区通道与车辆池。供人员研判，不直接下达真实执行指令。`,
+        const backgroundText=mapTrialBackground(options,{title,
+          goal:`合成测试：在 ${day} ${time} 开始办理，至少需要 ${count} 辆车，关注${zone==='west'?'西':'东'}区通道与车辆池。供人员研判，不直接下达真实执行指令。`,responsibility:''});
+        tasks[key]=access.create(actor,{clientActionId:randomUUID(),title:`【地图验证 ${trialId}】${backgroundText.title}`,visibility:'public',
+          goal:backgroundText.goal,
           context:{businessRefs:[{systemId:'situation',objectType:'road',objectId:`${trialId}-road-${zone}-01`},{systemId:'situation',objectType:'resource',objectId:`${trialId}-vehicles-${zone}-01`}],
             focus:{areaIds:[`${trialId}-zone-${zone}`],time:{from:`${day}T${time}:00+08:00`,to:`${day}T11:00:00+08:00`},topics:['通行','车辆']}}}).id;
       }

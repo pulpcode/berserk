@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。",
+  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。",
   "meta": {
     "implementationApproved": true,
     "implementationComplete": false,
@@ -39,12 +39,19 @@
     "baselineEvaluationReport": "research/model-evaluation-v1.md",
     "focusedEvaluationComplete": true,
     "focusedEvaluationReport": "research/model-evaluation-v1_1-focused.md",
-    "latestImplementationCommit": "661861f",
+    "latestImplementationCommit": "67b8cf2",
     "remediationPlan": "remediation-plan.md",
     "remediationResearch": "research/remediation-boundaries-review.md",
-    "remediationReviewStatus": "pending_user_review",
-    "remediationImplementationApproved": false,
-    "remediationExperimentsApproved": false,
-    "executionHold": "awaiting_remediation_review"
+    "remediationReviewStatus": "approved_for_execution",
+    "remediationImplementationApproved": true,
+    "remediationExperimentsApproved": true,
+    "executionHold": null,
+    "remediationPlanCommit": "21988f6",
+    "remediationPhase": "development_diagnostics",
+    "remediationOptionalModelApproved": false,
+    "remediationReadonlyModeApproved": false,
+    "remediationScorerCommit": "c28eb7e",
+    "remediationCodeValidated": true,
+    "remediationDiagnosticScheduled": 180
   }
 }

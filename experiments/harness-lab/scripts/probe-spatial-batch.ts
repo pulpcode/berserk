@@ -7,10 +7,10 @@ import {fileURLToPath} from 'node:url';
 import {spatialSchedule} from './probe-spatial-cases.js';
 export const spatialEvidenceFiles=['package.json','package-lock.json','tsconfig.json'];
 const root=fileURLToPath(new URL('../',import.meta.url));
-export async function spatialEvidenceHashes(){
+export async function spatialEvidenceHashes(packageRoot=root){
   const files=[...spatialEvidenceFiles];
   const walk=async(directory:string):Promise<void>=>{
-    for(const entry of await readdir(join(root,directory),{withFileTypes:true})){
+    for(const entry of await readdir(join(packageRoot,directory),{withFileTypes:true})){
       const file=directory+'/'+entry.name;
       if(entry.isDirectory())await walk(file);
       else if(entry.isFile())files.push(file);
@@ -19,7 +19,7 @@ export async function spatialEvidenceHashes(){
   };
   // Include actual HTTP/auth/Pi/transitive helper code and every controlled model-visible fixture.
   for(const directory of ['src','fixtures','scripts'])await walk(directory);
-  return Promise.all(files.sort().map(async file=>({file,sha256:createHash('sha256').update(await readFile(join(root,file))).digest('hex')})));
+  return Promise.all(files.sort().map(async file=>({file,sha256:createHash('sha256').update(await readFile(join(packageRoot,file))).digest('hex')})));
 }
 async function main(){
   const args=process.argv.slice(2);if(args.length!==2||args[0]!=='--output')throw new Error('用法：--output 新目录；执行冻结216试次，无重试/覆盖');
