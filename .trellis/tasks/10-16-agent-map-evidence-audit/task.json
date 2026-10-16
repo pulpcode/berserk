@@ -1,0 +1,31 @@
+{
+  "id": "agent-map-evidence-audit",
+  "name": "agent-map-evidence-audit",
+  "title": "Agent与态势标绘：查询证据接口审计及最小实验设计",
+  "description": "核实main与历史任务书差异、地图问题原始证据及既有机制，设计只改变实际读取范围呈现的有限对照；只落盘文档，待审阅后实施。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": "agent-map-query-evidence",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-16",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": ["prd.md", "design.md", "implement.md", "audit.md"],
+  "notes": "2026-10-16：初始main 3064bc6，文档审阅阶段；不改交接或产品，不运行付费模型。",
+  "meta": {
+    "baselineCommit": "3064bc62cbca5221ff907bc0ea0522d57b7ed6db",
+    "approvalRequiredForImplementation": true,
+    "productChanged": false,
+    "liveEvaluationExecuted": false
+  }
+}
