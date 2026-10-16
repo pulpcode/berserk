@@ -1,0 +1,11 @@
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "固定引用、权限、回执、宿主读取依据及 CAS 既有契约"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "输入版本逐字校验、新旧历史及显式引用边界"}
+{"file": ".trellis/spec/backend/agent-scenario-validation.md", "reason": "隔离真实模型、证据冻结及语义判定"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "桌面平台约定与相关地图规范入口"}
+{"file": ".trellis/tasks/10-15-map-result-projection/design.md", "reason": "本轮待审范围、模型结果与界面回执分工、查询范围及兼容要求"}
+{"file": ".trellis/tasks/10-15-map-result-projection/research.md", "reason": "当前源码及 Pi/参考实现已确认的能力与限制"}
+{"file": ".trellis/tasks/10-15-map-result-projection/implement.md", "reason": "原场景固定批次、自动验证与通过停止线"}
+{"file": ".trellis/tasks/10-14-map-result-reporting/base-current-validation.md", "reason": "原45请求基线及保留的失败结论"}
+{"file": ".trellis/tasks/10-14-map-result-reporting/base-current-semantic-review.md", "reason": "筛选范围、hash 缩写和虚构字段的实际证据"}
+{"file": ".trellis/tasks/10-14-desktop-map-acceptance/design.md", "reason": "原八场景业务输入、操作步骤和角色权限"}
+{"file": ".trellis/tasks/10-10-task-plan-validation/agent-map-workflow/recovery-validation.md", "reason": "原三例来源复制/发布/刷新恢复流程"}

@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "固定引用、模型投影与原始回执、权限和宿主依据；counts不改名，scope仅候选，实施后按实际同步规范"}
+{"file": ".trellis/spec/backend/conversation-references.md", "reason": "现有v5输入与旧历史契约，本轮不改自动输入或增加强制Skill"}
+{"file": ".trellis/spec/backend/agent-scenario-validation.md", "reason": "虚构隔离数据、真实证据、冻结批次、失败保留及分项语义验收"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "桌面平台和地图规范入口；有界面相关改动再按需读取对应harness契约，避免注入无关长文"}
+{"file": ".trellis/tasks/10-15-map-query-scope/design.md", "reason": "M1/M2/M3必做、E1 scope隔离候选、D1改名暂缓；准确与完整并重，待审阅"}
+{"file": ".trellis/tasks/10-15-map-query-scope/implement.md", "reason": "原57首轮、重点固定3次、H新题和Q诊断；A为75业务+9解释、B为9业务+6解释，分别评分与停止线"}
+{"file": ".trellis/tasks/10-15-map-query-scope/research.md", "reason": "实际失败证据、源码影响及因果归因限制"}
+{"file": ".trellis/tasks/10-15-map-result-projection/validation.md", "reason": "上一轮主45请求2条错误、G02错误及未覆盖边界的真实基线"}

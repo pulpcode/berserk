@@ -829,3 +829,138 @@
 ### Next Steps
 
 - 审阅agent-map-workflow/validation.md中的恢复提示、Skill触发、未指定层澄清及正文事实问题；全面业务验收未通过，未上线。
+
+
+## Session 29: 实施收窄地图工具契约并完成固定对照复测
+
+**Date**: 2026-10-15
+**Task**: 实施收窄地图工具契约并完成固定对照复测
+**Branch**: `main`
+
+### Summary
+
+先提交方案再实施M1/M2/M3；72测试及12桌面回归通过。冻结A/B后实际97案例、244条可见文字；存在9条明确错误、意外澄清与H01范围歧义。scope收益未证实，不采用、不部署；任务保留review，实施变更待审阅。
+
+### Main Changes
+
+- 工具契约与单条报告规则整理，counts保留；增加固定业务/诊断驱动与三次重复。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `7c43e45` | (see git log) |
+
+### Testing
+
+- [OK] lint、typecheck、build通过；9文件72测试和串行桌面12项通过；A/B354文件冻结前后一致。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅validation.md及semantic-review.md；不自动追加prompt、改题补跑或采用scope。
+
+
+## Session 30: 完成地图查询范围两模型同输入对照
+
+**Date**: 2026-10-15
+**Task**: 完成地图查询范围两模型同输入对照
+**Branch**: `main`
+
+### Summary
+
+固定四份原始输入，仅替换model，Flash与Pro各12次非思考单步调用；24次均完成，先盲评后解盲。两者各5次明确错误，Pro附加歧义较少但未满足核心改善判据。产品未改、模型未切换、未部署；报告待审阅。
+
+### Main Changes
+
+- 新增一次性原始provider输入重放、冻结审计、匿名评分及解盲报告。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 重放驱动5项测试通过；24份实际请求除model外相同，模型输出工具未执行；旧workspace/A/B冻结文件一致，git diff检查通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅model-comparison/validation.md；不自动追加提示词、试验或模型切换。
+
+2026-10-15 补记：按用户要求新增 `10-15-map-query-scope/issues.md`，分别记录 MAP-Q01 局部读取扩大、MAP-Q02 未筛选分页误述、MAP-Q03 附加状态歧义及证据/关闭标准。用户授权提交当前实现、测试和报告；不追加模型调用、不部署，问题保持未解决。提交前核对产品/A/B冻结及匿名评分不变，沿用已通过检查。
+
+
+## Session 31: 完成交接可靠性首轮审计与保护测试
+
+**Date**: 2026-10-15
+**Task**: 完成交接可靠性首轮审计与保护测试
+**Branch**: `codex/handoff-reliability`
+
+### Summary
+
+按外部任务书完成 P0—P1；复用已有交接机制，补保护测试和最小设计，等待审阅，不实施业务改动。
+
+### Main Changes
+
+- 建立 reliability-2026-10-15 审计、设计与验证记录；保留历史反证与未执行边界。
+- 三处测试净新增 5 项，覆盖固定副本损坏或缺失、账号禁用回执访问及工作确认超时。
+
+### Git Commits
+
+未提交（本轮包含审计、保护测试和设计）。
+
+### Testing
+
+- [OK] 确定性基线 14 文件 316/316；桌面浏览器 32/32；修改后三文件 69/69。
+- [OK] build、最终 lint/typecheck、diff-check 通过；11 个源码/配置/fixture 指纹与基线一致。
+- [未执行] 真实 Docker daemon 不可连接，计算验收未执行；付费模型调用 0。
+
+### Status
+
+**P0—P1 已完成，下一轮设计待审；业务修复与真实模型/容器验收未完成。**
+
+### Next Steps
+
+- 审阅 plan.md 的窄展示修正及真实容器/自然场景验证；未提交、推送、部署或关闭 Issue。
+
+
+## Session 32: 完成冻结代码的真实交接模型测评
+
+**Date**: 2026-10-15
+**Task**: 完成冻结代码的真实交接模型测评
+**Branch**: `codex/handoff-reliability`
+
+### Summary
+
+用户授权保持产品代码不变开展真实模型测评，完成30样本观察并分别核对操作和回答。
+
+### Main Changes
+
+- 新增 live-evaluation.md 和 live-answer-review.md，保留原始失败、离线评分纠正及完整链限制。
+
+### Git Commits
+
+未提交（仅测评驱动、证据与报告；产品代码未改）。
+
+### Testing
+
+- [OK] 明确分派13/20；真歧义澄清5/5；真实Docker后台计算5/5。没有虚报分派成功，仍有流程、字段与范围误述。
+- [OK] 171次provider请求；输入含缓存1856222 token、输出30845 token；180冻结文件摘要未变。
+- [部分覆盖] 测试脚本嵌套目录/文件名前缀误报离线核对；完整提交验收链未完成，不宣称通过。
+
+### Status
+
+**本轮30样本观察和报告已完成；完整业务链验收仍未完成。**
+
+### Next Steps
+
+- 审阅实测结果与剩余覆盖缺口；不自动修改提示或产品代码、不提交推送部署。
+
+2026-10-15 提交前补记：用户要求记录测评报告、提交并 push。已将七次额外确认的上下文/工具说明分析追加到 live-evaluation.md，区分模型直接决策与说明诱因；无消融证据，不作唯一归因。提交本轮保护测试及审计/测评材料，产品实现未改，原始证据与临时驱动不入 Git。沿用已通过的316基线、32桌面、69增量、lint/typecheck/build及独立审查，文档补记后检查 diff 和敏感信息。

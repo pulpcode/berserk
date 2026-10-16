@@ -134,11 +134,27 @@ describe('task handoff business boundaries', () => {
     await expect(service.importFile(b,fileId,own.id,'outside/escape')).rejects.toMatchObject({code:'FILE_UNSAFE_FILE'});
     await expect(service.importFile(b,fileId,own.id,'../escape')).rejects.toMatchObject({code:'INVALID_INPUT'});
   });
-  it('detects changed fixed bytes before commit and download, and does not create a work', async () => {
+  it.each(['missing', 'corrupt'])('rejects %s fixed bytes before commit and download without creating work or a receipt', async fault => {
     const {service,prepare,workspace,root,dir} = await setup(); await writeFile(join(root,'input'),'original');
     const action = await prepare(a,{kind:'assign',taskSpaceId:workspace.taskSpaceId,payload:{workspaceId:workspace.id,assigneeSeatId:b.seatId,title:'任务',goal:'目标',inputPaths:['input']}});
-    await writeFile(join(dir,'collaboration','files',action.files[0].fileId,'content'),'modified');
+    const fixed = join(dir,'collaboration','files',action.files[0].fileId,'content');
+    if (fault === 'missing') await unlink(fixed); else await writeFile(fixed,'modified');
     await expect(service.commitPage(a,action.operationId)).rejects.toThrow(); await expect(service.openFile(a,action.files[0].fileId)).rejects.toThrow(); expect(service.list(b)).toEqual([]);
+    expect(service.getAction(a,action.operationId).receipt).toBeUndefined();
+  });
+  it.each(['missing', 'corrupt'])('rejects receiver import of %s committed bytes without publishing or overwriting a file', async fault => {
+    const {service,workspaces,assign,root,dir} = await setup(); await writeFile(join(root,'input'),'original');
+    const work = await assign(['input']); const file = work.inputFiles[0];
+    const own = workspaces.list(b.seatId).workspaces[0]; const receiverRoot = workspaces.filesDirectory(own.id,b.seatId);
+    const fixed = join(dir,'collaboration','files',file.fileId,'content');
+    if (fault === 'missing') await unlink(fixed); else await writeFile(fixed,'modified');
+    const target = join(receiverRoot,'input');
+    await expect(service.importFile(b,file.fileId,own.id,'input')).rejects.toThrow();
+    await expect(readFile(target)).rejects.toMatchObject({code:'ENOENT'});
+    await writeFile(target,'receiver edits');
+    await expect(service.importFile(b,file.fileId,own.id,'input')).rejects.toThrow();
+    expect(await readFile(target,'utf8')).toBe('receiver edits');
+    expect(service.read(b,work.id).inputFiles).toEqual(work.inputFiles);
   });
   it('cancellation prevents commit but cannot revoke committed work; abort creates no work', async () => {
     const {service,prepare,workspace} = await setup(); const input: WorkPrepareInput = {kind:'assign',taskSpaceId:workspace.taskSpaceId,payload:{workspaceId:workspace.id,assigneeSeatId:b.seatId,title:'任务',goal:'目标'}};

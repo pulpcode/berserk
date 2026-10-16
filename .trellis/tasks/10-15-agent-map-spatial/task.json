@@ -21,13 +21,15 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "第一阶段范围已确认，架构与实施方案待审阅，尚未批准空间分析实施。按用户要求以 8b6029c 提交方案，再以 0e5e457 合入 codex/map-basemaps@a79f1ae。复核确认架构可行并补充前端适配约定；main@d79a561 的结果投影尚未同步，map-query-scope 候选字段不是本任务前置条件。",
+  "notes": "范围已确认，架构待审阅，尚未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。",
   "meta": {
     "implementationApproved": false,
     "implementationComplete": false,
-    "reviewedProductBaseline": "0e5e457",
+    "reviewedProductBaseline": "a79f1ae + 75fc7f1",
     "mergedBasemapCommit": "a79f1ae",
-    "mainProjectionToIntegrate": "d79a561",
-    "basemapFeasibilityReview": "research/basemap-merge-review.md"
+    "basemapFeasibilityReview": "research/basemap-merge-review.md",
+    "mergedMainCommit": "75fc7f169cc82c34db989c0fb7ee5dda75bf9845",
+    "integratedMainProjection": "d79a561",
+    "mainMergeReview": "research/main-merge-review.md"
   }
 }

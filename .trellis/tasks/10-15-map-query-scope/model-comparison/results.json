@@ -1,0 +1,1225 @@
+{
+  "unblindedAt": "2026-10-15T11:30:22.500301+00:00",
+  "reviewFreeze": {
+    "frozenAt": "2026-10-15T11:29:27.886518+00:00",
+    "reviewHashes": {
+      ".trellis/tasks/10-15-map-query-scope/model-comparison/blind-review.json": "2584caa9ef8abec8dbf74fefe12e7fa75f5f2363cb4977fdc7961deaa5fd0d93",
+      ".trellis/tasks/10-15-map-query-scope/model-comparison/blind-review.md": "be7722b53a09dbd70e98375d1b2ab6052937770d4a61b7898257fac257f8bd5b"
+    },
+    "adjudication": "Retain independent primary grading. Report ambiguity separately; do not count as definitely correct/no risk. Pre-unblind sensitivity treats three substantive ambiguous statements as non-clean answers, without reclassifying them as confirmed false.",
+    "substantiveAmbiguitySampleIds": [
+      "1f3539b0dd24",
+      "2e218cd72c18",
+      "89f963eac4b4"
+    ],
+    "minorImprecisionSampleIds": [
+      "adae88f67b98"
+    ]
+  },
+  "checks": {
+    "exactRequestOnlyModelChanged": 24,
+    "completed": 24,
+    "generatedToolCalls": 0,
+    "executedToolCalls": 0,
+    "retryCount": 0,
+    "frozenInputsAndReviewUnchanged": true
+  },
+  "aggregates": {
+    "deepseek-flash": {
+      "cases": {
+        "C1": {
+          "correctPrimary": 1,
+          "incorrect": 2,
+          "substantiveAmbiguity": 1,
+          "appropriateFollowup": 0
+        },
+        "C2": {
+          "correctPrimary": 0,
+          "incorrect": 3,
+          "substantiveAmbiguity": 0,
+          "appropriateFollowup": 0
+        },
+        "C3": {
+          "correctPrimary": 3,
+          "incorrect": 0,
+          "substantiveAmbiguity": 1,
+          "appropriateFollowup": 0
+        },
+        "C4": {
+          "correctPrimary": 3,
+          "incorrect": 0,
+          "substantiveAmbiguity": 1,
+          "appropriateFollowup": 0
+        }
+      },
+      "calls": 12,
+      "definiteErrors": 5,
+      "correctPrimary": 7,
+      "substantiveAmbiguities": 3,
+      "cleanUnderSensitivity": 4,
+      "promptTokens": 124233,
+      "completionTokens": 3804,
+      "promptCacheHitTokens": 122112,
+      "elapsedMsTotal": 29150,
+      "elapsedMsMedian": 2435.0
+    },
+    "deepseek-v4-pro": {
+      "cases": {
+        "C1": {
+          "correctPrimary": 1,
+          "incorrect": 2,
+          "substantiveAmbiguity": 0,
+          "appropriateFollowup": 0
+        },
+        "C2": {
+          "correctPrimary": 0,
+          "incorrect": 3,
+          "substantiveAmbiguity": 0,
+          "appropriateFollowup": 0
+        },
+        "C3": {
+          "correctPrimary": 3,
+          "incorrect": 0,
+          "substantiveAmbiguity": 0,
+          "appropriateFollowup": 0
+        },
+        "C4": {
+          "correctPrimary": 3,
+          "incorrect": 0,
+          "substantiveAmbiguity": 0,
+          "appropriateFollowup": 0
+        }
+      },
+      "calls": 12,
+      "definiteErrors": 5,
+      "correctPrimary": 7,
+      "substantiveAmbiguities": 0,
+      "cleanUnderSensitivity": 7,
+      "promptTokens": 124410,
+      "completionTokens": 2515,
+      "promptCacheHitTokens": 82688,
+      "elapsedMsTotal": 37240,
+      "elapsedMsMedian": 2910.0
+    }
+  },
+  "predeclaredDecision": "Not met: no definite-error reduction in any failing case. No production model switch justified.",
+  "samples": [
+    {
+      "index": 1,
+      "caseId": "C1",
+      "model": "deepseek-flash",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "8a062675b311",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "本会话的 point-b（集合点乙）在所选引用版本中不存在（该版本按 point-a 筛选读取，total=1）",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2837,
+      "usage": {
+        "prompt_tokens": 14251,
+        "completion_tokens": 374,
+        "total_tokens": 14625,
+        "prompt_tokens_details": {
+          "cached_tokens": 14080
+        },
+        "prompt_cache_hit_tokens": 14080,
+        "prompt_cache_miss_tokens": 171
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/01"
+    },
+    {
+      "index": 2,
+      "caseId": "C1",
+      "model": "deepseek-v4-pro",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "01b7a45b4e04",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "备注对照准确；明确乙不在用户引用比较范围，没有声称乙在引用整版不存在。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 3564,
+      "usage": {
+        "prompt_tokens": 14277,
+        "completion_tokens": 190,
+        "total_tokens": 14467,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 14277
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/02"
+    },
+    {
+      "index": 3,
+      "caseId": "C2",
+      "model": "deepseek-flash",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "08b16e3f7b08",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "「仓储设施」图层的第 4～5 项摘要",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该筛选范围内的仓储设施对象共 7 个",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2590,
+      "usage": {
+        "prompt_tokens": 12304,
+        "completion_tokens": 238,
+        "total_tokens": 12542,
+        "prompt_tokens_details": {
+          "cached_tokens": 12160
+        },
+        "prompt_cache_hit_tokens": 12160,
+        "prompt_cache_miss_tokens": 144
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/03"
+    },
+    {
+      "index": 4,
+      "caseId": "C2",
+      "model": "deepseek-v4-pro",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "551ba0099f2c",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "本会话地图\"仓储设施\"图层（storage）按保存顺序的第 4～5 项摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "图层\"仓储设施\"当前共有 7 个对象（total=7）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2642,
+      "usage": {
+        "prompt_tokens": 12316,
+        "completion_tokens": 170,
+        "total_tokens": 12486,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 12316
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/04"
+    },
+    {
+      "index": 5,
+      "caseId": "C3",
+      "model": "deepseek-flash",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "2e218cd72c18",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "读取的是当前会话自己草稿的实时状态（`status: draft`）",
+          "reason": "可合理指读取当时的草稿状态；正文明确setId和revision1，没有断言后续自动同步，不单凭“实时”判错。"
+        },
+        {
+          "quote": "这不是固定版本",
+          "reason": "严格来说返回已有固定ref和revision1，应写成“不是显式指定ref的read模式”。但工具契约本身以draft当前草稿与read明确固定版本对比，结合紧邻版本号，可合理理解为操作方式差别；记录术语歧义，不升级为确定的内容/范围错误。"
+        }
+      ],
+      "rationale": "三项解释目标均准确完整；开头关于固定版本的术语欠精确，记录可产生误读的歧义，而非仅凭关键词判错。",
+      "substantiveAmbiguity": true,
+      "elapsedMs": 2904,
+      "usage": {
+        "prompt_tokens": 2164,
+        "completion_tokens": 439,
+        "total_tokens": 2603,
+        "prompt_tokens_details": {
+          "cached_tokens": 1920
+        },
+        "prompt_cache_hit_tokens": 1920,
+        "prompt_cache_miss_tokens": 244
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/05"
+    },
+    {
+      "index": 6,
+      "caseId": "C3",
+      "model": "deepseek-v4-pro",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "9df77fa23132",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "要确认其他图层具体对象，则需按相应图层 ID 再读",
+          "reason": "若第一次全图摘要已经完整返回，未必还需要按层重读；这是条件式建议的效率措辞，并未执行或拒绝当前解释任务，不作为工具错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 5051,
+      "usage": {
+        "prompt_tokens": 2167,
+        "completion_tokens": 373,
+        "total_tokens": 2540,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2167
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/06"
+    },
+    {
+      "index": 7,
+      "caseId": "C4",
+      "model": "deepseek-flash",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "a57f17d32b34",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "另列维修层及对象，先前完整摘要支持，但超出用户只展示本页的要求。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2137,
+      "usage": {
+        "prompt_tokens": 12692,
+        "completion_tokens": 313,
+        "total_tokens": 13005,
+        "prompt_tokens_details": {
+          "cached_tokens": 12544
+        },
+        "prompt_cache_hit_tokens": 12544,
+        "prompt_cache_miss_tokens": 148
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/07"
+    },
+    {
+      "index": 8,
+      "caseId": "C4",
+      "model": "deepseek-v4-pro",
+      "repeat": 1,
+      "status": "completed",
+      "sampleId": "edd2e41aed35",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 3068,
+      "usage": {
+        "prompt_tokens": 12710,
+        "completion_tokens": 183,
+        "total_tokens": 12893,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        },
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 12454
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/08"
+    },
+    {
+      "index": 9,
+      "caseId": "C1",
+      "model": "deepseek-v4-pro",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "8ee4be7d6153",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "“集合点乙”仅存在于本会话草稿，引用版本未列出该对象",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2987,
+      "usage": {
+        "prompt_tokens": 14277,
+        "completion_tokens": 222,
+        "total_tokens": 14499,
+        "prompt_tokens_details": {
+          "cached_tokens": 14208
+        },
+        "prompt_cache_hit_tokens": 14208,
+        "prompt_cache_miss_tokens": 69
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/09"
+    },
+    {
+      "index": 10,
+      "caseId": "C1",
+      "model": "deepseek-flash",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "7166367ee3ca",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "引用版本中不存在该对象，故无可比项",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2420,
+      "usage": {
+        "prompt_tokens": 14251,
+        "completion_tokens": 273,
+        "total_tokens": 14524,
+        "prompt_tokens_details": {
+          "cached_tokens": 14080
+        },
+        "prompt_cache_hit_tokens": 14080,
+        "prompt_cache_miss_tokens": 171
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/10"
+    },
+    {
+      "index": 11,
+      "caseId": "C2",
+      "model": "deepseek-v4-pro",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "c64d52e1577e",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "“仓储设施”图层（第4～5项）摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层共 7 个对象（`total:7`）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 1793,
+      "usage": {
+        "prompt_tokens": 12316,
+        "completion_tokens": 137,
+        "total_tokens": 12453,
+        "prompt_tokens_details": {
+          "cached_tokens": 12288
+        },
+        "prompt_cache_hit_tokens": 12288,
+        "prompt_cache_miss_tokens": 28
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/11"
+    },
+    {
+      "index": 12,
+      "caseId": "C2",
+      "model": "deepseek-flash",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "218cafcb6717",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "仓储设施图层（layerId `storage`）按保存顺序第 4～5 项摘要",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层在本次筛选下共 7 个对象（total=7）",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2258,
+      "usage": {
+        "prompt_tokens": 12304,
+        "completion_tokens": 268,
+        "total_tokens": 12572,
+        "prompt_tokens_details": {
+          "cached_tokens": 12160
+        },
+        "prompt_cache_hit_tokens": 12160,
+        "prompt_cache_miss_tokens": 144
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/12"
+    },
+    {
+      "index": 13,
+      "caseId": "C3",
+      "model": "deepseek-v4-pro",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "7e0311fd7e8f",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 5260,
+      "usage": {
+        "prompt_tokens": 2167,
+        "completion_tokens": 300,
+        "total_tokens": 2467,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "prompt_cache_hit_tokens": 2048,
+        "prompt_cache_miss_tokens": 119
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/13"
+    },
+    {
+      "index": 14,
+      "caseId": "C3",
+      "model": "deepseek-flash",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "adae88f67b98",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "items 采用默认分页（offset 0、limit 50）",
+          "reason": "参数实际显式给出0和50，只是数值恰与默认一致；未改变实际分页解释，记轻微术语不精确而不判实质事实错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2455,
+      "usage": {
+        "prompt_tokens": 2164,
+        "completion_tokens": 303,
+        "total_tokens": 2467,
+        "prompt_tokens_details": {
+          "cached_tokens": 1920
+        },
+        "prompt_cache_hit_tokens": 1920,
+        "prompt_cache_miss_tokens": 244
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/14"
+    },
+    {
+      "index": 15,
+      "caseId": "C4",
+      "model": "deepseek-v4-pro",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "7d090a485d7a",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 1583,
+      "usage": {
+        "prompt_tokens": 12710,
+        "completion_tokens": 135,
+        "total_tokens": 12845,
+        "prompt_tokens_details": {
+          "cached_tokens": 12672
+        },
+        "prompt_cache_hit_tokens": 12672,
+        "prompt_cache_miss_tokens": 38
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/15"
+    },
+    {
+      "index": 16,
+      "caseId": "C4",
+      "model": "deepseek-flash",
+      "repeat": 2,
+      "status": "completed",
+      "sampleId": "bd8449efa83d",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "另列维修层及对象、baseRef背景，证据支持但超出用户只展示本页的要求。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2114,
+      "usage": {
+        "prompt_tokens": 12692,
+        "completion_tokens": 305,
+        "total_tokens": 12997,
+        "prompt_tokens_details": {
+          "cached_tokens": 12544
+        },
+        "prompt_cache_hit_tokens": 12544,
+        "prompt_cache_miss_tokens": 148
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/16"
+    },
+    {
+      "index": 17,
+      "caseId": "C1",
+      "model": "deepseek-flash",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "1f3539b0dd24",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "引用版本对象清单中无同名对象，故无可比对应项",
+          "reason": "可被读作整版无乙，但前一句明确限定“引用摘要只含point-a”，后句为未纳入比较。按完整段落可合理理解为返回的所选清单无乙，未出现整版不存在的明确断言，保留歧义而不硬计事实错误。"
+        },
+        {
+          "quote": "唯一差异",
+          "reason": "标题、开头和结尾均限定备注及所读摘要字段，因此不将此词扩读成所有未读字段均相同。"
+        }
+      ],
+      "rationale": "甲备注比较完整正确；关于乙的“清单中无同名对象”存在范围歧义，但紧邻句已限定引用摘要，按保守且连贯的解释不判整版不存在。",
+      "substantiveAmbiguity": true,
+      "elapsedMs": 2487,
+      "usage": {
+        "prompt_tokens": 14251,
+        "completion_tokens": 335,
+        "total_tokens": 14586,
+        "prompt_tokens_details": {
+          "cached_tokens": 14080
+        },
+        "prompt_cache_hit_tokens": 14080,
+        "prompt_cache_miss_tokens": 171
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/17"
+    },
+    {
+      "index": 18,
+      "caseId": "C1",
+      "model": "deepseek-v4-pro",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "f85ddaf263b2",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "引用版本中只有 point-a 这一个对象",
+          "reason": "引用读取显式筛选point-a，total1只属于该筛选。未读引用版本的point-b，不能声称整版无乙或仅有甲。",
+          "kind": "unsupported_scope_claim"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": false,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "重复备注差异、补充版本或未读取字段边界；不因篇幅判错。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "甲备注差异已答对，但额外肯定引用整版没有乙（或只有甲），超出可见证据；范围提示不能抵消该断言。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2833,
+      "usage": {
+        "prompt_tokens": 14277,
+        "completion_tokens": 198,
+        "total_tokens": 14475,
+        "prompt_tokens_details": {
+          "cached_tokens": 14208
+        },
+        "prompt_cache_hit_tokens": 14208,
+        "prompt_cache_miss_tokens": 69
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/18"
+    },
+    {
+      "index": 19,
+      "caseId": "C2",
+      "model": "deepseek-flash",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "698e557d9826",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "**仓储设施**图层（layerId `storage`）第 4～5 项摘要如下",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该图层共有 **7** 个对象",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "末尾询问继续第6～7项或额外字段；并未修复当前错页，且建立在错误的图层数量上。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2185,
+      "usage": {
+        "prompt_tokens": 12304,
+        "completion_tokens": 290,
+        "total_tokens": 12594,
+        "prompt_tokens_details": {
+          "cached_tokens": 12160
+        },
+        "prompt_cache_hit_tokens": 12160,
+        "prompt_cache_miss_tokens": 144
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/19"
+    },
+    {
+      "index": 20,
+      "caseId": "C2",
+      "model": "deepseek-v4-pro",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "bdf60bb70e04",
+      "primaryOutcome": "incorrect",
+      "factualErrors": [
+        {
+          "quote": "这一页展示的是「仓储设施」图层（layerId: storage）中的第 4～5 项对象",
+          "reason": "随后列出的南仓/storage-2、河畔仓/storage-3来自全图第4～5项；本次query为空，没有仓储图层筛选，不能据此标为层内第4～5项。",
+          "kind": "wrong_page_scope"
+        },
+        {
+          "quote": "该「仓储设施」图层共有 **7 个对象**",
+          "reason": "total7和hasMore:true属于全图候选范围；仓储层数量和后续页状态未由本次结果核实。不能将该全图计数与页状态移用于仓储层。",
+          "kind": "wrong_count_scope"
+        }
+      ],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": false,
+        "taskCompletedCorrectly": false,
+        "missing": [
+          "尚未取得仓储图层内第4～5项的证据；输出的是全图分页项目。"
+        ]
+      },
+      "necessaryFollowup": true,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": []
+      },
+      "ambiguities": [],
+      "rationale": "将未带layerIds的全图offset3/limit2解释为仓储第4～5项，并将全图total7解释为仓储数量；没有生成有效补查调用。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 1533,
+      "usage": {
+        "prompt_tokens": 12316,
+        "completion_tokens": 112,
+        "total_tokens": 12428,
+        "prompt_tokens_details": {
+          "cached_tokens": 12288
+        },
+        "prompt_cache_hit_tokens": 12288,
+        "prompt_cache_miss_tokens": 28
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/20"
+    },
+    {
+      "index": 21,
+      "caseId": "C3",
+      "model": "deepseek-flash",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "961de3c21efc",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2450,
+      "usage": {
+        "prompt_tokens": 2164,
+        "completion_tokens": 339,
+        "total_tokens": 2503,
+        "prompt_tokens_details": {
+          "cached_tokens": 1920
+        },
+        "prompt_cache_hit_tokens": 1920,
+        "prompt_cache_miss_tokens": 244
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/21"
+    },
+    {
+      "index": 22,
+      "caseId": "C3",
+      "model": "deepseek-v4-pro",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "ec12377d1e40",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "补充版本背景或条件式补读建议；并未实际调用工具，不计为多余读取。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "因此，在 `repair` 图层内这 2 个对象已经是全部可返回对象",
+          "reason": "单独由hasMore=false不能推出已读前页；本例实际offset0、total2且返回两项，结论在完整上下文中有依据，不机械判末页推全量错误。"
+        }
+      ],
+      "rationale": "准确列出机修站、电修站，限定total2于repair，明确不能据此判断其他图层有无对象。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 4772,
+      "usage": {
+        "prompt_tokens": 2167,
+        "completion_tokens": 356,
+        "total_tokens": 2523,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "prompt_cache_hit_tokens": 2048,
+        "prompt_cache_miss_tokens": 119
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/22"
+    },
+    {
+      "index": 23,
+      "caseId": "C4",
+      "model": "deepseek-flash",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "89f963eac4b4",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。",
+          "补充完整图层清单、维修对象与版本背景，均有输入证据；当前采用措辞另记歧义。"
+        ]
+      },
+      "ambiguities": [
+        {
+          "quote": "来源为自动会话草稿上下文，非任务当前采用版本",
+          "reason": "没有current查询依据，若理解为已确认未采用则无依据；但整句在说明数据来源，且draft与任务当前publication是不同入口，可理解为“本数据不代表任务当前采用版本”。保留歧义，不认定其明确断言当前采用内容与本草稿不同。"
+        }
+      ],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": true,
+      "elapsedMs": 2313,
+      "usage": {
+        "prompt_tokens": 12692,
+        "completion_tokens": 327,
+        "total_tokens": 13019,
+        "prompt_tokens_details": {
+          "cached_tokens": 12544
+        },
+        "prompt_cache_hit_tokens": 12544,
+        "prompt_cache_miss_tokens": 148
+      },
+      "requestedModel": "deepseek-flash",
+      "responseModel": "deepseek-flash",
+      "evidenceDirectory": ".local/map-model-comparison/runs/23"
+    },
+    {
+      "index": 24,
+      "caseId": "C4",
+      "model": "deepseek-v4-pro",
+      "repeat": 3,
+      "status": "completed",
+      "sampleId": "fe63100d1d8a",
+      "primaryOutcome": "correct_answer",
+      "factualErrors": [],
+      "toolErrors": [],
+      "completeness": {
+        "requestedContentProvided": true,
+        "taskCompletedCorrectly": true,
+        "missing": []
+      },
+      "necessaryFollowup": false,
+      "effectiveNecessaryFollowup": false,
+      "redundancy": {
+        "toolCalls": [],
+        "prose": [
+          "用户只要本页；附带完整仓储顺序属于有依据的冗余。"
+        ]
+      },
+      "ambiguities": [],
+      "rationale": "东仓、山脚仓及仓储总数5准确；先前全图7项摘要为额外完整顺序说明提供依据，未重复读取。",
+      "substantiveAmbiguity": false,
+      "elapsedMs": 2154,
+      "usage": {
+        "prompt_tokens": 12710,
+        "completion_tokens": 139,
+        "total_tokens": 12849,
+        "prompt_tokens_details": {
+          "cached_tokens": 12672
+        },
+        "prompt_cache_hit_tokens": 12672,
+        "prompt_cache_miss_tokens": 38
+      },
+      "requestedModel": "deepseek-v4-pro",
+      "responseModel": "deepseek-v4-pro",
+      "evidenceDirectory": ".local/map-model-comparison/runs/24"
+    }
+  ]
+}

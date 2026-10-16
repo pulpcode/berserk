@@ -20,7 +20,9 @@
   "subtasks": [],
   "children": [
     "10-14-desktop-map-acceptance",
-    "10-14-map-result-reporting"
+    "10-14-map-result-reporting",
+    "10-15-map-result-projection",
+    "10-15-map-query-scope"
   ],
   "parent": null,
   "relatedFiles": [

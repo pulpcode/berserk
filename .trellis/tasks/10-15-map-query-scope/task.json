@@ -1,0 +1,147 @@
+{
+  "id": "map-query-scope",
+  "name": "map-query-scope",
+  "title": "地图工具契约与回答边界：收窄后的最小改进",
+  "description": "收窄方案已实施并执行固定复测；确定性检查通过，回答与全部业务验收未全面通过，scope收益未证实、默认不采用，待审阅。",
+  "status": "review",
+  "dev_type": "backend",
+  "scope": "map-query-scope",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-15",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-10-task-plan-validation",
+  "relatedFiles": [
+    ".trellis/tasks/10-15-map-query-scope/prd.md",
+    ".trellis/tasks/10-15-map-query-scope/design.md",
+    ".trellis/tasks/10-15-map-query-scope/implement.md",
+    ".trellis/tasks/10-15-map-query-scope/research.md",
+    ".trellis/tasks/10-15-map-query-scope/validation-cases.md",
+    ".trellis/tasks/10-15-map-query-scope/implement.jsonl",
+    ".trellis/tasks/10-15-map-query-scope/check.jsonl",
+    ".trellis/tasks/10-15-map-query-scope/implementation.md",
+    ".trellis/tasks/10-15-map-query-scope/validation.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-review.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-desktop-review.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-collaboration-review.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-recovery-review.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-query-review.md",
+    ".trellis/tasks/10-15-map-query-scope/semantic-diagnostic-review.md",
+    ".trellis/tasks/10-15-map-query-scope/scope-candidate.patch",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/plan.md",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/replay.mjs",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/replay.test.mjs",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/preflight-review.md",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/blind-packet.py",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/blind-review.md",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/blind-review.json",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/results.json",
+    ".trellis/tasks/10-15-map-query-scope/model-comparison/validation.md",
+    ".trellis/tasks/10-15-map-query-scope/issues.md"
+  ],
+  "notes": "2026-10-15 用户要求先提交当前Git，再落盘最小改进方案。已提交上一轮实现及复测为d79a561；本任务仅规划，等待用户审阅后明确批准实施。未修改产品、未调用真实模型、未部署；上一轮失败记录保留，不归档为全面验收完成。 本轮按用户要求收窄并更新方案：M1/M2/M3必做，E1 scope候选，D1 changeCounts暂缓；加入未参与既往修复的H01–H03与固定3次重复。A/B构建及题目先冻结，候选不自动默认启用，仍等待审阅，不开始实施。 用户随后要求提交Git并开始实施；已提交方案为7c43e45，启动本任务。沿用已授权虚构隔离真实模型验收，不含部署或scope默认采用。 已按批准方案实施并完成固定批次：实际97次案例（协同依赖跳过3次、正常澄清多1次），未追加失败补跑。确定性检查通过；局部范围推断仍错，H01测试背景存在歧义；scope不采用，保持review不归档。 用户批准同输入两模型对照；固定四案例×两模型×三次共24次已完成并盲评后解盲。各5次明确错误，Pro附加歧义更少但核心范围错误未改善；不切换模型、不部署、不追加调用，报告待审阅。",
+  "meta": {
+    "designStatus": "approved",
+    "implementationApproved": true,
+    "implementationComplete": true,
+    "baselineCommit": "d79a561",
+    "desktopOnly": true,
+    "preserveServiceReceiptContract": true,
+    "required": [
+      "M1_tool_contract_clarity",
+      "M2_grounded_complete_reporting",
+      "M3_validation_design"
+    ],
+    "candidate": [
+      "E1_query_scope_isolated_comparison"
+    ],
+    "deferred": [
+      "D1_counts_to_changeCounts"
+    ],
+    "originalBusinessRequests": 57,
+    "newBusinessCases": [
+      "H01",
+      "H02",
+      "H03"
+    ],
+    "fixedRepetitionsPerKeyCase": 3,
+    "requiredA": {
+      "businessRequests": 75,
+      "controlledExplanations": 9
+    },
+    "candidateB": {
+      "businessRequests": 9,
+      "controlledExplanations": 6,
+      "businessCases": [
+        "G02-order",
+        "H01",
+        "H02"
+      ],
+      "diagnosticCases": [
+        "Q01",
+        "Q02"
+      ]
+    },
+    "totalIncludingCandidate": {
+      "businessRequests": 84,
+      "controlledExplanations": 15,
+      "caseExecutions": 99
+    },
+    "newCasesAreStrictBlindTest": false,
+    "freezeBeforeModelRuns": true,
+    "separateBusinessAndBoundaryScoring": true,
+    "scoreAccuracyAndCompleteness": true,
+    "candidateDefaultAdoptionApproved": false,
+    "deployed": false,
+    "approvedAt": "2026-10-15",
+    "planCommit": "7c43e45",
+    "validationComplete": true,
+    "semanticAcceptance": "not_fully_passed",
+    "candidateDecision": "not_adopted_benefit_not_proven",
+    "actualBusinessRequests": 82,
+    "actualControlledExplanations": 15,
+    "actualCaseExecutions": 97,
+    "visibleAssistantMessages": 244,
+    "unexecutedDependentRequests": 3,
+    "modelComparison": {
+      "approved": true,
+      "models": [
+        "deepseek-flash",
+        "deepseek-v4-pro"
+      ],
+      "plannedCalls": 24,
+      "status": "complete_pending_review",
+      "thinking": "disabled",
+      "actualCalls": 24,
+      "technicalFailures": 0,
+      "generatedToolCalls": 0,
+      "executedToolCalls": 0,
+      "definiteErrors": {
+        "deepseek-flash": 5,
+        "deepseek-v4-pro": 5
+      },
+      "substantiveAmbiguities": {
+        "deepseek-flash": 3,
+        "deepseek-v4-pro": 0
+      },
+      "decision": "predeclared_improvement_threshold_not_met",
+      "report": ".trellis/tasks/10-15-map-query-scope/model-comparison/validation.md",
+      "productionModelChanged": false
+    },
+    "openIssues": [
+      "MAP-Q01_partial_read_existence_inference",
+      "MAP-Q02_unfiltered_pagination_misinterpretation",
+      "MAP-Q03_unsolicited_state_ambiguity"
+    ],
+    "issueReport": ".trellis/tasks/10-15-map-query-scope/issues.md"
+  }
+}
