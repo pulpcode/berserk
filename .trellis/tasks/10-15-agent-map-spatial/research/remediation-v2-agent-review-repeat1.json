@@ -1,0 +1,1820 @@
+{
+  "batch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2",
+  "repeat": 1,
+  "reviewerType": "agent",
+  "status": "complete",
+  "reviewed": 60,
+  "scheduled": 60,
+  "entries": [
+    {
+      "id": "D01-1-V0",
+      "caseId": "D01",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:26:39.943877+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V0/score.json"
+      ],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答宣称草稿未发布、未设为任务当前；只读draft和测距，无发布列表/current查询证据。数值核心正确，但附加系统状态断言缺少所需依据。"
+      ],
+      "scorerConcerns": [
+        "自动通过不覆盖未读取的发布/current状态断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D01-1-V1",
+      "caseId": "D01",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:26:39.948637+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V1/score.json"
+      ],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D01-1-V2",
+      "caseId": "D01",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:26:39.953455+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V2/score.json"
+      ],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D01-1-V3",
+      "caseId": "D01",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:26:39.957686+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V3/score.json"
+      ],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D01-1-V4",
+      "caseId": "D01",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:26:39.962104+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D01-1-V4/score.json"
+      ],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D05-1-V1",
+      "caseId": "D05",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:27:30.122858+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V1/score.json"
+      ],
+      "notes": [
+        "固定region contains edge=true；读取两对象几何且工具referenceItems含类别/状态，推导intersects同为真合理；本轮未发布/采用表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D05-1-V2",
+      "caseId": "D05",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:27:30.127716+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V2/score.json"
+      ],
+      "notes": [
+        "核心含边界判断与资源4点/boat2 truck2统计正确，但附言称改用intersects（含边界接触）边界点处理会不同；该点仍相交，未验证措辞不能使错误事实成立。"
+      ],
+      "scorerConcerns": [
+        "自动通过未覆盖错误intersects附言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D05-1-V3",
+      "caseId": "D05",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:27:30.132248+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V3/score.json"
+      ],
+      "notes": [
+        "固定region→edge分别contains/intersects均true，解释准确；追加询问仅为后续可选分析，已完成当前问题。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D05-1-V4",
+      "caseId": "D05",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:27:30.136554+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V4/score.json"
+      ],
+      "notes": [
+        "读取实际坐标并核对角点，contains=true解释与限定正确，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D05-1-V0",
+      "caseId": "D05",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:27:58.507423+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D05-1-V0/score.json"
+      ],
+      "notes": [
+        "contains/intersects及包含/分离集合均正确；完整回答却说资源外因busy状态未选中，实际filter仅空间条件且未过滤status，错误归因。"
+      ],
+      "scorerConcerns": [
+        "自动核心通过未覆盖附加错误因果解释。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D07-1-V0",
+      "caseId": "D07",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:30:15.812626+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V0/score.json"
+      ],
+      "notes": [
+        "核心buffer→固定几何filter→category计数正确；附言把r3距离报成约1.9km并说2000m会纳入，独立球面核算约2270.75m，结论错误；经度半宽也误写0.0135°（实际约0.0146°）。"
+      ],
+      "scorerConcerns": [
+        "自动通过不覆盖额外估距和扩半径建议。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D07-1-V1",
+      "caseId": "D07",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:30:15.815476+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V1/score.json"
+      ],
+      "notes": [
+        "固定半径1500米缓冲筛选全部5资源得r1/r2，统计boat1/truck1；不把点数当运力，范围与限制准确。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D07-1-V2",
+      "caseId": "D07",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:30:15.817859+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V2/score.json"
+      ],
+      "notes": [
+        "完整链和数量、状态、无status过滤说明准确，明确固定版本与只分析，不写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D07-1-V3",
+      "caseId": "D07",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:30:15.820080+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V3/score.json"
+      ],
+      "notes": [
+        "正确加载Skill并完成固定缓冲→筛选→统计；各点ready可合理指计数的两命中点，均ready，不将该措辞强解为全部5点。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D07-1-V4",
+      "caseId": "D07",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:30:15.822173+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D07-1-V4/score.json"
+      ],
+      "notes": [
+        "一次错误顶层distanceM参数被拒后同会话修正，合法链完成且无写入；关于未命中点的保守附言不改变正确结论。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D09-1-V0",
+      "caseId": "D09",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:33:11.826218+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V0/score.json"
+      ],
+      "notes": [
+        "ready与禁入区排除的集合、最近两名r2/r3和距离均正确；全部过程回答已读，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D09-1-V1",
+      "caseId": "D09",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:33:11.826520+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": null,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/score.json"
+      ],
+      "notes": [
+        "最近两名r2/r3和距离正确。附言边界点约3150m，独立球面距离约3027.6m；未预设附加估距容差，留人工判定。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [
+        "最近两名r2/r3和距离正确。附言边界点约3150m，独立球面距离约3027.6m；未预设附加估距容差，留人工判定。"
+      ],
+      "semanticDisposition": "pending_human"
+    },
+    {
+      "id": "D09-1-V2",
+      "caseId": "D09",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:33:11.826573+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V2/score.json"
+      ],
+      "notes": [
+        "ready后disjoint再nearest，满足等价筛选顺序；集合、距离及限制准确，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D09-1-V3",
+      "caseId": "D09",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:33:11.826624+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V3/score.json"
+      ],
+      "notes": [
+        "实际计算使用正确r2/r3；正文把资源外写成r4，夹具实际ID为outside，附加身份信息错误。"
+      ],
+      "scorerConcerns": [
+        "自动事实检查未覆盖回答的额外身份陈述。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D09-1-V4",
+      "caseId": "D09",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:33:11.826671+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": null,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/score.json"
+      ],
+      "notes": [
+        "核心筛选及排序正确。附言边界点位于禁区边界附近未给距离依据；附近无预设阈值，留人工判断其是否构成误导。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [
+        "核心筛选及排序正确。附言边界点位于禁区边界附近未给距离依据；附近无预设阈值，留人工判断其是否构成误导。"
+      ],
+      "semanticDisposition": "pending_human"
+    },
+    {
+      "id": "D10-1-V0",
+      "caseId": "D10",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:34:21.262255+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V0/score.json"
+      ],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D10-1-V1",
+      "caseId": "D10",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:34:21.262540+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V1/score.json"
+      ],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D10-1-V2",
+      "caseId": "D10",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:34:21.262591+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V2/score.json"
+      ],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D10-1-V3",
+      "caseId": "D10",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:34:21.262641+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V3/score.json"
+      ],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。",
+        "过程中称草稿仅两个含点图层，实际reference/resources/ties三个均有点；核心排序正确但附加图层事实错误。"
+      ],
+      "scorerConcerns": [
+        "自动检查不含过程附加图层计数。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D10-1-V4",
+      "caseId": "D10",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:34:21.262690+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D10-1-V4/score.json"
+      ],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D11-1-V0",
+      "caseId": "D11",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:35:10.068249+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V0/result.json"
+      ],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D11-1-V1",
+      "caseId": "D11",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:35:10.068538+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V1/result.json"
+      ],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D11-1-V2",
+      "caseId": "D11",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:35:10.068601+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V2/result.json"
+      ],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D11-1-V3",
+      "caseId": "D11",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:35:10.068652+00:00",
+      "objectScope": false,
+      "method": false,
+      "numericGeometry": false,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V3/result.json"
+      ],
+      "notes": [
+        "首轮只读map-annotations及source.list，忽略用户草稿限定，未检索真实草稿origin就将任务导向外部来源并要求澄清；未加载spatial-analysis。",
+        "虚构工具次数上限：共4次工具/4次provider，11960ms，budgetExceeded=false、stopReason空且无工具错误；首轮自称上限时仅2次工具。",
+        "后轮如实承认没有固定结果，但整个两轮任务没有buffer/filter，属模型范围检索/方法执行失败而非基础设施故障。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D11-1-V4",
+      "caseId": "D11",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:35:10.068703+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D11-1-V4/result.json"
+      ],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D12-1-V0",
+      "caseId": "D12",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:23.121964+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V0/score.json"
+      ],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D12-1-V1",
+      "caseId": "D12",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:23.122294+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V1/score.json"
+      ],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D12-1-V2",
+      "caseId": "D12",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:23.122350+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/score.json"
+      ],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。",
+        "过程声称保存生成范围需显式geometry:true，实际保存工具契约不存在该参数；这是错误方法说明，后续实际调用及结果正确。"
+      ],
+      "scorerConcerns": [
+        "自动事实检查未覆盖过程对保存参数的错误说明。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D12-1-V3",
+      "caseId": "D12",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:23.122402+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V3/score.json"
+      ],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。",
+        "未加载spatial-analysis但任务实际完成；加载指标应与语义成功分开。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D12-1-V4",
+      "caseId": "D12",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:23.122459+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V4/score.json"
+      ],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D13-1-V0",
+      "caseId": "D13",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:59.146711+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V0/result.json"
+      ],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D13-1-V1",
+      "caseId": "D13",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:59.147007+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V1/result.json"
+      ],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D13-1-V2",
+      "caseId": "D13",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:59.147066+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V2/result.json"
+      ],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D13-1-V3",
+      "caseId": "D13",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:59.147126+00:00",
+      "objectScope": true,
+      "method": null,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/result.json"
+      ],
+      "notes": [
+        "按冻结clarify-ambiguous要求应先澄清，本例先分别计算；主统计暂不计成功，但不列确定模型真实失败，保留口径争议。",
+        "两者距离3276.28m/4256.88m及身份正确，明确列出歧义，没有擅选唯一对象或写入；不属伪造对象或几何。"
+      ],
+      "scorerConcerns": [
+        "当前失败依据是冻结的先澄清行为约束；双列合法候选并保留歧义的产品等价性可另行讨论，未据此放宽本次标准。"
+      ],
+      "humanPending": [
+        "rubric_equivalence：冻结先澄清口径判失败，但原请求未要求必须先询问；本回答完整列出两个合法候选且不擅自选定，是否属于可接受的条件回答需复核。"
+      ],
+      "semanticDisposition": "pending_human"
+    },
+    {
+      "id": "D13-1-V4",
+      "caseId": "D13",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:36:59.147258+00:00",
+      "objectScope": true,
+      "method": null,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/score.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/result.json"
+      ],
+      "notes": [
+        "按冻结clarify-ambiguous要求应先澄清，本例先分别计算；主统计暂不计成功，但不列确定模型真实失败，保留口径争议。",
+        "两者距离3276.28m/4256.88m及身份正确，明确列出歧义，没有擅选唯一对象或写入；不属伪造对象或几何。"
+      ],
+      "scorerConcerns": [
+        "当前失败依据是冻结的先澄清行为约束；双列合法候选并保留歧义的产品等价性可另行讨论，未据此放宽本次标准。"
+      ],
+      "humanPending": [
+        "rubric_equivalence：冻结先澄清口径判失败，但原请求未要求必须先询问；本回答完整列出两个合法候选且不擅自选定，是否属于可接受的条件回答需复核。"
+      ],
+      "semanticDisposition": "pending_human"
+    },
+    {
+      "id": "D14-1-V0",
+      "caseId": "D14",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:38:09.470319+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V0/score.json"
+      ],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "答复称本轮未请求sourceRefs，实际annotation_read明确请求geometry/attributes/sourceRefs；还将资源层称4资源点而实际5点。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D14-1-V1",
+      "caseId": "D14",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:38:09.470606+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V1/score.json"
+      ],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "已读取sourceRefs并核实无绑定；真实SPATIAL_GEOMETRY_MISSING错误被准确说明，不冒充零距离。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D14-1-V2",
+      "caseId": "D14",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:38:09.470667+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V2/score.json"
+      ],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读无字段的annotation摘要，未查sourceRefs即断言草稿不含这两个来源的标注；摘要不足以支撑该否定关联结论。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D14-1-V3",
+      "caseId": "D14",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:38:09.470716+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V3/score.json"
+      ],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读草稿摘要，未查sourceRefs即断言16对象与任务来源无关；缺关联字段时不能断定无关。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D14-1-V4",
+      "caseId": "D14",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:38:09.470770+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D14-1-V4/score.json"
+      ],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读草稿摘要且自述未读几何，却断言其中无与来源对应的车辆/道路几何；未查sourceRefs无法核实关联。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D17-1-V0",
+      "caseId": "D17",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:01.867239+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V0/score.json"
+      ],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D17-1-V1",
+      "caseId": "D17",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:01.867582+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V1/score.json"
+      ],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。",
+        "未读取sourceRefs却断言草稿这些点没有sourceRefs，位置不同可证但不能据此确定无来源关联。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查不覆盖附加身份/来源字段断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D17-1-V2",
+      "caseId": "D17",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:01.867698+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V2/score.json"
+      ],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D17-1-V3",
+      "caseId": "D17",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:01.867769+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V3/score.json"
+      ],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。",
+        "回答将基点标作r0/origin，原始唯一ID为origin，r0没有依据；还未读取sourceRefs即声称草稿不含关联道路。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查不覆盖附加身份/来源字段断言。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "D17-1-V4",
+      "caseId": "D17",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:01.867825+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D17-1-V4/score.json"
+      ],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D18-1-V0",
+      "caseId": "D18",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:29.124771+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V0/score.json"
+      ],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D18-1-V1",
+      "caseId": "D18",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:29.125065+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V1/score.json"
+      ],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D18-1-V2",
+      "caseId": "D18",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:29.125122+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V2/score.json"
+      ],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D18-1-V3",
+      "caseId": "D18",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:29.125173+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V3/score.json"
+      ],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "D18-1-V4",
+      "caseId": "D18",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:39:29.125228+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D18-1-V4/score.json"
+      ],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。",
+        "答复称其余16个对象未改动，实际总16，除origin外15个；附加计数错误。"
+      ],
+      "scorerConcerns": [
+        "自动效果检查未覆盖回答的其余对象计数。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "H04-1-V0",
+      "caseId": "H04",
+      "variant": "V0",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:40:24.736459+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V0/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V0/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V0/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V0/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V0/score.json"
+      ],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "真实读取后人工汇总boat3/truck1/缺1正确；bus0按已填字段观察值理解，未将缺类别r2推定为bus或零。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "H04-1-V1",
+      "caseId": "H04",
+      "variant": "V1",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:40:24.736798+00:00",
+      "objectScope": false,
+      "method": false,
+      "numericGeometry": false,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V1/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V1/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V1/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V1/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V1/score.json"
+      ],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "表中boat=2遗漏busy但真实category=boat的outside，用户没有要求ready过滤；5点计数只汇总4点。缺字段r2识别正确不能抵消遗漏已知类别。"
+      ],
+      "scorerConcerns": [
+        "自动missing-property边界检查通过，未校验全部自然语言类别计数/过程。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    },
+    {
+      "id": "H04-1-V2",
+      "caseId": "H04",
+      "variant": "V2",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:40:24.736862+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V2/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V2/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V2/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V2/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V2/score.json"
+      ],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "summarize/filter均真实报缺字段后，明确用已读属性手动统计boat3/truck1/缺1；等价正确，不因工具未成功而判失败。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "H04-1-V3",
+      "caseId": "H04",
+      "variant": "V3",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:40:24.736916+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": true,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V3/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V3/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V3/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V3/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V3/score.json"
+      ],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "未调用summarize，直接完整读取attributes手动准确统计；属于合法等价方法，加载指标单列。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "semanticDisposition": "passed"
+    },
+    {
+      "id": "H04-1-V4",
+      "caseId": "H04",
+      "variant": "V4",
+      "repeat": 1,
+      "reviewer": "remediation_eval",
+      "reviewerType": "agent",
+      "reviewedAt": "2026-10-16T09:40:24.736966+00:00",
+      "objectScope": true,
+      "method": true,
+      "numericGeometry": true,
+      "claims": false,
+      "effects": true,
+      "criticalErrors": [],
+      "evidence": [
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V4/plan.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V4/preparation.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V4/final-state.json",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V4/model-inputs.jsonl",
+        "/private/tmp/spatial-remediation-diagnostic-20261016-v2/H04-1-V4/score.json"
+      ],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "最终boat3/truck1/缺1正确，但过程先称资源4点，后把错误归因为前次摘要只列4/分页，实际第一次已列全5且hasMore=false；未纠正虚构截断原因。"
+      ],
+      "scorerConcerns": [
+        "自动missing-property边界检查通过，未校验全部自然语言类别计数/过程。"
+      ],
+      "humanPending": [],
+      "semanticDisposition": "failed"
+    }
+  ],
+  "completedAt": "2026-10-16T09:40:24.737027+00:00",
+  "summary": {
+    "dispositions": {
+      "failed": 17,
+      "passed": 39,
+      "pending_human": 4
+    },
+    "byVariant": {
+      "V0": {
+        "failed": 4,
+        "passed": 8
+      },
+      "V1": {
+        "passed": 9,
+        "pending_human": 1,
+        "failed": 2
+      },
+      "V2": {
+        "passed": 9,
+        "failed": 3
+      },
+      "V3": {
+        "passed": 6,
+        "failed": 5,
+        "pending_human": 1
+      },
+      "V4": {
+        "passed": 7,
+        "pending_human": 2,
+        "failed": 3
+      }
+    },
+    "criticalErrors": 0,
+    "limitations": [
+      "本文件为独立agent语义审阅，不是人工裁定。",
+      "仅新批repeat1的60条，旧31及repeat2不合并。",
+      "pending_human不计成功，估距/模糊附近表述及双列歧义候选的等价口径待复核。"
+    ]
+  }
+}

@@ -1,0 +1,718 @@
+{
+  "createdAt": "2026-10-16T09:49:56.881110+00:00",
+  "reason": "provider_quota_exhausted",
+  "description": "真实宿主lastResult返回insufficient_quota后人工停止父进程继续派发；在途自然完成。最后D12-2-V1又成功，不能据此认定额度持续耗尽或已恢复；未重试，未覆盖原progress/score。此批冻结runner尚无额度即停闸门，后续代码已补该保护但不修改此批快照。",
+  "scheduled": 120,
+  "attempted": 95,
+  "recorded": 95,
+  "completeTrials": 87,
+  "infrastructureInterrupted": 8,
+  "quotaEntries": [
+    "D11-2-V2",
+    "D11-2-V3",
+    "D11-2-V4",
+    "D11-2-V0",
+    "D12-2-V2",
+    "D12-2-V3",
+    "D12-2-V4",
+    "D12-2-V0"
+  ],
+  "unrun": [
+    "D13-2-V3",
+    "D13-2-V4",
+    "D13-2-V0",
+    "D13-2-V1",
+    "D13-2-V2",
+    "D14-2-V4",
+    "D14-2-V0",
+    "D14-2-V1",
+    "D14-2-V2",
+    "D14-2-V3",
+    "D17-2-V0",
+    "D17-2-V1",
+    "D17-2-V2",
+    "D17-2-V3",
+    "D17-2-V4",
+    "D18-2-V1",
+    "D18-2-V2",
+    "D18-2-V3",
+    "D18-2-V4",
+    "D18-2-V0",
+    "H04-2-V2",
+    "H04-2-V3",
+    "H04-2-V4",
+    "H04-2-V0",
+    "H04-2-V1"
+  ],
+  "outcomes": [
+    {
+      "id": "D01-1-V0",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-1-V1",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-1-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-1-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-1-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-1-V1",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-1-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-1-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-1-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-1-V0",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-1-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-1-V3",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-1-V4",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-1-V0",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-1-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-1-V3",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-1-V4",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-1-V0",
+      "status": "recorded",
+      "providerCalls": 7,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-1-V1",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-1-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-1-V4",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-1-V0",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-1-V1",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-1-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-1-V3",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-1-V0",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-1-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-1-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-1-V3",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-1-V4",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D12-1-V1",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D12-1-V2",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D12-1-V3",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D12-1-V4",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D12-1-V0",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D13-1-V2",
+      "status": "recorded",
+      "providerCalls": 2,
+      "failureCategory": null,
+      "lastResult": "cancelled"
+    },
+    {
+      "id": "D13-1-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D13-1-V4",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D13-1-V0",
+      "status": "recorded",
+      "providerCalls": 2,
+      "failureCategory": null,
+      "lastResult": "cancelled"
+    },
+    {
+      "id": "D13-1-V1",
+      "status": "recorded",
+      "providerCalls": 2,
+      "failureCategory": null,
+      "lastResult": "cancelled"
+    },
+    {
+      "id": "D14-1-V3",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D14-1-V4",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D14-1-V0",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D14-1-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D14-1-V2",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D17-1-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D17-1-V0",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D17-1-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D17-1-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D17-1-V3",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D18-1-V0",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D18-1-V1",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D18-1-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D18-1-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D18-1-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "H04-1-V1",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "H04-1-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "H04-1-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "H04-1-V4",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "H04-1-V0",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-2-V1",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-2-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-2-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-2-V4",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D01-2-V0",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-2-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-2-V3",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-2-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-2-V0",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D05-2-V1",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-2-V3",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-2-V4",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-2-V0",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-2-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D07-2-V2",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-2-V4",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-2-V0",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-2-V1",
+      "status": "recorded",
+      "providerCalls": 7,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-2-V2",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D09-2-V3",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-2-V0",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-2-V1",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-2-V2",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-2-V3",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D10-2-V4",
+      "status": "recorded",
+      "providerCalls": 3,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-2-V1",
+      "status": "recorded",
+      "providerCalls": 6,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    },
+    {
+      "id": "D11-2-V2",
+      "status": "recorded",
+      "providerCalls": 5,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D11-2-V3",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D11-2-V4",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D11-2-V0",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D12-2-V2",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D12-2-V3",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D12-2-V4",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D12-2-V0",
+      "status": "recorded",
+      "providerCalls": 1,
+      "failureCategory": "provider_quota_exhausted",
+      "lastResult": "failed"
+    },
+    {
+      "id": "D12-2-V1",
+      "status": "recorded",
+      "providerCalls": 4,
+      "failureCategory": null,
+      "lastResult": "succeeded"
+    }
+  ],
+  "originalProgressExecuted": 94,
+  "parentExitCode": 143,
+  "modelAcceptancePassed": false,
+  "humanCalibration": "pending"
+}

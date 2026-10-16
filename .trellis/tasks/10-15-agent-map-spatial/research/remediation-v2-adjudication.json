@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-16T17:41:10.437194+08:00",
+  "reviewerType": "agent",
+  "humanReview": "pending",
+  "reviewPurpose": "独立复核争议口径，减少误判；不以增加通过率为目标。",
+  "batchRoot": "/private/tmp/spatial-remediation-diagnostic-20261016-v2",
+  "productFreeze": "f6a6447",
+  "scope": "只读五个已完成案例的冻结 plan、完整公开助手文本、实际调用/工具结果、provider 参数契约及前后状态；没有读取先前审阅结论或依赖自动分数判定；未读取私有推理。",
+  "constraints": [
+    "原 score/review 不修改",
+    "90% 门槛不变",
+    "不重跑模型、不修改产品或夹具",
+    "对条件答案与模糊措辞保留人类裁定，不自行放宽冻结行为"
+  ],
+  "rulesSource": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.trellis/tasks/10-15-agent-map-spatial/remediation-plan.md §7.4",
+  "summary": {
+    "confirmedFalseClaims": 2,
+    "needsHumanPolicyAdjudication": 3,
+    "confirmedOperationalFailures": 0,
+    "pureStyleOnlyFailuresEstablished": 0,
+    "scoresOverwritten": 0
+  },
+  "cases": [
+    {
+      "caseId": "D13-1-V3",
+      "reviewerType": "agent",
+      "humanReview": "pending",
+      "frozenExpected": {
+        "operations": [],
+        "behavior": "clarify-ambiguous"
+      },
+      "evidence": [
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/plan.json",
+          "sha256": "92cee273bdaeb320e390753c0d6ef59c8d5db85da0f413a1b75708b9ad7f11f6"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/preparation.json",
+          "sha256": "f64dfa8c3ab958a441f0bfd6a2218ec3d381134f6769baf6c963bd8c14d0e896"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/final-state.json",
+          "sha256": "7d3535521e69543e0fac30c66c0e70ab9e92819f422375e17f841812081f9a8a"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/native-sessions/2026-10-16T09-34-01-428Z_01a1440f-b0d3-765e-a684-027a9fdf3dd2.jsonl",
+          "sha256": "ba6324cd2b91f97a1a43344409815bcc52c4e97cc1f24ae3a6df87c518b11514"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V3/model-inputs.jsonl",
+          "sha256": "731965f10640640d894d6d07b9f43fd8a023546d117daf40e93afa845d31b8d0"
+        }
+      ],
+      "stateCheck": {
+        "sameDocument": true,
+        "revisionBefore": 1,
+        "revisionAfter": 1,
+        "publicationsUnchanged": true,
+        "currentUnchanged": true
+      },
+      "criticalErrorEstablished": false,
+      "originalReviewModified": false,
+      "classification": "needs_human_adjudication_of_conditional_answer",
+      "label": "需人裁定；不是确凿对象或数值事实错误",
+      "coreFacts": "两个同名集合点都被明确标识为 amb-a/amb-b，分别用固定 revision 1 实际测量到 origin。工具值 3276.2805429652635 m、4256.8791990289565 m；最终表格按两位小数正确给出 3276.28、4256.88。没有选一个冒充唯一对象，没有写入。",
+      "factualCorrectnessRecommendation": "pass",
+      "scopeInterpretation": "未解析用户到底指哪一个，但公开列出所有同名候选并在最后请求用户指定，属于透明的条件/枚举回答，不应标为伪造对象或擅自认定唯一身份。",
+      "frozenMethodCompliance": "fail: 冻结预期 clarify-ambiguous，Skill 写明名称多个匹配且上下文无法确定时先澄清；本例是在先计算两种情况后再问，未满足先澄清的时间顺序。",
+      "semanticEquivalentStatus": "候选合法等价，而非已经冻结允许的等价路径。若产品允许只读且成本受控时列全候选的条件答案，本例可满足这种一般用户意图；当前不得静默回改成已获批准的等价行为。",
+      "overallRecommendation": "pending_human; 按当前先澄清冻结策略不计完整通过，同时将事实正确与方法策略不符单列。",
+      "humanDecisionNeeded": "确认本期歧义处理是否必须先停下来问，还是接受明确标识全部候选、分别只读计算且不替用户取舍的条件答案。适用规则须统一于所有同类案例，原冻结分数保留；若调整仅另报勘误/敏感性结果，不重新挑选模型运行。",
+      "nativeEvidenceLines": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "loadingSeparate": "实际调用轨迹未有 skill_read；这属于需加载用例的加载项失败，不能单凭该项将正确两组数值说成事实错误。"
+    },
+    {
+      "caseId": "D13-1-V4",
+      "reviewerType": "agent",
+      "humanReview": "pending",
+      "frozenExpected": {
+        "operations": [],
+        "behavior": "clarify-ambiguous"
+      },
+      "evidence": [
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/plan.json",
+          "sha256": "a06f2c9856a7a6fe84c3f82610b0fac5c35230f83f55254312d739a9a47eed8c"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/preparation.json",
+          "sha256": "d603ed7960cc55e8bcf1a052f18ac4d7fe81a9176764ee21beada49d7ad0556b"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/final-state.json",
+          "sha256": "a255dda7b5d38147fc497c2efcaa271c2f06488d9dc8007af80f52d9be2f3b96"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/native-sessions/2026-10-16T09-34-14-070Z_01a1440f-e235-76c4-97a6-9dc31bc5fa92.jsonl",
+          "sha256": "3f0a92c890a754077b731ed273f929846a905bfb33735a5111be59b3e874db40"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D13-1-V4/model-inputs.jsonl",
+          "sha256": "943569122e9acf3d7d5e208e5a9023664b8dfda5eb282d57706943a8af2c94bd"
+        }
+      ],
+      "stateCheck": {
+        "sameDocument": true,
+        "revisionBefore": 1,
+        "revisionAfter": 1,
+        "publicationsUnchanged": true,
+        "currentUnchanged": true
+      },
+      "criticalErrorEstablished": false,
+      "originalReviewModified": false,
+      "classification": "needs_human_adjudication_of_conditional_answer",
+      "label": "需人裁定；不是确凿对象或数值事实错误",
+      "coreFacts": "两个同名集合点都被明确标识为 amb-a/amb-b，分别用固定 revision 1 实际测量到 origin。工具值 3276.2805429652635 m、4256.8791990289565 m；最终表格按两位小数正确给出 3276.28、4256.88。没有选一个冒充唯一对象，没有写入。",
+      "factualCorrectnessRecommendation": "pass",
+      "scopeInterpretation": "未解析用户到底指哪一个，但公开列出所有同名候选并在最后请求用户指定，属于透明的条件/枚举回答，不应标为伪造对象或擅自认定唯一身份。",
+      "frozenMethodCompliance": "fail: 冻结预期 clarify-ambiguous，Skill 写明名称多个匹配且上下文无法确定时先澄清；本例是在先计算两种情况后再问，未满足先澄清的时间顺序。",
+      "semanticEquivalentStatus": "候选合法等价，而非已经冻结允许的等价路径。若产品允许只读且成本受控时列全候选的条件答案，本例可满足这种一般用户意图；当前不得静默回改成已获批准的等价行为。",
+      "overallRecommendation": "pending_human; 按当前先澄清冻结策略不计完整通过，同时将事实正确与方法策略不符单列。",
+      "humanDecisionNeeded": "确认本期歧义处理是否必须先停下来问，还是接受明确标识全部候选、分别只读计算且不替用户取舍的条件答案。适用规则须统一于所有同类案例，原冻结分数保留；若调整仅另报勘误/敏感性结果，不重新挑选模型运行。",
+      "nativeEvidenceLines": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "loadingSeparate": "显式加载 Skill 的 selection 存在，但先澄清规则未被遵循；不据此否定工具测量。"
+    },
+    {
+      "caseId": "D09-1-V1",
+      "reviewerType": "agent",
+      "humanReview": "pending",
+      "frozenExpected": {
+        "operations": [
+          "filter",
+          "nearest"
+        ],
+        "objectIds": [
+          "r2",
+          "r3"
+        ]
+      },
+      "evidence": [
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/plan.json",
+          "sha256": "459be94c4768bbf032c510e129e8ce4afda9dd4b1351ee095315ecf3627a4c91"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/preparation.json",
+          "sha256": "bc4fc438c566b077a0ef197c8a7f0986c9b1467e7f7023e79b69a549d6a929da"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/final-state.json",
+          "sha256": "2c1928d29620617a6d15e9797448d7c2e81c30398a8057040610e1c350415c02"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/native-sessions/2026-10-16T09-29-36-050Z_01a1440b-a431-7682-a843-26efe6cc4c22.jsonl",
+          "sha256": "172cce756553f9e78557cbd19cd3eaf2d9fd8bbd6439b25266c43945d35277ee"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V1/model-inputs.jsonl",
+          "sha256": "ed4ee39df3f6f2bda5519773375ea9f7fc58a1e875778b67b9345ab8fbd4b50a"
+        }
+      ],
+      "stateCheck": {
+        "sameDocument": true,
+        "revisionBefore": 1,
+        "revisionAfter": 1,
+        "publicationsUnchanged": true,
+        "currentUnchanged": true
+      },
+      "criticalErrorEstablished": false,
+      "originalReviewModified": false,
+      "classification": "confirmed_factual_error_in_extra_numeric_claim",
+      "label": "确凿附加数值错误；核心分析可接受等价",
+      "coreFacts": "先筛 ready，再用 contains 得到禁区内 r1，再从原 ready 固定结果用 itemIds 明确选择补集 r2/r3/edge 做 nearest。候选补集由已读完整集合与真实 contains 结果支持，前两项 r2/r3 与 1224.8494778907375/2270.7458829990746 m 正确。不能只因未直接使用 disjoint 或未引用 contains 命中集合而判方法错误。",
+      "disputedClaim": "边界点（ready，truck）距离基点约 3150 m 左右，排在第三，未进入前二。",
+      "independentOracle": {
+        "method": "Python math 标准库直接按冻结球半径 6371008.8 m 的 haversine 公式核算；未导入被测 Turf 或产品算法。",
+        "origin": [
+          114,
+          22.5
+        ],
+        "edge": [
+          114.02,
+          22.52
+        ],
+        "distanceM": 3027.63596463402,
+        "claimedM": 3150,
+        "absoluteErrorM": 122.36403536597982,
+        "relativeErrorPercent": 4.04157028108137
+      },
+      "reason": "第 17 行 nearest 仅返回前两点，没有 edge 的 distanceM；第 18 行额外给出约 3150 m。真实约 3027.64 m，误差约 122.36 m/4.04%，不是按展示位数的常规四舍五入。未预先登记允许这样的估算误差，不能事后新设 5% 容差使其通过。排序第三本身是正确的，与多余距离错误分开。",
+      "factualCorrectnessRecommendation": "fail",
+      "methodRecommendation": "pass_as_equivalent_complement_selection",
+      "overallRecommendation": "fail_under_frozen_full_answer_rule",
+      "humanDecisionNeeded": "所有代理裁定仍待人复核；若另定义宽松估距容差，应作为统一新评分版本，不能只豁免本例。",
+      "nativeEvidenceLines": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    },
+    {
+      "caseId": "D09-1-V4",
+      "reviewerType": "agent",
+      "humanReview": "pending",
+      "frozenExpected": {
+        "operations": [
+          "filter",
+          "nearest"
+        ],
+        "objectIds": [
+          "r2",
+          "r3"
+        ]
+      },
+      "evidence": [
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/plan.json",
+          "sha256": "44f8ce4b8f697381e853c808ade5cd4a10eef139dd9d46c371a1a1f75dcecd82"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/preparation.json",
+          "sha256": "fb5341bc0b8fde3222ac3e367079db9461e147f6cfc9fb027f01dd2b5c7ff524"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/final-state.json",
+          "sha256": "0101d25743eb30a92e399b879173fe534e5340be28fce8c28ab63b6c595eab62"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/native-sessions/2026-10-16T09-28-59-139Z_01a1440b-1402-720a-990c-30d742bd0a0e.jsonl",
+          "sha256": "0583c3a0e411e5d4deaafbdfc8914eeebf187f809615f834294fd074df99a8a4"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D09-1-V4/model-inputs.jsonl",
+          "sha256": "aaa7b554b27bafaab2cfc3c99ffe46c44d8643e8943bc146afd268882eb25489"
+        }
+      ],
+      "stateCheck": {
+        "sameDocument": true,
+        "revisionBefore": 1,
+        "revisionAfter": 1,
+        "publicationsUnchanged": true,
+        "currentUnchanged": true
+      },
+      "criticalErrorEstablished": false,
+      "originalReviewModified": false,
+      "classification": "unsupported_qualitative_spatial_claim_needs_human_adjudication",
+      "label": "核心正确；“附近”属无依据定性判断，不能冒称已证明精确真假",
+      "coreFacts": "filter 对资源层完整 5 点执行 disjoint + ready 得到 r2/r3/edge，nearest 真实使用该结果，前两名 r2/r3 及距离正确；无写入。",
+      "disputedClaim": "边界点位于禁区边界附近但经判定与禁入区分离（disjoint，不含边界接触），故保留在候选内。",
+      "geometryEvidence": {
+        "edge": [
+          114.02,
+          22.52
+        ],
+        "excludedBounds": [
+          113.999,
+          22.501,
+          114.001,
+          22.507
+        ],
+        "minimumLatitudeGapDegrees": 0.013,
+        "exclusionLatitudeSpanDegrees": 0.006,
+        "minimumLongitudeGapDegrees": 0.019,
+        "exclusionLongitudeSpanDegrees": 0.002
+      },
+      "reason": "disjoint 只证明无交集，不证明接近边界。实际 edge 在另一个观察区的角点，不在禁入区边界上；与禁区的纬度间隔已大于其南北跨度两倍，横向间隔约其宽度 9.5 倍。名称“边界点”不能充当“靠近禁区”的证据。但“附近”未给距离阈值/地图尺度，所以不应把它等同于有确定容差的数值错误，或伪造一个距离阈值断言必错。",
+      "factualCorrectnessRecommendation": "unsupported_extra_claim; disjoint 与保留候选的事实部分通过。",
+      "methodRecommendation": "pass",
+      "overallRecommendation": "pending_human; 按严格要求所有事实有依据的口径建议不计完整通过，但单列为无依据定性附言，不升级为几何计算错或关键错误。",
+      "humanDecisionNeeded": "确认冻结全文事实规则是否将未定义尺度的“附近”作为不受支持的事实断言，或视为没有影响结论的模糊措辞。应对所有同类附言一致处理，不因整体分数需要临时放宽。",
+      "nativeEvidenceLines": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "caseId": "D12-1-V2",
+      "reviewerType": "agent",
+      "humanReview": "pending",
+      "frozenExpected": {
+        "operations": [
+          "buffer"
+        ],
+        "allowWrites": "save"
+      },
+      "evidence": [
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/plan.json",
+          "sha256": "14ea2024eb2e95d46437028891db5a585173a50a4637373fa5168b5b3749473d"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/preparation.json",
+          "sha256": "f4af7c058da3f307570c68220ad031c9e8f2120e243d47f21f1746d3ad9b65fd"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/final-state.json",
+          "sha256": "797930089b03b416a46628df749ec54805d98aa779c4d88fe0aea421d58d986e"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/native-sessions/2026-10-16T09-32-58-279Z_01a1440e-ba26-75b3-87c7-e051f8504d4e.jsonl",
+          "sha256": "e67fcfcbb4195a32f0a1bcabeeeb22b05df8898567ce748df63e30342c47ebff"
+        },
+        {
+          "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/model-inputs.jsonl",
+          "sha256": "f33e04c2360393f98393defa037fc42e21af495e18b98e9aa59b0988ec3997cf"
+        }
+      ],
+      "stateCheck": {
+        "sameDocument": false,
+        "revisionBefore": 1,
+        "revisionAfter": 2,
+        "publicationsUnchanged": true,
+        "currentUnchanged": true,
+        "addedObjects": [
+          "buffer-500-origin"
+        ],
+        "existingObjectsUnchanged": true,
+        "savedName": "临时范围",
+        "savedLayer": "derived",
+        "savedGeometryExactlyEqualsBuffer": true
+      },
+      "criticalErrorEstablished": false,
+      "originalReviewModified": false,
+      "classification": "confirmed_tool_contract_misstatement_in_process_text",
+      "label": "确凿过程参数说明错误；真实计算和保存正确",
+      "coreFacts": "buffer 实际输入是固定草稿 origin、distanceM=500。annotation_from_analysis 以原 resultRef 保存，无 itemId，真实新增 derived/临时范围，revision 1→2，几何逐坐标与缓冲结果完全一致，已有对象不变，无发布/采用。",
+      "disputedClaim": "结果含生成几何与原点对象，保存生成范围需显式用 geometry:true。",
+      "wireContract": {
+        "path": "/private/tmp/spatial-remediation-diagnostic-20261016-v2/D12-1-V2/model-inputs.jsonl",
+        "line": 1,
+        "tool": "annotation_from_analysis",
+        "properties": [
+          "resultRef",
+          "itemId",
+          "layerId",
+          "objectId",
+          "name"
+        ],
+        "additionalProperties": false,
+        "savingGeneratedGeometry": "不填 itemId；geometry:true 属于 spatial_analyze 的结果输入选择，不是此保存工具字段。"
+      },
+      "reason": "第 12 行首段把后续分析的选择器规则套到保存，明确使用“需”，并非纯文风差异。紧接着说明“使用 annotation_from_analysis ...不填 itemId”，实际调用也正确，最终答复对保存效果准确。因此不能判成保存失败、错误几何、未授权写入或工具实现失败。正确实际动作不自动让前句 API 必需条件变真。",
+      "factualCorrectnessRecommendation": "fail_for_process_contract_claim; final_result_and_effects_pass",
+      "methodRecommendation": "pass_for_actual_calls",
+      "overallRecommendation": "fail_under_full_visible_answer_rule; minor_explanation_error_not_operational_failure",
+      "humanDecisionNeeded": "如希望把同段后续正确说明视为已纠正前句，应统一定义可接受的纠错证据与过程文本评分范围；当前没有明确撤回前句，不能临时只评分最终答复来通过。",
+      "nativeEvidenceLines": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ]
+}
