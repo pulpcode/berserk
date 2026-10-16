@@ -144,3 +144,36 @@ it('keeps annotation receipts in native details and UI while the actual provider
   expect(JSON.stringify(payloads.at(-1))).not.toContain(receipt.hash!);
   expect(reopened.get(session.id,'alpha').messages.find(message=>message.toolName==='annotation_action')?.annotationResult).toEqual(publication.annotationResult);
 });
+
+
+it('delivers the deployed spatial discovery catalog on the wire and loads its matching body through native skill_read', async () => {
+  const payloads:Array<{messages:WireMessage[]}>=[];
+  vi.stubGlobal('fetch', async (input:Request|string|URL,init?:RequestInit)=>{
+    payloads.push(JSON.parse(String(init?.body??(input instanceof Request?await input.text():''))));
+    const read=payloads.length===1;
+    const delta=read?{role:'assistant',tool_calls:[{index:0,id:'read-spatial-method',type:'function',function:{name:'skill_read',arguments:JSON.stringify({id:'spatial-analysis'})}}]}:{role:'assistant',content:'已读取空间方法。'};
+    const chunks=[{id:'spatial-catalog',object:'chat.completion.chunk',created:1,model:'deepseek-flash',choices:[{index:0,delta,finish_reason:null}]},{id:'spatial-catalog',object:'chat.completion.chunk',created:1,model:'deepseek-flash',choices:[{index:0,delta:{},finish_reason:read?'tool_calls':'stop'}],usage:{prompt_tokens:2,completion_tokens:2,total_tokens:4}}];
+    return new Response(chunks.map(chunk=>`data: ${JSON.stringify(chunk)}\n\n`).join('')+'data: [DONE]\n\n',{headers:{'Content-Type':'text/event-stream'}});
+  });
+  const dir=await mkdtemp(join(tmpdir(),'berserk-spatial-catalog-wire-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
+  const config=testConfig(dir,{provider:'deepseek',model:'deepseek-flash'}),lab=await PiLab.create(config);cleanup.push(()=>lab.close());
+  const session=await lab.createSession();
+  const skill=await lab.resources.readSkill(session.workspaceId,'spatial-analysis');
+  const info=await lab.resources.info(session.workspaceId);
+  const catalog=info.skills.find(item=>item.id===skill.id)!;
+  // Compare deployment metadata to the actual checked-in frontmatter; do not mock either description.
+  const description=skill.content.split('\n').find(line=>line.startsWith('description: '))!.slice('description: '.length);
+  expect(catalog.description).toBe(description);
+  for(const capability of ['组合分析','固定结果续问','边界判断','分析结果保存'])expect(catalog.description).toContain(capability);
+  const request=lab.start(session.id,'请读取用于固定结果续问、边界判断和分析结果保存的空间方法。');
+  await request.run(()=>{});
+  expect(lab.get(session.id).lastResult?.status).toBe('succeeded');expect(payloads).toHaveLength(2);
+  expect(textOf(payloads[0].messages[0])).toContain(`spatial-analysis（${catalog.description}）`);
+  expect(JSON.stringify(payloads[0])).not.toContain('明确本次范围');
+  const delivered=payloads[1].messages.find(message=>message.role==='tool');
+  expect(JSON.parse(textOf(delivered!))).toEqual(skill);
+  expect(lab.getRequestResources(session.id,request.requestId)).toMatchObject({skills:expect.arrayContaining([catalog]),readSkills:[skill]});
+  const native=(await Promise.all((await readdir(join(dir,'sessions'))).map(file=>readFile(join(dir,'sessions',file),'utf8')))).join('\n');
+  expect(native).toContain('berserk.skill-read.v1');expect(native).toContain(description);
+  expect(JSON.stringify(payloads)).not.toContain(config.apiKey);
+});

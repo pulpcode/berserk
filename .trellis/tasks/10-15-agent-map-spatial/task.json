@@ -47,11 +47,15 @@
     "remediationExperimentsApproved": true,
     "executionHold": null,
     "remediationPlanCommit": "21988f6",
-    "remediationPhase": "development_diagnostics",
+    "remediationPhase": "development_diagnostics_revised",
     "remediationOptionalModelApproved": false,
     "remediationReadonlyModeApproved": false,
     "remediationScorerCommit": "c28eb7e",
     "remediationCodeValidated": true,
-    "remediationDiagnosticScheduled": 180
+    "remediationDiagnosticScheduled": 120,
+    "remediationDiscardedIncompleteTreatmentTrials": 31,
+    "remediationTotalAuthorizedTrials": 151,
+    "remediationDiagnosticRepeats": 2,
+    "remediationDiagnosticReplanApproved": true
   }
 }

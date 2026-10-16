@@ -17,6 +17,13 @@ describe('isolated spatial remediation diagnostics',()=>{
     }
     expect(schedule[0].variant).not.toBe(schedule[60].variant);
   });
+  it('supports a separately preregistered two-repeat batch without selecting favorable cases',()=>{
+    const schedule=remediationSchedule(2);expect(schedule).toHaveLength(120);
+    expect(new Set(schedule.map(entry=>entry.id)).size).toBe(120);
+    for(const variant of ['V0','V1','V2','V3','V4'])expect(schedule.filter(entry=>entry.variant===variant)).toHaveLength(24);
+    expect(schedule.every(entry=>entry.repeat<=2)).toBe(true);
+    expect(schedule).toEqual(remediationSchedule(3).filter(entry=>entry.repeat<=2));
+  });
   it('requires one runtime per declared variant',()=>{
     const runtimes=['V0','V1','V2','V3','V4'].map(id=>({id,packageRoot:'/tmp/frozen'}));
     expect(parseRemediationRuntimes({version:1,runtimes}).runtimes).toHaveLength(5);
@@ -27,14 +34,17 @@ describe('isolated spatial remediation diagnostics',()=>{
     const make=(tool:string,skill:string)=>[
       {file:'fixtures/skills/spatial-analysis/SKILL.md',sha256:skill},
       {file:'scripts/probe-spatial-cases.ts',sha256:'common-fixture'},
-      {file:'src/pi/spatial-tools.ts',sha256:tool}];
+      {file:'src/pi/spatial-tools.ts',sha256:tool},
+      {file:'src/resources/service.ts',sha256:skill}];
     const hashes={V0:make('old','old'),V1:make('new','old'),V2:make('new','new'),V3:make('new','new'),V4:make('new','new')};
-    expect(validateRemediationSources(hashes)).toEqual({tools:['src/pi/spatial-tools.ts'],skill:['fixtures/skills/spatial-analysis/SKILL.md']});
+    expect(validateRemediationSources(hashes)).toEqual({tools:['src/pi/spatial-tools.ts'],skill:['fixtures/skills/spatial-analysis/SKILL.md','src/resources/service.ts']});
     for(const id of ['V0','V1','V2','V3','V4'] as RemediationVariant[]){
       const altered=structuredClone(hashes);altered[id][1].sha256='changed-fixture';
       expect(()=>validateRemediationSources(altered)).toThrow();
     }
     expect(()=>validateRemediationSources({...hashes,V0:hashes.V1})).toThrow();
+    const staleCatalog=structuredClone(hashes);for(const id of ['V2','V3','V4'] as const)staleCatalog[id][3].sha256='old';
+    expect(()=>validateRemediationSources(staleCatalog)).toThrow();
     expect(()=>validateRemediationSources({...hashes,V3:[...hashes.V3,{file:'unexpected.ts',sha256:'x'}]})).toThrow();
   });
   it('preserves default preparation text and neutralizes only synthetic business text',()=>{

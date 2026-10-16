@@ -12,8 +12,9 @@ export type RemediationVariant=typeof remediationVariants[number];
 export interface RemediationRuntime {id:RemediationVariant;packageRoot:string}
 interface RuntimePlan {version:1;runtimes:RemediationRuntime[]}
 type SourceHashes=Awaited<ReturnType<typeof spatialEvidenceHashes>>;
-export function remediationSchedule(){
-  return [1,2,3].flatMap(repeat=>remediationCaseIds.flatMap((caseId,caseIndex)=>
+export function remediationSchedule(repeats:2|3=3){
+  assert.ok(repeats===2||repeats===3,'Diagnostics require 2 or 3 predeclared repeats');
+  return Array.from({length:repeats},(_,i)=>i+1).flatMap(repeat=>remediationCaseIds.flatMap((caseId,caseIndex)=>
     remediationVariants.map((_,offset)=>{
       const variant=remediationVariants[(offset+repeat-1+caseIndex)%remediationVariants.length];
       return {id:`${caseId}-${repeat}-${variant}`,caseId,repeat,variant,
@@ -44,31 +45,33 @@ export function validateRemediationSources(hashes:Record<RemediationVariant,Sour
   const tools=changes('V0','V1');
   const allowed=new Set(['src/pi/spatial-tools.ts','src/spatial/service.ts','src/spatial/geometry.ts']);
   assert.ok(tools.length>0&&tools.every(file=>allowed.has(file)),'V0/V1 may differ only in reviewed P2 files');
-  assert.deepEqual(changes('V1','V2'),['fixtures/skills/spatial-analysis/SKILL.md'],'V1/V2 must isolate Skill content');
+  const skill=['fixtures/skills/spatial-analysis/SKILL.md','src/resources/service.ts'];
+  assert.deepEqual(changes('V1','V2'),skill,'V1/V2 must isolate Skill content and its controlled catalog description');
   assert.deepEqual(changes('V2','V3'),[],'V3 differs through native loading only');
   assert.deepEqual(changes('V2','V4'),[],'V4 differs through synthetic preparation only');
-  return {tools,skill:['fixtures/skills/spatial-analysis/SKILL.md']};
+  return {tools,skill};
 }
 async function main(){
-  const args=process.argv.slice(2);let manifest='',output='',prepareOnly=false,port=4391;
+  const args=process.argv.slice(2);let manifest='',output='',prepareOnly=false,port=4391,repeats:2|3=3;
   for(let i=0;i<args.length;i++){
     const arg=args[i],value=args[i+1];
     if(arg==='--prepare-only')prepareOnly=true;
+    else if(arg==='--repeats'&&(value==='2'||value==='3')){repeats=Number(value) as 2|3;i++;}
     else if(arg==='--runtimes'&&value){manifest=resolve(value);i++;}
     else if(arg==='--output'&&value){output=resolve(value);i++;}
     else if(arg==='--port'&&/^\d+$/.test(value??'')&&Number(value)>1023&&Number(value)<65536){port=Number(value);i++;}
-    else throw new Error('用法：--runtimes 固定快照清单 --output 新目录 [--port 4391] [--prepare-only]；禁止重试/覆盖');
+    else throw new Error('用法：--runtimes 固定快照清单 --output 新目录 [--port 4391] [--prepare-only] [--repeats 2|3]；禁止重试/覆盖');
   }
   assert.ok(manifest&&output,'Missing runtime manifest or output');
   const plan=parseRemediationRuntimes(JSON.parse(await readFile(manifest,'utf8')));
   const roots=Object.fromEntries(plan.runtimes.map(item=>[item.id,item.packageRoot])) as Record<RemediationVariant,string>;
   const hashes=Object.fromEntries(await Promise.all(remediationVariants.map(async id=>[id,await spatialEvidenceHashes(roots[id])])) as Array<[RemediationVariant,SourceHashes]>) as Record<RemediationVariant,SourceHashes>;
-  const differences=validateRemediationSources(hashes),schedule=remediationSchedule();
+  const differences=validateRemediationSources(hashes),schedule=remediationSchedule(repeats);
   // Separate no-model preflight: every runtime plus missing-geometry/missing-property fixtures.
   const entries=prepareOnly?schedule.filter(entry=>entry.repeat===1&&(entry.caseId===remediationCaseIds[0]||entry.variant==='V2'&&['D14','H04'].includes(entry.caseId))):schedule;
   await mkdir(output,{mode:0o700});
   const save=(name:string,value:unknown)=>writeFile(join(output,name),JSON.stringify(value,null,2)+'\n',{mode:0o600});
-  await save('schedule.json',{version:1,kind:'remediation-development',prepareOnly,scheduled:entries.length,
+  await save('schedule.json',{version:1,kind:'remediation-development',prepareOnly,repeats,scheduled:entries.length,
     fullDiagnosticScheduled:schedule.length,schedule:entries,runtimes:plan.runtimes,hashes,differences,
     startedAt:new Date().toISOString(),semanticReview:'pending_review',modelAcceptancePassed:false,
     backgroundAblation:{changed:['synthetic task title','synthetic task goal','seat responsibility text'],preserved:['businessRefs','focus areas/time/topics','access and data'],claim:'Narrative-background ablation only, not removal of all task context.'},
