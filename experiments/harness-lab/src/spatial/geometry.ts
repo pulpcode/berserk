@@ -10,8 +10,30 @@ import type { SpatialGeometry, SpatialRelation, SpatialRequest } from '../contra
 import { spatialError, validateGeometry, positions } from './validation.js';
 import type { Position } from '../contracts/context.js';
 
-export const METHOD='Turf 7.2.0; sphere R=6371008.8m; WGS84 planar topology; buffer AEQD 32 segments per quadrant (point buffers usually 128 edges)';
-export const LIMITATIONS=['球面距离/面积不是测绘级椭球测量；拓扑按经纬度线段。','缓冲圆弧每象限近似为 32 段；点缓冲通常为 128 边，线缓冲总边数随形状变化。近似边缘与精确距离阈值可能不同。','最近表示地理距离，不代表路程、时间、可通行或专业适用性。'];
+/** Describes only a new calculation; historical reads keep their stored metadata. */
+export function calculationDescription(request:Exclude<SpatialRequest,{operation:'read'}>):{method:string;limitations:string[]} {
+  const sphere='Turf 7.2.0; sphere R=6371008.8m';
+  const sphericalLimit='球面近似不是测绘级椭球测量；未提供逐结果误差界限。';
+  const topology='Turf 7.2.0 + closed-region coverage; WGS84 planar topology';
+  const topologyLimit='拓扑按经纬度线段；contains 包含边界，intersects 包括边界接触，不代表道路连通。';
+  switch(request.operation) {
+    case 'measure':return {method:`${sphere}; ${request.metric}; unit=${request.metric==='area'?'m²':'m'}`,limitations:[sphericalLimit,...(request.metric==='distance'||request.metric==='point_to_line'?['地理距离不代表路程、行程时间或可通行性。']:[])]};
+    case 'relate':return {method:`${topology}; input ${request.relation} target`,limitations:[topologyLimit]};
+    case 'buffer':return {method:'Turf 7.2.0; buffer AEQD 32 segments per quadrant (point buffers usually 128 edges); radius in m',limitations:['缓冲圆弧每象限近似为 32 段；点缓冲通常为 128 边，线缓冲总边数随形状变化。近似边缘与精确距离阈值可能不同。']};
+    case 'nearest':return {method:`${sphere}; point distance ascending, then full identity; first count items`,limitations:[sphericalLimit,'最近表示限定候选中的地理距离，不代表路程、时间、可通行或专业适用性；同距不扩大 count。']};
+    case 'summarize':return {method:'Count unique complete object identities by scalar field; null is a separate group',limitations:['统计输入集合的对象数，不是属性数值之和或资源容量；缺字段不能视为零或空类别。']};
+    case 'filter': {
+      const method=['Filter input candidates'];
+      const limitations=['仅表示明确输入范围内的匹配对象；candidateCount 是筛选前数量，items 是命中集合。'];
+      if(request.spatial) {
+        if('distanceM' in request.spatial) {method.push(`${sphere}; candidate point to target point/line distance <= distanceM (m)`);limitations.push(sphericalLimit,'距离阈值不增加隐式容差，不等同于近似缓冲多边形的包含判断。');}
+        else {method.push(`${topology}; target ${request.spatial.relation} candidate`);limitations.push(topologyLimit);}
+      }
+      if(request.attributes?.length) {method.push('AND predicates on actual top-level scalar fields');limitations.push('全部候选的必需属性均须存在；缺失字段不是条件不匹配。');}
+      return {method:method.join('; '),limitations};
+    }
+  }
+}
 const unsupported=()=>spatialError('UNSUPPORTED_GEOMETRY','该操作不支持这组几何类型；请核对对象与方法。');
 export function measure(metric:Extract<SpatialRequest,{operation:'measure'}>['metric'],a:SpatialGeometry,b?:SpatialGeometry):number {
   if(metric==='distance' && a.type==='Point' && b?.type==='Point') return distance(a,b,{units:'meters'});

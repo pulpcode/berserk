@@ -4,7 +4,7 @@ import type { SpatialInput, SpatialItem, SpatialRequest, SpatialResult } from '.
 import { SpatialInputs, type SpatialScope } from './inputs.js';
 import { spatialRequestValid } from '../contracts/spatial.js';
 import { LIMITS, spatialError, validateItems } from './validation.js';
-import { LIMITATIONS, METHOD } from './geometry.js';
+import { calculationDescription } from './geometry.js';
 import { runCalculation } from './worker.js';
 const one=(items:SpatialItem[])=>{if(items.length!==1) throw spatialError('AMBIGUOUS','该位置必须解析为恰好一个对象；请明确对象范围。');return items[0];};
 export class SpatialAnalysisService {
@@ -19,7 +19,7 @@ export class SpatialAnalysisService {
     if(request.operation==='nearest' && one(target!.items).geometry.type!=='Point') throw spatialError('UNSUPPORTED_GEOMETRY','邻近排序参考对象必须是单点。');
     if(request.operation==='filter' && request.spatial) {const g=one(target!.items).geometry;if('distanceM' in request.spatial && !['Point','LineString'].includes(g.type) || 'relation' in request.spatial && request.spatial.relation==='contains' && !['Polygon','MultiPolygon'].includes(g.type)) throw spatialError('UNSUPPORTED_GEOMETRY','空间筛选参考几何类型不支持。');}
     const refs:SpatialInput[]=[request.input,...(targetInput?[targetInput]:[])];
-    const result:SpatialResult={schemaVersion:1,resultRef:`spatial:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,operation:request.operation,parameters:structuredClone(request),createdAt:new Date().toISOString(),scope:structuredClone(refs),completeness:{status:'complete',candidateCount:data.items.length},items:structuredClone(data.items),...(target?{referenceItems:structuredClone(target.items)}:{}),method:METHOD,limitations:LIMITATIONS,provenance:[...data.provenance,...(target?.provenance??[])]};
+    const result:SpatialResult={schemaVersion:1,resultRef:`spatial:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,operation:request.operation,parameters:structuredClone(request),createdAt:new Date().toISOString(),scope:structuredClone(refs),completeness:{status:'complete',candidateCount:data.items.length},items:structuredClone(data.items),...(target?{referenceItems:structuredClone(target.items)}:{}),...calculationDescription(request),provenance:[...data.provenance,...(target?.provenance??[])]};
     result.provenance=[...new Map(result.provenance.map(p=>[JSON.stringify(p),p])).values()];
     if(result.provenance.length>100) throw spatialError('LIMIT','分析依赖的独立读取超过 100 项，未截断依据。');
     const calculated=await runCalculation({request,data,target,result},scope.signal);

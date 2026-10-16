@@ -8,7 +8,7 @@ import { SpatialAnalysisService } from '../src/spatial/service.js';
 import { PiLab } from '../src/pi/lab.js';
 import { fakeRuntime,testConfig } from './pi/fake-runtime.js';
 import type { SituationObject } from '../src/contracts/context.js';
-import type { SpatialInput, SpatialResult } from '../src/contracts/spatial.js';
+import { extractSpatialResult, projectSpatialResult, SPATIAL_MODEL_FORMAT, type SpatialInput, type SpatialRequest, type SpatialResult } from '../src/contracts/spatial.js';
 const clean:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const fn of clean.splice(0).reverse())await fn();});
 const point=(id:string,x=120):SituationObject=>({ref:{systemId:'source',objectType:'resource',objectId:id},name:id,revision:1,areaIds:[],effectiveAt:null,validTime:null,geometry:{type:'Point',coordinates:[x,30]},properties:{availableCount:1,unit:'辆'}});
@@ -127,4 +127,76 @@ it('requires an explicit generated-result selection while preserving fixed reads
   s.context.config.scopes[0].seatIds=[];
   await expect(s.service.inputs.read(input,scope)).rejects.toMatchObject({code:'SPATIAL_FORBIDDEN'});
   await expect(s.service.analyze({operation:'read',resultRef:buffer.resultRef},scope,randomUUID(),'denied-read')).rejects.toMatchObject({code:'SPATIAL_FORBIDDEN'});
+});
+
+
+it('describes executed operations without unrelated algorithms and retains input/target direction',async()=>{
+  const s=await setup([{items:[]}]),annotations=s.lab.annotations!;
+  const draft=annotations.action(s.scope.actor,s.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'analysis',name:'分析对象',order:0,defaultVisible:true,features:[
+    {objectId:'origin',kind:'point',name:'原点',geometry:{type:'Point',coordinates:[0,0]},attributes:{category:'point'}},
+    {objectId:'inside',kind:'point',name:'内点',geometry:{type:'Point',coordinates:[0.01,0]},attributes:{category:'point'}},
+    {objectId:'outside',kind:'point',name:'外点',geometry:{type:'Point',coordinates:[0.03,0]},attributes:{category:'point'}},
+    {objectId:'line',kind:'line',name:'线',geometry:{type:'LineString',coordinates:[[0,0],[0.01,0]]}},
+    {objectId:'region',kind:'polygon',name:'面',geometry:{type:'Polygon',coordinates:[[[-0.02,-0.02],[0.02,-0.02],[0.02,0.02],[-0.02,0.02],[-0.02,-0.02]]]}},
+  ]}}]});
+  const select=(...objectIds:string[]):SpatialInput=>({kind:'annotation',ref:draft.ref!,objectIds});
+  const input=select('inside','outside'),origin=select('origin'),region=select('region');
+  const cases:Array<{request:SpatialRequest;method:string;absent:string[]}>=[
+    {request:{operation:'measure',metric:'distance',input:origin,target:select('inside')},method:'distance; unit=m',absent:['buffer','topology']},
+    {request:{operation:'measure',metric:'point_to_line',input:origin,target:select('line')},method:'point_to_line; unit=m',absent:['buffer','topology']},
+    {request:{operation:'measure',metric:'length',input:select('line')},method:'length; unit=m',absent:['buffer','topology']},
+    {request:{operation:'measure',metric:'area',input:region},method:'area; unit=m²',absent:['buffer','topology']},
+    {request:{operation:'relate',relation:'contains',input:region,target:select('inside')},method:'input contains target',absent:['buffer','sphere']},
+    {request:{operation:'buffer',input:origin,distanceM:100},method:'32 segments per quadrant',absent:['topology','first count']},
+    {request:{operation:'filter',input,spatial:{target:region,relation:'contains'}},method:'target contains candidate',absent:['buffer','sphere']},
+    {request:{operation:'filter',input,spatial:{target:origin,distanceM:2000}},method:'distance <= distanceM',absent:['buffer','topology']},
+    {request:{operation:'filter',input,attributes:[{field:'category',op:'eq',value:'point'}]},method:'AND predicates',absent:['Turf','buffer','sphere','topology']},
+    {request:{operation:'nearest',input,target:origin,count:1},method:'point distance ascending',absent:['buffer','topology']},
+    {request:{operation:'summarize',input,field:'category'},method:'Count unique complete object identities',absent:['Turf','buffer','sphere','topology']},
+  ];
+  const results:SpatialResult[]=[];
+  for(const [index,test] of cases.entries()) {
+    const result=await s.service.analyze(test.request,s.scope,randomUUID(),`description-${index}`);
+    expect(result.method).toContain(test.method);
+    for(const absent of test.absent)expect(result.method).not.toContain(absent);
+    if(test.request.operation!=='buffer')expect(result.limitations.join(' ')).not.toContain('每象限');
+    if(test.request.operation!=='nearest')expect(result.limitations.join(' ')).not.toContain('最近表示');
+    const text=JSON.stringify({format:SPATIAL_MODEL_FORMAT,data:projectSpatialResult(result)});
+    expect(extractSpatialResult({spatialResult:result},'spatial_analyze',false,text)).toEqual(result);
+    results.push(result);
+  }
+  expect(results[0].values).toEqual({value:expect.closeTo(1111.950802335329,6),unit:'m'});
+  expect(results[1].values).toEqual({value:0,unit:'m'});
+  expect(results[4].values).toEqual({relation:'contains',matches:true});
+  expect(results[5].geometry?.type).toBe('Polygon');
+  for(const index of [6,7,9])expect(results[index].items.map(i=>i.name)).toEqual(['内点']);
+  expect(results[6].completeness.candidateCount).toBe(2);
+  expect(results[6].referenceItems?.map(i=>i.name)).toEqual(['面']);
+  expect(results[8].items.map(i=>i.name)).toEqual(['内点','外点']);
+  expect(results[10].values).toEqual({total:2,groups:[{value:'point',count:2}]});
+  await expect(s.service.analyze({operation:'relate',relation:'contains',input:select('inside'),target:region},s.scope,randomUUID(),'reverse-relate')).rejects.toMatchObject({code:'SPATIAL_UNSUPPORTED_GEOMETRY'});
+  await expect(s.service.analyze({operation:'filter',input:region,spatial:{target:select('inside'),relation:'contains'}},s.scope,randomUUID(),'reverse-filter')).rejects.toMatchObject({code:'SPATIAL_UNSUPPORTED_GEOMETRY'});
+});
+
+it('reads legacy method metadata unchanged through v1 evidence validation and permission rechecks',async()=>{
+  const s=await setup([{items:[point('legacy')]}]);
+  const result=await s.service.analyze({operation:'buffer',input:s.input,distanceM:100},s.scope,randomUUID(),'legacy-buffer');
+  // Fixed pre-remediation metadata, independent of the current description helper.
+  const stored:SpatialResult={...result,
+    method:'Turf 7.2.0; sphere R=6371008.8m; WGS84 planar topology; buffer AEQD 32 segments per quadrant (point buffers usually 128 edges)',
+    limitations:['球面距离/面积不是测绘级椭球测量；拓扑按经纬度线段。','缓冲圆弧每象限近似为 32 段；点缓冲通常为 128 边，线缓冲总边数随形状变化。近似边缘与精确距离阈值可能不同。','最近表示地理距离，不代表路程、时间、可通行或专业适用性。'],
+  };
+  const before=JSON.stringify(stored),text=JSON.stringify({format:SPATIAL_MODEL_FORMAT,data:projectSpatialResult(stored)});
+  const decoded=extractSpatialResult({spatialResult:stored},'spatial_analyze',false,text)!;
+  expect(decoded).toEqual(stored);
+  const scope={...s.scope,resolveResult:()=>decoded};
+  const read=await s.service.analyze({operation:'read',resultRef:stored.resultRef},scope,randomUUID(),'read-legacy');
+  expect(JSON.stringify(read)).toBe(before);expect(read).not.toBe(decoded);
+  expect(JSON.stringify({format:SPATIAL_MODEL_FORMAT,data:projectSpatialResult(read)})).toBe(text);
+  const altered=structuredClone(stored);altered.method=result.method;
+  expect(extractSpatialResult({spatialResult:altered},'spatial_analyze',false,text)).toBeNull();
+  read.limitations.push('local mutation');expect(JSON.stringify(stored)).toBe(before);
+  expect(s.fetch).toHaveBeenCalledTimes(1);
+  s.context.config.scopes[0].seatIds=[];
+  await expect(s.service.analyze({operation:'read',resultRef:stored.resultRef},scope,randomUUID(),'denied-legacy')).rejects.toMatchObject({code:'SPATIAL_FORBIDDEN'});
 });
