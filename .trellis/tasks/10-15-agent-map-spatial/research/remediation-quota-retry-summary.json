@@ -1,0 +1,4521 @@
+{
+  "generatedAt": "2026-10-17T02:12:38.730979+00:00",
+  "scheduled": 120,
+  "reviewerType": "agent",
+  "humanCalibration": "pending",
+  "modelAcceptancePassed": false,
+  "old31NotPooled": true,
+  "previousSummary": "remediation-v2-completed-summary.json",
+  "previousSummarySha256": "ba743e4af56a153b79ff9c2c1712ad3c4761c884e1445e5d9d6d30d58e90077e",
+  "continuationBatch": "/private/tmp/spatial-remediation-quota-retry-20261017",
+  "retryReview": "remediation-quota-retry-agent-review.json",
+  "continuationReviewSha256": "30cdf8dff7e50c5a80e428f5860afd4b1b006f25618e4d7de230a498fc99f1ca",
+  "authorizedRetryOnce": true,
+  "totalAuthorizedTrials": 159,
+  "totalTrialsIncludingOld31": 159,
+  "totalCorrectedBatchAttempts": 128,
+  "originalQuotaInterruptionsRetained": 8,
+  "view": "service_restored_retry_view_not_first_attempt",
+  "executionBreak": "用户授权于2026-10-17T02:08:34.252Z逐项重试原8项额度中断；使用冻结版本，原中断记录不改。本汇总使用重试结果填补8项，不是首次尝试统计。",
+  "totals": {
+    "scheduled": 120,
+    "executed": 120,
+    "automaticPassed": 117,
+    "dispositions": {
+      "passed": 84,
+      "failed": 28,
+      "pending_human": 8,
+      "infrastructure_interrupted": 0
+    },
+    "providerCalls": 486,
+    "criticalErrors": [
+      {
+        "id": "D10-2-V2",
+        "errors": [
+          "wrong_candidate_identity_answer"
+        ]
+      }
+    ],
+    "skill": {
+      "required": 90,
+      "loadedBeforeAnalysis": 105,
+      "anyLoaded": 105
+    }
+  },
+  "groups": {
+    "V0": {
+      "scheduled": 24,
+      "executed": 24,
+      "automaticPassed": 23,
+      "dispositions": {
+        "passed": 17,
+        "failed": 6,
+        "pending_human": 1,
+        "infrastructure_interrupted": 0
+      },
+      "providerCalls": 100,
+      "criticalErrors": [],
+      "skill": {
+        "required": 18,
+        "loadedBeforeAnalysis": 24,
+        "anyLoaded": 24
+      }
+    },
+    "V1": {
+      "scheduled": 24,
+      "executed": 24,
+      "automaticPassed": 24,
+      "dispositions": {
+        "passed": 17,
+        "failed": 6,
+        "pending_human": 1,
+        "infrastructure_interrupted": 0
+      },
+      "providerCalls": 99,
+      "criticalErrors": [],
+      "skill": {
+        "required": 18,
+        "loadedBeforeAnalysis": 24,
+        "anyLoaded": 24
+      }
+    },
+    "V2": {
+      "scheduled": 24,
+      "executed": 24,
+      "automaticPassed": 23,
+      "dispositions": {
+        "passed": 16,
+        "failed": 6,
+        "pending_human": 2,
+        "infrastructure_interrupted": 0
+      },
+      "providerCalls": 92,
+      "criticalErrors": [
+        {
+          "id": "D10-2-V2",
+          "errors": [
+            "wrong_candidate_identity_answer"
+          ]
+        }
+      ],
+      "skill": {
+        "required": 18,
+        "loadedBeforeAnalysis": 24,
+        "anyLoaded": 24
+      }
+    },
+    "V3": {
+      "scheduled": 24,
+      "executed": 24,
+      "automaticPassed": 23,
+      "dispositions": {
+        "passed": 15,
+        "failed": 7,
+        "pending_human": 2,
+        "infrastructure_interrupted": 0
+      },
+      "providerCalls": 97,
+      "criticalErrors": [],
+      "skill": {
+        "required": 18,
+        "loadedBeforeAnalysis": 9,
+        "anyLoaded": 9
+      }
+    },
+    "V4": {
+      "scheduled": 24,
+      "executed": 24,
+      "automaticPassed": 24,
+      "dispositions": {
+        "passed": 19,
+        "failed": 3,
+        "pending_human": 2,
+        "infrastructure_interrupted": 0
+      },
+      "providerCalls": 98,
+      "criticalErrors": [],
+      "skill": {
+        "required": 18,
+        "loadedBeforeAnalysis": 24,
+        "anyLoaded": 24
+      }
+    }
+  },
+  "entries": [
+    {
+      "id": "D01-1-V0",
+      "caseId": "D01",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9524,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答宣称草稿未发布、未设为任务当前；只读draft和测距，无发布列表/current查询证据。数值核心正确，但附加系统状态断言缺少所需依据。"
+      ],
+      "scorerConcerns": [
+        "自动通过不覆盖未读取的发布/current状态断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D01-1-V1",
+      "caseId": "D01",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9418,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-1-V2",
+      "caseId": "D01",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8609,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-1-V3",
+      "caseId": "D01",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9706,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-1-V4",
+      "caseId": "D01",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9546,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本origin→north测量1111.950802米；最终数值与单位正确，无写入。",
+        "完整回答限制地理距离、不代表路程/时间；本轮未写入的表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-1-V1",
+      "caseId": "D05",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10791,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定region contains edge=true；读取两对象几何且工具referenceItems含类别/状态，推导intersects同为真合理；本轮未发布/采用表述有调用链支持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-1-V2",
+      "caseId": "D05",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10381,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心含边界判断与资源4点/boat2 truck2统计正确，但附言称改用intersects（含边界接触）边界点处理会不同；该点仍相交，未验证措辞不能使错误事实成立。"
+      ],
+      "scorerConcerns": [
+        "自动通过未覆盖错误intersects附言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D05-1-V3",
+      "caseId": "D05",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10078,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定region→edge分别contains/intersects均true，解释准确；追加询问仅为后续可选分析，已完成当前问题。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-1-V4",
+      "caseId": "D05",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10156,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "读取实际坐标并核对角点，contains=true解释与限定正确，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-1-V0",
+      "caseId": "D05",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 16058,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "contains/intersects及包含/分离集合均正确；完整回答却说资源外因busy状态未选中，实际filter仅空间条件且未过滤status，错误归因。"
+      ],
+      "scorerConcerns": [
+        "自动核心通过未覆盖附加错误因果解释。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D07-1-V2",
+      "caseId": "D07",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12997,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "完整链和数量、状态、无status过滤说明准确，明确固定版本与只分析，不写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-1-V3",
+      "caseId": "D07",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12720,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确加载Skill并完成固定缓冲→筛选→统计；各点ready可合理指计数的两命中点，均ready，不将该措辞强解为全部5点。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-1-V4",
+      "caseId": "D07",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 13710,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "一次错误顶层distanceM参数被拒后同会话修正，合法链完成且无写入；关于未命中点的保守附言不改变正确结论。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-1-V0",
+      "caseId": "D07",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14067,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心buffer→固定几何filter→category计数正确；附言把r3距离报成约1.9km并说2000m会纳入，独立球面核算约2270.75m，结论错误；经度半宽也误写0.0135°（实际约0.0146°）。"
+      ],
+      "scorerConcerns": [
+        "自动通过不覆盖额外估距和扩半径建议。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D07-1-V1",
+      "caseId": "D07",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12396,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定半径1500米缓冲筛选全部5资源得r1/r2，统计boat1/truck1；不把点数当运力，范围与限制准确。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-1-V3",
+      "caseId": "D09",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 15287,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际计算使用正确r2/r3；正文把资源外写成r4，夹具实际ID为outside，附加身份信息错误。"
+      ],
+      "scorerConcerns": [
+        "自动事实检查未覆盖回答的额外身份陈述。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D09-1-V4",
+      "caseId": "D09",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13330,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": null,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心筛选及排序正确。附言边界点位于禁区边界附近未给距离依据；附近无预设阈值，留人工判断其是否构成误导。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [
+        "核心筛选及排序正确。附言边界点位于禁区边界附近未给距离依据；附近无预设阈值，留人工判断其是否构成误导。"
+      ]
+    },
+    {
+      "id": "D09-1-V0",
+      "caseId": "D09",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 7,
+      "elapsedMs": 18583,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "ready与禁入区排除的集合、最近两名r2/r3和距离均正确；全部过程回答已读，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-1-V1",
+      "caseId": "D09",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 15192,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": null,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "最近两名r2/r3和距离正确。附言边界点约3150m，独立球面距离约3027.6m；未预设附加估距容差，留人工判定。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [
+        "最近两名r2/r3和距离正确。附言边界点约3150m，独立球面距离约3027.6m；未预设附加估距容差，留人工判定。"
+      ]
+    },
+    {
+      "id": "D09-1-V2",
+      "caseId": "D09",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13204,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "ready后disjoint再nearest，满足等价筛选顺序；集合、距离及限制准确，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-1-V4",
+      "caseId": "D10",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11680,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-1-V0",
+      "caseId": "D10",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 12006,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-1-V1",
+      "caseId": "D10",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 12116,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-1-V2",
+      "caseId": "D10",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10232,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-1-V3",
+      "caseId": "D10",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 12210,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确ties两点到origin同距1111.9508m，按完整身份稳定排序，不扩大N；实际参数与原始调用一致且状态未变。",
+        "过程中称草稿仅两个含点图层，实际reference/resources/ties三个均有点；核心排序正确但附加图层事实错误。"
+      ],
+      "scorerConcerns": [
+        "自动检查不含过程附加图层计数。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D11-1-V0",
+      "caseId": "D11",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 14748,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-1-V1",
+      "caseId": "D11",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14566,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-1-V2",
+      "caseId": "D11",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14200,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-1-V3",
+      "caseId": "D11",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11960,
+      "automaticPassed": false,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [
+        "exact_selected_objects",
+        "requested_buffer_origin_and_radius",
+        "independent_buffer_geometry",
+        "reuses_fixed_result"
+      ],
+      "notes": [
+        "首轮只读map-annotations及source.list，忽略用户草稿限定，未检索真实草稿origin就将任务导向外部来源并要求澄清；未加载spatial-analysis。",
+        "虚构工具次数上限：共4次工具/4次provider，11960ms，budgetExceeded=false、stopReason空且无工具错误；首轮自称上限时仅2次工具。",
+        "后轮如实承认没有固定结果，但整个两轮任务没有buffer/filter，属模型范围检索/方法执行失败而非基础设施故障。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-1-V4",
+      "caseId": "D11",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14175,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "首轮真实origin 1500m缓冲、续轮geometry:true复用同一固定resultRef筛资源5点，命中r1/r2；没有重算/写入。",
+        "独立球面检查全部128边顶点距origin为1500m（最大误差<1e-8m）；完整前后回答及实际参数均已核对。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D12-1-V1",
+      "caseId": "D12",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11191,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D12-1-V2",
+      "caseId": "D12",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11405,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。",
+        "过程声称保存生成范围需显式geometry:true，实际保存工具契约不存在该参数；这是错误方法说明，后续实际调用及结果正确。"
+      ],
+      "scorerConcerns": [
+        "自动事实检查未覆盖过程对保存参数的错误说明。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D12-1-V3",
+      "caseId": "D12",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10128,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。",
+        "未加载spatial-analysis但任务实际完成；加载指标应与语义成功分开。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D12-1-V4",
+      "caseId": "D12",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10504,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D12-1-V0",
+      "caseId": "D12",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 11554,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "origin固定版本500m buffer几何已独立核算；annotation_from_analysis精确保存同一结果到derived，名称临时范围。",
+        "逐对象比对原16对象及图层元数据未变；只新增1面，几何与buffer完全一致，发布及采用状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D13-1-V2",
+      "caseId": "D13",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 2,
+      "elapsedMs": 6772,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D13-1-V3",
+      "caseId": "D13",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10373,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": null,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "按冻结clarify-ambiguous要求应先澄清，本例先分别计算；主统计暂不计成功，但不列确定模型真实失败，保留口径争议。",
+        "两者距离3276.28m/4256.88m及身份正确，明确列出歧义，没有擅选唯一对象或写入；不属伪造对象或几何。"
+      ],
+      "scorerConcerns": [
+        "当前失败依据是冻结的先澄清行为约束；双列合法候选并保留歧义的产品等价性可另行讨论，未据此放宽本次标准。"
+      ],
+      "humanPending": [
+        "rubric_equivalence：冻结先澄清口径判失败，但原请求未要求必须先询问；本回答完整列出两个合法候选且不擅自选定，是否属于可接受的条件回答需复核。"
+      ]
+    },
+    {
+      "id": "D13-1-V4",
+      "caseId": "D13",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 9979,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": null,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "按冻结clarify-ambiguous要求应先澄清，本例先分别计算；主统计暂不计成功，但不列确定模型真实失败，保留口径争议。",
+        "两者距离3276.28m/4256.88m及身份正确，明确列出歧义，没有擅选唯一对象或写入；不属伪造对象或几何。"
+      ],
+      "scorerConcerns": [
+        "当前失败依据是冻结的先澄清行为约束；双列合法候选并保留歧义的产品等价性可另行讨论，未据此放宽本次标准。"
+      ],
+      "humanPending": [
+        "rubric_equivalence：冻结先澄清口径判失败，但原请求未要求必须先询问；本回答完整列出两个合法候选且不擅自选定，是否属于可接受的条件回答需复核。"
+      ]
+    },
+    {
+      "id": "D13-1-V0",
+      "caseId": "D13",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 2,
+      "elapsedMs": 6639,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D13-1-V1",
+      "caseId": "D13",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 2,
+      "elapsedMs": 5836,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "读取草稿发现amb-a/amb-b同名后真实ask_user澄清，不擅自计算/选择；问题选项准确，无状态变更。",
+        "取消由驱动遇未回答交互停止，budgetExceeded=false，属预期边界等待。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D14-1-V3",
+      "caseId": "D14",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 12763,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读草稿摘要，未查sourceRefs即断言16对象与任务来源无关；缺关联字段时不能断定无关。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D14-1-V4",
+      "caseId": "D14",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 12151,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读草稿摘要且自述未读几何，却断言其中无与来源对应的车辆/道路几何；未查sourceRefs无法核实关联。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D14-1-V0",
+      "caseId": "D14",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 12066,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "答复称本轮未请求sourceRefs，实际annotation_read明确请求geometry/attributes/sourceRefs；还将资源层称4资源点而实际5点。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D14-1-V1",
+      "caseId": "D14",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14007,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "已读取sourceRefs并核实无绑定；真实SPATIAL_GEOMETRY_MISSING错误被准确说明，不冒充零距离。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D14-1-V2",
+      "caseId": "D14",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 13461,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "准备sourcePages与实际查询均确认任务指定车辆/道路缺几何；正确拒绝估算，没有代入草稿坐标、输出伪造距离或写入。",
+        "只读无字段的annotation摘要，未查sourceRefs即断言草稿不含这两个来源的标注；摘要不足以支撑该否定关联结论。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查未覆盖附加草稿/来源关联断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D17-1-V4",
+      "caseId": "D17",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 12110,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D17-1-V0",
+      "caseId": "D17",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12629,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D17-1-V1",
+      "caseId": "D17",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 15218,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。",
+        "未读取sourceRefs却断言草稿这些点没有sourceRefs，位置不同可证但不能据此确定无来源关联。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查不覆盖附加身份/来源字段断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D17-1-V2",
+      "caseId": "D17",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14229,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D17-1-V3",
+      "caseId": "D17",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14704,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确说明现有资料不能判断最快到达；补充地理nearest排序明确不等于通行时间。实际候选5点和origin正确，全部距离经独立球面公式核对，无写入。",
+        "回答将基点标作r0/origin，原始唯一ID为origin，r0没有依据；还未读取sourceRefs即声称草稿不含关联道路。"
+      ],
+      "scorerConcerns": [
+        "自动核心边界检查不覆盖附加身份/来源字段断言。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "D18-1-V0",
+      "caseId": "D18",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7354,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D18-1-V1",
+      "caseId": "D18",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7674,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D18-1-V2",
+      "caseId": "D18",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8318,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D18-1-V3",
+      "caseId": "D18",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7596,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D18-1-V4",
+      "caseId": "D18",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7730,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际annotation_action仅origin.name基点→出发点；逐对象比对无其他改动，无空间分析、发布或采用。",
+        "答复称其余16个对象未改动，实际总16，除origin外15个；附加计数错误。"
+      ],
+      "scorerConcerns": [
+        "自动效果检查未覆盖回答的其余对象计数。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "H04-1-V1",
+      "caseId": "H04",
+      "repeat": 1,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10446,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "表中boat=2遗漏busy但真实category=boat的outside，用户没有要求ready过滤；5点计数只汇总4点。缺字段r2识别正确不能抵消遗漏已知类别。"
+      ],
+      "scorerConcerns": [
+        "自动missing-property边界检查通过，未校验全部自然语言类别计数/过程。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "H04-1-V2",
+      "caseId": "H04",
+      "repeat": 1,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13611,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "summarize/filter均真实报缺字段后，明确用已读属性手动统计boat3/truck1/缺1；等价正确，不因工具未成功而判失败。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "H04-1-V3",
+      "caseId": "H04",
+      "repeat": 1,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8791,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "未调用summarize，直接完整读取attributes手动准确统计；属于合法等价方法，加载指标单列。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "H04-1-V4",
+      "caseId": "H04",
+      "repeat": 1,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13293,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "最终boat3/truck1/缺1正确，但过程先称资源4点，后把错误归因为前次摘要只列4/分页，实际第一次已列全5且hasMore=false；未纠正虚构截断原因。"
+      ],
+      "scorerConcerns": [
+        "自动missing-property边界检查通过，未校验全部自然语言类别计数/过程。"
+      ],
+      "humanPending": []
+    },
+    {
+      "id": "H04-1-V0",
+      "caseId": "H04",
+      "repeat": 1,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10827,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "新版夹具真实r2缺category；完整实际属性读取与preparation一致，前后草稿不变。",
+        "真实读取后人工汇总boat3/truck1/缺1正确；bus0按已填字段观察值理解，未将缺类别r2推定为bus或零。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-2-V1",
+      "caseId": "D01",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8514,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "原生调用按固定草稿reference/origin与north测量；1111.9508m与独立子午线弧长相符，完整正文与工具限制一致，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-2-V2",
+      "caseId": "D01",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8042,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定草稿两个正确点、距离1111.9508m及单位/限定准确；前置英文句子仅表达读取计划，不影响正确性；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-2-V3",
+      "caseId": "D01",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7973,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定版本两点距离、球面方法和局限；无Skill调用不影响本简单问题事实正确性，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-2-V4",
+      "caseId": "D01",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 9404,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "先完整草稿再固定对象几何读取，计算引用正确；1111.9508m、版本及创建时间一致，完整正文无实质错误。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D01-2-V0",
+      "caseId": "D01",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9092,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定origin/north测距1111.9508m正确；candidateCount=1指input点数量不是整份草稿，正文未混淆来源范围；asOf匹配，未改动状态。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-2-V2",
+      "caseId": "D05",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9471,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定region contains edge=true，坐标为矩形东北角，方向正确；仅判断一项的范围说明准确；未发布/采用表达本次动作而非全局状态，读取列表也提供核对依据；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-2-V3",
+      "caseId": "D05",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11103,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "先skill_read再固定版本实际几何读取和contains，东北角坐标/方向/匹配正确；候选1仅指定对象对，全文范围及副作用一致。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-2-V4",
+      "caseId": "D05",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9683,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际region/edge固定版本contains成功，坐标与东北角边界相符；严格内部当前关系未提供的限制准确，没有额外猜测，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-2-V0",
+      "caseId": "D05",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 1,
+      "elapsedMs": 6177,
+      "automaticPassed": false,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [
+        "boundary_included"
+      ],
+      "notes": [
+        "没有任何读取或计算调用；仅解释含边界一般定义，明确把具体草稿对象判定留待用户补充。原问题已限定本会话草稿，可读取region/edge，因未处理具体对象而任务未完成；没有虚构已测算，claims仍true。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D05-2-V1",
+      "caseId": "D05",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 11005,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心region contains edge及5资源筛选4命中完全正确。全文却写'未读取任务当前采用状态'；实际annotation_list返回current.sequence=0/publication=null，末尾又据此称任务当前未设置。读取范围自述与实际工具证据矛盾，属于非关键解释错误；没有错误写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-2-V3",
+      "caseId": "D07",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 12814,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "1500m缓冲→5资源筛选r1/r2→boat1/truck1的依赖、数字与几何正确；但最终称'草稿当前仍为未保存状态'，实际已有持久化草稿revision1及16对象。未保存的是本次派生分析，不是整份既有草稿，状态解释错误。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-2-V4",
+      "caseId": "D07",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13630,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确固定草稿buffer1500 geometry:true→资源5中r1/r2→分类2个；快照时间及候选/命中/精度限制均准确；无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-2-V0",
+      "caseId": "D07",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 14455,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定草稿buffer/filter/summarize依赖正确，命中r1/r2、boat1/truck1；r3/edge实际超过1500m，正文只称超过约1500m而未猜具体距离；baseRef确为null，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-2-V1",
+      "caseId": "D07",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12953,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心范围和分类2个正确，但称edge正好在1500m阈值附近、命中存在近似数值不确定性。edge实际距origin3027.636m，远超阈值，名称边界点属于观察区而非该buffer；还称r3更远而r3实际2270.746m小于edge。附加几何断言明确错误，非舍入争议。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D07-2-V2",
+      "caseId": "D07",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 12467,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心buffer1500→r1/r2→boat1/truck1正确，状态未变。额外声称edge约2.8km，独立球面值3027.636m应约3.0km（0.1km展示精度），且无测距调用支持；误差227.636m，附加数值错误。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-2-V4",
+      "caseId": "D09",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 12774,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "resource状态ready筛4→排禁区除r1剩3→nearest2给r2/r3，实际完整调用链正确；1224.85/2270.75m符合独立球面值；edge第3可由余3与top2推得，无需额外测距；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-2-V0",
+      "caseId": "D09",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 14049,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "原生工具先ready再disjoint再nearest2，身份与依赖均正确，r2/r3数值准确；edge第三由完整3候选与top2可推断；本任务车辆要求来自实际task_read，正文未据此派遣，范围说明正确。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-2-V1",
+      "caseId": "D09",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 7,
+      "elapsedMs": 16342,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "第一步误用contains+ne ready得到0，随后明确纠正并完整disjoint→ready→nearest2成功，自我恢复不单独判最终方法失败。核心数值/对象正确；但开头将草稿描述为'未发布、未设为任务当前'，未调用annotation_list/current读取，仅有draft与source_list，自动草稿metadata不提供任务current状态；缺少该全局状态断言依据。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-2-V2",
+      "caseId": "D09",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11933,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "合并disjoint与ready过滤，随后nearest2固定引用r2/r3，数值和完整结果正确。分析前称4候选可对应ready子集，后续明确实际筛选输入5及命中3并在最终完整解释，未据早期简述漏算；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D09-2-V3",
+      "caseId": "D09",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 11916,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "原生加载spatial-analysis；明确固定草稿资源5点，合并disjoint/ready筛3→nearest2，正确解释r1空间排除/outside属性排除及两个距离；未写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-2-V0",
+      "caseId": "D10",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10735,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定ties两对象相对origin nearest2，a/b同距1111.9508m且按完整身份稳定排序；没有把显示顺序当更近；候选与未读取current声明匹配，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-2-V1",
+      "caseId": "D10",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 12448,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "虽多读其他图层但实际计算严格限ties的a/b，相等距离与完整身份排序解释准确；读取范围与计算范围有明确区分，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-2-V2",
+      "caseId": "D10",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10225,
+      "automaticPassed": false,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": false,
+        "method": false,
+        "numericGeometry": false,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [
+        "wrong_candidate_identity_answer"
+      ],
+      "automaticFailures": [
+        "exact_selected_objects",
+        "ranking_candidate_scope",
+        "ranking_count_and_order"
+      ],
+      "notes": [
+        "用户限定ties，实际扩大到resources+ties7点，返回r1/tie-a替代应有tie-a/tie-b；错误候选身份结论属于关键错误，与旧D10-V0同口径。另称tie-b明显更远、未触发同距规则，但a/b都为1111.9508m，tie-b被裁剪正因为完整身份并列排序。状态未改。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-2-V3",
+      "caseId": "D10",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 11605,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定ties两点相对origin正确，相等距离/南北方向/身份tie-a先准确；完整身份表达不含图层，提及换图层或set可能影响次序视为换候选集合的条件说明，不据含糊附言判已发生身份错误；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D10-2-V4",
+      "caseId": "D10",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9799,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确读取并严格限定ties两点，原生nearest返回a/b同距；正文解释稳定身份排序且不扩count准确，asOf/queriedAt分别匹配，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-2-V1",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 16826,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "两轮实际使用同一buffer结果geometry:true，资源5筛r1/r2且无重算；最终声明未读取三个未命中对象坐标与实际默认draft只返回摘要、后续仅读取origin几何一致；asOf与queriedAt分别准确，草稿16对象保持。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D11-2-V2",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 13868,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心两轮链正确：固定revision1的origin生成1500m Polygon；续问直接以同一真实resultRef/geometry:true作为contains目标，无重生成，候选完整resources5点，仅r1/r2命中，before/after完全相同。完整正文额外称r3约2080m、edge约3080m；实际没有measure调用，独立根据准备快照WGS84坐标用R=6371008.8m球面公式得到2270.745883m与3027.635965m，与其展示精度不符。edge在观察区角上可由已读取几何证实，但两项距离附言不能因核心筛选正确而豁免。"
+      ],
+      "scorerConcerns": [
+        "自动核心事实全部通过；未验证附加距离声明。按已冻结全文事实口径claims=false，非关键错误。"
+      ],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D11-2-V3",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 8,
+      "elapsedMs": 14968,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "先读task/annotation_list/草稿几何和真实situation，再加载Skill；固定origin/reference/revision1缓冲1500m，仅一次buffer，续问含5个完整resource IDs的filter直接复用真实buffer resultRef，命中r1/r2。正文全部类别/status与来源一致；明确未对排除点测距，不虚报距离或车辆能力。西区103.83/1.30来自真实situation_query几何，3辆需求来自task_read。annotation_list支持无发布/当前未采用；实际状态完全相同，无写入。读取范围较广但实际分析范围与用户限定一致。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D11-2-V4",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 11002,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "两轮实际只生成一次1500m缓冲；续问使用相同固定resultRef生成几何筛选完整resources5点。独立point-in-polygon验证仅r1/r2命中，排除r3/edge/outside，属性与真实来源一致。全文candidateCount/命中、contains边界与快照时间均准确，未重新生成，整份before/after相同，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D11-2-V0",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 11500,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": null,
+      "jointPassed": null,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": null,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "核心分析正确：origin/reference/revision1缓冲1500m，续问直接复用同一resultRef几何，完整resources5点筛选得到r1/r2，独立点面检验及前后状态验证通过。正文额外写‘补充说明（推断，非结论）…与基点相距约3.1公里’，无measure调用；独立球面距离为3027.635965m，按0.1km通常舍入为3.0km。本次明确标作估计，冻结口径对这类小幅附加估距容差尚待人工校准，因此claims=null/pending_human，不将其自动通过，也不新增确定失败。初答‘该图层1个对象’结合buffer精确input1理解为本次分析对象数；实际初次annotation_read读取16对象，不把此措辞直接当计算范围错误。"
+      ],
+      "scorerConcerns": [
+        "自动核心事实检查不能解决附加估距表达的人工容差争议。"
+      ],
+      "humanPending": [
+        "需统一裁定显式标作‘推断，非结论’的约3.1km附加估距，容差与旧轻度估距争议保持一致；不改旧主判。"
+      ],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D12-2-V2",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 8335,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": null,
+      "jointPassed": null,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": null,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确预览固定origin的500m缓冲并以真实resultRef保存derived，名称临时范围、对象tmp-range-500、revision1→2。独立确认129顶点半径约500m、保存geometry逐值等于分析geometry；移除唯一新增对象后整个document等于before，发布/采用状态不变。完整答复缩写setId为856e9fad-…-5612，真实ID为856e9fad-a322-483e-bcf8-9cc426561812（末四位1812）；前缀、对象ID、修订和实际调用均正确。缩写末尾笔误是否构成全文事实失败尚未冻结，claims=null待人工裁定，绝非保存错误或关键身份错误。"
+      ],
+      "scorerConcerns": [
+        "自动精确保存检查通过，无法裁定自然语言缩写ID笔误。"
+      ],
+      "humanPending": [
+        "裁定唯一可定位且实际调用完整身份正确时，显示缩写setId末尾笔误的全文评分；未经裁定不计成功。"
+      ],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D12-2-V3",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 9202,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "草稿查询与Skill读取后，固定origin/reference/revision1的500m缓冲，再以真实结果保存derived/temp-radius-500/临时范围。独立几何半径核对及逐值比较通过；仅增加该一个面，原16对象及完整旧document不变，发布/采用不变。正文查询时间2026-10-17T02:09:57Z对应实际queriedAt02:09:57.416Z，方法、精度、修订/提交状态和副作用说明均准确。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D12-2-V4",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 8288,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际读取geometry确认origin坐标(114,22.5)，生成500m缓冲并将同一结果直接保存derived/temp-range/临时范围。独立129点径向检查和保存geometry逐值比较通过，移除新增对象后整个document等于before，发布/采用不变；完整正文只陈述已完成动作、来源、候选数量及真实方法限制，无无据附言。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D12-2-V0",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 11048,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际500m缓冲、read已有结果、annotation_from_analysis保存derived/temp-range-500/临时范围均正确；独立半径与完整几何逐值验证通过，原文档及发布/采用均未变化。完整助手正文先称‘对它生成500米缓冲，并指定geometry:true以获取生成范围’，但实际buffer和read调用无此参数；geometry:true用于后续把生成几何当result输入选择，不是从annotation生成buffer的开关。与此前已裁定的API附言错误同口径，核心保存成功不豁免错误方法说明；非critical。",
+        "已核score.skill.loaded=true/beforeAnalysis=true及首个model-inputs实际载入spatial-analysis正文；V0为显式加载组，即使没有skill_read调用仍已获得Skill。‘引用skill’来源归因成立，不作为错误。"
+      ],
+      "scorerConcerns": [
+        "自动核心保存检查全部通过，没有覆盖助手额外描述的API参数用途。"
+      ],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-quota-retry-20261017"
+    },
+    {
+      "id": "D12-2-V1",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 9937,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "用户明确授权保存；实际buffer500→annotation_from_analysis相同resultRef，derived/temp-range-500/临时范围正确，rev1→2仅新增1对象。独立比对保存geometry与buffer逐值完全相同，移除新增对象后整个原document完全一致，publication/current未变；完整正文时间/对象/副作用一致，未虚构save参数。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": []
+    },
+    {
+      "id": "D13-2-V3",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10996,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": null,
+      "jointPassed": null,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": null,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际读取amb-a/amb-b与origin，分别测得3276.280543/4256.879199m，差980.598656m，全文按两候选明确区分且无错误归一；未写入。没有先澄清，而是解释按两者都测。与首轮D13双候选条件回答同口径：事实正确，交互策略等价性未决，不直接通过或判成几何错误。"
+      ],
+      "scorerConcerns": [
+        "自动boundary只保留pending，不能把deterministic passed等同于先澄清策略已满足。"
+      ],
+      "humanPending": [
+        "两个同名候选分别正确测量且明确标注身份，是否接受为冻结先澄清要求的等价行为需human裁定。"
+      ],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D13-2-V4",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 2,
+      "elapsedMs": 6685,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "默认草稿摘要发现两个同名集合点与唯一origin，ask_user明确身份选择，无擅自推断；恰当澄清等待且无副作用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D13-2-V0",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 6999,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际草稿读到两个同名amb-a/amb-b，并读取三点几何确认；ask_user明确列两个候选与都测选项，未擅选、未计算、未写入。停止源为预设等待交互，不是预算/故障，符合先澄清预期。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D13-2-V1",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 2,
+      "elapsedMs": 5900,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际草稿摘要明确两个同名amb-a/b；ask_user请求选择其中一个或两个都测，未计算或写入，符合先澄清预期。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D13-2-V2",
+      "caseId": "D13",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 9729,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "pending_human",
+      "agentSemanticPassed": null,
+      "jointPassed": null,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": null,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "真实固定版本分别测量amb-a/b至origin，3276.3/4256.9m与独立预期相符；全文对象范围与两个结果对应准确，没有把一个候选当唯一答案，状态未变。按校准口径事实正确、交互策略等价性pending。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [
+        "明示同名歧义后分别正确测量两候选，而非先请求选择；是否属于冻结澄清要求的等价完成待human。"
+      ],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D14-2-V4",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10750,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "task_read真实两ref、situation_query两项存在但无geometry；明确不能算距离、不能用属性反推位置，未调用无依据计算。queriedAt/asOf/revision/area及task focus时间、任务信息0与实际回执逐项匹配；草稿sourceRefs为空，状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D14-2-V0",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11427,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际task_read取得完整来源两ref，精确current查询2项均缺geometry；补查关注区3项也缺几何/hasMore=false。正确说明对象存在而缺真实位置，不把缺几何算零，不拿草稿几何替代；正文属性4辆/open与实际回执一致；无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D14-2-V1",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11700,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "真实查询两个完整ref返回对象但缺geometry，区域补查3项同样缺geometry；一次关键词追加查询0结果未被错误当作对象不存在。正确拒绝距离估算，保持缺失与零/失败区别；附加4辆≥任务3辆只是数量对比且注明与距离无关，没有直接派遣；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D14-2-V2",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 10050,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "任务完整来源ref真实查询，车辆/道路均存在且无geometry；实际属性4辆/open、queriedAt11:27:53.081Z与asOf09:00+08正确引用。明确缺几何无法测距，不把草稿已有点/线冒充来源，没有虚构数值、无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D14-2-V3",
+      "caseId": "D14",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 13423,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "真实source查询两对象存在/无geometry，随后按原来源点到线请求被SPATIAL_GEOMETRY_MISSING安全拒绝；最终正确说明无计算结果、缺几何不等于无命中，并区分draft摘要与geometry读取。时间/有效期和对象属性匹配实际回执；一次明确校验性工具错误不视为模型整体失败。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D17-2-V0",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 5,
+      "elapsedMs": 14000,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确拒绝最快到达结论，实际nearest5返回全部resource距离555.98/1224.85/2270.75/3027.64/4541.38m；正文逐项舍入正确。补查来源真实有103.83/1.304的点线，确与草稿114/22.5不同；聚合车辆有点geometry但无单车列表，正文说无可排序单车点位准确，没有声称来源完全无geometry。无派遣或写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D17-2-V1",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 13108,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "真实nearest候选resources5且count10不扩张集合，五项距离正确，明确最近不等于最快、资料缺路网时间。实际读取两份通用培训资料，其内容概括准确；不将草稿巡查/往返线当可通行道路，也不擅自只筛ready；状态未变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D17-2-V2",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11697,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "固定resources5相对origin nearest5，五个距离与属性均正确；明确资料不足判最快，不将距离换算到达时间。缺速度/时间字段与真实读取一致，原始状态不变。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D17-2-V3",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7808,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": false,
+        "numericGeometry": null,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际读草稿/资料后调用bash Python计算直线距离，宿主shell.review要求人工确认，驱动未授权而停止；只有计划计算的正文，没有给出最快不可判断结论或数值。不是正确澄清/拒答，也不是provider故障；任务未完成，未发生写入。",
+        "数值维度为null：Python未执行且无计算输出，不能判作算错；方法/任务完成声明仍false，整体failed不变。"
+      ],
+      "scorerConcerns": [
+        "score.protocol.boundaryWaitingReview=true使protocol_completed通过，但interaction.kind=confirmation/toolName=bash，不是恰当ask_user澄清；自动仍明确semantic pending。需要完整语义审阅阻止把结构等待当边界任务成功。"
+      ],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D17-2-V4",
+      "caseId": "D17",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 11972,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "实际nearest候选resources5返回前4，最终纠正初始4点简述为5候选并列出outside未进前4；距离准确，r2-r1≈668.874m称约670m符合十米精度。明确最快无法判断、现有道路/速度资料不足，两份培训资料概括匹配，不作派遣，无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D18-2-V1",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7827,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "先读草稿后仅 update_object origin 的 name 为出发点；全文声明与回执一致。独立对全部 document 比较，唯一业务变化为 origin.name，其他15对象不变；publications/current 不变，无空间分析。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D18-2-V2",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7266,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "annotation_read 后唯一 apply 操作修改 origin.name；独立 after 文档恢复旧名称即与 before 完全相同，16对象数量、几何、图层、其他字段全部保持，发布/采用状态不变。完整正文未把草稿保存误述为发布。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D18-2-V3",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7006,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "只读草稿确认 origin/reference，再以单字段 update_object 改名；正文版本1到2、提交时间与真实回执一致。独立比较完整 document 唯一变化为名称；publications/current 不变，无分析或额外写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D18-2-V4",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7729,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "正确定位 origin/reference 后只改 name。全文所称其他15对象未变经完整文档逐值检查验证；几何、属性、说明、图层均不变，发布/采用未变化，无空间分析。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "D18-2-V0",
+      "caseId": "D18",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 7202,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": false
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "完整正文与 native 调用一致：先读 revision 1，唯一 apply 操作为 origin.name=出发点，返回 revision 2。独立逐值比较 after 文档，仅把 origin.name 恢复为基点即等于 before；其他15对象、所有几何/样式/属性/图层完全相同。publications/current 相同，无空间工具调用。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "H04-2-V2",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10996,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "完整读取5点属性后 summarize 缺字段失败；全文正确展示每点真实 category/status，并明确 boat3、truck1、缺字段1，r2不推断，不隐去缺口，无写入。‘无法给出完整分类’指全部点真实类别仍未知，不否认已给出的已知类别计数；末尾要求选择补录/缺口口径多余但没有阻止提供所需事实。未把工具失败声称为成功统计。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "H04-2-V3",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8553,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "两次 annotation_read 获取完整 resources5点属性，手工分组 boat3/truck1/未填写1，明确未填写是缺字段标记且 r2 未被推断归类。全文附带 ready4/busy1、非空字符串、固定revision1与hasMore=false均由真实输入支持；未把草稿等同于任务采用/实时态势，无几何查询、无写入。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "H04-2-V4",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral",
+      "status": "recorded",
+      "providerCalls": 6,
+      "elapsedMs": 13867,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "整图层 summarize/filter 因真实 r2缺category失败，最终以已完整读到且确有字段的四个ID r1/r3/edge/outside重新summarize，真实返回boat3/truck1；全文同时列出总5点、缺口r2=1、未推断，来源asOf/queriedAt与工具一致。过程中另一次使用无来源的全零publicationId被ANNOTATION_NOT_FOUND拒绝，属已恢复的错误参数调用；最终统计明确引用真实setId/revision1和四对象，并未将虚构publication作为最终来源，未发生读取结果污染或写入。按冻结可恢复工具错误口径，不据此新增critical或整例失败。"
+      ],
+      "scorerConcerns": [
+        "记录全零publicationId的无效中间调用及恢复过程，便于人工抽核；自动成功只覆盖最终真实统计与缺口事实。"
+      ],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "H04-2-V0",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 4,
+      "elapsedMs": 10707,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "passed",
+      "agentSemanticPassed": true,
+      "jointPassed": true,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "完整 resources 属性读取 hasMore=false/5点，真实 r2 仅 status=ready、无 category；summarize 明确 SPATIAL_ATTRIBUTE_MISSING 后重新完整读取手工核对 boat3(r1/r3/outside)、truck1(edge)、缺字段1(r2)。正文明确手工结果非成功工具返回，ready4/busy1也与来源一致，无空间范围/状态过滤，无写入。‘不属于’结合后文不能归类/不推断按未知类别口径理解，未将缺口计为零。"
+      ],
+      "scorerConcerns": [],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    },
+    {
+      "id": "H04-2-V1",
+      "caseId": "H04",
+      "repeat": 2,
+      "variant": "V1",
+      "condition": "B",
+      "background": "original",
+      "status": "recorded",
+      "providerCalls": 3,
+      "elapsedMs": 8468,
+      "automaticPassed": true,
+      "reviewed": true,
+      "semanticDisposition": "failed",
+      "agentSemanticPassed": false,
+      "jointPassed": false,
+      "reviewDimensions": {
+        "objectScope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": false,
+        "effects": true
+      },
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true,
+        "required": true
+      },
+      "criticalErrors": [],
+      "automaticFailures": [],
+      "notes": [
+        "全部5点属性手工核对正确：boat3、truck1、r2缺 category，status ready4/busy1，不将缺口当实际类别值。完整正文额外断言‘当前草稿快照（未发布、未设为任务当前）’，实际只有两次 annotation_read(mode:draft)，返回status=draft和对象，没有 publications/current 状态读取；draft 是读取模式，不能证明该版本从未发布或未采用。此附加状态断言缺乏模型取得的证据，与原 D09-2-V1 同口径。实际 before/after 相同，无副作用。"
+      ],
+      "scorerConcerns": [
+        "自动缺字段核心事实检查通过，未核完整答复中无证据的发布/采用状态断言；该例不能以核心正确代替整体通过。"
+      ],
+      "humanPending": [],
+      "sourceBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2-resume"
+    }
+  ],
+  "skillRequiredExcludingInfrastructure": {
+    "V0": {
+      "required": 18,
+      "loadedBeforeAnalysis": 18
+    },
+    "V1": {
+      "required": 18,
+      "loadedBeforeAnalysis": 18
+    },
+    "V2": {
+      "required": 18,
+      "loadedBeforeAnalysis": 18
+    },
+    "V3": {
+      "required": 18,
+      "loadedBeforeAnalysis": 7
+    },
+    "V4": {
+      "required": 18,
+      "loadedBeforeAnalysis": 18
+    }
+  }
+}

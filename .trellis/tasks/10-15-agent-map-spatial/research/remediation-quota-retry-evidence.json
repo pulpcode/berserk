@@ -1,0 +1,244 @@
+{
+  "generatedAt": "2026-10-17T02:12:38.736860+00:00",
+  "sourceRevision": "f6a6447",
+  "authorization": "用户2026-10-17明确要求重试8项欠费中断；每项仅重试一次，原记录不覆盖，累计预算159项。",
+  "startedAt": "2026-10-17T02:08:34.252Z",
+  "scriptSha256": "6eec4b02bdfb9b01ac5d689457f8848d8730910c62e23543e8fb90c24ad09790",
+  "sourceHashVerification": "每试次前后核对五组冻结源哈希；运行器遇差异即停止。",
+  "sourceHashManifestSha256": "e14733be2f06cc21605d3585c2d76287de6e0047780562b9a8d55b33e2d75c9c",
+  "priorSummarySha256": "ba743e4af56a153b79ff9c2c1712ad3c4761c884e1445e5d9d6d30d58e90077e",
+  "authorizedRetryOnce": true,
+  "originalEvidenceHashes": {
+    "remediation-v2-summary.json": "59fc9f5a1ca3c79cb2695f3178bb9bd8e44c1240d388d011f525b4f039d6c4d5",
+    "remediation-v2-adjudication.json": "3c3fa6d461d29d683ec5aa9109f63bbf75728424d70060d0f060d5f55306a10b",
+    "remediation-v2-agent-review-repeat1.json": "c594c2ae10f444f625390f834b763e4f7840ef82fe20dd3c3d32d1c737c9a235",
+    "remediation-v2-stop-evidence.json": "b770d5fbeabcced02e188c103cda1980276640264a8818edb6ef65613ca6e985",
+    "remediation-v2-resume-agent-review.json": "f6ab9a08f2db1050c8da547236bd14a09f07e6c3090a45658ee671dee047aae5",
+    "remediation-v2-agent-review-repeat2.json": "9e7095642c58ce2df832cc7f929be566f78f86916cb63d8ae1b7635b8cc85b92",
+    "remediation-v2-resume-evidence.json": "e56796597df90dccac16d6fb6b26f437a61542aad57d726e9ab653a6945ad638",
+    "remediation-v2-completed-summary.json": "ba743e4af56a153b79ff9c2c1712ad3c4761c884e1445e5d9d6d30d58e90077e"
+  },
+  "schedule": [
+    {
+      "id": "D11-2-V2",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D11-2-V3",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D11-2-V4",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D11-2-V0",
+      "caseId": "D11",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D12-2-V2",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V2",
+      "condition": "B",
+      "background": "original"
+    },
+    {
+      "id": "D12-2-V3",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V3",
+      "condition": "C",
+      "background": "original"
+    },
+    {
+      "id": "D12-2-V4",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V4",
+      "condition": "B",
+      "background": "neutral"
+    },
+    {
+      "id": "D12-2-V0",
+      "caseId": "D12",
+      "repeat": 2,
+      "variant": "V0",
+      "condition": "B",
+      "background": "original"
+    }
+  ],
+  "batchResult": {
+    "scheduled": 8,
+    "executed": 8,
+    "outcomes": [
+      {
+        "id": "D11-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      },
+      {
+        "id": "D11-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 8,
+        "failureCategory": null
+      },
+      {
+        "id": "D11-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      },
+      {
+        "id": "D11-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      },
+      {
+        "id": "D12-2-V2",
+        "variant": "V2",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D12-2-V3",
+        "variant": "V3",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      },
+      {
+        "id": "D12-2-V4",
+        "variant": "V4",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 4,
+        "failureCategory": null
+      },
+      {
+        "id": "D12-2-V0",
+        "variant": "V0",
+        "status": "recorded",
+        "exitCode": 0,
+        "providerCalls": 5,
+        "failureCategory": null
+      }
+    ],
+    "unrun": [],
+    "stopReason": "",
+    "previousBatch": "/private/tmp/spatial-remediation-diagnostic-20261016-v2",
+    "modelAcceptancePassed": false,
+    "semanticReview": "pending_review"
+  },
+  "rawEvidence": [
+    {
+      "id": "D11-2-V2",
+      "files": {
+        "plan.json": "65f9283ba60f3b265a9fced6274fb66391ddc4fe43d7f18737ad3c0e09538ad5",
+        "preparation.json": "e309665ab469ba6bff53db011cec185477d20e0a1015cd3c0d2422c30fbf0c8c",
+        "final-state.json": "6cba88c9ffd09657caa7a98b3e3fbc50a442827f2789094752c2eb341185b764",
+        "score.json": "af46abd139b0f787b7e90fdc04693ad7d5d64d7f94fbdca1149f0f29a338df2e",
+        "result.json": "d461f47da16a8c233ea548053f412bdf291e240ab6deb583a21b6a68fff350c9"
+      }
+    },
+    {
+      "id": "D11-2-V3",
+      "files": {
+        "plan.json": "cf5d7a4af94bf735a45a2d1714ba29b6b1cbb120eb58a79071298af2be0f7feb",
+        "preparation.json": "86c4251a47885e0d9cd9a55b505ccae31b70bf90ef92360577e83df5e98ad019",
+        "final-state.json": "011d2a142d744779e7eae6d3c00b593199f6ec3f1734eea0316547218cb8c7f7",
+        "score.json": "6a44ab01b3469719d350aa4768163d320c372ef5d1c402e604dd56613ae85041",
+        "result.json": "ad0618400bdbd8c0bdb20b8ab686d15cb78a4e2e588cf624aaeba42faa7300a2"
+      }
+    },
+    {
+      "id": "D11-2-V4",
+      "files": {
+        "plan.json": "d8027a6cf2389a9fd75101002db968ddfa3f603f8b7ab8b9f356abb48dce126a",
+        "preparation.json": "e7968c40a513610a97d844dd16397f38e61cb80fe941686f94c85db283ae8419",
+        "final-state.json": "b3f1633588bd322075b1e87af170c1c02b1fbae3d9eedf3411cd9aaf194f9d44",
+        "score.json": "1f42da4729328c07d3a4d68a5bdab7365062331b87f37ef280d7d9a7d0031066",
+        "result.json": "780d53a7b497e79eff4f7298a968f3b2dee0e26408e3254faa7ce17ee883f11f"
+      }
+    },
+    {
+      "id": "D11-2-V0",
+      "files": {
+        "plan.json": "54c21f6c425112adf35a51f55a42418b61fae340df274506ca0fa5721416f9af",
+        "preparation.json": "bd2432b6d5fad77058ec03e356f18f5582c47e6fc11d9907e2ebc3aa6fb79fde",
+        "final-state.json": "1ce4db244b74debab9ddfda9dc38d9438103193e448bc324b45b13827aa004fa",
+        "score.json": "8f5bda9a84069e42e5f532b86b1927628197db84ce579600040128d09b951a84",
+        "result.json": "3332c8d80abf8d3e6089941db88aa54e96dd346b92680659469fc6d3c97f33f2"
+      }
+    },
+    {
+      "id": "D12-2-V2",
+      "files": {
+        "plan.json": "509978099e1c7fc8f00d5e45bb17b79f9e49e72bab98cafc122bfc0a62169eb0",
+        "preparation.json": "71775ccbfcfa89db9403f8ae3000c07cc18e9c65bc69c636c94b74d067fe3737",
+        "final-state.json": "e26cc581e89a298544f53548bf3777aab6982be3e89940460dbbac56615ac95a",
+        "score.json": "18846b14ceff3f3695a266d2d32a7c2fbe91f0a122afd59bc4f5557172a5eb9b",
+        "result.json": "ce6efe0593b45e4ef4c5468c3501c8ae644ee16025225dc156b50da4b87d3e17"
+      }
+    },
+    {
+      "id": "D12-2-V3",
+      "files": {
+        "plan.json": "987e411c3e643d52b067d04e9a69b3144261e1aa02789c658936b41d9cdcd290",
+        "preparation.json": "2d83f2d36d862af7eafd0ba895240d8000729a66d9ffcf2608ebbed9eb3255bd",
+        "final-state.json": "69c717501fb007e5e962b22f8be69fc744fd99bf716f9ed184a31d8d76e74f6a",
+        "score.json": "18846b14ceff3f3695a266d2d32a7c2fbe91f0a122afd59bc4f5557172a5eb9b",
+        "result.json": "f89b44819caa0f811a04bcc0ed77968bb21e8623d0bd2bafcbd4fda8339e5d34"
+      }
+    },
+    {
+      "id": "D12-2-V4",
+      "files": {
+        "plan.json": "18e3a72b6c948726c1d979716167ca90ab54a386b559c0fb17abf508f928c077",
+        "preparation.json": "f09c060adfdc5872d41b1330b74255a968e97b88933e48ac949faae955916bdc",
+        "final-state.json": "60888bcf0729485be803efb48176b85b1397303185136a9af18a0216dc9421f0",
+        "score.json": "18846b14ceff3f3695a266d2d32a7c2fbe91f0a122afd59bc4f5557172a5eb9b",
+        "result.json": "4dc3776431025925434e82ed530c039430afef5955544cabbf7ef11f1495062e"
+      }
+    },
+    {
+      "id": "D12-2-V0",
+      "files": {
+        "plan.json": "63cd3e1a00e2135c87037d5aebe898aef9c789aa55c2fec81a5ef37d65f45813",
+        "preparation.json": "ea713f58e880c844cddbed8e28463b0c6f9133a6b4740c2825523d67feed90c9",
+        "final-state.json": "14f9a627fb326efb7285bd2814351233034f29b56b69619887c70f3f9eedd572",
+        "score.json": "18846b14ceff3f3695a266d2d32a7c2fbe91f0a122afd59bc4f5557172a5eb9b",
+        "result.json": "aea5092a3a592dfc4fea20d7164d7982cd9649a3b475be7fb8956bfe7c4b29fb"
+      }
+    }
+  ]
+}

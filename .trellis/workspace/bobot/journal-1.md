@@ -1067,3 +1067,34 @@
 ### Next Steps
 
 - 统一争议口径与人类校准后，再审阅后续改进及模型对照
+
+
+## Session 36: 补测空间诊断历史额度中断项
+
+**Date**: 2026-10-17
+**Task**: 补测空间诊断历史额度中断项
+**Branch**: `codex/agent-map-spatial`
+
+### Summary
+
+按用户授权冻结同版重试8项历史欠费中断：4通过、2失败、2待裁定，无新增额度故障。补测后120项为84通过、28失败、8待裁定，通过率70%；原首次尝试统计保留，累计159次，AC10未通过。
+
+### Main Changes
+
+- 新增补测证据与服务恢复后的120项视图，保持原score及审阅不变
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 8项真实quota身份、源哈希、独立全文审阅、4项保存几何及原对象保护检查通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 统一争议判例口径，再审阅Skill发现和回答证据约束改进
