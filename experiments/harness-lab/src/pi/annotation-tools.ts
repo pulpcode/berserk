@@ -16,8 +16,9 @@ const name = Type.String({ minLength: 1, maxLength: 120 });
 const selection = {layerIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 32, uniqueItems: true})), objectIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 500, uniqueItems: true}))};
 // Read filters intersect; composer reference selections retain their separate exclusive-range contract.
 const readSelection = {
-  layerIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 32, uniqueItems: true, description: '按图层 ID 筛选；同时指定 objectIds 时取交集，所列对象须均位于这些图层内，否则读取失败。仅知图层名称时，可先读取摘要中的 layers 定位 ID；已有摘要足以回答时无需重复读取。'})),
-  objectIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 500, uniqueItems: true, description: '按对象 ID 筛选；同时指定 layerIds 时取交集，所列对象须均位于这些图层内，否则读取失败。未知 ID 时先按需读取摘要定位，再读取所需字段，避免为单对象问题读取整图几何。'})),
+  layerIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 32, uniqueItems: true, description: '按图层 ID 筛选，与 layerNames 互斥；同时指定 objectIds 时取交集，所列对象须均位于这些图层内，否则读取失败。已有摘要足以回答时无需重复读取。'})),
+  layerNames: Type.Optional(Type.Array(Type.String({minLength: 1, maxLength: 120, pattern: '\\S'}), {minItems: 1, maxItems: 32, uniqueItems: true, description: '按本次读取的固定版本中的图层名称精确筛选，与 layerIds 互斥。不忽略空格或大小写，不模糊匹配；名称不存在则失败，同名时返回候选 ID，需明确选择后改用 layerIds。'})),
+  objectIds: Type.Optional(Type.Array(id, {minItems: 1, maxItems: 500, uniqueItems: true, description: '按对象 ID 筛选；同时指定 layerIds 或 layerNames 时取交集，所列对象须均位于这些图层内，否则读取失败。未知 ID 时先按需读取摘要定位，再读取所需字段，避免为单对象问题读取整图几何。'})),
 };
 const readFields = Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {
   uniqueItems: true, description: '选择额外字段。基础摘要始终包含 objectId/name/kind/layerId，不应将它们填入 fields；省略或空数组均仅返回摘要。未请求字段不代表字段为空。',
@@ -105,17 +106,17 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
         state.observeCurrent(result.current.sequence, callId); return result;
       }, signal, 'annotation_list')}),
-    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/objectIds 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
+    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
       parameters: Type.Union([
-        Type.Object({mode: Type.Literal('draft'), ...readSelection, fields: readFields, ...pagination}, strict),
-        Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...readSelection, fields: readFields, ...pagination}, strict),
+        Type.Object({mode: Type.Literal('draft'), ...readSelection, fields: readFields, ...pagination}, {...strict, not: {required: ['layerIds', 'layerNames']}}),
+        Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...readSelection, fields: readFields, ...pagination}, {...strict, not: {required: ['layerIds', 'layerNames']}}),
         Type.Object({mode: Type.Literal('compare'), left: annotationRefSchema, right: annotationRefSchema, ...pagination}, strict),
         Type.Object({mode: Type.Literal('receipt'), clientActionId: uuid}, strict),
         Type.Object({mode: Type.Literal('receipt'), requestId: uuid, toolCallId: Type.String({minLength: 1, maxLength: 256})}, strict),
       ], {type: 'object'}), executionMode: 'sequential', execute: (callId, params, signal) => execute(callId, () => {
         if (params.mode === 'draft') {
           const binding = service.binding(scope.actor, scope.sessionId);
-          const result = binding.draft ? service.read(scope.actor, scope.taskId, {ref: {setId: binding.draft.setId, revision: binding.draft.headRevision}, layerIds: params.layerIds, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit}) : null;
+          const result = binding.draft ? service.read(scope.actor, scope.taskId, {ref: {setId: binding.draft.setId, revision: binding.draft.headRevision}, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit}) : null;
           state.observeDraft(binding, callId);
           return result ? {status: 'draft', ...result} : {status: 'empty', bindingRevision: binding.bindingRevision, baseRef: binding.baseRef, writable: binding.writable};
         }
@@ -126,7 +127,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
           if (receipt) state.observeReceipt(receipt, callId);
           return receipt;
         }
-        return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit});
+        return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, fields: params.fields, offset: params.offset, limit: params.limit});
       }, signal, 'annotation_read', params)}),
     defineTool({name:'annotation_from_source',label:'按来源生成或刷新标注',
       description:'将已查询的来源对象精确标到本会话已有草稿和图层中；宿主重新查询并核对来源修订，保存原几何及本次真实查询时间，无需抄写坐标或时间。来源缺几何/修订变化时明确失败，不估算。add 使用来源名称；refresh 要求目标恰有一个匹配来源且几何类型兼容，保留标注ID、名称、样式、说明、属性及其他来源引用，只替换几何与该来源修订/时间。业务说明和属性不会自动更新，变化详情按需 situation_query 后另用 annotation_action 编辑。自定义规划区域使用 annotation_action；意图不清先澄清。1～20 项 items 整批原子保存；已有草稿须先读取本会话 draft；本轮新建成功的草稿无需重复读取。来源须先查询并收到结果再保存，版本条件由宿主维护。结果 fromSources[].queriedAt 是本工具新查询的 UTC 原值，不是此前查询时间；说明文件可按固定修订读取 sourceRefs，勿只改时区后缀。不发布、不设为任务当前。',

@@ -288,6 +288,9 @@ it('returns actual selector-scoped counts and pages without pretending unread fi
  const tools=annotationTools(lab.annotations!,{actor,taskId,sessionId:session.id,requestId:randomUUID(),signal:new AbortController().signal,check:()=>{}}),read=tools.find(tool=>tool.name==='annotation_read')!;
  const cases=[
   {query:{layerIds:['meeting']},total:2,names:['a','b'],hasMore:false},
+  {query:{layerNames:['集合图层']},total:2,names:['a','b'],hasMore:false},
+  {query:{layerNames:['集合图层'],offset:1,limit:1},total:2,names:['b'],hasMore:false},
+  {query:{layerNames:['集合图层'],objectIds:['b']},total:1,names:['b'],hasMore:false},
   {query:{layerIds:['meeting'],offset:1,limit:1},total:2,names:['b'],hasMore:false},
   {query:{objectIds:['a'],fields:['style']},total:1,names:['a'],hasMore:false},
   {query:{fields:[],offset:0,limit:1},total:3,names:['a'],hasMore:true},
@@ -302,6 +305,48 @@ it('returns actual selector-scoped counts and pages without pretending unread fi
  }
  expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(2);
  await expect(read.execute('unknown',{mode:'draft',objectIds:['missing']} as never,undefined,undefined,{} as never)).rejects.toThrow();
+});
+
+it('delivers named draft reads through the native schema and permits a later edit using the original host basis',async()=>{
+ const {lab,session,actor,calls}=await setup((_context,index)=>index===0
+  ? {tools:[{name:'annotation_read',arguments:{mode:'draft',layerNames:['集合图层'],objectIds:['a']}}]}
+  : index===1 ? {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'a',changes:{note:'已核对'}}]}}]} : {text:'已修改'});
+ const snapshot=await ask(lab,session.id),messages=snapshot.messages.filter(message=>message.role==='tool');
+ expect(snapshot.lastResult?.status).toBe('succeeded');expect(messages.every(message=>!message.isError)).toBe(true);
+ expect(JSON.parse(messages[0].text).data).toMatchObject({query:{layerNames:['集合图层'],objectIds:['a']},layers:[{layerId:'meeting'}],objects:{total:1}});
+ expect(messages[0].annotationResult).toBeUndefined();expect(messages[1].annotationResult?.origin).toBe('write');
+ expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(2);
+ const schema=JSON.parse(JSON.stringify(calls[0].context.tools!.find(tool=>tool.name==='annotation_read')!.parameters));
+ for(const mode of ['draft','read']) {
+  const branch=schema.anyOf.find((entry:{properties:{mode:{const:string}}})=>entry.properties.mode.const===mode);
+  expect(branch.required).not.toContain('layerNames');expect(branch.properties.layerNames.items.maxLength).toBe(120);
+  expect(branch.not).toEqual({required:['layerIds','layerNames']});
+ }
+});
+
+it('uses fixed-version layer names and never establishes editing evidence from a fixed read or failed name match',async()=>{
+ const selected:{ref?:AnnotationRef}={};
+ const {lab,session,actor,draft}=await setup((_context,index)=>{
+  if(index===0)return {tools:[{name:'annotation_read',arguments:{mode:'read',ref:selected.ref,layerNames:['集合图层']}}]};
+  if(index===1)return {tools:[{name:'annotation_read',arguments:{mode:'draft',layerNames:['集合图层']}}]};
+  if(index===2)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'rename_set',title:'不应保存'}]}}]};
+  return {text:'停止'};
+ });selected.ref=draft.ref;
+ lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_layer',layerId:'meeting',changes:{name:'已改名'}}]});
+ const snapshot=await ask(lab,session.id),messages=snapshot.messages.filter(message=>message.role==='tool');
+ expect(messages[0].isError).not.toBe(true);expect(JSON.parse(messages[0].text).data).toMatchObject({ref:draft.ref,layers:[{name:'集合图层'}],query:{layerNames:['集合图层']}});
+ expect(messages[1]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_LAYER_NAME_NOT_FOUND')});
+ expect(messages[2]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_READ_REQUIRED')});
+ expect(JSON.parse(messages[2].text).resources).toEqual([{kind:'draft',state:'missing'}]);
+ expect(lab.annotations!.binding(actor,session.id).draft?.headRevision).toBe(2);
+});
+
+it('rejects simultaneous ID and name selectors through native validation even for an empty draft',async()=>{
+ const {lab,session,calls}=await setup((_context,index)=>index===0
+  ? {tools:[{name:'annotation_read',arguments:{mode:'draft',layerNames:['集合图层'],layerIds:['meeting']}}]} : {text:'修正筛选'});
+ const empty=await lab.createSession(session.workspaceId,'alpha');
+ const snapshot=await ask(lab,empty.id);
+ expect(calls).toHaveLength(2);expect(snapshot.messages.find(message=>message.role==='tool')).toMatchObject({isError:true});
 });
 
 it('retains exact structured receipt entries through real native compaction and restart',async()=>{

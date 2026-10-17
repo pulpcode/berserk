@@ -1,0 +1,280 @@
+{
+  "A": {
+    "statuses": {
+      "recorded": 13,
+      "dependency_failed": 1
+    },
+    "budget": {
+      "total": 42,
+      "trial": 2,
+      "input": 530113,
+      "output": 3675,
+      "unknown": false,
+      "started": 1792230625995
+    },
+    "httpStatuses": {
+      "200": 42
+    },
+    "tools": {
+      "annotation_read": 27,
+      "annotation_action": 1,
+      "ask_user": 1
+    },
+    "layerNamesCalls": [],
+    "errors": [
+      {
+        "id": "T01",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "Validation failed for tool \"annotation_read\":\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - ref: must have required properties ref\n  - mode: must be equal to constant\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - left: must have required properties left, right\n  - root: must not have additional properties\n  - mode: must be equal to constant\n  - clientActionId: must have required properties clientActionId\n\nReceived arguments:\n{\n  \"mode\": \"draft\",\n  \"layerIds\": [\n    \"仓储设施\"\n  ],\n  \"offset\": 3,\n  \"limit\": 2\n}"
+      },
+      {
+        "id": "T04",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "Validation failed for tool \"annotation_read\":\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - ref: must have required properties ref\n  - mode: must be equal to constant\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - left: must have required properties left, right\n  - root: must not have additional properties\n  - mode: must be equal to constant\n  - clientActionId: must have required properties clientActionId\n\nReceived arguments:\n{\n  \"mode\": \"draft\",\n  \"layerIds\": [\n    \"河岸巡查\"\n  ]\n}"
+      },
+      {
+        "id": "T08",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "Validation failed for tool \"annotation_read\":\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - ref: must have required properties ref\n  - mode: must be equal to constant\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - left: must have required properties left, right\n  - root: must not have additional properties\n  - mode: must be equal to constant\n  - clientActionId: must have required properties clientActionId\n\nReceived arguments:\n{\n  \"mode\": \"draft\",\n  \"layerIds\": [\n    \"仓储设施\"\n  ],\n  \"offset\": 3,\n  \"limit\": 2\n}"
+      },
+      {
+        "id": "T09",
+        "phase": "preparation",
+        "name": "ask_user",
+        "text": "当前请求已停止。"
+      },
+      {
+        "id": "T10",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "Validation failed for tool \"annotation_read\":\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - ref: must have required properties ref\n  - mode: must be equal to constant\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - left: must have required properties left, right\n  - root: must not have additional properties\n  - mode: must be equal to constant\n  - clientActionId: must have required properties clientActionId\n\nReceived arguments:\n{\n  \"mode\": \"draft\",\n  \"layerIds\": [\n    \"应急补给\"\n  ],\n  \"offset\": 50,\n  \"limit\": 2\n}"
+      },
+      {
+        "id": "T12",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "Validation failed for tool \"annotation_read\":\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - ref: must have required properties ref\n  - mode: must be equal to constant\n  - layerIds.0: must match pattern \"^[A-Za-z0-9_.:-]{1,128}$\"\n  - left: must have required properties left, right\n  - root: must not have additional properties\n  - mode: must be equal to constant\n  - clientActionId: must have required properties clientActionId\n\nReceived arguments:\n{\n  \"mode\": \"draft\",\n  \"layerIds\": [\n    \"临时停靠\"\n  ]\n}"
+      }
+    ],
+    "queryElapsedMedianMs": 4034,
+    "totalElapsedMs": 70061,
+    "queriesUnchanged": 13,
+    "queryCount": 13,
+    "F2": [
+      {
+        "id": "T02",
+        "kind": "F2",
+        "repeat": 1,
+        "status": "recorded",
+        "semanticReview": "pending_review",
+        "preparationState": "correct",
+        "unchanged": true,
+        "providerRequests": 6,
+        "cancelled": null
+      },
+      {
+        "id": "T09",
+        "kind": "F2",
+        "repeat": 2,
+        "status": "dependency_failed",
+        "semanticReview": "pending_review",
+        "preparationState": "unchanged",
+        "providerRequests": 3,
+        "cancelled": null
+      }
+    ]
+  },
+  "B": {
+    "statuses": {
+      "recorded": 12,
+      "interaction_recorded": 2
+    },
+    "budget": {
+      "total": 37,
+      "trial": 2,
+      "input": 472734,
+      "output": 3581,
+      "unknown": false,
+      "started": 1792230748462
+    },
+    "httpStatuses": {
+      "200": 37
+    },
+    "tools": {
+      "annotation_read": 21,
+      "annotation_action": 2,
+      "ask_user": 2
+    },
+    "layerNamesCalls": [
+      {
+        "id": "T01",
+        "mode": "draft",
+        "layerNames": [
+          "仓储设施"
+        ],
+        "offset": 3,
+        "limit": 2
+      },
+      {
+        "id": "T03",
+        "mode": "draft",
+        "layerNames": [
+          "应急补给"
+        ],
+        "offset": 50,
+        "limit": 2
+      },
+      {
+        "id": "T04",
+        "mode": "draft",
+        "layerNames": [
+          "河岸巡查"
+        ]
+      },
+      {
+        "id": "T05",
+        "mode": "draft",
+        "layerNames": [
+          "临时停靠"
+        ]
+      },
+      {
+        "id": "T06",
+        "mode": "draft",
+        "layerNames": [
+          "备用观察"
+        ]
+      },
+      {
+        "id": "T07",
+        "mode": "read",
+        "ref": {
+          "setId": "92beff30-b74e-4c2d-b133-1b764fdd43f1",
+          "revision": 1
+        },
+        "layerNames": [
+          "潮汐观察"
+        ]
+      },
+      {
+        "id": "T08",
+        "mode": "draft",
+        "layerNames": [
+          "仓储设施"
+        ],
+        "offset": 3,
+        "limit": 2
+      },
+      {
+        "id": "T10",
+        "mode": "draft",
+        "layerNames": [
+          "应急补给"
+        ],
+        "offset": 50,
+        "limit": 2
+      },
+      {
+        "id": "T11",
+        "mode": "draft",
+        "layerNames": [
+          "河岸巡查"
+        ]
+      },
+      {
+        "id": "T12",
+        "mode": "draft",
+        "layerNames": [
+          "临时停靠"
+        ]
+      },
+      {
+        "id": "T13",
+        "mode": "draft",
+        "layerNames": [
+          "备用观察"
+        ]
+      },
+      {
+        "id": "T14",
+        "mode": "read",
+        "ref": {
+          "setId": "4e2f83d4-cc6d-4751-866e-50636e17fc8f",
+          "revision": 1
+        },
+        "layerNames": [
+          "潮汐观察"
+        ]
+      }
+    ],
+    "errors": [
+      {
+        "id": "T05",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "{\"code\":\"ANNOTATION_LAYER_NAME_AMBIGUOUS\",\"message\":\"该固定版本中名称 \\\"临时停靠\\\" 对应多个图层；请明确选择 layerIds：[\\\"lyr-u17\\\",\\\"lyr-b63\\\"]。\",\"outcome\":\"not_committed\"}"
+      },
+      {
+        "id": "T05",
+        "phase": "query",
+        "name": "ask_user",
+        "text": "当前请求已停止。"
+      },
+      {
+        "id": "T06",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "{\"code\":\"ANNOTATION_LAYER_NAME_NOT_FOUND\",\"message\":\"该固定版本中未找到名称 \\\"备用观察\\\" 的图层。\",\"outcome\":\"not_committed\"}"
+      },
+      {
+        "id": "T12",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "{\"code\":\"ANNOTATION_LAYER_NAME_AMBIGUOUS\",\"message\":\"该固定版本中名称 \\\"临时停靠\\\" 对应多个图层；请明确选择 layerIds：[\\\"lyr-u17\\\",\\\"lyr-b63\\\"]。\",\"outcome\":\"not_committed\"}"
+      },
+      {
+        "id": "T12",
+        "phase": "query",
+        "name": "ask_user",
+        "text": "当前请求已停止。"
+      },
+      {
+        "id": "T13",
+        "phase": "query",
+        "name": "annotation_read",
+        "text": "{\"code\":\"ANNOTATION_LAYER_NAME_NOT_FOUND\",\"message\":\"该固定版本中未找到名称 \\\"备用观察\\\" 的图层。\",\"outcome\":\"not_committed\"}"
+      }
+    ],
+    "queryElapsedMedianMs": 3994.0,
+    "totalElapsedMs": 68821,
+    "queriesUnchanged": 14,
+    "queryCount": 14,
+    "F2": [
+      {
+        "id": "T02",
+        "kind": "F2",
+        "repeat": 1,
+        "status": "recorded",
+        "semanticReview": "pending_review",
+        "preparationState": "correct",
+        "unchanged": true,
+        "providerRequests": 6,
+        "cancelled": null
+      },
+      {
+        "id": "T09",
+        "kind": "F2",
+        "repeat": 2,
+        "status": "recorded",
+        "semanticReview": "pending_review",
+        "preparationState": "correct",
+        "unchanged": true,
+        "providerRequests": 6,
+        "cancelled": null
+      }
+    ]
+  }
+}

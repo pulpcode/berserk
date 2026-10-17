@@ -1,0 +1,29 @@
+{
+  "id": "map-layer-name-experiment",
+  "name": "map-layer-name-experiment",
+  "title": "图层名称查询最小对照实验",
+  "description": "已保存Pro基线，评估显式layerNames是否减少无效调用；28条固定A/B原生流程，保持其它产品机制与模型参数。",
+  "status": "completed",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-17",
+  "completedAt": "2026-10-17",
+  "branch": "codex/map-query-pro-evaluation",
+  "base_branch": "codex/map-query-pro-evaluation",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "experiments/harness-lab/src/annotations/service.ts",
+    "experiments/harness-lab/src/pi/annotation-tools.ts"
+  ],
+  "notes": "最小实验完成；A/B各14次。名称误用5→0；严格A10/14，B13/14确定+1措辞歧义。候选与报告随本次提交保存、未部署；前轮Pro结果已提交ae7236c。",
+  "meta": {}
+}

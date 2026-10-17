@@ -83,6 +83,77 @@ it('compares only common-lineage IDs and preserves saved historical geometry',as
   expect(service.version(actor,taskId,original).document.layers[0].features[0].geometry).toEqual(point().geometry);
 });
 
+it('resolves exact layer names in saved order before object filtering and pagination',async()=>{
+  const {service,actor,session,taskId}=await setup();
+  service.action(actor,session,{...initial(),operations:[
+    {op:'add_layer',layer:{layerId:'opaque-a',name:'河岸巡查',order:0,defaultVisible:true,features:[point('a'),point('b'),point('c')]}},
+    {op:'add_layer',layer:{layerId:'opaque-b',name:'外围',order:1,defaultVisible:true,features:[point('d')]}},
+    {op:'add_layer',layer:{layerId:'empty',name:'空图层',order:2,defaultVisible:true,features:[]}},
+  ]});
+  const ref=draftRef(service,actor,session);
+  const byName=service.read(actor,taskId,{ref,layerNames:['河岸巡查'],offset:1,limit:2,fields:['note']});
+  expect(byName).toEqual(service.read(actor,taskId,{ref,layerIds:['opaque-a'],offset:1,limit:2,fields:['note']}));
+  expect(byName.objects).toMatchObject({total:3,hasMore:false,items:[{objectId:'b',note:point().note},{objectId:'c',note:point().note}]});
+  expect(byName.layers.map(layer=>layer.layerId)).toEqual(['opaque-a']);
+  expect(service.read(actor,taskId,{ref,layerNames:['外围','河岸巡查']}).objects.items.map(item=>item.objectId)).toEqual(['a','b','c','d']);
+  expect(service.read(actor,taskId,{ref,layerNames:['河岸巡查'],objectIds:['b']}).objects.total).toBe(1);
+  expect(()=>service.read(actor,taskId,{ref,layerNames:['河岸巡查'],objectIds:['d']})).toThrow('无权访问');
+  expect(service.read(actor,taskId,{ref,layerNames:['空图层']})).toMatchObject({layers:[{layerId:'empty'}],objects:{total:0,items:[]}});
+});
+
+it('rejects missing and ambiguous names without falling back, guessing, or partially returning objects',async()=>{
+  const {service,actor,session,taskId}=await setup();
+  service.action(actor,session,{...initial(),operations:[
+    {op:'add_layer',layer:{layerId:'dock-a',name:'临时停靠',order:0,defaultVisible:true,features:[point('a')]}},
+    {op:'add_layer',layer:{layerId:'dock-b',name:'临时停靠',order:1,defaultVisible:true,features:[point('b')]}},
+    {op:'add_layer',layer:{layerId:'north',name:'North',order:2,defaultVisible:true,features:[point('c')]}},
+  ]});
+  const ref=draftRef(service,actor,session);
+  expect(()=>service.read(actor,taskId,{ref,layerNames:['临时停靠']})).toThrow(expect.objectContaining({code:'ANNOTATION_LAYER_NAME_AMBIGUOUS',message:expect.stringContaining('["dock-a","dock-b"]')}));
+  for(const names of [['不存在'],['临时'],['north'],[' North'],['North '],['North','不存在']]) {
+    expect(()=>service.read(actor,taskId,{ref,layerNames:names})).toThrow(expect.objectContaining({code:'ANNOTATION_LAYER_NAME_NOT_FOUND'}));
+  }
+  expect(()=>service.read(actor,taskId,{ref,layerNames:['North','临时停靠']})).toThrow(expect.objectContaining({code:'ANNOTATION_LAYER_NAME_AMBIGUOUS'}));
+  expect(service.read(actor,taskId,{ref,layerIds:['dock-b']}).objects.items.map(item=>item.objectId)).toEqual(['b']);
+});
+
+it('matches names inside the requested historical revision and publication after a layer is renamed',async()=>{
+  const {service,actor,session,second,taskId}=await setup();service.action(actor,session,initial());
+  const original=draftRef(service,actor,session);
+  const published=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:1,title:'旧版'}).ref!;
+  service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_layer',layerId:'layer-a',changes:{name:'新名称'}}]});
+  service.action(actor,second,initial());
+  for(const ref of [original,published])expect(service.read(actor,taskId,{ref,layerNames:['集合点']}).layers).toMatchObject([{layerId:'layer-a',name:'集合点'}]);
+  const latest=draftRef(service,actor,session);
+  expect(()=>service.read(actor,taskId,{ref:latest,layerNames:['集合点']})).toThrow(expect.objectContaining({code:'ANNOTATION_LAYER_NAME_NOT_FOUND'}));
+  expect(service.read(actor,taskId,{ref:latest,layerNames:['新名称']}).layers).toMatchObject([{layerId:'layer-a'}]);
+});
+
+it('authorizes the fixed snapshot before disclosing any name matches or candidate IDs',async()=>{
+  const {service,actor,session,taskId,workspaces}=await setup();
+  service.context=new ContextService({systems:[{id:'source',name:'范围',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TEST_QUERY'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a','b']}]},{TEST_QUERY:'test-only-token'});
+  const input=initial();input.operations[0].layer.features[0].sourceRefs=[{systemId:'source',objectType:'resource',objectId:'object',revision:1}];
+  input.operations.push({op:'add_layer',layer:{layerId:'secret-candidate',name:'集合点',order:1,defaultVisible:true,features:[]}});
+  service.action(actor,session,input);const privateRef=draftRef(service,actor,session);
+  const published=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:1,title:'共享'}).ref!;
+  await workspaces.ensureWorkspace(taskId,'b','B');const b=service.actorForSeat('b');
+  const otherTask=await workspaces.create('其他任务',randomUUID(),'a');
+  for(const layerNames of [['集合点'],['不存在']]) {
+    expect(()=>service.read(b,taskId,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
+    expect(()=>service.read(actor,otherTask.taskSpaceId!,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND'}));
+  }
+  service.context.config.scopes[0].seatIds=['a'];
+  expect(()=>service.read(b,taskId,{ref:published,layerNames:['集合点']})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
+});
+
+it('validates name selectors without normalizing them or extending composer references',()=>{
+  const ref={setId:randomUUID(),revision:1};
+  for(const layerNames of [[],[''],['  '],['x'.repeat(121)],['x','x'],[1],Array.from({length:33},(_,index)=>String(index))])expect(()=>validation.readInput({ref,layerNames})).toThrow();
+  expect(()=>validation.readInput({ref,layerNames:['集合点'],layerIds:['layer-a']})).toThrow('只能指定一种');
+  expect(validation.readInput({ref,layerNames:[' 集合点 '],objectIds:['a']})).toMatchObject({layerNames:[' 集合点 '],objectIds:['a']});
+  expect(()=>validation.selection({...ref,layerNames:['集合点']})).toThrow();
+});
+
 it('does not equate independently created object IDs in branches of the same fixed baseline',async()=>{
   const {service,actor,session,second,taskId,workspace,workspaces}=await setup();
   service.action(actor,session,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'layer-a',name:'空基线',order:0,defaultVisible:true,features:[]}}]});

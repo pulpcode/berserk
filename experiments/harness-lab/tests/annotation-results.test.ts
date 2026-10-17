@@ -17,7 +17,7 @@ it('projects only known annotation metadata, preserves original receipts and bus
  expect(result.content[0].text).not.toContain(hash);
  expect(JSON.parse(result.content[0].text)).toMatchObject({format:'annotation.model-result.v1',data:{ref:receipt.ref,publication:{title:'发布版'}}});
 });
-it.each([{}, {objectIds:['north'],fields:['note']}, {layerIds:['roads'],fields:[]}, {fields:['style','attributes']}])('echoes original selectors without inventing omitted fields: %j', query => {
+it.each([{}, {objectIds:['north'],fields:['note']}, {layerIds:['roads'],fields:[]}, {layerNames:['道路'],objectIds:['north'],fields:[]}, {fields:['style','attributes']}])('echoes original selectors without inventing omitted fields: %j', query => {
  const actual={hash,ref:{setId:id,revision:1},objects:{items:[],offset:3,limit:2,total:5,hasMore:false}};
  const result=annotationToolResult(actual,'annotation_read',{mode:'read',...query} as never);
  expect(JSON.parse(result.content[0].text).data).toEqual({ref:actual.ref,objects:actual.objects,query});

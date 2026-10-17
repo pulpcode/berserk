@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {startMapTrial,mapTrialRequest} from '../../../experiments/harness-lab/scripts/probe-situation-map.js';
 import {ask,mapState} from '../../../experiments/harness-lab/scripts/probe-source-annotations.js';
 import {scopeObservations} from '../../../experiments/harness-lab/scripts/probe-map-result-projection.js';
-import {prepareFixture,preparationState,prompts,schedule,type Fixture} from './fixtures.js';
+import {prepareFixture as defaultPrepareFixture,preparationState,prompts as defaultPrompts,schedule as defaultSchedule,type Fixture} from './fixtures.js';
 
 const taskDir=fileURLToPath(new URL('.',import.meta.url));
 const repo=resolve(taskDir,'../../..');
@@ -147,7 +147,19 @@ export function parseArgs(args:string[]) {
   const [mode,batch,...rest]=args;if(!['prepare-only','run'].includes(mode)||!batch||!/^[-a-zA-Z0-9_]+$/.test(batch)||rest.length>1)throw new Error('Usage: run.ts prepare-only|run <unique-batch-id> [base-port]');
   const port=rest.length?Number(rest[0]):4450;if(!Number.isInteger(port)||port<1024||port>65520)throw new Error('Invalid base port');return {mode:mode as 'prepare-only'|'run',batch,port};
 }
-export async function main(args=process.argv.slice(2)) {
+/** Evaluation-only schedule reuse; never changes the native request/tool pipeline. */
+export interface EvaluationPlan {
+  schedule:Array<{id:string;kind:string;repeat:number}>;
+  prompts:Record<string,string>;
+  prepareFixture:(m:Parameters<typeof defaultPrepareFixture>[0],kind:string)=>Promise<Fixture>;
+  protocol:Record<string,unknown>;
+  validateProduct:()=>void;
+  hashes:()=>Promise<Record<string,string>>;
+  interactionCases?:string[];
+}
+export async function main(args=process.argv.slice(2),plan?:EvaluationPlan) {
+  const schedule=plan?.schedule??defaultSchedule, prompts:Record<string,string>=plan?.prompts??defaultPrompts;
+  const prepareFixture=plan?.prepareFixture??((m:Parameters<typeof defaultPrepareFixture>[0],kind:string)=>defaultPrepareFixture(m,kind as Fixture['kind']));
   const options=parseArgs(args);if(options.mode==='help'){console.info('From experiments/harness-lab: node --import tsx --env-file-if-exists=.env.local ../../.trellis/tasks/10-17-map-query-native-evaluation/run.ts prepare-only|run UNIQUE_BATCH [BASE_PORT]\nEach run prepares and freezes 15 new isolated fixtures before any provider request. prepare-only never calls the provider and is not resumable. No product change, deployment or automatic grading.');return;}
   const parent=join(repo,'.local/map-query-native');mkdirSync(parent,{recursive:true,mode:0o700});const directory=join(parent,options.batch);await exclusiveDirectory(directory);
   const original=globalThis.fetch,origin=new URL(process.env.LLM_BASE_URL||'https://api.deepseek.com').origin;
@@ -158,9 +170,12 @@ export async function main(args=process.argv.slice(2)) {
   const results=schedule.map(entry=>({...entry,status:'not_executed',semanticReview:'pending_review'})) as Array<Record<string,unknown>>;
   const env={...process.env,LLM_PROVIDER:'deepseek',LLM_MODEL:model,LLM_CONTEXT_WINDOW:'1000000',LLM_MAX_OUTPUT_TOKENS:'2048',LLM_REQUEST_TIMEOUT_MS:'60000',LAB_EXECUTION_ENABLED:'false',LAB_PUBLIC_ORIGIN:undefined};
   try {
+    if(plan)plan.validateProduct();
+    else {
     const productDiff=execFileSync('git',['diff','8cab905','--','experiments/harness-lab/src','experiments/harness-lab/fixtures','experiments/harness-lab/package-lock.json','experiments/harness-lab/package.json'],{cwd:repo,encoding:'utf8'});assert.equal(productDiff,'','Product differs from frozen baseline');
     assert.equal(execFileSync('git',['ls-files','--others','--exclude-standard','experiments/harness-lab/src','experiments/harness-lab/fixtures'],{cwd:repo,encoding:'utf8'}),'','Untracked product files found');
-    save(join(directory,'protocol.json'),{schedule,prompts,limits,mode:options.mode,node:process.version,piVersion:JSON.parse(readFileSync(join(packageRoot,'node_modules/@earendil-works/pi-coding-agent/package.json'),'utf8')).version,model,contextWindow:1000000,thinking:'disabled',outputLimit:2048,requestTimeoutMs:60000,baseline:'8cab905',head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),hashes:await hashes(),grading:'review-rubric.md; no automatic semantic acceptance'});
+    }
+    save(join(directory,'protocol.json'),{schedule,prompts,limits,mode:options.mode,node:process.version,piVersion:JSON.parse(readFileSync(join(packageRoot,'node_modules/@earendil-works/pi-coding-agent/package.json'),'utf8')).version,model,contextWindow:1000000,thinking:'disabled',outputLimit:2048,requestTimeoutMs:60000,baseline:'8cab905',head:plan?.protocol.head??execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),hashes:await (plan?.hashes??hashes)(),...plan?.protocol,grading:'review-rubric.md; no automatic semantic acceptance'});
     for(const [i,entry] of schedule.entries()) {
       const dir=join(directory,entry.id);await exclusiveDirectory(dir);
       const trial=await startMapTrial(options.port+i,env,false);
@@ -190,16 +205,17 @@ export async function main(args=process.argv.slice(2)) {
           active.phase='readonly';active.requestId=undefined;
         }
         const before=await mapState(p.trial.manifest,p.fixture.sessionId),otherBefore=p.fixture.otherSessionId?await mapState(p.trial.manifest,p.fixture.otherSessionId):null;
-        const record=await ask(p.trial.manifest,p.directory,'query',p.fixture.sessionId,prompts[p.fixture.kind],p.fixture.annotationRefs);await observer.settle();
+        const record=await ask(p.trial.manifest,p.directory,'query',p.fixture.sessionId,prompts[p.entry.kind],p.fixture.annotationRefs);await observer.settle();
         const otherAfter=p.fixture.otherSessionId?await mapState(p.trial.manifest,p.fixture.otherSessionId):null;
         const unchanged=JSON.stringify(before)===JSON.stringify(record.after)&&JSON.stringify(otherBefore)===JSON.stringify(otherAfter);
         const observations=scopeObservations(record.toolResults);save(join(p.directory,'checks.json'),{unchanged,otherBefore,otherAfter,observations});
         if(!unchanged||observations.writeToolAttempted)observer.cancel('readonly_state_or_write_violation',true);
         results[i].status=record.failure||record.cancelledForInteraction||record.snapshot.lastResult?.status!=='succeeded'||active.cancelled?'incomplete':'recorded';results[i].unchanged=unchanged;
+        if(record.cancelledForInteraction&&plan?.interactionCases?.includes(p.entry.kind)&&unchanged&&!active.cancelled)results[i].status='interaction_recorded';
       } catch(error) {results[i].status='technical_failure';results[i].error=String(error);observer.cancel('evidence_or_execution_failure',true);}
       finally {clearTimeout(timer);results[i].providerRequests=observer.budget.trial;results[i].cancelled=active.cancelled??null;save(join(directory,'runs.json'),results);save(join(directory,'attempts.json'),observer.attempts);save(join(directory,'budget.json'),observer.budget);await p.trial.stop();observer.active=undefined;}
     }
   } catch(error){observer.budget.fatal??=String(error);save(join(directory,'failure.json'),{error:String(error)});process.exitCode=1;}
-  finally {await observer.settle();if(observer.attempts.some(a=>!a.completed)){observer.budget.unknown=true;observer.budget.fatal??='unfinished_provider_evidence';}globalThis.fetch=original;for(const p of prepared)await p.trial.stop();save(join(directory,'runs.json'),results);save(join(directory,'attempts.json'),observer.attempts);save(join(directory,'budget.json'),observer.budget);console.info(JSON.stringify({directory,mode:options.mode,recorded:results.filter(r=>r.status==='recorded').length,providerAttempts:observer.budget.total,stop:observer.budget.fatal??null}));if(options.mode==='run'&&results.some(r=>r.status!=='recorded'))process.exitCode=1;}
+  finally {await observer.settle();if(observer.attempts.some(a=>!a.completed)){observer.budget.unknown=true;observer.budget.fatal??='unfinished_provider_evidence';}globalThis.fetch=original;for(const p of prepared)await p.trial.stop();save(join(directory,'runs.json'),results);save(join(directory,'attempts.json'),observer.attempts);save(join(directory,'budget.json'),observer.budget);console.info(JSON.stringify({directory,mode:options.mode,recorded:results.filter(r=>r.status==='recorded').length,providerAttempts:observer.budget.total,stop:observer.budget.fatal??null}));if(options.mode==='run'&&results.some(r=>!['recorded','interaction_recorded'].includes(String(r.status))))process.exitCode=1;}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))void main().catch(error=>{console.error(String(error));process.exitCode=1;});
