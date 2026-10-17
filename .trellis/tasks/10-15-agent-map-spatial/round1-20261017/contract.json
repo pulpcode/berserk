@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "round": 1,
+  "entries": 48,
+  "conditions": [
+    "deepseek-flash:B",
+    "deepseek-flash:C",
+    "deepseek-v4-pro:B",
+    "deepseek-v4-pro:C"
+  ],
+  "contextWindow": 1000000,
+  "thinking": "disabled",
+  "maxOutputTokens": 4096,
+  "requestTimeoutMs": 60000,
+  "trialLimits": {
+    "providerAttempts": 24,
+    "toolCalls": 64,
+    "wallMs": 600000
+  },
+  "batchLimits": {
+    "providerAttempts": 1152,
+    "inputTokensIncludingCache": 4000000,
+    "outputTokens": 150000
+  },
+  "noAutomaticSecondRound": true,
+  "noSemanticRetry": true,
+  "grading": "Independent full-transcript five-dimension review; pending is not pass",
+  "fixtures": "cases.ts; J09 duplicate layer names only, J12 missing category only",
+  "resume": "Same frozen batch, never-started entries only; fatal stops require review",
+  "executionEnabled": false,
+  "executionComparison": "All four groups use LAB_EXECUTION_ENABLED=false; cannot directly subtract old spatial execution-enabled scores",
+  "J11AcceptedPaths": [
+    "Complete accurate conditional answer distinguishing both candidates",
+    "Necessary object-disambiguation question"
+  ],
+  "semanticAcceptance": "Neither successful tool call nor arbitrary question is automatically passed"
+}

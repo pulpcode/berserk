@@ -115,17 +115,20 @@ it('keeps annotation receipts in native details and UI while the actual provider
   const definitions=payloads[0].tools.map(tool=>tool.function);
   const readDefinition=definitions.find(tool=>tool.name==='annotation_read')!;
   for(const branch of readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)) {
-    for(const optional of ['layerIds','objectIds','fields']) expect(branch.required??[]).not.toContain(optional);
+    for(const optional of ['layerIds','layerNames','objectIds','fields']) expect(branch.required??[]).not.toContain(optional);
     expect(branch.properties.fields.description).toContain('基础摘要始终包含 objectId/name/kind/layerId');
     expect(branch.properties.fields.description).toContain('省略或空数组均仅返回摘要');
     expect(branch.properties.fields.description).toContain('未请求字段不代表字段为空');
-    expect(branch.properties.layerIds.description).toContain('摘要中的 layers 定位 ID');
+    expect(branch.properties.layerIds.description).toContain('与 layerNames 互斥');
+    expect(branch.properties.layerNames.description).toContain('固定版本中的图层名称精确筛选');
+    expect(branch.properties.layerNames.description).toContain('与 layerIds 互斥');
+    expect(branch).toMatchObject({not:{required:['layerIds','layerNames']}});
     expect(branch.properties.layerIds.description).toContain('已有摘要足以回答时无需重复读取');
-    expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 时取交集');
+    expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 或 layerNames 时取交集');
     expect(branch.properties.layerIds.description).toContain('同时指定 objectIds 时取交集');
   }
   expect(readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)).toHaveLength(2);
-  expect(readDefinition.description).toContain('未指定 layerIds/objectIds 时，在该固定版本的全部对象中分页');
+  expect(readDefinition.description).toContain('未指定 layerIds/layerNames/objectIds 时，在该固定版本的全部对象中分页');
   expect(readDefinition.description).toContain('可涉及标题、图层和对象，不是对象总数');
   expect(definitions.find(tool=>tool.name==='annotation_list')!.description).toContain('发布说明 note 不是对象备注');
   const reportDefinition=definitions.find(tool=>tool.name==='annotation_action')!;
