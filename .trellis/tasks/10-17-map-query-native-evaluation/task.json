@@ -1,0 +1,39 @@
+{
+  "id": "map-query-native-evaluation",
+  "name": "map-query-native-evaluation",
+  "title": "地图Agent完整查询流程测评",
+  "description": "从原始用户请求开始验证图层发现、查询决策、补查及回答一致性；保持产品代码不变，方案待审阅后实施。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": "map-query-native-evaluation",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-17",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "prd.md",
+    "design.md",
+    "implement.md",
+    "merge-record.md"
+  ],
+  "notes": "2026-10-17：旧测评记录已合入并推送main至8cab905。本任务只规划原生完整流程诊断，不修产品；待审阅。",
+  "meta": {
+    "baselineCommit": "8cab905b3f14a201e7b8dadce5a651f115be8cde",
+    "productChanged": false,
+    "liveEvaluationExecuted": false,
+    "implementationApproved": false,
+    "plannedTrials": 15,
+    "repeatsPerCase": 5,
+    "maxProviderAttempts": 90
+  }
+}
