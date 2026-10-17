@@ -1,0 +1,1030 @@
+{
+  "reviewer": "native_eval_check",
+  "independent": true,
+  "primaryRatingsReadBeforeScoring": false,
+  "batch": ".local/map-query-native/live-20261017-native-01",
+  "rubric": "review-rubric.md",
+  "method": "人工逐条读取实际问题、完整工具结果、全部可见中途和最终文字；核对53个provider实际请求/响应、工具投递及流式正文与快照完全一致；独立比对15只读前后状态和5次前置编辑状态。未读取执行者评分。",
+  "interpretation": "wholeFinalFactuallyAccurate评价对实际证据的忠实程度，与wholeFinalTaskComplete分开。T14读错对象但忠实转述所得两条备注，事实转述可成立，任务仍失败。含糊表述单列，不自动按错误计分。",
+  "summary": {
+    "mainCorrect": 14,
+    "mainDenominator": 15,
+    "finalFactualAccuracy": 14,
+    "strictPass": 13,
+    "strictDenominator": 15,
+    "strictByCase": {
+      "F1": "5/5",
+      "F2": "4/5",
+      "F3": "4/5"
+    },
+    "preparationCorrect": "5/5",
+    "readOnlyStateUnchanged": "15/15",
+    "clearFailures": [
+      "T12",
+      "T14"
+    ],
+    "necessaryPaginationSuccesses": [
+      "T03",
+      "T12",
+      "T15"
+    ],
+    "recoveryLimitation": "分页续读并非从错误查询恢复；T14发现对象不同后未补查，其他自然错误恢复没有覆盖。"
+  },
+  "ratings": [
+    {
+      "id": "T01",
+      "case": "F1",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "先读完整7项，再按 storage offset=3 limit=2复核；“第4～5项：东仓、山脚仓”及图层5/整图7、未读额外字段均与证据一致。二次读取非必需，但合法。",
+      "verbatimEvidence": "这一页共 2 项：东仓、山脚仓，都是点状设施。该图层共 5 个对象",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T01/provider-001-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"storage\"], \"offset\": 3, \"limit\": 2}"
+            }
+          ],
+          "providerEvidence": "T01/provider-002-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T01/provider-003-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T01/query.json",
+        "T01/query.sse",
+        "T01/checks.json",
+        "T01/fixture.json"
+      ]
+    },
+    {
+      "id": "T02",
+      "case": "F2",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": true,
+        "operationCorrect": true,
+        "visibleExplanationAccurate": true
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [
+        "“引用版本的范围只包含point-a”宜理解为用户所选范围；可能被误读为整版，未明确断言A无乙。"
+      ],
+      "reason": "前轮只改乙备注。比较分别读A甲与B甲note；“引用版本为A 现场讨论，本会话草稿为基线备注”正确；对乙仅说明此前修改与本次不纳入比较，未断言A无乙。",
+      "verbatimEvidence": "但引用版本的范围只包含 point-a，因此本次未纳入比较。",
+      "queryPath": [
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T02/provider-004-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-b\"], \"fields\": [\"note\", \"geometry\", \"attributes\", \"style\", \"sourceRefs\"]}"
+            }
+          ],
+          "providerEvidence": "T02/provider-005-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_action",
+              "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"point-b\", \"changes\": {\"note\": \"B 保障讨论\"}}]}"
+            }
+          ],
+          "providerEvidence": "T02/provider-006-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [],
+          "providerEvidence": "T02/provider-007-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"98fe4484-cddc-4ad5-9752-76ae8f50b9e4\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            },
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T02/provider-008-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T02/provider-009-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T02/query.json",
+        "T02/query.sse",
+        "T02/checks.json",
+        "T02/fixture.json",
+        "T02/preparation.json",
+        "T02/preparation-other-after.json"
+      ]
+    },
+    {
+      "id": "T03",
+      "case": "F3",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "默认首屏只覆盖目标层前46项；中途“首屏只到应急补给46”正确，再按 lyr-k72 offset=50 limit=2取得目标。目标名称/类型、图层总数58均正确。",
+      "verbatimEvidence": "首屏只到“应急补给46”，继续读取第 51～52 项。",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T03/provider-010-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"lyr-k72\"], \"offset\": 50, \"limit\": 2}"
+            }
+          ],
+          "providerEvidence": "T03/provider-011-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T03/provider-012-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": true,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T03/query.json",
+        "T03/query.sse",
+        "T03/checks.json",
+        "T03/fixture.json"
+      ]
+    },
+    {
+      "id": "T04",
+      "case": "F1",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "完整7项先发现 storage，然后读取目标层第4～5项。额外列出前3项有同修订完整摘要支持，不属于范围扩大错误。",
+      "verbatimEvidence": "前3项来自同一草稿修订的整体摘要，与本次分页结果一致",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T04/provider-013-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"storage\"], \"offset\": 3, \"limit\": 2}"
+            }
+          ],
+          "providerEvidence": "T04/provider-014-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T04/provider-015-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T04/query.json",
+        "T04/query.sse",
+        "T04/checks.json",
+        "T04/fixture.json"
+      ]
+    },
+    {
+      "id": "T05",
+      "case": "F2",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": true,
+        "operationCorrect": true,
+        "visibleExplanationAccurate": true
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [
+        "可选同步建议未说明同步目标；不把未执行建议算成本次误写或阻塞确认。"
+      ],
+      "reason": "前轮真实修改乙备注；比较只读两侧甲note，备注正确，并明确“其余已读取字段”一致且未加载几何属性。末尾可选同步建议方向含混，但未执行、未阻塞主任务。",
+      "verbatimEvidence": "如需同步为本会话的“基线备注”，可以再告诉我。",
+      "queryPath": [
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T05/provider-016-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_action",
+              "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"point-b\", \"changes\": {\"note\": \"B 保障讨论\"}}]}"
+            }
+          ],
+          "providerEvidence": "T05/provider-017-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [],
+          "providerEvidence": "T05/provider-018-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"a4cf0642-bd72-41cf-8a13-16dc8389d25f\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            },
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T05/provider-019-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T05/provider-020-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T05/query.json",
+        "T05/query.sse",
+        "T05/checks.json",
+        "T05/fixture.json",
+        "T05/preparation.json",
+        "T05/preparation-other-after.json"
+      ]
+    },
+    {
+      "id": "T06",
+      "case": "F3",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "一次limit=100读取全部64项，足够本地筛出应急补给第51～52项；明确“total 64表示整个草稿的对象总数”，目标层58，均正确。不强制再次分页。",
+      "verbatimEvidence": "total 64 表示整个草稿的对象总数，其中含另外两个图层的对象",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"offset\": 0, \"limit\": 100}"
+            }
+          ],
+          "providerEvidence": "T06/provider-021-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T06/provider-022-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T06/query.json",
+        "T06/query.sse",
+        "T06/checks.json",
+        "T06/fixture.json"
+      ]
+    },
+    {
+      "id": "T07",
+      "case": "F1",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "完整7项摘要足够直接筛选仓储层末2项，未带layerIds不是错误。图层5/整图7、未请求额外字段的说明均正确。",
+      "verbatimEvidence": "草稿共 2 个图层、7 个对象。",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T07/provider-023-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T07/provider-024-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T07/query.json",
+        "T07/query.sse",
+        "T07/checks.json",
+        "T07/fixture.json"
+      ]
+    },
+    {
+      "id": "T08",
+      "case": "F2",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": true,
+        "operationCorrect": true,
+        "visibleExplanationAccurate": true
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [
+        "“唯一差异”未显式重复“已读取字段”；当前备注比较语境下不判全面字段一致的确定性错误。"
+      ],
+      "reason": "前轮乙备注修改正确，比较读A甲/B甲note并给出正确差异。“唯一差异在备注文本”放在本次备注比较语境可成立；若扩大为所有字段则证据不足，记录歧义，不作为明确事实错误。",
+      "verbatimEvidence": "唯一差异在备注文本：引用对象备注为“A 现场讨论”，本会话对应对象仍为“基线备注”。",
+      "queryPath": [
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T08/provider-025-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_action",
+              "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"point-b\", \"changes\": {\"note\": \"B 保障讨论\"}}]}"
+            }
+          ],
+          "providerEvidence": "T08/provider-026-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [],
+          "providerEvidence": "T08/provider-027-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"46eb2c1b-371e-410b-8c5e-11fc78157e11\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            },
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T08/provider-028-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T08/provider-029-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T08/query.json",
+        "T08/query.sse",
+        "T08/checks.json",
+        "T08/fixture.json",
+        "T08/preparation.json",
+        "T08/preparation-other-after.json"
+      ]
+    },
+    {
+      "id": "T09",
+      "case": "F3",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "一次limit=100读取全部64项，返回目标层58项，准确给出目标第51/52项及类型；没有额外查询需要。",
+      "verbatimEvidence": "“应急补给”图层（lyr-k72）共有 58 个对象",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"offset\": 0, \"limit\": 100}"
+            }
+          ],
+          "providerEvidence": "T09/provider-030-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T09/provider-031-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T09/query.json",
+        "T09/query.sse",
+        "T09/checks.json",
+        "T09/fixture.json"
+      ]
+    },
+    {
+      "id": "T10",
+      "case": "F1",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "完整摘要后正确给出仓储层5项及第4/5项。“除此之外没有其他对象”紧接“这一页（本图层全部5项中的第4～5项）”，明确限定本页，不能误判为全图不存在其他对象。",
+      "verbatimEvidence": "这一页（本图层全部 5 项中的第 4～5 项）只有东仓和山脚仓两个对象",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T10/provider-032-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T10/provider-033-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T10/query.json",
+        "T10/query.sse",
+        "T10/checks.json",
+        "T10/fixture.json"
+      ]
+    },
+    {
+      "id": "T11",
+      "case": "F2",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": true,
+        "operationCorrect": true,
+        "visibleExplanationAccurate": true
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "前轮仅乙备注变化，比较两侧固定r3的甲note。目标与名称/类型/图层均正确，且说明“仅在读取范围内一致”。",
+      "verbatimEvidence": "名称、类型、图层均相同（未作为比较重点，仅在读取范围内一致）。",
+      "queryPath": [
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T11/provider-034-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-b\"], \"fields\": [\"note\", \"attributes\", \"style\", \"geometry\", \"sourceRefs\"]}"
+            }
+          ],
+          "providerEvidence": "T11/provider-035-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_action",
+              "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"point-b\", \"changes\": {\"note\": \"B 保障讨论\"}}]}"
+            }
+          ],
+          "providerEvidence": "T11/provider-036-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [],
+          "providerEvidence": "T11/provider-037-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"e1b1be2a-00a4-4a8c-b0db-53d788f9b7e1\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            },
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"5e71fe4c-bd2a-4d4b-a607-6f5500e947ca\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T11/provider-038-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T11/provider-039-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T11/query.json",
+        "T11/query.sse",
+        "T11/checks.json",
+        "T11/fixture.json",
+        "T11/preparation.json",
+        "T11/preparation-other-after.json"
+      ]
+    },
+    {
+      "id": "T12",
+      "case": "F3",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": false,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": false,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": false,
+      "firstFailureStage": "answer_explanation",
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "实际查询正确，已经拿到目标项及图层total=58；但中途将未筛选total=64说成“应急补给图层共有64个对象”，终答又说“完整草稿摘要中该图层显示64个对象；两者计数不一致”。64属于整图，不是该层，虚构了计数冲突。主答案正确，所有可见文字与完整终答不准确。",
+      "verbatimEvidence": "“应急补给”图层共有 64 个对象，刚才只返回前 50 个；我读取第 51～52 项。",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T12/provider-040-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"lyr-k72\"], \"offset\": 50, \"limit\": 2}"
+            }
+          ],
+          "providerEvidence": "T12/provider-041-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T12/provider-042-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": true,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T12/query.json",
+        "T12/query.sse",
+        "T12/checks.json",
+        "T12/fixture.json"
+      ]
+    },
+    {
+      "id": "T13",
+      "case": "F1",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [],
+      "reason": "完整7项摘要正确本地筛出仓储第4/5项，明确“7=维修设施2+仓储设施5”；未读取字段不等于为空，说明正确。",
+      "verbatimEvidence": "对象总数 7 个 = 维修设施 2 个 + 仓储设施 5 个",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T13/provider-043-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T13/provider-044-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T13/query.json",
+        "T13/query.sse",
+        "T13/checks.json",
+        "T13/fixture.json"
+      ]
+    },
+    {
+      "id": "T14",
+      "case": "F2",
+      "mainCorrect": false,
+      "evidenceSufficientForRequestedTask": false,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": false,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": true,
+        "operationCorrect": true,
+        "visibleExplanationAccurate": true
+      },
+      "stateCorrect": true,
+      "strictPass": false,
+      "firstFailureStage": "query_decision",
+      "companionStages": [
+        "followup_not_corrected"
+      ],
+      "ambiguities": [],
+      "reason": "当前引用元信息明确point-a，历史B摘要已有point-a与point-b映射；却查询A甲与B乙。终答忠实列出两次实际note值并承认“两者是不同对象”，但没有按用户“对应对象”补查B甲，未完成请求。主要是对象选择/查询决策，继而未纠正，不能归为工具捏造字段或来源不存在。",
+      "verbatimEvidence": "两者是不同对象（point-a 与 point-b），不是同一对象的两个版本",
+      "queryPath": [
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T14/provider-045-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-b\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T14/provider-046-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [
+            {
+              "name": "annotation_action",
+              "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"point-b\", \"changes\": {\"note\": \"B 保障讨论\"}}]}"
+            }
+          ],
+          "providerEvidence": "T14/provider-047-meta.json"
+        },
+        {
+          "phase": "prepare",
+          "calls": [],
+          "providerEvidence": "T14/provider-048-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"read\", \"ref\": {\"setId\": \"9791282e-bb8c-4b90-b0a3-4c224f039eb0\", \"revision\": 3}, \"objectIds\": [\"point-a\"], \"fields\": [\"note\"]}"
+            },
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"point-b\"], \"fields\": [\"note\"]}"
+            }
+          ],
+          "providerEvidence": "T14/provider-049-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T14/provider-050-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": false,
+      "errorRecovery": "failed_to_correct_wrong_target",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T14/query.json",
+        "T14/query.sse",
+        "T14/checks.json",
+        "T14/fixture.json",
+        "T14/preparation.json",
+        "T14/preparation-other-after.json"
+      ]
+    },
+    {
+      "id": "T15",
+      "case": "F3",
+      "mainCorrect": true,
+      "evidenceSufficientForRequestedTask": true,
+      "wholeFinalFactuallyAccurate": true,
+      "wholeFinalTaskComplete": true,
+      "intermediateFactuallyAccurate": true,
+      "preparation": {
+        "applicable": false,
+        "operationCorrect": null,
+        "visibleExplanationAccurate": null
+      },
+      "stateCorrect": true,
+      "strictPass": true,
+      "firstFailureStage": null,
+      "companionStages": [],
+      "ambiguities": [
+        "“只查看了…应急补给”可能误读为仅查询该层，但与“未做任何修改”并列也可表达只读方式。"
+      ],
+      "reason": "默认首屏缺目标后，按 lyr-k72 offset=48 limit=10有效覆盖目标第51/52项，名称/类型/58总数均正确；多读8项是冗余。首句“只查看了…应急补给”与初次宽读的范围可能混淆，但紧接“未做任何修改”可理解为只读方式，记录歧义而非确定性范围错误。",
+      "verbatimEvidence": "只查看了本会话地图草稿（setId 06532757…，修订 1）的图层 lyr-k72「应急补给」，未做任何修改。",
+      "queryPath": [
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\"}"
+            }
+          ],
+          "providerEvidence": "T15/provider-051-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [
+            {
+              "name": "annotation_read",
+              "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"lyr-k72\"], \"offset\": 48, \"limit\": 10}"
+            }
+          ],
+          "providerEvidence": "T15/provider-052-meta.json"
+        },
+        {
+          "phase": "readonly",
+          "calls": [],
+          "providerEvidence": "T15/provider-053-meta.json"
+        }
+      ],
+      "necessaryPaginationFollowup": true,
+      "errorRecovery": "not_covered",
+      "blockingConfirmation": false,
+      "parameterErrors": 0,
+      "technicalRetries": 0,
+      "skillRead": false,
+      "evidence": [
+        "T15/query.json",
+        "T15/query.sse",
+        "T15/checks.json",
+        "T15/fixture.json"
+      ]
+    }
+  ]
+}

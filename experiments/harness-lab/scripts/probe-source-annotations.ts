@@ -6,7 +6,7 @@ import {appendFile, mkdir, mkdtemp, readFile, writeFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import type {AnnotationBinding, AnnotationCurrent, AnnotationFeature, AnnotationListing, AnnotationVersion} from '../src/contracts/annotations.js';
+import type {AnnotationBinding, AnnotationCurrent, AnnotationFeature, AnnotationListing, AnnotationSelection, AnnotationVersion} from '../src/contracts/annotations.js';
 import type {SituationObject} from '../src/contracts/context.js';
 import type {SessionSnapshot, StreamEvent} from '../src/contracts/index.js';
 import type {SimulationState} from '../src/contracts/simulation.js';
@@ -59,15 +59,15 @@ export function sourceMatches(items:AnnotationFeature[],sources:SituationObject[
       .map(item=>({objectId:item.objectId,geometryEqual:JSON.stringify(item.geometry)===JSON.stringify(source.geometry),
         sourceRefs:item.sourceRefs}))}));
 }
-export async function ask(m:MapTrialManifest, evidence:string,label:string,sessionId:string,prompt:string) {
+export async function ask(m:MapTrialManifest, evidence:string,label:string,sessionId:string,prompt:string,annotationRefs?:AnnotationSelection[]) {
   const startedAt=Date.now(),before=await mapState(m,sessionId),streamPath=join(evidence,`${label}.sse`);
-  await save(join(evidence,`${label}-input.json`),{sessionId,prompt,before});
+  await save(join(evidence,`${label}-input.json`),{sessionId,prompt,before,...(annotationRefs === undefined ? {} : {annotationRefs})});
   await writeFile(streamPath,'',{mode:0o600});
   let requestId:string|undefined,failure:string|undefined,cancelledForInteraction=false;
   const interactions:unknown[]=[];
   try {
     const response=await fetch(`${m.url}/api/sessions/${sessionId}/messages`,{method:'POST',
-      headers:{...await mapTrialAuth(m,'planning'),'content-type':'application/json'},body:JSON.stringify({text:prompt}),signal:AbortSignal.timeout(600_000)});
+      headers:{...await mapTrialAuth(m,'planning'),'content-type':'application/json'},body:JSON.stringify({text:prompt,...(annotationRefs === undefined ? {} : {annotationRefs})}),signal:AbortSignal.timeout(600_000)});
     assert.ok(response.ok&&response.body,`Message HTTP ${response.status}`);
     const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='';
     for(;;) {
