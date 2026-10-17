@@ -1,0 +1,67 @@
+[
+  {
+    "file": "experiments/harness-lab/scripts/probe-source-annotations.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "72d7b72a77410da3a18d430178e8bdd55febf66f6ca9bd231bc6aa6de86a2245"
+  },
+  {
+    "file": "experiments/harness-lab/src/annotations/service.ts",
+    "classification": "exact clean three-way merge",
+    "sha256": "afb937ce2f6a5c0c4ed08b00f986ab65903d0e633ba4603367585a99788f81f0"
+  },
+  {
+    "file": "experiments/harness-lab/src/annotations/validation.ts",
+    "classification": "exact clean three-way merge",
+    "sha256": "2cfd72e83121b37a5e07e3da3db09d8acbf9397f9df48cf2dedeb6f18955ff00"
+  },
+  {
+    "file": "experiments/harness-lab/src/contracts/annotations.ts",
+    "classification": "exact clean three-way merge",
+    "sha256": "15d847b19fa88676a709d3580b2a6bd7d760a96bcb76af2ea6704fbfc9f32cc1"
+  },
+  {
+    "file": "experiments/harness-lab/src/contracts/collaboration.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "89a1ae90de557b586f39beae624c456911721bbcb48818a89e629aee79a72d0e"
+  },
+  {
+    "file": "experiments/harness-lab/src/pi/annotation-results.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "93e52d37e1aaf94256db164c3d7dec08d961e057e86e4c4c28308ee02d7ea1d9"
+  },
+  {
+    "file": "experiments/harness-lab/src/pi/annotation-tools.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "6f389c55eb259599483913c51b44aaf2f6f01aea745049f57e3380ab3f98b57c"
+  },
+  {
+    "file": "experiments/harness-lab/src/pi/collaboration-tools.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "d3adeae469590c4e9aed27fc4df58aabb3422233f142793cf6115bbb720a57da"
+  },
+  {
+    "file": "experiments/harness-lab/tests/annotation-results.test.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "adfae56d02a534a8ed58d4d59b163c7d636c79aac78707ea719f72504bed249f"
+  },
+  {
+    "file": "experiments/harness-lab/tests/annotations-acceptance.test.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "06d34c6d85dcb3745c644de37487cb3826b450a7d5093a73769cfb2e7f2d320a"
+  },
+  {
+    "file": "experiments/harness-lab/tests/annotations.test.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "5e3853f319fa7f3e4579618ec457aa3123d30eeaeec9825a082f9ac64f491605"
+  },
+  {
+    "file": "experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "3f15b3f0147da2bf4bb97e0df5d9f27aec7c25f54265827d4ad6239810d5750e"
+  },
+  {
+    "file": "experiments/harness-lab/tests/pi/annotations.test.ts",
+    "classification": "incoming bytes exact",
+    "sha256": "fbe997e0fe4e86cb439175a0210e24c43f4b48a1658f09f8a3f3f4696b81d0e4"
+  }
+]
