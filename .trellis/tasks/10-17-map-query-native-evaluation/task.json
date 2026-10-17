@@ -2,7 +2,7 @@
   "id": "map-query-native-evaluation",
   "name": "map-query-native-evaluation",
   "title": "地图Agent完整查询流程测评",
-  "description": "已完成15条原生地图查询流程测评与双份复核，产品代码不变；严格13/15，主问题14/15。",
+  "description": "Flash与Pro原生完整流程对照已记录：Flash主问题14/15，Pro15/15；Pro原两类明确错误未复现，8次调用错误自行恢复，T06歧义及单人初评边界保留。",
   "status": "completed",
   "dev_type": null,
   "scope": "map-query-native-evaluation",
@@ -31,9 +31,14 @@
     "ratings-primary.json",
     "ratings-reviewer.json",
     "validation.md",
-    "evidence-index.json"
+    "evidence-index.json",
+    "pro-plan.md",
+    "pro-results.md",
+    "pro-ratings.json",
+    "pro-dialogue-excerpts.md",
+    "pro-evidence-index.json"
   ],
-  "notes": "方案先提交39d4a80；真实批次完成，未达到各场景5/5模型表现门槛。任务完成指测评执行与报告完成，不代表缺陷修复。新增测试和结果随本次Git提交保存，未push、未部署。",
+  "notes": "方案先提交39d4a80；真实批次完成，未达到各场景5/5模型表现门槛。任务完成指测评执行与报告完成，不代表缺陷修复。新增测试和结果随本次Git提交保存，未push、未部署。 Pro对照新增记录随本次Git提交保存，未push；严格评分为单人初评，T06歧义单列。",
   "meta": {
     "baselineCommit": "8cab905b3f14a201e7b8dadce5a651f115be8cde",
     "productChanged": false,
@@ -48,6 +53,17 @@
     "actualProviderAttempts": 53,
     "strictPass": 13,
     "mainCorrect": 14,
-    "batch": "live-20261017-native-01"
+    "batch": "live-20261017-native-01",
+    "proEvaluation": {
+      "batch": "live-20261017-pro-01",
+      "completedTrials": 15,
+      "mainCorrect": 15,
+      "strictPassPreliminary": 15,
+      "independentReviewCompleted": false,
+      "ambiguousScopeTrial": "T06",
+      "selfRecoveredToolErrors": 8,
+      "providerAttempts": 63,
+      "productChanged": false
+    }
   }
 }

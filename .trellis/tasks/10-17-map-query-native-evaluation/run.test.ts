@@ -3,10 +3,20 @@ import {test} from 'node:test';
 import {mkdtemp,readFile,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {Budget,Observer,SSELines,allowedTool,exclusiveDirectory,parseArgs} from './run.js';
+import {Budget,Observer,SSELines,allowedTool,exclusiveDirectory,parseArgs,evaluationModel} from './run.js';
 import {largeLayers,prompts,schedule} from './fixtures.js';
 import {ask} from '../../../experiments/harness-lab/scripts/probe-source-annotations.js';
 import type {MapTrialManifest} from '../../../experiments/harness-lab/scripts/probe-situation-map.js';
+
+test('model selection is bounded and Pro requests retain native payload and usage',async()=>{
+  assert.equal(evaluationModel(''),'deepseek-flash');assert.equal(evaluationModel('deepseek-v4-pro'),'deepseek-v4-pro');assert.throws(()=>evaluationModel('typo'),/Unsupported/);
+  const root=await mkdtemp(join(tmpdir(),'native-eval-pro-'));let sent:unknown;
+  const raw='data: {"choices":[],"usage":{"prompt_tokens":13,"completion_tokens":2}}\n\ndata: [DONE]\n\n';
+  const observer=new Observer(async(_input,init)=>{sent=init?.body;return new Response(raw);},root,'https://api.deepseek.com',evaluationModel('deepseek-v4-pro'));
+  observer.mode='run';observer.active={id:'T01',directory:root,phase:'readonly',fixture:{},trial:{}} as NonNullable<Observer['active']>;observer.budget.begin();
+  const body=JSON.stringify({model:'deepseek-v4-pro',max_tokens:2048,thinking:{type:'disabled'},messages:[{role:'user',content:'只读'}]});
+  const response=await observer.fetch('https://api.deepseek.com/chat/completions',{method:'POST',body});assert.equal(sent,body);assert.equal(await response.text(),raw);assert.equal(observer.budget.input,13);
+});
 
 test('frozen schedule and large-page boundary',()=>{
   assert.equal(schedule.length,15);assert.deepEqual(schedule.slice(0,3).map(x=>x.kind),['F1','F2','F3']);

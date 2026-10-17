@@ -16,6 +16,11 @@ const repo=resolve(taskDir,'../../..');
 const packageRoot=join(repo,'experiments/harness-lab');
 const digest=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 const save=(path:string,value:unknown)=>writeFileSync(path,JSON.stringify(value,null,2)+'\n',{mode:0o600});
+export function evaluationModel(value=process.env.NATIVE_EVAL_MODEL) {
+  const model=value||'deepseek-flash';
+  assert.ok(model==='deepseek-flash'||model==='deepseek-v4-pro','Unsupported evaluation model');
+  return model;
+}
 export const limits={trialRequests:6,totalRequests:90,input:2_000_000,output:60_000,reserve:2048,trialMs:360_000};
 export class Budget {
   total=0;trial=0;input=0;output=0;unknown=false;started=0;fatal:string|undefined;
@@ -55,7 +60,7 @@ interface Attempt {id:number;trialId:string;phase:string;status?:number;usage?:u
 interface Active {id:string;trial:Awaited<ReturnType<typeof startMapTrial>>;fixture:Fixture;directory:string;phase:'prepare'|'readonly';requestId?:string;cancelled?:string;cancelSent?:boolean;knownTools?:Set<string>}
 export class Observer {
   budget=new Budget();active?:Active;mode:'prepare-only'|'run'='prepare-only';attempts:Attempt[]=[];pending=new Set<Promise<void>>();
-  constructor(readonly original:typeof fetch,readonly directory:string,readonly providerOrigin:string){}
+  constructor(readonly original:typeof fetch,readonly directory:string,readonly providerOrigin:string,readonly model=evaluationModel('deepseek-flash')){}
   cancel(reason:string,fatal=false) {
     if(fatal)this.budget.fatal??=reason;
     const active=this.active;if(!active)return;
@@ -99,7 +104,7 @@ export class Observer {
     const active=this.active,id=this.budget.total,stem=join(active.directory,`provider-${String(id).padStart(3,'0')}`);
     const body=typeof init?.body==='string'?init.body:input instanceof Request?await input.clone().text():null;
     assert.ok(body,'Actual provider JSON body missing');const payload=JSON.parse(body);
-    assert.equal(payload.model,'deepseek-flash');assert.equal(payload.max_tokens,2048);assert.equal(payload.thinking?.type,'disabled');
+    assert.equal(payload.model,this.model);assert.equal(payload.max_tokens,2048);assert.equal(payload.thinking?.type,'disabled');
     save(`${stem}-input.json`,payload);
     const availableTools=new Set<string>((payload.tools??[]).map((tool:{function?:{name?:string}})=>tool.function?.name).filter(Boolean));
     active.knownTools??=new Set();for(const name of availableTools){active.knownTools.add(name);active.knownTools.add(name.replace('_','.'));}
@@ -147,14 +152,15 @@ export async function main(args=process.argv.slice(2)) {
   const parent=join(repo,'.local/map-query-native');mkdirSync(parent,{recursive:true,mode:0o700});const directory=join(parent,options.batch);await exclusiveDirectory(directory);
   const original=globalThis.fetch,origin=new URL(process.env.LLM_BASE_URL||'https://api.deepseek.com').origin;
   assert.equal(origin,'https://api.deepseek.com','This approved batch uses the existing DeepSeek endpoint only');
-  const observer=new Observer(original,directory,origin);globalThis.fetch=observer.fetch;
+  const model=evaluationModel();
+  const observer=new Observer(original,directory,origin,model);globalThis.fetch=observer.fetch;
   const prepared:Array<{entry:typeof schedule[number];trial:Awaited<ReturnType<typeof startMapTrial>>;fixture:Fixture;directory:string}>=[];
   const results=schedule.map(entry=>({...entry,status:'not_executed',semanticReview:'pending_review'})) as Array<Record<string,unknown>>;
-  const env={...process.env,LLM_PROVIDER:'deepseek',LLM_MODEL:'deepseek-flash',LLM_MAX_OUTPUT_TOKENS:'2048',LLM_REQUEST_TIMEOUT_MS:'60000',LAB_EXECUTION_ENABLED:'false',LAB_PUBLIC_ORIGIN:undefined};
+  const env={...process.env,LLM_PROVIDER:'deepseek',LLM_MODEL:model,LLM_CONTEXT_WINDOW:'1000000',LLM_MAX_OUTPUT_TOKENS:'2048',LLM_REQUEST_TIMEOUT_MS:'60000',LAB_EXECUTION_ENABLED:'false',LAB_PUBLIC_ORIGIN:undefined};
   try {
     const productDiff=execFileSync('git',['diff','8cab905','--','experiments/harness-lab/src','experiments/harness-lab/fixtures','experiments/harness-lab/package-lock.json','experiments/harness-lab/package.json'],{cwd:repo,encoding:'utf8'});assert.equal(productDiff,'','Product differs from frozen baseline');
     assert.equal(execFileSync('git',['ls-files','--others','--exclude-standard','experiments/harness-lab/src','experiments/harness-lab/fixtures'],{cwd:repo,encoding:'utf8'}),'','Untracked product files found');
-    save(join(directory,'protocol.json'),{schedule,prompts,limits,mode:options.mode,node:process.version,piVersion:JSON.parse(readFileSync(join(packageRoot,'node_modules/@earendil-works/pi-coding-agent/package.json'),'utf8')).version,model:'deepseek-flash',thinking:'disabled',outputLimit:2048,requestTimeoutMs:60000,baseline:'8cab905',head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),hashes:await hashes(),grading:'review-rubric.md; no automatic semantic acceptance'});
+    save(join(directory,'protocol.json'),{schedule,prompts,limits,mode:options.mode,node:process.version,piVersion:JSON.parse(readFileSync(join(packageRoot,'node_modules/@earendil-works/pi-coding-agent/package.json'),'utf8')).version,model,contextWindow:1000000,thinking:'disabled',outputLimit:2048,requestTimeoutMs:60000,baseline:'8cab905',head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),hashes:await hashes(),grading:'review-rubric.md; no automatic semantic acceptance'});
     for(const [i,entry] of schedule.entries()) {
       const dir=join(directory,entry.id);await exclusiveDirectory(dir);
       const trial=await startMapTrial(options.port+i,env,false);
