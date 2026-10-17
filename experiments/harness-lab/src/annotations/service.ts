@@ -173,8 +173,14 @@ export class AnnotationService {
   }
   read(actor: AnnotationActor,taskId: string,input: AnnotationReadInput): AnnotationReadResult {
     const normalized=validate.readInput(input), version=this.version(actor,taskId,normalized.ref);
-    const layers=version.document.layers.filter(layer=>!normalized.layerIds || normalized.layerIds.includes(layer.layerId));
-    if(normalized.layerIds?.some(id=>!layers.some(layer=>layer.layerId===id))) throw missing();
+    const layerIds=normalized.layerNames?.map(name=>{
+      const matches=version.document.layers.filter(layer=>layer.name===name);
+      if(!matches.length) throw new RequestError('ANNOTATION_LAYER_NAME_NOT_FOUND',`该固定版本中未找到名称 ${JSON.stringify(name)} 的图层。`,404);
+      if(matches.length>1) throw new RequestError('ANNOTATION_LAYER_NAME_AMBIGUOUS',`该固定版本中名称 ${JSON.stringify(name)} 对应多个图层；请明确选择 layerIds：${JSON.stringify(matches.map(layer=>layer.layerId))}。`,409);
+      return matches[0].layerId;
+    }) ?? normalized.layerIds;
+    const layers=version.document.layers.filter(layer=>!layerIds || layerIds.includes(layer.layerId));
+    if(layerIds?.some(id=>!layers.some(layer=>layer.layerId===id))) throw missing();
     const objects=layers.flatMap(layer=>layer.features.filter(feature=>!normalized.objectIds || normalized.objectIds.includes(feature.objectId)).map(feature=>{
       const selected: AnnotationReadResult['objects']['items'][number]={objectId:feature.objectId,name:feature.name,kind:feature.kind,layerId:layer.layerId};
       for(const field of normalized.fields ?? []) if(feature[field]!==undefined) Object.assign(selected,{[field]:feature[field]});

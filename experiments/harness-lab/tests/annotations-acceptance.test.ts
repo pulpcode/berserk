@@ -9,7 +9,7 @@ import { AccessStore } from '../src/access/store.js';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
 import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
-import type { AnnotationAction, AnnotationBinding, AnnotationCurrent, AnnotationFeature, AnnotationListing, AnnotationReceipt, AnnotationVersion } from '../src/contracts/annotations.js';
+import type { AnnotationAction, AnnotationBinding, AnnotationCurrent, AnnotationFeature, AnnotationListing, AnnotationReadResult, AnnotationReceipt, AnnotationVersion } from '../src/contracts/annotations.js';
 import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
 
 const cleanup: Array<() => Promise<unknown>> = [];
@@ -83,8 +83,14 @@ it('isolates conversation drafts, freezes publication content, and gates whole-v
   expect((await b.call(action(sa.id), create)).statusCode).toBe(404);
   expect((await a.read<AnnotationBinding>(binding(sa2.id))).draft).toBeNull();
   expect((await a.read<AnnotationVersion>(revisionUrl)).document.layers[0].features).toEqual([point(objectId)]);
+  const readUrl=`/api/tasks/${task.id}/annotations/read`,namedRead={ref:created.ref,layerNames:['集合点']};
+  expect((await a.read<AnnotationReadResult>(readUrl,namedRead)).objects.items).toEqual([{objectId,kind:'point',name:'集合点 A',layerId}]);
+  for(const client of [b,manager])expect((await client.call(readUrl,namedRead)).statusCode).toBe(404);
+  expect((await a.call(readUrl,{...namedRead,layerIds:[layerId]})).statusCode).toBe(400);
+  expect((await a.call(readUrl,{...namedRead,layerNames:['不存在']})).json()).toMatchObject({error:{code:'ANNOTATION_LAYER_NAME_NOT_FOUND'}});
   const published = await a.read<AnnotationReceipt>(action(sa.id), {action: 'publish', clientActionId: randomUUID(), revision: draft.headRevision, title: '基线版本'});
   const p1 = published.publication!;
+  expect((await b.read<AnnotationReadResult>(readUrl,{...namedRead,ref:{publicationId:p1.publicationId}})).layers).toMatchObject([{layerId,name:'集合点'}]);
   expect((await b.read<AnnotationVersion>(`/api/annotation-publications/${p1.publicationId}`)).document.layers[0].features[0]).toEqual(point(objectId));
   expect((await a.read<AnnotationCurrent>(current)).publication).toBeNull();
   for (const [client, id] of [[a, sa2.id], [b, sb.id]] as const) await client.read(action(id), {

@@ -75,9 +75,9 @@ it('stops the native loop on an original after hook exception after a real commi
   expect(lab.get(session.id, 'alpha').lastResult?.status).toBe('failed');
   expect(lab.annotations!.binding(actor, session.id).draft).toMatchObject({headRevision: 2, title: '已修改'});
 });
-it('invalidates an unseen successful read when the original hook replaces its content', async () => {
+it.each([undefined,['目标层']])('invalidates an unseen successful read when the original hook replaces its content (names: %j)', async layerNames => {
   fault.tool = 'annotation_read'; fault.mode = 'content';
-  const {lab, session, actor} = await setup((_context, index) => index === 0 ? {tools: [read]} : index === 1 ? {tools: [write]} : {text: '停止'});
+  const {lab, session, actor} = await setup((_context, index) => index === 0 ? {tools: [{...read,arguments:{...read.arguments,...(layerNames ? {layerNames} : {})}}]} : index === 1 ? {tools: [write]} : {text: '停止'});
   await lab.start(session.id, '编辑', {}, 'alpha').run(() => {});
   expect(lab.get(session.id, 'alpha').messages.find(message => message.toolName === 'annotation_action')).toMatchObject({isError: true});
   expect(lab.annotations!.binding(actor, session.id).draft?.headRevision).toBe(1);

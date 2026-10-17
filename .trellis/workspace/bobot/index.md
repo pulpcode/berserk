@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 36
+- **Total Sessions**: 37
 - **Last Active**: 2026-10-17
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1100 | Active |
+| `journal-1.md` | ~1132 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 37 | 2026-10-16 | 完成明确分派工具说明最小改动与五十样本对照 | - | `codex/handoff-reliability` |
 | 36 | 2026-10-17 | 补测空间诊断历史额度中断项 | - | `codex/agent-map-spatial` |
 | 35 | 2026-10-16 | 完成充值后的空间诊断续跑 | - | `codex/agent-map-spatial` |
 | 34 | 2026-10-16 | 空间分析修复与独立诊断 | `21988f6`, `67b8cf2`, `c28eb7e`, `6bce759`, `f6a6447` | `codex/agent-map-spatial` |

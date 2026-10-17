@@ -1,0 +1,27 @@
+{
+  "reason": "S1 query-range gate not met; do not run S2/S3",
+  "candidatePatchSha256": "414c0e9932e02803482a12caf9e59554139574de86649a3e60652e9c6b10a80e",
+  "restoredFrom": "1282d46",
+  "files": [
+    {
+      "file": "experiments/harness-lab/src/pi/annotation-results.ts",
+      "candidateSha256": "12cd97b25486815446143b82cd8b05e6993c49fd0b8f7b03d031c4bc8ffaab7d",
+      "restoredSha256": "3d8e17fd0a20c6f95e80e1c7059800429e72c16cbb2203f0b8b6d7a2325b07ff"
+    },
+    {
+      "file": "experiments/harness-lab/tests/annotation-results.test.ts",
+      "candidateSha256": "0a77a0227601a0725c67f85b4dd17a3e88d88e796560a271eed0f1133e56924a",
+      "restoredSha256": "c440614f8ce7a2a5fb45a919a992a5e0e34fe8f4a1e92a2215c87d5ec9500f76"
+    },
+    {
+      "file": "experiments/harness-lab/tests/pi/provider-payload.test.ts",
+      "candidateSha256": "c819e0dfa4bdd5ee064cb082eb13fe98a83d8997e3b18469e13a3159cdbf10c3",
+      "restoredSha256": "4e487294af78c9620a1619f8ba1141f0eaa11e7509a7bdef5700d94fb32e4bca"
+    },
+    {
+      "file": "experiments/harness-lab/tests/pi/annotation-hook-boundaries.test.ts",
+      "candidateSha256": "ed48cf66ed7fecb31d175714774458917b5ca27e4ab9a966a857e46654aa8c75",
+      "restoredSha256": "a5eb3aaf740ca1291dbd550bf3b8c8ed5e85402a96891bddc96fa700fc6f5b1e"
+    }
+  ]
+}
