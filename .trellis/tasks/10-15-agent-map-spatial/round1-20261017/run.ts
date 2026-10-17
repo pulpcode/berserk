@@ -161,7 +161,7 @@ export async function main(args=process.argv.slice(2)){
  const original=globalThis.fetch,observer=new Observer(original,directory,frozen);globalThis.fetch=observer.fetch;
  const results:Array<Record<string,unknown>>=mode==='resume'?load(join(directory,'runs.json')):schedule.map(entry=>({...entry,status:'not_executed',semanticReview:'pending_review'}));
  if(mode==='resume'){
-  const protocol=load<{hashes:Record<string,string>}>(join(directory,'protocol.json'));assert.deepEqual(frozen,protocol.hashes,'Cannot resume after source drift');
+  const protocol=load<{mode:string;hashes:Record<string,string>}>(join(directory,'protocol.json'));assert.equal(protocol.mode,'run','Prepare-only batches cannot be resumed as live experiments');assert.deepEqual(frozen,protocol.hashes,'Cannot resume after source drift');
   Object.assign(observer.budget,load(join(directory,'budget.json')));assert.ok(!observer.budget.fatal,'Fatal stop needs separate review, not automatic resume');
   observer.attempts=load(join(directory,'attempts.json'));assert.ok(observer.attempts.every(a=>a.completed),'Incomplete provider evidence');
   assert.ok(!results.some(r=>r.status==='started'),'Interrupted started entries must remain recorded, no automatic retry');
