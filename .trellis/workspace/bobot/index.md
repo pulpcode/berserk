@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 38
+- **Total Sessions**: 39
 - **Last Active**: 2026-10-17
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1166 | Active |
+| `journal-1.md` | ~1187 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 39 | 2026-10-17 | 校准评分并执行空间首轮四组诊断 | `8f2aa31`, `5a591dc`, `fc76d09` | `codex/agent-map-spatial` |
 | 38 | 2026-10-17 | 合入主线并整理下一轮空间评测审阅方案 | `ae9cb6d` | `codex/agent-map-spatial` |
 | 37 | 2026-10-16 | 完成明确分派工具说明最小改动与五十样本对照 | - | `codex/handoff-reliability` |
 | 36 | 2026-10-17 | 补测空间诊断历史额度中断项 | - | `codex/agent-map-spatial` |

@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。",
+  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。\n2026-10-17 R0与旧断言修复完成，冻结fc76d09运行首轮；预算停止于46完整/1中断/1未执行，219请求均HTTP200，4003032输入token。严格27通过/16失败/3未决，主任务41；结果待审阅，不追加预算或第二轮。",
   "meta": {
     "implementationApproved": true,
     "implementationComplete": false,
@@ -45,7 +45,7 @@
     "remediationReviewStatus": "next_round_pending_review",
     "remediationImplementationApproved": false,
     "remediationExperimentsApproved": false,
-    "executionHold": null,
+    "executionHold": "frozen_input_budget_reached_no_automatic_extension",
     "remediationPlanCommit": "21988f6",
     "remediationPhase": "main_merged_next_round_review_pending",
     "remediationOptionalModelApproved": false,
@@ -102,7 +102,7 @@
       "scope": "已完成修复及159次历史诊断/额度补测，不授权下一轮"
     },
     "nextRoundPlan": "next-round-plan.md",
-    "nextRoundReviewStatus": "approved_r0_r1_first_round_only",
+    "nextRoundReviewStatus": "results_awaiting_review",
     "nextRoundImplementationApproved": false,
     "nextRoundExperimentsApproved": true,
     "nextRoundProposedBaselineTrials": 48,
@@ -129,7 +129,19 @@
     "nextRoundPlanCommit": "8f2aa31",
     "nextRoundAssertionRepairApproved": true,
     "nextRoundCalibrationApproved": true,
-    "nextRoundExecuted": 0,
-    "nextRoundPhase": "calibration_and_preflight"
+    "nextRoundExecuted": 47,
+    "nextRoundPhase": "first_round_budget_stopped_review_pending",
+    "nextRoundCompleted": 46,
+    "nextRoundBudgetInterrupted": 1,
+    "nextRoundUnrun": 1,
+    "nextRoundProviderRequests": 219,
+    "nextRoundInputTokens": 4003032,
+    "nextRoundOutputTokens": 32820,
+    "nextRoundReport": "research/round1-live-results.md",
+    "nextRoundStrictPassed": 27,
+    "nextRoundStrictFailed": 16,
+    "nextRoundPending": 3,
+    "nextRoundAssertionRepairValidated": true,
+    "nextRoundCalibrationComplete": true
   }
 }

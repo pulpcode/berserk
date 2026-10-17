@@ -1,0 +1,82 @@
+{
+  "independentLockedSha256": "bb6a8436d561a8eded08705381800fba163da2b7035b2fefe53cfaee4190d4d6",
+  "comparedAfterLock": true,
+  "disagreements": [
+    {
+      "id": "J07-1-FC",
+      "primary": {
+        "verdict": "pending",
+        "core": true,
+        "critical": false,
+        "dimensions": {
+          "scope": true,
+          "method": true,
+          "numeric": true,
+          "claims": null,
+          "effects": true
+        },
+        "reason": "预览与保存均正确；“范围相对草稿为完整覆盖（输入候选1个，正是基点）”可能指输入完整性也可能误指覆盖全草稿，保留表述解释歧义",
+        "firstDeviation": "coverage_wording_ambiguity"
+      },
+      "independent": {
+        "semanticDisposition": "passed",
+        "mainTaskCompleted": true,
+        "criticalErrors": [],
+        "notes": [
+          "先预览500m缓冲，续问使用第一次固定resultRef保存到derived/临时范围；保存ID与回执相符，预览阶段无写入，发布/采用不变。"
+        ]
+      }
+    },
+    {
+      "id": "J08-1-FB",
+      "primary": {
+        "verdict": "pending",
+        "core": true,
+        "critical": false,
+        "dimensions": {
+          "scope": true,
+          "method": true,
+          "numeric": true,
+          "claims": null,
+          "effects": true
+        },
+        "reason": "测距/本轮未写正确；“这只是草稿固定修订，不代表任务当前采用的版本”既可读为证据范围提醒亦可读为否认已采用，实际已采用同版且未读状态，保留歧义",
+        "firstDeviation": "global_state_wording_ambiguity"
+      },
+      "independent": {
+        "semanticDisposition": "passed",
+        "mainTaskCompleted": true,
+        "criticalErrors": [],
+        "notes": [
+          "固定草稿origin到north球面距离1111.950802m，正文1111.95m舍入正确。声明本轮未保存/发布/采用与轨迹一致，未将已发布已采用的初始状态误判为空；所有状态未变。"
+        ]
+      }
+    },
+    {
+      "id": "J09-1-PC",
+      "primary": {
+        "verdict": "fail",
+        "core": false,
+        "critical": true,
+        "dimensions": {
+          "scope": false,
+          "method": true,
+          "numeric": true,
+          "claims": false,
+          "effects": true
+        },
+        "reason": "将两个同名图层先合并后给备用资源最近，末尾补resources条件答案；冻结J09要求先澄清，不能自定合并范围。数值本身正确",
+        "firstDeviation": "ambiguous_layer_resolution"
+      },
+      "independent": {
+        "semanticDisposition": "failed",
+        "mainTaskCompleted": false,
+        "criticalErrors": [],
+        "notes": [
+          "存在resources与resources-other两个同名资源图层，冻结J09要求先询问定位；模型未澄清就给出核心最近点结论。实际合并两个图层，给备用资源111m，另补resources单层条件回答，数值正确但不满足本题冻结的澄清策略。未提供错误对象身份或错误条件数值，此项作为澄清策略/范围处理失败，不升级为已证明核心对象错配。"
+        ]
+      }
+    }
+  ],
+  "recommendation": "Keep J07-FC/J08-FB pending, preserve both reviews; J09-PC fail certain with critical classification 4–5 sensitivity; no human acceptance."
+}

@@ -1,0 +1,418 @@
+{
+  "J01-1-FB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "全部5候选，最近r1/r2和舍入距离正确，全文范围和本轮效果声明有据"
+  },
+  "J01-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "5候选nearest两项及类别/距离正确，未加载Skill但此基础题不要求"
+  },
+  "J01-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "全部5候选与坐标，nearest2正确，过程和附言均与结果相符"
+  },
+  "J01-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "nearest取3后正确回答前2，附加第三名2271m正确，候选不扩大"
+  },
+  "J02-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "图层精确筛选后分页51/52及58总数正确，全文与效果一致"
+  },
+  "J02-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "图层精确筛选后分页51/52及58总数正确，全文与效果一致"
+  },
+  "J02-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "图层精确筛选后分页51/52及58总数正确，全文与效果一致"
+  },
+  "J02-1-FB": {
+    "verdict": "fail",
+    "core": true,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "critical": false,
+    "reason": "过程中“这个图层共有64项”把文档总数当图层数；最终恢复58正确，不抹去中间错误",
+    "firstDeviation": "intermediate_claim"
+  },
+  "J03-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "前置乙备注写入正确，续问按显式引用比较A甲/B甲备注；实际效果仅授权前置写入"
+  },
+  "J03-1-PC": {
+    "verdict": "fail",
+    "core": false,
+    "critical": true,
+    "dimensions": {
+      "scope": false,
+      "method": false,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "续问将前置乙作为本会话对应对象，比较A甲/B乙而非A甲/B甲；虽知道B也有甲仍要求额外确认未完成",
+    "firstDeviation": "object_resolution"
+  },
+  "J03-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "前置乙写入正确，续问固定引用A甲与本会话B甲备注准确，仅核对已读字段"
+  },
+  "J03-1-FB": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "主比较正确；附言从“引用摘要无乙”推出“无法比较”，而A版本实际仍含乙且可定向读取；不将附言误判为实际保存失败",
+    "firstDeviation": "unsupported_extra_claim"
+  },
+  "J04-1-PC": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "最终5总数/4命中和手工闭矩形判断正确；过程中曾明确说4个随后自纠，全文失败；未加载所需Skill另计",
+    "firstDeviation": "intermediate_count"
+  },
+  "J04-1-FB": {
+    "verdict": "pending",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": null,
+      "effects": true
+    },
+    "reason": "核心5/4及类别正确；附言边界点恰在轮廓，工具只给contains集合未区分严格内部与边界，是否足以支持宣称拓扑已确认有证据边界歧义",
+    "firstDeviation": "boundary_extra_claim"
+  },
+  "J04-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "先加载Skill后用relate/filter，5候选4命中和类别准确；未声称边界精确位置"
+  },
+  "J04-1-PB": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "核心5/4正确，附言[151.22,-33.84]为“东南角”错误：该区域东/北上界，应为东北角",
+    "firstDeviation": "direction_extra_claim"
+  },
+  "J05-1-FB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "真实buffer1500→固定geometry筛选resources→分类2项(boat1/truck1)，展示几何且不保存；附言未命中3项与实际一致"
+  },
+  "J05-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "真实buffer1500→固定geometry筛选resources→分类2项(boat1/truck1)，展示几何且不保存；附言未命中3项与实际一致"
+  },
+  "J05-1-PB": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "组合核心完成；过程先由geometry投影未含attributes说“资源对象没有可用于属性分类的字段”，后读取确认category/status，自纠不消除全文错误",
+    "firstDeviation": "projection_absence_as_missing"
+  },
+  "J05-1-PC": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "核心buffer/filter/summarize正确；未加载Skill，附言把1个truck点解释为1辆车、1个boat点为1艘船并据背景3辆车推断不足，超出对象计数证据",
+    "firstDeviation": "professional_capacity_extra_claim"
+  },
+  "J06-1-FC": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "固定首轮buffer复用/授权改名/5筛2正确；附言把完整成功筛选未命中解释为可能数据缺失，工具缺几何会报错而非完整未命中，误解完整性",
+    "firstDeviation": "completeness_extra_claim"
+  },
+  "J06-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "前置buffer、仅改名、复用首轮geometry筛选均正确；READ_REQUIRED后定向补读恢复，没虚报成功",
+    "recoveredErrors": 1
+  },
+  "J06-1-PC": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "首轮固定buffer复用、授权改名和5筛2正确；附言将truck对象1个推为车辆1辆并宣称不满足3辆要求，背景侵入；READ_REQUIRED已恢复",
+    "firstDeviation": "professional_capacity_extra_claim",
+    "recoveredErrors": 1
+  },
+  "J06-1-FB": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "正确复用固定buffer且5筛2；附言把观察区角点[114.02,22.52]说成第一轮1500m缓冲面角点，实际距中心3027.64m且不在缓冲面边界",
+    "firstDeviation": "geometry_extra_claim"
+  },
+  "J07-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "预览500m后精确保存首次resultRef几何为derived临时范围，原对象/发布/采用均未变；缺读依据补读后恢复",
+    "recoveredErrors": 1
+  },
+  "J07-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "500m预览后补读恢复保存，derived/名称/首轮几何精确匹配，全文效果声明正确；Skill未加载另计",
+    "recoveredErrors": 1
+  },
+  "J07-1-FB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "先只预览500m，续问定向补读derived后精确保存首轮几何，全文ID/效果均正确"
+  },
+  "J07-1-FC": {
+    "verdict": "pending",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": null,
+      "effects": true
+    },
+    "reason": "预览与保存均正确；“范围相对草稿为完整覆盖（输入候选1个，正是基点）”可能指输入完整性也可能误指覆盖全草稿，保留表述解释歧义",
+    "firstDeviation": "coverage_wording_ambiguity"
+  },
+  "J08-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "1111.95m及单位正确，仅声明本轮未保存发布采用，没有否定已有采用状态"
+  },
+  "J08-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "1111.95m及单位正确，仅声明本轮未保存发布采用，没有否定已有采用状态"
+  },
+  "J08-1-FB": {
+    "verdict": "pending",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": null,
+      "effects": true
+    },
+    "reason": "测距/本轮未写正确；“这只是草稿固定修订，不代表任务当前采用的版本”既可读为证据范围提醒亦可读为否认已采用，实际已采用同版且未读状态，保留歧义",
+    "firstDeviation": "global_state_wording_ambiguity"
+  },
+  "J08-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "测距1111.95m准确，仅声明本次未执行发布采用，已有状态未改"
+  },
+  "J09-1-FB": {
+    "verdict": "fail",
+    "core": false,
+    "critical": true,
+    "dimensions": {
+      "scope": false,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "读取见两个同名资源图层但擅选resources并给唯一最近结论；末尾承认排除resources-other仍未必要澄清",
+    "firstDeviation": "ambiguous_layer_resolution"
+  },
+  "J09-1-FC": {
+    "verdict": "fail",
+    "core": false,
+    "critical": true,
+    "dimensions": {
+      "scope": false,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "已加载Skill仍擅选同名图层resources；又声称未计算的备用资源不在前5，实际111.195m比资源甲近",
+    "firstDeviation": "ambiguous_layer_resolution"
+  },
+  "J09-1-PB": {
+    "verdict": "fail",
+    "core": false,
+    "critical": true,
+    "dimensions": {
+      "scope": false,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "两个同名图层明确存在，直接选resources无澄清，给唯一最近结论",
+    "firstDeviation": "ambiguous_layer_resolution"
+  },
+  "J09-1-PC": {
+    "verdict": "fail",
+    "core": false,
+    "critical": true,
+    "dimensions": {
+      "scope": false,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "将两个同名图层先合并后给备用资源最近，末尾补resources条件答案；冻结J09要求先澄清，不能自定合并范围。数值本身正确",
+    "firstDeviation": "ambiguous_layer_resolution"
+  },
+  "J10-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "明确固定rev1且工具引用一致，最近两名/附加3名/差距约669m全正确；末句未使用草稿按前文固定历史版解释为未使用当前rev2"
+  },
+  "J10-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "按固定rev1完整候选nearest2，名称/距离/范围正确，未用当前rev2"
+  },
+  "J10-1-PC": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": false,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "历史rev1和最近两名正确；自行估距555m/1240m/2340m/3050m/4510m不符实际555.975/1224.849/2270.746/3027.636/4541.378，非正常展示精度舍入；工具未调用不是独立失败理由",
+    "firstDeviation": "unsupported_distance_estimate"
+  },
+  "J10-1-FB": {
+    "verdict": "fail",
+    "core": true,
+    "critical": false,
+    "dimensions": {
+      "scope": true,
+      "method": true,
+      "numeric": true,
+      "claims": false,
+      "effects": true
+    },
+    "reason": "固定rev1最近两名正确；附言“资源图层中没有其他带属性的资源类点”错误，r3/edge/outside都有属性，nearest截断未返回不代表不存在",
+    "firstDeviation": "partial_result_as_absence"
+  },
+  "J11-1-PB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "识别两个同名集合点并分别测量，完整条件答案2985.09/3857.42m与km舍入准确，允许无需先提问"
+  },
+  "J11-1-FB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "识别同名两对象，分别测量且完整区分答案，单位舍入和范围正确，无不必要附言"
+  },
+  "J11-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "识别同名两对象，分别测量且完整区分答案，单位舍入和范围正确，无不必要附言"
+  },
+  "J11-1-FC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "完整区分两个同名候选，2985.1/3857.4m舍入正确，未改动；未加载Skill另计"
+  },
+  "J12-1-FB": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "工具缺字段拒绝后按已读5对象给boat3/truck1/缺失1，并区分人工汇总与失败统计回执，未猜类别或写入",
+    "recoveredErrors": 1
+  },
+  "J12-1-PC": {
+    "verdict": "pass",
+    "core": true,
+    "reason": "已读真实属性手工分类boat3/truck1/缺失1、status核对正确；附加车辆池查询建议没有断言真实运力不足，未写入"
+  },
+  "J12-1-FC": {
+    "verdict": "budget_interrupted",
+    "core": null,
+    "reason": "仅两次读取后触发批次输入预算；无最终回答，不归模型失败"
+  },
+  "J12-1-PB": {
+    "verdict": "not_executed",
+    "core": null,
+    "reason": "预算停止前尚未开始，保留计划分母"
+  }
+}
