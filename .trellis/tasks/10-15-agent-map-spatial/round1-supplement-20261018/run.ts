@@ -1,0 +1,26 @@
+/** Authorized two-entry supplement; never alters original batch or frozen source. */
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {resolve,join} from 'node:path';
+import {createHash} from 'node:crypto';
+import {main,hashes,limits} from '../round1-20261017/run.js';
+import {schedule,kinds} from '../round1-20261017/cases.js';
+const here=fileURLToPath(new URL('.',import.meta.url)),repo=resolve(here,'../../../..');
+const original=join(repo,'.local/spatial-round1/live-20261017-r1-02');
+const protocol=JSON.parse(readFileSync(join(original,'protocol.json'),'utf8'));
+assert.deepEqual(await hashes(),protocol.hashes,'Frozen sources changed: stop before any provider request');
+const selected=['J12-1-FC','J12-1-PB'];
+const prior=JSON.parse(readFileSync(join(original,'runs.json'),'utf8')) as Array<{id:string;status:string}>;
+assert.equal(prior.find(r=>r.id===selected[0])?.status,'dependency_or_protocol_incomplete');
+assert.equal(prior.find(r=>r.id===selected[1])?.status,'not_executed');
+const entries=selected.map(id=>{const entry=schedule.find(e=>e.id===id);assert.ok(entry);return entry;});
+schedule.splice(0,schedule.length,...entries);kinds.splice(0,kinds.length,'J12');
+Object.assign(limits,{requests:48,input:600000,output:32768});
+const [mode,batch,port]=process.argv.slice(2);
+assert.ok(mode==='preflight'||mode==='run');assert.ok(batch?.startsWith('supplement-20261018-'));assert.equal(process.argv.length,4+Number(port!==undefined));
+assert.ok(!existsSync(join(repo,'.local/spatial-round1',batch)),'Never overwrite a prior supplement');
+const authorization={date:'2026-10-18',sourceBatch:'live-20261017-r1-02',entries:selected,round:1,originalPreserved:true,secondRound:false,mode,batch,limits:{...limits},wrapperSha256:createHash('sha256').update(readFileSync(fileURLToPath(import.meta.url))).digest('hex'),frozenHashes:protocol.hashes,approval:'用户允许增加预算，补齐首轮剩余两项，保留中断记录，补测单列；第二轮不执行'};
+const approvals=join(repo,'.local/spatial-round1/supplement-authorizations');mkdirSync(approvals,{recursive:true});
+writeFileSync(join(approvals,`${batch}.json`),JSON.stringify(authorization,null,2)+'\n',{flag:'wx',mode:0o600});
+await main([mode,batch,...(port?[port]:[])]);
