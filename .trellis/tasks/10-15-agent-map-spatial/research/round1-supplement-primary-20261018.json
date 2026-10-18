@@ -1,0 +1,63 @@
+{
+  "reviewer": "primary_agent",
+  "independentReviewRead": false,
+  "sourceBatch": ".local/spatial-round1/supplement-20261018-live-01",
+  "date": "2026-10-18",
+  "entries": [
+    {
+      "id": "J12-1-FC",
+      "verdict": "pass",
+      "core": true,
+      "critical": false,
+      "dimensions": {
+        "scope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "reason": "完整读取5个资源点，明确boat3/truck1/category缺失r2一个，未把缺失当0或猜类别；无写入。自动summarize缺字段报错后正确读取属性完成手工统计，明确不是自动统计成功。附带status4ready/1busy事实正确；可用性措辞按限制说明理解，未给出无证据的可用数量或决策。",
+      "skill": {
+        "loaded": false,
+        "beforeAnalysis": false
+      },
+      "requests": 4,
+      "inputTokens": 63850,
+      "outputTokens": 661,
+      "effects": {
+        "publicationsUnchanged": true,
+        "adoptionUnchanged": true,
+        "expectedDocument": true
+      }
+    },
+    {
+      "id": "J12-1-PB",
+      "verdict": "pass",
+      "core": true,
+      "critical": false,
+      "dimensions": {
+        "scope": true,
+        "method": true,
+        "numericGeometry": true,
+        "claims": true,
+        "effects": true
+      },
+      "reason": "完整读取5个资源点，明确boat3/truck1/category缺失r2一个，未把缺失当0或猜类别；无写入。使用完整属性等价计数，未调用summarize本身不扣分。",
+      "skill": {
+        "loaded": true,
+        "beforeAnalysis": true
+      },
+      "requests": 3,
+      "inputTokens": 53865,
+      "outputTokens": 367,
+      "effects": {
+        "publicationsUnchanged": true,
+        "adoptionUnchanged": true,
+        "expectedDocument": true
+      }
+    }
+  ],
+  "original1275HashesUnchanged": true,
+  "frozenSourceHashes": 253,
+  "providerHttp200": 7
+}
