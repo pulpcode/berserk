@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-18",
+  "batch": ".local/spatial-r2/live-20261018-r2-01",
+  "frozenHead": "13d65ced4efb0fe97cff1d80dd795e49f7336a90",
+  "planned": 48,
+  "completedSlots": 48,
+  "normalRecorded": 45,
+  "necessaryBoundaryInteractions": 3,
+  "providerRequests": 207,
+  "inputTokens": 3917123,
+  "outputTokens": 32357,
+  "technicalInterruptions": 0,
+  "extraRounds": 0,
+  "semanticRetries": 0,
+  "groups": {
+    "baseline": {
+      "planned": 16,
+      "strictPassed": 12,
+      "strictFailed": 3,
+      "strictPending": 1,
+      "strictRate": 0.75,
+      "coreCompletedCertain": 15,
+      "coreFailedCertain": 1,
+      "coreDisputed": 0,
+      "criticalCertain": 1,
+      "criticalDisputed": 0,
+      "migrationStrictPassed": 2,
+      "necessaryClarifications": [
+        "J11"
+      ],
+      "unnecessaryClarifications": 0,
+      "requests": 69,
+      "inputTokens": 1304846,
+      "outputTokens": 11715,
+      "candidateExposedCases": [],
+      "adopted": false
+    },
+    "map-only": {
+      "planned": 16,
+      "strictPassed": 13,
+      "strictFailed": 3,
+      "strictPending": 0,
+      "strictRate": 0.8125,
+      "coreCompletedCertain": 15,
+      "coreFailedCertain": 1,
+      "coreDisputed": 0,
+      "criticalCertain": 1,
+      "criticalDisputed": 0,
+      "migrationStrictPassed": 4,
+      "necessaryClarifications": [
+        "J11",
+        "V09"
+      ],
+      "unnecessaryClarifications": 0,
+      "requests": 68,
+      "inputTokens": 1295089,
+      "outputTokens": 9668,
+      "candidateExposedCases": [
+        "J02",
+        "J03",
+        "J08",
+        "J09",
+        "J10",
+        "V02",
+        "V09"
+      ],
+      "adopted": false
+    },
+    "spatial-only": {
+      "planned": 16,
+      "strictPassed": 11,
+      "strictFailed": 4,
+      "strictPending": 1,
+      "strictRate": 0.6875,
+      "coreCompletedCertain": 14,
+      "coreFailedCertain": 1,
+      "coreDisputed": 1,
+      "criticalCertain": 1,
+      "criticalDisputed": 1,
+      "migrationStrictPassed": 2,
+      "necessaryClarifications": [],
+      "unnecessaryClarifications": 0,
+      "requests": 70,
+      "inputTokens": 1317188,
+      "outputTokens": 10974,
+      "candidateExposedCases": [
+        "J01",
+        "J04",
+        "J05",
+        "J06",
+        "J07",
+        "J11",
+        "J12",
+        "V04",
+        "V12"
+      ],
+      "adopted": false
+    }
+  },
+  "strictPassed": 36,
+  "strictFailed": 10,
+  "strictPending": 2,
+  "coreCompletedCertain": 44,
+  "coreFailedCertain": 3,
+  "coreDisputed": 1,
+  "criticalCertain": 3,
+  "criticalDisputed": 1,
+  "unauthorizedWrites": 0,
+  "aggregateIsProductAccuracy": false,
+  "formalAcceptanceThreshold": 0.9,
+  "formalAcceptancePassed": false,
+  "adoption": {
+    "candidate": null,
+    "mapReason": "仅多1项确定严格通过，且J09出现基线没有的核心失败。",
+    "spatialReason": "整体确定严格通过低于基线，J09核心退步，V09核心归类仍有分歧。"
+  },
+  "reviews": {
+    "r2-primary-review-20261018.json": "5aeca737566fc709004b6079f494a69cfe660547d8a9034eaf2efd5e1ab249a4",
+    "r2-independent-review-20261018.json": "3e36ff2184bc4919e139670792abe085d780ff167cced8380eb33da27f8326d2"
+  },
+  "reviewLimitations": [
+    "两名Agent审阅，组别可见，非人类或双盲验收",
+    "仅一轮16族，4变体是开发迁移题，不是未见保留集",
+    "每题仅一个显式Skill，实际无另一Skill原生读取",
+    "R2交互口径和显式Skill映射不同于R1，不直接跨批次比较正确率"
+  ]
+}

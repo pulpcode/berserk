@@ -1,0 +1,99 @@
+(node:8248) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J01-baseline","status":"recorded","requests":4,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J01-map-only","status":"recorded","requests":8,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J01-spatial-only","status":"recorded","requests":12,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J02-map-only","status":"recorded","requests":15,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J02-spatial-only","status":"recorded","requests":18,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J02-baseline","status":"recorded","requests":21,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J03-spatial-only","status":"recorded","requests":26,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J03-baseline","status":"recorded","requests":32,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J03-map-only","status":"recorded","requests":38,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J04-baseline","status":"recorded","requests":42,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J04-map-only","status":"recorded","requests":46,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J04-spatial-only","status":"recorded","requests":50,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J05-map-only","status":"recorded","requests":55,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J05-spatial-only","status":"recorded","requests":61,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J05-baseline","status":"recorded","requests":67,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J06-spatial-only","status":"recorded","requests":77,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J06-baseline","status":"recorded","requests":86,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J06-map-only","status":"recorded","requests":97,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J07-baseline","status":"recorded","requests":103,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J07-map-only","status":"recorded","requests":110,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J07-spatial-only","status":"recorded","requests":118,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J08-map-only","status":"recorded","requests":122,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J08-spatial-only","status":"recorded","requests":126,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J08-baseline","status":"recorded","requests":130,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J09-spatial-only","status":"recorded","requests":134,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J09-baseline","status":"recorded","requests":138,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J09-map-only","status":"recorded","requests":141,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J10-baseline","status":"recorded","requests":145,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J10-map-only","status":"recorded","requests":149,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J10-spatial-only","status":"recorded","requests":153,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J11-map-only","status":"boundary_interaction_recorded","requests":155,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J11-spatial-only","status":"recorded","requests":158,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J11-baseline","status":"boundary_interaction_recorded","requests":160,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J12-spatial-only","status":"recorded","requests":163,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J12-baseline","status":"recorded","requests":166,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"J12-map-only","status":"recorded","requests":169,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V02-baseline","status":"recorded","requests":172,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V02-map-only","status":"recorded","requests":175,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V02-spatial-only","status":"recorded","requests":177,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V04-map-only","status":"recorded","requests":181,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V04-spatial-only","status":"recorded","requests":185,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V04-baseline","status":"recorded","requests":189,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V09-spatial-only","status":"recorded","requests":192,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V09-baseline","status":"recorded","requests":196,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V09-map-only","status":"boundary_interaction_recorded","requests":198,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V12-baseline","status":"recorded","requests":201,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V12-map-only","status":"recorded","requests":204,"fatal":null}
+已忽略旧实验配置：REQUEST_TIMEOUT_MS、MAX_TOOL_CALLS、MAX_OUTPUT_TOKENS。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。
+{"entry":"V12-spatial-only","status":"recorded","requests":207,"fatal":null}
+{"directory":"/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01","mode":"run","providerAttempts":207}
