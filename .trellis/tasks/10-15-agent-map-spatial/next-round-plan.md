@@ -71,6 +71,7 @@ flowchart TD
 - **模型**仍负责把用户要求映射为调用，发现证据与目标不符时补查，并准确回答。返回合法结果不等于完成用户任务。
 - **评测**验证上述责任是否落实；不把独立评分器作为产品运行时的强制审核器。
 
+
 ### 名称入口与空间工具的衔接
 
 `layerNames`目前仅属于`annotation_read(draft/read)`；`spatial_analyze`的annotation输入仍接受固定ref、layerIds/objectIds。合法流程是：按名称精确读取 → 采用该返回中的真实ID与固定ref → 调用空间工具。不得把自然语言名称直接塞进layerIds，也不得认为两个工具已经共享名称选择器。
