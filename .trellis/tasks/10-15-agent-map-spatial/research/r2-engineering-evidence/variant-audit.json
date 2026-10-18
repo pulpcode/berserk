@@ -1,0 +1,21 @@
+{
+  "prepared": 48,
+  "providerAttempts": 0,
+  "variantIndependentChecks": [
+    "V02-baseline",
+    "V02-map-only",
+    "V02-spatial-only",
+    "V04-baseline",
+    "V04-map-only",
+    "V04-spatial-only",
+    "V09-baseline",
+    "V09-map-only",
+    "V09-spatial-only",
+    "V12-baseline",
+    "V12-map-only",
+    "V12-spatial-only"
+  ],
+  "identicalWithinCaseGroups": true,
+  "frozenSourceMatches": true,
+  "sourceHashCount": 268
+}

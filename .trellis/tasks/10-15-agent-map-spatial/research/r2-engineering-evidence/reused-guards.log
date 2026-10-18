@@ -1,0 +1,20 @@
+(node:6556) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ exact first-round 48 balanced entries, no second-round or outcome-dependent schedule (1.53627ms)
+✔ B selects actual controlled catalog hash; C leaves body to native read (4.786461ms)
+✔ budget counts cached prompt once and enforces per trial/global/output/input limits (0.779254ms)
+✔ fixtures have real ambiguity, missing attrs, page totals and independent oracle (1.912297ms)
+✔ readonly and precise action gates reject unauthorized writes, while domain clarification allowed (0.672923ms)
+✔ actual geometry and complete original document matter, successful tool call is insufficient (1.172364ms)
+(node:6557) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ all four real Pi/HTTP paths preserve model parameters and explicit/native Skill delivery (13360.268095ms)
+✔ provider synchronously reserves tools across responses before dispatch and retains blocked usage (94.740046ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16997.941032

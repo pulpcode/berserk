@@ -1,0 +1,12 @@
+(node:7076) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 48 immutable single-body trials preserve one explicit selection and balanced groups (1.869578ms)
+✔ real native HTTP delivery verifies both explicit selections and native other Skill reads in all three byte-isolated runtimes (21192.11988ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23937.314603
