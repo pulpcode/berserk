@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。\n2026-10-17 R0与旧断言修复完成，冻结fc76d09运行首轮；预算停止于46完整/1中断/1未执行，219请求均HTTP200，4003032输入token。严格27通过/16失败/3未决，主任务41；结果待审阅，不追加预算或第二轮。\n2026-10-18 用户授权增预算补首轮两项。独立批次7请求/117715输入/1028输出，FC/PB均两审通过。完整48槽位29通过/16失败/3未决、核心43；原47次启动及1预算中断证据不变，补测单列，第二轮未执行。原批次统计保留于nextRoundOriginalBatch；nextRoundExecuted表示48个已执行计划槽位，实际累计启动49次（含原中断），消耗含原中断。\n2026-10-18 用户要求将首轮后改进建议落盘并提交；post-round1-improvement-plan.md区分Skill、工具、模型职责与单变量验证顺序，产品交互原则待确认。仅文档授权，不改产品、不运行新测试。\n2026-10-18 用户要求开始实施并测评；执行R2三组独立Skill正文候选（原版/仅标绘/仅空间），16族各组一轮共48项，600万输入预算。新交互原则只用于新批次同口径，原R1不重评；未授权自动第二轮或超预算。\n2026-10-18 R2冻结13d65ce，48项全部完成（45正常记录+3必要澄清边界），207请求/3917123输入/32357输出，无技术或预算中断。合议严格B12/16、M13/16、S11/16，2项未决；核心44确定完成、3失败、1归类争议。两候选不满足预登记采用条件，产品基线保留；无自动追加测试。",
+  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。\n2026-10-17 R0与旧断言修复完成，冻结fc76d09运行首轮；预算停止于46完整/1中断/1未执行，219请求均HTTP200，4003032输入token。严格27通过/16失败/3未决，主任务41；结果待审阅，不追加预算或第二轮。\n2026-10-18 用户授权增预算补首轮两项。独立批次7请求/117715输入/1028输出，FC/PB均两审通过。完整48槽位29通过/16失败/3未决、核心43；原47次启动及1预算中断证据不变，补测单列，第二轮未执行。原批次统计保留于nextRoundOriginalBatch；nextRoundExecuted表示48个已执行计划槽位，实际累计启动49次（含原中断），消耗含原中断。\n2026-10-18 用户要求将首轮后改进建议落盘并提交；post-round1-improvement-plan.md区分Skill、工具、模型职责与单变量验证顺序，产品交互原则待确认。仅文档授权，不改产品、不运行新测试。\n2026-10-18 用户要求开始实施并测评；执行R2三组独立Skill正文候选（原版/仅标绘/仅空间），16族各组一轮共48项，600万输入预算。新交互原则只用于新批次同口径，原R1不重评；未授权自动第二轮或超预算。\n2026-10-18 R2冻结13d65ce，48项全部完成（45正常记录+3必要澄清边界），207请求/3917123输入/32357输出，无技术或预算中断。合议严格B12/16、M13/16、S11/16，2项未决；核心44确定完成、3失败、1归类争议。两候选不满足预登记采用条件，产品基线保留；无自动追加测试。\n2026-10-22 用户要求按源码审视结论修订现有改进方案，仅文档待审阅。撤回通用范围来源凭证/固定解析路径硬门槛；保留客观身份版本与效果检查，局部约束须有独立可信依据。补充Codex、Claude Code、DeepSeek Harness、Hermes参考依据及Skill/工具/评测调整，新增误阻断与无必要提问指标。R2授权归档为历史，新实施及测试未获授权，所有既有评分/协议/原始证据不变。",
   "meta": {
     "implementationApproved": true,
     "implementationComplete": false,
@@ -45,7 +45,7 @@
     "remediationReviewStatus": "next_round_pending_review",
     "remediationImplementationApproved": false,
     "remediationExperimentsApproved": false,
-    "executionHold": null,
+    "executionHold": "2026-10-22：仅更新方案及参考依据；新实现和新测试均待用户审阅。",
     "remediationPlanCommit": "21988f6",
     "remediationPhase": "main_merged_next_round_review_pending",
     "remediationOptionalModelApproved": false,
@@ -168,9 +168,9 @@
       "report": "research/round1-live-results.md"
     },
     "postRound1ImprovementPlan": "post-round1-improvement-plan.md",
-    "postRound1ImprovementStatus": "r2_completed_awaiting_review",
-    "postRound1ImplementationApproved": true,
-    "postRound1ExperimentsApproved": true,
+    "postRound1ImprovementStatus": "revised_plan_awaiting_review_20261022",
+    "postRound1ImplementationApproved": false,
+    "postRound1ExperimentsApproved": false,
     "r2ExecutionPlan": "r2-execution-plan-20261018.md",
     "r2PlannedTrials": 48,
     "r2RepeatedRounds": 1,
@@ -190,6 +190,25 @@
     "r2CoreCompletedCertain": 44,
     "r2CoreFailedCertain": 3,
     "r2CoreDisputed": 1,
-    "r2SecondRoundExecuted": false
+    "r2SecondRoundExecuted": false,
+    "postRound1CompletedAuthorization": {
+      "implementationApproved": true,
+      "experimentsApproved": true,
+      "scope": "2026-10-18已完成R2：独立Skill候选及48项诊断，不延伸到2026-10-22新提案",
+      "frozenCommit": "13d65ced4efb0fe97cff1d80dd795e49f7336a90",
+      "completedTrials": 48
+    },
+    "postR2PlanReview": {
+      "date": "2026-10-22",
+      "plan": "post-round1-improvement-plan.md",
+      "sourceReview": "research/range-binding-design-review-20261022.md",
+      "status": "awaiting_user_review",
+      "implementationApproved": false,
+      "experimentsApproved": false,
+      "proposedTestCount": null,
+      "universalScopeCredentialWithdrawn": true,
+      "retainExistingIdentityVersionAndEffectChecks": true,
+      "formalAcceptanceThreshold": 0.9
+    }
   }
 }
