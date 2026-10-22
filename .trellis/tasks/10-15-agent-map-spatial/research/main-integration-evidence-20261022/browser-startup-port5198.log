@@ -1,0 +1,8 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/annotations.spec.ts tests/e2e/situation-map.spec.ts tests/e2e/spatial.spec.ts tests/e2e/references.spec.ts --workers=2
+
+
+Error: http://127.0.0.1:5198 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
+

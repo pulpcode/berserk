@@ -1,0 +1,38 @@
+{
+  "refs": {
+    "refs/heads/codex/agent-map-spatial": "bab22915a8d0388ac05ffcbea214d8a6dad5947b",
+    "refs/heads/codex/handoff-reliability": "3064bc62cbca5221ff907bc0ea0522d57b7ed6db",
+    "refs/heads/codex/map-basemaps": "a79f1aef08e789315827e91c3604ef6a66b1d67c",
+    "refs/heads/codex/map-query-native-evaluation": "22bb05b60d1f2f8ceb89e8e3b067d7f686e58668",
+    "refs/heads/codex/map-query-pro-evaluation": "e7d56e8cb7d4e10b34c016bd5d37a2a7cd7e6aa8",
+    "refs/heads/codex/map-read-evidence": "8cab905b3f14a201e7b8dadce5a651f115be8cde",
+    "refs/heads/codex/ui-work": "c3b5bd681d4354a55172701fb777213e1e12f7b7",
+    "refs/heads/codex/work-inbox-overview-design": "f40bf3a9cc60747dcc580a8745d8fa8bd8689c7b",
+    "refs/heads/main": "e7d56e8cb7d4e10b34c016bd5d37a2a7cd7e6aa8",
+    "refs/remotes/origin/codex/agent-map-spatial": "bab22915a8d0388ac05ffcbea214d8a6dad5947b",
+    "refs/remotes/origin/codex/handoff-reliability": "3064bc62cbca5221ff907bc0ea0522d57b7ed6db",
+    "refs/remotes/origin/codex/ui-work": "b1375f2330b42436a10e5c0089c59139591a6bd9",
+    "refs/remotes/origin/main": "22bb05b60d1f2f8ceb89e8e3b067d7f686e58668"
+  },
+  "worktrees": "worktree /Users/lau/workspace/berserk\nHEAD e7d56e8cb7d4e10b34c016bd5d37a2a7cd7e6aa8\nbranch refs/heads/main\n\nworktree /Users/lau/.codex/worktrees/agent-map-spatial/berserk\nHEAD bab22915a8d0388ac05ffcbea214d8a6dad5947b\nbranch refs/heads/codex/agent-map-spatial\n\nworktree /Users/lau/.codex/worktrees/map-basemaps/berserk\nHEAD a79f1aef08e789315827e91c3604ef6a66b1d67c\nbranch refs/heads/codex/map-basemaps\n\n",
+  "authorization": "用户要求按照先推送、审查、检查、合入开发main、清理已合并历史分支的建议开展管理。",
+  "localCleanup": [
+    "codex/handoff-reliability",
+    "codex/map-query-native-evaluation",
+    "codex/map-query-pro-evaluation",
+    "codex/map-read-evidence",
+    "codex/ui-work",
+    "codex/work-inbox-overview-design"
+  ],
+  "remoteCleanup": [
+    "codex/handoff-reliability",
+    "codex/ui-work"
+  ],
+  "keepWorktrees": [
+    "main",
+    "codex/agent-map-spatial",
+    "codex/map-basemaps"
+  ],
+  "allCleanupTipsAlreadyContainedInMainBeforeIntegration": true,
+  "restoreInstructions": "如需恢复已删除本地分支，可用 git branch <branch> <refs中记录的原提交>；提交历史仍由main保留。"
+}

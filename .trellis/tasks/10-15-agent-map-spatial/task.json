@@ -455,6 +455,21 @@
       "report": "research/r6-results-20261022.md",
       "batch": ".local/spatial-r6/r6-20261022-01",
       "candidateAdopted": false
+    },
+    "mainIntegration": {
+      "authorization": "用户批准按建议管理并合入开发main",
+      "productCommit": "bab22915a8d0388ac05ffcbea214d8a6dad5947b",
+      "mainBefore": "e7d56e8cb7d4e10b34c016bd5d37a2a7cd7e6aa8",
+      "status": "checks_passed_ready_to_integrate",
+      "report": "research/main-integration-management-20261022.md",
+      "unitPassed": 1119,
+      "browserPassed": 38,
+      "typecheck": "pass",
+      "lint": "pass",
+      "build": "pass",
+      "newPaidModelCalls": 0,
+      "formalAcceptancePassed": false,
+      "candidateSkillAdopted": false
     }
   }
 }
