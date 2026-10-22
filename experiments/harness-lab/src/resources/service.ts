@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import { controlledSkillDescription } from '../pi/skill-metadata.js';
 import type { InstructionFile, InstructionUpdate, SkillFile, SourceInfo, WorkspaceResources } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import { WorkspaceStore } from '../workspaces/store.js';
@@ -6,10 +7,10 @@ import { fixtureDir, sourceDefinitions } from '../tools/sources.js';
 import { atomicWrite, hashContent, Mutex, readControlled, type WriteHooks } from './files.js';
 
 const skills = [
-  { id: 'synthesis', name: '资料综合写作', description: '综合多份资料形成有来源、可执行的方案。', version: '1' },
-  { id: 'review', name: '结果检查', description: '根据资料检查草稿的事实、约束与可执行性。', version: '1' },
-  { id: 'spatial-analysis', name: '空间分析', description: '基于既有对象进行测距、面积、空间关系、缓冲、范围筛选、邻近排序和分类统计；处理组合分析、固定结果续问、边界判断及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。', version: '1' },
-  { id: 'map-annotations', name: '态势标绘', description: '查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。', version: '1' },
+  { id: 'synthesis', name: '资料综合写作', version: '1' },
+  { id: 'review', name: '结果检查', version: '1' },
+  { id: 'spatial-analysis', name: '空间分析', version: '1' },
+  { id: 'map-annotations', name: '态势标绘', version: '1' },
 ];
 export const controlledSkillIds: readonly string[] = skills.map(skill => skill.id);
 /** Add deployed map methods without migrating the strict legacy workspace index. */
@@ -23,9 +24,9 @@ export async function loadControlledSkills(ids: readonly string[], signal?: Abor
     const skill = skills.find(item => item.id === id);
     if (!skill) throw new RequestError('RESOURCE_NOT_FOUND', 'Skill ID 不存在。', 404);
     const content = (await readControlled(join(fixtureDir, 'skills', skill.id, 'SKILL.md'), 16384))!;
-    if (!content.startsWith(`---\nname: ${skill.id}\ndescription:`)) throw new RequestError('RESOURCE_STATE_INVALID', 'Skill 配置损坏。', 409);
+    const description = controlledSkillDescription(content, skill.id);
     signal?.throwIfAborted();
-    return { ...skill, hash: hashContent(content), content };
+    return { id: skill.id, name: skill.name, description, version: skill.version, hash: hashContent(content), content };
   }));
 }
 export interface ResourceSnapshot {

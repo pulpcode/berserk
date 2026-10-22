@@ -172,6 +172,11 @@ it('delivers the deployed spatial discovery catalog on the wire and loads its ma
   await request.run(()=>{});
   expect(lab.get(session.id).lastResult?.status).toBe('succeeded');expect(payloads).toHaveLength(2);
   expect(textOf(payloads[0].messages[0])).toContain(`spatial-analysis（${catalog.description}）`);
+  const instructions = textOf(payloads[0].messages[0]);
+  expect(instructions).toContain('若正文已通过显式选择加载，不要重复读取');
+  expect(instructions).toContain('按步骤读取能覆盖任务的最小集合');
+  expect(instructions).toContain('用户要求优先于方法，方法不扩大权限');
+  expect(instructions).toContain('简单任务可直接使用工具');
   expect(JSON.stringify(payloads[0])).not.toContain('明确本次范围');
   const delivered=payloads[1].messages.find(message=>message.role==='tool');
   expect(JSON.parse(textOf(delivered!))).toEqual(skill);

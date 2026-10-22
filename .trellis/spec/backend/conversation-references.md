@@ -17,7 +17,11 @@ Resolve uploads and references in the captured seat's session workspace, dedupli
 
 The disk workspace index keeps the legacy `synthesis`/`review` pair. `effectiveSkillIds` adds the deployed `map-annotations` and `spatial-analysis` methods for foreground resource info, snapshot, readSkill and conversation continuation choices. Background execution still loads only its explicit Profile skillIds; child tool whitelists are unchanged. Skill availability never grants annotation tools. The model sees catalog metadata until explicit selection or `skill_read` supplies the controlled body.
 
+Controlled catalog descriptions come from the deployed Skill file frontmatter through `pi/skill-metadata.ts`, which reuses Pi’s public `parseFrontmatter` inside the SDK adapter boundary. Registration still owns allowed IDs, display names and versions. Validate matching `name`, a nonempty string `description` and nonempty body; preserve and hash the exact original file content. Do not duplicate descriptions in the registration table or introduce workspace-wide discovery.
+
 Native resource/composer decoders accept only the four controlled IDs (at most four catalog entries), retaining body/hash/request ownership checks and unchanged old record text. Old two-/three-Skill and new four-Skill histories must reopen together. Older binaries are not valid rollback targets for new Skill histories without a compatibility build or restoring a stopped pre-upgrade backup.
+
+Host method-selection guidance is an instruction, not proof of reading or a permission gate. Measure actual body delivery and task correctness separately. Changing this guidance must not rewrite historical composer templates, force every task to read a Skill, or expand tool authority.
 
 Explicit Skill selection loads the controlled body before `AgentSession.prompt`, without a synthetic `skill_read` call. No selection preserves ordinary on-demand tools. AGENTS.md, permissions and operation confirmation retain their existing authority.
 
@@ -35,6 +39,7 @@ Cancellation between saving custom input and saving user text can leave input hi
 
 | Condition | Result |
 | --- | --- |
+| Invalid deployed Skill frontmatter, mismatched name, blank description/body | `RESOURCE_STATE_INVALID` 409 |
 | Unknown Skill or role | `RESOURCE_NOT_FOUND`; no model call |
 | Selected Skill/role hash changed | `SELECTION_CHANGED` 409; select again |
 | Extra authority fields | Strict schema rejection |
@@ -52,6 +57,8 @@ Good: reviewer receives a selected review method and file paths, actually reads 
 Bad: reporting a completed delegation from a selection tag, trusting browser-supplied Skill text, adding child write tools, or counting uploads and references separately before deduplication.
 
 ## 6. Tests Required
+
+`tests/pi/skill-metadata.test.ts` covers single-source catalog descriptions, multiline/CRLF parsing, exact original content/hash and malformed metadata rejection. `tests/pi/provider-payload.test.ts` checks host guidance in the actual provider payload; this does not prove live-model adherence.
 
 `tests/pi/map-skill.test.ts` also verifies the spatial catalog, exact explicit/on-demand body delivery, strict metadata rejection and restart without rewriting the legacy workspace index. This establishes delivery correctness, not live-model method-selection quality.
 
