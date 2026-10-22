@@ -6,7 +6,7 @@ import { buffer } from '@turf/buffer';
 import { booleanIntersects } from '@turf/boolean-intersects';
 import { booleanPointInPolygon } from '@turf/boolean-point-in-polygon';
 import { difference } from '@turf/difference';
-import type { SpatialGeometry, SpatialRelation, SpatialRequest } from '../contracts/spatial.js';
+import type { SpatialGeometry, SpatialPointPosition, SpatialRelation, SpatialRequest } from '../contracts/spatial.js';
 import { spatialError, validateGeometry, positions } from './validation.js';
 import type { Position } from '../contracts/context.js';
 
@@ -18,6 +18,7 @@ export function calculationDescription(request:Exclude<SpatialRequest,{operation
   const topologyLimit='拓扑按经纬度线段；contains 包含边界，intersects 包括边界接触，不代表道路连通。';
   switch(request.operation) {
     case 'measure':return {method:`${sphere}; ${request.metric}; unit=${request.metric==='area'?'m²':'m'}`,limitations:[sphericalLimit,...(request.metric==='distance'||request.metric==='point_to_line'?['地理距离不代表路程、行程时间或可通行性。']:[])]};
+    case 'classify_points':return {method:'Turf 7.2.0 booleanPointInPolygon; WGS84 planar topology; closed coverage vs strict interior',limitations:['按经纬度线段判断单个 Polygon（含孔）；外环和内环边界均为 boundary，孔内部为 exterior。','不增加隐含距离容差；边界附近不等于位于边界，不声称测绘级精度。']};
     case 'relate':return {method:`${topology}; input ${request.relation} target`,limitations:[topologyLimit]};
     case 'buffer':return {method:'Turf 7.2.0; buffer AEQD 32 segments per quadrant (point buffers usually 128 edges); radius in m',limitations:['缓冲圆弧每象限近似为 32 段；点缓冲通常为 128 边，线缓冲总边数随形状变化。近似边缘与精确距离阈值可能不同。']};
     case 'nearest':return {method:`${sphere}; point distance ascending, then full identity; first count items`,limitations:[sphericalLimit,'最近表示限定候选中的地理距离，不代表路程、时间、可通行或专业适用性；同距不扩大 count。']};
@@ -69,9 +70,18 @@ function coversLine(region:Extract<SpatialGeometry,{type:'Polygon'|'MultiPolygon
   }
   return true;
 }
-export function relate(relation:SpatialRelation,a:SpatialGeometry,b:SpatialGeometry):boolean {
+function validateTopologyExtent(a:SpatialGeometry,b:SpatialGeometry):void {
   const all=[...positions(a.coordinates),...positions(b.coordinates)],xs=all.map(p=>p[0]),ys=all.map(p=>p[1]);
   if(Math.max(...xs)-Math.min(...xs)>10 || Math.max(...ys)-Math.min(...ys)>10) throw spatialError('UNSUPPORTED_REGION','拓扑分析组合范围跨度超过 10°，暂不支持。');
+}
+export function classifyPoint(point:SpatialGeometry,region:SpatialGeometry):SpatialPointPosition {
+  if(point.type!=='Point' || region.type!=='Polygon') throw unsupported();
+  validateTopologyExtent(point,region);
+  if(!booleanPointInPolygon(point,region,{ignoreBoundary:false})) return 'exterior';
+  return booleanPointInPolygon(point,region,{ignoreBoundary:true})?'interior':'boundary';
+}
+export function relate(relation:SpatialRelation,a:SpatialGeometry,b:SpatialGeometry):boolean {
+  validateTopologyExtent(a,b);
   if(relation!=='contains') {const hit=booleanIntersects(a,b);return relation==='intersects'?hit:!hit;}
   if(a.type!=='Polygon' && a.type!=='MultiPolygon') throw unsupported();
   if(b.type==='Point') return booleanPointInPolygon(b,a,{ignoreBoundary:false});

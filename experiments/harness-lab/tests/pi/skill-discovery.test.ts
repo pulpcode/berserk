@@ -1,0 +1,27 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, expect, it, vi } from 'vitest';
+import { SessionManager } from '@earendil-works/pi-coding-agent';
+import { PiLab } from '../../src/pi/lab.js';
+import { resourceTools, SKILL_ENTRY } from '../../src/pi/resource-tools.js';
+import { fakeRuntime, testConfig } from './fake-runtime.js';
+const cleanup: Array<() => Promise<void>> = [];
+afterEach(async () => { for (const fn of cleanup.splice(0).reverse()) await fn(); });
+it('offers only captured Skill candidates, omits an empty catalog, and retains server membership checks', async () => {
+  const dir=await mkdtemp(join(tmpdir(),'skill-discovery-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
+  const config=testConfig(dir),lab=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'ok'}))).runtime);cleanup.push(()=>lab.close());
+  const snapshot=await lab.resources.snapshot(lab.workspaces.list().defaultWorkspaceId),skill=snapshot.skills.find(s=>s.id==='spatial-analysis')!;
+  const manager=SessionManager.inMemory(dir),restricted={...snapshot,skills:[skill]};
+  const make=(skills:typeof snapshot.skills)=>resourceTools({...restricted,skills},lab.resources,manager,'request-id',new AbortController(),vi.fn(),vi.fn(),()=>{});
+  const tool=make([skill]).find(t=>t.name==='skill_read')!;
+  expect(tool.parameters).toMatchObject({properties:{id:{anyOf:[{type:'string',const:skill.id,description:`${skill.name}：${skill.description}`}]}},required:['id'],additionalProperties:false});
+  expect(JSON.stringify(tool.parameters)).not.toContain(skill.content);
+  expect(make([]).map(t=>t.name)).toEqual(['source_list','source_read','instructions_read','instructions_update']);
+  const context={} as Parameters<typeof tool.execute>[4];
+  await expect(tool.execute('bad',{id:'map-annotations'},undefined,undefined,context)).rejects.toThrow('RESOURCE_NOT_FOUND');
+  expect(manager.getEntries()).toHaveLength(0);
+  const result=await tool.execute('ok',{id:skill.id},undefined,undefined,context);
+  expect(result.details).toEqual(skill);
+  expect(manager.getEntries()).toEqual([expect.objectContaining({type:'custom',customType:SKILL_ENTRY,data:{requestId:'request-id',skill}})]);
+});

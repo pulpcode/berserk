@@ -21,7 +21,7 @@ async function setup(page:Page,coordinates:Position,options:{extra?:AnnotationFe
   const config=testConfig(dir,{seatId:'a',auth:{secret:'spatial-browser-secret-at-least-thirty-two-characters',sessionMs:28800000}});
   let resultRef='';
   const fake=await fakeRuntime(config,(context,index)=>{
-    for(const message of context.messages)if(message.role==='toolResult'&&message.toolName==='spatial_analyze')for(const part of message.content)if(part.type==='text'){const value=JSON.parse(part.text);if(value.format==='spatial.model-result.v1')resultRef=value.data.resultRef;}
+    for(const message of context.messages)if(message.role==='toolResult'&&message.toolName==='spatial_analyze')for(const part of message.content)if(part.type==='text'){const value=JSON.parse(part.text);if(value.format==='spatial.model-result.v1'||value.format==='spatial.model-result.v2')resultRef=value.data.resultRef;}
     if(index===0)return {tools:[{name:'spatial_analyze',arguments:options.request?options.request(input):{operation:'buffer',input:{kind:'annotation',ref:input,objectIds:['harbor']},distanceM:500}}]};
     if(index===2)return {tools:[{name:'annotation_read',arguments:{mode:'draft'}}]};
     if(index===3)return {tools:[{name:'annotation_from_analysis',arguments:{resultRef,layerId:'harbors',objectId:'saved-buffer',name:'保存的500米范围'}}]};
@@ -120,3 +120,35 @@ async function expectAnalysisPositionsVisible(page:Page,positions:Position[]) {
     return points.every(position=>{const point=map.project(position);return point.x>20&&point.x<canvas.width-20&&point.y>20&&point.y<canvas.height-20&&(!panel?.width||point.x+canvas.left>panel.right+10);});
   },positions)).toBe(true);
 }
+
+
+test('v2 point classifications show each identity and reopen the same fixed partition',async({page})=>{
+  const env=await setup(page,[120.31,36.04],{extra:[
+    {objectId:'inside',name:'区域内观测点',kind:'point',geometry:{type:'Point',coordinates:[120.315,36.045]}},
+    {objectId:'outside',name:'区域外观测点',kind:'point',geometry:{type:'Point',coordinates:[120.33,36.045]}},
+    {objectId:'region',name:'固定检查区域',kind:'polygon',geometry:{type:'Polygon',coordinates:[[[120.31,36.04],[120.32,36.04],[120.32,36.05],[120.31,36.05],[120.31,36.04]]]}},
+  ],request:ref=>({operation:'classify_points',input:{kind:'annotation',ref,objectIds:['harbor','inside','outside']},target:{kind:'annotation',ref,objectIds:['region']}})});
+  try{
+    await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('区分三个观测点在固定检查区域的内部、边界和外部。');await page.getByRole('button',{name:'发送消息',exact:true}).click();
+    const entry=page.getByRole('button',{name:/点面位置分类 ·/}).last();await expect(entry).toBeVisible();await entry.click();
+    const panel=page.getByRole('region',{name:'空间分析结果'});await expect(panel).toContainText('内部 1 · 边界 1 · 外部 1（共 3 个点）');
+    for(const [name,position] of [['港口观测点','边界'],['区域内观测点','内部'],['区域外观测点','外部']])await expect(panel.getByRole('button',{name:new RegExp(`^${name}.*${position}$`)})).toBeVisible();
+    const original=env.lab.get(env.session.id,'a').messages.find(message=>message.spatialResult)?.spatialResult;
+    if(!original)throw new Error('Missing verified classification result');
+    expect(original.schemaVersion).toBe(2);expect(original.items.map(item=>item.annotation?.objectId)).toEqual(['harbor','inside','outside']);
+    expect(original.classifications?.map(c=>c.position)).toEqual(['boundary','interior','exterior']);
+    await expect.poll(()=>page.evaluate(()=>Boolean(window.__basemapTestMap?.getSource('analysis:results')))).toBe(true);
+    const expectedIdentities=original.items.map(item=>item.id);
+    const actualIdentities=await page.evaluate(()=>{
+      const source=window.__basemapTestMap!.getStyle().sources['analysis:results'];
+      if(source.type!=='geojson'||typeof source.data==='string'||source.data.type!=='FeatureCollection')throw new Error('Missing analysis GeoJSON');
+      return source.data.features.filter(f=>f.properties?.role==='result').map(f=>f.properties?.analysisId);
+    });
+    expect(actualIdentities).toEqual(expectedIdentities);
+    await page.screenshot({path:test.info().outputPath('classification-v2.png')});
+    await page.reload();await expect(entry).toBeVisible();await entry.click();await expect(panel).toContainText('内部 1 · 边界 1 · 外部 1（共 3 个点）');
+    const results=env.lab.get(env.session.id,'a').messages.filter(message=>message.spatialResult);
+    expect(results).toHaveLength(1);expect(results[0].spatialResult).toEqual(original);
+    expect(env.lab.annotations!.binding(env.actor,env.session.id).draft?.headRevision).toBe(1);expect(env.errors).toEqual([]);
+  }finally{await env.close();}
+});

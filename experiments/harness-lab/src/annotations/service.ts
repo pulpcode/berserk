@@ -4,7 +4,7 @@ import type { DatabaseSync } from 'node:sqlite';
 import type { AccessStore } from '../access/store.js';
 import type { ContextService } from '../context/service.js';
 import type { Identity } from '../contracts/access.js';
-import type { AnnotationAction, AnnotationBaseInput, AnnotationBinding, AnnotationChange, AnnotationComparison, AnnotationContext, AnnotationCurrent, AnnotationCurrentInput, AnnotationDocument, AnnotationDraft, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationHostResult, AnnotationEditBasis, AnnotationFromSourceResult, AnnotationListing, AnnotationOperation, AnnotationPage, AnnotationPublication, AnnotationReadInput, AnnotationReadResult, AnnotationReceipt, AnnotationRef, AnnotationSelection, AnnotationVersion, LoadedAnnotationSelection } from '../contracts/annotations.js';
+import type { AnnotationAction, AnnotationBaseInput, AnnotationBinding, AnnotationChange, AnnotationComparison, AnnotationContext, AnnotationCurrent, AnnotationCurrentInput, AnnotationDocument, AnnotationDraft, AnnotationFeature, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationHostResult, AnnotationEditBasis, AnnotationFromSourceResult, AnnotationListing, AnnotationOperation, AnnotationPage, AnnotationPublication, AnnotationReadInput, AnnotationReadResult, AnnotationReceipt, AnnotationRef, AnnotationSelection, AnnotationVersion, LoadedAnnotationSelection } from '../contracts/annotations.js';
 import { RequestError } from '../contracts/errors.js';
 import { AnnotationError } from './errors.js';
 import type { ContextRef } from '../contracts/context.js';
@@ -181,13 +181,14 @@ export class AnnotationService {
     }) ?? normalized.layerIds;
     const layers=version.document.layers.filter(layer=>!layerIds || layerIds.includes(layer.layerId));
     if(layerIds?.some(id=>!layers.some(layer=>layer.layerId===id))) throw missing();
-    const objects=layers.flatMap(layer=>layer.features.filter(feature=>!normalized.objectIds || normalized.objectIds.includes(feature.objectId)).map(feature=>{
+    const matchesObject=(feature: AnnotationFeature) => (!normalized.objectIds || normalized.objectIds.includes(feature.objectId)) && (!normalized.objectNames || normalized.objectNames.includes(feature.name));
+    const objects=layers.flatMap(layer=>layer.features.filter(matchesObject).map(feature=>{
       const selected: AnnotationReadResult['objects']['items'][number]={objectId:feature.objectId,name:feature.name,kind:feature.kind,layerId:layer.layerId};
       for(const field of normalized.fields ?? []) if(feature[field]!==undefined) Object.assign(selected,{[field]:feature[field]});
       return selected;
     }));
     if(normalized.objectIds?.some(id=>!objects.some(object=>object.objectId===id))) throw missing();
-    const result: AnnotationReadResult={ref:version.ref,title:version.title,hash:version.hash,createdAt:version.createdAt,layers:layers.filter(layer=>!normalized.objectIds || layer.features.some(feature=>normalized.objectIds!.includes(feature.objectId))).map(({layerId,name,order,defaultVisible})=>({layerId,name,order,defaultVisible})),objects:pagination(objects,normalized.offset,normalized.limit)};
+    const result: AnnotationReadResult={ref:version.ref,title:version.title,hash:version.hash,createdAt:version.createdAt,layers:layers.filter(layer=>(!normalized.objectIds && !normalized.objectNames) || layer.features.some(matchesObject)).map(({layerId,name,order,defaultVisible})=>({layerId,name,order,defaultVisible})),objects:pagination(objects,normalized.offset,normalized.limit)};
     if(Buffer.byteLength(JSON.stringify(result))>256*1024) throw validate.tooLarge();
     return result;
   }

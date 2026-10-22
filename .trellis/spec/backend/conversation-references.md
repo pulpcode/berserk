@@ -21,6 +21,10 @@ Controlled catalog descriptions come from the deployed Skill file frontmatter th
 
 Native resource/composer decoders accept only the four controlled IDs (at most four catalog entries), retaining body/hash/request ownership checks and unchanged old record text. Old two-/three-Skill and new four-Skill histories must reopen together. Older binaries are not valid rollback targets for new Skill histories without a compatibility build or restoring a stopped pre-upgrade backup.
 
+The current `skill_read.id` schema enumerates the captured snapshot's available IDs, with each literal's display name and frontmatter description. Do not embed bodies in the schema or maintain another catalog. An empty snapshot omits the tool; role tool whitelists still apply. Server snapshot validation remains authoritative. Explicitly delivered body reuse does not require a redundant read; schema presentation is not evidence of automatic method selection.
+
+Known annotation/spatial errors may carry optional `methodAdvice:{skillId,reason}` only for methods available in that snapshot. Keep the actual error code, resource recovery facts and outcome. Do not advise automatic retries, change an uncertain outcome, offer methods for generic access/network failures, or gate otherwise valid operations on Skill loading. There is no added state or automatic read.
+
 Host method-selection guidance is an instruction, not proof of reading or a permission gate. Measure actual body delivery and task correctness separately. Changing this guidance must not rewrite historical composer templates, force every task to read a Skill, or expand tool authority.
 
 Explicit Skill selection loads the controlled body before `AgentSession.prompt`, without a synthetic `skill_read` call. No selection preserves ordinary on-demand tools. AGENTS.md, permissions and operation confirmation retain their existing authority.

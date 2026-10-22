@@ -88,7 +88,7 @@ export interface AnnotationReceipt {
 }
 export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef';
 export interface AnnotationReadInput {
-  ref: AnnotationRef; layerIds?: string[]; layerNames?: string[]; objectIds?: string[]; fields?: AnnotationReadField[]; offset?: number; limit?: number;
+  ref: AnnotationRef; layerIds?: string[]; layerNames?: string[]; objectIds?: string[]; objectNames?: string[]; fields?: AnnotationReadField[]; offset?: number; limit?: number;
 }
 export interface AnnotationReadResult {
   ref: AnnotationRef; title: string; hash: string; createdAt: string;

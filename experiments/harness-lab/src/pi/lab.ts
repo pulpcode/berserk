@@ -751,11 +751,11 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients,
       ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
         actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
-        requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState,
+        requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState, skillIds: snapshot.skills.map(skill => skill.id),
       }) : []),
       ...(!active.background && this.annotations && active.annotationActor && annotationState ? spatialTools(this.annotations, this.context, record.manager, {
         actor:active.annotationActor,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,
-        requestId:active.id,signal:active.controller.signal,check:authorizeRequest,state:annotationState,
+        requestId:active.id,signal:active.controller.signal,check:authorizeRequest,state:annotationState,skillIds:snapshot.skills.map(skill=>skill.id),
       }) : []),
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),

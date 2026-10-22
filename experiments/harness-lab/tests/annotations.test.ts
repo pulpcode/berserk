@@ -144,6 +144,7 @@ it('authorizes the fixed snapshot before disclosing any name matches or candidat
   }
   service.context.config.scopes[0].seatIds=['a'];
   expect(()=>service.read(b,taskId,{ref:published,layerNames:['集合点']})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
+  for(const objectNames of [['point-a'],['不存在']])expect(()=>service.read(b,taskId,{ref:published,objectNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
 });
 
 it('validates name selectors without normalizing them or extending composer references',()=>{
@@ -232,4 +233,54 @@ it('rejects malformed update source references before inspecting scope and leave
     expect(service.binding(actor,session).draft?.headRevision).toBe(1);
     expect(service.receipt(actor,input.clientActionId)).toBeNull();
   }
+});
+
+it('returns all exact object-name matches in document order with layer intersection and pagination',async()=>{
+  const {service,actor,session,taskId}=await setup();
+  service.action(actor,session,{...initial(),operations:[
+    {op:'add_layer',layer:{layerId:'reference',name:'参照',order:0,defaultVisible:true,features:[{...point('base-a'),name:'基点'},{...point('base-b'),name:'基点'},point('North')]}},
+    {op:'add_layer',layer:{layerId:'resources',name:'资源',order:1,defaultVisible:true,features:[{...point('base-c'),name:'基点'},point('target')]}},
+  ]});
+  const ref=draftRef(service,actor,session),before=service.version(actor,taskId,ref);
+  const all=service.read(actor,taskId,{ref,objectNames:['基点','target'],limit:2});
+  expect(all.ref).toEqual(ref);expect(all.objects).toMatchObject({total:4,offset:0,limit:2,hasMore:true,items:[{objectId:'base-a',name:'基点',layerId:'reference'},{objectId:'base-b',name:'基点',layerId:'reference'}]});
+  expect(all.layers.map(layer=>layer.layerId)).toEqual(['reference','resources']);
+  expect(all.objects.items.every(item=>!('geometry' in item) && !('note' in item))).toBe(true);
+  const next=service.read(actor,taskId,{ref,objectNames:['target','基点'],offset:2,limit:2,fields:['geometry']});
+  expect(next.objects).toMatchObject({total:4,hasMore:false,items:[{objectId:'base-c',geometry:point().geometry},{objectId:'target',geometry:point().geometry}]});
+  const selected=service.read(actor,taskId,{ref,layerNames:['资源'],objectNames:['基点']});
+  expect(selected.objects).toMatchObject({total:1,items:[{objectId:'base-c',layerId:'resources'}]});
+  expect(selected).toEqual(service.read(actor,taskId,{ref,layerIds:['resources'],objectNames:['基点']}));
+  expect(service.read(actor,taskId,{ref,objectNames:['基点','absent']}).objects.total).toBe(3);
+  for(const objectNames of [['north'],[' North'],['North '],['基'],['absent']])expect(service.read(actor,taskId,{ref,objectNames})).toMatchObject({layers:[],objects:{total:0,items:[],hasMore:false}});
+  expect(service.read(actor,taskId,{ref,layerIds:['reference'],objectNames:['target']}).objects.total).toBe(0);
+  expect(service.read(actor,taskId,{ref,objectNames:['基点'],offset:99}).objects).toMatchObject({total:3,items:[],hasMore:false});
+  expect(service.version(actor,taskId,ref)).toEqual(before);
+  expect(service.binding(actor,session).draft?.headRevision).toBe(1);
+});
+
+it('pins object-name searches to the authorized revision or publication without changing ID-based reads',async()=>{
+  const {service,actor,session,taskId,workspaces}=await setup();service.action(actor,session,initial());
+  const original=draftRef(service,actor,session),published=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:1,title:'固定名称'}).ref!;
+  service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'point-a',changes:{name:'改名后'}}]});
+  const latest=draftRef(service,actor,session);
+  for(const ref of [original,published])expect(service.read(actor,taskId,{ref,objectNames:['point-a']}).objects).toMatchObject({total:1,items:[{objectId:'point-a',name:'point-a'}]});
+  expect(service.read(actor,taskId,{ref:latest,objectNames:['point-a']}).objects.total).toBe(0);
+  expect(service.read(actor,taskId,{ref:latest,objectNames:['改名后']})).toEqual(service.read(actor,taskId,{ref:latest,objectIds:['point-a']}));
+  await workspaces.ensureWorkspace(taskId,'b','B');const b=service.actorForSeat('b'),otherTask=await workspaces.create('其他任务',randomUUID(),'a');
+  for(const objectNames of [['point-a'],['absent']]){
+    expect(()=>service.read(b,taskId,{ref:original,objectNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
+    expect(()=>service.read(actor,otherTask.taskSpaceId!,{ref:original,objectNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND'}));
+  }
+});
+
+it('validates bounded exact object names independently of layer selectors and composer references',()=>{
+  const ref={setId:randomUUID(),revision:1};
+  for(const objectNames of [[],[''],['  '],['x'.repeat(121)],['x','x'],[1],null,'name',Array.from({length:33},(_,index)=>String(index))])expect(()=>validation.readInput({ref,objectNames})).toThrow();
+  expect(()=>validation.readInput({ref,objectNames:['基点'],objectIds:['a']})).toThrow('只能指定一种');
+  expect(()=>validation.readInput({ref,objectNames:['基点'],layerIds:['a'],layerNames:['图层']})).toThrow('只能指定一种');
+  const objectNames=[' 基点 '];const input=validation.readInput({ref,objectNames,layerIds:['a']});
+  expect(input).toMatchObject({objectNames:[' 基点 '],layerIds:['a']});expect(input.objectNames).not.toBe(objectNames);
+  expect(validation.readInput({ref,objectNames:Array.from({length:32},(_,index)=>String(index))}).objectNames).toHaveLength(32);
+  expect(()=>validation.selection({...ref,objectNames:['基点']})).toThrow();
 });

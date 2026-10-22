@@ -293,6 +293,10 @@ it('returns actual selector-scoped counts and pages without pretending unread fi
   {query:{layerNames:['集合图层'],objectIds:['b']},total:1,names:['b'],hasMore:false},
   {query:{layerIds:['meeting'],offset:1,limit:1},total:2,names:['b'],hasMore:false},
   {query:{objectIds:['a'],fields:['style']},total:1,names:['a'],hasMore:false},
+  {query:{objectNames:['集合点 A','集合点 B'],offset:1,limit:1},total:2,names:['b'],hasMore:false},
+  {query:{objectNames:['集合点 A','不存在']},total:1,names:['a'],hasMore:false},
+  {query:{objectNames:['集合点 A'],layerIds:['other']},total:0,names:[],hasMore:false},
+  {query:{objectNames:['集合点 B'],layerNames:['集合图层']},total:1,names:['b'],hasMore:false},
   {query:{fields:[],offset:0,limit:1},total:3,names:['a'],hasMore:true},
   {query:{offset:99},total:3,names:[],hasMore:false},
  ];
@@ -320,7 +324,7 @@ it('delivers named draft reads through the native schema and permits a later edi
  for(const mode of ['draft','read']) {
   const branch=schema.anyOf.find((entry:{properties:{mode:{const:string}}})=>entry.properties.mode.const===mode);
   expect(branch.required).not.toContain('layerNames');expect(branch.properties.layerNames.items.maxLength).toBe(120);
-  expect(branch.not).toEqual({required:['layerIds','layerNames']});
+  expect(branch.allOf).toEqual([{not:{required:['layerIds','layerNames']}},{not:{required:['objectIds','objectNames']}}]);
  }
 });
 
@@ -364,4 +368,39 @@ it('retains exact structured receipt entries through real native compaction and 
  expect(after.messages.find(message=>message.toolName==='annotation_action')).toEqual(receipt);
  await lab.close();const reopened=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>reopened.close());
  expect(reopened.get(session.id,'alpha').messages.find(message=>message.toolName==='annotation_action')).toEqual(receipt);
+});
+
+it('delivers exact object-name results in the native loop, keeps fixed reads readonly, and reopens old/new reads unchanged',async()=>{
+ const selected:{ref?:AnnotationRef}={};
+ const {lab,session,actor,config,taskId}=await setup((_context,index)=>{
+  if(index===0)return {tools:[{name:'annotation_read',arguments:{mode:'read',ref:selected.ref,objectIds:['a']}}]};
+  if(index===1)return {tools:[{name:'annotation_read',arguments:{mode:'read',ref:selected.ref,objectNames:['集合点 A','未命中'],fields:['geometry']}}]};
+  if(index===2)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'rename_set',title:'不应保存'}]}}]};
+  if(index===3)return {tools:[{name:'annotation_read',arguments:{mode:'draft',objectNames:['集合点 A'],layerNames:['集合图层']}}]};
+  if(index===4)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'a',changes:{note:'名称查询后编辑'}}]}}]};
+  return {text:'完成'};
+ });selected.ref=lab.annotations!.binding(actor,session.id).draft ? {setId:lab.annotations!.binding(actor,session.id).draft!.setId,revision:1} : undefined;
+ const snapshot=await ask(lab,session.id),messages=snapshot.messages.filter(message=>message.role==='tool');
+ expect(JSON.parse(messages[1].text).data).toMatchObject({ref:selected.ref,query:{objectNames:['集合点 A','未命中'],fields:['geometry']},objects:{total:1,items:[{objectId:'a',name:'集合点 A',geometry:{type:'Point',coordinates:[120,30]}}]}});
+ expect(messages[2]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_READ_REQUIRED')});
+ expect(JSON.parse(messages[2].text)).toMatchObject({code:'ANNOTATION_READ_REQUIRED',outcome:'not_committed',resources:[{kind:'draft',state:'missing'}],methodAdvice:{skillId:'map-annotations'}});
+ expect(JSON.parse(messages[3].text).data.query).toEqual({objectNames:['集合点 A'],layerNames:['集合图层']});
+ expect(messages[4].annotationResult?.origin).toBe('write');
+ const head=lab.annotations!.binding(actor,session.id).draft!;
+ expect(head.headRevision).toBe(2);expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:2}).document.layers[0].features[0].note).toBe('名称查询后编辑');
+ const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]),before=await readFile(file,'utf8');
+ await lab.close();const reopened=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>reopened.close());
+ expect(reopened.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(reopened.get(session.id,'alpha').messages).toEqual(snapshot.messages);
+ expect(await readFile(file,'utf8')).toBe(before);
+});
+
+it.each([
+ {objectNames:['集合点 A'],objectIds:['a']},
+ {objectNames:[]},
+ {objectNames:[' ']},
+ {objectNames:['x','x']},
+])('rejects malformed object-name selectors through native schema even without a draft: %j',async selectors=>{
+ const {lab,session,calls}=await setup((_context,index)=>index===0 ? {tools:[{name:'annotation_read',arguments:{mode:'draft',...selectors}}]} : {text:'修正查询'});
+ const empty=await lab.createSession(session.workspaceId,'alpha'),snapshot=await ask(lab,empty.id);
+ expect(calls).toHaveLength(2);expect(snapshot.messages.find(message=>message.role==='tool')).toMatchObject({isError:true});
 });

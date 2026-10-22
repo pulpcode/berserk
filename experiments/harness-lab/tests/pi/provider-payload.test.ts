@@ -115,20 +115,23 @@ it('keeps annotation receipts in native details and UI while the actual provider
   const definitions=payloads[0].tools.map(tool=>tool.function);
   const readDefinition=definitions.find(tool=>tool.name==='annotation_read')!;
   for(const branch of readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)) {
-    for(const optional of ['layerIds','layerNames','objectIds','fields']) expect(branch.required??[]).not.toContain(optional);
+    for(const optional of ['layerIds','layerNames','objectIds','objectNames','fields']) expect(branch.required??[]).not.toContain(optional);
     expect(branch.properties.fields.description).toContain('基础摘要始终包含 objectId/name/kind/layerId');
     expect(branch.properties.fields.description).toContain('省略或空数组均仅返回摘要');
     expect(branch.properties.fields.description).toContain('未请求字段不代表字段为空');
     expect(branch.properties.layerIds.description).toContain('与 layerNames 互斥');
     expect(branch.properties.layerNames.description).toContain('固定版本中的图层名称精确筛选');
     expect(branch.properties.layerNames.description).toContain('与 layerIds 互斥');
-    expect(branch).toMatchObject({not:{required:['layerIds','layerNames']}});
+    expect(branch).toMatchObject({allOf:[{not:{required:['layerIds','layerNames']}},{not:{required:['objectIds','objectNames']}}]});
+    expect(branch.properties.objectNames.description).toContain('同名对象全部保留并分页');
+    expect(branch.properties.objectNames.description).toContain('不保证每个名称都命中');
+    expect(branch.properties.objectNames).toMatchObject({items:{maxLength:120,pattern:'\\S'}});
     expect(branch.properties.layerIds.description).toContain('已有摘要足以回答时无需重复读取');
     expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 或 layerNames 时取交集');
     expect(branch.properties.layerIds.description).toContain('同时指定 objectIds 时取交集');
   }
   expect(readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)).toHaveLength(2);
-  expect(readDefinition.description).toContain('未指定 layerIds/layerNames/objectIds 时，在该固定版本的全部对象中分页');
+  expect(readDefinition.description).toContain('未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页');
   expect(readDefinition.description).toContain('可涉及标题、图层和对象，不是对象总数');
   expect(definitions.find(tool=>tool.name==='annotation_list')!.description).toContain('发布说明 note 不是对象备注');
   const reportDefinition=definitions.find(tool=>tool.name==='annotation_action')!;
@@ -150,7 +153,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
 
 
 it('delivers the deployed spatial discovery catalog on the wire and loads its matching body through native skill_read', async () => {
-  const payloads:Array<{messages:WireMessage[]}>=[];
+  const payloads:Array<{messages:WireMessage[];tools:Array<{function:{name:string;parameters:{properties:{id:unknown}}}}>}>=[];
   vi.stubGlobal('fetch', async (input:Request|string|URL,init?:RequestInit)=>{
     payloads.push(JSON.parse(String(init?.body??(input instanceof Request?await input.text():''))));
     const read=payloads.length===1;
@@ -172,6 +175,9 @@ it('delivers the deployed spatial discovery catalog on the wire and loads its ma
   await request.run(()=>{});
   expect(lab.get(session.id).lastResult?.status).toBe('succeeded');expect(payloads).toHaveLength(2);
   expect(textOf(payloads[0].messages[0])).toContain(`spatial-analysis（${catalog.description}）`);
+  const readDefinition=payloads[0].tools.find(tool=>tool.function.name==='skill_read')!.function;
+  expect(readDefinition.parameters.properties.id).toEqual({anyOf:info.skills.map(item=>({type:'string',const:item.id,description:`${item.name}：${item.description}`}))});
+  for(const item of info.skills)expect(JSON.stringify(payloads[0].tools)).not.toContain((await lab.resources.readSkill(session.workspaceId,item.id)).content);
   const instructions = textOf(payloads[0].messages[0]);
   expect(instructions).toContain('若正文已通过显式选择加载，不要重复读取');
   expect(instructions).toContain('按步骤读取能覆盖任务的最小集合');

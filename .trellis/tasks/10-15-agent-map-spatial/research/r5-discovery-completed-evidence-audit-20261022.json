@@ -1,0 +1,384 @@
+{
+  "originalBatch": ".local/spatial-r5/r5-20261022-01",
+  "supplementBatch": ".local/spatial-r5/r5-20261022-supplement-01",
+  "reviewMode": "single primary full review plus focused independent D16/evidence cross-check; not full blind double review",
+  "originalEvidenceAllUnchanged": true,
+  "originalEvidenceFilesVerified": 603,
+  "rawEvidenceFilesVerified": 276,
+  "frozenSourceEqual": true,
+  "sameSyntheticDay": true,
+  "actualPayloadsChecked": 44,
+  "onlySkillIdSchemaDiffers": true,
+  "schemas": {
+    "L0": "b4d8dfb7139865df5fe03d2aa15d9e7113f41060ebe30e195cee33b3a851f547",
+    "L1": "91de4d2c5d62c935d1540e463fd29fc6f78601687e04eee3b2391204df255fb7"
+  },
+  "originalBudget": {
+    "requests": 15,
+    "input": 231065,
+    "output": 2166,
+    "unknownUsage": 1
+  },
+  "supplementBudget": {
+    "requests": 29,
+    "input": 521985,
+    "output": 4208,
+    "unknownUsage": 0
+  },
+  "combinedKnownUsage": {
+    "requests": 44,
+    "input": 753050,
+    "output": 6374,
+    "unknownUsage": 1
+  },
+  "byGroupAllAttemptsKnownUsage": {
+    "L0": {
+      "requests": 27,
+      "input": 457667,
+      "output": 4278,
+      "unknownUsage": 1
+    },
+    "L1": {
+      "requests": 17,
+      "input": 295383,
+      "output": 2096,
+      "unknownUsage": 0
+    }
+  },
+  "completeSlotCoverage": {
+    "L0": {
+      "eligibleTasks": 3,
+      "timelyTasks": 1,
+      "eligibleStages": 4,
+      "timelyStages": 1,
+      "anyApplicableBodyReceivedTasks": 1,
+      "negativeNoToolsPass": 1,
+      "unrelatedReads": 0,
+      "repeatReads": 0
+    },
+    "L1": {
+      "eligibleTasks": 3,
+      "timelyTasks": 0,
+      "eligibleStages": 4,
+      "timelyStages": 0,
+      "anyApplicableBodyReceivedTasks": 0,
+      "negativeNoToolsPass": 1,
+      "unrelatedReads": 0,
+      "repeatReads": 0
+    }
+  },
+  "rows": [
+    {
+      "batch": ".local/spatial-r5/r5-20261022-01",
+      "entryId": "D02-L0",
+      "status": "recorded",
+      "cost": {
+        "requests": 6,
+        "input": 100727,
+        "output": 1157,
+        "unknownUsage": 0
+      },
+      "reviewHash": "122776200ff6645a1e76ad78a3011c241025e4b92fa3c828e30954fb9cf0927f",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 5,
+      "firstSaveRequest": null,
+      "stages": [
+        {
+          "stage": "before_nearest_or_unnecessary_clarification",
+          "request": 5,
+          "timely": false
+        }
+      ],
+      "timelyTaskCoverage": false,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-01",
+      "entryId": "D02-L1",
+      "status": "recorded",
+      "cost": {
+        "requests": 2,
+        "input": 31475,
+        "output": 123,
+        "unknownUsage": 0
+      },
+      "reviewHash": "bf040c8f80883cddea8569b0cac76fce0aa8c1afe4b05ed5df60ee3c6b634847",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "firstSaveRequest": null,
+      "stages": [
+        {
+          "stage": "before_nearest_or_unnecessary_clarification",
+          "request": 8,
+          "timely": false
+        }
+      ],
+      "timelyTaskCoverage": false,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-01",
+      "entryId": "D05-L1",
+      "status": "recorded",
+      "cost": {
+        "requests": 4,
+        "input": 67469,
+        "output": 692,
+        "unknownUsage": 0
+      },
+      "reviewHash": "89754085c8b8632e0e358a6ff15ae7a8297faa428d8bbab7fcd3b5abb94e4701",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 11,
+      "firstSaveRequest": null,
+      "stages": [
+        {
+          "stage": "before_buffer_or_filter",
+          "request": 11,
+          "timely": false
+        }
+      ],
+      "timelyTaskCoverage": false,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-01",
+      "entryId": "D05-L0",
+      "status": "incomplete",
+      "cost": {
+        "requests": 3,
+        "input": 31394,
+        "output": 194,
+        "unknownUsage": 1
+      },
+      "reviewHash": "588302800198ff7ca5bd25fe8a583d9b416a29830fa52111784da9a4db22eccf",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "firstSaveRequest": null,
+      "stages": [],
+      "timelyTaskCoverage": null,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-supplement-01",
+      "entryId": "D05-L0",
+      "status": "recorded",
+      "cost": {
+        "requests": 7,
+        "input": 134632,
+        "output": 1838,
+        "unknownUsage": 0
+      },
+      "reviewHash": "0a815595d479e8bea32804f4297aa2f2c14e7bf39b3f0121cc3db79501267680",
+      "skillReads": [
+        {
+          "request": 1,
+          "id": "spatial-analysis"
+        }
+      ],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": 2,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 6,
+      "firstSaveRequest": null,
+      "stages": [
+        {
+          "stage": "before_buffer_or_filter",
+          "request": 6,
+          "timely": true
+        }
+      ],
+      "timelyTaskCoverage": true,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-supplement-01",
+      "entryId": "D16-L0",
+      "status": "recorded",
+      "cost": {
+        "requests": 10,
+        "input": 175543,
+        "output": 1088,
+        "unknownUsage": 0
+      },
+      "reviewHash": "0980a178d3df9679b3773d2b7189e7172ee68b437aacc9ef90e32e5339646034",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 10,
+      "firstSaveRequest": 12,
+      "stages": [
+        {
+          "stage": "before_first_buffer",
+          "request": 10,
+          "timely": false
+        },
+        {
+          "stage": "before_save_decision",
+          "request": 12,
+          "timely": false
+        }
+      ],
+      "timelyTaskCoverage": false,
+      "effects": {
+        "exactFirstPreviewSaved": true,
+        "addedName": "临时范围",
+        "addedLayer": "derived",
+        "externalNotePreserved": true,
+        "otherDocumentContentUnchanged": true,
+        "publicationAndCurrentUnchanged": true,
+        "polygonEdges": 128,
+        "independentVertexRadiusMaxErrorM": 1.8894752429332584e-09,
+        "expectedDraftHead": 4,
+        "actualDraftHead": 4
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-supplement-01",
+      "entryId": "D16-L1",
+      "status": "recorded",
+      "cost": {
+        "requests": 10,
+        "input": 180879,
+        "output": 1280,
+        "unknownUsage": 0
+      },
+      "reviewHash": "045ac244d33f72e1591c51232164217d84a4dc0a60d2b8d40da3fa2e72adf54a",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 20,
+      "firstSaveRequest": 22,
+      "stages": [
+        {
+          "stage": "before_first_buffer",
+          "request": 20,
+          "timely": false
+        },
+        {
+          "stage": "before_save_decision",
+          "request": 22,
+          "timely": false
+        }
+      ],
+      "timelyTaskCoverage": false,
+      "effects": {
+        "exactFirstPreviewSaved": true,
+        "addedName": "临时范围",
+        "addedLayer": "derived",
+        "externalNotePreserved": true,
+        "otherDocumentContentUnchanged": true,
+        "publicationAndCurrentUnchanged": true,
+        "polygonEdges": 128,
+        "independentVertexRadiusMaxErrorM": 1.8894752429332584e-09,
+        "expectedDraftHead": 4,
+        "actualDraftHead": 4
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-supplement-01",
+      "entryId": "N01-L1",
+      "status": "recorded",
+      "cost": {
+        "requests": 1,
+        "input": 15560,
+        "output": 1,
+        "unknownUsage": 0
+      },
+      "reviewHash": "3e3e0f4789ea800dac238914eeb8577a29edbce823cb0ae313029320bd52b58b",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "firstSaveRequest": null,
+      "stages": [],
+      "timelyTaskCoverage": null,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    },
+    {
+      "batch": ".local/spatial-r5/r5-20261022-supplement-01",
+      "entryId": "N01-L0",
+      "status": "recorded",
+      "cost": {
+        "requests": 1,
+        "input": 15371,
+        "output": 1,
+        "unknownUsage": 0
+      },
+      "reviewHash": "9a7fe5578400049719b631d3d288063135124700e1282707196f3cddc504b8dc",
+      "skillReads": [],
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "firstSaveRequest": null,
+      "stages": [],
+      "timelyTaskCoverage": null,
+      "effects": {
+        "fullBeforeAfterEqual": true
+      }
+    }
+  ],
+  "retryMapping": {
+    "D05-L0": {
+      "original": ".local/spatial-r5/r5-20261022-01/D05-L0",
+      "supplement": ".local/spatial-r5/r5-20261022-supplement-01/D05-L0",
+      "originalRetained": true
+    }
+  },
+  "later12Executed": false,
+  "billKnown": false
+}

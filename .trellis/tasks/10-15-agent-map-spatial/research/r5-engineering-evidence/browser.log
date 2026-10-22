@@ -1,0 +1,62 @@
+[WebServer] (node:91273) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:91245) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 33 tests using 2 workers
+
+(node:91313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91313) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:91314) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/annotations.spec.ts:70:1 › official Terra Draw supports point line polygon Chinese labels, edit and cleanup on MapLibre 6.4 (13.4s)
+  ✓   2 tests/e2e/annotations.spec.ts:51:1 › independent drafts, fixed publication, current selection and native annotation reference (15.9s)
+  ✓   3 tests/e2e/annotations.spec.ts:87:1 › CAS retains form and no WebGL still permits explicit coordinate editing (5.9s)
+  ✓   4 tests/e2e/annotations.spec.ts:100:1 › lost save response reconciles exactly once and clears only the submitted buffer (5.7s)
+  ✓   5 tests/e2e/annotations.spec.ts:110:1 › layout modes preserve unsaved editing and browser back still guards business navigation (9.5s)
+  ✓   6 tests/e2e/annotations.spec.ts:132:1 › three columns resize by keyboard and pointer while map fills available height (10.7s)
+  ✓   7 tests/e2e/annotations.spec.ts:175:1 › overlapping draft and publication objects select their exact read-only group (7.2s)
+  ✓   8 tests/e2e/annotations.spec.ts:185:1 › explicit saved reference stays read-only and fixed when the current draft advances (7.7s)
+  ✓   9 tests/e2e/annotations.spec.ts:200:1 › layer tree separates expansion visibility and drawing target, including empty layers and fixed references (11.7s)
+  ✓  10 tests/e2e/annotations.spec.ts:248:56 › legacy receipt buttons open fixed read-only targets and stay scoped to the final request after reload (9.5s)
+  ✓  11 tests/e2e/annotations.spec.ts:248:56 › structured receipt buttons open fixed read-only targets and stay scoped to the final request after reload (8.3s)
+  ✓  12 tests/e2e/annotations.spec.ts:279:1 › basemap switches preserve selected annotations, camera, visibility, and unfinished line/polygon through failure and retry (10.4s)
+  ✓  13 tests/e2e/annotations.spec.ts:330:1 › solid annotation strokes remain painted after hybrid source switches and narrow map controls do not overlap credits (10.7s)
+  ✓  14 tests/e2e/annotations.spec.ts:354:1 › hybrid progressively reveals minor service and path roads below business overlays across source overzoom (13.7s)
+  ✓  15 tests/e2e/annotations.spec.ts:383:1 › native streamed publication result and reloaded history open the same fixed version (9.9s)
+  ✓  17 tests/e2e/references.spec.ts:96:1 › IME, Escape, outside click and pasted paths remain plain text; menu allows replacement and removal (3.0s)
+  ✓  16 tests/e2e/references.spec.ts:55:1 › typed references select using keyboard, preserve prose, show historical Skill and do not call model before send (6.2s)
+  ✓  18 tests/e2e/references.spec.ts:123:1 › file picker browses directories and pagination, shares upload count and deduplicates the same ordinary path (4.6s)
+  ✓  20 tests/e2e/references.spec.ts:179:1 › 375px picker and Skill dialog remain contained with keyboard focus (2.0s)
+  ✓  19 tests/e2e/references.spec.ts:150:1 › seat-scoped drafts survive refresh, delayed directories cannot leak, and first creation migrates selections once (8.8s)
+  ✓  21 tests/e2e/references.spec.ts:201:1 › changed selection fails before model work and preserves all inputs until explicit correction (3.3s)
+  ✓  23 tests/e2e/references.spec.ts:252:1 › Chinese composition filters the browsed directory and caret movement abandons the trigger safely (3.0s)
+  ✓  22 tests/e2e/references.spec.ts:225:1 › workspace navigation preserves separate drafts and dismisses stale pickers without selecting late results (4.5s)
+  ✓  24 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (新的目标) (6.0s)
+  ✓  25 tests/e2e/references.spec.ts:286:43 › busy input keeps text editable and defers selection changes until failure settles (原始目标) (6.5s)
+  ✓  26 tests/e2e/references.spec.ts:311:1 › @ opens categories without loading file or agent lists and supports returning between categories (3.0s)
+(node:91313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing (9.8s)
+  ✓  28 tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing (10.0s)
+(node:91313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  30 tests/e2e/spatial.spec.ts:91:1 › without WebGL the same verified analysis remains readable in the object panel (5.4s)
+  ✓  29 tests/e2e/spatial.spec.ts:74:1 › native save preserves preview geometry and read delivery reopens the original fixed result (10.0s)
+(node:91314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  31 tests/e2e/spatial.spec.ts:100:59 › measurement distance renders both fixed input and reference geometry (7.4s)
+  ✓  32 tests/e2e/spatial.spec.ts:100:59 › measurement point_to_line renders both fixed input and reference geometry (9.1s)
+(node:91314) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  33 tests/e2e/spatial.spec.ts:125:1 › v2 point classifications show each identity and reopen the same fixed partition (9.8s)
+
+  33 passed (2.4m)

@@ -1,6 +1,6 @@
 import type { SpatialAttribute, SpatialItem, SpatialRequest, SpatialResult } from '../contracts/spatial.js';
 import { LIMITS, spatialError, validateGeometry } from './validation.js';
-import { makeBuffer, measure, relate } from './geometry.js';
+import { classifyPoint, makeBuffer, measure, relate } from './geometry.js';
 import type { SpatialDataset } from './inputs.js';
 const one=(items:SpatialItem[])=>{if(items.length!==1) throw spatialError('AMBIGUOUS','该位置必须解析为恰好一个对象；请明确对象范围。');return items[0];};
 function property(item:SpatialItem,field:string) {if(!Object.hasOwn(item.properties,field)) throw spatialError('ATTRIBUTE_MISSING',`对象 ${item.name} 没有字段 ${field}，不能当作不匹配。`);const value=item.properties[field];if(value!==null && !['string','number','boolean'].includes(typeof value)) throw spatialError('ATTRIBUTE_TYPE','分类/过滤仅支持实际标量字段。');return value as string|number|boolean|null;}
@@ -18,6 +18,15 @@ export async function run({request,data,target,result}:Calculation):Promise<Spat
     switch(request.operation) {
       case 'measure':result.values={value:measure(request.metric,one(data.items).geometry,target?one(target.items).geometry:undefined),unit:request.metric==='area'?'m²':'m'};break;
       case 'relate':result.values={relation:request.relation,matches:relate(request.relation,one(data.items).geometry,one(target!.items).geometry)};break;
+      case 'classify_points': {
+        const region=one(target!.items).geometry,counts={total:data.items.length,interior:0,boundary:0,exterior:0};
+        result.classifications=[];
+        for(const item of data.items) {
+          await tick();const position=classifyPoint(item.geometry,region);
+          result.classifications.push({itemId:item.id,position});counts[position]++;
+        }
+        result.values=counts;break;
+      }
       case 'buffer':result.geometry=makeBuffer(one(data.items).geometry,request.distanceM);break;
       case 'filter': {
         const picked:SpatialItem[]=[];

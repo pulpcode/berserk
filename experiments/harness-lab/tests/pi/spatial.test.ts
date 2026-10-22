@@ -76,6 +76,7 @@ it('records uncertain exact-save effects and blocks a second same-output write',
   await s.lab.start(s.session.id,'保存',{},'alpha').run(()=>{});const snapshot=s.lab.get(s.session.id,'alpha');
   const write=snapshot.messages.find(m=>m.toolName==='annotation_from_analysis')!;expect(write.annotationResult).toBeNull();
   expect(snapshot.messages.find(m=>m.toolName==='annotation_action')?.text).toContain('ANNOTATION_RESULT_UNCERTAIN');
+  expect(snapshot.messages.find(m=>m.toolName==='annotation_action')?.text).not.toContain('methodAdvice');
   const receipt=s.lab.annotations!.receipt(s.actor,annotationActionId(write.requestId!,write.toolCallId!))!;expect(receipt.fromAnalysis).toBeDefined();
   expect(s.lab.annotations!.binding(s.actor,s.session.id).draft?.headRevision).toBe(2);
 });
@@ -143,4 +144,47 @@ it('delivers result-selection ambiguity and recovers with the same fixed geometr
   expect(results[2].spatialResult?.items.map(i=>i.annotation?.objectId)).toEqual(['near']);
   expect(results[2].spatialResult?.scope[1]).toEqual({kind:'result',resultRef,geometry:true});
   expect(s.lab.annotations!.binding(s.actor,s.session.id).draft?.headRevision).toBe(1);
+});
+
+it('retains mixed v1/v2 native history and reuses the fixed classification after restart without recomputation',async()=>{
+  let classificationRef='';
+  const s=await setup((_context,index)=>index===0?{tools:[
+    {name:'spatial_analyze',arguments:{operation:'measure',metric:'distance',input:s.input,target:s.input}},
+    {name:'spatial_analyze',arguments:{operation:'classify_points',input:{kind:'annotation',ref:added.ref,objectIds:['center','near','far']},target:{kind:'annotation',ref:added.ref,objectIds:['region']}}},
+  ]}:{text:'读取固定分类。'});
+  const added=s.lab.annotations!.action(s.actor,s.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_object',layerId:'points',feature:{objectId:'region',name:'参照区域',kind:'polygon',geometry:{type:'Polygon',coordinates:[[[120,29.99],[120.01,29.99],[120.01,30.01],[120,30.01],[120,29.99]]]}}}]});
+  await s.lab.start(s.session.id,'分析点面位置',{},'alpha').run(()=>{});
+  const snapshot=s.lab.get(s.session.id,'alpha'),results=snapshot.messages.filter(m=>m.toolName==='spatial_analyze');
+  expect(results.map(m=>m.spatialResult?.schemaVersion)).toEqual([1,2]);
+  expect(results[0].text).toContain('spatial.model-result.v1');expect(results[1].text).toContain('spatial.model-result.v2');
+  const classification=results[1].spatialResult!;classificationRef=classification.resultRef;
+  expect(classification.classifications?.map(c=>c.position)).toEqual(['boundary','interior','exterior']);
+  expect(classification.values).toEqual({total:3,interior:1,boundary:1,exterior:1});
+  await s.lab.close();
+  const runtime=await fakeRuntime(s.config,(_context,index)=>index===0?{tools:[
+    {name:'spatial_analyze',arguments:{operation:'read',resultRef:classificationRef}},
+    {name:'spatial_analyze',arguments:{operation:'summarize',input:{kind:'result',resultRef:classificationRef},field:'category'}},
+    {name:'annotation_read',arguments:{mode:'draft'}},
+  ]}:index===1?{tools:[{name:'annotation_from_analysis',arguments:{resultRef:classificationRef,itemId:classification.items[1].id,layerId:'points',objectId:'classified-copy',name:'原点几何副本'}}]}:{text:'复用原结果完成。'});
+  const reopened=await PiLab.create(s.config,runtime.runtime);clean.push(()=>reopened.close());
+  expect(reopened.get(s.session.id,'alpha').messages).toEqual(snapshot.messages);
+  await reopened.start(s.session.id,'查看原分类、统计并保存一个点',{},'alpha').run(()=>{});
+  const after=reopened.get(s.session.id,'alpha').messages;
+  const read=after.filter(m=>m.toolName==='spatial_analyze')[2];
+  expect(read.spatialResult).toEqual({...classification,delivery:{requestId:read.requestId,toolCallId:read.toolCallId}});
+  expect(after.findLast(m=>m.toolName==='spatial_analyze')?.spatialResult?.schemaVersion).toBe(1);
+  const saved=after.findLast(m=>m.toolName==='annotation_from_analysis')!;expect(saved.isError).toBe(false);
+  const receipt=saved.annotationResult!.receipt;
+  expect(reopened.annotations!.version(s.actor,receipt.taskId,receipt.ref!).document.layers[0].features.find(f=>f.objectId==='classified-copy')?.geometry).toEqual(classification.items[1].geometry);
+});
+
+
+it('exposes a relevant method entry on unsupported geometry without automatically reading its body',async()=>{
+  const s=await setup((_context,index)=>index===0?{tools:[{name:'spatial_analyze',arguments:{operation:'classify_points',input:s.input,target:s.input}}]}:{text:'参照类型不支持。'});
+  await s.lab.start(s.session.id,'按点面关系检查',{},'alpha').run(()=>{});
+  const messages=s.lab.get(s.session.id,'alpha').messages,error=messages.find(m=>m.toolName==='spatial_analyze')!;
+  expect(error.isError).toBe(true);
+  expect(error.text).toContain('SPATIAL_UNSUPPORTED_GEOMETRY');
+  expect(error.text).toContain('methodAdvice');expect(error.text).toContain('spatial-analysis');
+  expect(messages.some(m=>m.toolName==='skill_read'||m.toolName==='skill.read')).toBe(false);
 });

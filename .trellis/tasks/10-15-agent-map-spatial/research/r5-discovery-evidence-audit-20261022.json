@@ -1,0 +1,171 @@
+{
+  "batch": ".local/spatial-r5/r5-20261022-01",
+  "reviewMode": "single primary agent plus programmatic evidence checks; not independent blind review",
+  "baselineCommit": "b56de822cec4ee2519ac8a24eb307a6230cac29d",
+  "candidateHash": "3e39ad74e6a0c922213537aaecdbe45bbc35be4b946ebedf7d407bedb4bc2cfd",
+  "planned": 8,
+  "started": 4,
+  "completeEvidence": 3,
+  "technicalInterrupted": 1,
+  "notExecuted": 4,
+  "stop": "provider_http_402",
+  "providerMessage": "Insufficient Balance",
+  "automaticRetries": false,
+  "later12Executed": false,
+  "budget": {
+    "requests": 15,
+    "input": 231065,
+    "output": 2166,
+    "unknownUsage": 1
+  },
+  "actualBillKnown": false,
+  "verifiedOriginalEvidenceFiles": 100,
+  "frozenSourceAndRuntimeVerified": true,
+  "actualInputsChecked": 15,
+  "candidateDescriptionDeliveredL1": true,
+  "onlySkillIdSchemaDiffers": true,
+  "schemas": {
+    "A": "b4d8dfb7139865df5fe03d2aa15d9e7113f41060ebe30e195cee33b3a851f547",
+    "B": "91de4d2c5d62c935d1540e463fd29fc6f78601687e04eee3b2391204df255fb7"
+  },
+  "rows": [
+    {
+      "entryId": "D02-L0",
+      "status": "recorded",
+      "requests": 6,
+      "knownInputTokens": 100727,
+      "knownOutputTokens": 1157,
+      "unknownUsageRequests": 0,
+      "toolCalls": 5,
+      "catalogPresentInEveryRequest": {
+        "synthesis": true,
+        "spatial-analysis": true,
+        "review": true,
+        "map-annotations": true
+      },
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 5,
+      "timelyRead": "no",
+      "beforeAfterEqual": true,
+      "reviewHash": "122776200ff6645a1e76ad78a3011c241025e4b92fa3c828e30954fb9cf0927f"
+    },
+    {
+      "entryId": "D02-L1",
+      "status": "recorded",
+      "requests": 2,
+      "knownInputTokens": 31475,
+      "knownOutputTokens": 123,
+      "unknownUsageRequests": 0,
+      "toolCalls": 1,
+      "catalogPresentInEveryRequest": {
+        "synthesis": true,
+        "spatial-analysis": true,
+        "review": true,
+        "map-annotations": true
+      },
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "timelyRead": "no",
+      "beforeAfterEqual": true,
+      "reviewHash": "bf040c8f80883cddea8569b0cac76fce0aa8c1afe4b05ed5df60ee3c6b634847"
+    },
+    {
+      "entryId": "D05-L1",
+      "status": "recorded",
+      "requests": 4,
+      "knownInputTokens": 67469,
+      "knownOutputTokens": 692,
+      "unknownUsageRequests": 0,
+      "toolCalls": 3,
+      "catalogPresentInEveryRequest": {
+        "synthesis": true,
+        "spatial-analysis": true,
+        "review": true,
+        "map-annotations": true
+      },
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": 11,
+      "timelyRead": "no",
+      "beforeAfterEqual": true,
+      "reviewHash": "89754085c8b8632e0e358a6ff15ae7a8297faa428d8bbab7fcd3b5abb94e4701"
+    },
+    {
+      "entryId": "D05-L0",
+      "status": "incomplete",
+      "requests": 3,
+      "knownInputTokens": 31394,
+      "knownOutputTokens": 194,
+      "unknownUsageRequests": 1,
+      "toolCalls": 2,
+      "catalogPresentInEveryRequest": {
+        "synthesis": true,
+        "spatial-analysis": true,
+        "review": true,
+        "map-annotations": true
+      },
+      "firstBodyRequests": {
+        "synthesis": null,
+        "spatial-analysis": null,
+        "review": null,
+        "map-annotations": null
+      },
+      "firstCalculationRequest": null,
+      "timelyRead": "pending_interruption_before_decision",
+      "beforeAfterEqual": true,
+      "reviewHash": "588302800198ff7ca5bd25fe8a583d9b416a29830fa52111784da9a4db22eccf"
+    },
+    {
+      "entryId": "D16-L0",
+      "status": "not_executed",
+      "timelyRead": "not_executed"
+    },
+    {
+      "entryId": "D16-L1",
+      "status": "not_executed",
+      "timelyRead": "not_executed"
+    },
+    {
+      "entryId": "N01-L1",
+      "status": "not_executed",
+      "timelyRead": "not_executed"
+    },
+    {
+      "entryId": "N01-L0",
+      "status": "not_executed",
+      "timelyRead": "not_executed"
+    }
+  ],
+  "batchState": {
+    "at": "2026-10-22T08:42:15.073Z",
+    "stop": "provider_http_402",
+    "planned": 8,
+    "recorded": 3,
+    "notExecuted": 4,
+    "totals": {
+      "requests": 15,
+      "input": 231065,
+      "output": 2166,
+      "unknownUsage": 1
+    },
+    "automaticRetries": false
+  },
+  "protocolHash": "a839d7eade33351361bf6ac0e212901303be925712a6134e70a58b1935e2823c",
+  "runsHash": "b18d2aaec5a974e6b6352bb30b4b755e5e773edee46cc85f53ee5d40be399481",
+  "attemptsHash": "211e83c460e655302a14b6bef1aabe0a659ef04f3f79bfbf24200c4c3c2f1e8c",
+  "errorHash": "457552dc6514b067d74ad9836e9caa26fb52373edbc0272a773d839fc4744d1c"
+}

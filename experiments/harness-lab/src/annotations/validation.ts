@@ -181,11 +181,15 @@ export function hostIntent(value: unknown): AnnotationHostIntent {
 }
 export function current(value: unknown): AnnotationCurrentInput {const object=record(value,['clientActionId','publicationId','expectedCurrentSequence']); return {clientActionId:uuid(object.clientActionId),publicationId:uuid(object.publicationId),expectedCurrentSequence:integer(object.expectedCurrentSequence)};}
 export function readInput(value: unknown): AnnotationReadInput {
-  const object=record(value,['ref','layerIds','layerNames','objectIds','fields','offset','limit'],['ref']);
+  const object=record(value,['ref','layerIds','layerNames','objectIds','objectNames','fields','offset','limit'],['ref']);
   if(object.layerIds!==undefined && object.layerNames!==undefined) throw invalid('layerIds 与 layerNames 只能指定一种。');
-  if(object.layerNames!==undefined && (!Array.isArray(object.layerNames) || !object.layerNames.length || object.layerNames.length>32 || new Set(object.layerNames).size!==object.layerNames.length || object.layerNames.some(value=>typeof value!=='string' || !value.trim() || value.length>120))) throw invalid('layerNames 须为 1～32 个不重复的非空图层名称，每项不超过 120 字符。');
+  if(object.objectIds!==undefined && object.objectNames!==undefined) throw invalid('objectIds 与 objectNames 只能指定一种。');
+  for(const field of ['layerNames','objectNames'] as const) {
+    const names=object[field];
+    if(names!==undefined && (!Array.isArray(names) || !names.length || names.length>32 || new Set(names).size!==names.length || names.some(value=>typeof value!=='string' || !value.trim() || value.length>120))) throw invalid(`${field} 须为 1～32 个不重复的非空${field==='layerNames' ? '图层' : '对象'}名称，每项不超过 120 字符。`);
+  }
   if(object.fields!==undefined && (!Array.isArray(object.fields) || object.fields.length>6 || new Set(object.fields).size!==object.fields.length || object.fields.some(f=>!['geometry','note','attributes','style','sourceRefs','originFeatureRef'].includes(String(f))))) throw invalid();
-  return {ref:ref(object.ref),...(object.layerIds!==undefined ? {layerIds:ids(object.layerIds)} : {}),...(object.layerNames!==undefined ? {layerNames:[...object.layerNames as string[]]} : {}),...(object.objectIds!==undefined ? {objectIds:ids(object.objectIds)} : {}),...(object.fields!==undefined ? {fields:object.fields as AnnotationReadInput['fields']} : {}),...page(object.offset,object.limit)};
+  return {ref:ref(object.ref),...(object.layerIds!==undefined ? {layerIds:ids(object.layerIds)} : {}),...(object.layerNames!==undefined ? {layerNames:[...object.layerNames as string[]]} : {}),...(object.objectIds!==undefined ? {objectIds:ids(object.objectIds)} : {}),...(object.objectNames!==undefined ? {objectNames:[...object.objectNames as string[]]} : {}),...(object.fields!==undefined ? {fields:object.fields as AnnotationReadInput['fields']} : {}),...page(object.offset,object.limit)};
 }
 /** Stable object-key order makes action retries independent of JSON serialization order. */
 export function canonical(value: unknown): string {

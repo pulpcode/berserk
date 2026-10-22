@@ -53,3 +53,21 @@ test('fixed reference geometry is separately visible and locatable without infla
   expect(analysisGeometries({...current,focusItem:analysisReferenceId(reference.id)})).toEqual([reference.geometry]);expect(analysisGeometries(current)).toEqual([result.geometry,reference.geometry]);expect(current.result.items).toEqual([]);
   const html=renderToStaticMarkup(createElement(AnalysisPanel,{state:current}));expect(html).toContain('参考：参照岸线');expect(html).toContain('不计入结果对象');expect(html).toContain('0 个参与对象');
 });
+
+test('v2 point classification projects validated evidence, counts and each object label without changing geometry',()=>{
+  const input=result.parameters.input,target=input;
+  const classified:SpatialResult={...result,schemaVersion:2,operation:'classify_points',parameters:{operation:'classify_points',input,target},scope:[input,target],geometry:undefined,
+    completeness:{status:'complete',candidateCount:3},items:[
+      {id:'i',name:'内点',geometry:{type:'Point',coordinates:[120.005,36.005]},properties:{}},
+      {id:'b',name:'边点',geometry:{type:'Point',coordinates:[120,36.005]},properties:{}},
+      {id:'e',name:'外点',geometry:{type:'Point',coordinates:[120.02,36.005]},properties:{}},
+    ],referenceItems:[{id:'region',name:'区域',geometry:result.geometry!,properties:{}}],
+    classifications:[{itemId:'i',position:'interior'},{itemId:'b',position:'boundary'},{itemId:'e',position:'exterior'}],values:{total:3,interior:1,boundary:1,exterior:1}};
+  const current=state(classified),text=JSON.stringify({format:'spatial.model-result.v2',data:projectSpatialResult(classified)});
+  expect(spatialMapEntries([{...message(classified),text}])).toEqual([classified]);
+  const html=renderToStaticMarkup(createElement(AnalysisPanel,{state:current}));
+  expect(html).toContain('内部 1 · 边界 1 · 外部 1（共 3 个点）');
+  for(const [name,position] of [['内点','内部'],['边点','边界'],['外点','外部']])expect(html).toContain(`${name}<small>${position}</small>`);
+  expect(analysisFeatures(current).features.map(f=>f.geometry)).toEqual([...classified.items.map(i=>i.geometry),classified.referenceItems![0].geometry]);
+  const invalid={...classified,classifications:[]};expect(spatialMapEntries([{...message(invalid),text}])).toEqual([]);
+});
