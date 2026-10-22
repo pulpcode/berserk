@@ -1,0 +1,908 @@
+[
+  {
+    "entryId": "D02-native-map-only",
+    "transcriptHash": "519a02ed99b632886efc6b3dd166614ca3a06b6bca95dbdbd292e81a9b1bd534",
+    "fields": {
+      "claims": {
+        "value": {
+          "verdict": "pending",
+          "reason": "f4032891“只有一个resources图层”确可指唯一ID，也可指草稿仅一层。不能确定后者才是本意，接受pending；未进一步读取origin导致主任务失败并不受此待定影响。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#final.messages/46487e23",
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#final.messages/f4032891",
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#truth",
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#after",
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "f4032891“只有一个resources图层”确可指唯一ID，也可指草稿仅一层。不能确定后者才是本意，接受pending；未进一步读取origin导致主任务失败并不受此待定影响。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#interactions"
+        ]
+      },
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D02-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D04-explicit-baseline",
+    "transcriptHash": "be8001f33dedcadad20f7f6a9379c16d8043ed787b6e28b015d01a48267981f7",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D04-explicit-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D04-explicit-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D04-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D04-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D04-explicit-map-only",
+    "transcriptHash": "ae2a68a4a6fe183bf4f4ea0e1f834870b3d1aa4bea320225204b514ec8872a51",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D04-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D04-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D04-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D04-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D04-native-map-only",
+    "transcriptHash": "e3d4a19ff2c3c7d1784e78313439212d32f56ef7e759dfddf6b0457a8df0ab29",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D04-native-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D04-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D04-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D04-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D04-native-spatial-only",
+    "transcriptHash": "096b8378d185e17a2c44958f74097f3e7f4c614339205a94a6da7ab422fb5392",
+    "fields": {
+      "claims": {
+        "value": {
+          "verdict": "pass",
+          "reason": "将21b3fb68作为完整单条回答阅读：说明已合并两图层的计算口径，表格给other-point所属resources-other与111.2m，末段另给仅resources的r1/556.0m；数字和身份均准确。不能截取首句抹去同一回答中的范围限定，接受claims pass。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages/bf15a15e",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages/1b10ebf1",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages/501de205",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages/21b3fb68",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#truth",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#after",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "将21b3fb68作为完整单条回答阅读：说明已合并两图层的计算口径，表格给other-point所属resources-other与111.2m，末段另给仅resources的r1/556.0m；数字和身份均准确。不能截取首句抹去同一回答中的范围限定，接受claims pass。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D04-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D04-native-baseline",
+    "transcriptHash": "5c53bb27030a45b02e0dc29020081bd9cca50cba2d776c48b2cca629c19e39b2",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D04-native-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D04-native-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D04-native-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D04-native-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D05-explicit-map-only",
+    "transcriptHash": "6fbc3d0f68e650c3630088a57a4b0da182a805959e511aa5db3485ead1fee890",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#interactions"
+        ]
+      },
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D05-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D05-native-map-only",
+    "transcriptHash": "131d08baf51198f582c61f654b89db0d8842610f419a9748e320e7095b390e64",
+    "fields": {
+      "criticalTargetError": {
+        "value": false,
+        "recommendation": "B",
+        "reason": "只在错误来源寻找并提出澄清，没有交付以错误对象计算出的最终答案；应记路由/检索未完成及不必要提问，criticalTargetError=false。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D05-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D05-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-explicit-baseline",
+    "transcriptHash": "8fb5b8bf4e3ef64f7c08d2192003d244613b461fb10e21e5340113deee02988f",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "fail",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-explicit-baseline/review.json#final.messages/286b5720,1509d963,33bd3b56,98a7e396,3c12f0f5,3822bae3,df5879f5,770bce2d",
+            ".local/spatial-r3/r3-20261022-01/D07-explicit-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D07-explicit-baseline/review.json#interactions"
+          ],
+          "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。"
+        },
+        "recommendation": "A",
+        "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-explicit-map-only",
+    "transcriptHash": "7ba9a64f17e6abd8e45d861c420bc376aeabd162aa70c68911a8464b5ff9b255",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-explicit-spatial-only",
+    "transcriptHash": "29238a21747ca7f1115cb9317b6dc016441faa0a9f0cdb09d148412a76b058e0",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-explicit-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-explicit-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-native-map-only",
+    "transcriptHash": "aa108b527f341be2b4b9da29cf224901f2be5525456663ddb69e0cb8fe8894c8",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "fail",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-native-map-only/review.json#final.messages/7a6e10e8,867b9b56",
+            ".local/spatial-r3/r3-20261022-01/D07-native-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D07-native-map-only/review.json#interactions"
+          ],
+          "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。"
+        },
+        "recommendation": "A",
+        "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-native-spatial-only",
+    "transcriptHash": "8b40ebd88b19ed066214f4c9dec475049c5ae414155b4c8b0bd33ff456f7b9fe",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "fail",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-native-spatial-only/review.json#final.messages/a3e7fb44,f995e045",
+            ".local/spatial-r3/r3-20261022-01/D07-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D07-native-spatial-only/review.json#interactions"
+          ],
+          "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。"
+        },
+        "recommendation": "A",
+        "reason": "完整两轮请求属于同一槽位：第一轮明确要求最近点却只列清单/追加提问，未交付r1；第二轮切换成功应另记恢复事实，不能使整个双轮任务完成。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D07-native-baseline",
+    "transcriptHash": "474b888c9393d8f143c2fd1f19fe5c30bf74cbda0bfe716e49d5713d1b7a3493",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D07-native-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D07-native-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D07-native-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D10-explicit-baseline",
+    "transcriptHash": "2c5f0251325810f8b2efc6dcb15cbc5636cea47ee2a5e07504a945807bfe6716",
+    "fields": {
+      "criticalTargetError": {
+        "value": false,
+        "recommendation": "B",
+        "reason": "只在错误来源寻找并提出澄清，没有交付以错误对象计算出的最终答案；应记路由/检索未完成及不必要提问，criticalTargetError=false。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D10-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D10-explicit-baseline/review.json#interactions"
+        ]
+      },
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D10-explicit-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D10-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D10-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D11-native-spatial-only",
+    "transcriptHash": "38e44e1aa2e1376717542feed6ac4d21ed03bce2c76ae8eb5012e94aedca0822",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "answered",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D11-native-spatial-only/review.json#final.messages/a4286be4,3debb38e,2712e126",
+            ".local/spatial-r3/r3-20261022-01/D11-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "A",
+        "reason": "2712e126在真实回答amb-b之后，又因仅读取amb-b而要求用户补充可从草稿检索的origin；这是阻断已授权测距的额外澄清，应unnecessary=true。已发生的首次回答仍为answered。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D11-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D11-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D12-explicit-spatial-only",
+    "transcriptHash": "31742257034eb7f88f7fdf39b511627133fdbb45aa9eea746490e45282987d80",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D12-explicit-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D13-explicit-map-only",
+    "transcriptHash": "b2a1ec801f6472ec81b72f5e9e5f43dff553dd5ccd6cb0c4dcf52a4a6cb8a131",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D13-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D13-native-spatial-only",
+    "transcriptHash": "b03ecf807fac09a4fbf90ed08e158ff1b3e5ae4946a7e04212d2f8605de2e4e2",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D13-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D14-explicit-spatial-only",
+    "transcriptHash": "ab3f4429aa33db444a6b0da8a2aaa43cd3524319fdcf58db4cba59bff4e5234b",
+    "fields": {
+      "core": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "实际正文询问且没有冒选/计算，行为安全；但无ask_user，没有观察到本题要求的真实skip/cancel/pending及清理链路，建议pending表示覆盖不足，不说成误选。D12/13缺expectedReply仍由冻结score判fail；D14将pending而非pass，不冒充API覆盖。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D14-explicit-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D15-native-spatial-only",
+    "transcriptHash": "1bd60bc12a6f357684a2ea06b1bcf3900686dd2e980dacb68e6a104b438d2d27",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": false,
+          "unnecessary": false,
+          "response": "none",
+          "evidence": []
+        },
+        "recommendation": "B",
+        "reason": "此处当前请求的预览/筛选已经完成，结尾是在询问是否另开未来保存或分析工作，没有把当前已授权任务挂起等待补充，也没有重复要求当前必要参数。按clarification语义接受asked=false/unnecessary=false；这不否认正文出现问句。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D15-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D15-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D17-explicit-map-only",
+    "transcriptHash": "a41244af4b42d9650a1e5516c3a0194bf2b7d2ba8f90bdf4d452170d8b3bfb6e",
+    "fields": {
+      "claims": {
+        "value": {
+          "verdict": "fail",
+          "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/ac7f55b2",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/14943a70",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/193496e4",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/5bc144f4",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/6f3bee4c",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/0eb8ec13",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages/141d1229",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#truth",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#after",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D17-native-spatial-only",
+    "transcriptHash": "8095f7a4e721d93c9ee6d575032ddf792f6cd292bb1b43e8274e13e6153446be",
+    "fields": {
+      "claims": {
+        "value": {
+          "verdict": "fail",
+          "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages/deff4562",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages/7ee0f6a9",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages/bd27fdc5",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages/1a029538",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#truth",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#after",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-native-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D17-native-baseline",
+    "transcriptHash": "c46bbb031407b9e9ef48eb2db6cc596fd2a9acc0970ceec204ad972d1b1cf055",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-native-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-native-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-native-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-native-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D17-native-map-only",
+    "transcriptHash": "65dec5b3f71062e46a9c6b06fec8ab557048bb5ff6cf3b9216993494449711de",
+    "fields": {
+      "claims": {
+        "value": {
+          "verdict": "fail",
+          "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages/30fc888c",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages/f2cbf531",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages/84cfd575",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#truth",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#after",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "最终回复把另一个态势“西区”当作“本会话观察区”作确定陈述，身份对应本身属于事实性陈述；所选错误对象内部数据自洽不能使claims通过，接受fail。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#interactions"
+        ]
+      },
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D17-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D19-explicit-baseline",
+    "transcriptHash": "efb9b2d0b4df32f627e04e9fb00ec48d1e9d1ab892abef17c466f937532a6dde",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D19-explicit-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/D19-explicit-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D19-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D19-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D20-explicit-baseline",
+    "transcriptHash": "e249b58ccc2d0099dc3321d0aa3ae514e49ed7ffa4899a259bf8cf73674e638f",
+    "fields": {
+      "criticalTargetError": {
+        "value": false,
+        "recommendation": "B",
+        "reason": "只在错误来源寻找并提出澄清，没有交付以错误对象计算出的最终答案；应记路由/检索未完成及不必要提问，criticalTargetError=false。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-baseline/review.json#interactions"
+        ]
+      },
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D20-explicit-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D20-explicit-spatial-only",
+    "transcriptHash": "1ebfd182a2a7e2b87cb421a63d5809d687942003ae2e9c90406188be012279ca",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": false,
+          "unnecessary": false,
+          "response": "none",
+          "evidence": []
+        },
+        "recommendation": "B",
+        "reason": "此处当前请求的预览/筛选已经完成，结尾是在询问是否另开未来保存或分析工作，没有把当前已授权任务挂起等待补充，也没有重复要求当前必要参数。按clarification语义接受asked=false/unnecessary=false；这不否认正文出现问句。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-spatial-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D20-explicit-spatial-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "D20-native-map-only",
+    "transcriptHash": "b875d6be904249095840970a1984bfd3fe38ad351a1b1080bb8006b327848af0",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": true,
+          "unnecessary": true,
+          "response": "cancelled",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/D20-native-map-only/review.json#interactions"
+          ]
+        },
+        "recommendation": "B",
+        "reason": "真实ask_user被driver标unexpected并执行清理取消；采用cancelled以反映实际链路终态，但不是用户做了取消选择，报告必须注明测试清理。当前请求确有不必要提问。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/D20-native-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/D20-native-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  },
+  {
+    "entryId": "H01-explicit-baseline",
+    "transcriptHash": "20276e4bd52e4a4f6f6a104a90a69beb771c9c8dd957d6db23226fa9828f2b3b",
+    "fields": {
+      "boundary": {
+        "value": {
+          "verdict": "pending",
+          "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+          "evidence": [
+            ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#final.messages",
+            ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#interactions"
+          ]
+        },
+        "recommendation": "new",
+        "reason": "本题不是预设交互边界题，boundary在冻结score中不参与严格结果；范围错误由core/claims/criticalTargetError处理，不扩大boundary定义。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#interactions"
+        ]
+      }
+    },
+    "notes": [
+      {
+        "kind": "instruction-coverage-gap",
+        "reason": "用户明确“只查询本会话地图”，实际额外situation_query违反只查询范围。冻结score仅对boundary题采用boundary，且这是查询范围限制而非未授权写入；不能通过强改boundary/unauthorizedEffect绕过既定公式。保留独立指令违规标签，注明评分公式未单独覆盖；本项本已因可见错误claims严格失败，无需修改公式或补测。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#prompts",
+          ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/H01-explicit-baseline/review.json#after"
+        ]
+      }
+    ]
+  },
+  {
+    "entryId": "H04-explicit-map-only",
+    "transcriptHash": "dfd21714899a24d823623620b6c3e2d65aac6c7479e63fc801879b803d0986d5",
+    "fields": {
+      "clarification": {
+        "value": {
+          "asked": false,
+          "unnecessary": false,
+          "response": "none",
+          "evidence": []
+        },
+        "recommendation": "B",
+        "reason": "此处当前请求的预览/筛选已经完成，结尾是在询问是否另开未来保存或分析工作，没有把当前已授权任务挂起等待补充，也没有重复要求当前必要参数。按clarification语义接受asked=false/unnecessary=false；这不否认正文出现问句。",
+        "evidence": [
+          ".local/spatial-r3/r3-20261022-01/H04-explicit-map-only/review.json#final.messages",
+          ".local/spatial-r3/r3-20261022-01/H04-explicit-map-only/review.json#interactions"
+        ]
+      }
+    },
+    "notes": []
+  }
+]

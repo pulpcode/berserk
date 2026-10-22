@@ -59,3 +59,20 @@ A natural case must make its intended data ownership discoverable from the actua
 Wrong: infer the imported path from whether the model happened to call an import tool, or declare the whole chain passed because its last work item is completed.
 
 Correct: inspect the actual import receipt and saved bytes; compare source geometry and statements independently; report task completion receipts and semantic quality as separate results.
+
+
+## R3 task-local live diagnostics
+
+**Scope / trigger.** The spatial task's `r3-20261022` runner compares frozen Skill bodies, using the existing HTTP/Pi runtime. It is a diagnostic runner, not a new product loop or proof of the 90% acceptance threshold.
+
+**Signatures.** From `experiments/harness-lab`, run `node --import tsx --env-file=<existing-config> ../../.trellis/tasks/10-15-agent-map-spatial/r3-20261022/live.ts run <new-absolute-.local/spatial-r3/batch> [port]`. `resume` requires the same frozen source, schedule and synthetic day, skips every previously started entry, and rejects incomplete accounting. Create the parent directory first. Configuration is read without copying or printing secrets; the runner fixes the reviewed model parameters independently of the current product default.
+
+**Contracts.** `runs.json` records planned entries and statuses; `attempts.json` and raw provider SSE establish actual requests and usage; `review.json` contains visible messages, tool evidence, interactions and before/after state. Preserve all original reviews and their hashes before adjudication. `recorded`, host `succeeded`, a successful tool and a model `stop` are not semantic passes. Compare exact frozen changed-body bytes in actual provider input: a selected original counterpart is not exposure to the candidate, and later loading cannot justify an earlier decision.
+
+**Validation / error matrix.** Numeric per-entry request/tool/time thresholds are warnings for this approved protocol. Check the plan budget and completion reserve before a new entry; allow a progressing current entry to finish, recording any overrun. A provider timeout, HTTP failure, missing usage or source drift retains the original failure and stops further paid requests rather than silently retrying. A single entry crossing midnight may finish with timestamps retained; stop before starting the next entry. Protocol and quota choices belong to the reviewed batch, not global product policy.
+
+**Good / base / bad cases.** Good: exact planned user responses use the real interaction API and retain observed pending, answer, skip, cancellation and cleanup separately. Base: an ordinary text question safely waits but never exercises the planned API path; report that coverage limit separately from wrong selection. Bad: count cleanup cancellation as a user choice, count a future-action offer after a completed task as blocking clarification, or claim an unloaded candidate caused a group score difference. An unrequested extra query can be an instruction-following issue even if the frozen scoring formula has no separate read-scope gate; disclose the gap without retroactively changing the formula.
+
+**Tests required.** `r3-20261022/live.test.ts` checks budget/cache accounting, more than 24 provider requests without numerical cutoff, failure retention without a second paid request, fresh HTTP runs and resume without repetition, actual answer/skip/cancel/unanswered paths, and a fixed-result save through a real version conflict. Run its scoped TypeScript check and repo-root ESLint. Keep model-quality review separate from these deterministic tests.
+
+**Wrong vs correct.** Wrong: compare differently worded/background historical trials as identical controls, or report group membership as evidence that changed instructions were used. Correct: check reuse eligibility against actual prompts/context/loading and retained evidence, report each body/loading condition separately, and add paired comparisons only for cases with verified candidate delivery. Agent reviews remain Agent reviews, not independent human calibration.

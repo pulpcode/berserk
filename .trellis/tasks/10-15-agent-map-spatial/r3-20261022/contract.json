@@ -1,9 +1,9 @@
 {
   "version": 3,
-  "status": "prepared-diagnostic-awaiting-model-budget-review",
+  "status": "live-authorized-launch-check-passed",
   "productAdopted": false,
-  "liveRunnerImplemented": false,
-  "liveModelAuthorized": false,
+  "liveRunnerImplemented": true,
+  "liveModelAuthorized": true,
   "liveModelCalls": 0,
   "automaticSecondRound": false,
   "automaticRetries": false,
@@ -30,20 +30,34 @@
     "maxOutputTokens": 4096,
     "contextWindow": 1000000
   },
-  "proposedBudgetNotEnforcedByPrepareOnly": {
-    "providerRequests": 900,
-    "inputTokens": 15000000,
-    "outputTokens": 200000,
-    "requestsPerSlot": 24,
-    "toolsPerSlot": 64,
-    "wallTimePerSlotMs": 600000,
-    "requestTimeoutMs": 60000
-  },
   "acceptance": {
     "formalStrictThreshold": 0.9,
     "formalHoldoutStrictThreshold": 0.9,
     "thisBatchIsFormalAcceptance": false,
     "candidateAdoption": "requires separate review; no automatic adoption"
   },
-  "historicalDisputes": "untouched; never rescore R1/R2 using R3 rules"
+  "historicalDisputes": "untouched; never rescore R1/R2 using R3 rules",
+  "budgetPolicy": {
+    "checkAt": "before-next-slot",
+    "perSlotLimits": "warnings-only-allow-normal-completion",
+    "completionReserve": {
+      "providerRequests": 48,
+      "inputTokens": 500000,
+      "outputTokens": 20000
+    },
+    "automaticRetry": false,
+    "automaticSecondRound": false,
+    "dateBoundary": "finish-active-slot-record-crossing-stop-before-next"
+  },
+  "authorizedPlanBudget": {
+    "providerRequests": 900,
+    "inputTokens": 15000000,
+    "outputTokens": 200000
+  },
+  "perSlotWarningLines": {
+    "requestsPerSlot": 24,
+    "toolsPerSlot": 64,
+    "wallTimePerSlotMs": 600000
+  },
+  "providerRequestTimeoutMs": 60000
 }
