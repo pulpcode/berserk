@@ -33,13 +33,15 @@
 - codex/ui-work
 - codex/work-inbox-overview-design
 
-main完成同步后删除上述本地分支及仍存在的两个远端旧分支codex/handoff-reliability、codex/ui-work。删除远端前再次核对实际提交，用预期提交约束删除，避免覆盖并行新工作。分支名称可删除，提交历史仍由main保留。
+main完成同步后，已删除上述本地分支及两个远端旧分支codex/handoff-reliability、codex/ui-work。删除远端前再次核对实际提交，用预期提交约束删除，避免覆盖并行新工作。分支名称可删除，提交历史仍由main保留。
 
 保留main、codex/agent-map-spatial、codex/map-basemaps及三个现有worktree；不删除本地.local原始证据或正在使用的工作目录。后续新任务从同步后的main新建codex/前缀分支和独立worktree；不反复使用已完成历史分支。
 
 ## 执行状态
 
 - 空间快照bab2291已推送；最终产品检查已完成。
-- 本记录提交后执行：main快进、同步远端、清理六本地/两远端历史分支。
-- 具体执行完成状态由后续Git记录和主会话汇报核实；本记录不预报尚未执行成功的动作。
+- main已从e7d56e8快进到51fa8bf并推送；底图a79f1ae已随空间分支完整进入main。
+- 六个本地及两个远端历史分支已清理，删除前再次验证提交归属与预期远端引用；没有强推现有分支历史。
+- main工作目录已用锁文件补齐52个依赖包（ignore-scripts），package.json/package-lock.json字节未变化；main目录再次typecheck通过。
+- 保留三个现有worktree和全部.local原始测评记录；本次管理完成记录也同步到main和空间分支。
 - 模型效果AC10仍未通过，整体90%门槛不变；保持任务进行中，不归档为功能验收完成。

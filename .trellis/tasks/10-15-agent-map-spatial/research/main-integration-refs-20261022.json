@@ -34,5 +34,14 @@
     "codex/map-basemaps"
   ],
   "allCleanupTipsAlreadyContainedInMainBeforeIntegration": true,
-  "restoreInstructions": "如需恢复已删除本地分支，可用 git branch <branch> <refs中记录的原提交>；提交历史仍由main保留。"
+  "restoreInstructions": "如需恢复已删除本地分支，可用 git branch <branch> <refs中记录的原提交>；提交历史仍由main保留。",
+  "cleanupCompleted": true,
+  "refsAfterCleanup": {
+    "refs/heads/codex/agent-map-spatial": "51fa8bf6a37030ed1861e318ed60dc0e0c6e6467",
+    "refs/heads/codex/map-basemaps": "a79f1aef08e789315827e91c3604ef6a66b1d67c",
+    "refs/heads/main": "51fa8bf6a37030ed1861e318ed60dc0e0c6e6467",
+    "refs/remotes/origin/codex/agent-map-spatial": "51fa8bf6a37030ed1861e318ed60dc0e0c6e6467",
+    "refs/remotes/origin/main": "51fa8bf6a37030ed1861e318ed60dc0e0c6e6467"
+  },
+  "worktreesAfterCleanup": "worktree /Users/lau/workspace/berserk\nHEAD 51fa8bf6a37030ed1861e318ed60dc0e0c6e6467\nbranch refs/heads/main\n\nworktree /Users/lau/.codex/worktrees/agent-map-spatial/berserk\nHEAD 51fa8bf6a37030ed1861e318ed60dc0e0c6e6467\nbranch refs/heads/codex/agent-map-spatial\n\nworktree /Users/lau/.codex/worktrees/map-basemaps/berserk\nHEAD a79f1aef08e789315827e91c3604ef6a66b1d67c\nbranch refs/heads/codex/map-basemaps\n\n"
 }

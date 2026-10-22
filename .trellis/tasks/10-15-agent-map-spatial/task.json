@@ -45,7 +45,7 @@
     "remediationReviewStatus": "next_round_pending_review",
     "remediationImplementationApproved": false,
     "remediationExperimentsApproved": false,
-    "executionHold": "获准R6后续12项已完成并审阅；没有授权追加/重试、采用候选或新的产品修改，等待用户审阅结果。",
+    "executionHold": "开发main集成与历史分支管理已完成。AC10仍未通过；没有授权追加模型测评、采用候选正文或部署。",
     "remediationPlanCommit": "21988f6",
     "remediationPhase": "main_merged_next_round_review_pending",
     "remediationOptionalModelApproved": false,
@@ -460,7 +460,7 @@
       "authorization": "用户批准按建议管理并合入开发main",
       "productCommit": "bab22915a8d0388ac05ffcbea214d8a6dad5947b",
       "mainBefore": "e7d56e8cb7d4e10b34c016bd5d37a2a7cd7e6aa8",
-      "status": "checks_passed_ready_to_integrate",
+      "status": "integrated_and_historical_branches_cleaned",
       "report": "research/main-integration-management-20261022.md",
       "unitPassed": 1119,
       "browserPassed": 38,
@@ -469,7 +469,14 @@
       "build": "pass",
       "newPaidModelCalls": 0,
       "formalAcceptancePassed": false,
-      "candidateSkillAdopted": false
+      "candidateSkillAdopted": false,
+      "integrationCommit": "51fa8bf6a37030ed1861e318ed60dc0e0c6e6467",
+      "mainPushed": true,
+      "localBranchesDeleted": 6,
+      "remoteBranchesDeleted": 2,
+      "worktreesPreserved": 3,
+      "mainDependenciesSynchronized": true,
+      "mainTypecheck": "pass"
     }
   }
 }
