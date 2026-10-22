@@ -1,0 +1,49 @@
+{
+  "version": 3,
+  "status": "prepared-diagnostic-awaiting-model-budget-review",
+  "productAdopted": false,
+  "liveRunnerImplemented": false,
+  "liveModelAuthorized": false,
+  "liveModelCalls": 0,
+  "automaticSecondRound": false,
+  "automaticRetries": false,
+  "groups": [
+    "baseline",
+    "map-only",
+    "spatial-only"
+  ],
+  "loadingModes": [
+    "explicit",
+    "native"
+  ],
+  "bodyOnly": true,
+  "catalogUnchanged": true,
+  "cases": {
+    "development": 20,
+    "holdout": 4,
+    "perGroupAndLoading": 24,
+    "proposedSlots": 144
+  },
+  "model": {
+    "id": "deepseek-v4-pro",
+    "thinking": "disabled",
+    "maxOutputTokens": 4096,
+    "contextWindow": 1000000
+  },
+  "proposedBudgetNotEnforcedByPrepareOnly": {
+    "providerRequests": 900,
+    "inputTokens": 15000000,
+    "outputTokens": 200000,
+    "requestsPerSlot": 24,
+    "toolsPerSlot": 64,
+    "wallTimePerSlotMs": 600000,
+    "requestTimeoutMs": 60000
+  },
+  "acceptance": {
+    "formalStrictThreshold": 0.9,
+    "formalHoldoutStrictThreshold": 0.9,
+    "thisBatchIsFormalAcceptance": false,
+    "candidateAdoption": "requires separate review; no automatic adoption"
+  },
+  "historicalDisputes": "untouched; never rescore R1/R2 using R3 rules"
+}
