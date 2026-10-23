@@ -1,0 +1,2243 @@
+[
+  {
+    "entryId": "T01-B",
+    "caseId": "T01",
+    "group": "B",
+    "category": "对象与范围",
+    "technical": "complete",
+    "transcriptHash": "421ef461269f6d065b9ada5255c8dc916ce9cbddd42e68cc1bc78eb0e51dd558",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "正确使用草稿region和resources，报告4个含边界成员；附加ready计数另判最终错误。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "fail",
+      "reason": "m5称“4个命中点中有3个状态ready”，但m4四个命中对象属性及m5自身表格均为ready，附加统计明确错误。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T01"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T01-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 1,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 2,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 3,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T02-B",
+    "caseId": "T02",
+    "group": "B",
+    "category": "对象与范围",
+    "technical": "complete",
+    "transcriptHash": "75bbd3772bf94a0539048aa02421296eba4a22b404f336396b03bb7ba56ac5b6",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实来源西区面与两个车辆资源点完成分类，报告西区资源点1个；区分对象数1与availableCount4。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[5]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[6]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages[6]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T02"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T02-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 4,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 4,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 5,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 6,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 7,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 8,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T03-B",
+    "caseId": "T03",
+    "group": "B",
+    "category": "对象与范围",
+    "technical": "complete",
+    "transcriptHash": "5fd2837d032b58e7437aa3254ffbaa976411017f3bdb25655d47e8d95eb0dcea",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "fail",
+      "reason": "未读草稿、不发现两个同名观察区，按任务关注查询来源西区并回答1个；未澄清或给两套条件答案。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "fail",
+      "reason": "m5把来源西区称为本会话观察区，未查两处同名草稿区域却回答1个；还用未测量的数百米余量代替明确边界核对。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T03"
+      ]
+    },
+    "boundary": {
+      "verdict": "fail",
+      "reason": "用任务来源西区替代未消歧的会话草稿观察区。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T03-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 9,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 10,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 11,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T04-B",
+    "caseId": "T04",
+    "group": "B",
+    "category": "对象与范围",
+    "technical": "complete",
+    "transcriptHash": "65678815ea8cf9bc0f0a389b0692697dd7bf4dbf96e7f8ba6bed2a2c50ee1456",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "在任务车辆/西区背景下，仍使用用户明确的草稿观察区，正确报告4个成员。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T04"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T04-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 12,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 13,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 14,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 15,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T05-B",
+    "caseId": "T05",
+    "group": "B",
+    "category": "基础测量",
+    "technical": "complete",
+    "transcriptHash": "12eee45cb9b806c52616c32078b5a22ed6cbcf0642afa0aacdbf4220afeca989",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "实际point-point测量1111.9508m，独立球面预期及最终舍入一致。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[3]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[4]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages[4]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T05"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T05-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 16,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 17,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 18,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T06-B",
+    "caseId": "T06",
+    "group": "B",
+    "category": "基础测量",
+    "technical": "complete",
+    "transcriptHash": "e903ba6d0bd4e890b8389e9a22dadcb8c1ea9767515aa3eff5808deecf923258",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "实际整条往返折线测量4447.8032m，没有用首尾重合距离0替代。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T06"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T06-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 19,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 20,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 21,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 22,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T07-B",
+    "caseId": "T07",
+    "group": "B",
+    "category": "基础测量",
+    "technical": "complete",
+    "transcriptHash": "2cfc79e7fded0e25cfb936debb59c93c2af8655254ab3412c2bd8fe9c354ac1f",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "实际面积4568936.0093m²，独立球面矩形公式及单位换算一致。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T07"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T07-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 23,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 24,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 25,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 26,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T08-B",
+    "caseId": "T08",
+    "group": "B",
+    "category": "基础测量",
+    "technical": "complete",
+    "transcriptHash": "30df449d52927bcc1803e747fecffb01dc17336ffb1fc87f00269ea6c8cf1e60",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "点到整条巡查线最短距离1111.9851m，在独立解析近似的2m容差内。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T08"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T08-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 27,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 28,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 29,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 30,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T09-B",
+    "caseId": "T09",
+    "group": "B",
+    "category": "关系与组合",
+    "technical": "complete",
+    "transcriptHash": "1f960d44d733f186547149b299b525a0ae407f66d65e35370ed05a0325c9891c",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "五个候选完整分类：内部r2/r3，边界r1/edge，外部outside，数量2/2/1。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T09"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T09-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 31,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 32,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 33,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 34,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T10-B",
+    "caseId": "T10",
+    "group": "B",
+    "category": "关系与组合",
+    "technical": "complete",
+    "transcriptHash": "e355c224ca979d89e22726a7e3863c13a26d71b5d41f3d2f5b8637cd6dbda049",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "候选严格resources五点，nearest前二r1/r2，距离约555.98/1224.85m正确。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[5]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[6]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages[6]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T10"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T10-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 35,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 36,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 37,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 38,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T11-B",
+    "caseId": "T11",
+    "group": "B",
+    "category": "关系与组合",
+    "technical": "complete",
+    "transcriptHash": "d2f61a4f48aba70db840e02ab35a9d3812a7195241afa3ae6fce8ef63a0c16f2",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "实际buffer1500m→固定geometry属性filter→summarize，boat命中r1共1个，未保存；候选说明另判最终错误。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[6]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[7]"
+      ]
+    },
+    "final": {
+      "verdict": "fail",
+      "reason": "m7称“在该范围内…候选点共5个”，把筛选前整个resources五点说成1500m范围内数量，实际范围内仅r1/r2两点。约3公里参照不清另记，不作为确定错误加项。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages[7]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T11"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T11-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 39,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 40,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 41,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 42,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 43,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 44,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": [
+      "原句约3公里未说明距离参照；距基点约4.54km、距1500m边界约3.04km，不以最不利解读另计确定错误。",
+      "终答asOf有spatial结果provenance原值支持，不因annotation_read仅显示createdAt就误判时间编造。"
+    ]
+  },
+  {
+    "entryId": "T12-B",
+    "caseId": "T12",
+    "group": "B",
+    "category": "关系与组合",
+    "technical": "complete",
+    "transcriptHash": "2ca0bcbcde6b73ffef6f7a051a41235bd124760a5f3352aa1a2e403955212353",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实relate intersects=false，与已读线和面纬度分离的几何一致。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T12"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T12-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 45,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 46,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 47,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 48,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": [
+      "约330m明确标注按纬度估算，依据已读0.003°差，数量合理；未冒充工具测距。"
+    ]
+  },
+  {
+    "entryId": "T13-B",
+    "caseId": "T13",
+    "group": "B",
+    "category": "数据完整性",
+    "technical": "complete",
+    "transcriptHash": "5fdd55d7e09bc3a67613bb5b3b912000ea126d311cc6922e81bd37da237dc9ef",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "最终58个名称和总数均与真值一致，按输出完成记pass；但实际漏读47—50，不是完整核实，最终证据性与分页覆盖另判失败。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "fail",
+      "reason": "m2全图第一页只包含应急01—46；m4改为图层筛选却继续offset50，取得51—58。47—50无读取证据，m5按序号补齐并当作完整清单；正确名称不证明完整核实。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T13"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T13-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 49,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 50,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 51,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": [
+      "输出完成不代表证据完整：actualReadNames54/58；若另统计完整核实达成，需排除此题。不得将本批输出口径替换成新的完整读数门槛而不说明。"
+    ]
+  },
+  {
+    "entryId": "T14-B",
+    "caseId": "T14",
+    "group": "B",
+    "category": "数据完整性",
+    "technical": "complete",
+    "transcriptHash": "87ed4152ac7231f1e55f9b6c4a408ca6d6872a0a3bbf4bba84c951250f5b1225",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "正确核对empty面，五点全外部，报告含边界0个；未把失败当空集。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[5]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[6]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages[6]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T14"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T14-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 52,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 53,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 54,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 55,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T15-B",
+    "caseId": "T15",
+    "group": "B",
+    "category": "数据完整性",
+    "technical": "complete",
+    "transcriptHash": "541d9a5a1f385cc07b13beb03bac9d100ad366814d25f7d14a785e98cf88243c",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实来源不可用后准确告知未获得结果，不把失败说成没有车辆资源。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T15"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T15-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 56,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 57,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 58,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T16-B",
+    "caseId": "T16",
+    "group": "B",
+    "category": "数据完整性",
+    "technical": "complete",
+    "transcriptHash": "ddefa49503eba48a2912fb5ced9ed9b0dd9e7331824a0451d6d520f54e500cda",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实缺几何错误及精确引用复核后说明不能给完整两项排序，不编造坐标或局部冒充总体。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[8]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[9]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages[9]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T16"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T16-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 59,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 60,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 61,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 62,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 63,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T17-B",
+    "caseId": "T17",
+    "group": "B",
+    "category": "版本与复用",
+    "technical": "complete",
+    "transcriptHash": "f4e6e5cb6cf6b61c43747a96a61cb9eb3c9c9066822465ec69e9e8cdae6cdf25",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "第二轮filter直接引用第一次1500m生成geometry，命中r1/r2共2个，未重生成。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[8]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[9]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages[9]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T17"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T17-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 64,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 65,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 66,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 67,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 68,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T18-B",
+    "caseId": "T18",
+    "group": "B",
+    "category": "版本与复用",
+    "technical": "complete",
+    "transcriptHash": "bdba7fa153addaa7d76e3ca78812c2dc1e71fcd3605678bf37752e673847fbc3",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "计算始终使用显式引用历史revision1，返回r1/r2及历史距离，未替换成最新revision3。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T18"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T18-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 69,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 70,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 71,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 72,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T19-B",
+    "caseId": "T19",
+    "group": "B",
+    "category": "版本与复用",
+    "technical": "complete",
+    "transcriptHash": "17e69b6277127a5480f5799efe76ef3b6e3ef3550d82cb2d5ee950566aff4023",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实来源availableCount4→1/revision1→2后重新过滤，比较命中1→0，读取原固定结果并保留旧值。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[11]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[10]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[11]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages[11]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T19"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T19-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 2,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 73,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 74,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 75,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 76,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 77,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 78,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": []
+  },
+  {
+    "entryId": "T20-B",
+    "caseId": "T20",
+    "group": "B",
+    "category": "版本与复用",
+    "technical": "complete",
+    "transcriptHash": "75b3aabace2fb960a63514c1a144134be72263e15a2024f5249904316df96482",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "先生成500m再1500m，第三轮正确引用第一结果geometry，命中0，不使用第二个或重生成。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[11]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[10]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[11]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages[11]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "只读状态完全不变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T20"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T20-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 79,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 80,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 81,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 82,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 83,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 84,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 85,
+        "turn": 2,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 86,
+        "turn": 2,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": [
+      "末段“未落在范围边界上或在范围外”有语病，结合明确0命中/contains口径，不扩张为确定的相反事实；保留措辞质量问题。"
+    ]
+  },
+  {
+    "entryId": "T21-B",
+    "caseId": "T21",
+    "group": "B",
+    "category": "保存与状态",
+    "technical": "complete",
+    "transcriptHash": "adbc7e5a0e50138667b532cd429281a746aedf8680cb4a30395588a92ac02ada",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "将首个500m预览逐坐标原样保存一次到derived，名称临时范围，其他内容和当前状态保留。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[11]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[10]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[11]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages[11]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "将首个500m预览逐坐标原样保存一次到derived，名称临时范围，其他内容和当前状态保留。独立前后状态检查通过。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T21"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T21-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 4,
+        "skill": "spatial-analysis",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 87,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 88,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 89,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 90,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 91,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 92,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 93,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 94,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": [
+      "“只存在本会话草稿中”承接未发布/未采用，未明确否认历史分析记录，不按存储体系断言误判。"
+    ]
+  },
+  {
+    "entryId": "T22-B",
+    "caseId": "T22",
+    "group": "B",
+    "category": "保存与状态",
+    "technical": "complete",
+    "transcriptHash": "eb47f69d6ac033af449be1268f02b5c717a49b6223e81a2b040ba3ffdd3f3b6c",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实草稿冲突后读取revision2，再保存首个500m预览到revision3，保留外部note，没有覆盖或重复写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[13]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[15]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[11]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[12]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[14]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[13]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[15]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[13]",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages[15]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "真实草稿冲突后读取revision2，再保存首个500m预览到revision3，保留外部note，没有覆盖或重复写入。独立前后状态检查通过。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T22"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T22-B/review.json#after"
+      ]
+    },
+    "skillReads": [
+      {
+        "messageIndex": 3,
+        "skill": "spatial-analysis",
+        "success": true
+      },
+      {
+        "messageIndex": 11,
+        "skill": "map-annotations",
+        "success": true
+      }
+    ],
+    "bodyExposure": [
+      {
+        "request": 95,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 96,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 97,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 98,
+        "turn": 0,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 99,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 100,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 101,
+        "turn": 1,
+        "skills": [
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 102,
+        "turn": 1,
+        "skills": [
+          "map-annotations",
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 103,
+        "turn": 1,
+        "skills": [
+          "map-annotations",
+          "spatial-analysis"
+        ]
+      },
+      {
+        "request": 104,
+        "turn": 1,
+        "skills": [
+          "map-annotations",
+          "spatial-analysis"
+        ]
+      }
+    ],
+    "notes": [
+      "map-annotations只在冲突后m11读取，后续provider102实际送达；这不证明保存前主动发现。"
+    ]
+  },
+  {
+    "entryId": "T23-B",
+    "caseId": "T23",
+    "group": "B",
+    "category": "保存与状态",
+    "technical": "complete",
+    "transcriptHash": "8d6945a60edac736e8c6fcce078c6d0f52482067c03abe9d20e0c57ac8ba0411",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "先恢复READ_REQUIRED，再遇真实提交后回执丢失；按原clientActionId查询实际receipt，唯一正确保存。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[12]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[7]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[8]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[9]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[11]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[12]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[4]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[6]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[10]",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages[12]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "先恢复READ_REQUIRED，再遇真实提交后回执丢失；按原clientActionId查询实际receipt，唯一正确保存。独立前后状态检查通过。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T23"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T23-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 105,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 106,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 107,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 108,
+        "turn": 1,
+        "skills": []
+      },
+      {
+        "request": 109,
+        "turn": 1,
+        "skills": []
+      },
+      {
+        "request": 110,
+        "turn": 1,
+        "skills": []
+      },
+      {
+        "request": 111,
+        "turn": 1,
+        "skills": []
+      },
+      {
+        "request": 112,
+        "turn": 1,
+        "skills": []
+      }
+    ],
+    "notes": [
+      "未读取Skill，按真实工具错误与原回执完成恢复；纠正同一任务内工具调用不算重跑评测。"
+    ]
+  },
+  {
+    "entryId": "T24-B",
+    "caseId": "T24",
+    "group": "B",
+    "category": "保存与状态",
+    "technical": "complete",
+    "transcriptHash": "088cdd6bd2863b1a469dad460beac185eb40054f86071ae1f79e760cdc0a29a2",
+    "reviewMode": "primary_agent_full_visible_review_plus_independent_agent_cross_check_not_human_blind_review",
+    "core": {
+      "verdict": "pass",
+      "reason": "真实发布指定revision1且标题正确，数据库来源版本一致，草稿和task current均未改变。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[5]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[2]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[4]"
+      ]
+    },
+    "process": {
+      "verdict": "pass",
+      "reason": "已核查全部可见过程说明；未发现明确过程事实误述。计划表述和事后完成事实分别判断；最终答案错误单列。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[5]"
+      ]
+    },
+    "final": {
+      "verdict": "pass",
+      "reason": "最终及各用户回合完成答复与实际对象、结果、方法、版本和操作证据一致；含糊措辞按完整上下文理解。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[1]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[3]",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages[5]"
+      ]
+    },
+    "effects": {
+      "verdict": "pass",
+      "reason": "真实发布指定revision1且标题正确，数据库来源版本一致，草稿和task current均未改变。独立前后状态检查通过。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#fixture.before",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#after",
+        "research/r10-state-audit-20261023.json#T24"
+      ]
+    },
+    "boundary": {
+      "verdict": "pass",
+      "reason": "实际完成的查询/计算/写入保留指定来源、候选、身份和版本；无越权或错误写入。",
+      "evidence": [
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#final.messages",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#fixture",
+        ".local/spatial-r10/batch-20261023/T24-B/review.json#after"
+      ]
+    },
+    "skillReads": [],
+    "bodyExposure": [
+      {
+        "request": 113,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 114,
+        "turn": 0,
+        "skills": []
+      },
+      {
+        "request": 115,
+        "turn": 0,
+        "skills": []
+      }
+    ],
+    "notes": []
+  }
+]

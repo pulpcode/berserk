@@ -604,5 +604,46 @@
     },
     "anySkillRead": "5/9",
     "report": "research/r9-results-20261023.md"
+  },
+  "resultGroundingR10": {
+    "status": "completed_pending_review",
+    "authorizedSlots": 24,
+    "repeats": 1,
+    "group": "B",
+    "loading": "native",
+    "candidateCommit": "c95b3d3",
+    "previousResultsCommit": "8da9d3e",
+    "automaticRetries": false,
+    "additionalTrialsApproved": false,
+    "productChangesApproved": false,
+    "record": "research/r10-authorization-20261023.md",
+    "offlineIntegrationPassed": 1,
+    "offlineSessions": 24,
+    "offlineSimulatedRequests": 70,
+    "offlineScoringTestsPassed": 6,
+    "typecheck": "pass",
+    "lint": "pass",
+    "batch": ".local/spatial-r10/batch-20261023",
+    "executed": 24,
+    "technicalInterruptions": 0,
+    "requests": 115,
+    "inputTokens": 2139010,
+    "outputTokens": 19251,
+    "core": "23/24",
+    "strict": "20/24",
+    "anySkillRead": "13/24",
+    "successfulSkillReadCalls": 14,
+    "primaryTaskFailures": [
+      "T03"
+    ],
+    "strictFailures": [
+      "T01",
+      "T03",
+      "T11",
+      "T13"
+    ],
+    "report": "research/r10-results-20261023.md",
+    "formalAcceptancePassed": false,
+    "completeReadCoverageT13": false
   }
 }
