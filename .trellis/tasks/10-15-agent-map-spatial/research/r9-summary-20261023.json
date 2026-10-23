@@ -1,0 +1,173 @@
+{
+  "groups": {
+    "B": {
+      "planned": 9,
+      "reviewed": 9,
+      "notReviewed": 0,
+      "corePass": 8,
+      "processFail": 0,
+      "finalFail": 1,
+      "strictPass": 8,
+      "strictFail": 1,
+      "pending": 0,
+      "incomplete": 0,
+      "strictRate": 0.8888888888888888,
+      "anySkillRead": 5
+    }
+  },
+  "cases": {
+    "D17": [
+      {
+        "entryId": "D17-R1-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 1,
+        "skillReads": [
+          {
+            "messageIndex": 2,
+            "skill": "spatial-analysis",
+            "success": true
+          }
+        ]
+      },
+      {
+        "entryId": "D17-R2-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 2,
+        "skillReads": [
+          {
+            "messageIndex": 2,
+            "skill": "spatial-analysis",
+            "success": true
+          }
+        ]
+      },
+      {
+        "entryId": "D17-R3-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "fail",
+        "process": "pass",
+        "final": "fail",
+        "effects": "pass",
+        "boundary": "fail",
+        "strict": "fail",
+        "round": 3,
+        "skillReads": [
+          {
+            "messageIndex": 5,
+            "skill": "spatial-analysis",
+            "success": true
+          }
+        ]
+      }
+    ],
+    "D02": [
+      {
+        "entryId": "D02-R1-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 1,
+        "skillReads": [
+          {
+            "messageIndex": 2,
+            "skill": "spatial-analysis",
+            "success": true
+          }
+        ]
+      },
+      {
+        "entryId": "D02-R2-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 2,
+        "skillReads": []
+      },
+      {
+        "entryId": "D02-R3-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 3,
+        "skillReads": [
+          {
+            "messageIndex": 3,
+            "skill": "spatial-analysis",
+            "success": true
+          }
+        ]
+      }
+    ],
+    "D23": [
+      {
+        "entryId": "D23-R1-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 1,
+        "skillReads": []
+      },
+      {
+        "entryId": "D23-R2-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 2,
+        "skillReads": []
+      },
+      {
+        "entryId": "D23-R3-B",
+        "group": "B",
+        "technical": "complete",
+        "core": "pass",
+        "process": "pass",
+        "final": "pass",
+        "effects": "pass",
+        "boundary": "pass",
+        "strict": "pass",
+        "round": 3,
+        "skillReads": []
+      }
+    ]
+  }
+}

@@ -574,5 +574,35 @@
       "A": "3/6",
       "B": "4/6"
     }
+  },
+  "resultGroundingR9": {
+    "authorizedSlots": 9,
+    "cases": [
+      "D17",
+      "D02",
+      "D23"
+    ],
+    "repeats": 3,
+    "group": "B",
+    "loading": "native",
+    "candidateCommit": "c95b3d3",
+    "previousResultsCommit": "18a5f96",
+    "status": "completed_pending_review",
+    "additionalTrialsApproved": false,
+    "automaticRetries": false,
+    "record": "research/r9-authorization-20261023.md",
+    "executed": 9,
+    "requests": 31,
+    "inputTokens": 565344,
+    "outputTokens": 5512,
+    "core": "8/9",
+    "strict": "8/9",
+    "byCase": {
+      "D17": "2/3",
+      "D02": "3/3",
+      "D23": "3/3"
+    },
+    "anySkillRead": "5/9",
+    "report": "research/r9-results-20261023.md"
   }
 }
