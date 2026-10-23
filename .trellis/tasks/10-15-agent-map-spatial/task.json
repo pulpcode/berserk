@@ -495,7 +495,21 @@
       "additionalRoundApproved": false,
       "onlineVerifierApproved": false,
       "modelCalls": 0,
-      "formalAcceptanceThreshold": 0.9
+      "formalAcceptanceThreshold": 0.9,
+      "planCommit": "6a8ba1c",
+      "evaluationProviderConfiguration": {
+        "date": "2026-10-23",
+        "provider": "volcengine-agent-plan",
+        "model": "deepseek-v4.1-flash",
+        "baseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3",
+        "localEnv": "experiments/harness-lab/.env.local",
+        "report": "research/ark-agent-plan-config-20261023.md",
+        "status": "local_config_prepared_key_pending",
+        "historicalRunnersModified": false,
+        "newRunnerAdapted": false,
+        "liveCalls": 0,
+        "productionChanged": false
+      }
     }
   }
 }
