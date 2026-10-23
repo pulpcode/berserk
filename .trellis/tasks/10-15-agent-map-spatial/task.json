@@ -543,5 +543,36 @@
     },
     "formalAcceptancePassed": false,
     "report": "research/r7-results-20261023.md"
+  },
+  "resultGroundingR8": {
+    "date": "2026-10-23",
+    "authorizedSlots": 12,
+    "loading": "native",
+    "productCommit": "c95b3d3",
+    "baseline": "af13107",
+    "groups": [
+      "A",
+      "B"
+    ],
+    "retriesApproved": false,
+    "additionalTrialsApproved": false,
+    "status": "completed_pending_review",
+    "report": "research/r8-results-20261023.md",
+    "executed": 12,
+    "requests": 54,
+    "inputTokens": 1007432,
+    "outputTokens": 8346,
+    "strict": {
+      "A": "5/6",
+      "B": "5/6"
+    },
+    "core": {
+      "A": "6/6",
+      "B": "5/6"
+    },
+    "anySkillRead": {
+      "A": "3/6",
+      "B": "4/6"
+    }
   }
 }
