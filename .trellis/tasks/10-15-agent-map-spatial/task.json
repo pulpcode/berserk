@@ -668,7 +668,7 @@
     ],
     "review": "r11-20261023/calibration-review.md",
     "executionAllowed": false,
-    "executionHoldReason": "2026-10-24用户要求仅更新方案并提交Git，暂不实施或测评",
+    "executionHoldReason": "2026-10-24用户要求保留预加载对照、调整分组预算并落盘，先不要执行",
     "changeProposal": "r11-20261023/next-change-proposal.md",
     "businessPolicyApproval": {
       "confirmed": true,
@@ -676,8 +676,72 @@
       "policy": "草稿点可按用户指定参与空间分析，但不自动视为真实可用资源；来源无法唯一确定且会影响答案时，澄清或分别说明。",
       "scope": "仅核心业务口径；细化规则、实施、评分标签和测评安排未批准"
     },
-    "proposedTaskTrials": 32,
-    "proposedJudgeRequests": 56,
-    "changeProposalApproved": false
+    "proposedTaskTrials": 64,
+    "proposedJudgeRequests": 88,
+    "changeProposalApproved": false,
+    "comparisonDirectionConfirmed": "同时验证Skill修改效果与加载问题，保留预加载对照",
+    "proposedComparisonGroups": [
+      "S0-N",
+      "S1-N",
+      "S0-P",
+      "S1-P"
+    ],
+    "proposedDesign": {
+      "tasks": 8,
+      "skillVersions": 2,
+      "loadingModes": 2,
+      "repetitions": 2,
+      "businessTrials": 48,
+      "unrelatedTrials": 16,
+      "supersedesUnexecutedTrials": [
+        32,
+        48
+      ],
+      "noSkillGroupIncluded": false
+    },
+    "proposedBudget": {
+      "status": "awaiting_review_not_authorized_for_execution",
+      "calibrationRequests": 24,
+      "trialJudgeRequests": 64,
+      "judgeRequestLimit": 88,
+      "estimatedAgentRequests": [
+        320,
+        480
+      ],
+      "estimatedTotalRequests": [
+        408,
+        568
+      ],
+      "estimatedInputTokens": [
+        6000000,
+        12000000
+      ],
+      "estimatedOutputTokens": [
+        100000,
+        200000
+      ],
+      "startupGuard": {
+        "requests": 720,
+        "inputTokens": 16000000,
+        "outputTokens": 400000
+      },
+      "judgeReserve": {
+        "requests": 88,
+        "inputTokens": 3000000,
+        "outputTokens": 160000
+      },
+      "agentAvailable": {
+        "requests": 632,
+        "inputTokens": 13000000,
+        "outputTokens": 240000
+      },
+      "newAgentTaskReserve": {
+        "requests": 36,
+        "inputTokens": 500000,
+        "outputTokens": 16000
+      },
+      "automaticAdditionalTrials": false,
+      "automaticRetries": false
+    }
   }
 }
