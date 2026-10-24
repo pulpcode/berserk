@@ -645,5 +645,39 @@
     "report": "research/r10-results-20261023.md",
     "formalAcceptancePassed": false,
     "completeReadCoverageT13": false
+  },
+  "resultGroundingR11": {
+    "plan": "current-improvement-plan.md",
+    "planCommit": "a4b065e",
+    "authorization": "用户：开始本阶段",
+    "status": "awaiting_change_proposal_review",
+    "humanCalibrationConfirmed": false,
+    "newProviderRequests": 0,
+    "plannedTaskTrials": 48,
+    "plannedJudgeRequests": 72,
+    "automaticRetries": false,
+    "progress": "r11-20261023/README.md",
+    "calibrationRecords": 24,
+    "developmentRecords": 16,
+    "validationRecords": 8,
+    "humanConfirmedRecords": 0,
+    "calibrationMaterialCheck": "passed",
+    "knownGaps": [
+      "development_only_one_disputed_negative",
+      "validation_eight_claims_from_five_traces_three_families"
+    ],
+    "review": "r11-20261023/calibration-review.md",
+    "executionAllowed": false,
+    "executionHoldReason": "2026-10-24用户要求仅更新方案并提交Git，暂不实施或测评",
+    "changeProposal": "r11-20261023/next-change-proposal.md",
+    "businessPolicyApproval": {
+      "confirmed": true,
+      "date": "2026-10-24",
+      "policy": "草稿点可按用户指定参与空间分析，但不自动视为真实可用资源；来源无法唯一确定且会影响答案时，澄清或分别说明。",
+      "scope": "仅核心业务口径；细化规则、实施、评分标签和测评安排未批准"
+    },
+    "proposedTaskTrials": 32,
+    "proposedJudgeRequests": 56,
+    "changeProposalApproved": false
   }
 }
