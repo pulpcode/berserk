@@ -1,0 +1,31 @@
+{
+  "status": "replacement_candidate_not_human_confirmed",
+  "evidence": [
+    {
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J04-baseline/native-sessions/2026-10-18T03-24-32-944Z_01a14d0a-252f-754f-a95c-7e1482e3fb46.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/R2-J04-baseline/2026-10-18T03-24-32-944Z_01a14d0a-252f-754f-a95c-7e1482e3fb46.jsonl",
+      "sha256": "85ce1ec220191da1d2e9986424520c88546a303d1d9bf5b5f39324bb4bae7fda",
+      "byteIdentical": true
+    },
+    {
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J04-baseline/final-state.json",
+      "copy": ".local/spatial-r11/historical-evidence/R2-J04-baseline/final-state.json",
+      "sha256": "fd9172fa92198f17a2c27d08b20a49632a99727f74e69356829ae5eec1d3d08d",
+      "byteIdentical": true
+    },
+    {
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J04-baseline/fixture.json",
+      "copy": ".local/spatial-r11/historical-evidence/R2-J04-baseline/fixture.json",
+      "sha256": "1e57d5eb2de79e3fa67bf2d018761a0417f35efee564ff48bd3102c611d99ffc",
+      "byteIdentical": true
+    },
+    {
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J04-baseline/provider-0042-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/R2-J04-baseline/provider-0042-input.json",
+      "sha256": "6023fdcc50dc8c696bdea61b9e337ec8f65ee467e46626d8bdcd5f572086a115",
+      "byteIdentical": true
+    }
+  ],
+  "stateProjection": "Use final-state.json.after directly via existing expected_state; no synthesized review.json. Historical fixture.truth and grades are not in the judge input.",
+  "rubricSha256AtSelection": "89cc99b933ad4e481e1db9b567f2def276e8ac3585efb9db5dc8cc2765aa6dad"
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "reason": "R3 region-membership original evidence for C28; original worktree remains read-only. Copies are ignored local audit evidence, not changed history.",
+  "records": [
+    {
+      "originalPath": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D17-explicit-baseline/native-sessions/2026-10-22T04-25-04-443Z_01a161da-febb-7234-ba0b-73e870eee105.jsonl",
+      "copiedPath": ".local/spatial-r11/historical-evidence/R3-D17-explicit-baseline/native-sessions/2026-10-22T04-25-04-443Z_01a161da-febb-7234-ba0b-73e870eee105.jsonl",
+      "sha256": "2c12cd9cb410a6f01abb8a79e426ddb9fb4c0e4abbf232ae14c96292c9f562e6",
+      "copyMode": "byte_identical_readonly_source"
+    },
+    {
+      "originalPath": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D17-explicit-baseline/review.json",
+      "copiedPath": ".local/spatial-r11/historical-evidence/R3-D17-explicit-baseline/review.json",
+      "sha256": "3bad0f46e6265a78249877be245e925cd5aefb479d4a25f20f405848c141efd6",
+      "copyMode": "byte_identical_readonly_source"
+    }
+  ]
+}

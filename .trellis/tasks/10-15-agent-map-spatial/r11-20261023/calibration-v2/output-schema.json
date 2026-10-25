@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "R11 grounded claim or task judgment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "unit",
+    "verdict",
+    "severity",
+    "axes",
+    "clarity",
+    "reason",
+    "evidence"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unit": {
+      "enum": [
+        "claim",
+        "task"
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "pass",
+        "fail",
+        "pending"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "none",
+        "material",
+        "critical"
+      ]
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completion",
+        "evidence",
+        "processFacts",
+        "finalFacts",
+        "effects",
+        "boundaries",
+        "coverage"
+      ],
+      "properties": {
+        "completion": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "evidence": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "processFacts": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "finalFacts": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "effects": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "boundaries": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        },
+        "coverage": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "pending",
+            "na"
+          ]
+        }
+      }
+    },
+    "clarity": {
+      "enum": [
+        "clear",
+        "awkward",
+        "ambiguous",
+        "pending"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sourceLine",
+          "quote",
+          "interpretation"
+        ],
+        "properties": {
+          "sourceLine": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "interpretation": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

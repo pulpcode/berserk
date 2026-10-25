@@ -1,0 +1,133 @@
+{
+  "recordedAt": "2026-10-24T18:19:15+08:00",
+  "scope": "read_only_material_and_launch_gate_checks_after_complete_family_audit",
+  "checks": {
+    "--materials-only": {
+      "exitCode": 0,
+      "result": {
+        "ready": false,
+        "errors": [],
+        "readinessErrors": [
+          "New-judge exposure audit is not frozen: prior product review alone does not disqualify data, but examples used to tune this judge cannot remain validation.",
+          "C25: human verdict pending; validation currently has 4 pass / 3 fail / 1 pending. A clear replacement requires separate human confirmation.",
+          "C05/C06: their T13 trace was explicitly used to define the current judge evidence-support rule; human labels remain valid but they cannot count as independent validation. Replace the trace without weakening the gate.",
+          "Region family: C17 was used to define the current judge rule against hidden business-premise assumptions. Under the approved family isolation rule, all region-membership validation claims are ineligible, including C28/C29 despite no individual tuning. Independent validation needs a new eligible 8-claim set.",
+          "C01: validation exposure audit not frozen eligible",
+          "C02: validation exposure audit not frozen eligible",
+          "C05: validation exposure audit not frozen eligible",
+          "C06: validation exposure audit not frozen eligible",
+          "C18: validation exposure audit not frozen eligible",
+          "C25: validation exposure audit not frozen eligible",
+          "C26: validation exposure audit not frozen eligible",
+          "C28: validation exposure audit not frozen eligible",
+          "C25: human label blank or pending",
+          "Human validation labels must be 4 pass / 4 fail, got {'fail': 3, 'pass': 4, 'pending': 1}"
+        ],
+        "bindings": {
+          "manifestSha256": "c78b0997c0a0a7665d38a18468492cb01e2d737edd4d9a94aa2b0d2706d8fb54",
+          "inputsSha256": "3d6b605d6dec2943f4e9120bee4279c4d90caf06baa487e1917f1fd04006ae87",
+          "humanLabelsSha256": "429094e6be0a2f294387f48103fb8efaee52ad2c0e4d2c1c6e37d1e2a9e74077",
+          "rubricSha256": "89cc99b933ad4e481e1db9b567f2def276e8ac3585efb9db5dc8cc2765aa6dad",
+          "outputSchemaSha256": "7317f45d7764b34ea4845d7b31d080b47afe3ae43b49ba8a8c6e3a56cc32f2c1",
+          "judgeConfigSha256": "e623bdcd719000f88a8a10b9e294c7e4946bb82884a5b699ed1233b76a6cc2c9"
+        },
+        "summary": {
+          "candidates": 29,
+          "development": 16,
+          "validation": 8,
+          "discussion": 5,
+          "humanConfirmed": 23,
+          "validationFamilies": 2,
+          "validationTraces": 5,
+          "validationSuggested": {
+            "fail": 3,
+            "pass": 4,
+            "pending": 1
+          },
+          "providerRequestsByGate": 0,
+          "integrity": "pass"
+        }
+      }
+    },
+    "--verify-labels": {
+      "exitCode": 1,
+      "result": {
+        "ready": false,
+        "errors": [
+          "New-judge exposure audit is not frozen: prior product review alone does not disqualify data, but examples used to tune this judge cannot remain validation.",
+          "C25: human verdict pending; validation currently has 4 pass / 3 fail / 1 pending. A clear replacement requires separate human confirmation.",
+          "C05/C06: their T13 trace was explicitly used to define the current judge evidence-support rule; human labels remain valid but they cannot count as independent validation. Replace the trace without weakening the gate.",
+          "Region family: C17 was used to define the current judge rule against hidden business-premise assumptions. Under the approved family isolation rule, all region-membership validation claims are ineligible, including C28/C29 despite no individual tuning. Independent validation needs a new eligible 8-claim set.",
+          "C01: validation exposure audit not frozen eligible",
+          "C02: validation exposure audit not frozen eligible",
+          "C05: validation exposure audit not frozen eligible",
+          "C06: validation exposure audit not frozen eligible",
+          "C18: validation exposure audit not frozen eligible",
+          "C25: validation exposure audit not frozen eligible",
+          "C26: validation exposure audit not frozen eligible",
+          "C28: validation exposure audit not frozen eligible",
+          "C25: human label blank or pending",
+          "Human validation labels must be 4 pass / 4 fail, got {'fail': 3, 'pass': 4, 'pending': 1}"
+        ],
+        "readinessErrors": [
+          "New-judge exposure audit is not frozen: prior product review alone does not disqualify data, but examples used to tune this judge cannot remain validation.",
+          "C25: human verdict pending; validation currently has 4 pass / 3 fail / 1 pending. A clear replacement requires separate human confirmation.",
+          "C05/C06: their T13 trace was explicitly used to define the current judge evidence-support rule; human labels remain valid but they cannot count as independent validation. Replace the trace without weakening the gate.",
+          "Region family: C17 was used to define the current judge rule against hidden business-premise assumptions. Under the approved family isolation rule, all region-membership validation claims are ineligible, including C28/C29 despite no individual tuning. Independent validation needs a new eligible 8-claim set.",
+          "C01: validation exposure audit not frozen eligible",
+          "C02: validation exposure audit not frozen eligible",
+          "C05: validation exposure audit not frozen eligible",
+          "C06: validation exposure audit not frozen eligible",
+          "C18: validation exposure audit not frozen eligible",
+          "C25: validation exposure audit not frozen eligible",
+          "C26: validation exposure audit not frozen eligible",
+          "C28: validation exposure audit not frozen eligible",
+          "C25: human label blank or pending",
+          "Human validation labels must be 4 pass / 4 fail, got {'fail': 3, 'pass': 4, 'pending': 1}"
+        ],
+        "bindings": {
+          "manifestSha256": "c78b0997c0a0a7665d38a18468492cb01e2d737edd4d9a94aa2b0d2706d8fb54",
+          "inputsSha256": "3d6b605d6dec2943f4e9120bee4279c4d90caf06baa487e1917f1fd04006ae87",
+          "humanLabelsSha256": "429094e6be0a2f294387f48103fb8efaee52ad2c0e4d2c1c6e37d1e2a9e74077",
+          "rubricSha256": "89cc99b933ad4e481e1db9b567f2def276e8ac3585efb9db5dc8cc2765aa6dad",
+          "outputSchemaSha256": "7317f45d7764b34ea4845d7b31d080b47afe3ae43b49ba8a8c6e3a56cc32f2c1",
+          "judgeConfigSha256": "e623bdcd719000f88a8a10b9e294c7e4946bb82884a5b699ed1233b76a6cc2c9"
+        },
+        "summary": {
+          "candidates": 29,
+          "development": 16,
+          "validation": 8,
+          "discussion": 5,
+          "humanConfirmed": 23,
+          "validationFamilies": 2,
+          "validationTraces": 5,
+          "validationSuggested": {
+            "fail": 3,
+            "pass": 4,
+            "pending": 1
+          },
+          "providerRequestsByGate": 0
+        }
+      }
+    }
+  },
+  "pythonTests": {
+    "count": 19,
+    "status": "passed",
+    "realProviderRequests": 0
+  },
+  "newCandidateEvidenceChecks": {
+    "realCandidates": 5,
+    "byteIdenticalSourceCopies": 15,
+    "status": "passed",
+    "selected": false,
+    "humanConfirmed": 0
+  },
+  "constructedProposals": {
+    "count": 3,
+    "implemented": false,
+    "actualModelRequests": 0
+  },
+  "realProviderRequests": 0,
+  "meaning": "Integrity passes; launch intentionally remains blocked by pending label and ineligible validation families. This is not a model evaluation result."
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "one_bounded_read_only_scan_J12",
+  "traces": [
+    "spatial-round1/live-20261017-r1-02/J12-1-FB",
+    "spatial-round1/live-20261017-r1-02/J12-1-FC",
+    "spatial-round1/live-20261017-r1-02/J12-1-PC",
+    "spatial-round1/supplement-20261018-live-01/J12-1-FC",
+    "spatial-round1/supplement-20261018-live-01/J12-1-PB",
+    "spatial-r2/live-20261018-r2-01/J12-baseline",
+    "spatial-r2/live-20261018-r2-01/J12-map-only",
+    "spatial-r2/live-20261018-r2-01/J12-spatial-only",
+    "spatial-r3/r3-20261022-01/D19-explicit-baseline",
+    "spatial-r3/r3-20261022-01/D19-explicit-map-only",
+    "spatial-r3/r3-20261022-01/D19-explicit-spatial-only",
+    "spatial-r3/r3-20261022-01/D19-native-baseline",
+    "spatial-r3/r3-20261022-01/D19-native-map-only",
+    "spatial-r3/r3-20261022-01/D19-native-spatial-only"
+  ],
+  "count": 14,
+  "clearIncorrectClaimsFromDistinctTraces": 1,
+  "clearCorrectCandidatesSelected": 4,
+  "missingRealNegativeTraces": 3,
+  "providerRequests": 0,
+  "notes": [
+    "首次J12-1-FC中断，不当作事实失败。",
+    "D19-native-map-only存在范围失败，但其全草稿11点/缺字段7点说法真实，不冒充事实负例。",
+    "同一次回答的多个错误未拆分凑独立负例。"
+  ]
+}
