@@ -116,14 +116,17 @@
 .annotation-marker>.annotation-symbol { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
 .annotation-marker>.annotation-label { position:absolute; left:50%; transform:translateX(-50%); }
 
-/* Object editing keeps actions outside the scrollable field list. */
-.annotation-tools-dock.has-object-editor { display:flex; flex-direction:column; overflow:hidden; padding-bottom:8px; }
+/* Object editing floats over the retained full-size map; only its card catches pointers. */
+.annotation-main.object-editor-open { display:block; }
+.annotation-tools-dock.has-object-editor { position:absolute; top:var(--annotation-panel-top); right:12px; z-index:7; display:flex; flex-direction:column; width:min(340px,calc(100% - 24px)); max-height:calc(100% - var(--annotation-panel-top) - 116px); overflow:hidden; padding:12px; border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 28px #182e2426; }
 .annotation-tools-dock.has-object-editor>.annotation-panel-heading,
 .annotation-tools-dock .annotation-editor-toolbar[hidden] { display:none; }
-.annotation-tools-dock.has-object-editor .annotation-editor-panel { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel { display:flex; flex-direction:column; flex:0 1 auto; min-height:0; overflow:hidden; }
 .annotation-tools-dock.has-object-editor .annotation-editor-panel[hidden] { display:none; }
-.annotation-feature-form { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
-.annotation-feature-fields { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:0 4px 8px !important; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel>.annotation-panel-heading { flex:none; }
+.annotation-feature-form { display:flex; flex-direction:column; flex:0 1 auto; min-height:0; overflow:clip; }
+/* A regular block owns scrolling; fieldset anonymous boxes do not reliably scroll in flex. */
+.annotation-feature-fields { flex:0 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:0 4px 8px; }
 .annotation-feature-footer { flex:none; border-top:1px solid var(--line) !important; padding:6px 4px 0 !important; background:var(--surface,#fff); }
 .annotation-feature-footer .annotation-actions { margin:4px 0; }
 .annotation-feature-footer .annotation-actions button:first-child { color:var(--surface,#fff); background:var(--accent); border-color:var(--accent); }

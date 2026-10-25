@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "桌面前端规范入口"}
+{"file": ".trellis/spec/frontend/map-symbols.md", "reason": "既有单地图/对象表单契约，浮动布局按最新用户要求更新"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "地图布局和可访问性约定"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "数据、预览与保存语义"}
+{"file": ".trellis/spec/guides/index.md", "reason": "保持变更范围与复用"}

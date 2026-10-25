@@ -37,7 +37,7 @@ export function FeatureEditor({ headingEditor, feature, layers, layerId, busy, s
     }catch(error){setError(error instanceof Error?error.message:'坐标格式无效。');}
   }
   return <form className="annotation-feature-form" aria-label="标注对象编辑" onSubmit={event=>{event.preventDefault();void submit();}} onChange={()=>dirty(true)}>
-    <fieldset className="annotation-feature-fields" disabled={busy}>
+    <div className="annotation-feature-fields"><fieldset disabled={busy}>
     {kind==='point'&&<><div className="annotation-current-symbol">{definition?<img src={symbolAssetUrl(definition.id)} alt="" width="36" height="36"/>:<span aria-hidden="true" className={`annotation-symbol ${symbol}`} style={{width:20,height:20,background:color}}/>}<div><strong>{definition?.name || '普通点'}</strong>{definition&&<small>{definition.sourceKind==='standard'?`标准 ${definition.standardRef}`:'应用扩展'}{definition.orientation==='upright'?' · 固定直立':''}</small>}</div><button ref={pickerButton} type="button" aria-label="更换图标" aria-expanded={pickerOpen} aria-controls={pickerId} onClick={()=>setPickerOpen(!pickerOpen)}>更换</button></div><div id={pickerId} className="annotation-symbol-replacement" hidden={!pickerOpen} onChange={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Enter'&&!event.nativeEvent.isComposing&&event.target instanceof HTMLInputElement)event.preventDefault();}}><SymbolPicker value={symbolId} select={id=>{setSymbolId(id);setHeading('');setPickerOpen(false);dirty(true);pickerButton.current?.focus();}}/>{symbolId&&<button type="button" onClick={()=>{setSymbolId('');setHeading('');setPickerOpen(false);dirty(true);pickerButton.current?.focus();}}>改用普通点</button>}</div></>}
     <label>对象名称<input value={name} maxLength={200} onChange={e=>setName(e.target.value)}/></label>
     <div className={`annotation-primary-fields${kind==='point'&&definition?.orientation==='heading'?' has-heading':''}`}><label>信息性质<select value={role || ''} onChange={event=>setRole(event.target.value as AnnotationFeature['informationRole'] || undefined)}><option value="" disabled={!!feature?.informationRole}>未注明</option><option value="plan">拟定方案</option><option value="assessment">研判</option><option value="observation">现场记录</option></select></label>{kind==='point'&&definition?.orientation==='heading'&&<label>真北方向（°）<input type="number" min="0" max="359.99" step="any" value={heading} placeholder="未设置" onChange={event=>setHeading(event.target.value)}/></label>}</div>
@@ -61,7 +61,7 @@ export function FeatureEditor({ headingEditor, feature, layers, layerId, busy, s
       {feature?.sourceRefs?.length ? <details><summary>来源关联 · 快照，不自动跟随</summary>{feature.sourceRefs.map(ref=><p key={JSON.stringify([ref.systemId,ref.objectType,ref.objectId])}>{ref.systemId} / {ref.objectType} / {ref.objectId}{ref.revision!==undefined?` · r${ref.revision}`:''}</p>)}</details>:null}
       <p className="resource-help">保存至会话草稿；发布或采用不代表已到场。</p>
     </details>
-    </fieldset>
+    </fieldset></div>
     <fieldset className="annotation-feature-footer" disabled={busy}>{error&&<p role="alert">{error}</p>}<div className="annotation-actions"><button type="submit">保存对象</button><button type="button" onClick={()=>cancel()}>取消编辑</button></div></fieldset>
   </form>;
 }

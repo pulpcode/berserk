@@ -583,6 +583,7 @@ async function rotationPoint(page:Page){
 }
 async function dragRotation(page:Page,delta:number){
  const handle=page.getByRole('button',{name:'旋转标号方向',exact:true}),box=(await handle.boundingBox())!,point=await rotationPoint(page);
+ expect(await handle.evaluate(element=>{const bounds=element.getBoundingClientRect();return document.elementFromPoint(bounds.x+bounds.width/2,bounds.y+bounds.height/2)?.closest('.annotation-rotation-handle')===element;})).toBe(true);
  const x=box.x+box.width/2,y=box.y+box.height/2,angle=Math.atan2(x-point.x,point.y-y),radius=Math.hypot(x-point.x,y-point.y);
  await page.mouse.move(x,y);await page.mouse.down();
  for(let step=1;step<=8;step++)await page.mouse.move(point.x+Math.sin(angle+delta*Math.PI/180*step/8)*radius,point.y-Math.cos(angle+delta*Math.PI/180*step/8)*radius);
@@ -613,7 +614,7 @@ test('rotation handle shares the numeric draft, preserves camera and coordinates
    await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.loaded())).toBe(true);
    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
    const location=await rotationPoint(page),h=(await handle.boundingBox())!,expected=Math.atan2(h.x+h.width/2-location.x,location.y-h.y-h.height/2);
-   const pixels=await canvas.screenshot({path:test.info().outputPath(`rotation-pixels-${camera.bearing}.png`)});
+   const pixels=await page.screenshot({clip:{x:location.x-80,y:location.y-80,width:160,height:160},path:test.info().outputPath(`rotation-pixels-${camera.bearing}.png`)});
    const principal=await page.evaluate(async encoded=>{const image=new Image();image.src=`data:image/png;base64,${encoded}`;await image.decode();const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const context=c.getContext('2d')!;context.drawImage(image,0,0);const data=context.getImageData(0,0,c.width,c.height).data;const points:Array<[number,number]>=[];for(let i=0;i<data.length;i+=4)if(data[i]>190&&data[i+1]<80&&data[i+2]<80)points.push([(i/4)%c.width,Math.floor(i/4/c.width)]);const mx=points.reduce((s,p)=>s+p[0],0)/points.length,my=points.reduce((s,p)=>s+p[1],0)/points.length;let xx=0,yy=0,xy=0;for(const [x,y]of points){xx+=(x-mx)**2;yy+=(y-my)**2;xy+=(x-mx)*(y-my);}return {count:points.length,axis:Math.atan2(2*xy,xx-yy)/2};},pixels.toString('base64'));
    expect(principal.count).toBeGreaterThan(40);expect(Math.abs(Math.cos(principal.axis-(expected-Math.PI/2))),JSON.stringify({camera,principal,expected,location})).toBeGreaterThan(.97);
   }
@@ -657,15 +658,29 @@ test('rotation guards restore pointer and gesture state across pause, hidden pre
 });
 
 test('compact editor retains hidden styles and metadata while keeping advanced fields reachable',async({page})=>{
- const env=await setup(page);
+ await captureMap(page);const env=await setup(page);const canvas=page.locator('.maplibregl-canvas'),originalCanvas=await canvas.elementHandle();
+ const mapFillsArea=async()=>{await expect.poll(async()=>{const map=(await canvas.boundingBox())!,area=(await page.locator('.annotation-main').boundingBox())!;return Math.max(Math.abs(map.width-area.width),Math.abs(map.height-area.height),Math.abs(map.x-area.x),Math.abs(map.y-area.y));}).toBeLessThan(2);};
  try{
   const original={objectId:'retained-properties',kind:'point' as const,name:'保留属性',informationRole:'plan' as const,note:'既有备注',attributes:{unit:'水域一队',count:3,confirmed:false,unknown:null},geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},style:{symbolId:'xf3013-2020.6.2.1',iconSize:44,heading:23,color:'#243647',fillColor:'#c9d2ab',label:'既有地图标签',symbol:'triangle' as const,lineStyle:'dotted' as const,size:12,width:6,opacity:.6}};
   env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'retained',name:'集合点',order:0,defaultVisible:true,features:[original]}}]});
   await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');await pickOwn(page,'保留属性 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
   const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
   await page.setViewportSize({width:1280,height:720});await expect(page.getByLabel('对象名称',{exact:true})).toBeInViewport({ratio:1});await expect(page.getByLabel('真北方向（°）')).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await mapFillsArea();expect(await canvas.evaluate((element,original)=>element===original,originalCanvas)).toBe(true);
+  const card=page.getByRole('complementary',{name:'标绘工具面板',exact:true}),form=page.getByRole('form',{name:'标注对象编辑',exact:true}),originalForm=await form.elementHandle();
+  const compact=(await card.boundingBox())!,mapBox=(await canvas.boundingBox())!,cameraBeforeExpansion=await rotationCamera(page);
+  expect(compact.height).toBeLessThan(mapBox.height-150);
+  await openProperties(page);expect((await card.boundingBox())!.height).toBeGreaterThan(compact.height+40);await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  const fields=page.locator('.annotation-feature-fields'),footer=page.locator('.annotation-feature-footer'),footerBeforeFocus=(await footer.boundingBox())!;
+  await fields.hover();await page.mouse.wheel(0,140);await expect.poll(()=>fields.evaluate(element=>element.scrollTop)).toBeGreaterThan(0);
+  await page.getByRole('textbox',{name:'备注',exact:true}).focus();expect((await footer.boundingBox())!.y).toBeCloseTo(footerBeforeFocus.y,0);expect(await form.evaluate(element=>element.scrollTop)).toBe(0);await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.locator('.annotation-more-properties > summary').click();expect((await card.boundingBox())!.height).toBeCloseTo(compact.height,0);expect(await rotationCamera(page)).toEqual(cameraBeforeExpansion);expect(await form.evaluate((element,original)=>element===original,originalForm)).toBe(true);
+  const exterior={x:compact.x+compact.width/2,y:compact.y+compact.height+16};
+  expect(await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.classList.contains('maplibregl-canvas'),exterior)).toBe(true);
+  await page.mouse.move(exterior.x,exterior.y);await page.mouse.down();await page.mouse.move(exterior.x-45,exterior.y+10,{steps:5});await page.mouse.up();await expect.poll(async()=>(await rotationCamera(page)).center).not.toEqual(cameraBeforeExpansion.center);await page.evaluate(()=>window.__basemapTestMap!.stop());
+  const zoomBeforeWheel=(await rotationCamera(page)).zoom;await page.mouse.move(exterior.x,exterior.y);await page.mouse.wheel(0,-160);await expect.poll(async()=>(await rotationCamera(page)).zoom).toBeGreaterThan(zoomBeforeWheel);await page.evaluate(()=>window.__basemapTestMap!.stop());
   await expect(page.locator('.annotation-current-symbol')).toContainText('标准 6.2.1');await expect(page.getByLabel('图标尺寸（px）')).not.toBeVisible();await expect(page.getByLabel('业务属性 JSON')).not.toBeVisible();
-  await openSymbolReplacement(page);await page.getByLabel('查找专业标号').fill('消防车');await page.getByLabel('查找专业标号').press('Enter');await page.getByRole('button',{name:'更换图标',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('23');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await openSymbolReplacement(page);expect((await card.boundingBox())!.height).toBeGreaterThan(compact.height+40);await page.getByLabel('查找专业标号').fill('消防车');await page.getByLabel('查找专业标号').press('Enter');await page.getByRole('button',{name:'更换图标',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('23');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
   await page.screenshot({path:test.info().outputPath('editor-simplified-wide.png')});
   await page.getByLabel('对象名称',{exact:true}).fill('保留属性已更新');await saveDraw(page);
   const binding=env.lab.annotations!.binding(env.actor,env.session.id),saved=()=>env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).document.layers[0]!.features[0]!;
@@ -674,7 +689,9 @@ test('compact editor retains hidden styles and metadata while keeping advanced f
   for(const label of ['填充色','填充透明度','点大小','点符号','线宽','线型'])await expect(page.getByLabel(label,{exact:true})).toHaveCount(0);
   await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();await page.getByText('业务属性',{exact:true}).click();
   await page.setViewportSize({width:1000,height:900});const attributes=page.getByLabel('业务属性 JSON');await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,80);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
-  await page.screenshot({path:test.info().outputPath('editor-advanced-narrow.png')});await saveDraw(page);
+  await mapFillsArea();await page.screenshot({path:test.info().outputPath('editor-advanced-narrow.png')});
+  await page.setViewportSize({width:1000,height:620});await mapFillsArea();await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,100);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'收起对象编辑',exact:true})).toBeInViewport({ratio:1});
+  const shortCard=(await card.boundingBox())!,switcher=(await page.getByRole('group',{name:'底图视图'}).boundingBox())!;expect(shortCard.y+shortCard.height).toBeLessThan(switcher.y);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('editor-floating-short.png')});await saveDraw(page);
   expect(saved()).toEqual({...original,name:'保留属性已更新',attributes:{...original.attributes,contact:'值班室'}});expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });
