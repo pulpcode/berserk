@@ -4,17 +4,19 @@ import { PausableAnnotationAdapter } from './pausable-adapter';
 import { ensureMapSymbols, resolveMapSymbol } from '../map-symbols';
 import type { AnnotationFeature, AnnotationVersion } from '../../contracts/annotations';
 import type { SituationGeometry } from '../../contracts/context';
+import { createRotationHandle, type AnnotationRotation } from './rotation-handle';
 import { BUSINESS_ANCHOR } from '../situation/basemap-style';
 
 export interface AnnotationMapGroup { key: string; version: AnnotationVersion; visibleLayers: string[] }
 export interface AnnotationMapEdit { mode: 'point' | 'line' | 'polygon' | 'text' | 'select'; feature?: AnnotationFeature; paused?: boolean }
 export interface AnnotationMapState {
   groups: AnnotationMapGroup[]; selected?: {group:string;objectId:string}; fit?: { key: string; geometry: SituationGeometry[] };
-  edit?: AnnotationMapEdit; pick: (keys: Array<{group: string; layerId: string; objectId: string}>) => void;
+  rotation?: AnnotationRotation; edit?: AnnotationMapEdit; pick: (keys: Array<{group: string; layerId: string; objectId: string}>) => void;
   finish: (geometry: SituationGeometry, objectId?: string) => void; error: (message: string) => void;
 }
 export function createAnnotationRuntime(map: LibreMap, read: () => AnnotationMapState | undefined) {
   let layers: string[] = []; let sources: string[] = []; let markers: Marker[] = []; let fitKey = ''; let editorKey = ''; let editor: TerraDraw | undefined; let adapter: PausableAnnotationAdapter | undefined; let rendered = ''; let disposed = false; let symbolsStarted = false;
+  const rotation = createRotationHandle(map, () => read()?.rotation);
   const cleanupLayers = () => { markers.forEach(marker => marker.remove()); markers = []; for (const id of [...layers].reverse()) if (map.getLayer(id)) map.removeLayer(id); for (const id of sources) if (map.getSource(id)) map.removeSource(id); layers = []; sources = []; };
   const clearEditor = () => { if (editor?.enabled) editor.stop(); editor = undefined; adapter = undefined; editorKey = '';  };
   const click = (event: {point: {x: number; y: number}}) => {
@@ -69,6 +71,7 @@ export function createAnnotationRuntime(map: LibreMap, read: () => AnnotationMap
       const points = state.fit.geometry.flatMap(geometry => geometry.type==='Point'?[geometry.coordinates]:geometry.type==='LineString'?geometry.coordinates:geometry.coordinates.flat());
       if (points.length) { const bounds=new LngLatBounds(points[0],points[0]);points.forEach(point=>bounds.extend(point));map.fitBounds(bounds,{padding:45,maxZoom:15,duration:0});fitKey=state.fit.key; }
     }
+    rotation.update();
     const nextKey = JSON.stringify(state?.edit ? {...state.edit,paused:undefined} : null);
     if (editorKey === nextKey) { adapter?.setPaused(!!state?.edit?.paused); return; }
     clearEditor(); editorKey = nextKey;
@@ -83,5 +86,5 @@ export function createAnnotationRuntime(map: LibreMap, read: () => AnnotationMap
       draw.on('finish', id => { const feature=draw.getSnapshotFeature(id); if (feature) read()?.finish(feature.geometry as SituationGeometry, read()?.edit?.feature?.objectId); });
     } catch(error) { clearEditor();read()?.error(error instanceof Error?error.message:'绘制器加载失败，请使用坐标表单。'); }
   }
-  return {update,destroy:()=>{disposed=true;map.off('click',click);clearEditor();cleanupLayers();},restore:()=>{clearEditor();layers=[];sources=[];rendered='';update();}};
+  return {update,destroy:()=>{disposed=true;map.off('click',click);rotation.destroy();clearEditor();cleanupLayers();},restore:()=>{clearEditor();layers=[];sources=[];rendered='';update();}};
 }

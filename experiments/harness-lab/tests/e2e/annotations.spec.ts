@@ -573,3 +573,82 @@ test('read-only entry after a refresh failure still guards unsaved plotting inpu
   expect(env.errors).toEqual([]);
  } finally {await env.close();}
 });
+
+async function rotationCamera(page:Page){const {center,zoom,bearing,pitch}=await mapSnapshot(page);return {center,zoom,bearing,pitch};}
+async function rotationPoint(page:Page){
+ return page.evaluate(()=>{const map=window.__basemapTestMap!;const source=map.getSource('annotation:preview:preview') as import('maplibre-gl').GeoJSONSource;const feature=(source.serialize().data as unknown as {features:Array<{geometry:{coordinates:[number,number]};properties:{rotation:number}}>}).features[0]!;const p=map.project(feature.geometry.coordinates),box=map.getContainer().getBoundingClientRect();return {coordinates:feature.geometry.coordinates,x:p.x+box.left,y:p.y+box.top,rotation:feature.properties.rotation};});
+}
+async function dragRotation(page:Page,delta:number){
+ const handle=page.getByRole('button',{name:'旋转标号方向',exact:true}),box=(await handle.boundingBox())!,point=await rotationPoint(page);
+ const x=box.x+box.width/2,y=box.y+box.height/2,angle=Math.atan2(x-point.x,point.y-y),radius=Math.hypot(x-point.x,y-point.y);
+ await page.mouse.move(x,y);await page.mouse.down();
+ for(let step=1;step<=8;step++)await page.mouse.move(point.x+Math.sin(angle+delta*Math.PI/180*step/8)*radius,point.y-Math.cos(angle+delta*Math.PI/180*step/8)*radius);
+ await page.mouse.up();
+}
+
+test('rotation handle shares the numeric draft, preserves camera and coordinates, and saves only explicitly',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try{
+  await layer(page);await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12}));
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),box=(await canvas.boundingBox())!;await page.mouse.click(box.x+box.width*.43,box.y+box.height*.42);
+  const angle=page.getByLabel('真北方向（°）'),handle=page.getByRole('button',{name:'旋转标号方向',exact:true});
+  await expect(handle).toBeVisible();await expect(angle).toHaveValue('');await expect(page.locator('.annotation-rotation-angle')).toHaveText('真北 90°');
+  const initial=await rotationPoint(page),before=await rotationCamera(page),writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  const originalHandle=await handle.elementHandle();await handle.click({position:{x:5,y:15}});await expect(angle).toHaveValue('');
+  await dragRotation(page,45);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(135,0);
+  expect(await handle.evaluate((element,original)=>element===original,originalHandle)).toBe(true);expect((await rotationPoint(page)).coordinates).toEqual(initial.coordinates);
+  expect(await rotationCamera(page)).toEqual(before);
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await angle.fill('359');await dragRotation(page,2);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(1,0);
+  await angle.fill('0');await expect(page.locator('.annotation-rotation-angle')).toHaveText('真北 0°');
+  await page.getByLabel('图标尺寸（px）').fill('64');
+  for(const camera of [{bearing:0,pitch:0,heading:0},{bearing:35,pitch:50,heading:90},{bearing:123,pitch:60,heading:359}]){
+   await page.evaluate(({bearing,pitch})=>window.__basemapTestMap!.jumpTo({bearing,pitch}),camera);await angle.fill(String(camera.heading));
+   await expect.poll(async()=>(await rotationPoint(page)).rotation).toBe((camera.heading+270)%360);
+   const tiltedCamera=await rotationCamera(page);await dragRotation(page,15);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo((camera.heading+15)%360,0);expect(await rotationCamera(page)).toEqual(tiltedCamera);expect((await rotationPoint(page)).coordinates).toEqual(initial.coordinates);
+   await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.loaded())).toBe(true);
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   const location=await rotationPoint(page),h=(await handle.boundingBox())!,expected=Math.atan2(h.x+h.width/2-location.x,location.y-h.y-h.height/2);
+   const pixels=await canvas.screenshot({path:test.info().outputPath(`rotation-pixels-${camera.bearing}.png`)});
+   const principal=await page.evaluate(async encoded=>{const image=new Image();image.src=`data:image/png;base64,${encoded}`;await image.decode();const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const context=c.getContext('2d')!;context.drawImage(image,0,0);const data=context.getImageData(0,0,c.width,c.height).data;const points:Array<[number,number]>=[];for(let i=0;i<data.length;i+=4)if(data[i]>190&&data[i+1]<80&&data[i+2]<80)points.push([(i/4)%c.width,Math.floor(i/4/c.width)]);const mx=points.reduce((s,p)=>s+p[0],0)/points.length,my=points.reduce((s,p)=>s+p[1],0)/points.length;let xx=0,yy=0,xy=0;for(const [x,y]of points){xx+=(x-mx)**2;yy+=(y-my)**2;xy+=(x-mx)*(y-my);}return {count:points.length,axis:Math.atan2(2*xy,xx-yy)/2};},pixels.toString('base64'));
+   expect(principal.count).toBeGreaterThan(40);expect(Math.abs(Math.cos(principal.axis-(expected-Math.PI/2))),JSON.stringify({camera,principal,expected,location})).toBeGreaterThan(.97);
+  }
+  await angle.fill('42');await page.screenshot({path:test.info().outputPath('rotation-wide.png')});
+  await page.setViewportSize({width:1000,height:900});await expect(handle).toBeInViewport({ratio:1});await page.screenshot({path:test.info().outputPath('rotation-narrow.png')});
+  await page.getByLabel('对象名称',{exact:true}).fill('旋转消防车');const savedCamera=await rotationCamera(page);await saveDraw(page);await expect(handle).not.toBeVisible();expect(await rotationCamera(page)).toEqual(savedCamera);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id),feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!;
+  expect(feature.style?.heading).toBe(42);expect(feature.geometry.coordinates).toEqual(initial.coordinates);
+  await page.setViewportSize({width:1440,height:960});await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await dragRotation(page,70);page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();await expect(handle).not.toBeVisible();
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!.style?.heading).toBe(42);
+  await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await handle.click({position:{x:5,y:15}});await expect(angle).toHaveValue('42');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');
+  await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'拖动及顶点编辑',exact:true}).click();await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();await page.getByRole('button',{name:'继续对象编辑',exact:true}).click();await expect(handle).not.toBeVisible();expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('rotation guards restore pointer and gesture state across pause, hidden previews and symbol changes',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try{
+  await layer(page);await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12}));
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),box=(await canvas.boundingBox())!;await page.mouse.click(box.x+box.width*.43,box.y+box.height*.42);
+  const handle=page.getByRole('button',{name:'旋转标号方向',exact:true}),angle=page.getByLabel('真北方向（°）');await expect(handle).toBeVisible();
+  await page.evaluate(()=>window.__basemapTestMap!.scrollZoom.disable());
+  const h=(await handle.boundingBox())!;await page.mouse.move(h.x+h.width/2,h.y+h.height/2);await page.mouse.down();
+  expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(false);
+  await handle.dispatchEvent('pointercancel',{pointerId:1});await page.mouse.up();
+  expect(await page.evaluate(()=>({pan:window.__basemapTestMap!.dragPan.isEnabled(),scroll:window.__basemapTestMap!.scrollZoom.isEnabled()}))).toEqual({pan:true,scroll:false});await expect(angle).toHaveValue('');
+  await dragRotation(page,30);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(120,0);
+  let activeHandle=(await handle.boundingBox())!;await page.mouse.move(activeHandle.x+15,activeHandle.y+15);await page.mouse.down();await handle.evaluate(element=>element.releasePointerCapture(1));await page.mouse.up();expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(true);
+  activeHandle=(await handle.boundingBox())!;await page.mouse.move(activeHandle.x+15,activeHandle.y+15);await page.mouse.down();await page.getByRole('button',{name:'标绘工具',exact:true}).evaluate(element=>(element as HTMLButtonElement).click());await page.mouse.up();await expect(handle).not.toBeVisible();expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(true);await openTools(page);
+  const cameraBeforePan=await rotationCamera(page);await page.mouse.move(box.x+80,box.y+100);await page.mouse.down();await page.mouse.move(box.x+125,box.y+125,{steps:5});await page.mouse.up();await expect.poll(async()=>(await rotationCamera(page)).center).not.toEqual(cameraBeforePan.center);await page.evaluate(camera=>window.__basemapTestMap!.jumpTo({center:camera.center as [number,number],zoom:camera.zoom,bearing:camera.bearing,pitch:camera.pitch}),cameraBeforePan);
+  await page.getByRole('button',{name:'标绘工具',exact:true}).click();await expect(handle).not.toBeVisible();await openTools(page);await expect(handle).toBeVisible();
+  await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await expect(handle).not.toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(handle).toBeVisible();
+  await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(handle).not.toBeVisible();await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();await expect(handle).toBeVisible();
+  const own=page.getByRole('region',{name:/^本会话标注 /});await expandGroup(page,'本会话标注');await own.getByRole('button',{name:'隐藏集合点',exact:true}).click();await expect(handle).not.toBeVisible();await own.getByRole('button',{name:'显示集合点',exact:true}).click();await expect(handle).toBeVisible();await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  await page.getByText('更换专业标号',{exact:true}).click();await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'集结地 标准 6.1.27',exact:true}).click();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();
+  await page.getByRole('button',{name:'改用普通点',exact:true}).click();await expect(handle).not.toBeVisible();
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();await page.getByText('更换专业标号',{exact:true}).click();await angle.fill('180');await expect(handle).toBeVisible();env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();await page.getByRole('button',{name:'查询保存回执',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);await expect(handle).not.toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});

@@ -130,3 +130,12 @@
 .annotation-feature-footer [role=alert] { margin:4px 0; max-height:60px; overflow:auto; font-size:12px; color:var(--danger,#a43c32); }
 .annotation-current-symbol { display:flex; align-items:center; gap:10px; padding:6px 0; font-size:13px; }
 .annotation-current-symbol small { display:block; margin-top:3px; color:var(--muted); font-size:11px; }
+
+/* Rotation lives above business layers but only its handle captures the pointer. */
+.annotation-rotation { position:absolute; top:0; left:0; width:0; height:0; z-index:3; pointer-events:none; }
+.annotation-rotation[hidden] { display:none; }
+.annotation-rotation-line { position:absolute; bottom:0; left:-1px; width:2px; background:var(--accent,#416858); box-shadow:0 0 0 1px white; transform-origin:bottom center; }
+.annotation-rotation .annotation-rotation-handle { position:absolute; display:grid; place-items:center; width:30px; height:30px; min-height:0; padding:0; border:2px solid white; border-radius:50%; background:var(--accent,#416858); color:white; box-shadow:0 1px 6px #102c3266; transform:translate(-50%,-50%); pointer-events:auto; cursor:grab; touch-action:none; }
+.annotation-rotation .annotation-rotation-handle:is(:hover,:focus-visible,:active) { background:#244b3f; outline:2px solid white; }
+.annotation-rotation.is-rotating .annotation-rotation-handle { cursor:grabbing; }
+.annotation-rotation-angle { position:absolute; transform:translate(-50%,calc(-100% - 19px)); white-space:nowrap; padding:3px 5px; border:1px solid var(--line); border-radius:4px; background:var(--surface,#fff); color:var(--ink,#152f27); font-size:11px; line-height:1.4; box-shadow:0 1px 4px #102c3226; }

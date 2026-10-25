@@ -9,6 +9,7 @@ Read when changing the single-map plotting tools, `web/map-symbols`, annotation 
 - `contracts/map-symbols.ts`: `MAP_SYMBOLS`, `getMapSymbol(id)`, `MAP_SYMBOL_ICON_SIZE` are the shared controlled catalog.
 - `web/map-symbols/index.ts`: `symbolAssetUrl(id)`, `symbolImageId(id)`, `resolveMapSymbol(style)` and `ensureMapSymbols(map): Promise<string[]>` (failed IDs).
 - `AnnotationMapEdit.paused` controls interaction suspension without discarding TerraDraw's unfinished geometry. The annotation runtime owns editor interaction; `SituationView` remains the independent source-query owner.
+- `annotations/rotation-handle.ts`: retained local pointer control; `FeatureEditor` exposes a guarded imperative heading setter into its existing form state.
 - Backend fields and strict validation are specified in [Map annotations](../backend/map-annotations.md).
 
 ## 3. Contracts
@@ -25,6 +26,12 @@ Source refresh does not mutate annotation revisions, clear form input or move th
 
 Professional point images use MapLibre symbol layers with overlap enabled, with group/layer/object hit identity. HTML labels stay screen-upright. The symbol's intrinsic orientation and explicit true-north `heading` are distinct: omitted heading preserves source orientation; east-facing artwork with heading 0 renders at -90 degrees. Upright signs reject a heading at the service boundary. `iconSize` is 20–64 CSS px, default 32; legacy `size` remains the radius of a generic point. Line arrows are derived display, never extra persisted polygon geometry.
 
+A direction-capable professional point exposes a rotation handle only while its writable property form and target/preview are visible and no geometry edit or save/receipt is pending. The numerical heading field remains the precise keyboard alternative. Both controls update the same local form; pressing without moving must not materialize an omitted heading. Rotation changes neither coordinates nor camera, and persists only through explicit save. Cancel keeps the saved heading.
+
+The handle is owned independently of business-layer redraws and retains its pointer capture across preview updates. Object identity, visibility, permissions and pending state fence callbacks. Pointer release/cancel/lost capture, window blur, hidden editing and runtime destruction release capture and restore only previously enabled map handlers. Hidden tools never begin capturing on reopen.
+
+For the current `icon-rotation-alignment: map` / `icon-pitch-alignment: viewport` renderer, use the projected local east tangent at the symbol anchor as the screen rotation baseline (the installed MapLibre symbol shader uses that tangent). Apply the explicit heading or intrinsic heading to this baseline. Do not derive arbitrary ground bearings from `unproject(pointer)` or use only `screenAngle + mapBearing` on tilted views. Keep existing glyph rendering rules unchanged.
+
 Bundle only controlled SVGs. `provenance.json` distinguishes original vector paths, vector transcriptions of source bitmaps and project extensions. Standard shapes/colors are independent of status. Images are registered once per map at 128 px / pixelRatio 4; basemap ownership excludes these business images. Failure gets a neutral question mark and visible notice. Do not infer a fire engine subtype from a source resource's quantity/name.
 
 Successful saves of new or existing objects preserve center, zoom, bearing and pitch. Initial document framing and deliberate locate actions remain available. Changing panel layout resizes the existing canvas and preserves camera state. Wide tools dock alongside the map; narrow desktop panes retain usable map and form areas. Actual SVG source records and approved sample are the visual authority; historical dual-mode mockups are not.
@@ -35,6 +42,9 @@ Successful saves of new or existing objects preserve center, zoom, bearing and p
 | --- | --- |
 | Open/close tools with no writable session | Read-only explanation; no implicit create/write |
 | Select catalog symbol / replace property symbol | Start one point placement / update local form only |
+| Rotate direction-capable point | Same local heading; no coordinate/camera/write change until save |
+| Pointer cancel/lost capture or edit hidden | Release capture, restore prior gesture state |
+| Fixed-upright / ordinary / read-only point | No rotation handle |
 | Save new or existing object | Preserve center, zoom, bearing and pitch |
 | Narrow desktop property panel | Independently scrollable fields and reachable save/cancel |
 | Collapse with unfinished geometry | Pause and retain; explicit resume |
@@ -54,6 +64,7 @@ Successful saves of new or existing objects preserve center, zoom, bearing and p
 ## 6. Tests Required
 
 - Catalog/provenance/asset completeness; source kind and shape distinction for the three boat types; source-relative direction conversion and legacy fallback.
+- Rotation: actual mouse drags, 0/90/359 and wraparound, omitted-heading press without movement, reverse numeric synchronization, saved/canceled headings, stable handle identity, pointer cleanup and gesture restoration, hidden/read-only/fixed-upright guards, projected glyph pixels versus handle on rotated/tilted maps.
 - Service/Pi roundtrips and atomic rejection (see backend spec).
 - Browser tests: same-map identity/camera, no writes on disclosure, unfinished draw retention/resume, retained form on source inspection/refresh, independent preview visibility, explicit save/publish/adopt, entry navigation without writes, direct symbol placement versus property replacement, camera preservation on new/existing save, reachable narrow desktop form footer, visible pixels and overlap selection.
 - Run typecheck, lint, build and affected annotation/situation/basemap tests with local tile fixtures. Do not equate mocked source updates with production GPS integration.
