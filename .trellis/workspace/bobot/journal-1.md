@@ -1352,3 +1352,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 46: 对象编辑浮动面板与独立滚动验证
+
+**Date**: 2026-10-25
+**Task**: 对象编辑浮动面板与独立滚动验证
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+将对象编辑改为按内容高度收缩的右上浮动卡片，释放固定侧栏让地图全幅显示。修复fieldset匿名盒导致焦点滚动带走保存按钮，采用独立div滚动与form裁切。类型、lint、构建通过；31个相关E2E唯一用例均通过，含外露地图真实拖动/滚轮、宽窄矮窗口及footer稳定性。4324原服务已更新，原未保存页保留，tab8提供新版45度示例。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `881ce43` | (see git log) |
+
+### Status
+
+[OK] **Completed**
