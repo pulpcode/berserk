@@ -40,6 +40,8 @@ async function setup(page:Page, basemap?: (origin:string)=>unknown, reply: Param
  return {lab,actor,task,session,second,requests,errors,dropNextAction:()=>{dropAction=true;},tiles:()=>tiles,fake,close:async()=>{page.on('dialog',dialog=>dialog.accept());await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await rm(dir,{recursive:true,force:true});}};
 }
 async function openTools(page:Page){const button=page.getByRole('button',{name:'标绘工具',exact:true});if(await button.getAttribute('aria-expanded')!=='true')await button.click();}
+async function openProperties(page:Page){const section=page.locator('.annotation-more-properties');if(await section.getAttribute('open')===null)await section.locator(':scope > summary').click();}
+async function openSymbolReplacement(page:Page){const button=page.getByRole('button',{name:'更换图标',exact:true});if(await button.getAttribute('aria-expanded')==='false')await button.click();}
 async function saveDraw(page:Page){await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);}
 async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'图层与对象',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
 async function expandGroup(page:Page,name:string){const button=page.getByRole('button',{name:`展开${name}`,exact:true});if(await button.isVisible())await button.click();}
@@ -422,7 +424,7 @@ test('single map tools pause incomplete geometry, retain form and preview, witho
   await page.getByRole('button',{name:'继续未完成绘制',exact:true}).click();box=(await canvas.boundingBox())!;
   await page.mouse.click(box.x+box.width*.55,box.y+box.height*.5);await page.mouse.dblclick(box.x+box.width*.65,box.y+box.height*.6);
   await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
-  await page.getByLabel('对象名称',{exact:true}).fill('拟定水域接近路线');await page.getByLabel('路线末端').selectOption('arrow');
+  await page.getByLabel('对象名称',{exact:true}).fill('拟定水域接近路线');await openProperties(page);await page.getByLabel('路线末端').selectOption('arrow');
   await page.getByRole('button',{name:'标绘工具',exact:true}).click();await expect(page.locator('.annotation-tools-dock')).toBeHidden();await expect(page.locator('.annotation-label')).toContainText('未保存 · 拟定水域接近路线');
   await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(page.locator('.annotation-label')).toHaveCount(0);await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();
   await openTools(page);await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('拟定水域接近路线');await saveDraw(page);
@@ -439,7 +441,7 @@ test('professional symbols keep identity, orientation and information role throu
   await layer(page);await expect(page.getByRole('group',{name:'专业标号目录'}).getByRole('button')).toHaveCount(22);
   const symbols=[['水罐消防车','xf3013-2020.6.2.1'],['救护车','xf3013-2020.6.2.30'],['消防艇','xf3013-2020.6.2.37'],['冲锋舟','app.rescue-inflatable-boat'],['救援舰船','app.rescue-vessel']] as const;
   for(const [name,id] of symbols){
-   await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByText('更换专业标号',{exact:true}).click();await page.getByLabel('查找专业标号').fill(name);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:new RegExp(`^${name}`)}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByLabel('图标尺寸（px）').fill('48');await page.getByLabel('真北方向（°）').fill('30');await saveDraw(page);
+   await page.getByRole('button',{name:'坐标新增',exact:true}).click();await openSymbolReplacement(page);await page.getByLabel('查找专业标号').fill(name);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:new RegExp(`^${name}`)}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByLabel('图标尺寸（px）').fill('48');await page.getByLabel('真北方向（°）').fill('30');await saveDraw(page);
    const binding=env.lab.annotations!.binding(env.actor,env.session.id);const feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features.at(-1)!;expect(feature.style).toMatchObject({symbolId:id,iconSize:48,heading:30});expect(feature.informationRole).toBe('plan');
   }
   await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:14}));
@@ -521,18 +523,19 @@ test('symbol selection places directly, compact properties retain drafts, and sa
   await page.mouse.click(box.x+box.width*.4,box.y+box.height*.55);
   await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('水罐消防车');
   await expect(page.getByLabel('真北方向（°）')).toBeVisible();
-  await expect(page.getByLabel('图标尺寸（px）')).toBeVisible();
+  await expect(page.getByLabel('图标尺寸（px）')).not.toBeVisible();
   await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();
   await expect(page.getByRole('group',{name:'专业标号目录'})).not.toBeVisible();
-  await page.getByText('更换专业标号',{exact:true}).click();
+  await openSymbolReplacement(page);
   await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'救护车 标准 6.2.30',exact:true}).click();
+  await expect(page.getByRole('button',{name:'更换图标',exact:true})).toBeFocused();
   await expect(page.getByRole('button',{name:'退出绘制',exact:true})).toHaveCount(0);
-  await page.getByText('更换专业标号',{exact:true}).click();
+  await expect(page.getByRole('group',{name:'专业标号目录'})).not.toBeVisible();
   await page.getByLabel('对象名称',{exact:true}).fill('救护车体验');await page.getByLabel('真北方向（°）').fill('42');
   await page.setViewportSize({width:1000,height:900});
   await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
-  await page.getByText('更多样式',{exact:true}).click();await page.getByLabel('地图标签',{exact:true}).fill('窄面板最后一项');
-  await page.getByLabel('地图标签',{exact:true}).scrollIntoViewIfNeeded();await expect(page.getByLabel('地图标签',{exact:true})).toBeInViewport({ratio:1});
+  await openProperties(page);await page.getByLabel('地图标签',{exact:true}).fill('窄面板最后一项');
+  await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,80);await expect(page.getByLabel('地图标签',{exact:true})).toBeInViewport({ratio:1});
   await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
   await page.screenshot({path:test.info().outputPath('compact-properties-narrow.png')});
   const before=await camera();await saveDraw(page);expect(await camera()).toEqual(before);
@@ -602,7 +605,7 @@ test('rotation handle shares the numeric draft, preserves camera and coordinates
   expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
   await angle.fill('359');await dragRotation(page,2);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(1,0);
   await angle.fill('0');await expect(page.locator('.annotation-rotation-angle')).toHaveText('真北 0°');
-  await page.getByLabel('图标尺寸（px）').fill('64');
+  await openProperties(page);await page.getByLabel('图标尺寸（px）').fill('64');await page.locator('.annotation-more-properties > summary').click();
   for(const camera of [{bearing:0,pitch:0,heading:0},{bearing:35,pitch:50,heading:90},{bearing:123,pitch:60,heading:359}]){
    await page.evaluate(({bearing,pitch})=>window.__basemapTestMap!.jumpTo({bearing,pitch}),camera);await angle.fill(String(camera.heading));
    await expect.poll(async()=>(await rotationPoint(page)).rotation).toBe((camera.heading+270)%360);
@@ -646,9 +649,32 @@ test('rotation guards restore pointer and gesture state across pause, hidden pre
   await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await expect(handle).not.toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(handle).toBeVisible();
   await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(handle).not.toBeVisible();await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();await expect(handle).toBeVisible();
   const own=page.getByRole('region',{name:/^本会话标注 /});await expandGroup(page,'本会话标注');await own.getByRole('button',{name:'隐藏集合点',exact:true}).click();await expect(handle).not.toBeVisible();await own.getByRole('button',{name:'显示集合点',exact:true}).click();await expect(handle).toBeVisible();await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
-  await page.getByText('更换专业标号',{exact:true}).click();await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'集结地 标准 6.1.27',exact:true}).click();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();
-  await page.getByRole('button',{name:'改用普通点',exact:true}).click();await expect(handle).not.toBeVisible();
+  await openSymbolReplacement(page);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'集结地 标准 6.1.27',exact:true}).click();await expect(handle).not.toBeVisible();await expect(angle).toHaveCount(0);
+  await openSymbolReplacement(page);await page.getByRole('button',{name:'改用普通点',exact:true}).click();await expect(handle).not.toBeVisible();
   expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
-  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();await page.getByText('更换专业标号',{exact:true}).click();await angle.fill('180');await expect(handle).toBeVisible();env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();await page.getByRole('button',{name:'查询保存回执',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);await expect(handle).not.toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.errors).toEqual([]);
+  await openSymbolReplacement(page);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();await angle.fill('180');await expect(handle).toBeVisible();env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();await page.getByRole('button',{name:'查询保存回执',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);await expect(handle).not.toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('compact editor retains hidden styles and metadata while keeping advanced fields reachable',async({page})=>{
+ const env=await setup(page);
+ try{
+  const original={objectId:'retained-properties',kind:'point' as const,name:'保留属性',informationRole:'plan' as const,note:'既有备注',attributes:{unit:'水域一队',count:3,confirmed:false,unknown:null},geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},style:{symbolId:'xf3013-2020.6.2.1',iconSize:44,heading:23,color:'#243647',fillColor:'#c9d2ab',label:'既有地图标签',symbol:'triangle' as const,lineStyle:'dotted' as const,size:12,width:6,opacity:.6}};
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'retained',name:'集合点',order:0,defaultVisible:true,features:[original]}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');await pickOwn(page,'保留属性 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.setViewportSize({width:1280,height:720});await expect(page.getByLabel('对象名称',{exact:true})).toBeInViewport({ratio:1});await expect(page.getByLabel('真北方向（°）')).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await expect(page.locator('.annotation-current-symbol')).toContainText('标准 6.2.1');await expect(page.getByLabel('图标尺寸（px）')).not.toBeVisible();await expect(page.getByLabel('业务属性 JSON')).not.toBeVisible();
+  await openSymbolReplacement(page);await page.getByLabel('查找专业标号').fill('消防车');await page.getByLabel('查找专业标号').press('Enter');await page.getByRole('button',{name:'更换图标',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('23');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await page.screenshot({path:test.info().outputPath('editor-simplified-wide.png')});
+  await page.getByLabel('对象名称',{exact:true}).fill('保留属性已更新');await saveDraw(page);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id),saved=()=>env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).document.layers[0]!.features[0]!;
+  expect(saved()).toEqual({...original,name:'保留属性已更新'});
+  await pickOwn(page,'保留属性已更新 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await openProperties(page);await expect(page.getByLabel('标签颜色',{exact:true})).toHaveValue(original.style.color);await expect(page.getByLabel('图标尺寸（px）')).toHaveValue('44');
+  for(const label of ['填充色','填充透明度','点大小','点符号','线宽','线型'])await expect(page.getByLabel(label,{exact:true})).toHaveCount(0);
+  await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();await page.getByText('业务属性',{exact:true}).click();
+  await page.setViewportSize({width:1000,height:900});const attributes=page.getByLabel('业务属性 JSON');await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,80);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.screenshot({path:test.info().outputPath('editor-advanced-narrow.png')});await saveDraw(page);
+  expect(saved()).toEqual({...original,name:'保留属性已更新',attributes:{...original.attributes,contact:'值班室'}});expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });

@@ -128,7 +128,14 @@
 .annotation-feature-footer .annotation-actions { margin:4px 0; }
 .annotation-feature-footer .annotation-actions button:first-child { color:var(--surface,#fff); background:var(--accent); border-color:var(--accent); }
 .annotation-feature-footer [role=alert] { margin:4px 0; max-height:60px; overflow:auto; font-size:12px; color:var(--danger,#a43c32); }
-.annotation-current-symbol { display:flex; align-items:center; gap:10px; padding:6px 0; font-size:13px; }
+.annotation-current-symbol { display:flex; align-items:center; gap:10px; padding:4px 0 8px; font-size:13px; }
+.annotation-current-symbol>div { flex:1; min-width:0; }
+.annotation-current-symbol>img,.annotation-current-symbol>.annotation-symbol,.annotation-current-symbol>button { flex:none; }
+.annotation-primary-fields.has-heading { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; }
+.annotation-direction-hint { margin:0 0 8px; color:var(--muted); font-size:11px; line-height:1.5; }
+.annotation-more-properties { margin-top:8px; border-top:1px solid var(--line); }
+.annotation-symbol-replacement { padding:8px; margin-bottom:8px; border:1px solid var(--line); border-radius:8px; }
+.annotation-symbol-replacement[hidden] { display:none; }
 .annotation-current-symbol small { display:block; margin-top:3px; color:var(--muted); font-size:11px; }
 
 /* Rotation lives above business layers but only its handle captures the pointer. */

@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范入口"}
+{"file": ".trellis/spec/frontend/map-symbols.md", "reason": "单地图与属性编辑契约"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "桌面前端布局与验证"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "保持属性数据契约与事务语义"}
+{"file": ".trellis/spec/guides/index.md", "reason": "范围与复用检查"}
