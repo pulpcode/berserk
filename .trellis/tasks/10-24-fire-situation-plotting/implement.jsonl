@@ -1,0 +1,6 @@
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "现有前端状态、接口与验证约定"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "会话草稿、固定版本、权限、来源复制与保存冲突"}
+{"file": ".trellis/spec/backend/situation-map.md", "reason": "来源只读、底图隔离、共享地图与桌面面板"}
+{"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "保持分析覆盖层与标绘独立"}
+{"file": ".trellis/tasks/10-24-fire-situation-plotting/research/evidence.md", "reason": "消防标准、符号条目与当前代码证据"}
+{"file": ".trellis/tasks/10-24-fire-situation-plotting/research/workspace-patterns.md", "reason": "V1.1 已确认单地图、按需展开标绘工具；第9节为最新决策，旧双模式/双页面候选已被替代；实时接入仍延后。"}
