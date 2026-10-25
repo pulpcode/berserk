@@ -6,4 +6,4 @@
 4. [x] 执行 typecheck、lint、build；完整 annotations 与 situation-map/map-symbols 受影响 E2E，相关数学/符号单测。
 5. [x] 由 trellis-check 独立全范围复核，范围内修复后验证。
 6. [x] 实际浏览器核对宽/窄布局与可拖动操作，截图留档；更新原 4324 服务并保留原数据。
-7. 中文提交代码与规范；归档本任务并记录会话，不影响其他 worktree。
+7. [x] 中文提交代码与规范；归档本任务并记录会话，不影响其他 worktree。
