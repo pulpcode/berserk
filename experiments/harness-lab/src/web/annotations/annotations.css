@@ -115,3 +115,18 @@
 .annotation-marker { width:1px; height:1px; }
 .annotation-marker>.annotation-symbol { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
 .annotation-marker>.annotation-label { position:absolute; left:50%; transform:translateX(-50%); }
+
+/* Object editing keeps actions outside the scrollable field list. */
+.annotation-tools-dock.has-object-editor { display:flex; flex-direction:column; overflow:hidden; padding-bottom:8px; }
+.annotation-tools-dock.has-object-editor>.annotation-panel-heading,
+.annotation-tools-dock .annotation-editor-toolbar[hidden] { display:none; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel[hidden] { display:none; }
+.annotation-feature-form { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+.annotation-feature-fields { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:0 4px 8px !important; }
+.annotation-feature-footer { flex:none; border-top:1px solid var(--line) !important; padding:6px 4px 0 !important; background:var(--surface,#fff); }
+.annotation-feature-footer .annotation-actions { margin:4px 0; }
+.annotation-feature-footer .annotation-actions button:first-child { color:var(--surface,#fff); background:var(--accent); border-color:var(--accent); }
+.annotation-feature-footer [role=alert] { margin:4px 0; max-height:60px; overflow:auto; font-size:12px; color:var(--danger,#a43c32); }
+.annotation-current-symbol { display:flex; align-items:center; gap:10px; padding:6px 0; font-size:13px; }
+.annotation-current-symbol small { display:block; margin-top:3px; color:var(--muted); font-size:11px; }

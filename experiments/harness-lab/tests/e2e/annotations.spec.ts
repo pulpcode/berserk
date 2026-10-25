@@ -423,7 +423,7 @@ test('single map tools pause incomplete geometry, retain form and preview, witho
   await page.mouse.click(box.x+box.width*.55,box.y+box.height*.5);await page.mouse.dblclick(box.x+box.width*.65,box.y+box.height*.6);
   await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
   await page.getByLabel('对象名称',{exact:true}).fill('拟定水域接近路线');await page.getByLabel('路线末端').selectOption('arrow');
-  await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();await expect(page.locator('.annotation-label')).toContainText('未保存 · 拟定水域接近路线');
+  await page.getByRole('button',{name:'标绘工具',exact:true}).click();await expect(page.locator('.annotation-tools-dock')).toBeHidden();await expect(page.locator('.annotation-label')).toContainText('未保存 · 拟定水域接近路线');
   await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(page.locator('.annotation-label')).toHaveCount(0);await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();
   await openTools(page);await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('拟定水域接近路线');await saveDraw(page);
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);const feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!;
@@ -439,9 +439,10 @@ test('professional symbols keep identity, orientation and information role throu
   await layer(page);await expect(page.getByRole('group',{name:'专业标号目录'}).getByRole('button')).toHaveCount(22);
   const symbols=[['水罐消防车','xf3013-2020.6.2.1'],['救护车','xf3013-2020.6.2.30'],['消防艇','xf3013-2020.6.2.37'],['冲锋舟','app.rescue-inflatable-boat'],['救援舰船','app.rescue-vessel']] as const;
   for(const [name,id] of symbols){
-   await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByText('专业标号',{exact:true}).click();await page.getByLabel('查找专业标号').fill(name);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:new RegExp(`^${name}`)}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByLabel('图标尺寸（px）').fill('48');await page.getByLabel('真北方向（°）').fill('30');await saveDraw(page);
+   await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByText('更换专业标号',{exact:true}).click();await page.getByLabel('查找专业标号').fill(name);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:new RegExp(`^${name}`)}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByLabel('图标尺寸（px）').fill('48');await page.getByLabel('真北方向（°）').fill('30');await saveDraw(page);
    const binding=env.lab.annotations!.binding(env.actor,env.session.id);const feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features.at(-1)!;expect(feature.style).toMatchObject({symbolId:id,iconSize:48,heading:30});expect(feature.informationRole).toBe('plan');
   }
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:14}));
   await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.queryRenderedFeatures().filter(f=>f.layer.id.includes(':symbols:')).length)).toBeGreaterThanOrEqual(5);
   const position=await page.evaluate(()=>{const p=window.__basemapTestMap!.project([116.4,39.9]);return {x:p.x,y:p.y};});const box=(await page.locator('.maplibregl-canvas').boundingBox())!;await page.mouse.click(box.x+position.x,box.y+position.y);
   await expect(page.getByText('此处有多个标注，请选择',{exact:true})).toBeVisible();await expect(page.locator('.annotation-overlap>button')).toHaveCount(5);
@@ -479,5 +480,96 @@ test('source polling and inspection preserve the independent draft target, form 
   await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保持中的部署输入');expect(env.lab.annotations!.binding(env.actor,env.session.id)).toEqual(binding);expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
   await openLayers(page);const source=page.getByRole('region',{name:'来源态势',exact:true});await source.getByRole('button',{name:'展开资源池',exact:true}).click();await source.getByRole('button',{name:new RegExp(sourceItem.name)}).click();await expect(page.locator('.situation-detail')).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).not.toBeVisible();
   await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保持中的部署输入');await expect(page.getByLabel('所属图层')).toContainText('集合点');expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+
+test('entry hints explain global, task and editable conversation maps without creating drafts',async({page})=>{
+ const env=await setup(page);
+ try {
+  await expect(page.getByLabel('标绘上下文')).toContainText('标注验证任务');
+  await expect(page.getByLabel('标绘上下文')).toContainText('本会话草稿 · 可编辑');
+  const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.goto('/situation');
+  await expect(page.getByLabel('全局态势入口')).toContainText('全局态势 · 只读');
+  await expect(page.getByRole('button',{name:'标绘工具',exact:true})).toHaveCount(0);
+  await page.getByRole('combobox',{name:'进入任务',exact:true}).selectOption(env.task.id);
+  await expect(page.getByRole('region',{name:'任务详情',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'态势',exact:true}).click();
+  await expect(page.getByLabel('标绘上下文')).toContainText('任务当前方案 · 只读');
+  await openTools(page);await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveCount(0);
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  await expect(page.getByRole('button',{name:'任务说明',exact:true})).toHaveAttribute('aria-current','page');
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft).toBeNull();
+  expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+test('symbol selection places directly, compact properties retain drafts, and saves preserve the camera',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try {
+  await page.getByRole('button',{name:'新建标绘图层',exact:true}).click();
+  await page.getByLabel('新图层名称').fill('集合点');await page.getByRole('button',{name:'添加图层',exact:true}).click();
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12,bearing:27,pitch:35}));
+  const camera=async()=>{const {center,zoom,bearing,pitch}=await mapSnapshot(page);return {center,zoom,bearing,pitch};};
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'救护车 标准 6.2.30',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'使用普通点',exact:true})).toBeDisabled();
+  const canvas=page.locator('.maplibregl-canvas');const box=(await canvas.boundingBox())!;
+  await page.mouse.click(box.x+box.width*.4,box.y+box.height*.55);
+  await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('水罐消防车');
+  await expect(page.getByLabel('真北方向（°）')).toBeVisible();
+  await expect(page.getByLabel('图标尺寸（px）')).toBeVisible();
+  await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();
+  await expect(page.getByRole('group',{name:'专业标号目录'})).not.toBeVisible();
+  await page.getByText('更换专业标号',{exact:true}).click();
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'救护车 标准 6.2.30',exact:true}).click();
+  await expect(page.getByRole('button',{name:'退出绘制',exact:true})).toHaveCount(0);
+  await page.getByText('更换专业标号',{exact:true}).click();
+  await page.getByLabel('对象名称',{exact:true}).fill('救护车体验');await page.getByLabel('真北方向（°）').fill('42');
+  await page.setViewportSize({width:1000,height:900});
+  await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.getByText('更多样式',{exact:true}).click();await page.getByLabel('地图标签',{exact:true}).fill('窄面板最后一项');
+  await page.getByLabel('地图标签',{exact:true}).scrollIntoViewIfNeeded();await expect(page.getByLabel('地图标签',{exact:true})).toBeInViewport({ratio:1});
+  await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.screenshot({path:test.info().outputPath('compact-properties-narrow.png')});
+  const before=await camera();await saveDraw(page);expect(await camera()).toEqual(before);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const saved=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features[0]!;
+  expect(saved.style).toMatchObject({symbolId:'xf3013-2020.6.2.30',heading:42,label:'窄面板最后一项'});
+  await page.setViewportSize({width:1440,height:960});await pickOwn(page,'救护车体验 point');
+  await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.42,39.92],zoom:11,bearing:63,pitch:20}));
+  await page.getByLabel('对象名称',{exact:true}).fill('救护车已修改');
+  const editingCamera=await camera();await saveDraw(page);expect(await camera()).toEqual(editingCamera);
+  await pickOwn(page,'救护车已修改 point');
+  expect((await camera()).zoom).not.toBe(editingCamera.zoom);
+  await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  await page.screenshot({path:test.info().outputPath('compact-properties-wide.png')});
+  expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+
+test('read-only entry after a refresh failure still guards unsaved plotting input',async({page})=>{
+ const env=await setup(page);
+ try {
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();
+  await page.getByLabel('对象名称',{exact:true}).fill('刷新失败后保留的输入');
+  const origin=page.url();const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.route(`**/api/sessions/${env.session.id}/annotation`,route=>route.abort());
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();
+  await expect(page.getByLabel('标绘上下文')).toContainText('本会话 · 只读');
+  let dismissed=false;
+  page.once('dialog',dialog=>{dismissed=true;void dialog.dismiss();});
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  expect(dismissed).toBe(true);await expect(page).toHaveURL(origin);
+  await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('刷新失败后保留的输入');
+  page.once('dialog',dialog=>dialog.accept());
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  await expect(page.getByRole('region',{name:'任务详情',exact:true})).toBeVisible();
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  expect(env.errors).toEqual([]);
  } finally {await env.close();}
 });

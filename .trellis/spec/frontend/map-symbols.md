@@ -15,19 +15,28 @@ Read when changing the single-map plotting tools, `web/map-symbols`, annotation 
 
 There is one retained MapLibre map. `标绘工具` is a local disclosure, initially closed; opening or closing it does not create a session, document, revision, publication or task-current choice. Closing pauses active editing and retains target, form and unfinished draw state; reopening must not automatically capture clicks. A deliberate resume continues the same operation. Hiding the target pauses interaction without discarding vertices. True identity/task/session/document changes retain existing dirty-data and late-response protections.
 
+Entry context distinguishes global read-only situation, task-current read-only plans, and writable conversation drafts. Global entry selects an existing task; task entry returns to its existing task home to select a conversation. These hints/navigation never create a session or draft. Navigation from an in-map entry retains the dirty-input confirmation, including when a refresh failure temporarily removes writable context.
+
+Clicking a catalog symbol in the tools dock immediately starts one point placement using the existing captured target/start identity. Block it while saving, awaiting a receipt, holding a dirty form, already drawing, or targeting a hidden/non-writable layer. Property-editor symbol replacement only changes that object’s local form and never starts drawing.
+
+Object forms prioritize name, information role, current point symbol, size and heading. Replacement catalog, coordinates and advanced fields are disclosure sections; explicit coordinate-add keeps coordinates open. Scroll the field body independently from save/cancel so narrow desktop docks retain reachable actions and last fields. Existing form previews, validation and dirty guards remain intact.
+
 Source refresh does not mutate annotation revisions, clear form input or move the camera. Inspecting a source does not change the captured edit destination. Save, publish and adopt remain separate existing service operations; adopted plans do not become observations. New ordinary annotations default to `plan`; legacy missing roles remain unspecified. Copied source geometry is a snapshot, not a tracking binding.
 
 Professional point images use MapLibre symbol layers with overlap enabled, with group/layer/object hit identity. HTML labels stay screen-upright. The symbol's intrinsic orientation and explicit true-north `heading` are distinct: omitted heading preserves source orientation; east-facing artwork with heading 0 renders at -90 degrees. Upright signs reject a heading at the service boundary. `iconSize` is 20–64 CSS px, default 32; legacy `size` remains the radius of a generic point. Line arrows are derived display, never extra persisted polygon geometry.
 
 Bundle only controlled SVGs. `provenance.json` distinguishes original vector paths, vector transcriptions of source bitmaps and project extensions. Standard shapes/colors are independent of status. Images are registered once per map at 128 px / pixelRatio 4; basemap ownership excludes these business images. Failure gets a neutral question mark and visible notice. Do not infer a fire engine subtype from a source resource's quantity/name.
 
-Changing panel layout resizes the existing canvas and preserves camera state. Wide tools dock alongside the map; narrow desktop panes retain usable map and form areas. Actual SVG source records and approved sample are the visual authority; historical dual-mode mockups are not.
+Successful saves of new or existing objects preserve center, zoom, bearing and pitch. Initial document framing and deliberate locate actions remain available. Changing panel layout resizes the existing canvas and preserves camera state. Wide tools dock alongside the map; narrow desktop panes retain usable map and form areas. Actual SVG source records and approved sample are the visual authority; historical dual-mode mockups are not.
 
 ## 4. Validation & Error Matrix
 
 | Condition | Behavior |
 | --- | --- |
 | Open/close tools with no writable session | Read-only explanation; no implicit create/write |
+| Select catalog symbol / replace property symbol | Start one point placement / update local form only |
+| Save new or existing object | Preserve center, zoom, bearing and pitch |
+| Narrow desktop property panel | Independently scrollable fields and reachable save/cancel |
 | Collapse with unfinished geometry | Pause and retain; explicit resume |
 | Source refresh during form/draw | Only source layer/data updates |
 | Source/reference selected during editing | Read-only detail; retain captured form/target |
@@ -46,7 +55,7 @@ Changing panel layout resizes the existing canvas and preserves camera state. Wi
 
 - Catalog/provenance/asset completeness; source kind and shape distinction for the three boat types; source-relative direction conversion and legacy fallback.
 - Service/Pi roundtrips and atomic rejection (see backend spec).
-- Browser tests: same-map identity/camera, no writes on disclosure, unfinished draw retention/resume, retained form on source inspection/refresh, independent preview visibility, explicit save/publish/adopt, narrow desktop layout, visible pixels and overlap selection.
+- Browser tests: same-map identity/camera, no writes on disclosure, unfinished draw retention/resume, retained form on source inspection/refresh, independent preview visibility, explicit save/publish/adopt, entry navigation without writes, direct symbol placement versus property replacement, camera preservation on new/existing save, reachable narrow desktop form footer, visible pixels and overlap selection.
 - Run typecheck, lint, build and affected annotation/situation/basemap tests with local tile fixtures. Do not equate mocked source updates with production GPS integration.
 
 ## 7. Wrong vs Correct

@@ -21,7 +21,7 @@ const MapContext=createContext<{
   layout:WorkspaceLayout; chooseLayout:(layout:WorkspaceLayout)=>void; panel?:ReactNode;
 }>({openAnalysis:()=>{},open:()=>{},reference:()=>{},openAnnotations:()=>{},annotationReference:()=>{},derive:async()=>{},openSession:()=>{},layout:'conversation',chooseLayout:()=>{}});
 export const useSituationMap=()=>useContext(MapContext);
-export function SituationProvider({children,reference,navigationKey,annotations}:{children:ReactNode;reference:(item:SituationObject)=>void;navigationKey:string;annotations?:{taskId:string;sessionId?:string;taskContext?:TaskContext;archived?:boolean;refreshKey?:string;reference:(ref:AnnotationSelection)=>void;derive:(taskId:string,ref:AnnotationRef)=>Promise<void>;openSession:(id:string)=>void}}) {
+export function SituationProvider({children,reference,navigationKey,annotations}:{children:ReactNode;reference:(item:SituationObject)=>void;navigationKey:string;annotations?:{taskId:string;taskTitle?:string;openTask?:()=>void;sessionId?:string;taskContext?:TaskContext;archived?:boolean;refreshKey?:string;reference:(ref:AnnotationSelection)=>void;derive:(taskId:string,ref:AnnotationRef)=>Promise<void>;openSession:(id:string)=>void}}) {
   const [selection,setSelection]=useState<MapSelection>();
   const trigger=useRef<HTMLElement|null>(null);
   const current=selection?.navigationKey===navigationKey?selection:undefined;
