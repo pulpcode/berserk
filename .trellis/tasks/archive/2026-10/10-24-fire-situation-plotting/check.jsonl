@@ -4,5 +4,5 @@
 {"file": ".trellis/spec/backend/map-symbols.md", "reason": "专业标号与信息性质跨层保存、严格校验及共享几何契约。"}
 {"file": ".trellis/spec/backend/situation-map.md", "reason": "来源只读、底图隔离、共享地图与桌面面板"}
 {"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "保持分析覆盖层与标绘独立"}
-{"file": ".trellis/tasks/10-24-fire-situation-plotting/research/evidence.md", "reason": "消防标准、符号条目与当前代码证据"}
-{"file": ".trellis/tasks/10-24-fire-situation-plotting/research/workspace-patterns.md", "reason": "V1.1 已确认单地图、按需展开标绘工具；第9节为最新决策，旧双模式/双页面候选已被替代；实时接入仍延后。"}
+{"file": ".trellis/tasks/archive/2026-10/10-24-fire-situation-plotting/research/evidence.md", "reason": "消防标准、符号条目与当前代码证据"}
+{"file": ".trellis/tasks/archive/2026-10/10-24-fire-situation-plotting/research/workspace-patterns.md", "reason": "V1.1 已确认单地图、按需展开标绘工具；第9节为最新决策，旧双模式/双页面候选已被替代；实时接入仍延后。"}

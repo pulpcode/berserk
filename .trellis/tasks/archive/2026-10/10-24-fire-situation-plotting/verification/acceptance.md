@@ -1,6 +1,6 @@
 # 单地图专业标绘实施验收
 
-日期：2026-10-25。分支：`codex/frontend-plotting`。方案提交：`0468d98`。独立 worktree 实施，无主线合并或推送。
+日期：2026-10-25。分支：`codex/frontend-plotting`。方案提交：`0468d98`；实现提交：`b5cdf15`。独立 worktree 实施，无主线合并或推送。
 
 ## 交付
 

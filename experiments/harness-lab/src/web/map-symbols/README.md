@@ -12,4 +12,4 @@
 
 来源：https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202101/W020210118711682130047.pdf
 
-已审阅样张：`.trellis/tasks/10-24-fire-situation-plotting/research/fire-rescue-symbols-22.pdf`。
+已审阅样张：`.trellis/tasks/archive/2026-10/10-24-fire-situation-plotting/research/fire-rescue-symbols-22.pdf`。

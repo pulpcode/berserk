@@ -3,7 +3,7 @@
   "name": "fire-situation-plotting",
   "title": "消防专业标号与单地图态势标绘",
   "description": "已实现单地图按需标绘、22 个专业符号与跨层保存；完成自动回归和桌面像素检查。",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": "fullstack",
   "scope": "experiments/harness-lab",
   "package": null,
@@ -11,11 +11,11 @@
   "creator": "bobot",
   "assignee": "bobot",
   "createdAt": "2026-10-24",
-  "completedAt": null,
+  "completedAt": "2026-10-25",
   "branch": "codex/frontend-plotting",
   "base_branch": "main",
   "worktree_path": "/Users/lau/.codex/worktrees/frontend-plotting/berserk",
-  "commit": null,
+  "commit": "b5cdf15",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -44,6 +44,7 @@
     "implementation_authorized_at": "2026-10-25",
     "symbol_sample": "research/fire-rescue-symbols-22.pdf",
     "verification": "verification/acceptance.md",
-    "plan_commit": "0468d98"
+    "plan_commit": "0468d98",
+    "implementation_commit": "b5cdf15"
   }
 }
