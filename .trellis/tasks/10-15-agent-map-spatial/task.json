@@ -647,7 +647,7 @@
     "completeReadCoverageT13": false
   },
   "resultGroundingR11": {
-    "plan": "current-improvement-plan.md",
+    "plan": "r11-20261023/loading-plan-history.md",
     "planCommit": "a4b065e",
     "authorization": "用户：提交git，然后开始实施",
     "status": "completed_grading_and_agent_evidence_review_pending_user_review",
@@ -913,6 +913,72 @@
       "finalContinuationNewRequests": 53,
       "originalAgentRequestsUnchanged": 235,
       "lastGraderFreeze": "bfa9d8ce0ae18cffa547e739187fad19f627a296ab04783651474a04d3082bf3"
-    }
+    },
+    "originalPlanPath": "current-improvement-plan.md"
+  },
+  "resultGroundingR12": {
+    "status": "planning_pending_user_review",
+    "plan": "r12-20261025/plan.md",
+    "authorization": "用户：上一轮已提交；本轮方案独立落盘待审阅，不拆同轮A/B/C；未授权实施或模型调用",
+    "baselineCommit": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "branch": "codex/agent-result-grounding",
+    "implementationAllowed": false,
+    "modelExecutionAllowed": false,
+    "proposedStages": {
+      "A": "离线评分修复，模型请求0",
+      "B": {
+        "taskTrials": 12,
+        "cases": 6,
+        "groups": 2,
+        "loading": "same_preload_for_both",
+        "candidate": "source_instructions_bundle"
+      },
+      "C": {
+        "continuationRequests": 12,
+        "snapshots": 6,
+        "configurations": 2,
+        "candidateConfig": "same_flash_thinking_enabled_high",
+        "notEndToEnd": true,
+        "documentationVerified": true,
+        "runtimeVerified": false,
+        "requestModel": "deepseek-v4.1-flash",
+        "expectedResponseModel": "deepseek-v4-1-flash-261017",
+        "controlThinking": {
+          "type": "disabled"
+        },
+        "candidateThinking": {
+          "type": "enabled"
+        },
+        "candidateReasoningEffort": "high",
+        "maxTokensBothGroups": 32768,
+        "topPBothGroups": 1.0,
+        "compatibilityPairIncludedIn12": true
+      }
+    },
+    "proposedBudget": {
+      "status": "unapproved",
+      "sourceTasks": {
+        "requests": 96,
+        "inputTokens": 2000000,
+        "outputTokens": 60000
+      },
+      "generationComparison": {
+        "requests": 12,
+        "inputTokens": 400000,
+        "outputTokens": 400000
+      },
+      "paidJudges": 0,
+      "totalRequests": 108,
+      "totalInputTokens": 2400000,
+      "totalOutputTokens": 460000
+    },
+    "automaticRetries": false,
+    "automaticExpansion": false,
+    "automaticFollowOnStage": false,
+    "newProviderRequests": 0,
+    "evidenceCommit": "f11beec",
+    "thinkingAudit": "r11-20261023/flash-thinking-audit-20261025.md",
+    "documentOrganization": "one_round_per_plan_keep_A_B_C_together",
+    "reviewScope": "R12独立方案；历史轮次仅引用，不合并正文；下一轮另建文件单独审阅"
   }
 }
