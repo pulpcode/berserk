@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 42
+- **Total Sessions**: 43
 - **Last Active**: 2026-10-25
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~1265 | Active |
+| `journal-1.md` | ~1299 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 43 | 2026-10-25 | 标绘交互优化与原工作树试用服务更新 | `220d1c9` | `codex/frontend-plotting` |
 | 42 | 2026-10-25 | 完成单地图专业标绘与消防符号实现 | `0468d98`, `b5cdf15` | `codex/frontend-plotting` |
 | 41 | 2026-10-18 | 空间与标绘Skill独立候选实施及R2首轮诊断 | `13d65ce` | `codex/agent-map-spatial` |
 | 40 | 2026-10-18 | 独立补齐空间首轮两项并更新完整对比 | `2ba01e5` | `codex/agent-map-spatial` |
