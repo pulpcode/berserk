@@ -1228,3 +1228,38 @@
 ### Next Steps
 
 - 审阅research/r2-results-20261018.md；90%验收未通过，保留两处评分歧义，不自动追加测试。
+
+
+## Session 42: 完成单地图专业标绘与消防符号实现
+
+**Date**: 2026-10-25
+**Task**: 完成单地图专业标绘与消防符号实现
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+独立 worktree 先提交方案与22项样张，再实现按需标绘工具、受控符号及跨层保存；174项单元服务回归、25项浏览器用例和typecheck/lint/build通过。已归档当前任务，未合并或推送。
+
+### Main Changes
+
+- 单地图开合不写入，暂停恢复未完成绘制，保留表单与合法预览
+- 20个标准符号与2个应用扩展，方向尺寸及信息性质贯通网页和Pi
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `0468d98` | (see git log) |
+| `b5cdf15` | (see git log) |
+
+### Testing
+
+- [OK] 174项unit/service、25项浏览器用例通过；typecheck、lint、build、diff-check通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户审阅独立分支及验收截图，后续按授权整合主线；真实GPS/AIS仍为后续范围
