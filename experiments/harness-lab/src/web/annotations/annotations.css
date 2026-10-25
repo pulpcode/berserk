@@ -84,3 +84,34 @@
 
 .annotation-workspace .situation-view.unified-map .situation-detail,
 .annotation-workspace .situation-view.unified-map .situation-source-error { top:var(--annotation-panel-top); max-height:calc(100% - var(--annotation-panel-top) - 52px); }
+
+/* One retained map; the plotting dock takes real desktop space when expanded. */
+.annotation-heading-actions>.annotation-tools-toggle { display:flex; align-items:center; gap:5px; }
+.annotation-main.tools-open { display:grid; grid-template-columns:minmax(0,1fr) 340px; }
+.annotation-main.tools-open>.situation-view { grid-column:1; grid-row:1; min-width:0; }
+.annotation-tools-dock { grid-column:2; grid-row:1; min-height:0; overflow:auto; padding:76px 12px 16px; background:var(--surface,#fff); border-left:1px solid var(--line); }
+.annotation-tools-dock[hidden],.annotation-editor-panel[hidden] { display:none; }
+.annotation-tools-dock .annotation-editor-toolbar { position:relative; inset:auto; max-width:none; width:100%; margin:8px 0 28px; box-shadow:none; }
+.annotation-tools-dock .annotation-draw-hint { position:static; flex-basis:100%; }
+.annotation-tools-dock .annotation-editor-panel { position:static; width:100%; max-height:none; padding:0; border:0; box-shadow:none; }
+.annotation-tools-dock .annotation-toolbar-target { width:100%; max-width:none; border:0; flex-basis:100%; padding:4px; }
+.annotation-tools-dock .annotation-toolbar-target>span { max-width:none; }
+.annotation-symbol-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; max-height:330px; overflow:auto; padding:2px; }
+.annotation-symbol-grid>button { display:grid; justify-items:center; gap:3px; padding:8px; min-width:0; }
+.annotation-symbol-grid>button[aria-pressed=true] { border-color:var(--accent); background:var(--accent-soft,#edf3ef); }
+.annotation-symbol-grid img { object-fit:contain; }
+.annotation-symbol-grid span { line-height:1.4; }
+.annotation-symbol-grid small { font-size:11px; color:var(--muted); }
+.annotation-line-arrow { width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:16px solid; pointer-events:none; filter:drop-shadow(0 0 1px white); }
+.annotation-main.tools-open>.annotation-detail,.annotation-main.tools-open>.annotation-overlap { right:352px; }
+@container annotation-workspace (max-width:850px) {
+  .annotation-main.tools-open { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(240px,1fr) minmax(0,44%); }
+  .annotation-tools-dock { grid-column:1; grid-row:2; padding:12px; border-left:0; border-top:1px solid var(--line); }
+  .annotation-main.tools-open>.annotation-detail,.annotation-main.tools-open>.annotation-overlap { right:12px; max-height:calc(56% - var(--annotation-panel-top)); }
+  .annotation-symbol-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+/* Label size must never shift a saved point away from its geographic anchor. */
+.annotation-marker { width:1px; height:1px; }
+.annotation-marker>.annotation-symbol { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.annotation-marker>.annotation-label { position:absolute; left:50%; transform:translateX(-50%); }

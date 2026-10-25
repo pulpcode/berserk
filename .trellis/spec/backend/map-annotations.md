@@ -40,7 +40,9 @@ Source restrictions are monotonic across inherited data and introduced structure
 
 ### Geometry and storage
 
-WGS84 longitude first. Point, line, single-ring closed non-self-intersecting polygon and point-anchored text are supported. Reject unsupported geometry rather than removing holes or guessing coordinates. Styles are controlled data: color, fill, width, size, lineStyle, symbol and label; never arbitrary scripts, URLs or MapLibre expressions.
+WGS84 longitude first. Point, line, single-ring closed non-self-intersecting polygon and point-anchored text are supported. `src/contracts/annotation-geometry.ts` owns the pure `validateAnnotationGeometry` function shared by saved-feature validation and browser draft previews. Invalid geometry throws the same `INVALID_INPUT` error; previews must not silently close, repair or persist incomplete geometry. Reject unsupported geometry rather than removing holes or guessing coordinates. Styles are controlled data: color, fill, width, size, lineStyle, symbol and label; never arbitrary scripts, URLs or MapLibre expressions.
+
+Professional symbols and information-role extensions follow [Professional Symbol Contract](./map-symbols.md).
 
 Authority lives in the host business database, outside /workspace and Bash mounts. Existing formal auth/background schemas migrate to annotation versions 9/10; all constructors must preserve the new terminal version. Explicit test mode retains its v1 identity-mode marker. Partial annotation tables are corruption, not a cue to recreate missing history. Old native transcripts are not rewritten.
 

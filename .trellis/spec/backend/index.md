@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Professional Symbol Contract](./map-symbols.md) for annotation symbol/role fields, shared geometry validation and compatibility.
+
 Read [Foreground Spatial Analysis](./spatial-analysis.md) for bounded calculations, native result evidence, exact-result saves and independent analysis map layers.
 
 Read [Agent Scenario Validation](./agent-scenario-validation.md) for isolated live end-to-end probes, exact synthetic confirmations, evidence retention and semantic review boundaries.

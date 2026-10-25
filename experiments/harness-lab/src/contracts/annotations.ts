@@ -6,11 +6,13 @@ export type AnnotationSelection = AnnotationRef & { layerIds?: string[]; objectI
 export interface AnnotationStyle {
   color?: string; fillColor?: string; opacity?: number; size?: number; width?: number;
   lineStyle?: 'solid' | 'dashed' | 'dotted'; symbol?: 'circle' | 'square' | 'triangle'; label?: string;
+  symbolId?: string; iconSize?: number; heading?: number; lineEnd?: 'none' | 'arrow';
 }
 export interface AnnotationFeature {
   objectId: string; kind: 'point' | 'line' | 'polygon' | 'text'; name: string;
   geometry: SituationGeometry; note?: string; attributes?: Record<string, string | number | boolean | null>;
   style?: AnnotationStyle;
+  informationRole?: 'observation' | 'assessment' | 'plan';
   sourceRefs?: Array<ContextRef & { revision?: number; queriedAt?: string }>;
   originFeatureRef?: { ref: AnnotationRef; objectId: string };
 }
@@ -86,7 +88,7 @@ export interface AnnotationReceipt {
   afterRef?: {setId:string; revision:number};
   objectIds?: string[];
 }
-export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef';
+export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef' | 'informationRole';
 export interface AnnotationReadInput {
   ref: AnnotationRef; layerIds?: string[]; layerNames?: string[]; objectIds?: string[]; objectNames?: string[]; fields?: AnnotationReadField[]; offset?: number; limit?: number;
 }

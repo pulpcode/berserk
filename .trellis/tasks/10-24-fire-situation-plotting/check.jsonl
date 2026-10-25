@@ -1,5 +1,7 @@
-{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "现有前端状态、接口与验证约定"}
+{"file": ".trellis/spec/frontend/map-symbols.md", "reason": "专业标号、单地图按需工具、缓冲保留、只读来源刷新与验证契约。通用前端规范按 index 读取，避免注入超限截断。"}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范索引；按本任务范围读取 harness-lab 的地图与交互小节。"}
 {"file": ".trellis/spec/backend/map-annotations.md", "reason": "会话草稿、固定版本、权限、来源复制与保存冲突"}
+{"file": ".trellis/spec/backend/map-symbols.md", "reason": "专业标号与信息性质跨层保存、严格校验及共享几何契约。"}
 {"file": ".trellis/spec/backend/situation-map.md", "reason": "来源只读、底图隔离、共享地图与桌面面板"}
 {"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "保持分析覆盖层与标绘独立"}
 {"file": ".trellis/tasks/10-24-fire-situation-plotting/research/evidence.md", "reason": "消防标准、符号条目与当前代码证据"}

@@ -97,7 +97,7 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
     });
     instance.on('load',update);
     instance.on('click', event => {
-      if(latest.current.annotations?.edit)return;
+      if(latest.current.annotations?.edit && !latest.current.annotations.edit.paused)return;
       const hits=instance.queryRenderedFeatures(event.point);
       if(hits.some(feature=>feature.properties?.group && feature.properties?.objectId)){latest.current.select('');return;}
       const feature=hits.find(feature=>['business:resources','business:roads','business:areas'].includes(feature.layer.id) && feature.properties?.key);

@@ -1,9 +1,9 @@
 {
   "id": "fire-situation-plotting",
   "name": "fire-situation-plotting",
-  "title": "消防专业标号与单地图态势标绘方案",
-  "description": "V1.1 已批准实施：单地图实时态势与按需标绘工具，20 个标准符号及 2 个应用扩展。",
-  "status": "planning",
+  "title": "消防专业标号与单地图态势标绘",
+  "description": "已实现单地图按需标绘、22 个专业符号与跨层保存；完成自动回归和桌面像素检查。",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "experiments/harness-lab",
   "package": null,
@@ -31,9 +31,9 @@
     "experiments/harness-lab/src/web/situation/MapCanvas.tsx",
     "experiments/harness-lab/src/web/situation/SituationView.tsx"
   ],
-  "notes": "2026-10-25：用户审阅单地图方案及 22 个符号样张后，明确要求提交方案 git，然后开始实施。使用隔离 worktree；真实 GPS/AIS 接入仍为后续范围。",
+  "notes": "2026-10-25：先提交已审阅方案0468d98，再在独立worktree完成实现。174项unit/service、25项浏览器用例通过，typecheck/lint/build通过，无未解决审查问题。来源仍沿用既有刷新，未接真实GPS/AIS，未合并或推送。",
   "meta": {
-    "review_state": "approved",
+    "review_state": "implementation_verified",
     "plan_version": "1.1",
     "planning_base": "6ce86513022350fb752eaa3dc04a96a5d2d82a6e",
     "open_decisions": [],
@@ -42,6 +42,8 @@
     "implementation_authorized": true,
     "review_requested_at": "2026-10-25",
     "implementation_authorized_at": "2026-10-25",
-    "symbol_sample": "research/fire-rescue-symbols-22.pdf"
+    "symbol_sample": "research/fire-rescue-symbols-22.pdf",
+    "verification": "verification/acceptance.md",
+    "plan_commit": "0468d98"
   }
 }

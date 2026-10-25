@@ -3,6 +3,8 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { validateToolArguments } from '@earendil-works/pi-ai';
+import { MAP_SYMBOLS } from '../../src/contracts/map-symbols.js';
 import { AgentSession } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
@@ -403,4 +405,30 @@ it.each([
  const {lab,session,calls}=await setup((_context,index)=>index===0 ? {tools:[{name:'annotation_read',arguments:{mode:'draft',...selectors}}]} : {text:'修正查询'});
  const empty=await lab.createSession(session.workspaceId,'alpha'),snapshot=await ask(lab,empty.id);
  expect(calls).toHaveLength(2);expect(snapshot.messages.find(message=>message.role==='tool')).toMatchObject({isError:true});
+});
+
+
+it('exports the shared bounded symbol catalog and roundtrips professional styles through actual Pi tools',async()=>{
+  const {lab,session,actor,taskId}=await setup();
+  const state=new AnnotationRequestState();state.observeDraft(lab.annotations!.binding(actor,session.id));state.beginInference();
+  const tools=annotationTools(lab.annotations!,{actor,taskId,sessionId:session.id,requestId:randomUUID(),signal:new AbortController().signal,check:()=>{},state});
+  const action=tools.find(tool=>tool.name==='annotation_action')!,read=tools.find(tool=>tool.name==='annotation_read')!;
+  const schema=action.parameters as unknown as {$defs:{style:{properties:{symbolId:{anyOf:Array<{const:string}>}}}}};
+  expect(schema.$defs.style.properties.symbolId.anyOf.map(item=>item.const)).toEqual(MAP_SYMBOLS.map(symbol=>symbol.id));
+  const style={symbolId:'app.rescue-inflatable-boat',iconSize:48,heading:90};
+  const args={action:'apply',operations:[{op:'update_object',objectId:'a',changes:{style,informationRole:'plan'}}]};
+  expect(()=>validateToolArguments(action,{type:'toolCall',id:'save-symbol',name:action.name,arguments:args})).not.toThrow();
+  await action.execute('save-symbol',args as never,undefined,undefined,{} as never);
+  const query={mode:'draft',objectIds:['a'],fields:['style','informationRole']};
+  expect(()=>validateToolArguments(read,{type:'toolCall',id:'read-symbol',name:read.name,arguments:query})).not.toThrow();
+  const result=await read.execute('read-symbol',query as never,undefined,undefined,{} as never);
+  expect(JSON.parse(result.content.filter(item=>item.type==='text').map(item=>item.text).join(''))).toMatchObject({data:{objects:{items:[{objectId:'a',style,informationRole:'plan'}]},query:{fields:['style','informationRole']}}});
+  for(const invalidStyle of [{symbolId:'unknown'},{...style,iconSize:65},{...style,heading:360}]){
+    const invalid={...args,operations:[{...args.operations[0],changes:{style:invalidStyle,informationRole:'plan'}}]};
+    expect(()=>validateToolArguments(action,{type:'toolCall',id:'bad',name:action.name,arguments:invalid})).toThrow();
+  }
+  state.beginInference();
+  const before=lab.annotations!.binding(actor,session.id).draft!;
+  await expect(action.execute('upright-invalid',{...args,operations:[{...args.operations[0],changes:{style:{symbolId:'xf3013-2020.6.1.21',heading:90}}}]} as never,undefined,undefined,{} as never)).rejects.toThrow('INVALID_INPUT');
+  expect(lab.annotations!.binding(actor,session.id).draft).toEqual(before);
 });

@@ -26,7 +26,7 @@
 
 每项记录：
 
-- 稳定 `id`：标准示例 `xf3013-2020.water-tanker`；应用扩展示例 `app.rescue-inflatable-boat`。
+- 稳定 `id`：标准示例 `xf3013-2020.6.2.1`；应用扩展示例 `app.rescue-inflatable-boat`。
 - `name`、`category`、有限别名；别名只用于目录检索，不用于推测来源对象类型。
 - `sourceKind: standard | extension`，标准名称/版本/条目，素材来源与归属说明。
 - `geometryKind`、`defaultIconSize`、`anchor`、`orientation: heading | upright`、素材固有朝向。

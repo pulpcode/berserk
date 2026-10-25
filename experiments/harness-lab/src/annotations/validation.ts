@@ -1,5 +1,6 @@
 import type { AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationDocument, AnnotationFeature, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationLayer, AnnotationOperation, AnnotationReadInput, AnnotationRef, AnnotationSelection } from '../contracts/annotations.js';
-import type { Position } from '../contracts/context.js';
+import { getMapSymbol, MAP_SYMBOL_ICON_SIZE } from '../contracts/map-symbols.js';
+import { validateAnnotationGeometry } from '../contracts/annotation-geometry.js';
 import { RequestError } from '../contracts/errors.js';
 import { UUID } from '../workspaces/store.js';
 
@@ -32,57 +33,36 @@ export function selection(value: unknown): AnnotationSelection {
   if(layerIds !== undefined && objectIds !== undefined) throw invalid('引用时请选择图层或对象其中一种范围。');
   return {...ref(reference), ...(layerIds !== undefined ? {layerIds: ids(layerIds)} : {}), ...(objectIds !== undefined ? {objectIds: ids(objectIds)} : {})};
 }
-function position(value: unknown): Position {
-  if (!Array.isArray(value) || value.length !== 2 || typeof value[0] !== 'number' || typeof value[1] !== 'number' || !Number.isFinite(value[0]) || !Number.isFinite(value[1]) || Math.abs(value[0]) > 180 || Math.abs(value[1]) > 90) throw invalid('坐标必须是有效的 WGS84 经度、纬度。');
-  return [value[0],value[1]];
-}
-function equal(a: Position,b: Position) { return a[0] === b[0] && a[1] === b[1]; }
-function cross(a: Position,b: Position,c: Position) { return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]); }
-function between(a: Position,b: Position,c: Position) { return cross(a,b,c) === 0 && c[0] >= Math.min(a[0],b[0]) && c[0] <= Math.max(a[0],b[0]) && c[1] >= Math.min(a[1],b[1]) && c[1] <= Math.max(a[1],b[1]); }
-function intersects(a: Position,b: Position,c: Position,d: Position) { const x=cross(a,b,c),y=cross(a,b,d),z=cross(c,d,a),w=cross(c,d,b); return (x*y<0 && z*w<0) || between(a,b,c) || between(a,b,d) || between(c,d,a) || between(c,d,b); }
-function geometry(value: unknown, kind: AnnotationFeature['kind']): AnnotationFeature['geometry'] {
-  const object=record(value,['type','coordinates']);
-  const expected=kind==='line' ? 'LineString' : kind==='polygon' ? 'Polygon' : 'Point';
-  if (object.type !== expected) throw invalid('对象类型与几何不匹配。');
-  if (expected==='Point') return {type:'Point',coordinates:position(object.coordinates)};
-  const raw=expected==='Polygon' ? object.coordinates : [object.coordinates];
-  if (!Array.isArray(raw) || raw.length!==1 || !Array.isArray(raw[0]) || raw[0].length > 20000) throw invalid('仅支持单环面或有界线段。');
-  const points=raw[0].map(position);
-  if (points.length < (expected==='Polygon' ? 4 : 2) || points.some((point,index)=>index>0 && equal(point,points[index-1]))) throw invalid('几何顶点数量不足或连续重复。');
-  if (expected==='LineString') return {type:'LineString',coordinates:points};
-  if (!equal(points[0],points.at(-1)!)) throw invalid('多边形必须闭合。');
-  let area=0;
-  const segments=points.slice(0,-1).map((a,i)=>{const b=points[i+1]; area+=a[0]*b[1]-b[0]*a[1];return {i,a,b,minX:Math.min(a[0],b[0]),maxX:Math.max(a[0],b[0]),minY:Math.min(a[1],b[1]),maxY:Math.max(a[1],b[1])};}).sort((a,b)=>a.minX-b.minX);
-  // X sweep and Y bounds avoid a quadratic all-pairs scan for ordinary large rings.
-  for(let i=0;i<segments.length;i++) for(let j=i+1;j<segments.length && segments[j].minX<=segments[i].maxX;j++) {
-    const a=segments[i],b=segments[j],distance=Math.abs(a.i-b.i);
-    if(distance===1 || distance===segments.length-1 || a.maxY<b.minY || b.maxY<a.minY) continue;
-    if(intersects(a.a,a.b,b.a,b.b)) throw invalid('多边形不能自交。');
-  }
-  if (Math.abs(area)<1e-14) throw invalid('多边形面积必须大于零。');
-  return {type:'Polygon',coordinates:[points]};
-}
-function style(value: unknown): AnnotationFeature['style'] {
-  const object=record(value,['color','fillColor','opacity','size','width','lineStyle','symbol','label'],[]);
+function style(value: unknown, kind: AnnotationFeature['kind']): AnnotationFeature['style'] {
+  const object=record(value,['color','fillColor','opacity','size','width','lineStyle','symbol','label','symbolId','iconSize','heading','lineEnd'],[]);
   for(const name of ['color','fillColor']) if(object[name] !== undefined && (typeof object[name]!=='string' || !/^#[0-9a-fA-F]{6}$/.test(object[name]))) throw invalid('颜色使用六位十六进制值。');
   for(const [name,max] of [['opacity',1],['size',100],['width',30]] as const) if(object[name]!==undefined && (typeof object[name]!=='number' || !Number.isFinite(object[name]) || object[name]<0 || object[name]>max)) throw invalid('样式数值超限。');
   if(object.lineStyle!==undefined && !['solid','dashed','dotted'].includes(String(object.lineStyle))) throw invalid();
   if(object.symbol!==undefined && !['circle','square','triangle'].includes(String(object.symbol))) throw invalid();
+  const definition=typeof object.symbolId==='string' ? getMapSymbol(object.symbolId) : undefined;
+  if(object.symbolId!==undefined && (!definition || kind!=='point')) throw invalid('专业标号必须为目录中的点标号。');
+  if(object.iconSize!==undefined && (!definition || typeof object.iconSize!=='number' || !Number.isFinite(object.iconSize) || object.iconSize<MAP_SYMBOL_ICON_SIZE.min || object.iconSize>MAP_SYMBOL_ICON_SIZE.max)) throw invalid('专业标号尺寸须为 20～64 像素。');
+  if(object.heading!==undefined && (definition?.orientation!=='heading' || typeof object.heading!=='number' || !Number.isFinite(object.heading) || object.heading<0 || object.heading>=360)) throw invalid('该标号不支持方向，或方向不在 [0, 360) 范围内。');
+  if(object.lineEnd!==undefined && (kind!=='line' || typeof object.lineEnd!=='string' || !['none','arrow'].includes(object.lineEnd))) throw invalid('末端箭头仅适用于线标绘。');
   if(object.label!==undefined) object.label=string(object.label,500,true);
   return {...object};
 }
 export function feature(value: unknown): AnnotationFeature {
-  const object=record(value,['objectId','kind','name','geometry','note','attributes','style','sourceRefs','originFeatureRef'],['objectId','kind','name','geometry']);
+  const object=record(value,['objectId','kind','name','geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'],['objectId','kind','name','geometry']);
   if(!['point','line','polygon','text'].includes(String(object.kind))) throw invalid();
   const kind=object.kind as AnnotationFeature['kind'];
-  const result: AnnotationFeature={objectId:id(object.objectId),kind,name:string(object.name),geometry:geometry(object.geometry,kind)};
+  const result: AnnotationFeature={objectId:id(object.objectId),kind,name:string(object.name),geometry:validateAnnotationGeometry(object.geometry,kind)};
   if(object.note!==undefined) result.note=string(object.note,8000,true);
   if(object.attributes!==undefined) {
     if(!object.attributes || typeof object.attributes!=='object' || Array.isArray(object.attributes) || Object.keys(object.attributes).length>50) throw invalid();
     result.attributes={};
     for(const [key,value] of Object.entries(object.attributes)) { id(key); if(['__proto__','constructor','prototype'].includes(key) || (value!==null && !['string','number','boolean'].includes(typeof value)) || (typeof value==='number' && !Number.isFinite(value)) || (typeof value==='string' && value.length>2000)) throw invalid(); result.attributes[key]=value; }
   }
-  if(object.style!==undefined) result.style=style(object.style);
+  if(object.style!==undefined) result.style=style(object.style,kind);
+  if(object.informationRole!==undefined) {
+    if(typeof object.informationRole!=='string' || !['observation','assessment','plan'].includes(object.informationRole)) throw invalid('信息性质无效。');
+    result.informationRole=object.informationRole as AnnotationFeature['informationRole'];
+  }
   if(object.sourceRefs!==undefined) {
     if(!Array.isArray(object.sourceRefs) || object.sourceRefs.length>20) throw invalid();
     result.sourceRefs=object.sourceRefs.map(value=>{const item=record(value,['systemId','objectType','objectId','revision','queriedAt'],['systemId','objectType','objectId']);
@@ -121,7 +101,7 @@ function operations(value: unknown): AnnotationOperation[] {
         return {op:item.op,layerId:id(item.layerId),changes:change};}
       case 'delete_layer': record(item,['op','layerId']); return {op:item.op,layerId:id(item.layerId)};
       case 'add_object': {record(item,['op','layerId','feature']); const normalized=feature(item.feature); if(normalized.originFeatureRef) throw invalid('通过 copy_object 复制已有对象。'); return {op:item.op,layerId:id(item.layerId),feature:normalized};}
-      case 'update_object': {record(item,['op','objectId','changes','layerId'],['op','objectId','changes']); const change=record(item.changes,['kind','name','geometry','note','attributes','style','sourceRefs'],[]); if(!Object.keys(change).length && item.layerId===undefined) throw invalid(); return {op:item.op,objectId:id(item.objectId),changes:change,...(item.layerId!==undefined ? {layerId:id(item.layerId)} : {})} as AnnotationOperation;}
+      case 'update_object': {record(item,['op','objectId','changes','layerId'],['op','objectId','changes']); const change=record(item.changes,['kind','name','geometry','note','attributes','style','sourceRefs','informationRole'],[]); if(!Object.keys(change).length && item.layerId===undefined) throw invalid(); return {op:item.op,objectId:id(item.objectId),changes:change,...(item.layerId!==undefined ? {layerId:id(item.layerId)} : {})} as AnnotationOperation;}
       case 'delete_object': record(item,['op','objectId']); return {op:item.op,objectId:id(item.objectId)};
       case 'copy_object': record(item,['op','source','objectId','newObjectId','layerId']); return {op:item.op,source:ref(item.source),objectId:id(item.objectId),newObjectId:id(item.newObjectId),layerId:id(item.layerId)};
       default: throw invalid('不支持的标注操作。');
@@ -188,7 +168,7 @@ export function readInput(value: unknown): AnnotationReadInput {
     const names=object[field];
     if(names!==undefined && (!Array.isArray(names) || !names.length || names.length>32 || new Set(names).size!==names.length || names.some(value=>typeof value!=='string' || !value.trim() || value.length>120))) throw invalid(`${field} 须为 1～32 个不重复的非空${field==='layerNames' ? '图层' : '对象'}名称，每项不超过 120 字符。`);
   }
-  if(object.fields!==undefined && (!Array.isArray(object.fields) || object.fields.length>6 || new Set(object.fields).size!==object.fields.length || object.fields.some(f=>!['geometry','note','attributes','style','sourceRefs','originFeatureRef'].includes(String(f))))) throw invalid();
+  if(object.fields!==undefined && (!Array.isArray(object.fields) || object.fields.length>7 || new Set(object.fields).size!==object.fields.length || object.fields.some(f=>!['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'].includes(String(f))))) throw invalid();
   return {ref:ref(object.ref),...(object.layerIds!==undefined ? {layerIds:ids(object.layerIds)} : {}),...(object.layerNames!==undefined ? {layerNames:[...object.layerNames as string[]]} : {}),...(object.objectIds!==undefined ? {objectIds:ids(object.objectIds)} : {}),...(object.objectNames!==undefined ? {objectNames:[...object.objectNames as string[]]} : {}),...(object.fields!==undefined ? {fields:object.fields as AnnotationReadInput['fields']} : {}),...page(object.offset,object.limit)};
 }
 /** Stable object-key order makes action retries independent of JSON serialization order. */

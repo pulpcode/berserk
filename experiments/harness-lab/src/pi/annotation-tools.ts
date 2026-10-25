@@ -1,3 +1,4 @@
+import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE } from '../contracts/map-symbols.js';
 import { annotationToolResult } from './annotation-results.js';
 import type { AnnotationReadInput } from '../contracts/annotations.js';
 import { createHash } from 'node:crypto';
@@ -23,7 +24,7 @@ const readSelection = {
   objectNames: Type.Optional(Type.Array(Type.String({minLength: 1, maxLength: 120, pattern: '\\S'}), {minItems: 1, maxItems: 32, uniqueItems: true, description: '按本次固定版本中的对象名称精确匹配，与 objectIds 互斥；与 layerIds/layerNames 取交集。不忽略空格或大小写，不模糊匹配。零匹配仅表示本次版本和范围未找到；同名对象全部保留并分页，不自动选第一个。objects.total 是所有所列名称合并后的匹配数，不保证每个名称都命中。根据返回 name/objectId/layerId 核对候选；几何仍由 fields 选择。'})),
 };
 const readSelectionConstraints = {allOf: [{not: {required: ['layerIds', 'layerNames']}}, {not: {required: ['objectIds', 'objectNames']}}]};
-const readFields = Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef'].map(value => Type.Literal(value))), {
+const readFields = Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'].map(value => Type.Literal(value))), {
   uniqueItems: true, description: '选择额外字段。基础摘要始终包含 objectId/name/kind/layerId，不应将它们填入 fields；省略或空数组均仅返回摘要。未请求字段不代表字段为空。',
 }));
 export const annotationRefSchema = Type.Union([Type.Object({setId: uuid, revision}, strict), Type.Object({publicationId: uuid}, strict)]);
@@ -37,10 +38,15 @@ const geometry = Type.Union([
 ]);
 const style = Type.Object({color: Type.Optional(Type.String({pattern: '^#[0-9a-fA-F]{6}$'})), fillColor: Type.Optional(Type.String({pattern: '^#[0-9a-fA-F]{6}$'})),
   opacity: Type.Optional(Type.Number({minimum: 0, maximum: 1})), size: Type.Optional(Type.Number({minimum: 0, maximum: 100})), width: Type.Optional(Type.Number({minimum: 0, maximum: 30})),
+  symbolId: Type.Optional(Type.Union(MAP_SYMBOLS.map(symbol => Type.Literal(symbol.id, {description:symbol.name})), {description:'仅用于 point；标准符号保留原色，不能按状态改色。未知车型不猜测具体标号。'})),
+  iconSize: Type.Optional(Type.Number({minimum:MAP_SYMBOL_ICON_SIZE.min,maximum:MAP_SYMBOL_ICON_SIZE.max,description:'专业点标号显示尺寸（像素），缺省32；须同时设置symbolId。'})),
+  heading: Type.Optional(Type.Number({minimum:0,exclusiveMaximum:360,description:'真北0、顺时针，仅用于支持方向的专业点标号；战斗员、集结地、消防无人机不设置此字段。缺省不代表真实朝向。'})),
+  lineEnd: Type.Optional(Type.Union([Type.Literal('none'),Type.Literal('arrow')], {description:'仅用于 line；箭头是显示样式，不改变折线几何。'})),
   lineStyle: Type.Optional(Type.Union(['solid','dashed','dotted'].map(value => Type.Literal(value)))), symbol: Type.Optional(Type.Union(['circle','square','triangle'].map(value => Type.Literal(value)))), label: Type.Optional(Type.String({maxLength: 200}))}, strict);
 const geometryRef = Type.Unsafe<Static<typeof geometry>>({$ref: '#/$defs/geometry'});
 const styleRef = Type.Unsafe<Static<typeof style>>({$ref: '#/$defs/style'});
 const featureFields = {kind: Type.Union(['point','line','polygon','text'].map(value => Type.Literal(value))), name, geometry: geometryRef,
+  informationRole: Type.Optional(Type.Union(['observation','assessment','plan'].map(value=>Type.Literal(value)), {description:'现场记录/研判/拟定方案，按用户意图明确设置；未提供保持未注明，发布或采用不会变为已到场。'})),
   note: Type.Optional(Type.String({maxLength: 4000})), attributes: Type.Optional(Type.Record(Type.String(), Type.Union([Type.String(),Type.Number(),Type.Boolean(),Type.Null()]))), style: Type.Optional(styleRef),
   sourceRefs: Type.Optional(Type.Array(Type.Object({systemId: id, objectType: id, objectId: id, revision: Type.Optional(revision), queriedAt: Type.Optional(Type.String())}, strict), {maxItems: 20}))};
 const feature = Type.Object({objectId: id, ...featureFields}, strict);
