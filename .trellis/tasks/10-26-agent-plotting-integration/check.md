@@ -40,7 +40,7 @@
 - 离线驱动原完整 9 项通过（30/30 正式 HTTP 准备与 4/4 native 受控槽）；最后重复提交补强相关 3 项通过，包含上述 4 个合法槽的重新执行及实际重复写反例。驱动作用域 TypeScript 与从仓库根执行的 ESLint 均通过。所有真实 provider 请求为 **0**；模拟 provider 不计作模型成绩。
 - 已目视最终宽、窄、矮窗口和冲突核对截图：浮动面板按内容收缩；内部滚动时保存/取消可达；冲突选项及取消核对可达；无重复恢复横栏。截图采用可重复的本地测试瓦片，不代表生产底图视觉验收。
 
-对应日志和最终截图在 `verification/`：`lint.log`、`typecheck.log`、`build.log`、`edit-tests.log`、`e2e-fixed.log`、`evaluation-duplicate-guard.log` 与 5 张 PNG。其余服务/Pi/离线日志由主代理收集在同目录。
+对应日志和最终截图在 `verification/`：`lint.txt`、`typecheck.txt`、`build.txt`、`edit-tests.txt`、`browser-tests.txt`、`evaluation-duplicate-guard-tests.txt` 与 5 张 PNG。其余服务/Pi/离线日志由主代理收集在同目录。
 
 首次完整浏览器运行的 2 个旧流程失败保留在 `.local/agent-plotting-check/first-e2e-run/`；真实首点丢失的修复前复现保留在 `.local/agent-plotting-check/draw-refresh-reproduction/`。这些失败未从历史中抹除，最终复测已覆盖。
 

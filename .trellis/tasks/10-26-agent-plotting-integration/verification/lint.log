@@ -1,5 +1,0 @@
-
-> @berserk/harness-lab@0.1.0 lint
-> eslint . && node scripts/check-boundaries.mjs
-
-Pi and browser dependency boundaries passed.

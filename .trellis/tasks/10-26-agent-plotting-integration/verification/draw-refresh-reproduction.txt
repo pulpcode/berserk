@@ -17,7 +17,7 @@ Running 1 test using 1 worker
   ✘  1 tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing (8.3s)
 
 
-  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing
 
     Error: expect(received).toBeCloseTo(expected, precision)
 
@@ -48,4 +48,4 @@ Running 1 test using 1 worker
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
   1 failed
-    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing

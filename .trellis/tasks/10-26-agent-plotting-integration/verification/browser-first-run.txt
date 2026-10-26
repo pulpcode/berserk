@@ -78,7 +78,7 @@ Running 41 tests using 2 workers
   ✓  41 tests/e2e/spatial.spec.ts:125:1 › v2 point classifications show each identity and reopen the same fixed partition (8.2s)
 
 
-  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing
 
     TimeoutError: locator.click: Timeout 10000ms exceeded.
     Call log:
@@ -104,7 +104,7 @@ Running 41 tests using 2 workers
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-  2) tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing 
+  2) tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing
 
     TimeoutError: locator.click: Timeout 10000ms exceeded.
     Call log:
@@ -131,6 +131,6 @@ Running 41 tests using 2 workers
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
   2 failed
-    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
-    tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing 
+    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing
+    tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing
   39 passed (3.4m)

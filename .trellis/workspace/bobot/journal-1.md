@@ -1373,3 +1373,36 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 47: Agent与标绘整合及并发保护验收
+
+**Date**: 2026-10-26
+**Task**: Agent与标绘整合及并发保护验收
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+独立组合固定前端和Agent基线，完成字段保留、明确冲突合并和未保存输入保护；216项单元/Pi、43项浏览器与11项离线驱动用例均有通过证据。真实模型调用为0，保留P4待执行，未归档整个任务。
+
+### Main Changes
+
+- 补齐22项标号工具说明，人工与Agent共用既有API及CAS机制
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4431d4d` | (see git log) |
+
+### Testing
+
+- [OK] 类型检查、Lint和构建通过，刷新首点丢失真实复现后修复并回归
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅工程结果，另行安排真实30槽位测评及后续主线合入或试用部署
