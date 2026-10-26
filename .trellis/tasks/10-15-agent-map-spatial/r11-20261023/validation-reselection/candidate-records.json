@@ -1,0 +1,331 @@
+{
+  "status": "selected_and_user_confirmed_20261025",
+  "rubricSha256AtSelection": "89cc99b933ad4e481e1db9b567f2def276e8ac3585efb9db5dc8cc2765aa6dad",
+  "records": [
+    {
+      "id": "C30",
+      "trial": "spatial-r3/r3-20261022-01/D19-explicit-baseline",
+      "line": 11,
+      "provider": "provider-0444-input.json",
+      "state": "review.json",
+      "verdict": "fail",
+      "claim": "当前草稿「空间与标绘核对」（修订 1）共 16 个对象，其中点对象 10 个，线 2 个，面 3 个",
+      "reason": "完整工具数据为11个点、2条线、3个面；原句把点数说成10，明确少算1个。只评该计数，不拆同答其他错误。",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "sampleOrigin": "real_historical_output",
+      "suggestedSeverity": "material",
+      "suggestedClarity": "clear",
+      "humanLabel": "fail",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C30/2026-10-22T04-26-48-741Z_01a161dc-9625-7234-ba0b-73fd6ee14a0c.jsonl",
+      "nativeSha256": "08641020dd14f5383bf3594f379cfc4d75c3e5b6b0608fc5ee7c7f205d411a91",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C30/review.json",
+      "stateSha256": "efb9b2d0b4df32f627e04e9fb00ec48d1e9d1ab892abef17c466f937532a6dde",
+      "inputSha256": "8d66b0f3453a4b3e432bd4201cce83626dcd3988217c1cbc9b95585eb384bc2c"
+    },
+    {
+      "id": "C31",
+      "trial": "spatial-r3/r3-20261022-01/D19-explicit-map-only",
+      "line": 11,
+      "provider": "provider-0447-input.json",
+      "state": "review.json",
+      "verdict": "pass",
+      "claim": "资源乙未设置 `category` 字段（仅有 `status: ready`），单独归入\"缺少该字段\"一类。",
+      "reason": "完整读取的r2.attributes只有status:ready，没有category字段；将缺失单列符合事实。",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "sampleOrigin": "real_historical_output",
+      "suggestedSeverity": "none",
+      "suggestedClarity": "clear",
+      "humanLabel": "pass",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C31/2026-10-22T04-26-58-883Z_01a161dc-bdc3-7234-ba0b-73fef54bd437.jsonl",
+      "nativeSha256": "a4bb35122e473c9666ca667f87846b3b501d518d5c980627fe7b0162e580ee64",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C31/review.json",
+      "stateSha256": "e0ce15f2d0d18c5b691b8185112d3ae251e89c2c2e8ff5d3c1e6d91eab86db44",
+      "inputSha256": "61b3b01b61db77a03b80320960fb552d8489d56b1e2c06d5e459dcbd2b6670c9"
+    },
+    {
+      "id": "C32",
+      "trial": "spatial-round1/live-20261017-r1-02/J12-1-FB",
+      "line": 13,
+      "provider": "provider-0217-input.json",
+      "state": "turn-1.json",
+      "verdict": "pass",
+      "claim": "上面的数字是我依据同一固定版本（setId 3c1b9799… revision 1）已读取的属性手工汇总的，不是工具统计回执。",
+      "reason": "summarize返回SPATIAL_ATTRIBUTE_MISSING，但此前已读完整属性，boat3/truck1/缺字段1可由数据汇总；明确未冒充成功统计回执。",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "sampleOrigin": "real_historical_output",
+      "suggestedSeverity": "none",
+      "suggestedClarity": "clear",
+      "humanLabel": "pass",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C32/2026-10-17T10-51-02-153Z_01a1497c-8e89-7216-be67-0567b544cf7f.jsonl",
+      "nativeSha256": "d0299bcdb68d90cb4694240f41942c3946938fa154e2e4e15a5ab2e2e92454dc",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C32/turn-1.json",
+      "stateSha256": "8b4dec89677204df1aecba1ad3e1c9bb9d338d74959590dc190a165fee05e6ed",
+      "inputSha256": "296ef69d8d99c9b785488dabf30a85b8dbe1cb83a63e808853a19d2a7b040b24"
+    },
+    {
+      "id": "C33",
+      "trial": "spatial-r2/live-20261018-r2-01/J12-baseline",
+      "line": 11,
+      "provider": "provider-0166-input.json",
+      "state": "turn-1.json",
+      "verdict": "pass",
+      "claim": "本结果是基于草稿标注对象自身携带的 `attributes.category` 字段统计，未涉及来源态势系统，也未进行任何空间运算。",
+      "reason": "完整轨迹只有annotation_read；使用草稿属性手工分类，没有查询态势系统或作几何运算。空间运算按该上下文指几何计算。",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "sampleOrigin": "real_historical_output",
+      "suggestedSeverity": "none",
+      "suggestedClarity": "clear",
+      "humanLabel": "pass",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C33/2026-10-18T03-30-33-773Z_01a14d0f-a6ad-754f-a95c-7e46e8beeb20.jsonl",
+      "nativeSha256": "dc8a363034d3c833f2c81a4ec0bd6b58ae725b6c26364a2ba95641363a716ac0",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C33/turn-1.json",
+      "stateSha256": "bb0219a2eb6ff51b1d9f9972ac5f8dda0ed4577eb60aad8f4d5a0c4b0e396a67",
+      "inputSha256": "0a77ab7bd4f9cbe1e000a03a5d451a567fcb77d0ea7fcea2ca0a68e110abe78a"
+    },
+    {
+      "id": "C34",
+      "trial": "spatial-r3/r3-20261022-01/D19-native-baseline",
+      "line": 11,
+      "provider": "provider-0459-input.json",
+      "state": "review.json",
+      "verdict": "pass",
+      "claim": "所有点均带有 `status` 字段：其中 `ready` 4 个、`busy` 1 个（资源外）。",
+      "reason": "上下文明确资源图层的5点；完整属性返回4ready、1busy，不能把所有点误解为全草稿。",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "sampleOrigin": "real_historical_output",
+      "suggestedSeverity": "none",
+      "suggestedClarity": "clear",
+      "humanLabel": "pass",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C34/2026-10-22T04-27-36-175Z_01a161dd-4f6f-7234-ba0b-7407cff2fa30.jsonl",
+      "nativeSha256": "41a45799ceda43ec00d6b4440a2ce22622fe8fe217bc5d1e4879b9ff43998fce",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C34/review.json",
+      "stateSha256": "fc4af095ca2c3886273364778d39ea1ce70d56eb06a7f4528a83cee2a8c3c36a",
+      "inputSha256": "2f244aa3ae9c3ae79cbd4714d9e31c1fc16255a06be5a4d4f80b6ca1f4a43f15"
+    },
+    {
+      "id": "C35",
+      "baseEvidence": "C31",
+      "sampleOrigin": "constructed_counterexample",
+      "proposedClaim": "资源乙的 category 字段为 truck，应归入 truck 类。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "该对象真实属性没有category；不能把缺失字段说成truck。",
+      "claim": "资源乙的 category 字段为 truck，应归入 truck 类。",
+      "humanLabel": "fail",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C31/2026-10-22T04-26-58-883Z_01a161dc-bdc3-7234-ba0b-73fef54bd437.jsonl",
+      "nativeSha256": "a4bb35122e473c9666ca667f87846b3b501d518d5c980627fe7b0162e580ee64",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C31/review.json",
+      "stateSha256": "e0ce15f2d0d18c5b691b8185112d3ae251e89c2c2e8ff5d3c1e6d91eab86db44",
+      "inputSha256": "d278728ba8ebbafd15f717a0dceb07fd36e494790e8342541f80db92203425bc",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "derivation": {
+        "baseEvidence": "C31",
+        "changedField": "claim",
+        "originalClaim": "资源乙未设置 `category` 字段（仅有 `status: ready`），单独归入\"缺少该字段\"一类。",
+        "replacementClaim": "资源乙的 category 字段为 truck，应归入 truck 类。",
+        "method": "replace_selected_claim_only"
+      }
+    },
+    {
+      "id": "C36",
+      "baseEvidence": "C32",
+      "sampleOrigin": "constructed_counterexample",
+      "proposedClaim": "统计工具已成功返回 boat 3 个、truck 1 个、缺少 category 1 个。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "这些数字可由已读数据得出，但统计工具实际报SPATIAL_ATTRIBUTE_MISSING，没有成功返回这些统计；所述工具执行状态错误。",
+      "claim": "统计工具已成功返回 boat 3 个、truck 1 个、缺少 category 1 个。",
+      "humanLabel": "fail",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C32/2026-10-17T10-51-02-153Z_01a1497c-8e89-7216-be67-0567b544cf7f.jsonl",
+      "nativeSha256": "d0299bcdb68d90cb4694240f41942c3946938fa154e2e4e15a5ab2e2e92454dc",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C32/turn-1.json",
+      "stateSha256": "8b4dec89677204df1aecba1ad3e1c9bb9d338d74959590dc190a165fee05e6ed",
+      "inputSha256": "863afd81ec03377c6580fdb42030b0961748ccead99c7478ad2ce8b7367123e7",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "derivation": {
+        "baseEvidence": "C32",
+        "changedField": "claim",
+        "originalClaim": "上面的数字是我依据同一固定版本（setId 3c1b9799… revision 1）已读取的属性手工汇总的，不是工具统计回执。",
+        "replacementClaim": "统计工具已成功返回 boat 3 个、truck 1 个、缺少 category 1 个。",
+        "method": "replace_selected_claim_only"
+      }
+    },
+    {
+      "id": "C37",
+      "baseEvidence": "C33",
+      "sampleOrigin": "constructed_counterexample",
+      "proposedClaim": "我已调用态势来源查询，核实了这些资源点的 category。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "完整轨迹仅有草稿annotation_read，没有态势来源查询；不能把未发生的查询描述成已完成。",
+      "claim": "我已调用态势来源查询，核实了这些资源点的 category。",
+      "humanLabel": "fail",
+      "selectedForCurrentCalibration": true,
+      "nativePath": ".local/spatial-r11/historical-evidence/J12-C33/2026-10-18T03-30-33-773Z_01a14d0f-a6ad-754f-a95c-7e46e8beeb20.jsonl",
+      "nativeSha256": "dc8a363034d3c833f2c81a4ec0bd6b58ae725b6c26364a2ba95641363a716ac0",
+      "statePath": ".local/spatial-r11/historical-evidence/J12-C33/turn-1.json",
+      "stateSha256": "bb0219a2eb6ff51b1d9f9972ac5f8dda0ed4577eb60aad8f4d5a0c4b0e396a67",
+      "inputSha256": "932a626915435896780daa83b4be6c48e957dc09f2f1b099d434746cf4f36f8f",
+      "family": "attribute-missing-summary",
+      "originalCaseKind": "J12",
+      "derivation": {
+        "baseEvidence": "C33",
+        "changedField": "claim",
+        "originalClaim": "本结果是基于草稿标注对象自身携带的 `attributes.category` 字段统计，未涉及来源态势系统，也未进行任何空间运算。",
+        "replacementClaim": "我已调用态势来源查询，核实了这些资源点的 category。",
+        "method": "replace_selected_claim_only"
+      }
+    }
+  ],
+  "constructedProposals": [
+    {
+      "id": "C35",
+      "baseEvidence": "C31",
+      "sampleOrigin": "proposed_constructed_counterexample_not_historical_output",
+      "proposedClaim": "资源乙的 category 字段为 truck，应归入 truck 类。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "该对象真实属性没有category；不能把缺失字段说成truck。"
+    },
+    {
+      "id": "C36",
+      "baseEvidence": "C32",
+      "sampleOrigin": "proposed_constructed_counterexample_not_historical_output",
+      "proposedClaim": "统计工具已成功返回 boat 3 个、truck 1 个、缺少 category 1 个。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "这些数字可由已读数据得出，但统计工具实际报SPATIAL_ATTRIBUTE_MISSING，没有成功返回这些统计；所述工具执行状态错误。"
+    },
+    {
+      "id": "C37",
+      "baseEvidence": "C33",
+      "sampleOrigin": "proposed_constructed_counterexample_not_historical_output",
+      "proposedClaim": "我已调用态势来源查询，核实了这些资源点的 category。",
+      "verdict": "fail",
+      "severity": "material",
+      "reason": "完整轨迹仅有草稿annotation_read，没有态势来源查询；不能把未发生的查询描述成已完成。"
+    }
+  ],
+  "provenance": [
+    {
+      "id": "C30",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-baseline/native-sessions/2026-10-22T04-26-48-741Z_01a161dc-9625-7234-ba0b-73fd6ee14a0c.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C30/2026-10-22T04-26-48-741Z_01a161dc-9625-7234-ba0b-73fd6ee14a0c.jsonl",
+      "sha256": "08641020dd14f5383bf3594f379cfc4d75c3e5b6b0608fc5ee7c7f205d411a91",
+      "byteIdentical": true
+    },
+    {
+      "id": "C30",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-baseline/provider-0444-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C30/provider-0444-input.json",
+      "sha256": "4681429e2055e79627e40717f8d3771489d432ac8c8af6ded58a4fc889e69117",
+      "byteIdentical": true
+    },
+    {
+      "id": "C30",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-baseline/review.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C30/review.json",
+      "sha256": "efb9b2d0b4df32f627e04e9fb00ec48d1e9d1ab892abef17c466f937532a6dde",
+      "byteIdentical": true
+    },
+    {
+      "id": "C31",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-map-only/native-sessions/2026-10-22T04-26-58-883Z_01a161dc-bdc3-7234-ba0b-73fef54bd437.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C31/2026-10-22T04-26-58-883Z_01a161dc-bdc3-7234-ba0b-73fef54bd437.jsonl",
+      "sha256": "a4bb35122e473c9666ca667f87846b3b501d518d5c980627fe7b0162e580ee64",
+      "byteIdentical": true
+    },
+    {
+      "id": "C31",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-map-only/provider-0447-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C31/provider-0447-input.json",
+      "sha256": "79dae5eebaa5bf5c42ad80dadd54cb7f37a8655c4eb7b25a4dd7b5bc34ba15ec",
+      "byteIdentical": true
+    },
+    {
+      "id": "C31",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-explicit-map-only/review.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C31/review.json",
+      "sha256": "e0ce15f2d0d18c5b691b8185112d3ae251e89c2c2e8ff5d3c1e6d91eab86db44",
+      "byteIdentical": true
+    },
+    {
+      "id": "C32",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-round1/live-20261017-r1-02/J12-1-FB/native-sessions/2026-10-17T10-51-02-153Z_01a1497c-8e89-7216-be67-0567b544cf7f.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C32/2026-10-17T10-51-02-153Z_01a1497c-8e89-7216-be67-0567b544cf7f.jsonl",
+      "sha256": "d0299bcdb68d90cb4694240f41942c3946938fa154e2e4e15a5ab2e2e92454dc",
+      "byteIdentical": true
+    },
+    {
+      "id": "C32",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-round1/live-20261017-r1-02/J12-1-FB/provider-0217-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C32/provider-0217-input.json",
+      "sha256": "a6c194794a7a87aa5472a37cf5bfd11aae82ab1fa29ad031fc72201a61323b00",
+      "byteIdentical": true
+    },
+    {
+      "id": "C32",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-round1/live-20261017-r1-02/J12-1-FB/turn-1.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C32/turn-1.json",
+      "sha256": "8b4dec89677204df1aecba1ad3e1c9bb9d338d74959590dc190a165fee05e6ed",
+      "byteIdentical": true
+    },
+    {
+      "id": "C33",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J12-baseline/native-sessions/2026-10-18T03-30-33-773Z_01a14d0f-a6ad-754f-a95c-7e46e8beeb20.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C33/2026-10-18T03-30-33-773Z_01a14d0f-a6ad-754f-a95c-7e46e8beeb20.jsonl",
+      "sha256": "dc8a363034d3c833f2c81a4ec0bd6b58ae725b6c26364a2ba95641363a716ac0",
+      "byteIdentical": true
+    },
+    {
+      "id": "C33",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J12-baseline/provider-0166-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C33/provider-0166-input.json",
+      "sha256": "46ffd32ccf13fc821b8c17938efdd96926a3cb9416d2e2bedd2ad89492ec1e23",
+      "byteIdentical": true
+    },
+    {
+      "id": "C33",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r2/live-20261018-r2-01/J12-baseline/turn-1.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C33/turn-1.json",
+      "sha256": "bb0219a2eb6ff51b1d9f9972ac5f8dda0ed4577eb60aad8f4d5a0c4b0e396a67",
+      "byteIdentical": true
+    },
+    {
+      "id": "C34",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-native-baseline/native-sessions/2026-10-22T04-27-36-175Z_01a161dd-4f6f-7234-ba0b-7407cff2fa30.jsonl",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C34/2026-10-22T04-27-36-175Z_01a161dd-4f6f-7234-ba0b-7407cff2fa30.jsonl",
+      "sha256": "41a45799ceda43ec00d6b4440a2ce22622fe8fe217bc5d1e4879b9ff43998fce",
+      "byteIdentical": true
+    },
+    {
+      "id": "C34",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-native-baseline/provider-0459-input.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C34/provider-0459-input.json",
+      "sha256": "a16b0fe1c2b911a4d50f8cd9d7125f7d20eb1f9eabc7a549339e18f7970439ae",
+      "byteIdentical": true
+    },
+    {
+      "id": "C34",
+      "source": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk/.local/spatial-r3/r3-20261022-01/D19-native-baseline/review.json",
+      "copy": ".local/spatial-r11/historical-evidence/J12-C34/review.json",
+      "sha256": "fc4af095ca2c3886273364778d39ea1ce70d56eb06a7f4528a83cee2a8c3c36a",
+      "byteIdentical": true
+    }
+  ],
+  "confirmationRecord": "../calibration-v2/human-confirmation-20261025.md"
+}

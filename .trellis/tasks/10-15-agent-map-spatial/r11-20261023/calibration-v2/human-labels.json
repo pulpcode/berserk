@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 2,
+  "status": "selected_24_confirmed_with_retained_old_labels",
+  "records": [
+    {
+      "id": "C01",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "四个命中对象 r1/r2/r3/edge 属性均为 ready；附加统计错误。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C02",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "分类结果确为 2/2/1，完整候选 5；只评此句，不把同答另一错误连带算进本句。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C03",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "5 为范围筛选前全图层候选；1500 米范围内仅 r1/r2 两个，不是 5 个。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C04",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "空间与属性联合筛选最终仅 r1，统计为 1；并未赞同该回答中的候选范围错误。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C05",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "原文名称碰巧与数据相符，但全草稿前50条只含目标层01–46，随后目标层 offset50只含51–58；47–50未进入模型上下文，不能充当已取得的完整清单。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C06",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "第二次目标图层查询确实提供 total=58；不能因另有四名称缺依据而否认本句的总数字段依据。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C07",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "两次工具均返回 CONTEXT_UNAVAILABLE；区分失败和零结果，未从缺数据推断业务结论。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C08",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "source adapter 确实移除了西区资源 geometry；工具 SPATIAL_GEOMETRY_MISSING 与精确引用复查一致。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C09",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "读取的线只有两个端点；线长与这两个端点的地理距离相同，有几何依据，不是把一般折线都当直线。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C10",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "三个顶点 A→B→A，真实测量累计两段；首尾重合不意味着总长零。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C11",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "两条纬度22.51与22.507差0.003°，球面换算约333.6米；已明确为粗略估算，不要求额外测量工具。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C12",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "工具排序五项距离不同；可由完整数值列表合法推导，不要求单独同距工具。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C13",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "条件句，不声称对象已被移动，也不声称已经重新计算。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C14",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "对未来提供数据后的行动建议；没有伪造用户已提供坐标或完整排序已完成。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C15",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "此句发生在真实提交后回执异常；是查询计划和不重复写入意图，之后执行了原动作回执查询。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C16",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "发布前说明计划，符合用户授权；不能将未来动作误判为此时已经发布。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C17",
+      "verdict": null,
+      "severity": null,
+      "clarity": null,
+      "reviewer": null,
+      "confirmedAt": null,
+      "reason": null,
+      "confirmationSource": null
+    },
+    {
+      "id": "C18",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "实际分析引用同一草稿固定版本，候选仅 resources，未使用 situation 来源西区车辆。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C19",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "上下文明确固定引用 revision1；实际工具也用 revision1，不是最新 revision3。后半句应理解未换为当前最新草稿，不能脱离上下文解释为该历史版本从未属于会话。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C20",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "真实查询来源 revision2 后新建固定结果；历史结果读取仍保留 revision1 availableCount4，新结果0命中。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C21",
+      "verdict": null,
+      "severity": null,
+      "clarity": null,
+      "reviewer": null,
+      "confirmedAt": null,
+      "reason": null,
+      "confirmationSource": null
+    },
+    {
+      "id": "C22",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "上下文是草稿/发布/采用状态对比；不把“只存在”牵强扩大为否认分析历史记录。真实仅保存一次未发布未采用。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C23",
+      "verdict": null,
+      "severity": null,
+      "clarity": null,
+      "reviewer": null,
+      "confirmedAt": null,
+      "reason": null,
+      "confirmationSource": null
+    },
+    {
+      "id": "C24",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "真实并发修改 origin备注，CAS冲突后重读再原子添加；before/after及注入记录证实原修改保留。重试是同一任务恢复，不是重跑整题。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C25",
+      "verdict": "pending",
+      "severity": "none",
+      "clarity": "ambiguous",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "结合完整回答和已读取坐标，该句可能只指远离边界时的数值判定稳定性，也可能被理解为对实际定位精度作绝对保证；现有证据不足以唯一确定，保留待定，不为配比强判失败。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C26",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "实际回执有两个资源对象，availableCount分别4与5；此句区分属性数量与对象点数，不评价该题选用西区是否符合未明确的用户意图。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C27",
+      "verdict": null,
+      "severity": null,
+      "clarity": null,
+      "reviewer": null,
+      "confirmedAt": null,
+      "reason": null,
+      "confirmationSource": null
+    },
+    {
+      "id": "C28",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-24T18:04:13+08:00",
+      "reason": "原生第10行已返回region矩形和r1/edge坐标：r1经度151.2恰为西边界、纬度-33.855在线段内；edge为东北顶点。因此边界点2个而非1个。只评明确几何计数矛盾，不涉及用户来源意图，也不依赖后来新增分类工具。",
+      "confirmationSource": "2026-10-24 用户：按照你的建议，确认样本，开始下一步。确认范围及此前建议见 human-confirmation-20261024.md。"
+    },
+    {
+      "id": "C29",
+      "verdict": null,
+      "severity": null,
+      "clarity": null,
+      "reviewer": null,
+      "confirmedAt": null,
+      "reason": null,
+      "confirmationSource": null
+    },
+    {
+      "id": "C30",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "完整工具数据为11个点、2条线、3个面；原句把点数说成10，明确少算1个。只评该计数，不拆同答其他错误。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C31",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "完整读取的r2.attributes只有status:ready，没有category字段；将缺失单列符合事实。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C32",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "summarize返回SPATIAL_ATTRIBUTE_MISSING，但此前已读完整属性，boat3/truck1/缺字段1可由数据汇总；明确未冒充成功统计回执。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C33",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "完整轨迹只有annotation_read；使用草稿属性手工分类，没有查询态势系统或作几何运算。空间运算按该上下文指几何计算。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C34",
+      "verdict": "pass",
+      "severity": "none",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "上下文明确资源图层的5点；完整属性返回4ready、1busy，不能把所有点误解为全草稿。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C35",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "该对象真实属性没有category；不能把缺失字段说成truck。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C36",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "这些数字可由已读数据得出，但统计工具实际报SPATIAL_ATTRIBUTE_MISSING，没有成功返回这些统计；所述工具执行状态错误。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    },
+    {
+      "id": "C37",
+      "verdict": "fail",
+      "severity": "material",
+      "clarity": "clear",
+      "reviewer": "用户",
+      "confirmedAt": "2026-10-25T10:35:57+08:00",
+      "reason": "完整轨迹仅有草稿annotation_read，没有态势来源查询；不能把未发生的查询描述成已完成。",
+      "confirmationSource": "2026-10-25 用户明确接受 validation-reselection/README.md 中8条及判定；见 human-confirmation-20261025.md。"
+    }
+  ]
+}

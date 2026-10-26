@@ -12,16 +12,16 @@
   "assignee": "bobot",
   "createdAt": "2026-10-15",
   "completedAt": null,
-  "branch": "codex/agent-map-spatial",
+  "branch": "codex/agent-result-grounding",
   "base_branch": "main",
-  "worktree_path": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk",
+  "worktree_path": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk",
   "commit": null,
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。\n2026-10-17 R0与旧断言修复完成，冻结fc76d09运行首轮；预算停止于46完整/1中断/1未执行，219请求均HTTP200，4003032输入token。严格27通过/16失败/3未决，主任务41；结果待审阅，不追加预算或第二轮。\n2026-10-18 用户授权增预算补首轮两项。独立批次7请求/117715输入/1028输出，FC/PB均两审通过。完整48槽位29通过/16失败/3未决、核心43；原47次启动及1预算中断证据不变，补测单列，第二轮未执行。原批次统计保留于nextRoundOriginalBatch；nextRoundExecuted表示48个已执行计划槽位，实际累计启动49次（含原中断），消耗含原中断。\n2026-10-18 用户要求将首轮后改进建议落盘并提交；post-round1-improvement-plan.md区分Skill、工具、模型职责与单变量验证顺序，产品交互原则待确认。仅文档授权，不改产品、不运行新测试。\n2026-10-18 用户要求开始实施并测评；执行R2三组独立Skill正文候选（原版/仅标绘/仅空间），16族各组一轮共48项，600万输入预算。新交互原则只用于新批次同口径，原R1不重评；未授权自动第二轮或超预算。\n2026-10-18 R2冻结13d65ce，48项全部完成（45正常记录+3必要澄清边界），207请求/3917123输入/32357输出，无技术或预算中断。合议严格B12/16、M13/16、S11/16，2项未决；核心44确定完成、3失败、1归类争议。两候选不满足预登记采用条件，产品基线保留；无自动追加测试。\n2026-10-22 用户要求按源码审视结论修订现有改进方案，仅文档待审阅。撤回通用范围来源凭证/固定解析路径硬门槛；保留客观身份版本与效果检查，局部约束须有独立可信依据。补充Codex、Claude Code、DeepSeek Harness、Hermes参考依据及Skill/工具/评测调整，新增误阻断与无必要提问指标。R2授权归档为历史，新实施及测试未获授权，所有既有评分/协议/原始证据不变。\n2026-10-22 用户要求“提交git，然后开始实施”。先提交审阅方案ef5d4a2；授权Skill候选、离线评测和相关工程验证。真实模型测评次数/预算尚未确定，不追加历史轮次、不修改历史成绩，产品采用仍需效果证据。\n2026-10-22 完成R3两份独立Skill候选、20项开发题与4项新组合保留题、评分校准和离线接线。57项既有相关测试、18项新增测试及最终72份准备预检通过，真实模型调用0次；产品基线及历史评分不变。建议144项新诊断及预算待审阅，付费批量执行器尚未实现，未自动采用候选或追加测试。\n2026-10-22 用户要求开始测试；此前要求正常单项完整处理，原24请求/64工具/10分钟改提醒线。核对旧原版记录可复用性后执行最多144项，一轮；预算在题间检查，真实调用前完成运行入口与独立工程检查。\n2026-10-22 用户要求开始实施并小范围测评；完成Skill目录单一来源和宿主约定候选，冻结正文/工具/模型进行12项A/B冒烟。55请求，无技术中断或重试。主任务均3/6；严格A1通过/4失败/1待定、B3通过/3失败。自动读取均1/4，未达到扩大试验条件；结果待审阅，90%正式验收未通过。\n2026-10-22 用户批准第9节两个工具扩展与澄清分开评分；先提交方案b141f39，R4基线b56de82另存。授权实施+离线检查+首批8项读取冒烟，后续12项明确不自动执行。\n2026-10-22 R5实现和离线检查完成；首批8项因DeepSeek HTTP402/Insufficient Balance中断：3完整、1中断、4未执行，15请求/已知231065输入/2166输出/1未知用量。部分审阅严格0通过/3失败/1中断待定，核心完成1；3完整均未读Skill。不做完整效果判断，无重试或后续12项。\n2026-10-22 用户充值后授权重试原中断1项及完成剩余4项；独立补测5项全部完整，29请求/521985输入/4208输出/无新中断。完整8槽位主任务L0 3/4、L1 2/4，严格均1/4；及时读取1/3对0/3。原603文件未变，累计9次启动、44请求、旧未知用量1保留。后续12项未执行。\n2026-10-22 用户授权后续12项精简Skill/新增工具执行对照，四题三组一轮、显式正文；预算在调用前冻结，普通澄清与API契约分开评分，不自动追加。\nR6已完成12项：主任务各3/4，严格E0 2/4、E1 3/4、E2 2/4。两项解释错，D02题意歧义明示；名称查询未被使用，分类工具正确使用但无新增主任务通过。无技术中断或追加。",
+  "notes": "历史方案阶段：范围已确认，当时架构待审阅，未批准空间分析实施。已提交方案并合入底图 a79f1ae；2026-10-16 固定合入 main@75fc7f1 的已提交内容，包含结果投影 d79a561 与工具契约 fdba343，不含 main 未提交修改。空间分析仍须独立验证方法与范围解释。\n2026-10-16 用户明确要求开始开发；固定实施基线 1b783a2，不纳入其他 worktree 未提交修改。\n2026-10-16 首轮工程实现及216次模型评测快照5910928；所有试次已审阅，AC10未通过，保持in_progress。\n2026-10-16 当前实现及聚焦验证已提交661861f。用户要求提交现状、继续分析并落盘修复方案，暂不编码或重跑模型；remediation-plan.md待审阅，历史implementationApproved只记录首轮授权。\n2026-10-16 用户要求“提交当前git，然后开展”；方案提交21988f6，授权P0/P1/P2及方案内开发诊断，保持90%验收。P3宿主改动须有对照依据，P4与第二模型仍单独审阅。\n2026-10-16 用户充值并要求继续；冻结同版补完原未执行25项，完整计划120项均已尝试，累计151项，未重跑8条历史额度中断，AC10仍未通过。\n2026-10-17 用户要求重试历史8条欠费中断；每项补测一次、原记录保留，累计159项。首次尝试指标与补测后视图分开，模型验收未通过。\n2026-10-17 用户要求先合入最新main、完成检查、结合两边测评更新方案，禁止追加产品修复或重跑模型。已合入main@e7d56e8，合并ae9cb6d；类型/Lint/构建、桌面26/26通过，单元1051通过/1项旧provider文案断言失败并保留。next-round-plan.md待审阅，R0校准、R1的96次新基线及之后全部提案未获执行授权；既有159次与原始评分不变。\n2026-10-17 用户确认仅调整落盘方案：保留显式/原生两种Skill加载方式，R1改为12族×1轮×2模型×2加载方式＝48次；明确第二轮触发条件，另48次必须单独报审，不自动追加。尚未授权首轮执行；当前只更新文档与元数据，不改代码、不重评、不运行测试。\n2026-10-17 用户批准：先提交当前方案，再修旧断言、完成R0评分校准并执行R1首轮48次；第二轮禁止自动追加。方案提交8f2aa31。产品Skill、工具及默认模型不变；仅测试断言、评测驱动/夹具/校准和记录进入本轮。\n2026-10-17 R0与旧断言修复完成，冻结fc76d09运行首轮；预算停止于46完整/1中断/1未执行，219请求均HTTP200，4003032输入token。严格27通过/16失败/3未决，主任务41；结果待审阅，不追加预算或第二轮。\n2026-10-18 用户授权增预算补首轮两项。独立批次7请求/117715输入/1028输出，FC/PB均两审通过。完整48槽位29通过/16失败/3未决、核心43；原47次启动及1预算中断证据不变，补测单列，第二轮未执行。原批次统计保留于nextRoundOriginalBatch；nextRoundExecuted表示48个已执行计划槽位，实际累计启动49次（含原中断），消耗含原中断。\n2026-10-18 用户要求将首轮后改进建议落盘并提交；post-round1-improvement-plan.md区分Skill、工具、模型职责与单变量验证顺序，产品交互原则待确认。仅文档授权，不改产品、不运行新测试。\n2026-10-18 用户要求开始实施并测评；执行R2三组独立Skill正文候选（原版/仅标绘/仅空间），16族各组一轮共48项，600万输入预算。新交互原则只用于新批次同口径，原R1不重评；未授权自动第二轮或超预算。\n2026-10-18 R2冻结13d65ce，48项全部完成（45正常记录+3必要澄清边界），207请求/3917123输入/32357输出，无技术或预算中断。合议严格B12/16、M13/16、S11/16，2项未决；核心44确定完成、3失败、1归类争议。两候选不满足预登记采用条件，产品基线保留；无自动追加测试。\n2026-10-22 用户要求按源码审视结论修订现有改进方案，仅文档待审阅。撤回通用范围来源凭证/固定解析路径硬门槛；保留客观身份版本与效果检查，局部约束须有独立可信依据。补充Codex、Claude Code、DeepSeek Harness、Hermes参考依据及Skill/工具/评测调整，新增误阻断与无必要提问指标。R2授权归档为历史，新实施及测试未获授权，所有既有评分/协议/原始证据不变。\n2026-10-22 用户要求“提交git，然后开始实施”。先提交审阅方案ef5d4a2；授权Skill候选、离线评测和相关工程验证。真实模型测评次数/预算尚未确定，不追加历史轮次、不修改历史成绩，产品采用仍需效果证据。\n2026-10-22 完成R3两份独立Skill候选、20项开发题与4项新组合保留题、评分校准和离线接线。57项既有相关测试、18项新增测试及最终72份准备预检通过，真实模型调用0次；产品基线及历史评分不变。建议144项新诊断及预算待审阅，付费批量执行器尚未实现，未自动采用候选或追加测试。\n2026-10-22 用户要求开始测试；此前要求正常单项完整处理，原24请求/64工具/10分钟改提醒线。核对旧原版记录可复用性后执行最多144项，一轮；预算在题间检查，真实调用前完成运行入口与独立工程检查。\n2026-10-22 用户要求开始实施并小范围测评；完成Skill目录单一来源和宿主约定候选，冻结正文/工具/模型进行12项A/B冒烟。55请求，无技术中断或重试。主任务均3/6；严格A1通过/4失败/1待定、B3通过/3失败。自动读取均1/4，未达到扩大试验条件；结果待审阅，90%正式验收未通过。\n2026-10-22 用户批准第9节两个工具扩展与澄清分开评分；先提交方案b141f39，R4基线b56de82另存。授权实施+离线检查+首批8项读取冒烟，后续12项明确不自动执行。\n2026-10-22 R5实现和离线检查完成；首批8项因DeepSeek HTTP402/Insufficient Balance中断：3完整、1中断、4未执行，15请求/已知231065输入/2166输出/1未知用量。部分审阅严格0通过/3失败/1中断待定，核心完成1；3完整均未读Skill。不做完整效果判断，无重试或后续12项。\n2026-10-22 用户充值后授权重试原中断1项及完成剩余4项；独立补测5项全部完整，29请求/521985输入/4208输出/无新中断。完整8槽位主任务L0 3/4、L1 2/4，严格均1/4；及时读取1/3对0/3。原603文件未变，累计9次启动、44请求、旧未知用量1保留。后续12项未执行。\n2026-10-22 用户授权后续12项精简Skill/新增工具执行对照，四题三组一轮、显式正文；预算在调用前冻结，普通澄清与API契约分开评分，不自动追加。\nR6已完成12项：主任务各3/4，严格E0 2/4、E1 3/4、E2 2/4。两项解释错，D02题意歧义明示；名称查询未被使用，分类工具正确使用但无新增主任务通过。无技术中断或追加。\n2026-10-22 用户要求结合成熟Agent经验更新现有改进方案，仅文档待审阅，不改代码、不重跑评测。第10节明确Skill短流程、最小工具事实改进、过程与最终误述分开评测、参考边界及90%门槛；从main@6ce8651建立codex/agent-result-grounding独立worktree，旧空间分支保留追溯。此前线上更新已单独授权完成，不延伸为本轮实现或测试授权。\n2026-10-24 用户要求先提交方案再实施；四组64项方案提交dcaeb52，在codex/agent-result-grounding实施两份Skill及隔离评测/评分脚本。原工具契约已提供所需字段，不新增接口。校准候选修订为16开发+8验证（拟4/4），原记录保留；人工0/24，真实调用0。当前完成离线检查后待人工评分样例确认，未通过正式模型验收。\n2026-10-24 用户按建议确认样本：已记录19通过、4失败，C25待定。材料与19项离线检查通过；完整曝光审计发现现有验证两家族用于过本裁判规则制定，需重选。有限查14条J12历史得到4正1负，另列3条明确标记的构造对照草案待审，未接入评分入口、未调用模型；旧确认与历史成绩不变。\n\n2026-10-25 用户明确接受8条替换材料及表中判定，要求真实历史与构造样本分别标识；授权完成离线检查后24次评分校准，校准通过后执行已批准64项及其评分，不自动重试或追加。\n\n2026-10-25 新8材料已确认并通过28项离线检查；24次评分校准新验证8/8、开发15/16。执行64项Agent全部完整（235请求），任务评分首条因额外clarityNote字段schema失败停止，0有效评分/63未调用。总260请求，4908930输入/47354输出，0未知用量，无重试。保持原始记录与冻结源码，不把64recorded当作正确率。\n\n2026-10-25 用户授权修复评分格式后用原响应离线验证、补齐既有64项评分；保留原失败，禁止重跑任务或追加测评，继续沿用原预算。\n\n2026-10-25 按用户授权修复评分格式契约：附加JSON另存metadata，核心字段不改；已知用量的单条裁判格式/逻辑错误保留为judge_error，技术/用量/冻结错误仍停止。24校准及已返回响应离线复核后完成原64项各一次评分，61有效/3裁判异常，累计323请求（Agent235+校准24+整题评分64），零重发/零追加。代理证据复核主56/64、严格54/64，四组新版/旧版效果相同；Q03八项来源覆盖失败，另两项解释错误。未改产品/Skill/题目/裁判rubric，原失败与全部响应保留；待用户审阅，不自动继续。",
   "meta": {
     "implementationApproved": true,
     "implementationComplete": false,
@@ -45,7 +45,7 @@
     "remediationReviewStatus": "next_round_pending_review",
     "remediationImplementationApproved": false,
     "remediationExperimentsApproved": false,
-    "executionHold": "开发main集成与历史分支管理已完成。AC10仍未通过；没有授权追加模型测评、采用候选正文或部署。",
+    "executionHold": "评分格式适配及原响应离线验证通过、复核后续评；不重复首条请求，只补剩余63首次评分。",
     "remediationPlanCommit": "21988f6",
     "remediationPhase": "main_merged_next_round_review_pending",
     "remediationOptionalModelApproved": false,
@@ -477,6 +477,442 @@
       "worktreesPreserved": 3,
       "mainDependenciesSynchronized": true,
       "mainTypecheck": "pass"
+    },
+    "resultGroundingPlanReview": {
+      "status": "planning_awaiting_user_review",
+      "date": "2026-10-22",
+      "plan": "post-round1-improvement-plan.md",
+      "section": 10,
+      "references": "research/result-grounding-references-20261022.md",
+      "baseCommit": "6ce86513022350fb752eaa3dc04a96a5d2d82a6e",
+      "branch": "codex/agent-result-grounding",
+      "worktree": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk",
+      "previousBranch": "codex/agent-map-spatial",
+      "previousWorktree": "/Users/lau/.codex/worktrees/agent-map-spatial/berserk",
+      "implementationApproved": false,
+      "engineeringTestsApproved": false,
+      "modelTestsApproved": false,
+      "additionalRoundApproved": false,
+      "onlineVerifierApproved": false,
+      "modelCalls": 0,
+      "formalAcceptanceThreshold": 0.9,
+      "planCommit": "6a8ba1c",
+      "evaluationProviderConfiguration": {
+        "date": "2026-10-23",
+        "provider": "volcengine-agent-plan",
+        "model": "deepseek-v4.1-flash",
+        "baseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3",
+        "localEnv": "experiments/harness-lab/.env.local",
+        "report": "research/ark-agent-plan-config-20261023.md",
+        "status": "local_config_prepared_key_pending",
+        "historicalRunnersModified": false,
+        "newRunnerAdapted": false,
+        "liveCalls": 0,
+        "productionChanged": false
+      }
+    }
+  },
+  "resultGroundingR7": {
+    "date": "2026-10-23",
+    "authorization": "用户：ok，开始本轮；承接6题A/B12项小范围对照",
+    "implementationApproved": true,
+    "offlineChecksApproved": true,
+    "liveTrialSlotsApproved": 12,
+    "loading": "explicit",
+    "model": "deepseek-v4.1-flash",
+    "providerBaseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3",
+    "baseline": "af13107",
+    "groups": [
+      "A",
+      "B"
+    ],
+    "automaticRetries": false,
+    "secondRoundApproved": false,
+    "largeScaleAcceptanceApproved": false,
+    "productionDeploymentApproved": false,
+    "record": "research/r7-implementation-20261023.md",
+    "status": "completed_pending_review",
+    "executed": 12,
+    "requests": 53,
+    "inputTokens": 1061332,
+    "outputTokens": 8511,
+    "retries": 0,
+    "strict": {
+      "A": "5/6",
+      "B": "6/6"
+    },
+    "formalAcceptancePassed": false,
+    "report": "research/r7-results-20261023.md"
+  },
+  "resultGroundingR8": {
+    "date": "2026-10-23",
+    "authorizedSlots": 12,
+    "loading": "native",
+    "productCommit": "c95b3d3",
+    "baseline": "af13107",
+    "groups": [
+      "A",
+      "B"
+    ],
+    "retriesApproved": false,
+    "additionalTrialsApproved": false,
+    "status": "completed_pending_review",
+    "report": "research/r8-results-20261023.md",
+    "executed": 12,
+    "requests": 54,
+    "inputTokens": 1007432,
+    "outputTokens": 8346,
+    "strict": {
+      "A": "5/6",
+      "B": "5/6"
+    },
+    "core": {
+      "A": "6/6",
+      "B": "5/6"
+    },
+    "anySkillRead": {
+      "A": "3/6",
+      "B": "4/6"
+    }
+  },
+  "resultGroundingR9": {
+    "authorizedSlots": 9,
+    "cases": [
+      "D17",
+      "D02",
+      "D23"
+    ],
+    "repeats": 3,
+    "group": "B",
+    "loading": "native",
+    "candidateCommit": "c95b3d3",
+    "previousResultsCommit": "18a5f96",
+    "status": "completed_pending_review",
+    "additionalTrialsApproved": false,
+    "automaticRetries": false,
+    "record": "research/r9-authorization-20261023.md",
+    "executed": 9,
+    "requests": 31,
+    "inputTokens": 565344,
+    "outputTokens": 5512,
+    "core": "8/9",
+    "strict": "8/9",
+    "byCase": {
+      "D17": "2/3",
+      "D02": "3/3",
+      "D23": "3/3"
+    },
+    "anySkillRead": "5/9",
+    "report": "research/r9-results-20261023.md"
+  },
+  "resultGroundingR10": {
+    "status": "completed_pending_review",
+    "authorizedSlots": 24,
+    "repeats": 1,
+    "group": "B",
+    "loading": "native",
+    "candidateCommit": "c95b3d3",
+    "previousResultsCommit": "8da9d3e",
+    "automaticRetries": false,
+    "additionalTrialsApproved": false,
+    "productChangesApproved": false,
+    "record": "research/r10-authorization-20261023.md",
+    "offlineIntegrationPassed": 1,
+    "offlineSessions": 24,
+    "offlineSimulatedRequests": 70,
+    "offlineScoringTestsPassed": 6,
+    "typecheck": "pass",
+    "lint": "pass",
+    "batch": ".local/spatial-r10/batch-20261023",
+    "executed": 24,
+    "technicalInterruptions": 0,
+    "requests": 115,
+    "inputTokens": 2139010,
+    "outputTokens": 19251,
+    "core": "23/24",
+    "strict": "20/24",
+    "anySkillRead": "13/24",
+    "successfulSkillReadCalls": 14,
+    "primaryTaskFailures": [
+      "T03"
+    ],
+    "strictFailures": [
+      "T01",
+      "T03",
+      "T11",
+      "T13"
+    ],
+    "report": "research/r10-results-20261023.md",
+    "formalAcceptancePassed": false,
+    "completeReadCoverageT13": false
+  },
+  "resultGroundingR11": {
+    "plan": "current-improvement-plan.md",
+    "planCommit": "a4b065e",
+    "authorization": "用户：提交git，然后开始实施",
+    "status": "completed_grading_and_agent_evidence_review_pending_user_review",
+    "humanCalibrationConfirmed": true,
+    "newProviderRequests": 323,
+    "plannedTaskTrials": 64,
+    "plannedJudgeRequests": 88,
+    "automaticRetries": false,
+    "progress": "r11-20261023/README.md",
+    "calibrationRecords": 24,
+    "developmentRecords": 16,
+    "validationRecords": 8,
+    "humanConfirmedRecords": 24,
+    "calibrationMaterialCheck": "passed",
+    "knownGaps": [
+      "Q03_source_disambiguation_or_full_conditional_coverage_failed_8_of_8",
+      "explanation_errors_on_otherwise_completed_Q02_2_S0_N_and_Q04_2_S1_N",
+      "three_judge_output_errors_preserved_without_retry",
+      "task_judge_false_pass_and_false_fail_require_evidence_review",
+      "calibration_development_C16_plan_tense_pending_vs_human_pass",
+      "validation_five_historical_traces_and_three_constructed_negatives_no_critical_gold",
+      "diagnostic_sample_not_production_accuracy_or_formal_holdout_acceptance"
+    ],
+    "review": "r11-20261023/calibration-v2/human-review.md",
+    "executionAllowed": false,
+    "executionHoldReason": "已完成批准的64项任务与各一次评分；不自动重试、追加或开展下一轮。",
+    "changeProposal": "r11-20261023/next-change-proposal.md",
+    "businessPolicyApproval": {
+      "confirmed": true,
+      "date": "2026-10-24",
+      "policy": "草稿点可按用户指定参与空间分析，但不自动视为真实可用资源；来源无法唯一确定且会影响答案时，澄清或分别说明。",
+      "scope": "核心业务口径已确认；本轮方案已由后续“提交git，然后开始实施”授权，具体人工评分标签不由该指令代填"
+    },
+    "proposedTaskTrials": 64,
+    "proposedJudgeRequests": 88,
+    "changeProposalApproved": true,
+    "comparisonDirectionConfirmed": "同时验证Skill修改效果与加载问题，保留预加载对照",
+    "proposedComparisonGroups": [
+      "S0-N",
+      "S1-N",
+      "S0-P",
+      "S1-P"
+    ],
+    "proposedDesign": {
+      "tasks": 8,
+      "skillVersions": 2,
+      "loadingModes": 2,
+      "repetitions": 2,
+      "businessTrials": 48,
+      "unrelatedTrials": 16,
+      "supersedesUnexecutedTrials": [
+        32,
+        48
+      ],
+      "noSkillGroupIncluded": false
+    },
+    "proposedBudget": {
+      "status": "approved_conditionally_on_calibration_gate",
+      "calibrationRequests": 24,
+      "trialJudgeRequests": 64,
+      "judgeRequestLimit": 88,
+      "estimatedAgentRequests": [
+        320,
+        480
+      ],
+      "estimatedTotalRequests": [
+        408,
+        568
+      ],
+      "estimatedInputTokens": [
+        6000000,
+        12000000
+      ],
+      "estimatedOutputTokens": [
+        100000,
+        200000
+      ],
+      "startupGuard": {
+        "requests": 720,
+        "inputTokens": 16000000,
+        "outputTokens": 400000
+      },
+      "judgeReserve": {
+        "requests": 88,
+        "inputTokens": 3000000,
+        "outputTokens": 160000
+      },
+      "agentAvailable": {
+        "requests": 632,
+        "inputTokens": 13000000,
+        "outputTokens": 240000
+      },
+      "newAgentTaskReserve": {
+        "requests": 36,
+        "inputTokens": 500000,
+        "outputTokens": 16000
+      },
+      "automaticAdditionalTrials": false,
+      "automaticRetries": false
+    },
+    "approvedPlanCommit": "dcaeb52",
+    "implementationAllowed": true,
+    "implementationRecord": "r11-20261023/implementation.md",
+    "legacyReview": "r11-20261023/calibration-review.md",
+    "calibrationCandidateRevision": "v2",
+    "validationSuggested": {
+      "pass": 4,
+      "fail": 3,
+      "pending": 1,
+      "traces": 5,
+      "families": 2
+    },
+    "excludedDiscussionOrReserve": [
+      "C17",
+      "C21",
+      "C23",
+      "C27"
+    ],
+    "offlineChecks": {
+      "skillRelatedTests": 131,
+      "judgeTests": 10,
+      "calibrationTests": 28,
+      "driverPureTests": 6,
+      "driverIntegration": "passed_64_local_simulated_trials",
+      "providerRequests": 0,
+      "driverIntegrationSimulatedRequests": 224,
+      "driverProviderFaultTests": 3,
+      "recordingPatchRegressionTrials": 4,
+      "recordingPatchSimulatedRequests": 16,
+      "typecheck": "passed",
+      "lint": "passed",
+      "independentReview": "passed",
+      "diffCheck": "passed"
+    },
+    "offlineImplementationComplete": true,
+    "humanConfirmationRecord": "r11-20261023/calibration-v2/human-confirmation-20261024.md",
+    "humanPendingRecords": [
+      "C25"
+    ],
+    "replacementCandidate": {
+      "id": "C29",
+      "status": "known_family_negative_candidate_not_independent_validation",
+      "replaces": "C25",
+      "review": "r11-20261023/calibration-v2/replacement-c29-review.md",
+      "suggestedVerdict": "fail",
+      "humanConfirmed": false
+    },
+    "validationExposureIneligible": [
+      "C01",
+      "C02",
+      "C05",
+      "C06",
+      "C18",
+      "C25",
+      "C26",
+      "C28"
+    ],
+    "validationReselectionProposal": {
+      "path": "r11-20261023/validation-reselection/README.md",
+      "status": "implemented_checked_and_calibrated",
+      "historicalTracesScanned": 14,
+      "realCandidates": {
+        "pass": 4,
+        "fail": 1
+      },
+      "proposedConstructedFailures": 3,
+      "humanConfirmedNewCandidates": 8,
+      "budgetIncrease": false,
+      "authorization": "2026-10-25 用户明确接受8条替换材料及表中判定，要求真实历史与构造样本分别标识；授权完成离线检查后24次评分校准，校准通过后执行已批准64项及其评分，不自动重试或追加。"
+    },
+    "calibrationResult": {
+      "developmentAgreement": "15/16",
+      "validationAgreement": "8/8",
+      "realValidationAgreement": "5/5",
+      "constructedValidationAgreement": "3/3",
+      "criticalGold": 0,
+      "path": ".local/spatial-r11/calibration-20261025/results.json"
+    },
+    "taskBatchResult": {
+      "planned": 64,
+      "recorded": 64,
+      "agentRequests": 235,
+      "technicalInterruptions": 0,
+      "retries": 0,
+      "path": ".local/spatial-r11/batch-20261025"
+    },
+    "taskGradingResult": {
+      "attempted": 64,
+      "valid": 61,
+      "judgeErrors": 3,
+      "notExecuted": 0,
+      "validStrict": {
+        "pass": 55,
+        "fail": 6,
+        "pending": 0
+      },
+      "path": ".local/spatial-r11/grading-continuation-20261025-v5",
+      "originalFailuresPreserved": true,
+      "repeatedJudgmentRequests": 0
+    },
+    "costUsage": {
+      "requests": 323,
+      "inputTokens": 5703875,
+      "outputTokens": 79022,
+      "unknownUsage": 0,
+      "agentRequests": 235,
+      "calibrationRequests": 24,
+      "taskGradingRequests": 64
+    },
+    "report": "r11-20261023/grading-results-20261025.md",
+    "gradingContinuationAuthorization": "用户：修复评分格式契约，先用已返回响应离线验证，再完成现有64任务评分，不重跑任务、不追加测评，保留原失败记录。",
+    "originalTaskGradingFirstStop": {
+      "attempted": 1,
+      "valid": 0,
+      "formatInvalid": 1,
+      "notExecuted": 63,
+      "reason": "unexpected field clarityNote",
+      "path": ".local/spatial-r11/grading-20261025"
+    },
+    "originalCostAtFirstGradingStop": {
+      "requests": 260,
+      "inputTokens": 4908930,
+      "outputTokens": 47354,
+      "unknownUsage": 0
+    },
+    "evidenceReview": {
+      "kind": "agent_evidence_review_not_human_gold",
+      "task": "56/64",
+      "strict": "54/64",
+      "businessTask": "40/48",
+      "businessStrict": "38/48",
+      "groups": {
+        "S0-N": {
+          "task": "14/16",
+          "strict": "13/16",
+          "businessStrict": "9/12"
+        },
+        "S1-N": {
+          "task": "14/16",
+          "strict": "13/16",
+          "businessStrict": "9/12"
+        },
+        "S0-P": {
+          "task": "14/16",
+          "strict": "14/16",
+          "businessStrict": "10/12"
+        },
+        "S1-P": {
+          "task": "14/16",
+          "strict": "14/16",
+          "businessStrict": "10/12"
+        }
+      },
+      "path": ".local/spatial-r11/audit/reviewed-scores-20261025.json",
+      "formalAcceptancePassed": false
+    },
+    "gradingFormatChecks": {
+      "offlineTests": 28,
+      "typecheck": "passed",
+      "lint": "passed_after_unused_variable_fix",
+      "originalCalibrationRevalidated": 24,
+      "returnedTaskResponsesRevalidatedBeforeFinalContinuation": 11,
+      "finalContinuationNewRequests": 53,
+      "originalAgentRequestsUnchanged": 235,
+      "lastGraderFreeze": "bfa9d8ce0ae18cffa547e739187fad19f627a296ab04783651474a04d3082bf3"
     }
   }
 }

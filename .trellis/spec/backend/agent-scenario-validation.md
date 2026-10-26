@@ -76,3 +76,19 @@ Correct: inspect the actual import receipt and saved bytes; compare source geome
 **Tests required.** `r3-20261022/live.test.ts` checks budget/cache accounting, more than 24 provider requests without numerical cutoff, failure retention without a second paid request, fresh HTTP runs and resume without repetition, actual answer/skip/cancel/unanswered paths, and a fixed-result save through a real version conflict. Run its scoped TypeScript check and repo-root ESLint. Keep model-quality review separate from these deterministic tests.
 
 **Wrong vs correct.** Wrong: compare differently worded/background historical trials as identical controls, or report group membership as evidence that changed instructions were used. Correct: check reuse eligibility against actual prompts/context/loading and retained evidence, report each body/loading condition separately, and add paired comparisons only for cases with verified candidate delivery. Agent reviews remain Agent reviews, not independent human calibration.
+
+## R7 Agent Plan result-grounding diagnostics
+
+**Scope / trigger.** The task-local `r7-20261023` batch compares the current integrated baseline with two changed Skill bodies, using six explicit-loading development cases per group. It is not automatic-discovery or holdout acceptance.
+
+**Signatures.** Run `node --import tsx --env-file=.env.local ../../.trellis/tasks/10-15-agent-map-spatial/r7-20261023/live.ts run <new-absolute-.local/spatial-r7/batch> [port]` from `experiments/harness-lab`. Frozen `LLM_BASE_URL` is `https://ark.cn-beijing.volces.com/api/plan/v3`, `LLM_MODEL` is `deepseek-v4.1-flash`; credentials are never recorded. Historical runners retain their original provider/model constraints.
+
+**Contracts.** Archive baseline `af13107`; the B runtime changes only the two controlled Skill bodies, preserving catalog metadata, backend and tool schemas. The evaluation transport sets `thinking.type=disabled` identically in A/B; save both original Pi input and actual wire input/hash. This is an evaluation adapter, not evidence of complete native product compatibility. A Plan endpoint does not prove subscription deduction: optional excess postpaid and delayed account usage must be verified separately.
+
+**Validation / errors.** Reject other endpoints/models before transport; record actual response model and usage. After provider failure, missing usage or source drift, preserve evidence and refuse subsequent external retries, including host-requested retries. Numeric limits are checked before new trials; the active progressing trial can finish. Never rerun a failed slot automatically. Freeze scoring and fixtures before live requests.
+
+**Cases.** Good: provide an actual source line matching a polygon edge when asking the existing measure tool for that edge length. Base: a correct classification plus an unsolicited wrong width is core-pass but strict-fail. Bad: require unsupported edge selection, then blame the model; or count only the final answer after an earlier visible misstatement.
+
+**Tests required.** Mock the native HTTP/Pi loop for all 12 slots and real conflict recovery; assert exact selected body at each user turn, A/B-only Skill differences, wire request compatibility, failure/retry guards and no evidence overwrite. Use an independent distance oracle and inspect actual state changes. Offline aggregation tests validate gating only; full semantic judgments still require evidence review, explicitly labeled Agent review unless a human actually reviewed.
+
+**Wrong vs correct.** Wrong: `HTTP 200` or a successful tool proves factual correctness. Correct: separately review core completion, process facts, final facts, actual effects and boundaries, retain ambiguous/incomplete entries in the planned denominator, and preserve original evidence and scores.

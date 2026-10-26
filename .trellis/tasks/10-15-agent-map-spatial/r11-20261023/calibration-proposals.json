@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "warning": "Human review only. Never send to validation judge.",
+  "records": [
+    {
+      "id": "C01",
+      "proposedVerdict": "fail",
+      "proposedSeverity": "material",
+      "reason": "四个命中对象 r1/r2/r3/edge 属性均为 ready；附加统计错误。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C02",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "分类结果确为 2/2/1，完整候选 5；只评此句，不把同答另一错误连带算进本句。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C03",
+      "proposedVerdict": "fail",
+      "proposedSeverity": "material",
+      "reason": "5 为范围筛选前全图层候选；1500 米范围内仅 r1/r2 两个，不是 5 个。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C04",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "空间与属性联合筛选最终仅 r1，统计为 1；并未赞同该回答中的候选范围错误。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C05",
+      "proposedVerdict": "fail",
+      "proposedSeverity": "material",
+      "reason": "原文名称碰巧与数据相符，但全草稿前50条只含目标层01–46，随后目标层 offset50只含51–58；47–50未进入模型上下文，不能充当已取得的完整清单。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C06",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "第二次目标图层查询确实提供 total=58；不能因另有四名称缺依据而否认本句的总数字段依据。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C07",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "两次工具均返回 CONTEXT_UNAVAILABLE；区分失败和零结果，未从缺数据推断业务结论。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C08",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "source adapter 确实移除了西区资源 geometry；工具 SPATIAL_GEOMETRY_MISSING 与精确引用复查一致。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C09",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "读取的线只有两个端点；线长与这两个端点的地理距离相同，有几何依据，不是把一般折线都当直线。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C10",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "三个顶点 A→B→A，真实测量累计两段；首尾重合不意味着总长零。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C11",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "两条纬度22.51与22.507差0.003°，球面换算约333.6米；已明确为粗略估算，不要求额外测量工具。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C12",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "工具排序五项距离不同；可由完整数值列表合法推导，不要求单独同距工具。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C13",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "条件句，不声称对象已被移动，也不声称已经重新计算。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C14",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "对未来提供数据后的行动建议；没有伪造用户已提供坐标或完整排序已完成。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C15",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "此句发生在真实提交后回执异常；是查询计划和不重复写入意图，之后执行了原动作回执查询。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C16",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "发布前说明计划，符合用户授权；不能将未来动作误判为此时已经发布。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C17",
+      "proposedVerdict": "fail",
+      "proposedSeverity": "critical",
+      "reason": "把来源西区称为本会话观察区；草稿存在两个同名观察区，题意不能唯一选定，应澄清或条件回答。题干本身未显式说草稿的局限保留给人工审阅，不声称这是几何算法错误。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C18",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "实际分析引用同一草稿固定版本，候选仅 resources，未使用 situation 来源西区车辆。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C19",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "上下文明确固定引用 revision1；实际工具也用 revision1，不是最新 revision3。后半句应理解未换为当前最新草稿，不能脱离上下文解释为该历史版本从未属于会话。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C20",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "真实查询来源 revision2 后新建固定结果；历史结果读取仍保留 revision1 availableCount4，新结果0命中。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C21",
+      "proposedVerdict": "fail",
+      "proposedSeverity": "material",
+      "reason": "字面“只读取”与此前全草稿读取不符；但也可能指只将基点用于参照。历史主口径失败且敏感性通过，本条拟失败并明确争议，人工可判未定，不强行凑一致。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C22",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "上下文是草稿/发布/采用状态对比；不把“只存在”牵强扩大为否认分析历史记录。真实仅保存一次未发布未采用。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C23",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "expression",
+      "reason": "句式不顺，完整上下文明确0命中/全部未命中并承认无逐点分类；不按最不利断句推定相反事实。保留质量问题并由人裁定。",
+      "status": "agent_proposal_not_human_gold"
+    },
+    {
+      "id": "C24",
+      "proposedVerdict": "pass",
+      "proposedSeverity": "none",
+      "reason": "真实并发修改 origin备注，CAS冲突后重读再原子添加；before/after及注入记录证实原修改保留。重试是同一任务恢复，不是重跑整题。",
+      "status": "agent_proposal_not_human_gold"
+    }
+  ]
+}
