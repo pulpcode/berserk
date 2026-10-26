@@ -149,3 +149,11 @@
 .annotation-rotation .annotation-rotation-handle:is(:hover,:focus-visible,:active) { background:#244b3f; outline:2px solid white; }
 .annotation-rotation.is-rotating .annotation-rotation-handle { cursor:grabbing; }
 .annotation-rotation-angle { position:absolute; transform:translate(-50%,calc(-100% - 19px)); white-space:nowrap; padding:3px 5px; border:1px solid var(--line); border-radius:4px; background:var(--surface,#fff); color:var(--ink,#152f27); font-size:11px; line-height:1.4; box-shadow:0 1px 4px #102c3226; }
+
+.annotation-edit-notice { font-size:12px; line-height:1.5; margin:0 0 10px; padding:8px; background:var(--accent-soft,#edf3ef); border-radius:6px; }
+.annotation-edit-comparison { border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:10px; font-size:12px; }
+.annotation-edit-comparison h4,.annotation-edit-comparison p { margin:0 0 8px; }
+.annotation-edit-difference { padding:8px 0; border-top:1px solid var(--line); }
+.annotation-edit-difference dl { margin:6px 0; display:grid; grid-template-columns:76px minmax(0,1fr); gap:4px 8px; }
+.annotation-edit-difference dt { color:var(--muted); }
+.annotation-edit-difference dd { margin:0; overflow-wrap:anywhere; white-space:pre-wrap; max-height:100px; overflow:auto; }

@@ -1,0 +1,23 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run tests/pi/annotation-workflow.test.ts tests/pi/annotation-hook-boundaries.test.ts tests/pi/annotation-source-history.test.ts tests/pi/composer-input.test.ts tests/pi/spatial.test.ts
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-plotting-integration/berserk/experiments/harness-lab
+
+(node:68047) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68046) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68045) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68044) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:68048) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  5 passed (5)
+      Tests  76 passed (76)
+   Start at  23:21:27
+   Duration  19.31s (transform 3.77s, setup 0ms, import 15.62s, tests 54.97s, environment 1ms)
+

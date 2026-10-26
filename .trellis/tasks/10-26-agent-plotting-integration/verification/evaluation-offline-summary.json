@@ -1,0 +1,23 @@
+{
+  "offlineTests": {
+    "initialSuitePassed": 9,
+    "targetedGuardSuitePassed": 3,
+    "newCasesInTargetedSuite": 2,
+    "uniqueCasesWithPassingEvidence": 11,
+    "failedFinalChecks": 0
+  },
+  "preparedSlots": 30,
+  "controlledNativeSlots": 4,
+  "syntheticProviderCalls": 16,
+  "realProviderCalls": 0,
+  "preparationEvidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-cjWKjr/batch",
+  "nativeEvidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-Oys0B0/batch",
+  "note": "离线程序验证，不是30槽真实模型成绩。初次完整9项通过后，补重复写入守卫并运行3项相关测试（含2项新增）；11个唯一用例均有通过证据。真正live前从最终提交重新冻结。",
+  "initialSuiteFreezeHash": "49d88f4dda6ee983147c8ec876d384b67f189a098f0be73e13287276418c9c61",
+  "followupGuard": {
+    "freezeHash": "934ceff473e1db7b303adf78195a17f086301b1953b3d333f720c1d7981e16c7",
+    "controlledNativeSlots": 4,
+    "duplicateWriteNegativeSlots": 1,
+    "log": "evaluation-duplicate-guard-tests.txt"
+  }
+}

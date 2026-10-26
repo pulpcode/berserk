@@ -1,0 +1,21 @@
+(node:72773) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ freezes 15 named scenarios twice, preserving R13 prompts and method requirement (1.753915ms)
+✔ budget counts actual requests, blocks unknown usage/reuse and reserves complete pairs (24.069165ms)
+✔ transport changes only fixed model parameters, rejects drift and truncation (5.225739ms)
+✔ provider retains failed/unknown usage evidence and never retries after a transport failure (20.234489ms)
+✔ clarification excludes optional invitations and never approves publishing or supplies new facts (2.281431ms)
+{"prepareEvidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-cjWKjr/batch","slots":30,"actualProviderRequests":0}
+✔ prepares all 30 fresh HTTP fixtures without any model request (78882.897511ms)
+{"controlledEvidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-Oys0B0/batch","slots":4,"syntheticProviderCalls":16,"realProviderRequests":0}
+✔ controlled native HTTP/Pi runs preserve fields and handle a real service CAS conflict (12890.215174ms)
+✔ scoring retains all 30 slots and requires actual attributed review and no critical effects (18.725739ms)
+✔ HTTP provider error body is retained with secrets redacted and no new request is sent (5.67562ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94933.979098

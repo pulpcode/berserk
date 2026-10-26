@@ -1,0 +1,19 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/spatial.spec.ts --grep 中国青岛港 --workers=1
+
+[WebServer] (node:73736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:73696) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:73740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73740) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:73740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing (8.5s)
+
+  1 passed (13.6s)

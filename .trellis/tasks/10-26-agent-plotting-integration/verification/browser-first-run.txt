@@ -1,0 +1,136 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/annotations.spec.ts tests/e2e/map-symbols.spec.ts tests/e2e/spatial.spec.ts --workers=2
+
+[WebServer] (node:71787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:71758) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 41 tests using 2 workers
+
+(node:71799) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71800) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:71799) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓   1 tests/e2e/annotations.spec.ts:74:1 › official Terra Draw supports point line polygon Chinese labels, edit and cleanup on MapLibre 6.4 (13.4s)
+  ✓   2 tests/e2e/annotations.spec.ts:55:1 › independent drafts, fixed publication, current selection and native annotation reference (15.9s)
+  ✓   3 tests/e2e/annotations.spec.ts:91:1 › CAS retains form and no WebGL still permits explicit coordinate editing (6.1s)
+  ✓   4 tests/e2e/annotations.spec.ts:103:1 › lost save response reconciles exactly once and clears only the submitted buffer (5.8s)
+  ✓   5 tests/e2e/annotations.spec.ts:113:1 › layout modes preserve unsaved editing and browser back still guards business navigation (10.0s)
+  ✓   6 tests/e2e/annotations.spec.ts:135:1 › three columns resize by keyboard and pointer while map fills available height (11.2s)
+  ✓   7 tests/e2e/annotations.spec.ts:178:1 › overlapping draft and publication objects select their exact read-only group (7.7s)
+  ✓   8 tests/e2e/annotations.spec.ts:188:1 › explicit saved reference stays read-only and fixed when the current draft advances (8.5s)
+  ✓   9 tests/e2e/annotations.spec.ts:203:1 › layer tree separates expansion visibility and drawing target, including empty layers and fixed references (11.6s)
+  ✓  10 tests/e2e/annotations.spec.ts:250:56 › legacy receipt buttons open fixed read-only targets and stay scoped to the final request after reload (10.0s)
+  ✓  11 tests/e2e/annotations.spec.ts:250:56 › structured receipt buttons open fixed read-only targets and stay scoped to the final request after reload (8.5s)
+  ✓  12 tests/e2e/annotations.spec.ts:281:1 › basemap switches preserve selected annotations, camera, visibility, and unfinished line/polygon through failure and retry (11.5s)
+  ✓  13 tests/e2e/annotations.spec.ts:332:1 › solid annotation strokes remain painted after hybrid source switches and narrow map controls do not overlap credits (10.7s)
+  ✓  14 tests/e2e/annotations.spec.ts:356:1 › hybrid progressively reveals minor service and path roads below business overlays across source overzoom (12.5s)
+  ✓  15 tests/e2e/annotations.spec.ts:385:1 › native streamed publication result and reloaded history open the same fixed version (10.3s)
+  ✓  16 tests/e2e/annotations.spec.ts:407:1 › single map tools pause incomplete geometry, retain form and preview, without implicit writes (8.3s)
+  ✓  18 tests/e2e/annotations.spec.ts:471:1 › source polling and inspection preserve the independent draft target, form and revision (6.9s)
+  ✓  17 tests/e2e/annotations.spec.ts:437:1 › professional symbols keep identity, orientation and information role through editing and overlapping selection (14.6s)
+  ✓  19 tests/e2e/annotations.spec.ts:488:1 › entry hints explain global, task and editable conversation maps without creating drafts (6.3s)
+  ✓  21 tests/e2e/annotations.spec.ts:557:1 › read-only entry after a refresh failure still guards unsaved plotting input (6.0s)
+  ✓  20 tests/e2e/annotations.spec.ts:510:1 › symbol selection places directly, compact properties retain drafts, and saves preserve the camera (10.1s)
+  ✓  23 tests/e2e/annotations.spec.ts:632:1 › rotation guards restore pointer and gesture state across pause, hidden previews and symbol changes (11.1s)
+  ✓  22 tests/e2e/annotations.spec.ts:592:1 › rotation handle shares the numeric draft, preserves camera and coordinates, and saves only explicitly (20.1s)
+  ✓  24 tests/e2e/annotations.spec.ts:659:1 › compact editor retains hidden styles and metadata while keeping advanced fields reachable (10.8s)
+  ✓  25 tests/e2e/annotations.spec.ts:698:1 › object edit preserves defaults, protects references and explicitly merges independent changes (7.5s)
+  ✓  26 tests/e2e/annotations.spec.ts:715:1 › same-field choices reset on a second conflict and equal concurrent values do not create revisions (9.1s)
+  ✓  27 tests/e2e/annotations.spec.ts:732:1 › failed fixed-version refresh keeps the old pair and input focus, deleted object cannot be resurrected (7.8s)
+  ✓  28 tests/e2e/annotations.spec.ts:745:1 › revoked editing keeps local input but leaves explicit cancel reachable (6.6s)
+  ✓  29 tests/e2e/annotations.spec.ts:754:1 › switching a baseline before first save stops old object edits even when IDs match (8.1s)
+  ✓  30 tests/e2e/annotations.spec.ts:765:1 › missing original receipt keeps the same pending action without resend or discarded input (5.9s)
+  ✓  31 tests/e2e/annotations.spec.ts:773:1 › late snapshot cannot replace a newer paired version while local input stays editable (7.2s)
+  ✓  32 tests/e2e/annotations.spec.ts:785:1 › ordinary service validation keeps editable input and does not impersonate a version conflict (7.1s)
+  ✓  34 tests/e2e/map-symbols.spec.ts:48:1 › a missing controlled asset registers a neutral image and reports the failed catalog ID (1.4s)
+  ✓  33 tests/e2e/map-symbols.spec.ts:5:1 › professional renderer keeps 500 overlapping objects selectable and heading stable on camera rotation (3.1s)
+(node:71800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71799) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  35 tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing (17.1s)
+(node:72610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  36 tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing (16.9s)
+(node:72613) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72610) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:72613) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:72610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72613) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  38 tests/e2e/spatial.spec.ts:91:1 › without WebGL the same verified analysis remains readable in the object panel (5.4s)
+(node:72613) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  37 tests/e2e/spatial.spec.ts:74:1 › native save preserves preview geometry and read delivery reopens the original fixed result (9.7s)
+  ✓  39 tests/e2e/spatial.spec.ts:100:59 › measurement distance renders both fixed input and reference geometry (7.1s)
+(node:72610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:72613) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  40 tests/e2e/spatial.spec.ts:100:59 › measurement point_to_line renders both fixed input and reference geometry (7.1s)
+  ✓  41 tests/e2e/spatial.spec.ts:125:1 › v2 point classifications show each identity and reopen the same fixed partition (8.2s)
+
+
+  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '绘制线', exact: true })
+
+
+      61 |     env.vector.online();await page.getByRole('button',{name:'重试底图',exact:true}).click();await expect(page.getByRole('button',{name:'重试底图',exact:true})).not.toBeVisible();
+      62 |     for(const view of ['影像','路网','混合']){await page.getByRole('button',{name:view,exact:true}).click();await expect(page.getByRole('button',{name:view,exact:true})).toHaveAttribute('aria-pressed','true');await expect(page.getByRole('button',{name:'重试底图',exact:true})).not.toBeVisible();expect(await mapSnapshot(page)).toEqual(before);expect(await page.evaluate(()=>window.__basemapTestMap!.getStyle().sources['analysis:results'])).toEqual(resultData);await page.screenshot({path:test.info().outputPath(`${location.name}-${view}.png`)});}
+    > 63 |     await page.getByRole('button',{name:'绘制线',exact:true}).click();const canvas=page.locator('.maplibregl-canvas');const box=(await canvas.boundingBox())!;const x=box.x+box.width/2,y=box.y+box.height/2;await page.mouse.click(x-60,y-30);
+         |                                                            ^
+      64 |     for(const view of ['路网','影像','混合','影像'])await page.getByRole('button',{name:view,exact:true}).click();
+      65 |     await entry.click();await expect(panel.getByRole('button',{name:'定位分析',exact:true})).toBeDisabled();expect(await mapSnapshot(page)).toEqual(before);
+      66 |     await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+80,y+30);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+        at /Users/lau/.codex/worktrees/agent-plotting-integration/berserk/experiments/harness-lab/tests/e2e/spatial.spec.ts:63:60
+
+    Error Context: test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '绘制线', exact: true })
+
+
+      61 |     env.vector.online();await page.getByRole('button',{name:'重试底图',exact:true}).click();await expect(page.getByRole('button',{name:'重试底图',exact:true})).not.toBeVisible();
+      62 |     for(const view of ['影像','路网','混合']){await page.getByRole('button',{name:view,exact:true}).click();await expect(page.getByRole('button',{name:view,exact:true})).toHaveAttribute('aria-pressed','true');await expect(page.getByRole('button',{name:'重试底图',exact:true})).not.toBeVisible();expect(await mapSnapshot(page)).toEqual(before);expect(await page.evaluate(()=>window.__basemapTestMap!.getStyle().sources['analysis:results'])).toEqual(resultData);await page.screenshot({path:test.info().outputPath(`${location.name}-${view}.png`)});}
+    > 63 |     await page.getByRole('button',{name:'绘制线',exact:true}).click();const canvas=page.locator('.maplibregl-canvas');const box=(await canvas.boundingBox())!;const x=box.x+box.width/2,y=box.y+box.height/2;await page.mouse.click(x-60,y-30);
+         |                                                            ^
+      64 |     for(const view of ['路网','影像','混合','影像'])await page.getByRole('button',{name:view,exact:true}).click();
+      65 |     await entry.click();await expect(panel.getByRole('button',{name:'定位分析',exact:true})).toBeDisabled();expect(await mapSnapshot(page)).toEqual(before);
+      66 |     await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+80,y+30);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+        at /Users/lau/.codex/worktrees/agent-plotting-integration/berserk/experiments/harness-lab/tests/e2e/spatial.spec.ts:63:60
+
+    Error Context: test-results/spatial-澳大利亚悉尼港-native-spa-4ada7-lure-and-unfinished-drawing/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/spatial-澳大利亚悉尼港-native-spa-4ada7-lure-and-unfinished-drawing/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/spatial-澳大利亚悉尼港-native-spa-4ada7-lure-and-unfinished-drawing/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+    tests/e2e/spatial.spec.ts:48:136 › 澳大利亚悉尼港: native spatial result survives three basemaps, failure and unfinished drawing 
+  39 passed (3.4m)

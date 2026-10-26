@@ -122,6 +122,11 @@ Viewport visibility, isolate, selection and zoom are local view state. Explicitl
 
 Capture the draft revision when a form or geometry edit begins. A background refresh may show a newer saved head but must not silently replace that edit's expectedRevision. Only an explicit conflict-review action may advance the edit base.
 
+`update_object` merges only top-level fields. Provided `style`, `attributes`, `geometry` and `sourceRefs` replace those complete values; omission preserves the existing value. Agent edits read the complete nested field before rebuilding it, and send only requested top-level changes. Symbol descriptions come from `MAP_SYMBOLS` with standard/extension and heading capability; a browser selection or unsaved preview is not model-visible object evidence. Fixed set identity plus object ID selects the object, while a current draft read establishes the writable basis.
+
+The browser loads binding and its fixed document as one successful editing snapshot. A failed or stale refresh cannot combine a newer revision with an older document. Local object comparison retains original, intended-local and latest-saved values; name/note/role/layer and individual style/attribute keys compare separately, geometry/source arrays as whole values. Different fields require explicit merge confirmation; divergent same fields require an explicit choice, and equal values need no empty revision. The confirmed candidate is built from the latest document and submitted once with its revision. A second conflict invalidates earlier choices. Deleted objects/layers, changed draft/baseline identity, incompatible kind and revoked writes stop the old save without recreating or redirecting it. Unknown outcomes remain on the original action receipt path; a missing receipt never permits a new action ID.
+
+
 ## 4. Validation & Error Matrix
 
 | Condition | Required behavior |
@@ -178,5 +183,7 @@ Wrong: infer a source polygon from a region name or replace `Z` with `+08:00` wh
 Wrong: erase all observations on any tool error and require alternating draft/source rereads. Correct: retain confirmed observations, pause the current output, and identify only missing/stale resources. Unknown commit outcomes require original receipt reconciliation rather than treating every exception as no effect.
 
 Wrong: equate a working map button or a successful save with an accurate explanation of task-current state. Correct: evaluate saved effects and visible narrative against their respective evidence, including pre-confirmation prose.
+
+`annotation-edit-changes.test.ts` and browser annotation cases cover preserved raw absence, own-key business attributes, explicit three-way choices, second conflicts, paired refresh failure, readonly cancel and original receipt recovery. `pi/annotations.test.ts` exercises nested-field preservation and cross-set identity with real tools/services and a controlled provider; these are engineering checks, not live-model success.
 
 `annotation-results.test.ts` covers deterministic metadata projection and damaged/legacy evidence. `pi/provider-payload.test.ts` verifies actual provider JSON excludes receipt details/annotation hashes while preserving business hash attributes, native history and restart. Annotation native tests cover exact entries after real compaction; browser tests exercise legacy, structured and native streamed entries.

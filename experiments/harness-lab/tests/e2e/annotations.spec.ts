@@ -94,9 +94,8 @@ test('CAS retains form and no WebGL still permits explicit coordinate editing',a
   await layer(page);await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await point(page);
   await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留我的修改');
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:binding.draft!.headRevision,operations:[{op:'rename_set',title:'Agent 已更新'}]});
-  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'查看最新保存版本'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');
-  await page.getByRole('button',{name:'已核对最新版本，重新编辑'}).click();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,4).document.layers[0]!.features[0]!.name).toBe('保留我的修改');
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();
+  await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,4).document.layers[0]!.features[0]!.name).toBe('保留我的修改');
  }finally{await env.close();}
 });
 
@@ -693,5 +692,124 @@ test('compact editor retains hidden styles and metadata while keeping advanced f
   await page.setViewportSize({width:1000,height:620});await mapFillsArea();await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,100);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'收起对象编辑',exact:true})).toBeInViewport({ratio:1});
   const shortCard=(await card.boundingBox())!,switcher=(await page.getByRole('group',{name:'底图视图'}).boundingBox())!;expect(shortCard.y+shortCard.height).toBeLessThan(switcher.y);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('editor-floating-short.png')});await saveDraw(page);
   expect(saved()).toEqual({...original,name:'保留属性已更新',attributes:{...original.attributes,contact:'值班室'}});expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('object edit preserves defaults, protects references and explicitly merges independent changes',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;const layerId=env.lab.annotations!.privateVersion(env.actor,setId,1).document.layers[0]!.layerId;
+  const original={objectId:'integration-boat',kind:'point' as const,name:'整合冲锋舟',geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},style:{symbolId:'app.rescue-inflatable-boat',heading:45,iconSize:48},attributes:{count:4,unknown:null}};
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_object',layerId,feature:original}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await pickOwn(page,'整合冲锋舟 point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();
+  await page.getByLabel('真北方向（°）').fill('90');await expect(page.getByText('这些修改尚未保存，Agent 只能读取已保存内容。')).toBeVisible();
+  const beforeUrl=page.url();await openLayers(page);await page.getByLabel('草稿 / 未保存预览').uncheck();await pickOwn(page,'整合冲锋舟 point');await page.getByRole('button',{name:'引用此对象',exact:true}).click();expect(page.url()).toBe(beforeUrl);await expect(page.getByText('请先保存或取消本地修改，再引用已保存内容。')).toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('90');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:original.objectId,changes:{name:'Agent 救援一队',attributes:{count:5,unknown:null,contact:'张队'}}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();
+  await expect(page.getByRole('region',{name:'核对对象修改'})).toContainText('Agent 救援一队');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(3);
+  await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);const saved=env.lab.annotations!.privateVersion(env.actor,setId,4).document.layers[0]!.features[0]!;
+  expect(saved).toEqual({...original,name:'Agent 救援一队',style:{...original.style,heading:90},attributes:{count:5,unknown:null,contact:'张队'}});
+  const last=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).at(-1)!.body;expect(last.operations).toEqual([{op:'update_object',objectId:original.objectId,changes:{style:{...original.style,heading:90}}}]);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('same-field choices reset on a second conflict and equal concurrent values do not create revisions',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const initial=env.lab.annotations!.binding(env.actor,env.session.id);const setId=initial.draft!.setId;const original=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!.features[0]!;
+  const rename=(revision:number,name:string)=>env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:revision,operations:[{op:'update_object',objectId:original.objectId,changes:{name}}]});
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('本地名称');rename(2,'Agent名称');
+  // Let the real service reject an old revision before refreshing the page state.
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.getByRole('button',{name:'合并我的修改并保存'})).toBeDisabled();
+  await expect(page.locator('.annotation-conflict')).toHaveCount(0);await expect(page.getByRole('button',{name:'查询保存回执'})).toHaveCount(0);
+  await page.getByRole('button',{name:'取消核对',exact:true}).click();await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('本地名称');
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.locator('.annotation-conflict')).toHaveCount(0);await page.screenshot({path:test.info().outputPath('annotation-conflict-review.png')});
+  await page.setViewportSize({width:1000,height:620});await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeInViewport({ratio:1});await page.getByLabel('采用名称').scrollIntoViewIfNeeded();await expect(page.getByLabel('采用名称')).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeInViewport({ratio:1});await page.screenshot({path:test.info().outputPath('annotation-conflict-short.png')});await page.setViewportSize({width:1440,height:960});
+  await page.getByLabel('采用名称').selectOption('local');rename(3,'Agent第二次名称');await page.getByRole('button',{name:'合并我的修改并保存'}).click();
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.getByRole('region',{name:'核对对象修改'})).toContainText('Agent第二次名称');
+  await page.getByLabel('采用名称').selectOption('local');await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.privateVersion(env.actor,setId,5).document.layers[0]!.features[0]!.name).toBe('本地名称');
+  await pickOwn(page,'本地名称 point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('同样名称');rename(5,'同样名称');await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('采用名称')).toHaveCount(0);await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(6);
+ }finally{await env.close();}
+});
+
+test('failed fixed-version refresh keeps the old pair and input focus, deleted object cannot be resurrected',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;const object=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!.features[0]!;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();const name=page.getByLabel('对象名称',{exact:true});await name.fill('不能丢失的输入');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'rename_set',title:'已保存的新版本'}]});
+  const pattern=`**/api/annotations/${setId}/revisions/3`;await page.route(pattern,route=>route.fulfill({status:503,json:{error:{code:'TEMPORARY_FAILURE',message:'固定内容加载失败'}}}));
+  // Programmatic refresh avoids moving focus with the mouse, like a message-driven refresh.
+  await page.getByRole('button',{name:'刷新标注',exact:true}).evaluate((button:HTMLButtonElement)=>button.click());await expect(page.getByText('固定内容加载失败',{exact:true})).toBeVisible();await expect(name).toBeFocused();await expect(name).toHaveValue('不能丢失的输入');await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();
+  await page.unroute(pattern);await page.getByRole('button',{name:'刷新标注',exact:true}).evaluate((button:HTMLButtonElement)=>button.click());await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await expect(name).toBeFocused();
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:3,operations:[{op:'delete_object',objectId:object.objectId}]});await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByText('此对象已被删除，本地输入仍保留；不能重新创建原对象。')).toBeVisible();await expect(name).toHaveValue('不能丢失的输入');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();expect(env.lab.annotations!.privateVersion(env.actor,setId,4).document.layers[0]!.features).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('revoked editing keeps local input but leaves explicit cancel reachable',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留只读后的输入');
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const pattern=`**/api/sessions/${env.session.id}/annotation`;await page.route(pattern,route=>route.fulfill({json:{...binding,writable:false}}));
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留只读后的输入');await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeEnabled();
+  page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);await page.unroute(pattern);
+ }finally{await env.close();}
+});
+
+test('switching a baseline before first save stops old object edits even when IDs match',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const source=env.lab.annotations!.binding(env.actor,env.session.id).draft!;const old=env.lab.annotations!.privateVersion(env.actor,source.setId,2).document.layers[0]!.features[0]!;
+  env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),expectedBindingRevision:0,baseRef:{setId:source.setId,revision:2}});
+  await page.goto(`/situation?taskId=${env.task.id}&sessionId=${env.second.id}`);await expect(page.locator('.annotation-heading')).toBeVisible();await openTools(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('旧基线修改');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:old.objectId,changes:{name:'新的基线对象'}}]});
+  const binding=env.lab.annotations!.binding(env.actor,env.second.id);env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),expectedBindingRevision:binding.bindingRevision,baseRef:{setId:source.setId,revision:3}});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('草稿身份已变化，请保留或复制本地输入后取消旧编辑。')).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('旧基线修改');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();expect(env.lab.annotations!.binding(env.actor,env.second.id).draft).toBeNull();
+ }finally{await env.close();}
+});
+
+test('missing original receipt keeps the same pending action without resend or discarded input',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('未知保存结果');env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();
+  const pattern='**/api/annotation-actions/*';await page.route(pattern,route=>route.fulfill({json:null}));await page.getByRole('button',{name:'查询保存回执'}).click();await expect(page.getByText('尚未查询到回执；未自动重试，编辑内容仍保留。',{exact:true})).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('未知保存结果');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'放弃本地修改',exact:true})).toHaveCount(0);expect(env.requests.filter(item=>item.path.endsWith('/annotation/actions')&&item.body.action==='apply')).toHaveLength(1);
+  await page.unroute(pattern);await page.getByRole('button',{name:'查询保存回执'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+ }finally{await env.close();}
+});
+
+test('late snapshot cannot replace a newer paired version while local input stays editable',async({page})=>{
+ const env=await setup(page);let release=()=>{};
+ try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留乱序加载时输入');
+  const rename=(revision:number,title:string)=>env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:revision,operations:[{op:'rename_set',title}]});rename(2,'第三版');
+  let entered=()=>{};const started=new Promise<void>(resolve=>{entered=resolve;});const gate=new Promise<void>(resolve=>{release=resolve;});const pattern=`**/api/annotations/${setId}/revisions/3`;
+  await page.route(pattern,async route=>{entered();await gate;await route.fallback();});await page.getByRole('button',{name:'刷新标注',exact:true}).click();await started;await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await page.getByLabel('对象名称',{exact:true}).fill('加载中继续输入');
+  rename(3,'第四版');await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');const response=page.waitForResponse(url=>url.url().includes(`/api/annotations/${setId}/revisions/3`));release();await response;await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('加载中继续输入');await page.getByRole('button',{name:'保存对象',exact:true}).click();await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');expect(env.lab.annotations!.privateVersion(env.actor,setId,5).title).toBe('第四版');
+ }finally{release();await env.close();}
+});
+
+test('ordinary service validation keeps editable input and does not impersonate a version conflict',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await openProperties(page);await page.locator('.annotation-more-properties > details').filter({has:page.locator('summary',{hasText:'业务属性'})}).locator('summary').click();
+  await page.getByLabel('业务属性 JSON').fill('{"__proto__":null}');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();await expect(page.getByRole('region',{name:'核对对象修改'})).toHaveCount(0);await expect(page.getByLabel('业务属性 JSON')).toHaveValue('{"__proto__":null}');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+  await page.getByLabel('业务属性 JSON').fill('{"contact":"李队"}');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);const draft=env.lab.annotations!.binding(env.actor,env.session.id).draft!;expect(env.lab.annotations!.privateVersion(env.actor,draft.setId,3).document.layers[0]!.features[0]!.attributes).toEqual({contact:'李队'});
+ }finally{await env.close();}
+});
+
+test('new local object merges into a newer saved revision exactly once',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('并发新增点');
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'rename_set',title:'Agent已更新标题'}]});
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();await expect(page.locator('.annotation-conflict')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+  await page.getByRole('button',{name:'合并我的修改并保存',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);
+  const saved=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,3).document;expect(saved.title).toBe('Agent已更新标题');expect(saved.layers[0]!.features).toHaveLength(1);expect(saved.layers[0]!.features[0]!.name).toBe('并发新增点');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(3);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('changed object kind or deleted original layer stops the old form without rewriting saved objects',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id),setId=binding.draft!.setId;const old=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!;const object=old.features[0]!;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('本地未保存名称');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:object.objectId,changes:{kind:'line',geometry:{type:'LineString',coordinates:[[116.4,39.9],[116.41,39.91]]}}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('对象类型已变化，请取消旧编辑后重新打开。',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('本地未保存名称');page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();
+  await pickOwn(page,'集合点 A line');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('第二次本地输入');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:3,operations:[{op:'add_layer',layer:{layerId:'surviving',name:'接收层',order:1,defaultVisible:true,features:[]}},{op:'update_object',objectId:object.objectId,changes:{},layerId:'surviving'},{op:'delete_layer',layerId:old.layerId}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('原目标图层已删除，本地输入仍保留。',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('第二次本地输入');
+  const saved=env.lab.annotations!.privateVersion(env.actor,setId,4).document;expect(saved.layers).toHaveLength(1);expect(saved.layers[0]!.layerId).toBe('surviving');expect(saved.layers[0]!.features[0]!.name).toBe('集合点 A');expect(saved.layers[0]!.features[0]!.kind).toBe('line');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(4);expect(env.errors).toEqual([]);
  }finally{await env.close();}
 });

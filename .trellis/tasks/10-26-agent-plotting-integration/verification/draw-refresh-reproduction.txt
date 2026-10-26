@@ -1,0 +1,51 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/spatial.spec.ts --grep 中国青岛港 --workers=1
+
+[WebServer] (node:73562) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:73533) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:73570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:73570) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:73570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing (8.3s)
+
+
+  1) tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 
+
+    Error: expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 120.29867874921246
+    Received: 120.302666665
+
+    Expected precision:    8
+    Expected difference: < 0.000000005
+    Received difference:   0.003987915787547536
+
+      70 |     await entry.click();await expect(panel.getByRole('button',{name:'定位分析',exact:true})).toBeDisabled();expect(await mapSnapshot(page)).toEqual(before);
+      71 |     await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+80,y+30);await expect(page.getByRole('form',{name:'标注对象编辑'})).toBeVisible();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+    > 72 |     const binding=env.lab.annotations!.binding(env.actor,env.session.id);const savedDocument=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document;expect(savedDocument.layers[0]!.features[0]!.geometry).toEqual({type:'Point',coordinates:location.coordinates});expect(savedDocument.layers[0]!.features[1]!.geometry.type).toBe('LineString');const savedLine=savedDocument.layers[0]!.features[1]!.geometry;if(savedLine.type!=='LineString')throw new Error('Expected saved line');expect(savedLine.coordinates[0]![0]).toBeCloseTo(firstCoordinate[0],8);expect(savedLine.coordinates[0]![1]).toBeCloseTo(firstCoordinate[1],8);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      73 |     if(!await panel.isVisible())await page.getByRole('button',{name:'图层与对象',exact:true}).click();await expect(panel).toBeVisible();await panel.getByRole('button',{name:'清除临时显示',exact:true}).click();await expect(panel).toHaveCount(0);await entry.click();await expect(panel).toBeVisible();
+      74 |     await page.setViewportSize({width:1280,height:800});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath(`${location.name}-narrow-panel.png`)});
+      75 |     await page.goto(`/?session=${env.second.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await expect(page.getByRole('region',{name:'空间分析结果'})).toHaveCount(0);expect(env.errors).toEqual([]);
+        at /Users/lau/.codex/worktrees/agent-plotting-integration/berserk/experiments/harness-lab/tests/e2e/spatial.spec.ts:72:536
+
+    Error Context: test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/spatial-中国青岛港-native-spati-faaf0-lure-and-unfinished-drawing/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/spatial.spec.ts:48:136 › 中国青岛港: native spatial result survives three basemaps, failure and unfinished drawing 

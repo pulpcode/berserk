@@ -1,0 +1,17 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run tests/annotations.test.ts tests/annotation-from-source.test.ts tests/map-symbol-contracts.test.ts tests/map-symbol-assets.test.ts tests/map-symbol-rotation.test.ts tests/annotation-results.test.ts tests/annotation-map-evidence.test.ts
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-plotting-integration/berserk/experiments/harness-lab
+
+(node:67746) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:67747) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  7 passed (7)
+      Tests  101 passed (101)
+   Start at  23:19:50
+   Duration  13.95s (transform 1.41s, setup 0ms, import 4.16s, tests 20.92s, environment 2ms)
+

@@ -1,4 +1,4 @@
-import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE } from '../contracts/map-symbols.js';
+import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE, MAP_SYMBOL_STANDARD } from '../contracts/map-symbols.js';
 import { annotationToolResult } from './annotation-results.js';
 import type { AnnotationReadInput } from '../contracts/annotations.js';
 import { createHash } from 'node:crypto';
@@ -38,16 +38,16 @@ const geometry = Type.Union([
 ]);
 const style = Type.Object({color: Type.Optional(Type.String({pattern: '^#[0-9a-fA-F]{6}$'})), fillColor: Type.Optional(Type.String({pattern: '^#[0-9a-fA-F]{6}$'})),
   opacity: Type.Optional(Type.Number({minimum: 0, maximum: 1})), size: Type.Optional(Type.Number({minimum: 0, maximum: 100})), width: Type.Optional(Type.Number({minimum: 0, maximum: 30})),
-  symbolId: Type.Optional(Type.Union(MAP_SYMBOLS.map(symbol => Type.Literal(symbol.id, {description:symbol.name})), {description:'仅用于 point；标准符号保留原色，不能按状态改色。未知车型不猜测具体标号。'})),
+  symbolId: Type.Optional(Type.Union(MAP_SYMBOLS.map(symbol => Type.Literal(symbol.id, {description: [symbol.name, symbol.sourceKind === 'standard' ? `标准符号 ${MAP_SYMBOL_STANDARD} ${symbol.standardRef}` : '应用扩展（非标准符号）', symbol.orientation === 'heading' ? '支持 heading' : '固定直立，不支持 heading', ...symbol.aliases.length ? [`别名：${symbol.aliases.join('、')}`] : []].join('；')})), {description:'仅用于 point；标准符号保留原色，不能按状态改色。未知车型不猜测具体标号。'})),
   iconSize: Type.Optional(Type.Number({minimum:MAP_SYMBOL_ICON_SIZE.min,maximum:MAP_SYMBOL_ICON_SIZE.max,description:'专业点标号显示尺寸（像素），缺省32；须同时设置symbolId。'})),
-  heading: Type.Optional(Type.Number({minimum:0,exclusiveMaximum:360,description:'真北0、顺时针，仅用于支持方向的专业点标号；战斗员、集结地、消防无人机不设置此字段。缺省不代表真实朝向。'})),
+  heading: Type.Optional(Type.Number({minimum:0,exclusiveMaximum:360,description:'真北0、顺时针，仅用于支持方向的专业点标号；战斗员、集结地、消防无人机不设置此字段。朝东为90。缺省不代表真实朝向；清除时从完整 style 中移除此键，不用0或null代替。'})),
   lineEnd: Type.Optional(Type.Union([Type.Literal('none'),Type.Literal('arrow')], {description:'仅用于 line；箭头是显示样式，不改变折线几何。'})),
   lineStyle: Type.Optional(Type.Union(['solid','dashed','dotted'].map(value => Type.Literal(value)))), symbol: Type.Optional(Type.Union(['circle','square','triangle'].map(value => Type.Literal(value)))), label: Type.Optional(Type.String({maxLength: 200}))}, strict);
 const geometryRef = Type.Unsafe<Static<typeof geometry>>({$ref: '#/$defs/geometry'});
 const styleRef = Type.Unsafe<Static<typeof style>>({$ref: '#/$defs/style'});
 const featureFields = {kind: Type.Union(['point','line','polygon','text'].map(value => Type.Literal(value))), name, geometry: geometryRef,
   informationRole: Type.Optional(Type.Union(['observation','assessment','plan'].map(value=>Type.Literal(value)), {description:'现场记录/研判/拟定方案，按用户意图明确设置；未提供保持未注明，发布或采用不会变为已到场。'})),
-  note: Type.Optional(Type.String({maxLength: 4000})), attributes: Type.Optional(Type.Record(Type.String(), Type.Union([Type.String(),Type.Number(),Type.Boolean(),Type.Null()]))), style: Type.Optional(styleRef),
+  note: Type.Optional(Type.String({maxLength: 4000})), attributes: Type.Optional(Type.Record(Type.String(), Type.Union([Type.String(),Type.Number(),Type.Boolean(),Type.Null()]), {description: 'update_object 中为完整替换；先读取原 attributes，仅调整指定键，保留其他键及 null。删除键须在完整新对象中有意移除。'})), style: Type.Optional(styleRef),
   sourceRefs: Type.Optional(Type.Array(Type.Object({systemId: id, objectType: id, objectId: id, revision: Type.Optional(revision), queriedAt: Type.Optional(Type.String())}, strict), {maxItems: 20}))};
 const feature = Type.Object({objectId: id, ...featureFields}, strict);
 const featureRef = Type.Unsafe<Static<typeof feature>>({$ref: '#/$defs/feature'});
@@ -58,7 +58,7 @@ const operations = Type.Array(Type.Union([
   Type.Object({op: Type.Literal('update_layer'), layerId: id, changes: Type.Partial(Type.Object(layerFields, strict))}, strict),
   Type.Object({op: Type.Literal('delete_layer'), layerId: id}, strict),
   Type.Object({op: Type.Literal('add_object'), layerId: id, feature: featureRef}, strict),
-  Type.Object({op: Type.Literal('update_object'), objectId: id, changes: Type.Partial(Type.Object(featureFields, strict)), layerId: Type.Optional(id)}, strict),
+  Type.Object({op: Type.Literal('update_object'), objectId: id, changes: Type.Partial(Type.Object(featureFields, {...strict, description: '只提交用户要求修改的顶层字段。style、attributes、geometry、sourceRefs 如传入均整体替换，不做嵌套合并；先读完整原字段，只调整指定内容。未传字段保持原值及缺省状态。'})), layerId: Type.Optional(id)}, strict),
   Type.Object({op: Type.Literal('delete_object'), objectId: id}, strict),
   Type.Object({op: Type.Literal('copy_object'), source: annotationRefSchema, objectId: id, newObjectId: id, layerId: id}, strict),
 ]), {minItems: 1, maxItems: 100});
@@ -115,7 +115,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
         state.observeCurrent(result.current.sequence, callId); return result;
       }, signal, 'annotation_list')}),
-    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
+    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定 ref 的 set 与 objectId 共同定位对象，不能按同名或跨 set 相同短 ID 替换目标；页面选中和未保存输入不在工具可读内容中。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
       parameters: Type.Union([
         Type.Object({mode: Type.Literal('draft'), ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
         Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
@@ -153,7 +153,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         state.committed(result.receipt, result.replayed);
         return {...result.receipt, ...(result.replayed ? {replayed: true} : {})};
       },signal,'annotation_from_source')}),
-    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。冲突必须重新评估，不能静默覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。说明实际操作效果，无需顺带总结任务当前。若要说明任务当前，以本次 annotation_list 查询或本次实际成功采用回执为依据，分别说明读取或提交时状态；历史回答、旧动作回执及 replayed:true 都不能代替。未提供 current 不能推断为没有当前版本或基线正在被采用。完成用户要求的结果说明与必要分析。事实陈述应对应实际读取范围和固定版本，区分已核实事实、推断与建议；依据不足时按需核对或说明不确定，不用未经核实的细节扩展结论。地图入口由界面提供，无须顺带复述技术标识。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
+    defineTool({name: 'annotation_action', label: '编辑或发布标注', description: '创建、修改和发布仅针对当前会话自己的草稿；任务当前采用是独立的共享设定。创建新草稿明确空白 baseRef:null 或固定 baseRef，无需先读取空草稿；服务检查无草稿和绑定条件，不覆盖已有草稿。修改已有草稿先 annotation_read mode:draft 读取；本轮创建成功可继续新增。版本条件由宿主管理。参数错误只修正参数，缺少依据只补读指定资源；冲突重读对应资源评估。结果不确定先查原回执再重读，不能直接重复写入。复用来源对象几何用 annotation_from_source；本工具用于自定义绘制及名称、样式、说明等编辑。update_object 仅合并顶层字段，style/attributes/geometry/sourceRefs 是整体替换；改方向先读取完整 style，保留其余样式，改名只传 name。冲突后重读最新目标，保留其他字段；请求字段已被他人改动且意图不明确时先澄清，不能把旧完整样式套到新版本覆盖。publish 仅在用户明确要求共享时执行；保存或发布都不会自动设为任务当前，无审批，也不通知、不修改现实来源。说明实际操作效果，无需顺带总结任务当前。若要说明任务当前，以本次 annotation_list 查询或本次实际成功采用回执为依据，分别说明读取或提交时状态；历史回答、旧动作回执及 replayed:true 都不能代替。未提供 current 不能推断为没有当前版本或基线正在被采用。完成用户要求的结果说明与必要分析。事实陈述应对应实际读取范围和固定版本，区分已核实事实、推断与建议；依据不足时按需核对或说明不确定，不用未经核实的细节扩展结论。地图入口由界面提供，无须顺带复述技术标识。图层和对象ID由模型取唯一短标识。' + (canSetCurrent ? '当前席位可以 set_current，仅在用户明确要求设为任务当前时执行；先 annotation_list 读取当前设定，收到结果后再采用；已有当前版本时先比较再设定。' : '当前席位不能设为任务当前，该操作不在可用参数中；不要尝试采用。'),
       parameters: actionSchema, executionMode: 'sequential',
       execute: (toolCallId, params, signal) => execute(toolCallId, (scoped, dispatch, committed) => {
         const clientActionId = annotationActionId(scope.requestId, toolCallId);
