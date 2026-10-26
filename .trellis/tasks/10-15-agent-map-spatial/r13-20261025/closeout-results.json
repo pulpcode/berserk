@@ -1,0 +1,66 @@
+{
+  "round": "R13-closeout",
+  "date": "2026-10-26",
+  "priorResultsCommit": "1757116",
+  "authorization": "仅补原F04-E0未执行的保存轮，原记录保留，结果单列，不追加其他测试",
+  "originalEntry": "F04-E0",
+  "businessUserTurn": 2,
+  "originalStatus": "waiting_user_unmapped_plain_question",
+  "originalFullTaskVerdict": "pending",
+  "newVerdict": {
+    "protocol": "pass",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass"
+  },
+  "rawBatch": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r13/closeout-20261026",
+  "usage": {
+    "new": {
+      "requests": 3,
+      "input": 56947,
+      "output": 446,
+      "unknown": 0
+    },
+    "cumulative": {
+      "requests": 49,
+      "input": 954743,
+      "output": 12276,
+      "unknown": 0
+    }
+  },
+  "effects": {
+    "firstPreviewStateUnchanged": true,
+    "originalResultRef": "spatial:a52bb21d-6d2c-4717-be73-48a46605c2c2:call_00_i1ngg0y0akaei6fe2frlx823",
+    "savedObjectId": "tmp-range-500",
+    "savedName": "临时范围",
+    "savedLayerId": "derived",
+    "oldObjects": 16,
+    "newObjects": 17,
+    "exactlyOneAdded": true,
+    "oldObjectsEqual": true,
+    "fourLayerMetadataEqual": true,
+    "geometryEqualsOriginalBuffer": true,
+    "sameSessionAndSet": true,
+    "beforeRevision": 1,
+    "afterRevision": 2,
+    "publicationsEqual": true,
+    "currentEqual": true
+  },
+  "newTools": [
+    "annotation_read",
+    "annotation_from_analysis"
+  ],
+  "newSkillBodyDelivery": {
+    "spatial-analysis": false,
+    "map-annotations": false
+  },
+  "oldRecordsUnchanged": true,
+  "firstUserTurnRerun": false,
+  "otherTasksRun": 0,
+  "automaticRetries": 0,
+  "reviewType": "independent Agent public-evidence review; not human gold",
+  "formalAcceptanceEvaluated": false
+}

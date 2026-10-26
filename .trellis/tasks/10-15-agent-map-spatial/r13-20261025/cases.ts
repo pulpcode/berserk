@@ -98,11 +98,29 @@ export function clarificationResponse(p:Prepared,item:Interaction,alreadyAnswere
  if(!isAllowedClarification(p,text,turn))return undefined;
  return {requestId:item.requestId,kind:'question',action:'answer',answers:[{questionId:q.id,text:clarificationReplyForTurn(p,turn)}]};
 }
+/** Ignore only the invitation inside a conditional follow-up, never the whole answer. */
+function withoutOptionalInvitation(sentence:string){
+ const conditional=/(?:若|如(?:果)?|倘若|假如).*(?:需|希望|想|保存|后续)/;
+ const required=/必须|才能|否则|无法|尚缺|缺少|仍需|还需|(?:完成|继续)(?:当前|本次)|为(?:了)?(?:完成|继续)|(?:需要|等待).{0,12}(?:您|你).{0,12}(?:确认|回复|提供)/;
+ if(required.test(sentence))return sentence;
+ let result=sentence.replace(/请(?:随时)?(?:告知|告诉我|联系我)(?:一声|即可|就好)?(?=[，,。！？!?；;]|$)/g,(invitation,offset:number)=>conditional.test(sentence.slice(0,offset))?'':invitation);
+ // A single optional follow-up question is not a missing-fact question.
+ if(/^\s*[-*]?\s*(?:是否需要|要不要)(?:继续|进一步)/.test(result)&&!/(?:请|确认|提供|批准|授权)/.test(result))result=result.replace(/[？?]/g,'');
+ return result;
+}
 export function plainClarificationKind(p:Prepared,snapshot:SessionSnapshot,turn=0):'allowed'|'unsupported'|'none'{
  const text=snapshot.messages.filter(m=>m.role==='assistant').at(-1)?.text??'';
- if(isAllowedClarification(p,text,turn))return 'allowed';
- if(/是否需要(?:继续|进一步)|要不要(?:继续|进一步)|如需|如果需要/.test(text))return 'none';
- return /请(?:确认|选择|明确|提供|告知|补充)|(?:需要|等待).{0,12}(?:您|你).{0,12}(?:确认|回复|提供)|[？?]\s*$/.test(text)?'unsupported':'none';
+ const sentences=text.match(/[^。！？!?；;\n]+[。！？!?；;]?/g)??[];
+ let allowed=false;
+ for(const sentence of sentences){
+  const remaining=withoutOptionalInvitation(sentence);
+  const blocking=/请(?:确认|选择|明确|提供|告知|补充|告诉我|批准|授权)|(?:需要|等待).{0,12}(?:您|你).{0,12}(?:确认|回复|提供)|(?:必须|需要|仍需|还需)(?:先)?(?:提供|确认|选择|补充|回复|授权|批准)|^\s*(?:当前|仍|目前)?(?:尚缺|缺少).*(?:坐标|数据|信息|授权|权限)|[？?]\s*$/.test(remaining);
+  if(!blocking)continue;
+  // Unknown necessary questions take precedence over a separate allowed confirmation.
+  if(!isAllowedClarification(p,remaining,turn))return 'unsupported';
+  allowed=true;
+ }
+ return allowed?'allowed':'none';
 }
 export function isPlainClarification(p:Prepared,snapshot:SessionSnapshot,turn=0){return plainClarificationKind(p,snapshot,turn)==='allowed';}
 export function criticalEffect(p:Prepared,final:SessionSnapshot,after:Prepared['fixture']['before'],turn:number){

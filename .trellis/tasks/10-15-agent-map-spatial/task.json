@@ -1096,7 +1096,7 @@
     "originalCheck": "r12-20261025/check.md"
   },
   "resultGroundingR13": {
-    "status": "results_awaiting_review_one_harness_interrupted_task",
+    "status": "closeout_completed_results_awaiting_review",
     "branch": "codex/agent-result-grounding",
     "plan": "r13-20261025/plan.md",
     "prd": "r13-20261025/prd.md",
@@ -1105,7 +1105,7 @@
     "authorization": "2026-10-26 用户：提交方案git，然后开始本轮",
     "implementationAllowed": true,
     "modelExecutionAllowed": true,
-    "newProviderRequests": 46,
+    "newProviderRequests": 49,
     "baselineRevision": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
     "scope": "end_to_end_from_original_user_tasks",
     "skillLoading": "native_on_demand_both_groups",
@@ -1168,10 +1168,10 @@
     "historyBaseline": ".local/spatial-r13/history-before-20261026.json",
     "offlineCheck": "r13-20261025/check.md",
     "attemptedTaskTrials": 10,
-    "fullTaskCompleted": 9,
-    "harnessInterruptedTaskTrials": 1,
-    "results": "r13-20261025/results.md",
-    "resultData": "r13-20261025/results.json",
+    "fullTaskCompleted": 10,
+    "harnessInterruptedTaskTrials": 0,
+    "results": "r13-20261025/combined-results.md",
+    "resultData": "r13-20261025/combined-results.json",
     "executionAudit": "r13-20261025/execution-audit.json",
     "independentBlindReview": "r13-20261025/blind-semantic-review.json",
     "batch": ".local/spatial-r13/batch-20261026",
@@ -1182,13 +1182,79 @@
     "productFilesUnchanged": true,
     "historicalFilesUnchanged": 4532,
     "actualUsage": {
-      "requests": 46,
-      "inputTokens": 897796,
-      "outputTokens": 11830,
+      "requests": 49,
+      "inputTokens": 954743,
+      "outputTokens": 12276,
       "reasoningTokensIncluded": 3649,
       "unknownUsage": 0
     },
     "groupOutcomes": {
+      "E0": {
+        "mainPass": 5,
+        "strictPass": 4,
+        "strictFail": 1,
+        "pending": 0,
+        "planned": 5
+      },
+      "E1": {
+        "mainPass": 5,
+        "strictPass": 5,
+        "strictFail": 0,
+        "pending": 0,
+        "planned": 5
+      }
+    },
+    "pairedOutcomes": {
+      "completePairs": 5,
+      "bothStrictPass": 4,
+      "strictImprovement": 1,
+      "strictRegression": 0,
+      "incompletePairs": 0
+    },
+    "nextAction": "审阅补齐后完整对比；本次已完成，不追加测试或改产品",
+    "independentExecutionAudit": "r13-20261025/independent-execution-review.md",
+    "closeout": {
+      "status": "completed_and_independently_reviewed",
+      "authorization": "2026-10-26 用户批准提交后修复误停、离线验证后只补齐未执行保存轮，原记录保留，补测单列",
+      "priorResultsCommit": "1757116",
+      "protocol": "r13-20261025/closeout-protocol.md",
+      "slot": "F04-E0",
+      "originalUserTurn": 2,
+      "exactOriginalPromptOnly": true,
+      "originalTrialsRerun": 0,
+      "newProviderRequests": 3,
+      "offlineGatePassed": true,
+      "paidCallsAllowedOnlyAfterIndependentGate": true,
+      "combinedBudget": {
+        "requests": 96,
+        "inputTokens": 2500000,
+        "outputTokens": 400000
+      },
+      "alreadyUsed": {
+        "requests": 46,
+        "inputTokens": 897796,
+        "outputTokens": 11830
+      },
+      "automaticRetries": false,
+      "additionalTasks": false,
+      "historyProtection": ".local/spatial-r13/closeout-before-20261026.json",
+      "approvedContinuationConsumed": true,
+      "furtherModelExecutionAllowed": false,
+      "batch": ".local/spatial-r13/closeout-20261026",
+      "freeze": ".local/spatial-r13/closeout-freeze-20261026.json",
+      "newUsage": {
+        "requests": 3,
+        "inputTokens": 56947,
+        "outputTokens": 446
+      },
+      "results": "r13-20261025/closeout-results.md",
+      "independentReview": "r13-20261025/closeout-independent-review.md",
+      "executionAudit": "r13-20261025/closeout-execution-audit.json",
+      "allSemanticDimensions": "pass",
+      "oldRecordsUnchanged": true,
+      "productChanged": false
+    },
+    "originalGroupOutcomes": {
       "E0": {
         "mainPass": 4,
         "strictPass": 3,
@@ -1204,15 +1270,18 @@
         "planned": 5
       }
     },
-    "pairedOutcomes": {
-      "completePairs": 4,
-      "bothStrictPass": 3,
-      "strictImprovement": 1,
-      "strictRegression": 0,
-      "incompletePairs": 1
-    },
-    "nextAction": "审阅评测器可选后续提议误停及F04补齐方式，不自动修复后重跑",
-    "independentExecutionAudit": "r13-20261025/independent-execution-review.md",
-    "knownHarnessDefect": "F04-E0完成后可选后续建议被误识别为阻塞澄清；第二用户轮未发，原completedUserTurns也误记0；完整任务待定。"
+    "originalFullTaskCompleted": 9,
+    "originalNewProviderRequests": 46,
+    "originalHarnessInterruptedTaskTrials": 1,
+    "combinedResults": "r13-20261025/combined-results.md",
+    "combinedData": "r13-20261025/combined-results.json",
+    "originalResults": "r13-20261025/results.md",
+    "originalResultData": "r13-20261025/results.json",
+    "originalHarnessDefect": "F04-E0完成后可选后续建议被误识别为阻塞澄清；第二用户轮未发，原completedUserTurns也误记0；完整任务待定。",
+    "harnessDefectFixed": true,
+    "auditParts": [
+      "r13-20261025/execution-audit.json",
+      "r13-20261025/closeout-execution-audit.json"
+    ]
   }
 }
