@@ -1,0 +1,140 @@
+{
+  "reviewer": "root_evidence_review",
+  "blinded": false,
+  "reason": "Root监控批次时已见运行映射；独立盲审由r13_check负责。",
+  "source": "真实公开对话及工具messages；不使用私有思考",
+  "taskTrials": [
+    {
+      "blindId": "0b08f16a-ecff-4222-8154-f3e99c1d6b57",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    },
+    {
+      "blindId": "2c24a48e-8854-472f-86c1-5fa6a26de66a",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "minor_wording",
+      "notes": [
+        {
+          "quote": "其余三个点…距离更远；备用资源…约111米",
+          "finding": "本轮实际annotation_read fields geometry/attributes返回全部17点坐标；备用资源与基点同经度相差0.001纬度，其余三候选纬差均大于资源乙直线距离所对应角差。可由已读几何与球面距离规则支持，不能机械套用旧仅返回前2项时的无依据判定。断面直线措辞别扭，事实不因此失败。",
+          "category": "supported_geometry_inference"
+        }
+      ]
+    },
+    {
+      "blindId": "32918a0a-2170-433a-b331-3af1ba2400d3",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    },
+    {
+      "blindId": "79b87c97-3aa9-4cfd-b8b3-dee3a4f2f216",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    },
+    {
+      "blindId": "80220c03-fdaa-4939-8f2c-ad2873cc6abe",
+      "mainRequirement": "pending",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pending",
+      "boundaries": "pass",
+      "strict": "pending",
+      "clarity": "clear",
+      "notes": [
+        {
+          "quote": "已完成预览，未保存到草稿。",
+          "finding": "首轮500m实际生成成功、事实与只读效果正确。末尾若需要…请告知是可选后续，驱动误识别成阻塞澄清，导致第二条已批准用户指令未发送。完整保存任务不可判能力失败；原completedUserTurns=0与真实已完成首轮不同，另记observedCompletedUserTurns=1。",
+          "category": "harness_false_blocking_clarification"
+        }
+      ]
+    },
+    {
+      "blindId": "8c03ed9a-eb5a-4cb4-92f1-899b8dbf6d89",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "clarity": "clear",
+      "notes": [
+        {
+          "quote": "即纬度 22.5000～22.5045、经度 113.9953～114.0047 附近",
+          "finding": "中心纬度22.5、半径500m的缓冲范围向南亦延伸约0.0045度，纬度下界约22.4955而非22.5000。前述±与后述区间不一致。必要筛选结果0和首次resultRef复用正确。",
+          "category": "extra_explanation_factual_error"
+        }
+      ]
+    },
+    {
+      "blindId": "d5c0b6e7-3018-4e13-9dee-3378048a576b",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    },
+    {
+      "blindId": "dd13862a-8d67-406a-bd92-f983f38d2689",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "minor_wording",
+      "notes": [
+        {
+          "finding": "resources-other图层中也存在一个名为资源的图层措辞重复；全文可理解为该图层名为资源且未加入候选，不判事实错。"
+        }
+      ]
+    },
+    {
+      "blindId": "e3086353-6373-4b48-890b-0128027d68cc",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    },
+    {
+      "blindId": "fef3c4cb-d848-419c-b089-483b45a22164",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "notes": []
+    }
+  ]
+}

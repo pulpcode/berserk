@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-26",
+  "modelRequests": 0,
+  "paidJudgeRequests": 0,
+  "historicalSamples": [
+    {
+      "sample": "查询过程误述",
+      "record": ".local/spatial-r12/reasoning-batch-20261025/C01-C0/record.json",
+      "recordSha256": "e437bb44a46b7792d9ac82c7fe5a19adb581c036e7d1072e2d19822d6afc58d8",
+      "request": ".local/spatial-r12/reasoning-batch-20261025/C01-C0/request.json",
+      "requestSha256": "3470455586f3a3718aab1d7a033f8ab75e719e3020b2dc583d292cd7ff58f80b",
+      "quote": "因此，上面的结果是按该区域标签查到的",
+      "decision": "必要结果正确；过程事实失败。实际成功调用是query关键词，未按返回区域ID重新查询。"
+    },
+    {
+      "sample": "附加严格距离关系",
+      "record": ".local/spatial-r12/reasoning-batch-20261025/C03-C0/record.json",
+      "recordSha256": "e29f0f23b8a27a295a233c61eb8b7cc5d7f79a8b1548b750cd536a783e8c553c",
+      "request": ".local/spatial-r12/reasoning-batch-20261025/C03-C0/request.json",
+      "requestSha256": "ea2515be8ceb1379541b8f527fa8db38a4abb68ba129a9f8e39489ed4f909a79",
+      "quote": "比这两个远，未被列入",
+      "decision": "必要名称/距离正确；严格失败。可见摘要无其余几何，前二结果及不扩展同距规则不能证明余项严格更远。"
+    },
+    {
+      "sample": "名称不能证明同距",
+      "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/record.json",
+      "recordSha256": "de9b7784fe251632ac01a4e79dba143aa8475f4e3a3464fbd42139c4b64c3076",
+      "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C1/request.json",
+      "requestSha256": "1af39347d80eb6dbebb696a7c9c423306ed427f60b3daf1ad36eb0ab38ffb24b",
+      "quote": "`ties` 图层的同距点也未纳入。",
+      "decision": "必要名称/距离正确；严格失败。未读取ties几何或距离，名字并列不是同距证据。若R13真实取得证据，必须重新按该次轨迹判。"
+    },
+    {
+      "sample": "保存的多轮状态",
+      "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/record.json",
+      "recordSha256": "a0c5ca5ec948498a43f236d5aa0f7e95b33c32e5c63af69d8a8e08aed90807ac",
+      "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C04-C0/request.json",
+      "requestSha256": "1b5975aefc52a533c9b7c60ff85bc55f2c12de01f29bdadd854beee2d077a60f",
+      "quote": "“临时范围”已保存到本会话草稿的“派生”图层",
+      "decision": "正确；此前预览无保存，后续用户授权后保存成功，不能混用不同用户轮次的状态。"
+    },
+    {
+      "sample": "措辞有歧义",
+      "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/record.json",
+      "recordSha256": "375f72997c65ec87bd65e53ccb06a933b1315ae826a62f3fa5e55d6a3a5d2707",
+      "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C05-C1/request.json",
+      "requestSha256": "120a932785abfc1732d43a8387c5c193e291485285eb776f072cabed2aaca99f",
+      "quote": "结果范围已生成",
+      "decision": "按全文记表达问题，未明确声称新增几何或保存；名单、方法及真实分类正确，不凭生成二字直接判新增buffer。"
+    },
+    {
+      "sample": "返回项并列的限定",
+      "record": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/record.json",
+      "recordSha256": "106b2604c8d6df300b9caca698c1b4c09e1dfcbe643d68ec0f0087cea93324d5",
+      "request": ".local/spatial-r12/reasoning-completion-batch-20261025/C06-C0/request.json",
+      "requestSha256": "ecd60228e868eab2f1630b9b1599a8faece7701b961510e4467b646867b0aec2",
+      "quote": "未对两名的并列做扩量（本次结果无并列情况）",
+      "decision": "结合两名及本次结果限定，返回两项距离不同支持该句；不扩读为已排除所有其他候选并列。"
+    }
+  ],
+  "notR13Results": true,
+  "notHumanGold": true
+}
