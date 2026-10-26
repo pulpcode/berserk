@@ -1283,5 +1283,38 @@
       "r13-20261025/execution-audit.json",
       "r13-20261025/closeout-execution-audit.json"
     ]
+  },
+  "resultGroundingR14": {
+    "status": "plan_awaiting_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r14-20261026/plan.md",
+    "authorization": "2026-10-26 用户仅要求形成并落盘方案，行文通俗凝练，任务清单逐题详细",
+    "planningOnly": true,
+    "implementationAllowed": false,
+    "modelExecutionAllowed": false,
+    "productBaseline": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "evaluatorStartingCommit": "e07f46e",
+    "plannedGroups": [
+      "flash_disabled",
+      "flash_enabled_high",
+      "pro_enabled_high"
+    ],
+    "plannedUniqueTasks": 24,
+    "historicalTasks": 6,
+    "newConstructedTasks": 18,
+    "repetitions": 2,
+    "proposedTaskTrials": 144,
+    "actualTaskTrials": 0,
+    "actualModelRequests": 0,
+    "proposedBudget": {
+      "modelRequests": 1600,
+      "inputTokens": 36000000,
+      "outputTokensIncludingReasoning": 3000000,
+      "afp": 12000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceEvaluated": false,
+    "nextAction": "用户审阅独立R14方案，批准前不实施、不执行模型测试"
   }
 }
