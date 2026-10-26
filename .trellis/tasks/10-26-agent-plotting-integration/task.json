@@ -1,0 +1,43 @@
+{
+  "id": "agent-plotting-integration",
+  "name": "agent-plotting-integration",
+  "title": "Agent 与标绘整合方案",
+  "description": "方案已获实施授权；将在独立集成 worktree 组合固定输入并完成工程自动化测试。真实模型批次额度独立确认。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": "planning:agent-plotting-integration",
+  "package": null,
+  "priority": "P2",
+  "creator": "bobot",
+  "assignee": "bobot",
+  "createdAt": "2026-10-26",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/10-26-agent-plotting-integration/prd.md",
+    ".trellis/tasks/10-26-agent-plotting-integration/design.md",
+    ".trellis/tasks/10-26-agent-plotting-integration/implement.md",
+    ".trellis/tasks/10-26-agent-plotting-integration/research.md",
+    ".trellis/spec/backend/map-symbols.md",
+    ".trellis/spec/frontend/map-symbols.md"
+  ],
+  "notes": "2026-10-26 用户确认第一步；已固定标绘99cba1f、Agent产品6a631a4和R13证据e07f46e。仅落盘整合范围、暂缓项和验收场景；未激活实现、未合并、未调用模型，未改当前服务或另一worktree。R14在对方独立进行，不混入本次整合。下一步为整合设计。\n2026-10-26 用户批注要求“落盘形成方案，待我审阅”。已基于现有引用、顶层合并及CAS机制形成设计和实施验收稿；提出有限字段核对及30槽位真实验收预算，均待审。没有激活实现、合并、提交Git、调用模型或修改服务。\n2026-10-26 用户要求“按照方案开始实施，完成后进行自动化测试”。授权独立整合、实现和工程自动化测试，保留真实模型批次及额度单独核对。",
+  "meta": {
+    "baseline_confirmed_on": "2026-10-26",
+    "baseline_scope": "step-1-only",
+    "frontend_commit": "99cba1fdd1274cc951ba4b12bcffd2702321a52b",
+    "agent_product_commit": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "evaluation_reference_commit": "e07f46e756b5dcb373fdfae25da63c9585d5824e",
+    "implementation_approved": true,
+    "design_status": "approved",
+    "design_approved": true,
+    "live_evaluation_approved": false
+  }
+}
