@@ -1,0 +1,794 @@
+{
+  "frozen": {
+    "schemaVersion": 2,
+    "driverVersion": "remediation-v2",
+    "revision": "359c3d654d7bcb362226767fd613ce06212d8480",
+    "product": {
+      "src": {
+        "access/context.ts": "9a09e6eb0b533056003ff3d5ac53812cfa379e06727032bc806b269fb6cb7e8a",
+        "access/database.ts": "01ae073d98315cdc66b2ff329ee30bed4e9ed7449d944fe6139ecfb801cc079e",
+        "access/schema.ts": "d9b3522f98ab2516ab9245acc3507d27c148720b4a494dc0346473a8f5565bdc",
+        "access/store.ts": "f16b9303bed980c957259a0166551cc56d14266dddef435bd292eefb927d61ea",
+        "annotations/errors.ts": "c024b2bfb3aec5f22a767eb698f99768195a128ddf780fac2def34e917f31fef",
+        "annotations/service.ts": "2fdf20c2d2bfd7a55e3180edc7bd2cf6d151724a7a008792999f6a225228505d",
+        "annotations/store.ts": "b107cd16d56c7987efc4bd8bbf44397ff2b5df461c6930c36564e3df8d183a78",
+        "annotations/validation.ts": "5460f173c55ca5bfdbb285eacbead618fa820fabcee3bc63e3cf5d3137f6c06f",
+        "background/config.ts": "15b679c71b57f6ed980dd93724dfc3ece1ff05f11f154e2e457c26f5b57f4178",
+        "background/context-evidence.ts": "e70cfa54800f470ba3a24301552ad64cf5771ebbec3fdd44aac12ada831367f9",
+        "background/executor.ts": "5b19a0e8805ce8ca7db4b65710185d4cbfc3ae498086f62259cca1a5835498d7",
+        "background/files.ts": "da1e0e8bc6194500d28acfcfa66ed95f692a7d3fb8c0be9fc1e178974277424d",
+        "background/model-permits.ts": "96749915559173f71683e40ffb5b754e8f3f35b6c2b14d3d11200269941238d5",
+        "background/recipient-evidence.ts": "5f1d06abeb4ca25075688467a320000d8cf300b97a1bddf2e47ba04ddf1bb914",
+        "background/service.ts": "e075ca16535264f79cd7cf425caef493081a509f2bf88597c23e5cc755130aa9",
+        "background/store.ts": "a709675896653b54f3a707ca3a5a5d7d81af974c983fedaaf91b2c04b30dede0",
+        "background/task-links.ts": "0f0913fa65b177be5ec1e0e01104b0726bc02b7aee16c09272686da139c59ff8",
+        "collaboration/files.ts": "a6b3bd5b40da6d4e38fb21416d6d7c959b97d2cfbe586428300545fc626e1664",
+        "collaboration/safe-import.py": "c03ea0decb2b860e465d03b5b766e61cd45bf0ee233bb13ef8468898a28c86fe",
+        "collaboration/service.ts": "2691305bf7c23e0ffa8efef3b9c02115b65516e72122d53e1300ab6453baa41b",
+        "context/composer.ts": "c5b4d77bace346d509890fd1e5b2c441f85f9ae4679dc99ab7830edaada4fe7b",
+        "context/config.ts": "b6531ca02c7d65a2e38e850a97e956f6064c7009f1eb573ac5edf9dee236e202",
+        "context/http.ts": "6d5b7f9b4c526743c06a7e56984ae53c5698f8419bb715ffc7bdc1ee30e5cdc9",
+        "context/map-references.ts": "f5177dc5e5a8a8c0a131bd8e236cc2bb444cbfedb19333d6d77c59a93a853200",
+        "context/service.ts": "d2365ca105ec6d80faa3313a9bccb52d80f858e93c44e9d51cb72814dde70cd5",
+        "context/task-query.ts": "ef7fa2cbe92c42f81e217c5048033b2198168c9474093c4b615faee555b0f5b5",
+        "context/validation.ts": "452757933fee5fefbe7cf29f8f97b20ef8e154453830822efd40fe8a0fefcf11",
+        "contracts/access.ts": "8ca00aa4ae542883316616b115f96f78644ba67351095e61c644c5041cdf250d",
+        "contracts/annotation-geometry.ts": "965fc73cb198477c3c5309c7412fe8c3f0195237bb084fef3296fda72cb7530b",
+        "contracts/annotation-results.ts": "3c09c5930a7ad03d2643bf0b7ff985f1b8dae02973c6aab2d3dbc31ac69f9805",
+        "contracts/annotations.ts": "aae90ef67cafb3c7201f36439b93d143d9f69178a80e028e3db2ef07fec55875",
+        "contracts/background.ts": "dc7d203888c7ae98c9e64c2245cf1fa738e657d8bdc7c43233d9855db707e3aa",
+        "contracts/collaboration.ts": "89a1ae90de557b586f39beae624c456911721bbcb48818a89e629aee79a72d0e",
+        "contracts/context.ts": "e664694ddfd923aa0fc7ca971c6c921f59b18b99f35c2a8c72f64408e53e350b",
+        "contracts/errors.ts": "022ac80d1cd3d67214c2857e2bc7d5dafc5c9d64b4cbd5a21dde058789168996",
+        "contracts/files.ts": "a5fcdfc012e7bbbb026797b3e6bc79fd7f8c225935d48ee6876daaff6f15b493",
+        "contracts/index.ts": "7e17511acf06d3d0d279e72a458313876c1204b4a5e5159bacefd297ed541359",
+        "contracts/interactions.ts": "0569006cc80910ce4745c7428f49b19979c2b85d31a0076ce2a1451431639a8a",
+        "contracts/map-symbols.ts": "78629d00c473b7800aa93230b530ef2977348d0f8fd840d0587014c2b54b7362",
+        "contracts/map.ts": "d7d7b6a8aa1f5da7498d058105469d3f338f92cc28ee914833351f185ef99d37",
+        "contracts/simulation.ts": "6e1549eae73c87993fc6462b82774e15e7b2cf9ebaee582bc1b2b4d395fa5193",
+        "contracts/spatial.ts": "b19065e5fc1e0a12f81ac66d78471462744d804f816ee2001cbbd290ef65ae42",
+        "contracts/task-information.ts": "f55719534b973e3b0213ebaaaa73ca4b733def1dbdfc8a94625d02f562d2525d",
+        "contracts/workbench.ts": "709f3613ba96e566607458640eff7860e471ca0aa34c294b7cfc17b8729c2fb2",
+        "execution/command-policy.ts": "3d73855ac2c54dbaa13f4782d89df9ca7e39fa19c7f25944a98d4079b15b6ee0",
+        "execution/docker.ts": "6f685d75ab2123f4798b0c4ce9a592339f0e3c043b8b9ed0dc13e458226770d2",
+        "files/safe-fs.py": "72a8a9de57681e7190ab95c7bcdff35e5579a8345f8d88d2322090ce2ab12a6e",
+        "files/service.ts": "e3a5966b7d53b3c4c47174ae1ffe4db7a00d30e077b9e0e5b0d89f31fbcbe682",
+        "pi/annotation-input.ts": "e314d487e0f34108fd9c9cfe24b1a4bc6c1bf0d4b5453cc436bec538356e265b",
+        "pi/annotation-results.ts": "73ede67b1fd0fb5881c5399e097b8e6f7f238d63e8b60be80a7fbcea9fd75b45",
+        "pi/annotation-state.ts": "aa87cc09bf18d4ad6b077cfd00553d6044e605f5be88e549688731fae7af291a",
+        "pi/annotation-tools.ts": "e8046ee3ca8bf9f4a1736051d3fcb46a8cb28aadf7e3bd0f826ab62847bc8fb1",
+        "pi/background-runner.ts": "cd6a35eca1bd583e87bf1494ec6a977b3efd8baacac91cd18d99d426297168d6",
+        "pi/collaboration-tools.ts": "d3adeae469590c4e9aed27fc4df58aabb3422233f142793cf6115bbb720a57da",
+        "pi/compaction-history.ts": "683d631f1fe94be928dd70f22150bfc516a5cbabb55b3e7d2af425ea1fb5aa8b",
+        "pi/composer-input.ts": "67da3ea0f32d06b720f75187840fa46057c5110cdb36f7c89577fbb7ba169eca",
+        "pi/context-tools.ts": "620016702b9db64bbfe44d4701514f576bdda95f1b966373c850979a27cb71f6",
+        "pi/controlled-stream.ts": "cf7fa5da55bbf935aa3e711ace6043d6237e9eb02bf48e6b4457efb0643cc28c",
+        "pi/file-history.ts": "5aeca6a82350be66f25ecb135f43e3ab48d5f349802dcfee7f7bf667382e5e42",
+        "pi/file-tools.ts": "9dc379f8e470e6a7cbe3037df8cd1ae257dc03d235234990786da37831d448ac",
+        "pi/history-evidence.ts": "d6be30f2822ddcb703c013093aa99fa4225d7541e59329b4e9852ef75a2dfb6d",
+        "pi/interactions.ts": "2e8e038a9433cc8e40379415094b4937e39a4f96a428deef2a87b8cb6d371536",
+        "pi/lab.ts": "0f94c6c73d78b96d44101b12214f8ddcfc08c6e6f4c6e263cba4de6d5d417bc6",
+        "pi/message-intake.ts": "a29e5eba5418cf7c325ae9488c5ac0cb1c934455fa9a9324feaba7c6c4d960a0",
+        "pi/migration.ts": "3c6f7cc84a47bf4c6eca361d935ab72d1e0e25e017d8121d46886f8c5d4bdb23",
+        "pi/model-selection.ts": "e1148ff9b2d9239ce78a1259dea421f42f34b72a09388acc14df5fd06e7f6b93",
+        "pi/recipient-tools.ts": "afab809a084547823b0610efbbe8ab77cacc4afd250d745dda35e2aacfc72dd6",
+        "pi/resource-tools.ts": "3e39ad74e6a0c922213537aaecdbe45bbc35be4b946ebedf7d407bedb4bc2cfd",
+        "pi/roles.ts": "804afed21e944dbae607c52a0ee2b6fd274f1d1c1cf0b2c1fe1a928e37a55a93",
+        "pi/skill-metadata.ts": "c78f0e758018d07f3c1e21a79d900c19f0a1eb052867db33f3f9eed9d7a93340",
+        "pi/skill-method-advice.ts": "6a469f8d38ad13b76925bc440c61f4c700b7d2ddb4882c3de775ba34194bc49b",
+        "pi/spatial-results.ts": "3125aa7de65d08844d08c5aa7bf55055f568a41bef21a7faeb154f9fd00ac1b9",
+        "pi/spatial-tools.ts": "964803f6cfa1028ea42941b005e52c6f34253760dffc1ac548b530f79926de5e",
+        "pi/subagent-history.ts": "c90ac7f3aea074d3051d10cbd3082d7f6ea77e27c5989255471327f785fee3f8",
+        "pi/task-information-tools.ts": "6363aec984b92251a8778334e5f39191eb36e8689e14a69cce61e03ffb6816d3",
+        "pi/validation.ts": "ddd93c971804beee4bb92d71b4cc993ca84f817c72772a76cccad8e8c90d4b81",
+        "resources/files.ts": "dd3ad1cfc676534ad9ff852bc94c7d5872f641c83b35f69a5b2b46c906b16aaf",
+        "resources/service.ts": "d86ca3b775663521ee09fe63a34d5dc46a9b0301c4acd9d3176916c6e8143d55",
+        "server/annotation-routes.ts": "64d496a12a039ab98d35d96a9ff448d2eb702a9615cf5ee6dc3479a189b199b1",
+        "server/app.ts": "9fa14280ce823a953826f87d8fa653f793bb9ad8a3d7445c2fc582c27b4b02b7",
+        "server/auth.ts": "3e60bf7b3e687f82619e0dfc2c78a747d9503e4399ffe6ba9505adfa47ed476b",
+        "server/background-routes.ts": "b91eab05d1f0f4de8c769e8f5ed89b270d2616541da594b3559a0e25abf062ed",
+        "server/collaboration-routes.ts": "092232ba36aaf18c0014eb36cc242bd7378f389d7a1ab0b6e0f0e2e9503899ac",
+        "server/config.ts": "5e9285b7f6415317745fafca2735e38afebc27b5dbe3bbbe60b45c5a28968011",
+        "server/context-routes.ts": "8316750db223619dc2a9bb513b0166e01c3cbb61ebd511bfe67ff2c6f4b589ec",
+        "server/file-preview.ts": "93c014e051f528028ef7b8784e4d59498dfed8cc84ae8c1a81a5cd5e7cfd6a10",
+        "server/file-response.ts": "edbe403a99dc7849d666c63275b686fc19b835a413f34f57b2b7f1681baa3038",
+        "server/file-routes.ts": "ee3e6f730081584e0ce30fce075f8aaf33164caf9e1cbd43b5d40480366c89f6",
+        "server/main.ts": "547261ff763868d8fbe291dbce324303fae44d55b6dfdfc808b1296bcfc42832",
+        "server/model-settings.ts": "4288a4c102d05c22410026375952f591f87a644b54e675b9b647ed71b5f95fea",
+        "server/seat-scope.ts": "4b0e0fd4398be38ca6080c5a036a48385ebe0129930a3572fac9ae3e85b2a6ba",
+        "server/task-information-routes.ts": "1ccbf675b1c31df7597a6699802c89ef78ad8748c64b90bb71b1cc63d2303f6d",
+        "server/task-routes.ts": "88a6815fd9b67709a4ae35fd7caa709ad1516a982766187211a1d8fa32b68fa7",
+        "server/workbench-routes.ts": "6ef7601159298fed0c334179fced1d04d7f17407f2d8bd30a24da72f19ad263b",
+        "spatial/calculation.ts": "d77c74a3343fd0c9c5168f3048dee76719eea200d26e66599091ca940b3dea9d",
+        "spatial/geometry.ts": "1c91f60b3d7258b109148559440c610bda9adb6cd25291685494fd1d3d3e19a1",
+        "spatial/inputs.ts": "ec86ca44d46e5b5c84b674b96675fd2c4af9c74a1a90a26d91e33022f6b4671d",
+        "spatial/service.ts": "fe31ef45a5345b18e51751fd8cc55e5eec567f1decc998d4312c41b375da02d2",
+        "spatial/validation.ts": "57bb3b7293c24bafe1ac41014275a78bc224fe363682bab17eb6865a871df89a",
+        "spatial/worker.ts": "ea6ba3053929388f0c2059e6d2ad9d7c7125c383b165e12255eaa8e5a8c0b051",
+        "tools/sources.ts": "cd978937250b804b25b5dfd0fc27f565ac51e910d61beb79c4aa32efcb9c49c1",
+        "web/ChatMessage.tsx": "b08b7fdb8d14d26d2c910376df1f13ab9c4746905765885dafadd6d94ba29d69",
+        "web/ChatPresentation.tsx": "f514428503b6360da646548ccd76feed084740a7d8d3e0a2538d2358f8a7502b",
+        "web/ComposerReferences.tsx": "caf7a8b23c91382e45f1ff2a492a8f8b9cc2c3764845b4135f3a67e1197408c8",
+        "web/ContextEvidence.tsx": "a4c88d2afcfd8cd1b95c4a8034ed747da7cc4c28c5f1864367369d1dff4fa882",
+        "web/DeliveryReviews.tsx": "6b05c746e481a83531c7f15fca8812f366c40f48ab059807d1ecd02f7753a770",
+        "web/DirectoryStatus.tsx": "c0d3d637e36f28fa749716d27c977367b6eee6c3d7f974b35745fd17a4dcdf40",
+        "web/Files.tsx": "008b87ac53db0a48dd7024747952ac8361152c36932cce6031ce5360052b6428",
+        "web/HandoffFiles.tsx": "b6d0da25225b6cb246ed7c82ee1b32c2de330e1dbb21f7800265777bec1656c6",
+        "web/Inbox.tsx": "d4504c9a5bf5c92766624ab330b81aaf1f72fc20839150ec64577bd4f126cc11",
+        "web/InformationCenter.tsx": "3ef33ffc3f1d6f0c6790247bcb9e75e61042af35fc22d4dcb0b25a523c0ee0aa",
+        "web/InformationContinuation.tsx": "eb6e9b2559718bb0cf5b24c9a7a67a0d2b3a4e6661219249c26bae6633ad71ea",
+        "web/InformationJobs.tsx": "33bead7020e9574426f8438f0e8706aa5e240fa1c641557ccbdc4d4c9af53f9b",
+        "web/InformationRules.tsx": "e95f599a616c8dbe8985d39a149b0d7f30f8b8a9ce647e0c65c07ec0a36f3f68",
+        "web/InputQueue.tsx": "181b7ae81a095aec435dd4ea22021af41794194fb0d1651075531b43595f745d",
+        "web/InteractionCard.tsx": "2818cbc53852197bb3e45f121108d18848daeb1a6f68995376fdca55ec47567f",
+        "web/ModelCatalogSettings.tsx": "beb46cfeaf49fde17b01ed1050df6fe9b33781bef74d185357923009f0d483a3",
+        "web/ModelPicker.tsx": "9540c3f2d170133ef38a1e1e19d1d1d6c1d2b18d50f42361d520c62146840575",
+        "web/ModelSettings.tsx": "f76a099529cb0dc7668bb4391644de4dba1d5b22163278bedfc5bb0180e5ca10",
+        "web/NewSession.tsx": "c5f8dbecf4d59cdebced7ba9e43c2132d0a051f93c4d59db3ffe47966b0f40e7",
+        "web/Resources.tsx": "b2ed0733cb02a74d21d4a026f7f3266d3be8943b2d50e4bda5f166f4263361a6",
+        "web/Seats.tsx": "abe99400a06c3cd1fc2eaff8fc53010e50af113d09d9eaa33eb681a8b5dda9ca",
+        "web/Settings.tsx": "ca514f6d72e06f04c85aeac98dc2f0e48e377d004a9ff3c7e991b9a365cda05e",
+        "web/SubagentCard.tsx": "553de05b73b3485db54069e50357f97b397351dccb3c4331ffd31964cb966938",
+        "web/TaskAssociations.tsx": "3bf7f9b555d27165c3f1cb04a274762ddfdbaa3861ae67850695038fae3d0ea4",
+        "web/TaskContextEditor.tsx": "27c3f2f157627ac9b133a1aab14bdbbd12e2c26a06253f483c7085aed02fa3ac",
+        "web/TaskHome.tsx": "5176ed664c9a8b5207bf29fc334bd6e1642d3da7629c75f9e0fcee06fc810028",
+        "web/TaskInformation.tsx": "b150b77a8fbf3ed40b369f8ab69de14a3fd0ecb7c88645d58b7656f99cd66c14",
+        "web/Tasks.tsx": "8116432924b79b19ac4486fdf46b69cae17f1252f4ca2fe139a8193887b01970",
+        "web/WorkInbox.tsx": "cbde9fec0e245826de71232a8e8c4ae8c3f829373878fe7efcdb544fe125a695",
+        "web/WorkOverview.tsx": "6ed5554f9761f260952b5437ba8185378026ed7127366a1cc29848f523dae235",
+        "web/Workbench.tsx": "955954ff2af942ad9166cfb0f570c9902340646880f8ad006e53edddce57e835",
+        "web/WorkspaceNavigation.tsx": "bb4f09f51b97b4ee67e650c96d7fb85a1115986fe8e2132b3d6c644aceb2c465",
+        "web/annotations/AnnotationWorkspace.tsx": "569666877333943d7b4a58ca8ab5d1b1bde6d7e08b04f31bba12579147625436",
+        "web/annotations/EditComparison.tsx": "e1d9b0836df4506d44783cd648af551c03991063cc17f703d7df28259bd98f25",
+        "web/annotations/FeatureEditor.tsx": "813fa28f056e6b38fe22e2586e701747a587bf409cf03bb6745efb21c23aa616",
+        "web/annotations/LayerTree.tsx": "92b8164271179efe9d1f5c3f66812d98d64d6f834b1baba2170b8e9b9d3d1f8b",
+        "web/annotations/SymbolPicker.tsx": "ce6f43066e7dab0839eacfc15da145d3c2b7dda04c8f51b3d0984cccc8d100f3",
+        "web/annotations/annotations.css": "08751492f819b40848b403b93e1727e3cb463419f702bdd794ad766e04d8bf85",
+        "web/annotations/edit-changes.ts": "095ac456cbf96f076c110a1e15a008bbb464d4aed48ba4417df7f548500e9c7a",
+        "web/annotations/helpers.ts": "3a7d7d1588ca679bb9164a6246cf46ae5699c223bee6bdd5c9b9f169a0485043",
+        "web/annotations/layer-tree.css": "77d3d7c20f4ac04296115a3a11e20961c247e982c1cded92fa963f2272162dde",
+        "web/annotations/map-runtime.ts": "86744b9d7e675ff242aa1917939097a8dd500281722fb84fbdf3f035d3fcd014",
+        "web/annotations/pausable-adapter.ts": "a3b39f0bcf7edfa00cf2db9bce98f1040aa8993c546e87fa0adad5caf62715f2",
+        "web/annotations/rotation-handle.ts": "eeaf1034ff5f60d4a05542db4fc1e9a6cbc84a18de473b8434d7f270625591ed",
+        "web/annotations/useAnnotations.ts": "b63ce0c0debf4a6c5de54d61b0a6fbc9a03775a8ea744841c2cb35623a2cbde6",
+        "web/api.ts": "da5fdaf25551ccc5badc24cf1b7e964de3c62de867e528f5065810d706816bfc",
+        "web/information-ui.tsx": "29988647ea9f991a74570fc8ba52f018868b2ffabd4024b3f558f89f0d339565",
+        "web/main.tsx": "d2320940adbbbcd6ad1909ade4d26fb09a5a209ae703cd6b6b0e534b3b2c15f7",
+        "web/map-symbols/README.md": "4e53c83586513c6f44b58fd5f19cce1fa325b117e16afd5d284a8351b3de3289",
+        "web/map-symbols/assets/app.rescue-inflatable-boat.svg": "277fbf507c76dcd4a5ebdb28c84c505ac3dc17245f3207f59825993678d2a734",
+        "web/map-symbols/assets/app.rescue-vessel.svg": "2adf6a274d36dd22fa1f8bcc237f0cd9b061782dfdbf033d84eb35bb499bf039",
+        "web/map-symbols/assets/xf3013-2020.6.1.21.svg": "886da718dd6693d8558b1af1dab260afef49598b8492bb501369408197b5d906",
+        "web/map-symbols/assets/xf3013-2020.6.1.27.svg": "599930ecbc0aa6746499e434db3e60624f1ea90cbe82044b23bf148ac84d2134",
+        "web/map-symbols/assets/xf3013-2020.6.2.1.svg": "11e0a3cbae8495d38bab18ff20f82701b9d1d9e06054a54d2fdcfaeda2a40056",
+        "web/map-symbols/assets/xf3013-2020.6.2.10.svg": "be389e1f354d4c0ff9c4196002467a3b0a81f22e337228a63ba3594c8b69f885",
+        "web/map-symbols/assets/xf3013-2020.6.2.11.svg": "5d18dc6cf12892d492ac36891287224bb5eaaed8fe5a9826c49b92c5e268ff03",
+        "web/map-symbols/assets/xf3013-2020.6.2.12.svg": "c44a22f343ee06bb15b7eefbffd5d512ea7853d7a75d09d5adfdacac2db06226",
+        "web/map-symbols/assets/xf3013-2020.6.2.13.svg": "190227dda8c9aec019aefcb1acdadbca19488dd64e12f48dce18fa88b6361a67",
+        "web/map-symbols/assets/xf3013-2020.6.2.14.svg": "d02d7b576f1127cca5a9ff5ecf84cc3ffbe32a5247e3c9de724ffd731147583b",
+        "web/map-symbols/assets/xf3013-2020.6.2.15.svg": "929240f8b3beffcd044dcf9d90cfdf39add80ecbd006e32a24ee643fcaffd16a",
+        "web/map-symbols/assets/xf3013-2020.6.2.16.svg": "272461bae2012351a34e32ece3ca329f533ec12aea3e2055a3c48f118a6e8026",
+        "web/map-symbols/assets/xf3013-2020.6.2.17.svg": "358a4d526392006957fe65c0dead98728d3cd652b3b3c5e27d77324de8983a8b",
+        "web/map-symbols/assets/xf3013-2020.6.2.18.svg": "ae1d10b417e10a7fdfe785c734bd46c4923d529de6e2f929c49ece9f480218d3",
+        "web/map-symbols/assets/xf3013-2020.6.2.2.svg": "b0caf88f38f219ba791cbc2ca17491183d30ef785f177656c931ddba1d60620e",
+        "web/map-symbols/assets/xf3013-2020.6.2.23.svg": "027f302253ca9e2170adc6b27baf0330f8f2e596848742541c872b7f6b972d9d",
+        "web/map-symbols/assets/xf3013-2020.6.2.30.svg": "2246920b57125d59321bddb2f9e5eea0510c2f689d43a5f34ecdee87c70813f9",
+        "web/map-symbols/assets/xf3013-2020.6.2.35.svg": "21d18f85ac874ad827948c3726001943c2723e1722ac69ce23a8a91b121aa518",
+        "web/map-symbols/assets/xf3013-2020.6.2.36.svg": "689a3fd7f9a74a8da9ceb4c37f6c8a62cf9858ca1c8ff0dd26a8986a077276b8",
+        "web/map-symbols/assets/xf3013-2020.6.2.37.svg": "172c63f0286837d73d71001faf99f900561ace38dc61835a48ac463d80caefda",
+        "web/map-symbols/assets/xf3013-2020.6.2.5.svg": "523bf956fdefbcb5b0626d876275365993ca6b1c1988ba6ebdc4fd56177243a5",
+        "web/map-symbols/assets/xf3013-2020.6.2.8.svg": "ccd62b3618e467f07e2d76d67bdcbf3f1209de1e773194961fa9a02316bcc8ef",
+        "web/map-symbols/index.ts": "fff45229c7008c1c02bcadbe753676e1cc539d9639f7f252f13d626afed51689",
+        "web/map-symbols/provenance.json": "3f5f29dba7de8e0a000265a7c569eba8dbe4d301233b3fdecd7bf2b1ebfb2442",
+        "web/model-settings.css": "75fb674e04284a9c2a43e70de709abf99f1c4ca2f76bac355cb2aa95732be647",
+        "web/processGroups.ts": "aa85b1a035b1668b81136d53c3fbc98d2ca331ec67127be387e01b94dc752aa4",
+        "web/random-uuid.ts": "df20d56a11e0d406cb2b930a1f0ddab8f41285f7e257dbed96389e8868eead09",
+        "web/situation/AnalysisPanel.tsx": "a7a0f8aa69947fe28155a225ed001e48c28a197d22860a7ccf0300a8cc23e94f",
+        "web/situation/MapCanvas.tsx": "34c7a0ed7791a5b16c7f6e5446f04ace0511d91d5c052bb8a64aa3c316b08eab",
+        "web/situation/MapContext.tsx": "77b5f10df93d17ea8ca77b075b58b312c80e821788f2310334c949640fd3b204",
+        "web/situation/Simulation.tsx": "c36bb5f942df2c761816d85a85125d7a7a84062a0e9be83ba6a74419eabb8ccb",
+        "web/situation/SituationView.tsx": "086606cd82edb378d835f30ee31e24ac753a18e62722b56b11aa3f0235e593b7",
+        "web/situation/SourceTree.tsx": "7bcd5427dd9fd7c018fd2fa202ddc3fa15256d388852092c1e24602587d5a5a0",
+        "web/situation/analysis-runtime.ts": "3cc51cc65cd5e4315ba38d8141d45cf0ce0102720f19e9f6c717c9c405aea8fe",
+        "web/situation/basemap-runtime.ts": "fbb29845af387a02e66e803fe57484bb6b5d85a8f11e0c886ad2447f56e4be8f",
+        "web/situation/basemap-style.ts": "05d43b1350155ccf956fb2d611d51b3ae1755cadeeed4f48801e9e70b7ad2bbb",
+        "web/situation/canvas-workspace.css": "47eca1869c04a1c0632562c43b9205c01ce68fa6b000816bd8710efa02ca30b1",
+        "web/situation/evidence.ts": "ec796cc3f6f2c0f8349b2c009669c418006ebec6e5a114c878b01b412d6215c2",
+        "web/situation/map-data.ts": "5295e162d78945ba1910d6f63a204dca54188d17914c1dc27f8e2206059747d6",
+        "web/situation/situation.css": "0ae5e18a8615e4a2b645b927ed4efa3402759e5a8dff0c73e7b60e4109cdda76",
+        "web/styles.css": "d86834fdce08ad26b997b3a0bb74dadf6803e02671e4fc44391e0e1c8f2f96f4",
+        "web/useAttachments.ts": "b3be58b0ce1a94a034bd92aa06807f7403a76988819e746e4bc976680be79994",
+        "web/useChat.ts": "49293775a4a81d2a1e828992c6ae9539a62ae62cc406d87bd82b370e8bc72e07",
+        "web/useChatItemFocus.ts": "1aada99d79da90e1c94a8a066664b203fcc8a80a265a78b5d692b0cdf2a641c6",
+        "web/useComposerSelections.ts": "e5669e7906aa225703abe1c7f9c8d372c0da61ca8e2e495892493de700b39bda",
+        "web/useInputQueue.ts": "a2d08fe86d0b4847424a7d2c1044996c9f4cca02e46ed17c05c2d858234532e6",
+        "web/useInstructions.ts": "ff7c78672f2cbfb02c1240fc86d91e62622b5e653dde6809239cf26e29e0c4aa",
+        "workbench/service.ts": "3bb829dff4fe74166fb0c572f41ed3b045386a527c6431b32fdee561f52dd0bd",
+        "workspaces/seat-migration.ts": "14f1cda6be5abe99140ba4645d5350321b8a2cbfb9b98575948476929e9cf5d3",
+        "workspaces/store.ts": "19bf3c4cb8f09cf2abcbbfe3403dff0a1597313c795293e9c7b4aca903b18602"
+      },
+      "scripts": {
+        "access-admin.ts": "2b62877965dba69f9f29769762c451529e63fc165f94f5e7f912dd5cb96deb9b",
+        "background-admin.ts": "79834233d3a70281899fbf17cc91e3d95dbbf410d32299ce2cb92b5a0e2ad2bc",
+        "check-boundaries.mjs": "aae96394efa6408b83888818f55d0b3d26e1335d0c977de48133c60d01dbadc0",
+        "migrate-seats.ts": "8e0044362c5b5932d0e88d3fdf52f72c52ee3ddea81ef20efd9beb0244f5914c",
+        "migrate-workspace.ts": "d2b1fc2337f4bf7676bf69dce321cbec39fbc84976d4053cdcb16215ff64eaa8",
+        "mock-context/README.md": "3eb16eebb120c53213e7f3f68ffaa8ae43b83cb240400704886b5f685b935d38",
+        "mock-context/control-api.ts": "6db23697efea3d79fe040a118690958b6049e616e68f8a0a4540d30539a47238",
+        "mock-context/control.ts": "7f0d7f92bcb42d0d34a92381c2e64b6d1135df327ea8f2ea7cb680fd25c8cadc",
+        "mock-context/fixtures.ts": "5ec83e61954819ebd8a8a91504f17bd351a9ce8b3e88693da4b38d79e17e2cc2",
+        "mock-context/main.ts": "0d41f1aeca00ff70cc9b2fba273a87f2c9088db062733a18a9b93e3175d65247",
+        "mock-context/map-fixtures.ts": "f712189f589a4875e0e73e8a8e27d8862e0de038eddff534f00055f001b0e100",
+        "mock-context/persistence.ts": "d6d41b297c6ec42499ddeb672b45daa909866c7789c4c3cb283e3aa4815b6c22",
+        "mock-context/server.ts": "737b96454afc8bae74c2bcfa24da1ece38fd2f38528ff40e74ac9361d37dd012",
+        "probe-access.ts": "c774b4050bfd32b415f3abb680818fa3cc93394113fb86cbfcc5a314685112a4",
+        "probe-agent-framework-observations.ts": "e3bcd4e8848a4748c31f6bbd0c02e93c0d0818127d31cfe14f710143929dde2f",
+        "probe-agent-framework.ts": "3796ff13e6089626232b9e560c4fcc68b95a019adeee6a685fcf189205983dd4",
+        "probe-annotations.ts": "1b1da6cc6b68a63b0527973448e397dd4784ae0107912e9392405a56e5215b50",
+        "probe-background.ts": "2a753baf6d78aadb757df68eca15b8f8243609a45591de3b7cb71eecb1308f15",
+        "probe-basemaps.ts": "4c57e50465394b6b59a6fd348debfed0fe18466f1d7c85eee8c3b59464bdd67c",
+        "probe-compaction.ts": "e867f36d2540ea58ee1287350f58a6e4aaab6b55438268bb636ba0a68c26d021",
+        "probe-context.ts": "6cd539b7c409d4f985fe978aa41e483c82b836fbcf111b8c63f0b4917ad710cd",
+        "probe-desktop-map.README.md": "d0804c14286dee4bb3bb9f66f645e40461aa8fa33b43a4c98e34a9a515a14f1f",
+        "probe-desktop-map.ts": "1822c691ace20ddb9d5ebc6e07599df29b5a689142ce93fcca96bc5bf00b988b",
+        "probe-execution.ts": "c70ece5712dbbb0d109a594a47affec84c0221c55ded914a65f7327c928b456a",
+        "probe-files-continuation.ts": "ce1e7487e83fca7997320f47cdd8a37b3b20944971aecf4a633a1c85b6570574",
+        "probe-files.ts": "a422e604a6e9f63c0dee43f2921899d898227b706e2a621bac9ab335a8a83567",
+        "probe-handoff.ts": "345761909018f5d79ce939614d2f3fd268933a2f180cfc310ca90f7326a53209",
+        "probe-hitl.ts": "b2f48c654c6c29fc62960de6fdf5b65d98493db4d0640097a04ab6d9a7439996",
+        "probe-live.ts": "5d0772088d742890cdeab83f4c7065932a673db99b2c28adbadd0ad6b38f57dd",
+        "probe-map-query-cases.ts": "e51be69abf1d19e1ef9dc32bd95324beaaec2707950d4ac973a1b1cd2fafeb14",
+        "probe-map-query-scope.ts": "2e80faada108a1153e3294b8f1fbed1432f760ed51a601361363995ae63ad1ca",
+        "probe-map-result-projection.ts": "f2b26576fdda96ae02663be2c3b28312a994705095c66b93dbaab9bfcbb469ec",
+        "probe-map-workflow.README.md": "70b97ce6c95849e01847dd46a9ff4ae14085fcf089d59232fe0ee33dca37fa12",
+        "probe-map-workflow.ts": "98b92fdeda954d396d11d57736f15a99ae49aec80a9651ddcfe03060cf910b72",
+        "probe-pi-recovery.ts": "826baeb393b70786c9711091ac609b6dd6b6e20f95205b56d655fd315676dc16",
+        "probe-recipients.ts": "deafe7a3ad18242f70d502b08c4f177593e50538626e281fc6a988324cda7b65",
+        "probe-references.ts": "2db455bdbf09831576f7cca40c3e55f8b5e5db87478d564bbd9910c59d9ebfe8",
+        "probe-session-recovery.ts": "44dc986c23c529fc1e3ec3f43a399a2871ec22b32fd27cd0c542586a344f956f",
+        "probe-situation-map.ts": "ac862b321e0cf531a400e516461c1be352a90f700bf416b33ca374050aa45650",
+        "probe-source-annotations.README.md": "140d6be46b0cae6edbb825562e563aac48c0cd70a889bf8f64fc9015a06628ab",
+        "probe-source-annotations.ts": "72d7b72a77410da3a18d430178e8bdd55febf66f6ca9bd231bc6aa6de86a2245",
+        "probe-spatial-batch.ts": "73dbdeaeddb1635624bd1404aca5f1d5e68f40c21ffd936f95332df7d1f28eaf",
+        "probe-spatial-cases.ts": "e66eb7dc5ece3668ef889f23ced6033824a3eadc5885d4c43f837538b0c678df",
+        "probe-spatial-evaluation.ts": "c6e6d8603b3a2f4a06f9317d392de2f9388517d56544a8a3221bb7126e9aeb32",
+        "probe-spatial-evidence.ts": "84cf14230c1bf5bb9ba5580cc19cf118ad6ac0c0bfa0e33c60e795be9b2afc86",
+        "probe-spatial-remediation.ts": "a37724c08bf1fb93864a286daebd31137bc558db13aa9e5aee82782c955198e7",
+        "probe-spatial-replay.ts": "41931827e94afb08de7a62bd628c45c16fa84c1fe534edc0e2cee0d0af0dd081",
+        "probe-spatial-report.ts": "fdb4de8914e47bd5eac59dd314def1956770fc4e048afdcb595a877857ba993f",
+        "probe-subagent.ts": "3eea084b5ef062c9a6357f0e23ff0ce3b8921526a6658f1e55bafc7157656966",
+        "probe-task-plan.ts": "82dc7713f739ac5ff13adf3a495a05bb03ccd75159be42b1355914b2c15e34d9",
+        "probe-workspace.ts": "534bc1c3a3e49b60e64c5269b3a13328236a4634ddc60ab6d50d37c7a7325148"
+      },
+      "fixtures": {
+        "agent-framework/README.md": "c9a12e8b56a87f9e36a3f7a74dc9aac905f209ad17d1ef10ef2eccd57b5305ff",
+        "agent-framework/review-checklist.md": "80c8f3fa8841e1cbf33145250324cdba26426c5b1a7eb531b90258319f1e93a1",
+        "agent-framework/初稿.md": "55c9e478ecb129c0df76f19c7b6f4dade664a1fdb80bb3fb3b06216d9a63c213",
+        "agents/analyst.md": "ed8850eed792095e373dfcf568f100ff04e034321f9d7d807d033d911d263250",
+        "agents/reviewer.md": "926bc47c5b8a6cb711f37f19b8a1d2e757a2fc57d1627188dceb1eb5f077fb7f",
+        "background-context.example.json": "4d8102d695942434063199cbbba86f1e550c8b7641c1f22c042348cfbf1c1486",
+        "background-seat-routing.example.json": "2df2f0dde56616f7b4e0c9c7b8561a738108db39c9d6b59b1b58d0c2366b174f",
+        "common/AGENTS.md": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+        "context-config.example.json": "3e62b828058d68daa5013fd136eaef1e953241bffb601803f4fc160372eedf5e",
+        "context-seat-routing.example.json": "eb21c6822ff7bc851d20bf9295af9c635437f94820bc52238c7141819bc62b43",
+        "manual-handoff-retest/会议室绿植记录.txt": "5cce9e94d50f3667ae8db0c4f7d6a67b9f52a4adcef58b42f040b4ebb08ef373",
+        "manual-handoff-retest/资料归档说明_修订要求.md": "e315ae421b85ba210120fe5abf18d08aca256f63b682e2b74bf2ef73116df46f",
+        "manual-handoff-retest/资料归档说明_初稿.md": "66f31b387fde3594c1cd5f6c6f6a1d34ce80f9d2ae718e296a41f30ebb5d2098",
+        "meeting-notes.md": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0",
+        "resource-brief.md": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626",
+        "seat-responsibilities/intelligence.md": "76b21450c053635eba2d7ad68acec892d03fb9da55db4af1353fdf4b1e3f62a0",
+        "seat-responsibilities/overall.md": "09f73269596a12ecefc6a9474ddff39bc5eaef2314e0f656071df0df557426ba",
+        "seat-responsibilities/planning.md": "4248c096bea0c7b91369a5617a185c561f408a42a8b3f8a3f6f1beb299426fef",
+        "seat-responsibilities/situation.md": "ccf9ef363b4e49774e4d157479a4da039425a80d30836e8714637c1554340149",
+        "skills/map-annotations/SKILL.md": "2d8a199c3fe92f08f0d5d97d2c3aceab7a65044efdd1f2618fa6068a7b2a7a2e",
+        "skills/review/SKILL.md": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904",
+        "skills/spatial-analysis/SKILL.md": "b1e95f5f8bd0b69268911c127a55f5219156ab079ddde5a18383bbea86611847",
+        "skills/synthesis/SKILL.md": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6",
+        "task-plan-validation/操作示例.md": "69c71b69cd1361ce3f9af059f75f3529a6981c33a61f14f71eac17d9e7041d9d",
+        "task-plan-validation/补给方案_初稿.md": "1a96e5fe52e38ed360231a90ccad60a72a703ad87778f4616da9579bd7ad822a"
+      },
+      "package.json": "1622cdb4643acb94350c8d5edf069cd21e3a2a529f5aa6cf60fe12fe0f1b4b4b",
+      "package-lock.json": "b99cf852da63f2c9628af3fc0f59188be7a29fe1e3dccad9a251926f2bb02e15",
+      "tsconfig.json": "759a8d0b5b5758cd821085745461da944018dec4545054f91bca127903eade10"
+    },
+    "helpers": {
+      "r3-20261022": {
+        "README.md": "16dc415df5fa8ddfb3fb18140d0629613718b05d63f22181119b385a3bbb3961",
+        "audit.ts": "e9e48f4b032d8922e969f7ab30209d876be3d338ddae7ff715d2667d8784a149",
+        "cases.ts": "34b579b3c02b45f149351c27bd38ed963d293ba5ee850cee3c162ed3a80fb43b",
+        "contract.json": "5e5a5ba5aa53db5e7523ad11f4c44999be134c6a738da572c5be656f256fcabe",
+        "holdout.ts": "36cd71b2338898290ecad26490803e20ab0dfe37dad2a23015f2717cb4f877bc",
+        "http-probe.ts": "d6c78b39a70c3962867fc3f23140597748a2ad7fe961119d1f5acad7cc9f9847",
+        "live-budget.ts": "e88bc3d328f6f6f3b52afaa39c0c53391cd17f8025b7d74b4c247af3e97b985b",
+        "live-provider.ts": "f85e95f047316e18806856b600fdf32a1286b5281240488cef6194e9d9230fb8",
+        "live.test.ts": "325374677bfb8006e3b9916bd5e32be9e81d6f8a1250265b0c0ea5c8dc781f9f",
+        "live.ts": "9c4875a086e04bc666ecdc4ca191723b74d557276b6169477ecd9a288c3e542a",
+        "native.test.ts": "f8468b842e5d207bbd36e1ef851e5d062fe40203a7dc31744f7c842a44d36792",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "prepare.ts": "da1e945bdf199fef90d4bd9bb0bbcbfaa2fcaf47972f25b53f184d0799a2da1b",
+        "review-rubric.md": "d4ccfbefa6c8b6c6f6b803ae06193afb77caec4bcbf6f2b8c73a59b78f7ba5a9",
+        "runtime.ts": "2a9e0fbbafe62afce38c8cd5fd3539a1388783c9053b28ed059471c160563fd8",
+        "scoring.test.ts": "0896a52c952972827cad76079b5ed29d8f1e8c8d076e41ba04f7ada5030ff5bb",
+        "scoring.ts": "1ecd1cbc25bc54b017b970fd7cc8f5a0c215bc66f6d30a97b2d27070c9027773",
+        "skill-changes.md": "c4d79ea4e6004d60f5632de605a399784e524c9ac33248021a5ff48b1d5ed837",
+        "skills/baseline/map-annotations/SKILL.md": "d78958c9af8c6739316d64a28f44ee44297f3011e596ebdfe9789d39a6635934",
+        "skills/baseline/spatial-analysis/SKILL.md": "eadbcbe1865b95732f3ae5869fe58646daae50d67eae3a9bd51b85bbfd5a2f40",
+        "skills/map-only/map-annotations/SKILL.md": "cb93a478a1523c9a75a8fcc110f5d0c068e07e862c8b4487409f42307f33eb46",
+        "skills/map-only/spatial-analysis/SKILL.md": "eadbcbe1865b95732f3ae5869fe58646daae50d67eae3a9bd51b85bbfd5a2f40",
+        "skills/spatial-only/map-annotations/SKILL.md": "d78958c9af8c6739316d64a28f44ee44297f3011e596ebdfe9789d39a6635934",
+        "skills/spatial-only/spatial-analysis/SKILL.md": "1067b8a59d8ee792bec57cb8f50515f4d79e450cb7af14a902c1c3a146bcfbcd",
+        "tsconfig.json": "02b92f7a4d5ab833fda9fe2e0d5e14eafcceb6e9defb0265d1b1f68157122f94"
+      },
+      "r7-20261023": {
+        "README.md": "6f1f31303695324bf3d1138fa897f50008058dc5d86cc35d9dc636938a387801",
+        "cases.ts": "5bf10cbc2f0d721a7808e550985eaf180a8e36f58f097a611c72538d1b4303e6",
+        "environment.ts": "24a29dabc31a0d9dcbcc3e750492ab607432ec6b158cdc988b83dc8553a2950b",
+        "live-budget.ts": "586012428a39798b216ba7424debaccd893c23f96a5f30051ea074abf875f005",
+        "live-provider.ts": "004326c8a604f97ef0e2860781c6338ef2828f62617f9a6da0dc01954a5d12c8",
+        "live.ts": "b19130484115f27465a416fd38ca1f42bbaba770cb34f7c6e477662b96897bf0",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "provider.test.ts": "d63586925f71ec5e36f40b1d8c43b2de40244348191c5bd2df90ba02b4caab93",
+        "recorder.ts": "31989470a41543088d41dbee6c602c0498c5b024587c13b583e460b39d789905",
+        "review-rubric.md": "987c8f9e0cfa0a949a972875d16cf0ca5b6d5244d0c42902b1ea8fd5d852ca1a",
+        "runtime.ts": "dbda7fdd85c125090bae10c87de23ff87d7cbac3935e8aa0b40a52c427d0c881",
+        "smoke.test.ts": "93e85e022a4213172999ad6c184b3248a1077d909845ae68221eb8e69ed305e3",
+        "tsconfig.json": "02b92f7a4d5ab833fda9fe2e0d5e14eafcceb6e9defb0265d1b1f68157122f94"
+      },
+      "r10-20261023": {
+        "README.md": "547aa7a060a4093c47145a2ddc13a36e0f31becb9bd3700f3f2d12192627da94",
+        "cases.ts": "5becd751835e985ff91254a7517d1307b9699391b0bb994f962c98783fe6cbed",
+        "live-budget.ts": "7bc0f13cc8dd2e47c90fb2cd213f066a736c2803a090a5cfe6da3e9070e45ea5",
+        "live.ts": "ad8a98ec1ce9775b947107069cef7c46539bf23b2a9cb96222f59fe9cc8a7eef",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "review-rubric.md": "775c120c7c0f980ef19fca7f1cf29223557cd1af76f054d571be6933a47fc7aa",
+        "smoke.test.ts": "9d5dc1f9b38aff0bda0e7e204551027e5b907d0325e2dffc4d650bb376ebf78d",
+        "tsconfig.json": "02b92f7a4d5ab833fda9fe2e0d5e14eafcceb6e9defb0265d1b1f68157122f94"
+      },
+      "r11-20261023": {
+        "README.md": "34892ecef465f8ab564146131314452cad6bacc6f3470dff9dacdd45432b2fae",
+        "budget.ts": "606c1b73e79d8078b306ba94281c023469935749684eb3fd14f5f91339ca2622",
+        "calibration-confirmation-check-20261024.json": "3c0d2fabc24aec6f98bc8e97a3a13a746316dc3c627dd3ff318900830c40038e",
+        "calibration-human-labels.json": "95fb49ad54668e1c00880a41d0887aaa7c3c41793b7c455eb5c3acd9c5917a63",
+        "calibration-inputs.json": "531cd5c7d87cdd7ea941f187510a7bf310cb6c53e6be570e45273de17179c656",
+        "calibration-manifest.json": "73c8912909d9f30a92362b42a5cfa7693f911d54f92849d1db3bc8b2d6f3306a",
+        "calibration-proposals.json": "dfa488ef895fd74b56f899ae44ae42c57ee434de1207a75a6e19e0043622d16b",
+        "calibration-review.md": "1c6dd6b8d3809aa3dc71e9d71eb64638b72097f5b81ff71023def70304c64786",
+        "calibration-v2/calibration_gate.py": "c0aadd71c7b6824982753673a88897f7247a3ec0115aa3ec395acc46c8327db8",
+        "calibration-v2/exposure-audit.md": "d32f133bde90609ca0e6734655852b4a72f20ac1d7568ce481a92d9f1f525ac5",
+        "calibration-v2/historical-evidence-provenance.json": "341fa04731cedcd5d70c4138767251814b98b3580b3b529e4a1fb0f2c4e3bf72",
+        "calibration-v2/human-confirmation-20261024.md": "ac1a7648614e50a3aedb66d40e47af1968f12ec73f79923d15d5a0402619b136",
+        "calibration-v2/human-confirmation-20261025.md": "ee11eb1b9add26e1eac70ceac89f194b34b4cd4a9b7196928ffa674acc92c17c",
+        "calibration-v2/human-labels-before-reselection-20261025.json": "429094e6be0a2f294387f48103fb8efaee52ad2c0e4d2c1c6e37d1e2a9e74077",
+        "calibration-v2/human-labels.json": "d0d9382b468129a54e12927e2bd04907edc37021091647bf6fccc6f3a159a0d0",
+        "calibration-v2/human-review.md": "501408c6766f718a1059cc9f1a055e9bbb05632180e0782dd78dfc41066cf0f8",
+        "calibration-v2/implementation-calibration.md": "ab3d5daa9fa921a45f577574a74e4842af8b03edce213d886388e9ee1a7b74fd",
+        "calibration-v2/inputs.json": "7da21781cf39a31888b982071057c8222c19946680b129f5b4c70f07689524f6",
+        "calibration-v2/judge-config.example.json": "e623bdcd719000f88a8a10b9e294c7e4946bb82884a5b699ed1233b76a6cc2c9",
+        "calibration-v2/judge-config.schema.json": "ae6eabdc7593e4d542803160088cb53800000a6b4380eaf7ec525f982f2b27d7",
+        "calibration-v2/output-schema.json": "7317f45d7764b34ea4845d7b31d080b47afe3ae43b49ba8a8c6e3a56cc32f2c1",
+        "calibration-v2/replacement-c29-provenance.json": "cbeac62810f7ad41b9dda019f1fc2e928f3c4e080978f32d800b43ec8accf048",
+        "calibration-v2/replacement-c29-review.md": "429192b98b99fc3653d83012a84474f0da3849123533e8f1e32b75d6da8d55a6",
+        "calibration-v2/rubric.md": "89cc99b933ad4e481e1db9b567f2def276e8ac3585efb9db5dc8cc2765aa6dad",
+        "calibration-v2/selection-manifest-before-reselection-20261025.json": "c78b0997c0a0a7665d38a18468492cb01e2d737edd4d9a94aa2b0d2706d8fb54",
+        "calibration-v2/selection-manifest.json": "edce0788d28b58540b78900592f9aa34e2f878d69496f9f308070c568bc35efa",
+        "calibration-v2/suggestions.json": "24c698675727fecfb0598c99fed77d512e23dd40b344c3d6cdc03ba19edc85f9",
+        "calibration-v2/test_calibration_gate.py": "49f3e933c8063246a9371e2d59b54b8a7b325721f3c38d4350db518b29133ec7",
+        "calibration-validate.py": "00e96aacdca54e1a69cbfdffb8a04420f745ad98ab6ef5157dde553174ecb744",
+        "cases.ts": "fbcee0752386d5cd5100afa679b2c277a1ea225454aa18e7be9180e3ce225e69",
+        "check.md": "082587bff711146a617038e5c76e4bc39846639c32b277a220629a9fddbabc36",
+        "dataset-inventory.md": "e857754e5a3a06cd1a5d41645ccc0a06d8226df8f4715f9b6a06110b6f3034bf",
+        "evidence.ts": "fbf4b2c054c49feb28a4090a674a617c4f2e1f1ea4923a09b6a57836c3434a24",
+        "execution-preflight-20261025.md": "28ff9207584af45befed03c388a77cf448c93ca49d167fbed771d39203c21a6c",
+        "grading-results-20261025.md": "da27e2178dab3a3ea975735a75bfc2525cc235a7401adb3b76986689a9273adf",
+        "implementation-driver.md": "b054b73db9e6611616c1e2a5feb49267e127f920d721472a31b73ca4c30351c8",
+        "implementation-judge.md": "f8ce0aae61137dfee6c80527cc137b51c6c6d0fe370fc22ba5dfc6b2df786afd",
+        "implementation.md": "752519b491d0a0186166b527dc01cea07f6a640fb04290b08223ac05d6562874",
+        "judge-continuation.test.ts": "3088efed40a807ab0de5f2502046d9566bda5f2be1176992fee853b1fc10fa67",
+        "judge-continuation.ts": "4791ca70eb8d159a7595a4de6e93bd5e19a22b5f3b633a53b91f9d2985d3f31d",
+        "judge-format-repair-20261025.md": "8865c89c723d42492524270f138c3d82ae80325fdd38b4b429f40295b66f90f7",
+        "judge-format.ts": "34f76b864eb3e10c9ebf5991b1c18259caf25287ad4ec2c15e26ceb3e99316d8",
+        "judge-semantic-review-20261025.md": "9f7b50a56d4a4ccdb029a0a8b21fa008fccf1025b5beeb99604c69945f3a03b4",
+        "judge.test.ts": "e323ff87b819048a43cab7f312d38547439123e511edf4f0f9425304d42725c5",
+        "judge.ts": "2f05a1c312fda4401611ea57e638631b2834bdc8a06a5678d29afe16bcefea66",
+        "live.test.ts": "98cda8edaa3078e80a31a6594fb05f6d5aaef01e3aa72d508aa08ebb3cf1415e",
+        "live.ts": "d8e214677d95754561e3e7a0c9cfaf23f7edf65ffdb646e2e694797b243350b0",
+        "next-change-proposal.md": "e68d593a123cef7292c172da241c88a6bc74078a3dbada387aaa0a0a80833562",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "provider.ts": "f527ad6c81d1a391313a695a6c01e3c486ac6a8c2a5e779175343cf339df5895",
+        "q01-q02-review-20261025.md": "35f22b518e0235ebcb76ad41b2aa1acc5a3025b42c6e75e7fff0a38ed5d73486",
+        "q03-review-20261025.md": "d3312618e3e1f420b7d83f420c0311e9510f2ad826983faca07aefb126247341",
+        "q04-q06-review-20261025.md": "7431bd6ff66cd18887fb1a2e9fbb9ca3104fb499ae0bc4c9c8340d083658624e",
+        "q07-q08-review-20261025.md": "d5c57b0e038ce3ade5ab19fce826c8ff83580184d5e2d3359f9ec04b399ae868",
+        "results-20261025.md": "fdfc66bfb7a2c626d208c2559cb88ef46e453caf36c41fe4de58a845ff2e4391",
+        "review-dialogues/C05.md": "418b15d2b54ca84c1a2c69c48c5a3377ba4485ae6d3d06b808948728635359e6",
+        "review-dialogues/C19.md": "43ccd045d45d7b6132a7807742dc3da06ff024e806f215dffdba10692d7f7ade",
+        "review-dialogues/C22.md": "c31718f25bc336798ced71b2e77ed69d10e99108f9eb60751938cafd69178b31",
+        "review-dialogues/C25.md": "00850b55a39b4761d9af158d1d8775980271f3e08db56d48b9325e8f52556b05",
+        "review-dialogues/C29.md": "0ea482af1944121a868a27684e635fda7aa742566895d02a212512ed36b83679",
+        "review-dialogues/README.md": "dafc0e29e22f2a7304bbe5567500524d91ff6eb78e59c9b8bfb80b542e0695c4",
+        "rule-sources.md": "2e25ce2685d692236dca54b4d547fe1589e605e756e4631542d008e5f9c6ac07",
+        "runtime.ts": "13fa111f16765c0ad7e004c50341a100e8f38910cd4af646572492752b7617d7",
+        "skill-implementation.md": "f29b0a217fdf61c86adb2315f184c2415c3931ebd72c7685c8edf45f968107a8",
+        "tsconfig.json": "57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10",
+        "validation-reselection/C30-dialogue.md": "ff37b97400f5d89f4a9954f7286dd3d888897db21a13aa74ac3c809bda6a8247",
+        "validation-reselection/C30-input.json": "4fe492f69e2a7b388d70358dd2a91950b1410d98826819a75ba1d579f7dd48d6",
+        "validation-reselection/C31-dialogue.md": "5d768d459c1d384834c199c77f73dc48f5226da635d4eb3b3e667580cdf26ede",
+        "validation-reselection/C31-input.json": "c675f12516efb68033c732f487c2d16764017127bc3f5b31e20bad5abe58ba63",
+        "validation-reselection/C32-dialogue.md": "aeb84a92a3cf97b21ae19e78ca7cdde8ac6b8d82bdc372d4f32c366f9eb52bae",
+        "validation-reselection/C32-input.json": "46f871abf8e9b5d29265c925816bcb366710937e97a5f6d70e30376b62772570",
+        "validation-reselection/C33-dialogue.md": "79ca1b4dc400e70a691a932aa4a5130fbca2efa9365b52b2067e0cd14199024d",
+        "validation-reselection/C33-input.json": "3b6654521a8cec4b5ab0f106d57739c86c0362b3a6d51bda4a7a100c7264383b",
+        "validation-reselection/C34-dialogue.md": "7ec918219130243a68088e34f4bddeed58ef19d7d34905952cfc34505f357bfa",
+        "validation-reselection/C34-input.json": "d063df0b7ec4fe2bab5ac8fdb03aa63ec55e5884c705a6298b9da4488f1265c5",
+        "validation-reselection/C35-construction.md": "b9de25ef570db257266e0695bfb59b85cfbdf67729343b325b5e8d9401b2286c",
+        "validation-reselection/C35-input.json": "0f61ea54de4dca9db384522dcb13ec9a62451568498f652a666d49e5306df82f",
+        "validation-reselection/C36-construction.md": "fa2339eae56a72e51439d73f92ccb4d62ef7672fba645643532465d06d9ad271",
+        "validation-reselection/C36-input.json": "f3010c6f4ff1f2ae224ad33d04d70f600d1e48f7f35d2631a0329bd31897e80e",
+        "validation-reselection/C37-construction.md": "045e880bd2bdc70fe69ac5f8efe103aab032808625876710d84d9ff003ef06dc",
+        "validation-reselection/C37-input.json": "7ecbea3ccdccd41166709f6f5b6aa59ca869891984f66e625c873fc9a3020879",
+        "validation-reselection/README-reviewed-20261024.md": "3527d4cdca9b0e5b694a80e1babfc0baececceb5f1c6dd71f08fb03f4ee68104",
+        "validation-reselection/README.md": "ad6a383edb8bb39febc6d70a0ee07b114a5753bc0f32329ad9a4d426fea32d6e",
+        "validation-reselection/candidate-records-reviewed-20261024.json": "2b5663efa4c0ca617f617cdeab497e70e863817a78a5e055e31f9ff86c4b5961",
+        "validation-reselection/candidate-records.json": "2bade15ac4994214d9d9d67b92d2cea2b261bb183de3c0ba27b412544216c55b",
+        "validation-reselection/scan-index.json": "9b446bda02c851dce8e77d1a456455fb2b365e969f2c27a63822d5e49c0ef002"
+      },
+      "round1-20261017": {
+        "cases.ts": "14e73243f560bd291b381e2e2fff365139d40cecda03287ac726ef1f3e14aa66",
+        "contract.json": "25b0743f25fb78d2fe6295a618d8ce38783781b2f4bdb1a60bb8c58640f52ec3",
+        "driver.test.ts": "e25e30429fd81f8cd64fb143b69cee5485e9b3e6e680eb7f7b27a7fca91bddfd",
+        "native-smoke.test.ts": "8ea3f6ab7f9b2921f2fc12b1ec69463ca2443ac9c7e76a0f850cbb81b051cd48",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "run.ts": "cc7afd889c5a973cc6443a555104df31c35b67acd4f77b5bee6260e6a82e23ff",
+        "tsconfig.json": "48552e9cfb0f746b570e60e43cce2fbd47705ef7cc8ec4ff2f14237e29c145b0"
+      },
+      "query": {
+        "check.jsonl": "00616ff53bd227708cc228ca095fc81abc89481cd35d6691458ef7ce3b868683",
+        "design.md": "b6866c48c56c30e080e5eaeb6594e71a8ccdd4a856d973fb94130debd71bcb30",
+        "dialogue-excerpts.md": "3ddf4fe2fa0fa8fb08c5ad7ba6e38f95c5c512e8550f49190008f292df582eb1",
+        "evidence-index.json": "9166a506d60d195a9ba0a00f6059e96412a66778fa41976534d55901e22286fd",
+        "fixtures.ts": "1687f04d5b14bb09b4f36ecc3bb796b946ab2614b5a095c93ac89068d2deb32f",
+        "implement.jsonl": "00616ff53bd227708cc228ca095fc81abc89481cd35d6691458ef7ce3b868683",
+        "implement.md": "f92ea9f0a397c40da0c16213fc6887af74a231d6531c50bf6f1ef31809447da6",
+        "merge-record.md": "6d4f25547b489fb2aeee156c523595004a3226718ef0e2aa727b2db514835e04",
+        "native-smoke.test.ts": "ad324d52ebe4c89c3affaaba0e51ecb141b621310e5d7a2401359e5420bb7f0d",
+        "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+        "prd.md": "ee901dc84a1531b5005462e6e90f7b95f05fdf9abccc666e092e9e9cf0d8e85c",
+        "pro-dialogue-excerpts.md": "8dc5c86fb6804d0a8d1065c4cfbd5e1311f6f3d3a9abd34357d757c0c5372821",
+        "pro-evidence-index.json": "9293bdb05f625c80566d8d3ff564eb0768188999bb37c86e51ae61cb6e49246e",
+        "pro-plan.md": "2af12182f22d98a5ff6d00a3ef9c833ba93db9a9027761e99127905cf2a10e8f",
+        "pro-ratings.json": "7dfe4d4f43e026cc8f8bdc347fdb2185b83bb628e9e377dec75585d0a3c08da4",
+        "pro-results.md": "4c30860c4ae041f4e29685d211adaf87bcf71354d5e18b56b043f5e3f3e5347b",
+        "ratings-primary.json": "5c5bb4f72abf48c607f769a4ad2c3215027d47c42194bc247c823d63c9338991",
+        "ratings-reviewer.json": "5088456b12eec81eb098cb3b7c18cce61566c2d483c1cd712c4e8beeb56c2fbe",
+        "ratings.json": "b0767839e521236097a4316bea4465af81c2074a6c2731afc3d6369241ee7dc7",
+        "results.md": "bcc03794be83506ff84d1a0c653bbcaf86ca26d9bb5f0ccc554073d4f333bf4a",
+        "review-rubric.md": "cc12073710af6c2bdd0684c31e05ddf7171bca8bbf1221332201623e354cd60d",
+        "run.test.ts": "0b13853ffbc398abc1a29070a8b6b16627de3f880d19dff93b0f73a2f28ed68f",
+        "run.ts": "941a479644da95e665edfc6555d40649105d8b17788c652b1c1c8c767f76e7d3",
+        "task.json": "583e9353131243068f55497c577d6350a605019ecaed0d0c3d00688fd3cba84c",
+        "tsconfig.json": "0566a3f955865f533ab269156d9f05550788a5c89ba6652e7dbf3f92b12877b4",
+        "validation.md": "26ac308038b1484a0aef68c5bc5e2db3ad0a95e1c0a378a2cc23426b511a0592"
+      }
+    },
+    "driver": {
+      "README.md": "dccbf79ae6c735e0317ebbad786ada2f7f0be1c7ab56746b0c7ba723fa2b4109",
+      "accounting.ts": "d24070d0f61887d4cf2f9e43ea1bb6918deca1aa115daac3cc35920d9b3c4f98",
+      "budget.ts": "a5a426b8b1463d15424ad13441bdaebfd9470a733e6209bfdf7828935753868e",
+      "cases.ts": "0798c2cdd74f83631b0944e3e4695dacf5eb7167d099f9d3ea684617ab94ba60",
+      "ending-cases.json": "2b80dcf0cfface3853629cfd843451ad46a0eab28e2b9a451ff875cf01c3e1f9",
+      "evaluation.test.ts": "c51c5726bd635e836882d3005630830e91117e7c1006fee68c429038a241b655",
+      "interactions.ts": "7b44ac2e2c93b511988bc711bffeaf36dae5526fe3e1b4554bcce5785fc8144e",
+      "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "provider.ts": "d0c1ac88ea928917df4e7ea6d9b7af555ed7f09372c0cbb8484aa99dcaf87f50",
+      "remediation.test.ts": "e3806913950956696560305399d81e95895941011490db9d5de2ba11fc48165c",
+      "run.ts": "a9c015ca012275455688e2975df34d5bf4f8f25b1ebea8b41f4f53e99c70bb8d",
+      "runtime.ts": "7bfdc0da7b70ee33f799b31d1cfb4e66e10a96c7a6f2ad5c78b5335dc4b606d9",
+      "scoring.ts": "955d78f300670cac7436b93abd05b38ac6947c3a3edc277601f5582b3404625b",
+      "tsconfig.json": "57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10"
+    },
+    "cases": [
+      {
+        "id": "C01",
+        "prompts": [
+          "在本会话草稿的部署图层(layerId=deployment)，分别在[114,22.5]放置救护车、[114.001,22.5]放置冲锋舟、[114.002,22.5]放置消防艇；均为方案。保存这三个标绘对象，不发布、不采用。"
+        ]
+      },
+      {
+        "id": "C02",
+        "prompts": [
+          "在本会话草稿部署图层(layerId=deployment)的[114,22.5]放置一个消防车图标，作为方案保存，不发布、不采用。"
+        ]
+      },
+      {
+        "id": "C03",
+        "prompts": [
+          "把引用的冲锋舟改成朝东，其他内容不变，保存草稿，不发布。"
+        ]
+      },
+      {
+        "id": "C04",
+        "prompts": [
+          "把引用的普通点改名为“集合点甲”，其他内容不变，保存草稿，不发布。"
+        ]
+      },
+      {
+        "id": "C05",
+        "prompts": [
+          "把引用的消防无人机图标旋转到90°，其他内容不变。"
+        ]
+      },
+      {
+        "id": "C06",
+        "prompts": [
+          "给引用对象添加业务属性contact，值为“救援一队”，其余属性和内容不变，保存草稿，不发布。"
+        ]
+      },
+      {
+        "id": "C07",
+        "prompts": [
+          "仅把本条引用的本会话草稿对象图标尺寸改为56，其他对象和内容不变，保存草稿，不发布。"
+        ]
+      },
+      {
+        "id": "C08",
+        "prompts": [
+          "把引用的冲锋舟方向改成90°，保留其他内容，保存草稿，不发布。"
+        ]
+      },
+      {
+        "id": "C09",
+        "prompts": [
+          "分别查询situation来源系统西区的车辆资源，以及本会话草稿的部署图层：报告来源资源点数、availableCount记录的车辆数、草稿点数，并说明这些记录能确认哪些车辆已到场。不要把来源和草稿相加，只查询不修改。"
+        ]
+      },
+      {
+        "id": "C10",
+        "prompts": [
+          "以本会话草稿的基点(objectId=origin)生成500米范围并预览，先不保存。",
+          "把刚才那次预览的固定范围保存到派生图层(layerId=derived)，命名“临时范围”，设为方案。现有专业标绘和其他内容不变，不发布、不采用。"
+        ]
+      },
+      {
+        "id": "F01",
+        "prompts": [
+          "仅针对situation来源系统西区的车辆资源对象：分别列出资源点名称、点的个数，以及availableCount属性记录的车辆数量。不要使用草稿中的同名点，不要把点数当作车辆数；只查询，不修改。"
+        ]
+      },
+      {
+        "id": "F02",
+        "prompts": [
+          "以本会话草稿基点生成500米范围，不保存。",
+          "再以同一基点生成1500米范围，不保存。",
+          "沿用第一次生成的500米固定范围，筛选resources资源点并报名称和数量，不使用第二次范围，也不重新生成。"
+        ]
+      },
+      {
+        "id": "F03",
+        "prompts": [
+          "仅针对本会话草稿：候选仅限layerId=resources，找离基点最近的两个点，给名称和直线距离。可以读取其他图层来定位基点，但不能把其他图层的点加入候选。只分析，不修改。"
+        ]
+      },
+      {
+        "id": "F04",
+        "prompts": [
+          "以本会话草稿基点生成500米范围，先预览，不保存。",
+          "将刚才那次预览的固定范围保存到派生图层，命名临时范围，其他内容不变，不发布、不设为当前。"
+        ]
+      },
+      {
+        "id": "F05",
+        "prompts": [
+          "仅针对本会话地图草稿objectId=region的观察区和layerId=resources资源图层：包含边界在内有哪些资源点，共多少个？这里统计我画的点，只分析，不修改。\n请同时说明你采用的判断方法和依据。"
+        ]
+      }
+    ],
+    "schedule": [
+      {
+        "id": "C01-1",
+        "caseId": "C01",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C01-2",
+        "caseId": "C01",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C02-1",
+        "caseId": "C02",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C02-2",
+        "caseId": "C02",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C03-1",
+        "caseId": "C03",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C03-2",
+        "caseId": "C03",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C04-1",
+        "caseId": "C04",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C04-2",
+        "caseId": "C04",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C05-1",
+        "caseId": "C05",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C05-2",
+        "caseId": "C05",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C06-1",
+        "caseId": "C06",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C06-2",
+        "caseId": "C06",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C07-1",
+        "caseId": "C07",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C07-2",
+        "caseId": "C07",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C08-1",
+        "caseId": "C08",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C08-2",
+        "caseId": "C08",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C09-1",
+        "caseId": "C09",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C09-2",
+        "caseId": "C09",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "C10-1",
+        "caseId": "C10",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "C10-2",
+        "caseId": "C10",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "F01-1",
+        "caseId": "F01",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "F01-2",
+        "caseId": "F01",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "F02-1",
+        "caseId": "F02",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "F02-2",
+        "caseId": "F02",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "F03-1",
+        "caseId": "F03",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "F03-2",
+        "caseId": "F03",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "F04-1",
+        "caseId": "F04",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "F04-2",
+        "caseId": "F04",
+        "round": 2,
+        "split": "development"
+      },
+      {
+        "id": "F05-1",
+        "caseId": "F05",
+        "round": 1,
+        "split": "development"
+      },
+      {
+        "id": "F05-2",
+        "caseId": "F05",
+        "round": 2,
+        "split": "development"
+      }
+    ],
+    "limits": {
+      "requests": 300,
+      "input": 8000000,
+      "output": 600000
+    },
+    "pairReserve": {
+      "requests": 36,
+      "input": 1000000,
+      "output": 65536
+    },
+    "model": {
+      "request": "deepseek-v4.1-flash",
+      "response": "deepseek-v4-1-flash-261017",
+      "thinking": "disabled",
+      "maxTokens": 32768,
+      "topP": 1,
+      "temperature": "absent",
+      "reasoningEffort": "absent"
+    },
+    "businessContext": "草稿点可按用户指定作为空间分析候选，不自动代表真实可用资源。对象个数、属性数量和可用状态分别依据实际数据。“本会话”是上下文线索，不自动指定草稿。来源无法唯一确定且会影响答案时，澄清或分别说明；不默认草稿优先或来源优先。只有明确要求联合统计才合并；不凭同名去重，不能核实身份时分开报告。",
+    "loading": "native_on_demand",
+    "automaticRetries": false
+  },
+  "freezeHash": "db514b3cb9e741d69dbbfec57d177593174cc50126fe004bb4ac16967ce256f5",
+  "mode": "live",
+  "offlineSimulation": false,
+  "automaticRetries": false,
+  "automaticResume": false
+}

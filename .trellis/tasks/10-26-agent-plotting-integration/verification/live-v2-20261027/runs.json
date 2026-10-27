@@ -1,0 +1,707 @@
+[
+  {
+    "id": "C01-1",
+    "caseId": "C01",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56539,
+      "output": 642,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      1,
+      2,
+      3
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C01-2",
+    "caseId": "C01",
+    "round": 2,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 56567,
+      "output": 672,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      4,
+      5,
+      6
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C02-1",
+    "caseId": "C02",
+    "round": 1,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 56218,
+      "output": 414,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      7,
+      8,
+      9
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C02-2",
+    "caseId": "C02",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56257,
+      "output": 438,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      10,
+      11,
+      12
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C03-1",
+    "caseId": "C03",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56862,
+      "output": 361,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      13,
+      14,
+      15
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C03-2",
+    "caseId": "C03",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 57052,
+      "output": 420,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      16,
+      17,
+      18
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C04-1",
+    "caseId": "C04",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56780,
+      "output": 292,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      19,
+      20,
+      21
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C04-2",
+    "caseId": "C04",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56702,
+      "output": 357,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      22,
+      23,
+      24
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C05-1",
+    "caseId": "C05",
+    "round": 1,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 2,
+    "tools": 1,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 37325,
+      "output": 237,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      25,
+      26
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C05-2",
+    "caseId": "C05",
+    "round": 2,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 56490,
+      "output": 403,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      27,
+      28,
+      29
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C06-1",
+    "caseId": "C06",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 56973,
+      "output": 525,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      30,
+      31,
+      32
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C06-2",
+    "caseId": "C06",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 57048,
+      "output": 506,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      33,
+      34,
+      35
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C07-1",
+    "caseId": "C07",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 3,
+    "completedTurns": 1,
+    "usage": {
+      "input": 76185,
+      "output": 465,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      36,
+      37,
+      38,
+      39
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C07-2",
+    "caseId": "C07",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 3,
+    "completedTurns": 1,
+    "usage": {
+      "input": 76076,
+      "output": 407,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      40,
+      41,
+      42,
+      43
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C08-1",
+    "caseId": "C08",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 5,
+    "tools": 4,
+    "completedTurns": 1,
+    "usage": {
+      "input": 95646,
+      "output": 580,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C08-2",
+    "caseId": "C08",
+    "round": 2,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 6,
+    "tools": 5,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 123964,
+      "output": 715,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C09-1",
+    "caseId": "C09",
+    "round": 1,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 3,
+    "completedTurns": 0,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 58301,
+      "output": 1057,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      55,
+      56,
+      57
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C09-2",
+    "caseId": "C09",
+    "round": 2,
+    "split": "development",
+    "status": "waiting_user",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 4,
+    "completedTurns": 0,
+    "stop": "unrecognized_plain_question",
+    "usage": {
+      "input": 81914,
+      "output": 2034,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      58,
+      59,
+      60,
+      61
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C10-1",
+    "caseId": "C10",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 8,
+    "tools": 6,
+    "completedTurns": 2,
+    "usage": {
+      "input": 175329,
+      "output": 1093,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "C10-2",
+    "caseId": "C10",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 7,
+    "tools": 6,
+    "completedTurns": 2,
+    "usage": {
+      "input": 156551,
+      "output": 1118,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F01-1",
+    "caseId": "F01",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 57890,
+      "output": 516,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      77,
+      78,
+      79
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F01-2",
+    "caseId": "F01",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 2,
+    "tools": 1,
+    "completedTurns": 1,
+    "usage": {
+      "input": 37896,
+      "output": 458,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      80,
+      81
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F02-1",
+    "caseId": "F02",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 8,
+    "tools": 5,
+    "completedTurns": 3,
+    "usage": {
+      "input": 178169,
+      "output": 1130,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F02-2",
+    "caseId": "F02",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 7,
+    "tools": 4,
+    "completedTurns": 3,
+    "usage": {
+      "input": 142566,
+      "output": 1295,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F03-1",
+    "caseId": "F03",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 4,
+    "completedTurns": 1,
+    "usage": {
+      "input": 78131,
+      "output": 715,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      97,
+      98,
+      99,
+      100
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F03-2",
+    "caseId": "F03",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "tools": 2,
+    "completedTurns": 1,
+    "usage": {
+      "input": 57816,
+      "output": 500,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      101,
+      102,
+      103
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F04-1",
+    "caseId": "F04",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 9,
+    "tools": 7,
+    "completedTurns": 2,
+    "usage": {
+      "input": 209151,
+      "output": 1082,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F04-2",
+    "caseId": "F04",
+    "round": 2,
+    "split": "development",
+    "status": "needs_review",
+    "semanticReview": "pending",
+    "requests": 7,
+    "tools": 5,
+    "completedTurns": 1,
+    "stop": "question_scope_uncertain",
+    "usage": {
+      "input": 152943,
+      "output": 913,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F05-1",
+    "caseId": "F05",
+    "round": 1,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 3,
+    "completedTurns": 1,
+    "usage": {
+      "input": 83033,
+      "output": 801,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      120,
+      121,
+      122,
+      123
+    ],
+    "accountingIssues": []
+  },
+  {
+    "id": "F05-2",
+    "caseId": "F05",
+    "round": 2,
+    "split": "development",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "tools": 3,
+    "completedTurns": 1,
+    "usage": {
+      "input": 84763,
+      "output": 968,
+      "unknown": 0
+    },
+    "providerRequestIds": [
+      124,
+      125,
+      126,
+      127
+    ],
+    "accountingIssues": []
+  }
+]
