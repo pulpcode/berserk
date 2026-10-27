@@ -28,14 +28,19 @@
     ".trellis/tasks/10-26-continuous-background-analysis/research/findings.md",
     ".trellis/tasks/10-26-continuous-background-analysis/implementation-report.md",
     ".trellis/spec/backend/continuous-analysis.md",
-    ".trellis/tasks/10-26-continuous-background-analysis/missing-record-repair-review.md"
+    ".trellis/tasks/10-26-continuous-background-analysis/missing-record-repair-review.md",
+    ".trellis/tasks/10-26-continuous-background-analysis/missing-record-repair-report.md",
+    ".trellis/tasks/10-26-continuous-background-analysis/research/record-repair-actual-output.md",
+    ".trellis/tasks/10-26-continuous-background-analysis/research/repair-comparison-results.md"
   ],
-  "notes": "2026-10-26 实施与测试完成；腾讯云隔离验证完成，原服务未改动。机制检查通过，原P1语义问题定向修正，仍有已披露P2模型精度局限。2026-10-27 按用户要求将实现和测试结论纳入本次提交，保持review；长期运行与多任务测试尚未启动。 2026-10-27 用户批准多任务文本样本落盘并线上执行；仅开展12次更新的基础接续测试，地图集成与现实长时测试留待后续。 多任务首次实测于R2漏调记录工具而暂停，后续10轮未执行；结果未通过，原始证据保留供审阅，未进行产品修复或重跑。 用户已批准提交漏记录修复方案并开始实施。",
+  "notes": "2026-10-26 实施与测试完成；腾讯云隔离验证完成，原服务未改动。机制检查通过，原P1语义问题定向修正，仍有已披露P2模型精度局限。2026-10-27 按用户要求将实现和测试结论纳入本次提交，保持review；长期运行与多任务测试尚未启动。 2026-10-27 用户批准多任务文本样本落盘并线上执行；仅开展12次更新的基础接续测试，地图集成与现实长时测试留待后续。 多任务首次实测于R2漏调记录工具而暂停，后续10轮未执行；结果未通过，原始证据保留供审阅，未进行产品修复或重跑。 用户已批准提交漏记录修复方案并开始实施。 2026-10-27 方案及旧实测证据已提交4fd77cb；漏记录原生补做最多2次已实现，全量1159/1159、浏览器4/4通过。新隔离实测12批次全部发布，0次补做；语义验收未通过（旧消息误报、任务资源推测固化），未部署生产，修复代码与报告待审阅。 2026-10-27 后续仅复盘并完成新旧各3次同样本对照，未改代码。旧1/3、新2/3完整；其余均因任务检索漏检、无基线而未触发R5。200个provider请求系统/工具/参数一致，新版0次补做。无补做提示直接带偏证据，但后段对照仅旧1次、新2次，不能作整体无退化结论。",
   "meta": {
     "base_commit": "6ce86513022350fb752eaa3dc04a96a5d2d82a6e",
     "planning_only": false,
     "review_status": "implementation_review",
     "implementation_status": "implemented_and_tested",
-    "multitask_validation_status": "failed_at_r2_unpublished"
+    "multitask_validation_status": "repair_run_mechanism_passed_semantics_failed",
+    "record_repair_status": "implemented_tested_pending_review",
+    "repair_comparison_status": "completed_with_semantic_failures_and_coverage_limits"
   }
 }
