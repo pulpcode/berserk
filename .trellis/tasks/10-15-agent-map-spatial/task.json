@@ -1435,5 +1435,36 @@
     "previous34Report": "r14-20261026/combined-results.md",
     "mainPending": 1,
     "completeReviewFinished": true
+  },
+  "resultGroundingR15": {
+    "status": "planning_awaiting_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r15-20261027/plan.md",
+    "authorization": "用户仅要求形成落盘方案，待审阅",
+    "planningOnly": true,
+    "implementationAllowed": false,
+    "modelExecutionAllowed": false,
+    "previousResultsCommit": "e34448a",
+    "productBaselineProposal": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "groupsProposed": [
+      "original",
+      "skill_only",
+      "tools_only",
+      "skill_and_tools"
+    ],
+    "modelProposal": "Flash enabled high, native on-demand Skill",
+    "proposedUniqueTasks": 12,
+    "proposedRepetitions": 1,
+    "proposedTaskTrials": 48,
+    "proposedBudget": {
+      "modelRequests": 600,
+      "inputTokens": 12000000,
+      "outputTokensIncludingReasoning": 1000000,
+      "afp": 2000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceThreshold": 0.9,
+    "nextAction": "等待审阅本轮方案；未批准前不改代码、不执行测试。"
   }
 }
