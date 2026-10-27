@@ -1,0 +1,17 @@
+(node:89739) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ fourth raw evidence and drivers remain intact; only original final 11 slots may execute (2975.153223ms)
+✔ original D04-2-A has completed the allowed missing-field answer; optional conditional work is not blocking (8.335757ms)
+✔ 609 inherited requests debit the same old window cap exactly once, and duplicate completion is rejected (3140.639155ms)
+✔ fifth freeze cannot legalize changes to existing driver, model, source data or scoring (5119.151794ms)
+{"entry":"D04-2-B","status":"recorded","completed":1,"planned":2,"usage":{"requests":611,"input":11713731,"output":200908,"afp":3151.8478499999983,"unknown":0}}
+{"entry":"D04-2-C","status":"recorded","completed":2,"planned":2,"usage":{"requests":613,"input":11713931,"output":200928,"afp":3151.9688499999984,"unknown":0}}
+✔ native fifth mock runs remaining D04 BC only, starts request 610 and keeps all original data and claims (36044.797354ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52689.698753

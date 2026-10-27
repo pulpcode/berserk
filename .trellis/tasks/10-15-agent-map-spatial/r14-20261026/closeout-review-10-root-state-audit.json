@@ -1,0 +1,126 @@
+{
+  "mode": "root已知初评意见后的真实状态及独立计算复核，不宣称盲审",
+  "rows": [
+    {
+      "blindId": "026e69d9-e9f5-4eea-b888-f44b1d339b3e",
+      "caseId": "D13",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentDistances": {
+        "资源甲": 555.9754011676299,
+        "资源乙": 1224.8494778904726,
+        "资源丙": 2270.745882999107,
+        "边界点": 3027.635964633257,
+        "资源外": 4541.378291401586
+      }
+    },
+    {
+      "blindId": "190fcfa3-02a1-4d52-88d2-645b73bc739a",
+      "caseId": "D15",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "1ac064b8-9624-467d-91ca-726e6fa5f071",
+      "caseId": "D14",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentLength": 1667.9262035035972
+    },
+    {
+      "blindId": "1dda9cdb-fc95-470a-8bb7-d3a9309c1f49",
+      "caseId": "D14",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentLength": 1667.9262035035972
+    },
+    {
+      "blindId": "1f56ae20-c3c5-4b29-a8cc-0006200456a3",
+      "caseId": "D17",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.8189325601269957e-09
+    },
+    {
+      "blindId": "551fd6b3-0a1c-437b-b6f2-371b60899536",
+      "caseId": "D14",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentLength": 1667.9262035035972
+    },
+    {
+      "blindId": "6a5baeeb-ebe4-40b9-8332-e35a1fe19677",
+      "caseId": "D16",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "9807cf39-9858-489d-bf73-933f7b7a72f6",
+      "caseId": "D13",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentDistances": {
+        "资源甲": 555.9754011676299,
+        "资源乙": 1224.8494778904726,
+        "资源丙": 2270.745882999107,
+        "边界点": 3027.635964633257,
+        "资源外": 4541.378291401586
+      }
+    },
+    {
+      "blindId": "9f940de1-cd88-4934-a652-07f84712069b",
+      "caseId": "D17",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.8189325601269957e-09
+    },
+    {
+      "blindId": "ac853964-ad00-47a3-b97b-00c004070d53",
+      "caseId": "D17",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.8189325601269957e-09
+    },
+    {
+      "blindId": "ae94ee16-6d4b-4aa3-808c-75f33db1d793",
+      "caseId": "D16",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3",
+      "caseId": "D13",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentDistances": {
+        "资源甲": 555.9754011676299,
+        "资源乙": 1224.8494778904726,
+        "资源丙": 2270.745882999107,
+        "边界点": 3027.635964633257,
+        "资源外": 4541.378291401586
+      }
+    },
+    {
+      "blindId": "bd3e44c3-fdb3-4766-8d19-b0836b847661",
+      "caseId": "D15",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "d23ccd77-86f8-48b6-928c-3d4d523e5c55",
+      "caseId": "D15",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "f3351e45-19bf-4240-af5a-0ef1261f7e81",
+      "caseId": "D16",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    }
+  ],
+  "verdictsNotOverwritten": true
+}

@@ -1,0 +1,12 @@
+{
+  "purpose": "34项部分报告只读保留，后续完整结果另写文件",
+  "files": {
+    "combined-results.md": "a8f425155928cfb1bd2a9b3b7595d911bbe22d19112b7b556935d9582603debe",
+    "combined-results.json": "2b4cc4d63072e58ed379dcffb34887ff9248b0cc2be5ba70b2e72dd5a84716d0",
+    "combined-reviewed-scores.json": "e06369d480519964e440bee23b4cf478b913a23f953d6af09d8d80e48e02c001",
+    "combined-runs.json": "cee391985bc85a62e01eeae0620c86b148598f80002b2a0532e14d3768c39cfc",
+    "combined-execution-audit.json": "3a49649fa09f78deae4fce1a370e1030ebd3929fb633d019ed019db6d0cc05d9",
+    "closeout-final-audit.json": "3f449aa4f915094570eea47dffb79e649ff337808cdb679e58b45620958ace4e",
+    "actual-boundary-stop.md": "9578a7f3f523e843475c6c0efb51a80b933637aa5548bb318a8073b91a1670e1"
+  }
+}

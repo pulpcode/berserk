@@ -1,0 +1,21 @@
+(node:46426) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original D03-A complete public response: section label and both conditional invitations do not stop (17.470232ms)
+✔ all eight original completed responses retain no blocking request; files and original stop remain immutable (57.512946ms)
+✔ earlier R13 actual optional preview invitation remains nonblocking (2.889199ms)
+✔ conditional correction and future follow-up wording is classified by clause role, not one fixed sentence (3.139986ms)
+✔ partial results and conditional packaging never hide missing required input or authority (2.610644ms)
+✔ explicit current scope confirmation stays unnecessary despite mandatory wording; real unknown inputs still stop (2.228732ms)
+✔ preview follow-up can be optional, but a requested save cannot be postponed as optional (1.20257ms)
+✔ flow control is independent of tool-success markers and does not claim completion or correctness (6.194365ms)
+✔ assistant offers of additional work do not request missing current input (2.970755ms)
+✔ first closeout D07-A original response keeps the optional offer and original false stop (6.964402ms)
+✔ D06 short choice request uses declared candidate context without treating descriptive provenance as authority (5.868764ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7792.174591

@@ -1,0 +1,104 @@
+{
+  "status": "stopped_evaluator_false_positive",
+  "attemptedTrials": 8,
+  "plannedTrials": 144,
+  "notExecutedTrials": 136,
+  "rawStatuses": {
+    "recorded": 7,
+    "waiting_user": 1,
+    "not_executed": 136
+  },
+  "stop": "waiting_user_unmapped_plain_question",
+  "stoppedEntry": "D03-1-A",
+  "modelRequests": 34,
+  "inputTokens": 626034,
+  "outputTokensIncludingReasoning": 12625,
+  "afpEstimate": 172.56015,
+  "unknownUsage": 0,
+  "groups": {
+    "A": {
+      "attempted": 3,
+      "notExecuted": 45,
+      "requests": 17,
+      "inputTokens": 300810,
+      "outputTokensIncludingReasoning": 3381,
+      "reasoningTokens": 0,
+      "afpEstimate": 38.023875,
+      "elapsedMsSum": 29931,
+      "skillReads": [
+        {
+          "entryId": "D01-1-A",
+          "skills": []
+        },
+        {
+          "entryId": "D02-1-A",
+          "skills": []
+        },
+        {
+          "entryId": "D03-1-A",
+          "skills": []
+        }
+      ]
+    },
+    "B": {
+      "attempted": 2,
+      "notExecuted": 46,
+      "requests": 6,
+      "inputTokens": 114247,
+      "outputTokensIncludingReasoning": 2038,
+      "reasoningTokens": 1161,
+      "afpEstimate": 14.535625,
+      "elapsedMsSum": 15522,
+      "skillReads": [
+        {
+          "entryId": "D01-1-B",
+          "skills": []
+        },
+        {
+          "entryId": "D02-1-B",
+          "skills": [
+            "spatial-analysis",
+            "map-annotations"
+          ]
+        }
+      ]
+    },
+    "C": {
+      "attempted": 3,
+      "notExecuted": 45,
+      "requests": 11,
+      "inputTokens": 210977,
+      "outputTokensIncludingReasoning": 7206,
+      "reasoningTokens": 5454,
+      "afpEstimate": 120.00065,
+      "elapsedMsSum": 120021,
+      "skillReads": [
+        {
+          "entryId": "D01-1-C",
+          "skills": []
+        },
+        {
+          "entryId": "D02-1-C",
+          "skills": []
+        },
+        {
+          "entryId": "D03-1-C",
+          "skills": [
+            "spatial-analysis"
+          ]
+        }
+      ]
+    }
+  },
+  "allRequestsHttp200": true,
+  "allRequestedConfigurationsAndActualModelsMatched": true,
+  "allEightBusinessStatesUnchanged": true,
+  "protectedFilesUnchanged": 179,
+  "sourceFreezeAudit": "stop-offline-audit.json",
+  "originalEvidenceManifest": "partial-evidence-manifest.json",
+  "modelCallsDuringReview": 0,
+  "automaticRetry": false,
+  "automaticResume": false,
+  "codeChangedAfterFreeze": false,
+  "furtherExecutionRequiresAuthorization": true
+}

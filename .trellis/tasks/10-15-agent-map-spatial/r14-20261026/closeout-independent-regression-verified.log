@@ -1,0 +1,47 @@
+(node:31101) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"D01-1-A","status":"incomplete","stop":"provider_http_429","completed":1,"planned":3,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider http_error preserves first failure and refuses automatic retry (14261.879327ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"response_model_drift\n+ actual - expected\n\n  [\n+   'other'\n-   'deepseek-v4-1-flash-261017'\n  ]\n","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider response_model_drift preserves first failure and refuses automatic retry (15456.809707ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"unknown_or_empty_usage","completed":1,"planned":3,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider missing_usage preserves first failure and refuses automatic retry (14448.217238ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"output_truncated","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider truncated preserves first failure and refuses automatic retry (13164.822752ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"unnecessary_confirmation","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D01-1-B","status":"incomplete","stop":"unnecessary_confirmation","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D01-1-C","status":"incomplete","stop":"unnecessary_confirmation","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary unnecessary follows the frozen continuation rule (14157.835591ms)
+{"entry":"D01-1-A","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ task boundary unknown follows the frozen continuation rule (12732.983982ms)
+{"entry":"D17-1-B","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D17-1-C","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.07425,"unknown":0}}
+{"entry":"D17-1-A","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary missing_result follows the frozen continuation rule (14384.63631ms)
+{"entry":"D04-1-A","status":"recorded","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D04-1-B","status":"recorded","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D04-1-C","status":"recorded","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary data_gap follows the frozen continuation rule (13501.10386ms)
+{"entry":"D01-1-A","status":"recorded","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D01-1-B","status":"recorded","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D01-1-C","status":"recorded","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary optional_invitation follows the frozen continuation rule (13242.054884ms)
+{"entry":"D06-1-C","status":"recorded","completed":1,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.1815,"unknown":0}}
+{"entry":"D06-1-A","status":"recorded","completed":2,"planned":3,"usage":{"requests":6,"input":600,"output":60,"afp":0.22275000000000003,"unknown":0}}
+{"entry":"D06-1-B","status":"recorded","completed":3,"planned":3,"usage":{"requests":9,"input":900,"output":90,"afp":0.264,"unknown":0}}
+✔ D06 ordinary/API questions receive only the frozen choice and continue native tools (14615.086455ms)
+✔ only distinct successful generated buffers satisfy dependent user turns (0.281026ms)
+✔ execution gate rejects blocked, unreviewed or drifted code before live claim (6.660225ms)
+{"entry":"D06-1-C","status":"incomplete","stop":"unnecessary_confirmation","completed":1,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.121,"unknown":0}}
+{"entry":"D06-1-A","status":"incomplete","stop":"unnecessary_repeated_clarification","completed":2,"planned":3,"usage":{"requests":4,"input":400,"output":40,"afp":0.14850000000000002,"unknown":0}}
+{"entry":"D06-1-B","status":"incomplete","stop":"unnecessary_confirmation","completed":3,"planned":3,"usage":{"requests":6,"input":600,"output":60,"afp":0.17600000000000005,"unknown":0}}
+✔ repeated D06 question is not answered twice and does not stop unrelated scheduled tasks (16767.607424ms)
+✔ two buffers in first preview cannot substitute for missing second preview (0.617732ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160362.584392

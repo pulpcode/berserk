@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "freezeHash": "09c8ac0c6f0068113eaeeb63e1715d12b35e668a51adc2e4ec95886c939061c2",
+  "evidence": [
+    "independent-check.json",
+    "independent-auth-recovery-check.json",
+    "D10-1-A-freeze.json",
+    "../fifth-closeout-check.json"
+  ],
+  "reviewer": "root execution-time verification, separate from module implementer; independent component reviewer reports retained",
+  "entry": "D10-1-A",
+  "group": "A",
+  "newTaskCount": 0,
+  "onlyOriginalMessages": 2,
+  "latest": ".local/spatial-r14/pending-D06-1-A-auth-recovery-20261027",
+  "carried": {
+    "requests": 652,
+    "input": 12502719,
+    "output": 216403,
+    "afp": 3354.2479999999987
+  },
+  "previousRecordsPreserved": true
+}

@@ -1,0 +1,28 @@
+{
+  "rows": [
+    {
+      "blindId": "36d34ec2-ab7f-4743-b589-41c5471abe08",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "在“码头补给点”图层的 3 个点中，含边界在内，位于“码头作业区”内的有 **2 个**",
+        "需要我把这个结果另行统计汇总，或基于固定结果继续做其他分析吗？"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/model-visible-evidence.json#/observedMessages/2",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-02/36d34ec2-ab7f-4743-b589-41c5471abe08/completion.json"
+      ],
+      "reason": "实际解析了唯一图层与区域名称，按 dock-points 全层 3 个候选及 dock-zone 做分类，返回栈桥仓、堤头仓内部，外港仓外部。最终完整给出名称、总数 2、分类 2/0/1 和方法限制，且工具结果在最终回答之前进入模型请求。全程只读、前后状态相同。末尾是对后续其他分析的可选邀约，不缺当前关键输入，不影响已完成的本题；waiting_user/未计完成是程序标记，不是主任务事实。",
+      "clarity": "开场把区域也称作图层，但属于拟查意图，查询后正确称其参照对象/多边形；不判公开过程事实错误。收尾邀约可省略以避免误停，不据此扣已完成任务分。"
+    }
+  ]
+}

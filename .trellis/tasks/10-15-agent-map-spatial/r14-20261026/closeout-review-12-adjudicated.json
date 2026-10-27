@@ -1,0 +1,187 @@
+[
+  {
+    "blindId": "0136bcb2-64df-48f9-9756-e8df6882588c",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取本会话草稿，确认“救援资源”图层的情况。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/0136bcb2-64df-48f9-9756-e8df6882588c/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/0136bcb2-64df-48f9-9756-e8df6882588c/model-visible-evidence.json"
+    ],
+    "reason": "先实际读出rescue-coast与rescue-inland两同名图层，让用户选择；原预设选择送达后只列rescue-coast岸边甲/岸边乙2点，不默认选、不合并。API与普通文字澄清均按业务结果认可，工具回包和真实状态支持结果。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "3ec37d4b-cbca-4294-8e3c-f694d22beb84",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "草稿里确实有两个同名“救援资源”图层，按你的要求，我先请你选择："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/3ec37d4b-cbca-4294-8e3c-f694d22beb84/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/3ec37d4b-cbca-4294-8e3c-f694d22beb84/model-visible-evidence.json"
+    ],
+    "reason": "先实际读出rescue-coast与rescue-inland两同名图层，让用户选择；原预设选择送达后只列rescue-coast岸边甲/岸边乙2点，不默认选、不合并。API与普通文字澄清均按业务结果认可，工具回包和真实状态支持结果。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "71733a99-0230-4c01-a2f3-73a5bda8ea91",
+    "mainRequirement": "fail",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "区域内资源点只有 **1 个**"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/71733a99-0230-4c01-a2f3-73a5bda8ea91/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/71733a99-0230-4c01-a2f3-73a5bda8ea91/model-visible-evidence.json"
+    ],
+    "reason": "冻结业务口径要求来源不唯一且答案不同先澄清，或完整条件化给草稿4点与来源1点两套答案。该回答只选一套并给结果，未问清，也未完整交付另一套；末尾说可另查不抵消这一缺口。自身已选范围的计算可以正确，主任务仍失败。 实际仅task_read/situation_query，没有读取当前会话同名草稿西区与资源候选；来源1点坐标判断本身正确。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。",
+    "failureCategory": "unresolved_source_scope"
+  },
+  {
+    "blindId": "7aefd50c-9d82-489e-9c3c-a3d94f23814c",
+    "mainRequirement": "fail",
+    "processFacts": "na",
+    "finalFacts": "fail",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "西区内（含边界）共有 4 个资源点",
+      "位于西区东南角点"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/7aefd50c-9d82-489e-9c3c-a3d94f23814c/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/7aefd50c-9d82-489e-9c3c-a3d94f23814c/model-visible-evidence.json"
+    ],
+    "reason": "冻结业务口径要求来源不唯一且答案不同先澄清，或完整条件化给草稿4点与来源1点两套答案。该回答只选一套并给结果，未问清，也未完整交付另一套；末尾说可另查不抵消这一缺口。自身已选范围的计算可以正确，主任务仍失败。 另将edge说成东南角；原矩形edge同时为最大经纬度，实际东北角，南半球也不反转纬度方向。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。",
+    "failureCategory": "unresolved_source_scope"
+  },
+  {
+    "blindId": "9b81823a-882a-45bb-9e2e-00b5b9e9ecb3",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取空间分析方法，并读取本会话草稿内容。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/9b81823a-882a-45bb-9e2e-00b5b9e9ecb3/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/9b81823a-882a-45bb-9e2e-00b5b9e9ecb3/model-visible-evidence.json"
+    ],
+    "reason": "按唯一图层名称解析，3个dock候选逐点分类，栈桥仓/堤头仓内部、外港仓外部，含边界总2正确，无边界点；其他层与来源没有混入，实际只读。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "9c2d2740-7f0a-4455-b998-dfe908126c32",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取本会话草稿的内容。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/9c2d2740-7f0a-4455-b998-dfe908126c32/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/9c2d2740-7f0a-4455-b998-dfe908126c32/model-visible-evidence.json"
+    ],
+    "reason": "正确列3个点、甲4/丙2已知合计6、乙availableCount缺失，不能确定总量且未当0。实际只annotation_read，无来源调用或写入；末尾条件式后续服务被程序误停不影响本题已经完整回答。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "a27707c1-ecd3-4285-a494-42894e5ef807",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "存在两个同名「救援资源」图层，需要你先选择："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/a27707c1-ecd3-4285-a494-42894e5ef807/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/a27707c1-ecd3-4285-a494-42894e5ef807/model-visible-evidence.json"
+    ],
+    "reason": "先实际读出rescue-coast与rescue-inland两同名图层，让用户选择；原预设选择送达后只列rescue-coast岸边甲/岸边乙2点，不默认选、不合并。API与普通文字澄清均按业务结果认可，工具回包和真实状态支持结果。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "a6050a7b-eaf1-4535-911c-1a0f214ac4dd",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pending",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pending",
+    "quotes": [
+      "没有加距离容差，因此靠近边界但并非恰在边界上的点不会计入。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/a6050a7b-eaf1-4535-911c-1a0f214ac4dd/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/a6050a7b-eaf1-4535-911c-1a0f214ac4dd/model-visible-evidence.json"
+    ],
+    "reason": "按唯一图层名称解析，3个dock候选逐点分类，栈桥仓/堤头仓内部、外港仓外部，含边界总2正确，无边界点；其他层与来源没有混入，实际只读。 附加“不会计入”可能指边界分类，也可能被理解为所有范围命中，后者错误（近界内部点仍计入）；未明确宾语，主任务正确，解释暂待独立复核。 独立复核按“计入边界类别”判事实通过，主复核仍保留“计入范围总数”的合理读法，按既定实质歧义口径记待定，不以投票强判错或对。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。",
+    "failureCategory": "ambiguous_near_boundary_explanation"
+  },
+  {
+    "blindId": "afba2071-1f7c-409e-9422-33dbd1bf744b",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "分析完成。本会话草稿（修订 1）中，“码头补给点”图层共 3 个点，相对“码头作业区”区域（含边界）的判定结果："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/afba2071-1f7c-409e-9422-33dbd1bf744b/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/afba2071-1f7c-409e-9422-33dbd1bf744b/model-visible-evidence.json"
+    ],
+    "reason": "按唯一图层名称解析，3个dock候选逐点分类，栈桥仓/堤头仓内部、外港仓外部，含边界总2正确，无边界点；其他层与来源没有混入，实际只读。",
+    "clarity": "主任务与额外事实分开评分；只读前后状态逐字段相同。"
+  },
+  {
+    "blindId": "c60ab3d5-bd3f-40b4-9ca3-2d411303fc13",
+    "mainRequirement": "fail",
+    "processFacts": "na",
+    "finalFacts": "pending",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "本会话草稿「资源」图层共有 5 个点，其中在西区范围内的有 4 个"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-12/c60ab3d5-bd3f-40b4-9ca3-2d411303fc13/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-12/c60ab3d5-bd3f-40b4-9ca3-2d411303fc13/model-visible-evidence.json"
+    ],
+    "reason": "冻结业务口径要求来源不唯一且答案不同先澄清，或完整条件化给草稿4点与来源1点两套答案。该回答只选一套并给结果，未问清，也未完整交付另一套；末尾说可另查不抵消这一缺口。自身已选范围的计算可以正确，主任务仍失败。 附带禁入区描述按独立复核保留解释歧义，finalFacts待定；不影响来源未消歧已明确main/strict失败。",
+    "clarity": "“内部还有”“轮廓一带”应以相交/包含及具体距离代替；歧义不影响本条来源处理主任务失败。",
+    "failureCategory": "unresolved_source_scope"
+  }
+]

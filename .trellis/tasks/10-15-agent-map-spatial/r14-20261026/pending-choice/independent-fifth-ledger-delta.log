@@ -1,0 +1,13 @@
+(node:90594) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ only the already answered D06 choice is a redundant plain question (6.442463ms)
+✔ fifth continuation requires all eleven original slots and the exact full 609-request prefix (69.641695ms)
+✔ five historical prefixes yield exactly the approved missing messages; counters cannot skip a round (41.886448ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4360.989046

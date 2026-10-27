@@ -1,0 +1,36 @@
+(node:89723) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original D03-A complete public response: section label and both conditional invitations do not stop (18.904123ms)
+✔ all eight original completed responses retain no blocking request; files and original stop remain immutable (42.191055ms)
+✔ earlier R13 actual optional preview invitation remains nonblocking (3.886772ms)
+✔ conditional correction and future follow-up wording is classified by clause role, not one fixed sentence (1.450523ms)
+✔ partial results and conditional packaging never hide missing required input or authority (2.881018ms)
+✔ explicit current scope confirmation stays unnecessary despite mandatory wording; real unknown inputs still stop (1.689347ms)
+✔ preview follow-up can be optional, but a requested save cannot be postponed as optional (1.395417ms)
+✔ flow control is independent of tool-success markers and does not claim completion or correctness (1.896735ms)
+✔ assistant offers of additional work do not request missing current input (1.462514ms)
+✔ first closeout D07-A original response keeps the optional offer and original false stop (5.011134ms)
+✔ D06 short choice request uses declared candidate context without treating descriptive provenance as authority (3.733591ms)
+(node:89724) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ historical D04 completed answer keeps the entire conditional follow-up list optional (12.110966ms)
+✔ conditional service prerequisites remain scoped across semicolons and numbered lines (0.801707ms)
+✔ current dependencies, mixed requests and authority never inherit the optional scope (3.498749ms)
+✔ a currently requested save cannot be deferred as an optional listed service (0.928411ms)
+(node:89725) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ complete historical D09-1-A response permits next planned user turn without changing evidence (25.838954ms)
+✔ complete historical D10-1-A response permits next planned user turn without changing evidence (5.647367ms)
+✔ complete historical D10-1-B response permits next planned user turn without changing evidence (8.426424ms)
+✔ offer recognition is independent of operation and object words, question or closing invitation (2.30995ms)
+✔ predeclared source/layer choices take priority over the same offer grammar (5.050217ms)
+✔ required facts, authority, unresolved preceding inputs and current save stay nonoptional (1.491556ms)
+✔ D12-C actual unauthorized draft save remains a critical stop regardless of optional answer wording (7.749273ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6479.358983

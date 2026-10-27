@@ -1,0 +1,1208 @@
+(node:87594) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 24 frozen tasks, six historical, 144 balanced independent slots and exact prompt extraction (4.953593ms)
+✔ only D05/D06 scripted choices; anticipated gaps and optional invitations do not stop (2.349153ms)
+▶ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries
+  ✔ D01 (10234.958116ms)
+  ✖ D02 (9042.328396ms)
+  ✖ D03 (9108.121787ms)
+  ✖ D04 (9417.202386ms)
+  ✔ D05 (9071.731652ms)
+  ✔ D06 (8968.970416ms)
+  ✖ D07 (8982.227742ms)
+  ✖ D08 (8968.751474ms)
+  ✔ D09 (9541.059732ms)
+  ✔ D10 (9384.666124ms)
+  ✔ D11 (9326.513784ms)
+  ✖ D12 (9168.69957ms)
+  ✔ D13 (9213.775541ms)
+  ✔ D14 (9055.466424ms)
+  ✔ D15 (8772.436648ms)
+  ✔ D16 (8727.617454ms)
+  ✔ D17 (9251.300988ms)
+  ✔ D18 (8823.3452ms)
+  ✔ D19 (9135.086879ms)
+  ✔ D20 (8788.679782ms)
+  ✔ D21 (11579.704988ms)
+  ✔ D22 (8983.418131ms)
+  ✔ D23 (8886.169981ms)
+  ✔ D24 (8641.820787ms)
+✖ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries (224651.959644ms)
+✔ source customizer leaves historical source data byte-equivalent (0.44524ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 21
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 227592.256428
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D02 (9042.328396ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        areaIds: [
+  +       'map-97c2452b-zone-east'
+  +     ],
+  +     effectiveAt: '2026-10-26T09:00:00+08:00',
+  +     geometry: {
+  +       coordinates: [
+  +         [
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ]
+  +         ]
+  +       ],
+  +       type: 'Polygon'
+  +     },
+  +     name: '东区',
+  +     properties: {
+  +       memberRefs: [
+  +         {
+  +           objectId: 'map-97c2452b-road-east-01',
+  +           objectType: 'road',
+  +           systemId: 'situation'
+  +         }
+  +       ]
+  +     },
+  +     ref: {
+  +       objectId: 'map-97c2452b-zone-east',
+  +       objectType: 'area',
+  +       systemId: 'situation'
+  +     },
+  +     revision: 1,
+  +     validTime: {
+  +       from: '2026-10-26T09:00:00+08:00',
+  +       to: '2026-10-26T11:00:00+08:00'
+  +     }
+  +   },
+  +   {
+  +     areaIds: [
+          'map-97c2452b-zone-west'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  -       'map-97c2452b-zone-west'
+  -     ],
+  -     effectiveAt: '2026-10-26T09:00:00+08:00',
+  -     geometry: {
+  -       coordinates: [
+  -         [
+  -           103.8322866,
+  -           1.3047841
+  -         ],
+  -         [
+  -           103.8323264,
+  -           1.3047617
+  -         ],
+  -         [
+  -           103.8324948,
+  -           1.3046666
+  -         ],
+  -         [
+  -           103.8325992,
+  -           1.304608
+  -         ],
+  -         [
+  -           103.8329914,
+  -           1.3043877
+  -         ]
+  -       ],
+  -       type: 'LineString'
+  -     },
+  -     name: '西区通道',
+  -     properties: {
+  -       passability: 'open'
+  -     },
+  -     ref: {
+  -       objectId: 'map-97c2452b-road-west-01',
+  -       objectType: 'road',
+  -       systemId: 'situation'
+  -     },
+  -     revision: 1,
+  -     validTime: {
+  -       from: '2026-10-26T09:00:00+08:00',
+  -       to: '2026-10-26T11:00:00+08:00'
+  -     }
+  -   },
+  -   {
+  -     areaIds: [
+          'map-97c2452b-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  +       'map-97c2452b-zone-west'
+  -       'map-97c2452b-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+  +           103.8322866,
+  +           1.3047841
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ]
+            ],
+  +         [
+  +           103.8323264,
+  +           1.3047617
+  +         ],
+  +         [
+  +           103.8324948,
+  +           1.3046666
+  +         ],
+  +         [
+  +           103.8325992,
+  +           1.304608
+  +         ],
+  +         [
+  +           103.8329914,
+  +           1.3043877
+  +         ]
+          ],
+  +       type: 'LineString'
+  -       type: 'Polygon'
+        },
+  +     name: '西区通道',
+  -     name: '东区',
+        properties: {
+  +       passability: 'open'
+  -       memberRefs: [
+  -         {
+  -           objectId: 'map-97c2452b-road-east-01',
+  -           objectType: 'road',
+  -           systemId: 'situation'
+  -         }
+  -       ]
+        },
+        ref: {
+  +       objectId: 'map-97c2452b-road-west-01',
+  +       objectType: 'road',
+  -       objectId: 'map-97c2452b-zone-east',
+  -       objectType: 'area',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+          from: '2026-10-26T09:00:00+08:00',
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源车组甲', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源车组乙', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] } ],
+    expected: [ { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源车组甲', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源车组乙', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D03 (9108.121787ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        areaIds: [
+  +       'map-6c4fa517-zone-east'
+  +     ],
+  +     effectiveAt: '2026-10-26T09:00:00+08:00',
+  +     geometry: {
+  +       coordinates: [
+  +         [
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ]
+  +         ]
+  +       ],
+  +       type: 'Polygon'
+  +     },
+  +     name: '东区',
+  +     properties: {
+  +       memberRefs: [
+  +         {
+  +           objectId: 'map-6c4fa517-road-east-01',
+  +           objectType: 'road',
+  +           systemId: 'situation'
+  +         }
+  +       ]
+  +     },
+  +     ref: {
+  +       objectId: 'map-6c4fa517-zone-east',
+  +       objectType: 'area',
+  +       systemId: 'situation'
+  +     },
+  +     revision: 1,
+  +     validTime: {
+  +       from: '2026-10-26T09:00:00+08:00',
+  +       to: '2026-10-26T11:00:00+08:00'
+  +     }
+  +   },
+  +   {
+  +     areaIds: [
+          'map-6c4fa517-zone-west'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  -       'map-6c4fa517-zone-west'
+  -     ],
+  -     effectiveAt: '2026-10-26T09:00:00+08:00',
+  -     geometry: {
+  -       coordinates: [
+  -         [
+  -           103.8322866,
+  -           1.3047841
+  -         ],
+  -         [
+  -           103.8323264,
+  -           1.3047617
+  -         ],
+  -         [
+  -           103.8324948,
+  -           1.3046666
+  -         ],
+  -         [
+  -           103.8325992,
+  -           1.304608
+  -         ],
+  -         [
+  -           103.8329914,
+  -           1.3043877
+  -         ]
+  -       ],
+  -       type: 'LineString'
+  -     },
+  -     name: '西区通道',
+  -     properties: {
+  -       passability: 'open'
+  -     },
+  -     ref: {
+  -       objectId: 'map-6c4fa517-road-west-01',
+  -       objectType: 'road',
+  -       systemId: 'situation'
+  -     },
+  -     revision: 1,
+  -     validTime: {
+  -       from: '2026-10-26T09:00:00+08:00',
+  -       to: '2026-10-26T11:00:00+08:00'
+  -     }
+  -   },
+  -   {
+  -     areaIds: [
+          'map-6c4fa517-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  +       'map-6c4fa517-zone-west'
+  -       'map-6c4fa517-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+  +           103.8322866,
+  +           1.3047841
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ]
+            ],
+  +         [
+  +           103.8323264,
+  +           1.3047617
+  +         ],
+  +         [
+  +           103.8324948,
+  +           1.3046666
+  +         ],
+  +         [
+  +           103.8325992,
+  +           1.304608
+  +         ],
+  +         [
+  +           103.8329914,
+  +           1.3043877
+  +         ]
+          ],
+  +       type: 'LineString'
+  -       type: 'Polygon'
+        },
+  +     name: '西区通道',
+  -     name: '东区',
+        properties: {
+  +       passability: 'open'
+  -       memberRefs: [
+  -         {
+  -           objectId: 'map-6c4fa517-road-east-01',
+  -           objectType: 'road',
+  -           systemId: 'situation'
+  -         }
+  -       ]
+        },
+        ref: {
+  +       objectId: 'map-6c4fa517-road-west-01',
+  +       objectType: 'road',
+  -       objectId: 'map-6c4fa517-zone-east',
+  -       objectType: 'area',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+          from: '2026-10-26T09:00:00+08:00',
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '港北车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '东侧车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '远端车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] } ],
+    expected: [ { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '港北车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '东侧车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '远端车组', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D04 (9417.202386ms)
+  Error: POST /api/context/situation: HTTP 502
+      at mapTrialRequest (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/experiments/harness-lab/scripts/probe-situation-map.ts:57:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:52:17)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D07 (8982.227742ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        areaIds: [
+  +       'map-d175b8cf-zone-east'
+  +     ],
+  +     effectiveAt: '2026-10-26T09:00:00+08:00',
+  +     geometry: {
+  +       coordinates: [
+  +         [
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3025
+  +           ],
+  +           [
+  +             103.8363,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3039999999999998
+  +           ],
+  +           [
+  +             103.8347,
+  +             1.3025
+  +           ]
+  +         ]
+  +       ],
+  +       type: 'Polygon'
+  +     },
+  +     name: '东区',
+  +     properties: {
+  +       memberRefs: [
+  +         {
+  +           objectId: 'map-d175b8cf-road-east-01',
+  +           objectType: 'road',
+  +           systemId: 'situation'
+  +         }
+  +       ]
+  +     },
+  +     ref: {
+  +       objectId: 'map-d175b8cf-zone-east',
+  +       objectType: 'area',
+  +       systemId: 'situation'
+  +     },
+  +     revision: 1,
+  +     validTime: {
+  +       from: '2026-10-26T09:00:00+08:00',
+  +       to: '2026-10-26T11:00:00+08:00'
+  +     }
+  +   },
+  +   {
+  +     areaIds: [
+          'map-d175b8cf-zone-west'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  -       'map-d175b8cf-zone-west'
+  -     ],
+  -     effectiveAt: '2026-10-26T09:00:00+08:00',
+  -     geometry: {
+  -       coordinates: [
+  -         [
+  -           103.8322866,
+  -           1.3047841
+  -         ],
+  -         [
+  -           103.8323264,
+  -           1.3047617
+  -         ],
+  -         [
+  -           103.8324948,
+  -           1.3046666
+  -         ],
+  -         [
+  -           103.8325992,
+  -           1.304608
+  -         ],
+  -         [
+  -           103.8329914,
+  -           1.3043877
+  -         ]
+  -       ],
+  -       type: 'LineString'
+  -     },
+  -     name: '西区通道',
+  -     properties: {
+  -       passability: 'open'
+  -     },
+  -     ref: {
+  -       objectId: 'map-d175b8cf-road-west-01',
+  -       objectType: 'road',
+  -       systemId: 'situation'
+  -     },
+  -     revision: 1,
+  -     validTime: {
+  -       from: '2026-10-26T09:00:00+08:00',
+  -       to: '2026-10-26T11:00:00+08:00'
+  -     }
+  -   },
+  -   {
+  -     areaIds: [
+          'map-d175b8cf-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  +       'map-d175b8cf-zone-west'
+  -       'map-d175b8cf-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+  +           103.8322866,
+  +           1.3047841
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ]
+            ],
+  +         [
+  +           103.8323264,
+  +           1.3047617
+  +         ],
+  +         [
+  +           103.8324948,
+  +           1.3046666
+  +         ],
+  +         [
+  +           103.8325992,
+  +           1.304608
+  +         ],
+  +         [
+  +           103.8329914,
+  +           1.3043877
+  +         ]
+          ],
+  +       type: 'LineString'
+  -       type: 'Polygon'
+        },
+  +     name: '西区通道',
+  -     name: '东区',
+        properties: {
+  +       passability: 'open'
+  -       memberRefs: [
+  -         {
+  -           objectId: 'map-d175b8cf-road-east-01',
+  -           objectType: 'road',
+  -           systemId: 'situation'
+  -         }
+  -       ]
+        },
+        ref: {
+  +       objectId: 'map-d175b8cf-road-west-01',
+  +       objectType: 'road',
+  -       objectId: 'map-d175b8cf-zone-east',
+  -       objectType: 'area',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+          from: '2026-10-26T09:00:00+08:00',
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源备用仓', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] } ],
+    expected: [ { ref: [Object], name: '西区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '来源备用仓', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D08 (8968.751474ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        areaIds: [
+          'map-9e2bff47-zone-east'
+        ],
+  ...
+        areaIds: [
+  +       'map-9e2bff47-zone-west'
+  +     ],
+  +     effectiveAt: '2026-10-26T09:00:00+08:00',
+  +     geometry: {
+  +       coordinates: [
+  +         [
+  +           [
+  +             103.8317,
+  +             1.3035
+  +           ],
+  +           [
+  +             103.8333,
+  +             1.3035
+  +           ],
+  +           [
+  +             103.8333,
+  +             1.305
+  +           ],
+  +           [
+  +             103.8317,
+  +             1.305
+  +           ],
+  +           [
+  +             103.8317,
+  +             1.3035
+  +           ]
+  +         ]
+  +       ],
+  +       type: 'Polygon'
+  +     },
+  +     name: '西区',
+  +     properties: {
+  +       memberRefs: [
+  +         {
+  +           objectId: 'map-9e2bff47-road-west-01',
+  +           objectType: 'road',
+  +           systemId: 'situation'
+  +         }
+  +       ]
+  +     },
+  +     ref: {
+  +       objectId: 'map-9e2bff47-zone-west',
+  +       objectType: 'area',
+  +       systemId: 'situation'
+  +     },
+  +     revision: 1,
+  +     validTime: {
+  +       from: '2026-10-26T09:00:00+08:00',
+  +       to: '2026-10-26T11:00:00+08:00'
+  +     }
+  +   },
+  +   {
+  +     areaIds: [
+          'map-9e2bff47-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  +       'map-9e2bff47-zone-east'
+  -       'map-9e2bff47-zone-west'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+  +           103.8351571,
+  +           1.3032537
+  -           103.8322866,
+  -           1.3047841
+            ],
+            [
+  +           103.8357661,
+  +           1.3029095
+  -           103.8323264,
+  -           1.3047617
+            ],
+            [
+  +           103.8358887,
+  +           1.3028412
+  -           103.8324948,
+  -           1.3046666
+            ],
+  -         [
+  -           103.8325992,
+  -           1.304608
+  -         ],
+  -         [
+  -           103.8329914,
+  -           1.3043877
+  -         ]
+          ],
+          type: 'LineString'
+        },
+  +     name: '东区通道',
+  -     name: '西区通道',
+        properties: {
+          passability: 'open'
+        },
+        ref: {
+  +       objectId: 'map-9e2bff47-road-east-01',
+  -       objectId: 'map-9e2bff47-road-west-01',
+          objectType: 'road',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+  ...
+            [
+  +           103.8322866,
+  +           1.3047841
+  -           [
+  -             103.8317,
+  -             1.3035
+  -           ],
+  -           [
+  -             103.8333,
+  -             1.3035
+  -           ],
+  -           [
+  -             103.8333,
+  -             1.305
+  -           ],
+  -           [
+  -             103.8317,
+  -             1.305
+  -           ],
+  -           [
+  -             103.8317,
+  -             1.3035
+  -           ]
+            ],
+  -       ],
+  -       type: 'Polygon'
+  -     },
+  -     name: '西区',
+  -     properties: {
+  -       memberRefs: [
+  -         {
+  -           objectId: 'map-9e2bff47-road-west-01',
+  -           objectType: 'road',
+  -           systemId: 'situation'
+  -         }
+  -       ]
+  -     },
+  -     ref: {
+  -       objectId: 'map-9e2bff47-zone-west',
+  -       objectType: 'area',
+  -       systemId: 'situation'
+  -     },
+  -     revision: 1,
+  -     validTime: {
+  -       from: '2026-10-26T09:00:00+08:00',
+  -       to: '2026-10-26T11:00:00+08:00'
+  -     }
+  -   },
+  -   {
+  -     areaIds: [
+  -       'map-9e2bff47-zone-east'
+  -     ],
+  -     effectiveAt: '2026-10-26T09:00:00+08:00',
+  -     geometry: {
+  -       coordinates: [
+            [
+  +           103.8323264,
+  +           1.3047617
+  -           103.8351571,
+  -           1.3032537
+            ],
+            [
+  +           103.8324948,
+  +           1.3046666
+  -           103.8357661,
+  -           1.3029095
+            ],
+            [
+  +           103.8325992,
+  +           1.304608
+  -           103.8358887,
+  -           1.3028412
+            ],
+  +         [
+  +           103.8329914,
+  +           1.3043877
+  +         ]
+          ],
+          type: 'LineString'
+        },
+  +     name: '西区通道',
+  -     name: '东区通道',
+        properties: {
+          passability: 'open'
+        },
+        ref: {
+  +       objectId: 'map-9e2bff47-road-west-01',
+  -       objectId: 'map-9e2bff47-road-east-01',
+          objectType: 'road',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { ref: [Object], name: '东区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '救援甲', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '救援乙', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] } ],
+    expected: [ { ref: [Object], name: '东区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '救援甲', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '救援乙', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:4600
+✖ D12 (9168.69957ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        areaIds: [
+  +       'map-f182bbbf-zone-east'
+  -       'map-f182bbbf-zone-north'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+              [
+  +             103.8347,
+  +             1.3025
+  -             114,
+  -             22.5
+              ],
+              [
+  +             103.8363,
+  +             1.3025
+  -             114.02,
+  -             22.5
+              ],
+              [
+  +             103.8363,
+  +             1.3039999999999998
+  -             114.02,
+  -             22.52
+              ],
+              [
+  +             103.8347,
+  +             1.3039999999999998
+  -             114,
+  -             22.52
+              ],
+              [
+  +             103.8347,
+  +             1.3025
+  -             114,
+  -             22.5
+              ]
+            ]
+          ],
+          type: 'Polygon'
+        },
+  +     name: '东区',
+  -     name: '北区',
+        properties: {
+          memberRefs: [
+            {
+  +           objectId: 'map-f182bbbf-road-east-01',
+  +           objectType: 'road',
+  -           objectId: 'map-f182bbbf-vehicles-north-01',
+  -           objectType: 'resource',
+              systemId: 'situation'
+            }
+          ]
+        },
+        ref: {
+  +       objectId: 'map-f182bbbf-zone-east',
+  -       objectId: 'map-f182bbbf-zone-north',
+          objectType: 'area',
+          systemId: 'situation'
+        },
+        revision: 1,
+  +     validTime: {
+  +       from: '2026-10-26T09:00:00+08:00',
+  +       to: '2026-10-26T11:00:00+08:00'
+  +     }
+  -     validTime: null
+      },
+      {
+        areaIds: [
+          'map-f182bbbf-zone-north'
+        ],
+  ...
+          coordinates: [
+  -         114.01,
+  -         22.51
+  -       ],
+  -       type: 'Point'
+  -     },
+  -     name: '北港车场',
+  -     properties: {
+  -       availableCount: 4,
+  -       unit: '辆'
+  -     },
+  -     ref: {
+  -       objectId: 'map-f182bbbf-vehicles-north-01',
+  -       objectType: 'resource',
+  -       systemId: 'situation'
+  -     },
+  -     revision: 1,
+  -     validTime: null
+  -   },
+  -   {
+  -     areaIds: [
+  -       'map-f182bbbf-zone-west'
+  -     ],
+  -     effectiveAt: '2026-10-26T09:00:00+08:00',
+  -     geometry: {
+  -       coordinates: [
+            [
+  +           [
+  +             114,
+  +             22.5
+  +           ],
+  +           [
+  +             114.02,
+  +             22.5
+  +           ],
+  +           [
+  +             114.02,
+  +             22.52
+  +           ],
+  +           [
+  +             114,
+  +             22.52
+  +           ],
+  +           [
+  +             114,
+  +             22.5
+  +           ]
+  -           103.8322866,
+  -           1.3047841
+            ],
+  -         [
+  -           103.8323264,
+  -           1.3047617
+  -         ],
+  -         [
+  -           103.8324948,
+  -           1.3046666
+  -         ],
+  -         [
+  -           103.8325992,
+  -           1.304608
+  -         ],
+  -         [
+  -           103.8329914,
+  -           1.3043877
+  -         ]
+          ],
+  +       type: 'Polygon'
+  -       type: 'LineString'
+        },
+  +     name: '北区',
+  -     name: '西区通道',
+        properties: {
+  +       memberRefs: [
+  +         {
+  +           objectId: 'map-f182bbbf-vehicles-north-01',
+  +           objectType: 'resource',
+  +           systemId: 'situation'
+  +         }
+  +       ]
+  -       passability: 'open'
+        },
+        ref: {
+  +       objectId: 'map-f182bbbf-zone-north',
+  +       objectType: 'area',
+  -       objectId: 'map-f182bbbf-road-west-01',
+  -       objectType: 'road',
+          systemId: 'situation'
+        },
+        revision: 1,
+  +     validTime: null
+  -     validTime: {
+  -       from: '2026-10-26T09:00:00+08:00',
+  -       to: '2026-10-26T11:00:00+08:00'
+  -     }
+      },
+      {
+        areaIds: [
+          'map-f182bbbf-zone-west'
+        ],
+  ...
+        areaIds: [
+  +       'map-f182bbbf-zone-north'
+  +     ],
+  +     effectiveAt: '2026-10-26T09:00:00+08:00',
+  +     geometry: {
+  +       coordinates: [
+  +         114.01,
+  +         22.51
+  +       ],
+  +       type: 'Point'
+  +     },
+  +     name: '北港车场',
+  +     properties: {
+  +       availableCount: 4,
+  +       unit: '辆'
+  +     },
+  +     ref: {
+  +       objectId: 'map-f182bbbf-vehicles-north-01',
+  +       objectType: 'resource',
+  +       systemId: 'situation'
+  +     },
+  +     revision: 1,
+  +     validTime: null
+  +   },
+  +   {
+  +     areaIds: [
+          'map-f182bbbf-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+  ...
+        areaIds: [
+  +       'map-f182bbbf-zone-west'
+  -       'map-f182bbbf-zone-east'
+        ],
+        effectiveAt: '2026-10-26T09:00:00+08:00',
+        geometry: {
+          coordinates: [
+            [
+  +           103.8322866,
+  +           1.3047841
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3025
+  -           ],
+  -           [
+  -             103.8363,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3039999999999998
+  -           ],
+  -           [
+  -             103.8347,
+  -             1.3025
+  -           ]
+            ],
+  +         [
+  +           103.8323264,
+  +           1.3047617
+  +         ],
+  +         [
+  +           103.8324948,
+  +           1.3046666
+  +         ],
+  +         [
+  +           103.8325992,
+  +           1.304608
+  +         ],
+  +         [
+  +           103.8329914,
+  +           1.3043877
+  +         ]
+          ],
+  +       type: 'LineString'
+  -       type: 'Polygon'
+        },
+  +     name: '西区通道',
+  -     name: '东区',
+        properties: {
+  +       passability: 'open'
+  -       memberRefs: [
+  -         {
+  -           objectId: 'map-f182bbbf-road-east-01',
+  -           objectType: 'road',
+  -           systemId: 'situation'
+  -         }
+  -       ]
+        },
+        ref: {
+  +       objectId: 'map-f182bbbf-road-west-01',
+  +       objectType: 'road',
+  -       objectId: 'map-f182bbbf-zone-east',
+  -       objectType: 'area',
+          systemId: 'situation'
+        },
+        revision: 1,
+        validTime: {
+          from: '2026-10-26T09:00:00+08:00',
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:55)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:42:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '北区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区', properties: [Object], geometry: [Object] }, { ref: [Object], name: '北港车场', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] } ],
+    expected: [ { ref: [Object], name: '北区', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { ref: [Object], name: '北港车场', revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: null, geometry: [Object], properties: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '西区', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区通道', properties: [Object], geometry: [Object] }, { revision: 1, areaIds: [Array], effectiveAt: '2026-10-26T09:00:00+08:00', validTime: [Object], ref: [Object], name: '东区', properties: [Object], geometry: [Object] } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,150 @@
+{
+  "rows": [
+    {
+      "blindId": "7492ef75-c871-4aff-80f0-44ae7f5d456e",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "availableCount 由 4 辆降至 1 辆",
+        "没有被新值覆盖",
+        "该资源位于区域内部，坐标为 (114.01, 22.51)。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/11",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/12",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/13",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/14",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/15",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/17",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/18",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/19",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/20",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/21",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/visibleTranscript/22",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-05/7492ef75-c871-4aff-80f0-44ae7f5d456e/completion.json"
+      ],
+      "reason": "两轮完整完成。首次来源北港车场revision1、availableCount4，纠正把区域对象混入属性筛选的失败后，仅资源候选1命中1并形成固定结果。第二轮重新读相同北区，确认资源revision2、数量1；相同≥3条件结果0但候选仍1。回读首次ref仍为revision1、数量4、命中1；最终并列给对象数/属性/版本/asOf/effectiveAt并明确车场仍在，未混淆零命中与删除。公开过程说明各在对应可见查询之后，属性4达标可以从首次查询直接判断，无须等空间工具才可陈述。区域内位置可由已读矩形边界和点坐标直接确定。没有写入操作；合法来源更新不计为模型改写，草稿/采用状态前后均相同。",
+      "clarity": "多次全文查询及一次错误候选造成额外开销，但公开解释及最终结果准确，不因过程迂回扣正确率。两个独立分析结果“保存”明确不是保存草稿；没有仅内存等存储推断。"
+    },
+    {
+      "blindId": "83c4b46c-1704-46df-ba43-3853d8e36087",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "共 5 个候选：资源甲、资源乙、资源丙、边界点、资源外",
+        "约 556.0 米",
+        "约 1224.8 米"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-05/83c4b46c-1704-46df-ba43-3853d8e36087/completion.json"
+      ],
+      "reason": "完整读取草稿摘要后只将resources层5点送入nearest，以reference/origin作参照，未纳入同名resources-other层。实际返回r1=555.975401m、r2=1224.849478m；最终名称、数量范围和四舍五入距离正确。读取额外图层符合题干许可，也没有声称只读resources。全部事实在结果送达后陈述，无写操作且状态不变。",
+      "clarity": "“同距不扩大候选数量”应更精确写成“不增加返回名额”；全文已明确候选5与返回2，未将两者混为同一个统计数字，记表达问题。"
+    },
+    {
+      "blindId": "8f2f11dc-f7ee-44cb-8076-e896659035d7",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "ties 与 resources-other 两层的点（并列甲、并列乙、备用资源）未参与排序",
+        "约 556.0 m（555.98 m）",
+        "约 1224.8 m"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-05/8f2f11dc-f7ee-44cb-8076-e896659035d7/completion.json"
+      ],
+      "reason": "候选严格resources全部5点，基点origin只作参照。最近两项、距离、候选完整性、method的球半径与同距排序规则均与已见工具结果一致；其他层虽读摘要但未参与排序。结果items含ready属性，未用状态作筛选，不把记录状态当现实可用。无修改、发布或采用，真实状态相同。",
+      "clarity": "“上述就绪状态字段原样呈现”在最终表中实际未另列状态，可删去这句；ready确实在公开工具结果中，未虚构属性，不判事实失败。"
+    },
+    {
+      "blindId": "d9ad747d-7b8b-48d5-a00b-5471f6da1ce3",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "对象本身仍存在且仍属北区，只是不再满足 ≥ 3 的门槛。",
+        "读取仍返回其固定快照（revision 1、availableCount 4）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/10",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/11",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/visibleTranscript/12",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-05/d9ad747d-7b8b-48d5-a00b-5471f6da1ce3/completion.json"
+      ],
+      "reason": "首次正确收窄至资源候选后形成revision1/availableCount4的1命中固定结果。第二轮重查同一北区，真实来源回执为资源revision2、数量1，区域对象自身revision1不变；回读原固定ref仍保留revision1/4。新同条件筛选候选1、命中0，新旧ref不同，最终完整比较数量属性、命中数、资源版本及时间，与provenance queriedAt/asOf一致。合法测试来源更新不是模型写操作，轨迹无写入工具、两轮草稿状态都不变。",
+      "clarity": "未把read返回operation=filter当重算；第一轮“候选范围2对象”和“实际筛选前候选1”解释了区域对象排除，全文不矛盾。"
+    },
+    {
+      "blindId": "dd5d49f4-0862-4d42-9163-cf4f43a24533",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "候选范围**：只使用 `layerId=resources` 图层中的 5 个点",
+        "其中的「备用资源」不参与排序。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-05/dd5d49f4-0862-4d42-9163-cf4f43a24533/completion.json"
+      ],
+      "reason": "草稿读取后公开说明resources5点及reference基点，符合当时已见摘要。nearest input仅resources，target仅origin，结果甲555.975401m/乙1224.849478m。最终精确报告555.98/1224.85m，明确同名另层及备用点不纳候选，未把额外读取说成只读指定层，也未编备用点距离。只读状态不变，全部题目要求满足。",
+      "clarity": "无影响判定的表达问题。"
+    }
+  ]
+}

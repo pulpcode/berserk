@@ -951,7 +951,7 @@
         },
         "candidateReasoningEffort": "high",
         "maxTokensBothGroups": 32768,
-        "topPBothGroups": 1.0,
+        "topPBothGroups": 1,
         "compatibilityPairIncludedIn12": true,
         "runtimeVerificationSummary": "请求开启high的6次中5次有思考观测，C04为零；零观测不证明内部开关状态。原批次停止记录保留，按补充方案只完成剩余5次。"
       }
@@ -1285,13 +1285,13 @@
     ]
   },
   "resultGroundingR14": {
-    "status": "plan_awaiting_review",
+    "status": "executed_and_reviewed_144_with_preserved_pending",
     "branch": "codex/agent-result-grounding",
     "plan": "r14-20261026/plan.md",
-    "authorization": "2026-10-26 用户仅要求形成并落盘方案，行文通俗凝练，任务清单逐题详细",
-    "planningOnly": true,
-    "implementationAllowed": false,
-    "modelExecutionAllowed": false,
+    "authorization": "2026-10-26 用户：提交git，然后开始",
+    "planningOnly": false,
+    "implementationAllowed": true,
+    "modelExecutionAllowed": true,
     "productBaseline": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
     "evaluatorStartingCommit": "e07f46e",
     "plannedGroups": [
@@ -1304,8 +1304,8 @@
     "newConstructedTasks": 18,
     "repetitions": 2,
     "proposedTaskTrials": 144,
-    "actualTaskTrials": 0,
-    "actualModelRequests": 0,
+    "actualTaskTrials": 144,
+    "actualModelRequests": 673,
     "proposedBudget": {
       "modelRequests": 1600,
       "inputTokens": 36000000,
@@ -1315,6 +1315,125 @@
     "automaticRetries": false,
     "additionalTrialsAllowed": false,
     "formalAcceptanceEvaluated": false,
-    "nextAction": "用户审阅独立R14方案，批准前不实施、不执行模型测试"
+    "nextAction": "本轮报告待用户审阅；不自动追加、重试或更换线上配置。",
+    "planCommit": "ccb4a11",
+    "actualTrials": 144,
+    "executionGate": "completed_no_additional_execution",
+    "blocker": null,
+    "check": "r14-20261026/check.md",
+    "caseCheck": "r14-20261026/check-cases.md",
+    "reviewDecision": "r14-20261026/d04-review.md",
+    "D04Authorization": "2026-10-26用户：只要题目和问答保持一致且和当前的系统不冲突就可以",
+    "D04Revision": "草稿vehicle-points数量缺字段；其余题目、144项预算不变",
+    "freezeHash": "e0924b62a5842d91eda23272972b07ccfd84d4557d3878a81372fc928bb094ac",
+    "liveBatch": ".local/spatial-r14/batch-20261026",
+    "remainingTaskTrials": 0,
+    "partialExecutionAudit": "r14-20261026/partial-execution-audit.json",
+    "results": "r14-20261026/complete-results.md",
+    "resultData": "r14-20261026/complete-results.json",
+    "mainPass": 134,
+    "strictPass": 113,
+    "strictFail": 25,
+    "semanticPending": 6,
+    "partialReviewComplete": true,
+    "actualUsage": {
+      "requests": 673,
+      "inputTokens": 12991534,
+      "outputTokensIncludingReasoning": 221979,
+      "afpEstimate": 3433.8106,
+      "unknownUsage": 0
+    },
+    "closeout": {
+      "authorization": "用户：进行修复，完成后续",
+      "plannedTrials": 136,
+      "originalTrialsRetained": 8,
+      "protocol": "r14-20261026/closeout-protocol.md",
+      "offlineGatePassed": true,
+      "automaticRetries": false,
+      "additionalTrialsAllowed": false,
+      "freezeHash": "1747c7427225734cff6074960ee182181346f48aefa2e510d886428580013bb2",
+      "batch": ".local/spatial-r14/closeout-20261026",
+      "status": "stopped_actual_unauthorized_draft_change",
+      "firstSegmentStop": "D07-1-A optional assistant-offer false stop",
+      "firstSegmentAttempted": 11,
+      "remaining": 110,
+      "secondSegment": {
+        "status": "stopped_actual_unauthorized_draft_change",
+        "freezeHash": "1e51c7720aadd287f27b5003b6d321b91384491e0a26e30291f4b575cebd999d",
+        "plannedTrials": 125,
+        "batch": ".local/spatial-r14/closeout-second-20261026",
+        "offlineGatePassed": true,
+        "actualTrials": 15,
+        "stop": "unauthorized_draft_change",
+        "audit": "r14-20261026/closeout-second-stop-audit.json"
+      }
+    },
+    "mainFail": 9,
+    "finalOfflineCheck": {
+      "passed": true,
+      "independentTests": 48,
+      "modelCalls": 0,
+      "report": "r14-20261026/final-offer-fix-independent.md"
+    },
+    "thirdAuthorization": {
+      "user": "判失败，然后继续完成剩余测试",
+      "date": "2026-10-27",
+      "protocol": "r14-20261026/third-closeout-protocol.md",
+      "plannedUnstartedTrials": 110,
+      "historyContinuations": [
+        "D06-1-A",
+        "D10-1-A",
+        "D10-1-B"
+      ],
+      "budgetIncrease": false
+    },
+    "thirdSegment": {
+      "plannedTrials": 110,
+      "preservedTrials": 34,
+      "freezeHash": "13cc763108334fa2a851deb0203bf74a5c1aa01264b5a41e9c5c2174adbd1085",
+      "batch": ".local/spatial-r14/closeout-third-20261027",
+      "status": "settled_at_D08_false_clarification",
+      "offlineGatePassed": true,
+      "actualTrials": 89,
+      "stop": "optional_missing_information_heading_false_stop"
+    },
+    "fourthSegment": {
+      "directory": ".local/spatial-r14/closeout-fourth-20261027",
+      "plannedSlots": 21,
+      "preservedSlots": 123,
+      "freezeHash": "fa4fa94e10ddc52b8239e77e37d922005f715fd7dd62813ba4f0528017ac8227",
+      "independentCheck": "r14-20261026/fourth-closeout-check.json",
+      "status": "settled_at_D04_false_clarification",
+      "actualTrials": 10,
+      "stop": "nested_conditional_offer_false_stop"
+    },
+    "latestCumulativeRequests": 673,
+    "fifthSegment": {
+      "directory": ".local/spatial-r14/closeout-fifth-20261027",
+      "plannedSlots": 11,
+      "preservedSlots": 133,
+      "status": "settled",
+      "freezeHash": "7ce839e647d74171a0f1df99bf49c7a4a57309095e7af53d9dfb6b4cf63445b4",
+      "stop": null
+    },
+    "pendingBootstrapFailure": {
+      "entry": "D06-1-A",
+      "reason": "expired_local_session_cookie_HTTP401",
+      "modelRequests": 0,
+      "newUsage": 0,
+      "originalEvidencePreserved": true
+    },
+    "completedSupplements": {
+      "count": 5,
+      "originalUserMessages": 7,
+      "newTaskSlots": 0,
+      "mapping": "r14-20261026/pending-choice/review-mapping.json",
+      "scores": "r14-20261026/pending-choice/reviewed-scores.json",
+      "additionalRequests": 23
+    },
+    "finalAudit": "r14-20261026/complete-execution-audit.json",
+    "previous34Report": "r14-20261026/combined-results.md",
+    "mainPending": 1,
+    "completeReviewFinished": true
   }
 }

@@ -1,0 +1,112 @@
+{
+  "rows": [
+    {
+      "blindId": "00b2c98e-d322-4e3e-b06b-eca314c68f74",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-13/00b2c98e-d322-4e3e-b06b-eca314c68f74/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D03：区域实际引用草稿search-zone固定修订1，候选实际来自situation三个车辆resource；分类内部港北车组、边界东侧车组、外部远端车组，含边界2个的名单数量正确。独立按已读矩形及点坐标复核一致。额外4/2/1辆属性和西区几何与草稿重合都有已读依据，未把来源西区替换为计算区域。过程只有读取意图，无已完成事实陈述；草稿、发布、采用状态不变。",
+      "clarity": "“固定版本setId 1aed1a11”是集合ID短前缀展示，实际工具引用完整ID及修订；建议显式加省略号。"
+    },
+    {
+      "blindId": "03baab5b-8f64-47f0-b971-a8fee5257ef5",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-13/03baab5b-8f64-47f0-b971-a8fee5257ef5/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D03：用草稿search-zone和situation三个车辆资源的混合来源执行contains含边界筛选，港北车组、东侧车组2个正确。详细坐标、东侧位于经度114.02边界、远端经度超界，以及4/2辆属性均由此前读取支持；未混入草稿资源或来源道路区域。完整只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "32f918e9-72bb-4320-9c13-a2309d199f61",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-13/32f918e9-72bb-4320-9c13-a2309d199f61/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D04：起初把layerId当名称检索未命中后，读取草稿发现真实ID，再按vehicle-points读取全部三个点的属性。准确给甲4、乙缺availableCount、丙2，已知合计6、完整总数未知，未把缺失当0，未声称现实可派遣。只读且没有来源查询；错误恢复及名称/ID说明符合真实调用。",
+      "clarity": ""
+    },
+    {
+      "blindId": "64eb86fd-c2b3-41c5-8c73-a5f931bb3783",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-13/64eb86fd-c2b3-41c5-8c73-a5f931bb3783/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D04：名称查询失败后按草稿图层ID成功读取3点；甲4、丙2、乙只有unit没有availableCount，已知6并非完整总数。答齐点数、明细、缺失对象和总数限制，没有用来源替代草稿，也未承诺现实可调度。状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "e06fa91f-0156-4361-ae8e-fa71c88ca9f8",
+      "mainRequirement": "fail",
+      "processFacts": "fail",
+      "finalFacts": "pending",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "我读取了本会话草稿（版本 1，标题「空间与标绘核对」）：当前 0 个图层、0 个对象，没有找到 search-zone，因此拿不到你画的区域边界。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/visibleTranscript/6/toolInput/questions/0/prompt",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/judge-input.json#/stateEvidence/0/before/version/document",
+        ".local/spatial-r14/closeout-blind-chunk-13/e06fa91f-0156-4361-ae8e-fa71c88ca9f8/completion.json"
+      ],
+      "reason": "D03：仅按objectNames=[search-zone]读取0项后，未按objectId或全量草稿纠正，直接提出必须补区域的澄清。真实草稿有reference/draft-resources两层和origin、search-zone、draft-unrelated三个对象，search-zone是ID、显示名搜索区。模型把过滤结果当成整个草稿为空，并要求用户先保存或改用来源区域，未完成必需的2个命中名称和数量，main失败。ask_user公开请求参数里的0图层0对象陈述超出了工具证据且与实际状态矛盾，processFacts失败。没有最终回答，finalFacts记pending；不是凭completion状态直接判失败。未实际换源计算、写草稿或发布，effects/boundaries通过。",
+      "clarity": "错误句出现在visibleTranscript/6/toolInput/questions/0/prompt。宿主以“当前请求已停止”结束，末个工具回执没有后续模型请求；不声称这段问题已经被UI呈现。本评分把对外ask_user请求内容作为公开过程陈述，与私有思考分开。",
+      "failureCategory": "filtered_lookup_misread_as_empty_draft"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+(node:79359) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ only the already answered D06 choice is a redundant plain question (6.188884ms)
+✔ idle boundary uses the last actual progress and resets after progress (0.270236ms)
+✔ five historical prefixes yield exactly the approved missing messages; counters cannot skip a round (29.783569ms)
+✔ five native recoveries preserve old results and linearly inherit latest budget with original A/B/C configuration (67296.559199ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74226.397126

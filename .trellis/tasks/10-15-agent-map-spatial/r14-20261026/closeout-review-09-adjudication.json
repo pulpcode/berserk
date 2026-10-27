@@ -1,0 +1,14 @@
+{
+  "selected": "closeout-review-09-adjudicated.json",
+  "strict": {
+    "pass": 11,
+    "fail": 4,
+    "pending": 0
+  },
+  "main": {
+    "pass": 14,
+    "pending": 1
+  },
+  "changed": "6225读取历史误述，采用独立fail；固定版本支持未改，不证明此前读取",
+  "originalReviewsPreserved": true
+}
