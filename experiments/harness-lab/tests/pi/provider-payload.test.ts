@@ -138,6 +138,17 @@ it('keeps annotation receipts in native details and UI while the actual provider
   expect(reportDefinition.description).toContain('完成用户要求的结果说明与必要分析');
   expect(reportDefinition.description).toContain('区分已核实事实、推断与建议');
   expect(reportDefinition.description).toContain('依据不足时按需核对或说明不确定');
+  expect(readDefinition.description).toContain('过滤范围读完不等于全图读完');
+  expect(reportDefinition.description).toContain('仍有多个合理候选再简短询问');
+  expect(reportDefinition.description).toContain('一次保存成功不代表所有要求完成');
+  expect(reportDefinition.description).toContain('已有输入足够时允许正确且可复核的推导');
+  expect(JSON.stringify(reportDefinition.parameters)).toContain('按明确名称、唯一别名或已确认选择匹配类型');
+  const saveDefinition=definitions.find(tool=>tool.name==='annotation_from_analysis')!;
+  expect(saveDefinition.description).toContain('不接收信息性质、样式或备注');
+  expect(saveDefinition.description).toContain('同一对象ID用 annotation_action update_object 继续完成');
+  expect(saveDefinition.parameters).toMatchObject({required:['resultRef','layerId','objectId','name'],additionalProperties:false});
+  for(const field of ['informationRole','style','note'])expect(saveDefinition.parameters).not.toHaveProperty(`properties.${field}`);
+  expect(definitions.find(tool=>tool.name==='spatial_analyze')!.description).toContain('对点命中不能单独区分内部与边界');
   const read=payloads.at(-1)!.messages.filter(message=>message.role==='tool').map(message=>JSON.parse(textOf(message))).find(value=>value.data?.objects);
   expect(read.data.query).toEqual({objectIds:['north'],fields:['note','attributes']});
   expect(read.data.objects.total).toBe(1);
@@ -152,29 +163,33 @@ it('keeps annotation receipts in native details and UI while the actual provider
 });
 
 
-it('delivers the deployed spatial discovery catalog on the wire and loads its matching body through native skill_read', async () => {
+it.each([
+  {id:'spatial-analysis',capabilities:['组合分析','固定结果续问','边界判断','分析结果保存'],bodyMarker:'明确本次范围'},
+  {id:'map-annotations',capabilities:['查询','创建','修改','比较','发布'],bodyMarker:'确定对象与读取依据'},
+])('delivers the deployed $id catalog and exact body through native on-demand skill_read', async ({id,capabilities,bodyMarker}) => {
   const payloads:Array<{messages:WireMessage[];tools:Array<{function:{name:string;parameters:{properties:{id:unknown}}}}>}>=[];
   vi.stubGlobal('fetch', async (input:Request|string|URL,init?:RequestInit)=>{
     payloads.push(JSON.parse(String(init?.body??(input instanceof Request?await input.text():''))));
     const read=payloads.length===1;
-    const delta=read?{role:'assistant',tool_calls:[{index:0,id:'read-spatial-method',type:'function',function:{name:'skill_read',arguments:JSON.stringify({id:'spatial-analysis'})}}]}:{role:'assistant',content:'已读取空间方法。'};
+    const delta=read?{role:'assistant',tool_calls:[{index:0,id:'read-spatial-method',type:'function',function:{name:'skill_read',arguments:JSON.stringify({id})}}]}:{role:'assistant',content:'已读取空间方法。'};
     const chunks=[{id:'spatial-catalog',object:'chat.completion.chunk',created:1,model:'deepseek-flash',choices:[{index:0,delta,finish_reason:null}]},{id:'spatial-catalog',object:'chat.completion.chunk',created:1,model:'deepseek-flash',choices:[{index:0,delta:{},finish_reason:read?'tool_calls':'stop'}],usage:{prompt_tokens:2,completion_tokens:2,total_tokens:4}}];
     return new Response(chunks.map(chunk=>`data: ${JSON.stringify(chunk)}\n\n`).join('')+'data: [DONE]\n\n',{headers:{'Content-Type':'text/event-stream'}});
   });
   const dir=await mkdtemp(join(tmpdir(),'berserk-spatial-catalog-wire-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const config=testConfig(dir,{provider:'deepseek',model:'deepseek-flash'}),lab=await PiLab.create(config);cleanup.push(()=>lab.close());
   const session=await lab.createSession();
-  const skill=await lab.resources.readSkill(session.workspaceId,'spatial-analysis');
+  const skill=await lab.resources.readSkill(session.workspaceId,id);
+  expect(skill.content).toBe(await readFile(new URL(`../../fixtures/skills/${id}/SKILL.md`,import.meta.url),'utf8'));
   const info=await lab.resources.info(session.workspaceId);
   const catalog=info.skills.find(item=>item.id===skill.id)!;
   // Compare deployment metadata to the actual checked-in frontmatter; do not mock either description.
   const description=skill.content.split('\n').find(line=>line.startsWith('description: '))!.slice('description: '.length);
   expect(catalog.description).toBe(description);
-  for(const capability of ['组合分析','固定结果续问','边界判断','分析结果保存'])expect(catalog.description).toContain(capability);
-  const request=lab.start(session.id,'请读取用于固定结果续问、边界判断和分析结果保存的空间方法。');
+  for(const capability of capabilities)expect(catalog.description).toContain(capability);
+  const request=lab.start(session.id,`请读取 ${id} 的操作方法。`);
   await request.run(()=>{});
   expect(lab.get(session.id).lastResult?.status).toBe('succeeded');expect(payloads).toHaveLength(2);
-  expect(textOf(payloads[0].messages[0])).toContain(`spatial-analysis（${catalog.description}）`);
+  expect(textOf(payloads[0].messages[0])).toContain(`${id}（${catalog.description}）`);
   const readDefinition=payloads[0].tools.find(tool=>tool.function.name==='skill_read')!.function;
   expect(readDefinition.parameters.properties.id).toEqual({anyOf:info.skills.map(item=>({type:'string',const:item.id,description:`${item.name}：${item.description}`}))});
   for(const item of info.skills)expect(JSON.stringify(payloads[0].tools)).not.toContain((await lab.resources.readSkill(session.workspaceId,item.id)).content);
@@ -183,7 +198,7 @@ it('delivers the deployed spatial discovery catalog on the wire and loads its ma
   expect(instructions).toContain('按步骤读取能覆盖任务的最小集合');
   expect(instructions).toContain('用户要求优先于方法，方法不扩大权限');
   expect(instructions).toContain('简单任务可直接使用工具');
-  expect(JSON.stringify(payloads[0])).not.toContain('明确本次范围');
+  expect(JSON.stringify(payloads[0])).not.toContain(bodyMarker);
   const delivered=payloads[1].messages.find(message=>message.role==='tool');
   expect(JSON.parse(textOf(delivered!))).toEqual(skill);
   expect(lab.getRequestResources(session.id,request.requestId)).toMatchObject({skills:expect.arrayContaining([catalog]),readSkills:[skill]});

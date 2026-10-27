@@ -71,6 +71,40 @@ it('rejects altered native result details as downstream authority',async()=>{
   expect(message.text).not.toContain('altered');expect(message.text).not.toContain('中心');
   expect(()=>s.lab.start(s.session.id,'继续引用该结果',{},'alpha')).toThrow('完整性校验');
 });
+
+it.each([
+  {label:'save only',changes:undefined},
+  {label:'information role',changes:{informationRole:'plan' as const}},
+  {label:'note',changes:{note:'待现场核实'}},
+])('saves the fixed geometry and completes $label through existing tools without duplicate objects',async({changes})=>{
+  let resultRef='';
+  const s=await setup((context,index)=>{
+    if(index===0)return {tools:[{name:'spatial_analyze',arguments:{operation:'buffer',input:s.input,distanceM:250}},{name:'annotation_read',arguments:{mode:'draft'}}]};
+    if(index===1){resultRef=lastResult(context).resultRef;return {tools:[{name:'annotation_from_analysis',arguments:{resultRef,layerId:'points',objectId:'saved-range',name:'固定范围'}}]};}
+    if(index===2 && changes)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'saved-range',changes}]}}]};
+    return {text:'已完成明确要求。'};
+  });
+  const taskId=s.lab.workspaces.get(s.session.workspaceId,'alpha').taskSpaceId!;
+  const before=s.lab.annotations!.version(s.actor,taskId,s.ref).document;
+  // Script only provider choices; the native loop, saved revisions and object updates are real.
+  await s.lab.start(s.session.id,`保存固定范围${changes?.informationRole?'并标为拟定方案':changes?.note?'并添加备注“待现场核实”':''}`,{},'alpha').run(()=>{});
+  const snapshot=s.lab.get(s.session.id,'alpha'),tools=snapshot.messages.filter(m=>m.role==='tool');
+  expect(snapshot.lastResult?.status).toBe('succeeded');
+  expect(tools.every(m=>!m.isError)).toBe(true);
+  expect(tools.map(m=>m.toolName)).toEqual(['spatial_analyze','annotation_read','annotation_from_analysis',...(changes?['annotation_action']:[])]);
+  const binding=s.lab.annotations!.binding(s.actor,s.session.id),revision=changes?3:2;
+  expect(binding.draft?.headRevision).toBe(revision);
+  const after=s.lab.annotations!.version(s.actor,taskId,tools.at(-1)!.annotationResult!.receipt.ref!).document;
+  const feature=after.layers[0].features.find(f=>f.objectId==='saved-range')!;
+  expect(after.layers[0].features).toHaveLength(before.layers[0].features.length+1);
+  expect(after.layers[0].features.filter(f=>f.objectId!=='saved-range')).toEqual(before.layers[0].features);
+  expect(feature).toMatchObject({name:'固定范围',geometry:tools[0].spatialResult!.geometry,...changes});
+  if(!changes?.informationRole)expect(feature).not.toHaveProperty('informationRole');
+  if(!changes?.note)expect(feature).not.toHaveProperty('note');
+  expect(feature).not.toHaveProperty('style');
+  expect(tools[2].annotationResult?.receipt.fromAnalysis?.resultRef).toBe(resultRef);
+  expect(s.lab.annotations!.list(s.actor,taskId).publications.items).toEqual([]);
+});
 it('records uncertain exact-save effects and blocks a second same-output write',async()=>{
   const s=await setup((context,index)=>index===0?{tools:[{name:'spatial_analyze',arguments:{operation:'buffer',input:s.input,distanceM:100}},{name:'annotation_read',arguments:{mode:'draft'}}]}:index===1?{tools:[{name:'annotation_from_analysis',arguments:{resultRef:lastResult(context).resultRef,layerId:'points',objectId:'range',name:'范围'}},{name:'annotation_action',arguments:{action:'apply',operations:[{op:'rename_set',title:'不应写入'}]}}]}:{text:'需核对回执'});fault.mode='save';
   await s.lab.start(s.session.id,'保存',{},'alpha').run(()=>{});const snapshot=s.lab.get(s.session.id,'alpha');

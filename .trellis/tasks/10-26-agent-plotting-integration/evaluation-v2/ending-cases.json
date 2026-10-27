@@ -1,0 +1,42 @@
+[
+  {
+    "id": "C02-1",
+    "source": ".local/agent-plotting-integration/live-20261027-executable/C02-1/review.json",
+    "sourceSha256": "07d4b11057938198ffbfeed29eda0ab7120779c5e68741942efe50a112183de3",
+    "text": "已保存到本会话草稿，未发布、未设为任务当前。\n\n**操作结果**\n- 草稿：b07dad91-a489-43de-89f2-52efc936a180，修订从 1 变为 2。\n- 图层：deployment（部署）。\n- 新增对象：fire-truck-01，名称“消防车”，点，坐标 [114, 22.5]（WGS84 经纬度）。\n- 符号：xf3013-2020.6.2.1（水罐消防车），这是该标准符号中的默认消防车图标；如你要的是其他车型（如举高喷射车、抢险救援车等），告诉我可以改。\n- 信息角色：标注为“拟定方案”（plan），因为按你的要求它属于方案内容，不代表现场实际部署。\n- 说明：这是人工指定的标绘点，不来自态势来源对象，因此没有绑定来源引用，也不代表该位置有真实可用车辆。\n\n**状态**\n- 仅保存在本会话可写草稿中；没有发布版本，也没有改变任务当前采用的版本（本席位无该权限）。\n- 需要发布或供其他席位查看时，请明确告知。",
+    "expectedProtocol": "needs_review",
+    "semanticScoreUnchanged": true
+  },
+  {
+    "id": "C02-2",
+    "source": ".local/agent-plotting-integration/live-20261027-executable/C02-2/review.json",
+    "sourceSha256": "561e8d2f07f5892e7c87ea372cc9e2eabe27837ff9aa2450cc4dbc7484f8edc1",
+    "text": "已完成保存。\n\n**操作结果（已核实）**\n- 在本会话草稿（setId `7942d913-…`）的「部署」图层（layerId `deployment`）中新增了一个点对象：\n  - 名称：消防车\n  - 标注 ID：`fire-engine-1`\n  - 位置：WGS84 [114, 22.5]\n  - 符号：水罐消防车（标准符号 XF/T 3013—2020 6.2.1，缺省未指定车型，按最通用的消防车符号选取）；显示尺寸 32 像素\n  - 信息角色：标记为「拟定方案」（plan），与您“作为方案保存”的要求一致\n- 草稿修订：由 revision 1 更新为 **revision 2**（这是本会话草稿版本，非发布版本）。\n\n**未做的操作**\n- 未发布该草稿，未生成发布版本。\n- 未设为任务当前采用版本。任务当前采用状态属于独立共享设定，本次未提交任何相关操作；如需了解当前采用状态，可另行查询。\n\n**说明与建议**\n- 您给的 `[114, 22.5]` 我按 WGS84 经纬度直接采用，未做投影或坐标转换；如该数值来自其他坐标系（如某种本地平面坐标或 GCJ-02），位置会有偏差，请告知我可调整。\n- 若您实际想表达的是某种具体消防车型（泡沫车、云梯车等），可告诉我，我再替换符号；符号仅为显示样式，不影响位置。",
+    "expectedProtocol": "needs_review",
+    "semanticScoreUnchanged": true
+  },
+  {
+    "id": "C05-1",
+    "source": ".local/agent-plotting-integration/live-20261027-executable/C05-1/review.json",
+    "sourceSha256": "b52e99d6f204cb0e253fa34c88f9bce61e30338f9694be49acb80e5245a459a9",
+    "text": "引用的「消防无人机」使用的是标准符号 `xf3013-2020.6.2.36`（消防无人机）。按符号规则，该符号固定直立，不支持设定方向，因此我并没有执行旋转。原因如下：\n\n- 该点当前样式只有 `symbolId` 和 `iconSize: 48`，没有 `heading` 字段；即使添加该字段，也不会改变无人机符号的朝向，而且工具会拒绝给不支持方向的符号设置朝向。\n- 若要表达某条航向，通常需要更换为支持方向的符号，例如消防直升机 6.2.35，或应用扩展符号；但那样会改变原有的图标语义，不属于“其他内容不变”的要求。\n\n因此，我未做任何修改，草稿仍保持 revision 1。可选做法：\n1. 保持现状，不旋转；建议在名称或说明中标注航向，例如“朝东 90°”。\n2. 明确同意改用支持方向的符号，例如 6.2.35 消防直升机，或 app.rescue-vessel 等；该调整会改变图标类型。\n3. 如果你实际想旋转的是其他对象，请指明对象；我可以先核对它的符号是否支持方向。\n\n请选择你需要的方案。",
+    "expectedProtocol": "needs_review",
+    "semanticScoreUnchanged": true
+  },
+  {
+    "id": "C10-1",
+    "source": ".local/agent-plotting-integration/live-20261027-executable/C10-1/review.json",
+    "sourceSha256": "f82fac0aa6ed77145ac096d255660b8409801106e31cc8ace850e7a05774cec6",
+    "text": "已把刚才那次预览的固定范围保存到草稿「派生」图层。\n\n**本次操作（已提交，回执 clientActionId b3679d6c-af2c-5a55-a855-6acab23b1e59）**\n- 来源：上一次缓冲预览的固定结果（空间分析结果，基点 origin、500 米半径的面），未重新计算\n- 目标草稿：「标绘整合核对」，setId e4d5e0a1-ff56-43cf-a284-1c88714c4936，由 revision 1 提交后变为 **revision 2**\n- 图层：derived（「派生」）\n- 新对象：objectId=temp_range_500m，名称「临时范围」，类型 polygon\n- 原有内容未改动：部署层「冲锋舟 1」、基点层「基点」保留；图层结构（部署、基点、派生）保持，未新建图层\n- 未发布、未设为任务当前采用\n\n**需要说明的一点**：名称设为「临时范围」已按你的要求执行，但对象上没有可核实的「方案」标记，可以核实的是它属于待确认的草稿标注；若你确实需要标注为方案，我可以再把它补充为方案性质，告诉我即可，我再操作一次。\n\n该对象现仅存在于本会话草稿中（revision 2），尚不是共享发布版，也不代表任务当前采用（本轮未查询任务当前采用状态，未做推断）。",
+    "expectedProtocol": "finished",
+    "semanticScoreUnchanged": true
+  },
+  {
+    "id": "C08-1",
+    "source": ".local/agent-plotting-integration/live-20261027-executable/C08-1/review.json",
+    "sourceSha256": "6d190eee4e21a433a1a1f59572fdbc67c222fbb09491f987d492a451dcf4e778",
+    "text": "已保存到草稿：冲锋舟 1 的方向（heading）改为 90°（正东），其他字段未动，保留当前最新内容，包括符号 app.rescue-inflatable-boat、图标尺寸 48、标签“一号艇”、颜色 #123456、坐标 [114, 22.5]、属性（unit=艘、count=1、confirmed=false、unknown=null）、备注“外部已核实，请保留”、来源引用和信息性质 plan。\n\n草稿现在为 revision 3。本次未发布，也未设为任务当前版本。\n\n补充说明：我第一次提交时遇到草稿版本冲突，因此先重新读取了最新草稿，再以最新字段为基础重新提交。期间该对象的方向已被改成了 180°，我按你的要求把它改成了 90°，没有保留 180°。",
+    "expectedProtocol": "finished",
+    "semanticScoreUnchanged": true
+  }
+]

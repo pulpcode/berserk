@@ -2,7 +2,7 @@
   "id": "agent-plotting-integration",
   "name": "agent-plotting-integration",
   "title": "Agent 与标绘整合",
-  "description": "工程测试已通过；30槽真实模型测评严格22/30，未达验收门槛。修复方案已落盘待用户审阅，本轮修复与新测评均未开工。",
+  "description": "第5版修复完成：工具说明/Skill及独立测评器v2已实现，产品260项和测评器15项离线回归通过，独立检查通过。新真实模型复测待单独确定，原严格22/30不变。",
   "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "agent-plotting-integration",
@@ -27,9 +27,11 @@
     ".trellis/tasks/10-26-agent-plotting-integration/research.md",
     ".trellis/spec/backend/map-symbols.md",
     ".trellis/spec/frontend/map-symbols.md",
-    ".trellis/tasks/10-26-agent-plotting-integration/remediation-plan-20261027.md"
+    ".trellis/tasks/10-26-agent-plotting-integration/remediation-plan-20261027.md",
+    ".trellis/tasks/10-26-agent-plotting-integration/remediation-implementation-20261027.md",
+    ".trellis/tasks/10-26-agent-plotting-integration/remediation-retest-candidates-20261027.md"
   ],
-  "notes": "2026-10-26 用户确认第一步；已固定标绘99cba1f、Agent产品6a631a4和R13证据e07f46e。仅落盘整合范围、暂缓项和验收场景；未激活实现、未合并、未调用模型，未改当前服务或另一worktree。R14在对方独立进行，不混入本次整合。下一步为整合设计。\n2026-10-26 用户批注要求“落盘形成方案，待我审阅”。已基于现有引用、顶层合并及CAS机制形成设计和实施验收稿；提出有限字段核对及30槽位真实验收预算，均待审。没有激活实现、合并、提交Git、调用模型或修改服务。\n2026-10-26 用户要求“按照方案开始实施，完成后进行自动化测试”。授权独立整合、实现和工程自动化测试，保留真实模型批次及额度单独核对。\n2026-10-26 独立分支完成工程实现。216项单元/Pi、43项浏览器通过；复核修复刷新期间未完成绘制首点丢失，并同步既有spatial测试至按需展开/显式保存流程。真实模型未调用，原4324仍由PID17769监听。\n2026-10-27 用户批准执行30个真实模型槽位，已执行并独立证据复核：127请求，核心27/30、严格22/30，新功能15/20、回归7/10，关键效果错误0。未达验收门槛；初次沙箱启动0请求失败保留，解除本地监听限制后执行正式批次。未修改产品、合并主线或部署4324。\n2026-10-27 用户要求“方案落盘，然后待我审阅，先不开工”。新增修复方案，明确产品侧优先修改工具说明与Skill正文，测评器另行修复；本轮修复及新测评未批准、未执行，历史授权不自动延伸。\n2026-10-27 用户要求先更新方案、继续审阅，明确不开动实施。修复审阅稿第2版将第一项改为“明确目标后操作，必要时简短澄清”，补充具体判断步骤、正反例及避免多余询问的验证范围；仅更新文档和任务记录。\n2026-10-27 用户批准仅更新方案中的直白表述并继续审阅，先不实施。审阅稿第3版将第二项明确为“设置对象的信息性质”，区分草稿状态与拟定方案，并保留未指定时不擅自补plan的边界；产品、Skill与测评均未改动或启动。\n2026-10-27 用户认可可尝试“逐项完成明确要求”的改进方向，并要求仅更新方案待审阅。审阅稿第4版将第二项改为通用完成检查，工具说明仅交代能力边界及编辑衔接，plan场景降为回归例子；补充不同字段组合与不擅自补属性的验证。改善效果尚待验证，本轮实施和新测评仍未批准。\n2026-10-27 用户授权按通用依据核对思路更新第三项方案，待审阅、先不实施。审阅稿第5版保留数量/分页、字段/版本及空间关系的工具规则；将具体失败案例移至回归测试设计，补充跨场景与依据充分时直接回答的正向验证。仅更新方案和任务记录，未修改产品、Skill或测试代码，未发起新模型调用。",
+  "notes": "2026-10-26 用户确认第一步；已固定标绘99cba1f、Agent产品6a631a4和R13证据e07f46e。仅落盘整合范围、暂缓项和验收场景；未激活实现、未合并、未调用模型，未改当前服务或另一worktree。R14在对方独立进行，不混入本次整合。下一步为整合设计。\n2026-10-26 用户批注要求“落盘形成方案，待我审阅”。已基于现有引用、顶层合并及CAS机制形成设计和实施验收稿；提出有限字段核对及30槽位真实验收预算，均待审。没有激活实现、合并、提交Git、调用模型或修改服务。\n2026-10-26 用户要求“按照方案开始实施，完成后进行自动化测试”。授权独立整合、实现和工程自动化测试，保留真实模型批次及额度单独核对。\n2026-10-26 独立分支完成工程实现。216项单元/Pi、43项浏览器通过；复核修复刷新期间未完成绘制首点丢失，并同步既有spatial测试至按需展开/显式保存流程。真实模型未调用，原4324仍由PID17769监听。\n2026-10-27 用户批准执行30个真实模型槽位，已执行并独立证据复核：127请求，核心27/30、严格22/30，新功能15/20、回归7/10，关键效果错误0。未达验收门槛；初次沙箱启动0请求失败保留，解除本地监听限制后执行正式批次。未修改产品、合并主线或部署4324。\n2026-10-27 用户要求“方案落盘，然后待我审阅，先不开工”。新增修复方案，明确产品侧优先修改工具说明与Skill正文，测评器另行修复；本轮修复及新测评未批准、未执行，历史授权不自动延伸。\n2026-10-27 用户要求先更新方案、继续审阅，明确不开动实施。修复审阅稿第2版将第一项改为“明确目标后操作，必要时简短澄清”，补充具体判断步骤、正反例及避免多余询问的验证范围；仅更新文档和任务记录。\n2026-10-27 用户批准仅更新方案中的直白表述并继续审阅，先不实施。审阅稿第3版将第二项明确为“设置对象的信息性质”，区分草稿状态与拟定方案，并保留未指定时不擅自补plan的边界；产品、Skill与测评均未改动或启动。\n2026-10-27 用户认可可尝试“逐项完成明确要求”的改进方向，并要求仅更新方案待审阅。审阅稿第4版将第二项改为通用完成检查，工具说明仅交代能力边界及编辑衔接，plan场景降为回归例子；补充不同字段组合与不擅自补属性的验证。改善效果尚待验证，本轮实施和新测评仍未批准。\n2026-10-27 用户授权按通用依据核对思路更新第三项方案，待审阅、先不实施。审阅稿第5版保留数量/分页、字段/版本及空间关系的工具规则；将具体失败案例移至回归测试设计，补充跨场景与依据充分时直接回答的正向验证。仅更新方案和任务记录，未修改产品、Skill或测试代码，未发起新模型调用。\n2026-10-27 用户要求“提交git，然后开始”。先以中文提交c6b5dc8保存第5版方案和既有测评记录，再批准并启动本轮产品提示与测评器修复、离线工程检查；新真实模型调用仍按方案第5节单独确定范围与额度。\n2026-10-27 用户“重试继续”后完成本轮修复：产品260项、测评器15项唯一用例最终通过覆盖，类型/Lint/构建及独立复核通过。保留沙箱启动失败与分类修复记录；455个历史依赖哈希匹配，原driver/30槽证据不变。新真实模型请求0，未合并推送或部署，真实复测另行冻结与授权。",
   "meta": {
     "baseline_confirmed_on": "2026-10-26",
     "baseline_scope": "step-1-only",
@@ -49,19 +51,30 @@
     "live_provider_requests": 127,
     "offline_driver_unique_tests_passed": 11,
     "live_fixture_slots_prepared": 30,
-    "remaining_phase": "Review remediation plan before any new implementation; separately scope and authorize live retest",
+    "remaining_phase": "Review engineering remediation results, then separately freeze and authorize live retest; no merge or deployment yet",
     "engineering_review": "passed",
     "live_evaluation_executed": true,
     "live_evaluation_passed": false,
     "remediation": {
       "plan": "remediation-plan-20261027.md",
-      "design_status": "pending_review",
-      "implementation_approved": false,
-      "implementation_started": false,
+      "design_status": "approved",
+      "implementation_approved": true,
+      "implementation_started": true,
       "live_retest_approved": false,
       "live_retest_started": false,
       "plan_revision": 5,
-      "plan_updated_on": "2026-10-27"
+      "plan_updated_on": "2026-10-27",
+      "implementation_approved_on": "2026-10-27",
+      "plan_commit": "c6b5dc8",
+      "implementation_record": "remediation-implementation-20261027.md",
+      "retest_candidates": "remediation-retest-candidates-20261027.md",
+      "implementation_complete": true,
+      "engineering_checks_passed": true,
+      "product_unique_tests_passed": 260,
+      "evaluator_unique_tests_passed": 15,
+      "independent_review": "passed",
+      "real_provider_requests": 0,
+      "verification_directory": "verification/remediation-20261027"
     }
   },
   "live_evaluation_result": {
