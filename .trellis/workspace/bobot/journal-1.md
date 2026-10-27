@@ -1425,3 +1425,29 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 49: 完成第五版标绘提示与测评器修复
+
+**Date**: 2026-10-27
+**Task**: 完成第五版标绘提示与测评器修复
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+按用户授权先提交方案及历史测评，再完成目标选择、逐项完成和依据核对提示；独立测评器v2保留旧证据，修复结束语三态及最终计数。产品260项和测评器15项唯一离线用例最终通过，类型/Lint/构建及独立复核通过。保留失败与修复记录，新真实模型请求0；原严格22/30不变，尚未合并或部署。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c6b5dc8` | (see git log) |
+| `c6f7ffd` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅工程结果，另行冻结并授权真实模型复测；整合任务保持进行中。
