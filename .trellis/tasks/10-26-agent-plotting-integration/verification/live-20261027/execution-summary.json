@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-27",
+  "revision": "8c58af1ed15687915d54e598d1d4ef2c8c248f89",
+  "freezeHash": "6ef6e7f726706ee9f1db0205526b2faac982b9aa78b7caf37f0f23a8f46ac64a",
+  "afterFreezeMatches": true,
+  "planned": 30,
+  "executed": 30,
+  "rawStatuses": {
+    "recorded": 27,
+    "waiting_user": 3
+  },
+  "stop": null,
+  "usage": {
+    "requests": 127,
+    "input": 2498870,
+    "output": 21243,
+    "unknown": 0
+  },
+  "httpStatuses": {
+    "200": 127
+  },
+  "responseModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "loading": {
+    "map-annotations": {
+      "slotsWithBody": [
+        "C05-2",
+        "C08-1",
+        "C08-2"
+      ],
+      "count": 3
+    },
+    "spatial-analysis": {
+      "slotsWithBody": [
+        "F02-1",
+        "F04-2",
+        "F05-1"
+      ],
+      "count": 3
+    }
+  },
+  "batch": "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable",
+  "launchFailureBeforeInference": {
+    "requests": 0,
+    "reason": "sandbox EPERM local listener",
+    "evidence": "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027"
+  }
+}

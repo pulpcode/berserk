@@ -1,0 +1,318 @@
+{
+  "planned": 30,
+  "newPlanned": 20,
+  "totalStrict": 22,
+  "newStrict": 15,
+  "unresolved": [
+    "C02-1",
+    "C02-2",
+    "C05-1"
+  ],
+  "criticalErrors": [],
+  "everyNewCasePassed": false,
+  "engineeringPassed": true,
+  "recommendIntegration": false,
+  "claim": "Development acceptance only; not an independent 90% holdout reliability claim",
+  "rows": [
+    {
+      "id": "C01-1",
+      "caseId": "C01",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C01-2",
+      "caseId": "C01",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "C02-1",
+      "caseId": "C02",
+      "round": 1,
+      "split": "development",
+      "status": "waiting_user",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "C02-2",
+      "caseId": "C02",
+      "round": 2,
+      "split": "development",
+      "status": "waiting_user",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "C03-1",
+      "caseId": "C03",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C03-2",
+      "caseId": "C03",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C04-1",
+      "caseId": "C04",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C04-2",
+      "caseId": "C04",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C05-1",
+      "caseId": "C05",
+      "round": 1,
+      "split": "development",
+      "status": "waiting_user",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C05-2",
+      "caseId": "C05",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C06-1",
+      "caseId": "C06",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C06-2",
+      "caseId": "C06",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C07-1",
+      "caseId": "C07",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C07-2",
+      "caseId": "C07",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C08-1",
+      "caseId": "C08",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C08-2",
+      "caseId": "C08",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C09-1",
+      "caseId": "C09",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C09-2",
+      "caseId": "C09",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "C10-1",
+      "caseId": "C10",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "C10-2",
+      "caseId": "C10",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "F01-1",
+      "caseId": "F01",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F01-2",
+      "caseId": "F01",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F02-1",
+      "caseId": "F02",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F02-2",
+      "caseId": "F02",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "F03-1",
+      "caseId": "F03",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "F03-2",
+      "caseId": "F03",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F04-1",
+      "caseId": "F04",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F04-2",
+      "caseId": "F04",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F05-1",
+      "caseId": "F05",
+      "round": 1,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "F05-2",
+      "caseId": "F05",
+      "round": 2,
+      "split": "development",
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    }
+  ]
+}
