@@ -16,6 +16,8 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [Continuous Background Analysis](../backend/continuous-analysis.md) for task current/history views, fixed-version private discussions, recipient-only records and epoch configuration controls.
+
 Read [Foreground Spatial Analysis](../backend/spatial-analysis.md) for bounded calculations, native result evidence, exact-result saves and independent analysis map layers.
 
 Read [Conversation Map Annotations](../backend/map-annotations.md) for annotation layer groups, independent editing, fixed version references and save-conflict behavior.

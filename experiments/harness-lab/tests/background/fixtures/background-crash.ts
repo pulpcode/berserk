@@ -51,12 +51,17 @@ service.store.setControl('queue', 0, false, userId);
 
 if (boundary === 'before_commit') {
   const exec = lab.access!.db.exec.bind(lab.access!.db);
+  let savepointDepth = 0;
   lab.access!.db.exec = sql => {
-    if (sql === 'COMMIT') {
+    // The queue permits nested metadata operations with savepoints. Releasing
+    // the outermost savepoint is the durable commit, not an inner RELEASE.
+    if (sql === 'COMMIT' || (sql.startsWith('RELEASE ') && savepointDepth === 1)) {
       const event = service.store.listEvents()[0], job = service.store.listJobs()[0];
       stoppedAt({eventId: event.id, jobId: job.id, uncommittedEvents: 1, acknowledged: false});
     }
     exec(sql);
+    if (sql.startsWith('SAVEPOINT ')) savepointDepth++;
+    else if (sql.startsWith('RELEASE ')) savepointDepth--;
   };
 }
 const receipt = await service.accept('crash-source', {sourceMessageId: 'stable-message', title: '崩溃边界', text: '需要分析的原始输入'});

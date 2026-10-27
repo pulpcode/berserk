@@ -2,7 +2,7 @@ import type { ContextScopeSnapshot } from './context.js';
 import type { BackgroundAnalysisOrigin, TaskAssessment, TaskLinksView, TaskSuggestionCreation } from './task-information.js';
 import type { ComposerSelection, PublicMessage, SessionSnapshot, SkillFile, UsageSummary } from './index.js';
 
-export type BackgroundJobKind = 'preprocess' | 'seat_analysis';
+export type BackgroundJobKind = 'preprocess' | 'seat_analysis' | 'continuous_analysis';
 export type BackgroundJobStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'interrupted';
 export type BackgroundPhase = 'preparing' | 'waiting_model' | 'generating' | 'tool' | 'compacting' | 'subagent';
 export type InformationPermission = 'view' | 'manage';
@@ -65,13 +65,13 @@ export interface BackgroundEvent {
   systemId?: string;
   subjectId?: string; occurredAt?: string; receivedAt: string;
   payloadHash: string; files: BackgroundFile[]; ruleSnapshot?: BackgroundRuleSnapshot;
-  initialJobId?: string; revision: number;
+  initialJobId?: string; continuousEpochId?: string; revision: number;
 }
 export interface BackgroundResultRef {
   sessionId: string; requestId: string; finalMessageId?: string; files: BackgroundFile[];
 }
-export interface BackgroundJob {
-  id: string; kind: BackgroundJobKind; eventId: string; sourceId: string;
+export interface BackgroundJobBase {
+  id: string;
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
   createdAt: string; startedAt?: string; endedAt?: string; cancelRequestedAt?: string;
   sessionId?: string; requestId: string; retryOfJobId?: string;
@@ -87,16 +87,24 @@ export interface BackgroundJob {
   model?: string; modelSettingsVersion?: string; result?: BackgroundResultRef; usage?: UsageSummary;
   error?: { code: string; message: string };
 }
+export type BackgroundJob = BackgroundJobBase & (
+  {kind: 'preprocess' | 'seat_analysis'; eventId: string; sourceId: string; batchId?: never; streamEpochId?: never} |
+  {kind: 'continuous_analysis'; eventId?: never; sourceId?: never; batchId: string; streamEpochId: string}
+);
 export interface InboxHandling { deliveryId: string; state: 'pending' | 'completed' | 'legacy'; revision: number; updatedAt: string; updatedByUserId?: string }
 export interface InboxHandlingResult { handling: InboxHandling; receipt?: InboxHandling }
-export interface BackgroundDelivery {
+export interface BackgroundDeliveryBase {
   /** Read projection, never persisted into delivery JSON. */
   handling?: InboxHandling;
-  id: string; eventId: string; jobId: string; sourceId: string; recipientSeatId: string;
+  id: string; jobId: string; recipientSeatId: string;
   reviewId?: string;
   status: 'pending' | 'delivered' | 'failed'; revision: number;
   createdAt: string; updatedAt: string; deliveredAt?: string; error?: { code: string; message: string };
 }
+export type BackgroundDelivery = BackgroundDeliveryBase & (
+  {eventId: string; sourceId: string; streamEpochId?: never} |
+  {eventId?: never; sourceId?: never; streamEpochId: string}
+);
 export interface BackgroundControl { key: string; enabled: boolean; revision: number; updatedAt: string; updatedByUserId?: string }
 export interface InformationSource {
   sourceId: string; name: string; allowedProfileIds: string[]; allowedRecipientSeatIds: string[];
@@ -133,7 +141,7 @@ export interface BackgroundAction {
   kind: 'analysis' | 'reprocess' | 'process_event' | 'retry_delivery' | 'create_rule' | 'inbox_handle' | 'delivery_review';
   handling?: InboxHandling;
   inputHash: string; status: 'preparing' | 'completed'; revision: number; createdAt: string; updatedAt: string;
-  eventId?: string; deliveryId?: string; taskSpaceId?: string; workspaceId?: string;
+  eventId?: string; deliveryId?: string; taskSpaceId?: string; workspaceId?: string; continuousJobId?: string;
   origin?: BackgroundAnalysisOrigin;
   sessionId?: string; requestId?: string; jobId?: string; ruleId?: string; reviewId?: string;
   analysis?: BackgroundAnalysisInput;

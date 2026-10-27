@@ -1147,3 +1147,23 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .queue-send-picker > .icon-button { width: 32px; height: 40px; min-height: 40px; padding: 0; }
 .queue-send-picker .queue-menu button { display: flex; gap: 5px; align-items: center; }
 @media (max-width: 767px), (pointer: coarse) { .queue-send-picker > .icon-button { width: 44px; height: 44px; min-height: 44px; } }
+
+/* Continuous assessments share the task content column and existing modal surfaces. */
+.task-assessments { min-width: 0; padding-block: 20px; border-top: 1px solid var(--line); }
+.task-assessments h2 { font-size: 16px; }
+.continuous-card { min-width: 0; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.continuous-card > header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.continuous-card h3 { font-size: 15px; margin: 0; }
+.continuous-change { line-height: 1.65; overflow-wrap: anywhere; }
+.continuous-conclusion { max-height: 260px; overflow: auto; overscroll-behavior: contain; }
+.continuous-status { display: grid; gap: 6px; font-size: 12px; color: var(--muted); line-height: 1.6; margin-block: 12px; }
+.continuous-new { border: 1px solid var(--line); padding: 12px; line-height: 1.7; }
+.continuous-new button { margin-inline-start: 8px; }
+.continuous-history { display: grid; gap: 8px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.continuous-history > button { text-align: left; justify-content: flex-start; height: auto; white-space: normal; }
+.continuous-round, .continuous-records, .continuous-rules { min-width: 0; }
+.continuous-records { padding: 20px; overflow: auto; }
+.continuous-records .information-timeline > li { display: grid; gap: 8px; }
+.continuous-rules .information-form > fieldset { display: grid; gap: 16px; border: 0; padding: 0; min-width: 0; }
+.continuous-rules .information-form label { min-width: 0; }
+.continuous-rules .information-form select { max-width: 100%; }

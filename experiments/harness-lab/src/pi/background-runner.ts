@@ -7,6 +7,7 @@ import { hashContent } from '../resources/files.js';
 import { loadControlledSkills, type ResourceSnapshot } from '../resources/service.js';
 import { loadAgentRoles } from './roles.js';
 import { PiLab } from './lab.js';
+import { continuousToolNames } from './continuous-tools.js';
 
 /** Freeze only controlled deployment resources; never read a seat's instructions or history. */
 export async function snapshotBackgroundProfile(lab: PiLab, profile: BackgroundProfileSnapshot): Promise<BackgroundProfileSnapshot> {
@@ -63,15 +64,24 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
           return current.lastResult?.status === 'succeeded' ? verifiedResult(await lab.readSavedSession(job.sessionId, job.seatId)) : { snapshot: current };
         }
         if (!input.profile) throw new RequestError('BACKGROUND_PROFILE_MISSING', '后台处理方案快照缺失。', 409);
+        const continuous = input.continuous;
+        if ((job.kind === 'continuous_analysis') !== Boolean(continuous)) throw new RequestError('CONTINUOUS_INPUT_INVALID', '持续研判批次与作业不一致。', 409);
+        if (continuous && (continuous.batch.jobId !== job.id || continuous.stream.sessionId !== job.sessionId
+          || continuous.batch.epochId !== continuous.stream.epochId || job.kind !== 'continuous_analysis'
+          || job.streamEpochId !== continuous.stream.epochId || job.batchId !== continuous.batch.id)) throw new RequestError('CONTINUOUS_INPUT_INVALID', '持续研判批次与会话不一致。', 409);
+        const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', 'read', 'ls', 'find'])]
+          : input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
-          text: input.text, files: input.files, resources: resources(input.profile, job.id), roles: input.profile.agents!, tools: input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion),
+          text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id), roles: continuous ? [] : input.profile.agents!, tools,
+          ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, recordAnalysisUpdate: input.recordAnalysisUpdate} : {}),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);
         if (cancelled) prepared.cancel();
         await prepared.run(input.onEvent);
         const current = prepared.snapshot();
-        return current.lastResult?.status === 'succeeded' ? verifiedResult(await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId, directory: input.directory })) : { snapshot: current };
+        return current.lastResult?.status === 'succeeded' ? verifiedResult(await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId, directory: input.directory,
+          ...(continuous ? {streamEpochId: continuous.stream.epochId, requestId: job.requestId} : {}) })) : { snapshot: current };
       }
       finally { running.delete(job.id); }
     },
@@ -79,7 +89,10 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
       if (!job.sessionId) return null;
       try {
         return job.kind === 'seat_analysis' ? lab.get(job.sessionId, job.seatId)
-          : await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId, directory: join(lab.config.dataDir, 'background', 'jobs', job.id) });
+          : await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId,
+            ...(job.kind === 'continuous_analysis' ? {streamEpochId: job.streamEpochId, requestId: job.requestId,
+              directory: join(lab.config.dataDir, 'background', 'streams', job.streamEpochId, job.sessionId)}
+              : {directory: join(lab.config.dataDir, 'background', 'jobs', job.id)}) });
       } catch (error) {
         if (error instanceof RequestError && error.code === 'SESSION_NOT_FOUND') return null;
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;

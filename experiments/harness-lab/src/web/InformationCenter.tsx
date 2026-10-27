@@ -7,6 +7,8 @@ import { TaskAssociations } from './TaskAssociations';
 import { useApi } from './api';
 import { DeliveryReviews, DeliveryReviewStatus } from './DeliveryReviews';
 import { WorkOverview } from './WorkOverview';
+import { ContinuousRecords, type ContinuousDiscussion } from './ContinuousAssessments';
+import type { ContinuousAccess } from '../contracts/continuous';
 import { InformationRules } from './InformationRules';
 import { Message } from './ChatMessage';
 import { ContextEvidence, isContextEvidence } from './ContextEvidence';
@@ -14,25 +16,26 @@ import type { ChatFocusTransfer } from './useChatItemFocus';
 import { AnalysisHistory, deliveryLabels, InformationFiles, InformationPagination, InformationText, informationError, informationTime, jobLabels, useInformationQuery } from './information-ui';
 import { InformationDrawer, InformationJobColumn, JobDeliverySummary, JobStatus, jobColumns, jobPhases, jobTitle } from './InformationJobs';
 
-type Tab = 'work' | 'reviews' | 'events' | 'jobs' | 'rules';
+type Tab = 'assessments' | 'work' | 'reviews' | 'events' | 'jobs' | 'rules';
 type Location = { taskId: string; seatId: string; tab: Tab; id: string; sourceId: string; status: string; search: string; offset: number; view: 'board' | 'list'; queued: number; running: number; succeeded: number; stopped: number };
 const firstPages = { offset: 0, queued: 0, running: 0, succeeded: 0, stopped: 0 };
 function initialLocation(work = false): Location {
   const params = new URLSearchParams(location.pathname === '/overview' ? location.search : '');
   const tab = params.get('tab');
   const offset = (key: string) => Math.max(0, Math.floor(Number(params.get(key)) || 0));
-  return { taskId: params.get('taskId') || '', seatId: params.get('seatId') || '', tab: tab === 'work' || tab === 'reviews' || tab === 'events' || tab === 'rules' || tab === 'jobs' ? tab : params.has('id') ? 'events' : work ? 'work' : 'events', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
+  return { taskId: params.get('taskId') || '', seatId: params.get('seatId') || '', tab: tab === 'assessments' || tab === 'work' || tab === 'reviews' || tab === 'events' || tab === 'rules' || tab === 'jobs' ? tab : params.has('id') ? 'events' : work ? 'work' : 'events', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
 }
 function locationUrl(route: Location) {
   const params = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value !== 0).map(([key, value]) => [key, String(value)]));
   return `/overview?${params}`;
 }
-export function InformationCenter({ visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, openMenu, seats }: { seats: Array<{id: string; name: string}>; openWork: (id: string) => void; openMenu: () => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
+export function InformationCenter({ continuous, discussion, visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, openMenu, seats }: { continuous?: ContinuousAccess; discussion: ContinuousDiscussion; seats: Array<{id: string; name: string}>; openWork: (id: string) => void; openMenu: () => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
   const { api, domId } = useApi();
   const [route, setRoute] = useState(() => initialLocation(!!identity?.viewWorkOverview));
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [busy, setBusy] = useState(false); const [refreshKey, setRefreshKey] = useState(0);
   const lock = useRef(false); const actionIds = useRef(new Map<string, string>()); const [focusTransfers] = useState<ChatFocusTransfer>(() => new Map());
   const allowed = Boolean(capabilities?.sources.length);
+  if (capabilities && !allowed && continuous?.canRead && ['events', 'jobs', 'rules'].includes(route.tab)) setRoute({ ...route, tab: 'assessments', id: '' });
   const query = new URLSearchParams({ offset: String(route.offset), limit: '25', ...(route.sourceId ? { sourceId: route.sourceId } : {}), ...(route.status ? { status: route.status } : {}), ...(route.search ? { search: route.search } : {}) });
   const events = useInformationQuery<BackgroundPage<BackgroundEventSummary>>(`/api/information/events?${query}`, visible && allowed && route.tab === 'events');
   const jobs = useInformationQuery<BackgroundPage<InformationJobSummary>>(`/api/information/jobs?${query}`, visible && allowed && route.tab === 'jobs' && route.view === 'list');
@@ -74,13 +77,14 @@ export function InformationCenter({ visible, capabilities, refreshAccess, tasks,
   const feedback = <>{error && <p className="resource-error" role="alert">{error}</p>}{navigationError?.url === location.pathname + location.search && <p className="resource-error" role="alert">{navigationError.message}<button onClick={clearNavigationError}>关闭提示</button></p>}{notice && <p className="resource-success" role="status">{notice}</p>}</>;
   return <section id={domId('information-center')} tabIndex={-1} className="information-center" hidden={!visible} aria-label="工作总览">
     <header className="information-center-header" inert={detailOpen || undefined}><div><button className="icon-button mobile-only" aria-label="打开会话列表" onClick={openMenu}><Menu size={20} /></button><Workflow size={22} aria-hidden="true" /><h1>工作总览</h1></div></header>
-    {!allowed && !identity?.viewWorkOverview && !capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
+    {!allowed && !continuous?.canRead && !identity?.viewWorkOverview && !capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed && !continuous?.canRead && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
       <nav className="information-tabs" aria-label="工作总览栏目" inert={detailOpen || undefined}>
+        {continuous?.canRead && <button aria-current={route.tab === 'assessments' ? 'page' : undefined} onClick={() => navigate({ tab: 'assessments', id: '', offset: 0 })}>研判记录</button>}
         {identity?.viewWorkOverview && <button aria-current={route.tab === 'work' ? 'page' : undefined} onClick={() => navigate({ tab: 'work', id: '', offset: 0, status: '' })}>席位工作</button>}
         {allowed && ([['events', '信息流转'], ['jobs', '处理运行'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}
         {capabilities?.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>补充投递审批</button>}
       </nav>
-      {route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
+      {route.tab === 'assessments' ? continuous?.canRead ? <ContinuousRecords visible={visible} discussion={discussion} selectedId={route.id} select={id => navigate({ id })} /> : <p>当前没有研判读取权限。</p> : route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
       <div className="information-center-body" hidden={route.tab === 'reviews'} inert={detailOpen || undefined}>
         {capabilities.queue.blockedReason && <p className="information-queue-notice" role="status">{capabilities.queue.blockedReason}</p>}
         {route.tab !== 'rules' && route.tab !== 'reviews' && <>

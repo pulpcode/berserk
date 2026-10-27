@@ -1,6 +1,7 @@
 import type { BackgroundJob, BackgroundProfileSnapshot, RecipientSuggestionInput, RecipientSuggestion } from '../contracts/background.js';
 import type { FileOutput, FileRef, SessionSnapshot, StreamEvent, ComposerSelection } from '../contracts/index.js';
 import type { TaskAssessment, TaskAssessmentInput } from '../contracts/task-information.js';
+import type { AnalysisUpdateInput, AnalysisUpdate, ContinuousExecutionContext, ContinuousCurrentQuery, ContinuousCurrentResult } from '../contracts/continuous.js';
 
 /** Only successful task queries from the current execution contribute evidence. */
 export interface TaskAssessmentEvidence { queried: boolean; tasks: ReadonlyMap<string, number> }
@@ -11,12 +12,19 @@ export type RecordTaskAssessment = (input: TaskAssessmentInput, evidence: TaskAs
 export type RecordRecipientSuggestion = (input: RecipientSuggestionInput, toolCallId: string, signal?: AbortSignal) =>
   {suggestion: RecipientSuggestion; published: false} | Promise<{suggestion: RecipientSuggestion; published: false}>;
 
+export type RecordAnalysisUpdate = (input: AnalysisUpdateInput, evidence: TaskAssessmentEvidence, toolCallId: string, signal?: AbortSignal) =>
+  {update: AnalysisUpdate; published: false} | Promise<{update: AnalysisUpdate; published: false}>;
+export type ReadAnalysisCurrent = (query: ContinuousCurrentQuery, signal?: AbortSignal) => Promise<ContinuousCurrentResult>;
+
 /** Adapter boundary: background queue owns admission; the Pi adapter owns native execution/history. */
 export interface BackgroundExecutionInput {
   text: string; directory: string; files: FileRef[]; profile?: BackgroundProfileSnapshot;
   selection?: ComposerSelection;
   recordTaskAssessment?: RecordTaskAssessment;
   recordRecipientSuggestion?: RecordRecipientSuggestion;
+  continuous?: ContinuousExecutionContext;
+  recordAnalysisUpdate?: RecordAnalysisUpdate;
+  readAnalysisCurrent?: ReadAnalysisCurrent;
   onEvent(event: StreamEvent): void;
   publish(input: {sessionId: string; requestId: string; toolCallId: string; path: string}, signal?: AbortSignal): Promise<FileOutput>;
 }

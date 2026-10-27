@@ -6,7 +6,7 @@ import type { WorkbenchItem, WorkbenchPage, WorkOverviewItem, WorkOverviewPage }
 import { workPerspective } from '../contracts/workbench.js';
 import { RequestError } from '../contracts/errors.js';
 
-export interface WorkbenchFilter { bucket?: 'actionable'|'following'|'done'|'all'; kind?: 'work'|'information'|'delivery_review'; taskId?:string; search?:string; offset?:number; limit?:number }
+export interface WorkbenchFilter { bucket?: 'actionable'|'following'|'done'|'all'; kind?: 'work'|'information'|'delivery_review'|'continuous'; taskId?:string; search?:string; offset?:number; limit?:number }
 export interface OverviewFilter { taskId?:string; seatId?:string; status?:string; search?:string; offset?:number; limit?:number }
 function paginate<T>(items:T[], filter:{offset?:number;limit?:number}) {
   const offset = filter.offset ?? 0, limit = filter.limit ?? 25;
@@ -23,7 +23,7 @@ export class WorkbenchService {
   }
   items(identity:Identity, filter:WorkbenchFilter = {}): WorkbenchPage {
     const actor = this.current(identity);
-    const sections:WorkbenchPage['sections'] = {work:this.collaboration?'available':'unavailable',information:this.background?'available':'unavailable',delivery_review:'unavailable'};
+    const sections:WorkbenchPage['sections'] = {work:this.collaboration?'available':'unavailable',information:this.background?'available':'unavailable',delivery_review:'unavailable',continuous:this.background?'available':'unavailable'};
     let items:WorkbenchItem[] = [];
     const tasks = new Map(this.access.list(actor.seatId).map(task => [task.id,task]));
     if (this.collaboration) try {
@@ -43,6 +43,7 @@ export class WorkbenchService {
       sections.delivery_review = reviews.available ? 'available' : 'unavailable';
       items.push(...reviews.items.map((review):WorkbenchItem => ({key:`delivery_review:${review.id}`,id:review.id,kind:'delivery_review',title:review.title,state:review.status,bucket:review.status === 'pending' ? 'actionable' : 'done',label:review.status === 'pending' ? '待我批准' : review.status === 'approved' ? '已批准' : '不予补充',source:review.sourceName,updatedAt:review.updatedAt,tasks:background.taskLinks.effectiveTasks(actor,review.eventId,review.jobId),jobId:review.jobId,analysisAt:background.store.getJob(review.jobId).createdAt})));
     } catch { sections.delivery_review = 'error'; }
+    if(this.background)try{const bg=this.background;for(const delivery of bg.store.listDeliveries()){if(!delivery.streamEpochId||delivery.recipientSeatId!==actor.seatId||delivery.status!=='delivered')continue;const stream=bg.continuous.store.stream(delivery.streamEpochId);if(!bg.continuous.canRead(actor,stream))continue;const handling=bg.store.handling(delivery.id),job=bg.store.getJob(delivery.jobId),update=bg.continuous.store.publication(job.id).update;items.push({key:`continuous:${delivery.id}`,id:delivery.id,kind:'continuous',title:stream.name,state:handling.state,bucket:handling.state==='pending'?'actionable':handling.state==='completed'?'done':'legacy',label:handling.state==='pending'?'研判重要变化':'已处理',source:stream.sourceIds.join('、'),tasks:(update?.taskUpdates??[]).filter(t=>tasks.has(t.taskId)).map(t=>({id:t.taskId,title:t.taskTitle})),updatedAt:handling.updatedAt,jobId:job.id,analysisAt:job.createdAt});}}catch{sections.continuous='error';}
     items = items.filter(item => (!filter.kind || item.kind === filter.kind) && (!filter.taskId || item.tasks.some(task => task.id === filter.taskId)) && (!filter.search || item.title.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase())));
     items.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt) || a.key.localeCompare(b.key));
     const incomplete = filter.kind ? sections[filter.kind] === 'error' : Object.values(sections).includes('error');

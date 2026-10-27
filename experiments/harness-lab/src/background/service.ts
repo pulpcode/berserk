@@ -1,3 +1,4 @@
+import { ContinuousService } from './continuous-service.js';
 import { verifiedRecipientSuggestion } from './recipient-evidence.js';
 import { queryEvidence, queryReferences, sourceReference } from './context-evidence.js';
 import type { ContextScopeSnapshot } from '../contracts/context.js';
@@ -68,6 +69,7 @@ function requestSnapshot(snapshot: SessionSnapshot, requestId: string): SessionS
 
 /** Durable admission and delivery. The native runtime remains the conversation authority. */
 export class BackgroundService {
+  readonly continuous: ContinuousService;
   readonly store: BackgroundStore;
   readonly files: BackgroundFiles;
   readonly taskLinks: TaskLinkService;
@@ -83,6 +85,7 @@ export class BackgroundService {
     this.store = new BackgroundStore(lab.access.db);
     this.files = new BackgroundFiles(lab.config.dataDir, lab.files.maxFileBytes, lab.files.maxAttachments, 'python3', () => new Set(this.store.listEvents().flatMap(event => event.files.map(file => file.id))));
     this.executor = executor ?? createBackgroundExecutor(lab);
+    this.continuous = new ContinuousService(this,this.executor);
     this.taskLinks = new TaskLinkService(lab.access, this.store, {
       canRead: (actor, event, job) => this.canReadTaskInformation(actor, event, job),
       sourceName: sourceId => this.source(sourceId).name,
@@ -100,6 +103,7 @@ export class BackgroundService {
   async initialize() {
     await this.files.initialize();
     this.store.recoverRunning();
+    this.continuous.store.recover();
     this.lab.setModelConcurrency(this.config.modelConcurrency);
     this.lab.taskInformation = {
       list: (seatId, taskId, params, signal) => {
@@ -139,7 +143,7 @@ export class BackgroundService {
     if (manage && permission !== 'manage') throw new RequestError('FORBIDDEN', '当前账号没有此来源的管理权限。', 403);
     return permission;
   }
-  private configuredProfileScope(profile: BackgroundProfileSnapshot): ContextScopeSnapshot | undefined {
+  configuredProfileScope(profile: BackgroundProfileSnapshot): ContextScopeSnapshot | undefined {
     if (!profile.contextScopeId) {
       if (profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE','查询方案须配置业务资料范围。',503);
       return undefined;
@@ -147,7 +151,7 @@ export class BackgroundService {
     if (!this.lab.context) throw new RequestError('CONTEXT_UNAVAILABLE','业务资料配置不可用。',503);
     return this.lab.context.scopeSnapshot(profile.contextScopeId);
   }
-  private assertContext(seatId: string | undefined, scope?: ContextScopeSnapshot) {
+  assertContext(seatId: string | undefined, scope?: ContextScopeSnapshot) {
     if (!scope) return;
     if (!this.lab.context) throw new RequestError('CONTEXT_UNAVAILABLE', '本次业务资料配置不可用。', 503);
     if (seatId === undefined) this.lab.context.assertServiceScope(scope);
@@ -185,6 +189,7 @@ export class BackgroundService {
       payloadHash:'',files:[],revision:event.revision,initialJobId:event.initialJobId,contentRestricted:true};
   }
   private jobProjection(actor: Identity, job: BackgroundJob): BackgroundJob {
+    if(job.kind==='continuous_analysis')throw notFound();
     if (this.canReadJob(actor,job)) return job.status === 'succeeded' ? job : {...job,taskAssessment:undefined,taskSuggestionCreation:undefined,recipientSuggestion:undefined,recipientSuggestionError:undefined};
     return {id:job.id,kind:job.kind,eventId:job.eventId,sourceId:job.sourceId,status:job.status,phase:job.phase,
       revision:job.revision,createdAt:job.createdAt,startedAt:job.startedAt,endedAt:job.endedAt,requestId:job.requestId};
@@ -193,7 +198,7 @@ export class BackgroundService {
     return this.canReadJob(actor,this.store.getJob(delivery.jobId)) ? {...delivery,...(delivery.status === 'delivered' ? {handling:this.store.handling(delivery.id)} : {})} : {...delivery,error:undefined};
   }
   deliveries(actor: Identity, query: InformationFilter) {
-    return page(this.store.listDeliveries().filter(delivery => this.store.effectivePermission(actor,delivery.sourceId)
+    return page(this.store.listDeliveries().filter(delivery => delivery.sourceId !== undefined && this.store.effectivePermission(actor,delivery.sourceId)
       && (!query.sourceId || delivery.sourceId === query.sourceId) && (!query.status || delivery.status === query.status))
       .map(delivery => this.deliveryProjection(actor,delivery)),query);
   }
@@ -249,15 +254,21 @@ export class BackgroundService {
       const directory = join(this.files.root, 'events', event.id); await mkdir(directory, {mode: 0o700}); await checkDirectory(directory);
       await atomicWrite(join(directory, 'input.json'), JSON.stringify({text: input.text}));
       // Rule mutations share this admission lock; snapshot and accepted revision cannot diverge.
-      const snapshot = await this.prepareRule(sourceId);
+      const continuous = this.continuous.store.source(sourceId);
+      if (continuous) {this.continuous.assertStream(continuous);if(Buffer.byteLength(input.text)+Buffer.byteLength(JSON.stringify(event.files))>128*1024)throw new RequestError('INPUT_TOO_LONG','持续研判单条输入超过容量。',413);event.continuousEpochId=continuous.epochId;}
+      const snapshot = continuous ? undefined : await this.prepareRule(sourceId);
       if (snapshot) event.ruleSnapshot = snapshot;
       const job = snapshot ? this.freshJob(event, snapshot) : undefined;
       this.assertReceiving(sourceId);
-      const accepted = this.store.acceptEvent(event, {initialJob: job, capacity: this.config.backlogLimit, expectedRule: snapshot ? {id: snapshot.rule.id, revision: snapshot.rule.revision} : null});
+      const accepted = this.store.transaction(() => {
+        const accepted = this.store.acceptEvent(event, {initialJob: job, capacity: this.config.backlogLimit, expectedRule: snapshot ? {id: snapshot.rule.id, revision: snapshot.rule.revision} : null});
+        if(continuous)this.continuous.store.add({id:randomUUID(),epochId:continuous.epochId,kind:'event',eventId:event.id,receivedAt:event.receivedAt,bytes:Buffer.byteLength(input.text)+Buffer.byteLength(JSON.stringify(event.files))});
+        return accepted;
+      });
       void this.pump(); return this.receipt(accepted);
     });
   }
-  private async eventText(event: BackgroundEvent): Promise<string> {
+  async eventText(event: BackgroundEvent): Promise<string> {
     const raw = await readControlled(join(this.files.root, 'events', event.id, 'input.json'), 256 * 1024);
     const value = JSON.parse(raw!) as {text: string}; if (typeof value.text !== 'string' || hash([event.sourceMessageId,event.title,value.text,event.subjectId ?? null,event.occurredAt ?? null,event.files.map(file => [file.name,file.size,file.hash])]) !== event.payloadHash) throw conflict('原始信息文件损坏。'); return value.text;
   }
@@ -273,6 +284,7 @@ export class BackgroundService {
   async saveRule(actor: Identity, input: InformationRuleInput, options: {id?:string;revision?:number;clientActionId?:string}) {
     return this.admission.run(async () => {
       this.permission(actor, input.sourceId, true); validateRuleScope(this.config, input);
+      if(input.enabled && this.continuous.store.source(input.sourceId))throw conflict('请先关闭该来源的持续配置，再启用逐条处理。');
       if (input.recipientSeatIds.some(id => !this.lab.access!.seats().some(seat => seat.id === id))) throw new RequestError('INVALID_INPUT', '接收席位未启用。');
       const scope = this.configuredProfileScope(this.config.profiles.find(profile => profile.id === input.profileId)!);
       for (const seatId of input.recipientSeatIds) this.assertContext(seatId,scope);
@@ -310,7 +322,7 @@ export class BackgroundService {
     signal?.throwIfAborted();
     if (this.stopping) throw conflict('处理已停止。');
     const job = this.store.getJob(jobId);
-    if (!job.ruleSnapshot?.supplementaryDelivery || !job.ruleSnapshot.profile.tools.includes('information_suggest_recipients')) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE','本次处理未启用补充建议。',409);
+    if (job.kind !== 'preprocess' || !job.ruleSnapshot?.supplementaryDelivery || !job.ruleSnapshot.profile.tools.includes('information_suggest_recipients')) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE','本次处理未启用补充建议。',409);
     if (Array.isArray(input?.recipients) && input.recipients.length && input.noAdditionalReason !== undefined) throw new RequestError('INVALID_INPUT','recipients 非空时必须省略 noAdditionalReason；请保留接收名单及逐席位 reason，删除 noAdditionalReason 后重新提交。');
     if (Array.isArray(input?.recipients) && !input.recipients.length && (typeof input.noAdditionalReason !== 'string' || !input.noAdditionalReason.trim())) throw new RequestError('INVALID_INPUT','recipients 为空数组时必须填写 noAdditionalReason，说明无需补充的理由。');
     if (!validRecipientSuggestionInput(input)) throw new RequestError('INVALID_INPUT','请提交不重复的候选席位及逐席位 reason（1～1,500 字符）；recipients 非空时省略 noAdditionalReason，为空时填写该字段（1～1,500 字符）。');
@@ -324,6 +336,7 @@ export class BackgroundService {
     if (!current || current.seatId !== actor.seatId) throw notFound();
     this.permission(current,review.sourceId,decide);
     const job = this.store.getJob(review.jobId);
+    if(job.kind!=='preprocess')throw notFound();
     this.assertContext(current.seatId,this.jobScope(job));
     if (decide && (current.seatId !== review.reviewerSeatId || current.seatId !== this.config.deliveryReviewSeatId)) throw new RequestError('FORBIDDEN','只有指定总体席可以批准补充投递。',403);
     return job;
@@ -403,7 +416,7 @@ export class BackgroundService {
   events(actor: Identity, query: InformationFilter): BackgroundPage<BackgroundEventSummary> {
     const events = this.store.listEvents().filter(event => this.store.effectivePermission(actor, event.sourceId) && (!query.sourceId || event.sourceId === query.sourceId));
     const items = events.map(event => ({...this.eventProjection(actor,event), jobs: this.store.listJobs().filter(job => job.eventId === event.id && job.kind === 'preprocess').map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === event.id).map(delivery => this.deliveryProjection(actor,delivery))})).filter(event => !query.search || event.title.includes(query.search) || event.sourceMessageId.includes(query.search));
-    return page(items.filter(event => !query.status || (query.status === 'unmatched' ? !event.initialJobId : event.jobs[0]?.status === query.status)), query);
+    return page(items.filter(event => !query.status || (query.status === 'unmatched' ? !event.initialJobId && !event.continuousEpochId : event.jobs[0]?.status === query.status)), query);
   }
   private analysisSummary(actor: Identity, action: BackgroundAction): BackgroundAnalysisSummary {
     const job = action.jobId ? this.store.getJob(action.jobId) : undefined;
@@ -425,6 +438,7 @@ export class BackgroundService {
     const current = this.lab.access!.identity(actor.userId);
     if (!current || current.seatId !== actor.seatId) throw notFound();
     const delivery = this.store.getDelivery(id);
+    if(delivery.sourceId===undefined||delivery.eventId===undefined)throw notFound();
     if (delivery.recipientSeatId !== actor.seatId || delivery.status !== 'delivered' || !this.source(delivery.sourceId).allowedRecipientSeatIds.includes(actor.seatId)) throw notFound();
     const event = this.store.getEvent(delivery.eventId), job = this.store.getJob(delivery.jobId);
     this.assertContext(actor.seatId,this.jobScope(job));
@@ -434,14 +448,15 @@ export class BackgroundService {
     const deliveryReason = review ? {kind:'supplementary' as const,reason:review.recipients?.find(item => item.seatId === actor.seatId)?.reason,approvedBySeatId:review.reviewerSeatId} : {kind:'fixed' as const};
     return {delivery,event,job,deliveryReason,handling:this.store.handling(id),sourceName:this.source(delivery.sourceId).name};
   }
+  private assertHandling(actor:Identity,id:string){const delivery=this.store.getDelivery(id);if(delivery.streamEpochId){if(delivery.recipientSeatId!==actor.seatId||delivery.status!=='delivered'||!this.continuous.canRead(actor,this.continuous.store.stream(delivery.streamEpochId)))throw notFound();return;}this.allowedInbox(actor,id);}
   inboxHandling(actor: Identity, id: string, clientActionId?: string) {
-    this.allowedInbox(actor,id);
+    this.assertHandling(actor,id);
     const action = clientActionId ? this.store.findAction(actor.userId,clientActionId) : undefined;
     if (action && (action.kind !== 'inbox_handle' || action.deliveryId !== id || action.seatId !== actor.seatId)) throw notFound();
     return {handling:this.store.handling(id),...(action?.handling ? {receipt:action.handling} : {})};
   }
   handleInbox(actor: Identity, id: string, input: {state:'pending'|'completed';revision:number;clientActionId:string}) {
-    this.allowedInbox(actor,id);
+    this.assertHandling(actor,id);
     const receipt = this.store.handleInbox(actor,id,input);
     return {handling:this.store.handling(id),receipt};
   }
@@ -481,6 +496,7 @@ export class BackgroundService {
     return {...result,items:result.items.map(job => this.jobSummary(actor,job))};
   }
   private jobSummary(actor: Identity, job: BackgroundJob): InformationJobSummary {
+    if(job.kind==='continuous_analysis')throw notFound();
     const own = (job.kind === 'preprocess' || job.seatId === actor.seatId) && this.canReadJob(actor,job);
     return {id:job.id,kind:job.kind,sourceId:job.sourceId,eventId:job.eventId,status:job.status,revision:job.revision,createdAt:job.createdAt,
       ...(job.phase ? {phase:job.phase} : {}), ...(job.startedAt ? {startedAt:job.startedAt} : {}), ...(job.endedAt ? {endedAt:job.endedAt} : {}), ...(job.seatId ? {seatId:job.seatId} : {}),
@@ -491,6 +507,7 @@ export class BackgroundService {
   }
   async jobDetail(actor: Identity, id: string, center: boolean): Promise<InformationJobDetail> {
     const job = this.store.getJob(id);
+    if(job.kind==='continuous_analysis')throw notFound();
     if (center) this.permission(actor,job.sourceId);
     else if (job.kind !== 'seat_analysis' || job.seatId !== actor.seatId) throw notFound();
     const summary = this.jobSummary(actor,job);
@@ -510,6 +527,7 @@ export class BackgroundService {
   }
   async cancel(actor: Identity, id: string, revision: number) {
     const job = this.store.getJob(id);
+    if(job.kind==='continuous_analysis'){this.continuous.manage(actor,this.continuous.store.stream(job.streamEpochId));const result=this.store.requestCancel(id,revision);this.continuous.store.savePublication(job,{...this.continuous.store.publication(job.id),status:'unpublished',reason:'人员取消，等待显式恢复。'});this.continuous.store.pause(job.streamEpochId,'人员取消，等待显式恢复。');await this.executor.cancel(result);return {id:result.id,kind:result.kind,status:result.status,revision:result.revision,createdAt:result.createdAt};}
     if (job.kind === 'preprocess') this.permission(actor,job.sourceId,true);
     else if (job.seatId !== actor.seatId) throw notFound();
     const result = this.store.requestCancel(id,revision);
@@ -517,6 +535,7 @@ export class BackgroundService {
   }
   private async deliver(delivery: BackgroundDelivery) {
     if (delivery.status === 'delivered') return;
+    if(delivery.sourceId===undefined){await this.continuous.deliver(delivery.id);return;}
     try {
       if (!this.source(delivery.sourceId).allowedRecipientSeatIds.includes(delivery.recipientSeatId) || !this.lab.access!.seats().some(seat => seat.id === delivery.recipientSeatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
       const job = this.store.getJob(delivery.jobId);
@@ -538,7 +557,9 @@ export class BackgroundService {
   }
   private async deliverPending() { for (const delivery of this.store.listDeliveries().filter(delivery => delivery.status === 'pending')) await this.deliver(delivery); }
   async retryDelivery(actor: Identity, id: string, clientActionId: string) {
-    const delivery = this.store.getDelivery(id); this.permission(actor,delivery.sourceId,true);
+    const delivery = this.store.getDelivery(id);
+    if(delivery.sourceId===undefined){this.continuous.manage(actor,this.continuous.store.stream(delivery.streamEpochId));await this.continuous.deliver(id);return this.store.getDelivery(id);}
+    this.permission(actor,delivery.sourceId,true);
     this.assertContext(actor.seatId,this.jobScope(this.store.getJob(delivery.jobId)));
     let action = this.store.beginAction({userId:actor.userId,seatId:actor.seatId,clientActionId,kind:'retry_delivery',inputHash:hash([id]),deliveryId:id,eventId:delivery.eventId});
     if (action.status === 'completed') return this.store.getDelivery(id);
@@ -561,7 +582,7 @@ export class BackgroundService {
   }
   async reprocess(actor: Identity, id: string, clientActionId: string) {
     return this.admission.run(async () => {
-      const previous = this.store.getJob(id); this.permission(actor,previous.sourceId,true);
+      const previous = this.store.getJob(id); if(previous.kind==='continuous_analysis')throw conflict('请使用恢复分析入口。'); this.permission(actor,previous.sourceId,true);
       this.assertContext(actor.seatId,this.jobScope(previous));
       if (previous.kind !== 'preprocess') throw new RequestError('FORBIDDEN','席位分析须由原席位重新发起。',403);
       if (['queued','running'].includes(previous.status)) throw conflict('请先等待或停止当前处理。');
@@ -577,7 +598,7 @@ export class BackgroundService {
     if (origin.kind === 'inbox') return this.allowedInbox(actor, origin.deliveryId);
     return this.taskLinks.resolve(actor, origin.taskSpaceId, origin.eventId, origin.jobId, write);
   }
-  private async taskOptions(actor: Identity, taskId: string) {
+  async taskOptions(actor: Identity, taskId: string) {
     const task = this.lab.access!.get(taskId, actor.seatId, true);
     const workspace = this.lab.workspaces.list(actor.seatId).workspaces.find(item => item.taskSpaceId === taskId);
     const ids = workspace ? this.lab.workspaces.get(workspace.id, actor.seatId).skillIds : newWorkspace(task.title).skillIds;
@@ -688,6 +709,7 @@ export class BackgroundService {
     });
   }
   private async execute(job: BackgroundJob) {
+    if(job.kind==='continuous_analysis'){await this.continuous.execute(job,()=>this.stopping);await this.deliverPending();return;}
     try {
       const event = this.store.getEvent(job.eventId); let text: string, files: FileRef[], profile: BackgroundProfileSnapshot | undefined, selection: ComposerSelection | undefined;
       const directory = this.jobDirectory(job); await mkdir(directory,{recursive:true,mode:0o700}); await checkDirectory(directory);
@@ -750,9 +772,10 @@ export class BackgroundService {
     if (this.pumping || this.stopping) return; this.pumping = true;
     try {
       if (!this.store.getControl('queue',this.config.enabled).enabled || !this.lab.canStartBackground()) return;
-      if (this.lab.config.execution?.enabled && !this.lab.info().files?.executionAvailable) return;
+      const executionUnavailable=Boolean(this.lab.config.execution?.enabled&&!this.lab.info().files?.executionAvailable);
+      this.continuous.store.enqueueDue();
       while (this.active.size < this.config.concurrency) {
-        const next = this.store.queuedJobs(1)[0]; if (!next) break;
+        const next = this.store.queuedJobs(1,{continuousOnly:executionUnavailable,skipPausedContinuous:true})[0]; if (!next) break;
         const job = this.store.claimJob(next.id,{sessionId:next.sessionId!,model:this.lab.info().model,modelSettingsVersion:this.lab.modelSettings().version});
         const work = this.execute(job).finally(() => {this.active.delete(job.id); if (!this.stopping) void this.pump();});
         this.active.set(job.id,work);

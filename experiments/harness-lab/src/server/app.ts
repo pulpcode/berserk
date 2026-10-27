@@ -1,3 +1,4 @@
+import { continuousRoutes } from './continuous-routes.js';
 import { annotationRoutes } from './annotation-routes.js';
 import { annotationSelectionSchema } from '../pi/annotation-tools.js';
 import type { InputSubmission, InputAction } from '../contracts/index.js';
@@ -35,9 +36,9 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   }
   if (lab.annotations) lab.annotations.context = lab.context;
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
-  if (!backgroundConfig && lab.access && [3,4,5,6,8,10].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
+  if (!backgroundConfig && lab.access && [3,4,5,6,8,10,11,12].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
     const existing = new BackgroundStore(lab.access.db);
-    if (existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
+    if (Number(lab.access.db.prepare('SELECT count(*) n FROM continuous_inputs WHERE consumed=0').get()?.n) > 0 || existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
       throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);
     }
   }
@@ -69,7 +70,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   });
   if (lab.access && lab.config.auth) { await registerAuth(app,lab.access,lab.config.auth); await taskRoutes(app,lab, taskId => background?.store.hasTaskReservations(taskId) ?? false); }
   else app.get('/api/auth/session',async()=>({mode:'test'}));
-  if (lab.access) { await backgroundRoutes(app,background,backgroundOptions?.env); await workbenchRoutes(app,new WorkbenchService(lab.access,lab.collaboration,background)); }
+  if (lab.access) { await backgroundRoutes(app,background,backgroundOptions?.env); await continuousRoutes(app,background); await workbenchRoutes(app,new WorkbenchService(lab.access,lab.collaboration,background)); }
   if (background) await taskInformationRoutes(app,background);
   app.get('/api/health',async()=>({ok:true}));
   app.get('/api/info', async () => lab.info());

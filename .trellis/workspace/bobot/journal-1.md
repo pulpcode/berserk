@@ -1228,3 +1228,36 @@
 ### Next Steps
 
 - 审阅research/r2-results-20261018.md；90%验收未通过，保留两处评分歧义，不自动追加测试。
+
+
+## Session 42: 实现持续后台研判并完成隔离验证
+
+**Date**: 2026-10-26
+**Task**: 实现持续后台研判并完成隔离验证
+**Branch**: `codex/continuous-background-analysis`
+
+### Summary
+
+完成来源批次自动接续、任务修订重评、固定历史与重要提醒；保留未提交变更供审阅。
+
+### Main Changes
+
+- 新增持续配置代次、组合授权、原子发布、原生证据分页与显式恢复；不替换线上服务。
+- 任务当前研判、固定版本私有讨论、静默记录及重要提醒接入既有桌面界面。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 类型检查、Lint、构建通过；全量1150/1151、浏览器200/201的两个夹具问题修复后，相关34/34和5/5复测通过。
+- [OK] 腾讯云独立真实模型5轮与6轮机制通过；P1结论过强定向修正，保留P2措辞及时间精度局限与原始证据。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅implementation-report.md及模型精度局限，再决定提交、合并与生产发布。

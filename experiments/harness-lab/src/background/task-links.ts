@@ -66,6 +66,7 @@ export function validateTaskLinkIntegrity(db: DatabaseSync, jobs: Map<string, Ba
     }
     const creation = job.taskSuggestionCreation;
     if (creation) {
+      if(job.kind!=='preprocess')throw stateError();
       const action = db.prepare('SELECT task_id,input FROM task_actions WHERE user_id=? AND action_id=?').get(creation.createdByUserId, creation.clientActionId);
       if (action?.task_id !== creation.taskSpaceId) throw stateError();
       const input = parseJsonStrict(String(action.input));

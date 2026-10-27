@@ -23,7 +23,7 @@ async function setup() {
 function event(sourceMessageId: string = randomUUID(), sourceId = 'special'): BackgroundEvent {
   return {id: randomUUID(), sourceId, sourceMessageId, title: '新的材料', payloadHash: backgroundHash({text: 'payload'}), receivedAt: new Date().toISOString(), files: [], revision: 1};
 }
-function job(e: BackgroundEvent, snapshot?: BackgroundRuleSnapshot): BackgroundJob {
+function job(e: BackgroundEvent, snapshot?: BackgroundRuleSnapshot): Extract<BackgroundJob,{kind:'preprocess'|'seat_analysis'}> {
   return {id: randomUUID(), eventId: e.id, sourceId: e.sourceId, kind: 'preprocess', status: 'queued', revision: 1, requestId: randomUUID(), createdAt: new Date().toISOString(), ruleSnapshot: snapshot};
 }
 function accept(store: BackgroundStore) {
@@ -42,7 +42,7 @@ describe('durable background metadata', () => {
     disposers.push(async () => { db?.close(); await rm(dir, {recursive: true, force: true}); });
     new AccessStore(db); db.prepare('INSERT INTO works VALUES(?,?)').run('existing', '{"existing":true}');
     db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run('a', '席位 A', 1, 1);
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11);
     expect(db.prepare('SELECT data FROM works WHERE id=?').get('existing')?.data).toBe('{"existing":true}');
     db.close(); db = await openDatabase(dir); const access = new AccessStore(db); new BackgroundStore(db);
     expect(access.allSeatIds()).toEqual(['a']);
@@ -285,9 +285,9 @@ describe('explicit seat inbox handling', () => {
   it('migrates only historical delivered rows as legacy and treats later delivery as pending', async () => {
     const {db,store} = await setup(); const {j} = accept(store); success(store,j);
     const first = store.listDeliveries()[0]!, later = store.listDeliveries()[1]!; store.updateDelivery(first.id,1,'delivered');
-    db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=4;');
+    db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=4;');
     const access = new AccessStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11);
     const next = new BackgroundStore(db);
     expect(next.handling(first.id)).toMatchObject({state:'legacy',revision:1});
     expect(next.handling(first.id).updatedByUserId).toBeUndefined();
@@ -313,7 +313,7 @@ describe('explicit seat inbox handling', () => {
     const migrated = new AccessStore(db);
     expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(7);
     expect(migrated.identity(id)).toMatchObject({seatId:'overall',viewWorkOverview:false});
-    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
+    new BackgroundStore(db); expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11);
     expect(new BackgroundStore(db).listDeliveries()).toEqual([]);
     db.exec('ALTER TABLE seats DROP COLUMN view_work_overview');
     expect(() => new AccessStore(db)).toThrow();

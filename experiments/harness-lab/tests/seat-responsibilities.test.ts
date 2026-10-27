@@ -43,9 +43,9 @@ async function legacy(version: 2 | 3 | 4) {
   value.db.prepare('INSERT INTO auth_sessions VALUES(?,?,?,?)').run('retained-session', userId, Date.now() + 60_000, '{"existing":true}');
   if (version >= 3) {
     value.db.exec('PRAGMA user_version=2'); new AccessStore(value.db); new BackgroundStore(value.db);
-    value.db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN view_work_overview; ALTER TABLE seats DROP COLUMN responsibility; ALTER TABLE seats DROP COLUMN responsibility_revision;');
+    value.db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN view_work_overview; ALTER TABLE seats DROP COLUMN responsibility; ALTER TABLE seats DROP COLUMN responsibility_revision;');
     if (version === 3) value.db.exec('DROP TABLE information_task_overrides');
-    value.db.exec(`PRAGMA user_version=${version}`);
+    value.db.exec(`DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; PRAGMA user_version=${version}`);
   }
   return { ...value, userId };
 }
@@ -63,7 +63,7 @@ describe('central seat responsibilities', () => {
     expect(db.prepare('SELECT * FROM accounts ORDER BY id').all()).toEqual(accounts);
     expect(db.prepare('SELECT * FROM auth_sessions').all()).toEqual(sessions);
     // The background store owns the remaining v5 tables and advances the shared schema version.
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version === 2 ? 7 : 8);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version === 2 ? 7 : 11);
     expect(new AccessStore(db).seats()).toEqual(store.seats());
   });
 
