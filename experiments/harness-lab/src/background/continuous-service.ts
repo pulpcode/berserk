@@ -1,3 +1,5 @@
+import { discoverTasks } from './task-discovery.js';
+import { extractTaskDiscovery, type TaskDiscovery } from '../contracts/continuous.js';
 import { randomUUID, createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import { mkdir } from 'node:fs/promises';
@@ -18,15 +20,16 @@ const missing=()=>new RequestError('CONTINUOUS_NOT_FOUND','研判不存在或无
 function finalText(snapshot:SessionSnapshot|null,requestId:string){const id=snapshot?.turns?.find(t=>t.requestId===requestId)?.finalMessageId;return snapshot?.messages.find(m=>m.id===id&&m.requestId===requestId&&m.role==='assistant'&&!m.isError)?.text??'';}
 function processingStatements(snapshot:SessionSnapshot|null,requestId:string){const id=snapshot?.turns?.find(t=>t.requestId===requestId)?.finalMessageId;const end=snapshot?.messages.findIndex(m=>m.id===id)??-1;return snapshot?.messages.slice(0,end).filter(m=>m.role==='assistant'&&m.requestId===requestId&&!m.isError).map(m=>m.text).filter(Boolean).join('\n\n');}
 const invalid=(text:string)=>new RequestError('INVALID_INPUT',text);
-const readonlyTools=new Set(['read','ls','find','source_list','source_read','skill_read','information_search','information_read','situation_query','task_search','task_read','analysis_current_read','information_record_analysis_update']);
+const readonlyTools=new Set(['read','ls','find','source_list','source_read','skill_read','information_search','information_read','situation_query','task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_task_candidates','spatial_analyze']);
 export class ContinuousService {
   readonly store:ContinuousStore;
   private readonly preparations=new Mutex();
+  private readonly discoveries=new Map<string,TaskDiscovery>();
   constructor(readonly host:BackgroundService,readonly executor:BackgroundExecutor){this.store=new ContinuousStore(host.store);}
   manage(actor:Identity,stream:ContinuousStream){for(const id of stream.sourceIds)this.host.permission(actor,id,true);}
   assertStream(stream:ContinuousStream){
     const {host}=this;host.assertContext(undefined,stream.profile.contextScope);
-    const profile=host.config.profiles.find(p=>p.id===stream.profileId);if(!profile||stream.profile.skillIds.some(id=>!profile.skillIds.includes(id))||stream.profile.tools.some(t=>!['task_search','task_read','analysis_current_read','information_record_analysis_update'].includes(t)&&!profile.tools.includes(t)))throw missing();
+    const profile=host.config.profiles.find(p=>p.id===stream.profileId);if(!profile||stream.profile.skillIds.some(id=>!profile.skillIds.includes(id))||stream.profile.tools.some(t=>!['task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_task_candidates'].includes(t)&&!profile.tools.includes(t)))throw missing();
     for(const sourceId of stream.sourceIds){const source=host.source(sourceId);if(!source.allowedProfileIds.includes(stream.profileId))throw missing();for(const seatId of stream.recipientSeatIds){if(!source.allowedRecipientSeatIds.includes(seatId)||!host.lab.access!.identityForSeat(seatId))throw missing();host.assertContext(seatId,stream.profile.contextScope);}}
   }
   canRead(actor:Identity,stream:ContinuousStream){
@@ -45,7 +48,7 @@ export class ContinuousService {
     const previous=options.id?this.store.current(options.id):undefined;if(previous){this.manage(actor,previous);if(previous.revision!==options.revision)throw new RequestError('CONTINUOUS_CONFLICT','配置已变化。',409);}
     const configured=this.host.config.profiles.find(p=>p.id===input.profileId);if(!configured)throw invalid('处理方案不存在。');
     // The continuous capability is a strictly read-only subset, independent of legacy profile execution.
-    const profile=await snapshotBackgroundProfile(this.host.lab,{...configured,tools:[...new Set([...configured.tools.filter(t=>readonlyTools.has(t)),'task_search','task_read','analysis_current_read','information_record_analysis_update'])],agentIds:[]});
+    const profile=await snapshotBackgroundProfile(this.host.lab,{...configured,tools:[...new Set([...configured.tools.filter(t=>readonlyTools.has(t)),'task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_task_candidates'])],agentIds:[]});
     const scope=this.host.configuredProfileScope(configured);if(!scope)throw invalid('持续研判需要明确的共同资料范围。');profile.contextScope=scope;
     const time=new Date().toISOString();const stream:ContinuousStream={...input,name:input.name.trim(),id:previous?.id??randomUUID(),epochId:randomUUID(),revision:previous?previous.revision+1:1,profile,sessionId:randomUUID(),state:input.enabled?'active':'paused',createdAt:time,updatedAt:time,createdByUserId:actor.userId,pendingInputs:0};this.assertStream(stream);
     for(const id of input.sourceIds)this.host.permission(actor,id,true);
@@ -75,7 +78,7 @@ export class ContinuousService {
     const publication=this.store.publication(job.id),result=job.result;
     if(!snapshot||job.status!=='succeeded'||publication.status!=='published'||!result?.finalMessageId||snapshot.id!==result.sessionId||result.sessionId!==job.sessionId||result.requestId!==job.requestId||!snapshot.turns?.some(t=>t.requestId===job.requestId&&t.status==='succeeded'&&t.finalMessageId===result.finalMessageId)||!snapshot.messages.some(m=>m.id===result.finalMessageId&&m.requestId===job.requestId&&m.role==='assistant'&&!m.isError)||!publication.update||!this.verified(job,snapshot,publication.update))throw new RequestError('CONTINUOUS_EVIDENCE_MISSING','固定研判的原生正文或变化记录无法核验。',409);
   }
-  async detail(actor:Identity,jobId:string):Promise<ContinuousRoundDetail>{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||this.store.publication(jobId).status!=='published'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();const snapshot=await this.executor.read(job);this.assertPublishedSnapshot(job,snapshot);const inputs=await this.inputEvidence(job);if(!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return {...this.round(job),text:finalText(snapshot,job.requestId),processingText:processingStatements(snapshot,job.requestId),queryMessages:this.evidence(snapshot,job.requestId),inputs};}
+  async detail(actor:Identity,jobId:string):Promise<ContinuousRoundDetail>{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||this.store.publication(jobId).status!=='published'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();const snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile);this.assertPublishedSnapshot(job,snapshot);const inputs=await this.inputEvidence(job);if(!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return {...this.round(job),text:finalText(snapshot,job.requestId),processingText:processingStatements(snapshot,job.requestId),queryMessages:this.evidence(snapshot,job.requestId),inputs};}
   async readCurrent(epochId:string,query:ContinuousCurrentQuery):Promise<ContinuousCurrentResult>{
     const stream=this.store.stream(epochId);this.assertStream(stream);
     const offset=query.offset??0,limit=query.limit??20,textOffset=query.textOffset??0,textLimit=query.textLimit??16000;
@@ -86,7 +89,7 @@ export class ContinuousService {
     if(query.evidenceId&&!jobId)throw invalid('分段读取须指定固定 jobId 或任务基线。');
     if(jobId){
       const round=items.find(r=>r.jobId===jobId);if(!round)throw missing();
-      const job=this.host.store.getJob(jobId),snapshot=await this.executor.read(job);this.assertPublishedSnapshot(job,snapshot);
+      const job=this.host.store.getJob(jobId),snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile);this.assertPublishedSnapshot(job,snapshot);
       const inputs=await this.inputEvidence(job),queryMessages=this.evidence(snapshot,job.requestId),text=finalText(snapshot,job.requestId),processingText=processingStatements(snapshot,job.requestId);
       const evidence=[{id:'result',kind:'result' as const,text},{id:'processing',kind:'processing' as const,text:processingText??''},...inputs.map(input=>({id:`input:${input.id}`,kind:'input' as const,text:JSON.stringify(input)})),...queryMessages.map(message=>({id:`tool:${message.id}`,kind:'tool' as const,text:JSON.stringify(message)}))];
       this.assertStream(this.store.stream(epochId));
@@ -104,18 +107,70 @@ export class ContinuousService {
   record(job:BackgroundJob,input:AnalysisUpdateInput,evidence:TaskAssessmentEvidence,toolCallId:string,signal?:AbortSignal){
     signal?.throwIfAborted();if(job.kind!=='continuous_analysis')throw missing();const current=this.host.store.getJob(job.id);if(current.status!=='running'||current.cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));
     const reason=(v:unknown)=>typeof v==='string'&&!!v.trim()&&v.length<=3000;
-    if(!input||!Array.isArray(input.taskUpdates)||input.taskUpdates.length>100||new Set(input.taskUpdates.map(t=>t.taskId)).size!==input.taskUpdates.length||!input.unassigned||typeof input.unassigned.significant!=='boolean'||!reason(input.unassigned.reason)||!Array.isArray(input.uncertainties)||input.uncertainties.length>100||input.uncertainties.some(v=>!reason(v)))throw invalid('请完整记录任务变化、未归属变化及资料缺口。');
-    const batch=this.store.batch(job.batchId);
-    const taskUpdates=input.taskUpdates.map(item=>{
-      if(!item||!Array.isArray(item.inputIds)||!item.inputIds.length||new Set(item.inputIds).size!==item.inputIds.length||item.inputIds.some(id=>!batch.inputIds.includes(id)&&!this.store.db.prepare('SELECT 1 FROM continuous_inputs WHERE id=? AND epoch_id=? AND consumed=1').get(id,job.streamEpochId))||!['initial','changed','unchanged','retracted','uncertain'].includes(item.change)||!reason(item.reason)||typeof item.significant!=='boolean')throw invalid('任务变化或输入引用无效。');
+    if(!input||!Array.isArray(input.taskUpdates)||input.taskUpdates.length>100||input.taskUpdates.some(t=>!t)||!input.unassigned||typeof input.unassigned.significant!=='boolean'||!reason(input.unassigned.reason)||!Array.isArray(input.uncertainties)||input.uncertainties.length>100||input.uncertainties.some(v=>!reason(v)))throw invalid('请完整记录任务变化、未归属变化及资料缺口。');
+    const batch=this.store.batch(job.batchId),discovery=this.discoveries.get(job.id);
+    if(!discovery)throw new RequestError('TASK_DISCOVERY_REQUIRED','请先调用 analysis_task_candidates 完整核验本轮任务清单。',409);
+    const currentTasks=this.host.lab.access!.listActivePublic();
+    if(currentTasks.length!==discovery.tasks.length || currentTasks.some(task=>!discovery.tasks.some(item=>item.task.id===task.id&&item.task.revision===task.revision))){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务清单已改变，请重新核验。',409);}
+    const supplied=input.taskCoverage??input.taskUpdates.map(item=>({taskId:item.taskId,status:item.change==='uncertain'?'uncertain' as const:'assessed' as const,reason:item.reason}));
+    if(!Array.isArray(supplied)||supplied.some(item=>!item))throw invalid('taskCoverage 必须是完整的任务覆盖数组。');
+    const expectedTaskIds=discovery.tasks.map(item=>item.task.id),suppliedTaskIds=supplied.map(item=>item.taskId),updatedTaskIds=input.taskUpdates.map(item=>item.taskId);
+    const missingTaskIds=expectedTaskIds.filter(id=>!suppliedTaskIds.includes(id));
+    const unknownTaskIds=[...new Set([...suppliedTaskIds,...updatedTaskIds].filter(id=>!expectedTaskIds.includes(id)))];
+    const conflictingTaskIds=[...new Set([...suppliedTaskIds.filter((id,index)=>suppliedTaskIds.indexOf(id)!==index),...updatedTaskIds.filter((id,index)=>updatedTaskIds.indexOf(id)!==index)])];
+    if(missingTaskIds.length||unknownTaskIds.length||conflictingTaskIds.length)throw new RequestError('TASK_COVERAGE_MISSING',`本轮任务覆盖不完整或存在重复，请核对具体任务：${JSON.stringify({missingTaskIds,unknownTaskIds,conflictingTaskIds})}`,409);
+    const taskCoverage=supplied.map(item=>{
+      const found=discovery.tasks.find(candidate=>candidate.task.id===item.taskId),update=input.taskUpdates.find(update=>update.taskId===item.taskId);
+      if(!found||!['assessed','unrelated','uncertain'].includes(item.status)||!reason(item.reason))throw invalid(`任务覆盖说明的status或reason无效：${JSON.stringify({taskId:item.taskId})}`);
+      if(item.status==='unrelated' ? found.candidate!=='unrelated'||!!update : !update || item.status==='uncertain'&&update.change!=='uncertain')throw new RequestError('TASK_COVERAGE_MISSING',`候选或待核实任务须有明确研判；只有已核验无关联任务可标记unrelated：${JSON.stringify({conflictingTaskIds:[item.taskId],status:item.status,candidate:found.candidate,hasTaskUpdate:!!update})}`,409);
+      return {...item,taskRevision:found.task.revision,taskTitle:found.task.title};
+    });
+    const observed=new Map([...evidence.tasks,...discovery.tasks.map(item=>[item.task.id,item.task.revision] as const)]);
+    const taskUpdates=input.taskUpdates.map((item,taskIndex)=>{
+      const field=`taskUpdates[${taskIndex}].inputIds`;
+      if(!Array.isArray(item.inputIds)||!item.inputIds.length)throw invalid(`${field} 必须是非空输入引用数组。`);
+      const seen=new Set<string>();
+      for(const [index,id] of item.inputIds.entries()) {
+        const path=`${field}[${index}]`;
+        if(seen.has(id))throw invalid(`输入引用重复：${JSON.stringify({path,value:id})}`);
+        seen.add(id);
+        if(typeof id!=='string'||!batch.inputIds.includes(id)&&!this.store.db.prepare('SELECT 1 FROM continuous_inputs WHERE id=? AND epoch_id=? AND consumed=1').get(id,job.streamEpochId))throw invalid(`输入引用不存在或不在获准范围：${JSON.stringify({path,value:id,currentBatchInputIds:batch.inputIds})}。同一配置时期（epoch）已消费的历史输入引用也允许；请依据实际相关资料选择引用，不要删除任务覆盖来绕过错误。`);
+      }
+      if(!['initial','changed','unchanged','retracted','uncertain'].includes(item.change))throw invalid(`taskUpdates[${taskIndex}].change 无效。`);
+      if(!reason(item.reason))throw invalid(`taskUpdates[${taskIndex}].reason 必须是非空说明且不超过3000字符。`);
+      if(typeof item.significant!=='boolean')throw invalid(`taskUpdates[${taskIndex}].significant 必须是布尔值。`);
       const row=this.store.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(item.taskId),task=row?JSON.parse(String(row.data)) as TaskSpace:undefined;
-      if(task&&evidence.tasks.has(task.id)&&evidence.tasks.get(task.id)!==task.revision){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务说明已改变，请重新查询当前版本后记录。',409);}
-      if(!task||task.visibility!=='public'||task.state!=='active'||evidence.tasks.get(task.id)!==task.revision)throw new RequestError('TASK_NOT_QUERIED','请先成功查询当前活动公共任务版本。',409);
+      if(task&&observed.has(task.id)&&observed.get(task.id)!==task.revision){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务说明已改变，请重新查询当前版本后记录。',409);}
+      if(!task||task.visibility!=='public'||task.state!=='active'||observed.get(task.id)!==task.revision)throw new RequestError('TASK_NOT_QUERIED','请先成功查询当前活动公共任务版本。',409);
       return {...item,taskRevision:task.revision,taskTitle:task.title,previousJobId:this.store.baseline(job.streamEpochId,item.taskId)};
     });
-    const update:AnalysisUpdate={...input,taskUpdates,toolCallId,recordedAt:new Date().toISOString()};this.store.savePublication(job,{status:'pending',update});return {update,published:false as const};
+    const update:AnalysisUpdate={...input,taskUpdates,taskCoverage,discoveryToolCallId:discovery.toolCallId,discoveryDigest:createHash('sha256').update(JSON.stringify(discovery)).digest('hex'),toolCallId,recordedAt:new Date().toISOString()};
+    const issue=this.store.publicationIssue(job,update);
+    if(issue==='stale'){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务版本或基线已变化，请重新核验。',409);}
+    if(issue==='missing')throw invalid(`必要重评任务尚未引用本批任务修订输入：${JSON.stringify({requiredTaskInputIssues:this.store.requiredTaskInputIssues(job,update)})}。合法历史输入不能替代本轮任务变更依据；请核对所列字段并引用实际相关的本批任务修订。`);
+    this.store.savePublication(job,{status:'pending',update});return {update,published:false as const};
   }
-  private verified(job:BackgroundJob,snapshot:SessionSnapshot,update:AnalysisUpdate){if(snapshot.recoveryWarning)return false;const end=snapshot.messages.findIndex(m=>m.id===snapshot.turns?.find(t=>t.requestId===job.requestId)?.finalMessageId);if(end<0)return false;return snapshot.messages.slice(0,end).some(m=>{if(m.role!=='tool'||m.isError||m.resultMissing||m.requestId!==job.requestId||m.toolName!=='information_record_analysis_update'||m.toolCallId!==update.toolCallId)return false;try{const parsed=JSON.parse(m.text);return parsed.published===false&&isDeepStrictEqual(parsed.update,update);}catch{return false;}});}
+  private verified(job:BackgroundJob,snapshot:SessionSnapshot,update:AnalysisUpdate,finalMessageId=snapshot.turns?.find(t=>t.requestId===job.requestId)?.finalMessageId){
+    if(snapshot.recoveryWarning)return false;
+    const end=snapshot.messages.findIndex(m=>m.id===finalMessageId);if(end<0)return false;
+    const before=snapshot.messages.slice(0,end);
+    if(update.discoveryToolCallId){
+      const message=before.find(m=>m.role==='tool'&&!m.isError&&!m.resultMissing&&m.requestId===job.requestId&&m.toolName==='analysis_task_candidates'&&m.toolCallId===update.discoveryToolCallId);
+      const discovery=message&&extractTaskDiscovery({taskDiscovery:message.taskDiscovery},message.toolName!,false,message.text);
+      if(!discovery||discovery.requestId!==job.requestId||createHash('sha256').update(JSON.stringify(discovery)).digest('hex')!==update.discoveryDigest)return false;
+    }
+    return before.some(m=>{if(m.role!=='tool'||m.isError||m.resultMissing||m.requestId!==job.requestId||m.toolName!=='information_record_analysis_update'||m.toolCallId!==update.toolCallId)return false;try{const parsed=JSON.parse(m.text);return parsed.published===false&&isDeepStrictEqual(parsed.update,update);}catch{return false;}});
+  }
+  private completion(job:BackgroundJob,snapshot:SessionSnapshot,stopped:()=>boolean):'ready'|'missing'|'stale' {
+    if(job.kind!=='continuous_analysis'||stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();
+    this.assertStream(this.store.stream(job.streamEpochId));
+    if(snapshot.recoveryWarning)throw new RequestError('CONTINUOUS_EVIDENCE_MISSING','原生记录损坏，不能自动补做。',409);
+    const publication=this.store.publication(job.id),update=publication.update;
+    if(publication.revisionConflict)return 'stale';
+    if(update && this.store.publicationIssue(job,update)==='stale')return 'stale';
+    if(!update || !this.verified(job,snapshot,update,snapshot.messages.at(-1)?.id))return 'missing';
+    return this.store.publicationIssue(job,update)==='missing'?'missing':'ready';
+  }
   async execute(job:BackgroundJob,stopped:()=>boolean){
     if(job.kind!=='continuous_analysis')throw missing();const stream=this.store.stream(job.streamEpochId),batch=this.store.batch(job.batchId),inputs=this.store.inputs(batch);
     try {
@@ -124,7 +179,7 @@ export class ContinuousService {
       for(const input of inputs){if(input.kind==='task_revision'){parts.push(`任务说明修订（人员维护条件，不是模型推断）：inputId=${input.id}\n${JSON.stringify(input.task)}`);continue;}const event=this.host.store.getEvent(input.eventId);parts.push(`来源资料 inputId=${input.id} eventId=${event.id} sourceId=${event.sourceId} occurredAt=${event.occurredAt??'未知'} receivedAt=${event.receivedAt}\n${event.title}\n${await this.host.eventText(event)}`);
         for(const file of event.files){const path=`${file.id}-${file.name}`;await this.host.files.copies.import({fileId:file.id,name:file.name,size:file.size,hash:file.hash,createdAt:''},join(directory,'files'),path);files.push({path,name:basename(path),size:file.size,hash:file.hash});}}
       if(stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();
-      const result=await this.executor.execute(job,{text:`${stream.profile.goal}\n\n本轮批次 ${batch.id}，输入截止 ${batch.inputCutoff}。必要重评任务：${JSON.stringify(batch.requiredTaskIds)}。上一发布轮次：${batch.previousJobId??'无'}。以 analysis_current_read 获取各任务上一已发布判断；旧判断是待复核观点，不能冒充事实。逐任务比较事实、推断和人员条件变化；遗漏任务不代表无风险。结论只覆盖已核验的条件；局部约束解除不等于整体可执行或全部风险解除。已识别且影响建议成立的资料缺口须直接限定主结论和建议；必要条件未核验时给出条件性建议，不得仅在末尾列出缺口。未发布历史不作为基线。业务新旧依据来源时间／版本，不能按接收顺序覆盖。完成后记录完整变化元数据，再给出最终答复。\n\n${parts.join('\n\n')}`,directory,files,profile:stream.profile,continuous:{stream,batch,inputs,requiredTaskIds:batch.requiredTaskIds},recordAnalysisUpdate:(input,evidence,id,signal)=>this.record(job,input,evidence,id,signal),readAnalysisCurrent:(query,signal)=>{signal?.throwIfAborted();return this.readCurrent(stream.epochId,query);},onEvent:event=>{if(event.type==='text.delta')this.host.store.setPhase(job.id,'generating');else if(event.type==='tool.started')this.host.store.setPhase(job.id,'tool');},publish:async()=>{throw invalid('持续研判不允许写入文件。');}});
+      const result=await this.executor.execute(job,{text:`${stream.profile.goal}\n\n本轮批次 ${batch.id}，输入截止 ${batch.inputCutoff}。必要重评任务：${JSON.stringify(batch.requiredTaskIds)}。先调用 analysis_task_candidates 完整核验任务关联，逐一记录全部返回任务；几何相交仅是候选，需核对时间和业务限制。未定位对象或缺几何不能认定无关联。旧研判中的建议、假设及条件句不能成为事实，实际调配/改线必须有新的业务来源依据。上一发布轮次：${batch.previousJobId??'无'}。以 analysis_current_read 获取各任务上一已发布判断；旧判断是待复核观点，不能冒充事实。逐任务比较事实、推断和人员条件变化；遗漏任务不代表无风险。结论只覆盖已核验的条件；局部约束解除不等于整体可执行或全部风险解除。已识别且影响建议成立的资料缺口须直接限定主结论和建议；必要条件未核验时给出条件性建议，不得仅在末尾列出缺口。未发布历史不作为基线。业务新旧依据来源时间／版本，不能按接收顺序覆盖。完成后记录完整变化元数据，再给出最终答复。\n\n${parts.join('\n\n')}`,directory,files,profile:stream.profile,continuous:{stream,batch,inputs,requiredTaskIds:batch.requiredTaskIds},recordAnalysisUpdate:(input,evidence,id,signal)=>this.record(job,input,evidence,id,signal),checkAnalysisCompletion:snapshot=>this.completion(job,snapshot,stopped),readTaskCandidates:async(id,signal)=>{const checked=()=>{if(stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));};const discovery=await discoverTasks(this.host.lab.access!,this.host.lab.context!,inputs,id=>this.host.store.getEvent(id),{principal:{kind:'service',profileId:stream.profileId,jobId:job.id,scope:stream.profile.contextScope!},requestId:job.requestId,toolCallId:id,signal:signal??new AbortController().signal,check:checked,baseline:id=>this.store.baseline(stream.epochId,id)});checked();this.discoveries.set(job.id,discovery);return discovery;},readAnalysisCurrent:(query,signal)=>{signal?.throwIfAborted();return this.readCurrent(stream.epochId,query);},onEvent:event=>{if(event.type==='text.delta')this.host.store.setPhase(job.id,'generating');else if(event.type==='tool.started')this.host.store.setPhase(job.id,'tool');},publish:async()=>{throw invalid('持续研判不允许写入文件。');}});
       const snapshot=result.snapshot,terminal=snapshot.lastResult,final=snapshot.turns?.find(t=>t.requestId===job.requestId)?.finalMessageId;if(!terminal||terminal.requestId!==job.requestId||terminal.status!=='succeeded'||!final||snapshot.recoveryWarning)throw new RequestError('CONTINUOUS_FAILED','本轮未正常完成，保留输入等待恢复。',409);
       this.assertStream(this.store.stream(job.streamEpochId));
       this.host.store.transaction(()=>{
@@ -135,7 +190,7 @@ export class ContinuousService {
         if(!update||!this.verified(job,snapshot,update)){this.store.savePublication(job,{status:'unpublished',reason:'缺少完整变化记录或对应原生证据。'});this.store.pause(stream.epochId,'缺少完整变化记录，需要核对后恢复。');return;}
         try {this.store.publish(finished,update);}catch(error){if(!(error instanceof RequestError))throw error;this.store.savePublication(job,{status:'unpublished',update,reason:error.message});this.store.pause(stream.epochId,error.message);}
       });
-    }catch(error){const latest=this.host.store.getJob(job.id);if(latest.status==='running')this.host.store.finishJob(job.id,latest.revision,{status:latest.cancelRequestedAt?'cancelled':stopped()?'interrupted':'failed',error:{code:error instanceof RequestError?error.code:'CONTINUOUS_FAILED',message:error instanceof RequestError?error.message:'持续研判执行失败。'}});this.store.savePublication(job,{...this.store.publication(job.id),status:'unpublished',reason:'执行未完成，需显式恢复。'});this.store.pause(job.streamEpochId,'执行未完成，保留输入等待恢复。');}
+    }catch(error){const latest=this.host.store.getJob(job.id);if(latest.status==='running')this.host.store.finishJob(job.id,latest.revision,{status:latest.cancelRequestedAt?'cancelled':stopped()?'interrupted':'failed',error:{code:error instanceof RequestError?error.code:'CONTINUOUS_FAILED',message:error instanceof RequestError?error.message:'持续研判执行失败。'}});this.store.savePublication(job,{...this.store.publication(job.id),status:'unpublished',reason:'执行未完成，需显式恢复。'});this.store.pause(job.streamEpochId,'执行未完成，保留输入等待恢复。');}finally{this.discoveries.delete(job.id);}
   }
   async openFile(actor:Identity,jobId:string,fileId:string){const detail=await this.detail(actor,jobId),file=detail.inputs?.flatMap(i=>i.event?.files??[]).find(f=>f.id===fileId);if(!file)throw missing();const content=await this.host.files.copies.open({fileId:file.id,name:file.name,size:file.size,hash:file.hash,createdAt:''});try{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return content;}catch(error){content.stream.destroy();throw error;}}
   async analysisOptions(actor:Identity,jobId:string,taskId:string){await this.detail(actor,jobId);return this.host.taskOptions(actor,taskId);}
@@ -155,5 +210,5 @@ export class ContinuousService {
     await this.host.lab.createSession(workspace.id,actor.seatId,undefined,action.sessionId);
     await this.detail(actor,jobId);return this.host.store.updateAction(action.id,action.revision,{status:'completed'});
   });}
-  async deliver(id:string){const delivery=this.host.store.getDelivery(id),job=this.host.store.getJob(delivery.jobId);if(job.kind!=='continuous_analysis')throw missing();try{const stream=this.store.stream(job.streamEpochId);this.assertStream(stream);if(this.store.publication(job.id).status!=='published'||!this.canRead(this.host.lab.access!.identityForSeat(delivery.recipientSeatId)!,stream))throw missing();const snapshot=await this.executor.read(job),update=this.store.publication(job.id).update;if(!snapshot||!update||!this.verified(job,snapshot,update))throw missing();this.assertPublishedSnapshot(job,snapshot);this.assertStream(this.store.stream(job.streamEpochId));this.host.store.updateDelivery(id,delivery.revision,'delivered');}catch{this.host.store.updateDelivery(id,delivery.revision,'failed',{code:'CONTINUOUS_DELIVERY_FAILED',message:'通知暂未完成，请核对权限后重试。'});}}
+  async deliver(id:string){const delivery=this.host.store.getDelivery(id),job=this.host.store.getJob(delivery.jobId);if(job.kind!=='continuous_analysis')throw missing();try{const stream=this.store.stream(job.streamEpochId);this.assertStream(stream);if(this.store.publication(job.id).status!=='published'||!this.canRead(this.host.lab.access!.identityForSeat(delivery.recipientSeatId)!,stream))throw missing();const snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile),update=this.store.publication(job.id).update;if(!snapshot||!update||!this.verified(job,snapshot,update))throw missing();this.assertPublishedSnapshot(job,snapshot);this.assertStream(this.store.stream(job.streamEpochId));this.host.store.updateDelivery(id,delivery.revision,'delivered');}catch{this.host.store.updateDelivery(id,delivery.revision,'failed',{code:'CONTINUOUS_DELIVERY_FAILED',message:'通知暂未完成，请核对权限后重试。'});}}
 }

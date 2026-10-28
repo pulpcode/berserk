@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import type { TaskContext } from '../contracts/access';
+import type { TaskBusinessRole, TaskContext } from '../contracts/access';
 import type { ContextCatalog } from '../contracts/context';
 import { useApi } from './api';
 
 export type ContextDraft = {
-  refs: Array<{ systemId: string; objectType: string; objectId: string; label: string }>;
+  refs: Array<{ systemId: string; objectType: string; objectId: string; label: string; role: TaskBusinessRole | '' }>;
   areas: string; topics: string; from: string; to: string;
 };
 export function contextDraft(context?: TaskContext): ContextDraft {
-  return { refs: (context?.businessRefs || []).map(ref => ({ ...ref, label: ref.label || '' })), areas: context?.focus?.areaIds?.join('\n') || '', topics: context?.focus?.topics?.join('\n') || '', from: context?.focus?.time?.from || '', to: context?.focus?.time?.to || '' };
+  return { refs: (context?.businessRefs || []).map(ref => ({ ...ref, label: ref.label || '', role: ref.role || '' })), areas: context?.focus?.areaIds?.join('\n') || '', topics: context?.focus?.topics?.join('\n') || '', from: context?.focus?.time?.from || '', to: context?.focus?.time?.to || '' };
 }
+const roleLabels: Record<TaskBusinessRole, string> = { route: '使用路线', resource: '使用资源或车辆', location: '执行地点', work_area: '实际作业范围', reference: '参考对象' };
 const lines = (value: string) => [...new Set(value.split('\n').map(item => item.trim()).filter(Boolean))];
 export function validateContext(draft: ContextDraft): { context: TaskContext | null; errors: Record<string, string> } {
   const errors: Record<string, string> = {};
@@ -32,7 +33,7 @@ export function validateContext(draft: ContextDraft): { context: TaskContext | n
     else time[key] = value;
   }
   if (time.from && time.to && Date.parse(time.from) >= Date.parse(time.to)) errors['context-to'] = '结束时间必须晚于开始时间。';
-  const businessRefs = refs.filter(ref => Object.values(ref).some(Boolean)).map(({ label, ...ref }) => ({ ...ref, ...(label ? { label } : {}) }));
+  const businessRefs = refs.filter(ref => Object.values(ref).some(Boolean)).map(({ label, role, ...ref }) => ({ ...ref, ...(label ? { label } : {}), ...(role ? { role } : {}) }));
   const focus = { ...(areas.length ? { areaIds: areas } : {}), ...(topics.length ? { topics } : {}), ...(Object.keys(time).length ? { time } : {}) };
   const context = { ...(businessRefs.length ? { businessRefs } : {}), ...(Object.keys(focus).length ? { focus } : {}) };
   return { context: Object.keys(context).length ? context : null, errors };
@@ -60,7 +61,7 @@ export function TaskContextEditor({ draft, change, disabled, errors }: { draft: 
   const fieldError = (id: string) => errors[id] ? <small id={`${id}-error`} className="resource-error">{errors[id]}</small> : null;
   return <details ref={details} className="task-context-editor" open={expanded} onToggle={event => setExpanded(event.currentTarget.open)}>
     <summary>业务关联与关注范围（可选）<span>{populated ? '已填写关注条件' : '未设置，普通任务可留空'}</span></summary>
-    <p className="resource-help">用于查找相关业务资料，不改变文件与会话权限。保存引用不会核验远端对象是否存在。</p>
+    <p className="resource-help">关联任务实际使用的路线、资源、地点或作业范围，供后台核对影响。保存引用不会核验远端对象是否存在，也不改变资料权限。</p>
     {catalog.error && <p className="resource-help" role="status">{catalog.error}<button type="button" onClick={catalog.refresh}>重试读取目录</button></p>}
     {Object.keys(errors).length > 0 && <div className="resource-error" role="alert" tabIndex={-1} ref={feedback}>请检查以下字段：<ul>{Object.entries(errors).map(([id, message]) => <li key={id}><a href={`#${id}`}>{message}</a></li>)}</ul></div>}
     <fieldset disabled={disabled}>
@@ -72,13 +73,14 @@ export function TaskContextEditor({ draft, change, disabled, errors }: { draft: 
           <label htmlFor={`context-objectType-${index}`}>对象类型<select id={`context-objectType-${index}`} aria-label="对象类型" aria-describedby={errors[`context-objectType-${index}`] ? `context-objectType-${index}-error` : undefined} value={ref.objectType} aria-invalid={Boolean(errors[`context-objectType-${index}`])} onChange={event => setRef(index, { objectType: event.target.value })}><option value="">选择类型</option>{ref.objectType && !system?.objectTypes.includes(ref.objectType) && <option value={ref.objectType}>{ref.objectType}（当前目录不可用）</option>}{system?.objectTypes.map(type => <option key={type} value={type}>{type}</option>)}</select>{fieldError(`context-objectType-${index}`)}</label>
           <label htmlFor={`context-objectId-${index}`}>对象编号<input id={`context-objectId-${index}`} aria-label="对象编号" aria-describedby={errors[`context-objectId-${index}`] ? `context-objectId-${index}-error` : undefined} value={ref.objectId} maxLength={128} aria-invalid={Boolean(errors[`context-objectId-${index}`])} onChange={event => setRef(index, { objectId: event.target.value })}/>{fieldError(`context-objectId-${index}`)}</label>
           <label>显示名称（可选）<input value={ref.label} maxLength={200} onChange={event => setRef(index, { label: event.target.value })}/></label>
+          <label htmlFor={`context-role-${index}`}>任务中的用途<select id={`context-role-${index}`} aria-label="任务中的用途" value={ref.role} onChange={event => setRef(index, { role: event.target.value as TaskBusinessRole | '' })}><option value="">用途未明确（待核实）</option>{Object.entries(roleLabels).map(([role, label]) => <option key={role} value={role}>{label}</option>)}</select></label>
           <button type="button" aria-label={`移除第 ${index + 1} 项业务引用`} onClick={() => change({ ...draft, refs: draft.refs.filter((_, i) => i !== index) })}>移除</button>
         </div>;
       })}
       {!draft.refs.length && <p className="resource-help">尚无业务对象引用。</p>}
-      {!disabled && <button type="button" disabled={draft.refs.length >= 20 || !systems.length} onClick={() => change({ ...draft, refs: [...draft.refs, { systemId: '', objectType: '', objectId: '', label: '' }] })}>添加业务引用</button>}
+      {!disabled && <button type="button" disabled={draft.refs.length >= 20 || !systems.length} onClick={() => change({ ...draft, refs: [...draft.refs, { systemId: '', objectType: '', objectId: '', label: '', role: '' }] })}>添加业务引用</button>}
       <div className="task-context-fields">
-        <label htmlFor="context-areas">关注区域编码<textarea id="context-areas" rows={2} value={draft.areas} aria-invalid={Boolean(errors['context-areas'])} onChange={event => change({ ...draft, areas: event.target.value })}/><small>每行一个编码，最多 10 个。{areas.map(area => `${area.name}：${area.id}`).join('；')}</small>{fieldError('context-areas')}</label>
+        <label htmlFor="context-areas">关注区域编码<textarea id="context-areas" rows={2} value={draft.areas} aria-invalid={Boolean(errors['context-areas'])} onChange={event => change({ ...draft, areas: event.target.value })}/><small>每行一个编码，最多 10 个。关注区域不等于实际作业范围。{areas.map(area => `${area.name}：${area.id}`).join('；')}</small>{fieldError('context-areas')}</label>
         <label htmlFor="context-topics">关注主题<textarea id="context-topics" rows={2} value={draft.topics} aria-invalid={Boolean(errors['context-topics'])} onChange={event => change({ ...draft, topics: event.target.value })}/><small>每行一个主题，最多 10 项。</small>{fieldError('context-topics')}</label>
         <label htmlFor="context-from">开始时间（含时区）<input id="context-from" value={draft.from} placeholder="2026-10-01T09:00:00+08:00" maxLength={64} aria-invalid={Boolean(errors['context-from'])} onChange={event => change({ ...draft, from: event.target.value })}/>{fieldError('context-from')}</label>
         <label htmlFor="context-to">结束时间（含时区）<input id="context-to" value={draft.to} placeholder="2026-10-01T11:00:00+08:00" maxLength={64} aria-invalid={Boolean(errors['context-to'])} onChange={event => change({ ...draft, to: event.target.value })}/>{fieldError('context-to')}</label>
@@ -90,7 +92,7 @@ export function TaskContextEditor({ draft, change, disabled, errors }: { draft: 
 
 export function TaskContextSummary({ context }: { context?: TaskContext }) {
   return <div className="task-context-summary"><strong>业务关联与关注范围</strong>{!context ? <p>未设置</p> : <>
-    {context.businessRefs?.map(ref => <p key={JSON.stringify([ref.systemId, ref.objectType, ref.objectId])}>{ref.label && `${ref.label} · `}{ref.systemId} / {ref.objectType} / {ref.objectId}</p>)}
+    {context.businessRefs?.map(ref => <p key={JSON.stringify([ref.systemId, ref.objectType, ref.objectId])}>{ref.role ? roleLabels[ref.role] : '用途未明确'} · {ref.label && `${ref.label} · `}{ref.systemId} / {ref.objectType} / {ref.objectId}</p>)}
     {context.focus?.areaIds?.length ? <p>区域：{context.focus.areaIds.join('、')}</p> : null}
     {context.focus?.time && <p>时间：{context.focus.time.from || '未限定开始'} ～ {context.focus.time.to || '未限定结束'}</p>}
     {context.focus?.topics?.length ? <p>主题：{context.focus.topics.join('、')}</p> : null}

@@ -108,15 +108,15 @@ export function MapLink({href,children,messages,external=false}:{href?:string;ch
   if(!external || href?.startsWith('/situation'))return <span>{children}</span>;
   return <a href={href}>{children}</a>;
 }
-export function EvidenceMapLinks({messages}:{messages:PublicMessage[]}) {
+export function EvidenceMapLinks({messages,onOpenMap}:{messages:PublicMessage[];onOpenMap?:()=>void}) {
   const map=useSituationMap();
   const refs=[...new Map(messageReferences(messages).map(item=>[item.href,item])).values()];
   const annotations=annotationMapEntries(messages);
   const spatial=spatialMapEntries(messages);
   const buttons=[
-    ...spatial.map(result=><button key={result.resultRef} title="打开本次固定分析结果" onClick={()=>map.openAnalysis(result)}><MapPin size={13} aria-hidden="true"/>{analysisLabels[result.operation]} · {analysisValue(result)}</button>),
-    ...refs.map(item=><button key={item.href} title="打开当前来源态势；历史证据版本单独显示" onClick={()=>map.open(item)}><MapPin size={13} aria-hidden="true"/>在地图查看 · {item.ref.objectId}{item.revision?` · 证据版本 ${item.revision}`:''}</button>),
-    ...annotations.map(item=><button key={`${annotationKey(item.selection)}:${item.original}`} onClick={()=>map.openAnnotations(item.selection)}><MapPin size={13} aria-hidden="true"/>{item.original?'查看原动作结果':item.publication?'查看发布标注':'查看本次标注'} · {annotationLabel(item.selection)}{item.selection.objectIds?` · ${item.selection.objectIds.length} 个对象`:''}</button>),
+    ...spatial.map(result=><button key={result.resultRef} title="打开本次固定分析结果" onClick={()=>{map.openAnalysis(result);onOpenMap?.();}}><MapPin size={13} aria-hidden="true"/>{analysisLabels[result.operation]} · {analysisValue(result)}</button>),
+    ...refs.map(item=><button key={item.href} title="打开当前来源态势；历史证据版本单独显示" onClick={()=>{map.open(item);onOpenMap?.();}}><MapPin size={13} aria-hidden="true"/>在地图查看 · {item.ref.objectId}{item.revision?` · 证据版本 ${item.revision}`:''}</button>),
+    ...annotations.map(item=><button key={`${annotationKey(item.selection)}:${item.original}`} onClick={()=>{map.openAnnotations(item.selection);onOpenMap?.();}}><MapPin size={13} aria-hidden="true"/>{item.original?'查看原动作结果':item.publication?'查看发布标注':'查看本次标注'} · {annotationLabel(item.selection)}{item.selection.objectIds?` · ${item.selection.objectIds.length} 个对象`:''}</button>),
   ];
   if(!buttons.length)return null;
   return <div className="evidence-map-links" aria-label="地图操作结果">{buttons.slice(0,3)}{buttons.length>3?<details className="evidence-map-more"><summary>另有 {buttons.length-3} 个地图入口</summary><div className="evidence-map-links">{buttons.slice(3,100)}</div>{buttons.length>100?<p>仅显示前 100 个入口，请按对象缩小查询范围。</p>:null}</details>:null}</div>;

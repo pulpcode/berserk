@@ -19,7 +19,7 @@ test('only exact observed object and revision links are clickable; report revisi
 });
 test('task refs and focus areas remain separate queries (union, not intersection)',()=>{
  const catalog:ContextCatalog={systems:[{id:'situation',name:'态势',objectTypes:['road'],capabilities:['situation_current'],areas:[]}]};
- expect(taskQueries(catalog,{businessRefs:[road.ref],focus:{areaIds:['other-area']}})).toEqual([{systemId:'situation',mode:'current',objectRefs:[road.ref]},{systemId:'situation',mode:'current',areaIds:['other-area']}]);
+ expect(taskQueries(catalog,{businessRefs:[{...road.ref,label:'实际运输路线',role:'route'}],focus:{areaIds:['other-area']}})).toEqual([{systemId:'situation',mode:'current',objectRefs:[road.ref]},{systemId:'situation',mode:'current',areaIds:['other-area']}]);
 });
 test('pagination retries one stale generation without mixing old pages and rejects incomplete cursors',async()=>{
  let calls=0;const result=await readSituation(async params=>{calls++;if(calls===1)return envelope([road],true);if(calls===2)throw Object.assign(new Error('stale'),{code:'CONTEXT_CURSOR_STALE'});expect(params.cursor).toBeUndefined();return envelope([{...road,revision:2}]);},{systemId:'situation',mode:'current'});

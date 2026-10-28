@@ -21,7 +21,7 @@ export async function snapshotBackgroundProfile(lab: PiLab, profile: BackgroundP
   const skills = await loadControlledSkills(profile.skillIds);
   if (profile.contextScopeId && !lab.context) throw new RequestError('CONTEXT_UNAVAILABLE', '业务资料配置不可用，未启动综合查询。', 503);
   const contextScope = profile.contextScopeId ? lab.context!.scopeSnapshot(profile.contextScopeId) : undefined;
-  if (!contextScope && profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE', '查询方案须配置业务资料范围。', 503);
+  if (!contextScope && profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment','spatial_analyze'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE', '查询方案须配置业务资料范围。', 503);
   return { ...structuredClone(profile), skills, agents, ...(contextScope ? {contextScope} : {}) };
 }
 
@@ -69,11 +69,11 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         if (continuous && (continuous.batch.jobId !== job.id || continuous.stream.sessionId !== job.sessionId
           || continuous.batch.epochId !== continuous.stream.epochId || job.kind !== 'continuous_analysis'
           || job.streamEpochId !== continuous.stream.epochId || job.batchId !== continuous.batch.id)) throw new RequestError('CONTINUOUS_INPUT_INVALID', '持续研判批次与会话不一致。', 409);
-        const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', 'read', 'ls', 'find'])]
+        const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', ...(input.readTaskCandidates ? ['analysis_task_candidates'] : []), 'read', 'ls', 'find'])]
           : input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id), roles: continuous ? [] : input.profile.agents!, tools,
-          ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, recordAnalysisUpdate: input.recordAnalysisUpdate} : {}),
+          ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);
@@ -81,15 +81,18 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         await prepared.run(input.onEvent);
         const current = prepared.snapshot();
         return current.lastResult?.status === 'succeeded' ? verifiedResult(await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId, directory: input.directory,
-          ...(continuous ? {streamEpochId: continuous.stream.epochId, requestId: job.requestId} : {}) })) : { snapshot: current };
+          ...(continuous ? {streamEpochId: continuous.stream.epochId, requestId: job.requestId} : {}),
+          ...(input.profile.contextScope ? {contextPrincipal:{kind:'service',profileId:input.profile.id,jobId:job.id,scope:input.profile.contextScope}} : {}) })) : { snapshot: current };
       }
       finally { running.delete(job.id); }
     },
-    async read(job) {
+    async read(job, profile) {
       if (!job.sessionId) return null;
+      const captured=profile ?? job.ruleSnapshot?.profile;
       try {
         return job.kind === 'seat_analysis' ? lab.get(job.sessionId, job.seatId)
           : await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId,
+            ...(captured?.contextScope ? {contextPrincipal:{kind:'service',profileId:captured.id,jobId:job.id,scope:captured.contextScope}} : {}),
             ...(job.kind === 'continuous_analysis' ? {streamEpochId: job.streamEpochId, requestId: job.requestId,
               directory: join(lab.config.dataDir, 'background', 'streams', job.streamEpochId, job.sessionId)}
               : {directory: join(lab.config.dataDir, 'background', 'jobs', job.id)}) });

@@ -1,0 +1,242 @@
+[
+  {
+    "run": "spatial-1",
+    "version": "v2-ark",
+    "durationSeconds": 295.42,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 53,
+    "providerRequests": 44,
+    "repairPrompts": 0,
+    "toolErrors": 2,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 390672,
+      "output": 52099,
+      "cacheRead": 4066176,
+      "cacheWrite": 0,
+      "totalTokens": 4508947
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 212088,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 15632,
+    "audit": {
+      "requests": 44,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 44
+      }
+    }
+  },
+  {
+    "run": "spatial-2",
+    "version": "v2-ark",
+    "durationSeconds": 280.48,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 46,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 377783,
+      "output": 46810,
+      "cacheRead": 3965824,
+      "cacheWrite": 0,
+      "totalTokens": 4390417
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 208825,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 12009,
+    "audit": {
+      "requests": 46,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 46
+      }
+    }
+  },
+  {
+    "run": "spatial-3",
+    "version": "v2-ark",
+    "durationSeconds": 291.22,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 45,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 367771,
+      "output": 50392,
+      "cacheRead": 4204032,
+      "cacheWrite": 0,
+      "totalTokens": 4622195
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 198470,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 16699,
+    "audit": {
+      "requests": 45,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 45
+      }
+    }
+  },
+  {
+    "run": "text-1",
+    "version": "v2-ark",
+    "durationSeconds": 203.56,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 38,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 234274,
+      "output": 33954,
+      "cacheRead": 1967104,
+      "cacheWrite": 0,
+      "totalTokens": 2235332
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 126113,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 8095,
+    "audit": {
+      "requests": 38,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 38
+      }
+    }
+  },
+  {
+    "run": "text-2",
+    "version": "v2-ark",
+    "durationSeconds": 230.84,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 48,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 486071,
+      "output": 39452,
+      "cacheRead": 4949120,
+      "cacheWrite": 0,
+      "totalTokens": 5474643
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 263760,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 8090,
+    "audit": {
+      "requests": 48,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 48
+      }
+    }
+  },
+  {
+    "run": "text-3",
+    "version": "v2-ark",
+    "durationSeconds": 227.09,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 38,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 476573,
+      "output": 38982,
+      "cacheRead": 3782784,
+      "cacheWrite": 0,
+      "totalTokens": 4298339
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 258397,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 7503,
+    "audit": {
+      "requests": 38,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 38
+      }
+    }
+  }
+]

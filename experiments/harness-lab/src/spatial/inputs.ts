@@ -2,22 +2,38 @@ import type { AnnotationService, AnnotationActor } from '../annotations/service.
 import type { ContextService } from '../context/service.js';
 import type { SpatialInput, SpatialItem, SpatialProvenance, SpatialResult } from '../contracts/spatial.js';
 import { spatialError, validateItems, LIMITS } from './validation.js';
-import type { ContextRef } from '../contracts/context.js';
-export interface SpatialScope {actor:AnnotationActor; sessionId:string; taskId:string; check:()=>void; signal:AbortSignal; resolveResult:(ref:string)=>SpatialResult}
+import type { ContextPrincipal, ContextRef } from '../contracts/context.js';
+interface SpatialExecutionScope {check:()=>void; signal:AbortSignal; resolveResult:(ref:string)=>SpatialResult}
+export interface SpatialForegroundScope extends SpatialExecutionScope {actor:AnnotationActor; sessionId:string; taskId:string}
+export interface SpatialServiceScope extends SpatialExecutionScope {principal:Extract<ContextPrincipal,{kind:'service'}>}
+export type SpatialScope = SpatialForegroundScope | SpatialServiceScope;
 export const sourceKey=(ref:ContextRef)=>JSON.stringify([ref.systemId,ref.objectType,ref.objectId]);
 export interface SpatialDataset {items:SpatialItem[]; provenance:SpatialProvenance[]}
 export class SpatialInputs {
-  constructor(readonly annotations:AnnotationService,readonly context?:ContextService) {}
+  constructor(readonly annotations:AnnotationService|undefined,readonly context?:ContextService) {}
+  private check(scope:SpatialScope) {
+    scope.signal.throwIfAborted();scope.check();
+    if('principal' in scope) {
+      if(!this.context) throw spatialError('UNAVAILABLE','未配置来源系统。');
+      this.context.assertServiceScope(scope.principal.scope);
+    } else {
+      if(!this.annotations) throw spatialError('UNAVAILABLE','标绘服务不可用。');
+      this.annotations.binding(scope.actor,scope.sessionId);
+    }
+  }
   authorize(result:SpatialResult,scope:SpatialScope) {
-    scope.signal.throwIfAborted();scope.check();this.annotations.binding(scope.actor,scope.sessionId);
-    const systems=new Set(this.context?.catalog(scope.actor.seatId).systems.map(s=>s.id)??[]);
+    this.check(scope);
+    const systems=new Set('principal' in scope?scope.principal.scope.systemIds:this.context?.catalog(scope.actor.seatId).systems.map(s=>s.id)??[]);
     for(const p of result.provenance) {
       if(p.input.kind==='source' && !systems.has(p.input.systemId)) throw spatialError('FORBIDDEN','当前身份无法读取分析的来源。');
-      if(p.input.kind==='annotation') this.annotations.version(scope.actor,scope.taskId,p.input.ref);
+      if(p.input.kind==='annotation') {
+        if('principal' in scope) throw spatialError('FORBIDDEN','后台空间分析不能读取标绘或由标绘派生的结果。');
+        this.annotations!.version(scope.actor,scope.taskId,p.input.ref);
+      }
     }
   }
   async read(input:SpatialInput,scope:SpatialScope):Promise<SpatialDataset> {
-    scope.signal.throwIfAborted();scope.check();this.annotations.binding(scope.actor,scope.sessionId);
+    this.check(scope);
     let items:SpatialItem[]=[],provenance:SpatialProvenance[]=[];
     if(input.kind==='result') {
       const result=scope.resolveResult(input.resultRef);this.authorize(result,scope);
@@ -31,7 +47,8 @@ export class SpatialInputs {
         if(input.itemIds) {if(input.itemIds.some(id=>!items.some(i=>i.id===id))) throw spatialError('OBJECT_NOT_FOUND','所选分析对象不在固定结果中。');items=items.filter(i=>input.itemIds!.includes(i.id));}
       }
     } else if(input.kind==='annotation') {
-      const version=this.annotations.version(scope.actor,scope.taskId,input.ref),now=new Date().toISOString();
+      if('principal' in scope) throw spatialError('FORBIDDEN','后台空间分析仅允许获准业务来源与本会话的可信结果。');
+      const version=this.annotations!.version(scope.actor,scope.taskId,input.ref),now=new Date().toISOString();
       if(input.layerIds?.some(id=>!version.document.layers.some(l=>l.layerId===id))) throw spatialError('OBJECT_NOT_FOUND','固定版本中缺少指定图层。');
       const layers=version.document.layers.filter(l=>!input.layerIds || input.layerIds.includes(l.layerId));
       const features=layers.flatMap(l=>l.features.map(f=>({f,layerId:l.layerId})));
@@ -44,7 +61,7 @@ export class SpatialInputs {
       let cursor:string|undefined,asOf:string|undefined,changeCursor:string|undefined;
       const seen=new Set<string>(),expected=new Map(input.revisions?.map(v=>[sourceKey(v.ref),v.revision])??[]);
       do {
-        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},'principal' in scope?scope.principal:{kind:'seat',seatId:scope.actor.seatId},scope.signal);
         scope.signal.throwIfAborted();scope.check();
         if(!('changeCursor' in query.data)) throw spatialError('INCOMPLETE','来源未返回当前对象快照。');
         const data=query.data;

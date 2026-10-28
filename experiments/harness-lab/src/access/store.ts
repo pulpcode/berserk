@@ -1,5 +1,6 @@
 import { checkAnnotationTables } from '../annotations/store.js';
 import { upgradeSeatColumns } from './schema.js';
+import { enqueueContinuousTaskChange } from '../background/continuous-store.js';
 import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
@@ -145,6 +146,7 @@ export class AccessStore {
     const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {})};
     this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task));
     this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id);
+    enqueueContinuousTaskChange(this.db,task);
     return task;
   }
   update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false): TaskSpace {
@@ -166,12 +168,7 @@ export class AccessStore {
     try {
       const current = this.get(id,actor.seatId);if(current.revision!==revision)throw conflict();
       this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify(next),id);
-      if(this.db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_streams'").get() && next.visibility==='public' && next.state==='active') {
-        const rows=this.db.prepare('SELECT s.data FROM continuous_streams s JOIN continuous_current c ON c.epoch_id=s.epoch_id WHERE s.current=1 AND c.task_id=?').all(id);
-        for(const row of rows) { const stream=JSON.parse(String(row.data)) as {epochId:string;enabled:boolean};if(!stream.enabled)continue;const input={id:randomUUID(),epochId:stream.epochId,kind:'task_revision',task:next,receivedAt:next.updatedAt,bytes:Buffer.byteLength(JSON.stringify(next))};
-          this.db.prepare('INSERT INTO continuous_inputs VALUES(?,?,NULL,?,0,?,?)').run(input.id,stream.epochId,id,input.receivedAt,JSON.stringify(input));
-        }
-      }
+      enqueueContinuousTaskChange(this.db,next);
       this.db.exec('COMMIT');return next;
     } catch(error){this.db.exec('ROLLBACK');throw error;}
   }

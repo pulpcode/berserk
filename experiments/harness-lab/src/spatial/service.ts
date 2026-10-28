@@ -9,7 +9,7 @@ import { runCalculation } from './worker.js';
 const one=(items:SpatialItem[])=>{if(items.length!==1) throw spatialError('AMBIGUOUS','该位置必须解析为恰好一个对象；请明确对象范围。');return items[0];};
 export class SpatialAnalysisService {
   readonly inputs:SpatialInputs;
-  constructor(annotations:AnnotationService,context?:ContextService) {this.inputs=new SpatialInputs(annotations,context);}
+  constructor(annotations:AnnotationService|undefined,context?:ContextService) {this.inputs=new SpatialInputs(annotations,context);}
   async analyze(request:SpatialRequest,scope:SpatialScope,requestId:string,toolCallId:string):Promise<SpatialResult> {
     if(!spatialRequestValid(request)) throw spatialError('INVALID_INPUT','空间分析参数无效或不支持；不要补造坐标。');
     if(request.operation==='read') {const result=scope.resolveResult(request.resultRef);this.inputs.authorize(result,scope);return structuredClone(result);}

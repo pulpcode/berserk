@@ -29,7 +29,7 @@ export async function readSituation(transport: QueryTransport, params: Situation
 export function taskQueries(catalog: ContextCatalog, context?: TaskContext): SituationQueryParams[] {
   const result: SituationQueryParams[] = [];
   for (const system of catalog.systems.filter(item => item.capabilities.includes('situation_current'))) {
-    const objectRefs = context?.businessRefs?.filter(ref => ref.systemId === system.id && ['road','resource','area'].includes(ref.objectType));
+    const objectRefs = context?.businessRefs?.filter(ref => ref.systemId === system.id && ['road','resource','area'].includes(ref.objectType)).map(({systemId,objectType,objectId}) => ({systemId,objectType,objectId}));
     if (objectRefs?.length) result.push({ systemId: system.id, mode: 'current', objectRefs });
     if (context?.focus?.areaIds?.length) result.push({ systemId: system.id, mode: 'current', areaIds: context.focus.areaIds });
   }

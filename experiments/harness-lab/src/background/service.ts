@@ -145,7 +145,7 @@ export class BackgroundService {
   }
   configuredProfileScope(profile: BackgroundProfileSnapshot): ContextScopeSnapshot | undefined {
     if (!profile.contextScopeId) {
-      if (profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE','查询方案须配置业务资料范围。',503);
+      if (profile.tools.some(tool => ['information_search','information_read','situation_query','task_search','task_read','information_record_task_assessment','spatial_analyze','analysis_task_candidates'].includes(tool))) throw new RequestError('CONTEXT_UNAVAILABLE','查询方案须配置业务资料范围。',503);
       return undefined;
     }
     if (!this.lab.context) throw new RequestError('CONTEXT_UNAVAILABLE','业务资料配置不可用。',503);

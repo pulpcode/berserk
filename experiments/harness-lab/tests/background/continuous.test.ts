@@ -11,6 +11,7 @@ import { ContinuousStore } from '../../src/background/continuous-store.js';
 import { ContextService } from '../../src/context/service.js';
 import { DockerExecutionService } from '../../src/execution/docker.js';
 import { PiLab } from '../../src/pi/lab.js';
+import { createBackgroundExecutor } from '../../src/pi/background-runner.js';
 import { fakeRuntime, testConfig, type Reply } from '../pi/fake-runtime.js';
 import type { BackgroundJob } from '../../src/contracts/background.js';
 import type { Identity, TaskSpace } from '../../src/contracts/access.js';
@@ -18,25 +19,31 @@ import type { AnalysisUpdateInput } from '../../src/contracts/continuous.js';
 
 const cleanup:Array<()=>Promise<unknown>|void>=[];
 afterEach(async()=>{for(const fn of cleanup.splice(0).reverse())await fn();});
-type Mode='quiet'|'significant'|'unassigned'|'missing'|'omit'|'race'|'wait'|'large'|'race-before-record';
-async function setup(options:{executionUnavailable?:boolean}={}){
+type Mode='quiet'|'significant'|'unassigned'|'missing'|'omit'|'race'|'wait'|'large'|'race-before-record'|'repair'|'repair-error'|'repair-wait'|'unrelated'|'input-repair';
+async function setup(options:{executionUnavailable?:boolean;timeoutMs?:number;beforeReply?:(stage:number)=>void;transformUpdate?:(update:AnalysisUpdateInput,stage:number,lastToolText:string)=>AnalysisUpdateInput}={}){
   const dir=await mkdtemp(join(tmpdir(),'axon-continuous-service-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir),access=new AccessStore(db),actors={} as Record<'a'|'b'|'c',Identity>;
   for(const name of ['a','b','c'] as const){const id=randomUUID();db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run(name,name,1,0);db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(id,name,name,name,'test-only','test-only');actors[name]=access.identity(id)!;}
   db.close();
-  const config=testConfig(dir,{...(options.executionUnavailable?{execution:{enabled:true,image:'test-unused',cpus:1,memoryMb:256,pidsLimit:16,uid:1000,gid:1000}}:{}),seatId:'a',auth:{secret:'continuous-test-auth-secret-32-characters',sessionMs:100000}});
+  const config=testConfig(dir,{...(options.executionUnavailable?{execution:{enabled:true,image:'test-unused',cpus:1,memoryMb:256,pidsLimit:16,uid:1000,gid:1000}}:{}),...(options.timeoutMs?{agentRunTimeoutMs:options.timeoutMs}:{}),seatId:'a',auth:{secret:'continuous-test-auth-secret-32-characters',sessionMs:100000}});
   let task:TaskSpace,mode:Mode='quiet',raceDone=false;
   const stages=new Map<string,number>();
-  const fake=await fakeRuntime(config,():Reply=>{
+  const fake=await fakeRuntime(config,(context):Reply=>{
     const job=host.store.listJobs().find(j=>j.status==='running')!;
-    const stage=stages.get(job.id)??0;stages.set(job.id,stage+1);
+    const stage=stages.get(job.id)??0;stages.set(job.id,stage+1);options.beforeReply?.(stage);
     if(mode==='wait')return {waitForAbort:true};
-    if(stage===0)return {tools:[{name:'task_read',arguments:{taskId:task.id}}]};
-    if(stage===1){if(mode==='race-before-record'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'查询后、记录前修改条件'});}
+    if(stage===0)return {tools:[{name:'analysis_task_candidates',arguments:{}}]};
+    if(mode==='repair-wait' && stage>=2)return {waitForAbort:true};
+    if((mode==='repair'||mode==='repair-wait') && stage===1)return {text:'已记录变化（实际遗漏）'};
+    if(mode==='repair-error' && stage===2)return {text:'工具错误后仍试图结束'};
+    if(stage===1 || mode==='input-repair' && stage===2 || mode==='repair' && stage===2 || mode==='repair-error' && stage===3){if(mode==='race-before-record'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'查询后、记录前修改条件'});}
       if(mode==='missing')return {text:'未记录的普通答复'};
       const inputs=host.continuous.store.inputs(host.continuous.store.batch(job.batchId!));
-      const update:AnalysisUpdateInput={taskUpdates:mode==='unassigned'||mode==='omit'?[]:[{taskId:task.id,inputIds:inputs.map(i=>i.id),change:'changed',reason:'资料影响已复核',significant:mode==='significant'}],unassigned:{significant:mode==='unassigned',reason:'未归属事实已核对'},uncertainties:[]};
-      return {text:'这是最终答复前的处理中说明',tools:[{name:'information_record_analysis_update',arguments:{...update}}]};
+      const update:AnalysisUpdateInput={taskUpdates:mode==='omit'||mode==='unrelated'?[]:[{taskId:task.id,inputIds:mode==='repair-error'&&stage===1?[randomUUID()]:inputs.map(i=>i.id),change:'changed',reason:'资料影响已复核',significant:mode==='significant'||mode==='repair'}],unassigned:{significant:mode==='unassigned',reason:'未归属事实已核对'},uncertainties:[]};
+      if(mode==='unrelated')update.taskCoverage=[{taskId:task.id,status:'unrelated',reason:'没有发现相关关键词'}];
+      const previousContent=context.messages.at(-1)?.content;
+      const lastToolText=typeof previousContent==='string'?previousContent:previousContent?.filter(block=>block.type==='text').map(block=>block.text).join('')??'';
+      return {text:'这是最终答复前的处理中说明',tools:[{name:'information_record_analysis_update',arguments:{...(options.transformUpdate?.(update,stage,lastToolText)??update)}}]};
     }
     if(mode==='race'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'人员已修订的新需求'});}
     return {text:mode==='large'?'证据字符'.repeat(80000):'最终研判：保留仍有依据的判断。'};
@@ -54,13 +61,177 @@ async function setup(options:{executionUnavailable?:boolean}={}){
 }
 
 describe('continuous queue, native evidence and atomic publication',()=>{
+  it.each(['repair','repair-error'] as const)('repairs %s using native follow-up in one request and publishes only the final result',async mode=>{
+    const s=await setup();s.setMode(mode);await s.accept();const job=await s.settled(1);
+    expect(s.host.continuous.store.publication(job.id).status).toBe('published');
+    const detail=await s.host.continuous.detail(s.actors.b,job.id);
+    expect(detail.text).toBe('最终研判：保留仍有依据的判断。');
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(1);
+    expect(snapshot?.messages.every(m=>m.requestId===job.requestId)).toBe(true);
+    expect(snapshot?.turns).toHaveLength(1);
+    expect(s.fake.calls).toHaveLength(mode==='repair'?4:5);
+    expect(s.host.store.listDeliveries(job.id)).toHaveLength(mode==='repair'?1:0);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(0);
+    const restored=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);expect(restored?.turns?.[0].finalMessageId).toBe(snapshot?.turns?.[0].finalMessageId);
+  });
+  it('caps missing-record repair at two and never reuses a previous round receipt',async()=>{
+    const s=await setup();await s.accept();const first=await s.settled(1);const before=s.fake.calls.length;
+    s.setMode('missing');await s.accept();const job=await s.settled(2);
+    expect(s.fake.calls.length-before).toBe(4);
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(2);
+    expect(s.host.continuous.store.publication(job.id).status).toBe('unpublished');
+    expect(s.host.continuous.store.stream(s.stream.epochId).state).toBe('paused');
+    expect(s.host.continuous.store.baseline(s.stream.epochId,s.task().id)).toBe(first.id);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(1);
+    expect(s.host.store.listDeliveries(job.id)).toHaveLength(0);
+  });
+  it.each(['cancel','timeout'] as const)('keeps the original budget and pending inputs on repair %s',async ending=>{
+    const s=await setup(ending==='timeout'?{timeoutMs:1500}:{});s.setMode('repair-wait');await s.accept();
+    await vi.waitFor(()=>expect(s.fake.calls).toHaveLength(3));const job=s.host.store.listJobs()[0];
+    expect(s.host.continuous.store.publication(job.id).status).not.toBe('published');
+    expect(s.host.store.listDeliveries()).toHaveLength(0);await s.accept();
+    expect(s.host.continuous.store.batch(job.batchId!).inputIds).toHaveLength(1);
+    if(ending==='cancel')await s.host.cancel(s.actors.a,job.id,job.revision);
+    await s.settled(1);expect(s.fake.calls).toHaveLength(3);expect(s.fake.calls[2].aborted).toBe(true);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(2);
+    expect(s.host.continuous.store.stream(s.stream.epochId).state).toBe('paused');
+  });
+
+  it('preserves native repair evidence and final identity after reopening the lab',async()=>{
+    const s=await setup();s.setMode('repair');await s.accept();const job=await s.settled(1);
+    const before=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    await s.host.close();await s.lab.close();
+    const restored=await PiLab.create(s.lab.config,s.fake.runtime);restored.context=s.lab.context;cleanup.push(()=>restored.close());
+    const after=await createBackgroundExecutor(restored).read(job,s.stream.profile);
+    expect(after?.turns).toEqual(before?.turns);expect(after?.messages).toEqual(before?.messages);
+    expect(after?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(1);
+    expect(s.fake.calls).toHaveLength(4);
+  });
+  it('uses the existing stale-version reassessment instead of spending more repair attempts',async()=>{
+    let change=()=>{};
+    const s=await setup({beforeReply:stage=>{if(stage===2)change();}});
+    await s.accept();await s.settled(1);
+    change=()=>{change=()=>{};s.revise();};
+    s.setMode('repair');await s.accept();await s.settled(3);
+    const jobs=s.host.store.listJobs();
+    const stale=jobs.find(j=>s.host.continuous.store.publication(j.id).status==='superseded')!;
+    expect(stale).toBeDefined();
+    const snapshot=await createBackgroundExecutor(s.lab).read(stale,s.stream.profile);
+    expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(1);
+    expect(s.host.continuous.current(s.actors.b,s.task().id).items[0].update?.taskUpdates[0].taskRevision).toBe(2);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(0);
+  });
+  it('does not send a repair request after the fixed recipient authorization is revoked',async()=>{
+    let revoke=()=>{};
+    const s=await setup({beforeReply:stage=>{if(stage===1)revoke();}});
+    revoke=()=>{s.host.config.sources[0].allowedRecipientSeatIds=['a'];};
+    s.setMode('missing');await s.accept();const job=await s.settled(1);
+    expect(s.fake.calls).toHaveLength(2);expect(job.status).toBe('failed');
+    expect(s.host.continuous.store.publication(job.id).status).toBe('unpublished');
+    expect(s.host.store.listDeliveries(job.id)).toHaveLength(0);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(1);
+  });
   it('publishes quiet native results for fixed recipient without notification or single-source leakage, preserves raw evidence and duplicate identity',async()=>{
     const s=await setup();const receipt=await s.accept('same');const job=await s.settled(1);
     expect(job.kind).toBe('continuous_analysis');expect(job.eventId).toBeUndefined();expect(s.host.store.listDeliveries()).toEqual([]);
     expect(await s.accept('same')).toEqual(receipt);expect(s.host.continuous.rounds(s.actors.b).total).toBe(1);expect(s.host.continuous.rounds(s.actors.c).total).toBe(0);
-    const detail=await s.host.continuous.detail(s.actors.b,job.id);expect(detail.text).toBe('最终研判：保留仍有依据的判断。');expect(detail.processingText).toContain('处理中说明');expect(detail.inputs?.[0].event?.text).toContain('SOURCE_FACT');expect(detail.update?.taskUpdates[0].taskRevision).toBe(1);
+    const detail=await s.host.continuous.detail(s.actors.b,job.id);expect(s.fake.calls).toHaveLength(3);expect(detail.text).toBe('最终研判：保留仍有依据的判断。');expect(detail.processingText).toContain('处理中说明');expect(detail.inputs?.[0].event?.text).toContain('SOURCE_FACT');expect(detail.update?.taskUpdates[0].taskRevision).toBe(1);
     const historical=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,section:'evidence'});expect(historical.detail?.inputs?.[0].event?.occurredAt).toBe('2026-10-26T10:00:00Z');
     expect(new ContinuousStore(new BackgroundStore(s.lab.access!.db)).publication(job.id).status).toBe('published');
+  });
+  it.each(['omit','unrelated'] as const)('rejects %s coverage for a task with unresolved association and preserves input after bounded repair',async mode=>{
+    const s=await setup();s.setMode(mode);await s.accept();const job=await s.settled(1);
+    expect(s.host.continuous.store.publication(job.id).status).toBe('unpublished');
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(1);
+    expect(s.host.store.listDeliveries()).toHaveLength(0);
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    expect(snapshot?.messages.some(m=>m.role==='tool'&&m.isError&&m.text.includes('TASK_COVERAGE_MISSING'))).toBe(true);
+    expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(2);
+    expect(snapshot?.messages.find(m=>m.toolName==='analysis_task_candidates')?.taskDiscovery?.tasks).toHaveLength(1);
+  });
+  it('identifies a one-character UUID typo and lets the native same-request loop correct it from tool feedback',async()=>{
+    let bad='',valid='',rejectedWithoutRecord=false;
+    const s=await setup({transformUpdate:(update,stage,text)=>{
+      if(stage===1){valid=update.taskUpdates[0].inputIds[0];bad=valid.slice(0,-1)+(valid.endsWith('0')?'1':'0');update.taskUpdates[0].inputIds=[bad];}
+      else {
+        const diagnostic=JSON.parse(text.slice(text.indexOf('{'),text.lastIndexOf('}')+1)) as {path:string;value:string;currentBatchInputIds:string[]};
+        expect(text).toContain('INVALID_INPUT');expect(diagnostic).toEqual({path:'taskUpdates[0].inputIds[0]',value:bad,currentBatchInputIds:[valid]});
+        const job=s.host.store.listJobs()[0];rejectedWithoutRecord=s.host.continuous.store.publication(job.id).update===undefined;
+        update.taskUpdates[0].inputIds=[diagnostic.currentBatchInputIds[0]];
+      }return update;
+    }});
+    s.setMode('input-repair');await s.accept();const job=await s.settled(1);
+    expect(rejectedWithoutRecord).toBe(true);expect(s.fake.calls).toHaveLength(4);
+    const publication=s.host.continuous.store.publication(job.id);expect(publication.status).toBe('published');expect(publication.update?.taskUpdates[0].inputIds).toEqual([valid]);
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);expect(snapshot?.messages.every(m=>m.requestId===job.requestId)).toBe(true);
+    expect(snapshot?.messages.filter(m=>m.toolName==='information_record_analysis_update').map(m=>!!m.isError)).toEqual([true,false]);
+    expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(0);
+  });
+  it.each(['empty','duplicate','unknown','change','reason','significant'] as const)('separates %s recording diagnostics without persisting an invalid update',async kind=>{
+    let checked=false;
+    const s=await setup({transformUpdate:update=>{
+      const broken=structuredClone(update),item=broken.taskUpdates[0],job=s.host.store.listJobs()[0];
+      if(kind==='empty')item.inputIds=[];if(kind==='duplicate')item.inputIds.push(item.inputIds[0]);if(kind==='unknown')item.inputIds=[randomUUID()];
+      if(kind==='change')Object.assign(item,{change:'wrong'});if(kind==='reason')item.reason='';if(kind==='significant')Object.assign(item,{significant:'true'});
+      const call=()=>s.host.continuous.record(job,broken,{queried:true,tasks:new Map()},'invalid-direct');
+      expect(call).toThrow(kind==='empty'?'必须是非空输入引用数组':kind==='duplicate'?'输入引用重复':kind==='unknown'?'currentBatchInputIds':kind);
+      expect(s.host.continuous.store.publication(job.id).update).toBeUndefined();checked=true;return update;
+    }});
+    await s.accept();const job=await s.settled(1);expect(checked).toBe(true);expect(s.host.continuous.store.publication(job.id).status).toBe('published');
+  });
+  it.each(['same-epoch','other-epoch'] as const)('retains %s historical input authorization and never repairs references automatically',async kind=>{
+    let history:string|undefined=undefined;
+    const s=await setup({transformUpdate:update=>{if(history)update.taskUpdates[0].inputIds=[history];return update;}});
+    await s.accept();const first=await s.settled(1);history=s.host.continuous.store.batch(first.batchId!).inputIds[0];
+    let epoch=s.stream.epochId;
+    if(kind==='other-epoch'){
+      const current=s.host.continuous.store.stream(epoch);
+      epoch=(await s.host.continuous.configure(s.actors.a,{name:'新配置',sourceIds:current.sourceIds,profileId:current.profileId,recipientSeatIds:current.recipientSeatIds,enabled:true,quietMs:0,maxWaitMs:1},{id:current.id,revision:current.revision})).epochId;
+    }
+    await s.accept();const job=await s.settled(2),publication=s.host.continuous.store.publication(job.id);
+    if(kind==='same-epoch'){expect(publication.status).toBe('published');expect(publication.update?.taskUpdates[0].inputIds).toEqual([history]);}
+    else {
+      expect(publication.status).toBe('unpublished');expect(publication.update).toBeUndefined();expect(s.host.continuous.store.pending(epoch)).toHaveLength(1);
+      const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile),error=snapshot?.messages.find(m=>m.toolName==='information_record_analysis_update'&&m.isError)?.text??'';
+      expect(error).toContain(history);expect(error).toContain(JSON.stringify({path:'taskUpdates[0].inputIds[0]',value:history,currentBatchInputIds:s.host.continuous.store.batch(job.batchId!).inputIds}));
+      expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(2);
+      expect(s.host.continuous.store.baseline(s.stream.epochId,s.task().id)).toBe(first.id);
+    }
+  });
+  it.each([false,true])('rejects a legal historical reference replacing required current task input; native correction=%s',async correct=>{
+    let history:string|undefined=undefined,required:string|undefined=undefined,checked=false;
+    const s=await setup({transformUpdate:(update,stage,text)=>{
+      if(!history)return update;
+      if(stage===2){
+        const diagnostic=JSON.parse(text.slice(text.indexOf('{'),text.lastIndexOf('}')+1)) as {requiredTaskInputIssues:Array<{taskId:string;path:string;currentTaskRevisionInputIds:string[]}>};
+        expect(diagnostic).toEqual({requiredTaskInputIssues:[{taskId:s.task().id,path:'taskUpdates[0].inputIds',currentTaskRevisionInputIds:[required]}]});
+        expect(s.host.continuous.store.publication(s.host.store.listJobs()[0].id).update).toBeUndefined();checked=true;
+        if(correct){update.taskUpdates[0].inputIds=[diagnostic.requiredTaskInputIssues[0].currentTaskRevisionInputIds[0]];return update;}
+      }
+      update.taskUpdates[0].inputIds=[history];return update;
+    }});
+    await s.accept();const first=await s.settled(1);history=s.host.continuous.store.batch(first.batchId!).inputIds[0];
+    s.setMode('input-repair');s.revise();required=s.host.continuous.store.pending(s.stream.epochId)[0].id;await s.host.pump();const job=await s.settled(2);
+    expect(checked).toBe(true);const publication=s.host.continuous.store.publication(job.id);
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);expect(snapshot?.messages.every(m=>m.requestId===job.requestId)).toBe(true);
+    const records=snapshot?.messages.filter(m=>m.toolName==='information_record_analysis_update');expect(records?.map(m=>!!m.isError)).toEqual(correct?[true,false]:[true,true]);
+    expect(publication.status).toBe(correct?'published':'unpublished');expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(correct?0:1);
+    if(correct)expect(publication.update?.taskUpdates[0].inputIds).toEqual([required]);
+    else {expect(publication.update).toBeUndefined();expect(s.host.continuous.store.baseline(s.stream.epochId,s.task().id)).toBe(first.id);expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(2);}
+  });
+  it.each(['missing','unknown','conflicting'] as const)('reports the specific %s task coverage IDs',async kind=>{
+    let unknown='';const s=await setup({transformUpdate:update=>{
+      if(kind==='missing')update.taskUpdates=[];
+      if(kind==='unknown'){unknown=randomUUID();update.taskUpdates[0].taskId=unknown;}
+      if(kind==='conflicting')update.taskCoverage=[{taskId:update.taskUpdates[0].taskId,status:'unrelated',reason:'猜测无关'}];
+      return update;
+    }});
+    await s.accept();const job=await s.settled(1),snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    const error=snapshot?.messages.find(m=>m.toolName==='information_record_analysis_update'&&m.isError)?.text??'';
+    expect(error).toContain('TASK_COVERAGE_MISSING');expect(error).toContain(JSON.stringify(kind==='conflicting'?{conflictingTaskIds:[s.task().id],status:'unrelated',candidate:'uncertain',hasTaskUpdate:true}:{missingTaskIds:[s.task().id],unknownTaskIds:kind==='unknown'?[unknown]:[],conflictingTaskIds:[]}));
+    expect(s.host.continuous.store.publication(job.id).status).toBe('unpublished');expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(1);
   });
   it('commits task revision trigger atomically and requires explicit reassessment; resume uses a new request/session without discarding pending input',async()=>{
     const s=await setup();await s.accept();const first=await s.settled(1);s.setMode('omit');const revised=s.revise();expect(s.host.continuous.store.pending(s.stream.epochId)[0]).toMatchObject({kind:'task_revision',task:{revision:revised.revision}});
@@ -84,7 +255,7 @@ describe('continuous queue, native evidence and atomic publication',()=>{
     expect(next.sessionId).not.toBe(previous.sessionId);expect(s.host.continuous.store.source('one')?.epochId).toBe(next.epochId);expect(s.host.continuous.store.pending(previous.epochId)).toHaveLength(1);
     // A retired paused epoch can be explicitly recovered without receiving new inputs.
     const old=s.host.continuous.store.stream(previous.epochId);s.setMode('quiet');s.host.continuous.control(s.actors.a,old.epochId,{revision:old.revision,action:'resume',clientActionId:randomUUID()});await s.settled(2);expect(s.host.continuous.store.stream(old.epochId).state).toBe('retired');
-    s.revise();expect(s.host.continuous.store.pending(old.epochId)).toHaveLength(0);expect(s.host.continuous.store.pending(next.epochId)).toHaveLength(0);
+    s.revise();expect(s.host.continuous.store.pending(old.epochId)).toHaveLength(0);expect(s.host.continuous.store.pending(next.epochId)).toHaveLength(1);
   });
   it('holds cancelled work and new inputs until explicit recovery',async()=>{
     const s=await setup();s.setMode('wait');await s.accept();await vi.waitFor(()=>expect(s.fake.calls.length).toBe(1));const running=s.host.store.listJobs()[0];await s.host.cancel(s.actors.a,running.id,running.revision);await s.settled(1);await s.accept();expect(s.host.continuous.store.pending(s.stream.epochId)).toHaveLength(2);expect(s.host.continuous.store.stream(s.stream.epochId).state).toBe('paused');expect(s.host.store.listJobs()).toHaveLength(1);

@@ -1,5 +1,8 @@
 import type { BackgroundJobStatus, BackgroundProfileSnapshot, BackgroundResultRef, BackgroundFile } from './background.js';
 import type { TaskSpace } from './access.js';
+import type { ContextRef, ContextQueryResult } from './context.js';
+import { decodeSpatialResult, projectSpatialResult, type SpatialResult } from './spatial.js';
+import { normalizeContextQuery, decodeContextResponse } from '../context/validation.js';
 import type { PublicMessage } from './index.js';
 
 export interface ContinuousStreamInput {
@@ -24,12 +27,17 @@ export type AnalysisChange = 'initial' | 'changed' | 'unchanged' | 'retracted' |
 export interface AnalysisTaskUpdateInput {
   taskId: string; inputIds: string[]; change: AnalysisChange; reason: string; significant: boolean;
 }
+export interface AnalysisTaskCoverageInput {taskId:string;status:'assessed'|'unrelated'|'uncertain';reason:string}
 export interface AnalysisUpdateInput {
+  taskCoverage?: AnalysisTaskCoverageInput[];
   taskUpdates: AnalysisTaskUpdateInput[];
   unassigned: {significant: boolean; reason: string};
   uncertainties: string[];
 }
-export interface AnalysisUpdate extends Omit<AnalysisUpdateInput, 'taskUpdates'> {
+export interface AnalysisUpdate extends Omit<AnalysisUpdateInput, 'taskUpdates' | 'taskCoverage'> {
+  discoveryToolCallId?: string;
+  discoveryDigest?: string;
+  taskCoverage?: Array<AnalysisTaskCoverageInput & {taskRevision:number;taskTitle:string}>;
   taskUpdates: Array<AnalysisTaskUpdateInput & {taskRevision: number; taskTitle: string; previousJobId?: string}>;
   toolCallId: string; recordedAt: string;
 }
@@ -46,4 +54,41 @@ export interface ContinuousCurrentResult { items: ContinuousRound[]; total: numb
 export interface ContinuousAccess { enabled: boolean; canRead: boolean; canManage: boolean }
 export interface ContinuousExecutionContext {
   stream: ContinuousStream; batch: ContinuousBatch; inputs: ContinuousInput[]; requiredTaskIds: string[];
+}
+
+/** Complete host discovery; geometry is kept in native details, not transcribed by the model. */
+export interface TaskDiscovery {
+  schemaVersion:1; requestId:string; toolCallId:string; queriedAt:string;
+  inputs:Array<{inputId:string;objectRefs:ContextRef[];resolved:boolean;reason:string}>;
+  tasks:Array<{task:Pick<TaskSpace,'id'|'title'|'goal'|'revision'|'context'>;candidate:'related'|'unrelated'|'uncertain';reason:string;spatialResultRefs:string[]}>;
+  spatialResults:SpatialResult[];
+  sourceQueries?:ContextQueryResult[];
+}
+export function projectTaskDiscovery(result:TaskDiscovery) {
+  return {...result, spatialResults:result.spatialResults.map(projectSpatialResult)};
+}
+export function extractTaskDiscovery(details:unknown,toolName:string,isError=false,text?:string):TaskDiscovery|null|undefined {
+  if(!details || typeof details!=='object' || !Object.hasOwn(details,'taskDiscovery')) return;
+  const v=(details as {taskDiscovery?:unknown}).taskDiscovery;
+  if(isError || toolName!=='analysis_task_candidates' || !v || typeof v!=='object') return null;
+  const d=v as TaskDiscovery;
+  const str=(v:unknown)=>typeof v==='string' && !!v.trim();
+  const ref=(v:ContextRef)=>v && str(v.systemId) && str(v.objectType) && str(v.objectId);
+  if(d.schemaVersion!==1 || !str(d.requestId) || !str(d.toolCallId) || !Number.isFinite(Date.parse(d.queriedAt))
+    || !Array.isArray(d.inputs) || d.inputs.length>32 || !d.inputs.every(i=>i && str(i.inputId) && typeof i.resolved==='boolean' && str(i.reason) && Array.isArray(i.objectRefs) && i.objectRefs.every(ref))
+    || !Array.isArray(d.tasks) || d.tasks.length>100 || !d.tasks.every(i=>i && i.task && str(i.task.id) && str(i.task.title) && typeof i.task.goal==='string' && Number.isSafeInteger(i.task.revision) && i.task.revision>0 && ['related','unrelated','uncertain'].includes(i.candidate) && str(i.reason) && Array.isArray(i.spatialResultRefs) && i.spatialResultRefs.every(str))
+    || new Set(d.tasks.map(i=>i.task.id)).size!==d.tasks.length || !Array.isArray(d.spatialResults) || d.spatialResults.length>100) return null;
+  if(d.sourceQueries!==undefined) {
+    if(!Array.isArray(d.sourceQueries) || d.sourceQueries.length>100)return null;
+    try {for(const q of d.sourceQueries) {
+      if(!q || !str(q.systemId) || !Number.isFinite(Date.parse(q.queriedAt)) || !q.query || typeof q.query!=='object' || !q.data) return null;
+      const tool='mode' in q.query?'situation_query':'item' in q.data?'information_read':'information_search';
+      const params=normalizeContextQuery(tool,q.query);
+      if(params.systemId!==q.systemId)return null;
+      decodeContextResponse(tool,params,q.data);
+    }} catch {return null;}
+  }
+  if(d.spatialResults.some((r,index)=>!decodeSpatialResult(r) || r.requestId!==d.requestId || r.toolCallId!==`${d.toolCallId}:spatial:${index}` || r.delivery || r.scope.some(i=>i.kind!=='source'))) return null;
+  if(d.tasks.some(t=>t.spatialResultRefs.some(ref=>!d.spatialResults.some(r=>r.resultRef===ref)))) return null;
+  try {if(text!==undefined && JSON.stringify(JSON.parse(text))!==JSON.stringify(projectTaskDiscovery(d))) return null; return structuredClone(d);} catch {return null;}
 }

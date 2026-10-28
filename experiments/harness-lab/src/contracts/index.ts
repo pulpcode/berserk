@@ -1,3 +1,4 @@
+import type { TaskDiscovery } from './continuous.js';
 import type { SpatialResult } from './spatial.js';
 import type { AnnotationResult } from './annotation-results.js';
 import type { AnnotationContext, AnnotationSelection, LoadedAnnotationSelection } from './annotations.js';
@@ -20,6 +21,7 @@ export interface PublicMessage {
   resultMissing?: true;
   annotationResult?: AnnotationResult | null;
   spatialResult?: SpatialResult | null;
+  taskDiscovery?: TaskDiscovery | null;
   attachments?: FileRef[];
   selections?: LoadedComposerSelection;
 }
@@ -165,7 +167,7 @@ export type StreamEvent = {
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; taskDiscovery?: TaskDiscovery | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }

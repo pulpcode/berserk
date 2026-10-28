@@ -56,7 +56,7 @@ async function setup(reply: Parameters<typeof fakeRuntime>[1], context = false, 
       recordAnalysisUpdate: (value, evidence, toolCallId) => {
         records.push({input: value, evidence});
         for (const task of value.taskUpdates) if (!evidence.tasks.has(task.taskId)) throw new RequestError('TASK_NOT_QUERIED', '本轮未查询任务。', 409);
-        return {update: {...value, taskUpdates: value.taskUpdates.map(task => ({...task, taskRevision: evidence.tasks.get(task.taskId)!, taskTitle: '公共任务'})), toolCallId, recordedAt: new Date().toISOString()}, published: false};
+        return {update: {...value, taskCoverage:value.taskCoverage?.map(item=>({...item,taskRevision:evidence.tasks.get(item.taskId)!,taskTitle:'公共任务'})), taskUpdates: value.taskUpdates.map(task => ({...task, taskRevision: evidence.tasks.get(task.taskId)!, taskTitle: '公共任务'})), toolCallId, recordedAt: new Date().toISOString()}, published: false};
       }};
     return {job, input};
   }
@@ -84,7 +84,7 @@ describe('native continuous background execution', () => {
     expect(processingText(exact, first.job.requestId)).not.toContain('FINAL_3');
   });
 
-  it('does not append a repair call when the model omits or fails the change record', async () => {
+  it('leaves publication policy to the host when no completion check is supplied', async () => {
     const f = await setup((_context, index) => index === 0 ? {text: 'NO_RECORD'} : index === 1
       ? {tools: [{name: 'information_record_analysis_update', arguments: {...empty, taskUpdates: [{taskId: randomUUID(), inputIds: [randomUUID()], change: 'changed', reason: '未查询', significant: true}]}}]}
       : {text: 'RECORD_FAILED'});

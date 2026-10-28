@@ -1,5 +1,6 @@
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import { extractSpatialResult, projectSpatialResult, spatialModelFormat, type SpatialResult } from '../contracts/spatial.js';
+import { extractTaskDiscovery } from '../contracts/continuous.js';
 import { spatialError } from '../spatial/validation.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
 export function spatialToolResult(result:SpatialResult) {
@@ -9,13 +10,25 @@ export function spatialToolResult(result:SpatialResult) {
 export function resolveSpatialResult(entries:SessionEntry[],ref:string):SpatialResult {
   let requestId:string|undefined;
   const calls=new Map<string,Record<string,unknown>>();
+  const discoveryCalls=new Map<string,Record<string,unknown>>();
   let found:SpatialResult|undefined;
   for(const entry of entries) {
-    if(entry.type==='custom' && entry.customType===RESOURCE_ENTRY) {requestId=(entry.data as {requestId:string}).requestId;calls.clear();}
-    if(entry.type==='custom' && entry.customType===RESULT_ENTRY) {requestId=undefined;calls.clear();}
+    if(entry.type==='custom' && entry.customType===RESOURCE_ENTRY) {requestId=(entry.data as {requestId:string}).requestId;calls.clear();discoveryCalls.clear();}
+    if(entry.type==='custom' && entry.customType===RESULT_ENTRY) {requestId=undefined;calls.clear();discoveryCalls.clear();}
     if(entry.type!=='message' || !requestId) continue;
     const message=entry.message;
     if(message.role==='assistant') for(const c of message.content) if(c.type==='toolCall' && c.name==='spatial_analyze') calls.set(c.id,c.arguments as Record<string,unknown>);
+    if(message.role==='assistant') for(const c of message.content) if(c.type==='toolCall' && c.name==='analysis_task_candidates') discoveryCalls.set(c.id,c.arguments as Record<string,unknown>);
+    if(message.role==='toolResult' && message.toolName==='analysis_task_candidates') {
+      const args=discoveryCalls.get(message.toolCallId);discoveryCalls.delete(message.toolCallId);
+      const discovery=extractTaskDiscovery(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
+      if(!args || Object.keys(args).length || !discovery || discovery.requestId!==requestId || discovery.toolCallId!==message.toolCallId) continue;
+      for(const result of discovery.spatialResults) if(result.resultRef===ref) {
+        if(found) throw spatialError('RESULT_INVALID','原生历史中分析结果引用不唯一。');
+        found=result;
+      }
+      continue;
+    }
     if(message.role!=='toolResult' || message.toolName!=='spatial_analyze') continue;
     const args=calls.get(message.toolCallId);calls.delete(message.toolCallId);
     const text=message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n');

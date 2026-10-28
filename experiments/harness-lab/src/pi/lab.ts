@@ -1,7 +1,9 @@
 import { SpatialInputs } from '../spatial/inputs.js';
 import type { SpatialResult } from '../contracts/spatial.js';
 import { extractSpatialResult } from '../contracts/spatial.js';
-import { spatialTools } from './spatial-tools.js';
+import { extractTaskDiscovery, type TaskDiscovery } from '../contracts/continuous.js';
+import { backgroundSpatialTools, spatialTools } from './spatial-tools.js';
+import { resolveSpatialResult } from './spatial-results.js';
 import { extractAnnotationResult } from '../contracts/annotation-results.js';
 import { AnnotationService, type AnnotationActor } from '../annotations/service.js';
 import { annotationTools } from './annotation-tools.js';
@@ -14,7 +16,8 @@ import { taskAssessmentTool, taskInformationTools, type TaskInformationReader } 
 import { recipientSuggestionTool } from './recipient-tools.js';
 import { continuousFileTools } from './continuous-files.js';
 import { continuousTools, continuousToolNames } from './continuous-tools.js';
-import type { RecordTaskAssessment, RecordRecipientSuggestion, ReadAnalysisCurrent, RecordAnalysisUpdate } from '../background/executor.js';
+import { continuousCompletion } from './continuous-completion.js';
+import type { RecordTaskAssessment, RecordRecipientSuggestion, ReadAnalysisCurrent, ReadTaskCandidates, RecordAnalysisUpdate, CheckAnalysisCompletion } from '../background/executor.js';
 import { ContextService } from '../context/service.js';
 import { TaskQueryService } from '../context/task-query.js';
 import type { ContextPrincipal } from '../contracts/context.js';
@@ -73,10 +76,12 @@ export interface PreprocessInput {
   recordRecipientSuggestion?: RecordRecipientSuggestion;
   streamEpochId?: string;
   readAnalysisCurrent?: ReadAnalysisCurrent;
+  readTaskCandidates?: ReadTaskCandidates;
   recordAnalysisUpdate?: RecordAnalysisUpdate;
+  checkAnalysisCompletion?: CheckAnalysisCompletion;
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
 }
-export interface PreprocessReference { jobId: string; sessionId: string; directory: string; streamEpochId?: string; requestId?: string }
+export interface PreprocessReference { jobId: string; sessionId: string; directory: string; streamEpochId?: string; requestId?: string; contextPrincipal?: Extract<ContextPrincipal,{kind:'service'}> }
 interface RequestModel { id: string; config: LabConfig; runtime: ModelRuntime; version: string }
 interface Active {
   model: RequestModel;
@@ -118,7 +123,7 @@ interface Active {
 }
 interface RecordState {
   intake?: MessageIntake;
-  service?: { directory: string };
+  service?: { directory: string; contextPrincipal?: Extract<ContextPrincipal,{kind:'service'}>; streamEpochId?: string };
   manager: SessionManager;
   session?: AgentSession;
   workspaceId: string;
@@ -436,7 +441,9 @@ export class PiLab {
       && (entry.data as {requestId?: string}).requestId === input.requestId)) throw new RequestError('SESSION_BUSY', '该请求已有执行记录，不会自动重跑。', 409);
     if (input.streamEpochId && (unfinishedRequests(manager.getBranch()).length || (previous && previous.status !== 'succeeded')))
       throw new RequestError('RECOVERY_REQUIRED', '未完成的持续研判必须显式恢复到新会话。', 409);
-    const record: RecordState = { manager, workspaceId, seatId: 'service', service: { directory }, result: previous };
+    const record: RecordState = { manager, workspaceId, seatId: 'service', service: { directory, contextPrincipal: input.contextPrincipal ? structuredClone(input.contextPrincipal) : undefined, streamEpochId: input.streamEpochId }, result: previous };
+    if (input.tools.includes('spatial_analyze') && (!input.streamEpochId || !input.contextPrincipal || !this.context)) throw new RequestError('SPATIAL_FORBIDDEN','后台空间分析需要持续研判及明确来源范围。',403);
+    this.validateSpatialHistory(record);
     if (this.settingsUpdating) throw settingsBusy();
     const active: Active = { model: this.requestModel('default'), id: input.requestId, background: true, service: { ...input, resources: structuredClone(input.resources), roles: structuredClone(input.roles), tools: [...input.tools], files: structuredClone(input.files) },
       status: 'responding', phase: 'preparing', acceptedAt: Date.now(), compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
@@ -462,7 +469,7 @@ export class PiLab {
     const path = join(sessionDirectory, matches[0]); if (!(await lstat(path)).isFile()) throw stateError();
     const manager = await openStrictSession(path, sessionDirectory);
     if (manager.getSessionId() !== input.sessionId) throw stateError();
-    const record: RecordState = { manager, workspaceId, seatId: 'service', service: { directory }, result: null };
+    const record: RecordState = { manager, workspaceId, seatId: 'service', service: { directory, contextPrincipal: input.contextPrincipal ? structuredClone(input.contextPrincipal) : undefined, streamEpochId: input.streamEpochId }, result: null };
     record.result = validateHistoryEvidence(manager.getBranch(), workspaceId, input.sessionId);
     await this.validateChildren(record);
     return this.serviceSnapshot(record, input.requestId);
@@ -608,10 +615,57 @@ export class PiLab {
   }
 
   private authorizeSpatialHistory(record:RecordState,result:SpatialResult,actor?:AnnotationActor) {
-    if(!this.annotations || record.service) throw new RequestError('SPATIAL_FORBIDDEN','当前身份无法读取该空间结果。',403);
+    if(record.service) {
+      const principal=record.service.contextPrincipal;
+      if(!this.context || !principal || !record.service.streamEpochId) throw new RequestError('SPATIAL_FORBIDDEN','后台历史缺少获准来源范围。',403);
+      const original=resolveSpatialResult(record.manager.getBranch(),result.resultRef);
+      const fixed={...result};delete fixed.delivery;
+      if(!isDeepStrictEqual(original,fixed)) throw new RequestError('SPATIAL_RESULT_INVALID','空间历史与原始计算不一致。',409);
+      new SpatialInputs(undefined,this.context).authorize(result,{principal,signal:new AbortController().signal,check:()=>{},resolveResult:ref=>resolveSpatialResult(record.manager.getBranch(),ref)});
+      return;
+    }
+    if(!this.annotations) throw new RequestError('SPATIAL_FORBIDDEN','当前身份无法读取该空间结果。',403);
     const current=actor ?? this.annotations.actorForSeat(record.seatId);
     new SpatialInputs(this.annotations,this.context).authorize(result,{actor:current,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,signal:new AbortController().signal,check:()=>{},resolveResult:()=>{throw new Error('History projection does not resolve new results.');}});
   }
+  private authorizeTaskDiscoveryHistory(record:RecordState,discovery:TaskDiscovery) {
+    const principal=record.service?.contextPrincipal;
+    if(!this.context || !principal || !record.service?.streamEpochId) throw new RequestError('SPATIAL_FORBIDDEN','任务发现历史缺少获准来源范围。',403);
+    this.context.assertServiceScope(principal.scope);
+    if(discovery.inputs.some(input=>input.objectRefs.some(ref=>!principal.scope.systemIds.includes(ref.systemId)))) throw new RequestError('SPATIAL_FORBIDDEN','当前范围不能读取任务发现的来源。',403);
+    if(discovery.sourceQueries?.some(query=>!principal.scope.systemIds.includes(query.systemId))) throw new RequestError('SPATIAL_FORBIDDEN','当前范围不能读取任务发现的查询依据。',403);
+    let requestId:string|undefined,called=false,found=false;
+    for(const entry of record.manager.getBranch()) {
+      if(entry.type==='custom' && entry.customType===RESOURCE_ENTRY) {requestId=(entry.data as {requestId:string}).requestId;called=false;}
+      if(entry.type==='custom' && entry.customType===RESULT_ENTRY) {requestId=undefined;called=false;}
+      if(entry.type!=='message' || requestId!==discovery.requestId) continue;
+      const message=entry.message;
+      if(message.role==='assistant') for(const content of message.content) if(content.type==='toolCall' && content.name==='analysis_task_candidates' && content.id===discovery.toolCallId && Object.keys(content.arguments).length===0) called=true;
+      if(message.role!=='toolResult' || message.toolName!=='analysis_task_candidates' || message.toolCallId!==discovery.toolCallId || !called) continue;
+      called=false;
+      const original=extractTaskDiscovery(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
+      if(found || !original || !isDeepStrictEqual(original,discovery)) throw new RequestError('TASK_DISCOVERY_INVALID','任务发现历史与原始工具结果不一致。',409);
+      found=true;
+    }
+    if(!found) throw new RequestError('TASK_DISCOVERY_INVALID','任务发现历史缺少本会话原始工具回执。',409);
+    const scope={principal,signal:new AbortController().signal,check:()=>{},resolveResult:():SpatialResult=>{throw new Error('Discovery results cannot authorize native spatial result reads.');}};
+    for(const result of discovery.spatialResults) new SpatialInputs(undefined,this.context).authorize(result,scope);
+  }
+  private validateSpatialHistory(record:RecordState,actor?:AnnotationActor) {
+    let requestId:string|undefined;
+    for(const entry of record.manager.getBranch()) {
+      if(entry.type==='custom' && entry.customType===RESOURCE_ENTRY) requestId=(entry.data as {requestId:string}).requestId;
+      if(entry.type==='custom' && entry.customType===RESULT_ENTRY) requestId=undefined;
+      if(entry.type!=='message' || entry.message.role!=='toolResult') continue;
+      const message=entry.message,result=extractSpatialResult(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
+      if(message.toolName==='spatial_analyze' && ((message.details as {spatialRejected?:boolean}|undefined)?.spatialRejected || !message.isError && !result)) throw new RequestError('SPATIAL_RESULT_INVALID','会话含未通过完整性校验的空间结果；原始记录保留，请在新会话重新分析。',409);
+      if(result) {const owner=result.delivery??result;if(record.service && (owner.requestId!==requestId || owner.toolCallId!==message.toolCallId)) throw new RequestError('SPATIAL_RESULT_INVALID','空间历史的请求或调用归属不一致。',409);this.authorizeSpatialHistory(record,result,actor);}
+      const discovery=extractTaskDiscovery(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
+      if(message.toolName==='analysis_task_candidates' && ((message.details as {taskDiscoveryRejected?:boolean}|undefined)?.taskDiscoveryRejected || !message.isError && !discovery)) throw new RequestError('TASK_DISCOVERY_INVALID','会话含未通过完整性校验的任务发现结果；原始记录保留，请在新会话重新分析。',409);
+      if(discovery) {if(discovery.requestId!==requestId || discovery.toolCallId!==message.toolCallId) throw new RequestError('TASK_DISCOVERY_INVALID','任务发现历史的请求或调用归属不一致。',409);this.authorizeTaskDiscoveryHistory(record,discovery);}
+    }
+  }
+
   private snapshot(record: RecordState): SessionSnapshot {
     const id = record.manager.getSessionId();
     const backgroundJob = record.service ? undefined : this.backgroundHooks?.getReservation?.(id);
@@ -633,9 +687,12 @@ export class PiLab {
       let spatialResult = message.role === 'toolResult' ? extractSpatialResult(message.details,message.toolName,message.isError,text) : undefined;
       if(message.role==='toolResult' && message.toolName==='spatial_analyze' && ((message.details as {spatialRejected?:boolean}|undefined)?.spatialRejected || !message.isError && !spatialResult)) text='空间结果未通过完整性校验，原始审计记录保留，不能继续使用该结果。';
       if(spatialResult) {try {this.authorizeSpatialHistory(record,spatialResult);} catch {spatialResult=null;text='当前身份无法读取此历史空间分析的来源；原记录保留，未替换为新数据。';}}
+      let taskDiscovery=message.role==='toolResult'?extractTaskDiscovery(message.details,message.toolName,message.isError,text):undefined;
+      if(message.role==='toolResult' && message.toolName==='analysis_task_candidates' && ((message.details as {taskDiscoveryRejected?:boolean}|undefined)?.taskDiscoveryRejected || !message.isError && !taskDiscovery)) text='任务发现结果未通过完整性校验，原始审计记录保留。';
+      if(taskDiscovery) {try {if(taskDiscovery.requestId!==requestId || message.role!=='toolResult' || taskDiscovery.toolCallId!==message.toolCallId) throw new Error('Ownership mismatch');this.authorizeTaskDiscoveryHistory(record,taskDiscovery);} catch {taskDiscovery=null;text='当前身份无法核验此历史任务发现结果；原记录保留，未替换为新数据。';}}
       if (text || message.role === 'toolResult') messages.push({
         id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text,
-        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult } : {}),
+        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult, taskDiscovery } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
@@ -732,7 +789,11 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
 ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_item_read 查询最新状态）：${JSON.stringify({ id: work.id, title: work.title, goal: work.goal, state: work.state, revision: work.revision, creatorSeatId: work.creatorSeatId, assigneeSeatId: work.assigneeSeatId, inputFiles: work.inputFiles, latestSubmissionId: work.latestSubmissionId, latestReview: work.submissions.at(-1)?.review })}` : '本会话尚未关联分派工作；如用户指的是已有工作，先查询，存在多个可能对象时询问。'}` : '';
     const loader = new DefaultResourceLoader({
       cwd: '/workspace', agentDir: this.agentDir, settingsManager,
-      extensionFactories: role || active.background ? [] : [interactionExtension(async (toolCallId, questions, signal) => {
+      extensionFactories: active.service?.streamEpochId && active.service.checkAnalysisCompletion
+        ? [continuousCompletion(() => active.service!.checkAnalysisCompletion!(this.serviceSnapshot(record, active.id)),
+          () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted,
+          error => this.stop(record, active, 'failure', error instanceof Error ? error.message : '研判完成检查失败。'))]
+        : role || active.background ? [] : [interactionExtension(async (toolCallId, questions, signal) => {
         const item = { ...this.interactionBase(record, active, toolCallId, 'ask_user'), kind: 'question' as const, questions, status: 'pending' as const };
         return await this.waitForInteraction(record, active, item, signal) as QuestionInteraction;
       }, Boolean(this.config.hitlDemoEnabled))],
@@ -785,8 +846,11 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const recipients = !role && active.service?.recordRecipientSuggestion && active.service.tools.includes('information_suggest_recipients')
       ? [recipientSuggestionTool(active.service.recordRecipientSuggestion, active.controller, authorizeRequest)] : [];
     const continuous = !role && active.service?.streamEpochId && active.service.readAnalysisCurrent && active.service.recordAnalysisUpdate
-      ? continuousTools(active.service.readAnalysisCurrent, active.service.recordAnalysisUpdate, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest) : [];
+      ? continuousTools(active.service.readAnalysisCurrent, active.service.recordAnalysisUpdate, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest, active.service.readTaskCandidates) : [];
     const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients, ...continuous,
+      ...(!role && active.service?.streamEpochId && principal?.kind==='service' && this.context ? backgroundSpatialTools(this.context,record.manager,{
+        principal,requestId:active.id,signal:active.controller.signal,check:authorizeRequest,skillIds:snapshot.skills.map(skill=>skill.id),
+      }):[]),
       ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
         actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
         requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState, skillIds: snapshot.skills.map(skill => skill.id),
@@ -883,14 +947,14 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }
     };
     session.agent.afterToolCall = async context => {
-      const mapResult = isMapTool(context.toolCall.name) || context.toolCall.name === 'spatial_analyze';
+      const mapResult = isMapTool(context.toolCall.name) || context.toolCall.name === 'spatial_analyze' || context.toolCall.name === 'analysis_task_candidates';
       const actualContent = mapResult ? structuredClone(context.result.content) : undefined;
       const actualDetails = mapResult ? structuredClone(context.result.details) : undefined;
       const actualError = context.isError;
       let original: Awaited<ReturnType<NonNullable<typeof originalAfter>>>;
       try { original = await originalAfter?.(context); }
       catch (error) {
-        if (context.toolCall.name.startsWith('annotation_') || context.toolCall.name === 'situation_query' || context.toolCall.name === 'spatial_analyze') {
+        if (context.toolCall.name.startsWith('annotation_') || context.toolCall.name === 'situation_query' || context.toolCall.name === 'spatial_analyze' || context.toolCall.name === 'analysis_task_candidates') {
           annotationState?.invalidate();
           this.stop(record, active, 'failure', '地图工具结果处理失败，请核对原操作回执；不继续后续写入。');
           throw error;
@@ -907,6 +971,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         annotationState?.rejectResult(toolCall.id);
         // Changed delivery cannot retain a successful structured receipt.
         if (toolCall.name === 'spatial_analyze') return {...original, details: {spatialResult: null, spatialRejected: !actualError || Boolean((actualDetails as {spatialResult?:unknown}|undefined)?.spatialResult)}};
+        if (toolCall.name === 'analysis_task_candidates') return {...original, details: {taskDiscovery:null,taskDiscoveryRejected: !actualError || Boolean((actualDetails as {taskDiscovery?:unknown}|undefined)?.taskDiscovery)}};
         if (toolCall.name.startsWith('annotation_')) return {...original, details: {annotationResult: null}};
       }
       const policy = active.policies?.get(toolCall.id);
@@ -1080,11 +1145,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     if (!active.background && this.annotations) {
       active.annotationActor = this.annotations.actorForSeat(record.seatId, actorUserId);
       // Native history is authoritative: deny continuation rather than feed revoked result bodies to a model.
-      for(const entry of record.manager.getBranch()) if(entry.type==='message' && entry.message.role==='toolResult') {
-        const message=entry.message,result=extractSpatialResult(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
-        if(message.toolName==='spatial_analyze' && ((message.details as {spatialRejected?:boolean}|undefined)?.spatialRejected || !message.isError && !result)) throw new RequestError('SPATIAL_RESULT_INVALID','会话含未通过完整性校验的空间结果；原始记录保留，请在新会话重新分析。',409);
-        if(result) this.authorizeSpatialHistory(record,result,active.annotationActor);
-      }
+      this.validateSpatialHistory(record,active.annotationActor);
 
       const annotationContext = this.annotations.automaticContext(active.annotationActor, id);
       if (annotationContext) active.selections = {annotationContext};
@@ -1204,7 +1265,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             setPhase(record, active, 'preparing');
             const result = event.result as { content?: Array<{ type: string; text?: string }>; details?: unknown };
             emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName),
-              text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError, annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || ''), spatialResult: extractSpatialResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '') });
+              text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError, annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || ''), spatialResult: extractSpatialResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || ''), taskDiscovery:extractTaskDiscovery(result.details,event.toolName,event.isError,result.content?.filter(block=>block.type==='text').map(block=>block.text||'').join('\n')||'') });
           }
         });
         if (!child && !active.background) {

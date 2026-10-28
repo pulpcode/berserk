@@ -1,0 +1,770 @@
+{
+  "id": "continuous-spatial-multitask-v1",
+  "tasks": [
+    {
+      "key": "A",
+      "title": "A 上午配送",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划10:00通过绑定路线；车辆已分配且正常，任务路线以绑定对象为准。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "r1",
+            "role": "route"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    },
+    {
+      "key": "B",
+      "title": "B 下午配送",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划14:00通过绑定路线；车辆已分配且正常，任务路线以绑定对象为准。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "r1",
+            "role": "route"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    },
+    {
+      "key": "C",
+      "title": "C 区域内现场作业",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划09:30—10:30在绑定作业范围开展需要车辆进入的作业，各作业点未细分。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "work-w",
+            "role": "work_area"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    },
+    {
+      "key": "E",
+      "title": "E 上午设备配送",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划10:30通过绑定路线；车辆已分配且正常，任务路线以绑定对象为准。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "r2",
+            "role": "route"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    }
+  ],
+  "objects": [
+    {
+      "ref": {
+        "systemId": "situation",
+        "objectType": "area",
+        "objectId": "zone-z"
+      },
+      "name": "临时管制边界",
+      "revision": 1,
+      "areaIds": [
+        "shared-label"
+      ],
+      "effectiveAt": "2026-11-10T08:00:00+08:00",
+      "validTime": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120,
+              30
+            ],
+            [
+              120.02,
+              30
+            ],
+            [
+              120.02,
+              30.02
+            ],
+            [
+              120,
+              30.02
+            ],
+            [
+              120,
+              30
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "memberRefs": []
+      }
+    },
+    {
+      "ref": {
+        "systemId": "situation",
+        "objectType": "road",
+        "objectId": "r1"
+      },
+      "name": "通道一",
+      "revision": 1,
+      "areaIds": [
+        "shared-label"
+      ],
+      "effectiveAt": "2026-11-10T08:00:00+08:00",
+      "validTime": null,
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.99,
+            30.01
+          ],
+          [
+            120.03,
+            30.01
+          ]
+        ]
+      },
+      "properties": {
+        "passability": "open",
+        "restrictionNote": "该道路自身正常；另须结合区域管制通知。"
+      }
+    },
+    {
+      "ref": {
+        "systemId": "situation",
+        "objectType": "road",
+        "objectId": "r2"
+      },
+      "name": "通道二",
+      "revision": 1,
+      "areaIds": [
+        "shared-label"
+      ],
+      "effectiveAt": "2026-11-10T08:00:00+08:00",
+      "validTime": null,
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            119.99,
+            30.04
+          ],
+          [
+            120.03,
+            30.04
+          ]
+        ]
+      },
+      "properties": {
+        "passability": "open",
+        "restrictionNote": "该道路自身正常；另须结合区域管制通知。"
+      }
+    },
+    {
+      "ref": {
+        "systemId": "situation",
+        "objectType": "area",
+        "objectId": "work-w"
+      },
+      "name": "作业范围",
+      "revision": 1,
+      "areaIds": [
+        "shared-label"
+      ],
+      "effectiveAt": "2026-11-10T08:00:00+08:00",
+      "validTime": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              120.015,
+              30.005
+            ],
+            [
+              120.025,
+              30.005
+            ],
+            [
+              120.025,
+              30.015
+            ],
+            [
+              120.015,
+              30.015
+            ],
+            [
+              120.015,
+              30.005
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "memberRefs": []
+      }
+    }
+  ],
+  "steps": [
+    {
+      "round": 0,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:00:00+08:00",
+      "title": "区域通行通知 第1版",
+      "payload": {
+        "sourceMessageId": "spatial-r0",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第1版",
+        "text": "业务接收时间为2026-11-10T08:00:00+08:00。报告zone-notice第1版已发布，请读取报告正文及关联区域对象。\n独立演练业务时钟为2026年11月10日08:00。当前没有区域通行限制；对象边界用于定位，边界存在本身不代表封控。",
+        "occurredAt": "2026-11-10T08:00:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 1,
+        "title": "区域通行通知 第1版",
+        "summary": "独立演练业务时钟为2026年11月10日08:00。当前没有区域通行限制；对象边界用于定位，边界存在本身不代表封控。",
+        "content": "独立演练业务时钟为2026年11月10日08:00。当前没有区域通行限制；对象边界用于定位，边界存在本身不代表封控。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:00:00+08:00",
+        "publishedAt": "2026-11-10T08:00:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      }
+    },
+    {
+      "round": 1,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:05:00+08:00",
+      "title": "区域通行通知 第2版",
+      "payload": {
+        "sourceMessageId": "spatial-r1",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第2版",
+        "text": "业务接收时间为2026-11-10T08:05:00+08:00。报告zone-notice第2版已发布，请读取报告正文及关联区域对象。\n区域对象situation/area/zone-z的边界内（含边界）在2026年11月10日09:00—12:00禁止所有车辆进入，区外正常。",
+        "occurredAt": "2026-11-10T08:05:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 2,
+        "title": "区域通行通知 第2版",
+        "summary": "区域对象situation/area/zone-z的边界内（含边界）在2026年11月10日09:00—12:00禁止所有车辆进入，区外正常。",
+        "content": "区域对象situation/area/zone-z的边界内（含边界）在2026年11月10日09:00—12:00禁止所有车辆进入，区外正常。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:05:00+08:00",
+        "publishedAt": "2026-11-10T08:05:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      }
+    },
+    {
+      "round": 2,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:10:00+08:00",
+      "title": "区域通行通知 第3版",
+      "payload": {
+        "sourceMessageId": "spatial-r2",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第3版",
+        "text": "业务接收时间为2026-11-10T08:10:00+08:00。报告zone-notice第3版已发布，请读取报告正文及关联区域对象。\n封控有效时段和限制不变；管制边界已更新至修订2，请按来源当前边界核对。",
+        "occurredAt": "2026-11-10T08:10:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 3,
+        "title": "区域通行通知 第3版",
+        "summary": "封控有效时段和限制不变；管制边界已更新至修订2，请按来源当前边界核对。",
+        "content": "封控有效时段和限制不变；管制边界已更新至修订2，请按来源当前边界核对。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:10:00+08:00",
+        "publishedAt": "2026-11-10T08:10:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      },
+      "objects": [
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          },
+          "name": "临时管制边界",
+          "revision": 2,
+          "areaIds": [
+            "shared-label"
+          ],
+          "effectiveAt": "2026-11-10T08:10:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  120,
+                  30
+                ],
+                [
+                  120.02,
+                  30
+                ],
+                [
+                  120.02,
+                  30.05
+                ],
+                [
+                  120,
+                  30.05
+                ],
+                [
+                  120,
+                  30
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "memberRefs": []
+          }
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:15:00+08:00",
+      "title": "区域通行通知 第4版",
+      "payload": {
+        "sourceMessageId": "spatial-r3",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第4版",
+        "text": "业务接收时间为2026-11-10T08:15:00+08:00。报告zone-notice第4版已发布，请读取报告正文及关联区域对象。\n封控有效时段和限制不变；管制边界缩小至修订3，请按来源当前边界核对。",
+        "occurredAt": "2026-11-10T08:15:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 4,
+        "title": "区域通行通知 第4版",
+        "summary": "封控有效时段和限制不变；管制边界缩小至修订3，请按来源当前边界核对。",
+        "content": "封控有效时段和限制不变；管制边界缩小至修订3，请按来源当前边界核对。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:15:00+08:00",
+        "publishedAt": "2026-11-10T08:15:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      },
+      "objects": [
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          },
+          "name": "临时管制边界",
+          "revision": 3,
+          "areaIds": [
+            "shared-label"
+          ],
+          "effectiveAt": "2026-11-10T08:15:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  120.015,
+                  30.005
+                ],
+                [
+                  120.025,
+                  30.005
+                ],
+                [
+                  120.025,
+                  30.015
+                ],
+                [
+                  120.015,
+                  30.015
+                ],
+                [
+                  120.015,
+                  30.005
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "memberRefs": []
+          }
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "kind": "duplicate",
+      "businessTime": "2026-11-10T08:18:00+08:00",
+      "title": "重复第3轮通知",
+      "duplicateOf": 3
+    },
+    {
+      "round": 5,
+      "kind": "task_revision",
+      "businessTime": "2026-11-10T08:20:00+08:00",
+      "title": "A确认改走通道二",
+      "taskKey": "A",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划10:00通过绑定路线；管理者现已确认改走通道二，绑定对象已同步变更。车辆正常。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "r2",
+            "role": "route"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    },
+    {
+      "round": 6,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:25:00+08:00",
+      "title": "区域通行通知 第5版",
+      "payload": {
+        "sourceMessageId": "spatial-r6",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第5版",
+        "text": "业务接收时间为2026-11-10T08:25:00+08:00。报告zone-notice第5版已发布，请读取报告正文及关联区域对象。\n取消本日09:00—12:00的区域封控。区域内外均恢复正常通行。边界对象仍保留，不代表仍在限制。",
+        "occurredAt": "2026-11-10T08:25:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 5,
+        "title": "区域通行通知 第5版",
+        "summary": "取消本日09:00—12:00的区域封控。区域内外均恢复正常通行。边界对象仍保留，不代表仍在限制。",
+        "content": "取消本日09:00—12:00的区域封控。区域内外均恢复正常通行。边界对象仍保留，不代表仍在限制。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:25:00+08:00",
+        "publishedAt": "2026-11-10T08:25:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      }
+    },
+    {
+      "round": 7,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:30:00+08:00",
+      "title": "区域通行通知 第2版 旧版晚到转发",
+      "payload": {
+        "sourceMessageId": "spatial-r7",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第2版 旧版晚到转发",
+        "text": "业务接收时间为2026-11-10T08:30:00+08:00。报告zone-notice第2版为旧版转发，请核对来源最新修订。\n转发08:05发布的第2版旧通知：区域内09:00—12:00禁止车辆进入。此条是旧版转发，不是重新发布封控。",
+        "occurredAt": "2026-11-10T08:05:00+08:00"
+      }
+    },
+    {
+      "round": 8,
+      "kind": "task_create",
+      "businessTime": "2026-11-10T08:35:00+08:00",
+      "title": "新建D 尚无路线资料",
+      "task": {
+        "key": "D",
+        "title": "D 新增物资配送",
+        "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划09:40从仓库向医院配送，实际路线尚未提供；不得假定具体经过地点。"
+      }
+    },
+    {
+      "round": 9,
+      "kind": "task_revision",
+      "businessTime": "2026-11-10T08:40:00+08:00",
+      "title": "D确认路线并保留备选讨论",
+      "taskKey": "D",
+      "goal": "日期为2026年11月10日，时间为北京时间。仅依据已知资料判断约束，不假定已执行改线或资源调度；司机、装载和实际执行状态未提供。计划09:40通过当前绑定的通道一。已确认实际路线为通道一；人员只讨论了改走通道二的可能性，尚未批准或执行。",
+      "context": {
+        "businessRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "r1",
+            "role": "route"
+          }
+        ],
+        "focus": {
+          "areaIds": [
+            "shared-label"
+          ]
+        }
+      }
+    },
+    {
+      "round": 10,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:45:00+08:00",
+      "title": "区域通行通知 第6版",
+      "payload": {
+        "sourceMessageId": "spatial-r10",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第6版",
+        "text": "业务接收时间为2026-11-10T08:45:00+08:00。报告zone-notice第6版已发布，请读取报告正文及关联区域对象。\n重新实施本日09:00—12:00管制：当前区域边界内（含边界）禁止所有车辆进入。其他区域正常。",
+        "occurredAt": "2026-11-10T08:45:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 6,
+        "title": "区域通行通知 第6版",
+        "summary": "重新实施本日09:00—12:00管制：当前区域边界内（含边界）禁止所有车辆进入。其他区域正常。",
+        "content": "重新实施本日09:00—12:00管制：当前区域边界内（含边界）禁止所有车辆进入。其他区域正常。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:45:00+08:00",
+        "publishedAt": "2026-11-10T08:45:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      }
+    },
+    {
+      "round": 11,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:50:00+08:00",
+      "title": "区域通行通知 第7版",
+      "payload": {
+        "sourceMessageId": "spatial-r11",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第7版",
+        "text": "业务接收时间为2026-11-10T08:50:00+08:00。报告zone-notice第7版已发布，请读取报告正文及关联区域对象。\n09:00—12:00管制仍有效。来源边界数据暂缺，未发布取消或改线决定，请核实影响范围。",
+        "occurredAt": "2026-11-10T08:50:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 7,
+        "title": "区域通行通知 第7版",
+        "summary": "09:00—12:00管制仍有效。来源边界数据暂缺，未发布取消或改线决定，请核实影响范围。",
+        "content": "09:00—12:00管制仍有效。来源边界数据暂缺，未发布取消或改线决定，请核实影响范围。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:50:00+08:00",
+        "publishedAt": "2026-11-10T08:50:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      },
+      "objects": [
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          },
+          "name": "临时管制边界",
+          "revision": 4,
+          "areaIds": [
+            "shared-label"
+          ],
+          "effectiveAt": "2026-11-10T08:50:00+08:00",
+          "validTime": null,
+          "geometry": null,
+          "properties": {
+            "memberRefs": []
+          }
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "kind": "event",
+      "businessTime": "2026-11-10T08:55:00+08:00",
+      "title": "区域通行通知 第8版",
+      "payload": {
+        "sourceMessageId": "spatial-r12",
+        "subjectId": "zone-notice",
+        "title": "区域通行通知 第8版",
+        "text": "业务接收时间为2026-11-10T08:55:00+08:00。报告zone-notice第8版已发布，请读取报告正文及关联区域对象。\n取消本日09:00—12:00的区域封控，内外均正常通行；边界数据已恢复。未发生任何新的任务改线决定。",
+        "occurredAt": "2026-11-10T08:55:00+08:00"
+      },
+      "report": {
+        "reportId": "zone-notice",
+        "subjectId": "zone-notice",
+        "revision": 8,
+        "title": "区域通行通知 第8版",
+        "summary": "取消本日09:00—12:00的区域封控，内外均正常通行；边界数据已恢复。未发生任何新的任务改线决定。",
+        "content": "取消本日09:00—12:00的区域封控，内外均正常通行；边界数据已恢复。未发生任何新的任务改线决定。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          }
+        ],
+        "areaIds": [
+          "shared-label"
+        ],
+        "observedAt": "2026-11-10T08:55:00+08:00",
+        "publishedAt": "2026-11-10T08:55:00+08:00",
+        "validTime": {
+          "from": "2026-11-10T09:00:00+08:00",
+          "to": "2026-11-10T12:00:00+08:00"
+        }
+      },
+      "objects": [
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "zone-z"
+          },
+          "name": "临时管制边界",
+          "revision": 5,
+          "areaIds": [
+            "shared-label"
+          ],
+          "effectiveAt": "2026-11-10T08:55:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  120.015,
+                  30.005
+                ],
+                [
+                  120.025,
+                  30.005
+                ],
+                [
+                  120.025,
+                  30.015
+                ],
+                [
+                  120.015,
+                  30.015
+                ],
+                [
+                  120.015,
+                  30.005
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "memberRefs": []
+          }
+        }
+      ]
+    }
+  ]
+}

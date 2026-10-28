@@ -23,7 +23,9 @@ async function run() {
   const config = crashConfig(dataDir);
   const fake = await fakeRuntime(config,(context) => {
     if (blocked) return {waitForAbort:true};
-    if (context.messages.at(-1)?.role==='user') return {tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:true,reason:'需要提醒的独立输入'},uncertainties:[]}}]};
+    const last=context.messages.at(-1);
+    if(last?.role==='user')return {tools:[{name:'analysis_task_candidates',arguments:{}}]};
+    if(last?.role==='toolResult' && last.toolName==='analysis_task_candidates') return {tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:true,reason:'需要提醒的独立输入'},uncertainties:[]}}]};
     return {text:'SIGKILL 前已发布的固定结论'};
   });
   const lab = await PiLab.create(config,fake.runtime);lab.context=crashContext();const service = new BackgroundService(lab,crashCatalog());
@@ -38,7 +40,7 @@ async function run() {
   }
   const first = service.store.listJobs()[0]; blocked=true;
   await service.accept('crash-source',{sourceMessageId:'second',title:'第二条',text:'中断前已受理但未发布的来源事实'});
-  while(fake.calls.length<3){if(Date.now()>deadline)throw new Error('Blocked provider did not start');await new Promise(resolve=>setTimeout(resolve,20));}
+  while(fake.calls.length<4){if(Date.now()>deadline)throw new Error('Blocked provider did not start');await new Promise(resolve=>setTimeout(resolve,20));}
   const second=service.store.listJobs().find(job=>job.id!==first.id)!;
   process.send?.({ready:true,stream,first,second,pendingIds:service.continuous.store.pending(stream.epochId).map(input=>input.id)});
   // The test kills this process while the real native request remains active.

@@ -1,7 +1,8 @@
-import type { TaskBusinessRef, TaskContext } from '../contracts/access.js';
+import type { TaskBusinessRef, TaskBusinessRole, TaskContext } from '../contracts/access.js';
 import { RequestError } from '../contracts/errors.js';
 
 const invalid = () => new RequestError('INVALID_INPUT', '业务关联与关注范围格式无效，请检查字段、数量及带时区的时间。');
+const roles = ['route', 'resource', 'location', 'work_area', 'reference'] as const;
 const idSchema = { type: 'string', minLength: 1, maxLength: 128 };
 const timeSchema = { type: 'string', format: 'date-time', maxLength: 64 };
 export const taskContextSchema = {
@@ -10,7 +11,7 @@ export const taskContextSchema = {
     businessRefs: {
       type: 'array', maxItems: 20, items: {
         type: 'object', additionalProperties: false, required: ['systemId', 'objectType', 'objectId'],
-        properties: { systemId: idSchema, objectType: idSchema, objectId: idSchema, label: { type: 'string', maxLength: 200 } },
+        properties: { systemId: idSchema, objectType: idSchema, objectId: idSchema, label: { type: 'string', maxLength: 200 }, role: { type: 'string', enum: roles } },
       },
     },
     focus: {
@@ -58,12 +59,14 @@ export function normalizeTaskContext(value: unknown): TaskContext | undefined {
     if (!Array.isArray(source.businessRefs) || source.businessRefs.length > 20) throw invalid();
     const refs = new Map<string, TaskBusinessRef>();
     for (const value of source.businessRefs) {
-      const item = object(value, ['systemId', 'objectType', 'objectId', 'label']);
+      const item = object(value, ['systemId', 'objectType', 'objectId', 'label', 'role']);
       const ref: TaskBusinessRef = { systemId: text(item.systemId, 128), objectType: text(item.objectType, 128), objectId: text(item.objectId, 128) };
       if (item.label !== undefined) { const label = text(item.label, 200, true); if (label) ref.label = label; }
+      if (item.role !== undefined) { if (!roles.includes(item.role as TaskBusinessRole)) throw invalid(); ref.role = item.role as TaskBusinessRole; }
       const key = JSON.stringify([ref.systemId, ref.objectType, ref.objectId]);
       // A label is display-only. Repeated references keep one deterministic display label.
       const old = refs.get(key);
+      if (old && old.role !== ref.role) throw invalid();
       if (!old || (ref.label !== undefined && (old.label === undefined || ref.label < old.label))) refs.set(key, ref);
     }
     if (refs.size) result.businessRefs = [...refs].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, ref]) => ref);

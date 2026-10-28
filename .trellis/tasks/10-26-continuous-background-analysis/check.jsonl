@@ -7,3 +7,6 @@
 {"file": ".trellis/spec/frontend/harness-lab.md", "reason": "桌面导航、草稿和异步状态保持"}
 {"file": ".trellis/tasks/10-26-continuous-background-analysis/research/findings.md", "reason": "冻结基线的并行代码证据及已排除假设"}
 {"file": ".trellis/spec/backend/continuous-analysis.md", "reason": "持续配置代次、原子发布、原生证据、组合授权、恢复与桌面接续的已实现契约"}
+{"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "复用空间计算与原生证据，批准增量增加服务主体只读适配"}
+{"file": ".trellis/tasks/10-26-continuous-background-analysis/task-spatial-continuation-review.md", "reason": "用户批准的本轮范围与验证计划"}
+{"file": ".trellis/tasks/10-26-continuous-background-analysis/task-spatial-continuation-report.md", "reason": "本轮实现、全部测试失败、诊断v2版本边界与模型额度阻断，不得误记完整验收"}

@@ -85,7 +85,7 @@ async function collect(name:string) {
   }
   assert.ok(job,'等待自动批次达到观察时限；不会自动重跑。');
   observed.add(job.id); entry.job = job;
-  entry.snapshot = await createBackgroundExecutor(lab).read(job);
+  entry.snapshot = await createBackgroundExecutor(lab).read(job,stream.profile);
   entry.sourceRequests = [...mock.requests]; await persist();
   assert.equal(job.status,'succeeded',JSON.stringify(job.error));
   const detail = await app.inject({url:`/api/continuous/rounds/${job.id}`,headers:recipient});

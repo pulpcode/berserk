@@ -28,9 +28,12 @@ it('retains actual SIGKILL inputs and published baseline; resumes once with a fr
     expect(state.first.status).toBe('succeeded');expect(state.second.status).toBe('running');expect(state.pendingIds).toHaveLength(1);
     const exit=once(child,'exit');expect(child.kill('SIGKILL')).toBe(true);expect((await exit)[1]).toBe('SIGKILL');
     const config=crashConfig(dataDir);
-    const fake=await fakeRuntime(config,context=>context.messages.at(-1)?.role==='user'
-      ?{tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:false,reason:'显式恢复核对输入'},uncertainties:[]}}]}
-      :{text:'显式恢复后的固定结论'});
+    const fake=await fakeRuntime(config,context=>{
+      const last=context.messages.at(-1);
+      if(last?.role==='user')return {tools:[{name:'analysis_task_candidates',arguments:{}}]};
+      if(last?.role==='toolResult'&&last.toolName==='analysis_task_candidates')return {tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:false,reason:'显式恢复核对输入'},uncertainties:[]}}]};
+      return {text:'显式恢复后的固定结论'};
+    });
     lab=await PiLab.create(config,fake.runtime);lab.context=crashContext();service=new BackgroundService(lab,crashCatalog());await service.initialize();await service.start();
     const actor=lab.access!.identityForSeat('crash-seat')!;
     expect(service.store.getJob(state.second.id).status).toBe('interrupted');
@@ -48,7 +51,7 @@ it('retains actual SIGKILL inputs and published baseline; resumes once with a fr
     const jobs=service.store.listJobs();expect(jobs).toHaveLength(3);
     const recovered=jobs.find(job=>job.id!==state.first.id&&job.id!==state.second.id)!;
     expect(recovered.status).toBe('succeeded');expect(recovered.requestId).not.toBe(state.second.requestId);
-    expect(service.store.getJob(state.second.id).status).toBe('interrupted');expect(fake.calls).toHaveLength(2);
+    expect(service.store.getJob(state.second.id).status).toBe('interrupted');expect(fake.calls).toHaveLength(3);
     expect(service.store.listDeliveries()).toHaveLength(1);
     expect((await service.continuous.detail(actor,state.first.id)).text).toBe(previous.text);
   } finally {

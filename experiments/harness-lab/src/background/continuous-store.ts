@@ -1,3 +1,4 @@
+import type { DatabaseSync } from 'node:sqlite';
 import { randomUUID, createHash } from 'node:crypto';
 import type { TaskSpace } from '../contracts/access.js';
 import type { AnalysisUpdate, ContinuousBatch, ContinuousInput, ContinuousStream } from '../contracts/continuous.js';
@@ -50,13 +51,7 @@ export class ContinuousStore {
   add(input:ContinuousInput) {
     this.db.prepare('INSERT INTO continuous_inputs VALUES(?,?,?,?,0,?,?)').run(input.id,input.epochId,input.kind==='event'?input.eventId:null,input.kind==='task_revision'?input.task.id:null,input.receivedAt,JSON.stringify(input));
   }
-  taskChanged(task:TaskSpace) {
-    if(task.visibility!=='public'||task.state!=='active')return;
-    for(const stream of this.streams(true)) {
-      if(!stream.enabled || !this.db.prepare('SELECT 1 FROM continuous_current WHERE epoch_id=? AND task_id=?').get(stream.epochId,task.id))continue;
-      this.add({id:randomUUID(),epochId:stream.epochId,kind:'task_revision',task,receivedAt:task.updatedAt,bytes:Buffer.byteLength(JSON.stringify(task))});
-    }
-  }
+  taskChanged(task:TaskSpace) { enqueueContinuousTaskChange(this.db,task); }
   pending(epochId:string):ContinuousInput[] { return this.db.prepare('SELECT data FROM continuous_inputs WHERE epoch_id=? AND consumed=0 ORDER BY rowid').all(epochId).map(row=>this.decode<ContinuousInput>(row.data)); }
   inputs(batch:ContinuousBatch):ContinuousInput[] { return batch.inputIds.map(id=> {const row=this.db.prepare('SELECT data FROM continuous_inputs WHERE id=? AND epoch_id=?').get(id,batch.epochId);if(!row)throw conflict('批次输入缺失。');return this.decode<ContinuousInput>(row.data);}); }
   batch(id:string):ContinuousBatch { const row=this.db.prepare('SELECT data FROM continuous_batches WHERE id=?').get(id);if(!row)throw conflict('批次不存在。');return this.decode<ContinuousBatch>(row.data); }
@@ -83,23 +78,42 @@ export class ContinuousStore {
   }
   pause(epochId:string,reason:string) {const stream=this.stream(epochId);this.save({...stream,state:'paused',pauseReason:reason,revision:stream.revision+1,updatedAt:now()});}
   recover() {for(const job of this.background.listJobs())if(job.kind==='continuous_analysis' && ['failed','cancelled','interrupted'].includes(job.status) && this.publication(job.id).status==='pending'){this.savePublication(job,{status:'unpublished',reason:job.error?.message??'执行未完成'});this.pause(job.streamEpochId,job.error?.message??'执行未完成，需要恢复分析。');}}
-  publish(job:BackgroundJob,update:AnalysisUpdate) {
+  publicationIssue(job:BackgroundJob,update:AnalysisUpdate):'stale'|'missing'|undefined {
     if(job.kind!=='continuous_analysis')throw conflict();
-    const batch=this.batch(job.batchId),stream=this.stream(job.streamEpochId);
+    if(update.taskCoverage){
+      const current=this.db.prepare("SELECT data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row=>this.decode<TaskSpace>(row.data));
+      if(current.length!==update.taskCoverage.length||current.some(task=>!update.taskCoverage!.some(item=>item.taskId===task.id&&item.taskRevision===task.revision)))return 'stale';
+    }
     for(const item of update.taskUpdates) {
       const row=this.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(item.taskId);
       const task=row?this.decode<TaskSpace>(row.data):undefined;
-      if(!task || task.revision!==item.taskRevision || task.state!=='active' || this.baseline(stream.epochId,item.taskId)!==item.previousJobId) {
-        this.savePublication(job,{status:'superseded',update,reason:'任务版本已更新，输入保留待重新评估。'});return false;
-      }
+      if(!task || task.revision!==item.taskRevision || task.state!=='active' || this.baseline(job.streamEpochId,item.taskId)!==item.previousJobId)return 'stale';
     }
-    const archivedTaskIds:string[]=[];
-    for(const taskId of batch.requiredTaskIds) {
+    if(this.requiredTaskInputIssues(job,update).length)return 'missing';
+    return undefined;
+  }
+  /** The same required-input rule drives both publication and actionable record errors. */
+  requiredTaskInputIssues(job:BackgroundJob,update:AnalysisUpdate) {
+    if(job.kind!=='continuous_analysis')throw conflict();
+    const batch=this.batch(job.batchId),inputs=this.inputs(batch);
+    return batch.requiredTaskIds.flatMap(taskId=>{
       const row=this.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(taskId);
       const task=row?this.decode<TaskSpace>(row.data):undefined;
-      if(task?.state==='archived')archivedTaskIds.push(taskId);
-      if(task?.state==='active' && !update.taskUpdates.some(item=>item.taskId===taskId && this.inputs(batch).some(input=>input.kind==='task_revision'&&input.task.id===taskId&&item.inputIds.includes(input.id))))throw conflict('本批要求重评的任务未完整记录。');
-    }
+      const currentTaskRevisionInputIds=inputs.filter(input=>input.kind==='task_revision'&&input.task.id===taskId).map(input=>input.id);
+      const index=update.taskUpdates.findIndex(item=>item.taskId===taskId);
+      if(task?.state!=='active'||index>=0&&update.taskUpdates[index].inputIds.some(id=>currentTaskRevisionInputIds.includes(id)))return [];
+      return [{taskId,path:index>=0?`taskUpdates[${index}].inputIds`:'taskUpdates',currentTaskRevisionInputIds}];
+    });
+  }
+  publish(job:BackgroundJob,update:AnalysisUpdate) {
+    if(job.kind!=='continuous_analysis')throw conflict();
+    const batch=this.batch(job.batchId),stream=this.stream(job.streamEpochId),issue=this.publicationIssue(job,update);
+    if(issue==='stale'){this.savePublication(job,{status:'superseded',update,reason:'任务版本已更新，输入保留待重新评估。'});return false;}
+    if(issue==='missing')throw conflict('本批要求重评的任务未完整记录。');
+    const archivedTaskIds=batch.requiredTaskIds.filter(taskId=>{
+      const row=this.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(taskId);
+      return row && this.decode<TaskSpace>(row.data).state==='archived';
+    });
     const publishedAt=now();this.savePublication(job,{status:'published',update,publishedAt,...(archivedTaskIds.length?{archivedTaskIds}:{})});
     for(const item of update.taskUpdates)this.db.prepare('INSERT INTO continuous_current VALUES(?,?,?) ON CONFLICT(epoch_id,task_id) DO UPDATE SET job_id=excluded.job_id').run(stream.epochId,item.taskId,job.id);
     for(const id of batch.inputIds)this.db.prepare('UPDATE continuous_inputs SET consumed=1 WHERE id=?').run(id);
@@ -112,5 +126,20 @@ export class ContinuousStore {
     for(const job of this.background.listJobs())if(job.kind==='continuous_analysis') {
       const batch=this.batch(job.batchId);if(batch.jobId!==job.id || batch.epochId!==job.streamEpochId)throw conflict('批次关系损坏。');this.stream(job.streamEpochId);this.inputs(batch);
     }
+  }
+}
+
+/** Called inside the task mutation transaction; no baseline is required for first assessment. */
+export function enqueueContinuousTaskChange(db:DatabaseSync,task:TaskSpace) {
+  if(task.visibility!=='public'||task.state!=='active'||!db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_streams'").get())return;
+  const refs=task.context?.businessRefs??[];
+  for(const row of db.prepare('SELECT data FROM continuous_streams WHERE current=1').all()) {
+    const stream=JSON.parse(String(row.data)) as ContinuousStream;
+    if(!stream.enabled||!stream.profile.contextScope)continue;
+    const baseline=db.prepare('SELECT 1 FROM continuous_current WHERE epoch_id=? AND task_id=?').get(stream.epochId,task.id);
+    if(!baseline&&refs.length&&!refs.some(ref=>stream.profile.contextScope!.systemIds.includes(ref.systemId)))continue;
+    if(db.prepare("SELECT 1 FROM continuous_inputs WHERE epoch_id=? AND task_id=? AND json_extract(data,'$.task.revision')=?").get(stream.epochId,task.id,task.revision))continue;
+    const input:ContinuousInput={id:randomUUID(),epochId:stream.epochId,kind:'task_revision',task,receivedAt:task.updatedAt,bytes:Buffer.byteLength(JSON.stringify(task))};
+    db.prepare('INSERT INTO continuous_inputs VALUES(?,?,NULL,?,0,?,?)').run(input.id,stream.epochId,task.id,input.receivedAt,JSON.stringify(input));
   }
 }
