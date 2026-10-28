@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-28T13:10:23.216794+00:00",
+  "sourceEvidence": "User explicitly confirmed quota reset and authorized retry/continuation. Original provider AccountQuotaExceeded response reset time2026-10-28 19:30:46+08:00 has passed. CUA page currently requires login, so current numeric balances and overage state could not be reverified. remainingAfp zeroes denote conservative known lower bounds, NOT observed zero balance; balances unknown. Previous overage disabled observation retained in old records; no account setting was changed. No artificial monetary admission gate by explicit user authorization.",
+  "observedOverageEnabled": null,
+  "remainingAfp": {
+    "fiveHour": 0,
+    "week": 0,
+    "month": 0
+  },
+  "remainingAfpObservation": "unknown_lower_bounds_only",
+  "externalUseReserveAfp": 0,
+  "sharedUsePolicy": "observed_shared_usage"
+}

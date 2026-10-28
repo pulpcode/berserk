@@ -1,0 +1,27 @@
+{
+  "id": 29,
+  "entry": "Q08-1-GT",
+  "group": "GT",
+  "turn": 0,
+  "at": "2026-10-28T13:34:18.525Z",
+  "completed": true,
+  "payloadHash": "0903a3dae981bb4b89b9459827dc94ba0737926c1525bda9752c17db8216440f",
+  "wirePayloadHash": "8aaea5ec56fc6306b456d04ebeefcd20839e4ae8780e819cbceb401aad1a9be2",
+  "tools": [],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 2565,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 529,
+  "reasoningTokens": 123,
+  "observedThinking": true,
+  "finishReason": "stop",
+  "usage": {
+    "prompt_tokens": 20533,
+    "completion_tokens": 412
+  },
+  "responseSha256": "822642783e4568f7c69ca23dd672a591d7554c5f2deb3abae78668c6a290a656"
+}

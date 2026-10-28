@@ -1,0 +1,83 @@
+[
+  {
+    "id": "call_00_il23acls7yy4385gcvre7gax",
+    "name": "skill_read",
+    "arguments": {
+      "id": "spatial-analysis"
+    },
+    "firstObservedRequest": 37
+  },
+  {
+    "id": "call_01_skko4u2mib20keoy1oexsutk",
+    "name": "skill_read",
+    "arguments": {
+      "id": "map-annotations"
+    },
+    "firstObservedRequest": 37
+  },
+  {
+    "id": "call_02_y0ivi7mabh19sru3d6xqpfvj",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 37
+  },
+  {
+    "id": "call_00_3ydfhfjkrmjonrsab9kgjwbu",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "f6a2a5e8-9d3b-475b-9bf7-3afe327e0570",
+          "revision": 1
+        },
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 700
+    },
+    "firstObservedRequest": 38
+  },
+  {
+    "id": "call_00_ffv2e2b1ixvuhsx1r9qyignb",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 40
+  },
+  {
+    "id": "call_00_x1itek6zzvel7sduzxcpswny",
+    "name": "annotation_from_analysis",
+    "arguments": {
+      "resultRef": "spatial:489997df-43e6-417f-90f0-20bd5950e89e:call_00_3ydfhfjkrmjonrsab9kgjwbu",
+      "layerId": "derived",
+      "objectId": "inner-ring",
+      "name": "内圈"
+    },
+    "firstObservedRequest": 41
+  },
+  {
+    "id": "call_00_wmt8cbxy34nqzuy5e7hlt63e",
+    "name": "spatial_analyze",
+    "arguments": {
+      "distanceM": 1200,
+      "input": {
+        "kind": "annotation",
+        "objectIds": [
+          "origin"
+        ],
+        "ref": {
+          "revision": 2,
+          "setId": "f6a2a5e8-9d3b-475b-9bf7-3afe327e0570"
+        }
+      },
+      "operation": "buffer"
+    },
+    "firstObservedRequest": 43
+  }
+]

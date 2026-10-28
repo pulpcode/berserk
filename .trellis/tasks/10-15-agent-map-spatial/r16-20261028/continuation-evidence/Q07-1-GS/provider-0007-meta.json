@@ -1,0 +1,20 @@
+{
+  "id": 7,
+  "entry": "Q07-1-GS",
+  "group": "GS",
+  "turn": 0,
+  "at": "2026-10-28T10:00:29.281Z",
+  "completed": true,
+  "payloadHash": "b632dd28c5f6780edd15a7f5d67171a2353a830a40c2e7edd79732b24c769686",
+  "wirePayloadHash": "1e963c9106b2b0ce356b05ee7828eb8627c9e299a852a6f6ffeb5657698df830",
+  "tools": [],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 429,
+  "elapsedMs": 231,
+  "actualModels": [],
+  "reasoningCharacters": 0,
+  "observedThinking": false,
+  "finishReason": "",
+  "error": "provider_http_429"
+}

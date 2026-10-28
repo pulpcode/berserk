@@ -1,0 +1,38 @@
+{
+  "id": 1,
+  "entry": "Q07-1-G0",
+  "group": "G0",
+  "turn": 0,
+  "at": "2026-10-28T10:00:05.868Z",
+  "completed": true,
+  "payloadHash": "99b4c20ad23d4362747e2fcb3c6006f88d74c9bb6d29b9d638eb06bb5e4e646f",
+  "wirePayloadHash": "eae4112acdedbc9d68e67cb4c9a26cd55b1712b81b81b66269c2b31b8062aed1",
+  "tools": [
+    {
+      "id": "call_00_ik83nqdz5mp3udhc3say4pod",
+      "name": "annotation_read",
+      "arguments": "{\"mode\": \"draft\"}"
+    },
+    {
+      "id": "call_01_izdlc1tyzjjlpqaqfarnp61l",
+      "name": "skill_read",
+      "arguments": "{\"id\": \"spatial-analysis\"}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 1891,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 466,
+  "reasoningTokens": 187,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 16374,
+    "completion_tokens": 256
+  },
+  "responseSha256": "e07feaa33edc132768d792a89f76ec6017004e49c4e9f581298b0c1d2b180781"
+}

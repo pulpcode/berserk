@@ -1,0 +1,30 @@
+{
+  "request": 36,
+  "turn": 0,
+  "skills": {
+    "synthesis": {
+      "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6",
+      "catalogPresent": true,
+      "bodyPresent": false
+    },
+    "review": {
+      "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904",
+      "catalogPresent": true,
+      "bodyPresent": false
+    },
+    "map-annotations": {
+      "hash": "c4e0dd9412ffc247c1b43f049fb78527bc27a28b4bff9bcff63fa4bfa6911da2",
+      "catalogPresent": true,
+      "bodyPresent": false
+    },
+    "spatial-analysis": {
+      "hash": "ded2bc71274afdb9a5183ae29daf88e3a7f805f752ebb8e51c9e00cad328c8a0",
+      "catalogPresent": true,
+      "bodyPresent": false
+    }
+  },
+  "parent": true,
+  "schemaHash": "e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1",
+  "mode": "native-on-demand",
+  "preloaded": false
+}

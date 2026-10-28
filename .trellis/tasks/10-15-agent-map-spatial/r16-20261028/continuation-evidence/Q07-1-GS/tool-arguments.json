@@ -1,0 +1,49 @@
+[
+  {
+    "id": "call_00_g81ceotje5b7fv0m2xy875b5",
+    "name": "skill_read",
+    "arguments": {
+      "id": "spatial-analysis"
+    },
+    "firstObservedRequest": 6
+  },
+  {
+    "id": "call_01_ev65ul5x0egifrp9zo8ikpuw",
+    "name": "skill_read",
+    "arguments": {
+      "id": "map-annotations"
+    },
+    "firstObservedRequest": 6
+  },
+  {
+    "id": "call_02_gtlabfvy6h67v454bpblp79p",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft",
+      "limit": 20
+    },
+    "firstObservedRequest": 6
+  },
+  {
+    "id": "call_00_l1xsp45ud6t2h3bb59f7m4mx",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "86178d3b-ff8a-40b0-8ba7-8f05a687560d",
+          "revision": 1
+        },
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 700
+    },
+    "firstObservedRequest": 7
+  }
+]

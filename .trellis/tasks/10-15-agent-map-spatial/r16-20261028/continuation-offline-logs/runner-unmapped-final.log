@@ -1,0 +1,14 @@
+(node:8646) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"Q02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ unmapped plain clarification remains pending and halts further tasks (19699.946741ms)
+{"entry":"Q02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ unmapped api clarification remains pending and halts further tasks (18876.548874ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41304.222905

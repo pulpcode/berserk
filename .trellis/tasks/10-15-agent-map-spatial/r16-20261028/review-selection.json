@@ -1,0 +1,12 @@
+{
+  "seed": "R16-20261028-review",
+  "total": 1,
+  "ids": [
+    "23db2f45-6830-40e3-bab6-54aac279b96a"
+  ],
+  "randomPassCount": 1,
+  "randomPassIds": [
+    "23db2f45-6830-40e3-bab6-54aac279b96a"
+  ],
+  "basis": "freeze selection from initial reviews, never silently resample after adjudication"
+}

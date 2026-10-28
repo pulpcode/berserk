@@ -1,0 +1,33 @@
+{
+  "id": 46,
+  "entry": "Q20-1-GS",
+  "group": "GS",
+  "turn": 0,
+  "at": "2026-10-28T13:35:34.751Z",
+  "completed": true,
+  "payloadHash": "869671c9fd90624a01e142d30750cda85a9efbd2dfd7493089db8732bd48aaaf",
+  "wirePayloadHash": "31475de96a28f36c1ed0594ef68d175472779aa354f59baa1f990f2155226ad7",
+  "tools": [
+    {
+      "id": "call_00_c50crsgzfs7nnn7syyq2lvvw",
+      "name": "ask_user",
+      "arguments": "{\"questions\": [{\"id\": \"center\", \"prompt\": \"700 米缓冲以哪个对象为中心？\", \"options\": [{\"id\": \"origin\", \"label\": \"基点（origin，114.0000, 22.5000）\", \"description\": \"以草稿 reference 图层的“基点”为圆心生成 700 米范围\"}, {\"id\": \"center-b\", \"label\": \"站点乙（center-b，114.0500, 22.5000）\", \"description\": \"以草稿 reference 图层的“站点乙”为圆心生成 700 米范围\"}, {\"id\": \"both\", \"label\": \"两个点分别生成，分开预览\", \"description\": \"各生成一个 700 米范围，分别报告，不合并\"}, {\"id\": \"other\", \"label\": \"都不是，我另外指定中心\", \"description\": \"请说明中心对象或坐标（可来自其他来源）\"}]}]}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 2062,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 129,
+  "reasoningTokens": 42,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 20498,
+    "completion_tokens": 404
+  },
+  "responseSha256": "11900bbe70db90fed32223fefb1a9472d71093d238b67a5198d00ec501b44c8f"
+}

@@ -1,0 +1,2318 @@
+[
+  {
+    "entryId": "Q07-1-GST",
+    "blindId": "23db2f45-6830-40e3-bab6-54aac279b96a",
+    "originalStatus": "waiting_user",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/live-20261028/Q07-1-GST",
+    "reusedByIndependentReview": true,
+    "sourceFreezeHash": "e37713a4813d0b7e87b16a7e1ad94a46970c8fa0992cc49177e60a9d41b39e6e"
+  },
+  {
+    "entryId": "Q07-1-G0",
+    "blindId": "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/continuation-20261028/Q07-1-G0",
+    "reusedByIndependentReview": true,
+    "sourceFreezeHash": "9abeb5c4b600e53b2adf6dba22260f39ffedeeb3db8d16b0bed9f466bd273aee"
+  },
+  {
+    "entryId": "Q07-1-GS",
+    "blindId": "0301f41d-7b72-4b9f-b037-98d7fac8cf47",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e",
+    "attemptNumber": 2,
+    "previousInterruptedAttempt": {
+      "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/continuation-20261028/Q07-1-GS",
+      "blindId": "64ac59e7-143c-4ce9-bca2-080eccfec293",
+      "status": "incomplete",
+      "stop": "provider_http_429",
+      "sourceFreezeHash": "9abeb5c4b600e53b2adf6dba22260f39ffedeeb3db8d16b0bed9f466bd273aee"
+    },
+    "retryAuthorization": {
+      "path": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-authorization.md",
+      "sha256": "0d74e13742aac022ba7b7fe63f769164c63d34d7891b948e6016d4d3f56fac34"
+    }
+  },
+  {
+    "entryId": "Q07-1-GT",
+    "blindId": "daf6b7f2-bbbd-452c-b4bd-ca7c26539df2",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-1-G0",
+    "blindId": "9524a51b-2709-431f-bf5e-f8e3c9fa6090",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-1-GS",
+    "blindId": "d3b89585-baf6-4aab-8255-a7bebc915aef",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-1-GT",
+    "blindId": "25f8c221-8ce8-4b8b-ae3f-128e266cd9b8",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-1-GST",
+    "blindId": "b8c7d721-b1fa-4172-b6c6-115cf5e2ede3",
+    "originalStatus": "recorded",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-1-GS",
+    "blindId": "2ad64733-526d-40bb-93d5-a8ea3f28825a",
+    "originalStatus": "waiting_user",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-1-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-1-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-1-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-1-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-1-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-1-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-1-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-1-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-2-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-2-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-2-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-2-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-2-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-2-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-2-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-2-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q01-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q01-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q02-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q02-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q03-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q03-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q04-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q04-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q05-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q05-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q06-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q06-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q07-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q07-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q08-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q08-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q09-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q09-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q10-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q10-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q11-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q11-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q12-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q12-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q13-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q13-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q14-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q14-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q15-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q15-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q16-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q16-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q17-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q17-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q18-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q18-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q19-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q19-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q20-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q20-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q21-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q21-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q22-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q22-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q23-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q23-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-3-G0",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-3-G0",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-3-GS",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-3-GS",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-3-GT",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-3-GT",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  },
+  {
+    "entryId": "Q24-3-GST",
+    "blindId": null,
+    "originalStatus": "not_executed",
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/quota-retry-20261028/Q24-3-GST",
+    "reusedByIndependentReview": false,
+    "sourceFreezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e"
+  }
+]

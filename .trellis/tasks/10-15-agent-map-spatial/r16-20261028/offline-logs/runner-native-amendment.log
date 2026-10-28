@@ -1,0 +1,25 @@
+(node:85965) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"Q07-1-GST","status":"incomplete","stop":"repeated_tool_evidence_no_progress","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+✔ native repeated identical tool evidence halts before fourth provider request without retries (23450.393187ms)
+{"entry":"Q23-1-GS","status":"recorded","completed":1,"planned":12,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"Q23-1-GT","status":"recorded","completed":2,"planned":12,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"Q23-1-GST","status":"recorded","completed":3,"planned":12,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q23-1-G0","status":"recorded","completed":4,"planned":12,"usage":{"requests":4,"input":400,"output":40,"afp":0.055,"unknown":0}}
+{"entry":"Q23-2-GT","status":"recorded","completed":5,"planned":12,"usage":{"requests":5,"input":500,"output":50,"afp":0.06875,"unknown":0}}
+{"entry":"Q23-2-GST","status":"recorded","completed":6,"planned":12,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q23-2-G0","status":"recorded","completed":7,"planned":12,"usage":{"requests":7,"input":700,"output":70,"afp":0.09625,"unknown":0}}
+{"entry":"Q23-2-GS","status":"recorded","completed":8,"planned":12,"usage":{"requests":8,"input":800,"output":80,"afp":0.11,"unknown":0}}
+{"entry":"Q23-3-GST","status":"recorded","completed":9,"planned":12,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q23-3-G0","status":"recorded","completed":10,"planned":12,"usage":{"requests":10,"input":1000,"output":100,"afp":0.1375,"unknown":0}}
+{"entry":"Q23-3-GS","status":"recorded","completed":11,"planned":12,"usage":{"requests":11,"input":1100,"output":110,"afp":0.15125000000000002,"unknown":0}}
+{"entry":"Q23-3-GT","status":"recorded","completed":12,"planned":12,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ three repetitions each create independent native sessions and drafts (46838.119562ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74718.649543

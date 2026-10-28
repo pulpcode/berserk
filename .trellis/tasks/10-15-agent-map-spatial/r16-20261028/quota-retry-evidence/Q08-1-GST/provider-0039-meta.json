@@ -1,0 +1,33 @@
+{
+  "id": 39,
+  "entry": "Q08-1-GST",
+  "group": "GST",
+  "turn": 1,
+  "at": "2026-10-28T13:34:56.459Z",
+  "completed": true,
+  "payloadHash": "ac9ae85470ded48e211b4aac5a785c220fd1a5996d16bbeeb5da994faa538f63",
+  "wirePayloadHash": "5060262e87cb167b550c4df25d93673540ea1c0554ccd047a6b36e8cedeb1f84",
+  "tools": [
+    {
+      "id": "call_00_ffv2e2b1ixvuhsx1r9qyignb",
+      "name": "annotation_read",
+      "arguments": "{\"mode\": \"draft\"}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 2124,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 587,
+  "reasoningTokens": 261,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 23649,
+    "completion_tokens": 300
+  },
+  "responseSha256": "f8912a1543af9c519c1af52014db625656166943be17436fac5b046a8fa4e8b2"
+}

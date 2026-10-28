@@ -1,0 +1,487 @@
+{
+  "caseId": "Q07",
+  "day": "2026-10-28",
+  "prompts": [
+    "以当前草稿reference层的对象ID origin生成700米范围，只预览，不保存。",
+    "说明刚才这个范围现在的状态，以及你实际做了哪些操作；不要再次计算。"
+  ],
+  "annotation": {
+    "binding": {
+      "sessionId": "<session>",
+      "taskId": "<task>",
+      "workspaceId": "<workspace>",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "<draft>",
+        "ownerSessionId": "<session>",
+        "taskId": "<task>",
+        "workspaceId": "<workspace>",
+        "headRevision": 1,
+        "title": "空间与标绘核对",
+        "hash": "02b6f6a975a5767a0770a9c18ebbbdfabb4e6ea1ca25cce8ea7a51c929863046",
+        "baseRef": null,
+        "createdAt": "<generated:annotation.binding.draft.createdAt>",
+        "updatedAt": "<generated:annotation.binding.draft.updatedAt>"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "<draft>",
+        "revision": 1
+      },
+      "title": "空间与标绘核对",
+      "hash": "02b6f6a975a5767a0770a9c18ebbbdfabb4e6ea1ca25cce8ea7a51c929863046",
+      "createdAt": "<generated:annotation.version.createdAt>",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间与标绘核对",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "origin",
+                "kind": "point",
+                "name": "基点",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    114,
+                    22.5
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "<task>",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "source": {
+    "instanceId": "<source-instance>",
+    "objects": [
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "<source-instance>-road-west-01"
+        },
+        "name": "西区通道",
+        "properties": {
+          "passability": "open"
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              103.8322866,
+              1.3047841
+            ],
+            [
+              103.8323264,
+              1.3047617
+            ],
+            [
+              103.8324948,
+              1.3046666
+            ],
+            [
+              103.8325992,
+              1.304608
+            ],
+            [
+              103.8329914,
+              1.3043877
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "<source-instance>-vehicles-west-01"
+        },
+        "name": "西区可用车辆",
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            103.8325,
+            1.3046
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "<source-instance>-zone-west"
+        },
+        "name": "西区",
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "<source-instance>-road-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<source-instance>-vehicles-west-01"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.8317,
+                1.3035
+              ],
+              [
+                103.8333,
+                1.3035
+              ],
+              [
+                103.8333,
+                1.305
+              ],
+              [
+                103.8317,
+                1.305
+              ],
+              [
+                103.8317,
+                1.3035
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "<source-instance>-road-east-01"
+        },
+        "name": "东区通道",
+        "properties": {
+          "passability": "open"
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              103.8351571,
+              1.3032537
+            ],
+            [
+              103.8357661,
+              1.3029095
+            ],
+            [
+              103.8358887,
+              1.3028412
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "<source-instance>-vehicles-east-01"
+        },
+        "name": "东区可用车辆",
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            103.8355,
+            1.3035999999999999
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "<source-instance>-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "<source-instance>-zone-east"
+        },
+        "name": "东区",
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "<source-instance>-road-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<source-instance>-vehicles-east-01"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.8347,
+                1.3025
+              ],
+              [
+                103.8363,
+                1.3025
+              ],
+              [
+                103.8363,
+                1.3039999999999998
+              ],
+              [
+                103.8347,
+                1.3039999999999998
+              ],
+              [
+                103.8347,
+                1.3025
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "reports": [
+      {
+        "reportId": "<source-instance>-report-west-01",
+        "subjectId": "<source-instance>-report-west-01",
+        "revision": 1,
+        "title": "西区通道观测记录",
+        "summary": "截至观测时刻未报告西区通道限制。",
+        "content": "截至 2026-10-28 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "<source-instance>-road-west-01"
+          }
+        ],
+        "areaIds": [
+          "<source-instance>-zone-west"
+        ],
+        "observedAt": "2026-10-28T08:50:00+08:00",
+        "publishedAt": "2026-10-28T08:55:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        }
+      }
+    ],
+    "actions": []
+  },
+  "task": {
+    "id": "<task>",
+    "title": "【地图验证 <source-instance>】空间资料核对任务",
+    "goal": "空间资料核对合成测试。",
+    "visibility": "public",
+    "ownerSeatId": "seat-overall",
+    "state": "active",
+    "revision": 1,
+    "createdByUserId": "<overall-user>",
+    "updatedByUserId": "<overall-user>",
+    "createdAt": "<generated:task.createdAt>",
+    "updatedAt": "<generated:task.updatedAt>",
+    "context": {
+      "businessRefs": [
+        {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "<source-instance>-vehicles-west-01"
+        },
+        {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "<source-instance>-road-west-01"
+        }
+      ],
+      "focus": {
+        "areaIds": [
+          "<source-instance>-zone-west"
+        ],
+        "time": {
+          "from": "2026-10-28T01:40:00.000Z",
+          "to": "2026-10-28T03:00:00.000Z"
+        },
+        "topics": [
+          "车辆",
+          "通行"
+        ]
+      }
+    }
+  },
+  "actor": {
+    "userId": "<planning-user>",
+    "username": "planning",
+    "displayName": "筹划席",
+    "seatId": "seat-planning",
+    "seatName": "筹划席",
+    "createPublicTask": false,
+    "manageModelSettings": false,
+    "viewWorkOverview": false
+  },
+  "creator": {
+    "userId": "<overall-user>",
+    "username": "overall",
+    "displayName": "总体席",
+    "seatId": "seat-overall",
+    "seatName": "总体席",
+    "createPublicTask": true,
+    "manageModelSettings": true,
+    "viewWorkOverview": true
+  },
+  "contextConfig": {
+    "systems": [
+      {
+        "areas": [
+          {
+            "id": "<source-instance>-zone-west",
+            "name": "西区"
+          },
+          {
+            "id": "<source-instance>-zone-east",
+            "name": "东区"
+          }
+        ],
+        "id": "intel",
+        "name": "模拟特情系统",
+        "adapter": "mock-information-http",
+        "baseUrl": "<source-origin>/intel",
+        "tokenEnv": "MOCK_CONTEXT_API_TOKEN"
+      },
+      {
+        "areas": [
+          {
+            "id": "<source-instance>-zone-west",
+            "name": "西区"
+          },
+          {
+            "id": "<source-instance>-zone-east",
+            "name": "东区"
+          }
+        ],
+        "id": "situation",
+        "name": "模拟态势系统",
+        "adapter": "mock-situation-http",
+        "baseUrl": "<source-origin>/situation",
+        "tokenEnv": "MOCK_CONTEXT_API_TOKEN"
+      }
+    ],
+    "scopes": [
+      {
+        "id": "demo-context",
+        "name": "本轮模拟资料",
+        "systemIds": [
+          "intel",
+          "situation"
+        ],
+        "seatIds": [
+          "seat-overall",
+          "seat-intelligence",
+          "seat-planning",
+          "seat-situation"
+        ]
+      }
+    ],
+    "simulation": {
+      "enabled": true,
+      "baseUrl": "<source-origin>",
+      "tokenEnv": "MOCK_CONTEXT_CONTROL_TOKEN",
+      "sources": [
+        {
+          "systemId": "intel",
+          "sourceId": "mock-intel-source"
+        },
+        {
+          "systemId": "situation",
+          "sourceId": "mock-situation-source"
+        }
+      ]
+    }
+  },
+  "businessContext": "草稿点可按用户指定作为空间分析候选，不自动代表真实可用资源。对象个数、属性数量和可用状态分别依据实际数据。“本会话”是上下文线索，不自动指定草稿。来源无法唯一确定且会影响答案时，澄清或分别说明；不默认草稿优先或来源优先。只有明确要求联合统计才合并；不凭同名去重，不能核实身份时分开报告。"
+}
