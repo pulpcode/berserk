@@ -122,3 +122,20 @@ Required offline checks: `evaluation-v2/remediation.test.ts` covers necessary re
 **Budget and effects.** The diagnostic's lower ledger caps are 120 requests / 4M input / 200K output, checked before requests and after settlement. Inherited pair reserves may stop the batch before 24 slots finish. Never silently expand limits, retry a failed slot, or remove unfinished slots from the denominator. All tasks preserve source state; readonly/preview cases preserve the entire map state. Successful responses remain counted even when an effect check subsequently fails.
 
 **Review and verification.** A semantic review may accept an executed `needs_review` slot after inspecting evidence, but cannot award a pass to a missing, not-executed, prepared or still-started outcome. Test native HTTP/Pi writes, actual clarification and preview with a controlled provider, plus lower-budget limits, one-use claims, side-effect stops and denominator retention. These are driver checks, not evidence that a real model improved. Leave all semantic model judgments pending until actual claims and effects have been reviewed.
+
+
+## Integrated settled-request review gate (2026-10-28)
+
+**Scope.** `10-28-agent-spatial-plotting/evaluation` is evaluation-only continuation control. It does not modify product Agent prompts, old frozen drivers, or historical scores. Every settled ordinary answer currently receives explicit offline review; there is no automatic semantic classifier.
+
+**Signature.** `runReviewedTurns({directory,prompts,replies,ports})` consumes frozen original prompts and `{id,userTurn,text}` replies. Ports are `send(text)`, `review(checkpoint)` and `inspect()`. The existing runner owns authorization, budgets, provider-version checks, native service lifetime and structured-interaction replies.
+
+**Contract.** Persist dispatch attempts and actual native evidence before review. Decisions contain `checkpointHash`, attributed `reviewer`, `reason`, and `advance|reply|hold`. `reply` may select only an unused frozen reply for the current original user turn. `advance` authorizes the next original turn, never semantic success. Reinspect native session/map evidence after review and reject drift. Keep original-versus-scripted dispatch kind explicitly; identical text does not imply identical purpose.
+
+**Validation / errors.** Stale hashes, changed native state, unknown/reused reply IDs and unattributed decisions reject continuation. Failed/pending native requests remain unresolved; ordinary messages must not bypass AskUser. Transport failure is recorded without automatic resend. Existing evidence directories reject automatic restart. `hold` ends this adapter invocation; the caller must retain any desired native service state. Only a pending review Promise supports same-process continuation; process-exit or historical-session recovery is not implemented.
+
+**Good / base / bad.** Good: review a completed preview ending with an optional offer, then send the frozen save turn once and save the original geometry. Base: a wrong but finished answer proceeds while semantic scoring remains pending. Bad: infer required input from a question mark, repeat the original task as a guessed answer, or claim that protocol advancement proves correctness.
+
+**Tests.** `review-gate.test.ts` replays R16 Q20 and plotting C09 evidence copies with explicitly constructed review decisions and tests narrow replies, holds, drift, dispatch identity and no retry. `http.test.ts` uses real local HTTP/Pi, the existing AskUser response endpoint, actual analysis/save tools and a controlled provider; assert one session, two original messages, one clarification, exact geometry and plan preservation. These are offline evaluator checks, not live model outcomes.
+
+**Wrong versus correct.** Wrong: describe the adapter as a 288-task runner or automatic recovery for the old Q20. Correct: connect its ports to a separately reviewed, budgeted runner, freeze that connection, and keep old evidence/denominators unchanged.

@@ -1,0 +1,44 @@
+{
+  "id": "agent-spatial-plotting",
+  "name": "agent-spatial-plotting",
+  "title": "空间分析与标绘统一整合",
+  "description": "",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-10-28",
+  "completedAt": null,
+  "branch": "codex/agent-spatial-plotting",
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {},
+  "integration": {
+    "status": "offline_complete_pending_evaluation_review",
+    "branch": "codex/agent-spatial-plotting",
+    "groundingArchive": "fc7fc2a7217c37c6f048bf356dde4fe67beb855a",
+    "plottingBase": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
+    "productVerification": {
+      "unitTests": 230,
+      "browserTests": 43
+    },
+    "paidModelRequests": 0,
+    "nextAction": "审阅next-evaluation-plan.md；未授权真实测评、推送、部署或合入main",
+    "legacyR16": {
+      "complete": 8,
+      "pending": 1,
+      "unexecuted": 279
+    },
+    "evaluationAdapterLimit": "仅离线接入验证，每个普通终态需复核；hold或进程退出后无自动恢复"
+  }
+}
