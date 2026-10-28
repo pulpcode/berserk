@@ -21,6 +21,9 @@ function stream(content:string,tool?:{name:string;arguments:unknown}){return new
 test('authorization binds exact 24-slot scope, freeze and lower limits',async()=>{
  const auth={approvedByUser:true as const,providerAllowanceVerified:true as const,billingNote:'offline assertion only',freezeHash:'f',limits,scope};
  assert.doesNotThrow(()=>validateAuthorization(auth,'f'));
+ assert.throws(()=>validateAuthorization({...auth,providerAllowanceVerified:false},'f'),/waiver/);
+ assert.doesNotThrow(()=>validateAuthorization({...auth,providerAllowanceVerified:false,providerAllowanceCheckWaivedByUser:true,billingNote:'User explicitly requested no allowance check'},'f'));
+ assert.throws(()=>validateAuthorization({...auth,providerAllowanceVerified:false,providerAllowanceCheckWaivedByUser:true,billingNote:''},'f'),/waiver/);
  assert.throws(()=>validateAuthorization(undefined,'f'),/approval/);
  assert.throws(()=>validateAuthorization({...auth,freezeHash:'old'},'f'),/frozen/);
  assert.throws(()=>validateAuthorization({...auth,scope:{...scope,slots:23}},'f'),/Scope/);

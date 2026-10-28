@@ -52,3 +52,7 @@ node_modules/.bin/eslint --config eslint.config.js ../../.trellis/tasks/10-26-ag
 ```
 
 执行时不要修改任何冻结源文件，不与别人占用5285端口。受控测试实际创建对象、澄清接续、生成预览并读取结果；仅证明驱动和保护接通，不能作为真实模型业务能力成绩。检查和证据见 [就绪记录](../verification/recurring-errors-20261028/live-readiness-checks.md)。
+
+## 2026-10-28 用户明确豁免额度核对
+
+用户在批准真实批次后明确要求“不核对额度，直接进行测试”。授权记录可使用 `providerAllowanceVerified: false` 和 `providerAllowanceCheckWaivedByUser: true`，并在 `billingNote` 记录原话及未核实事实；不得伪造额度已核实。预算、模型、scope/freeze、一次性claim和停止条件继续生效。这只改变启动核对条件，不改变题目或模型可见上下文。
