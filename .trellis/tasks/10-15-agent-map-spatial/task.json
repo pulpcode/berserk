@@ -1480,6 +1480,39 @@
       "pass": 38,
       "fail": 5,
       "pending": 5
-    }
+    },
+    "resultsCommit": "0cbe321e79765f14aae4debfa383126596f4e1cc"
+  },
+  "resultGroundingR16": {
+    "status": "planning_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r16-20261028/plan.md",
+    "tasks": "r16-20261028/tasks.md",
+    "authorization": "2026-10-28：只提交R15、编写R16方案，待审阅；先不要执行",
+    "planningOnly": true,
+    "implementationAllowed": false,
+    "modelExecutionAllowed": false,
+    "productBaseline": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "candidateCommit": "0cbe321e79765f14aae4debfa383126596f4e1cc",
+    "groupsProposed": [
+      "G0",
+      "GS",
+      "GT",
+      "GST"
+    ],
+    "uniqueTasksProposed": 24,
+    "repetitionsProposed": 3,
+    "taskTrialsProposed": 288,
+    "budgetProposed": {
+      "requests": 3000,
+      "inputTokens": 60000000,
+      "outputTokensIncludingReasoning": 4000000,
+      "afp": 8000,
+      "accountReserveAfp": 1000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceThreshold": 0.9,
+    "nextAction": "用户审阅R16方案及逐题清单后，再决定是否批准实施和测评。"
   }
 }
