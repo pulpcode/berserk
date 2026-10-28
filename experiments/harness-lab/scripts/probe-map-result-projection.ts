@@ -6,6 +6,7 @@ import {appendFile,cp,mkdir,readFile,writeFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {AnnotationLayer} from '../src/contracts/annotations.js';
+import {ANNOTATION_MODEL_FORMAT,ANNOTATION_EXPLAINED_MODEL_FORMAT} from '../src/contracts/annotation-results.js';
 import type {PublicMessage} from '../src/contracts/index.js';
 import {loadConfig} from '../src/server/config.js';
 import {ask,mapState} from './probe-source-annotations.js';
@@ -50,7 +51,7 @@ export function scopeObservations(messages:PublicMessage[]) {
   for(const message of messages) {
     if(message.role!=='tool'||message.toolName!=='annotation_read'||message.isError||message.resultMissing)continue;
     let parsed:unknown;try{parsed=JSON.parse(message.text);}catch{continue;}
-    if(!record(parsed)||parsed.format!=='annotation.model-result.v1'||!record(parsed.data))continue;
+    if(!record(parsed)||![ANNOTATION_MODEL_FORMAT,ANNOTATION_EXPLAINED_MODEL_FORMAT].includes(String(parsed.format))||!record(parsed.data))continue;
     const value=parsed.data;
     if(!record(value.query)||!record(value.objects)||!Array.isArray(value.objects.items))continue;
     reads.push({query:value.query,offset:value.objects.offset,limit:value.objects.limit,total:value.objects.total,hasMore:value.objects.hasMore,

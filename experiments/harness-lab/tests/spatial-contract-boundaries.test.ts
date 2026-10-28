@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { spatialToolResult } from '../src/pi/spatial-results.js';
 import { extractSpatialResult, projectSpatialResult, SPATIAL_MODEL_FORMAT, type SpatialResult } from '../src/contracts/spatial.js';
 
 function result(): SpatialResult {
@@ -64,4 +65,26 @@ describe('spatial evidence boundary independent of the calculator', () => {
   ])('refuses self-described success with %s', (_label, patch) => {
     expect(extractSpatialResult({ spatialResult: { ...result(), ...patch } }, 'spatial_analyze')).toBeNull();
   });
+});
+
+it('strictly pairs explained v3 text with untouched native v1 data and accepts old v1 text',()=>{
+ const original=result(),before=JSON.stringify(original),oldText=text(original),tool=spatialToolResult(original),model=JSON.parse(tool.content[0].text);
+ expect(model.format).toBe('spatial.model-result.v3');expect(model.data).toEqual(projectSpatialResult(original));
+ expect(model.meaning.effect).toContain('没有重新计算');
+ expect(extractSpatialResult(tool.details,'spatial_analyze',false,tool.content[0].text)).toEqual(original);
+ expect(extractSpatialResult(tool.details,'spatial_analyze',false,oldText)).toEqual(original);
+ for(const bad of [{...model,meaning:{...model.meaning,effect:'刚刚保存'}},{...model,extra:true},{...model,meaning:undefined},{...model,data:{...model.data,createdAt:'2026-01-01T00:00:00Z'}}]) {
+  expect(extractSpatialResult(tool.details,'spatial_analyze',false,JSON.stringify(bad))).toBeNull();
+ }
+ expect(JSON.stringify(original)).toBe(before);expect(text(original)).toBe(oldText);
+});
+it('describes buffer inputs, filtered matches and grouped objects as different counts',()=>{
+ const base=result();delete base.delivery;
+ const explained=(r:SpatialResult)=>JSON.parse(spatialToolResult(r).content[0].text).meaning;
+ const buffer={...base,operation:'buffer' as const,parameters:{operation:'buffer' as const,input:base.scope[0],distanceM:500}};
+ expect(explained(buffer).counts).toContain('缓冲输入1个对象');expect(explained(buffer).counts).toContain('items是原输入');
+ expect(explained(buffer).effect).toContain('已形成固定分析结果');expect(explained(buffer).scope).toContain('不代表整个图层');
+ const filtered={...base,operation:'filter' as const,parameters:{operation:'filter' as const,input:base.scope[0]},completeness:{status:'complete' as const,candidateCount:5},items:[]};
+ expect(explained(filtered).counts).toContain('输入5个对象，满足本次全部条件0个');
+ expect(explained({...filtered,operation:'summarize',parameters:{operation:'summarize',input:base.scope[0],field:'capacity'}}).counts).toContain('不是属性数值求和');
 });

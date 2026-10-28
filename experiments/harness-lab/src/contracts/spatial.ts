@@ -37,6 +37,7 @@ export interface SpatialResult {
 }
 export const SPATIAL_MODEL_FORMAT = 'spatial.model-result.v1';
 export const SPATIAL_CLASSIFICATION_MODEL_FORMAT = 'spatial.model-result.v2';
+export const SPATIAL_EXPLAINED_MODEL_FORMAT = 'spatial.model-result.v3';
 export const spatialModelFormat=(result:SpatialResult)=>result.schemaVersion===2?SPATIAL_CLASSIFICATION_MODEL_FORMAT:SPATIAL_MODEL_FORMAT;
 /** Model projection retains identities/counts, but never asks the model to transcribe geometry. */
 export function projectSpatialResult(result:SpatialResult) {
@@ -143,7 +144,35 @@ export function extractSpatialResult(details:unknown,toolName:string,isError=fal
   if(result.operation==='measure' && result.values && 'unit' in result.values && result.values.unit!==(result.parameters.operation==='measure' && result.parameters.metric==='area'?'m²':'m')) return null;
   try {
     if(new TextEncoder().encode(JSON.stringify(result)).length>1024*1024) return null;
-    if(text!==undefined) {const model:unknown=JSON.parse(text);if(!object(model) || !keys(model,['format','data']) || model.format!==spatialModelFormat(result) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null;}
+    if(text!==undefined) {
+      const model:unknown=JSON.parse(text);
+      if(!object(model) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null;
+      if(model.format===spatialModelFormat(result)) {if(!keys(model,['format','data'])) return null;}
+      else if(model.format!==SPATIAL_EXPLAINED_MODEL_FORMAT || !keys(model,['format','data','meaning']) || JSON.stringify(model.meaning)!==JSON.stringify(spatialResultMeaning(result))) return null;
+    }
     return structuredClone(result);
   } catch {return null;}
+}
+
+/** Display-only interpretation. Never adds evidence or changes the stored result schema. */
+export function spatialResultMeaning(result:SpatialResult) {
+  const count=result.completeness.candidateCount;
+  let counts:string;
+  switch(result.operation) {
+    case 'filter':counts=`筛选前输入${count}个对象，满足本次全部条件${result.items.length}个；items是命中对象。`;break;
+    case 'nearest':counts=`输入候选${count}个，返回最近${result.items.length}个；items保持计算排序。`;break;
+    case 'classify_points': {
+      const values=result.values as SpatialClassificationCounts;
+      counts=`输入${count}个点：内部${values.interior}、边界${values.boundary}、外部${values.exterior}；items包含全部候选，不能把items长度当范围命中数。`;break;
+    }
+    case 'buffer':counts=`本次缓冲输入${count}个对象；items是原输入，geometryType对应生成范围。`;break;
+    case 'summarize':counts=`本次统计${count}个输入对象；values.groups按属性分组计对象数，不是属性数值求和。`;break;
+    default:counts=`本次输入${count}个对象；items是计算输入，测量值或关系判断见values。`;
+  }
+  return {
+    scope:'范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。',
+    counts,
+    effect:result.delivery ? '本次读取已有固定分析结果，没有重新计算，也没有写入草稿；其他保存动作须查看相应回执。'
+      :'本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。',
+  };
 }

@@ -1,4 +1,5 @@
 import {describe,expect,it} from 'vitest';
+import {annotationToolResult} from '../src/pi/annotation-results';
 import type {PublicMessage} from '../src/contracts/index';
 import {projectionLayers,projectionOptions,readonlyCases,scopeObservations} from '../scripts/probe-map-result-projection';
 
@@ -16,6 +17,10 @@ describe('readonly result projection probe',()=>{
     const wrapped={format:'annotation.model-result.v1',data:page};
     expect(scopeObservations([message(wrapped)]).partialLastPageObserved).toBe(true);
     for(const item of [message(page),message(wrapped,{isError:true}),message(wrapped,{resultMissing:true}),message(wrapped,{role:'assistant'}),message({...wrapped,data:{...page,objects:{...page.objects,offset:0}}})])expect(scopeObservations([item]).partialLastPageObserved).toBe(false);
+    const explained=annotationToolResult(page,'annotation_read',{mode:'read',layerIds:['storage']});
+    expect(JSON.parse(explained.content[0].text).format).toBe('annotation.model-result.v2');
+    expect(scopeObservations([message(JSON.parse(explained.content[0].text))]).partialLastPageObserved).toBe(true);
+    expect(scopeObservations([message({format:'unknown',data:page})]).partialLastPageObserved).toBe(false);
     expect(scopeObservations([message(wrapped)]).semanticReview).toBe('pending_review');
     expect(scopeObservations([message(wrapped,{toolName:'annotation_action',isError:true})]).writeToolAttempted).toBe(true);
   });

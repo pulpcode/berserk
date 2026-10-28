@@ -15,7 +15,7 @@ it('projects only known annotation metadata, preserves original receipts and bus
  const result=annotationToolResult(receipt,'annotation_action');
  expect(result.details.annotationResult?.receipt.hash).toBe(hash);
  expect(result.content[0].text).not.toContain(hash);
- expect(JSON.parse(result.content[0].text)).toMatchObject({format:'annotation.model-result.v1',data:{ref:receipt.ref,publication:{title:'发布版'}}});
+ expect(JSON.parse(result.content[0].text)).toMatchObject({format:'annotation.model-result.v2',data:{ref:receipt.ref,publication:{title:'发布版'}}});
 });
 it.each([{}, {objectIds:['north'],fields:['note']}, {layerIds:['roads'],fields:[]}, {layerNames:['道路'],objectIds:['north'],fields:[]}, {fields:['style','attributes']}, {objectNames:['north','不存在'],fields:[]}, {layerNames:['道路'],objectNames:['north']}])('echoes original selectors without inventing omitted fields: %j', query => {
  const actual={hash,ref:{setId:id,revision:1},objects:{items:[],offset:3,limit:2,total:5,hasMore:false}};
@@ -38,4 +38,41 @@ it('requires valid paired metadata, keeps legacy receipts, and never falls back 
  const read=annotationToolResult(receipt,'annotation_read');
  expect(read.details.annotationResult?.origin).toBe('receipt_read');
  expect(annotationMapEntries([{...message,toolName:'annotation_read',text:read.content[0].text,annotationResult:read.details.annotationResult}])[0]?.original).toBe(true);
+});
+
+it('explains read scope and page counts without widening zero matches to an empty draft',()=>{
+ const actual={ref:{setId:id,revision:1},layers:[],objects:{items:[],total:0,offset:0,limit:10,hasMore:false},nameLookupHints:[{objectId:'zone-id',name:'区域',layerId:'areas'}]};
+ const result=annotationToolResult(actual,'annotation_read',{mode:'draft',objectNames:['zone-id'],layerIds:['areas']});
+ const model=JSON.parse(result.content[0].text);
+ expect(model.data.objects).toEqual(actual.objects);expect(model.data.layers).toEqual([]);
+ expect(model.meaning.scope).toContain('仅列有匹配对象');expect(model.meaning.counts).toContain('不表示整个草稿为空');
+ expect(model.meaning.nameLookupHints).toContain('保留原ref及图层限制');
+ expect(model.meaning.effect).toContain('没有创建');
+ const whole=JSON.parse(annotationToolResult({...actual,nameLookupHints:undefined},'annotation_read',{mode:'read'}).content[0].text);
+ expect(whole.meaning.scope).toContain('全部图层');expect(whole.meaning.nameLookupHints).toBeUndefined();
+ const page=JSON.parse(annotationToolResult({...actual,objects:{items:[],total:5,offset:99,hasMore:false}},'annotation_read',{mode:'read',objectNames:['区域']}).content[0].text);
+ expect(page.meaning.counts).toContain('共匹配5个对象，本页返回0个');
+});
+it('accepts original v1 receipt text and strict v2 meanings, rejects changed meaning or extra fields',()=>{
+ for(const [tool,actual] of [['annotation_action',receipt],['annotation_action',{...receipt,replayed:true}],['annotation_read',receipt]] as const) {
+   const result=annotationToolResult(actual,tool),model=JSON.parse(result.content[0].text);
+   const legacy=JSON.stringify({format:'annotation.model-result.v1',data:projectAnnotationResult(actual)});
+   expect(extractAnnotationResult(result.details,tool,false,legacy)).toEqual(result.details.annotationResult);
+   expect(extractAnnotationResult(result.details,tool,false,result.content[0].text)).toEqual(result.details.annotationResult);
+   for(const changed of [{...model,meaning:{effect:'刚刚保存了全部对象'}},{...model,extra:'可信'},{...model,meaning:undefined}]) {
+     expect(extractAnnotationResult(result.details,tool,false,JSON.stringify(changed))).toBeNull();
+   }
+   if(tool==='annotation_read')expect(model.meaning.effect).toContain('没有重新执行写入');
+   else if('replayed' in actual)expect(model.meaning.effect).toContain('没有重复写入');
+ }
+});
+
+it.each(['not_committed','unknown'])('never describes a %s outcome as a successful write',outcome=>{
+ const actual={...receipt,outcome};
+ for(const tool of ['annotation_action','annotation_read']) {
+  const output=annotationToolResult(actual,tool),model=JSON.parse(output.content[0].text);
+  expect(model.data.outcome).toBe(outcome);expect(model.meaning).toBeUndefined();
+  expect(output.details.annotationResult).toBeUndefined();
+  expect(extractAnnotationResult({annotationResult:{schemaVersion:1,origin:tool==='annotation_read'?'receipt_read':'write',receipt:actual}},tool)).toBeNull();
+ }
 });

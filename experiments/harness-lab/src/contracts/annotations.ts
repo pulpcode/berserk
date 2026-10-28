@@ -91,6 +91,8 @@ export interface AnnotationReadInput {
   ref: AnnotationRef; layerIds?: string[]; layerNames?: string[]; objectIds?: string[]; objectNames?: string[]; fields?: AnnotationReadField[]; offset?: number; limit?: number;
 }
 export interface AnnotationReadResult {
+  /** Exact IDs in the same authorized snapshot/layer scope; never name-query matches. */
+  nameLookupHints?: Array<{objectId:string; name:string; layerId:string}>;
   ref: AnnotationRef; title: string; hash: string; createdAt: string;
   layers: Array<Omit<AnnotationLayer, 'features'>>;
   objects: AnnotationPage<Pick<AnnotationFeature, 'objectId' | 'kind' | 'name'> & Partial<AnnotationFeature> & { layerId: string }>;

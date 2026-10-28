@@ -132,7 +132,7 @@ it('matches names inside the requested historical revision and publication after
 it('authorizes the fixed snapshot before disclosing any name matches or candidate IDs',async()=>{
   const {service,actor,session,taskId,workspaces}=await setup();
   service.context=new ContextService({systems:[{id:'source',name:'范围',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TEST_QUERY'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a','b']}]},{TEST_QUERY:'test-only-token'});
-  const input=initial();input.operations[0].layer.features[0].sourceRefs=[{systemId:'source',objectType:'resource',objectId:'object',revision:1}];
+  const input=initial();input.operations[0].layer.features[0].name='具有来源权限的点';input.operations[0].layer.features[0].sourceRefs=[{systemId:'source',objectType:'resource',objectId:'object',revision:1}];
   input.operations.push({op:'add_layer',layer:{layerId:'secret-candidate',name:'集合点',order:1,defaultVisible:true,features:[]}});
   service.action(actor,session,input);const privateRef=draftRef(service,actor,session);
   const published=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:1,title:'共享'}).ref!;
@@ -142,6 +142,7 @@ it('authorizes the fixed snapshot before disclosing any name matches or candidat
     expect(()=>service.read(b,taskId,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
     expect(()=>service.read(actor,otherTask.taskSpaceId!,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND'}));
   }
+  expect(service.read(b,taskId,{ref:published,objectNames:['point-a']}).nameLookupHints).toEqual([{objectId:'point-a',name:'具有来源权限的点',layerId:'layer-a'}]);
   service.context.config.scopes[0].seatIds=['a'];
   expect(()=>service.read(b,taskId,{ref:published,layerNames:['集合点']})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
   for(const objectNames of [['point-a'],['不存在']])expect(()=>service.read(b,taskId,{ref:published,objectNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
@@ -283,4 +284,30 @@ it('validates bounded exact object names independently of layer selectors and co
   expect(input).toMatchObject({objectNames:[' 基点 '],layerIds:['a']});expect(input.objectNames).not.toBe(objectNames);
   expect(validation.readInput({ref,objectNames:Array.from({length:32},(_,index)=>String(index))}).objectNames).toHaveLength(32);
   expect(()=>validation.selection({...ref,objectNames:['基点']})).toThrow();
+});
+
+it('offers exact ID hints only for zero name matches inside the same authorized snapshot and layer scope',async()=>{
+ const {service,actor,session,second,taskId}=await setup();
+ service.action(actor,session,{...initial(),operations:[
+  {op:'add_layer',layer:{layerId:'areas',name:'区域层',order:0,defaultVisible:true,features:[{...point('zone-id'),name:'巡查区'},{...point('other'),name:'zone-id'}]}},
+  {op:'add_layer',layer:{layerId:'other-layer',name:'其他',order:1,defaultVisible:true,features:[{...point('hidden-id'),name:'另一区'}]}},
+ ]});
+ const before=draftRef(service,actor,session);
+ // A real name match wins even when the string is another object's ID.
+ const named=service.read(actor,taskId,{ref:before,objectNames:['zone-id']});
+ expect(named.objects.items.map(o=>o.objectId)).toEqual(['other']);expect(named.nameLookupHints).toBeUndefined();
+ service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'other',changes:{name:'改名'}},{op:'add_object',layerId:'areas',feature:{...point('new-id'),name:'新对象'}}]});
+ const ref=draftRef(service,actor,session),snapshot=service.version(actor,taskId,ref);
+ const result=service.read(actor,taskId,{ref,layerNames:['区域层'],objectNames:['zone-id','hidden-id'],fields:['geometry','note']});
+ expect(result).toMatchObject({ref,layers:[],objects:{total:0,items:[]},nameLookupHints:[{objectId:'zone-id',name:'巡查区',layerId:'areas'}]});
+ expect(Object.keys(result.nameLookupHints![0])).toEqual(['objectId','name','layerId']);
+ expect(service.read(actor,taskId,{ref,objectNames:['巡查区','hidden-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectNames:['巡查区'],offset:99}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref:before,objectNames:['new-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectNames:['zone'],layerIds:['areas']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,layerIds:['other-layer'],objectNames:['zone-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectIds:['zone-id']}).objects.items[0].objectId).toBe('zone-id');
+ service.action(actor,second,initial());
+ expect(service.read(actor,taskId,{ref:draftRef(service,actor,second),objectNames:['zone-id']}).nameLookupHints).toBeUndefined();
+ expect(service.version(actor,taskId,ref)).toEqual(snapshot);
 });

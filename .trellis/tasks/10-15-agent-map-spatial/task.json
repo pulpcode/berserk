@@ -1437,12 +1437,12 @@
     "completeReviewFinished": true
   },
   "resultGroundingR15": {
-    "status": "planning_awaiting_review",
+    "status": "results_ready_for_review",
     "branch": "codex/agent-result-grounding",
     "plan": "r15-20261027/plan.md",
-    "authorization": "用户仅要求形成落盘方案，待审阅",
-    "planningOnly": true,
-    "implementationAllowed": false,
+    "authorization": "2026-10-27 用户：方案提交git，然后开始实施",
+    "planningOnly": false,
+    "implementationAllowed": true,
     "modelExecutionAllowed": false,
     "previousResultsCommit": "e34448a",
     "productBaselineProposal": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
@@ -1465,6 +1465,21 @@
     "automaticRetries": false,
     "additionalTrialsAllowed": false,
     "formalAcceptanceThreshold": 0.9,
-    "nextAction": "等待审阅本轮方案；未批准前不改代码、不执行测试。"
+    "nextAction": "用户审阅R15结果；未发出轮次保持待定，不自动补测、重试或追加。",
+    "planCommit": "6af1175",
+    "results": "r15-20261027/results.md",
+    "actualTaskSlots": 48,
+    "modelRequests": 173,
+    "estimatedAFP": 423.53662499999973,
+    "mainResults": {
+      "pass": 40,
+      "fail": 3,
+      "pending": 5
+    },
+    "strictResults": {
+      "pass": 38,
+      "fail": 5,
+      "pending": 5
+    }
   }
 }

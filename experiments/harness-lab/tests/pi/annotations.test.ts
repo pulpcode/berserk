@@ -208,7 +208,10 @@ describe('annotation input and native tools', () => {
     expect(lab.annotations!.receipt(actor, annotationActionId(requestId, 'retry-call'))?.ref).toBeDefined();
     const read = tools.find(tool => tool.name === 'annotation_read')!;
     const recovered = await read.execute('inspect-receipt', {mode: 'receipt', requestId, toolCallId: 'retry-call'} as never, undefined, undefined, {} as never);
-    expect(recovered.content).toEqual(first.content);
+    const originalModel=JSON.parse((first.content[0] as {text:string}).text),readModel=JSON.parse((recovered.content[0] as {text:string}).text);
+    expect(readModel.data).toEqual(originalModel.data);
+    expect(readModel.meaning.effect).toContain('没有重新执行写入');
+    expect(originalModel.meaning.effect).toContain('本次动作已成功');
     expect(recovered.details.annotationResult).toMatchObject({origin:'receipt_read',receipt:first.details.annotationResult!.receipt});
     expect(JSON.stringify(action.parameters)).not.toContain('sessionId');
     controller.abort(); await expect(action.execute('after-stop', params as never, undefined, undefined, {} as never)).rejects.toThrow();

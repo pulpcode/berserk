@@ -1,0 +1,757 @@
+{
+  "groups": {
+    "G0": {
+      "main": {
+        "planned": 12,
+        "pass": 9,
+        "fail": 1,
+        "pending": 2,
+        "notExecuted": 0
+      },
+      "strict": {
+        "planned": 12,
+        "pass": 9,
+        "fail": 1,
+        "pending": 2,
+        "notExecuted": 0
+      },
+      "categories": {
+        "source": {
+          "main": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 1,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 1,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "lookup": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "counts": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "state": {
+          "main": {
+            "planned": 2,
+            "pass": 0,
+            "fail": 0,
+            "pending": 2,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 0,
+            "fail": 0,
+            "pending": 2,
+            "notExecuted": 0
+          }
+        },
+        "direction": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "authorship": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        }
+      }
+    },
+    "GS": {
+      "main": {
+        "planned": 12,
+        "pass": 11,
+        "fail": 0,
+        "pending": 1,
+        "notExecuted": 0
+      },
+      "strict": {
+        "planned": 12,
+        "pass": 11,
+        "fail": 0,
+        "pending": 1,
+        "notExecuted": 0
+      },
+      "categories": {
+        "source": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "lookup": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "counts": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "state": {
+          "main": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          }
+        },
+        "direction": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "authorship": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        }
+      }
+    },
+    "GT": {
+      "main": {
+        "planned": 12,
+        "pass": 11,
+        "fail": 0,
+        "pending": 1,
+        "notExecuted": 0
+      },
+      "strict": {
+        "planned": 12,
+        "pass": 9,
+        "fail": 2,
+        "pending": 1,
+        "notExecuted": 0
+      },
+      "categories": {
+        "source": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "lookup": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "counts": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "state": {
+          "main": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 0,
+            "fail": 1,
+            "pending": 1,
+            "notExecuted": 0
+          }
+        },
+        "direction": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "authorship": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 1,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        }
+      }
+    },
+    "GST": {
+      "main": {
+        "planned": 12,
+        "pass": 10,
+        "fail": 1,
+        "pending": 1,
+        "notExecuted": 0
+      },
+      "strict": {
+        "planned": 12,
+        "pass": 8,
+        "fail": 1,
+        "pending": 3,
+        "notExecuted": 0
+      },
+      "categories": {
+        "source": {
+          "main": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 1,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 1,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "lookup": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          }
+        },
+        "counts": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          }
+        },
+        "state": {
+          "main": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 1,
+            "fail": 0,
+            "pending": 1,
+            "notExecuted": 0
+          }
+        },
+        "direction": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        },
+        "authorship": {
+          "main": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          },
+          "strict": {
+            "planned": 2,
+            "pass": 2,
+            "fail": 0,
+            "pending": 0,
+            "notExecuted": 0
+          }
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "GSvsG0": {
+      "improved": 1,
+      "regressed": 0,
+      "bothPass": 9,
+      "bothFail": 0,
+      "unresolved": 2,
+      "net": 1,
+      "details": [
+        {
+          "caseId": "P01",
+          "outcome": "improved"
+        },
+        {
+          "caseId": "P02",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P03",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P04",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P05",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P06",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P07",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P08",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P09",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P10",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P11",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P12",
+          "outcome": "bothPass"
+        }
+      ]
+    },
+    "GTvsG0": {
+      "improved": 1,
+      "regressed": 1,
+      "bothPass": 8,
+      "bothFail": 0,
+      "unresolved": 2,
+      "net": 0,
+      "details": [
+        {
+          "caseId": "P01",
+          "outcome": "improved"
+        },
+        {
+          "caseId": "P02",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P03",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P04",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P05",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P06",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P07",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P08",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P09",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P10",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P11",
+          "outcome": "regressed"
+        },
+        {
+          "caseId": "P12",
+          "outcome": "bothPass"
+        }
+      ]
+    },
+    "GSTvsG0": {
+      "improved": 0,
+      "regressed": 0,
+      "bothPass": 7,
+      "bothFail": 1,
+      "unresolved": 4,
+      "net": 0,
+      "details": [
+        {
+          "caseId": "P01",
+          "outcome": "bothFail"
+        },
+        {
+          "caseId": "P02",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P03",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P04",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P05",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P06",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P07",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P08",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P09",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P10",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P11",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P12",
+          "outcome": "bothPass"
+        }
+      ]
+    },
+    "GSTvsGS": {
+      "improved": 0,
+      "regressed": 1,
+      "bothPass": 8,
+      "bothFail": 0,
+      "unresolved": 3,
+      "net": -1,
+      "details": [
+        {
+          "caseId": "P01",
+          "outcome": "regressed"
+        },
+        {
+          "caseId": "P02",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P03",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P04",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P05",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P06",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P07",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P08",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P09",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P10",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P11",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P12",
+          "outcome": "bothPass"
+        }
+      ]
+    },
+    "GSTvsGT": {
+      "improved": 2,
+      "regressed": 1,
+      "bothPass": 6,
+      "bothFail": 0,
+      "unresolved": 3,
+      "net": 1,
+      "details": [
+        {
+          "caseId": "P01",
+          "outcome": "regressed"
+        },
+        {
+          "caseId": "P02",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P03",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P04",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P05",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P06",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P07",
+          "outcome": "improved"
+        },
+        {
+          "caseId": "P08",
+          "outcome": "unresolved"
+        },
+        {
+          "caseId": "P09",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P10",
+          "outcome": "bothPass"
+        },
+        {
+          "caseId": "P11",
+          "outcome": "improved"
+        },
+        {
+          "caseId": "P12",
+          "outcome": "bothPass"
+        }
+      ]
+    }
+  },
+  "coverage": {
+    "planned": 48,
+    "reviewed": 48
+  },
+  "notIndependentHeldout": true
+}

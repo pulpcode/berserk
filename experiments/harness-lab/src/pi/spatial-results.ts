@@ -1,9 +1,9 @@
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
-import { extractSpatialResult, projectSpatialResult, spatialModelFormat, type SpatialResult } from '../contracts/spatial.js';
+import { extractSpatialResult, projectSpatialResult, SPATIAL_EXPLAINED_MODEL_FORMAT, spatialResultMeaning, type SpatialResult } from '../contracts/spatial.js';
 import { spatialError } from '../spatial/validation.js';
 import { RESOURCE_ENTRY, RESULT_ENTRY } from './resource-tools.js';
 export function spatialToolResult(result:SpatialResult) {
-  return {content:[{type:'text' as const,text:JSON.stringify({format:spatialModelFormat(result),data:projectSpatialResult(result)})}],details:{spatialResult:result}};
+  return {content:[{type:'text' as const,text:JSON.stringify({format:SPATIAL_EXPLAINED_MODEL_FORMAT,data:projectSpatialResult(result),meaning:spatialResultMeaning(result)})}],details:{spatialResult:result}};
 }
 /** Authority is an actual original computation in this authorized native branch, never supplied result JSON. */
 export function resolveSpatialResult(entries:SessionEntry[],ref:string):SpatialResult {

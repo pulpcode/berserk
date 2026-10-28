@@ -1,0 +1,111 @@
+# R15 匿名初评 stage 03
+
+只依据blind-stage-03公开历史、实际工具结果、状态与模型可见证据；未读原批次、组别映射、配置、费用或私有思考。此为首次语义评分，不是独立复核。
+
+8项主任务均通过；严格7通过、0明确失败、1待定，确认下界7/8，上界8/8。全部过程没有独立公开助手事实段，processFacts记na；最终答复里的过程回顾仍纳入finalFacts。8项均真实生成origin的500米Polygon、输入1点，未保存且草稿/共享采用/发布不变。P06四项均列全层4个点及完整名单。
+
+f481…实际完成，脚本把可选保存邀请误识别为必要确认；按内容判通过。d223…“只读取并计算origin”保留作用域争议，不机械判最坏语义，需独立复核。
+
+## 24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd（P06）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> 总数：4 个对象（分页信息显示本页 4 个、无后续页），全部为点类型。
+
+依据与判定：全层四点和名单完整，缓冲只选origin且输入1点、500米明确；最终未写草稿/发布/采用与真实状态相符。
+
+表达复核：“源对象名称”在紧邻文字中明确指草稿输入对象，并非断言来自外部态势；仅记可改称“原输入对象”。
+
+证据：`.local/spatial-r15/blind-stage-03/24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd/judge-input.json#visibleTranscript/3/spatialResult`；`.local/spatial-r15/blind-stage-03/24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd/judge-input.json#visibleTranscript/4`；`.local/spatial-r15/blind-stage-03/24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd/completion.json`。
+
+## 37936a1e-4478-48b6-9048-303cfe551410（P05）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> **输入点数量**：1 个（completeness 为 complete，候选数 1）。
+
+依据与判定：正确报告草稿origin为中心、500米范围和1输入；来源关键词查询确实无命中，未把局部输入说成全层总数；实际未写入。
+
+表达复核：末尾“筛选范围内的参照点（参照甲、参照乙、参照丙）”是后续筛选邀请，且明确“目前这两项都还没有做”，不作为已经验证这三点在范围内的断言；建议改称“以这三点为候选再筛选”。
+
+证据：`.local/spatial-r15/blind-stage-03/37936a1e-4478-48b6-9048-303cfe551410/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/37936a1e-4478-48b6-9048-303cfe551410/judge-input.json#visibleTranscript/4/spatialResult`；`.local/spatial-r15/blind-stage-03/37936a1e-4478-48b6-9048-303cfe551410/judge-input.json#visibleTranscript/5`；`.local/spatial-r15/blind-stage-03/37936a1e-4478-48b6-9048-303cfe551410/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/37936a1e-4478-48b6-9048-303cfe551410/completion.json`。
+
+## 67c70232-a919-4c11-8ace-c8b537fef906（P06）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> 总数：4 个（读取范围为本会话草稿修订 1，`objects.total=4`，无更多分页）。
+
+依据与判定：先完整读取4点摘要，再只读origin几何，最终正确列全层4点名单，并以单个基点origin生成500米预览，未写入。单个圆心表述清楚，未把后续局部total=1当全层总数。
+
+表达复核：没有另写“输入1点”数字，但“以基点（origin）为圆心”已经明确唯一输入，用户题干并未另要求输入计数字段；不因少一个重复数字判漏答。
+
+证据：`.local/spatial-r15/blind-stage-03/67c70232-a919-4c11-8ace-c8b537fef906/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/67c70232-a919-4c11-8ace-c8b537fef906/judge-input.json#visibleTranscript/5/spatialResult`；`.local/spatial-r15/blind-stage-03/67c70232-a919-4c11-8ace-c8b537fef906/judge-input.json#visibleTranscript/6`；`.local/spatial-r15/blind-stage-03/67c70232-a919-4c11-8ace-c8b537fef906/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/67c70232-a919-4c11-8ace-c8b537fef906/completion.json`。
+
+## 700531a9-023a-4164-8de8-2583f3be0d0b（P06）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> **reference 层（图层 ID：reference，参照对象）**该层共 **4 个**对象，全部是点：基点、参照甲、参照乙、参照丙。
+
+依据与判定：完整4名单、层总数4、缓冲输入1与500米分别正确；revision1和4对象不变可由初始读取及仅只读工具执行、最终真实状态支持。
+
+表达复核：无实质表达争议。
+
+证据：`.local/spatial-r15/blind-stage-03/700531a9-023a-4164-8de8-2583f3be0d0b/judge-input.json#visibleTranscript/3`；`.local/spatial-r15/blind-stage-03/700531a9-023a-4164-8de8-2583f3be0d0b/judge-input.json#visibleTranscript/4/spatialResult`；`.local/spatial-r15/blind-stage-03/700531a9-023a-4164-8de8-2583f3be0d0b/judge-input.json#visibleTranscript/5`；`.local/spatial-r15/blind-stage-03/700531a9-023a-4164-8de8-2583f3be0d0b/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/700531a9-023a-4164-8de8-2583f3be0d0b/completion.json`。
+
+## a1e3744c-61ba-4653-9d17-6481ad5e13e9（P05）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> 本次用了 **1 个**输入点（仅 `origin`）。同图层另有参照甲、参照乙、参照丙 3 个点，未纳入本次计算；也未做任何合并或去重。
+
+依据与判定：origin名称/坐标由定向读取支持；500米缓冲输入1点，其他3点由此前完整摘要支持。来源关键词无命中属实际查询结果，未宣称不存在所有来源对象；未写入状态正确。
+
+表达复核：“未做任何合并或去重”在此指未联合其他对象，未据此推断工具内部实现；单点输入下无实际合并任务，不机械按实现细节扣分。
+
+证据：`.local/spatial-r15/blind-stage-03/a1e3744c-61ba-4653-9d17-6481ad5e13e9/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/a1e3744c-61ba-4653-9d17-6481ad5e13e9/judge-input.json#visibleTranscript/4/spatialResult`；`.local/spatial-r15/blind-stage-03/a1e3744c-61ba-4653-9d17-6481ad5e13e9/judge-input.json#visibleTranscript/5`；`.local/spatial-r15/blind-stage-03/a1e3744c-61ba-4653-9d17-6481ad5e13e9/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/a1e3744c-61ba-4653-9d17-6481ad5e13e9/completion.json`。
+
+## c7b77fa7-ce7c-41ba-a316-dae4fbeec566（P05）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> 输入点数量：1 个（即 `origin` 一个点；候选数 1，状态 complete，无分页遗漏）
+
+依据与判定：500米、origin、单点输入均有真实结果；全层其他3点由首次完整读取支持。关键词来源搜索确实空，本次未混合来源；所有状态表述限定本次且未写草稿。
+
+表达复核：开头“未做任何保存”由后文“结果未写入草稿”限定为业务保存，不升级解读为没有内部持久存储。
+
+证据：`.local/spatial-r15/blind-stage-03/c7b77fa7-ce7c-41ba-a316-dae4fbeec566/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/c7b77fa7-ce7c-41ba-a316-dae4fbeec566/judge-input.json#visibleTranscript/4/spatialResult`；`.local/spatial-r15/blind-stage-03/c7b77fa7-ce7c-41ba-a316-dae4fbeec566/judge-input.json#visibleTranscript/5`；`.local/spatial-r15/blind-stage-03/c7b77fa7-ce7c-41ba-a316-dae4fbeec566/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/c7b77fa7-ce7c-41ba-a316-dae4fbeec566/completion.json`。
+
+## d22389b8-ef0a-4a37-8337-53a8ca0e3e1d（P05）
+
+主任务pass；过程事实na；最终事实pending；效果pass；边界pass；严格pending。
+
+原句：
+> 本次只读取并计算了 `origin`，其余 3 个点没有参与计算，也没有作为参照。
+
+依据与判定：主任务完整：origin中心、500米、输入1点、全层4点区分正确且实际未写入。争议仅在“只读取并计算”：整个请求的annotation_read确实返回4点摘要；但同段“其余3点未参与计算/作为参照”也支持将其理解为本次缓冲操作只取origin。按规则保留finalFacts待定，交独立复核，不将两种合理作用域强行取最坏解释。
+
+表达复核：待定：若“本次”指整次请求，则把读取范围4说成1是事实错误；若指缓冲计算输入读取，则真实input.objectIds=[origin]支持。建议改为“已读全层摘要，本次只用origin计算”。
+
+证据：`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/judge-input.json#visibleTranscript/3/spatialResult`；`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/judge-input.json#visibleTranscript/4`；`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/completion.json`；`.local/spatial-r15/blind-stage-03/d22389b8-ef0a-4a37-8337-53a8ca0e3e1d/model-visible-evidence.json#observedMessages/2`。
+
+## f4812f65-572b-4499-b468-9d13abf100f8（P06）
+
+主任务pass；过程事实na；最终事实pass；效果pass；边界pass；严格pass。
+
+原句：
+> 如需把该范围保存为草稿图层对象，请明确说明目标图层和名称。
+
+依据与判定：四点完整名单、总数4、唯一图层、origin圆心、500米和输入1均已答完，实际只读无写入。结尾是以“如需”为条件的后续保存邀请，不阻碍已经完成的当前不保存任务。completion的incomplete/unnecessary_confirmation是执行器分类误判，不作为语义失败。
+
+表达复核：应避免把可选后续邀请识别成当前任务必要澄清；正文没有等待答复才能完成本次任务的条件。
+
+证据：`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/judge-input.json#visibleTranscript/1`；`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/judge-input.json#visibleTranscript/4/spatialResult`；`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/judge-input.json#visibleTranscript/5`；`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/judge-input.json#stateEvidence/0`；`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/completion.json`；`.local/spatial-r15/blind-stage-03/f4812f65-572b-4499-b468-9d13abf100f8/model-visible-evidence.json#observedMessages/2`。

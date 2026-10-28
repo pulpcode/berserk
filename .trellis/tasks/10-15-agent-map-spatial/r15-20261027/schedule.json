@@ -1,0 +1,482 @@
+[
+  {
+    "id": "P01-1-G0",
+    "entryId": "P01-1-G0",
+    "caseId": "P01",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 1,
+    "split": "development"
+  },
+  {
+    "id": "P01-1-GS",
+    "entryId": "P01-1-GS",
+    "caseId": "P01",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 2,
+    "split": "development"
+  },
+  {
+    "id": "P01-1-GT",
+    "entryId": "P01-1-GT",
+    "caseId": "P01",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 3,
+    "split": "development"
+  },
+  {
+    "id": "P01-1-GST",
+    "entryId": "P01-1-GST",
+    "caseId": "P01",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 4,
+    "split": "development"
+  },
+  {
+    "id": "P02-1-GS",
+    "entryId": "P02-1-GS",
+    "caseId": "P02",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 5,
+    "split": "development"
+  },
+  {
+    "id": "P02-1-GT",
+    "entryId": "P02-1-GT",
+    "caseId": "P02",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 6,
+    "split": "development"
+  },
+  {
+    "id": "P02-1-GST",
+    "entryId": "P02-1-GST",
+    "caseId": "P02",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 7,
+    "split": "development"
+  },
+  {
+    "id": "P02-1-G0",
+    "entryId": "P02-1-G0",
+    "caseId": "P02",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 8,
+    "split": "development"
+  },
+  {
+    "id": "P03-1-GT",
+    "entryId": "P03-1-GT",
+    "caseId": "P03",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 9,
+    "split": "development"
+  },
+  {
+    "id": "P03-1-GST",
+    "entryId": "P03-1-GST",
+    "caseId": "P03",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 10,
+    "split": "development"
+  },
+  {
+    "id": "P03-1-G0",
+    "entryId": "P03-1-G0",
+    "caseId": "P03",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 11,
+    "split": "development"
+  },
+  {
+    "id": "P03-1-GS",
+    "entryId": "P03-1-GS",
+    "caseId": "P03",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 12,
+    "split": "development"
+  },
+  {
+    "id": "P04-1-GST",
+    "entryId": "P04-1-GST",
+    "caseId": "P04",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 13,
+    "split": "development"
+  },
+  {
+    "id": "P04-1-G0",
+    "entryId": "P04-1-G0",
+    "caseId": "P04",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 14,
+    "split": "development"
+  },
+  {
+    "id": "P04-1-GS",
+    "entryId": "P04-1-GS",
+    "caseId": "P04",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 15,
+    "split": "development"
+  },
+  {
+    "id": "P04-1-GT",
+    "entryId": "P04-1-GT",
+    "caseId": "P04",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 16,
+    "split": "development"
+  },
+  {
+    "id": "P05-1-G0",
+    "entryId": "P05-1-G0",
+    "caseId": "P05",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 17,
+    "split": "development"
+  },
+  {
+    "id": "P05-1-GS",
+    "entryId": "P05-1-GS",
+    "caseId": "P05",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 18,
+    "split": "development"
+  },
+  {
+    "id": "P05-1-GT",
+    "entryId": "P05-1-GT",
+    "caseId": "P05",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 19,
+    "split": "development"
+  },
+  {
+    "id": "P05-1-GST",
+    "entryId": "P05-1-GST",
+    "caseId": "P05",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 20,
+    "split": "development"
+  },
+  {
+    "id": "P06-1-GS",
+    "entryId": "P06-1-GS",
+    "caseId": "P06",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 21,
+    "split": "development"
+  },
+  {
+    "id": "P06-1-GT",
+    "entryId": "P06-1-GT",
+    "caseId": "P06",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 22,
+    "split": "development"
+  },
+  {
+    "id": "P06-1-GST",
+    "entryId": "P06-1-GST",
+    "caseId": "P06",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 23,
+    "split": "development"
+  },
+  {
+    "id": "P06-1-G0",
+    "entryId": "P06-1-G0",
+    "caseId": "P06",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 24,
+    "split": "development"
+  },
+  {
+    "id": "P07-1-GT",
+    "entryId": "P07-1-GT",
+    "caseId": "P07",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 25,
+    "split": "development"
+  },
+  {
+    "id": "P07-1-GST",
+    "entryId": "P07-1-GST",
+    "caseId": "P07",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 26,
+    "split": "development"
+  },
+  {
+    "id": "P07-1-G0",
+    "entryId": "P07-1-G0",
+    "caseId": "P07",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 27,
+    "split": "development"
+  },
+  {
+    "id": "P07-1-GS",
+    "entryId": "P07-1-GS",
+    "caseId": "P07",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 28,
+    "split": "development"
+  },
+  {
+    "id": "P08-1-GST",
+    "entryId": "P08-1-GST",
+    "caseId": "P08",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 29,
+    "split": "development"
+  },
+  {
+    "id": "P08-1-G0",
+    "entryId": "P08-1-G0",
+    "caseId": "P08",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 30,
+    "split": "development"
+  },
+  {
+    "id": "P08-1-GS",
+    "entryId": "P08-1-GS",
+    "caseId": "P08",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 31,
+    "split": "development"
+  },
+  {
+    "id": "P08-1-GT",
+    "entryId": "P08-1-GT",
+    "caseId": "P08",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 32,
+    "split": "development"
+  },
+  {
+    "id": "P09-1-G0",
+    "entryId": "P09-1-G0",
+    "caseId": "P09",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 33,
+    "split": "development"
+  },
+  {
+    "id": "P09-1-GS",
+    "entryId": "P09-1-GS",
+    "caseId": "P09",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 34,
+    "split": "development"
+  },
+  {
+    "id": "P09-1-GT",
+    "entryId": "P09-1-GT",
+    "caseId": "P09",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 35,
+    "split": "development"
+  },
+  {
+    "id": "P09-1-GST",
+    "entryId": "P09-1-GST",
+    "caseId": "P09",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 36,
+    "split": "development"
+  },
+  {
+    "id": "P10-1-GS",
+    "entryId": "P10-1-GS",
+    "caseId": "P10",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 37,
+    "split": "development"
+  },
+  {
+    "id": "P10-1-GT",
+    "entryId": "P10-1-GT",
+    "caseId": "P10",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 38,
+    "split": "development"
+  },
+  {
+    "id": "P10-1-GST",
+    "entryId": "P10-1-GST",
+    "caseId": "P10",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 39,
+    "split": "development"
+  },
+  {
+    "id": "P10-1-G0",
+    "entryId": "P10-1-G0",
+    "caseId": "P10",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 40,
+    "split": "development"
+  },
+  {
+    "id": "P11-1-GT",
+    "entryId": "P11-1-GT",
+    "caseId": "P11",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 41,
+    "split": "development"
+  },
+  {
+    "id": "P11-1-GST",
+    "entryId": "P11-1-GST",
+    "caseId": "P11",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 42,
+    "split": "development"
+  },
+  {
+    "id": "P11-1-G0",
+    "entryId": "P11-1-G0",
+    "caseId": "P11",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 43,
+    "split": "development"
+  },
+  {
+    "id": "P11-1-GS",
+    "entryId": "P11-1-GS",
+    "caseId": "P11",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 44,
+    "split": "development"
+  },
+  {
+    "id": "P12-1-GST",
+    "entryId": "P12-1-GST",
+    "caseId": "P12",
+    "group": "GST",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 45,
+    "split": "development"
+  },
+  {
+    "id": "P12-1-G0",
+    "entryId": "P12-1-G0",
+    "caseId": "P12",
+    "group": "G0",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 46,
+    "split": "development"
+  },
+  {
+    "id": "P12-1-GS",
+    "entryId": "P12-1-GS",
+    "caseId": "P12",
+    "group": "GS",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 47,
+    "split": "development"
+  },
+  {
+    "id": "P12-1-GT",
+    "entryId": "P12-1-GT",
+    "caseId": "P12",
+    "group": "GT",
+    "round": 1,
+    "repetition": 1,
+    "ordinal": 48,
+    "split": "development"
+  }
+]

@@ -5,7 +5,8 @@ import { join } from 'node:path';
 import { afterEach,expect,it,vi } from 'vitest';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime,testConfig } from './fake-runtime.js';
-import type { SpatialInput,SpatialResult } from '../../src/contracts/spatial.js';
+import { projectSpatialResult, spatialModelFormat, type SpatialInput, type SpatialResult } from '../../src/contracts/spatial.js';
+import * as spatialResults from '../../src/pi/spatial-results.js';
 import { SpatialAnalysisService } from '../../src/spatial/service.js';
 import { annotationActionId } from '../../src/pi/annotation-tools.js';
 const fault=vi.hoisted(()=>({mode:''}));
@@ -17,7 +18,7 @@ vi.mock('@earendil-works/pi-coding-agent',async original=>{
   }};
 });
 const clean:Array<()=>Promise<unknown>>=[];
-afterEach(async()=>{fault.mode='';for(const fn of clean.splice(0).reverse()) await fn();});
+afterEach(async()=>{fault.mode='';vi.restoreAllMocks();for(const fn of clean.splice(0).reverse()) await fn();});
 async function setup(reply:Parameters<typeof fakeRuntime>[1],overrides:Partial<ReturnType<typeof testConfig>>={}) {
   const dir=await mkdtemp(join(tmpdir(),'spatial-native-'));clean.push(()=>rm(dir,{recursive:true,force:true}));
   const config=testConfig(dir,{seatId:'alpha',testSeats:[{id:'alpha',name:'甲'},{id:'bravo',name:'乙'}],...overrides});
@@ -147,6 +148,8 @@ it('delivers result-selection ambiguity and recovers with the same fixed geometr
 });
 
 it('retains mixed v1/v2 native history and reuses the fixed classification after restart without recomputation',async()=>{
+  // Write the historical envelopes through the real native session before reopening with the current adapter.
+  const historical=vi.spyOn(spatialResults,'spatialToolResult').mockImplementation(result=>({content:[{type:'text' as const,text:JSON.stringify({format:spatialModelFormat(result),data:projectSpatialResult(result)})}],details:{spatialResult:result}}));
   let classificationRef='';
   const s=await setup((_context,index)=>index===0?{tools:[
     {name:'spatial_analyze',arguments:{operation:'measure',metric:'distance',input:s.input,target:s.input}},
@@ -157,6 +160,7 @@ it('retains mixed v1/v2 native history and reuses the fixed classification after
   const snapshot=s.lab.get(s.session.id,'alpha'),results=snapshot.messages.filter(m=>m.toolName==='spatial_analyze');
   expect(results.map(m=>m.spatialResult?.schemaVersion)).toEqual([1,2]);
   expect(results[0].text).toContain('spatial.model-result.v1');expect(results[1].text).toContain('spatial.model-result.v2');
+  historical.mockRestore();
   const classification=results[1].spatialResult!;classificationRef=classification.resultRef;
   expect(classification.classifications?.map(c=>c.position)).toEqual(['boundary','interior','exterior']);
   expect(classification.values).toEqual({total:3,interior:1,boundary:1,exterior:1});
@@ -172,6 +176,8 @@ it('retains mixed v1/v2 native history and reuses the fixed classification after
   const after=reopened.get(s.session.id,'alpha').messages;
   const read=after.filter(m=>m.toolName==='spatial_analyze')[2];
   expect(read.spatialResult).toEqual({...classification,delivery:{requestId:read.requestId,toolCallId:read.toolCallId}});
+  expect(read.text).toContain('spatial.model-result.v3');expect(read.text).toContain('没有重新计算');
+  expect(after.filter(m=>m.toolName==='spatial_analyze').slice(0,2)).toEqual(results);
   expect(after.findLast(m=>m.toolName==='spatial_analyze')?.spatialResult?.schemaVersion).toBe(1);
   const saved=after.findLast(m=>m.toolName==='annotation_from_analysis')!;expect(saved.isError).toBe(false);
   const receipt=saved.annotationResult!.receipt;

@@ -1,0 +1,166 @@
+{
+  "offlineOnly": true,
+  "batch": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/r15-offline-complete-IYxOZQ/batch",
+  "total": {
+    "requests": 136,
+    "input": 13600,
+    "output": 1360,
+    "afp": 1.8699999999999968,
+    "unknown": 0
+  },
+  "schema": {
+    "G0": {
+      "group": "G0",
+      "rawSchemaHash": "38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606",
+      "normalizedSchemaHash": "ebe83e38e2bd51901415a9e3701979a963c61cb4e177e9978bfe5ca1ef38a4e4",
+      "allowedDifferences": [
+        "skill_read.parameters.properties.id.anyOf[map-annotations].description",
+        "skill_read.parameters.properties.id.anyOf[spatial-analysis].description"
+      ]
+    },
+    "GS": {
+      "group": "GS",
+      "rawSchemaHash": "e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1",
+      "normalizedSchemaHash": "ebe83e38e2bd51901415a9e3701979a963c61cb4e177e9978bfe5ca1ef38a4e4",
+      "allowedDifferences": [
+        "skill_read.parameters.properties.id.anyOf[map-annotations].description",
+        "skill_read.parameters.properties.id.anyOf[spatial-analysis].description"
+      ]
+    },
+    "GT": {
+      "group": "GT",
+      "rawSchemaHash": "38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606",
+      "normalizedSchemaHash": "ebe83e38e2bd51901415a9e3701979a963c61cb4e177e9978bfe5ca1ef38a4e4",
+      "allowedDifferences": [
+        "skill_read.parameters.properties.id.anyOf[map-annotations].description",
+        "skill_read.parameters.properties.id.anyOf[spatial-analysis].description"
+      ]
+    },
+    "GST": {
+      "group": "GST",
+      "rawSchemaHash": "e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1",
+      "normalizedSchemaHash": "ebe83e38e2bd51901415a9e3701979a963c61cb4e177e9978bfe5ca1ef38a4e4",
+      "allowedDifferences": [
+        "skill_read.parameters.properties.id.anyOf[map-annotations].description",
+        "skill_read.parameters.properties.id.anyOf[spatial-analysis].description"
+      ]
+    }
+  },
+  "differences": {
+    "G0_vs_GS": [
+      "/4/function/parameters/properties/id/anyOf/2/description",
+      "/4/function/parameters/properties/id/anyOf/3/description"
+    ],
+    "G0_vs_GT": [],
+    "G0_vs_GST": [
+      "/4/function/parameters/properties/id/anyOf/2/description",
+      "/4/function/parameters/properties/id/anyOf/3/description"
+    ]
+  },
+  "p12States": {
+    "G0": [
+      {
+        "objectId": "old-a",
+        "kind": "point",
+        "name": "旧点甲",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.5
+          ]
+        }
+      },
+      {
+        "objectId": "exercise",
+        "kind": "point",
+        "name": "演练点",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.51
+          ]
+        }
+      }
+    ],
+    "GS": [
+      {
+        "objectId": "old-a",
+        "kind": "point",
+        "name": "旧点甲",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.5
+          ]
+        }
+      },
+      {
+        "objectId": "exercise",
+        "kind": "point",
+        "name": "演练点",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.51
+          ]
+        }
+      }
+    ],
+    "GT": [
+      {
+        "objectId": "old-a",
+        "kind": "point",
+        "name": "旧点甲",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.5
+          ]
+        }
+      },
+      {
+        "objectId": "exercise",
+        "kind": "point",
+        "name": "演练点",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.51
+          ]
+        }
+      }
+    ],
+    "GST": [
+      {
+        "objectId": "old-a",
+        "kind": "point",
+        "name": "旧点甲",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.5
+          ]
+        }
+      },
+      {
+        "objectId": "exercise",
+        "kind": "point",
+        "name": "演练点",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            114,
+            22.51
+          ]
+        }
+      }
+    ]
+  }
+}

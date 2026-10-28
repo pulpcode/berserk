@@ -1,0 +1,210 @@
+(node:52759) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ missing freeze refuses before secrets and does not claim live slot (200.236696ms)
+✖ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (75.706611ms)
+✖ provider http_error preserves first failure and never retries (38.817243ms)
+✖ provider response_model_drift preserves first failure and never retries (45.526675ms)
+✖ provider missing_usage preserves first failure and never retries (45.293016ms)
+✖ provider truncated preserves first failure and never retries (48.018521ms)
+✖ unmapped plain clarification remains pending and independent tasks continue (49.542261ms)
+✖ unmapped api clarification remains pending and independent tasks continue (50.75458ms)
+✔ offline gate requires approval evidence matching exact frozen code (1.120099ms)
+✔ reading an old buffer does not count as a new generation (0.421245ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 2
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5208.654274
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:1088
+✖ missing freeze refuses before secrets and does not claim live slot (200.236696ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /requires frozen source/. Input:
+  
+  'AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    "+ 'undefined'\n" +
+    "- 'string'\n"
+  
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:19:2)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+    + actual - expected
+    
+    + 'undefined'
+    - 'string'
+    
+        at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+        at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+        at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:19:2)
+        at async Test.run (node:internal/test_runner/test:1125:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3),
+    expected: /requires frozen source/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:1424
+✖ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (75.706611ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:55:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider http_error preserves first failure and never retries (38.817243ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider response_model_drift preserves first failure and never retries (45.526675ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider missing_usage preserves first failure and never retries (45.293016ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider truncated preserves first failure and never retries (48.018521ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:9130
+✖ unmapped plain clarification remains pending and independent tasks continue (49.542261ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:73:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:9130
+✖ unmapped api clarification remains pending and independent tasks continue (50.75458ms)
+  AssertionError [ERR_ASSERTION]: missing_frozen_synthetic_day
+  + actual - expected
+  
+  + 'undefined'
+  - 'string'
+  
+      at frozenSyntheticDay (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:25:140)
+      at sourceFreeze (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:31:39)
+      at async runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.ts:63:38)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:73:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
