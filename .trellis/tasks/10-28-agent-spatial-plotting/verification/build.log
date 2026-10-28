@@ -1,0 +1,31 @@
+
+> @berserk/harness-lab@0.1.0 build
+> vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 2239 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                   0.62 kB │ gzip:   0.40 kB
+dist/assets/xf3013-2020.6.2.18-Cqk6x_Qf.svg       6.95 kB │ gzip:   2.43 kB
+dist/assets/maplibre-gl-worker-B8OLt8TZ.js      468.84 kB
+dist/assets/LayerTree-pVb4gqth.css                2.29 kB │ gzip:   0.76 kB
+dist/assets/SituationView-Cc2Sl4JG.css            5.98 kB │ gzip:   1.49 kB
+dist/assets/AnnotationWorkspace-P-HeVHZn.css     14.83 kB │ gzip:   3.24 kB
+dist/assets/MapCanvas-JR8eJ17e.css               83.02 kB │ gzip:  10.52 kB
+dist/assets/index-BKbzo9L9.css                   95.54 kB │ gzip:  17.77 kB
+dist/assets/map-data-CRgEKjOG.js                  1.47 kB │ gzip:   0.94 kB
+dist/assets/LayerTree-CaGFdnKr.js                 5.07 kB │ gzip:   2.00 kB
+dist/assets/Simulation-CwzT8gMr.js                7.87 kB │ gzip:   3.17 kB
+dist/assets/SituationView-SyH_6qM3.js            13.41 kB │ gzip:   5.30 kB
+dist/assets/index-Dz0-3fTR.js                    39.35 kB │ gzip:   7.35 kB
+dist/assets/AnnotationWorkspace-Dn5p-1t4.js      60.35 kB │ gzip:  19.47 kB
+dist/assets/index-LoMdbZus.js                   723.81 kB │ gzip: 220.49 kB
+dist/assets/MapCanvas-D4SIGYk_.js             1,142.74 kB │ gzip: 295.06 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 11.05s
