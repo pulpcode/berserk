@@ -1,0 +1,81 @@
+[
+  {
+    "id": "call_00_ufx5cmunyfcel1fnhr37nppb",
+    "name": "skill_read",
+    "arguments": {
+      "id": "spatial-analysis"
+    },
+    "firstObservedRequest": 20
+  },
+  {
+    "id": "call_01_cvusekvtoop38atc1xfo8hg2",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 20
+  },
+  {
+    "id": "call_00_o9bmo395y6pthi7cv4njl49y",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "36ef0aea-103b-4c5e-a09d-93b02574fff3",
+          "revision": 1
+        },
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 700
+    },
+    "firstObservedRequest": 21
+  },
+  {
+    "id": "call_00_a1wxthpm6wssixogblt0v31t",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 23
+  },
+  {
+    "id": "call_00_iqyk3y2npaxqxlvt452j5ukz",
+    "name": "annotation_from_analysis",
+    "arguments": {
+      "resultRef": "spatial:ecee8156-6781-4f49-9b5a-60754516b9b4:call_00_o9bmo395y6pthi7cv4njl49y",
+      "layerId": "derived",
+      "objectId": "inner-ring",
+      "name": "内圈"
+    },
+    "firstObservedRequest": 24
+  },
+  {
+    "id": "call_00_28h045byr4r54c9x603sm7ap",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "36ef0aea-103b-4c5e-a09d-93b02574fff3",
+          "revision": 2
+        },
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 1200
+    },
+    "firstObservedRequest": 26
+  }
+]

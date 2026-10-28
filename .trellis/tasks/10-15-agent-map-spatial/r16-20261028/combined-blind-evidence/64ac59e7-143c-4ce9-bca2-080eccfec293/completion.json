@@ -1,0 +1,9 @@
+{
+  "status": "incomplete",
+  "completedUserTurns": 0,
+  "plannedUserTurns": 2,
+  "sentOriginalUserTurns": 1,
+  "additionalClarificationTurns": 0,
+  "unissuedOriginalUserTurns": 1,
+  "stop": "provider_http_429"
+}

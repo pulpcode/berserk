@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "trialId": "map-903acf83",
+  "day": "2026-10-28",
+  "dataDir": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-map-VafckM",
+  "url": "http://127.0.0.1:4810",
+  "socket": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-map-VafckM/mock.sock",
+  "tasks": {
+    "supply": "4fe4a77f-5fbb-4e5a-93e7-5c3dd331c62c",
+    "transfer": "10622c67-162b-4a04-beb5-3a3fe3532cfd",
+    "control": "29a066dd-9c9f-4b9b-91b6-16a1ed002a06"
+  },
+  "createdAt": "2026-10-28T13:33:07.214Z",
+  "objects": {
+    "road": {
+      "systemId": "situation",
+      "objectType": "road",
+      "objectId": "map-903acf83-road-west-01"
+    },
+    "resource": {
+      "systemId": "situation",
+      "objectType": "resource",
+      "objectId": "map-903acf83-vehicles-west-01"
+    }
+  }
+}

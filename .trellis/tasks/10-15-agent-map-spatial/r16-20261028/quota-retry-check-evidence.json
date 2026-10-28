@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-10-28T13:20:56.074021+00:00",
+  "reviewer": "independent trellis-check",
+  "status": "passed",
+  "freezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e",
+  "freezeFileSha256": "73093ccf2c649bf4cc83fe005e63ede139aa3b972f188830917ac645cc36f308",
+  "driver": {
+    "budget.ts": "46be8f553d12e737c6f63ea5791bce305c62e7be5f975908428207d2199014b5",
+    "case-materials.json": "e0603426575c4a7833d18044176ae678726b7f815795c19e5d7304beabe98ef9",
+    "case-specs.json": "36a116c96384fe0649954f70885973e39187fde09e0dcad7957339593b54adad",
+    "cases-http.test.ts": "ce973ff3fa00fbe8f782c112355bb01d8ff63bfc361e5810ed9208bf163204c7",
+    "cases.json": "36a116c96384fe0649954f70885973e39187fde09e0dcad7957339593b54adad",
+    "cases.test.ts": "2f9d1fed124a498494a979943fdea48729b5ed2db27a203db9cf6c6c0b21b851",
+    "cases.ts": "3e215fd158085fa89ace49bb9646d3d065424844e93c4bfa4cd43d1f0c87aeff",
+    "check.jsonl": "12298169e5b779bc0930353a0a4db0d0a3a641f9c61fe8e874e24d1858c7e0f2",
+    "data.ts": "5e55c9140e55acfa4701769314582c7201cb36e67908e72842e28f6a86679a60",
+    "design.md": "e579ad4776405270794c0305167e7257a65663dc5f65cbe79213fcf79dd40770",
+    "execution-amendment.md": "43b8f69c6f5be0f57c872615184451c13523d6d5d69194c7a8fe500eb49e4477",
+    "implement.jsonl": "12298169e5b779bc0930353a0a4db0d0a3a641f9c61fe8e874e24d1858c7e0f2",
+    "implement.md": "a8bcdd184c83c67723c54f48e04806ff3668b93c488924ea987ec2ec25a763d3",
+    "live.continuation.test.ts": "5b712995327b2f74fbdfba94bf4817eaa26b69afb3beb4f996c7c64a508e6e4b",
+    "live.quota-retry.test.ts": "a817bdae2b0c23300c29c156a8fcd15da647a1d42e6fcd6209f14f70b947f5ac",
+    "live.test.ts": "9ee53daa59695ea9fc2b98f52afa97c2a458c02601a3519b3cda1bdc25a8a35e",
+    "live.ts": "7893ec24483f73f919fb2cb5d91f9c53cff58762c15ff409ab7131bd9fc27b32",
+    "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+    "plan.md": "8a45e2b62fdee43247d17479751b49050c6464af8518def3511d0398166daf98",
+    "prd.md": "e8d87a0a29ff29275571c41a84981c5cd4cd69a333ae01a24f3996d025a7d74d",
+    "provider-budget.test.ts": "ab15be8c6a73dbe5a9bc096fcb44dd7cd02fe186650c3159a84b007ae07f61fc",
+    "provider.ts": "8af1965b7259cb09bb673cdc1bb2be40bd56166f937676ab407121d2b907f006",
+    "review-rules.md": "eabaeb843fa5548d593d24a805ad61e1c48bbed2689b397e89d20e4c3920b476",
+    "review-tools.test.ts": "036c262c1b0e9451a76e55957426afc5aaee07213bd6b25a11f29ceaea78cd5c",
+    "review-tools.ts": "f643f1b5ec542b99c674fd34bf6a05911136a9accfc8284de94222db3e01ad64",
+    "runtime.ts": "a7b6873105c8cd254e4ed84222d096a5d69394acd69085bb18abe1637f1028a8",
+    "schedule.json": "f19bf8e20e380cbb5ec0f41d134aa0edacc9d61d4ea62771460045ba5ae6f05a",
+    "tasks.md": "11a06f56b8b5cd912450225a77b6f4cc4331746d0f23608b62aba016f4be42d2",
+    "tsconfig.json": "57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10"
+  },
+  "changedPriorDriver": [
+    "live.ts"
+  ],
+  "addedTs": [
+    "live.quota-retry.test.ts"
+  ],
+  "preserved": {
+    "initialSnapshot": 27,
+    "continuationSnapshot": 28,
+    "protectedFiles": 1268,
+    "initialEvidenceFiles": 1062,
+    "continuationEvidenceFiles": 838,
+    "oldClaimsUnchanged": true
+  },
+  "scope": {
+    "reused": [
+      "Q07-1-GST",
+      "Q07-1-G0"
+    ],
+    "retry": "Q07-1-GS",
+    "authorizedRetries": 1,
+    "unstartedTasks": 285,
+    "newTaskExecutions": 286,
+    "originalTaskDenominator": 288,
+    "previousRequests": 11,
+    "previousUnknownUsage": 1,
+    "previousKnownAfp": 24.793999999999997
+  },
+  "checks": {
+    "lint": "passed",
+    "typecheck": "passed",
+    "independentContractUnit": {
+      "passed": 1,
+      "failed": 0
+    },
+    "ownerNative": {
+      "passed": 2,
+      "failed": 0,
+      "fakeSuccessTaskSlots": 14,
+      "fakeSuccessRequests": 30,
+      "failedRequestScenarioCalls": 1
+    }
+  },
+  "logHashes": {
+    "runner-contract.log": "c4f6ac76a454fdd24f1f5e16b8dbecff0be0bc8b6455eeb016e6341ecdc817bd",
+    "runner-native.log": "136f30d57306fb889f865cc9048ffe7f66c5195cefef093472854a2d4608a02a"
+  },
+  "externalModelCallsByReviewer": 0
+}

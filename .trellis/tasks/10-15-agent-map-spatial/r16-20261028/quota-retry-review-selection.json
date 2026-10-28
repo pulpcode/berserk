@@ -1,0 +1,21 @@
+{
+  "seed": "R16-20261028-review",
+  "total": 9,
+  "ids": [
+    "0301f41d-7b72-4b9f-b037-98d7fac8cf47",
+    "23db2f45-6830-40e3-bab6-54aac279b96a",
+    "25f8c221-8ce8-4b8b-ae3f-128e266cd9b8",
+    "2ad64733-526d-40bb-93d5-a8ea3f28825a",
+    "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+    "9524a51b-2709-431f-bf5e-f8e3c9fa6090",
+    "b8c7d721-b1fa-4172-b6c6-115cf5e2ede3",
+    "d3b89585-baf6-4aab-8255-a7bebc915aef",
+    "daf6b7f2-bbbd-452c-b4bd-ca7c26539df2"
+  ],
+  "randomPassCount": 2,
+  "randomPassIds": [
+    "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+    "d3b89585-baf6-4aab-8255-a7bebc915aef"
+  ],
+  "basis": "freeze selection from initial reviews, never silently resample after adjudication"
+}

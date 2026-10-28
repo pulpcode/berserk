@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "freezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e",
+  "evidence": [
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-check.md",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-check-evidence.json",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-runner-checks.md",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-offline-logs/runner-contract.log",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-offline-logs/runner-native.log"
+  ],
+  "createdAt": "2026-10-28T13:31:45.623Z"
+}

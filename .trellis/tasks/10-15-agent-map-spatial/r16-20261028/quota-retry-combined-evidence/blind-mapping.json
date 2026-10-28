@@ -1,0 +1,65 @@
+[
+  {
+    "blindId": "0301f41d-7b72-4b9f-b037-98d7fac8cf47",
+    "entryId": "Q07-1-GS",
+    "caseId": "Q07",
+    "group": "GS",
+    "round": 1
+  },
+  {
+    "blindId": "23db2f45-6830-40e3-bab6-54aac279b96a",
+    "entryId": "Q07-1-GST",
+    "caseId": "Q07",
+    "group": "GST",
+    "round": 1
+  },
+  {
+    "blindId": "25f8c221-8ce8-4b8b-ae3f-128e266cd9b8",
+    "entryId": "Q08-1-GT",
+    "caseId": "Q08",
+    "group": "GT",
+    "round": 1
+  },
+  {
+    "blindId": "2ad64733-526d-40bb-93d5-a8ea3f28825a",
+    "entryId": "Q20-1-GS",
+    "caseId": "Q20",
+    "group": "GS",
+    "round": 1
+  },
+  {
+    "blindId": "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+    "entryId": "Q07-1-G0",
+    "caseId": "Q07",
+    "group": "G0",
+    "round": 1
+  },
+  {
+    "blindId": "9524a51b-2709-431f-bf5e-f8e3c9fa6090",
+    "entryId": "Q08-1-G0",
+    "caseId": "Q08",
+    "group": "G0",
+    "round": 1
+  },
+  {
+    "blindId": "b8c7d721-b1fa-4172-b6c6-115cf5e2ede3",
+    "entryId": "Q08-1-GST",
+    "caseId": "Q08",
+    "group": "GST",
+    "round": 1
+  },
+  {
+    "blindId": "d3b89585-baf6-4aab-8255-a7bebc915aef",
+    "entryId": "Q08-1-GS",
+    "caseId": "Q08",
+    "group": "GS",
+    "round": 1
+  },
+  {
+    "blindId": "daf6b7f2-bbbd-452c-b4bd-ca7c26539df2",
+    "entryId": "Q07-1-GT",
+    "caseId": "Q07",
+    "group": "GT",
+    "round": 1
+  }
+]

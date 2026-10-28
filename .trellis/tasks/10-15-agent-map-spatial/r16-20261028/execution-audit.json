@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "plannedTasks": 288,
+  "startedTasks": 1,
+  "unexecutedTasks": 287,
+  "rawStatusCounts": {
+    "waiting_user": 1,
+    "not_executed": 287
+  },
+  "sentOriginalUserTurns": 2,
+  "rawCompletedUserTurns": 1,
+  "independentlyObservedSucceededUserTurns": 2,
+  "requests": 4,
+  "inputTokens": 78063,
+  "outputTokens": 1872,
+  "reasoningTokensIncludedInOutput": 955,
+  "estimatedAfp": 9.991875,
+  "unknownUsageRequests": 0,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "requestsWithObservedThinking": 3,
+  "taskElapsedMs": 17598,
+  "providerElapsedMs": 14858,
+  "stop": "waiting_user_unmapped_plain_question",
+  "cause": "Evaluator false positive on optional future-save statement; answerPresent incorrectly requires a tool in the current request",
+  "noRetries": true,
+  "noAdditionalTasks": true,
+  "first12CheckpointReached": false,
+  "groupComparisonAvailable": false,
+  "accountOverageChanged": false,
+  "rawRecordsPreserved": true
+}

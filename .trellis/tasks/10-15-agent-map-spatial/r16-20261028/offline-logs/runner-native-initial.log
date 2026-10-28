@@ -1,0 +1,70 @@
+(node:59284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ missing freeze refuses before secrets and does not claim live slot (788.743644ms)
+{"id":"Q07-1-GST","warning":"12_requests_only_not_cancelled"}
+{"entry":"Q07-1-GST","status":"recorded","completed":1,"planned":16,"usage":{"requests":17,"input":1700,"output":170,"afp":0.2337500000000001,"unknown":0}}
+{"id":"Q07-1-G0","warning":"12_requests_only_not_cancelled"}
+{"entry":"Q07-1-G0","status":"recorded","completed":2,"planned":16,"usage":{"requests":34,"input":3400,"output":340,"afp":0.46749999999999986,"unknown":0}}
+{"id":"Q07-1-GS","warning":"12_requests_only_not_cancelled"}
+{"entry":"Q07-1-GS","status":"recorded","completed":3,"planned":16,"usage":{"requests":51,"input":5100,"output":510,"afp":0.7012500000000004,"unknown":0}}
+{"id":"Q07-1-GT","warning":"12_requests_only_not_cancelled"}
+{"entry":"Q07-1-GT","status":"recorded","completed":4,"planned":16,"usage":{"requests":68,"input":6800,"output":680,"afp":0.935000000000001,"unknown":0}}
+{"entry":"Q08-1-G0","status":"recorded","completed":5,"planned":16,"usage":{"requests":77,"input":7700,"output":770,"afp":1.058750000000001,"unknown":0}}
+{"entry":"Q08-1-GS","status":"recorded","completed":6,"planned":16,"usage":{"requests":86,"input":8600,"output":860,"afp":1.1825000000000003,"unknown":0}}
+{"entry":"Q08-1-GT","status":"recorded","completed":7,"planned":16,"usage":{"requests":95,"input":9500,"output":950,"afp":1.3062499999999997,"unknown":0}}
+{"entry":"Q08-1-GST","status":"recorded","completed":8,"planned":16,"usage":{"requests":104,"input":10400,"output":1040,"afp":1.429999999999999,"unknown":0}}
+{"entry":"Q01-1-GT","status":"recorded","completed":9,"planned":16,"usage":{"requests":106,"input":10600,"output":1060,"afp":1.457499999999999,"unknown":0}}
+{"entry":"Q01-1-GST","status":"recorded","completed":10,"planned":16,"usage":{"requests":108,"input":10800,"output":1080,"afp":1.4849999999999988,"unknown":0}}
+{"entry":"Q01-1-G0","status":"recorded","completed":11,"planned":16,"usage":{"requests":110,"input":11000,"output":1100,"afp":1.5124999999999986,"unknown":0}}
+{"entry":"Q01-1-GS","status":"recorded","completed":12,"planned":16,"usage":{"requests":112,"input":11200,"output":1120,"afp":1.5399999999999985,"unknown":0}}
+{"entry":"Q12-1-GST","status":"recorded","completed":13,"planned":16,"usage":{"requests":118,"input":11800,"output":1180,"afp":1.622499999999998,"unknown":0}}
+{"entry":"Q12-1-G0","status":"recorded","completed":14,"planned":16,"usage":{"requests":124,"input":12400,"output":1240,"afp":1.7049999999999976,"unknown":0}}
+{"entry":"Q12-1-GS","status":"recorded","completed":15,"planned":16,"usage":{"requests":130,"input":13000,"output":1300,"afp":1.7874999999999972,"unknown":0}}
+{"entry":"Q12-1-GT","status":"recorded","completed":16,"planned":16,"usage":{"requests":136,"input":13600,"output":1360,"afp":1.8699999999999968,"unknown":0}}
+✔ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (150258.786477ms)
+{"entry":"Q07-1-GST","status":"incomplete","stop":"provider_http_429","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider http_error preserves first failure and never retries (23884.106711ms)
+{"entry":"Q07-1-GST","status":"incomplete","stop":"response_model_drift\n+ actual - expected\n\n  [\n+   'other'\n-   'deepseek-v4-1-flash-261017'\n  ]\n","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider response_model_drift preserves first failure and never retries (25931.341382ms)
+{"entry":"Q07-1-GST","status":"incomplete","stop":"unknown_or_empty_usage","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider missing_usage preserves first failure and never retries (25583.833566ms)
+{"entry":"Q07-1-GST","status":"incomplete","stop":"output_truncated","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider truncated preserves first failure and never retries (21542.657125ms)
+{"entry":"Q02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ unmapped plain clarification remains pending and halts further tasks (24782.617054ms)
+{"entry":"Q02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ unmapped api clarification remains pending and halts further tasks (28819.336158ms)
+✔ offline gate requires approval evidence matching exact frozen code (3.567093ms)
+✔ reading an old buffer does not count as a new generation (0.432474ms)
+{"entry":"Q05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by answer still fails only that task (42270.912811ms)
+{"entry":"Q05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by plain still fails only that task (42384.623176ms)
+{"entry":"Q05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by api still fails only that task (49557.313174ms)
+{"entry":"Q20-1-GS","status":"recorded","completed":1,"planned":8,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q20-1-GT","status":"recorded","completed":2,"planned":8,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+{"entry":"Q20-1-GST","status":"recorded","completed":3,"planned":8,"usage":{"requests":18,"input":1800,"output":180,"afp":0.2475000000000001,"unknown":0}}
+{"entry":"Q20-1-G0","status":"recorded","completed":4,"planned":8,"usage":{"requests":24,"input":2400,"output":240,"afp":0.33,"unknown":0}}
+{"entry":"Q22-1-G0","status":"recorded","completed":5,"planned":8,"usage":{"requests":28,"input":2800,"output":280,"afp":0.38499999999999995,"unknown":0}}
+{"entry":"Q22-1-GS","status":"recorded","completed":6,"planned":8,"usage":{"requests":32,"input":3200,"output":320,"afp":0.4399999999999999,"unknown":0}}
+{"entry":"Q22-1-GT","status":"recorded","completed":7,"planned":8,"usage":{"requests":36,"input":3600,"output":360,"afp":0.49499999999999983,"unknown":0}}
+{"entry":"Q22-1-GST","status":"recorded","completed":8,"planned":8,"usage":{"requests":40,"input":4000,"output":400,"afp":0.5499999999999999,"unknown":0}}
+✔ Q20 mapped centre clarification completes both original turns; Q22 uses user-edited revision (63492.375472ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 504053.741231

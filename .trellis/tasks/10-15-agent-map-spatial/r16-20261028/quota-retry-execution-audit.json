@@ -1,0 +1,40 @@
+{
+  "plannedUniqueTasks": 288,
+  "newStartedTasks": 7,
+  "newCompletedTasks": 6,
+  "newPendingTask": "Q20-1-GS",
+  "reusedCompleteTasks": 2,
+  "combinedCompleteTaskEvidence": 8,
+  "combinedStartedUniqueTasks": 9,
+  "notExecutedTasks": 279,
+  "oldPlatformInterruptedAttemptRetained": "Q07-1-GS",
+  "authorizedRetryCompleted": true,
+  "allStartedAttemptsIncludingOldInterruption": 10,
+  "newRequests": 48,
+  "combinedRequestsIncludingPriorAttempts": 59,
+  "newUsage": {
+    "requests": 48,
+    "input": 1015912,
+    "output": 14673,
+    "afp": 128.823125,
+    "unknown": 0
+  },
+  "combinedKnownUsage": {
+    "requests": 59,
+    "input": 1209788,
+    "output": 19149,
+    "afp": 153.617125,
+    "unknown": 1
+  },
+  "oldUnknownUsageStillUnresolved": 1,
+  "newUnknownUsage": 0,
+  "newAllHttp200": true,
+  "newActualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "stop": "waiting_user_unmapped_plain_question",
+  "cause": "Optional next-task invitation with a question mark before 如果 misclassified as blocking clarification after successful preview",
+  "first12CheckpointReached": false,
+  "automaticExtraRetry": false,
+  "sourceChangesDuringLive": false
+}

@@ -1,0 +1,17 @@
+(node:56322) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ quartet admission is conservative; current quartet may continue beyond reserve, no per-task cutoff (8499.644356ms)
+✔ wire group configuration never edits native messages, tools, or private history (3.416434ms)
+✔ response contract permits E1 zero thinking and valid JSON wrong tool schema, rejects protocol errors (12.656039ms)
+✔ non-parent model requests use same group configuration and shared ledger (40.976547ms)
+✔ AFP counts thinking once as output, same Flash coefficient and account reserves are independent (7.326623ms)
+✔ only exact loaded Skill catalogue descriptions are normalized; extra schema differences remain visible (2.316426ms)
+✔ three identical tool results stop, changed arguments/evidence or a new user turn reset progress (0.644065ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17066.420191

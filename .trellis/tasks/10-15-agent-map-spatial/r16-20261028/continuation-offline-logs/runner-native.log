@@ -1,0 +1,44 @@
+(node:97282) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"Q07-1-G0","status":"recorded","completed":1,"planned":287,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q07-1-GS","status":"recorded","completed":2,"planned":287,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q07-1-GT","status":"recorded","completed":3,"planned":287,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q08-1-G0","status":"recorded","completed":4,"planned":287,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+{"entry":"Q08-1-GS","status":"recorded","completed":5,"planned":287,"usage":{"requests":15,"input":1500,"output":150,"afp":0.20625000000000007,"unknown":0}}
+{"entry":"Q08-1-GT","status":"recorded","completed":6,"planned":287,"usage":{"requests":18,"input":1800,"output":180,"afp":0.2475000000000001,"unknown":0}}
+{"entry":"Q08-1-GST","status":"recorded","completed":7,"planned":287,"usage":{"requests":21,"input":2100,"output":210,"afp":0.28875000000000006,"unknown":0}}
+{"entry":"Q20-1-GS","status":"recorded","completed":8,"planned":287,"usage":{"requests":23,"input":2300,"output":230,"afp":0.31625000000000003,"unknown":0}}
+{"entry":"Q20-1-GT","status":"recorded","completed":9,"planned":287,"usage":{"requests":25,"input":2500,"output":250,"afp":0.34375,"unknown":0}}
+{"entry":"Q20-1-GST","status":"recorded","completed":10,"planned":287,"usage":{"requests":27,"input":2700,"output":270,"afp":0.37124999999999997,"unknown":0}}
+{"entry":"Q20-1-G0","status":"incomplete","stop":"operator_interrupt","completed":11,"planned":287,"usage":{"requests":27,"input":2700,"output":270,"afp":0.37124999999999997,"unknown":0}}
+{"checkpoint":"first12_awaiting_review","directory":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/r16-offline-continuation-fjBd5x/new"}
+✖ native continuation preserves old slot, completes history-only Q07, reviews old1+new11, then dispatches only remaining slots (75475.777154ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78528.456713
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r16-20261028/live.continuation.test.ts:1:3581
+✖ native continuation preserves old slot, completes history-only Q07, reviews old1+new11, then dispatches only remaining slots (75475.777154ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  10 !== 11
+  
+      at Object.onCheckpoint (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/live.continuation.test.ts:49:194)
+      at runLive (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/live.ts:120:306)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/live.continuation.test.ts:50:15)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 10,
+    expected: 11,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

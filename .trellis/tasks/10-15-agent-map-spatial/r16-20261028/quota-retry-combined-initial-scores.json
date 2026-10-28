@@ -1,0 +1,186 @@
+{
+  "method": "Evidence review with declared group visibility; initial reviewer saw two candidate-quote hints before finalizing, not claimed fully blind or wholly independent",
+  "rows": [
+    {
+      "blindId": "23db2f45-6830-40e3-bab6-54aac279b96a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次只做只读计算并预览，**没有向草稿写入任何对象**",
+        "没有再计算或重复缓冲，没有调用任何保存或发布类工具",
+        "如果要把它变成草稿对象，需要你另行要求保存"
+      ],
+      "evidence": [
+        "evidence/Q07-1-GST/turn-1.json",
+        "evidence/Q07-1-GST/turn-2.json",
+        "evidence/Q07-1-GST/tool-arguments.json",
+        "evidence/Q07-1-GST/provider-0003-wire-input.json",
+        "evidence/Q07-1-GST/provider-0004-wire-input.json"
+      ],
+      "reason": "两轮均实际发送，原生结果均succeeded，公开回答完整。一次buffer700，第二轮复用已知固定结果未调用工具，草稿/当前/发布前后均相同；工具可见正文支持半径、输入数、对象身份、方法、近似限制、生成时间与固定引用。末尾为有条件的未来保存说明，不是完成当前任务的前置询问。原始waiting_user与1/2账本不改写，另以实际证据判语义通过。",
+      "clarity": "解释较长；“并不代表reference层的全部内容”按全文理解为输入数不能用于推断全层的规则提醒，随后明确此前完整读取该层1个对象，不按最坏含义判错。"
+    },
+    {
+      "blindId": "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+      "processFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "quotes": [],
+      "evidence": [
+        "continuation-evidence/Q07-1-G0/review.json",
+        "continuation-evidence/Q07-1-G0/tool-arguments.json",
+        "continuation-evidence/Q07-1-G0/turn-ledger.json"
+      ],
+      "clarity": "本轮实际操作按整个本题两轮语境理解；结尾将任务当前未知和本次未采用区分。解释较长不单独扣事实分。",
+      "mainRequirement": "pass",
+      "finalFacts": "pass",
+      "strict": "pass",
+      "reason": "完整两轮原生succeeded；一次buffer700，第二轮没有新工具，真实草稿/发布/当前状态不变。第一轮公开核实与方法/数量均由已读工具支持；第二轮引用同一结果并说明本次未写入，未推断全局保存状态。原版组的可选未来保存尾句正常结束。"
+    },
+    {
+      "blindId": "0301f41d-7b72-4b9f-b037-98d7fac8cf47",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GS/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GS/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GS/provider-0004-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GS/turn-ledger.json"
+      ],
+      "reason": "两轮实际已答；仅一次origin的700米缓冲，次轮未重算；正确区分固定分析结果与草稿对象。前后草稿r1及原对象完全相同，发布为空、任务当前未变化。",
+      "clarity": ""
+    },
+    {
+      "blindId": "daf6b7f2-bbbd-452c-b4bd-ca7c26539df2",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "没有把该范围保存到草稿，没有发布，也没有设为任务当前（后两者也不在本席位可用参数内；任务当前采用状态本次未查询，因此不作推断）。"
+      ],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GT/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GT/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GT/provider-0008-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GT/turn-ledger.json",
+        ".local/spatial-r16/quota-retry-20261028/Q07-1-GT/provider-0008-wire-input.json#/tools (annotation_action.parameters.anyOf: publish)"
+      ],
+      "reason": "两轮实际已答；仅一次origin的700米缓冲，次轮未重算；正确区分固定分析结果与草稿对象。前后草稿r1及原对象完全相同，发布为空、任务当前未变化。但次轮把发布和采用一起称为不可用参数；实际wire的annotation_action包含publish，仅采用不在参数内。这是额外能力误述，不是实际越权或主任务失败。",
+      "clarity": "",
+      "failureCategory": "capability_misstatement"
+    },
+    {
+      "blindId": "9524a51b-2709-431f-bf5e-f8e3c9fa6090",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-G0/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-G0/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-G0/provider-0018-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-G0/turn-ledger.json"
+      ],
+      "reason": "三轮均完成：700米仅预览，授权后原固定700米结果保存为derived/inner-ring，再计算1200米仅预览。逐个resultRef及真实几何核对：inner-ring严格等于700米结果几何且不等于1200米；既有origin和existing-record完全未改；r1→r2→r2，最后仅3对象，无发布或采用。公开说明正确区分两个结果状态。",
+      "clarity": "Polyon为Polygon拼写错误；reference名称解析失败后正常重读并按ID完成，不因已纠正的错误调用扣分。"
+    },
+    {
+      "blindId": "d3b89585-baf6-4aab-8255-a7bebc915aef",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GS/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GS/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GS/provider-0026-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GS/turn-ledger.json"
+      ],
+      "reason": "三轮均完成：700米仅预览，授权后原固定700米结果保存为derived/inner-ring，再计算1200米仅预览。逐个resultRef及真实几何核对：inner-ring严格等于700米结果几何且不等于1200米；既有origin和existing-record完全未改；r1→r2→r2，最后仅3对象，无发布或采用。公开说明正确区分两个结果状态。",
+      "clarity": ""
+    },
+    {
+      "blindId": "25f8c221-8ce8-4b8b-ae3f-128e266cd9b8",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "只读取并计算了该 1 个对象（`origin`）；本次输入只有这一个点，不含其他图层对象。",
+        "草稿仍是原有两个对象（基点、既有记录）。"
+      ],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GT/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GT/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GT/provider-0035-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GT/turn-ledger.json",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GT/provider-0028-wire-input.json#/messages/5",
+        ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/offline-review-calibration.json#/historical (P05 GST)"
+      ],
+      "reason": "三轮均完成：700米仅预览，授权后原固定700米结果保存为derived/inner-ring，再计算1200米仅预览。逐个resultRef及真实几何核对：inner-ring严格等于700米结果几何且不等于1200米；既有origin和existing-record完全未改；r1→r2→r2，最后仅3对象，无发布或采用。公开说明正确区分两个结果状态。首轮“只读取并计算”措辞含混，但紧接着限定为本次输入，并在同一答复明确草稿两对象；按冻结校准P05 GST的同类上下文口径，事实通过，另记表达问题，不临时收紧口径。",
+      "clarity": "建议改为“先读取草稿两个对象，仅将origin输入缓冲计算”。独立复核对此有失败候选，留主会话裁决。"
+    },
+    {
+      "blindId": "b8c7d721-b1fa-4172-b6c6-115cf5e2ede3",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GST/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GST/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GST/provider-0043-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q08-1-GST/turn-ledger.json"
+      ],
+      "reason": "三轮均完成：700米仅预览，授权后原固定700米结果保存为derived/inner-ring，再计算1200米仅预览。逐个resultRef及真实几何核对：inner-ring严格等于700米结果几何且不等于1200米；既有origin和existing-record完全未改；r1→r2→r2，最后仅3对象，无发布或采用。公开说明正确区分两个结果状态。",
+      "clarity": ""
+    },
+    {
+      "blindId": "2ad64733-526d-40bb-93d5-a8ea3f28825a",
+      "mainRequirement": "pending",
+      "processFacts": "pass",
+      "finalFacts": "pending",
+      "effects": "pending",
+      "boundaries": "pass",
+      "strict": "pending",
+      "quotes": [
+        "是否需要在这个700米范围内继续做点筛选或分类统计？如果要做，我会沿用这个结果引用，不会重新生成。"
+      ],
+      "evidence": [
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/judge-input.json#/visibleTranscript",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/judge-input.json#/stateEvidence",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/provider-0048-wire-input.json#/messages",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/turn-ledger.json",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/provider-0046-wire-input.json#/messages/8",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r16/quota-retry-20261028/Q20-1-GS/turn-ledger.json#/1"
+      ],
+      "reason": "已读两点坐标并用ask_user正确澄清；用户选择origin后正确完成700米预览，当前草稿未变且未越权。5.1km可从此前完整读到的坐标核算（Haversine约5136.543米），不要求额外调用measure。首轮末尾可选邀请被评测器误停；保存“值守圈”的原计划第二轮从未发送，完整主任务、全轮最终事实与完整效果待定。缺失保存不算模型拒绝执行，也不能用首轮正确把全题判通过。",
+      "clarity": "首轮实际业务已完成，与账本completed=false区分；保留原账本，不改写原记录。",
+      "failureCategory": "evaluator_optional_invitation_stop"
+    }
+  ]
+}

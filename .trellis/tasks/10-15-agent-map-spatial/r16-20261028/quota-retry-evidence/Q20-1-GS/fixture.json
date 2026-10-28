@@ -1,0 +1,631 @@
+{
+  "caseId": "Q20",
+  "originalCaseId": "Q20",
+  "spec": {
+    "id": "Q20",
+    "kind": "J01",
+    "targetSkill": "spatial-analysis",
+    "category": "state",
+    "prompts": [
+      "请生成700米范围，只预览不保存。如果缺少确定中心的信息，先问我。",
+      "把刚才700米范围的固定结果保存到derived层，名称‘值守圈’，不发布，不设为任务当前。"
+    ],
+    "clarification": "unnecessary",
+    "objective": "answer"
+  },
+  "fixture": {
+    "kind": "J01",
+    "sessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+    "workspaceId": "d5f9d000-5b1a-47eb-a2f4-01961f00dc15",
+    "before": {
+      "binding": {
+        "sessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+        "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+        "workspaceId": "d5f9d000-5b1a-47eb-a2f4-01961f00dc15",
+        "bindingRevision": 1,
+        "baseRef": null,
+        "draft": {
+          "setId": "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb",
+          "ownerSessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+          "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+          "workspaceId": "d5f9d000-5b1a-47eb-a2f4-01961f00dc15",
+          "headRevision": 1,
+          "title": "空间与标绘核对",
+          "hash": "e5f2c8d40ee28d92d1fcd6fa447dc898c0bf594dcc59f7f30ca6836df4b24d8d",
+          "baseRef": null,
+          "createdAt": "2026-10-28T13:35:17.130Z",
+          "updatedAt": "2026-10-28T13:35:17.130Z"
+        },
+        "writable": true
+      },
+      "version": {
+        "ref": {
+          "setId": "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb",
+          "revision": 1
+        },
+        "title": "空间与标绘核对",
+        "hash": "e5f2c8d40ee28d92d1fcd6fa447dc898c0bf594dcc59f7f30ca6836df4b24d8d",
+        "createdAt": "2026-10-28T13:35:17.130Z",
+        "document": {
+          "schemaVersion": 1,
+          "title": "空间与标绘核对",
+          "layers": [
+            {
+              "layerId": "reference",
+              "name": "参照对象",
+              "order": 0,
+              "defaultVisible": true,
+              "features": [
+                {
+                  "objectId": "origin",
+                  "kind": "point",
+                  "name": "基点",
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      114,
+                      22.5
+                    ]
+                  }
+                },
+                {
+                  "objectId": "center-b",
+                  "kind": "point",
+                  "name": "站点乙",
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                      114.05,
+                      22.5
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "layerId": "derived",
+              "name": "派生层",
+              "order": 1,
+              "defaultVisible": true,
+              "features": []
+            }
+          ]
+        }
+      },
+      "publications": [],
+      "current": {
+        "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+        "sequence": 0,
+        "publication": null
+      }
+    },
+    "setupReceipts": [
+      {
+        "clientActionId": "38deee38-1cfe-4875-9836-6fb4f141cd33",
+        "action": "create_draft",
+        "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+        "sessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+        "committedAt": "2026-10-28T13:35:17.130Z",
+        "ref": {
+          "setId": "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb",
+          "revision": 1
+        },
+        "hash": "e5f2c8d40ee28d92d1fcd6fa447dc898c0bf594dcc59f7f30ca6836df4b24d8d",
+        "binding": {
+          "sessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+          "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+          "workspaceId": "d5f9d000-5b1a-47eb-a2f4-01961f00dc15",
+          "bindingRevision": 1,
+          "baseRef": null,
+          "draft": {
+            "setId": "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb",
+            "ownerSessionId": "01a182b8-e26d-72cb-a28b-823aea08d3f4",
+            "taskId": "2183feeb-963c-4516-b635-54edf3a2bc62",
+            "workspaceId": "d5f9d000-5b1a-47eb-a2f4-01961f00dc15",
+            "headRevision": 1,
+            "title": "空间与标绘核对",
+            "hash": "e5f2c8d40ee28d92d1fcd6fa447dc898c0bf594dcc59f7f30ca6836df4b24d8d",
+            "baseRef": null,
+            "createdAt": "2026-10-28T13:35:17.130Z",
+            "updatedAt": "2026-10-28T13:35:17.130Z"
+          },
+          "writable": true
+        },
+        "beforeRef": null,
+        "afterRef": {
+          "setId": "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb",
+          "revision": 1
+        },
+        "objectIds": [
+          "origin",
+          "center-b"
+        ]
+      }
+    ],
+    "truth": {
+      "caseId": "Q20",
+      "category": "state",
+      "historical": false,
+      "method": "Frozen synthetic inputs; independent spherical distance and rectangular containment; no product math oracle",
+      "expected": {
+        "savedRadiusM": 700,
+        "saveTurn": 1,
+        "saveLayer": "derived",
+        "saveName": "值守圈",
+        "clarifyBeforeComputation": true,
+        "center": "origin"
+      },
+      "expectedDescription": "真实澄清后生成origin的700米预览，第二轮保存原结果一次。普通文字或交互API都可；API格式单列检查。",
+      "scoring": "默认任意中心、还没澄清就生成两个圈代替用户选择、第一轮提前保存；运行器没给已预设回复则评测待定，不能判模型失败。",
+      "documentTotal": 2,
+      "layerCounts": {
+        "reference": 2,
+        "derived": 0
+      }
+    }
+  },
+  "prompts": [
+    "请生成700米范围，只预览不保存。如果缺少确定中心的信息，先问我。",
+    "把刚才700米范围的固定结果保存到derived层，名称‘值守圈’，不发布，不设为任务当前。"
+  ],
+  "truth": {
+    "caseId": "Q20",
+    "category": "state",
+    "historical": false,
+    "method": "Frozen synthetic inputs; independent spherical distance and rectangular containment; no product math oracle",
+    "expected": {
+      "savedRadiusM": 700,
+      "saveTurn": 1,
+      "saveLayer": "derived",
+      "saveName": "值守圈",
+      "clarifyBeforeComputation": true,
+      "center": "origin"
+    },
+    "expectedDescription": "真实澄清后生成origin的700米预览，第二轮保存原结果一次。普通文字或交互API都可；API格式单列检查。",
+    "scoring": "默认任意中心、还没澄清就生成两个圈代替用户选择、第一轮提前保存；运行器没给已预设回复则评测待定，不能判模型失败。",
+    "documentTotal": 2,
+    "layerCounts": {
+      "reference": 2,
+      "derived": 0
+    }
+  },
+  "sourceOrigin": "http://127.0.0.1:59079",
+  "sourceBefore": {
+    "instanceId": "map-e519174b",
+    "objects": [
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "map-e519174b-road-west-01"
+        },
+        "name": "西区通道",
+        "properties": {
+          "passability": "open"
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              103.8322866,
+              1.3047841
+            ],
+            [
+              103.8323264,
+              1.3047617
+            ],
+            [
+              103.8324948,
+              1.3046666
+            ],
+            [
+              103.8325992,
+              1.304608
+            ],
+            [
+              103.8329914,
+              1.3043877
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "map-e519174b-vehicles-west-01"
+        },
+        "name": "西区可用车辆",
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            103.8325,
+            1.3046
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-west"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-e519174b-zone-west"
+        },
+        "name": "西区",
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "map-e519174b-road-west-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "map-e519174b-vehicles-west-01"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.8317,
+                1.3035
+              ],
+              [
+                103.8333,
+                1.3035
+              ],
+              [
+                103.8333,
+                1.305
+              ],
+              [
+                103.8317,
+                1.305
+              ],
+              [
+                103.8317,
+                1.3035
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "map-e519174b-road-east-01"
+        },
+        "name": "东区通道",
+        "properties": {
+          "passability": "open"
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              103.8351571,
+              1.3032537
+            ],
+            [
+              103.8357661,
+              1.3029095
+            ],
+            [
+              103.8358887,
+              1.3028412
+            ]
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "map-e519174b-vehicles-east-01"
+        },
+        "name": "东区可用车辆",
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            103.8355,
+            1.3035999999999999
+          ]
+        }
+      },
+      {
+        "revision": 1,
+        "areaIds": [
+          "map-e519174b-zone-east"
+        ],
+        "effectiveAt": "2026-10-28T09:00:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        },
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "map-e519174b-zone-east"
+        },
+        "name": "东区",
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "road",
+              "objectId": "map-e519174b-road-east-01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "map-e519174b-vehicles-east-01"
+            }
+          ]
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.8347,
+                1.3025
+              ],
+              [
+                103.8363,
+                1.3025
+              ],
+              [
+                103.8363,
+                1.3039999999999998
+              ],
+              [
+                103.8347,
+                1.3039999999999998
+              ],
+              [
+                103.8347,
+                1.3025
+              ]
+            ]
+          ]
+        }
+      }
+    ],
+    "reports": [
+      {
+        "reportId": "map-e519174b-report-west-01",
+        "subjectId": "map-e519174b-report-west-01",
+        "revision": 1,
+        "title": "西区通道观测记录",
+        "summary": "截至观测时刻未报告西区通道限制。",
+        "content": "截至 2026-10-28 08:50 的观测，未报告西区通道限制。本记录描述观测时掌握的信息，不保证后续通行情况。",
+        "objectRefs": [
+          {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "map-e519174b-road-west-01"
+          }
+        ],
+        "areaIds": [
+          "map-e519174b-zone-west"
+        ],
+        "observedAt": "2026-10-28T08:50:00+08:00",
+        "publishedAt": "2026-10-28T08:55:00+08:00",
+        "validTime": {
+          "from": "2026-10-28T09:00:00+08:00",
+          "to": "2026-10-28T11:00:00+08:00"
+        }
+      }
+    ],
+    "actions": []
+  },
+  "clarificationReply": "以当前草稿reference层的对象ID origin（基点）为中心。",
+  "day": "2026-10-28",
+  "task": {
+    "id": "2183feeb-963c-4516-b635-54edf3a2bc62",
+    "title": "【地图验证 map-e519174b】空间资料核对任务",
+    "goal": "空间资料核对合成测试。",
+    "visibility": "public",
+    "ownerSeatId": "seat-overall",
+    "state": "active",
+    "revision": 1,
+    "createdByUserId": "8df14c46-6fff-4cfc-8e5a-112b63b44dbf",
+    "updatedByUserId": "8df14c46-6fff-4cfc-8e5a-112b63b44dbf",
+    "createdAt": "2026-10-28T13:35:16.004Z",
+    "updatedAt": "2026-10-28T13:35:16.004Z",
+    "context": {
+      "businessRefs": [
+        {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "map-e519174b-vehicles-west-01"
+        },
+        {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "map-e519174b-road-west-01"
+        }
+      ],
+      "focus": {
+        "areaIds": [
+          "map-e519174b-zone-west"
+        ],
+        "time": {
+          "from": "2026-10-28T01:40:00.000Z",
+          "to": "2026-10-28T03:00:00.000Z"
+        },
+        "topics": [
+          "车辆",
+          "通行"
+        ]
+      }
+    }
+  },
+  "actor": {
+    "userId": "9d93678a-2f42-43a9-829a-a0c309646cc6",
+    "username": "planning",
+    "displayName": "筹划席",
+    "seatId": "seat-planning",
+    "seatName": "筹划席",
+    "createPublicTask": false,
+    "manageModelSettings": false,
+    "viewWorkOverview": false
+  },
+  "creator": {
+    "userId": "8df14c46-6fff-4cfc-8e5a-112b63b44dbf",
+    "username": "overall",
+    "displayName": "总体席",
+    "seatId": "seat-overall",
+    "seatName": "总体席",
+    "createPublicTask": true,
+    "manageModelSettings": true,
+    "viewWorkOverview": true
+  },
+  "contextConfig": {
+    "systems": [
+      {
+        "areas": [
+          {
+            "id": "map-e519174b-zone-west",
+            "name": "西区"
+          },
+          {
+            "id": "map-e519174b-zone-east",
+            "name": "东区"
+          }
+        ],
+        "id": "intel",
+        "name": "模拟特情系统",
+        "adapter": "mock-information-http",
+        "baseUrl": "http://127.0.0.1:59079/intel",
+        "tokenEnv": "MOCK_CONTEXT_API_TOKEN"
+      },
+      {
+        "areas": [
+          {
+            "id": "map-e519174b-zone-west",
+            "name": "西区"
+          },
+          {
+            "id": "map-e519174b-zone-east",
+            "name": "东区"
+          }
+        ],
+        "id": "situation",
+        "name": "模拟态势系统",
+        "adapter": "mock-situation-http",
+        "baseUrl": "http://127.0.0.1:59079/situation",
+        "tokenEnv": "MOCK_CONTEXT_API_TOKEN"
+      }
+    ],
+    "scopes": [
+      {
+        "id": "demo-context",
+        "name": "本轮模拟资料",
+        "systemIds": [
+          "intel",
+          "situation"
+        ],
+        "seatIds": [
+          "seat-overall",
+          "seat-intelligence",
+          "seat-planning",
+          "seat-situation"
+        ]
+      }
+    ],
+    "simulation": {
+      "enabled": true,
+      "baseUrl": "http://127.0.0.1:59079",
+      "tokenEnv": "MOCK_CONTEXT_CONTROL_TOKEN",
+      "sources": [
+        {
+          "systemId": "intel",
+          "sourceId": "mock-intel-source"
+        },
+        {
+          "systemId": "situation",
+          "sourceId": "mock-situation-source"
+        }
+      ]
+    }
+  },
+  "normalization": {
+    "identities": {
+      "01a182b8-e26d-72cb-a28b-823aea08d3f4": "<session>",
+      "d5f9d000-5b1a-47eb-a2f4-01961f00dc15": "<workspace>",
+      "2183feeb-963c-4516-b635-54edf3a2bc62": "<task>",
+      "32e3c9cb-d8ce-4e09-a83d-eb9e3894d3eb": "<draft>",
+      "9d93678a-2f42-43a9-829a-a0c309646cc6": "<planning-user>",
+      "8df14c46-6fff-4cfc-8e5a-112b63b44dbf": "<overall-user>"
+    },
+    "prefixes": {
+      "map-e519174b": "<source-instance>",
+      "http://127.0.0.1:59079": "<source-origin>"
+    },
+    "generatedTimePaths": [
+      "annotation.binding.draft.createdAt",
+      "annotation.binding.draft.updatedAt",
+      "annotation.version.createdAt",
+      "task.createdAt",
+      "task.updatedAt"
+    ]
+  }
+}

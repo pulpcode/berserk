@@ -1,0 +1,75 @@
+{
+  "freezeHash": "e37713a4813d0b7e87b16a7e1ad94a46970c8fa0992cc49177e60a9d41b39e6e",
+  "account": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-10-28T09:11:00Z",
+    "sourceEvidence": "Authenticated Agent Plan Medium UI observation: five-hour used 3453.026/10000; week32.18%/35000 and month12.72%/100000 rounded; conservative remaining values recorded. Flash selected updated1017; 开启超额后付费 confirms disabled. Other account usage observed between initial and current check. No settings changed. User explicitly removed artificial monetary/token/request caps.",
+    "observedOverageEnabled": false,
+    "remainingAfp": {
+      "fiveHour": 6546.974,
+      "week": 23733,
+      "month": 87270
+    },
+    "externalUseReserveAfp": 0,
+    "sharedUsePolicy": "observed_shared_usage"
+  },
+  "requests": [
+    {
+      "id": 1,
+      "trialId": "Q07-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 61461,
+      "outputReserve": 32768,
+      "afpReserve": 11.778625,
+      "usage": {
+        "input": 16386,
+        "output": 140
+      },
+      "afp": 2.06575
+    },
+    {
+      "id": 2,
+      "trialId": "Q07-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 76597,
+      "outputReserve": 32768,
+      "afpReserve": 13.670625,
+      "usage": {
+        "input": 19747,
+        "output": 219
+      },
+      "afp": 2.49575
+    },
+    {
+      "id": 3,
+      "trialId": "Q07-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 79777,
+      "outputReserve": 32768,
+      "afpReserve": 14.068125,
+      "usage": {
+        "input": 20694,
+        "output": 229
+      },
+      "afp": 2.615375
+    },
+    {
+      "id": 4,
+      "trialId": "Q07-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 82016,
+      "outputReserve": 32768,
+      "afpReserve": 14.348,
+      "usage": {
+        "input": 21236,
+        "output": 1284
+      },
+      "afp": 2.815
+    }
+  ],
+  "halted": "waiting_user_unmapped_plain_question"
+}
