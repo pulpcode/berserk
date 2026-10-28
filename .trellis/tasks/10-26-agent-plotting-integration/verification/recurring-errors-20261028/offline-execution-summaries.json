@@ -1,0 +1,5366 @@
+{
+  "plotting-integration-eval-PJYJnt": {
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-PJYJnt/batch/batch-state.json",
+      "sha256": "236557d1243c0b8dc19195aed1820989f5eba3eb3e5662b70493fb15dc5c1e2b",
+      "content": {
+        "mode": "prepare",
+        "offlineSimulation": false,
+        "rows": [
+          {
+            "id": "C01-1",
+            "caseId": "C01",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C01-2",
+            "caseId": "C01",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C02-1",
+            "caseId": "C02",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C02-2",
+            "caseId": "C02",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C03-1",
+            "caseId": "C03",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C03-2",
+            "caseId": "C03",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C04-1",
+            "caseId": "C04",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C04-2",
+            "caseId": "C04",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C05-1",
+            "caseId": "C05",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C05-2",
+            "caseId": "C05",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C06-1",
+            "caseId": "C06",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C06-2",
+            "caseId": "C06",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C07-1",
+            "caseId": "C07",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C07-2",
+            "caseId": "C07",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C08-1",
+            "caseId": "C08",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C08-2",
+            "caseId": "C08",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C09-1",
+            "caseId": "C09",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C09-2",
+            "caseId": "C09",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C10-1",
+            "caseId": "C10",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "C10-2",
+            "caseId": "C10",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F01-1",
+            "caseId": "F01",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F01-2",
+            "caseId": "F01",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F02-1",
+            "caseId": "F02",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F02-2",
+            "caseId": "F02",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F03-1",
+            "caseId": "F03",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F03-2",
+            "caseId": "F03",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F04-1",
+            "caseId": "F04",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F04-2",
+            "caseId": "F04",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F05-1",
+            "caseId": "F05",
+            "round": 1,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          },
+          {
+            "id": "F05-2",
+            "caseId": "F05",
+            "round": 2,
+            "split": "development",
+            "status": "prepared",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0,
+            "usage": {
+              "input": 0,
+              "output": 0,
+              "unknown": 0
+            },
+            "providerRequestIds": [],
+            "accountingIssues": []
+          }
+        ],
+        "stop": null,
+        "totals": {
+          "requests": 0,
+          "input": 0,
+          "output": 0,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    },
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-PJYJnt/batch/runs.json",
+      "sha256": "da69a74bdfa1e00e810f5997204b77d6d3cce07743c941d94d6f295c40606d2e",
+      "content": [
+        {
+          "id": "C01-1",
+          "caseId": "C01",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C01-2",
+          "caseId": "C01",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C02-1",
+          "caseId": "C02",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C02-2",
+          "caseId": "C02",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C03-1",
+          "caseId": "C03",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C03-2",
+          "caseId": "C03",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C04-1",
+          "caseId": "C04",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C04-2",
+          "caseId": "C04",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C05-1",
+          "caseId": "C05",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C05-2",
+          "caseId": "C05",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C06-1",
+          "caseId": "C06",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C06-2",
+          "caseId": "C06",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C07-1",
+          "caseId": "C07",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C07-2",
+          "caseId": "C07",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C08-1",
+          "caseId": "C08",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C08-2",
+          "caseId": "C08",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C09-1",
+          "caseId": "C09",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C09-2",
+          "caseId": "C09",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C10-1",
+          "caseId": "C10",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "C10-2",
+          "caseId": "C10",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F01-1",
+          "caseId": "F01",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F01-2",
+          "caseId": "F01",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F02-1",
+          "caseId": "F02",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F02-2",
+          "caseId": "F02",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F03-1",
+          "caseId": "F03",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F03-2",
+          "caseId": "F03",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F04-1",
+          "caseId": "F04",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F04-2",
+          "caseId": "F04",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F05-1",
+          "caseId": "F05",
+          "round": 1,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        },
+        {
+          "id": "F05-2",
+          "caseId": "F05",
+          "round": 2,
+          "split": "development",
+          "status": "prepared",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0,
+          "usage": {
+            "input": 0,
+            "output": 0,
+            "unknown": 0
+          },
+          "providerRequestIds": [],
+          "accountingIssues": []
+        }
+      ]
+    }
+  },
+  "plotting-integration-eval-PL259A": {
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-PL259A/batch/batch-state.json",
+      "sha256": "637f0c9ac074c7898a590f8ab217ac02081c2207646a233dacf6970464e12d35",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "C03-1",
+            "caseId": "C03",
+            "round": 1,
+            "split": "development",
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1,
+              2,
+              3
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "C03-2",
+            "caseId": "C03",
+            "round": 2,
+            "split": "development",
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              4,
+              5,
+              6
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "C08-1",
+            "caseId": "C08",
+            "round": 1,
+            "split": "development",
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 5,
+            "tools": 4,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 7500,
+              "output": 500,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              7,
+              8,
+              9,
+              10,
+              11
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "C08-2",
+            "caseId": "C08",
+            "round": 2,
+            "split": "development",
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 5,
+            "tools": 4,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 7500,
+              "output": 500,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              12,
+              13,
+              14,
+              15,
+              16
+            ],
+            "accountingIssues": []
+          }
+        ],
+        "stop": null,
+        "totals": {
+          "requests": 16,
+          "input": 24000,
+          "output": 1600,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    },
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-PL259A/batch/runs.json",
+      "sha256": "81183c89f18df1a47af02a6640daa0651df24cbb19783727230d7ae1085ebbfc",
+      "content": [
+        {
+          "id": "C03-1",
+          "caseId": "C03",
+          "round": 1,
+          "split": "development",
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1,
+            2,
+            3
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "C03-2",
+          "caseId": "C03",
+          "round": 2,
+          "split": "development",
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            4,
+            5,
+            6
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "C08-1",
+          "caseId": "C08",
+          "round": 1,
+          "split": "development",
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 5,
+          "tools": 4,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 7500,
+            "output": 500,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "C08-2",
+          "caseId": "C08",
+          "round": 2,
+          "split": "development",
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 5,
+          "tools": 4,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 7500,
+            "output": 500,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "accountingIssues": []
+        }
+      ]
+    }
+  },
+  "plotting-integration-eval-HDlJiZ": {
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-HDlJiZ/batch/batch-state.json",
+      "sha256": "3d0d82da6b398d0acdd5e89f58048de921a1302ae2ab050c4c2c5025e6021eab",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "C03-1",
+            "caseId": "C03",
+            "round": 1,
+            "split": "development",
+            "status": "failed",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 3,
+            "completedTurns": 0,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "stop": "duplicate_or_extra_single_field_write",
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "C03-2",
+            "caseId": "C03",
+            "round": 2,
+            "split": "development",
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          }
+        ],
+        "stop": "duplicate_or_extra_single_field_write",
+        "totals": {
+          "requests": 4,
+          "input": 6000,
+          "output": 400,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    },
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-HDlJiZ/batch/runs.json",
+      "sha256": "f03d80b59eb5a21c946e42d264ab1de7270fcde790efc94a09fbcf74bad827b6",
+      "content": [
+        {
+          "id": "C03-1",
+          "caseId": "C03",
+          "round": 1,
+          "split": "development",
+          "status": "failed",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 3,
+          "completedTurns": 0,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "stop": "duplicate_or_extra_single_field_write",
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "C03-2",
+          "caseId": "C03",
+          "round": 2,
+          "split": "development",
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        }
+      ]
+    }
+  },
+  "plotting-integration-eval-edDQCi": {
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-edDQCi/batch/batch-state.json",
+      "sha256": "76cea6c09136cabdda00cdc1da1fd0f0e6195c642ebcc256257db956db28dbfa",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "C09-1",
+            "caseId": "C09",
+            "round": 1,
+            "split": "development",
+            "status": "needs_review",
+            "semanticReview": "pending",
+            "requests": 1,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "stop": "question_scope_uncertain",
+            "usage": {
+              "input": 1500,
+              "output": 100,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "C09-2",
+            "caseId": "C09",
+            "round": 2,
+            "split": "development",
+            "status": "needs_review",
+            "semanticReview": "pending",
+            "requests": 1,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "stop": "question_scope_uncertain",
+            "usage": {
+              "input": 1500,
+              "output": 100,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              2
+            ],
+            "accountingIssues": []
+          }
+        ],
+        "stop": null,
+        "totals": {
+          "requests": 2,
+          "input": 3000,
+          "output": 200,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    },
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-edDQCi/batch/runs.json",
+      "sha256": "4b346b543885c5e1566d8e63c4a4e0728517c289f16332e57e3608ea90c872b1",
+      "content": [
+        {
+          "id": "C09-1",
+          "caseId": "C09",
+          "round": 1,
+          "split": "development",
+          "status": "needs_review",
+          "semanticReview": "pending",
+          "requests": 1,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "stop": "question_scope_uncertain",
+          "usage": {
+            "input": 1500,
+            "output": 100,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "C09-2",
+          "caseId": "C09",
+          "round": 2,
+          "split": "development",
+          "status": "needs_review",
+          "semanticReview": "pending",
+          "requests": 1,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "stop": "question_scope_uncertain",
+          "usage": {
+            "input": 1500,
+            "output": 100,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            2
+          ],
+          "accountingIssues": []
+        }
+      ]
+    }
+  },
+  "plotting-loading-odLxy9": {
+    "summary.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-odLxy9/batch/summary.json",
+      "sha256": "dabe89484b16465897c90faa95f91fc71c0d96999b8c4a22a36c1bb92749ab59",
+      "content": {
+        "prepared": 24,
+        "syntheticProviderRequests": 48,
+        "realProviderRequests": 0,
+        "toolSchemasIdentical": true,
+        "freezeHash": "dccce9287a6d29bedf3f228ee8bd6ea0ecdc631a159bf8859148e97ffe935186",
+        "liveEnabled": false
+      }
+    },
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-odLxy9/batch/runs.json",
+      "sha256": "9491f222251af5f64b780a78c860a7f460d67cfd0212fb1a3c73b685c80acba9",
+      "content": [
+        {
+          "id": "T1-A-1",
+          "caseId": "T1",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T1-B-1",
+          "caseId": "T1",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T1-B-2",
+          "caseId": "T1",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T1-A-2",
+          "caseId": "T1",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T2-A-1",
+          "caseId": "T2",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T2-B-1",
+          "caseId": "T2",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T2-B-2",
+          "caseId": "T2",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "T2-A-2",
+          "caseId": "T2",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R1-A-1",
+          "caseId": "R1",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R1-B-1",
+          "caseId": "R1",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R1-B-2",
+          "caseId": "R1",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R1-A-2",
+          "caseId": "R1",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R2-A-1",
+          "caseId": "R2",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R2-B-1",
+          "caseId": "R2",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R2-B-2",
+          "caseId": "R2",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "R2-A-2",
+          "caseId": "R2",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S1-A-1",
+          "caseId": "S1",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S1-B-1",
+          "caseId": "S1",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S1-B-2",
+          "caseId": "S1",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S1-A-2",
+          "caseId": "S1",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S2-A-1",
+          "caseId": "S2",
+          "group": "A",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S2-B-1",
+          "caseId": "S2",
+          "group": "B",
+          "round": 1,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S2-B-2",
+          "caseId": "S2",
+          "group": "B",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        },
+        {
+          "id": "S2-A-2",
+          "caseId": "S2",
+          "group": "A",
+          "round": 2,
+          "status": "prepared",
+          "syntheticProviderRequests": 2,
+          "semanticReview": "not_applicable"
+        }
+      ]
+    }
+  },
+  "plotting-loading-live-FzYmLO": {
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-FzYmLO/batch/runs.json",
+      "sha256": "26236905aca23a8703a9e32a80ae4495521afa33f64092eee668c17374bdaae7",
+      "content": [
+        {
+          "id": "T1-A-1",
+          "caseId": "T1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-B-1",
+          "caseId": "T1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-B-2",
+          "caseId": "T1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-A-2",
+          "caseId": "T1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-A-1",
+          "caseId": "T2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            17,
+            18,
+            19
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-B-1",
+          "caseId": "T2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            20,
+            21,
+            22
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-B-2",
+          "caseId": "T2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            23,
+            24,
+            25
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-A-2",
+          "caseId": "T2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            26,
+            27,
+            28
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-A-1",
+          "caseId": "R1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            29,
+            30,
+            31
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-B-1",
+          "caseId": "R1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            32,
+            33,
+            34
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-B-2",
+          "caseId": "R1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            35,
+            36,
+            37
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-A-2",
+          "caseId": "R1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            38,
+            39,
+            40
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-A-1",
+          "caseId": "R2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            41,
+            42
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-B-1",
+          "caseId": "R2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            43,
+            44
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-B-2",
+          "caseId": "R2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            45,
+            46
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-A-2",
+          "caseId": "R2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            47,
+            48
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-A-1",
+          "caseId": "S1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            49,
+            50,
+            51
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-B-1",
+          "caseId": "S1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            52,
+            53,
+            54
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-B-2",
+          "caseId": "S1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            55,
+            56,
+            57
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-A-2",
+          "caseId": "S1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            58,
+            59,
+            60
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-A-1",
+          "caseId": "S2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            61,
+            62
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-B-1",
+          "caseId": "S2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            63,
+            64
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-B-2",
+          "caseId": "S2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            65,
+            66
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-A-2",
+          "caseId": "S2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            67,
+            68
+          ],
+          "accountingIssues": []
+        }
+      ]
+    },
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-FzYmLO/batch/batch-state.json",
+      "sha256": "ee5fd8d9eed70b548a4dc9620af14687a8fc7e03506fb5eb52396737e6ba08e1",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "T1-A-1",
+            "caseId": "T1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-B-1",
+            "caseId": "T1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-B-2",
+            "caseId": "T1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              9,
+              10,
+              11,
+              12
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-A-2",
+            "caseId": "T1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              13,
+              14,
+              15,
+              16
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-A-1",
+            "caseId": "T2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              17,
+              18,
+              19
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-B-1",
+            "caseId": "T2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              20,
+              21,
+              22
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-B-2",
+            "caseId": "T2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              23,
+              24,
+              25
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-A-2",
+            "caseId": "T2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              26,
+              27,
+              28
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-A-1",
+            "caseId": "R1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              29,
+              30,
+              31
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-B-1",
+            "caseId": "R1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              32,
+              33,
+              34
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-B-2",
+            "caseId": "R1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              35,
+              36,
+              37
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-A-2",
+            "caseId": "R1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              38,
+              39,
+              40
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-A-1",
+            "caseId": "R2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              41,
+              42
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-B-1",
+            "caseId": "R2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              43,
+              44
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-B-2",
+            "caseId": "R2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              45,
+              46
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-A-2",
+            "caseId": "R2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              47,
+              48
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-A-1",
+            "caseId": "S1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              49,
+              50,
+              51
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-B-1",
+            "caseId": "S1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              52,
+              53,
+              54
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-B-2",
+            "caseId": "S1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              55,
+              56,
+              57
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-A-2",
+            "caseId": "S1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              58,
+              59,
+              60
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-A-1",
+            "caseId": "S2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              61,
+              62
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-B-1",
+            "caseId": "S2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              63,
+              64
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-B-2",
+            "caseId": "S2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              65,
+              66
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-A-2",
+            "caseId": "S2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              67,
+              68
+            ],
+            "accountingIssues": []
+          }
+        ],
+        "stop": null,
+        "totals": {
+          "requests": 68,
+          "input": 102000,
+          "output": 6800,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    }
+  },
+  "plotting-loading-live-c1WTeF": {
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-c1WTeF/batch/runs.json",
+      "sha256": "26236905aca23a8703a9e32a80ae4495521afa33f64092eee668c17374bdaae7",
+      "content": [
+        {
+          "id": "T1-A-1",
+          "caseId": "T1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-B-1",
+          "caseId": "T1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-B-2",
+          "caseId": "T1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            9,
+            10,
+            11,
+            12
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-A-2",
+          "caseId": "T1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 4,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 2,
+          "sentTurns": 2,
+          "successfulResponseTurns": 2,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 6000,
+            "output": 400,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            13,
+            14,
+            15,
+            16
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-A-1",
+          "caseId": "T2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            17,
+            18,
+            19
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-B-1",
+          "caseId": "T2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            20,
+            21,
+            22
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-B-2",
+          "caseId": "T2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            23,
+            24,
+            25
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T2-A-2",
+          "caseId": "T2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            26,
+            27,
+            28
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-A-1",
+          "caseId": "R1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            29,
+            30,
+            31
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-B-1",
+          "caseId": "R1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            32,
+            33,
+            34
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-B-2",
+          "caseId": "R1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            35,
+            36,
+            37
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R1-A-2",
+          "caseId": "R1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            38,
+            39,
+            40
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-A-1",
+          "caseId": "R2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            41,
+            42
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-B-1",
+          "caseId": "R2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            43,
+            44
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-B-2",
+          "caseId": "R2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            45,
+            46
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "R2-A-2",
+          "caseId": "R2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            47,
+            48
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-A-1",
+          "caseId": "S1",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            49,
+            50,
+            51
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-B-1",
+          "caseId": "S1",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            52,
+            53,
+            54
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-B-2",
+          "caseId": "S1",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            55,
+            56,
+            57
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S1-A-2",
+          "caseId": "S1",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            58,
+            59,
+            60
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-A-1",
+          "caseId": "S2",
+          "group": "A",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            61,
+            62
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-B-1",
+          "caseId": "S2",
+          "group": "B",
+          "round": 1,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            63,
+            64
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-B-2",
+          "caseId": "S2",
+          "group": "B",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            65,
+            66
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "S2-A-2",
+          "caseId": "S2",
+          "group": "A",
+          "round": 2,
+          "status": "recorded",
+          "semanticReview": "pending",
+          "requests": 2,
+          "tools": 1,
+          "completedTurns": 1,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "usage": {
+            "input": 3000,
+            "output": 200,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            67,
+            68
+          ],
+          "accountingIssues": []
+        }
+      ]
+    },
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-c1WTeF/batch/batch-state.json",
+      "sha256": "ee5fd8d9eed70b548a4dc9620af14687a8fc7e03506fb5eb52396737e6ba08e1",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "T1-A-1",
+            "caseId": "T1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-B-1",
+            "caseId": "T1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-B-2",
+            "caseId": "T1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              9,
+              10,
+              11,
+              12
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-A-2",
+            "caseId": "T1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 4,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 2,
+            "sentTurns": 2,
+            "successfulResponseTurns": 2,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 6000,
+              "output": 400,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              13,
+              14,
+              15,
+              16
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-A-1",
+            "caseId": "T2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              17,
+              18,
+              19
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-B-1",
+            "caseId": "T2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              20,
+              21,
+              22
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-B-2",
+            "caseId": "T2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              23,
+              24,
+              25
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T2-A-2",
+            "caseId": "T2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              26,
+              27,
+              28
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-A-1",
+            "caseId": "R1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              29,
+              30,
+              31
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-B-1",
+            "caseId": "R1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              32,
+              33,
+              34
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-B-2",
+            "caseId": "R1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              35,
+              36,
+              37
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R1-A-2",
+            "caseId": "R1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              38,
+              39,
+              40
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-A-1",
+            "caseId": "R2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              41,
+              42
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-B-1",
+            "caseId": "R2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              43,
+              44
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-B-2",
+            "caseId": "R2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              45,
+              46
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "R2-A-2",
+            "caseId": "R2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              47,
+              48
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-A-1",
+            "caseId": "S1",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              49,
+              50,
+              51
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-B-1",
+            "caseId": "S1",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              52,
+              53,
+              54
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-B-2",
+            "caseId": "S1",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              55,
+              56,
+              57
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S1-A-2",
+            "caseId": "S1",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              58,
+              59,
+              60
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-A-1",
+            "caseId": "S2",
+            "group": "A",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              61,
+              62
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-B-1",
+            "caseId": "S2",
+            "group": "B",
+            "round": 1,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              63,
+              64
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-B-2",
+            "caseId": "S2",
+            "group": "B",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              65,
+              66
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "S2-A-2",
+            "caseId": "S2",
+            "group": "A",
+            "round": 2,
+            "status": "recorded",
+            "semanticReview": "pending",
+            "requests": 2,
+            "tools": 1,
+            "completedTurns": 1,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "usage": {
+              "input": 3000,
+              "output": 200,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              67,
+              68
+            ],
+            "accountingIssues": []
+          }
+        ],
+        "stop": null,
+        "totals": {
+          "requests": 68,
+          "input": 102000,
+          "output": 6800,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    }
+  },
+  "plotting-loading-live-TdCGs8": {
+    "runs.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-TdCGs8/batch/runs.json",
+      "sha256": "65250b59be6517ca23774d9360ea61f24fb8945a0dc2ab93ff800b066cd10c05",
+      "content": [
+        {
+          "id": "T1-A-1",
+          "caseId": "T1",
+          "group": "A",
+          "round": 1,
+          "status": "failed",
+          "semanticReview": "pending",
+          "requests": 3,
+          "tools": 2,
+          "completedTurns": 0,
+          "messageSendAttempts": 1,
+          "sentTurns": 1,
+          "successfulResponseTurns": 1,
+          "respondedUserTurns": 1,
+          "stop": "unexpected_or_duplicate_object",
+          "usage": {
+            "input": 4500,
+            "output": 300,
+            "unknown": 0
+          },
+          "providerRequestIds": [
+            1,
+            2,
+            3
+          ],
+          "accountingIssues": []
+        },
+        {
+          "id": "T1-B-1",
+          "caseId": "T1",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T1-B-2",
+          "caseId": "T1",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T1-A-2",
+          "caseId": "T1",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T2-A-1",
+          "caseId": "T2",
+          "group": "A",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T2-B-1",
+          "caseId": "T2",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T2-B-2",
+          "caseId": "T2",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "T2-A-2",
+          "caseId": "T2",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R1-A-1",
+          "caseId": "R1",
+          "group": "A",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R1-B-1",
+          "caseId": "R1",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R1-B-2",
+          "caseId": "R1",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R1-A-2",
+          "caseId": "R1",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R2-A-1",
+          "caseId": "R2",
+          "group": "A",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R2-B-1",
+          "caseId": "R2",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R2-B-2",
+          "caseId": "R2",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "R2-A-2",
+          "caseId": "R2",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S1-A-1",
+          "caseId": "S1",
+          "group": "A",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S1-B-1",
+          "caseId": "S1",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S1-B-2",
+          "caseId": "S1",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S1-A-2",
+          "caseId": "S1",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S2-A-1",
+          "caseId": "S2",
+          "group": "A",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S2-B-1",
+          "caseId": "S2",
+          "group": "B",
+          "round": 1,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S2-B-2",
+          "caseId": "S2",
+          "group": "B",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        },
+        {
+          "id": "S2-A-2",
+          "caseId": "S2",
+          "group": "A",
+          "round": 2,
+          "status": "not_executed",
+          "semanticReview": "pending",
+          "requests": 0,
+          "tools": 0,
+          "completedTurns": 0,
+          "messageSendAttempts": 0,
+          "sentTurns": 0,
+          "successfulResponseTurns": 0,
+          "respondedUserTurns": 0
+        }
+      ]
+    },
+    "batch-state.json": {
+      "path": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-loading-live-TdCGs8/batch/batch-state.json",
+      "sha256": "95411c214eea8d8d06caa7fc8de1346802d8cef3265358189e7dda8cd55e6c1c",
+      "content": {
+        "mode": "live",
+        "offlineSimulation": true,
+        "rows": [
+          {
+            "id": "T1-A-1",
+            "caseId": "T1",
+            "group": "A",
+            "round": 1,
+            "status": "failed",
+            "semanticReview": "pending",
+            "requests": 3,
+            "tools": 2,
+            "completedTurns": 0,
+            "messageSendAttempts": 1,
+            "sentTurns": 1,
+            "successfulResponseTurns": 1,
+            "respondedUserTurns": 1,
+            "stop": "unexpected_or_duplicate_object",
+            "usage": {
+              "input": 4500,
+              "output": 300,
+              "unknown": 0
+            },
+            "providerRequestIds": [
+              1,
+              2,
+              3
+            ],
+            "accountingIssues": []
+          },
+          {
+            "id": "T1-B-1",
+            "caseId": "T1",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T1-B-2",
+            "caseId": "T1",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T1-A-2",
+            "caseId": "T1",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T2-A-1",
+            "caseId": "T2",
+            "group": "A",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T2-B-1",
+            "caseId": "T2",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T2-B-2",
+            "caseId": "T2",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "T2-A-2",
+            "caseId": "T2",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R1-A-1",
+            "caseId": "R1",
+            "group": "A",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R1-B-1",
+            "caseId": "R1",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R1-B-2",
+            "caseId": "R1",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R1-A-2",
+            "caseId": "R1",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R2-A-1",
+            "caseId": "R2",
+            "group": "A",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R2-B-1",
+            "caseId": "R2",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R2-B-2",
+            "caseId": "R2",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "R2-A-2",
+            "caseId": "R2",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S1-A-1",
+            "caseId": "S1",
+            "group": "A",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S1-B-1",
+            "caseId": "S1",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S1-B-2",
+            "caseId": "S1",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S1-A-2",
+            "caseId": "S1",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S2-A-1",
+            "caseId": "S2",
+            "group": "A",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S2-B-1",
+            "caseId": "S2",
+            "group": "B",
+            "round": 1,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S2-B-2",
+            "caseId": "S2",
+            "group": "B",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          },
+          {
+            "id": "S2-A-2",
+            "caseId": "S2",
+            "group": "A",
+            "round": 2,
+            "status": "not_executed",
+            "semanticReview": "pending",
+            "requests": 0,
+            "tools": 0,
+            "completedTurns": 0,
+            "messageSendAttempts": 0,
+            "sentTurns": 0,
+            "successfulResponseTurns": 0,
+            "respondedUserTurns": 0
+          }
+        ],
+        "stop": "unexpected_or_duplicate_object",
+        "totals": {
+          "requests": 3,
+          "input": 4500,
+          "output": 300,
+          "unknown": 0
+        },
+        "semanticReview": "pending"
+      }
+    }
+  }
+}

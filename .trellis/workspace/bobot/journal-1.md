@@ -1485,3 +1485,36 @@
 ### Next Steps
 
 - 审阅C02消歧、额外解释越界与终态误报；不自动扩跑或合并部署。
+
+
+## Session 51: 重复错误测评器修复与Skill加载诊断准备
+
+**Date**: 2026-10-28
+**Task**: 重复错误测评器修复与Skill加载诊断准备
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+提交收窄方案后修复误代答和计数，完成独立24槽A/B入口及离线自动化验证；真实模型未调用，产品提示保持基线。
+
+### Main Changes
+
+- 新增evaluation-v3和loading-diagnostic-live；候选确认暂缓
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `efa4a43` | (see git log) |
+
+### Testing
+
+- [OK] v3初轮18项通过，最终受影响10项通过；加载准备2项；live入口完整6项及最终评分补测1项通过；TypeScript和ESLint通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 核对模型和额度，按冻结24槽协议执行真实加载对照，再据证据选择产品最小修改
