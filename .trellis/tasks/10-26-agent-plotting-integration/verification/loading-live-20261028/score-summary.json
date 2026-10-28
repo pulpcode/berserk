@@ -1,0 +1,298 @@
+{
+  "planned": 24,
+  "groups": [
+    {
+      "group": "A",
+      "planned": 12,
+      "strict": 8
+    },
+    {
+      "group": "B",
+      "planned": 12,
+      "strict": 9
+    }
+  ],
+  "unresolved": [
+    "T1-B-2",
+    "S1-A-1",
+    "S1-B-2"
+  ],
+  "rows": [
+    {
+      "id": "T1-A-1",
+      "caseId": "T1",
+      "group": "A",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "T1-B-1",
+      "caseId": "T1",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "T1-B-2",
+      "caseId": "T1",
+      "group": "B",
+      "round": 2,
+      "status": "needs_review",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "T1-A-2",
+      "caseId": "T1",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "T2-A-1",
+      "caseId": "T2",
+      "group": "A",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "T2-B-1",
+      "caseId": "T2",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "T2-B-2",
+      "caseId": "T2",
+      "group": "B",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "T2-A-2",
+      "caseId": "T2",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R1-A-1",
+      "caseId": "R1",
+      "group": "A",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "R1-B-1",
+      "caseId": "R1",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "R1-B-2",
+      "caseId": "R1",
+      "group": "B",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R1-A-2",
+      "caseId": "R1",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R2-A-1",
+      "caseId": "R2",
+      "group": "A",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R2-B-1",
+      "caseId": "R2",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R2-B-2",
+      "caseId": "R2",
+      "group": "B",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "R2-A-2",
+      "caseId": "R2",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S1-A-1",
+      "caseId": "S1",
+      "group": "A",
+      "round": 1,
+      "status": "needs_review",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S1-B-1",
+      "caseId": "S1",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S1-B-2",
+      "caseId": "S1",
+      "group": "B",
+      "round": 2,
+      "status": "needs_review",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S1-A-2",
+      "caseId": "S1",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S2-A-1",
+      "caseId": "S2",
+      "group": "A",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": false,
+      "criticalErrors": []
+    },
+    {
+      "id": "S2-B-1",
+      "caseId": "S2",
+      "group": "B",
+      "round": 1,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S2-B-2",
+      "caseId": "S2",
+      "group": "B",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    },
+    {
+      "id": "S2-A-2",
+      "caseId": "S2",
+      "group": "A",
+      "round": 2,
+      "status": "recorded",
+      "reviewed": true,
+      "strict": true,
+      "criticalErrors": []
+    }
+  ],
+  "claim": "Development diagnostic; no automatic causal attribution, integration approval or reliability estimate",
+  "coreCorrect": 20,
+  "strictTotal": 17,
+  "reviewAttribution": "Agent evidence review, not human calibration",
+  "byCase": [
+    {
+      "caseId": "T1",
+      "A": 0,
+      "B": 0
+    },
+    {
+      "caseId": "T2",
+      "A": 2,
+      "B": 2
+    },
+    {
+      "caseId": "R1",
+      "A": 1,
+      "B": 1
+    },
+    {
+      "caseId": "R2",
+      "A": 2,
+      "B": 2
+    },
+    {
+      "caseId": "S1",
+      "A": 2,
+      "B": 2
+    },
+    {
+      "caseId": "S2",
+      "A": 1,
+      "B": 2
+    }
+  ]
+}

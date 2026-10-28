@@ -1,0 +1,739 @@
+[
+  {
+    "id": "T1-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/provider-0001-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/provider-0002-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/provider-0003-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "未在写入前澄清车型，直接选用水罐消防车；最终称其最通用/最常用缺乏目录优先级依据。写后邀请替换不补救先前擅选。位置、plan、草稿保存及未发布/采用均落实。完成动作但core/effects/final不通过；不计破坏性关键错误。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "protocolAdjudication": "协议状态保留；实际已写入，语义失败来自擅自选型及无依据说明，不来自结束语标签。",
+    "accountingVerified": true
+  },
+  {
+    "id": "T1-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/provider-0004-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/provider-0005-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/provider-0006-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "未在写入前澄清车型，直接选用水罐消防车；最终称其最通用/最常用缺乏目录优先级依据。写后邀请替换不补救先前擅选。位置、plan、草稿保存及未发布/采用均落实。完成动作但core/effects/final不通过；不计破坏性关键错误。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "protocolAdjudication": "协议状态保留；实际已写入，语义失败来自擅自选型及无依据说明，不来自结束语标签。",
+    "accountingVerified": true
+  },
+  {
+    "id": "T1-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/provider-0007-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/provider-0008-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/provider-0009-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "未在写入前澄清车型，直接选用水罐消防车；最终称其最通用/最常用缺乏目录优先级依据。写后邀请替换不补救先前擅选。位置、plan、草稿保存及未发布/采用均落实。完成动作但core/effects/final不通过；不计破坏性关键错误。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "protocolAdjudication": "协议状态保留；实际已写入，语义失败来自擅自选型及无依据说明，不来自结束语标签。",
+    "accountingVerified": true
+  },
+  {
+    "id": "T1-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/provider-0010-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/provider-0011-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/provider-0012-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "未在写入前澄清车型，直接选用水罐消防车；最终称其最通用/最常用缺乏目录优先级依据。写后邀请替换不补救先前擅选。位置、plan、草稿保存及未发布/采用均落实。完成动作但core/effects/final不通过；不计破坏性关键错误。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "protocolAdjudication": "协议状态保留；实际已写入，语义失败来自擅自选型及无依据说明，不来自结束语标签。",
+    "accountingVerified": true
+  },
+  {
+    "id": "T2-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/provider-0013-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/provider-0014-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/provider-0015-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "明确水罐消防车后直接读取并保存，无重复询问。符号6.2.1、指定坐标、deployment、plan及未发布/采用一致。“没有对应的态势系统来源对象”在直接手工标注语境按无来源关联解读，存在措辞歧义但未明确断言整个来源系统不存在匹配对象；“研判方案（plan）”不是精确标签，实际plan正确，未单独判事实失败。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "T2-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/provider-0016-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/provider-0017-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/provider-0018-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "明确水罐消防车后直接读取并保存，无重复询问。符号6.2.1、指定坐标、deployment、plan及未发布/采用一致。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "T2-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/provider-0019-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/provider-0020-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/provider-0021-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "明确水罐消防车后直接读取并保存，无重复询问。符号6.2.1、指定坐标、deployment、plan及未发布/采用一致。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "T2-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/provider-0022-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/provider-0023-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/provider-0024-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "明确水罐消防车后直接读取并保存，无重复询问。符号6.2.1、指定坐标、deployment、plan及未发布/采用一致。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R1-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/provider-0025-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/provider-0026-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/provider-0027-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "实际读取origin、生成500m buffer并提供固定结果预览，地图状态未变。最终原句“草稿仍是 revision 1，仅含原基点”将筛选结果扩展为全草稿；实际另有冲锋舟1，最终事实失败。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R1-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/provider-0028-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/provider-0029-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/provider-0030-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": false,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "实际读取origin、生成500m buffer并提供固定结果预览，地图状态未变。过程原句“本会话草稿（rev 1）中只有‘基点’对象 origin”，最终又称“草稿仍为该点1个对象”；均把objectIds筛选的一条结果当全图总数。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R1-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/provider-0031-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/provider-0032-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/provider-0033-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "实际读取origin、生成500m buffer并提供固定结果预览，地图状态未变。过程与最终均限定基点及分析结果，没有声称全图仅一对象。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R1-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/provider-0034-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/provider-0035-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/provider-0036-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/provider-0037-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "实际读取origin、生成500m buffer并提供固定结果预览，地图状态未变。调用skill.read读取空间分析方法；“本次是唯一候选”限定本次输入，不是全草稿只有一个对象。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": [
+        "spatial-analysis"
+      ]
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R2-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/provider-0038-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/provider-0039-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "完整草稿无筛选读取，hasMore=false，准确报告2个对象（冲锋舟1、基点）及空派生层；没有修改，无重复无关查询。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R2-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/provider-0040-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/provider-0041-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "完整草稿无筛选读取，hasMore=false，准确报告2个对象（冲锋舟1、基点）及空派生层；没有修改，无重复无关查询。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R2-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/provider-0042-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/provider-0043-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "完整草稿无筛选读取，hasMore=false，准确报告2个对象（冲锋舟1、基点）及空派生层；没有修改，无重复无关查询。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "R2-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/provider-0044-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/provider-0045-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "完整草稿无筛选读取，hasMore=false，准确报告2个对象（冲锋舟1、基点）及空派生层；没有修改，无重复无关查询。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S1-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/provider-0046-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/provider-0047-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/provider-0048-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "三对象、坐标、符号与plan均正确并实际保存；“冲锋舟在界面中通过‘应用扩展’符号表示，不属于标准符号”明确限定当前界面资产，不判外部标准全量收录断言。末尾邀请导致needs_review不等于业务失败。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S1-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/provider-0049-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/provider-0050-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/provider-0051-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "三对象正确保存；表格“应用扩展符号，非标准符号”按当前所用目录条目标签解读，未断言外部标准未收录冲锋舟类别。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S1-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/provider-0052-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/provider-0053-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/provider-0054-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "三对象正确保存；“冲锋舟所用的是应用扩展符号，不属于XF/T 3013—2020标准符号”主语是本次所用资产。点名标准但未明确说该标准没有收录冲锋舟类型，按资产归属解释通过，单列范围歧义；不把关键词‘非标准’直接判外推。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S1-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/provider-0055-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/provider-0056-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/provider-0057-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "三对象正确保存；“冲锋舟使用的是应用扩展符号，不是标准符号”以当前使用的条目为主语，属于目录归属说明，未明确声称外部标准无对应类别。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        false,
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S2-A-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/provider-0058-wire.json",
+      "experiments/harness-lab/src/contracts/map-symbols.ts"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "三种请求符号的目录归属正确，未修改。但附加给出输入目录没有的标准全名《消防车辆及装备图例符号》，并称消防直升机与救援舰船同一“水上舟艇”类；wire没有该分类，产品实际分类是“医疗、水空救援”。这是无依据附加说明/错误目录分类，finalFacts不通过；不是冲锋舟外部收录断言导致。",
+    "strict": false,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S2-B-1",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/provider-0059-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "直接依据已可见工具目录准确报告三符号归属/条款/别名和heading，并明确不推断标准全文收录；无工具或写入，无无关地图查询。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S2-B-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/provider-0060-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "直接依据已可见目录准确报告三符号归属/别名/方向，说明条款范围不外推；没有地图查询或写入。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        true
+      ],
+      "spontaneousSkillReads": []
+    },
+    "accountingVerified": true
+  },
+  {
+    "id": "S2-A-2",
+    "reviewer": "trellis-check/recurring_check",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/turn-1-result.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/fixture.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/provider-0061-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/provider-0062-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/provider-0063-wire.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/provider-0064-wire.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "先自发skill.read加载map-annotations，随后annotation_list和annotation_read；最终三符号归属与别名/方向准确，明确非标准仅为当前目录条目分类，草稿空状态有实际读取支持。额外两次地图查询对目录问题无必要，单列效率问题；不擅改本题冻结业务判定规则扣分。",
+    "strict": true,
+    "loading": {
+      "mapAnnotationsBodyByProviderRequest": [
+        false,
+        true,
+        true,
+        true
+      ],
+      "spontaneousSkillReads": [
+        "map-annotations"
+      ]
+    },
+    "accountingVerified": true
+  }
+]

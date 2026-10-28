@@ -1,0 +1,609 @@
+{
+  "planned": 24,
+  "executed": 24,
+  "rawStatuses": {
+    "recorded": 21,
+    "needs_review": 3
+  },
+  "totals": {
+    "requests": 64,
+    "input": 1297363,
+    "output": 10190,
+    "unknown": 0
+  },
+  "allHttp200": true,
+  "actualResponseModel": "deepseek-v4-1-flash-261017",
+  "modelParametersUnchanged": true,
+  "slotAndLedgerAccountingMatch": true,
+  "evidenceFilesVerified": 608,
+  "pairedBusinessDocumentsMatch": 12,
+  "toolSchemaHashes": [
+    "5ba5e4935c22e3c6240cc04c1f76b509a487c3757c31a3e2b545e5030fb2ddbd"
+  ],
+  "sourceStateUnchangedAll": true,
+  "criticalEffects": 0,
+  "sentTurns": 24,
+  "successfulResponseTurns": 24,
+  "protocolCompletedTurns": 21,
+  "spontaneousMapSkillSlots": [
+    "S2-A-2"
+  ],
+  "exposure": [
+    {
+      "id": "T1-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T1-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T1-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T1-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T2-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T2-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T2-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "T2-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "R1-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "spatial_analyze"
+      ]
+    },
+    {
+      "id": "R1-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "spatial_analyze"
+      ]
+    },
+    {
+      "id": "R1-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "spatial_analyze"
+      ]
+    },
+    {
+      "id": "R1-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "tools": [
+        "annotation_read",
+        "skill.read",
+        "spatial_analyze"
+      ]
+    },
+    {
+      "id": "R2-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read"
+      ]
+    },
+    {
+      "id": "R2-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read"
+      ]
+    },
+    {
+      "id": "R2-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read"
+      ]
+    },
+    {
+      "id": "R2-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read"
+      ]
+    },
+    {
+      "id": "S1-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "S1-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "S1-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "S1-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "annotation_read",
+        "annotation_action"
+      ]
+    },
+    {
+      "id": "S2-A-1",
+      "group": "A",
+      "mapBodyByRequest": [
+        false
+      ],
+      "spatialBodyByRequest": [
+        false
+      ],
+      "tools": []
+    },
+    {
+      "id": "S2-B-1",
+      "group": "B",
+      "mapBodyByRequest": [
+        true
+      ],
+      "spatialBodyByRequest": [
+        false
+      ],
+      "tools": []
+    },
+    {
+      "id": "S2-B-2",
+      "group": "B",
+      "mapBodyByRequest": [
+        true
+      ],
+      "spatialBodyByRequest": [
+        false
+      ],
+      "tools": []
+    },
+    {
+      "id": "S2-A-2",
+      "group": "A",
+      "mapBodyByRequest": [
+        false,
+        true,
+        true,
+        true
+      ],
+      "spatialBodyByRequest": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "tools": [
+        "skill.read",
+        "annotation_list",
+        "annotation_read"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "T1-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T1-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T1-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T1-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T2-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T2-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T2-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "T2-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 1
+    },
+    {
+      "id": "R1-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R1-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R1-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R1-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R2-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R2-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R2-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "R2-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 2
+    },
+    {
+      "id": "S1-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 3
+    },
+    {
+      "id": "S1-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 3
+    },
+    {
+      "id": "S1-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 3
+    },
+    {
+      "id": "S1-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": false,
+      "objectCount": 3
+    },
+    {
+      "id": "S2-A-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 0
+    },
+    {
+      "id": "S2-B-1",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 0
+    },
+    {
+      "id": "S2-B-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 0
+    },
+    {
+      "id": "S2-A-2",
+      "sourceUnchanged": true,
+      "publicationAndCurrentUnchanged": true,
+      "readonlyUnchanged": true,
+      "objectCount": 0
+    }
+  ],
+  "semanticScores": "Separate evidence review; effect checks do not establish semantic correctness"
+}
