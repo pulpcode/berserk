@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "freezeHash": "7d4cf55fadf71221b33bd87a4494cb9fdd9c9ed33071bce846421e51306e26d6",
+  "evidence": [
+    "independent-check.json",
+    "independent-fifth-ledger-check.json",
+    "D06-1-A-freeze.json",
+    "../fifth-closeout-check.json"
+  ],
+  "reviewer": "root execution-time verification, separate from module implementer; independent component reviewer reports retained",
+  "entry": "D06-1-A",
+  "group": "A",
+  "newTaskCount": 0,
+  "onlyOriginalMessages": 1,
+  "latest": ".local/spatial-r14/closeout-fifth-20261027",
+  "carried": {
+    "requests": 650,
+    "input": 12467724,
+    "output": 216097,
+    "afp": 3349.8353749999987
+  },
+  "previousRecordsPreserved": true
+}

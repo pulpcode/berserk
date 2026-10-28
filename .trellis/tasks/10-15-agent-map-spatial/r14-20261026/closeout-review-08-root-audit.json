@@ -1,0 +1,122 @@
+{
+  "mode": "root已知初评结果后的独立事实核对；不冒充第二次盲审",
+  "rows": [
+    {
+      "blindId": "0e52ce9d-c3ec-4b00-8a4a-0808eead0a91",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "130b49b4-69ca-4171-9b29-494d11d822e1",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    },
+    {
+      "blindId": "2c252519-7657-4a3e-8182-6536ae99b43e",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    },
+    {
+      "blindId": "307b533c-e9e5-4fa6-9804-30d1bd2b7325",
+      "caseId": "D22",
+      "stateUnchanged": true,
+      "expectedNames": 67,
+      "allNamesActuallyRead": true,
+      "allNamesInFinalInOrder": true
+    },
+    {
+      "blindId": "3235aae4-7be8-4583-af83-da61092845e4",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "443f64d1-1a2e-4116-b5df-9353a30a5273",
+      "caseId": "D22",
+      "stateUnchanged": true,
+      "expectedNames": 67,
+      "allNamesActuallyRead": true,
+      "allNamesInFinalInOrder": true
+    },
+    {
+      "blindId": "462e04e9-620f-4314-90a8-efe800152451",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "57272a90-099e-4ba3-8ca3-56e00babebee",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    },
+    {
+      "blindId": "73e98b58-9975-4c7f-9f36-7feaea5ed188",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "81ee3440-380f-47de-8423-57df0544f522",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "8808d6a0-6e75-4eec-b28e-6a0acf2878b1",
+      "caseId": "D22",
+      "stateUnchanged": true,
+      "expectedNames": 67,
+      "allNamesActuallyRead": true,
+      "allNamesInFinalInOrder": true
+    },
+    {
+      "blindId": "90f564b2-c857-4b9c-8f95-91130aab8837",
+      "caseId": "D24",
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "924a036a-eaa7-4d7f-8be8-30cca553f3d8",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    },
+    {
+      "blindId": "d4a805ab-e923-44f9-ab11-a83c326a7cb6",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    },
+    {
+      "blindId": "d88e3e4b-5911-4501-9d64-60944459c86f",
+      "caseId": "D23",
+      "stateUnchanged": true,
+      "candidateCount": 6,
+      "spatialCount": 5,
+      "readyCount": 4,
+      "boats": 2,
+      "capacity": 5
+    }
+  ],
+  "mainPass": 15,
+  "strictPass": 14,
+  "strictFail": 1
+}

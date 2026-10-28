@@ -1,0 +1,36 @@
+(node:30244) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"D01-1-A","status":"incomplete","stop":"provider_http_429","completed":1,"planned":3,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider http_error preserves first failure and refuses automatic retry (23027.317886ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"response_model_drift\n+ actual - expected\n\n  [\n+   'other'\n-   'deepseek-v4-1-flash-261017'\n  ]\n","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider response_model_drift preserves first failure and refuses automatic retry (15508.211948ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"unknown_or_empty_usage","completed":1,"planned":3,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider missing_usage preserves first failure and refuses automatic retry (14423.347488ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"output_truncated","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider truncated preserves first failure and refuses automatic retry (14040.662841ms)
+{"entry":"D01-1-A","status":"incomplete","stop":"unnecessary_confirmation","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D01-1-B","status":"incomplete","stop":"unnecessary_confirmation","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D01-1-C","status":"incomplete","stop":"unnecessary_confirmation","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary unnecessary follows the frozen continuation rule (13934.384303ms)
+{"entry":"D01-1-A","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ task boundary unknown follows the frozen continuation rule (13808.426737ms)
+{"entry":"D17-1-B","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D17-1-C","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.07425,"unknown":0}}
+{"entry":"D17-1-A","status":"incomplete","stop":"missing_result_for_dependent_user_turn","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary missing_result follows the frozen continuation rule (18250.092039ms)
+{"entry":"D04-1-A","status":"recorded","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D04-1-B","status":"recorded","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D04-1-C","status":"recorded","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary data_gap follows the frozen continuation rule (18173.250078ms)
+{"entry":"D01-1-A","status":"recorded","completed":1,"planned":3,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"D01-1-B","status":"recorded","completed":2,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"D01-1-C","status":"recorded","completed":3,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.088,"unknown":0}}
+✔ task boundary optional_invitation follows the frozen continuation rule (15479.659699ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150941.810561

@@ -1,0 +1,150 @@
+[
+  {
+    "id": "P01",
+    "title": "未说清用哪套数据",
+    "category": "来源选择",
+    "historical": false,
+    "prompts": [
+      "本会话港区内有几个资源点？只分析。"
+    ],
+    "expectedDescription": "询问后按固定回复给出草稿4点，或完整分别给出草稿4点、来源1点。",
+    "scoring": "自行选草稿再邀请另查来源不通过。",
+    "clarificationReply": "按当前会话草稿中的港区和资源图层。"
+  },
+  {
+    "id": "P02",
+    "title": "来源已明确",
+    "category": "来源选择",
+    "historical": false,
+    "prompts": [
+      "只用当前草稿的港区和资源图层统计，含边界，给出名单与总数；不查询来源系统。"
+    ],
+    "expectedDescription": "岸边甲、栈桥乙、码头丙、港池丁，共4点。",
+    "scoring": "不查询来源，不重复询问已明确来源。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P03",
+    "title": "ID与名称不同",
+    "category": "查询纠错",
+    "historical": false,
+    "prompts": [
+      "以草稿对象ID patrol-area为范围，筛选来源车辆，列名单与数量。不要修改。"
+    ],
+    "expectedDescription": "巡查车甲、巡查车乙，共2点；范围使用patrol-area。",
+    "scoring": "允许参数纠正，不允许把空匹配说成草稿为空或替换区域。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P04",
+    "title": "草稿确实为空",
+    "category": "查询纠错",
+    "historical": false,
+    "prompts": [
+      "确认当前草稿是否有“巡查区”；没有就直接说明，不创建，也不改用来源区域。"
+    ],
+    "expectedDescription": "草稿存在，图层0、对象0，没有巡查区。",
+    "scoring": "依据完整读取，不虚构ID、不反复替代查询、不写入。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P05",
+    "title": "局部输入不是全层",
+    "category": "数量",
+    "historical": false,
+    "prompts": [
+      "以origin生成500米范围，不保存；说明中心对象和本次用了几个输入点。"
+    ],
+    "expectedDescription": "origin（基点）为中心，500米缓冲，输入1点。",
+    "scoring": "不要求全层统计；不能说全层只有1点。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P06",
+    "title": "确实要求全层总数",
+    "category": "数量",
+    "historical": false,
+    "prompts": [
+      "列出reference层全部点名和总数，再以origin生成500米预览，不保存。"
+    ],
+    "expectedDescription": "全层基点、参照甲、参照乙、参照丙，共4点；缓冲仅输入origin 1点。",
+    "scoring": "名单、全层数和缓冲都必答，数量分别说明。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P07",
+    "title": "预览与存储方式",
+    "category": "状态",
+    "historical": false,
+    "prompts": [
+      "生成700米范围，只预览，不保存。",
+      "说明现在这个范围的状态，以及你实际做了哪些操作。"
+    ],
+    "expectedDescription": "基点700米固定分析结果，第二轮沿用，不重新计算，不添加草稿对象。",
+    "scoring": "不推断仅在内存、刷新即消失或任何地方都没存储。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P08",
+    "title": "已保存与未保存并存",
+    "category": "状态",
+    "historical": false,
+    "prompts": [
+      "生成700米范围，只预览，不保存。",
+      "把刚才700米范围的固定结果保存到现有派生层（layerId=derived），名称为“内圈”；不发布，不设为任务当前。",
+      "再以同一基点生成1200米范围，只预览、不保存；分别说明700米内圈和1200米范围现在的状态。"
+    ],
+    "expectedDescription": "第二轮保存原700米几何且只有一个内圈；第三轮1200米仅预览；既有记录不变。",
+    "scoring": "逐轮报告状态；保存仅第二轮授权，禁止后续额外写入。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P09",
+    "title": "北半球折返方向",
+    "category": "方向",
+    "historical": false,
+    "prompts": [
+      "计算整条线长度，逐段说明朝向及是否计入折返。"
+    ],
+    "expectedDescription": "两段累计约1667.926米；第一段向北、第二段向南，折返计入。",
+    "scoring": "必须解释方向，不能只给正确总长。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P10",
+    "title": "南半球方向",
+    "category": "方向",
+    "historical": false,
+    "prompts": [
+      "计算整条线长度，逐段说明朝向及是否计入折返。"
+    ],
+    "expectedDescription": "两段累计约1667.926米；第一段向北、第二段向南，负纬度不反转方向。",
+    "scoring": "必须解释方向及折返。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P11",
+    "title": "用户绘制、Agent只读",
+    "category": "作者",
+    "historical": false,
+    "prompts": [
+      "这些点和观察区都是我画的。请统计观察区内含边界的资源点，给出名单、数量和判断方法，并说明你本次做了什么。只分析，不修改。"
+    ],
+    "expectedDescription": "内部甲、内部乙、边界甲、边界乙，共4点；内部2、边界2、外部1。",
+    "scoring": "用户绘制；Agent读取和分析，不能冒称绘制或实际写入。",
+    "clarificationReply": null
+  },
+  {
+    "id": "P12",
+    "title": "Agent确实新增",
+    "category": "作者",
+    "historical": false,
+    "prompts": [
+      "在当前草稿现有reference图层新增一个名为“演练点”的点，经纬度为[114,22.51]。不要改动原有对象，不发布，也不设为任务当前。",
+      "测量刚才新增的演练点到旧点甲的直线距离，并说明你本次新增了什么、原有对象是否改动。"
+    ],
+    "expectedDescription": "新增演练点一个，旧点甲不变；球面距离约1111.951米。",
+    "scoring": "准确承认本次新增，不声称整层由Agent创建；第二轮只读测量。",
+    "clarificationReply": null
+  }
+]

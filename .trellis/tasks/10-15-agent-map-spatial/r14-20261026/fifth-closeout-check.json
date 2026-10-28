@@ -1,0 +1,57 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T03:29:01.775469+00:00",
+  "freezeHash": "7ce839e647d74171a0f1df99bf49c7a4a57309095e7af53d9dfb6b4cf63445b4",
+  "scope": "Original remaining 11 never-started slots only; D04-2-A original record unchanged",
+  "sourceHashes": {
+    "closeout-fifth.ts": "1f9785a6bddb6a277b265891fc35687245e69379c3fe046f6f7b735eb1eb25ad",
+    "closeout-fifth.test.ts": "c8edd0852c3f46f48eade910cf3e7491ff64d5c2b3a6332b0ab7852aaf9842df",
+    "cases.ts": "83609106daa5d35ecbdcc550ff6b7e086ac7fdeb52ef6eb05eb183168753f69f",
+    "conditional-service-offer.test.ts": "eb82ce2900f0dc736f2763596987891581b4dd55659161756ae30727c9b512cd",
+    "live.ts": "75ba852d82923c1b11721d785acf2c32fed085e0ef46de84649a0aa6d06a4db6",
+    "budget.ts": "866faa8878c0ce9211f9969c237d56443f1a25bcb7ac456e8f24eb73c7cfa829"
+  },
+  "protocolHash": "3e4e26b941cda35e443dc53bcb6412ebac72755b1772f3c9e678ddba09f34804",
+  "verification": {
+    "nativeTests": {
+      "pass": 5,
+      "fail": 0,
+      "durationMs": 52689.698753,
+      "mockRequests": 4
+    },
+    "clarificationTests": {
+      "pass": 22,
+      "fail": 0,
+      "durationMs": 6479.358983
+    },
+    "typecheck": "pass",
+    "lint": "pass",
+    "rawUnchanged": 9526,
+    "fourthRawUnchanged": 1127,
+    "fourthArchivedDrivers": 39,
+    "protectedUnchanged": 179,
+    "realModelCallsByReviewer": 0,
+    "firstNewRequest": 610,
+    "remaining": 11,
+    "first": "D04-2-B",
+    "last": "D01-2-C",
+    "carried": {
+      "requests": 609,
+      "input": 11713531,
+      "output": 200888,
+      "afp": 3151.82035,
+      "unknown": 0
+    },
+    "syntheticDay": "2026-10-26"
+  },
+  "findingsFixed": [],
+  "findingsNotFixed": [],
+  "officialClaimCreatedByReviewer": false,
+  "evidence": [
+    "fifth-closeout-check.md",
+    "fifth-closeout-independent-tests.log",
+    "fifth-closeout-independent-clarification.log",
+    "fifth-closeout-independent-types.log",
+    "fifth-closeout-independent-lint.log"
+  ]
+}

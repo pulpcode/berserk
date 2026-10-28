@@ -1,0 +1,29 @@
+(node:44961) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original D03-A complete public response: section label and both conditional invitations do not stop (10.424452ms)
+✔ all eight original completed responses retain no blocking request; files and original stop remain immutable (28.448189ms)
+✔ earlier R13 actual optional preview invitation remains nonblocking (2.268182ms)
+✔ conditional correction and future follow-up wording is classified by clause role, not one fixed sentence (1.127037ms)
+✔ partial results and conditional packaging never hide missing required input or authority (1.591478ms)
+✔ explicit current scope confirmation stays unnecessary despite mandatory wording; real unknown inputs still stop (1.114036ms)
+✔ preview follow-up can be optional, but a requested save cannot be postponed as optional (0.973574ms)
+✔ flow control is independent of tool-success markers and does not claim completion or correctness (1.481074ms)
+✔ assistant offers of additional work do not request missing current input (0.804554ms)
+✔ first closeout D07-A original response keeps the optional offer and original false stop (4.280347ms)
+✔ D06 short choice request uses declared candidate context without treating descriptive provenance as authority (3.288961ms)
+(node:44964) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ second segment preserves both evidence trees, selects exactly original slots 20-144 and carries 75 requests once (1163.490964ms)
+✔ second freeze binds prior segments and only permits clarification repair in previously frozen drivers (1450.428009ms)
+✔ all 19 actually returned responses replay without the two optional-offer false stops; original incomplete cases retain their kind (453.561072ms)
+{"entry":"D07-1-B","status":"recorded","completed":1,"planned":2,"usage":{"requests":76,"input":1356044,"output":26702,"afp":350.67600000000004,"unknown":0}}
+{"entry":"D07-1-C","status":"recorded","completed":2,"planned":2,"usage":{"requests":77,"input":1356144,"output":26712,"afp":350.73650000000004,"unknown":0}}
+✔ native second continuation starts at D07 B/C with original A canonical, request 76, no repeated completed slot or charge (12596.963645ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21949.773928

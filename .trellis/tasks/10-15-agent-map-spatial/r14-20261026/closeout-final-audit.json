@@ -1,0 +1,24 @@
+{
+  "preserved": {
+    "protected-before.json": 179,
+    "partial-evidence-manifest.json": 1076,
+    "closeout-first-segment-manifest.json": 1169,
+    "closeout-second-segment-manifest.json": 1519
+  },
+  "scoringSourcesMatch": true,
+  "requestsStill159": true,
+  "liveExecutionDisabled": true,
+  "independentOfflineTests": 48,
+  "actualTrials": 34,
+  "notStarted": 110,
+  "main": {
+    "pass": 26,
+    "fail": 4,
+    "pending": 4
+  },
+  "strict": {
+    "pass": 22,
+    "fail": 8,
+    "pending": 4
+  }
+}

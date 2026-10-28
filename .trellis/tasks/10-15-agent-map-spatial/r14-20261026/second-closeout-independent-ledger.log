@@ -1,0 +1,13 @@
+(node:46425) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ second segment preserves both evidence trees, selects exactly original slots 20-144 and carries 75 requests once (1857.608954ms)
+✔ second freeze binds prior segments and only permits clarification repair in previously frozen drivers (1563.858151ms)
+✔ all 19 actually returned responses replay without the two optional-offer false stops; original incomplete cases retain their kind (531.074096ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10979.081049

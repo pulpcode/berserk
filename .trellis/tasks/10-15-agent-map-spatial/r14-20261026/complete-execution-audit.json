@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T04:09:30.121472+00:00",
+  "plannedSlots": 144,
+  "uniqueSlots": 144,
+  "groups": {
+    "A": 48,
+    "B": 48,
+    "C": 48
+  },
+  "supplementalConversations": 5,
+  "originalAdditionalUserMessages": 7,
+  "newTaskSlots": 0,
+  "noModelRequestRetried": true,
+  "ledger": ".local/spatial-r14/pending-D20-2-C-20261027/ledger.json",
+  "usage": {
+    "requests": 673,
+    "input": 12991534,
+    "output": 221979,
+    "afp": 3433.810599999999,
+    "unknown": 0
+  },
+  "perRequestChecked": [
+    "contiguous id",
+    "entry/trialId",
+    "group",
+    "finished",
+    "prompt tokens",
+    "completion tokens"
+  ],
+  "allFiveSupplementScoresExactIds": true,
+  "priorEvidenceCheck": "pending-choice/final-preservation-check.json",
+  "pipelineIndependentReview": "pending-choice/report-pipeline-check.md",
+  "additionalEvidenceFiles": 2690,
+  "protectedProductAndSkillsUnchanged": true,
+  "notes": [
+    "原评分与失败目录未覆盖；完整汇总仅替换5个原ID的视图",
+    "旧D06本地401为0模型请求，正常重新登录隔离副本，不重复已发送请求",
+    "先前误停与本题草稿违规各保留原原因",
+    "真实任务均已停止；无后续自动重试或追加"
+  ]
+}

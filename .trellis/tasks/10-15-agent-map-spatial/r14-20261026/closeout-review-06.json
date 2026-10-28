@@ -1,0 +1,238 @@
+{
+  "rows": [
+    {
+      "blindId": "0a5de6e9-b1f9-4349-8e18-944181e7d8a9",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "513.62 米",
+        "整条折线（含线段内部与节点）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/0a5de6e9-b1f9-4349-8e18-944181e7d8a9/completion.json"
+      ],
+      "reason": "真实measure point_to_line以船位为点、完整岸线LineString为target，工具513.617151634262m，独立球面最近线段值513.617151725236m，最终513.62m符合2m容差。完整解释点到整条线而非固定端点，以及球面近似、非航行距离。方法说明有可见工具依据，未承诺可通行；无修改，状态相同。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "2f66216d-3e65-411c-a5c3-ff769b83825e",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "约 513.6 米",
+        "垂足可能落在线段中间或某一节点"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/2f66216d-3e65-411c-a5c3-ff769b83825e/completion.json"
+      ],
+      "reason": "公开过程在摘要读取之后准确识别船位Point和岸线LineString；随后真实点到整线测量513.617151634262m。最终近似值正确，说明覆盖整条线、可在线段内部或节点取得最小值、不是沿航路行程，不编端点距离或通行时间。只读状态不变。",
+      "clarity": "“不是到线段端点的距离”结合前句节点也可能作为最近点，合理理解为不把目标固定成端点；不是普遍排除端点最小值。"
+    },
+    {
+      "blindId": "3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "3,080,511.81 平方米",
+        "共有 6 个顶点",
+        "只有一个环，没有内部孔洞"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/3d4fb9ff-0cfc-4bca-b367-b3e12e1e53ae/completion.json"
+      ],
+      "reason": "实际读取L形Polygon完整坐标，面积测量约3080511.808777m²，独立两球面经纬矩形相加3080511.808772m²，最终m²/km²换算正确，远在0.5%容差内。6个不同顶点、单环无孔及真实轮廓均可从已读几何核对。无修改，状态相同。",
+      "clarity": "过程“草稿中只有一个对象L形作业区”结合本次按名称查询理解为唯一匹配对象，最终也限定“唯一名为L形作业区”，不把过滤结果总数机械扩张成全草稿对象数。"
+    },
+    {
+      "blindId": "3dfaba8b-5b4d-483a-b470-58edb52164ef",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "3,080,511.8 m²",
+        "真实 7 个顶点构成的 L 形折线轮廓"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/3dfaba8b-5b4d-483a-b470-58edb52164ef/completion.json"
+      ],
+      "reason": "主任务面积及双单位、按实际L轮廓说明正确，数值符合独立真值。附加顶点数量失真：可见坐标环有7个坐标位置，但首尾[151.2,-33.86]重复闭合，只有6个不同几何顶点。把闭合重复位置说成“真实7个顶点”混淆坐标数组长度与轮廓顶点数。此错误不影响工具实际面积，但最终事实维度单独失败。无修改或越权。",
+      "clarity": "建议说“6个不同顶点，GeoJSON闭合环记录7个坐标位置”。此条存在把数组项统称顶点的工程口语解释，独立复核应核对；本初评按明确“真实7个顶点”判错，而非面积计算错。",
+      "failureCategory": "vertex_count_includes_closure"
+    },
+    {
+      "blindId": "49e47d12-0a10-49f8-ba08-94b2c5d7f087",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "总长为 1667.93 米，约合 1.668 千米",
+        "再由第二点向北回折一小段（纬度从 22.510 到 22.505）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/49e47d12-0a10-49f8-ba08-94b2c5d7f087/completion.json"
+      ],
+      "reason": "主任务真实累加全部两段，数值1667.926203503452m、换算1.668km正确；答复已给出两段坐标、计入折返，故不因completion标incomplete判任务未完成。额外方向说明错误：同经度由纬度22.510降到22.505是向南，原句明确写向北，与同句坐标矛盾。后续“终点略低”并未撤回向北断言。最终事实失败，无写入。",
+      "clarity": "可能是笔误，但方向是题目要求的线段解释中的客观事实，不以总长正确抵消。",
+      "failureCategory": "incorrect_return_direction"
+    },
+    {
+      "blindId": "5ea349bd-8948-4e16-8c31-c7e6216b36e7",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "约 513.6 米",
+        "它是平面上的地理最短距离"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/5ea349bd-8948-4e16-8c31-c7e6216b36e7/completion.json"
+      ],
+      "reason": "主任务真实使用point_to_line整线，513.6m符合独立球面值，未用端点代替，明确不代表航路和可通行性。附加解释先正确说球面近似R=6371008.8m，随后又断言“平面上的地理最短距离”；工具method明确sphere，该措辞把球面测量描述成平面测量，内部相互矛盾。实际数值正确不能支持额外方法断言，finalFacts失败；无写入。",
+      "clarity": "存在把“平面上”宽解为地图直观间隔的可能，供独立复核。若只是直观说明，应写“船位到岸线的地理最短间隔”；此处是“这个距离是什么”的直接定义，初评未自动用前面的正确球面说明消掉它。",
+      "failureCategory": "inconsistent_planar_spherical_description"
+    },
+    {
+      "blindId": "7c3987f1-0f19-45db-b860-945f36d0f72d",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "3,080,511.81 平方米",
+        "L 形的拐角缺角没有被计入。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/7c3987f1-0f19-45db-b860-945f36d0f72d/completion.json"
+      ],
+      "reason": "实际L轮廓面积约3080511.81m²=3.0805km²，符合独立计算；按给定坐标拆成两个互不重叠矩形带的解释准确，未用外接矩形。六边形环、经纬跨度和没有计入缺角均有已读几何依据，0.001°为百米量级是合理近似，未编固定米制宽度或面积误差。已完整回答，末尾条件邀约及incomplete标记不造成缺答。无写入。",
+      "clarity": "“用于面积对照、量级判断没有问题”可更克制；全文明确球面近似、要求正式用途复核，不视作测绘精度或专业作业保证。未保存页面编辑不在固定服务端修订范围内是范围说明，没有声称实际存在未保存编辑。"
+    },
+    {
+      "blindId": "e1253aca-49fc-486d-9a32-1e42d5c81aee",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "1667.93 米，约合 1.668 千米",
+        "同一经线上向南折回的约 0.005° 段。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/e1253aca-49fc-486d-9a32-1e42d5c81aee/completion.json"
+      ],
+      "reason": "全线length工具值1667.926203503452m，独立R乘0.015°弧度值1667.926203502994m，双单位正确。两段坐标、先北后南方向完整准确；说明没有按名称再额外乘二，未把重叠回程漏计。无行驶时间或通行承诺。状态不变。",
+      "clarity": "“并非同一路径叠加成往返两倍”结合两段明确列示，是拒绝按名称额外倍增；不是否认几何有部分重叠。"
+    },
+    {
+      "blindId": "fbaf772e-4b2b-40e8-bcf3-e824062a69be",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "1 667.93 米",
+        "1 111.9 米",
+        "556.0 米"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-06/fbaf772e-4b2b-40e8-bcf3-e824062a69be/completion.json"
+      ],
+      "reason": "先量取整线长度，再读取具体几何后才公开逐段说明，时点正确。独立球面计算两段约1111.950802m与555.975401m，最终1111.9/556.0近似在容差内，总长1667.93m及1.668km正确；北行与南折回方向及两段全计说明正确。逐段数值明确为基于已读纬差的估算，不冒充另一次工具测量。无修改。",
+      "clarity": "“两点均在经度114”实际列3个顶点，但每段两端都同经度，全文不产生端点数量或漏计歧义，仅记行文瑕疵。"
+    }
+  ]
+}

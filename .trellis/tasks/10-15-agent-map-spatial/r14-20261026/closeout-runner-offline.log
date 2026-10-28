@@ -1,0 +1,20 @@
+(node:30162) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ all 1076 original evidence files remain frozen; selection is exactly 136 never-started slots (498.226409ms)
+✔ closeout rejects task/model/data/scoring drift while allowing only declared evaluator repair (443.412835ms)
+✔ inherited ledger starts new request at 35, keeps old charges once and never restores window allowance (244.059096ms)
+✔ fresh observed balances lower the cumulative cap without double-charging old requests (154.640171ms)
+✔ explicit closeout freeze records original stop, preserved usage and only the approved remaining schedule (341.762706ms)
+{"entry":"D03-1-B","status":"recorded","completed":1,"planned":4,"usage":{"requests":35,"input":626134,"output":12635,"afp":172.57389999999995,"unknown":0}}
+{"entry":"D04-1-A","status":"recorded","completed":2,"planned":4,"usage":{"requests":36,"input":626234,"output":12645,"afp":172.58764999999994,"unknown":0}}
+{"entry":"D04-1-B","status":"recorded","completed":3,"planned":4,"usage":{"requests":37,"input":626334,"output":12655,"afp":172.60139999999993,"unknown":0}}
+{"entry":"D04-1-C","status":"recorded","completed":4,"planned":4,"usage":{"requests":38,"input":626434,"output":12665,"afp":172.66189999999992,"unknown":0}}
+✔ native offline continuation executes only D03-B then D04 ABC, preserves old evidence and refuses duplicate claim (21416.18115ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28419.401663

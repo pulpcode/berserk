@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "scope": "second closeout: original remaining 125 only; excludes D06-A historical-answer continuation",
+  "reviewedFreezeHash": "1e51c7720aadd287f27b5003b6d321b91384491e0a26e30291f4b575cebd999d",
+  "preservedEvidence": {
+    "original": 1076,
+    "firstCloseout": 1169,
+    "total": 2245,
+    "originalDriver": 28,
+    "firstCloseoutDriver": 32,
+    "protectedLegacy": 179
+  },
+  "remaining": 125,
+  "firstRemaining": "D07-1-B",
+  "inheritedTotals": {
+    "requests": 75,
+    "input": 1355944,
+    "output": 26692,
+    "afp": 350.66225,
+    "unknown": 0
+  },
+  "firstNewRequest": 76,
+  "lint": "pass",
+  "typecheck": "pass",
+  "tests": {
+    "independentClarification": 11,
+    "independentSelectionBudgetReplay": 3,
+    "nativeTwoSlotMockFromAuthorLog": "pass"
+  },
+  "flowReplay": {
+    "returnedRecords": 19,
+    "D03FirstFalseStop": "none",
+    "D07FalseStop": "none",
+    "D06PlainChoice": "allowed",
+    "D05TwoQuestionApiResponse": null,
+    "D05ActualApiJoinedPrompts": "unnecessary"
+  },
+  "unresolvedBlockingIssues": [],
+  "realModelCallsByReviewer": 0,
+  "realSecondClaimExists": false,
+  "executionGateWrittenByReviewer": false,
+  "evidence": [
+    "second-closeout-check.md",
+    "second-closeout-independent-clarification.log",
+    "second-closeout-independent-ledger.log",
+    "second-closeout-final-offline.log"
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "kind": "offline_real_business_api",
+  "providerRequests": 0,
+  "groups": [
+    {
+      "group": "A",
+      "canonicalHash": "e8381894e9d9dc04f2292926d5b3d3a99817c844abe946768c616ed399374ee1",
+      "prompt": "只查询本会话草稿 vehicle-points 图层的车辆记录：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。不使用来源系统的数据，只查询，不修改。",
+      "draft": {
+        "ref": {
+          "setId": "825afd98-951a-45fc-91d0-c44ae7b44c78",
+          "revision": 1
+        },
+        "title": "空间与标绘核对",
+        "hash": "e75d8760f0102b57f45d610d76dffd1d55984cdb2a34e9a648a6c3899f87f795",
+        "createdAt": "2026-10-26T13:31:11.679Z",
+        "layers": [
+          {
+            "layerId": "vehicle-points",
+            "name": "草稿车辆记录",
+            "order": 0,
+            "defaultVisible": true
+          }
+        ],
+        "objects": {
+          "items": [
+            {
+              "objectId": "vehicle-a",
+              "name": "车场甲",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 4,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.004,
+                  22.504
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-b",
+              "name": "车场乙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.008,
+                  22.508
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-c",
+              "name": "车场丙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 2,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.012,
+                  22.512
+                ]
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 50,
+          "total": 3,
+          "hasMore": false
+        }
+      },
+      "expected": {
+        "layer": "vehicle-points",
+        "objectIds": [
+          "vehicle-a",
+          "vehicle-b",
+          "vehicle-c"
+        ],
+        "names": [
+          "车场甲",
+          "车场乙",
+          "车场丙"
+        ],
+        "count": 3,
+        "counts": {
+          "车场甲": 4,
+          "车场乙": null,
+          "车场丙": 2
+        },
+        "knownTotal": 6,
+        "completeTotal": null,
+        "unit": "辆",
+        "expectedMissing": "车场乙.attributes.availableCount",
+        "draftOnly": true,
+        "noDispatchClaim": true
+      },
+      "sourceQueryStatus": "normal",
+      "sourceObjectCount": 6,
+      "actualCount": 3,
+      "knownTotal": 6,
+      "missing": [
+        "车场乙"
+      ],
+      "completeTotal": "unknown",
+      "draftUnchanged": true,
+      "providerRequests": 0
+    },
+    {
+      "group": "B",
+      "canonicalHash": "e8381894e9d9dc04f2292926d5b3d3a99817c844abe946768c616ed399374ee1",
+      "prompt": "只查询本会话草稿 vehicle-points 图层的车辆记录：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。不使用来源系统的数据，只查询，不修改。",
+      "draft": {
+        "ref": {
+          "setId": "9f04f080-3fde-4547-ab02-970434465bf7",
+          "revision": 1
+        },
+        "title": "空间与标绘核对",
+        "hash": "e75d8760f0102b57f45d610d76dffd1d55984cdb2a34e9a648a6c3899f87f795",
+        "createdAt": "2026-10-26T13:31:14.711Z",
+        "layers": [
+          {
+            "layerId": "vehicle-points",
+            "name": "草稿车辆记录",
+            "order": 0,
+            "defaultVisible": true
+          }
+        ],
+        "objects": {
+          "items": [
+            {
+              "objectId": "vehicle-a",
+              "name": "车场甲",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 4,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.004,
+                  22.504
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-b",
+              "name": "车场乙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.008,
+                  22.508
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-c",
+              "name": "车场丙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 2,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.012,
+                  22.512
+                ]
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 50,
+          "total": 3,
+          "hasMore": false
+        }
+      },
+      "expected": {
+        "layer": "vehicle-points",
+        "objectIds": [
+          "vehicle-a",
+          "vehicle-b",
+          "vehicle-c"
+        ],
+        "names": [
+          "车场甲",
+          "车场乙",
+          "车场丙"
+        ],
+        "count": 3,
+        "counts": {
+          "车场甲": 4,
+          "车场乙": null,
+          "车场丙": 2
+        },
+        "knownTotal": 6,
+        "completeTotal": null,
+        "unit": "辆",
+        "expectedMissing": "车场乙.attributes.availableCount",
+        "draftOnly": true,
+        "noDispatchClaim": true
+      },
+      "sourceQueryStatus": "normal",
+      "sourceObjectCount": 6,
+      "actualCount": 3,
+      "knownTotal": 6,
+      "missing": [
+        "车场乙"
+      ],
+      "completeTotal": "unknown",
+      "draftUnchanged": true,
+      "providerRequests": 0
+    },
+    {
+      "group": "C",
+      "canonicalHash": "e8381894e9d9dc04f2292926d5b3d3a99817c844abe946768c616ed399374ee1",
+      "prompt": "只查询本会话草稿 vehicle-points 图层的车辆记录：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。不使用来源系统的数据，只查询，不修改。",
+      "draft": {
+        "ref": {
+          "setId": "51c33af1-b205-4fbe-83dd-2add084f122d",
+          "revision": 1
+        },
+        "title": "空间与标绘核对",
+        "hash": "e75d8760f0102b57f45d610d76dffd1d55984cdb2a34e9a648a6c3899f87f795",
+        "createdAt": "2026-10-26T13:31:17.706Z",
+        "layers": [
+          {
+            "layerId": "vehicle-points",
+            "name": "草稿车辆记录",
+            "order": 0,
+            "defaultVisible": true
+          }
+        ],
+        "objects": {
+          "items": [
+            {
+              "objectId": "vehicle-a",
+              "name": "车场甲",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 4,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.004,
+                  22.504
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-b",
+              "name": "车场乙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.008,
+                  22.508
+                ]
+              }
+            },
+            {
+              "objectId": "vehicle-c",
+              "name": "车场丙",
+              "kind": "point",
+              "layerId": "vehicle-points",
+              "attributes": {
+                "availableCount": 2,
+                "unit": "辆"
+              },
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.012,
+                  22.512
+                ]
+              }
+            }
+          ],
+          "offset": 0,
+          "limit": 50,
+          "total": 3,
+          "hasMore": false
+        }
+      },
+      "expected": {
+        "layer": "vehicle-points",
+        "objectIds": [
+          "vehicle-a",
+          "vehicle-b",
+          "vehicle-c"
+        ],
+        "names": [
+          "车场甲",
+          "车场乙",
+          "车场丙"
+        ],
+        "count": 3,
+        "counts": {
+          "车场甲": 4,
+          "车场乙": null,
+          "车场丙": 2
+        },
+        "knownTotal": 6,
+        "completeTotal": null,
+        "unit": "辆",
+        "expectedMissing": "车场乙.attributes.availableCount",
+        "draftOnly": true,
+        "noDispatchClaim": true
+      },
+      "sourceQueryStatus": "normal",
+      "sourceObjectCount": 6,
+      "actualCount": 3,
+      "knownTotal": 6,
+      "missing": [
+        "车场乙"
+      ],
+      "completeTotal": "unknown",
+      "draftUnchanged": true,
+      "providerRequests": 0
+    }
+  ]
+}

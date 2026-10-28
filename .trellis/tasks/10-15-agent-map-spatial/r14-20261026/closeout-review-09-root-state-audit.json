@@ -1,0 +1,126 @@
+{
+  "mode": "root已知初评意见后的真实状态及独立计算复核，不宣称盲审",
+  "rows": [
+    {
+      "blindId": "27cb8b29-2c0e-418b-84b0-ad4db9567769",
+      "caseId": "D18",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.5149907994782552e-09
+    },
+    {
+      "blindId": "49463ffc-7679-43b6-a6f5-66e0114669e4",
+      "caseId": "D18",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.5149907994782552e-09
+    },
+    {
+      "blindId": "4cdc0df6-02de-49c9-98d6-9427d8872988",
+      "caseId": "D18",
+      "publicationCurrentUnchanged": true,
+      "savedExactOriginalGeometry": true,
+      "oldObjectsUnchanged": true,
+      "maxRadiusErrorM": 1.5149907994782552e-09
+    },
+    {
+      "blindId": "57f409ee-e34f-4ea9-9889-38f5950400a3",
+      "caseId": "D20",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "61b7763d-a2cf-4335-9bf2-fa6cfeea5de8",
+      "caseId": "D19",
+      "publicationCurrentUnchanged": true,
+      "onlyNameChanged": "note-k7"
+    },
+    {
+      "blindId": "6225c621-eb17-4c9a-a924-7cde02c950b1",
+      "caseId": "D20",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "991b245b-9cdb-4368-b370-4996d5707055",
+      "caseId": "D20",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true
+    },
+    {
+      "blindId": "b0a5bf7b-0fd2-4f6d-bd21-45bcb9d2a84c",
+      "caseId": "D21",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentClassifications": {
+        "r1": "boundary",
+        "r2": "interior",
+        "r3": "interior",
+        "edge": "boundary",
+        "outside": "exterior"
+      }
+    },
+    {
+      "blindId": "c1321114-17b4-48ec-82ba-844393b08478",
+      "caseId": "D22",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "all67NamesReadAndReported": true
+    },
+    {
+      "blindId": "d615df3a-b4ed-4473-b05e-55e99a8b2d55",
+      "caseId": "D19",
+      "publicationCurrentUnchanged": true,
+      "onlyNameChanged": "note-k7"
+    },
+    {
+      "blindId": "da910b3d-350e-420b-8237-b5421b1c50c8",
+      "caseId": "D21",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentClassifications": {
+        "r1": "boundary",
+        "r2": "interior",
+        "r3": "interior",
+        "edge": "boundary",
+        "outside": "exterior"
+      }
+    },
+    {
+      "blindId": "def1d74d-a059-4927-82fe-3eea4c475e1f",
+      "caseId": "D22",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "all67NamesReadAndReported": true
+    },
+    {
+      "blindId": "eec55d1b-8dd2-41d7-b739-78a94a663b72",
+      "caseId": "D21",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "independentClassifications": {
+        "r1": "boundary",
+        "r2": "interior",
+        "r3": "interior",
+        "edge": "boundary",
+        "outside": "exterior"
+      }
+    },
+    {
+      "blindId": "eed1cf87-9b2d-49ef-b837-087c8dfe90a4",
+      "caseId": "D19",
+      "publicationCurrentUnchanged": true,
+      "onlyNameChanged": "note-k7"
+    },
+    {
+      "blindId": "ef7281fa-cda7-4889-b1ed-e8a27ca8133f",
+      "caseId": "D22",
+      "publicationCurrentUnchanged": true,
+      "stateUnchanged": true,
+      "all67NamesReadAndReported": true
+    }
+  ],
+  "verdictsNotOverwritten": true
+}

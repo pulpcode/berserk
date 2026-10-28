@@ -1,0 +1,31 @@
+(node:65757) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"P01-1-G0","status":"recorded","completed":1,"planned":16,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"P01-1-GS","status":"recorded","completed":2,"planned":16,"usage":{"requests":4,"input":400,"output":40,"afp":0.055,"unknown":0}}
+{"entry":"P01-1-GT","status":"recorded","completed":3,"planned":16,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P01-1-GST","status":"recorded","completed":4,"planned":16,"usage":{"requests":8,"input":800,"output":80,"afp":0.11,"unknown":0}}
+{"id":"P07-1-GT","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GT","status":"recorded","completed":5,"planned":16,"usage":{"requests":25,"input":2500,"output":250,"afp":0.34375,"unknown":0}}
+{"id":"P07-1-GST","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GST","status":"recorded","completed":6,"planned":16,"usage":{"requests":42,"input":4200,"output":420,"afp":0.5775,"unknown":0}}
+{"id":"P07-1-G0","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-G0","status":"recorded","completed":7,"planned":16,"usage":{"requests":59,"input":5900,"output":590,"afp":0.8112500000000007,"unknown":0}}
+{"id":"P07-1-GS","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GS","status":"recorded","completed":8,"planned":16,"usage":{"requests":76,"input":7600,"output":760,"afp":1.045000000000001,"unknown":0}}
+{"entry":"P08-1-GST","status":"recorded","completed":9,"planned":16,"usage":{"requests":85,"input":8500,"output":850,"afp":1.1687500000000004,"unknown":0}}
+{"entry":"P08-1-G0","status":"recorded","completed":10,"planned":16,"usage":{"requests":94,"input":9400,"output":940,"afp":1.2924999999999998,"unknown":0}}
+{"entry":"P08-1-GS","status":"recorded","completed":11,"planned":16,"usage":{"requests":103,"input":10300,"output":1030,"afp":1.4162499999999991,"unknown":0}}
+{"entry":"P08-1-GT","status":"recorded","completed":12,"planned":16,"usage":{"requests":112,"input":11200,"output":1120,"afp":1.5399999999999985,"unknown":0}}
+{"entry":"P12-1-GST","status":"recorded","completed":13,"planned":16,"usage":{"requests":118,"input":11800,"output":1180,"afp":1.622499999999998,"unknown":0}}
+{"entry":"P12-1-G0","status":"recorded","completed":14,"planned":16,"usage":{"requests":124,"input":12400,"output":1240,"afp":1.7049999999999976,"unknown":0}}
+{"entry":"P12-1-GS","status":"recorded","completed":15,"planned":16,"usage":{"requests":130,"input":13000,"output":1300,"afp":1.7874999999999972,"unknown":0}}
+{"entry":"P12-1-GT","status":"recorded","completed":16,"planned":16,"usage":{"requests":136,"input":13600,"output":1360,"afp":1.8699999999999968,"unknown":0}}
+✔ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (92497.29907ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96443.868373

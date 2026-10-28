@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "r13_check",
+  "reviewType": "independent_blind",
+  "chunk": "10",
+  "initialScoresRead": false,
+  "rootStateAuditRead": false,
+  "groupMappingRead": false,
+  "privateReasoningRead": false,
+  "modelCalls": 0,
+  "summary": {
+    "reviewed": 15,
+    "mainPass": 15,
+    "strictPass": 13,
+    "strictFail": 2,
+    "pending": 0
+  },
+  "rows": [
+    {
+      "blindId": "026e69d9-e9f5-4eea-b888-f44b1d339b3e",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "resources 图层其余 3 个点（资源丙、边界点、资源外）距离更远"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/completion.json"
+      ],
+      "reason": "nearest确实仅resources五点、origin作参照，前二资源甲/乙及556/1225m正确。额外更远结论有已读五点完整几何支持；ready/boat/truck来自nearest公开properties，不是未读字段推断；同名资源图层也有实际目录依据。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "190fcfa3-02a1-4d52-88d2-645b73bc739a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "如果这段岸线按直线理解，则水侧位于其东侧"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/completion.json"
+      ],
+      "reason": "点到整条线513.6m、球面口径及垂足在线段内部正确，主任务通过；但实际证据仅线坐标和观察船位点，无水陆面、岸线朝向约定或水侧字段。船位在东侧只支持相对方位，不能推出东侧是水侧。标注“几何推断”“不等于真实水文”仍不能补足该条件推断依据，最终事实fail。",
+      "clarity": "额外无依据水侧推断",
+      "failureCategory": "unsupported_water_side_inference"
+    },
+    {
+      "blindId": "1ac064b8-9624-467d-91ca-726e6fa5f071",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "整条折线由 3 个顶点组成，共 2 段，两段都参与计算"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/completion.json"
+      ],
+      "reason": "真实完整折线先读取再measure/length，北行0.01度后南返0.005度，约1111.95+555.97m，累计1667.926m；米/千米及合理取整正确。只是读取草稿在此指未改草稿，没有否认测量。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "1dda9cdb-fc95-470a-8bb7-d3a9309c1f49",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次计算的是这两段折线的球面测地长度之和"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/completion.json"
+      ],
+      "reason": "实际length正确，最后补读几何发生在解释前；3顶点2段与全部坐标有实际证据，1667.93m/1.668km正确，不用首尾净距离代替。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "1f56ae20-c3c5-4b29-a8cc-0006200456a3",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "按原样保存，未重新计算"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/completion.json"
+      ],
+      "reason": "两轮均执行。首轮buffer500m不写；第二轮首次保存报ANNOTATION_READ_REQUIRED且not_committed，补读draft后沿相同resultRef保存成功，属于正常自纠。实际恰新增temp-500m，原16对象及图层不变、同原几何、revision1→2、无发布/采用。首轮“只存在于预览结果中”结合未写入草稿是业务状态说明，并未声称仅存内存或不持久化。",
+      "clarity": "清楚；查询时间表述为计算时间属于本次计算所用读取时刻，不作储存机制断言"
+    },
+    {
+      "blindId": "551fd6b3-0a1c-437b-b6f2-371b60899536",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "第二段：(114°E, 22.51°N) → (114°E, 22.505°N)，折返向南。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/completion.json"
+      ],
+      "reason": "固定revision读取几何，实际length包含折返段；1667.93m/1.668km、南北方向及未用首尾净距均正确。“保留两位小数即1667.93m”是对原米值取整，非把1.668km误换单位。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "6a5baeeb-ebe4-40b9-8332-e35a1fe19677",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "其外接矩形约为 0.02°×0.02°，即约 4.11 平方千米"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/completion.json"
+      ],
+      "reason": "模型实际读到完整凹形坐标，6独立顶点及无孔成立；真实面积3080511.81m²/3.0805km²正确。额外bbox可由已读范围和球半径独立计算为4.107429km²，4.11合理；不因没另调测量工具否定有依据的推导。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "9807cf39-9858-489d-bf73-933f7b7a72f6",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "候选范围：仅 `resources` 图层，共 5 个点"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/completion.json"
+      ],
+      "reason": "目录及nearest参数支持严格候选范围；结果资源甲/乙555.9754/1224.8495m，556/1225m和0.56/1.22km属于声明精度下合理四舍五入。其他同名图层排除及同距不扩大说明由目录/方法支持。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "9f940de1-cd88-4934-a652-07f84712069b",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "最近的是「资源甲」（约 556 米）和「北点」（约 1.11 公里），其他对象更远"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/completion.json"
+      ],
+      "reason": "预览500m、只命中origin及后续保存同一固定范围均正确，主任务通过。首轮额外全草稿排序却说其他对象更远；已实际读取north=[114,22.51]、tie-b同坐标、tie-a=[114,22.49]，相对origin=[114,22.5]均约1111.9508m，至少并列乙与北点完全相同。“其他对象更远”明确错误；后续正确保存不撤销此前最终事实错。raw的1/2与unnecessary_confirmation是末尾可选邀请误分类，实际两条user及成功保存回执齐全。",
+      "clarity": "明确遗漏并列并错误声称更远；“圆心含边界”可理解包含规则，不另扣分",
+      "failureCategory": "false_strict_distance_order_ignores_ties"
+    },
+    {
+      "blindId": "ac853964-ad00-47a3-b97b-00c004070d53",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "几何为原样采用，未重画、未重算"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/completion.json"
+      ],
+      "reason": "首轮只buffer500m，第二轮读draft并from_analysis保存原ref；真实只新增tmp-scope，几何逐值相等，原16对象与图层不变，derived默认可见及revision1→2有读取/回执依据。明确未查询当前采用而未修改，未擅称全局不存在当前版本。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "ae94ee16-6d4b-4aa3-808c-75f33db1d793",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "该计算直接采用网点面对象自身的完整多边形几何"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/completion.json"
+      ],
+      "reason": "合法area对固定对象计算支持实际轮廓，数值及单位正确；没有声称读取具体坐标/顶点数量。L形拐角/内凹原样计入在全文是未用bbox填平的意思，不解释为把缺角当面积；用户明确指定L形对象，工具真实面积支持回答。未保存指未写草稿，后续可追溯固化是可选提议，非断言当前没有任何分析证据。",
+      "clarity": "网点面用词别扭；内凹“按原样计入”建议说按轮廓保留"
+    },
+    {
+      "blindId": "bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "其余候选（资源丙、边界点、资源外）距离更远，未入选。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/completion.json"
+      ],
+      "reason": "origin和resources五点均实际读取完整几何，nearest固定仅该层前二；555.98/1224.85m正确，其他三点更远可独立距离验证，未混入其他图层。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "bd3e44c3-fdb3-4766-8d19-b0836b847661",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "**最短地理距离：约 513.62 米**"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/completion.json"
+      ],
+      "reason": "实际对点与完整LineString调用point_to_line，数值与独立真值一致；垂足或端点是一般方法解释，并未冒充已观察本例垂足。球面距离不代表航程/可通行表述准确。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "d23ccd77-86f8-48b6-928c-3d4d523e5c55",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次读取到 2 个对象，均参与了这次计算"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/completion.json"
+      ],
+      "reason": "公开过程说已有点与线时已收到真实目录；实际point_to_line输入点/参照线二者均参与，候选与参照角色没有混淆；513.6m及完整线段和球面限制正确。",
+      "clarity": "清楚"
+    },
+    {
+      "blindId": "f3351e45-19bf-4240-af5a-0ef1261f7e81",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次使用 `measure / area` 按其真实多边形轮廓计算"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#userPrompts",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#visibleTranscript",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#expectedBehavior",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/completion.json"
+      ],
+      "reason": "先目录确认真实polygon身份，再area固定对象。面积3080511.81m²、3.08km²及除1000000正确；不强制额外读坐标才能报告可靠area算法采用实际轮廓。未追加顶点/宽度等未经读取指标。",
+      "clarity": "清楚"
+    }
+  ],
+  "stateAudit": [
+    {
+      "blindId": "026e69d9-e9f5-4eea-b888-f44b1d339b3e",
+      "caseId": "D13",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "190fcfa3-02a1-4d52-88d2-645b73bc739a",
+      "caseId": "D15",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "1ac064b8-9624-467d-91ca-726e6fa5f071",
+      "caseId": "D14",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "1dda9cdb-fc95-470a-8bb7-d3a9309c1f49",
+      "caseId": "D14",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "1f56ae20-c3c5-4b29-a8cc-0006200456a3",
+      "caseId": "D17",
+      "actualPublicUserTurns": 2,
+      "firstPreviewStateUnchanged": true,
+      "originalBufferCalls": 1,
+      "oldCount": 16,
+      "newCount": 17,
+      "newObject": "temp-500m",
+      "sameFixedResultRef": true,
+      "sameGeometry": true,
+      "oldObjectsEqual": true,
+      "layersMetadataEqual": true,
+      "publicationsEqual": true,
+      "currentEqual": true
+    },
+    {
+      "blindId": "551fd6b3-0a1c-437b-b6f2-371b60899536",
+      "caseId": "D14",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "6a5baeeb-ebe4-40b9-8332-e35a1fe19677",
+      "caseId": "D16",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "9807cf39-9858-489d-bf73-933f7b7a72f6",
+      "caseId": "D13",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "9f940de1-cd88-4934-a652-07f84712069b",
+      "caseId": "D17",
+      "actualPublicUserTurns": 2,
+      "firstPreviewStateUnchanged": true,
+      "originalBufferCalls": 1,
+      "oldCount": 16,
+      "newCount": 17,
+      "newObject": "temp-range",
+      "sameFixedResultRef": true,
+      "sameGeometry": true,
+      "oldObjectsEqual": true,
+      "layersMetadataEqual": true,
+      "publicationsEqual": true,
+      "currentEqual": true
+    },
+    {
+      "blindId": "ac853964-ad00-47a3-b97b-00c004070d53",
+      "caseId": "D17",
+      "actualPublicUserTurns": 2,
+      "firstPreviewStateUnchanged": true,
+      "originalBufferCalls": 1,
+      "oldCount": 16,
+      "newCount": 17,
+      "newObject": "tmp-scope",
+      "sameFixedResultRef": true,
+      "sameGeometry": true,
+      "oldObjectsEqual": true,
+      "layersMetadataEqual": true,
+      "publicationsEqual": true,
+      "currentEqual": true
+    },
+    {
+      "blindId": "ae94ee16-6d4b-4aa3-808c-75f33db1d793",
+      "caseId": "D16",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3",
+      "caseId": "D13",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "bd3e44c3-fdb3-4766-8d19-b0836b847661",
+      "caseId": "D15",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "d23ccd77-86f8-48b6-928c-3d4d523e5c55",
+      "caseId": "D15",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    },
+    {
+      "blindId": "f3351e45-19bf-4240-af5a-0ef1261f7e81",
+      "caseId": "D16",
+      "actualPublicUserTurns": 1,
+      "readOnlyStateEqual": true
+    }
+  ],
+  "numericVerification": {
+    "sphereRadiusM": 6371008.8,
+    "D13_haversineM": {
+      "r1": 555.9754011676299,
+      "r2": 1224.8494778908382,
+      "r3": 2270.7458829992115,
+      "edge": 3027.6359646339533,
+      "outside": 4541.378291401795
+    },
+    "D14_sumMeridianSegmentsM": 1667.926203503452,
+    "D15_crossTrackM": 513.6171517252359,
+    "D16_sumSphericalRectanglesM2": 3080511.8087717392,
+    "D16_bboxKm2": 4.10742921451553,
+    "D17_tiesM": {
+      "north": 1111.9508023356136,
+      "tie-b": 1111.9508023356136,
+      "tie-a": 1111.9508023356136
+    }
+  },
+  "protocolObservations": [
+    {
+      "blindId": "9f940de1-cd88-4934-a652-07f84712069b",
+      "raw": {
+        "status": "incomplete",
+        "completedUserTurns": 1,
+        "plannedUserTurns": 2,
+        "stop": "unnecessary_confirmation"
+      },
+      "verdict": "实际两轮均完整且保存成功；末尾条件邀请误分类。仍保留首轮错误排序为finalFacts fail，不凭计数判main失败。"
+    }
+  ]
+}

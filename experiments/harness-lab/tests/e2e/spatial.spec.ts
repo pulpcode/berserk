@@ -21,7 +21,7 @@ async function setup(page:Page,coordinates:Position,options:{extra?:AnnotationFe
   const config=testConfig(dir,{seatId:'a',auth:{secret:'spatial-browser-secret-at-least-thirty-two-characters',sessionMs:28800000}});
   let resultRef='';
   const fake=await fakeRuntime(config,(context,index)=>{
-    for(const message of context.messages)if(message.role==='toolResult'&&message.toolName==='spatial_analyze')for(const part of message.content)if(part.type==='text'){const value=JSON.parse(part.text);if(value.format==='spatial.model-result.v1'||value.format==='spatial.model-result.v2')resultRef=value.data.resultRef;}
+    for(const message of context.messages)if(message.role==='toolResult'&&message.toolName==='spatial_analyze')for(const part of message.content)if(part.type==='text'){const value=JSON.parse(part.text);if(value.format==='spatial.model-result.v1'||value.format==='spatial.model-result.v2'||value.format==='spatial.model-result.v3')resultRef=value.data.resultRef;}
     if(index===0)return {tools:[{name:'spatial_analyze',arguments:options.request?options.request(input):{operation:'buffer',input:{kind:'annotation',ref:input,objectIds:['harbor']},distanceM:500}}]};
     if(index===2)return {tools:[{name:'annotation_read',arguments:{mode:'draft'}}]};
     if(index===3)return {tools:[{name:'annotation_from_analysis',arguments:{resultRef,layerId:'harbors',objectId:'saved-buffer',name:'保存的500米范围'}}]};

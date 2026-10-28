@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T03:29:55.133217+00:00",
+  "scope": "Incremental change: same five slots and seven messages, now inherit final fifth ledger with fourth 609 prefix",
+  "sourceHashes": {
+    "README.md": "402635a89f991259ae4811a7b2dbd1e668d8fbf85f6b4864f2aed8746c2fe952",
+    "runner.test.ts": "803b69dec7e9490fe3a129f3f9cca3659e4b702fe189eda19d3472bb202e53e2",
+    "runner.ts": "c5cef40718600e9450aa95f36130c8a008db240cad31216d0463aa92bc77943c",
+    "tsconfig.json": "6655e144469bc5bfc82b7c433aadd1f1106762179eae6ed30047a04088440ad1"
+  },
+  "addendumHash": "250a493b5be302d11fd9c8ad94950af54fe9373b8d97f31220357b4ff5d33540",
+  "verification": {
+    "targetedTests": {
+      "pass": 3,
+      "fail": 0,
+      "durationMs": 4360.989046
+    },
+    "typecheck": "pass",
+    "lint": "pass",
+    "fullNativeMockRepeated": false,
+    "previousFullNativeEvidence": "independent-check.json",
+    "realModelCallsByReviewer": 0
+  },
+  "findingsNotFixed": [],
+  "executionPreconditions": [
+    "Fifth segment all 11 scheduled rows settled without batch stop and all usage known",
+    "D06 copies complete fifth ledger with exact fourth 609-request prefix; each later supplement inherits only its predecessor",
+    "Per-slot freeze/gate/claim still required; no additional slots or automatic retry"
+  ],
+  "evidence": [
+    "independent-fifth-ledger-delta.log",
+    "independent-fifth-ledger-types.log",
+    "independent-fifth-ledger-lint.log",
+    "independent-fifth-ledger-check.md"
+  ]
+}

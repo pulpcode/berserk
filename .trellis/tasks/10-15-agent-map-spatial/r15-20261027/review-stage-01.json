@@ -1,0 +1,201 @@
+{
+  "rows": [
+    {
+      "blindId": "0f0cf04b-3d59-47df-9337-ffbe8ef845cf",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "港区内资源点：**4 个**",
+        "分类明细：内部 4、边界 0、外部 1，合计 5。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/completion.json#",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/model-visible-evidence.json#/observedMessages/3/messages/1",
+        ".local/spatial-r15/blind-stage-01/0f0cf04b-3d59-47df-9337-ffbe8ef845cf/model-visible-evidence.json#/observedMessages/3/messages/9"
+      ],
+      "reason": "完整草稿读取给出2层、资源层5点；分类证明4内部/0边界/1外部，名单齐全且未查询来源。未建立基线有当时宿主上下文baseRef:null支持。全部状态逐字段相同。",
+      "clarity": "“港区图层”澄清稍多，但对象归属说明属实。"
+    },
+    {
+      "blindId": "116f26d2-a5ab-4f1d-83bd-47a7f5f47663",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "范围内（含边界）共 **4** 个点：",
+        "本次为只读分析，未新增或修改草稿对象，也未保存分析结果。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/completion.json#",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/model-visible-evidence.json#/observedMessages/3/messages/8",
+        ".local/spatial-r15/blind-stage-01/116f26d2-a5ab-4f1d-83bd-47a7f5f47663/model-visible-evidence.json#/observedMessages/3/messages/10"
+      ],
+      "reason": "明确使用草稿，读取geometry和attributes后得到完整5点；四点名单、边界0及矩形角点与可见证据一致。未查询来源、未改变真实状态。",
+      "clarity": "“未保存分析结果”紧接“未新增或修改草稿对象”，按未执行保存动作理解，不扩大判为没有任何持久存储；建议写成未保存到草稿。"
+    },
+    {
+      "blindId": "31ce1825-cbef-4b68-8807-051debace3b4",
+      "mainRequirement": "fail",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "已按本会话草稿（修订 1）对港区做了点位分类，结果如下：",
+        "本次只做了分析，没有新建、修改或保存任何对象，也未核查态势来源系统里的其他港区资源点。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/completion.json#"
+      ],
+      "reason": "仅给草稿4点，没有询问来源并处理选择，也没有来源几何1点的完整条件答案，违反P01主任务。草稿限定下的分类、名单和只读陈述均有依据，故finalFacts/effects/boundaries仍通过，不把范围选择失败重复记成算错。",
+      "clarity": "来源标签清楚仍不能替代用户选择或完整双来源答案。",
+      "failureCategory": "unresolved_source_scope"
+    },
+    {
+      "blindId": "3f82e42f-2947-4c5e-b98b-57ad8a205d2b",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "这个“港区”在两个来源中同名，结果也不同，我分别报告：",
+        "**港区多边形内共有 4 个资源点**，均位于多边形内部："
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/completion.json#",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/model-visible-evidence.json#/observedMessages/4/messages/9",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/model-visible-evidence.json#/observedMessages/4/messages/10"
+      ],
+      "reason": "第一个公开答复已完整分别报告草稿4与来源几何1，成员登记2另有字段依据，未混为几何数量。脚本随后发送固定草稿选择，最终正确沿用原分类答4。两轮前后状态完全相同。",
+      "clarity": "“图层参照对象或资源图层”首答措辞松散，但正文分别说明区域与候选，续答明确两层角色；“未保存任何结果”按本次未执行保存动作理解。首答已完整，额外固定回复不作为成功必要条件。"
+    },
+    {
+      "blindId": "55173f0f-7805-45a9-89cc-01a53526b634",
+      "mainRequirement": "fail",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "本会话草稿（`setId 4b33ede6…`，修订 1）的港区范围内共有 **4 个资源点**：岸边甲、栈桥乙、码头丙、港池丁。",
+        "本次只做了只读计算，没有新增或修改草稿对象，也没有查询其他来源系统的同区域资源。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/completion.json#"
+      ],
+      "reason": "直接限定草稿，未询问来源、未给来源几何1点完整条件答案，P01主任务失败。其草稿四点结果与实际工具分类一致，未发现独立事实错误或越权写入。",
+      "clarity": "答案明确说明仅草稿，但仍未满足本题消歧要求。",
+      "failureCategory": "unresolved_source_scope"
+    },
+    {
+      "blindId": "5ae76959-7a5c-4e52-a169-0fcfa1c67cdd",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "结果为**面内 4 个、边界 0 个、面外 1 个**",
+        "若按**几何落在港区面内**统计：结果为内部 1 个、外部 1 个，即来源港车甲在面内，来源外港乙在面外"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/completion.json#",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/model-visible-evidence.json#/observedMessages/3/messages/8",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/model-visible-evidence.json#/observedMessages/3/messages/9",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/model-visible-evidence.json#/observedMessages/3/messages/11"
+      ],
+      "reason": "完整列出草稿4和来源几何1，符合P01条件答案路径。来源归属2有memberRefs/areaIds依据，并明确区别于几何位置；重复坐标、属性1辆和时间亦有可见读取支持。没有跨来源合并或写入。",
+      "clarity": "另列区域归属2令答复偏长，但有条件标注，不据此误判数字矛盾；尾部邀请收窄数字不抹去已完成的完整条件答案。"
+    },
+    {
+      "blindId": "5aea68df-8576-47be-937b-7a6a0f15813c",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "**范围内（含边界）共 4 个：**",
+        "分类合计：内部 4、边界 0、外部 1，资源图层候选点共 5 个（完整读取，无分页遗漏）。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/5aea68df-8576-47be-937b-7a6a0f15813c/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/5aea68df-8576-47be-937b-7a6a0f15813c/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/5aea68df-8576-47be-937b-7a6a0f15813c/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/5aea68df-8576-47be-937b-7a6a0f15813c/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/5aea68df-8576-47be-937b-7a6a0f15813c/completion.json#"
+      ],
+      "reason": "草稿完整列表与按resources/harbor执行的分类支持四点名单、总数和边界说明；没有来源查询，未写入。",
+      "clarity": "无实质表达争议。"
+    },
+    {
+      "blindId": "8764d351-3f55-4d5f-b7cc-f054473d8bad",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "**结果：包含边界在内，共有 4 个资源点位于港区范围内**",
+        "**计数**：候选 5 个；内部 4 个、边界上 0 个、外部 1 个。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/8764d351-3f55-4d5f-b7cc-f054473d8bad/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r15/blind-stage-01/8764d351-3f55-4d5f-b7cc-f054473d8bad/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r15/blind-stage-01/8764d351-3f55-4d5f-b7cc-f054473d8bad/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r15/blind-stage-01/8764d351-3f55-4d5f-b7cc-f054473d8bad/judge-input.json#/stateEvidence",
+        ".local/spatial-r15/blind-stage-01/8764d351-3f55-4d5f-b7cc-f054473d8bad/completion.json#"
+      ],
+      "reason": "仅使用草稿，固定ref分类覆盖resources全部5点；名单、分项、合计和无距离容差与真实工具结果一致。状态不变，无来源查询。",
+      "clarity": "无实质表达争议。"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-26",
+  "reviewer": "r13_check",
+  "scope": "Original F04-E0 turn 1 plus separately authorized save closeout; original verdict unchanged",
+  "reviewOrder": [
+    "public semantic evidence and actual effects",
+    "wire/configuration/usage/protection audit"
+  ],
+  "privateReasoningUsed": false,
+  "externalModelCallsByReviewer": 0,
+  "verdict": {
+    "protocol": "pass",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass"
+  },
+  "clarity": "清楚；Arc 属于略技术化表达，不构成独立事实错误",
+  "evidence": [
+    {
+      "claim": "已完成预览，未保存到草稿。",
+      "basis": "原首轮仅 annotation_read、spatial_analyze buffer 500m；该轮 before=after，revision=1，16对象。后续保存不反判此前未保存。"
+    },
+    {
+      "claim": "我会先读取草稿当前状态，确认「派生」图层与最新修订，再保存。",
+      "basis": "新增请求47调用 annotation_read(mode=draft)，返回 derived、revision=1、total=16、hasMore=false；随后请求48保存。"
+    },
+    {
+      "claim": "上一步预览得到的固定范围",
+      "basis": "annotation_from_analysis 参数及回执均引用原500m resultRef；新多边形几何与原首次buffer逐值一致；未新调用buffer。"
+    },
+    {
+      "claim": "草稿版本：修订 1 → 修订 2",
+      "basis": "回执 beforeRef.revision=1、afterRef.revision=2；实际草稿相同setId，revision变为2。"
+    },
+    {
+      "claim": "其余 16 个对象和 4 个图层的名称、顺序、可见性均未改动；本次只新增 1 个对象。",
+      "basis": "本次只执行一次 from_analysis；原模型可见16项完整清单、4图层元数据与单对象成功回执。宿主前后状态独立核验旧16对象逐项相等、4图层元数据相等，恰新增 tmp-range-500 到 derived。"
+    },
+    {
+      "claim": "共享发布版本和任务当前采用状态均未改变",
+      "basis": "只有草稿apply，无发布/采用调用；实际 publications、current 前后相同。未将“未改动”解读为未经查询断言全局不存在其他版本。"
+    },
+    {
+      "claim": "近似几何（Arc，每象限约 32 段）",
+      "basis": "原模型可见buffer返回明确每象限32段、近似边缘与精确距离阈值可能不同；含义成立，Arc略技术化，不按最坏解释升级为事实错误。"
+    }
+  ],
+  "effects": {
+    "firstPreviewStateUnchanged": true,
+    "originalResultRef": "spatial:a52bb21d-6d2c-4717-be73-48a46605c2c2:call_00_i1ngg0y0akaei6fe2frlx823",
+    "savedObjectId": "tmp-range-500",
+    "savedName": "临时范围",
+    "savedLayerId": "derived",
+    "oldObjects": 16,
+    "newObjects": 17,
+    "exactlyOneAdded": true,
+    "oldObjectsEqual": true,
+    "fourLayerMetadataEqual": true,
+    "geometryEqualsOriginalBuffer": true,
+    "sameSessionAndSet": true,
+    "beforeRevision": 1,
+    "afterRevision": 2,
+    "publicationsEqual": true,
+    "currentEqual": true
+  },
+  "executionAudit": {
+    "providerRequests": [
+      47,
+      48,
+      49
+    ],
+    "newTools": [
+      "annotation_read",
+      "annotation_from_analysis"
+    ],
+    "noBufferRerun": true,
+    "exactBusinessPromptsEachOnceInWire": true,
+    "restoredMessagesEqualOriginal": true,
+    "restoredStateEqualOriginal": true,
+    "originalNativeBytes": 20438,
+    "restoredNativeBytesAfter": 34357,
+    "nativePrefixUnchanged": true,
+    "wireModel": "deepseek-v4.1-flash",
+    "responseModel": "deepseek-v4-1-flash-261017",
+    "thinking": "disabled",
+    "maxTokens": 32768,
+    "topP": 1,
+    "temperature": "absent",
+    "reasoningEffort": "absent",
+    "reasoningTokens": 0,
+    "skillCatalogPresent": true,
+    "spatialSkillBodyReceived": false,
+    "annotationsSkillBodyReceived": false,
+    "childOrCompactionCalls": 0,
+    "noRetry": true,
+    "unknownUsage": 0,
+    "claimMatchesFreezeAndDirectory": true
+  },
+  "usage": {
+    "carried": {
+      "requests": 46,
+      "input": 897796,
+      "output": 11830
+    },
+    "new": {
+      "requests": 3,
+      "input": 56947,
+      "output": 446
+    },
+    "cumulative": {
+      "requests": 49,
+      "input": 954743,
+      "output": 12276
+    },
+    "nativeNewInput": 5491,
+    "nativeNewCacheRead": 51456,
+    "rawSseUsageMatchesLedger": true,
+    "original46LedgerRowsEqual": true,
+    "currencyCost": "未读取账单，不把token用量换算为人民币资费"
+  },
+  "protection": {
+    "fullCloseoutFreezeEqual": true,
+    "originalBatchFiles": 938,
+    "originalStateFiles": 15,
+    "historicalProtectedFiles": 5031,
+    "productFiles": 7,
+    "hashMismatches": 0,
+    "productDiffUnchanged": true
+  },
+  "limitations": [
+    "只补一条原保存用户轮，不是新独立样本；旧pending仍保留。",
+    "本次通过不会消除原F02-E0的纬度下界错误；不得覆盖旧批次结果。",
+    "补齐后该题两组均严格通过，没有新增配对改善；不能据此宣称稳定提高或正式90%验收达标。"
+  ],
+  "evidencePaths": [
+    ".local/spatial-r13/closeout-20261026/judge-input.json",
+    ".local/spatial-r13/closeout-20261026/review.json",
+    ".local/spatial-r13/closeout-20261026/before.json",
+    ".local/spatial-r13/closeout-20261026/provider-0047-wire-input.json",
+    ".local/spatial-r13/closeout-20261026/provider-0048-wire-input.json",
+    ".local/spatial-r13/closeout-20261026/provider-0049-wire-input.json",
+    ".local/spatial-r13/closeout-20261026/ledger.json",
+    ".local/spatial-r13/closeout-freeze-20261026.json",
+    ".local/spatial-r13/closeout-before-20261026.json"
+  ]
+}

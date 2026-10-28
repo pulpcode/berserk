@@ -1,0 +1,862 @@
+{
+  "groups": {
+    "A": {
+      "main": {
+        "planned": 48,
+        "pass": 3,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 45
+      },
+      "strict": {
+        "planned": 48,
+        "pass": 2,
+        "fail": 1,
+        "pending": 0,
+        "notExecuted": 45
+      },
+      "historical": {
+        "planned": 12,
+        "pass": 1,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 11
+      },
+      "new": {
+        "planned": 36,
+        "pass": 1,
+        "fail": 1,
+        "pending": 0,
+        "notExecuted": 34
+      },
+      "categories": [
+        {
+          "planned": 8,
+          "pass": 2,
+          "fail": 1,
+          "pending": 0,
+          "notExecuted": 5
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        }
+      ],
+      "repeated": {
+        "bothPass": 0,
+        "mixed": 0,
+        "bothFail": 0,
+        "incomplete": 24
+      }
+    },
+    "B": {
+      "main": {
+        "planned": 48,
+        "pass": 2,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 46
+      },
+      "strict": {
+        "planned": 48,
+        "pass": 2,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 46
+      },
+      "historical": {
+        "planned": 12,
+        "pass": 1,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 11
+      },
+      "new": {
+        "planned": 36,
+        "pass": 1,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 35
+      },
+      "categories": [
+        {
+          "planned": 8,
+          "pass": 2,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 6
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        }
+      ],
+      "repeated": {
+        "bothPass": 0,
+        "mixed": 0,
+        "bothFail": 0,
+        "incomplete": 24
+      }
+    },
+    "C": {
+      "main": {
+        "planned": 48,
+        "pass": 3,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 45
+      },
+      "strict": {
+        "planned": 48,
+        "pass": 3,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 45
+      },
+      "historical": {
+        "planned": 12,
+        "pass": 1,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 11
+      },
+      "new": {
+        "planned": 36,
+        "pass": 2,
+        "fail": 0,
+        "pending": 0,
+        "notExecuted": 34
+      },
+      "categories": [
+        {
+          "planned": 8,
+          "pass": 3,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 5
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        },
+        {
+          "planned": 8,
+          "pass": 0,
+          "fail": 0,
+          "pending": 0,
+          "notExecuted": 8
+        }
+      ],
+      "repeated": {
+        "bothPass": 0,
+        "mixed": 0,
+        "bothFail": 0,
+        "incomplete": 24
+      }
+    }
+  },
+  "comparisons": {
+    "BvsA": {
+      "improved": 1,
+      "regressed": 0,
+      "bothPass": 1,
+      "bothFail": 0,
+      "unresolved": 46,
+      "net": 1,
+      "details": [
+        {
+          "caseId": "D01",
+          "round": 1,
+          "outcome": "bothPass",
+          "historical": true
+        },
+        {
+          "caseId": "D02",
+          "round": 1,
+          "outcome": "improved",
+          "historical": false
+        },
+        {
+          "caseId": "D03",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D04",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D05",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D06",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D07",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D08",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D09",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D10",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D11",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D12",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D13",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D14",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D15",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D16",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D17",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D18",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D19",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D20",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D21",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D22",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D23",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D24",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D24",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D23",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D22",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D21",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D20",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D19",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D18",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D17",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D16",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D15",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D14",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D13",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D12",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D11",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D10",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D09",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D08",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D07",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D06",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D05",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D04",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D03",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D02",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D01",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        }
+      ]
+    },
+    "CvsB": {
+      "improved": 0,
+      "regressed": 0,
+      "bothPass": 2,
+      "bothFail": 0,
+      "unresolved": 46,
+      "net": 0,
+      "details": [
+        {
+          "caseId": "D01",
+          "round": 1,
+          "outcome": "bothPass",
+          "historical": true
+        },
+        {
+          "caseId": "D02",
+          "round": 1,
+          "outcome": "bothPass",
+          "historical": false
+        },
+        {
+          "caseId": "D03",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D04",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D05",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D06",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D07",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D08",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D09",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D10",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D11",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D12",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D13",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D14",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D15",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D16",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D17",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D18",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D19",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D20",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D21",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D22",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D23",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D24",
+          "round": 1,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D24",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D23",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D22",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D21",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D20",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D19",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D18",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D17",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D16",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D15",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D14",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D13",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D12",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D11",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D10",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D09",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D08",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D07",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D06",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D05",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        },
+        {
+          "caseId": "D04",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D03",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D02",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": false
+        },
+        {
+          "caseId": "D01",
+          "round": 2,
+          "outcome": "unresolved",
+          "historical": true
+        }
+      ]
+    }
+  },
+  "coverage": {
+    "planned": 144,
+    "reviewed": 8
+  },
+  "notIndependentHeldout": true,
+  "independentReview": {
+    "seed": "R14-20261026-reviewed-ccb4a11",
+    "total": 8,
+    "ids": [
+      "02140b65-e2bc-4d9e-8bdb-31a0796d78ee",
+      "0a61083e-0b6e-40d9-9559-79ea405aca51",
+      "1ea89df1-5d6e-4b48-aec2-1bd513ae993d",
+      "4b156603-1344-4836-ac68-4ba6551cf5de",
+      "4d3385cf-e160-445c-b3e4-87d8facd425a",
+      "5a6a8965-fd89-41fe-ae3f-988a2458d8b7",
+      "e2ad5325-6a8b-4815-b4a8-8ebb1493b1ba",
+      "fb5ece85-37b1-45f8-a2d6-a6f4fecd8792"
+    ],
+    "randomPassCount": 2
+  }
+}

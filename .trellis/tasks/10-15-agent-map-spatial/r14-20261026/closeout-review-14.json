@@ -1,0 +1,125 @@
+{
+  "rows": [
+    {
+      "blindId": "2d202d5c-e779-485e-a11b-4a9fafa17b14",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/2d202d5c-e779-485e-a11b-4a9fafa17b14/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D02：工具input严格限定草稿planned-points四点、target为同修订draft-zone，contains含边界返回临时甲乙丙3点；临时外未命中。没有来源查询、没有拒绝草稿作为计算候选或声称现实可派遣。名单、总数、范围与未修改状态均正确。",
+      "clarity": ""
+    },
+    {
+      "blindId": "4b70373b-c16f-4e59-bb6c-94362a9ac2bd",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/4b70373b-c16f-4e59-bb6c-94362a9ac2bd/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-14/4b70373b-c16f-4e59-bb6c-94362a9ac2bd/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-14/4b70373b-c16f-4e59-bb6c-94362a9ac2bd/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-14/4b70373b-c16f-4e59-bb6c-94362a9ac2bd/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/4b70373b-c16f-4e59-bb6c-94362a9ac2bd/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D02：仅分类planned-points四个草稿点相对draft-zone的位置；甲乙内部、丙边界、外在外，2+1=3正确。工具分类及独立矩形坐标复核支持逐点说明和2/1/1分项；WGS84平面拓扑、无距离容差有工具方法依据。全程只读，未查询来源或声称可派遣。",
+      "clarity": "“区域内边界上”指计入闭区域的边界点，表格和后文均明确边界1点，不理解为严格内部。"
+    },
+    {
+      "blindId": "6365de65-b06f-4fdb-ab71-a26eb9c0feda",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/6365de65-b06f-4fdb-ab71-a26eb9c0feda/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D02：图层名称检索失败后正常恢复为读取实际layerId，已读四点与区域几何，再完整分类甲乙内部、丙边界、外在外，含边界3点正确。没有把初次查询失败当数据不存在；没有来源混用、派遣推断或写入。末尾另存邀请是可选后续，未执行保存。",
+      "clarity": ""
+    },
+    {
+      "blindId": "cd09679b-ecd5-4a7c-bbb8-76d57ff8af26",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/cd09679b-ecd5-4a7c-bbb8-76d57ff8af26/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D01：先按西区和车辆关键词读取，再实际以areaIds=西区真实ID查询确认完整范围。西区可用车辆1点、availableCount4辆正确；道路不计、东区5辆不计，额外道路及时间属性都有先行依据。只访问situation，无草稿读取/修改，实际状态不变。",
+      "clarity": "查询时间03:34:52Z对应前两次请求；实际区域ID复核为03:34:56Z。原文未称该值是最后一次查询时间，不判捏造，但建议标明所对应请求。"
+    },
+    {
+      "blindId": "e00c858e-0b61-454d-9ace-160ce7f160fc",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/e00c858e-0b61-454d-9ace-160ce7f160fc/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D01：先将西区名称当areaIds检索为空，公开准确说明空结果并继续查询西区和全局车辆。已读西区memberRefs与资源areaIds支持唯一西区资源，1点4辆正确，东区资源排除，未用草稿。道路passability=open、成员数量及来源快照都有工具依据。没有必须使用特定查询路径才能通过的要求；真实状态只读。",
+      "clarity": "最终“查询条件…区域限定为西区（区域对象真实ID）”不够严密：实际没有以该真实ID再次发出areaIds查询。但全文明确说明按车辆全局查询、读取西区成员并排除东区，可合理理解为结果限定范围，并未明确声称“用该ID调用接口筛选”。因此本次按表达问题通过，保留原句/参数供复核，不把逻辑范围与实际工具参数强行等同。queriedAt03:34:39Z确实存在但属于初次空请求，成功读取在03:34:42Z，应分别标注。"
+    },
+    {
+      "blindId": "eee7ac64-cd62-4d03-a75d-a9ec2b363ff6",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-14/eee7ac64-cd62-4d03-a75d-a9ec2b363ff6/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-14/eee7ac64-cd62-4d03-a75d-a9ec2b363ff6/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-14/eee7ac64-cd62-4d03-a75d-a9ec2b363ff6/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-14/eee7ac64-cd62-4d03-a75d-a9ec2b363ff6/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-14/eee7ac64-cd62-4d03-a75d-a9ec2b363ff6/judge-input.json#/stateEvidence"
+      ],
+      "reason": "D01：先读取任务中的西区areaId，再实际用该ID查询situation，hasMore=false；完整西区有1个resource点、availableCount4辆，另1道路与区域本身均未计入。类型Point与属性有真实来源依据，未使用草稿同名点、未写入。",
+      "clarity": ""
+    }
+  ]
+}

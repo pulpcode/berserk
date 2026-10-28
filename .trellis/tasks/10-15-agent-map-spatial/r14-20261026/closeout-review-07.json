@@ -1,0 +1,402 @@
+{
+  "rows": [
+    {
+      "blindId": "25720b3a-9e31-4752-a168-4580221eceaf",
+      "mainRequirement": "pending",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pending",
+      "quotes": [
+        "已按草稿中的“基点”生成 800 米缓冲范围，仅作预览",
+        "如需保存到草稿图层，请明确告知目标图层"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/25720b3a-9e31-4752-a168-4580221eceaf/completion.json"
+      ],
+      "reason": "第一轮真实基于origin生成800m预览，完整性1、类型和方法均准确；既有记录没有作为基点，草稿及发布/采用状态保持。计划3轮但匿名轨迹只有首轮题干及完整答复，1200m和保存指定第二范围两题未发，因此整体任务待定，不能凭首轮成功判全部通过，也不把程序提前停推成模型拒绝执行。",
+      "clarity": "首轮尾部只是可选保存说明，不构成已授权保存；效果通过仅评价已发生的只读预览，未执行后两轮由main=pending保留。",
+      "failureCategory": "scheduled_turns_not_delivered"
+    },
+    {
+      "blindId": "381f3139-9d4d-431f-b8f8-99945186f5e7",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "一共有 **4 个**",
+        "内部 2 个、边界 2 个、外部 1 个"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/381f3139-9d4d-431f-b8f8-99945186f5e7/completion.json"
+      ],
+      "reason": "候选仅resources5点，参照region，同固定修订。真实classify_points返回r2/r3内部、r1/edge边界、outside外部；最终名单、总数4、总候选5和方法解释完整正确，未根据状态过滤或混入其他层。读到草稿总对象16和工具结果均在回答前可见。所有状态不变，未修改。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "388a4a9f-50ff-4ad3-b7ff-a41933886707",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "按原始生成几何保存，未抄写或重算坐标",
+        "本次仅新增这一对象"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/388a4a9f-50ff-4ad3-b7ff-a41933886707/completion.json"
+      ],
+      "reason": "第一轮只预览500m且状态不变；第二轮按授权保存首次固定resultRef。首次写入缺少当轮已读依据报错且未提交，补读后成功。独立比对after新增temp-range-500.geometry与首次spatialResult.geometry逐坐标完全相等，名称临时范围、layerId derived正确；所有旧feature及图层metadata不变，revision1→2，publication/current未变。回执真实支持最终保存说明，没有把API成功直接替代几何检查。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "39643f5b-cd39-4c57-9479-5b2361aee248",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次执行的只是只读缓冲计算",
+        "没有另行比对它的几何细节"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/39643f5b-cd39-4c57-9479-5b2361aee248/completion.json"
+      ],
+      "reason": "两轮按要求仅生成700m预览并确认未保存。先前已有old-range与origin未修改，两轮state全等；第二轮读取仍同setId/revision1和2对象，支持未发生草稿写入，且坦承未另行比几何，未虚称做过。没有误删历史临时范围、没有把本次未保存说成历史不存在。",
+      "clarity": "开头“基点图层参照对象里的点”有语序问题，但标明origin及参照对象层，不造成实际范围混淆。"
+    },
+    {
+      "blindId": "41377763-89fd-4919-b07b-73c58545063a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "含边界在内，观察区共有 4 个资源点",
+        "这些点是我在草稿里画的标绘点"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/41377763-89fd-4919-b07b-73c58545063a/completion.json"
+      ],
+      "reason": "真实classify_points针对指定5候选和region，结果及最终表逐点完全一致：甲/edge边界，乙/丙内部，outside外部，合计4。完整回答方法、数据版本、边界无容差、候选数与命中数关系，不混来源实际资源状态。全程只读、状态不变。",
+      "clarity": "“我在草稿里画的”复述用户“我画的点”时人称未转换，宜改成“你画的点”。全文只讨论既有草稿并明确未新增，不据这一口误认定模型实际声称执行过绘制或创建了对象。"
+    },
+    {
+      "blindId": "46b8ed5d-b117-4b22-bde9-eab042c23f32",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次没有新增草稿对象",
+        "“临时范围”未被删除或修改"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/46b8ed5d-b117-4b22-bde9-eab042c23f32/completion.json"
+      ],
+      "reason": "第一轮正确只用origin生成700m分析结果；第二轮重新读取相同revision1，保留origin与old-range，全部state相同。没有写入、删除、发布或采用；最终明确仅本次未保存并保留旧临时范围，不作历史无保存或仅内存断言。",
+      "clarity": "“没有它的删除或更新记录”结合本次没有写工具和修订不变，解释为本次未做这些操作；没有将摘要读取冒充额外历史审计。末尾可丢弃/保存是未来可选说明，当前未做。"
+    },
+    {
+      "blindId": "55ee3878-e6b4-4c5b-983a-ff51e6a8836e",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "上一轮预览的 500 米缓冲范围",
+        "未发布、未设为任务当前，其他内容保持不变。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/55ee3878-e6b4-4c5b-983a-ff51e6a8836e/completion.json"
+      ],
+      "reason": "第一轮无写入；第二轮读草稿后从首次500m固定ref保存derived/temp-range，name临时范围。独立逐坐标检查新增几何与原spatialResult.geometry完全相等；没有重生成，旧对象及图层metadata不变，仅revision1→2，publication/current未变化。最终陈述与实际效果一致。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "69f39ba0-9efe-45da-a3f1-0a77742af4ba",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "把第二次计算的 **1200 米**固定结果",
+        "第一次 800 米范围没有保存"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/10",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/11",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/12",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/visibleTranscript/13",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/69f39ba0-9efe-45da-a3f1-0a77742af4ba/completion.json"
+      ],
+      "reason": "三轮完整。800m/1200m各一次只读预览，保存轮使用第二1200m的确切ref；第一次尝试缺读依据未提交，补读后保存。独立比较新增derived/outer-ring-ref名称外圈参考及几何，准确匹配第二spatialResult而非第一；existing记录及origin完整不变，图层metadata、publication/current不变，仅新增授权面、revision1→2。最终无重算/无手绘和不保存第一圈有真实依据。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "6c24d772-f2d4-4e0f-a43d-58759c7db8f0",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "未新增草稿对象；「临时范围」未被删除或修改。",
+        "700 米缓冲结果仅停留在分析回执中"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/6c24d772-f2d4-4e0f-a43d-58759c7db8f0/completion.json"
+      ],
+      "reason": "正确生成700m预览，两轮均未调用写入工具；第二次读取仍revision1，两对象及图层与之前一致，状态快照完全相等。保留历史old-range不删除、不改动，明确本次没有落入草稿。",
+      "clarity": "“仅停留在分析回执中，没有落图”结合全文指未保存标注，而非内部仅内存或预览未显示；不扩大解释为存储机制断言。"
+    },
+    {
+      "blindId": "7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "将第二次 **1200 米** 的缓冲范围保存",
+        "第一次 800 米范围未保存"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/10",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/visibleTranscript/11",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/7f39ae5f-d2e4-43b4-bdf8-89baff0d7f55/completion.json"
+      ],
+      "reason": "公开过程在草稿读取后准确说明两个点；800m/1200m预览均保持草稿不变。保存轮读取后用第二次ref写derived/outer-ring，name外圈参考；after几何逐坐标等于该1200m原结果、不等于800m，旧两点及图层metadata不变，publication/current未变。没有先保存第一圈、重算或多写对象。",
+      "clarity": "“派生态图层”是图层名称的笔误，不影响真实derived归属或名单。"
+    },
+    {
+      "blindId": "819fbc27-37f4-47f1-b565-036c3b4e3a37",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "仅将名称由“旧集合点”改为“临时集合点”",
+        "同名的其他对象未被处理。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/819fbc27-37f4-47f1-b565-036c3b4e3a37/completion.json"
+      ],
+      "reason": "读取指定note-k7后只提交changes.name。独立对比所有旧feature：仅note-k7.name发生变化，位置、style、attributes、note、layerId均未变，same-name原同名对象完全不变。图层metadata不变、revision1→2，publication/current不变。最终旧名新名、图层集合点及只改此对象说明准确。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "a86c5d5c-1669-4f2e-9254-2696cdedd724",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "位置、样式、属性、备注和所属图层（notes）均未改动"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/a86c5d5c-1669-4f2e-9254-2696cdedd724/completion.json"
+      ],
+      "reason": "实际仅对note-k7改名，after与before的全对象比较只有name由旧集合点变临时集合点；另一个同名对象没有变化，图层和所有非名称字段均保留。revision1→2、无发布或采用，公开声明真实。不需要为证明patch未更改几何强制另一次读几何。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "a97a0682-2004-42ec-a6d5-8aecdd65078b",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "约 0.785 平方公里（500 米圆的理论面积",
+        "采用上次预览的固定范围几何"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/a97a0682-2004-42ec-a6d5-8aecdd65078b/completion.json"
+      ],
+      "reason": "首轮按origin只生成500m，未写草稿；次轮将首次固定ref保存derived/temp-range，几何逐坐标与原结果相同，旧feature及图层metadata全保留、仅新增授权对象且revision1→2，未发布/采用。额外面积明确为500m理想圆理论估计：π×500²/10^6≈0.785398km²，约0.785正确，不冒称工具实测面积；近似内接多边形略小与方法可推知一致。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次只提交了名称这一项修改",
+        "未涉及任何其他对象（包括同名对象）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/b3ba72b5-ea66-4ca1-8ed2-430f01e9dd17/completion.json"
+      ],
+      "reason": "真实patch仅note-k7.name；完整before/after比较确认仅该字段变化，其坐标、样式、属性、备注、所属notes层和另一个同名点均不变。只修订1→2，没有发布/采用。最终没有宣称未读取别层，也未误说明对象归属。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "cc205f02-24e5-4703-b5c6-580c1cb970d7",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "包含边界**的资源点共 **4 个**",
+        "采用 `contains`（闭区域包含边界）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/judge-input.json#/visibleTranscript/0",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/model-visible-evidence.json#/observedMessages",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-07/cc205f02-24e5-4703-b5c6-580c1cb970d7/completion.json"
+      ],
+      "reason": "按指定resources全5点与region执行闭区域contains，返回甲乙丙edge4项，外部outside未命中。最终完整给名称、总数及包含边界方法，属性来自可见items。题目不强制classify_points，正确filter是等价方法；未据名称判断候选或实际执行写入，状态不变。",
+      "clarity": "“底图版本”应为“草稿版本”，下文明确setId修订和草稿时点，未实际查询或声称更换底图。edge括号“边界点”是其对象名，全文未提供逐点内部/边界分类；“因此edge被计入”宜改为“该点在闭区域结果中命中”，不把名称当几何证明。"
+    }
+  ]
+}

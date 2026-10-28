@@ -1,0 +1,15 @@
+{
+  "selectedScores": "closeout-review-05.json",
+  "allStrictVerdictsAgree": true,
+  "differences": [
+    {
+      "blindId": "8f2f11dc-f7ee-44cb-8076-e896659035d7",
+      "dimension": "processFacts",
+      "primary": "na",
+      "independent": "pass",
+      "adjudicated": "na",
+      "reason": "过程只有“我先读取本会话草稿，确认图层和对象情况”这一计划性说明，没有待核验的已发生事实；不影响主任务或严格结果。"
+    }
+  ],
+  "originalReviewsPreserved": true
+}

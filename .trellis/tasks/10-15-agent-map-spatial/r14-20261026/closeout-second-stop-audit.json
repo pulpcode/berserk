@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-26T14:59:10.132272+00:00",
+  "stop": "unauthorized_draft_change",
+  "segmentStarted": 15,
+  "remaining": 110,
+  "next": "D12-1-A",
+  "cumulativeRequests": 159,
+  "input": 3032768,
+  "output": 61051,
+  "afp": 873.5313,
+  "unknownUsage": 0,
+  "filesProtected": 1519,
+  "driverFiles": 34,
+  "modelExecutionAllowed": false
+}

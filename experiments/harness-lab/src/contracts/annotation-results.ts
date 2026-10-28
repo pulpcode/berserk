@@ -1,6 +1,7 @@
-import type { AnnotationReceipt, AnnotationRef, AnnotationSelection } from './annotations.js';
+import type { AnnotationReadInput, AnnotationReceipt, AnnotationRef, AnnotationSelection } from './annotations.js';
 
 export const ANNOTATION_MODEL_FORMAT = 'annotation.model-result.v1';
+export const ANNOTATION_EXPLAINED_MODEL_FORMAT = 'annotation.model-result.v2';
 export interface AnnotationResult {
   schemaVersion: 1;
   origin: 'write' | 'replay' | 'receipt_read';
@@ -52,7 +53,11 @@ export function extractAnnotationResult(details: unknown, toolName: string, isEr
   if (text !== undefined) {
     try {
       const model: unknown = JSON.parse(text);
-      if (!record(model) || model.format !== ANNOTATION_MODEL_FORMAT || JSON.stringify(model.data) !== JSON.stringify(projectAnnotationResult(value.receipt))) return null;
+      if (!record(model) || JSON.stringify(model.data) !== JSON.stringify(projectAnnotationResult(value.receipt))) return null;
+      if (model.format === ANNOTATION_MODEL_FORMAT) {
+        if (Object.keys(model).some(key => !['format','data'].includes(key))) return null;
+      } else if (model.format !== ANNOTATION_EXPLAINED_MODEL_FORMAT || Object.keys(model).some(key => !['format','data','meaning'].includes(key))
+        || JSON.stringify(model.meaning) !== JSON.stringify(annotationReceiptMeaning(origin))) return null;
     } catch { return null; }
   }
   return structuredClone(value) as unknown as AnnotationResult;
@@ -73,4 +78,22 @@ export function projectAnnotationResult(actual: unknown): unknown {
     if (record(page) && Array.isArray(page.items)) page.items.forEach(omit);
   }
   return result;
+}
+
+/** Describes this delivery only, never the conversation's overall save state. */
+export function annotationReceiptMeaning(origin:AnnotationResult['origin']) {
+  return {effect:origin==='receipt_read' ? '本次读取既有动作回执，没有重新执行写入；data记录原动作、版本和对象。'
+    :origin==='replay' ? '本次返回同一动作的已有回执，没有重复写入；data记录原动作、版本和对象。'
+    :'本次动作已成功，具体动作、版本和涉及对象以data为准；其他动作的状态须分别核对。'};
+}
+export function annotationReadMeaning(actual:unknown, query:Partial<AnnotationReadInput>) {
+  if(!record(actual) || !record(actual.objects) || !Array.isArray(actual.objects.items) || typeof actual.objects.total!=='number') return;
+  const objectFilter=Boolean(query.objectIds || query.objectNames),layerFilter=Boolean(query.layerIds || query.layerNames);
+  return {
+    scope:objectFilter ? 'data.ref固定版本内，按data.query的图层及对象条件读取；layers仅列有匹配对象的图层。'
+      :layerFilter ? 'data.ref固定版本内，读取data.query指定图层的对象。' : '读取data.ref固定版本的全部图层及对象，objects.items按页返回。',
+    counts:`本次条件共匹配${actual.objects.total}个对象，本页返回${actual.objects.items.length}个；分页位置与后续页以objects.offset/hasMore为准。${objectFilter?'不能据此推断全草稿或全图层总数，零匹配也不表示整个草稿为空。':''}`,
+    effect:'本次只读取已有对象，没有创建或修改标绘。',
+    ...(Array.isArray(actual.nameLookupHints) && actual.nameLookupHints.length ? {nameLookupHints:'名称查询仍为零匹配；这些字符串与同版本、同图层范围内的对象ID完全一致。需要时保留原ref及图层限制，使用objectIds重新读取，不自动替换本次结果。'} : {}),
+  };
 }

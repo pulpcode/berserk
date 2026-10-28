@@ -1,0 +1,13 @@
+(node:16879) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D04 approved revision leaves the other 23 frozen tasks, schedule and old failure evidence unchanged (13.456365ms)
+{"d04Evidence":"/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/d04-api-evidence.json","groups":3,"providerRequests":0}
+✔ D04 A/B/C read all three draft points and missing attribute through real APIs; source stays normal (12804.731253ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15912.828407

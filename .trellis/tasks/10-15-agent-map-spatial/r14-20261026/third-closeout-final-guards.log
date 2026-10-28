@@ -1,0 +1,14 @@
+(node:35709) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ actual D12-C draft violation is task-local only under the explicit amendment and unchanged ownership/boundaries (7.334859ms)
+✔ wrong D17/D18 saves and D19 edits remain failures scoped to the owned draft only (3.953772ms)
+✔ owned draft title content is distinct from inconsistent metadata or non-writable ownership (4.474437ms)
+✔ third segment binds 3764 prior files, exact remaining 110, unchanged data and single inherited 159-request ledger (2794.006466ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7761.888896

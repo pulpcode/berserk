@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-26T14:28:43.074062+00:00",
+  "sourceEvidence": "Logged-in CUA Agent Plan read-only subscription UI: five-hour used350.66/10000, week471.536/35000, month1928.292/100000. No billing setting changes.",
+  "observedOverageEnabled": null,
+  "remainingAfp": {
+    "fiveHour": 9649.34,
+    "week": 34528.464,
+    "month": 98071.708
+  },
+  "externalUseReserveAfp": 1000,
+  "sharedUsePolicy": "reserved_other_usage"
+}

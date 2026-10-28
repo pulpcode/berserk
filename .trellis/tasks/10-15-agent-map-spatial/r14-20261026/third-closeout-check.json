@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T02:12:15.511731+00:00",
+  "scope": "Third segment 110 never-started tasks only; pending-choice continuation excluded",
+  "freezeHash": "13cc763108334fa2a851deb0203bf74a5c1aa01264b5a41e9c5c2174adbd1085",
+  "sourceHashes": {
+    "live.ts": "75ba852d82923c1b11721d785acf2c32fed085e0ef46de84649a0aa6d06a4db6",
+    "cases.ts": "1b3f7b825827df88d1060c6310659660bb93b601bf508c96ad8f927b865f030a",
+    "closeout-third.ts": "43c197c12db0da7fa2fecf5b490a233ce3363394d2b0fd3c3390026cb7e51e0a",
+    "closeout-third.test.ts": "ac1aee4eb32d9cb8eb3bab9d938e18b69118899252a86749199fcfc8e465faab"
+  },
+  "protocolHash": "979deeafa435c4a41b800eebd24f638bc7207224e1fc09366d8ad4c55dfd9087",
+  "evidence": [
+    "third-closeout-independent-final.log",
+    "third-closeout-independent-boundaries.log",
+    "third-closeout-independent-budget.log",
+    "third-closeout-independent-types.log",
+    "third-closeout-independent-lint.log",
+    "third-closeout-check.md"
+  ],
+  "verification": {
+    "independentThirdTests": {
+      "pass": 7,
+      "fail": 0,
+      "mockProviderRequests": 14
+    },
+    "independentExistingBoundaryTests": {
+      "pass": 9,
+      "fail": 0
+    },
+    "independentProviderBudgetTests": {
+      "pass": 5,
+      "fail": 0
+    },
+    "typecheck": "pass",
+    "lint": "pass",
+    "priorEvidenceCounts": {
+      "partial-evidence-manifest.json": 1076,
+      "closeout-first-segment-manifest.json": 1169,
+      "closeout-second-segment-manifest.json": 1519
+    },
+    "priorEvidenceUnchanged": 3764,
+    "protectedHistoricalFilesUnchanged": 179,
+    "syntheticDay": "2026-10-26",
+    "remainingCount": 110,
+    "firstRemaining": "D12-1-A",
+    "originalStartedNotReplayed": 34,
+    "carriedTotals": {
+      "requests": 159,
+      "input": 3032768,
+      "output": 61051,
+      "afp": 873.5313,
+      "unknown": 0
+    },
+    "firstNewRequestId": 160,
+    "realModelCallsByReviewer": 0,
+    "officialThirdClaimPresentAtCheck": false
+  },
+  "resolvedFindings": [
+    "Four isolated-draft content violations share task-only policy; ownership and other effects remain batch stops.",
+    "Unmapped necessary plain clarification cannot be hidden by a draft violation.",
+    "Writable ownership is mandatory; consistent document title is content, mismatched title metadata is not accepted as isolated content."
+  ],
+  "unfixedFindings": [],
+  "limits": [
+    "No model-quality conclusion is implied by offline fake transport.",
+    "No official freeze/gate/paid claim created by reviewer. Root must prepare matching freeze and gate.",
+    "Pending-choice three-slot continuation requires its own review and is not approved by this check."
+  ]
+}

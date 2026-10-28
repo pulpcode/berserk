@@ -647,7 +647,7 @@
     "completeReadCoverageT13": false
   },
   "resultGroundingR11": {
-    "plan": "current-improvement-plan.md",
+    "plan": "r11-20261023/loading-plan-history.md",
     "planCommit": "a4b065e",
     "authorization": "用户：提交git，然后开始实施",
     "status": "completed_grading_and_agent_evidence_review_pending_user_review",
@@ -913,6 +913,606 @@
       "finalContinuationNewRequests": 53,
       "originalAgentRequestsUnchanged": 235,
       "lastGraderFreeze": "bfa9d8ce0ae18cffa547e739187fad19f627a296ab04783651474a04d3082bf3"
-    }
+    },
+    "originalPlanPath": "current-improvement-plan.md"
+  },
+  "resultGroundingR12": {
+    "status": "closeout_completed_reviewed_no_further_execution",
+    "plan": "r12-20261025/plan.md",
+    "authorization": "用户：按R12方案开始实施，完成离线检查后执行计划内12项来源处理对照和12次推理对照；不自动重试或追加",
+    "baselineCommit": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "branch": "codex/agent-result-grounding",
+    "implementationAllowed": true,
+    "modelExecutionAllowed": false,
+    "proposedStages": {
+      "A": "离线评分修复，模型请求0",
+      "B": {
+        "taskTrials": 12,
+        "cases": 6,
+        "groups": 2,
+        "loading": "same_preload_for_both",
+        "candidate": "source_instructions_bundle"
+      },
+      "C": {
+        "continuationRequests": 12,
+        "snapshots": 6,
+        "configurations": 2,
+        "candidateConfig": "same_flash_thinking_enabled_high",
+        "notEndToEnd": true,
+        "documentationVerified": true,
+        "runtimeVerified": true,
+        "requestModel": "deepseek-v4.1-flash",
+        "expectedResponseModel": "deepseek-v4-1-flash-261017",
+        "controlThinking": {
+          "type": "disabled"
+        },
+        "candidateThinking": {
+          "type": "enabled"
+        },
+        "candidateReasoningEffort": "high",
+        "maxTokensBothGroups": 32768,
+        "topPBothGroups": 1,
+        "compatibilityPairIncludedIn12": true,
+        "runtimeVerificationSummary": "请求开启high的6次中5次有思考观测，C04为零；零观测不证明内部开关状态。原批次停止记录保留，按补充方案只完成剩余5次。"
+      }
+    },
+    "proposedBudget": {
+      "status": "approved_after_offline_gate",
+      "sourceTasks": {
+        "requests": 96,
+        "inputTokens": 2000000,
+        "outputTokens": 60000
+      },
+      "generationComparison": {
+        "requests": 12,
+        "inputTokens": 400000,
+        "outputTokens": 400000
+      },
+      "paidJudges": 0,
+      "totalRequests": 108,
+      "totalInputTokens": 2400000,
+      "totalOutputTokens": 460000
+    },
+    "automaticRetries": false,
+    "automaticExpansion": false,
+    "automaticFollowOnStage": false,
+    "newProviderRequests": 47,
+    "evidenceCommit": "f11beec",
+    "thinkingAudit": "r11-20261023/flash-thinking-audit-20261025.md",
+    "documentOrganization": "one_round_per_plan_keep_A_B_C_together",
+    "reviewScope": "R12独立方案；历史轮次仅引用，不合并正文；下一轮另建文件单独审阅",
+    "approvedPlanCommit": "2d9a669",
+    "offlineGatePassed": true,
+    "progress": "r12-20261025/README.md",
+    "check": "r12-20261025/closeout-check.md",
+    "resultReport": "r12-20261025/closeout-results.md",
+    "executionAudit": "r12-20261025/closeout-execution-audit.json",
+    "actualExecution": {
+      "B": {
+        "completedTaskTrials": 12,
+        "plannedTaskTrials": 12,
+        "requests": 35,
+        "inputTokens": 779986,
+        "outputTokens": 7712,
+        "baselineMainPassed": 6,
+        "baselineStrictPassed": 6,
+        "candidateMainPassed": 5,
+        "candidateStrictPassed": 5
+      },
+      "C": {
+        "plannedRequests": 12,
+        "attemptedRequests": 12,
+        "unexecutedRequests": 0,
+        "stop": null,
+        "inputTokens": 264572,
+        "outputTokens": 4328,
+        "reasoningTokensIncludedInOutput": 1324,
+        "completeComparablePairs": 4,
+        "historicalStop": "thinking_effect_unverified at original C04-C1; preserved",
+        "strictCorrectC0": 3,
+        "strictCorrectC1": 3,
+        "improvementPairs": 1,
+        "regressionPairs": 1
+      },
+      "automaticRetries": 0,
+      "additionalModelTests": 0,
+      "paidJudges": 0,
+      "unknownUsage": 0,
+      "r11EvidenceFilesUnchanged": 4002
+    },
+    "remainingRequestsRequireNewAuthorization": false,
+    "closeout": {
+      "status": "completed_reviewed",
+      "plan": "r12-20261025/closeout-plan.md",
+      "authorization": "用户：好的，那么补充方案设计，然后开工后续；承接只首次执行剩余5次建议",
+      "onlyPendingIds": [
+        "C04-C0",
+        "C05-C0",
+        "C05-C1",
+        "C06-C1",
+        "C06-C0"
+      ],
+      "additionalRequestLimit": 5,
+      "originalCBudgetUnchanged": true,
+      "offlineGatePassed": true,
+      "newRequests": 5,
+      "productChanges": false,
+      "automaticRetries": false,
+      "automaticExpansion": false,
+      "originalSevenReclassification": "r12-20261025/reasoning-existing-review-v2.json",
+      "offlineCheck": "r12-20261025/closeout-check.md",
+      "offlineTests": {
+        "fullSuite": {
+          "passed": 10,
+          "total": 10
+        },
+        "additionalStreamInterruptionCheck": "passed",
+        "typecheck": "passed",
+        "eslint": "passed",
+        "diffCheck": "passed"
+      },
+      "newInputTokens": 117669,
+      "newOutputTokens": 1740,
+      "newStrictCorrect": 4,
+      "newMainRequirementPass": 5,
+      "newObservedThinkingEnabled": 2,
+      "resultReport": "r12-20261025/closeout-results.md",
+      "executionAudit": "r12-20261025/closeout-execution-audit.json",
+      "allOriginal12Attempted": true,
+      "newProviderRequestsAllowed": 0,
+      "automaticFollowOnStage": false,
+      "finalIndependentCheckPassed": true
+    },
+    "initialActualExecution": {
+      "B": {
+        "completedTaskTrials": 12,
+        "plannedTaskTrials": 12,
+        "requests": 35,
+        "inputTokens": 779986,
+        "outputTokens": 7712,
+        "baselineMainPassed": 6,
+        "baselineStrictPassed": 6,
+        "candidateMainPassed": 5,
+        "candidateStrictPassed": 5
+      },
+      "C": {
+        "plannedRequests": 12,
+        "attemptedRequests": 7,
+        "unexecutedRequests": 5,
+        "stop": "thinking_effect_unverified",
+        "inputTokens": 146903,
+        "outputTokens": 2588,
+        "reasoningTokensIncludedInOutput": 992,
+        "completeComparablePairs": 1
+      },
+      "automaticRetries": 0,
+      "additionalModelTests": 0,
+      "paidJudges": 0,
+      "unknownUsage": 0,
+      "r11EvidenceFilesUnchanged": 4002
+    },
+    "originalResultReport": "r12-20261025/results.md",
+    "originalExecutionAudit": "r12-20261025/execution-audit.json",
+    "originalCheck": "r12-20261025/check.md"
+  },
+  "resultGroundingR13": {
+    "status": "closeout_completed_results_awaiting_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r13-20261025/plan.md",
+    "prd": "r13-20261025/prd.md",
+    "design": "r13-20261025/design.md",
+    "implement": "r13-20261025/implement.md",
+    "authorization": "2026-10-26 用户：提交方案git，然后开始本轮",
+    "implementationAllowed": true,
+    "modelExecutionAllowed": true,
+    "newProviderRequests": 49,
+    "baselineRevision": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "scope": "end_to_end_from_original_user_tasks",
+    "skillLoading": "native_on_demand_both_groups",
+    "skillChanges": false,
+    "productChanges": false,
+    "proposedTaskTrials": 10,
+    "cases": 5,
+    "groups": [
+      "E0_disabled",
+      "E1_enabled_high"
+    ],
+    "repetitions": 1,
+    "deduplicatedMaterials": {
+      "F01": [
+        "C01"
+      ],
+      "F02": [
+        "C02"
+      ],
+      "F03": [
+        "C03",
+        "C06"
+      ],
+      "F04": [
+        "C04"
+      ],
+      "F05": [
+        "C05"
+      ]
+    },
+    "oldScoresReusedInDenominator": false,
+    "oldResultsPreserved": true,
+    "proposedBudget": {
+      "status": "executed_once_within_budget",
+      "estimatedRequests": [
+        40,
+        70
+      ],
+      "requests": 96,
+      "inputTokens": 2500000,
+      "outputTokens": 400000,
+      "outputIncludesReasoning": true,
+      "maxTokensPerRequest": 32768,
+      "newPairReserve": {
+        "requests": 24,
+        "inputTokens": 600000,
+        "outputTokens": 131072
+      },
+      "paidJudges": 0,
+      "connectivityProbes": 0
+    },
+    "noPerTaskNumericCutoff": true,
+    "automaticRetries": false,
+    "automaticExpansion": false,
+    "automaticSecondRound": false,
+    "formalAcceptanceTarget": 0.9,
+    "approvedPlanCommit": "94fbdbc",
+    "liveExecutionRequiresOfflineGate": true,
+    "offlineGatePassed": true,
+    "historyBaseline": ".local/spatial-r13/history-before-20261026.json",
+    "offlineCheck": "r13-20261025/check.md",
+    "attemptedTaskTrials": 10,
+    "fullTaskCompleted": 10,
+    "harnessInterruptedTaskTrials": 0,
+    "results": "r13-20261025/combined-results.md",
+    "resultData": "r13-20261025/combined-results.json",
+    "executionAudit": "r13-20261025/execution-audit.json",
+    "independentBlindReview": "r13-20261025/blind-semantic-review.json",
+    "batch": ".local/spatial-r13/batch-20261026",
+    "sourceFreeze": ".local/spatial-r13/freeze-20261026.json",
+    "approvedBatchConsumed": true,
+    "furtherModelExecutionAllowed": false,
+    "automaticRetryPerformed": false,
+    "productFilesUnchanged": true,
+    "historicalFilesUnchanged": 4532,
+    "actualUsage": {
+      "requests": 49,
+      "inputTokens": 954743,
+      "outputTokens": 12276,
+      "reasoningTokensIncluded": 3649,
+      "unknownUsage": 0
+    },
+    "groupOutcomes": {
+      "E0": {
+        "mainPass": 5,
+        "strictPass": 4,
+        "strictFail": 1,
+        "pending": 0,
+        "planned": 5
+      },
+      "E1": {
+        "mainPass": 5,
+        "strictPass": 5,
+        "strictFail": 0,
+        "pending": 0,
+        "planned": 5
+      }
+    },
+    "pairedOutcomes": {
+      "completePairs": 5,
+      "bothStrictPass": 4,
+      "strictImprovement": 1,
+      "strictRegression": 0,
+      "incompletePairs": 0
+    },
+    "nextAction": "审阅补齐后完整对比；本次已完成，不追加测试或改产品",
+    "independentExecutionAudit": "r13-20261025/independent-execution-review.md",
+    "closeout": {
+      "status": "completed_and_independently_reviewed",
+      "authorization": "2026-10-26 用户批准提交后修复误停、离线验证后只补齐未执行保存轮，原记录保留，补测单列",
+      "priorResultsCommit": "1757116",
+      "protocol": "r13-20261025/closeout-protocol.md",
+      "slot": "F04-E0",
+      "originalUserTurn": 2,
+      "exactOriginalPromptOnly": true,
+      "originalTrialsRerun": 0,
+      "newProviderRequests": 3,
+      "offlineGatePassed": true,
+      "paidCallsAllowedOnlyAfterIndependentGate": true,
+      "combinedBudget": {
+        "requests": 96,
+        "inputTokens": 2500000,
+        "outputTokens": 400000
+      },
+      "alreadyUsed": {
+        "requests": 46,
+        "inputTokens": 897796,
+        "outputTokens": 11830
+      },
+      "automaticRetries": false,
+      "additionalTasks": false,
+      "historyProtection": ".local/spatial-r13/closeout-before-20261026.json",
+      "approvedContinuationConsumed": true,
+      "furtherModelExecutionAllowed": false,
+      "batch": ".local/spatial-r13/closeout-20261026",
+      "freeze": ".local/spatial-r13/closeout-freeze-20261026.json",
+      "newUsage": {
+        "requests": 3,
+        "inputTokens": 56947,
+        "outputTokens": 446
+      },
+      "results": "r13-20261025/closeout-results.md",
+      "independentReview": "r13-20261025/closeout-independent-review.md",
+      "executionAudit": "r13-20261025/closeout-execution-audit.json",
+      "allSemanticDimensions": "pass",
+      "oldRecordsUnchanged": true,
+      "productChanged": false
+    },
+    "originalGroupOutcomes": {
+      "E0": {
+        "mainPass": 4,
+        "strictPass": 3,
+        "strictFail": 1,
+        "pending": 1,
+        "planned": 5
+      },
+      "E1": {
+        "mainPass": 5,
+        "strictPass": 5,
+        "strictFail": 0,
+        "pending": 0,
+        "planned": 5
+      }
+    },
+    "originalFullTaskCompleted": 9,
+    "originalNewProviderRequests": 46,
+    "originalHarnessInterruptedTaskTrials": 1,
+    "combinedResults": "r13-20261025/combined-results.md",
+    "combinedData": "r13-20261025/combined-results.json",
+    "originalResults": "r13-20261025/results.md",
+    "originalResultData": "r13-20261025/results.json",
+    "originalHarnessDefect": "F04-E0完成后可选后续建议被误识别为阻塞澄清；第二用户轮未发，原completedUserTurns也误记0；完整任务待定。",
+    "harnessDefectFixed": true,
+    "auditParts": [
+      "r13-20261025/execution-audit.json",
+      "r13-20261025/closeout-execution-audit.json"
+    ]
+  },
+  "resultGroundingR14": {
+    "status": "executed_and_reviewed_144_with_preserved_pending",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r14-20261026/plan.md",
+    "authorization": "2026-10-26 用户：提交git，然后开始",
+    "planningOnly": false,
+    "implementationAllowed": true,
+    "modelExecutionAllowed": true,
+    "productBaseline": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "evaluatorStartingCommit": "e07f46e",
+    "plannedGroups": [
+      "flash_disabled",
+      "flash_enabled_high",
+      "pro_enabled_high"
+    ],
+    "plannedUniqueTasks": 24,
+    "historicalTasks": 6,
+    "newConstructedTasks": 18,
+    "repetitions": 2,
+    "proposedTaskTrials": 144,
+    "actualTaskTrials": 144,
+    "actualModelRequests": 673,
+    "proposedBudget": {
+      "modelRequests": 1600,
+      "inputTokens": 36000000,
+      "outputTokensIncludingReasoning": 3000000,
+      "afp": 12000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceEvaluated": false,
+    "nextAction": "本轮报告待用户审阅；不自动追加、重试或更换线上配置。",
+    "planCommit": "ccb4a11",
+    "actualTrials": 144,
+    "executionGate": "completed_no_additional_execution",
+    "blocker": null,
+    "check": "r14-20261026/check.md",
+    "caseCheck": "r14-20261026/check-cases.md",
+    "reviewDecision": "r14-20261026/d04-review.md",
+    "D04Authorization": "2026-10-26用户：只要题目和问答保持一致且和当前的系统不冲突就可以",
+    "D04Revision": "草稿vehicle-points数量缺字段；其余题目、144项预算不变",
+    "freezeHash": "e0924b62a5842d91eda23272972b07ccfd84d4557d3878a81372fc928bb094ac",
+    "liveBatch": ".local/spatial-r14/batch-20261026",
+    "remainingTaskTrials": 0,
+    "partialExecutionAudit": "r14-20261026/partial-execution-audit.json",
+    "results": "r14-20261026/complete-results.md",
+    "resultData": "r14-20261026/complete-results.json",
+    "mainPass": 134,
+    "strictPass": 113,
+    "strictFail": 25,
+    "semanticPending": 6,
+    "partialReviewComplete": true,
+    "actualUsage": {
+      "requests": 673,
+      "inputTokens": 12991534,
+      "outputTokensIncludingReasoning": 221979,
+      "afpEstimate": 3433.8106,
+      "unknownUsage": 0
+    },
+    "closeout": {
+      "authorization": "用户：进行修复，完成后续",
+      "plannedTrials": 136,
+      "originalTrialsRetained": 8,
+      "protocol": "r14-20261026/closeout-protocol.md",
+      "offlineGatePassed": true,
+      "automaticRetries": false,
+      "additionalTrialsAllowed": false,
+      "freezeHash": "1747c7427225734cff6074960ee182181346f48aefa2e510d886428580013bb2",
+      "batch": ".local/spatial-r14/closeout-20261026",
+      "status": "stopped_actual_unauthorized_draft_change",
+      "firstSegmentStop": "D07-1-A optional assistant-offer false stop",
+      "firstSegmentAttempted": 11,
+      "remaining": 110,
+      "secondSegment": {
+        "status": "stopped_actual_unauthorized_draft_change",
+        "freezeHash": "1e51c7720aadd287f27b5003b6d321b91384491e0a26e30291f4b575cebd999d",
+        "plannedTrials": 125,
+        "batch": ".local/spatial-r14/closeout-second-20261026",
+        "offlineGatePassed": true,
+        "actualTrials": 15,
+        "stop": "unauthorized_draft_change",
+        "audit": "r14-20261026/closeout-second-stop-audit.json"
+      }
+    },
+    "mainFail": 9,
+    "finalOfflineCheck": {
+      "passed": true,
+      "independentTests": 48,
+      "modelCalls": 0,
+      "report": "r14-20261026/final-offer-fix-independent.md"
+    },
+    "thirdAuthorization": {
+      "user": "判失败，然后继续完成剩余测试",
+      "date": "2026-10-27",
+      "protocol": "r14-20261026/third-closeout-protocol.md",
+      "plannedUnstartedTrials": 110,
+      "historyContinuations": [
+        "D06-1-A",
+        "D10-1-A",
+        "D10-1-B"
+      ],
+      "budgetIncrease": false
+    },
+    "thirdSegment": {
+      "plannedTrials": 110,
+      "preservedTrials": 34,
+      "freezeHash": "13cc763108334fa2a851deb0203bf74a5c1aa01264b5a41e9c5c2174adbd1085",
+      "batch": ".local/spatial-r14/closeout-third-20261027",
+      "status": "settled_at_D08_false_clarification",
+      "offlineGatePassed": true,
+      "actualTrials": 89,
+      "stop": "optional_missing_information_heading_false_stop"
+    },
+    "fourthSegment": {
+      "directory": ".local/spatial-r14/closeout-fourth-20261027",
+      "plannedSlots": 21,
+      "preservedSlots": 123,
+      "freezeHash": "fa4fa94e10ddc52b8239e77e37d922005f715fd7dd62813ba4f0528017ac8227",
+      "independentCheck": "r14-20261026/fourth-closeout-check.json",
+      "status": "settled_at_D04_false_clarification",
+      "actualTrials": 10,
+      "stop": "nested_conditional_offer_false_stop"
+    },
+    "latestCumulativeRequests": 673,
+    "fifthSegment": {
+      "directory": ".local/spatial-r14/closeout-fifth-20261027",
+      "plannedSlots": 11,
+      "preservedSlots": 133,
+      "status": "settled",
+      "freezeHash": "7ce839e647d74171a0f1df99bf49c7a4a57309095e7af53d9dfb6b4cf63445b4",
+      "stop": null
+    },
+    "pendingBootstrapFailure": {
+      "entry": "D06-1-A",
+      "reason": "expired_local_session_cookie_HTTP401",
+      "modelRequests": 0,
+      "newUsage": 0,
+      "originalEvidencePreserved": true
+    },
+    "completedSupplements": {
+      "count": 5,
+      "originalUserMessages": 7,
+      "newTaskSlots": 0,
+      "mapping": "r14-20261026/pending-choice/review-mapping.json",
+      "scores": "r14-20261026/pending-choice/reviewed-scores.json",
+      "additionalRequests": 23
+    },
+    "finalAudit": "r14-20261026/complete-execution-audit.json",
+    "previous34Report": "r14-20261026/combined-results.md",
+    "mainPending": 1,
+    "completeReviewFinished": true
+  },
+  "resultGroundingR15": {
+    "status": "results_ready_for_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r15-20261027/plan.md",
+    "authorization": "2026-10-27 用户：方案提交git，然后开始实施",
+    "planningOnly": false,
+    "implementationAllowed": true,
+    "modelExecutionAllowed": false,
+    "previousResultsCommit": "e34448a",
+    "productBaselineProposal": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "groupsProposed": [
+      "original",
+      "skill_only",
+      "tools_only",
+      "skill_and_tools"
+    ],
+    "modelProposal": "Flash enabled high, native on-demand Skill",
+    "proposedUniqueTasks": 12,
+    "proposedRepetitions": 1,
+    "proposedTaskTrials": 48,
+    "proposedBudget": {
+      "modelRequests": 600,
+      "inputTokens": 12000000,
+      "outputTokensIncludingReasoning": 1000000,
+      "afp": 2000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceThreshold": 0.9,
+    "nextAction": "用户审阅R15结果；未发出轮次保持待定，不自动补测、重试或追加。",
+    "planCommit": "6af1175",
+    "results": "r15-20261027/results.md",
+    "actualTaskSlots": 48,
+    "modelRequests": 173,
+    "estimatedAFP": 423.53662499999973,
+    "mainResults": {
+      "pass": 40,
+      "fail": 3,
+      "pending": 5
+    },
+    "strictResults": {
+      "pass": 38,
+      "fail": 5,
+      "pending": 5
+    },
+    "resultsCommit": "0cbe321e79765f14aae4debfa383126596f4e1cc"
+  },
+  "resultGroundingR16": {
+    "status": "planning_review",
+    "branch": "codex/agent-result-grounding",
+    "plan": "r16-20261028/plan.md",
+    "tasks": "r16-20261028/tasks.md",
+    "authorization": "2026-10-28：只提交R15、编写R16方案，待审阅；先不要执行",
+    "planningOnly": true,
+    "implementationAllowed": false,
+    "modelExecutionAllowed": false,
+    "productBaseline": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+    "candidateCommit": "0cbe321e79765f14aae4debfa383126596f4e1cc",
+    "groupsProposed": [
+      "G0",
+      "GS",
+      "GT",
+      "GST"
+    ],
+    "uniqueTasksProposed": 24,
+    "repetitionsProposed": 3,
+    "taskTrialsProposed": 288,
+    "budgetProposed": {
+      "requests": 3000,
+      "inputTokens": 60000000,
+      "outputTokensIncludingReasoning": 4000000,
+      "afp": 8000,
+      "accountReserveAfp": 1000
+    },
+    "automaticRetries": false,
+    "additionalTrialsAllowed": false,
+    "formalAcceptanceThreshold": 0.9,
+    "nextAction": "用户审阅R16方案及逐题清单后，再决定是否批准实施和测评。"
   }
 }

@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "freezeHash": "e5263113aa1d3f6f44a88c147570de606628163ec86f141f1832a81df6d52257",
+  "evidence": [
+    "check.md",
+    "runner-implementation.md",
+    "tools-implementation.md",
+    "case-offline-checks.md"
+  ],
+  "approvedScope": "12 tasks x 4 groups x 1; user approved plan then implementation; no retries or extras",
+  "createdAt": "2026-10-27T09:25:08.209Z",
+  "evidenceHashes": [
+    {
+      "path": "check.md",
+      "sha256": "e21e2d2de1270667018b5cf5d7f23e6057c623c4d4be406cf269383d09cfae3b"
+    },
+    {
+      "path": "runner-implementation.md",
+      "sha256": "edc141cfbf779de178c8175851df8a849d7638cb6008352618504f1faf31660f"
+    },
+    {
+      "path": "tools-implementation.md",
+      "sha256": "547c163107621a2ba851b43508108b5a2a7d2bcd0c867cc43459f9b4f49d83af"
+    },
+    {
+      "path": "case-offline-checks.md",
+      "sha256": "78c4e8495be023802f7a3e5626c8255c95f9318cefa9fe30cafe449f9df557ea"
+    }
+  ]
+}

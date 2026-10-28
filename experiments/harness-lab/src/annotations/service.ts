@@ -189,6 +189,11 @@ export class AnnotationService {
     }));
     if(normalized.objectIds?.some(id=>!objects.some(object=>object.objectId===id))) throw missing();
     const result: AnnotationReadResult={ref:version.ref,title:version.title,hash:version.hash,createdAt:version.createdAt,layers:layers.filter(layer=>(!normalized.objectIds && !normalized.objectNames) || layer.features.some(matchesObject)).map(({layerId,name,order,defaultVisible})=>({layerId,name,order,defaultVisible})),objects:pagination(objects,normalized.offset,normalized.limit)};
+    if(normalized.objectNames && objects.length===0) {
+      const hints=layers.flatMap(layer=>layer.features.filter(feature=>normalized.objectNames!.includes(feature.objectId))
+        .map(({objectId,name})=>({objectId,name,layerId:layer.layerId})));
+      if(hints.length) result.nameLookupHints=hints;
+    }
     if(Buffer.byteLength(JSON.stringify(result))>256*1024) throw validate.tooLarge();
     return result;
   }

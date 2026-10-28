@@ -1,0 +1,67 @@
+[
+  {
+    "id": "D06-1-A",
+    "blindId": "11220224-cc06-46f4-9c73-ad5a82399252",
+    "directory": ".local/spatial-r14/pending-D06-1-A-auth-recovery-20261027",
+    "original": ".local/spatial-r14/closeout-20261026/D06-1-A",
+    "newUsage": {
+      "requests": 2,
+      "input": 34995,
+      "output": 306,
+      "afp": 4.4126249999999345,
+      "unknown": 0
+    }
+  },
+  {
+    "id": "D10-1-A",
+    "blindId": "2ab6de05-a3e8-4dd6-8aab-5f85f56f3fb8",
+    "directory": ".local/spatial-r14/pending-D10-1-A-20261027",
+    "original": ".local/spatial-r14/closeout-second-20261026/D10-1-A",
+    "newUsage": {
+      "requests": 12,
+      "input": 282712,
+      "output": 2610,
+      "afp": 35.665250000000015,
+      "unknown": 0
+    }
+  },
+  {
+    "id": "D10-1-B",
+    "blindId": "51ccf131-aec9-4b06-970b-ac80aeacb1ee",
+    "directory": ".local/spatial-r14/pending-D10-1-B-20261027",
+    "original": ".local/spatial-r14/closeout-second-20261026/D10-1-B",
+    "newUsage": {
+      "requests": 2,
+      "input": 47823,
+      "output": 1059,
+      "afp": 6.110250000000178,
+      "unknown": 0
+    }
+  },
+  {
+    "id": "D18-1-B",
+    "blindId": "25720b3a-9e31-4752-a168-4580221eceaf",
+    "directory": ".local/spatial-r14/pending-D18-1-B-20261027",
+    "original": ".local/spatial-r14/closeout-third-20261027/D18-1-B",
+    "newUsage": {
+      "requests": 5,
+      "input": 116837,
+      "output": 1553,
+      "afp": 14.798749999999927,
+      "unknown": 0
+    }
+  },
+  {
+    "id": "D20-2-C",
+    "blindId": "991b245b-9cdb-4368-b370-4996d5707055",
+    "directory": ".local/spatial-r14/pending-D20-2-C-20261027",
+    "original": ".local/spatial-r14/closeout-third-20261027/D20-2-C",
+    "newUsage": {
+      "requests": 2,
+      "input": 41443,
+      "output": 354,
+      "afp": 22.988350000000082,
+      "unknown": 0
+    }
+  }
+]

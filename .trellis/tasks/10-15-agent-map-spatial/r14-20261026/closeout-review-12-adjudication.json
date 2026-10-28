@@ -1,0 +1,28 @@
+{
+  "selected": "closeout-review-12-adjudicated.json",
+  "main": {
+    "pass": 7,
+    "fail": 3
+  },
+  "strict": {
+    "pass": 6,
+    "fail": 3,
+    "pending": 1
+  },
+  "disagreements": [
+    {
+      "id": "a6050a7b-eaf1-4535-911c-1a0f214ac4dd",
+      "primary": "pending",
+      "independent": "pass",
+      "final": "pending",
+      "basis": "不会计入的宾语未明确：边界类别或整个范围；保留两种合理读法。"
+    },
+    {
+      "id": "c60ab3d5-bd3f-40b4-9ca3-2d411303fc13",
+      "finalFacts": "pending",
+      "strict": "fail",
+      "basis": "禁入区描述有歧义，但来源未消歧已经明确失败。"
+    }
+  ],
+  "originalReviewsPreserved": true
+}

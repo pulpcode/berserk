@@ -1,0 +1,14 @@
+{
+  "selected": "closeout-review-14-adjudicated.json",
+  "main": {
+    "pass": 6
+  },
+  "strict": {
+    "pass": 5,
+    "pending": 1
+  },
+  "pending": [
+    "e00c858e-0b61-454d-9ace-160ce7f160fc"
+  ],
+  "originalReviewsPreserved": true
+}
