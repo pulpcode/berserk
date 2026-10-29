@@ -15,12 +15,12 @@ import { createBackgroundExecutor } from '../../src/pi/background-runner.js';
 import { fakeRuntime, testConfig, type Reply } from '../pi/fake-runtime.js';
 import type { BackgroundJob } from '../../src/contracts/background.js';
 import type { Identity, TaskSpace } from '../../src/contracts/access.js';
-import type { AnalysisUpdateInput } from '../../src/contracts/continuous.js';
+import type { AnalysisUpdateInput, TaskDiscovery } from '../../src/contracts/continuous.js';
 
 const cleanup:Array<()=>Promise<unknown>|void>=[];
 afterEach(async()=>{for(const fn of cleanup.splice(0).reverse())await fn();});
-type Mode='quiet'|'significant'|'unassigned'|'missing'|'omit'|'race'|'wait'|'large'|'race-before-record'|'repair'|'repair-error'|'repair-wait'|'unrelated'|'input-repair';
-async function setup(options:{executionUnavailable?:boolean;timeoutMs?:number;beforeReply?:(stage:number)=>void;transformUpdate?:(update:AnalysisUpdateInput,stage:number,lastToolText:string)=>AnalysisUpdateInput}={}){
+type Mode='evidence'|'calculate'|'quiet'|'significant'|'unassigned'|'missing'|'omit'|'race'|'wait'|'large'|'race-before-record'|'repair'|'repair-error'|'repair-wait'|'unrelated'|'input-repair';
+async function setup(options:{inputText?:string;executionUnavailable?:boolean;timeoutMs?:number;beforeReply?:(stage:number)=>void;transformUpdate?:(update:AnalysisUpdateInput,stage:number,lastToolText:string)=>AnalysisUpdateInput}={}){
   const dir=await mkdtemp(join(tmpdir(),'axon-continuous-service-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir),access=new AccessStore(db),actors={} as Record<'a'|'b'|'c',Identity>;
   for(const name of ['a','b','c'] as const){const id=randomUUID();db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run(name,name,1,0);db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(id,name,name,name,'test-only','test-only');actors[name]=access.identity(id)!;}
@@ -33,16 +33,37 @@ async function setup(options:{executionUnavailable?:boolean;timeoutMs?:number;be
     const stage=stages.get(job.id)??0;stages.set(job.id,stage+1);options.beforeReply?.(stage);
     if(mode==='wait')return {waitForAbort:true};
     if(stage===0)return {tools:[{name:'analysis_task_candidates',arguments:{}}]};
+    if(mode==='evidence'&&stage===1){
+      const content=context.messages.at(-1)?.content;
+      const data=JSON.parse(typeof content==='string'?content:content?.filter(b=>b.type==='text').map(b=>b.text).join('')??'{}') as TaskDiscovery;
+      const source=data.assessmentSources!.find(e=>e.kind==='input'&&e.jobId!==job.id)??data.assessmentSources!.find(e=>e.kind==='input')!;
+      expect(source.truncated).toBe(true);expect(source.text.length).toBeLessThanOrEqual(300);
+      return {tools:[{name:'analysis_evidence_read',arguments:{id:source.id,offset:4900,limit:300}}]};
+    }
+    if(mode==='calculate'&&stage===1)return {tools:[{name:'analysis_calculate',arguments:{operation:'subtract',values:[3,3],unit:'辆',evidence:[{id:`task:${task.id}:${task.revision}`,quote:'3 辆'},{id:`task:${task.id}:${task.revision}`,quote:'3 辆'}]}}]};
     if(mode==='repair-wait' && stage>=2)return {waitForAbort:true};
     if((mode==='repair'||mode==='repair-wait') && stage===1)return {text:'已记录变化（实际遗漏）'};
     if(mode==='repair-error' && stage===2)return {text:'工具错误后仍试图结束'};
-    if(stage===1 || mode==='input-repair' && stage===2 || mode==='repair' && stage===2 || mode==='repair-error' && stage===3){if(mode==='race-before-record'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'查询后、记录前修改条件'});}
+    if(stage===1 || (mode==='calculate'||mode==='evidence') && stage===2 || mode==='input-repair' && stage===2 || mode==='repair' && stage===2 || mode==='repair-error' && stage===3){if(mode==='race-before-record'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'查询后、记录前修改条件'});}
       if(mode==='missing')return {text:'未记录的普通答复'};
       const inputs=host.continuous.store.inputs(host.continuous.store.batch(job.batchId!));
       const update:AnalysisUpdateInput={taskUpdates:mode==='omit'||mode==='unrelated'?[]:[{taskId:task.id,inputIds:mode==='repair-error'&&stage===1?[randomUUID()]:inputs.map(i=>i.id),change:'changed',reason:'资料影响已复核',significant:mode==='significant'||mode==='repair'}],unassigned:{significant:mode==='unassigned',reason:'未归属事实已核对'},uncertainties:[]};
+      const candidateMessage=[...context.messages].reverse().find(m=>m.role==='toolResult'&&m.toolName==='analysis_task_candidates');
+      const candidateContent=candidateMessage?.content;
+      const candidateText=typeof candidateContent==='string'?candidateContent:candidateContent?.filter(b=>b.type==='text').map(b=>b.text).join('')??'{}';
+      const discovery=JSON.parse(candidateText) as TaskDiscovery;
+      for(const item of update.taskUpdates){
+        const old=discovery.assessmentBaselines?.find(b=>b.taskId===item.taskId)?.assessment?.conditions[0];
+        const source=discovery.assessmentSources?.find(e=>e.kind==='task'&&e.id.includes(item.taskId));
+        if(!source)throw new Error('Fixture requires the actual discovered task source');
+        const status=item.significant?(old?.status==='blocked'?'met':'blocked'):(old?.status??'unknown');
+        item.assessment={summary:'最终研判：保留仍有依据的判断。',conditions:[{id:old?.id??'new:任务条件',name:'任务条件',before:old?.status??null,status,kind:'inference',change:!old?'initial':status===old.status?'unchanged':'changed',reason:'资料影响已复核',significant:item.significant,evidence:[{id:source.id,quote:source.text}]}],recommendations:[]};
+      }
       if(mode==='unrelated')update.taskCoverage=[{taskId:task.id,status:'unrelated',reason:'没有发现相关关键词'}];
       const previousContent=context.messages.at(-1)?.content;
       const lastToolText=typeof previousContent==='string'?previousContent:previousContent?.filter(block=>block.type==='text').map(block=>block.text).join('')??'';
+      if(mode==='evidence'){const read=JSON.parse(lastToolText) as {id:string;text:string};expect(read.text).toContain('尾部车辆正常');update.taskUpdates[0].assessment!.conditions[0].evidence=[{id:read.id,quote:'尾部车辆正常'}];}
+      if(mode==='calculate'){const calculated=JSON.parse(lastToolText) as {id:string};update.taskUpdates[0].assessment!.conditions[0].evidence=[{id:calculated.id,quote:lastToolText}];}
       return {text:'这是最终答复前的处理中说明',tools:[{name:'information_record_analysis_update',arguments:{...(options.transformUpdate?.(update,stage,lastToolText)??update)}}]};
     }
     if(mode==='race'&&!raceDone){raceDone=true;task=host.lab.access!.update(actors.a,task.id,task.revision,{goal:'人员已修订的新需求'});}
@@ -55,17 +76,53 @@ async function setup(options:{executionUnavailable?:boolean;timeoutMs?:number;be
   for(const source of ['one','two'])host.store.grant('seat','a',source,'manage');host.store.grant('seat','c','one','view');
   task=lab.access!.create(actors.a,{title:'公共任务',goal:'车辆需求 3 辆',visibility:'public',clientActionId:randomUUID()});
   const stream=await host.continuous.configure(actors.a,{name:'共同持续研判',sourceIds:['one','two'],profileId:'profile',recipientSeatIds:['b'],enabled:true,quietMs:0,maxWaitMs:1},{clientActionId:randomUUID()});
-  const accept=(id:string=randomUUID())=>host.accept('one',{sourceMessageId:id,title:'道路通知',text:'SOURCE_FACT:道路封闭，时间 10:00',occurredAt:'2026-10-26T10:00:00Z'});
+  const accept=(id:string=randomUUID())=>host.accept('one',{sourceMessageId:id,title:'道路通知',text:options.inputText??'SOURCE_FACT:道路封闭，时间 10:00',occurredAt:'2026-10-26T10:00:00Z'});
   async function settled(count:number){await vi.waitFor(()=>{expect(host.store.listJobs()).toHaveLength(count);expect(host.store.listJobs().some(j=>j.status==='running'||j.status==='queued')).toBe(false);},{timeout:10000,interval:20});return host.store.listJobs()[0];}
   return {dir,lab,host,actors,stream,accept,settled,fake,setMode:(value:Mode)=>{mode=value;},task:()=>task,revise:()=>{task=lab.access!.update(actors.a,task.id,task.revision,{goal:`需求更新 ${task.revision}`});return task;}};
 }
 
 describe('continuous queue, native evidence and atomic publication',()=>{
+  it('pages long source originals and restores the same historical source in the next round',async()=>{
+    const s=await setup({inputText:'x'.repeat(5000)+'尾部车辆正常'});s.setMode('evidence');
+    await s.accept();const first=await s.settled(1);
+    const firstUpdate=s.host.continuous.store.publication(first.id).update!;
+    expect(s.host.continuous.store.publication(first.id).status).toBe('published');
+    const source=firstUpdate.assessmentSources!.find(e=>e.kind==='input')!;
+    expect(source.text).toBe('');expect(source.excerpts).toEqual(['尾部车辆正常']);
+    await s.accept();const next=await s.settled(2);
+    expect(s.host.continuous.store.publication(next.id).status).toBe('published');
+    const snapshot=await createBackgroundExecutor(s.lab).read(next,s.stream.profile);
+    const read=snapshot!.messages.find(m=>m.requestId===next.requestId&&m.toolName==='analysis_evidence_read')!;
+    expect(read.isError).toBeFalsy();expect(JSON.parse(read.text)).toMatchObject({id:source.id,offset:4900});
+    expect(s.host.continuous.store.publication(next.id).update!.taskUpdates[0].assessment!.conditions[0].id).toBe(firstUpdate.taskUpdates[0].assessment!.conditions[0].id);
+  });
+  it('preserves the fixed candidate receipt when calculation adds evidence before recording',async()=>{
+    const s=await setup();s.setMode('calculate');await s.accept();const job=await s.settled(1);
+    expect(s.host.continuous.store.publication(job.id).status).toBe('published');
+    const detail=await s.host.continuous.detail(s.actors.b,job.id);
+    const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
+    const candidate=snapshot!.messages.find(m=>m.toolName==='analysis_task_candidates')!;
+    const calculation=snapshot!.messages.find(m=>m.toolName==='analysis_calculate')!;
+    expect(calculation.isError).toBeFalsy();
+    expect(candidate.taskDiscovery!.assessmentSources!.some(e=>e.kind==='calculation')).toBe(false);
+    expect(detail.update!.assessmentSources!.some(e=>e.kind==='calculation')).toBe(true);
+    expect(detail.update!.taskUpdates[0].assessment!.conditions[0].evidence[0].quote).toBe(calculation.text);
+    expect(snapshot!.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(0);
+    expect(s.fake.calls).toHaveLength(4);
+    const condition=detail.update!.taskUpdates[0].assessment!.conditions[0];
+    await s.accept();const next=await s.settled(2);
+    const nextDetail=await s.host.continuous.detail(s.actors.b,next.id);
+    expect(nextDetail.update!.taskUpdates[0].previousJobId).toBe(job.id);
+    expect(nextDetail.update!.taskUpdates[0].assessment!.conditions[0]).toMatchObject({id:condition.id,before:condition.status,change:'unchanged'});
+    const historical=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,section:'result'});
+    expect(historical.detail!.update!.taskUpdates[0].assessment!.conditions[0]).toEqual(condition);
+  });
+
   it.each(['repair','repair-error'] as const)('repairs %s using native follow-up in one request and publishes only the final result',async mode=>{
     const s=await setup();s.setMode(mode);await s.accept();const job=await s.settled(1);
     expect(s.host.continuous.store.publication(job.id).status).toBe('published');
     const detail=await s.host.continuous.detail(s.actors.b,job.id);
-    expect(detail.text).toBe('最终研判：保留仍有依据的判断。');
+    expect(detail.text).toContain('最终研判：保留仍有依据的判断。');
     const snapshot=await createBackgroundExecutor(s.lab).read(job,s.stream.profile);
     expect(snapshot?.messages.filter(m=>m.role==='user'&&m.text.includes('[系统补做提示'))).toHaveLength(1);
     expect(snapshot?.messages.every(m=>m.requestId===job.requestId)).toBe(true);
@@ -137,7 +194,7 @@ describe('continuous queue, native evidence and atomic publication',()=>{
     const s=await setup();const receipt=await s.accept('same');const job=await s.settled(1);
     expect(job.kind).toBe('continuous_analysis');expect(job.eventId).toBeUndefined();expect(s.host.store.listDeliveries()).toEqual([]);
     expect(await s.accept('same')).toEqual(receipt);expect(s.host.continuous.rounds(s.actors.b).total).toBe(1);expect(s.host.continuous.rounds(s.actors.c).total).toBe(0);
-    const detail=await s.host.continuous.detail(s.actors.b,job.id);expect(s.fake.calls).toHaveLength(3);expect(detail.text).toBe('最终研判：保留仍有依据的判断。');expect(detail.processingText).toContain('处理中说明');expect(detail.inputs?.[0].event?.text).toContain('SOURCE_FACT');expect(detail.update?.taskUpdates[0].taskRevision).toBe(1);
+    const detail=await s.host.continuous.detail(s.actors.b,job.id);expect(s.fake.calls).toHaveLength(3);expect(detail.text).toContain('最终研判：保留仍有依据的判断。');expect(detail.processingText).toContain('处理中说明');expect(detail.inputs?.[0].event?.text).toContain('SOURCE_FACT');expect(detail.update?.taskUpdates[0].taskRevision).toBe(1);
     const historical=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,section:'evidence'});expect(historical.detail?.inputs?.[0].event?.occurredAt).toBe('2026-10-26T10:00:00Z');
     expect(new ContinuousStore(new BackgroundStore(s.lab.access!.db)).publication(job.id).status).toBe('published');
   });
@@ -274,9 +331,10 @@ describe('continuous queue, native evidence and atomic publication',()=>{
   it('makes oversized fixed evidence recoverable through exact bounded slices',async()=>{
     const s=await setup();s.setMode('large');await s.accept();const job=await s.settled(1);
     const index=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,section:'evidence'});
-    expect(index.detail).toBeUndefined();expect(index.evidenceIndex?.find(e=>e.id==='result')?.length).toBe(320000);
+    expect(index.detail?.text).toContain('最终研判：保留仍有依据的判断。');expect(index.evidenceIndex?.find(e=>e.id==='native-answer')?.length).toBe(320000);
+    expect(index.detail?.text).not.toContain('证据字符');
     let text='',offset=0;
-    for(;;){const slice=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,evidenceId:'result',textOffset:offset,textLimit:32000});expect(Buffer.byteLength(JSON.stringify(slice))).toBeLessThan(256*1024);text+=slice.evidence!.text;if(slice.evidence!.nextOffset===undefined)break;offset=slice.evidence!.nextOffset;}
+    for(;;){const slice=await s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,evidenceId:'native-answer',textOffset:offset,textLimit:32000});expect(Buffer.byteLength(JSON.stringify(slice))).toBeLessThan(256*1024);text+=slice.evidence!.text;if(slice.evidence!.nextOffset===undefined)break;offset=slice.evidence!.nextOffset;}
     expect(text).toBe('证据字符'.repeat(80000));
     await expect(s.host.continuous.readCurrent(s.stream.epochId,{jobId:job.id,evidenceId:'tool:foreign'})).rejects.toMatchObject({code:'CONTINUOUS_NOT_FOUND'});
   });

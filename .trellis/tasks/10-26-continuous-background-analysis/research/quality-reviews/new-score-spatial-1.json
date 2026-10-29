@@ -1,0 +1,480 @@
+{
+  "run": "new-spatial-1",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "把明确无区域限制的第1版按发布时间08:00缩窄为瞬时状态，凭空要求09—12时另行放行确认。",
+      "evidenceIssues": [
+        "来源有效期与发布时间混淆，已知无管制变成待核"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": [
+        "来源没有已生效禁令，却写没有显示限制解除；核心仍明确本批不构成约束"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "把明确无区域限制的第1版按发布时间08:00缩窄为瞬时状态，凭空要求09—12时另行放行确认。",
+      "evidenceIssues": [
+        "来源有效期与发布时间混淆，已知无管制变成待核"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务覆盖中正确标记unrelated：r2与当前边界不相交，未漏检。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务覆盖中正确标记unrelated：r2与当前边界不相交，未漏检。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确确认改走r2解除区域限制，却新增与E同通道协同确认作为整体可执行前提。",
+      "evidenceIssues": [
+        "无道路容量/冲突依据，将相隔30分钟同路提升为放行门槛"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "E",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "路线正常判断正确，但把同通道协调列为剩余缺口，缺少实际冲突或容量约束来源。",
+      "evidenceIssues": [
+        "同通道间隔30分钟被新增为执行门槛"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": [
+        "D路线尚未知，摘要擅自断言D与B路线不同；时段不同故核心不受影响正确"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛",
+        "09:40点时刻与09:30—10:30区间写作相差50分钟，实际50分钟是到结束的差而非窗口重叠时长"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": [
+        "建议把未走r2的情况直接归为与C协调进场，缺少路线依据；09:40至10:30的50分钟不是点与区间重叠时长"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。 摘要还误称D不进入work-w，实际r1与work-w相交。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛",
+        "D路线与C作业区相交被写成不进入，与同轮D条件和工具相矛盾"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "D",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确识别管制边界缺失，但把仍可计算的r1与work-w相交条件降为unknown，混淆作业区关系与管制区关系。",
+      "evidenceIssues": [
+        "zone-z缺失不使r1/work-w几何失效"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。",
+      "evidenceIssues": [
+        "无来源的作业点清单必查门槛"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "区域版本、任务实际路线与时段判断符合独立预期；几何关系未直接等同管制。",
+      "evidenceIssues": []
+    }
+  ],
+  "notes": [
+    "采用spatial-multi-task-oracle及errata：R2 C仍部分覆盖，R3 C全覆盖；R12输入恢复的是修订3的W几何。",
+    "一般未来更新提醒、装载司机未知、可行状态下建议现场协调不扣；明确将协调/点位清单列为未满足执行前提则扣。",
+    "正式结构中的错误不能由同轮其他任务的正确结果抵消。",
+    "R4重复不评分；E R0/R1覆盖清单unrelated正确，计通过。",
+    "raw自由答复不替代正式结果；本表不对提醒数量或成本重复评分。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 9,
+      "detail": "原生明确r1与work-w相交，正式C摘要却说D不进入work-w；正式D条件正确不能抵消C错误。"
+    },
+    {
+      "round": 11,
+      "detail": "原生整体说空间结论全部失效，正式D进一步把仍有几何的r1/work-w关系降unknown；本表按正式条件扣分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生把限制解除后的现场协同也列为未落实，正式A/E较收敛；正式C仍把作业点排程列实质前提，按正式逐任务评分。"
+    }
+  ]
+}

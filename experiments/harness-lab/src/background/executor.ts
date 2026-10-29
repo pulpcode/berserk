@@ -1,10 +1,11 @@
+import type { CalculationInput } from '../pi/analysis-calculation.js';
 import type { BackgroundJob, BackgroundProfileSnapshot, RecipientSuggestionInput, RecipientSuggestion } from '../contracts/background.js';
 import type { FileOutput, FileRef, SessionSnapshot, StreamEvent, ComposerSelection } from '../contracts/index.js';
 import type { TaskAssessment, TaskAssessmentInput } from '../contracts/task-information.js';
 import type { AnalysisUpdateInput, AnalysisUpdate, ContinuousExecutionContext, ContinuousCurrentQuery, ContinuousCurrentResult, TaskDiscovery } from '../contracts/continuous.js';
 
 /** Only successful task queries from the current execution contribute evidence. */
-export interface TaskAssessmentEvidence { queried: boolean; tasks: ReadonlyMap<string, number> }
+export interface TaskAssessmentEvidence { queried: boolean; tasks: ReadonlyMap<string, number>; messages?: SessionSnapshot["messages"] }
 export type RecordTaskAssessment = (input: TaskAssessmentInput, evidence: TaskAssessmentEvidence, toolCallId: string, signal?: AbortSignal) =>
   {status: 'recorded' | 'unchanged'; assessment: TaskAssessment; published: false}
   | Promise<{status: 'recorded' | 'unchanged'; assessment: TaskAssessment; published: false}>;
@@ -29,6 +30,8 @@ export interface BackgroundExecutionInput {
   recordAnalysisUpdate?: RecordAnalysisUpdate;
   readAnalysisCurrent?: ReadAnalysisCurrent;
   readTaskCandidates?: ReadTaskCandidates;
+  readAssessmentSource?: (id:string,offset:number,limit:number,signal?:AbortSignal)=>Promise<unknown>;
+  calculateAnalysis?: (input:CalculationInput,toolCallId:string,signal?:AbortSignal,evidence?:TaskAssessmentEvidence)=>unknown;
   checkAnalysisCompletion?: CheckAnalysisCompletion;
   onEvent(event: StreamEvent): void;
   publish(input: {sessionId: string; requestId: string; toolCallId: string; path: string}, signal?: AbortSignal): Promise<FileOutput>;

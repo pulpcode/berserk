@@ -69,11 +69,11 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         if (continuous && (continuous.batch.jobId !== job.id || continuous.stream.sessionId !== job.sessionId
           || continuous.batch.epochId !== continuous.stream.epochId || job.kind !== 'continuous_analysis'
           || job.streamEpochId !== continuous.stream.epochId || job.batchId !== continuous.batch.id)) throw new RequestError('CONTINUOUS_INPUT_INVALID', '持续研判批次与会话不一致。', 409);
-        const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', ...(input.readTaskCandidates ? ['analysis_task_candidates'] : []), 'read', 'ls', 'find'])]
+        const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', 'analysis_calculate', 'analysis_evidence_read', ...(input.readTaskCandidates ? ['analysis_task_candidates'] : []), 'read', 'ls', 'find'])]
           : input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id), roles: continuous ? [] : input.profile.agents!, tools,
-          ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
+          ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, calculateAnalysis: input.calculateAnalysis, readAssessmentSource: input.readAssessmentSource, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);

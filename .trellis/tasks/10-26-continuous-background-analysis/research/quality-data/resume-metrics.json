@@ -1,0 +1,400 @@
+[
+  {
+    "run": "new-spatial-3-resume",
+    "version": "new",
+    "durationSeconds": 739.57,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 65,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 921067,
+      "output": 170862,
+      "cacheRead": 14989696,
+      "cacheWrite": 0,
+      "totalTokens": 16081625
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 486217,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 46280,
+    "toolCalls": 113,
+    "toolCallsByName": {
+      "information_read": 6,
+      "analysis_task_candidates": 12,
+      "situation_query": 12,
+      "analysis_current_read": 11,
+      "information_search": 1,
+      "analysis_evidence_read": 16,
+      "analysis_calculate": 32,
+      "information_record_analysis_update": 19,
+      "spatial_analyze": 4
+    },
+    "audit": {
+      "requests": 65,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 65
+      }
+    }
+  },
+  {
+    "run": "new-text-3-resume",
+    "version": "new",
+    "durationSeconds": 571.09,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 71,
+    "repairPrompts": 0,
+    "toolErrors": 15,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 850268,
+      "output": 135145,
+      "cacheRead": 12802176,
+      "cacheWrite": 0,
+      "totalTokens": 13787589
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 446940,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 26739,
+    "toolCalls": 86,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 15,
+      "analysis_calculate": 36,
+      "information_record_analysis_update": 21,
+      "task_read": 1
+    },
+    "audit": {
+      "requests": 71,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 71
+      }
+    }
+  },
+  {
+    "run": "new-variant-shared-object",
+    "version": "new",
+    "durationSeconds": 446.21,
+    "publishedBatches": 10,
+    "attemptedBatches": 11,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 30,
+    "recordedTaskUpdates": 30,
+    "providerRequests": 50,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 1,
+    "usage": {
+      "input": 785530,
+      "output": 106664,
+      "cacheRead": 8784128,
+      "cacheWrite": 0,
+      "totalTokens": 9676322
+    },
+    "mechanismChecksPassed": false,
+    "failure": "{\"code\":\"CONTINUOUS_FAILED\",\"message\":\"本轮未正常完成，保留输入等待恢复。\"}\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 410675,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [
+      "deepseek-v4.1-flash"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 23693,
+    "toolCalls": 67,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 11,
+      "analysis_current_read": 18,
+      "analysis_calculate": 25,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 50,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49,
+        "429": 1
+      }
+    }
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "version": "new",
+    "durationSeconds": 550.2,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 58,
+    "repairPrompts": 0,
+    "toolErrors": 16,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 1384923,
+      "output": 126700,
+      "cacheRead": 16434304,
+      "cacheWrite": 0,
+      "totalTokens": 17945927
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 734468,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 23387,
+    "toolCalls": 94,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "analysis_calculate": 27,
+      "information_record_analysis_update": 18
+    },
+    "audit": {
+      "requests": 58,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 58
+      }
+    }
+  },
+  {
+    "run": "new-variant-time-weight",
+    "version": "new",
+    "durationSeconds": 451.35,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 56,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 502151,
+      "output": 104154,
+      "cacheRead": 6421376,
+      "cacheWrite": 0,
+      "totalTokens": 7027681
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 267089,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 17472,
+    "toolCalls": 54,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 3,
+      "analysis_calculate": 22,
+      "information_record_analysis_update": 16
+    },
+    "audit": {
+      "requests": 56,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 56
+      }
+    }
+  },
+  {
+    "run": "old-variant-shared-object",
+    "version": "old",
+    "durationSeconds": 240.77,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 49,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 470494,
+      "output": 39704,
+      "cacheRead": 4773632,
+      "cacheWrite": 0,
+      "totalTokens": 5283830
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 256361,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 9825,
+    "toolCalls": 64,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "ls": 1,
+      "task_read": 3,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 49,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49
+      }
+    }
+  },
+  {
+    "run": "old-variant-source-conflict",
+    "version": "old",
+    "durationSeconds": 211.62,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 37,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 254425,
+      "output": 36872,
+      "cacheRead": 2199040,
+      "cacheWrite": 0,
+      "totalTokens": 2490337
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 139175,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 7245,
+    "toolCalls": 42,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 16,
+      "task_read": 1,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 37,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 37
+      }
+    }
+  },
+  {
+    "run": "old-variant-time-weight",
+    "version": "old",
+    "durationSeconds": 223.96,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 50,
+    "repairPrompts": 0,
+    "toolErrors": 2,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 468437,
+      "output": 37302,
+      "cacheRead": 4864256,
+      "cacheWrite": 0,
+      "totalTokens": 5369995
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 253296,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 6742,
+    "toolCalls": 62,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "information_record_analysis_update": 14
+    },
+    "audit": {
+      "requests": 50,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 50
+      }
+    }
+  }
+]

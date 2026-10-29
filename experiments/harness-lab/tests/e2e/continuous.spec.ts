@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import type { SituationObject } from '../../src/contracts/context';
-import type { ContinuousRoundDetail } from '../../src/contracts/continuous';
+import type { TaskDiscovery, ContinuousRoundDetail } from '../../src/contracts/continuous';
 import { basemapFixture, captureMap, localVectorTiles } from './basemap-fixtures';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -34,10 +34,14 @@ async function fixture(page: Page, activeTask = true, sourceUrl?: string) {
     if (!context.tools?.some(tool => tool.name === 'information_record_analysis_update')) return { text: '私有讨论完成。' };
     const last = context.messages.at(-1);
     if (last?.role === 'user') return { tools: [{ name: 'analysis_task_candidates', arguments: {} }] };
-    if (last?.role === 'toolResult' && last.toolName === 'analysis_task_candidates') return { tools: [{ name: 'information_record_analysis_update', arguments: {
-      taskUpdates: linked ? [{ taskId: task.id, inputIds: continuous.pending(stream.epochId).map(input => input.id), change: uncertain ? 'uncertain' : sequence === 1 ? 'initial' : 'changed', reason: uncertain ? '缺少实际路线，不能排除影响' : `第 ${sequence} 轮变化依据`, significant }] : [],
-      unassigned: { significant: !linked && significant, reason: linked ? '已核对任务影响' : '独立来源事实已核对' }, uncertainties: uncertain ? ['实际路线待补充'] : [],
-    } }] };
+    if (last?.role === 'toolResult' && last.toolName === 'analysis_task_candidates') {
+      const discovery=JSON.parse(last.content.filter(x=>x.type==='text').map(x=>x.text).join('')) as TaskDiscovery;
+      const prior=discovery.assessmentBaselines?.find(x=>x.taskId===task.id)?.assessment?.conditions[0];
+      const source=discovery.assessmentSources!.find(x=>x.id.startsWith('input:'))!;
+      return { tools: [{ name: 'information_record_analysis_update', arguments: {
+      taskUpdates: linked ? [{ taskId: task.id, inputIds: continuous.pending(stream.epochId).map(input => input.id), change: uncertain ? 'uncertain' : sequence === 1 ? 'initial' : 'changed', reason: uncertain ? '缺少实际路线，不能排除影响' : `第 ${sequence} 轮变化依据`, significant,assessment:{summary:uncertain?'缺少实际路线，关联待核实。':`第 ${sequence} 轮固定研判正文。`,conditions:[{id:prior?.id??'new:来源条件',name:'来源条件',before:prior?.status??null,status:uncertain?'unknown':'met',kind:'inference',change:prior?'corrected':'initial',reason:`第 ${sequence} 轮变化依据`,significant,evidence:[{id:source.id,quote:`第 ${sequence} 条真实输入。`}]}],recommendations:[]} }] : [],
+      unassigned: { significant: !linked && significant, reason: linked ? '已核对任务影响' : `第 ${sequence} 轮固定研判正文。独立来源事实已核对` }, uncertainties: uncertain ? ['实际路线待补充'] : [],
+    } }] };}
     return { text: uncertain ? '缺少实际路线，关联待核实。' : `第 ${sequence} 轮固定研判正文。` };
   });
   const lab = await PiLab.create(config, fake.runtime);

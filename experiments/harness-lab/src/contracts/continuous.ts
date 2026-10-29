@@ -24,8 +24,16 @@ export interface ContinuousBatch {
   createdAt: string; inputCutoff: string; previousJobId?: string;
 }
 export type AnalysisChange = 'initial' | 'changed' | 'unchanged' | 'retracted' | 'uncertain';
+export interface AssessmentEvidence { id: string; quote: string }
+export interface AssessmentCondition {
+  id: string; name: string; before: string | null; status: 'met' | 'blocked' | 'unknown' | 'not_applicable';
+  kind: 'source' | 'inference'; change: 'initial' | 'changed' | 'unchanged' | 'corrected' | 'withdrawn';
+  reason: string; significant: boolean; evidence: AssessmentEvidence[];
+}
+export interface TaskAssessmentResult { summary: string; conditions: AssessmentCondition[]; recommendations: string[] }
+export interface AssessmentSource { id: string; text: string; kind: 'input' | 'task' | 'query' | 'calculation'; jobId: string; length?:number; truncated?:boolean; excerpts?:string[]; digest?:string }
 export interface AnalysisTaskUpdateInput {
-  taskId: string; inputIds: string[]; change: AnalysisChange; reason: string; significant: boolean;
+  taskId: string; inputIds: string[]; change: AnalysisChange; reason: string; significant: boolean; assessment?: TaskAssessmentResult;
 }
 export interface AnalysisTaskCoverageInput {taskId:string;status:'assessed'|'unrelated'|'uncertain';reason:string}
 export interface AnalysisUpdateInput {
@@ -35,6 +43,7 @@ export interface AnalysisUpdateInput {
   uncertainties: string[];
 }
 export interface AnalysisUpdate extends Omit<AnalysisUpdateInput, 'taskUpdates' | 'taskCoverage'> {
+  assessmentSources?: AssessmentSource[];
   discoveryToolCallId?: string;
   discoveryDigest?: string;
   taskCoverage?: Array<AnalysisTaskCoverageInput & {taskRevision:number;taskTitle:string}>;
@@ -50,7 +59,7 @@ export interface ContinuousRound {
 export type ContinuousInputEvidence = ContinuousInput & {event?:{id:string;sourceId:string;sourceMessageId:string;title:string;text:string;occurredAt?:string;receivedAt:string;files:BackgroundFile[]}};
 export interface ContinuousRoundDetail extends ContinuousRound { text: string; processingText?:string; queryMessages: PublicMessage[]; inputs?:ContinuousInputEvidence[] }
 export interface ContinuousCurrentQuery { taskId?: string; jobId?: string; offset?: number; limit?: number; section?: 'result' | 'evidence'; evidenceId?:string; textOffset?:number; textLimit?:number }
-export interface ContinuousCurrentResult { items: ContinuousRound[]; total: number; detail?: ContinuousRoundDetail; evidenceIndex?:Array<{id:string;kind:'input'|'tool'|'result'|'processing';length:number}>; evidenceTotal?:number; evidence?:{id:string;text:string;offset:number;total:number;nextOffset?:number} }
+export interface ContinuousCurrentResult { items: ContinuousRound[]; total: number; detail?: ContinuousRoundDetail; evidenceIndex?:Array<{id:string;kind:'input'|'tool'|'result'|'processing';length:number}>; evidenceTotal?:number; evidence?:{id:string;citationId?:string;text:string;offset:number;total:number;nextOffset?:number} }
 export interface ContinuousAccess { enabled: boolean; canRead: boolean; canManage: boolean }
 export interface ContinuousExecutionContext {
   stream: ContinuousStream; batch: ContinuousBatch; inputs: ContinuousInput[]; requiredTaskIds: string[];
@@ -63,6 +72,8 @@ export interface TaskDiscovery {
   tasks:Array<{task:Pick<TaskSpace,'id'|'title'|'goal'|'revision'|'context'>;candidate:'related'|'unrelated'|'uncertain';reason:string;spatialResultRefs:string[]}>;
   spatialResults:SpatialResult[];
   sourceQueries?:ContextQueryResult[];
+  assessmentSources?: AssessmentSource[];
+  assessmentBaselines?: Array<{taskId:string;jobId?:string;assessment?:TaskAssessmentResult}>;
 }
 export function projectTaskDiscovery(result:TaskDiscovery) {
   return {...result, spatialResults:result.spatialResults.map(projectSpatialResult)};

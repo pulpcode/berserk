@@ -1,0 +1,160 @@
+{
+  "run": "new-variant-shared-object-complete",
+  "reviewSha256": "56342593827d01e7cc9504204b57475cc25d5d75dc7262da340dce9dcdc777da",
+  "scope": "冻结批次提醒矩阵为主；以下任务级案例仅补充，不新增评分分母。R10/R11预期静默，R12预期提醒。",
+  "source": "experiments/harness-lab/.local/continuous-validation/quality-final-20261029-092754/evidence/new-variant-shared-object-complete/review.json",
+  "rows": [
+    {
+      "round": 10,
+      "task": "A",
+      "significant": true,
+      "reason": "事实：JT-03第1版（08:45）将东桥检修定在2026年11月11日13:00—16:00；A全程在11月10日09:00-10:00、经东桥。推断：次日检修与A无关，A的六个旧条件状态不变；唯一实质变化是距出发仅15分钟而司机/装载仍无记录，“能否准时发出”的风险上升。仍受限：司机到岗、装载、实际发车；03、04均故障无备用车。",
+      "conditions": [
+        {
+          "before": "unknown",
+          "change": "changed",
+          "evidence": [
+            {
+              "id": "calculation:call_00_9l5rf248i5nutj3z7c0x5ltw",
+              "quote": "15"
+            },
+            {
+              "id": "input:244dc449-5ea8-4fce-a1b2-2d1ca6dcf197",
+              "quote": "业务接收时间：2026年11月10日08:45"
+            },
+            {
+              "id": "task:ae49b8b5-5306-4dad-8a1b-9024993af1de:2",
+              "quote": "09:00出发"
+            }
+          ],
+          "id": "b855aa3378affed94f854725",
+          "kind": "inference",
+          "name": "距09:00出发仅剩15分钟（以08:45业务时间为起点），可用于确认司机到岗与装载",
+          "reason": "确认窗口持续压缩（08:35→为25分钟、08:40为20分钟、08:45为15分钟）；至今仍无司机、装载或发车记录，已接近无法补救的程度。",
+          "significant": true,
+          "status": "unknown"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "significant": true,
+      "reason": "事实：JT-02第2版（08:50）只改西桥限重时段（改为13:00—15:00、取消早间限制），A全程经东桥。推断：A六个旧条件状态不变；唯一实质变化是确认窗口缩至10分钟，而司机与装载仍无记录，按时发车风险已达临界。仍受限：司机到岗、装载、实际发车；03、04故障无备用车。",
+      "conditions": [
+        {
+          "before": "unknown",
+          "change": "changed",
+          "evidence": [
+            {
+              "id": "calculation:call_01_hjz73d9f6vmsy7smzb8er39a",
+              "quote": "10"
+            },
+            {
+              "id": "input:7ac45482-3b67-4d8c-a8df-a5283ff7e514",
+              "quote": "业务接收时间：2026年11月10日08:50"
+            },
+            {
+              "id": "task:ae49b8b5-5306-4dad-8a1b-9024993af1de:2",
+              "quote": "09:00出发"
+            }
+          ],
+          "id": "b855aa3378affed94f854725",
+          "kind": "inference",
+          "name": "距09:00出发仅剩10分钟（以08:50业务时间为起点），可用于确认司机到岗与装载",
+          "reason": "确认窗口持续压缩（08:45为15分钟、08:50为10分钟）；仍无司机、装载、发车记录，已基本不具备整备时间。",
+          "significant": true,
+          "status": "unknown"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "significant": true,
+      "reason": "事实：CL-02第2版（08:55）称04已修复恢复使用，01、02正常，03仍故障；A仍在09:00出发、经东桥、需≥2辆。推断：A的路径与运力条件不变，且C已可自用04，A不再被抽调；唯一实质变化是出发前只剩5分钟，而司机/装载仍无记录，按时发车基本取决于现场即时状态。仍受限：司机到岗、装载、实际发车。",
+      "conditions": [
+        {
+          "before": "unknown",
+          "change": "changed",
+          "evidence": [
+            {
+              "id": "calculation:call_00_mx7dmns042v9ae37vj3w4nx2",
+              "quote": "5"
+            },
+            {
+              "id": "input:9f09defd-bba8-469b-ba1d-776377b12eea",
+              "quote": "业务接收时间：2026年11月10日08:55"
+            },
+            {
+              "id": "task:ae49b8b5-5306-4dad-8a1b-9024993af1de:2",
+              "quote": "09:00出发"
+            }
+          ],
+          "id": "b855aa3378affed94f854725",
+          "kind": "inference",
+          "name": "距09:00出发仅剩5分钟（以08:55业务时间为起点）",
+          "reason": "窗口持续压缩（08:50为10分钟、08:55为5分钟）；仍无司机、装载、发车记录，已无实质整备时间，是否按时发出只能靠即时确认。",
+          "significant": true,
+          "status": "unknown"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "significant": true,
+      "reason": "事实：CL-02第2版（08:55）称04已修复恢复使用；JT-02第2版西桥13:00—15:00限重仍有效，B车货总重4.5吨、14:00-15:00执行。推断：B的运力阻碍解除（04可用），但路径阻碍仍在（时段重叠true），整体仍不可执行；这是重要局部改善，不等于整体可执行。仍待核实：绕行/减载/提前/改期授权、04载重、司机与装载。",
+      "conditions": [
+        {
+          "before": "blocked",
+          "change": "changed",
+          "evidence": [
+            {
+              "id": "input:9f09defd-bba8-469b-ba1d-776377b12eea",
+              "quote": "车辆04已修复并恢复使用"
+            },
+            {
+              "id": "task:c3cd8284-4128-4b52-b03f-80f688d49f9b:1",
+              "quote": "车辆04已预留当日下午使用"
+            }
+          ],
+          "id": "b9d3e47e23f96bb9ad342b35",
+          "kind": "source",
+          "name": "车辆04可用且已预留当日下午使用",
+          "reason": "CL-02第2版（08:55）明确04已修复并恢复使用，任务预留未变；B重新具备已确认运力，条件由受阻转为满足。",
+          "significant": true,
+          "status": "met"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "significant": true,
+      "reason": "事实：CL-02第2版（08:55）称04已修复恢复使用；C配车04、总重2.5吨、09:30出发，路径不在13:00—15:00限行内。推断：C的路径与运力阻碍均已解除，转为“仅待司机与装载确认”；距出发35分钟。仍受限：司机到岗、药品装载、实际发车未提供，司机/装载未核验前仍不能判为已可执行。",
+      "conditions": [
+        {
+          "before": "blocked",
+          "change": "changed",
+          "evidence": [
+            {
+              "id": "input:9f09defd-bba8-469b-ba1d-776377b12eea",
+              "quote": "车辆04已修复并恢复使用"
+            },
+            {
+              "id": "task:c6e6875d-d02d-45dd-b16b-67acff208413:1",
+              "quote": "已分配车辆04，总重2.5吨"
+            }
+          ],
+          "id": "66c7c8744038b8f71d6305e1",
+          "kind": "source",
+          "name": "C已分配车辆04且状态正常",
+          "reason": "CL-02第2版（08:55）明确04已修复恢复使用，C所配车辆重新可用，条件由受阻转为满足。",
+          "significant": true,
+          "status": "met"
+        }
+      ]
+    }
+  ]
+}

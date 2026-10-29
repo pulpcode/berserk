@@ -1,0 +1,702 @@
+{
+  "run": "old-variant-source-conflict",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "e7c96e050a862974bb46c1fb607dcb07ddd895012875f46f66db2402b60afb39",
+  "denominator": 36,
+  "coreCorrect": 14,
+  "evidenceCorrect": 9,
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：初始东桥与三车正常，执行准备未知。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "beafb8fb-ac92-4a11-b86d-750ceac14e7d",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：次日01预留无新阻碍；一般临期核验不扣。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "beafb8fb-ac92-4a11-b86d-750ceac14e7d",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "需先取得西桥限重/限高/临时管制条件"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "beafb8fb-ac92-4a11-b86d-750ceac14e7d",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/0"
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：封路覆盖A09时。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "封闭08:00早于A09:00出发，首句误称出发后；后文窗口冲突判断正确，单列依据错误。",
+          "excerpt": "东桥在任务A出发后封闭"
+        }
+      ],
+      "evidenceIssues": [
+        "封闭08:00早于A09:00出发，首句误称出发后；后文窗口冲突判断正确，单列依据错误。"
+      ],
+      "jobId": "a517fccc-2993-4015-b510-a56aaebd3ed6",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：当天封闭不覆盖次日B。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "a517fccc-2993-4015-b510-a56aaebd3ed6",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "维持原线的前提是先确认西桥实时通行与限重条件满足 2.5 吨"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "a517fccc-2993-4015-b510-a56aaebd3ed6",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/1"
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：A单车不足3辆且东桥封闭。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "9f63139e-4667-4713-a10a-ebb13d4775c4",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "并要求给出 02、03 修复或替代方案"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "9f63139e-4667-4713-a10a-ebb13d4775c4",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "维持原线的前提是保持车04 可用并确认西桥通行/限重满足 2.5 吨"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "9f63139e-4667-4713-a10a-ebb13d4775c4",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/2"
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：A没有2.5吨要求，却在重估门槛中混入C的2.5吨级车辆条件；“如需要”未给出任务来源。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "A没有2.5吨要求，却在重估门槛中混入C的2.5吨级车辆条件；“如需要”未给出任务来源。",
+          "excerpt": "其中至少包含一辆2.5吨级或与货物匹配的车辆（如需要）"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "变化理由把原08:00—12:00误写05:00—12:00后再括注原文，依据表述自相矛盾。",
+          "excerpt": "原05:00—12:00类时段封闭提前结束"
+        }
+      ],
+      "evidenceIssues": [
+        "A没有2.5吨要求，却在重估门槛中混入C的2.5吨级车辆条件；“如需要”未给出任务来源。",
+        "变化理由把原08:00—12:00误写05:00—12:00后再括注原文，依据表述自相矛盾。"
+      ],
+      "jobId": "0c9720f7-884d-4668-8edf-0b1d0f03b088",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "② 02、03 的修复或替代车方案"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "0c9720f7-884d-4668-8edf-0b1d0f03b088",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "先确认西桥限重满足 2.5 吨再放行"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "0c9720f7-884d-4668-8edf-0b1d0f03b088",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/3"
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：A需求3改2，缺口2改1仍不足。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "R5业务08:20至09:00为40分钟，并非沿用08:15的45分钟；需求与缺口判断正确。",
+          "excerpt": "距 A 的 09:00 出发时间只剩约 45 分钟"
+        }
+      ],
+      "evidenceIssues": [
+        "R5业务08:20至09:00为40分钟，并非沿用08:15的45分钟；需求与缺口判断正确。"
+      ],
+      "jobId": "31288d77-a0c0-42c4-9f7c-d4132bb8fbe1",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "仍需出发前确认车輂01未被抽调及02、03修复情况"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "31288d77-a0c0-42c4-9f7c-d4132bb8fbe1",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "应按“不可按原线执行”处理"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "31288d77-a0c0-42c4-9f7c-d4132bb8fbe1",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/5"
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。",
+          "excerpt": "放行前要求一次简短的车况/载重确认"
+        }
+      ],
+      "evidenceIssues": [
+        "已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。"
+      ],
+      "jobId": "09854bcb-ebc0-49d8-9d46-90f15537ca36",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "仍需出发前确认01未被抽调、03修复或替代安排"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "09854bcb-ebc0-49d8-9d46-90f15537ca36",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "若在 09:30 前仍无该资料，应按“不可按原线执行”处理"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "09854bcb-ebc0-49d8-9d46-90f15537ca36",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/6"
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：A道路存在真实来源冲突，01+02车辆满足；未直接认定又封路。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "bad877f0-be0d-47a3-a1c2-2c950756fbe8",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：当天来源冲突不等于B次日确定封闭。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "bad877f0-be0d-47a3-a1c2-2c950756fbe8",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。",
+          "excerpt": "维持原线的前提是出发前确认西桥通行与限重满足 2.5 吨"
+        }
+      ],
+      "evidenceIssues": [
+        "西桥已报正常、任务总重2.5吨明确；无限制证据时把额外限重确认当不得按原线执行的门槛。"
+      ],
+      "jobId": "bad877f0-be0d-47a3-a1c2-2c950756fbe8",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/7"
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。",
+          "excerpt": "出发前要求一次车况／载重确认"
+        }
+      ],
+      "evidenceIssues": [
+        "已修复恢复使用的02又被要求额外车况/载重确认后才能放行；任务未提供新的故障或载重限制。"
+      ],
+      "jobId": "ec12491e-5706-47df-bd4b-674209e5d82e",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "车 01 未被抽调、03 修复情况"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "ec12491e-5706-47df-bd4b-674209e5d82e",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：总重2.5吨明确且低于3吨，仍要求证明含车总重，直接将已知通行条件降格。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "总重2.5吨明确且低于3吨，仍要求证明含车总重，直接将已知通行条件降格。",
+          "excerpt": "这是 C 能否在 08:30—11:00 窗口内经西桥的决定性前提"
+        }
+      ],
+      "evidenceIssues": [
+        "总重2.5吨明确且低于3吨，仍要求证明含车总重，直接将已知通行条件降格。"
+      ],
+      "jobId": "ec12491e-5706-47df-bd4b-674209e5d82e",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/8"
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：没有实际调派，却把A优先还是让车C作为必须明确的执行安排，假设引入现有任务门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "没有实际调派，却把A优先还是让车C作为必须明确的执行安排，假设引入现有任务门槛。",
+          "excerpt": "但须明确“A 的两辆车优先”还是“让车给 C”"
+        }
+      ],
+      "evidenceIssues": [
+        "没有实际调派，却把A优先还是让车C作为必须明确的执行安排，假设引入现有任务门槛。"
+      ],
+      "jobId": "ffec0230-1128-45d3-a7ce-85a8923e3f25",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：B01正常预留，无直接阻碍；未来实际改派才重评。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "01和02均正常，却称01为C唯一正常备选；本轮B仍无直接阻碍、实际改派才重评，核心不扣。",
+          "excerpt": "01成为C唯一可能借用且质量正常的备选"
+        }
+      ],
+      "evidenceIssues": [
+        "01和02均正常，却称01为C唯一正常备选；本轮B仍无直接阻碍、实际改派才重评，核心不扣。"
+      ],
+      "jobId": "ffec0230-1128-45d3-a7ce-85a8923e3f25",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：C04故障，新增车辆阻碍；未把换车建议当已发生。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "原任务明确总重2.5吨，仍把原始口径未知混入缺口；04故障的核心及换新车辆后重算的建议本身正确。",
+          "excerpt": "“2.5 吨是否等于含车总重”"
+        }
+      ],
+      "evidenceIssues": [
+        "原任务明确总重2.5吨，仍把原始口径未知混入缺口；04故障的核心及换新车辆后重算的建议本身正确。"
+      ],
+      "jobId": "ffec0230-1128-45d3-a7ce-85a8923e3f25",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/9"
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：次日封闭不影响当天A。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "8936592b-bafa-40d8-ba6f-519922a9ee6c",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "B 用车仍需确认 01 未被 C 临时借用"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "8936592b-bafa-40d8-ba6f-519922a9ee6c",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：C仍04故障，次日东桥不影响西桥。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "8936592b-bafa-40d8-ba6f-519922a9ee6c",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/10"
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：次日取消不影响A。",
+      "issues": [],
+      "evidenceIssues": [],
+      "jobId": "d0902d46-63ff-4f15-8da1-26661a00c643",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "01 是否被 C 借用未核实"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "d0902d46-63ff-4f15-8da1-26661a00c643",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：C仍04故障，替换车辆方案未执行。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "reason": "沿用原总重含车未知；仅对实际替补车重算可以，但原总重已经明确。",
+          "excerpt": "2.5吨是否含车自重、替补车是否满足载重仍未核验"
+        }
+      ],
+      "evidenceIssues": [
+        "沿用原总重含车未知；仅对实际替补车重算可以，但原总重已经明确。"
+      ],
+      "jobId": "d0902d46-63ff-4f15-8da1-26661a00c643",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/11"
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：08:55尚未到09:00、装载状态未知且计划到达09:30留30分钟，直接要求后续按延误事件处理。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "08:55尚未到09:00、装载状态未知且计划到达09:30留30分钟，直接要求后续按延误事件处理。",
+          "excerpt": "后续应作为延误事件处理"
+        }
+      ],
+      "evidenceIssues": [
+        "08:55尚未到09:00、装载状态未知且计划到达09:30留30分钟，直接要求后续按延误事件处理。"
+      ],
+      "jobId": "82ca4b5f-b88a-4dbc-8ca3-81490ef66d51",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。",
+          "excerpt": "04恢复使C不再必须借用01"
+        }
+      ],
+      "evidenceIssues": [
+        "01次日下午预留已确认且与A/C日期不同；未有调派仍把抽调/其他车辆修复作为B前提，R12更将曾需借01当成既有事实。"
+      ],
+      "jobId": "82ca4b5f-b88a-4dbc-8ca3-81490ef66d51",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：04已恢复且2.5<3，仍把修后载重与已知总重重新核验作为不放行门槛。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "reason": "04已恢复且2.5<3，仍把修后载重与已知总重重新核验作为不放行门槛。",
+          "excerpt": "这三项缺任一项，C 不应按原线放行"
+        }
+      ],
+      "evidenceIssues": [
+        "04已恢复且2.5<3，仍把修后载重与已知总重重新核验作为不放行门槛。"
+      ],
+      "jobId": "82ca4b5f-b88a-4dbc-8ca3-81490ef66d51",
+      "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict/review.json#/steps/12"
+    }
+  ],
+  "notes": [
+    "严格阅读全文，不能以正确首段替代后文新增门槛的评价；与之前冻结旧/新全文评分同口径。",
+    "R7真冲突、R8撤回的主方向正确；R8仍有修后再检和总重未知等独立问题，不把通知到达当语义通过。",
+    "C原车总重明确；若未来换成不同车辆，重新核验新车总重合理，未因此扣分。",
+    "A R3唯一重估门槛混入2.5吨级（如需要）按跨任务额外条件扣；若宽松理解为一般按需匹配建议，核心+1但原封闭时间误写仍使依据失败。",
+    "A R12因未确认装载即要求按延误事件处理扣，不因普通出发前装载/司机核查扣。",
+    "B R2/3/5/6/8/10/11为额外预留再确认或无关修复门槛；若宽松看成普通提醒，核心/依据各+7。R12“C不再必须借01”是明确假设固化，不能用此宽松处理。",
+    "R5官方业务时点08:20至09:00为40分钟；文本沿用45分钟只计依据错误。",
+    "通知另由汇总脚本评分；不和前轮只看主方向的分数横比。"
+  ]
+}

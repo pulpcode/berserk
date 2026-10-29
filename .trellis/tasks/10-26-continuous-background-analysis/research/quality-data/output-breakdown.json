@@ -1,0 +1,90 @@
+[
+  {
+    "run": "new-spatial-1",
+    "toolTurns": 52,
+    "toolTurnsOutputTokens": 153324,
+    "recordTurnsOutputTokens": 111975,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 12350
+  },
+  {
+    "run": "new-spatial-2",
+    "toolTurns": 56,
+    "toolTurnsOutputTokens": 154574,
+    "recordTurnsOutputTokens": 114687,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 14109
+  },
+  {
+    "run": "new-text-1",
+    "toolTurns": 49,
+    "toolTurnsOutputTokens": 135901,
+    "recordTurnsOutputTokens": 110774,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 10729
+  },
+  {
+    "run": "new-text-2",
+    "toolTurns": 37,
+    "toolTurnsOutputTokens": 122676,
+    "recordTurnsOutputTokens": 106000,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 11715
+  },
+  {
+    "run": "new-text-3",
+    "toolTurns": 19,
+    "toolTurnsOutputTokens": 48791,
+    "recordTurnsOutputTokens": 38289,
+    "finalTurns": 5,
+    "finalTurnsOutputTokens": 4156
+  },
+  {
+    "run": "old-spatial-1",
+    "toolTurns": 35,
+    "toolTurnsOutputTokens": 38919,
+    "recordTurnsOutputTokens": 27137,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 10043
+  },
+  {
+    "run": "old-spatial-2",
+    "toolTurns": 30,
+    "toolTurnsOutputTokens": 31435,
+    "recordTurnsOutputTokens": 24349,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 10118
+  },
+  {
+    "run": "old-spatial-3",
+    "toolTurns": 39,
+    "toolTurnsOutputTokens": 42699,
+    "recordTurnsOutputTokens": 27256,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 15428
+  },
+  {
+    "run": "old-text-1",
+    "toolTurns": 26,
+    "toolTurnsOutputTokens": 24866,
+    "recordTurnsOutputTokens": 18142,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 10993
+  },
+  {
+    "run": "old-text-2",
+    "toolTurns": 39,
+    "toolTurnsOutputTokens": 25329,
+    "recordTurnsOutputTokens": 20143,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 12245
+  },
+  {
+    "run": "old-text-3",
+    "toolTurns": 37,
+    "toolTurnsOutputTokens": 25628,
+    "recordTurnsOutputTokens": 19402,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 9729
+  }
+]

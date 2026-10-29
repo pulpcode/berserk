@@ -1,0 +1,499 @@
+{
+  "run": "new-spatial-3-resume",
+  "status": "complete",
+  "partial": false,
+  "plannedTaskRounds": 53,
+  "publishedTaskRounds": 53,
+  "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+  "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+  "reviewSha256": "42bf22915f16ec0daab32e34434418996f64356d65ccd72b7aab7898ba0e7372",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "只给10:00通过，摘要凭空写09:00出发前，出发时刻无来源"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "无管制资料下要求先获取独立覆盖下午的新通知/时段结论再决定14:00通行，新增放行前提。",
+      "evidenceIssues": [
+        "把通知覆盖缺口升级为必须有新时段性放行依据"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务覆盖清单明确unrelated，r2与边界分离正确，不是漏检。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "10:00受阻正确，但把未定具体时刻的12:00后备选直接判为与B14:00排程冲突，新增无据协调约束。",
+      "evidenceIssues": [
+        "未有通道容量、车辆复用或确定时间重叠依据，却断言延期备选与B冲突"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "部分受限正确，但建议明确要求第3版或调度确认后才能认定12:00恢复，给明确期限之外新增放行前提。",
+      "evidenceIssues": [
+        "09:00—12:00禁令之外被要求另行正面解除依据"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务覆盖清单明确unrelated，r2与边界分离正确，不是漏检。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "建议写09:00前不得经r1原计划通过，却又列提前通过备选；原计划为10:00，禁令09:00才开始"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "Z仅北扩且东界不变，W区外仍为东半幅，却称区外仅剩窄带/可能更小；部分影响主结论正确"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "E",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "r2新受限正确，但要求在第4版出现后确认12:00后恢复，将发布新版通知当成解除既有有期限限制的前提。",
+      "evidenceIssues": [
+        "无来源新增下一版通知出现才能核验通行的要求"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "完整覆盖判断正确，但延后备选仍说不得依据12:00期限恢复，必须先额外确认，延续无据放行前提。",
+      "evidenceIssues": [
+        "将期限明确的管制到期与另行正面确认混同"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "任务明确不受区域限制，region条件仍blocked；理由/摘要已明确不适用于r2，按呈现矛盾不扣核心"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "把A10:00/E10:30通过路线时刻当作发车时刻来安排发车顺序，原任务未给其出发时间"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "把A10:00/E10:30通过路线时刻当作发车时刻来安排发车顺序，原任务未给其出发时间"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "任务明确不受区域限制，region条件仍blocked；理由/摘要已明确不适用于r2，按呈现矛盾不扣核心"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“已确认可行避开禁入路径”仍met，理由却明确本轮边界外关系无法核验；路线批准不等于当前避让可行"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "“14:00通过时刻通知覆盖”标met，理由实际为09:00—12:00禁令不覆盖；标题与判据相反"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": [
+        "条件名固定修订3位置，理由却用修订4缺几何记unknown，历史关系与当前关系混用"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、时段、版本与区域影响符合独立预期；没有把建议改线当成已实施。",
+      "evidenceIssues": []
+    }
+  ],
+  "notes": [
+    "采用原空间样本及统一勘误：R2 C仍部分覆盖，R3才全部覆盖。该勘误是在首次原空间运行后制定，不能声称完全无修订预注册答案。",
+    "评分正式摘要、条件、建议全文；一般出发前查看更新不扣，明确需新版/独立放行证明才能解除期限外限制则扣。C R5/R10只说先复核是否延续，作为一般检查未扣；R1/R3及E R2明确否认依据期限恢复/要求新版本则扣。",
+    "口径敏感性：若将所有到期后复核都视为一般谨慎，C R1/R3和E R2三格可从不通过变通过，核心48/53会变51/53；本次主分保持前轮明确新增放行门槛的严格标准。",
+    "R5 A和R10 A摘要/理由明确区域限制不适用，blocked只列依据呈现矛盾，不因全局区域状态条目而反转正确任务主结论。",
+    "A/E同路协调建议明确无容量依据不作硬约束，C取消后点位索取也仅建议，均未当成无据执行门槛扣核心。",
+    "R11明确缺边界与保守风险，未以零命中宣称解除；C保守停派属于oracle允许的有条件既有风险。",
+    "E R0/R1正确unrelated计通过；R4重复无新批次。全53格归档update已与实时validation一致；代理逐格复核而非人类盲评。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 1,
+      "detail": "原生自由答复与正式结果都将A假设推迟12时后的方案直接称为与B14时排程冲突；没有实际选择该方案或时段重叠证据，正式结果按核心错误计。"
+    },
+    {
+      "round": 2,
+      "detail": "原生自由答复建议E推迟12时后，正式建议进一步要求第4版出现后才确认恢复；按正式可见结果的新增放行前提计错。原生与正式均把C未覆盖东侧半区说成极窄区域，另计依据错误。"
+    },
+    {
+      "round": 11,
+      "detail": "原生自由答复将A当前空间可行性列为未知；正式条件仍将已确认可行避开禁入区的路径标为met，与缺边界的理由矛盾。正式摘要方向正确，因此只扣依据呈现。"
+    }
+  ]
+}

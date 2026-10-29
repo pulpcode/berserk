@@ -1,0 +1,66 @@
+[
+  {
+    "run": "new-spatial-3-resume",
+    "toolTurns": 53,
+    "toolTurnsOutputTokens": 158222,
+    "recordTurnsOutputTokens": 118240,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 12640
+  },
+  {
+    "run": "new-text-3-resume",
+    "toolTurns": 59,
+    "toolTurnsOutputTokens": 125154,
+    "recordTurnsOutputTokens": 95654,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 9991
+  },
+  {
+    "run": "new-variant-shared-object",
+    "toolTurns": 39,
+    "toolTurnsOutputTokens": 97756,
+    "recordTurnsOutputTokens": 73663,
+    "finalTurns": 11,
+    "finalTurnsOutputTokens": 8908
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "toolTurns": 46,
+    "toolTurnsOutputTokens": 115583,
+    "recordTurnsOutputTokens": 91584,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 11117
+  },
+  {
+    "run": "new-variant-time-weight",
+    "toolTurns": 44,
+    "toolTurnsOutputTokens": 90235,
+    "recordTurnsOutputTokens": 73977,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 13919
+  },
+  {
+    "run": "old-variant-shared-object",
+    "toolTurns": 37,
+    "toolTurnsOutputTokens": 25588,
+    "recordTurnsOutputTokens": 18202,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 14116
+  },
+  {
+    "run": "old-variant-source-conflict",
+    "toolTurns": 25,
+    "toolTurnsOutputTokens": 23985,
+    "recordTurnsOutputTokens": 18803,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 12887
+  },
+  {
+    "run": "old-variant-time-weight",
+    "toolTurns": 38,
+    "toolTurnsOutputTokens": 25492,
+    "recordTurnsOutputTokens": 19094,
+    "finalTurns": 12,
+    "finalTurnsOutputTokens": 11810
+  }
+]

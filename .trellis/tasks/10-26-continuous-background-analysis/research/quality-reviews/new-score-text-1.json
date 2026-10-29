@@ -1,0 +1,374 @@
+{
+  "run": "new-text-1",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": [
+        "无依据断言当天自行改派必然影响次日B整备"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "道路恢复/车辆缺口判断正确，但建议09:30前修复即可09:00出发、09:30前到达，行动时间不成立。",
+      "evidenceIssues": [
+        "修复时间晚于建议出发时间"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "道路恢复/车辆缺口判断正确，但建议09:30前修复即可09:00出发、09:30前到达，行动时间不成立。",
+      "evidenceIssues": [
+        "修复时间晚于建议出发时间"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛",
+        "已知总重被降为口径待核"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。 将C专用04故障说成A冗余进一步下降。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件",
+        "04并非A备用车辆"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": [
+        "声称为C抽调01或02均直接影响B预留；B仅预留01且在次日"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛",
+        "已知总重被降为口径待核"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": [
+        "将14:00—15:00任务窗口写成行程；实际行程为14:00—14:30"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛",
+        "已知总重被降为口径待核",
+        "08:45到最晚10:10为85分钟，条件仍写约90分钟换车弹性"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛",
+        "已知总重被降为口径待核"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。",
+      "evidenceIssues": [
+        "旧三辆条件继续作为当前受阻条件",
+        "业务08:55，建议却说已到09:00发车时刻"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "本轮任务状态、日期与资源归属正确；未把条件性调配当已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。",
+      "evidenceIssues": [
+        "无来源新增载重能力门槛",
+        "已知总重被降为口径待核"
+      ]
+    }
+  ],
+  "notes": [
+    "评分对象为保存assessment的summary、全部conditions及recommendations；不是只看主结论或工具数值。",
+    "一般未来路况核查、装载/司机未提供、明确条件性改派不扣核心。",
+    "R4重复消息没有新研判，不列任务轮。",
+    "所有C轮的载重门槛为持续错误；R9—R11虽缺车主结论正确，旧无据门槛仍在正式结果。",
+    "原生自由答复未作为正式结论计分；其差异不抵消结构结果错误。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 5,
+      "detail": "原生自由答复只说最晚09:30发车，正式recommendations额外写09:30修复即可09:00出发；以正式结构计时间建议错。"
+    },
+    {
+      "round": 10,
+      "detail": "原生自由答复笼统称A顺延至11-11同样撞上13—16检修；正式结构限定11-11下午，未将该raw额外错误计入正式核心分。"
+    },
+    {
+      "round": 11,
+      "detail": "原生标题称A已到发车时点但正文写08:50距09:00还有10分钟；正式结构写发车前10分钟，未把raw矛盾计入正式分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生与正式均说已到09:00时刻，同时依据业务时钟08:55；正式分已扣数值依据。"
+    }
+  ]
+}

@@ -77,6 +77,8 @@ export interface PreprocessInput {
   streamEpochId?: string;
   readAnalysisCurrent?: ReadAnalysisCurrent;
   readTaskCandidates?: ReadTaskCandidates;
+  readAssessmentSource?: import('../background/executor.js').BackgroundExecutionInput['readAssessmentSource'];
+  calculateAnalysis?: import('../background/executor.js').BackgroundExecutionInput['calculateAnalysis'];
   recordAnalysisUpdate?: RecordAnalysisUpdate;
   checkAnalysisCompletion?: CheckAnalysisCompletion;
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
@@ -846,7 +848,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const recipients = !role && active.service?.recordRecipientSuggestion && active.service.tools.includes('information_suggest_recipients')
       ? [recipientSuggestionTool(active.service.recordRecipientSuggestion, active.controller, authorizeRequest)] : [];
     const continuous = !role && active.service?.streamEpochId && active.service.readAnalysisCurrent && active.service.recordAnalysisUpdate
-      ? continuousTools(active.service.readAnalysisCurrent, active.service.recordAnalysisUpdate, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest, active.service.readTaskCandidates) : [];
+      ? continuousTools(active.service.readAnalysisCurrent, active.service.recordAnalysisUpdate, () => ({queried: queriedTasks, tasks: new Map(observedTasks), messages:this.serviceSnapshot(record,active.id).messages}), active.controller, authorizeRequest, active.service.readTaskCandidates, active.service.calculateAnalysis, active.service.readAssessmentSource) : [];
     const customTools = (role ? [...resources, ...readonlyFiles].filter(tool => role.tools.includes(tool.name)) : [...resources, ...readonlyFiles, ...queries, ...taskReads, ...assessment, ...recipients, ...continuous,
       ...(!role && active.service?.streamEpochId && principal?.kind==='service' && this.context ? backgroundSpatialTools(this.context,record.manager,{
         principal,requestId:active.id,signal:active.controller.signal,check:authorizeRequest,skillIds:snapshot.skills.map(skill=>skill.id),

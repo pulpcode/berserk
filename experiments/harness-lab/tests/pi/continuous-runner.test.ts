@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { BackgroundExecutionInput, TaskAssessmentEvidence } from '../../src/background/executor.js';
 import type { BackgroundJob, BackgroundProfileSnapshot } from '../../src/contracts/background.js';
-import type { AnalysisUpdateInput, ContinuousStream, ContinuousRoundDetail } from '../../src/contracts/continuous.js';
+import type { AnalysisUpdateInput, ContinuousStream, ContinuousRoundDetail, TaskAssessmentResult } from '../../src/contracts/continuous.js';
 import { RequestError } from '../../src/contracts/errors.js';
 import { PiLab } from '../../src/pi/lab.js';
 import { createBackgroundExecutor, snapshotBackgroundProfile } from '../../src/pi/background-runner.js';
@@ -22,6 +22,10 @@ import { fakeRuntime, testConfig } from './fake-runtime.js';
 const cleanup: Array<() => Promise<unknown> | void> = [];
 afterEach(async () => { for (const fn of cleanup.splice(0).reverse()) await fn(); });
 const empty: AnalysisUpdateInput = {taskUpdates: [], unassigned: {significant: false, reason: '本轮无重要变化'}, uncertainties: []};
+// These adapter tests validate per-request observations, not host publication/evidence policy.
+const assessment: TaskAssessmentResult = {summary: '车辆条件待核对', conditions: [{id: 'new:vehicles', name: '车辆需求', before: null,
+  status: 'unknown', kind: 'inference', change: 'initial', reason: '尚待核对可用车辆', significant: false,
+  evidence: [{id: 'fixture:task-goal', quote: '3辆车'}]}], recommendations: []};
 const profile: BackgroundProfileSnapshot = {id: 'continuous', name: '持续研判', goal: '分析变化', instructions: 'READONLY_PROFILE',
   tools: ['source_list', 'source_read', 'skill_read', 'bash', 'subagent', 'file_output', 'information_record_task_assessment'],
   skillIds: [], agentIds: [], resources: [{id: 'incoming', title: '资料', content: 'ORIGINAL_SOURCE'}]};
@@ -86,7 +90,7 @@ describe('native continuous background execution', () => {
 
   it('leaves publication policy to the host when no completion check is supplied', async () => {
     const f = await setup((_context, index) => index === 0 ? {text: 'NO_RECORD'} : index === 1
-      ? {tools: [{name: 'information_record_analysis_update', arguments: {...empty, taskUpdates: [{taskId: randomUUID(), inputIds: [randomUUID()], change: 'changed', reason: '未查询', significant: true}]}}]}
+      ? {tools: [{name: 'information_record_analysis_update', arguments: {...empty, taskUpdates: [{taskId: randomUUID(), inputIds: [randomUUID()], change: 'changed', reason: '未查询', significant: true, assessment}]}}]}
       : {text: 'RECORD_FAILED'});
     const missing = f.next(); const first = await f.executor.execute(missing.job, missing.input);
     expect(first.snapshot.lastResult?.status).toBe('succeeded'); expect(f.records).toHaveLength(0); expect(f.calls).toHaveLength(1);
@@ -94,6 +98,8 @@ describe('native continuous background execution', () => {
     const failed = f.next(); const second = await f.executor.execute(failed.job, failed.input);
     expect(second.snapshot.lastResult?.status).toBe('succeeded');
     expect(second.snapshot.messages.find(message => message.toolName === 'information_record_analysis_update')).toMatchObject({isError: true});
+    expect(f.records).toHaveLength(1);
+    expect(second.snapshot.messages.find(message => message.toolName === 'information_record_analysis_update')?.text).toContain('TASK_NOT_QUERIED');
     expect(f.calls).toHaveLength(3);
   });
 
@@ -184,7 +190,7 @@ describe('native continuous background execution', () => {
 
   it('observes current task revisions only within each request and exposes original native queries to recovery', async () => {
     let taskId = ''; const inputId = randomUUID();
-    const value = () => ({...empty, taskUpdates: [{taskId, inputIds: [inputId], change: 'changed' as const, reason: '条件已核对', significant: false}]});
+    const value = () => ({...empty, taskUpdates: [{taskId, inputIds: [inputId], change: 'changed' as const, reason: '条件已核对', significant: false, assessment}]});
     const f = await setup((_context, index) => index === 0 ? {tools: [{name: 'task_search', arguments: {}},
       {name: 'information_read', arguments: {systemId: 'intel', reportId: 'report-west-01', revision: 1}}]}
       : index === 1 || index === 3 ? {tools: [{name: 'information_record_analysis_update', arguments: value()}]}

@@ -1,0 +1,342 @@
+{
+  "run": "new-variant-source-conflict",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "初始3辆需求、道路和09:30到达正确；潜在调车仅为建议未认定发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "明确跨日预留不冲突；未来通行和装载司机待核查未虚构当前阻碍。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "无来源引入04载重匹配作为出发必要核验并存为条件，40分钟余量正确。",
+      "evidenceIssues": [
+        "无来源引入04载重匹配作为出发必要核验并存为条件，40分钟余量正确。"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "识别10日封闭覆盖任务，12:00比10:00晚120分钟作为解封时点差正确，不等同到达差。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "今日封闭不被套到次日；车辆01跨日预留保持，不假定A延期已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04分配和西桥未受影响正确，但载重参数仍成无据前提；调车只是假设。",
+      "evidenceIssues": [
+        "04分配和西桥未受影响正确，但载重参数仍成无据前提；调车只是假设。"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "车辆缺口与封闭正确，但把B次日预留牵连为今日01不可调度余量的理由；未禁止A用已分配01，故仅扣依据。",
+      "evidenceIssues": [
+        "车辆缺口与封闭正确，但把B次日预留牵连为今日01不可调度余量的理由；未禁止A用已分配01，故仅扣依据。"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "01正常预留不变，只有若未来实际被临时调用才复核，不把假设当事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "无据核载门槛继续；04抽调压力明确为推测，没有新增真实调配。",
+      "evidenceIssues": [
+        "无据核载门槛继续；04抽调压力明确为推测，没有新增真实调配。"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "道路恢复但仍缺车正确；摘要把旧判断复述成‘约09:30到达、晚时限120分钟’矛盾，并沿用次日01预留牵连今日余量。",
+      "evidenceIssues": [
+        "道路恢复但仍缺车正确；摘要把旧判断复述成‘约09:30到达、晚时限120分钟’矛盾，并沿用次日01预留牵连今日余量。"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "当日恢复不被说成次日封闭，01预留保持；只有未来若改派才核查。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留无据核载必要前提；主路线和40分钟余量正确。",
+      "evidenceIssues": [
+        "保留无据核载必要前提；主路线和40分钟余量正确。"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "需求减为2、缺口降为1，条件名称同步改为数量是否满足需求；未假定04兼跑。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "明确与A时间不同、预留不变，改期后复核保持条件句。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "补齐04载重参数后才判可执行仍是额外前提；未把借用动议当事实。",
+      "evidenceIssues": [
+        "补齐04载重参数后才判可执行仍是额外前提；未把借用动议当事实。"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "两辆已满足、道路恢复，相关减量/借调条件转不适用；名称随需求修订。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "明确跨日不冲突且预留保持，未把普通未来占用核查转为已发生冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "无据核载必要前提持续，抽调压力下降明确只是推断。",
+      "evidenceIssues": [
+        "无据核载必要前提持续，抽调压力下降明确只是推断。"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "正确将真实来源冲突标未知并要求裁决，而非直接封闭；但无替代行程和容量依据就断言改西桥将挤占C窗口。",
+      "evidenceIssues": [
+        "正确将真实来源冲突标未知并要求裁决，而非直接封闭；但无替代行程和容量依据就断言改西桥将挤占C窗口。"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "保留次日未确认，不把今日争议确定外推为次日封控，预留仍成立。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核载门槛持续，且把尚无路线时长依据的A假设改道后果说成与C直接竞争。",
+      "evidenceIssues": [
+        "核载门槛持续，且把尚无路线时长依据的A假设改道后果说成与C直接竞争。"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "撤回错误定位报告后通行/时间恢复，裁决条件满足、改线条件不适用，没有残留冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "今日报告撤回不被当作次日封控或预留变化；跨日范围保持。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "2.5<3主判断正确，但明确总重再次被要求证明是否仅货重，且无据核载门槛持续。",
+      "evidenceIssues": [
+        "2.5<3主判断正确，但明确总重再次被要求证明是否仅货重，且无据核载门槛持续。"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "04故障没有减少A已分配的01/02，主路线和数量维持；未认定调车已发生。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "01正常预留有效，与A不冲突；未来实际占用才重新核查。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确识别04故障，但无据核载条件持续；将整个到达窗口等同确定用车占用并断言调给C必令A不达标，依据不足。",
+      "evidenceIssues": [
+        "正确识别04故障，但无据核载条件持续；将整个到达窗口等同确定用车占用并断言调给C必令A不达标，依据不足。"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "次日检修不影响今日A，需求两辆和原路线均保持。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "封闭覆盖14时主判断正确，但建议把16时出发的到达延误写60分钟，30分钟路程后16:30才到，应晚90分钟。",
+      "evidenceIssues": [
+        "封闭覆盖14时主判断正确，但建议把16时出发的到达延误写60分钟，30分钟路程后16:30才到，应晚90分钟。"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04仍故障与次日东桥无关正确，但最初无来源核载疑问仍保留，并继续把假设替代方案占用当确定困难。",
+      "evidenceIssues": [
+        "04仍故障与次日东桥无关正确，但最初无来源核载疑问仍保留，并继续把假设替代方案占用当确定困难。"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "次日取消不改变今日A，保持原两辆需求和路线。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "取消禁令后主计划恢复、改线授权转不适用正确，但摘要说01预留仍待核实，与本轮met及建议维持预留矛盾。",
+      "evidenceIssues": [
+        "取消禁令后主计划恢复、改线授权转不适用正确，但摘要说01预留仍待核实，与本轮met及建议维持预留矛盾。"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "仍将04核载未知保存为条件，未把次日取消当今日西桥变化。",
+      "evidenceIssues": [
+        "仍将04核载未知保存为条件，未把次日取消当今日西桥变化。"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "04恢复不改变A两辆已满足，03不被计入可用运力。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "01预留与跨日无冲突保持；未来路况核查不等同新封控。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04恢复、未超桥限、换车授权不适用正确，但重新将核载参数确认作为必要前提。",
+      "evidenceIssues": [
+        "04恢复、未超桥限、换车授权不适用正确，但重新将核载参数确认作为必要前提。"
+      ]
+    }
+  ],
+  "notes": [
+    "逐格审核正式投影全文（摘要、条件、建议），AI代理复核而非人工盲评。",
+    "普通未来路况核验、明确条件性的未来调配复核不扣；已确认总重降成疑问、核载参数变成必要前提按原严格口径扣。",
+    "A R2/R3以B次日预留解释今日余量属于依据牵连，但未禁止A使用01，不扣核心。A R7假设改西桥后会挤占C窗口缺容量和行程依据，仅扣依据；当前任务主判断未被替换。",
+    "R1/R2的120分钟明确是到解封时点差，不扣算术；R10 B明确说‘到达将晚约60分钟’，故按16:00+30min=16:30与15:00差90min扣依据。",
+    "B R11摘要将预留写待核实与条件met矛盾；主计划与预留建议保持，所以只扣依据。若视为合并句误写而忽略，依据可19→20，主核心不变。",
+    "独立review代理定向复核R0—3及R7/R8，与上述边界一致；提醒另统计，R8C无影响的限重条件重要标记作为任务级误报案例。"
+  ],
+  "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-source-conflict/review.json",
+  "sourceSha256": "7995cabfe60100e088578d5bdbe0b5952033e4a75e5d004d411a968e4ae3c81d",
+  "summary": {
+    "rows": 36,
+    "coreCorrect": 24,
+    "evidenceCorrect": 19
+  }
+}

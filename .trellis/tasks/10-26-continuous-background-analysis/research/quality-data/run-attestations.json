@@ -1,0 +1,299 @@
+[
+  {
+    "run": "new-spatial-1",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+    "runnerHash": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 64
+      }
+    ]
+  },
+  {
+    "run": "new-spatial-2",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+    "runnerHash": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 68
+      }
+    ]
+  },
+  {
+    "run": "new-text-1",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 61
+      }
+    ]
+  },
+  {
+    "run": "new-text-2",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 49
+      }
+    ]
+  },
+  {
+    "run": "new-text-3",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 24
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-1",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+    "runnerHash": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 47
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-2",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+    "runnerHash": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 42
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-3",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+    "runnerHash": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 51
+      }
+    ]
+  },
+  {
+    "run": "old-text-1",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 38
+      }
+    ]
+  },
+  {
+    "run": "old-text-2",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 51
+      }
+    ]
+  },
+  {
+    "run": "old-text-3",
+    "sourceRevision": "2321f72",
+    "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 49
+      }
+    ]
+  }
+]

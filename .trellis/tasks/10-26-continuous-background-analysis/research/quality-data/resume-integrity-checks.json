@@ -1,0 +1,13 @@
+{
+  "oldSourceFiles": 234,
+  "newSourceFiles": 237,
+  "inputs": 5,
+  "publicConfigUnchanged": true,
+  "verifiedArchives": 19,
+  "allExactArkUrl": true,
+  "allActualResponseModelsSame": true,
+  "businessHttpStatuses": {
+    "200": 978,
+    "429": 2
+  }
+}

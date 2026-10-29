@@ -1,0 +1,135 @@
+[
+  {
+    "run": "new-spatial-1",
+    "file": "archives/new-spatial-1.tar.gz",
+    "sha256": "e7ea03e3b5b5be195d81422e0911a3b63532030f0a0270d5e37c826569a2fce0",
+    "bytes": 9360004,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "new-spatial-2",
+    "file": "archives/new-spatial-2.tar.gz",
+    "sha256": "bf869fd6d662153f7ffb30cb582a2fc2cdc5c222a2fbef3561ed5734f7199615",
+    "bytes": 10863917,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "new-text-1",
+    "file": "archives/new-text-1.tar.gz",
+    "sha256": "8c596e9fb4b460e2c1781dc8b11d221ea094d49ba583409071077e501acadfd5",
+    "bytes": 6497214,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "new-text-2",
+    "file": "archives/new-text-2.tar.gz",
+    "sha256": "b34ce76c93294a38d37a1afcce6cd28b78c8a34f56a757700150f2693f514613",
+    "bytes": 4765550,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "new-text-3",
+    "file": "archives/new-text-3.tar.gz",
+    "sha256": "4a27404021808bedb8af2e5620bd1dbbb008fe2e6d3a8292bd4cac544d498acd",
+    "bytes": 967931,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-spatial-1",
+    "file": "archives/old-spatial-1.tar.gz",
+    "sha256": "4841d6089e4b0447d9b8d8420da198e7a1481d712ee000b08b2074fff012f547",
+    "bytes": 3297273,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-spatial-2",
+    "file": "archives/old-spatial-2.tar.gz",
+    "sha256": "2e70028879cd3a412b3ff5afd6f4b02d959a5b664c6dfc2df7b3c298e1faeab3",
+    "bytes": 3068086,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-spatial-3",
+    "file": "archives/old-spatial-3.tar.gz",
+    "sha256": "7b75ea5b71183600dd0d5b8ecddb69ff1c2b85a4d738a871879afc76604a78f2",
+    "bytes": 4116067,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-text-1",
+    "file": "archives/old-text-1.tar.gz",
+    "sha256": "f02b4661dfb853ce1a5e23ebe4569ee80d729f69ed19a0bc3ee77dc89a05c873",
+    "bytes": 1756287,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-text-2",
+    "file": "archives/old-text-2.tar.gz",
+    "sha256": "8b0f359735a1aa14532f3f1421a1bb19e78c55f437e72fbbfb644f331d65a9f9",
+    "bytes": 2311402,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "old-text-3",
+    "file": "archives/old-text-3.tar.gz",
+    "sha256": "d7c4f3fb37e9bad8431de595cc72c7e65e5307416eefad650f99631b089edc70",
+    "bytes": 2274586,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028"
+  },
+  {
+    "run": "new-spatial-3-resume",
+    "file": "archives/new-spatial-3-resume.tar.gz",
+    "sha256": "16b1594571c7c9970bbcf9635a2a5b77a80ac53b415522aabdefc3f809b6d9ff",
+    "bytes": 9074064,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "new-text-3-resume",
+    "file": "archives/new-text-3-resume.tar.gz",
+    "sha256": "d258854856e35d3af7afa0aad778bec092ad84c6f469ce90fc13044dc849dfd5",
+    "bytes": 6632625,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "new-variant-shared-object",
+    "file": "archives/new-variant-shared-object.tar.gz",
+    "sha256": "b8ac516a853833192e5c636a66daa5ef266dc63fdf26a1944de09d916bcaced6",
+    "bytes": 4717654,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "file": "archives/new-variant-source-conflict.tar.gz",
+    "sha256": "8cdddde8f246fae9f2b0780458efd0b9922b5d3bd4cdbd652f5a3fdda68134a6",
+    "bytes": 8194435,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "new-variant-time-weight",
+    "file": "archives/new-variant-time-weight.tar.gz",
+    "sha256": "b6a947f3f30956706c2e4e80ed4306f2327902baf648344d754518f140285239",
+    "bytes": 4201978,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "old-variant-shared-object",
+    "file": "archives/old-variant-shared-object.tar.gz",
+    "sha256": "c62622ec36c15644a61f627617aebd051b40a8ffc8a312f244dfedafc12c2146",
+    "bytes": 2295250,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "old-variant-source-conflict",
+    "file": "archives/old-variant-source-conflict.tar.gz",
+    "sha256": "952bcae6531eccd2fa1501f7ae3738771ed7415b7f8efbbe098b46388a3d0279",
+    "bytes": 1657020,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  },
+  {
+    "run": "old-variant-time-weight",
+    "file": "archives/old-variant-time-weight.tar.gz",
+    "sha256": "cc6f738730be09044861afe785c8ccf4bc3971624c38214df439c09f698f4e3a",
+    "bytes": 2172984,
+    "root": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505"
+  }
+]

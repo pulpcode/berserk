@@ -1,0 +1,31 @@
+{
+  "actualRuntimeDriver": {
+    "path": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/resume-suites.mjs",
+    "sha256": "868b2fa554b2c29c63e70b2529cb2b8b4366699cf73800a2e8c866e9c02c4962"
+  },
+  "safeReviewCopy": {
+    "path": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/.trellis/tasks/10-26-continuous-background-analysis/research/quality-runner/resume-suites.mjs",
+    "sha256": "1cff666a374ff5e322c4a35916fc2c228d9fe28f84b695ea5a0396b3861214c3"
+  },
+  "difference": "审阅副本要求显式QUALITY_RUN_ROOT；实际运行文件保持原样，不被副本替换。",
+  "actualRuntimeLogFiles": [
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-spatial-3-resume-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-spatial-3-resume.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-text-3-resume-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-text-3-resume.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-shared-object-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-shared-object.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-source-conflict-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-source-conflict.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-time-weight-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/new-variant-time-weight.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-shared-object-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-shared-object.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-source-conflict-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-source-conflict.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-time-weight-provider.jsonl",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/old-variant-time-weight.log",
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/logs/preflight-network-provider.jsonl"
+  ],
+  "resumeManifest": "resume-manifest.json"
+}

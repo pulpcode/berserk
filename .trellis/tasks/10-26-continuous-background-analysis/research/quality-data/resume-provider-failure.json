@@ -1,0 +1,31 @@
+{
+  "run": "new-variant-shared-object",
+  "round": 11,
+  "audit": {
+    "at": "2026-10-28T13:53:24.189Z",
+    "url": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+    "model": "deepseek-v4.1-flash",
+    "stream": true,
+    "responseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+    "status": 429,
+    "requestId": "02179319560543419937eadc6258ad89b117be868ee33ed7c67ee"
+  },
+  "nativeError": "insufficient_quota: 模型额度不足，请检查账户后重试。",
+  "nativeEvidenceFiles": [
+    "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-shared-object/background/streams/0e94003d-b9a2-4160-ac35-fb666da33b99/7350c831-58ed-48de-bc87-5ab3f5542e06/sessions/2026-10-28T13-46-02-458Z_7350c831-58ed-48de-bc87-5ab3f5542e06.jsonl"
+  ],
+  "status": {
+    "name": "new-variant-shared-object",
+    "fixture": "shared-object-input.json",
+    "status": "finished",
+    "startedAt": "2026-10-28T13:45:53.751Z",
+    "exitCode": 1,
+    "endedAt": "2026-10-28T13:53:24.572Z",
+    "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-Oi2ndS/validation.json",
+    "requests": 50,
+    "providerFailure": true,
+    "stopReason": "upstream_failure"
+  },
+  "futureRequestsStopped": true,
+  "retry": false
+}

@@ -12,6 +12,7 @@ export const crashCatalog = () => parseBackgroundConfig({enabled:true,concurrenc
   sources:[{sourceId:'crash-source',name:'隔离故障来源',credentialRef:'UNUSED_TEST_TOKEN',allowedProfileIds:['readonly'],allowedRecipientSeatIds:['crash-seat']}],
   profiles:[{id:'readonly',name:'只读故障验证',goal:'核对输入，不执行写入。',tools:['source_list'],contextScopeId:'crash-scope'}]});
 export const crashConfig = (dataDir:string) => testConfig(dataDir,{seatId:'crash-seat',auth:{secret:'isolated-crash-test-signing-key-123456',sessionMs:3600000}});
+export const crashPublishedAssessment = '需要提醒的独立输入';
 export const crashContext = () => new ContextService(parseContextConfig({systems:[{id:'mock',name:'隔离只读资料',adapter:'mock-information-http',baseUrl:'http://127.0.0.1:9',tokenEnv:'CRASH_QUERY_TOKEN'}],scopes:[{id:'crash-scope',name:'故障验证范围',systemIds:['mock'],seatIds:['crash-seat']}]}),{CRASH_QUERY_TOKEN:'unused-isolated-query-token'});
 
 async function run() {
@@ -25,7 +26,7 @@ async function run() {
     if (blocked) return {waitForAbort:true};
     const last=context.messages.at(-1);
     if(last?.role==='user')return {tools:[{name:'analysis_task_candidates',arguments:{}}]};
-    if(last?.role==='toolResult' && last.toolName==='analysis_task_candidates') return {tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:true,reason:'需要提醒的独立输入'},uncertainties:[]}}]};
+    if(last?.role==='toolResult' && last.toolName==='analysis_task_candidates') return {tools:[{name:'information_record_analysis_update',arguments:{taskUpdates:[],unassigned:{significant:true,reason:crashPublishedAssessment},uncertainties:[]}}]};
     return {text:'SIGKILL 前已发布的固定结论'};
   });
   const lab = await PiLab.create(config,fake.runtime);lab.context=crashContext();const service = new BackgroundService(lab,crashCatalog());

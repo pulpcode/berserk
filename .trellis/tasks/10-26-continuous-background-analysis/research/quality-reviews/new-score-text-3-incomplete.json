@@ -1,0 +1,124 @@
+{
+  "run": "new-text-3",
+  "status": "incomplete",
+  "includedInPairedAggregate": false,
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。",
+      "evidenceIssues": [
+        "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": [
+        "没有西桥绕行里程/耗时来源，却断言大概率无法维持10:00时限"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。",
+      "evidenceIssues": [
+        "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。",
+      "evidenceIssues": [
+        "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "路线、日期与车辆归属符合本轮预期，未把已知安排当实际冲突。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。",
+      "evidenceIssues": [
+        "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+      ]
+    }
+  ],
+  "notes": [
+    "本次R0—R3四轮成功发布，R4重复不产生批次，R5上游失败后停止；仅评已发布12个任务轮。",
+    "核心8/12、依据7/12仅为中断前观察，不算第三次完整run、不混入完整同序号配对分母。",
+    "没有new-spatial-3或变体语义评分；这些测试未完成不能推断结果。",
+    "原生自由答复不是正式主评分对象。"
+  ],
+  "plannedTaskRounds": 36,
+  "publishedTaskRounds": 12,
+  "unscoredTaskRounds": 24,
+  "interruption": "R5 方舟 HTTP 429 insufficient_quota；停止全部付费测试",
+  "partial": true
+}

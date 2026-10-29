@@ -11,7 +11,7 @@ import type { BackgroundJob } from '../src/contracts/background.js';
 import type { ContinuousStream } from '../src/contracts/continuous.js';
 import { PiLab } from '../src/pi/lab.js';
 import { fakeRuntime } from './pi/fake-runtime.js';
-import { crashCatalog, crashConfig, crashContext } from './fixtures/continuous-crash-child.js';
+import { crashCatalog, crashConfig, crashContext, crashPublishedAssessment } from './fixtures/continuous-crash-child.js';
 
 it('retains actual SIGKILL inputs and published baseline; resumes once with a fresh native session',async()=>{
   const dataDir=await mkdtemp(join(tmpdir(),'axon-continuous-sigkill-'));
@@ -42,7 +42,8 @@ it('retains actual SIGKILL inputs and published baseline; resumes once with a fr
     const paused=service.continuous.store.stream(state.stream.epochId);expect(paused.state).toBe('paused');expect(paused.latestJobId).toBe(state.first.id);
     expect(service.continuous.store.pending(paused.epochId).map(input=>input.id)).toEqual(state.pendingIds);
     await service.pump();expect(fake.calls).toHaveLength(0);
-    const previous=await service.continuous.detail(actor,state.first.id);expect(previous.text).toBe('SIGKILL 前已发布的固定结论');
+    const previous=await service.continuous.detail(actor,state.first.id);expect(previous.text).toBe(crashPublishedAssessment);
+    expect(previous.text).toBe(service.continuous.store.publication(state.first.id).update?.unassigned.reason);
     expect(previous.inputs?.some(input=>input.event?.text==='首次来源事实')).toBe(true);
     const action={revision:paused.revision,action:'resume' as const,clientActionId:randomUUID()};
     const resumed=service.continuous.control(actor,paused.id,action);expect(resumed.sessionId).not.toBe(state.second.sessionId);

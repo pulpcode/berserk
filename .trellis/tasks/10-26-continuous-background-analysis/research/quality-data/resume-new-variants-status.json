@@ -1,0 +1,36 @@
+[
+  {
+    "name": "new-variant-time-weight",
+    "fixture": "time-weight-input.json",
+    "status": "finished",
+    "startedAt": "2026-10-28T13:29:04.564Z",
+    "exitCode": 0,
+    "endedAt": "2026-10-28T13:36:39.496Z",
+    "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-XBAfzl/validation.json",
+    "requests": 56,
+    "providerFailure": false
+  },
+  {
+    "name": "new-variant-source-conflict",
+    "fixture": "source-conflict-input.json",
+    "status": "finished",
+    "startedAt": "2026-10-28T13:36:39.504Z",
+    "exitCode": 0,
+    "endedAt": "2026-10-28T13:45:53.745Z",
+    "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-gmKp0y/validation.json",
+    "requests": 58,
+    "providerFailure": false
+  },
+  {
+    "name": "new-variant-shared-object",
+    "fixture": "shared-object-input.json",
+    "status": "finished",
+    "startedAt": "2026-10-28T13:45:53.751Z",
+    "exitCode": 1,
+    "endedAt": "2026-10-28T13:53:24.572Z",
+    "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-Oi2ndS/validation.json",
+    "requests": 50,
+    "providerFailure": true,
+    "stopReason": "upstream_failure"
+  }
+]

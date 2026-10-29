@@ -1,0 +1,89 @@
+[
+  {
+    "run": "new-variant-shared-object-complete",
+    "fixture": "shared-object-input.json",
+    "fixtureHash": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+    "rubric": "shared-object-v1",
+    "taskScoringScope": "variant_batch_only",
+    "batchCorrect": 9,
+    "batchScored": 11,
+    "unpublishedAttemptedBatchChecks": 0,
+    "batchPlanned": 11,
+    "rows": [
+      {
+        "round": 1,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 2,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 3,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 5,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 6,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 7,
+        "expected": false,
+        "actual": false,
+        "passed": true
+      },
+      {
+        "round": 8,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 9,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      },
+      {
+        "round": 10,
+        "expected": false,
+        "actual": true,
+        "passed": false
+      },
+      {
+        "round": 11,
+        "expected": false,
+        "actual": true,
+        "passed": false
+      },
+      {
+        "round": 12,
+        "expected": true,
+        "actual": true,
+        "passed": true
+      }
+    ],
+    "requiredTaskCorrect": 0,
+    "requiredTaskScored": 0,
+    "requiredTaskPlanned": 0,
+    "taskRows": [],
+    "allTextTaskCorrect": 0,
+    "allTextTaskScored": 0,
+    "allTextTaskPlanned": 0,
+    "allTextTaskRows": []
+  }
+]

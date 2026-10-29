@@ -1,0 +1,12 @@
+{
+  "scannedFiles": 2238,
+  "scannedDecompressedArchives": 20,
+  "exactCredentialMatches": 0,
+  "credentialValuePrinted": false,
+  "networkRequests": 0,
+  "excludedDirectories": [
+    "node_modules",
+    ".git"
+  ],
+  "symlinkTraversal": false
+}

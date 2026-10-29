@@ -1,0 +1,476 @@
+{
+  "run": "new-spatial-2",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "本轮无管制，却要求先取得独立覆盖14:00的来源确认才可执行，新增放行门槛。",
+      "evidenceIssues": [
+        "把当前通知时效范围之外直接转化为必须补独立放行来源"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "覆盖清单正确标unrelated：r2不与区域相交。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "覆盖清单正确标unrelated：r2不与区域相交。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位",
+        "边界只向北扩、经度不变，纬30.01的r1穿越长度未增加，却称范围变长"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "D先前路线未知，却写不再共路/只剩A与E、协同压力减轻，暗含D原在r2的无据历史"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "D先前路线未知，却写不再共路/只剩A与E、协同压力减轻，暗含D原在r2的无据历史"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": [
+        "替代路线条件因缺边界无法评估，却继续记not_applicable；主结论待核实正确"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "D",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "E",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "实际路线、通知版本、几何/时段及本轮约束判断符合预期，建议未当作已执行。",
+      "evidenceIssues": []
+    }
+  ],
+  "notes": [
+    "采用原空间oracle及勘误；R2 C部分覆盖、R3全部覆盖均正确。",
+    "C明确可执行、仅建议出发前确认点位清单，没有像spatial1写为不可缺的开工强条件，故不扣核心。A/E同路建议协调亦未限制主结论。",
+    "条件标题与理由矛盾只扣依据呈现；稳定ID不能保证条件名称/含义自动更新。",
+    "R4无新批次；E R0/R1正确unrelated计通过。",
+    "原生自由答复不替代正式结构评分。",
+    "已逐轮核对正式归档review.update与评分时实时validation.detail.update完全一致；来源版本d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 9,
+      "detail": "原生推断段明确D过去没有路线，但同文表格及正式A/E仍称不再共路线/只剩A与E；无据旧状态在正式结果中保留。"
+    },
+    {
+      "round": 1,
+      "detail": "原生与正式都把B先前人为增加的14:00无依据缺口称已闭合；按本轮禁令时间外不受影响核心通过，条件旧标题矛盾另扣依据。"
+    },
+    {
+      "round": 12,
+      "detail": "原生开头概称五项全部恢复，正式B明确维持无变化；仅按正式逐任务结果计分。"
+    }
+  ]
+}
