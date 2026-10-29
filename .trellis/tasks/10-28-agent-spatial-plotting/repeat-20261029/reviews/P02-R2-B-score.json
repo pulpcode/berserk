@@ -1,0 +1,21 @@
+{
+  "id": "P02-R2-B",
+  "mainRequirement": "pass",
+  "processFacts": "fail",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "写前澄清车型并正确保存水罐符号/坐标名称plan。AskUser选项附加最常见主战消防车类型，当前目录和工具没有频率/场景或主战依据，属无据专业比较断言；不宣称该事实客观必错。",
+  "quotes": [
+    "最常见的主战消防车类型"
+  ],
+  "evidence": [
+    "P02-R2-B/gate/1-checkpoint.json",
+    "P02-R2-B/interaction-fe58de81-7ea2-4b54-b4a6-108bf35410e5.json"
+  ],
+  "adjudication": {
+    "reviewerSuggestion": "processFacts fail, main pass",
+    "rootDecision": "同意无依据专业比较断言；需限定地区场景及频率依据，非目录事实或可复算推导"
+  }
+}

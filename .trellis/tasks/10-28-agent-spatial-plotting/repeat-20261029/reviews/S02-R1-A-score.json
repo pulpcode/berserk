@@ -1,0 +1,14 @@
+{
+  "id": "S02-R1-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "全层4点名单与总数、单输入origin500米预览与只读状态正确，近似边界说明有方法依据。",
+  "evidence": [
+    "S02-R1-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

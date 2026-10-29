@@ -1,0 +1,14 @@
+{
+  "id": "S01-R1-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "全层读取4点与计算仅origin1点清楚区分，500米预览及只读r1状态正确，方法限制有依据。",
+  "evidence": [
+    "S01-R1-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

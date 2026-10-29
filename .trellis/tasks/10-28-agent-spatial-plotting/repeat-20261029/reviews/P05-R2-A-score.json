@@ -1,0 +1,16 @@
+{
+  "id": "P05-R2-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "原固定700米几何保存/plan/备注均完成，r1到r3说明准确；时间有真实provenance依据，不发布采用。",
+  "evidence": [
+    "P05-R2-A/gate/2-checkpoint.json",
+    "P05-R2-A/browser-review.json"
+  ],
+  "clarity": [],
+  "browser": "pass"
+}

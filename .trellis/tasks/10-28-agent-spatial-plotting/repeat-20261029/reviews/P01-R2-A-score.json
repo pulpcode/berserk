@@ -1,0 +1,14 @@
+{
+  "id": "P01-R2-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确水罐符号、坐标名称plan保存正确，其他未要求字段未添；过程将图层名称口称对象名称但主语明确为deployment图层、最终已正确标图层名称，记表达问题非事实失败。",
+  "evidence": [
+    "P01-R2-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

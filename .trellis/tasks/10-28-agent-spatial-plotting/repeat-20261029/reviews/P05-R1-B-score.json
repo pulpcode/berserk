@@ -1,0 +1,19 @@
+{
+  "id": "P05-R1-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "fail",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "700米预览和原固定几何保存/属性成功。首轮错误声称reference层2个对象，实际该层只有origin，existing在derived；第二轮列出正确构成但未明确纠正，不能抵消原误述。",
+  "quotes": [
+    "reference 层 2 个对象：origin；另有 derived 层 existing"
+  ],
+  "evidence": [
+    "P05-R1-B/gate/1-checkpoint.json",
+    "P05-R1-B/gate/2-checkpoint.json",
+    "P05-R1-B/browser-review.json"
+  ],
+  "browser": "pass"
+}

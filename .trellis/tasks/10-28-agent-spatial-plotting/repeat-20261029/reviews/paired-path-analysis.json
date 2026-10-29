@@ -1,0 +1,1641 @@
+{
+  "reviewer": "integration_review",
+  "source": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/agent-spatial-plotting-repeat-20261029/live",
+  "normalization": "忽略会话/结果/新建对象随机身份及 JSON key 顺序；保留既有对象、版本、筛选范围与工具选择。ordered 保留同响应独立读取顺序；functional 忽略这种顺序，公开说明另列不把一句准备语当方法分歧。",
+  "orderedCounts": {
+    "before": 9,
+    "after": 2,
+    "same": 4
+  },
+  "functionalCounts": {
+    "before": 7,
+    "after": 3,
+    "same": 5
+  },
+  "pairedScores": {
+    "main": {
+      "bothPass": 12,
+      "onlyA": 0,
+      "onlyB": 2,
+      "bothFail": 1
+    },
+    "strict": {
+      "bothPass": 11,
+      "onlyA": 1,
+      "onlyB": 1,
+      "bothFail": 2
+    }
+  },
+  "pairs": [
+    {
+      "caseId": "P02",
+      "repeat": 1,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 1,
+      "requestB": 4,
+      "note": "A 首次同时读草稿和地图 Skill，B 只读草稿；均未澄清即写普通点。",
+      "scores": {
+        "A": {
+          "main": "fail",
+          "strict": "fail"
+        },
+        "B": {
+          "main": "fail",
+          "strict": "fail"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 1,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_ppkpkseioby4byrgzhghwmot",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_9s4433yo45cfe5vimhdj0je0",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"map-annotations\"}"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_x8zlluy6bwyh5szr60lz0vyq",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"ft-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 4,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_87xp51rm3finvm4apsp58zm8",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_2qz0qnk1y0uf4uv7thod9glf",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P02",
+      "repeat": 2,
+      "orderedToolPathFirstDifference": "after",
+      "functionalToolPathFirstDifference": "after",
+      "requestA": 47,
+      "requestB": 43,
+      "note": "首次都只读草稿，收到返回后 A 直接写普通点，B 先 AskUser。",
+      "scores": {
+        "A": {
+          "main": "fail",
+          "strict": "fail"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "fail"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 46,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_qqw8fo2eqladfcl90z9ga5wp",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 47,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_0clrw5vzu4dpkfegpntrce0v",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"firetruck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 48,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 42,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_jcptsfwypozcndvq75berkno",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 43,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_rl169elso47clwq0udsictik",
+                "name": "ask_user",
+                "arguments": "{\"questions\": [{\"id\": \"truck_type\", \"prompt\": \"deployment（部署图层）可写，草稿为 revision 1。但“消防车”在符号目录中没有唯一对应类型，请指定要用的消防车标号：\", \"options\": [{\"id\": \"water_tank\", \"label\": \"水罐消防车（XF/T 3013—2020 6.2.1）\", \"description\": \"最常见的主战消防车类型\"}, {\"id\": \"foam\", \"label\": \"泡沫消防车（6.2.2）\"}, {\"id\": \"pump\", \"label\": \"泵浦消防车（6.2.8）\"}, {\"id\": \"rescue\", \"label\": \"抢险救援消防车（6.2.13）\"}, {\"id\": \"ladder\", \"label\": \"云梯消防车（6.2.10）\"}, {\"id\": \"no_symbol\", \"label\": \"不用专业符号，仅用普通点标（circle）\", \"description\": \"只按名称和方案性质表达位置，不加消防车符号\"}], \"multiSelect\": false}]}"
+              }
+            ]
+          },
+          {
+            "id": 44,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_11fwnfnp3xubyu0j6ed3ywbc",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"firetruck-jia-1\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 45,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P02",
+      "repeat": 3,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 86,
+      "requestB": 89,
+      "note": "B 首次同一模型响应已同时生成 read 与 AskUser，A 只生成 read；B 的追问决定早于 read 返回。",
+      "scores": {
+        "A": {
+          "main": "fail",
+          "strict": "fail"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 86,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_1zjpn4w345tvbjhea5zljcod",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 87,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_v70uj19k5p21z4959c4zu8bu",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"firetruck-a\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 88,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 89,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_6xk228r36gi43rie029s6l6w",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_1hhgtixkumoljk4d313qb2dv",
+                "name": "ask_user",
+                "arguments": "{\"questions\": [{\"id\": \"vehicle_type\", \"prompt\": \"“消防车”对应多种标准符号，需要确认具体车种才能设置标号：请选择要在 [114, 22.5] 添加的消防车类型。\", \"options\": [{\"id\": \"water_tanker\", \"label\": \"水罐消防车\", \"description\": \"标准符号 XF/T 3013—2020 6.2.1（别名：水罐车）\"}, {\"id\": \"foam\", \"label\": \"泡沫消防车\", \"description\": \"标准符号 XF/T 3013—2020 6.2.2\"}, {\"id\": \"rescue\", \"label\": \"抢险救援消防车\", \"description\": \"标准符号 XF/T 3013—2020 6.2.13\"}, {\"id\": \"aerial\", \"label\": \"云梯消防车\", \"description\": \"标准符号 XF/T 3013—2020 6.2.10\"}]}]}"
+              }
+            ]
+          },
+          {
+            "id": 90,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_mqt860qtpfr0o6imaa4mam66",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-a\", \"name\": \"消防车甲\", \"kind\": \"point\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 91,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S02",
+      "repeat": 1,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 10,
+      "requestB": 7,
+      "note": "A 先读草稿再读空间 Skill，B 首次同时读取。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 10,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_705kyxjdllwp7p1lz95qw0eh",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 11,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_exm6id8vdr2ks0h9ctz54c58",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_dqhqjme38ks4dq585pfey9wo",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"7ce3fc90-6e86-40d9-8d17-e3ea7d990cf7\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 13,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 7,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_0uyqvmi3bdq4p2tng4cnluxc",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_xeapigjjx7iy6b63fy9m8cgk",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 8,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_tm17aw0fj9lsdplhn40fysb8",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"998e4ee0-3c41-473c-9354-c647fee8b8e9\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 9,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S02",
+      "repeat": 2,
+      "orderedToolPathFirstDifference": "after",
+      "functionalToolPathFirstDifference": "after",
+      "requestA": 50,
+      "requestB": 53,
+      "note": "首次均读草稿；之后 A 直接计算，B 先读空间 Skill。两组最初准备语措辞有差异但不改变步骤。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 49,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_hd7y41d99ivqr1sr91b2socc",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 50,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_yzwr5jxw8ek9tp4z83ps1vv7",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"399a3655-5866-4b4d-9d0a-bfdd2401d19c\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 51,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 52,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_6wphw3lw3fvhepi5oene06pt",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 53,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_0c6qjvce6wq8enwos4ly72vh",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 54,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_ink81glhvub8yz3eun1hkbvf",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"ea58fb47-885d-4660-9802-913189b97118\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 55,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S02",
+      "repeat": 3,
+      "orderedToolPathFirstDifference": "same",
+      "functionalToolPathFirstDifference": "same",
+      "requestA": 96,
+      "requestB": 92,
+      "note": "工具选择、输入范围与顺序一致；B 多一句计算前读取说明。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 96,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_icli3t3k3snjoqo5htevunqo",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 97,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_7qj86dimrgupdxliuc1vu7w7",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 98,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_x9rxes7euzwmf19zofa84lr2",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"d95f5601-e0c7-4d91-a0e4-b0b01c231374\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 99,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 92,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_tscqnf8zcltwab8kxx9ikt10",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 93,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_uwadk1sowt4qwaoptyvjmx30",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 94,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_58jtjs59kdrbgwier95w0x5v",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"c7335b9d-f093-4dca-a479-4c916ac17277\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 95,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P05",
+      "repeat": 1,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 14,
+      "requestB": 22,
+      "note": "A 首次同时读草稿和空间 Skill，B 只读草稿。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "fail"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 14,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_wmpo40uu5dd0jfqv2y6miofz",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_nuqdyvciw9nuoxze65dw7yfz",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 15,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_khq56rktnudks2geex9aycsu",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"39d11995-27e0-42ad-bdee-ed7098275c8d\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+              }
+            ]
+          },
+          {
+            "id": 16,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 17,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_vy26l9y81bd39sl5ewejlj4z",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 18,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_mrdr33qfibajcdswltr4k15g",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:df788ade-da48-4e0d-b55b-09f32227cdea:call_00_khq56rktnudks2geex9aycsu\", \"layerId\": \"derived\", \"objectId\": \"temp-range-700m\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 19,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_2afrb1y6ns7hcfiwzprw08hu",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"temp-range-700m\", \"layerId\": \"derived\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 20,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_q916e6zs69josi004f7xxoao",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"temp-range-700m\"], \"fields\": [\"informationRole\", \"note\", \"sourceRefs\"]}"
+              }
+            ]
+          },
+          {
+            "id": 21,
+            "turn": 2,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 22,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_vhpwf4lc4j9jdmli2tyi4a9m",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 23,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_kszzqyo2fuimtcbnlnymi1w7",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"256c3c25-fe6e-45a5-8025-5a8b16385b4a\", \"revision\": 1}, \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+              }
+            ]
+          },
+          {
+            "id": 24,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 25,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_2hlrsgpz5mzkg3w8hh9cmst7",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 26,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_x38im21l1yroh62ueslxe18q",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:aa2e938a-1b9a-428a-a2b2-0f423a62a89a:call_00_kszzqyo2fuimtcbnlnymi1w7\", \"layerId\": \"derived\", \"objectId\": \"temp-range\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 27,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_qxlj6rwg8ss2rk2v8sc8gyy7",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"temp-range\", \"layerId\": \"derived\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 28,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_esjx8lxy262x7n4xyqg1l2dr",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"temp-range\"], \"fields\": [\"note\", \"informationRole\", \"sourceRefs\"]}"
+              }
+            ]
+          },
+          {
+            "id": 29,
+            "turn": 2,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P05",
+      "repeat": 2,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 67,
+      "requestB": 56,
+      "note": "A 读草稿与 Skill；B 把 reference 当 layerNames 筛选，返回 NOT_FOUND 后自行恢复。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 67,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_u5hba6ua7uwt6fddhlgclurt",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_qta21f5c5jxygavwixicvd24",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 68,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_xjsi0epxbxir1kzj4ejee49h",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"5c5b6684-ea19-4023-9c9a-a60d6c173f70\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+              }
+            ]
+          },
+          {
+            "id": 69,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 70,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_mfy1v3fh01y6rqy9xzihw3zv",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 71,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_9fm6s5y9ytfy52fe3rqd77by",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:f718f638-80f4-4b68-b801-45fd4f7dc87a:call_00_xjsi0epxbxir1kzj4ejee49h\", \"layerId\": \"derived\", \"objectId\": \"temp-range-700m\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 72,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_ub56g2c512og377mlj29rnn0",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"temp-range-700m\", \"layerId\": \"derived\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 73,
+            "turn": 2,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 56,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_r0hcpbs7zdrvamykd197f1iz",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"layerNames\": [\"reference\"], \"objectIds\": [\"origin\"], \"fields\": [\"geometry\"]}"
+              }
+            ]
+          },
+          {
+            "id": 57,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_wpb9vcsfal6njm4uorp2osqi",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"limit\": 100}"
+              }
+            ]
+          },
+          {
+            "id": 58,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_rcoom46c9suqyb7l4hi8ombw",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"], \"fields\": [\"geometry\", \"sourceRefs\"]}"
+              }
+            ]
+          },
+          {
+            "id": 59,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_4hana9f87zbvu3hsghsthjgv",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"660025f4-d2d4-4096-a10d-3a3d712dbc3c\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+              }
+            ]
+          },
+          {
+            "id": 60,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 61,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_lssixzc0r1n13xpg0t5tfcde",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:ddec8a17-91e4-4528-a564-758c4025bf5f:call_00_4hana9f87zbvu3hsghsthjgv\", \"layerId\": \"derived\", \"objectId\": \"temp-range\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 62,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_njkbjaqrdprmkfm0q7qtmzm2",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"limit\": 100}"
+              }
+            ]
+          },
+          {
+            "id": 63,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_sxmpcym5yku21lcryczmy528",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"layerId\": \"derived\", \"name\": \"临时范围\", \"objectId\": \"temp-range\", \"resultRef\": \"spatial:ddec8a17-91e4-4528-a564-758c4025bf5f:call_00_4hana9f87zbvu3hsghsthjgv\"}"
+              }
+            ]
+          },
+          {
+            "id": 64,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_gd6z1xvw6ydlyxirtz6sqs02",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"temp-range\", \"layerId\": \"derived\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 65,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_b1tudny1u1nhn3073y714h3o",
+                "name": "annotation_read",
+                "arguments": "{\"fields\": [\"informationRole\", \"note\"], \"layerIds\": [\"derived\"], \"mode\": \"draft\", \"objectIds\": [\"temp-range\"]}"
+              }
+            ]
+          },
+          {
+            "id": 66,
+            "turn": 2,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P05",
+      "repeat": 3,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "after",
+      "requestA": 100,
+      "requestB": 108,
+      "note": "首次仅同响应内 read/Skill 顺序相反。忽略独立读取顺序，首次实质差异为保存轮 A#103 只读草稿、B#111 加读地图 Skill。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 100,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_e4fd4t52kkh5gtpkktlrla7q",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_givtj2pjuqcze7736sxs203s",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 101,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_l3i5spimp05a6b1yi28mutmh",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"1a99164e-0961-4373-b69f-56a528e5b3d8\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+              }
+            ]
+          },
+          {
+            "id": 102,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 103,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_msy1p4dcqnji2l8yelhcxiyp",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 104,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_mejvunm3qxl0yglopfp2h8e0",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:bb09e2da-8898-4779-a65e-7d24de83c535:call_00_l3i5spimp05a6b1yi28mutmh\", \"layerId\": \"derived\", \"objectId\": \"buf-origin-700\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 105,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_2nm3dhl1u3tx4ng7p4jwkhdu",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"buf-origin-700\", \"layerId\": \"derived\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 106,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_0vqfs7mdlvllrwuq7d9rc9gi",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"objectIds\": [\"buf-origin-700\"], \"fields\": [\"note\", \"informationRole\", \"sourceRefs\", \"geometry\"]}"
+              }
+            ]
+          },
+          {
+            "id": 107,
+            "turn": 2,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 108,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_2ut4d3s4iqipc8kpydxjqj9x",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              },
+              {
+                "id": "call_01_ttkowuwuncqfznjgemqom3ip",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 109,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_moplsox0q0mcn9eitv112m5q",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"distanceM\": 700, \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"419a484d-2c01-4eed-a85d-8742ec77ae83\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}}"
+              }
+            ]
+          },
+          {
+            "id": 110,
+            "turn": 1,
+            "tools": []
+          },
+          {
+            "id": 111,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_rdgp8qrv0p5o66p5z93v5x4n",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_g7qc1q6nuoai9tfphcahfdun",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"map-annotations\"}"
+              }
+            ]
+          },
+          {
+            "id": 112,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_sb0uhamukbx48f6kgdtiyt4v",
+                "name": "annotation_from_analysis",
+                "arguments": "{\"resultRef\": \"spatial:0a00f8a7-72fb-4343-b72e-4c7d862eaa63:call_00_moplsox0q0mcn9eitv112m5q\", \"layerId\": \"derived\", \"objectId\": \"tmp_range_700\", \"name\": \"临时范围\"}"
+              }
+            ]
+          },
+          {
+            "id": 113,
+            "turn": 2,
+            "tools": [
+              {
+                "id": "call_00_mabfnw5kw4or8caynupokiy9",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"update_object\", \"objectId\": \"tmp_range_700\", \"changes\": {\"informationRole\": \"plan\", \"note\": \"待核实\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 114,
+            "turn": 2,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P01",
+      "repeat": 1,
+      "orderedToolPathFirstDifference": "same",
+      "functionalToolPathFirstDifference": "same",
+      "requestA": 33,
+      "requestB": 30,
+      "note": "读取→正确水罐符号保存→最终回答一致；生成的新对象 ID 不同不算方法分歧。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 33,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_61vtar9sehr7epytcphg44eh",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 34,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_wjoitjfaz4ll92743fqwhu6q",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 35,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 30,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_lwoa4nlpu1wmshnpdzqq4l6l",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 31,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_cynrbb7sp756hz0b4858d8my",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"firetruck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 32,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P01",
+      "repeat": 2,
+      "orderedToolPathFirstDifference": "same",
+      "functionalToolPathFirstDifference": "same",
+      "requestA": 74,
+      "requestB": 77,
+      "note": "工具路径一致；A 多准备读取与准备添加说明。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 74,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_avt1djwrjr3p9tkbpc9411xs",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 75,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_3sh7bfv52dwyqohs71qikjwg",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 76,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 77,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_tzdpb3yxrfaxweramk8f1o72",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 78,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_ebzgw0jf83q3y0ke6vynvit9",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}, \"informationRole\": \"plan\"}}]}"
+              }
+            ]
+          },
+          {
+            "id": 79,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "P01",
+      "repeat": 3,
+      "orderedToolPathFirstDifference": "same",
+      "functionalToolPathFirstDifference": "same",
+      "requestA": 118,
+      "requestB": 115,
+      "note": "工具路径一致；B 多准备读取说明。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 118,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_a5yhshtf16ardtgadsdwfpb8",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 119,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_uzo29dlqmph8im9hbvnc0klw",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-a\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 120,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 115,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_u1pocrfsn95m94cfxae0ff9p",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 116,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_wms3253k3ek50z1645s3oigi",
+                "name": "annotation_action",
+                "arguments": "{\"action\": \"apply\", \"operations\": [{\"op\": \"add_object\", \"layerId\": \"deployment\", \"feature\": {\"objectId\": \"fire-truck-jia\", \"kind\": \"point\", \"name\": \"消防车甲\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [114, 22.5]}, \"informationRole\": \"plan\", \"style\": {\"symbolId\": \"xf3013-2020.6.2.1\"}}}]}"
+              }
+            ]
+          },
+          {
+            "id": 117,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S01",
+      "repeat": 1,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 36,
+      "requestB": 39,
+      "note": "A 首次读取 geometry/attributes 并读 Skill；B 只读摘要。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 36,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_tguhv0xug9wurw62swtlsg88",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"fields\": [\"geometry\", \"attributes\"]}"
+              },
+              {
+                "id": "call_01_s7jv43wy4v94rm3cmtk6d2qf",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 37,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_86tpoybafknqvl9ql2cip1ne",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"c4afbdc5-3d68-4b9c-b4f2-405f8075c25b\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 38,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 39,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_5oeqy74dz7wukcu8zfl0zd00",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 40,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_7a2zkahi62t3jarbt1ii4f33",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"ebe3c48d-fe05-40f8-b8e7-aeccc493db3e\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 41,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S01",
+      "repeat": 2,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "same",
+      "requestA": 83,
+      "requestB": 80,
+      "note": "仅首次同响应内独立 read/Skill 顺序相反，后续方法与范围一致。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 83,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_wevij9433vhi19etcxg63276",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              },
+              {
+                "id": "call_01_htnfnmf2bwxt2dvkmyizlxdo",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 84,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_ptdtjbofj08mra7b4ylu0y5b",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"1877bf1c-40c3-4958-9c19-142a626c78ac\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 85,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 80,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_1y9yiw75r6d1mcqe231g28a3",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              },
+              {
+                "id": "call_01_0i5ihx7lf649ya5lwxnznyxt",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 81,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_icmebtbx9rig923gmi63gxkf",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"8ebbee88-0e6a-4c30-a566-abfebcefdd99\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 82,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    },
+    {
+      "caseId": "S01",
+      "repeat": 3,
+      "orderedToolPathFirstDifference": "before",
+      "functionalToolPathFirstDifference": "before",
+      "requestA": 121,
+      "requestB": 124,
+      "note": "A 首次指定 geometry/attributes/sourceRefs，B 读摘要；独立读取顺序也不同。",
+      "scores": {
+        "A": {
+          "main": "pass",
+          "strict": "pass"
+        },
+        "B": {
+          "main": "pass",
+          "strict": "pass"
+        }
+      },
+      "requests": {
+        "A": [
+          {
+            "id": 121,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_k4go0h37hgy98nfwwvyl9bfp",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\", \"fields\": [\"geometry\", \"attributes\", \"sourceRefs\"]}"
+              },
+              {
+                "id": "call_01_ccbsvrxyeph2c75tuq0h1pfg",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              }
+            ]
+          },
+          {
+            "id": 122,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_guiyh8w9kde2sblght4e35ad",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"03ea8eac-0bb5-4301-a221-8bdae3f62829\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 500}"
+              }
+            ]
+          },
+          {
+            "id": 123,
+            "turn": 1,
+            "tools": []
+          }
+        ],
+        "B": [
+          {
+            "id": 124,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_4vpn6btim3ry213svphqvgej",
+                "name": "skill_read",
+                "arguments": "{\"id\": \"spatial-analysis\"}"
+              },
+              {
+                "id": "call_01_7duzxjd1rl3lrg0vxwb34gte",
+                "name": "annotation_read",
+                "arguments": "{\"mode\": \"draft\"}"
+              }
+            ]
+          },
+          {
+            "id": 125,
+            "turn": 1,
+            "tools": [
+              {
+                "id": "call_00_61oii4ga9ddtftb6bby49oym",
+                "name": "spatial_analyze",
+                "arguments": "{\"operation\": \"buffer\", \"distanceM\": 500, \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"5ba07f91-473c-453d-b266-233b74484e46\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}}"
+              }
+            ]
+          },
+          {
+            "id": 126,
+            "turn": 1,
+            "tools": []
+          }
+        ]
+      }
+    }
+  ]
+}

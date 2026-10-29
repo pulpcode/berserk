@@ -1,0 +1,14 @@
+{
+  "id": "S01-R3-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "origin输入1、全层4以及未用3点清楚，500米固定预览正确，过程与最终范围/方法/状态均有依据。",
+  "evidence": [
+    "S01-R3-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

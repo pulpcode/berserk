@@ -24,7 +24,7 @@
   "notes": "",
   "meta": {},
   "integration": {
-    "status": "preparing_authorized_24_trial_batch",
+    "status": "completed_24_and_30_repeat_pending_review",
     "branch": "codex/agent-spatial-plotting",
     "groundingArchive": "fc7fc2a7217c37c6f048bf356dde4fe67beb855a",
     "plottingBase": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
@@ -32,14 +32,14 @@
       "unitTests": 230,
       "browserTests": 43
     },
-    "paidModelRequests": 0,
-    "nextAction": "2026-10-29用户已批准24项；首S04/P02四项流程复核通过后继续余20项；不重试不追加，不推送部署。",
+    "paidModelRequests": 226,
+    "nextAction": "24项已归档260acb7；新30项重复全部完成，用户审阅结果；不自动重试追加、改产品或提交。",
     "legacyR16": {
       "complete": 8,
       "pending": 1,
       "unexecuted": 279
     },
-    "evaluationAdapterLimit": "仅离线接入验证，每个普通终态需复核；hold或进程退出后无自动恢复"
+    "evaluationAdapterLimit": "每个普通终态需Codex复核；进程保持现场等待，退出无自动恢复"
   },
   "integrationLive20261029": {
     "status": "completed_pending_user_review",
@@ -90,5 +90,126 @@
     },
     "acceptancePassed": false,
     "nextStep": "用户审阅整合版未达标原因；不自动追加测试或修改产品"
+  },
+  "integrationRepeat20261029": {
+    "status": "completed_pending_user_review",
+    "plan": "repeat-20261029/plan.md",
+    "planned": 30,
+    "historyExcluded": true,
+    "limits": {
+      "requests": 240,
+      "input": 6000000,
+      "output": 150000
+    },
+    "automaticRetries": false,
+    "driver": "repeat-20261029/run.ts",
+    "freezeHash": "31905408c95f5eee08da8c6ca0235470e67abfc8b77fc913f7df29720db87b79",
+    "executed": 30,
+    "unexecuted": 0,
+    "providerRequests": 126,
+    "inputTokens": 2622762,
+    "outputTokens": 31622,
+    "unknownUsage": 0,
+    "report": "repeat-20261029/results.md",
+    "groups": {
+      "A": {
+        "mainPass": 12,
+        "strictPass": 12,
+        "requests": 61,
+        "input": 1286652,
+        "output": 16051,
+        "providerElapsedMs": 137323,
+        "originalTurns": 18,
+        "plainClarificationTurns": 0,
+        "structuredAnswers": 0,
+        "tasks": 15,
+        "skills": {
+          "map-annotations": 1,
+          "spatial-analysis": 8
+        },
+        "anyMapSkill": 9
+      },
+      "B": {
+        "mainPass": 14,
+        "strictPass": 12,
+        "requests": 65,
+        "input": 1336110,
+        "output": 15571,
+        "providerElapsedMs": 145367,
+        "originalTurns": 18,
+        "plainClarificationTurns": 0,
+        "structuredAnswers": 2,
+        "tasks": 15,
+        "skills": {
+          "map-annotations": 1,
+          "spatial-analysis": 6
+        },
+        "anyMapSkill": 6
+      }
+    },
+    "byCase": {
+      "P02": {
+        "A": {
+          "mainPass": 0,
+          "strictPass": 0,
+          "total": 3
+        },
+        "B": {
+          "mainPass": 2,
+          "strictPass": 1,
+          "total": 3
+        }
+      },
+      "S02": {
+        "A": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        },
+        "B": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        }
+      },
+      "P05": {
+        "A": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        },
+        "B": {
+          "mainPass": 3,
+          "strictPass": 2,
+          "total": 3
+        }
+      },
+      "P01": {
+        "A": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        },
+        "B": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        }
+      },
+      "S01": {
+        "A": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        },
+        "B": {
+          "mainPass": 3,
+          "strictPass": 3,
+          "total": 3
+        }
+      }
+    },
+    "acceptancePassed": false,
+    "nextStep": "审阅五题重复结果及首次分歧线索；不得当整体正确率，无自动后续"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "id": "S01-R2-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确输入origin1点、全层4点不混淆，500米Polygon预览与只读状态正确，GeometryType为普通类型标签未声称返回有该大写字段。",
+  "evidence": [
+    "S01-R2-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

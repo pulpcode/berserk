@@ -1,0 +1,564 @@
+{
+  "reviewer": "integration_review",
+  "usage": {
+    "requests": 126,
+    "input": 2622762,
+    "output": 31622
+  },
+  "modelsAndThinking": "all exact expected model enabled/high, HTTP200 usage accounted",
+  "schemaHashCount": 1,
+  "skillBodyHashes": {
+    "map-annotations": [
+      "2d8a199c3fe92f08f0d5d97d2c3aceab7a65044efdd1f2618fa6068a7b2a7a2e"
+    ],
+    "spatial-analysis": [
+      "b1e95f5f8bd0b69268911c127a55f5219156ab079ddde5a18383bbea86611847"
+    ]
+  },
+  "slots": [
+    {
+      "id": "P02-R1-A",
+      "main": "fail",
+      "strict": "fail",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "map-annotations": "provider-0002-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 1,
+          "arguments": "{\"id\": \"map-annotations\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P02-R1-B",
+      "main": "fail",
+      "strict": "fail",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R1-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0008-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 7,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R1-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 4,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0012-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 11,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R1-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 8,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0015-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 14,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R1-B",
+      "main": "pass",
+      "strict": "fail",
+      "process": "na",
+      "final": "fail",
+      "requests": 8,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R1-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R1-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R1-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0037-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 36,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R1-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P02-R2-B",
+      "main": "pass",
+      "strict": "fail",
+      "process": "fail",
+      "final": "pass",
+      "requests": 4,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 1,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P02-R2-A",
+      "main": "fail",
+      "strict": "fail",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R2-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R2-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 4,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0054-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 53,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R2-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 11,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R2-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 7,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0068-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 67,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R2-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R2-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R2-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0081-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 80,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R2-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0084-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 83,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P02-R3-A",
+      "main": "fail",
+      "strict": "fail",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P02-R3-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 1,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R3-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 4,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0094-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 93,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S02-R3-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 4,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0098-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 97,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R3-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 8,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0101-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 100,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P05-R3-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 7,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0109-wire-input.json",
+        "map-annotations": "provider-0112-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 108,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        },
+        {
+          "request": 111,
+          "arguments": "{\"id\": \"map-annotations\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 2,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R3-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "P01-R3-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {},
+      "skillCalls": [],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R3-A",
+      "main": "pass",
+      "strict": "pass",
+      "process": "na",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0122-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 121,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    },
+    {
+      "id": "S01-R3-B",
+      "main": "pass",
+      "strict": "pass",
+      "process": "pass",
+      "final": "pass",
+      "requests": 3,
+      "skillBodyWire": {
+        "spatial-analysis": "provider-0125-wire-input.json"
+      },
+      "skillCalls": [
+        {
+          "request": 124,
+          "arguments": "{\"id\": \"spatial-analysis\"}"
+        }
+      ],
+      "mapStateChecks": "pass",
+      "interactionCount": 0,
+      "originalPrompts": 1,
+      "conflictObserved": false
+    }
+  ],
+  "groups": {
+    "A": {
+      "slots": 15,
+      "mainPass": 12,
+      "strictPass": 12,
+      "skillReadSlots": 9
+    },
+    "B": {
+      "slots": 15,
+      "mainPass": 14,
+      "strictPass": 12,
+      "skillReadSlots": 6
+    }
+  }
+}

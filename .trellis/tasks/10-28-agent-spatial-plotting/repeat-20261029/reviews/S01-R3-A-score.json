@@ -1,0 +1,14 @@
+{
+  "id": "S01-R3-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "读4点、算origin1点明确，500米预览及坐标来源/精度限制/无保存均正确。",
+  "evidence": [
+    "S01-R3-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

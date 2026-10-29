@@ -1,0 +1,16 @@
+{
+  "id": "P05-R3-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "原700米固定几何保存并补plan备注正确，完整旧对象保留，三对象分层说明符合实际，未重算发布采用。",
+  "evidence": [
+    "P05-R3-A/gate/2-checkpoint.json",
+    "P05-R3-A/browser-review.json"
+  ],
+  "clarity": [],
+  "browser": "pass"
+}

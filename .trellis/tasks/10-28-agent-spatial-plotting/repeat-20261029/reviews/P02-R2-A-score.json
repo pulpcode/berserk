@@ -1,0 +1,13 @@
+{
+  "id": "P02-R2-A",
+  "mainRequirement": "fail",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "fail",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "未读Skill且未写前澄清车型，直接保存无symbolId普通点。最终坦诚专业符号未设，事实正确；事后补样式建议不补救。",
+  "evidence": [
+    "P02-R2-A/gate/1-checkpoint.json"
+  ]
+}
