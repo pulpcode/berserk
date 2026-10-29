@@ -1,0 +1,14 @@
+{
+  "id": "S02-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "完整读取reference四点并列名单/总数，origin500米缓冲正确，固定结果与只读状态说明有依据；无需要用户补充的信息。",
+  "evidence": [
+    "S02-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

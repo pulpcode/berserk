@@ -1,0 +1,14 @@
+{
+  "id": "S01-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "最初误把reference作图层名称报错，随后读取实际图层ID并正确完成500米origin缓冲；最终明确全层4点、输入1点，未写入。错误调用已恢复，不按路径惩罚。",
+  "evidence": [
+    "S01-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "P05-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "固定700米结果保存为同一新对象并补plan/待核实成功，无重算；其他对象保留，未发布采用，两轮公开说明有依据，同对象真实浏览器核验通过。",
+  "evidence": [
+    "P05-B/gate/2-checkpoint.json",
+    "P05-B/browser-review.json"
+  ],
+  "clarity": [],
+  "browser": "pass"
+}

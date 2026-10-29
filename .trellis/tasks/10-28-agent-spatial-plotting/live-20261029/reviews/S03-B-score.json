@@ -1,0 +1,14 @@
+{
+  "id": "S03-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "三个候选均读取并参与nearest，甲乙距离正确；第三点约300米标明坐标等距推算，已读坐标支持该近似，不是无据声称工具返回；无写入。",
+  "evidence": [
+    "S03-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

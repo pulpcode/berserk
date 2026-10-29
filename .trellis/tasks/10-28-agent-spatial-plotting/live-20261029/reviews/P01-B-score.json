@@ -1,0 +1,14 @@
+{
+  "id": "P01-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确水罐车型按目录symbolId保存，名称/坐标/图层/plan正确，原对象保留，r1到r2且未发布采用；最终说明与实际一致。",
+  "evidence": [
+    "P01-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "S05-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "区域筛选命中甲乙2个、全部候选3个、未命中丙与工具一致；只读及边界说明有依据。点数容量等属性一句措辞不佳，但主语为业务属性，前文数量明确，不当作否认已统计对象数。",
+  "evidence": [
+    "S05-A/gate/1-checkpoint.json"
+  ],
+  "clarity": [
+    "“点数、容量等属性未在本次查询范围”应直说没有核实业务数量/容量属性，避免与对象计数混淆。"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "S01-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "500米origin缓冲完成，明确输入1点、全层4对象并列其他对象未参与；只读状态与方法说明符合实际，无必需追问。末尾扩展操作仅建议。",
+  "evidence": [
+    "S01-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

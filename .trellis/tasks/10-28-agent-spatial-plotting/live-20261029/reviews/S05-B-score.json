@@ -1,0 +1,16 @@
+{
+  "id": "S05-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "范围、命中甲乙2个、候选3个及未命中丙均有完整工具依据，contains包含边界符合工具契约。末句草稿点数3指候选全集，全文已区分命中2，不机械判矛盾；表达可更清晰。",
+  "evidence": [
+    "S05-B/gate/1-checkpoint.json"
+  ],
+  "clarity": [
+    "末句“依据这些草稿点，点数是3”应注明这是候选总数；前文命中2已清晰，不计事实错误。"
+  ]
+}

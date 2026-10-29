@@ -1,0 +1,22 @@
+{
+  "id": "P05-A",
+  "mainRequirement": "pass",
+  "processFacts": "fail",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "预览700米及固定结果保存/plan/备注/浏览器编辑均完成。但首轮AskUser把objectNames:[origin]的零命中错误扩大为全草稿没有reference层与origin，属公开过程事实错误；之后重读恢复不能抹去。最终关于前后空结果的表述不清，未明确指出筛选条件差异。",
+  "quotes": [
+    "图层0个、对象0个，没有reference层，也没有ID为origin的对象"
+  ],
+  "evidence": [
+    "P05-A/gate/1-checkpoint.json",
+    "P05-A/gate/2-checkpoint.json",
+    "P05-A/browser-review.json"
+  ],
+  "browser": "pass",
+  "clarity": [
+    "首轮最终回答将不同查询范围描述为同版本先空后有，须说明查询条件差异"
+  ]
+}

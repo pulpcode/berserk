@@ -1,0 +1,13 @@
+{
+  "id": "S06-A",
+  "mainRequirement": "fail",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "本会话存在草稿与来源两种港区资源口径，模型直接采用草稿而未澄清或分别给出完整条件答案。所报草稿4内1外及只读效果正确；问题是数据来源选择未明确，不是几何计算错误。",
+  "evidence": [
+    "S06-A/gate/1-checkpoint.json"
+  ]
+}

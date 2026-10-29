@@ -1,0 +1,22 @@
+{
+  "id": "S02-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "fail",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "主任务四点名单/总数和500米预览正确；最终把不存在的returnItems作为返回字段，实际为data.items。属于明确技术字段误述，含义基本正确但不能由主任务正确抵消。",
+  "quotes": [
+    "`returnItems` 展示的是原对象“基点”，面几何存放在这次固定结果中。"
+  ],
+  "evidence": [
+    "S02-B/gate/1-checkpoint.json"
+  ],
+  "adjudication": {
+    "initialReviewerSuggestion": "clarity/pass because intended items meaning clear",
+    "finalDecision": "root reviewed exact backticked nonexistent-field assertion: finalFacts fail",
+    "principle": "不虚构技术细节；此处字段断言明确，不是全文可消歧的普通措辞"
+  },
+  "severity": "minor_explanation_error"
+}

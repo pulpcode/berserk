@@ -24,7 +24,7 @@
   "notes": "",
   "meta": {},
   "integration": {
-    "status": "offline_complete_pending_evaluation_review",
+    "status": "preparing_authorized_24_trial_batch",
     "branch": "codex/agent-spatial-plotting",
     "groundingArchive": "fc7fc2a7217c37c6f048bf356dde4fe67beb855a",
     "plottingBase": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
@@ -33,12 +33,62 @@
       "browserTests": 43
     },
     "paidModelRequests": 0,
-    "nextAction": "审阅next-evaluation-plan.md；未授权真实测评、推送、部署或合入main",
+    "nextAction": "2026-10-29用户已批准24项；首S04/P02四项流程复核通过后继续余20项；不重试不追加，不推送部署。",
     "legacyR16": {
       "complete": 8,
       "pending": 1,
       "unexecuted": 279
     },
     "evaluationAdapterLimit": "仅离线接入验证，每个普通终态需复核；hold或进程退出后无自动恢复"
+  },
+  "integrationLive20261029": {
+    "status": "completed_pending_user_review",
+    "plan": "next-evaluation-plan.md",
+    "driver": "live-20261029/run.ts",
+    "freezeHash": "64ba973b357a7392c7ac49f0cac417b476e387a7e551b84e7b175fffdb1b7d4d",
+    "productRevisions": {
+      "A": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
+      "B": "74986e0f1b4ac3a2fb62434673b3da4c5334ff14"
+    },
+    "planned": 24,
+    "executed": 24,
+    "unexecuted": 0,
+    "providerRequests": 100,
+    "inputTokens": 2152015,
+    "outputTokens": 27930,
+    "unknownUsage": 0,
+    "automaticRetries": false,
+    "additionalTrials": false,
+    "report": "live-20261029/results.md",
+    "groups": {
+      "A": {
+        "tasks": 12,
+        "mainPass": 11,
+        "strictPass": 10,
+        "requests": 54,
+        "input": 1161427,
+        "output": 15571,
+        "skills": {
+          "map-annotations": 2,
+          "spatial-analysis": 5
+        },
+        "anyMapSkill": 7
+      },
+      "B": {
+        "tasks": 12,
+        "mainPass": 10,
+        "strictPass": 9,
+        "requests": 46,
+        "input": 990588,
+        "output": 12359,
+        "skills": {
+          "map-annotations": 2,
+          "spatial-analysis": 7
+        },
+        "anyMapSkill": 8
+      }
+    },
+    "acceptancePassed": false,
+    "nextStep": "用户审阅整合版未达标原因；不自动追加测试或修改产品"
   }
 }

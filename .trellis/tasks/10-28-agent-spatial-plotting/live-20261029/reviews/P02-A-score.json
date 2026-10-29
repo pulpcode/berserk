@@ -1,0 +1,15 @@
+{
+  "id": "P02-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "读取完整草稿及map-annotations后，写前AskUser车型澄清，收到冻结水罐消防车答复后保存正确符号/坐标/plan；旧对象与发布采用状态不变。",
+  "evidence": [
+    "P02-A/gate/1-checkpoint.json",
+    "P02-A/interaction-6c75f9ce-bd92-4f34-ad3c-7573c799d43c.json"
+  ],
+  "clarity": []
+}

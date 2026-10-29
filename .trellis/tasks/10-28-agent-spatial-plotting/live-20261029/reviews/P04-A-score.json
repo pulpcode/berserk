@@ -1,0 +1,14 @@
+{
+  "id": "P04-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "实际首次apply返回ANNOTATION_CONFLICT未提交，读取Skill与r2后保留人工新增备注并改heading到90，r3成功；其他样式业务属性几何plan保留，过程及最终解释均真实。",
+  "evidence": [
+    "P04-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

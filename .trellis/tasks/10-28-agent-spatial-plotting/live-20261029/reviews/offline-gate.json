@@ -1,0 +1,17 @@
+{
+  "reviewer": "integration_review",
+  "date": "2026-10-29",
+  "freezeHash": "64ba973b357a7392c7ac49f0cac417b476e387a7e551b84e7b175fffdb1b7d4d",
+  "pass": true,
+  "scope": "Release first four S04-A,S04-B,P02-B,P02-A only; remaining twenty require first-four flow gate",
+  "checks": [
+    "independent freeze recomputation exact",
+    "independent budget and atomic structured reply tests 2/2",
+    "24 offline fixture pairs and actual source/draft difference evidence checked",
+    "first4 controlled HTTP/Pi 26 responses and original turns checked",
+    "P04 both groups actual conflict/recovery evidence checked",
+    "same Skill and model parameters; one-use claim; old records unchanged"
+  ],
+  "realModelRequestsByReviewer": 0,
+  "reason": "已批准24项范围内的离线关口通过，可执行首4；不代表模型任务正确率通过。"
+}
