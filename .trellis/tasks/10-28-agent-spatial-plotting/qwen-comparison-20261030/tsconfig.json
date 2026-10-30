@@ -1,0 +1,1 @@
+{"extends":"../../../../experiments/harness-lab/tsconfig.json","include":["comparison*.ts"],"compilerOptions":{"allowJs":true,"checkJs":false,"types":[],"typeRoots":["../../../../experiments/harness-lab/node_modules/@types"]}}

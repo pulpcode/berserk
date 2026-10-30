@@ -1,0 +1,16 @@
+{
+  "id": "T03-R1-A",
+  "reviewer": "Codex trellis-check independent agent review",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "strict": "pass",
+  "reason": "分别给出草稿4点及来源1点；名单、边界、来源成员、时间和只读效果均有工具证据。",
+  "expressionNotes": [
+    "“仅按用户指定作为候选”略不严密；全文已明确两组条件答案，没有据此擅自只选草稿，沿用历史判读不单独判事实失败。"
+  ],
+  "evidence": [
+    ".local/qwen-comparison-20261030/comparison/T03-R1-A/review.json"
+  ]
+}

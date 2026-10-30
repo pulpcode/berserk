@@ -1,0 +1,826 @@
+[
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/decision-1.json",
+    "sha256": "35eb123898373c12d0bd3fb8466fca296f41d43df58c83942bef3eff320bd272"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/fixture.json",
+    "sha256": "2a09f1167b39c860072283511cba88c0be26bf5ec2aaf2018fb1eb500bab8642"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/1-checkpoint.json",
+    "sha256": "be227f1a30b23c65452206965bdb904a42985a8b758fd76e3ce652e0d9bc0834"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/1-decision.json",
+    "sha256": "16d2481924e4d43c61b3c78b38a2e703039e3b3906be5326efd2813e3fec29f7"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/1-response.json",
+    "sha256": "1208d1c1900e6679494c75e964287854cea5d4edc2c53bc024f34fb9ea6b9171"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/manifest.json",
+    "sha256": "6492f874a3d21558cc546c855872b47607560ae7dfdfb25ce65d762b92b5b95c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/native-sessions/2026-10-30T03-54-23-050Z_01a18af1-c5c9-77eb-97f5-dfb020942b88.jsonl",
+    "sha256": "5636dbb0fd01ad8f5806001c5a836801ce7f98dc0c8572efbc3b3b6334d534af"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0001-meta.json",
+    "sha256": "4dbefc7317975242b657faa388f5e27f5370947e705714e5c37abc7490de984c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0001-native.json",
+    "sha256": "cde4256fc5bfa19eb7ccaac117d47ed333df9c8e433384ef21a5ccea19526fe2"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0001-response.sse",
+    "sha256": "3165197ae7e48bd5e0bac51413b14a11e67d739c8761db6bcaf27789dd323dd6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0001-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0001-wire.json",
+    "sha256": "f63c0689976cacbd75541bcf2619a63e1f36e159b10388a9a3e906d5ebd3e029"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0002-meta.json",
+    "sha256": "d306beacb8ad340c12916d636ac646b28d6fd25b83fa40c521cf7893fcfefe7b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0002-native.json",
+    "sha256": "b75c8a19896b920784fd04135f8c3727f7c4640bfe4f9db21efe2d4b1d60af15"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0002-response.sse",
+    "sha256": "4f07c595ec1de4bc0207273112b1beb9d93a4c6b99c85741d145e77fee4abb74"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0002-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0002-wire.json",
+    "sha256": "e1ff27e18e068f5c657882bee565670b12674cd4f22ef9dc4051d2c10a66820f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0003-meta.json",
+    "sha256": "819a4ec2022035c863acb9424cb9e3746c1c3ea32f94a2d5af71942b5fd0ac18"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0003-native.json",
+    "sha256": "d8f2142f3fd0066a256c47b3eec2bc35fd97f39089d0469d6c1130aae798efec"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0003-response.sse",
+    "sha256": "303f079a962dec339904f7f04abbaecd4d4ab26ed87a91bf275d26702c23f6be"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0003-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/provider-0003-wire.json",
+    "sha256": "3b59efe625d4deed57c7feb5baf74ef9d819fbfeb9c57d16fcb931030f0289c5"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/replay-1-native-input.json",
+    "sha256": "8c29a239fb7e5fc61b55b9c695cd3e69db6ce9a865454d992f103bd338d10bc3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/replay-2-native-input.json",
+    "sha256": "3c121c53fa2f46e7a018a508289c6fd4ee854a4b6207fd5d22aef0837391d212"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/restoration.json",
+    "sha256": "72b3d25c771413c9f04c191b8a1ae8dc762f48ad73307691d7b38785a0e39103"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/result.json",
+    "sha256": "35aff33d484115e2bd3912b6f564cdd0ebeae710012da8f2816994d7de3ee54e"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/review.json",
+    "sha256": "0468d4f5aa0ce6dd0f3aef7d3432f1323c230edc1e5346aa6a9d714f9095e347"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/turn-1-result.json",
+    "sha256": "1208d1c1900e6679494c75e964287854cea5d4edc2c53bc024f34fb9ea6b9171"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-A/turn-1.sse",
+    "sha256": "16ff06883e2a88568d3535f188aefb0bddc1ff99f62df6678802a5b0ea2acc17"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/decision-1.json",
+    "sha256": "63cd1c5068ba1f4d688371eeeeec872d2bda9a9a14545f9600fb3d13c96d9a6a"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/fixture.json",
+    "sha256": "d41d144a955eac917ad628ccc1de8ed9717987b633307cf66a26b7edd7e492c9"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/1-checkpoint.json",
+    "sha256": "5c14908ed964a946f7ad8bcaf288359bb1f80c0a91709909f90dd841ca1f1524"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/1-decision.json",
+    "sha256": "346e2d85ec021eefd585db75477bad908be226714be4188429b0dd9c7acfddcb"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/1-response.json",
+    "sha256": "a0b7dd7266a7d2dc6dfb481df9a4bc59faaaebdd4a1955e5f13efc3237baee91"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/manifest.json",
+    "sha256": "2b7fa90c544bd9b9e6a54fdcfcf366164ff8bb947805eeae19a4ed5ccc07bc1b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/native-sessions/2026-10-30T03-55-07-506Z_01a18af2-7372-77eb-97f5-dfb319c1ccc5.jsonl",
+    "sha256": "91c8cbaf2be2f2cc34b6cc9d8b9f569863fa3ea2a8298ae0761c284365eddc1f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0004-meta.json",
+    "sha256": "74b2c14069f41ba9ce38975a60c70cb2abebd53282738077fbdd788fd25ea425"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0004-native.json",
+    "sha256": "bb0ca5f12ec5248b3c2a71588cc8d661e51f6981a0e88cda03f7e7b83cdda6ab"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0004-response.sse",
+    "sha256": "5f29883ef335a174167bfad76403ba40de660b8f2c99e5e37bac78c03e33758a"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0004-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0004-wire.json",
+    "sha256": "aa4f6abe0ab385bcbaed7193d2fa2aa834e818d2d468c40f2fe9f716f7f03708"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0005-meta.json",
+    "sha256": "196e646f19d9f71d86facd264146d1f9cb5c42c7927b73a5d6a7d1d3322357ed"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0005-native.json",
+    "sha256": "dc7154e57da392064c855a63868814f6f05e09a4740febc40a9edfcdfee641ac"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0005-response.sse",
+    "sha256": "1896b2bcca2bb0d64c6dc19e7b36e0d8650b2a8fde9b23d6433e49f74384fa96"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0005-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/provider-0005-wire.json",
+    "sha256": "85ff07f0c60feb6e84657139eb9f6556f17ebf7ff3e2f1d580c058615ff71d9f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/replay-1-native-input.json",
+    "sha256": "8aee3e8a0eea362746be9c3535150ed83a426df37149a2bfe0ef7a95b360195a"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/replay-2-native-input.json",
+    "sha256": "cc48358668256d74f658a7d9e90704114fe8c7b89983f3d20cbafaaddf644c50"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/restoration.json",
+    "sha256": "fd89acc3c96f1967e6b044af0c3063e133b160e6aa5b536564b3b18ee7f45a6d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/result.json",
+    "sha256": "8f0602ee04a67a6f4de47fb3b41206b07db4bc84c0a410bca90eeabfdd50391f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/review.json",
+    "sha256": "090d62bbdf85628e0e4c1c0be2c1e69caf53600b189dc67b330a1ddf15c566a1"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/turn-1-result.json",
+    "sha256": "a0b7dd7266a7d2dc6dfb481df9a4bc59faaaebdd4a1955e5f13efc3237baee91"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R1-B/turn-1.sse",
+    "sha256": "031945283ae8b5d5df17a494e6589c25341ad8e2fd0bc38b7f345f15c2d648f8"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/decision-1.json",
+    "sha256": "afb898c6be7dca53cc962cb0d0511f44b730ea95581c116662751805ab73f200"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/fixture.json",
+    "sha256": "46501698abab34cf71c12544d5397f726bb8803f9cef7b3eca11719099a02909"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/1-checkpoint.json",
+    "sha256": "b0b35eb6989824a5a868420d6ee882d6f023ea0a1c30f93296c08bbd07188230"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/1-decision.json",
+    "sha256": "44095912ae4bddfc01408d691489b303bdba288a49992afe3fbae03eb4368568"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/1-response.json",
+    "sha256": "3f37eb48cae9fbfb5c76308e0596f22f52ab686debea613ee8751c32e6ac7369"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/manifest.json",
+    "sha256": "8996a5db786776416e20141fd5c30a3cdcbcdb158c9bf332d433a9d6b9b9846b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/native-sessions/2026-10-30T03-58-41-449Z_01a18af5-b729-77eb-97f5-dfb6f7a0405e.jsonl",
+    "sha256": "238ddddee5c97a0e9c8f6bc97b35fd6ae9bd407b6a549b972cab0b4c62846d58"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0010-meta.json",
+    "sha256": "1cd9fe338e2e8e054c6162ca56952e44bc8f406703b48eee779174eff1efbdf6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0010-native.json",
+    "sha256": "e034309ae47ae9d6bcd047c6b634b8ea08c0a293886607ef9fdef8460e9b2a0c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0010-response.sse",
+    "sha256": "7528fee356cbf224f80eb930c9c28f4a120e03747f88ccb97a0317ab21d4f426"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0010-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0010-wire.json",
+    "sha256": "6343b38c4086b9ec4ae6346365d845eeec6f9bf90df166d4e59ff9c71c09601e"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0011-meta.json",
+    "sha256": "96fc80c1c874d04436dbf544ff2efacb9b2084667da154bdad52b364b9f7a7a3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0011-native.json",
+    "sha256": "f36147dd7fc809e666eecc179ca0631b08ba8fa78cdc7c92b4bf7ad8a05b4ce6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0011-response.sse",
+    "sha256": "c99553094deeffdd7abc1c860f668988f11f9ecb4b2083dc64bf9f0f174addf7"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0011-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0011-wire.json",
+    "sha256": "ff36a8b5739d431fe626d0c3913edcbaefa01e18955c8f5fe2dcf5612e93f21f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0012-meta.json",
+    "sha256": "29a4b6bc022b755108f5fd82cd654078fef27db4dbbe637ccc48fefc7cd669dd"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0012-native.json",
+    "sha256": "22023e3ee5b2e16d6cbf2805a062eaf2f556b1732c5eef592288145e5a7cc298"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0012-response.sse",
+    "sha256": "02c54be41ae9b5ba5b42acd1ef2d79fe918e7eeeb29938757ce1ce2e6a3ce706"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0012-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/provider-0012-wire.json",
+    "sha256": "dd575d27831d8233ea02b719eb0369322bddf71022b5323f2b939fae2b1dd270"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/replay-1-native-input.json",
+    "sha256": "f7bcf61ccad997105cf7f9c25199f5a3996277cb754145c319da8b231044524c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/replay-2-native-input.json",
+    "sha256": "e7572e4cdc053b32371163289a5a91da1cc6b5e4d328e262e23c30b2163a811a"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/restoration.json",
+    "sha256": "5c83eedbdfdd3e9d156643b4c340e9cedd841833be16f2a3e5fc5cb266810c77"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/result.json",
+    "sha256": "a1f3258546675a6b2365d933e9e93b184e4f0252dfcc99f160fd7ea4574d9eee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/review.json",
+    "sha256": "418084b14ce63d00958dd89fd7dcd655a411ffc54051186dd906e3b4aca6a1ea"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/turn-1-result.json",
+    "sha256": "3f37eb48cae9fbfb5c76308e0596f22f52ab686debea613ee8751c32e6ac7369"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-A/turn-1.sse",
+    "sha256": "bcd8cb9b9f6ad4269a3fd819d53047d8e3b93fa25661aa46e2493fec02540db7"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/decision-1.json",
+    "sha256": "9535d56c34f965e755bd9324e336dfbbfe0aabe5e063d313a113a69051bf7c69"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/fixture.json",
+    "sha256": "c8d0a8369f5049ad3d9c62d9b536d7283aad3d754a7501affe9765cb7ab1376d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/1-checkpoint.json",
+    "sha256": "2be4549f86793211b9d20c4ffa30ae2c1d2ee0d3b5ba33136adb467c84f932be"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/1-decision.json",
+    "sha256": "ce37fc36b088d02b8070d005cd35dff012c2cf78e361233ff167285c566bc489"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/1-response.json",
+    "sha256": "83f8e10ec4294760dfd70f35d7abc9db0b6a9c0c8b73b46dafeb842d65a46a0e"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/manifest.json",
+    "sha256": "9787b089b8fa1ae06bcc39a3fa197fb91b44088c23042c9e077c96c29e2e7117"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/native-sessions/2026-10-30T03-56-34-989Z_01a18af3-c92d-77eb-97f5-dfb57cf11791.jsonl",
+    "sha256": "397ae916dd8ac59fb4332b6e13f78ec84069141c5c8045f8281f92bf72e39c97"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0006-meta.json",
+    "sha256": "76fd8e970e209e1f232fcd43abbab9bfea879e84a507bbb225e6de43807fcbd5"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0006-native.json",
+    "sha256": "12223cf373472ff2564f87719d73562c665e040af825c101d4fa87470f97c0e9"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0006-response.sse",
+    "sha256": "87213354f398e210d1766709b97f9273f7c1ab8003952424a0d1e4685d653d2d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0006-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0006-wire.json",
+    "sha256": "da9c7e4ebff4acaa30fe66a1e82c2dbf8b6cefd303556ca68a3e2a59d43b76ed"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0007-meta.json",
+    "sha256": "2afe19d73fc412ed56e84b8602c36045efe83c3d2b20287722722bdec79b2f9d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0007-native.json",
+    "sha256": "c8bb93e6fe70a4a39479e91a4db7ea96bb3cb3d0b7502412956d8bfad72b9e8e"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0007-response.sse",
+    "sha256": "2051c54ca9696fa42f160a3c6f1edf212115fbebffa31b40c42e64f4cb1f507c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0007-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0007-wire.json",
+    "sha256": "32d8a602e9e506492f384a582fd6dfe162111d821a3582201a34030f78b89bce"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0008-meta.json",
+    "sha256": "244feb95911dd7283c5b4e00c6b2ccd34132cbe80a9f7a977e2e24f74d0f6d5b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0008-native.json",
+    "sha256": "576727b245038b86f880281efb87349b919865b21404b83d3250133800650c22"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0008-response.sse",
+    "sha256": "1a73c2bafb4c092d1e342d28190a20882ea5ae0d0fa3aeab3e32a5d06bc5679d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0008-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0008-wire.json",
+    "sha256": "8ba2ecb35e6288e9e1740bf673d4b8243e3f854db345f1a48d682ce9563da872"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-meta.json",
+    "sha256": "158814dd7c2c4f77b02acd9236177352b602dffa357fee04ce1ea044f4197294"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-native.json",
+    "sha256": "c24bf378f9745d14bdcd698777766d55b0482689a81403ad6fb9641d8992b86b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-response.sse",
+    "sha256": "76f3a060eaabb425f0b874f2abab469c13447c32df3424b03b4470bc0a3b974c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-wire.json",
+    "sha256": "975b09f9619c92f06ef5b1a35afa70eb6f000b462864ee5173dcd17c02781f27"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/replay-1-native-input.json",
+    "sha256": "eb0fe093263865765332488bb02678fb5683f902fcb7d84537bef13e11f66b9b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/replay-2-native-input.json",
+    "sha256": "da26fba164cc4026fb7f4583fb47f0441528a9534594ad4c6e59af5d37e71c63"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/restoration.json",
+    "sha256": "1cbe0ac14d932293e24fe5fa45f5b2e300cbac1e922270727cb1703171c4090a"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/result.json",
+    "sha256": "39803560ee2a9c56a897bc891fd9309588d180a80a42d484b8f1390a538bd285"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/review.json",
+    "sha256": "e249e0a4fe43783e5730af911d86d13b462b8a5794310ead9f7401e5b4aaeadb"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/turn-1-result.json",
+    "sha256": "83f8e10ec4294760dfd70f35d7abc9db0b6a9c0c8b73b46dafeb842d65a46a0e"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R2-B/turn-1.sse",
+    "sha256": "0814e876500f72f0abaf1d60b132c6d1dbdd1e455c9235194b4cb17880590d56"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/decision-1.json",
+    "sha256": "65f3bddabfbc374fcb245d08205adffa2853025e98d36b6d6b64b2e28e381705"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/fixture.json",
+    "sha256": "c7f2fa5a117b4b98799d2095859fbca9d5bdefd163a919e2511b1cdbdc017a23"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/1-checkpoint.json",
+    "sha256": "eb482611fb85904472c424fe8a22d9252bbb01d2a8f02e92d7c2e2e8a6a5c1c0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/1-decision.json",
+    "sha256": "e66b346439672d72e744c942999c01ab12cff53029981b587902b0f022760b75"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/1-response.json",
+    "sha256": "4a6f928b8042e5dd93a35fd1d3af510f7a642b2f45785b21825dc68c41194624"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/manifest.json",
+    "sha256": "f7636764ff9cddc95b152e1d8fd4cf1f1cc5ba50232b5af7a4c3902f61b8d7bd"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/native-sessions/2026-10-30T04-00-03-544Z_01a18af6-f7d8-77eb-97f5-dfb9a089f4ee.jsonl",
+    "sha256": "85773a87bb50d7d507bf9d02474f466040b5a74b7dd46fb961f7b6920c3690d9"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0013-meta.json",
+    "sha256": "6b09634dc94441cd67fc2682d529b7d03c6264001096afdb5584b4f61e8efa79"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0013-native.json",
+    "sha256": "b2ba154cb95efe258d6e9c87ec72e4f5229b9dc8e8c3bacdfea02c5915c5d18d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0013-response.sse",
+    "sha256": "ef9a0e46c656eaa6253e34c4bf3454d34cfc2aca904f1184a23755a6d0817fff"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0013-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0013-wire.json",
+    "sha256": "d335116fe5b1bdc241bd75c5d2bd5f4cb390d600d81aea8cf4cf1106e2be7e42"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0014-meta.json",
+    "sha256": "d9d0424b20e7ba82725581cfc985cb62dadd13f48806a807f6e9d1a3df70e6a8"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0014-native.json",
+    "sha256": "1d0fbce32245501fbdb6b52456ad8e7faeb5b41ed83c2bf6d8a79569044727d7"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0014-response.sse",
+    "sha256": "d5868ed39b03769c4c83d05082867785883c1d3d00f33c2b29af37746d615f62"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0014-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0014-wire.json",
+    "sha256": "db0f56899c4979b52ef89efb8885da722f6e683d803c090a5d12cdf000293697"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0015-meta.json",
+    "sha256": "861d2332c582b45e55295b48ed10b84327d15328a0b4d0ed50ef24b362eaa9a3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0015-native.json",
+    "sha256": "f4966d6a9c23a17a09fe7b7d4260e2e7043e3405d5257925c46c6fe5a67cc07c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0015-response.sse",
+    "sha256": "4e5bf1cbbfdfa2c31da35793965310ca582082a7b6c22fab8c091fa00ffa7834"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0015-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/provider-0015-wire.json",
+    "sha256": "2bbf34a5d7f914fde49dbc737ea54c5aa1b0f1be90f0ea3dead8613eeae39bcd"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/replay-1-native-input.json",
+    "sha256": "7b4abf4054d0fccdb0a1da321eb366f0ca1c26bc84aa8adaae5f37c7bf962857"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/replay-2-native-input.json",
+    "sha256": "ed09e9d77a8244537e22dd6d972043d7bb1f3694b2a0018e0ce3a5fa7d3a8ffa"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/restoration.json",
+    "sha256": "4a7e08045f62fffa24e154c9583b9b13dd5dfd3c0f8953081668c4c2a08e8efa"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/result.json",
+    "sha256": "1bab3a5dcfc67c883322eb9a0a695f6fa1c8aa44c2d3ee65b61d348ede10222d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/review.json",
+    "sha256": "8b83da1fca8c67e81a587f3116e8a03e644f17de7c49141188e4f552476df4bb"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/turn-1-result.json",
+    "sha256": "4a6f928b8042e5dd93a35fd1d3af510f7a642b2f45785b21825dc68c41194624"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-A/turn-1.sse",
+    "sha256": "9a924def0385f3995e60422214726db39996d2f3fb4d89b96bfed9721c597a78"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/decision-1.json",
+    "sha256": "f5cf83a8dcf0ee4992e5a20e3466e8d8f10a16038245483f0e96845676a467d6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/fixture.json",
+    "sha256": "9df3a0bca0f2289f21a6cad1194b8165c43998dc7dd1128503bc79bf3c6b408c"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/1-checkpoint.json",
+    "sha256": "5aec5eaf2aec0734f2d6ab079494dc75d17a82b0caf7a6bdc56ef4a925c4f460"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/1-decision.json",
+    "sha256": "ca9420f1489a93813e97275f902c907ca1cecce21a38709e7fc18f884185aa2f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/1-dispatch.json",
+    "sha256": "fbbd534caedc8aba07da66fe51c90fbe09457d90682199cc611d1cf8a81cceee"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/1-response.json",
+    "sha256": "32557f10b6202bceb955beb656ee31297f3f7f0863869135e267ad7a021eaf98"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/protocol.json",
+    "sha256": "05e976f1cdb385b3c19f56ed8d51de0548800b57ef5c7536b9fa4ba69bf62159"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/gate/result.json",
+    "sha256": "026431f3e60f872123e8e6fe844600d91bf7e82e50fac064cc84439ad417bab6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/manifest.json",
+    "sha256": "815a66b654cc6decca5cf00b5a8caf75075e1f82b5bd5bdd193ecfbda771d0b6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/native-sessions/2026-10-30T04-01-04-412Z_01a18af7-e59c-77eb-97f5-dfbb2cde0768.jsonl",
+    "sha256": "70cf908919ded43abe5eb30a5828f2c0a4dada1fcf42b9921fb455c6d203ed85"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0016-meta.json",
+    "sha256": "acf2d09a9b01ae9320fff743e9486f123cfdcaffb20ecaff284c1781a14ff76b"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0016-native.json",
+    "sha256": "6ecb5c80450e7dd5e4a30e0ce8adec52398e8015790e4fdf464d6952362903e4"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0016-response.sse",
+    "sha256": "027d39cb96454ee6f5816d5e34420f69a0bdb3915de593b68c8e451d829e13fe"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0016-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0016-wire.json",
+    "sha256": "9fdd7486259d206046fa761ab6441f08917cde10949dfb2dfabe3b5b78c91432"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0017-meta.json",
+    "sha256": "e64b5c1f22065dc96518295c31bf7d7d766250027f32d2f7ecf5f175019e8809"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0017-native.json",
+    "sha256": "8e2c0ed3ead0e766f576e6f83b6b63dded3ed83e02c8fe93dd4ee4eedc773070"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0017-response.sse",
+    "sha256": "67e508125df697acd32141536b119c9899fe8584ddd07504d8ccd128de6376d7"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0017-schema.json",
+    "sha256": "2219b6bf3b9ebe221010f9bd1a3b753de0222a5deeb625fbb053871f87ebb6e0"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/provider-0017-wire.json",
+    "sha256": "55de0eef64114d7e0cfe94bedc68126b76543e8c0e091f6a56fe752218aba3a3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/replay-1-native-input.json",
+    "sha256": "680664cc29bfb0768d629126a6269172bce7996a02bd2a1795116191d82ad9b5"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/replay-2-native-input.json",
+    "sha256": "b5f3185351facd8abe56eb701b52e70ee564b4a2458063d8c9919d87edd313b3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/replay.json",
+    "sha256": "0061a3640b31d3b0f1f8f60a12d906a978e290db847b1f9235da32d49e7f165d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/restoration.json",
+    "sha256": "7ada8c3a9583e82e79e8b1abad4ae624ee7b194e48942a5c57f06d994b1852b2"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/result.json",
+    "sha256": "14ab56c48332b485fd9f788e309449bc6d435e52edd62412193a765ea100ea8f"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/review.json",
+    "sha256": "891f8cda1a19eedd680bdea4d1d60ab369221fc932e1be389879c18d068ece91"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/turn-1-input.json",
+    "sha256": "d217f1dba52e859f7e6e6d4182d9c6c6f6c45959de9b10d85b120f98199d9bc6"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/turn-1-result.json",
+    "sha256": "32557f10b6202bceb955beb656ee31297f3f7f0863869135e267ad7a021eaf98"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/T03-R3-B/turn-1.sse",
+    "sha256": "e47b5e427578e7a0dac68c952058e55df22f73e1877298a1a3e8eeeb5277b2ef"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/attempts.json",
+    "sha256": "19597dd2566d05aaab30bd55ab7f7b5e5b557257ca7f62539c55711d515631bd"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/batch-state.json",
+    "sha256": "5d077e846f7026d9cfd037501b8773e588bff44d0bb471a0bd6e1a5fadfa516d"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/budget.json",
+    "sha256": "b3cec21c64e204b4f22e0cfd069f7bcd58eb38972ccbca66389866efc83a24e4"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/ledger.json",
+    "sha256": "8fee152823f2ceb989982a10fb54d7a30731b79192a721de80ca0d504f51b728"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/pending.json",
+    "sha256": "854448e9c11888da00bf7273c69d1830e5557f16af5c4d2911e1171526389c53"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/protocol.json",
+    "sha256": "9c706254d232f269aebcd52a962717868853d79f9306b80238873aa14593d9c3"
+  },
+  {
+    "path": ".local/qwen-comparison-20261030/comparison/runs.json",
+    "sha256": "d13c40fb3a0b49f45efc86f5965fb1fd167cb1e60a305ecaaad938b00b9d3726"
+  }
+]

@@ -1,0 +1,180 @@
+{
+  "freezeHash": "1d614ea292fb6ddd4522d987637da9978056908bde24c783e548779206d97433",
+  "requests": [
+    {
+      "id": 1,
+      "trialId": "T03-R1-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 22588,
+        "output": 800
+      }
+    },
+    {
+      "id": 2,
+      "trialId": "T03-R1-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 25897,
+        "output": 370
+      }
+    },
+    {
+      "id": 3,
+      "trialId": "T03-R1-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 27806,
+        "output": 921
+      }
+    },
+    {
+      "id": 4,
+      "trialId": "T03-R1-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 22941,
+        "output": 990
+      }
+    },
+    {
+      "id": 5,
+      "trialId": "T03-R1-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 26786,
+        "output": 1048
+      }
+    },
+    {
+      "id": 6,
+      "trialId": "T03-R2-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 22917,
+        "output": 953
+      }
+    },
+    {
+      "id": 7,
+      "trialId": "T03-R2-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 27060,
+        "output": 590
+      }
+    },
+    {
+      "id": 8,
+      "trialId": "T03-R2-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 27698,
+        "output": 453
+      }
+    },
+    {
+      "id": 9,
+      "trialId": "T03-R2-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 29765,
+        "output": 953
+      }
+    },
+    {
+      "id": 10,
+      "trialId": "T03-R2-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 22590,
+        "output": 870
+      }
+    },
+    {
+      "id": 11,
+      "trialId": "T03-R2-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 25938,
+        "output": 617
+      }
+    },
+    {
+      "id": 12,
+      "trialId": "T03-R2-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 28097,
+        "output": 875
+      }
+    },
+    {
+      "id": 13,
+      "trialId": "T03-R3-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 22587,
+        "output": 860
+      }
+    },
+    {
+      "id": 14,
+      "trialId": "T03-R3-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 24615,
+        "output": 688
+      }
+    },
+    {
+      "id": 15,
+      "trialId": "T03-R3-A",
+      "group": "A",
+      "status": "finished",
+      "usage": {
+        "input": 28712,
+        "output": 1061
+      }
+    },
+    {
+      "id": 16,
+      "trialId": "T03-R3-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 22940,
+        "output": 899
+      }
+    },
+    {
+      "id": 17,
+      "trialId": "T03-R3-B",
+      "group": "B",
+      "status": "finished",
+      "usage": {
+        "input": 28131,
+        "output": 570
+      }
+    }
+  ],
+  "smoke": {
+    "requests": 4,
+    "input": 1516,
+    "output": 181
+  }
+}

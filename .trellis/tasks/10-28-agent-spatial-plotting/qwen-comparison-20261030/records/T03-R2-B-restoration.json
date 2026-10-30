@@ -1,0 +1,26 @@
+{
+  "sourceSha": "9da8a8bcce614cbed2903724a248b3b9415a66349630ab05d7c371fcd06ee7c4",
+  "mapping": {
+    "6d287755-6000-4072-9313-b259b87052cc": "5ca32c80-0c9e-48fb-9167-52873be3ee03",
+    "01a18855-d9b0-7460-b9f8-e3766f691125": "01a18af3-c92d-77eb-97f5-dfb57cf11791",
+    "7a5c3f6c-4390-44b6-84f2-c377ea62e495": "21b1d898-7c41-4a1d-adfe-bf96eb0abab3",
+    "map-988d463d": "map-c2fcf7eb",
+    "91c66a9d-c0bf-45e9-8c8e-5ced236a8d17": "b8299707-7252-4905-b8da-40e4c74a5112",
+    "2026-10-29T15:44:50.125Z": "2026-10-30T03:56:35.016Z",
+    "2026-10-29T15:44:56.567Z": "2026-10-30T03:56:35.689Z",
+    "situation-ea8cea01-3c31-4ca3-b0c4-0cc0cfffd62c-seq-100": "situation-2b752450-7ee1-41ef-a8ec-ccd20eec3fa5-seq-100"
+  },
+  "publicHash": "fd0db7f10b61ce761e5b1c39cef7cdd657e54245b4e84e3ec0cb733d73849ed0",
+  "actualHash": "d88cf1de903ff8803b20d323caf197f383f09d8ca1686fd230801472b47e37a0",
+  "toolSchemaHash": "c68aca02090be0305b45bcdc6e0b8ce8a352174b404f96db1300edae008a7b38",
+  "removedOldReasoning": [
+    {
+      "index": 4,
+      "characters": 625
+    },
+    {
+      "index": 7,
+      "characters": 605
+    }
+  ]
+}

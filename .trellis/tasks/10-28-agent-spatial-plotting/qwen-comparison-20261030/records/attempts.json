@@ -1,0 +1,325 @@
+[
+  {
+    "id": 1,
+    "entry": "T03-R1-A",
+    "group": "A",
+    "at": "2026-10-30T03:54:24.087Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22588,
+      "output": 800
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3871,
+    "reasoningCharacters": 1653,
+    "reasoningTokens": 454,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 2,
+    "entry": "T03-R1-A",
+    "group": "A",
+    "at": "2026-10-30T03:54:28.526Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 25897,
+      "output": 370
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2067,
+    "reasoningCharacters": 516,
+    "reasoningTokens": 159,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 3,
+    "entry": "T03-R1-A",
+    "group": "A",
+    "at": "2026-10-30T03:54:31.111Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 27806,
+      "output": 921
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4885,
+    "reasoningCharacters": 1035,
+    "reasoningTokens": 346,
+    "finishReason": "stop"
+  },
+  {
+    "id": 4,
+    "entry": "T03-R1-B",
+    "group": "B",
+    "at": "2026-10-30T03:55:08.302Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22941,
+      "output": 990
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 28835,
+    "reasoningCharacters": 2739,
+    "reasoningTokens": 702,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 5,
+    "entry": "T03-R1-B",
+    "group": "B",
+    "at": "2026-10-30T03:55:38.008Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 26786,
+      "output": 1048
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 29052,
+    "reasoningCharacters": 2376,
+    "reasoningTokens": 541,
+    "finishReason": "stop"
+  },
+  {
+    "id": 6,
+    "entry": "T03-R2-B",
+    "group": "B",
+    "at": "2026-10-30T03:56:35.908Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22917,
+      "output": 953
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 34517,
+    "reasoningCharacters": 1742,
+    "reasoningTokens": 711,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 7,
+    "entry": "T03-R2-B",
+    "group": "B",
+    "at": "2026-10-30T03:57:10.979Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 27060,
+      "output": 590
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 17605,
+    "reasoningCharacters": 1986,
+    "reasoningTokens": 466,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 8,
+    "entry": "T03-R2-B",
+    "group": "B",
+    "at": "2026-10-30T03:57:29.120Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 27698,
+      "output": 453
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 20925,
+    "reasoningCharacters": 1075,
+    "reasoningTokens": 268,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 9,
+    "entry": "T03-R2-B",
+    "group": "B",
+    "at": "2026-10-30T03:57:50.552Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 29765,
+      "output": 953
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 26167,
+    "reasoningCharacters": 1596,
+    "reasoningTokens": 453,
+    "finishReason": "stop"
+  },
+  {
+    "id": 10,
+    "entry": "T03-R2-A",
+    "group": "A",
+    "at": "2026-10-30T03:58:42.308Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22590,
+      "output": 870
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4276,
+    "reasoningCharacters": 2035,
+    "reasoningTokens": 557,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 11,
+    "entry": "T03-R2-A",
+    "group": "A",
+    "at": "2026-10-30T03:58:47.111Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 25938,
+      "output": 617
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3392,
+    "reasoningCharacters": 1254,
+    "reasoningTokens": 406,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 12,
+    "entry": "T03-R2-A",
+    "group": "A",
+    "at": "2026-10-30T03:58:50.968Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 28097,
+      "output": 875
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4973,
+    "reasoningCharacters": 811,
+    "reasoningTokens": 344,
+    "finishReason": "stop"
+  },
+  {
+    "id": 13,
+    "entry": "T03-R3-A",
+    "group": "A",
+    "at": "2026-10-30T04:00:04.469Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22587,
+      "output": 860
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4615,
+    "reasoningCharacters": 2553,
+    "reasoningTokens": 621,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 14,
+    "entry": "T03-R3-A",
+    "group": "A",
+    "at": "2026-10-30T04:00:09.334Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 24615,
+      "output": 688
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3106,
+    "reasoningCharacters": 1180,
+    "reasoningTokens": 310,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 15,
+    "entry": "T03-R3-A",
+    "group": "A",
+    "at": "2026-10-30T04:00:13.184Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 28712,
+      "output": 1061
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 5826,
+    "reasoningCharacters": 1833,
+    "reasoningTokens": 559,
+    "finishReason": "stop"
+  },
+  {
+    "id": 16,
+    "entry": "T03-R3-B",
+    "group": "B",
+    "at": "2026-10-30T04:01:05.371Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22940,
+      "output": 899
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 22699,
+    "reasoningCharacters": 2263,
+    "reasoningTokens": 520,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 17,
+    "entry": "T03-R3-B",
+    "group": "B",
+    "at": "2026-10-30T04:01:28.801Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 28131,
+      "output": 570
+    },
+    "actualModels": [
+      "qwen3.8-max-0902"
+    ],
+    "elapsedMs": 17791,
+    "reasoningCharacters": 630,
+    "reasoningTokens": 156,
+    "finishReason": "stop"
+  }
+]
