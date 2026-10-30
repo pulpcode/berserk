@@ -1,0 +1,26 @@
+{
+  "zip_sha256": "fab4d0173972911d07799fd8b0453e8271d5bf7921ca36305a84845cb40cfaf6",
+  "standalone_plan_sha256": "69c8d0e9721a470a542f3c7ab8a4c3b6139104570520f342853142e4ff85c1ca",
+  "reference_commit": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "current_head": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "baseline_files": [
+    {
+      "path": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "matches": true
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "matches": true
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-tools.ts",
+      "matches": true
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/spatial-tools.ts",
+      "matches": true
+    }
+  ],
+  "reserve_details_read": false,
+  "paid_model_requests": 0
+}

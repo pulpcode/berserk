@@ -1,0 +1,74 @@
+{
+  "status": "not_run",
+  "planned_main_cases": 8,
+  "executed_main_cases": 0,
+  "main_pass_count": null,
+  "strict_pass_count": null,
+  "main_cases": [
+    {
+      "case_id": "G01",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G07",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G04",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G05",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G02",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G08",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G03",
+      "status": "not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "G06",
+      "status": "not_run",
+      "score_file": null
+    }
+  ],
+  "reserve_cases": [
+    {
+      "case_id": "H03",
+      "status": "reserved_not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "H01",
+      "status": "reserved_not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "H04",
+      "status": "reserved_not_run",
+      "score_file": null
+    },
+    {
+      "case_id": "H02",
+      "status": "reserved_not_run",
+      "score_file": null
+    }
+  ],
+  "protocol_failures": [],
+  "decision": null,
+  "warning": "Counts are diagnostic results on these cases, not an estimate or proof of 90% product accuracy. Protocol-invalid and unexecuted cases must remain visible."
+}

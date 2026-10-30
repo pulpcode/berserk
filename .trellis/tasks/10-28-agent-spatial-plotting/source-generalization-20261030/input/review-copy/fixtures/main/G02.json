@@ -1,0 +1,309 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G02",
+  "logical_source_system_id": "fixture-source-g02",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g02-d-region",
+          "name": "白鹭作业区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  121.48,
+                  31.23
+                ],
+                [
+                  121.48,
+                  31.2356
+                ],
+                [
+                  121.4744,
+                  31.2356
+                ],
+                [
+                  121.4744,
+                  31.23
+                ],
+                [
+                  121.48,
+                  31.23
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g02-d-p01",
+          "name": "白榆甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              121.47888,
+              31.23392
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g02-d-p02",
+          "name": "白榆乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              121.47888,
+              31.23672
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g02-d-p03",
+          "name": "白榆丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              121.47888,
+              31.2398
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g02-d-p04",
+          "name": "白榆丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              121.47608,
+              31.24022
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g02-d-p05",
+          "name": "白榆戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              121.4772,
+              31.24064
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "area",
+          "objectId": "g02-s-region"
+        },
+        "name": "白鹭作业区",
+        "revision": 1,
+        "areaIds": [
+          "g02-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                121.48,
+                31.2328
+              ],
+              [
+                121.48,
+                31.2384
+              ],
+              [
+                121.4744,
+                31.2384
+              ],
+              [
+                121.4744,
+                31.2328
+              ],
+              [
+                121.48,
+                31.2328
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g02",
+              "objectType": "resource",
+              "objectId": "g02-s-p01"
+            },
+            {
+              "systemId": "fixture-source-g02",
+              "objectType": "resource",
+              "objectId": "g02-s-p02"
+            },
+            {
+              "systemId": "fixture-source-g02",
+              "objectType": "resource",
+              "objectId": "g02-s-p03"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "resource",
+          "objectId": "g02-s-p01"
+        },
+        "name": "鹭石甲",
+        "revision": 1,
+        "areaIds": [
+          "g02-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            121.47874,
+            31.23686
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "resource",
+          "objectId": "g02-s-p02"
+        },
+        "name": "鹭石乙",
+        "revision": 1,
+        "areaIds": [
+          "g02-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            121.47594,
+            31.23742
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "resource",
+          "objectId": "g02-s-p03"
+        },
+        "name": "鹭石丙",
+        "revision": 1,
+        "areaIds": [
+          "g02-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            121.47706,
+            31.23672
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "resource",
+          "objectId": "g02-s-p04"
+        },
+        "name": "鹭石丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            121.47874,
+            31.23994
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g02",
+          "objectType": "resource",
+          "objectId": "g02-s-p05"
+        },
+        "name": "鹭石戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            121.47594,
+            31.24036
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

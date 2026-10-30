@@ -1,0 +1,287 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G08",
+  "logical_source_system_id": "fixture-source-g08",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g08-d-region",
+          "name": "长汀仓区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  116.42,
+                  39.92
+                ],
+                [
+                  116.42,
+                  39.914
+                ],
+                [
+                  116.426,
+                  39.914
+                ],
+                [
+                  116.426,
+                  39.92
+                ],
+                [
+                  116.42,
+                  39.92
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g08-d-p01",
+          "name": "长汀甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              116.4212,
+              39.9188
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g08-d-p02",
+          "name": "长汀乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              116.4242,
+              39.9182
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g08-d-p03",
+          "name": "长汀丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              116.4212,
+              39.9158
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g08-d-p04",
+          "name": "长汀丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              116.4212,
+              39.9095
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g08-d-p05",
+          "name": "长汀戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              116.4242,
+              39.90905
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "area",
+          "objectId": "g08-s-region"
+        },
+        "name": "长汀仓区",
+        "revision": 1,
+        "areaIds": [
+          "g08-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                116.42,
+                39.917
+              ],
+              [
+                116.42,
+                39.911
+              ],
+              [
+                116.426,
+                39.911
+              ],
+              [
+                116.426,
+                39.917
+              ],
+              [
+                116.42,
+                39.917
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": []
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "resource",
+          "objectId": "g08-s-p01"
+        },
+        "name": "鹭汀甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            116.42135,
+            39.91865
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "resource",
+          "objectId": "g08-s-p02"
+        },
+        "name": "鹭汀乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            116.42435,
+            39.91805
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "resource",
+          "objectId": "g08-s-p03"
+        },
+        "name": "鹭汀丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            116.42135,
+            39.90935
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "resource",
+          "objectId": "g08-s-p04"
+        },
+        "name": "鹭汀丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            116.42435,
+            39.9089
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g08",
+          "objectType": "resource",
+          "objectId": "g08-s-p05"
+        },
+        "name": "鹭汀戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            116.42315,
+            39.90845
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

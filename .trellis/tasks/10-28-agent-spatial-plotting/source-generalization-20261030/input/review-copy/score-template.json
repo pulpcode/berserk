@@ -1,0 +1,51 @@
+{
+  "case_id": null,
+  "stage": null,
+  "run_id": null,
+  "configuration_hash": null,
+  "fixture_hash": null,
+  "status": "not_run",
+  "actual_model": null,
+  "thinking_enabled_observed": null,
+  "finish_reason": null,
+  "scope_events": [],
+  "required_pairs_at_completion": [],
+  "judgments": {
+    "scope_pass": null,
+    "geometry_and_members_pass": null,
+    "main_pass": null,
+    "process_facts_pass": null,
+    "final_facts_pass": null,
+    "no_business_effects_pass": null,
+    "strict_pass": null
+  },
+  "behavior": {
+    "skill_read_before_relevant_decision": null,
+    "redundant_clarifications": 0,
+    "unrequested_but_valid_calculations": 0,
+    "recovered_tool_errors": 0,
+    "coupled_source_questions": 0
+  },
+  "failure_tags": [],
+  "evidence_refs": [],
+  "reviewer_kind": null,
+  "reviewer_name": null,
+  "review_note": null,
+  "state_comparison": {
+    "draft_before": null,
+    "draft_after": null,
+    "source_before": null,
+    "source_after": null,
+    "published_before": null,
+    "published_after": null,
+    "adopted_before": null,
+    "adopted_after": null
+  },
+  "usage": {
+    "model_requests": null,
+    "input_tokens": null,
+    "output_tokens_including_reasoning": null,
+    "reasoning_tokens_subset": null,
+    "cost_estimate": null
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "package_version": "1.0.0",
+  "created_date": "2026-10-30",
+  "timezone": "Asia/Singapore",
+  "status": "authored_and_offline_validated_not_executed",
+  "repository": "https://github.com/pulpcode/berserk",
+  "branch": "codex/agent-spatial-plotting",
+  "reference_commit": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "purpose": "Small, mechanism-focused generalization diagnosis of independent candidate/reference source selection; not a population accuracy estimate.",
+  "recommended_baseline": {
+    "runtime": "Current product files at the reference commit, with the already-decided thinking-enabled configuration.",
+    "skill_group_label": "G2-equivalent current product files; do not silently replay G1.",
+    "model_requested": "deepseek-v4.1-flash",
+    "model_expected_observed": "deepseek-v4-1-flash-261017",
+    "provider": "Volcengine Agent Plan",
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "high",
+    "max_completion_tokens": 32768,
+    "retry_policy": "no automatic model/sample retry",
+    "sampling": "Keep the existing supported production/evaluation settings fixed and record the actual wire payload; do not introduce arbitrary new temperature values."
+  },
+  "reference_files": [
+    {
+      "path": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "git_blob_sha": "e71c402fb815cfb4f3398b4c0578ff0e4db974f1"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "git_blob_sha": "31db87d82f61e42ade489b43e2f98199bee3bc48"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/annotation-tools.ts",
+      "git_blob_sha": "e0cbecd71252d4a24c25fc861454beffa48cde92"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/spatial-tools.ts",
+      "git_blob_sha": "5f1891ec770ba2fc3e3feece870563f5bcf5884a"
+    }
+  ],
+  "main_schedule": [
+    "G01",
+    "G07",
+    "G04",
+    "G05",
+    "G02",
+    "G08",
+    "G03",
+    "G06"
+  ],
+  "reserve_schedule": [
+    "H03",
+    "H01",
+    "H04",
+    "H02"
+  ],
+  "repetitions_per_case_per_frozen_configuration": 1,
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "cold_start": "Fresh backend/workspace/session; prepared business data but zero old user/assistant/tool messages or resultRefs; initial message contains only text.",
+  "runtime_adaptation_required": true,
+  "live_execution_performed": false,
+  "paid_model_requests_performed": 0,
+  "preserve_current_defaults": "Keep normal product system/workspace instructions and the controlled Skill directory. Do not inject an evaluator-written source-resolution rule into model context.",
+  "holdout_isolation": "Administrative reservation, not encryption or access control. If the change author reads reserve details, label that set regression rather than unseen validation."
+}

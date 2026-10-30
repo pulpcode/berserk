@@ -1,0 +1,352 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G07",
+  "logical_source_system_id": "fixture-source-g07",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g07-d-region",
+          "name": "溪湾物资区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  112.97,
+                  28.23
+                ],
+                [
+                  112.97,
+                  28.2232
+                ],
+                [
+                  112.9768,
+                  28.2232
+                ],
+                [
+                  112.9768,
+                  28.23
+                ],
+                [
+                  112.97,
+                  28.23
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g07-d-p01",
+          "name": "溪湾甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.97136,
+              28.22864
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g07-d-p02",
+          "name": "溪湾乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.97204,
+              28.22524
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g07-d-p03",
+          "name": "溪湾丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.97255,
+              28.22694
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g07-d-p04",
+          "name": "溪湾丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.97476,
+              28.22864
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g07-d-p05",
+          "name": "溪湾戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.97544,
+              28.22524
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g07-d-p06",
+          "name": "溪湾己",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              112.9819,
+              28.22864
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "area",
+          "objectId": "g07-s-region"
+        },
+        "name": "溪湾物资区",
+        "revision": 1,
+        "areaIds": [
+          "g07-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                112.9734,
+                28.23
+              ],
+              [
+                112.9734,
+                28.2232
+              ],
+              [
+                112.9802,
+                28.2232
+              ],
+              [
+                112.9802,
+                28.23
+              ],
+              [
+                112.9734,
+                28.23
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g07",
+              "objectType": "resource",
+              "objectId": "g07-s-p01"
+            },
+            {
+              "systemId": "fixture-source-g07",
+              "objectType": "resource",
+              "objectId": "g07-s-p02"
+            },
+            {
+              "systemId": "fixture-source-g07",
+              "objectType": "resource",
+              "objectId": "g07-s-p03"
+            },
+            {
+              "systemId": "fixture-source-g07",
+              "objectType": "resource",
+              "objectId": "g07-s-p04"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p01"
+        },
+        "name": "梧湾甲",
+        "revision": 1,
+        "areaIds": [
+          "g07-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.97493,
+            28.22847
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p02"
+        },
+        "name": "梧湾乙",
+        "revision": 1,
+        "areaIds": [
+          "g07-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.97833,
+            28.22847
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p03"
+        },
+        "name": "梧湾丙",
+        "revision": 1,
+        "areaIds": [
+          "g07-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.97901,
+            28.22507
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p04"
+        },
+        "name": "梧湾丁",
+        "revision": 1,
+        "areaIds": [
+          "g07-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.97816,
+            28.22643
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p05"
+        },
+        "name": "梧湾戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.98207,
+            28.22847
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g07",
+          "objectType": "resource",
+          "objectId": "g07-s-p06"
+        },
+        "name": "梧湾己",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            112.98258,
+            28.22507
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

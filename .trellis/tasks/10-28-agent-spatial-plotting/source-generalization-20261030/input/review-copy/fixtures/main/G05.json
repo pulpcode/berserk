@@ -1,0 +1,331 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G05",
+  "logical_source_system_id": "fixture-source-g05",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g05-d-region",
+          "name": "松浦港区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  117.23,
+                  31.85
+                ],
+                [
+                  117.2236,
+                  31.85
+                ],
+                [
+                  117.2236,
+                  31.8436
+                ],
+                [
+                  117.23,
+                  31.8436
+                ],
+                [
+                  117.23,
+                  31.85
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g05-d-p01",
+          "name": "资源甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              117.22872,
+              31.84552
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g05-d-p02",
+          "name": "资源乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              117.22552,
+              31.84488
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g05-d-p03",
+          "name": "松浦丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              117.22872,
+              31.84232
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g05-d-p04",
+          "name": "松浦丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              117.22872,
+              31.8388
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g05-d-line01",
+          "name": "联络线",
+          "kind": "line",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                117.22792,
+                31.84632
+              ],
+              [
+                117.22744,
+                31.84472
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "area",
+          "objectId": "g05-s-region"
+        },
+        "name": "松浦港区",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                117.23,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8468
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g05",
+              "objectType": "resource",
+              "objectId": "g05-s-p04"
+            },
+            {
+              "systemId": "fixture-source-g05",
+              "objectType": "resource",
+              "objectId": "g05-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p01"
+        },
+        "name": "资源甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84856
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p02"
+        },
+        "name": "资源乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22536,
+            31.84792
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p03"
+        },
+        "name": "杉浦丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22696,
+            31.84744
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p04"
+        },
+        "name": "杉浦丁",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84536
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p05"
+        },
+        "name": "杉浦戊",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84216
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g05",
+          "objectType": "resource",
+          "objectId": "g05-s-p06"
+        },
+        "name": "杉浦己",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.83864
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

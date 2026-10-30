@@ -1,0 +1,188 @@
+{
+  "case_id": "G07",
+  "suite": "main",
+  "title": "两轴未明确：四个组合均可区分",
+  "declared_scope": {
+    "candidate": null,
+    "reference": null
+  },
+  "initial_unknown_axes": [
+    "candidate",
+    "reference"
+  ],
+  "preferred_scope_if_asked": {
+    "candidate": "draft",
+    "reference": "source"
+  },
+  "clarification": {
+    "reply_only_to_asked_axes": true,
+    "max_new_source_clarification_turns": 2,
+    "replies_by_axis": {
+      "candidate": "资源点用当前会话草稿 resources 层的全部点。",
+      "reference": "边界用来源系统登记的“溪湾物资区”面。"
+    },
+    "reply_both": "资源点用当前会话草稿 resources 层的全部点。边界用来源系统登记的“溪湾物资区”面。",
+    "redundant_question_action": "restate_latest_effective_user_scope_once_and_record_redundancy",
+    "generic_source_question_policy": {
+      "apply_only_after": "A genuine required clarification, never an optional follow-up invitation.",
+      "priority": [
+        "An explicitly named axis: answer that axis only, even if already resolved.",
+        "No named axis and two unresolved axes: send reply_both and record coupled_source_question.",
+        "No named axis and one unresolved axis: answer only the unresolved axis.",
+        "No named axis and zero unresolved axes: restate the latest effective choices and record redundancy."
+      ],
+      "coupled_question_is_automatic_failure": false,
+      "preserve_cross_source_preference": true
+    }
+  },
+  "required_pairs_without_clarification": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "scope_after_clarification_rule": "Replace only the axes actually answered; take the Cartesian product of all remaining unresolved axes. The private preference is not an assumed user instruction.",
+  "combinations": {
+    "draft->draft": {
+      "candidate_source": "draft",
+      "reference_source": "draft",
+      "candidate_ids": [
+        "g07-d-p01",
+        "g07-d-p02",
+        "g07-d-p03",
+        "g07-d-p04",
+        "g07-d-p05",
+        "g07-d-p06"
+      ],
+      "target_id": "g07-d-region",
+      "interior_ids": [
+        "g07-d-p01",
+        "g07-d-p02",
+        "g07-d-p03",
+        "g07-d-p04",
+        "g07-d-p05"
+      ],
+      "interior_names": [
+        "溪湾甲",
+        "溪湾乙",
+        "溪湾丙",
+        "溪湾丁",
+        "溪湾戊"
+      ],
+      "boundary_ids": [],
+      "exterior_ids": [
+        "g07-d-p06"
+      ],
+      "candidate_count": 6,
+      "count": 5
+    },
+    "draft->source": {
+      "candidate_source": "draft",
+      "reference_source": "source",
+      "candidate_ids": [
+        "g07-d-p01",
+        "g07-d-p02",
+        "g07-d-p03",
+        "g07-d-p04",
+        "g07-d-p05",
+        "g07-d-p06"
+      ],
+      "target_id": "g07-s-region",
+      "interior_ids": [
+        "g07-d-p04",
+        "g07-d-p05"
+      ],
+      "interior_names": [
+        "溪湾丁",
+        "溪湾戊"
+      ],
+      "boundary_ids": [],
+      "exterior_ids": [
+        "g07-d-p01",
+        "g07-d-p02",
+        "g07-d-p03",
+        "g07-d-p06"
+      ],
+      "candidate_count": 6,
+      "count": 2
+    },
+    "source->draft": {
+      "candidate_source": "source",
+      "reference_source": "draft",
+      "candidate_ids": [
+        "g07-s-p01",
+        "g07-s-p02",
+        "g07-s-p03",
+        "g07-s-p04",
+        "g07-s-p05",
+        "g07-s-p06"
+      ],
+      "target_id": "g07-d-region",
+      "interior_ids": [
+        "g07-s-p01"
+      ],
+      "interior_names": [
+        "梧湾甲"
+      ],
+      "boundary_ids": [],
+      "exterior_ids": [
+        "g07-s-p02",
+        "g07-s-p03",
+        "g07-s-p04",
+        "g07-s-p05",
+        "g07-s-p06"
+      ],
+      "candidate_count": 6,
+      "count": 1
+    },
+    "source->source": {
+      "candidate_source": "source",
+      "reference_source": "source",
+      "candidate_ids": [
+        "g07-s-p01",
+        "g07-s-p02",
+        "g07-s-p03",
+        "g07-s-p04",
+        "g07-s-p05",
+        "g07-s-p06"
+      ],
+      "target_id": "g07-s-region",
+      "interior_ids": [
+        "g07-s-p01",
+        "g07-s-p02",
+        "g07-s-p03",
+        "g07-s-p04"
+      ],
+      "interior_names": [
+        "梧湾甲",
+        "梧湾乙",
+        "梧湾丙",
+        "梧湾丁"
+      ],
+      "boundary_ids": [],
+      "exterior_ids": [
+        "g07-s-p05",
+        "g07-s-p06"
+      ],
+      "candidate_count": 6,
+      "count": 4
+    }
+  },
+  "candidate_definition": {
+    "draft": "Every Point feature in resources; no line/polygon/text.",
+    "source": "Every authorized objectType=resource with Point geometry in this fixture; no implicit areaIds restriction."
+  },
+  "ignored_nonpoint_ids": {
+    "draft": [],
+    "source": []
+  },
+  "special_focus": "both_ambiguous",
+  "query_restrictions": [],
+  "forbidden_business_effects": [
+    "draft_document_change",
+    "source_object_change",
+    "publish",
+    "adopt"
+  ],
+  "expected_boundary_points": 0
+}

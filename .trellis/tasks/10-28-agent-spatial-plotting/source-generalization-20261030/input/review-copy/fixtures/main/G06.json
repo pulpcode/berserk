@@ -1,0 +1,315 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G06",
+  "logical_source_system_id": "fixture-source-g06",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g06-d-region",
+          "name": "云桥作业区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  119.32,
+                  26.09
+                ],
+                [
+                  119.32,
+                  26.0952
+                ],
+                [
+                  119.3148,
+                  26.0952
+                ],
+                [
+                  119.3148,
+                  26.09
+                ],
+                [
+                  119.32,
+                  26.09
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g06-d-p01",
+          "name": "云桥甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.31896,
+              26.09104
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g06-d-p02",
+          "name": "云桥乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.31636,
+              26.09104
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g06-d-p03",
+          "name": "云桥丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.31376,
+              26.09104
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g06-d-p04",
+          "name": "云桥丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.31324,
+              26.09364
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g06-d-p05",
+          "name": "云桥戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.31389,
+              26.0926
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g06-d-p06",
+          "name": "云桥己",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              119.3109,
+              26.09104
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "area",
+          "objectId": "g06-s-region"
+        },
+        "name": "云桥作业区",
+        "revision": 1,
+        "areaIds": [
+          "g06-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                119.3174,
+                26.09
+              ],
+              [
+                119.3174,
+                26.0952
+              ],
+              [
+                119.3122,
+                26.0952
+              ],
+              [
+                119.3122,
+                26.09
+              ],
+              [
+                119.3174,
+                26.09
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g06",
+              "objectType": "resource",
+              "objectId": "g06-s-p02"
+            },
+            {
+              "systemId": "fixture-source-g06",
+              "objectType": "resource",
+              "objectId": "g06-s-p03"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "resource",
+          "objectId": "g06-s-p01"
+        },
+        "name": "杉桥甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            119.31883,
+            26.09117
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "resource",
+          "objectId": "g06-s-p02"
+        },
+        "name": "联络点",
+        "revision": 1,
+        "areaIds": [
+          "g06-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            119.31623,
+            26.09117
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "resource",
+          "objectId": "g06-s-p03"
+        },
+        "name": "联络点",
+        "revision": 1,
+        "areaIds": [
+          "g06-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            119.31363,
+            26.09117
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "resource",
+          "objectId": "g06-s-p04"
+        },
+        "name": "杉桥丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            119.31077,
+            26.09117
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g06",
+          "objectType": "resource",
+          "objectId": "g06-s-p05"
+        },
+        "name": "杉桥戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            119.31038,
+            26.09377
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}
