@@ -1,0 +1,19 @@
+{
+  "mainRequirement": "fail",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T03-R1-G1",
+  "strict": "fail",
+  "reason": "已读到来源同名港区仍自行采用草稿；来源仅列memberRefs数量，未给来源空间命中数1，未满足澄清或完整两口径答案。其已报告的草稿计数和成员引用数量本身有依据，无写入。",
+  "quotes": [
+    "按你的限定，候选用草稿点、参照用草稿港区面",
+    "如你希望以态势来源为准单独统计，我可以另做一次。"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T03-R1-G1/gate/1-checkpoint.json"
+  ]
+}

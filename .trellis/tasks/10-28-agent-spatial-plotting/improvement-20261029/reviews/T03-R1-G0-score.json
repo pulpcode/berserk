@@ -1,0 +1,19 @@
+{
+  "mainRequirement": "fail",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T03-R1-G0",
+  "strict": "fail",
+  "reason": "草稿5候选内4外1计算和事实准确且无修改，但未澄清两种来源，也未完整给出两来源条件答案。",
+  "quotes": [
+    "已按本会话草稿（setId 1e452965…，revision 1）中的“港区”多边形，对资源图层 5 个点做了位置分类",
+    "草稿之外是否还有同类资源点，本次未查。"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T03-R1-G0/gate/1-checkpoint.json"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T04-R2-G1",
+  "strict": "pass",
+  "reason": "过程5候选与实际一致；四点名单和总数正确，未扩大来源和无写入。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T04-R2-G1/gate/1-checkpoint.json"
+  ]
+}

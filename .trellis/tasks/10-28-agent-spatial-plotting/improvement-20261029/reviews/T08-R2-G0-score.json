@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T08-R2-G0",
+  "strict": "pass",
+  "reason": "三项类别ID别名heading正确，明确目录不代表已绘对象，不查改地图。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T08-R2-G0/gate/1-checkpoint.json"
+  ]
+}

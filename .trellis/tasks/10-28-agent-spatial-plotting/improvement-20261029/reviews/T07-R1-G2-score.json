@@ -1,0 +1,18 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T07-R1-G2",
+  "strict": "pass",
+  "reason": "完整预览后保存同一700米几何并补plan/备注；过程和最终说明均符合当时工具依据，原对象及授权边界保留。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T07-R1-G2/gate/1-checkpoint.json",
+    "T07-R1-G2/gate/2-checkpoint.json",
+    "T07-R1-G2-browser.json"
+  ]
+}

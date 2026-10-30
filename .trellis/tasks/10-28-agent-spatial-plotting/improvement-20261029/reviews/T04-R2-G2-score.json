@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T04-R2-G2",
+  "strict": "pass",
+  "reason": "四内一点外名单正确，5候选完整；未查询来源也未修改地图，未推断可用资源。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T04-R2-G2/gate/1-checkpoint.json"
+  ]
+}

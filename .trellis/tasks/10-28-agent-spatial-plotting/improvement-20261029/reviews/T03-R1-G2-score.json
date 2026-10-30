@@ -1,0 +1,18 @@
+{
+  "mainRequirement": "fail",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T03-R1-G2",
+  "strict": "fail",
+  "reason": "未消除草稿/来源歧义，未给完整双口径答案，主任务失败；已给草稿计数、图层总数和计算限制均符合证据，无实际写入。",
+  "quotes": [
+    "已按会话草稿（版本 1）完成只读分析，未保存任何内容。"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T03-R1-G2/gate/1-checkpoint.json"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "T01-R1-G2",
+  "mainRequirement": "pass",
+  "processFacts": "fail",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "写前AskUser澄清后按水罐消防车正确保存；公开选项最常用的通用供水/灭火车型标号缺少目录证据支持其常用程度与通用用途比较。此槽未读取Skill正文，不能把组别当成解释规则已加载。",
+  "quotes": [
+    "最常用的通用供水/灭火车型标号"
+  ],
+  "evidence": [
+    "T01-R1-G2/gate/1-checkpoint.json",
+    "T01-R1-G2/interaction-56da5f41-7c68-409d-82ae-f7fcfee77b27.json"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false
+}

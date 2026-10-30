@@ -1,0 +1,18 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "fail",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T06-R2-G2",
+  "strict": "fail",
+  "reason": "主任务与写入边界正确，但最终声称内存/固定分析结果，实际wire仅证明固定resultRef和未写草稿，未提供内存存储实现依据；不得据猜测补内部实现。",
+  "quotes": [
+    "本次只做了只读计算并形成内存/固定分析结果"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T06-R2-G2/gate/1-checkpoint.json"
+  ]
+}

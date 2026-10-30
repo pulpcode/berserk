@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T06-R2-G1",
+  "strict": "pass",
+  "reason": "4点名单完整，输入1点且无写入；另外3点不在范围内紧接只缓冲1点，可理解为未纳入本次输入，按全文不硬判空间包含误述，单列措辞风险。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T06-R2-G1/gate/1-checkpoint.json"
+  ]
+}

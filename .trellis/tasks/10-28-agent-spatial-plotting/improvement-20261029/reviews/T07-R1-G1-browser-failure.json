@@ -1,0 +1,6 @@
+{
+  "error": "TimeoutError: locator.selectOption: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('席位', { exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <select required=\"\" name=\"seatId\" id=\"login-seat\" autocomplete=\"username\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - did not find some options\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    59 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - did not find some options\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "url": "http://127.0.0.1:5398/",
+  "body": "登录 Axon\n\n进入你的席位工作台\n\n席位\n请选择席位\n情报席\n总体席\n筹划席\n态势席\n密码\n显示密码\n登录",
+  "mutations": []
+}

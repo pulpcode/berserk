@@ -1,0 +1,33 @@
+(node:42207) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 48 slots, exact inherited tasks/candidate edits and approved budget (929.23429ms)
+{"waitingReview":"interaction","id":"T01-R1-G0","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G0/interaction-a0fb2b4a-30c0-425d-a25e-af7f1eb801f0-decision.json"}
+{"waitingReview":"ending","id":"T01-R1-G0","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G0/decision-1.json"}
+{"waitingReview":"interaction","id":"T01-R1-G1","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G1/interaction-61a7face-e983-4494-bb69-799e4a685deb-decision.json"}
+{"waitingReview":"ending","id":"T01-R1-G1","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G1/decision-1.json"}
+{"waitingReview":"interaction","id":"T01-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G2/interaction-d48d0219-175d-4dd1-ad6b-4d98236f87d8-decision.json"}
+{"waitingReview":"ending","id":"T01-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T01-R1-G2/decision-1.json"}
+{"waitingReview":"ending","id":"T07-R1-G1","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G1/decision-1.json"}
+{"waitingReview":"ending","id":"T07-R1-G1","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G1/decision-2.json"}
+{"waitingReview":"browser","id":"T07-R1-G1","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G1/browser-review.json"}
+{"waitingReview":"ending","id":"T07-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G2/decision-1.json"}
+{"waitingReview":"ending","id":"T07-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G2/decision-2.json"}
+{"waitingReview":"browser","id":"T07-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G2/browser-review.json"}
+{"waitingReview":"ending","id":"T07-R1-G0","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G0/decision-1.json"}
+{"waitingReview":"ending","id":"T07-R1-G0","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G0/decision-2.json"}
+{"waitingReview":"browser","id":"T07-R1-G0","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T07-R1-G0/browser-review.json"}
+{"waitingReview":"first6","id":"first6","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/first6-review.json"}
+{"waitingReview":"ending","id":"T02-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T02-R1-G2/decision-1.json"}
+{"waitingReview":"ending","id":"T04-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T04-R1-G2/decision-1.json"}
+{"waitingReview":"ending","id":"T05-R1-G2","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch/T05-R1-G2/decision-1.json"}
+{"nativeOfflineEvidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/integrated-improvement-QQxWUq/batch","controlledRequests":48,"realRequests":0}
+✔ native three-group Skill delivery, six-slot gate, clarification, fixed save and ordinary circle (47932.336563ms)
+✔ flow gate rejects absent/false/stale approval and repeated unchanged tool evidence stops (4.158647ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52737.657213

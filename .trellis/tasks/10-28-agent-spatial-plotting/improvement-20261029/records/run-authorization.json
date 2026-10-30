@@ -1,0 +1,13 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "97953a726aa9383dcb9db969507e0c8e14963cc082877d9d9b938a240871a001",
+  "limits": {
+    "requests": 360,
+    "input": 8000000,
+    "output": 200000
+  },
+  "automaticRetries": false,
+  "additionalTrials": false,
+  "planned": 48,
+  "firstSixRequired": true
+}

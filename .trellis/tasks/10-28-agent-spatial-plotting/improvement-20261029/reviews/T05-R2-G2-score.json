@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T05-R2-G2",
+  "strict": "pass",
+  "reason": "circle/plan/坐标/名称正确；过滤回读1与旧对象不混淆；当前席位无采用权限明确存在实际wire工具说明，未发布采用符合本次动作。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T05-R2-G2/gate/1-checkpoint.json"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-29",
+  "approvedByUser": true,
+  "userInstruction": "可以，先提交方案到git，然后按方案实施，完成离线检查后执行48项测评，先跑6项流程检查，通过后继续剩余42项，不自动重试或追加测试。",
+  "planCommit": "be6df60",
+  "plan": "improvement-20261029/plan.md",
+  "plannedTasks": 48,
+  "flowGateTasks": 6,
+  "remainingAfterGate": 42,
+  "limits": {
+    "requests": 360,
+    "input": 8000000,
+    "output": 200000
+  },
+  "automaticRetries": false,
+  "additionalTrials": false,
+  "status": "implementation_and_offline_checks",
+  "liveAuthorizationRequiresFrozenManifest": true
+}

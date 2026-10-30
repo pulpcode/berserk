@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T06-R1-G2",
+  "strict": "pass",
+  "reason": "4点名单和输入1点准确分开，500米AEQD近似解释有工具依据，草稿版本对象数未变且无写入。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T06-R1-G2/gate/1-checkpoint.json"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T01-R2-G2",
+  "strict": "pass",
+  "reason": "问项仅列目录类别与ID，无最常用等无依据比较；正确水罐符号/plan/坐标/名称，保留旧对象。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T01-R2-G2/gate/1-checkpoint.json",
+    "T01-R2-G2/interaction-bea8208b-8c3a-4208-9b25-35f0dc068c9c.json"
+  ]
+}

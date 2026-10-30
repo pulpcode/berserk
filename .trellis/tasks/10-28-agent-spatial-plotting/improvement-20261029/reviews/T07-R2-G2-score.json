@@ -1,0 +1,18 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T07-R2-G2",
+  "strict": "pass",
+  "reason": "700米预览后通过原resultRef保存，未重算，补plan/待核实；两轮事实一致，旧对象不变，无发布采用，浏览器同对象通过。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T07-R2-G2/gate/1-checkpoint.json",
+    "T07-R2-G2/gate/2-checkpoint.json",
+    "T07-R2-G2-browser.json"
+  ]
+}

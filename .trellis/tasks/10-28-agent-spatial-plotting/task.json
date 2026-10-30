@@ -24,7 +24,7 @@
   "notes": "",
   "meta": {},
   "integration": {
-    "status": "completed_24_and_30_repeat_pending_review",
+    "status": "completed_24_30_and_48_pending_user_review",
     "branch": "codex/agent-spatial-plotting",
     "groundingArchive": "fc7fc2a7217c37c6f048bf356dde4fe67beb855a",
     "plottingBase": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
@@ -32,8 +32,8 @@
       "unitTests": 230,
       "browserTests": 43
     },
-    "paidModelRequests": 226,
-    "nextAction": "24项已归档260acb7；新30项重复全部完成，用户审阅结果；不自动重试追加、改产品或提交。",
+    "paidModelRequests": 416,
+    "nextAction": "48项本轮对照全部完成，原始记录及独立复核已保留；G1/G2严格13/16，未达门槛，待用户审阅。",
     "legacyR16": {
       "complete": 8,
       "pending": 1,
@@ -211,5 +211,135 @@
     },
     "acceptancePassed": false,
     "nextStep": "审阅五题重复结果及首次分歧线索；不得当整体正确率，无自动后续"
+  },
+  "integrationImprovement20261029": {
+    "date": "2026-10-29",
+    "approvedByUser": true,
+    "userInstruction": "可以，先提交方案到git，然后按方案实施，完成离线检查后执行48项测评，先跑6项流程检查，通过后继续剩余42项，不自动重试或追加测试。",
+    "planCommit": "be6df60",
+    "plan": "improvement-20261029/plan.md",
+    "plannedTasks": 48,
+    "flowGateTasks": 6,
+    "remainingAfterGate": 42,
+    "limits": {
+      "requests": 360,
+      "input": 8000000,
+      "output": 200000
+    },
+    "automaticRetries": false,
+    "additionalTrials": false,
+    "status": "completed_pending_user_review",
+    "liveAuthorizationRequiresFrozenManifest": true,
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-30",
+    "fixtureDay": "2026-10-29",
+    "executed": 48,
+    "unexecuted": 0,
+    "freezeHash": "97953a726aa9383dcb9db969507e0c8e14963cc082877d9d9b938a240871a001",
+    "providerRequests": 190,
+    "inputTokens": 4029165,
+    "outputTokens": 60368,
+    "unknownUsage": 0,
+    "originalTurns": 54,
+    "structuredAnswers": 5,
+    "plainClarificationTurns": 0,
+    "groups": {
+      "G0": {
+        "planned": 16,
+        "completed": 16,
+        "scored": 16,
+        "mainPass": 14,
+        "strictPass": 14,
+        "processFailures": 0,
+        "finalFailures": 0,
+        "unnecessaryClarification": 0,
+        "requests": 62,
+        "input": 1290410,
+        "output": 20058,
+        "unknownUsage": 0,
+        "providerElapsedMs": 144457,
+        "originalTurns": 18,
+        "clarificationTurns": 0,
+        "structuredAnswers": 1,
+        "anyMapSkill": 7,
+        "skills": {
+          "map-annotations": 1,
+          "spatial-analysis": 6
+        }
+      },
+      "G1": {
+        "planned": 16,
+        "completed": 16,
+        "scored": 16,
+        "mainPass": 15,
+        "strictPass": 13,
+        "processFailures": 2,
+        "finalFailures": 0,
+        "unnecessaryClarification": 0,
+        "requests": 63,
+        "input": 1372763,
+        "output": 21098,
+        "unknownUsage": 0,
+        "providerElapsedMs": 143781,
+        "originalTurns": 18,
+        "clarificationTurns": 0,
+        "structuredAnswers": 2,
+        "anyMapSkill": 11,
+        "skills": {
+          "map-annotations": 4,
+          "spatial-analysis": 8
+        }
+      },
+      "G2": {
+        "planned": 16,
+        "completed": 16,
+        "scored": 16,
+        "mainPass": 15,
+        "strictPass": 13,
+        "processFailures": 1,
+        "finalFailures": 1,
+        "unnecessaryClarification": 0,
+        "requests": 65,
+        "input": 1365992,
+        "output": 19212,
+        "unknownUsage": 0,
+        "providerElapsedMs": 134066,
+        "originalTurns": 18,
+        "clarificationTurns": 0,
+        "structuredAnswers": 2,
+        "anyMapSkill": 6,
+        "skills": {
+          "map-annotations": 1,
+          "spatial-analysis": 6
+        }
+      }
+    },
+    "acceptance": {
+      "G0": {
+        "strictThreshold": false,
+        "notBelowG0": true,
+        "criticalEffectsAbsent": true,
+        "keyDecisionsNotBothFailed": true,
+        "passed": false
+      },
+      "G1": {
+        "strictThreshold": false,
+        "notBelowG0": false,
+        "criticalEffectsAbsent": true,
+        "keyDecisionsNotBothFailed": true,
+        "passed": false
+      },
+      "G2": {
+        "strictThreshold": false,
+        "notBelowG0": false,
+        "criticalEffectsAbsent": true,
+        "keyDecisionsNotBothFailed": true,
+        "passed": false
+      }
+    },
+    "acceptancePassed": false,
+    "report": "improvement-20261029/results.md",
+    "codeState": "G2_candidate_not_accepted_not_deployed",
+    "nextStep": "用户审阅48项对照；未达15/16严格门槛，不自动改代码、回滚、提交产品、重试或追加测试。"
   }
 }
