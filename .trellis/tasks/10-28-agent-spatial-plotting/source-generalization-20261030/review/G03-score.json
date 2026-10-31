@@ -1,0 +1,67 @@
+{
+  "caseId": "G03",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G03/review.json",
+  "sourceSha256": "d26acf5e1800a29d93da5dee2aa31c8351af62286950dfb35b1d16d59c29cef2",
+  "requiredPairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "draft"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "process_facts_pass": true,
+  "no_business_effects_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 3,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "final_facts_pass": true,
+  "strict_pass": true,
+  "failureTags": [],
+  "completedPairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "missingPairs": [],
+  "evidence": [
+    {
+      "quote": "| 本会话草稿 `reference` 层的“青岚仓区” | 2 | 青岚甲、青岚乙 |\n| 态势来源区域 `g03-s-region`（修订 1，业务时间 2026-10-30T09:00:00+08:00） | 2 | 青岚丙、青岚丁 |",
+      "basis": "两次真实classify_points均使用同一草稿resources5点，分别以草稿面/来源面为target；完整覆盖两种合法边界。"
+    },
+    {
+      "quote": "草稿区域偏东，来源区域偏西",
+      "basis": "两个实际已读矩形纬度范围相同；草稿经度113.3452–113.35，来源113.3428–113.3476，来源整体向西0.0024度，方向正确。"
+    },
+    {
+      "quote": "青岚戊在两个区域之外",
+      "basis": "两次分类均将g03-d-p05标为exterior。"
+    },
+    {
+      "quote": "请确认“青岚仓区”以哪一份为准",
+      "basis": "完整条件答案之后建议未来确定一种口径，不是阻断本题完成的必要澄清；不续发模拟回复。"
+    }
+  ],
+  "notes": [
+    "两个合计恰好同为2，但名字不同；模型正确保留两套名单，未按数字相同合并。",
+    "“约一个小区块”是模糊描述，精确程度可改进，但方向与实际几何相符，没有引入具体无依据尺寸。",
+    "末尾建议选择口径记为可选后续邀请，不计作一次已实际发生的澄清。"
+  ],
+  "optionalFollowupInvitation": true
+}

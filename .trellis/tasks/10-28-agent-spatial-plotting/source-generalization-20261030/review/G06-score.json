@@ -1,0 +1,65 @@
+{
+  "caseId": "G06",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G06/review.json",
+  "sourceSha256": "e133e79c62029d08cb6ef8de70993f1833f44759de8adeb6a2a264899a20666a",
+  "requiredPairs": [
+    "draft->source",
+    "source->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "reference": "source"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 1,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "failureTags": [
+    "CANDIDATE_SOURCE"
+  ],
+  "completedPairs": [
+    "draft->source"
+  ],
+  "missingPairs": [
+    "source->source"
+  ],
+  "evidence": [
+    {
+      "quote": "在云桥作业区内的资源点名单是 云桥乙、云桥丙、云桥丁、云桥戊，共 4 个。",
+      "basis": "去除markdown强调后的原句；实际D→S6点输入得到这4内部点，计算正确；候选来源未明确，遗漏S→S两个同名联络点的答案，亦未澄清。"
+    },
+    {
+      "quote": "草稿资源点图层中这 6 个点名称互不重复，也没有同名点",
+      "basis": "已读取草稿6个Point名字确实互不重复；不能据此完成来源资源的重名检验。"
+    },
+    {
+      "quote": "上表另附对象 ID，便于与来源系统同名的资源区分开，两者身份不同，未做合并。",
+      "basis": "该句在解释ID展示用途，未指定来源侧具体名称或断言本题存在多少同名点；按泛化用途解释，未认定确定事实错误。实际未查来源资源名称，不能据此宣称已查明跨来源同名关系。"
+    }
+  ],
+  "notes": [
+    "应改成“附对象ID，避免可能的同名混淆”；现有句子容易让读者误以为已经查明来源同名，列表达风险，不把主任务遗漏重复扣事实。",
+    "来源资源真实名单中有两个联络点，模型没有查询或统计；不是已观察到按名称去重，而是遗漏了来源候选这一路。",
+    "边界严格采用用户指定来源面，未误用草稿同名面；六个草稿点均完整参与。"
+  ]
+}

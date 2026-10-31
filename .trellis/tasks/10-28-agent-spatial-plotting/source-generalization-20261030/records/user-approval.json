@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-30",
+  "instruction": "提交git，然后开始实施",
+  "planCommit": "de06e4a",
+  "plan": "source-generalization-20261030/plan.md",
+  "approvedTasks": 8,
+  "requests": 96,
+  "inputTokens": 3000000,
+  "outputTokensIncludingReasoning": 300000,
+  "reserveCasesApproved": false,
+  "automaticRetries": false,
+  "additionalTrials": false,
+  "liveRequiresOfflineGate": true
+}

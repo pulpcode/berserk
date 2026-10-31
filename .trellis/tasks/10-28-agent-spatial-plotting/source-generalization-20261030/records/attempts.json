@@ -1,0 +1,553 @@
+[
+  {
+    "id": 1,
+    "entry": "G01",
+    "group": "A",
+    "at": "2026-10-30T08:27:44.311Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18338,
+      "output": 286
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2215,
+    "reasoningCharacters": 615,
+    "reasoningTokens": 132,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 2,
+    "entry": "G01",
+    "group": "A",
+    "at": "2026-10-30T08:27:46.663Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22288,
+      "output": 201
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 1897,
+    "reasoningCharacters": 555,
+    "reasoningTokens": 125,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 3,
+    "entry": "G01",
+    "group": "A",
+    "at": "2026-10-30T08:27:48.645Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22921,
+      "output": 313
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 1735,
+    "reasoningCharacters": 327,
+    "reasoningTokens": 140,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 4,
+    "entry": "G01",
+    "group": "A",
+    "at": "2026-10-30T08:27:50.819Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 25172,
+      "output": 336
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2444,
+    "reasoningCharacters": 347,
+    "reasoningTokens": 103,
+    "finishReason": "stop"
+  },
+  {
+    "id": 5,
+    "entry": "G07",
+    "group": "A",
+    "at": "2026-10-30T08:28:28.196Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18307,
+      "output": 159
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 1817,
+    "reasoningCharacters": 221,
+    "reasoningTokens": 90,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 6,
+    "entry": "G07",
+    "group": "A",
+    "at": "2026-10-30T08:28:30.106Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 21753,
+      "output": 347
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2726,
+    "reasoningCharacters": 424,
+    "reasoningTokens": 168,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 7,
+    "entry": "G07",
+    "group": "A",
+    "at": "2026-10-30T08:28:33.313Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 24177,
+      "output": 397
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3028,
+    "reasoningCharacters": 149,
+    "reasoningTokens": 100,
+    "finishReason": "stop"
+  },
+  {
+    "id": 8,
+    "entry": "G04",
+    "group": "A",
+    "at": "2026-10-30T08:29:11.634Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18320,
+      "output": 367
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2949,
+    "reasoningCharacters": 582,
+    "reasoningTokens": 228,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 9,
+    "entry": "G04",
+    "group": "A",
+    "at": "2026-10-30T08:29:14.687Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 21968,
+      "output": 409
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3732,
+    "reasoningCharacters": 791,
+    "reasoningTokens": 325,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 10,
+    "entry": "G04",
+    "group": "A",
+    "at": "2026-10-30T08:29:18.502Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 23712,
+      "output": 537
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2967,
+    "reasoningCharacters": 485,
+    "reasoningTokens": 249,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 11,
+    "entry": "G04",
+    "group": "A",
+    "at": "2026-10-30T08:29:21.902Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 26326,
+      "output": 615
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4068,
+    "reasoningCharacters": 282,
+    "reasoningTokens": 181,
+    "finishReason": "stop"
+  },
+  {
+    "id": 12,
+    "entry": "G05",
+    "group": "A",
+    "at": "2026-10-30T08:30:04.571Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18323,
+      "output": 279
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2814,
+    "reasoningCharacters": 445,
+    "reasoningTokens": 194,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 13,
+    "entry": "G05",
+    "group": "A",
+    "at": "2026-10-30T08:30:07.484Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 21863,
+      "output": 741
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 5979,
+    "reasoningCharacters": 1113,
+    "reasoningTokens": 533,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 14,
+    "entry": "G05",
+    "group": "A",
+    "at": "2026-10-30T08:30:13.931Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 24418,
+      "output": 585
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3896,
+    "reasoningCharacters": 398,
+    "reasoningTokens": 239,
+    "finishReason": "stop"
+  },
+  {
+    "id": 15,
+    "entry": "G02",
+    "group": "A",
+    "at": "2026-10-30T08:30:33.386Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18325,
+      "output": 193
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2135,
+    "reasoningCharacters": 615,
+    "reasoningTokens": 124,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 16,
+    "entry": "G02",
+    "group": "A",
+    "at": "2026-10-30T08:30:35.626Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 21782,
+      "output": 360
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2631,
+    "reasoningCharacters": 821,
+    "reasoningTokens": 167,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 17,
+    "entry": "G02",
+    "group": "A",
+    "at": "2026-10-30T08:30:38.449Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 23673,
+      "output": 719
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3861,
+    "reasoningCharacters": 1582,
+    "reasoningTokens": 431,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 18,
+    "entry": "G02",
+    "group": "A",
+    "at": "2026-10-30T08:30:42.740Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 26504,
+      "output": 779
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4959,
+    "reasoningCharacters": 880,
+    "reasoningTokens": 227,
+    "finishReason": "stop"
+  },
+  {
+    "id": 19,
+    "entry": "G08",
+    "group": "A",
+    "at": "2026-10-30T08:31:19.014Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18308,
+      "output": 137
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 1898,
+    "reasoningCharacters": 118,
+    "reasoningTokens": 62,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 20,
+    "entry": "G08",
+    "group": "A",
+    "at": "2026-10-30T08:31:21.015Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18821,
+      "output": 424
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4236,
+    "reasoningCharacters": 642,
+    "reasoningTokens": 233,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 21,
+    "entry": "G08",
+    "group": "A",
+    "at": "2026-10-30T08:31:25.394Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22552,
+      "output": 254
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 1928,
+    "reasoningCharacters": 165,
+    "reasoningTokens": 50,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 22,
+    "entry": "G08",
+    "group": "A",
+    "at": "2026-10-30T08:31:27.835Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 24650,
+      "output": 517
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 3651,
+    "reasoningCharacters": 350,
+    "reasoningTokens": 190,
+    "finishReason": "stop"
+  },
+  {
+    "id": 23,
+    "entry": "G03",
+    "group": "A",
+    "at": "2026-10-30T08:32:02.579Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18319,
+      "output": 309
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4896,
+    "reasoningCharacters": 452,
+    "reasoningTokens": 186,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 24,
+    "entry": "G03",
+    "group": "A",
+    "at": "2026-10-30T08:32:07.599Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 19578,
+      "output": 1022
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 5802,
+    "reasoningCharacters": 1943,
+    "reasoningTokens": 982,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 25,
+    "entry": "G03",
+    "group": "A",
+    "at": "2026-10-30T08:32:13.537Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 23488,
+      "output": 495
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2813,
+    "reasoningCharacters": 405,
+    "reasoningTokens": 155,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 26,
+    "entry": "G03",
+    "group": "A",
+    "at": "2026-10-30T08:32:17.335Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 27803,
+      "output": 752
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 5056,
+    "reasoningCharacters": 539,
+    "reasoningTokens": 331,
+    "finishReason": "stop"
+  },
+  {
+    "id": 27,
+    "entry": "G06",
+    "group": "A",
+    "at": "2026-10-30T08:33:10.151Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 18334,
+      "output": 411
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 2873,
+    "reasoningCharacters": 625,
+    "reasoningTokens": 223,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 28,
+    "entry": "G06",
+    "group": "A",
+    "at": "2026-10-30T08:33:13.188Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 22605,
+      "output": 712
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 4548,
+    "reasoningCharacters": 1909,
+    "reasoningTokens": 464,
+    "finishReason": "tool_calls"
+  },
+  {
+    "id": 29,
+    "entry": "G06",
+    "group": "A",
+    "at": "2026-10-30T08:33:18.213Z",
+    "completed": true,
+    "status": 200,
+    "usage": {
+      "input": 25817,
+      "output": 1169
+    },
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "elapsedMs": 7511,
+    "reasoningCharacters": 2563,
+    "reasoningTokens": 645,
+    "finishReason": "stop"
+  }
+]

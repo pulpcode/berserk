@@ -1,0 +1,64 @@
+{
+  "caseId": "G05",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G05/review.json",
+  "sourceSha256": "1365994c704c5cb250bbe51df49f6dfeaaed26b1ccfec3bb225202f376dc10f7",
+  "requiredPairs": [
+    "draft->draft",
+    "source->draft"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "reference": "draft"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "process_facts_pass": true,
+  "no_business_effects_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 2,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "final_facts_pass": true,
+  "strict_pass": false,
+  "failureTags": [
+    "CANDIDATE_SOURCE"
+  ],
+  "completedPairs": [
+    "draft->draft"
+  ],
+  "missingPairs": [
+    "source->draft"
+  ],
+  "evidence": [
+    {
+      "quote": "范围内资源点：2 个",
+      "basis": "D→D的资源甲、资源乙2点正确；未处理S→D的4点答案。"
+    },
+    {
+      "quote": "该层另有 1 条折线“联络线”，不是点，未参与本次分类。",
+      "basis": "实际读取resources有4 Point与1 LineString，spatial input明确4个point IDs，筛选正确。"
+    },
+    {
+      "quote": "如果你说的“资源点”是指态势来源系统里的资源对象（而非本会话草稿 resources 层），告诉我，我可以按同一“松浦港区”范围另做一次筛选。",
+      "basis": "自选草稿候选完成后把另一来源列为可选后续，不是必需澄清，不能补发固定答案挽救。"
+    }
+  ],
+  "notes": [
+    "“4个点均在本次计算范围内”按前后文指计算输入集合，并非区域内部；前面清楚列2内2外，不硬判事实矛盾。",
+    "用户只明确了草稿边界，“按你指定的边界”归因准确；没有声称用户指定草稿候选。"
+  ]
+}

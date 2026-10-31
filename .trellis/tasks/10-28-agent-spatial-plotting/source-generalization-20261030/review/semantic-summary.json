@@ -1,0 +1,143 @@
+{
+  "reviewer": "Codex trellis-check independent Agent",
+  "planned": 8,
+  "executed": 8,
+  "scored": 8,
+  "metrics": {
+    "scope_pass": 3,
+    "geometry_and_members_pass": 3,
+    "main_pass": 3,
+    "process_facts_pass": 8,
+    "final_facts_pass": 7,
+    "no_business_effects_pass": 8,
+    "strict_pass": 2
+  },
+  "categories": {
+    "both_explicit": {
+      "cases": [
+        "G01",
+        "G02"
+      ],
+      "total": 2,
+      "mainPass": 2,
+      "strictPass": 1
+    },
+    "candidate_explicit": {
+      "cases": [
+        "G03",
+        "G04"
+      ],
+      "total": 2,
+      "mainPass": 1,
+      "strictPass": 1
+    },
+    "reference_explicit": {
+      "cases": [
+        "G05",
+        "G06"
+      ],
+      "total": 2,
+      "mainPass": 0,
+      "strictPass": 0
+    },
+    "both_unknown": {
+      "cases": [
+        "G07",
+        "G08"
+      ],
+      "total": 2,
+      "mainPass": 0,
+      "strictPass": 0
+    }
+  },
+  "skillReadTasks": 8,
+  "skills": {
+    "spatial-analysis": 8,
+    "map-annotations": 0
+  },
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "confirmedFactErrorCases": [
+    "G02"
+  ],
+  "mainFailureCases": [
+    "G07",
+    "G04",
+    "G05",
+    "G08",
+    "G06"
+  ],
+  "successfulSpatialCalculations": [
+    {
+      "caseId": "G01",
+      "pair": "draft->source",
+      "membersMatch": true,
+      "count": 2
+    },
+    {
+      "caseId": "G07",
+      "pair": "draft->draft",
+      "membersMatch": true,
+      "count": 5
+    },
+    {
+      "caseId": "G04",
+      "pair": "source->source",
+      "membersMatch": true,
+      "count": 3
+    },
+    {
+      "caseId": "G05",
+      "pair": "draft->draft",
+      "membersMatch": true,
+      "count": 2
+    },
+    {
+      "caseId": "G02",
+      "pair": "source->draft",
+      "membersMatch": true,
+      "count": 0
+    },
+    {
+      "caseId": "G08",
+      "pair": "draft->draft",
+      "membersMatch": true,
+      "count": 3
+    },
+    {
+      "caseId": "G03",
+      "pair": "draft->draft",
+      "membersMatch": true,
+      "count": 2
+    },
+    {
+      "caseId": "G03",
+      "pair": "draft->source",
+      "membersMatch": true,
+      "count": 2
+    },
+    {
+      "caseId": "G06",
+      "pair": "draft->source",
+      "membersMatch": true,
+      "count": 4
+    }
+  ],
+  "toolErrors": [],
+  "businessStateUnchanged": 8,
+  "limitations": [
+    "Targeted source-choice diagnostic, not overall production accuracy",
+    "No model or Skill treatment contrast in this round",
+    "Independent Agent review, not human annotation or double-blind review"
+  ],
+  "scores": [
+    "G01-score.json",
+    "G07-score.json",
+    "G04-score.json",
+    "G05-score.json",
+    "G02-score.json",
+    "G08-score.json",
+    "G03-score.json",
+    "G06-score.json"
+  ]
+}

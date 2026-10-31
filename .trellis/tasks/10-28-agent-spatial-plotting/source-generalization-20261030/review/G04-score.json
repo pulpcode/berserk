@@ -1,0 +1,64 @@
+{
+  "caseId": "G04",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G04/review.json",
+  "sourceSha256": "e0dac57046d98f21c2ad97c2979b6ad0129acdb9a83991927ae3f73f67c8477b",
+  "requiredPairs": [
+    "source->draft",
+    "source->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "source"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "process_facts_pass": true,
+  "no_business_effects_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 2,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "final_facts_pass": true,
+  "strict_pass": false,
+  "failureTags": [
+    "REFERENCE_SOURCE"
+  ],
+  "completedPairs": [
+    "source->source"
+  ],
+  "missingPairs": [
+    "source->draft"
+  ],
+  "evidence": [
+    {
+      "quote": "临溪集结区边界内的资源点共 3 个",
+      "basis": "实际对5个来源Point和来源区域计算，乙丙丁3点正确；未查草稿边界、未澄清，缺S→D的甲乙2点条件答案。"
+    },
+    {
+      "quote": "memberRefs 只列了云杉丁、云杉戊",
+      "basis": "实际查询成员与areaIds均为p04/p05；模型没有误用标签缩小候选，完整计算包括无标签的p02/p03。"
+    },
+    {
+      "quote": "区域内 3 个资源点合计 9 辆；这是属性值相加，不代表实际可调运能力。",
+      "basis": "实际字段5+1+3=9；属有依据附加信息，未与点数混淆。"
+    }
+  ],
+  "notes": [
+    "主任务失败是边界来源未处理完整，不是标签误筛或空间算法错。",
+    "先查询再说明5候选，公开过程事实有当时证据；无草稿读取、无澄清。"
+  ]
+}

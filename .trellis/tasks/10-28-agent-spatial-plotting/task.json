@@ -341,5 +341,26 @@
     "report": "improvement-20261029/results.md",
     "codeState": "G2_candidate_not_accepted_not_deployed",
     "nextStep": "用户审阅48项对照；未达15/16严格门槛，不自动改代码、回滚、提交产品、重试或追加测试。"
+  },
+  "sourceGeneralization20261030": {
+    "status": "completed_pending_user_review",
+    "planCommit": "de06e4a",
+    "plan": "source-generalization-20261030/plan.md",
+    "report": "source-generalization-20261030/records/results.md",
+    "planned": 8,
+    "executed": 8,
+    "scored": 8,
+    "mainPass": 3,
+    "strictPass": 2,
+    "spatialSkillRead": 8,
+    "requests": 29,
+    "inputTokens": 638445,
+    "outputTokens": 13825,
+    "reasoningTokens": 7277,
+    "automaticRetries": false,
+    "additionalTrials": false,
+    "reserveExecuted": 0,
+    "productChanges": false,
+    "nextStep": "审阅来源选择遗漏与解释错误；不自动修改或启用保留题"
   }
 }
