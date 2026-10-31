@@ -1,0 +1,106 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V14",
+  "caseId": "G04",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "source->draft",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "source->source"
+  ],
+  "missing_pairs": [
+    "source->draft"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "source",
+  "final_reference_source": "source",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "2734d0de",
+      "tool_call_id": "call_00_frdy09ze1pdt1uc9r5aa78yt"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unresolved_reference_source",
+    "missing_conditional_pairs",
+    "default_source_boundary"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+    "draft_hash_after": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "b0f5c114-eff2-4a44-8279-7ea98e2243af",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "b0f5c114-eff2-4a44-8279-7ea98e2243af",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "候选来源明确，完整读取全部来源资源五点；未按区域登记标签预筛，因此正确识别来源面内云杉乙/丙/丁三点。",
+    "边界来源未明确且没有实际澄清；只用来源同名面，遗漏草稿面条件下云杉甲/乙两点。",
+    "归属成员丁/戊与几何成员乙/丙/丁的差异有查询与分类依据，不属于事实错误。",
+    "“请按用途选择”针对几何和成员登记口径，不是草稿/来源边界的真实追问；正文已明确给几何结果，未改用标签名单。"
+  ],
+  "evidence": [
+    {
+      "message_id": "828cf699",
+      "quote": "临溪集结区内的资源点：3 个",
+      "basis": "仅使用 g04-s-region；无真实澄清或后续 user 答复。G04 初始有效要求仍包含 source->draft，应列云杉甲/乙共2，该组合未报告。",
+      "category": "scope_and_required_members_omission"
+    }
+  ],
+  "default_source_boundary": true,
+  "optional_boundary_offer": false
+}

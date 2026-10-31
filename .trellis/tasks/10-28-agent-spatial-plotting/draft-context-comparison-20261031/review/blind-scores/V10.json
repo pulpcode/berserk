@@ -1,0 +1,113 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V10",
+  "caseId": "G05",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "draft->draft"
+  ],
+  "missing_pairs": [
+    "source->draft"
+  ],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft",
+  "default_draft_end": true,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": {
+    "tool_issue": [
+      "ANNOTATION_LAYER_NAME_NOT_FOUND",
+      "SPATIAL_UNSUPPORTED_GEOMETRY"
+    ],
+    "recovered_with": "draft directory then explicit four point IDs",
+    "public_fact_correction": false
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "27bf5688",
+      "tool_call_id": "call_00_3cu9hjokpc18lykqja71dvs9"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "missing_conditional_pairs",
+    "default_draft_end"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "draft_hash_after": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "9c4885c0-2a4b-46b3-9441-52bf3d890086",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "9c4885c0-2a4b-46b3-9441-52bf3d890086",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "evidence": [
+    {
+      "message_id": "25bef126",
+      "quote": "以上仅统计本会话草稿中的资源点，未查询态势来源系统里的资源对象",
+      "basis": "只有原始user请求，资源来源未知；实际仅草稿4点->草稿面，漏来源6点->草稿面4点名单。",
+      "category": "scope_and_required_members_omission"
+    }
+  ],
+  "observations": [
+    "最终草稿4点分类2内/0边界/2外正确；既定草稿边界得到遵守。",
+    "layerNames误用reference先失败，后读目录恢复；资源图层含线使分类失败，后指定4点恢复。",
+    "“未纳入点分类”在最终成功分类上下文下准确；首次失败未产生分类结果，不能因此说其公开说明虚假。",
+    "承认未查询来源，未提出继续所必需的问题；没有真正澄清。"
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

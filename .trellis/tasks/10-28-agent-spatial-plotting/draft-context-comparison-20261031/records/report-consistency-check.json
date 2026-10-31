@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checkedFiles": {
+    "records/results.md": "1db01b6d01f13bdc595711993147a23c6474d024b81bb3c9b52431d343cf5664",
+    "records/scores-summary.json": "08c6e562786b8e7d9804a303d537324276985b242cf81c06620ee8c8681c18b3",
+    "records/final-scores.json": "d3a52baa2f0772d0be4aa2de0c23cf781af5d2548469548034e9a35ba6024f95",
+    "review/root-adjudication.md": "d1c2d826638f122bda6000ff7b400295eab02c58f9b243ece03f80786aaf4436"
+  },
+  "checks": [
+    "32个原独立评分SHA匹配",
+    "仅V17/V20/V21最终事实维度改为通过；主任务及严格未改",
+    "两组、两次重复、逐题、16配对计数与报告一致",
+    "Skill读取数量、两项未读、正文哈希、map-annotations读取一致",
+    "146请求用量及耗时与原始attempts一致",
+    "V09保留失败且敏感性B严格4/16正确",
+    "主任务和严格定义、已报告部分正确与整体未完成的区别已写清",
+    "小样本不能宣称总体90%或稳定因果退化已写清",
+    "最终派生输出三个legacy alias已与canonical一致；原独立评分完整保留；规范化不改变任何分数"
+  ],
+  "rawEvidenceChanged": false,
+  "newTestsOrModelCalls": 0
+}

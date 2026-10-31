@@ -1,0 +1,83 @@
+{
+  "scope": "controlled offline only",
+  "batch": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/source-generalization-TC7R7M/batch",
+  "normalization": [
+    "remove exactly automatic paragraph for comparison",
+    "UUID identity mapping",
+    "synthetic map task nonce"
+  ],
+  "cases": [
+    {
+      "caseId": "G01",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "6684e78530260b9114268ba895e827c46be7448199f50c5f14fbc941564a4fae",
+      "sourceWireSha256": [
+        "a98f73a35970d4c526286a39099a8cc50f2e105a918bbfd0248d7cbf70f82f73",
+        "2b4c7779a25c7083e5ac657853fa3add8dad477a12470b29364d30728148b7ce"
+      ]
+    },
+    {
+      "caseId": "G07",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "0c46b679d0b03df80b8cb604c16c424b90d6d6dfd09f4fad9166cc81480e694c",
+      "sourceWireSha256": [
+        "ec18537d8e3af8997b6ca888aa6f297a363fa78f44b426780d8f995b78b0275d",
+        "a0b896d0be6e2a49e8703b181ae2d12f8a67de489cf07678b7d54b1294e6c9e3"
+      ]
+    },
+    {
+      "caseId": "G04",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "e49f35a749e7e7743e5fc52b692e462f5e9fa5f1e904c5a46b877a80fc43a07e",
+      "sourceWireSha256": [
+        "3dce5563bef67e9f6f0fab87ef601d9f2077ac50671117f41b1456bd076279ac",
+        "61f3c057592741cb54bdda7cb4239188c4de200a19235c1b91db3f3c9e22d519"
+      ]
+    },
+    {
+      "caseId": "G05",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "4f456bdc0cd18db4373611300f4abdd11651f352df14863b34da3c93e8350d5a",
+      "sourceWireSha256": [
+        "ef9532365991e2c94271cc57fe23c1a5f3839f8b379670180719f37a19833974",
+        "071d8d3097a742b7ce6037ff3bbfcfd9e21aae22ba5756149de3a77ebafb1e67"
+      ]
+    },
+    {
+      "caseId": "G02",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "7d5a8d5f999ffd1e1433535ad3f6386ea02b3d1ebbca25b35a4e3d6533d76a3e",
+      "sourceWireSha256": [
+        "37bfb490e09a731af98360b101a33fb3e855f6eb3432907ea1de6e53ea30978b",
+        "e487a0b9cbe83d62d5fc7a46dc34ed2dec4ee74a6a0105fc059747f820e76bdd"
+      ]
+    },
+    {
+      "caseId": "G08",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "62f50a6be2bafc23d283f3e9429f4f39924c0a421ab76e1334e3312a7287de99",
+      "sourceWireSha256": [
+        "b286e20236db48ca12b081842e71b982ac64f6673134b5ee3c3a0a52b8b751b8",
+        "32d559553ff2f28c053891fd83d39a711b3e2e308f9354de32421036710578a8"
+      ]
+    },
+    {
+      "caseId": "G03",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "8b102725877e1a22720e80be21c0c84ef83db003d14e8370ecf656f0e45a9290",
+      "sourceWireSha256": [
+        "2933e9dcab157086bf95d50cb2e308f64176a2dee3da6e6990b872a2cd1aa546",
+        "3622e1747df976516a5f83cd38a1701a8ec52f8e1c51e4b94dae148fed721e7a"
+      ]
+    },
+    {
+      "caseId": "G06",
+      "initialPayloadEqualAfterDeclaredNormalization": true,
+      "normalizedSha256": "0c8cc7bd38354b1c42f41688668569ecbe9a9dd4eeba95f0a4d58c503fa68a21",
+      "sourceWireSha256": [
+        "e0e0f0a94947b75fc90e2b0710ea1a62648e5054db0a05cd8206efc5e970287e",
+        "4d0d234d4e32359ab7baeeb4e0a230ecc7e5b26d93acab749df4014caab6c912"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V13",
+  "caseId": "G07",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "source->source"
+  ],
+  "missing_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "source",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": true,
+  "aware_of_other_source_left_optional": false,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "f6ac1880",
+      "tool_call_id": "call_00_j3ltow6fhgdzxp44r0w9br3k"
+    }
+  ],
+  "candidate_completeness_pass": false,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "draft_hash_after": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "d72f6438-2807-4542-a7b4-592537a1bdf1",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "d72f6438-2807-4542-a7b4-592537a1bdf1",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "两来源轴未定，仅来源标签成员4点对来源面；漏三种条件结果，scope/geometry/main失败。",
+    "“本次输入共4个候选，没有其他候选”限定本次输入，回执确实4；不扩大解释成全来源仅4而额外硬判事实错。",
+    "availableCount四值2/5/1/3及合计11正确；“没有按运力或其他口径折算或合计”后附原值和11措辞别扭，但上下文是未做运力换算，不影响真实值。",
+    "“2026-10-30 09:00前后按来源快照固定下来的结果”可理解业务快照时点，实际分析生成于10-31；记录时间表述含混，不直接认定其声称在10-30执行计算。"
+  ],
+  "evidence": [
+    {
+      "message_id": "3a9aa844",
+      "quote": "溪湾物资区（区域对象：g07-s-region，来源 situation，修订 1，业务时间 2026-10-30 09:00）内的资源点共 4 个",
+      "basis": "用户无后续回复；工具只areaIds=[g07-s-region]预筛及4点分类，仍需四组合条件答案。所报4点名单正确，但缺其余3组合。",
+      "category": "scope_and_required_members_omission"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "default_draft_end": false,
+  "default_source_end": true,
+  "other_source_optional": false,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "failureTags": [
+    "unresolved_candidate_source",
+    "unresolved_reference_source",
+    "missing_conditional_pairs",
+    "default_source_end",
+    "candidate_prefiltered_by_area_membership"
+  ],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": true,
+  "optional_boundary_offer": false
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V25",
+  "caseId": "G05",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "draft->draft"
+  ],
+  "missing_pairs": [
+    "source->draft"
+  ],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft",
+  "default_draft_end": true,
+  "default_source_end": false,
+  "other_source_optional": true,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "fa659302",
+      "quote": "松浦丁的纬度约为 31.8388，低于该区域北边界约 31.8436 的南侧",
+      "full_context": "松浦丙和松浦丁都位于该范围之外。例如，松浦丁的纬度约为 31.8388，低于该区域北边界约 31.8436 的南侧；松浦丙的纬度也约为 31.8423，同样在该区域南界之外。",
+      "basis": "call_00_mqi4ll7wyvauxonbg4ao94j3 返回草稿Polygon纬度范围31.8436至31.85，31.8436是南界而非北界；丁在南侧外部的结论正确，但北界纬度标注错误。",
+      "category": "wrong_boundary_direction",
+      "disputed_interpretation": "紧邻下一分句正确称南界，可能为笔误；按所有公开事实核对仍保留这一明确北/南标签错误。"
+    }
+  ],
+  "recovery": {
+    "tool_issue": "SPATIAL_UNSUPPORTED_GEOMETRY from mixed line in resources",
+    "recovered_with": "read geometry and explicitly select four Point IDs",
+    "public_fact_correction": false
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "07274203",
+      "tool_call_id": "call_01_sw9z07ao5hikukn3twvyrg5f"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "missing_conditional_pairs",
+    "default_draft_end",
+    "wrong_boundary_direction"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "draft_hash_after": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "a1c96641-05bc-4cd5-bb0f-41a94541d76c",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "a1c96641-05bc-4cd5-bb0f-41a94541d76c",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "边界按用户固定的草稿面；草稿4候选2内0边界2外正确，排除了同层联络线。",
+    "资源来源仍未定，只报草稿候选，末尾把来源资源留待用户另行提出；不算实际澄清，缺source->draft四点条件答案。",
+    "过程列点和线的说法发生在目录读取之后有依据；虽然首个分类误包含线失败，后重试只4点成功。",
+    "snapshot 2026-10-31T04:34:42.855Z及计算04:34:51.656Z分别等于annotation createdAt/provenance asOf和spatial createdAt，版本1正确。"
+  ],
+  "evidence": [
+    {
+      "message_id": "fa659302",
+      "quote": "那样需要按来源另行查询并重新分析",
+      "basis": "只有原始user消息，无来源选择回复；实际仅草稿4点对草稿面，没有来源候选条件结果。",
+      "category": "scope_and_required_members_omission"
+    },
+    {
+      "message_id": "fa659302",
+      "quote": "松浦丁的纬度约为 31.8388，低于该区域北边界约 31.8436 的南侧",
+      "full_context": "松浦丙和松浦丁都位于该范围之外。例如，松浦丁的纬度约为 31.8388，低于该区域北边界约 31.8436 的南侧；松浦丙的纬度也约为 31.8423，同样在该区域南界之外。",
+      "basis": "call_00_mqi4ll7wyvauxonbg4ao94j3 返回草稿Polygon纬度范围31.8436至31.85，31.8436是南界而非北界；丁在南侧外部的结论正确，但北界纬度标注错误。",
+      "category": "wrong_boundary_direction",
+      "disputed_interpretation": "紧邻下一分句正确称南界，可能为笔误；按所有公开事实核对仍保留这一明确北/南标签错误。"
+    }
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

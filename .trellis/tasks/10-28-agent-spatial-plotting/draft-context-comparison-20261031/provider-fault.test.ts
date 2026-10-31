@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {mkdtemp} from 'node:fs/promises';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {Ledger} from './budget.js';
+import {Provider} from './provider.js';
+
+for(const fault of ['http_429','missing_usage','model_drift'] as const){
+ test(`retain ${fault} and refuse another transport dispatch`,async()=>{
+  const directory=await mkdtemp(join(tmpdir(),'source-provider-fault-'));
+  const ledger=new Ledger(join(directory,'ledger.json'),'offline-fixed');
+  let dispatches=0,cancellations=0;
+  const endpoint='https://offline.invalid/chat/completions';
+  const provider=new Provider({directory,endpoint,secret:'offline-test-key',verify:async()=>{},cancel:async()=>{cancellations++;},original:async()=>{
+   dispatches++;
+   if(fault==='http_429')return new Response('quota exceeded',{status:429});
+   const event={id:'offline-response',model:fault==='model_drift'?'unexpected-model':'deepseek-v4-1-flash-261017',choices:[{index:0,delta:{role:'assistant',content:'完成'},finish_reason:'stop'}],...(fault==='missing_usage'?{}:{usage:{prompt_tokens:2000,completion_tokens:100}})};
+   return new Response(`data: ${JSON.stringify(event)}\n\ndata: [DONE]\n\n`,{headers:{'content-type':'text/event-stream'}});
+  }},ledger);
+  provider.active={id:'offline-only',group:'A',directory,turn:1,runtime:{root:'unused',hashes:{},skills:{},start:async()=>{throw new Error('not used by transport test');}},requests:0,dataDir:directory};
+  const init={method:'POST',body:JSON.stringify({model:'deepseek-v4.1-flash',stream:true,messages:[{role:'system',content:'你是子 Agent analyst，仅处理显式任务。'},{role:'user',content:'无业务信息的离线传输检查'}],tools:[]})};
+  const response=await provider.fetch(endpoint,init);
+  if(fault==='http_429'){assert.equal(response.status,429);await response.text();}
+  else await assert.rejects(response.text());
+  assert.equal(dispatches,1);
+  assert.ok(provider.fatal);
+  assert.equal(cancellations,1);
+  assert.equal(provider.attempts.length,1);
+  assert.equal(provider.attempts[0].completed,true);
+  assert.equal(ledger.read().requests[0].status,'failed');
+  assert.equal(ledger.totals().unknown,fault==='model_drift'?0:1);
+  await assert.rejects(provider.fetch(endpoint,init),/halted_no_retry/);
+  assert.equal(dispatches,1);
+ });
+}

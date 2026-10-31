@@ -1,0 +1,101 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V16",
+  "caseId": "G01",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": false,
+  "aware_of_other_source_left_optional": false,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "339abd62",
+      "tool_call_id": "call_00_m39vnr7mspo4h6et60ch53nn"
+    }
+  ],
+  "candidate_completeness_pass": true,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "draft_hash_after": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "411dd971-a145-45f9-a4b7-4d2a24f372ec",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "411dd971-a145-45f9-a4b7-4d2a24f372ec",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "草稿resources全部5点对来源区域，完整分类结果丙/丁内部2点、边界0、甲/乙/戊外部3，名单数量正确。",
+    "草稿与来源均revision1，业务快照时间及方法/容差说明与回执一致；没有将来源memberRefs混入候选。",
+    "无真实追问或回复，没有未定来源轴。"
+  ],
+  "evidence": [
+    {
+      "message_id": "7830ad7f",
+      "quote": "梧桐丙、梧桐丁",
+      "basis": "call_00_n8sj7nz4kvmawoy547tpg75j：complete candidateCount=5，classifications只有g01-d-p03/g01-d-p04为interior；G01 oracle一致。",
+      "category": "verified_main_answer"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "failureTags": [],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

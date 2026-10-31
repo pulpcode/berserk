@@ -1,0 +1,122 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V17",
+  "caseId": "G06",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->source",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [
+    "source->source"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "default_draft_end": true,
+  "default_source_end": false,
+  "default_source_boundary": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "cfd3992f",
+      "quote": "同名情况只出现在面对象上",
+      "full_context": "本会话“资源点”图层中的 6 个点名称互不重复（云桥甲～云桥己），因此名单按对象 ID 给出即可唯一确定；同名情况只出现在面对象上：草稿“参照对象”图层中的 `g06-d-region` 也被命名为“云桥作业区”，它与来源面同名，但它是面、不属于资源点，也没有参与上面的点分类。如果你指的是其他重名点（例如页面中尚未保存的输入），或者想要换用草稿中的同名面作为边界，请告诉我，我再重新核对。",
+      "basis": "tool call_01_haj8go5og8uuhehewbmvhb8a 只返回来源area及p02/p03引用，没有来源点名称；call_02_7uha17zfuxziji08ens3c2zs 只读草稿。sourceBefore及允许G06 fixture清楚给出 g06-s-p02 与 g06-s-p03 均名联络点。故把重名穷尽为面对象无依据并与实际来源数据不符。",
+      "category": "unsupported_exhaustive_homonym_claim",
+      "disputed_interpretation": "前半句限定草稿资源层6点，此限定下“不重复”正确；若把后续“只”也严格限于已读草稿+来源面，可视为局部陈述。本评分按整段对用户重名要求的总体答复理解为无依据穷尽，交root复核。"
+    }
+  ],
+  "recovery": null,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "82613714",
+      "tool_call_id": "call_00_8k1vz1do0vkblo5g7ysaovo7"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "02177d5df57cd76318563889e8bad1a0bf98f3923ecbad78d8fc5abefdcbf375",
+    "draft_hash_after": "02177d5df57cd76318563889e8bad1a0bf98f3923ecbad78d8fc5abefdcbf375",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "809c8123-8049-408a-8c58-d2f39bdc4862",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "809c8123-8049-408a-8c58-d2f39bdc4862",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "missing_conditional_pairs",
+    "default_draft_end",
+    "unsupported_exhaustive_homonym_claim"
+  ],
+  "evidence": [
+    {
+      "message_id": "cfd3992f",
+      "quote": "候选集合是本会话当前草稿中的“资源点”图层",
+      "basis": "用户仅固定来源边界，资源来源未定；无user澄清。仅报告草稿6点->来源面4点，缺来源全部5点->来源面2个不同ID联络点的完整条件统计。",
+      "category": "scope_and_required_members_omission"
+    },
+    {
+      "message_id": "cfd3992f",
+      "quote": "同名情况只出现在面对象上",
+      "full_context": "本会话“资源点”图层中的 6 个点名称互不重复（云桥甲～云桥己），因此名单按对象 ID 给出即可唯一确定；同名情况只出现在面对象上：草稿“参照对象”图层中的 `g06-d-region` 也被命名为“云桥作业区”，它与来源面同名，但它是面、不属于资源点，也没有参与上面的点分类。如果你指的是其他重名点（例如页面中尚未保存的输入），或者想要换用草稿中的同名面作为边界，请告诉我，我再重新核对。",
+      "basis": "tool call_01_haj8go5og8uuhehewbmvhb8a 只返回来源area及p02/p03引用，没有来源点名称；call_02_7uha17zfuxziji08ens3c2zs 只读草稿。sourceBefore及允许G06 fixture清楚给出 g06-s-p02 与 g06-s-p03 均名联络点。故把重名穷尽为面对象无依据并与实际来源数据不符。",
+      "category": "unsupported_exhaustive_homonym_claim",
+      "disputed_interpretation": "前半句限定草稿资源层6点，此限定下“不重复”正确；若把后续“只”也严格限于已读草稿+来源面，可视为局部陈述。本评分按整段对用户重名要求的总体答复理解为无依据穷尽，交root复核。"
+    }
+  ],
+  "observations": [
+    "实际草稿候选6点完整，命中乙/丙/丁/戊4点、边界0及甲/己外部正确；边界按明确来源对象使用。",
+    "没有对尚未保存输入断言存在；该处只是例如式假设，不另扣事实。"
+  ],
+  "optional_boundary_offer": true
+}

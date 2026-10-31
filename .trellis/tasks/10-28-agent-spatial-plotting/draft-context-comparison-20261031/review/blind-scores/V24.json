@@ -1,0 +1,85 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V24",
+  "caseId": "G01",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": false,
+  "aware_of_other_source_left_optional": false,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [],
+  "candidate_completeness_pass": true,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "draft_hash_after": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "未读取 Skill；不因此自动判主任务或事实失败。",
+    "固定草稿 revision 1 全部 5 点，对来源区域 revision 1 分类，内部为 g01-d-p03、g01-d-p04，边界 0、外部 3。",
+    "末尾可按需继续使用或另作保存属于可选邀请，不是范围澄清。"
+  ],
+  "evidence": [
+    {
+      "message_id": "308c779c",
+      "quote": "在范围内的候选点（2 个）",
+      "basis": "call_00_k2xncygx1iihwdzjnpftx0dn：complete candidateCount=5，interior=2，命中梧桐丙、梧桐丁；与 G01 oracle draft->source 一致。"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "skills": [],
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "failureTags": [],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

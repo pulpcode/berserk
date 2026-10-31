@@ -1,0 +1,781 @@
+{
+  "reviewId": "V24",
+  "caseId": "G01",
+  "messages": [
+    {
+      "id": "3db99aa8",
+      "requestId": "8f4aeae6-3b4e-483c-ac31-beff0cec9e88",
+      "role": "user",
+      "text": "只用当前会话草稿 resources 层的全部点作候选，范围用来源系统登记的“桐港区”面。哪些候选点在范围内？列名称和总数，只分析，不保存、不发布、不采用。",
+      "selections": {
+        "annotationContext": {
+          "sessionId": "01a19031-4ce6-7210-ba08-a4b79abadb23",
+          "draft": {
+            "setId": "61c5f5d2-32d6-40f5-8c45-223d078c5ef4",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        }
+      }
+    },
+    {
+      "id": "05256b9e",
+      "requestId": "8f4aeae6-3b4e-483c-ac31-beff0cec9e88",
+      "role": "tool",
+      "text": "{\"format\":\"annotation.model-result.v2\",\"data\":{\"status\":\"draft\",\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"title\":\"空间资料\",\"createdAt\":\"2026-10-31T04:21:52.519Z\",\"layers\":[{\"layerId\":\"reference\",\"name\":\"参照对象\",\"order\":0,\"defaultVisible\":true},{\"layerId\":\"resources\",\"name\":\"资源点\",\"order\":1,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"g01-d-region\",\"name\":\"桐港区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"g01-d-p01\",\"name\":\"梧桐甲\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g01-d-p02\",\"name\":\"梧桐乙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g01-d-p03\",\"name\":\"梧桐丙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g01-d-p04\",\"name\":\"梧桐丁\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g01-d-p05\",\"name\":\"梧桐戊\",\"kind\":\"point\",\"layerId\":\"resources\"}],\"offset\":0,\"limit\":50,\"total\":6,\"hasMore\":false},\"query\":{}},\"meaning\":{\"scope\":\"读取data.ref固定版本的全部图层及对象，objects.items按页返回。\",\"counts\":\"本次条件共匹配6个对象，本页返回6个；分页位置与后续页以objects.offset/hasMore为准。\",\"effect\":\"本次只读取已有对象，没有创建或修改标绘。\"}}",
+      "toolName": "annotation_read",
+      "toolCallId": "call_00_befnv5n1mypse2fq6z7i3rlf",
+      "isError": false
+    },
+    {
+      "id": "26d2feaa",
+      "requestId": "8f4aeae6-3b4e-483c-ac31-beff0cec9e88",
+      "role": "tool",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":20,\"query\":\"桐港区\",\"mode\":\"current\"},\"queriedAt\":\"2026-10-31T04:21:55.444Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"items\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"},\"name\":\"桐港区\",\"revision\":1,\"areaIds\":[\"g01-s-region\"],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[118.242,24.47],[118.246,24.47],[118.246,24.474],[118.242,24.474],[118.242,24.47]]]},\"properties\":{\"memberRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p03\"}]}}],\"limit\":20,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-9d25a646-6836-44d4-a4ec-8663211b632c-seq-100\"},\"mapReferences\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=area&objectId=g01-s-region&revision=1\"}]}",
+      "toolName": "situation_query",
+      "toolCallId": "call_00_56reseye93978rni0n2nr0ik",
+      "isError": false
+    },
+    {
+      "id": "c021b534",
+      "requestId": "8f4aeae6-3b4e-483c-ac31-beff0cec9e88",
+      "role": "tool",
+      "text": "{\"format\":\"spatial.model-result.v3\",\"data\":{\"schemaVersion\":2,\"resultRef\":\"spatial:8f4aeae6-3b4e-483c-ac31-beff0cec9e88:call_00_k2xncygx1iihwdzjnpftx0dn\",\"requestId\":\"8f4aeae6-3b4e-483c-ac31-beff0cec9e88\",\"toolCallId\":\"call_00_k2xncygx1iihwdzjnpftx0dn\",\"operation\":\"classify_points\",\"parameters\":{\"operation\":\"classify_points\",\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"layerIds\":[\"resources\"]},\"target\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"}]}},\"createdAt\":\"2026-10-31T04:21:57.931Z\",\"scope\":[{\"kind\":\"annotation\",\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"layerIds\":[\"resources\"]},{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"}]}],\"completeness\":{\"status\":\"complete\",\"candidateCount\":5},\"items\":[{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p01\\\"]\",\"name\":\"梧桐甲\",\"properties\":{\"name\":\"梧桐甲\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"objectId\":\"g01-d-p01\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p02\\\"]\",\"name\":\"梧桐乙\",\"properties\":{\"name\":\"梧桐乙\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"objectId\":\"g01-d-p02\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p03\\\"]\",\"name\":\"梧桐丙\",\"properties\":{\"name\":\"梧桐丙\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"objectId\":\"g01-d-p03\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p04\\\"]\",\"name\":\"梧桐丁\",\"properties\":{\"name\":\"梧桐丁\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"objectId\":\"g01-d-p04\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p05\\\"]\",\"name\":\"梧桐戊\",\"properties\":{\"name\":\"梧桐戊\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"objectId\":\"g01-d-p05\"},\"geometryType\":\"Point\"}],\"referenceItems\":[{\"id\":\"[\\\"situation\\\",\\\"area\\\",\\\"g01-s-region\\\"]\",\"name\":\"桐港区\",\"properties\":{\"memberRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g01-s-p03\"}],\"name\":\"桐港区\",\"objectType\":\"area\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:21:57.929Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Polygon\"}],\"method\":\"Turf 7.2.0 booleanPointInPolygon; WGS84 planar topology; closed coverage vs strict interior\",\"limitations\":[\"按经纬度线段判断单个 Polygon（含孔）；外环和内环边界均为 boundary，孔内部为 exterior。\",\"不增加隐含距离容差；边界附近不等于位于边界，不声称测绘级精度。\"],\"provenance\":[{\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"layerIds\":[\"resources\"]},\"queriedAt\":\"2026-10-31T04:21:57.924Z\",\"asOf\":\"2026-10-31T04:21:52.519Z\",\"hash\":\"8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94\"},{\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"}]},\"queriedAt\":\"2026-10-31T04:21:57.929Z\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"sourceRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\",\"revision\":1}]}],\"classifications\":[{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p01\\\"]\",\"position\":\"exterior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p02\\\"]\",\"position\":\"exterior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p03\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p04\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\\\",\\\"revision\\\":1},\\\"g01-d-p05\\\"]\",\"position\":\"exterior\"}],\"values\":{\"total\":5,\"interior\":2,\"boundary\":0,\"exterior\":3}},\"meaning\":{\"scope\":\"范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。\",\"counts\":\"输入5个点：内部2、边界0、外部3；items包含全部候选，不能把items长度当范围命中数。\",\"effect\":\"本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。\"}}",
+      "toolName": "spatial_analyze",
+      "toolCallId": "call_00_k2xncygx1iihwdzjnpftx0dn",
+      "isError": false
+    },
+    {
+      "id": "308c779c",
+      "requestId": "8f4aeae6-3b4e-483c-ac31-beff0cec9e88",
+      "role": "assistant",
+      "text": "已完成只读空间判定，没有保存、发布或采用任何内容。\n\n**候选集合**：本会话草稿（setId 61c5f5d2…，revision 1）中「资源点」图层（resources）的全部 5 个点。\n**范围**：来源系统 situation 登记的「桐港区」面（objectType area，objectId g01-s-region，revision 1，快照时间 2026-10-30T09:00:00+08:00），未使用草稿「参照对象」层里的同名面。\n\n**在范围内的候选点（2 个）**\n- 梧桐丙（g01-d-p03）：面内部\n- 梧桐丁（g01-d-p04）：面内部\n\n**不在范围内的候选点（3 个）**\n- 梧桐甲（g01-d-p01）：面外部\n- 梧桐乙（g01-d-p02）：面外部\n- 梧桐戊（g01-d-p05）：面外部\n\n**总数统计**：输入 5 个点，内部 2、边界 0、外部 3。\n\n说明：判定按经纬度平面拓扑（Turf 7.2.0）逐个点进行，未加距离容差；本次没有点落在边界上，因此「在范围内」= 2 个的结论不含边界歧义。该结果为固定分析结果（resultRef spatial:8f4aeae6…），可按需继续使用或另作保存；本次未做任何写入。"
+    }
+  ],
+  "toolCalls": [
+    {
+      "id": "call_00_befnv5n1mypse2fq6z7i3rlf",
+      "type": "function",
+      "function": {
+        "name": "annotation_read",
+        "arguments": "{\"mode\":\"draft\"}"
+      }
+    },
+    {
+      "id": "call_00_56reseye93978rni0n2nr0ik",
+      "type": "function",
+      "function": {
+        "name": "situation_query",
+        "arguments": "{\"systemId\":\"situation\",\"mode\":\"current\",\"query\":\"桐港区\"}"
+      }
+    },
+    {
+      "id": "call_00_k2xncygx1iihwdzjnpftx0dn",
+      "type": "function",
+      "function": {
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\":\"classify_points\",\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"61c5f5d2-32d6-40f5-8c45-223d078c5ef4\",\"revision\":1},\"layerIds\":[\"resources\"]},\"target\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g01-s-region\"}]}}"
+      }
+    }
+  ],
+  "interactions": [],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "draft",
+      "reference": "source"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "mapBefore": {
+    "binding": {
+      "sessionId": "01a19031-4ce6-7210-ba08-a4b79abadb23",
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "workspaceId": "59769d04-412b-46b9-b7ad-f77972e2cfa8",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "61c5f5d2-32d6-40f5-8c45-223d078c5ef4",
+        "ownerSessionId": "01a19031-4ce6-7210-ba08-a4b79abadb23",
+        "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+        "workspaceId": "59769d04-412b-46b9-b7ad-f77972e2cfa8",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:21:52.519Z",
+        "updatedAt": "2026-10-31T04:21:52.519Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "61c5f5d2-32d6-40f5-8c45-223d078c5ef4",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+      "createdAt": "2026-10-31T04:21:52.519Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g01-d-region",
+                "kind": "polygon",
+                "name": "桐港区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        118.24,
+                        24.47
+                      ],
+                      [
+                        118.244,
+                        24.47
+                      ],
+                      [
+                        118.244,
+                        24.474
+                      ],
+                      [
+                        118.24,
+                        24.474
+                      ],
+                      [
+                        118.24,
+                        24.47
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g01-d-p01",
+                "kind": "point",
+                "name": "梧桐甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2408,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p02",
+                "kind": "point",
+                "name": "梧桐乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2412,
+                    24.4728
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p03",
+                "kind": "point",
+                "name": "梧桐丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2428,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p04",
+                "kind": "point",
+                "name": "梧桐丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2432,
+                    24.4728
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p05",
+                "kind": "point",
+                "name": "梧桐戊",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.247,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "mapAfter": {
+    "binding": {
+      "sessionId": "01a19031-4ce6-7210-ba08-a4b79abadb23",
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "workspaceId": "59769d04-412b-46b9-b7ad-f77972e2cfa8",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "61c5f5d2-32d6-40f5-8c45-223d078c5ef4",
+        "ownerSessionId": "01a19031-4ce6-7210-ba08-a4b79abadb23",
+        "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+        "workspaceId": "59769d04-412b-46b9-b7ad-f77972e2cfa8",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:21:52.519Z",
+        "updatedAt": "2026-10-31T04:21:52.519Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "61c5f5d2-32d6-40f5-8c45-223d078c5ef4",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+      "createdAt": "2026-10-31T04:21:52.519Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g01-d-region",
+                "kind": "polygon",
+                "name": "桐港区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        118.24,
+                        24.47
+                      ],
+                      [
+                        118.244,
+                        24.47
+                      ],
+                      [
+                        118.244,
+                        24.474
+                      ],
+                      [
+                        118.24,
+                        24.474
+                      ],
+                      [
+                        118.24,
+                        24.47
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g01-d-p01",
+                "kind": "point",
+                "name": "梧桐甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2408,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p02",
+                "kind": "point",
+                "name": "梧桐乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2412,
+                    24.4728
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p03",
+                "kind": "point",
+                "name": "梧桐丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2428,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p04",
+                "kind": "point",
+                "name": "梧桐丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.2432,
+                    24.4728
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g01-d-p05",
+                "kind": "point",
+                "name": "梧桐戊",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    118.247,
+                    24.4708
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "3a1c801d-def6-4a99-9e47-29819e2921ff",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "sourceBefore": {
+    "instanceId": "map-4783f26c",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g01-s-region"
+        },
+        "name": "桐港区",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                118.242,
+                24.47
+              ],
+              [
+                118.246,
+                24.47
+              ],
+              [
+                118.246,
+                24.474
+              ],
+              [
+                118.242,
+                24.474
+              ],
+              [
+                118.242,
+                24.47
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p02"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p03"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p01"
+        },
+        "name": "青桐甲",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2429,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p02"
+        },
+        "name": "青桐乙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2449,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p03"
+        },
+        "name": "青桐丙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2453,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p04"
+        },
+        "name": "青桐丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2471,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p05"
+        },
+        "name": "青桐戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2474,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  },
+  "sourceAfter": {
+    "instanceId": "map-4783f26c",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g01-s-region"
+        },
+        "name": "桐港区",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                118.242,
+                24.47
+              ],
+              [
+                118.246,
+                24.47
+              ],
+              [
+                118.246,
+                24.474
+              ],
+              [
+                118.242,
+                24.474
+              ],
+              [
+                118.242,
+                24.47
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p01"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p02"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g01-s-p03"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p01"
+        },
+        "name": "青桐甲",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2429,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p02"
+        },
+        "name": "青桐乙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2449,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p03"
+        },
+        "name": "青桐丙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2453,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p04"
+        },
+        "name": "青桐丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2471,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g01-s-p05"
+        },
+        "name": "青桐戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2474,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V29",
+  "caseId": "G02",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "actual_reported_pairs_correct": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "source->draft"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "source",
+  "final_reference_source": "draft",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": {
+    "tool_issue": "SPATIAL_UNSUPPORTED_GEOMETRY caused by full source containing area",
+    "recovered_with": "explicit five resource objectRefs",
+    "public_fact_correction": false
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "1cb89cf2",
+      "tool_call_id": "call_01_kii6thmbdri8cf3mp1d9qj7z"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "draft_hash_after": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "373d3b69-a8dc-4a92-90e9-6ecf29f30d96",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "373d3b69-a8dc-4a92-90e9-6ecf29f30d96",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "evidence": [
+    {
+      "message_id": "3ba92863",
+      "quote": "5 个资源点全部在边界之外，范围内资源点总数为 0，名单为空",
+      "basis": "call_00_syr29gvrim3039gj6skh27tz 全部5点 exterior；完整来源查询已读齐。",
+      "category": "verified_main_answer"
+    },
+    {
+      "message_id": "3ba92863",
+      "quote": "最近的鹭石丙（121.47706, 31.23672）与北边界尚差约 0.0011° 纬度（约 120 米",
+      "basis": "草稿北界31.2356，差0.00112°；五点经度都在草稿横向跨度内，鹭石丙纬度差最小，约124米写约120米且明确近似，不判事实错。",
+      "category": "verified_extra_fact"
+    }
+  ],
+  "observations": [
+    "来源全部5点对指定草稿边界，完整零命中正确。",
+    "source revision均1、草稿revision1、时间、五点纬度范围及成员引用均与读取一致。",
+    "首次把区域混入候选触发几何错误，公开说明原因准确并排除区域后成功，没有把错误当零结果。"
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

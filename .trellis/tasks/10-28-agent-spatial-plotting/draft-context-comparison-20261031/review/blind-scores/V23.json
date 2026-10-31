@@ -1,0 +1,122 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V23",
+  "caseId": "G07",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "source->source"
+  ],
+  "missing_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "source",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": true,
+  "aware_of_other_source_left_optional": false,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "fcf1e0d6",
+      "tool_call_id": "call_00_6xlimqcxqa2ne7jnbaeujba7"
+    }
+  ],
+  "candidate_completeness_pass": true,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "draft_hash_after": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "bb3b2385-4ab8-4026-a947-c4939d508258",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "bb3b2385-4ab8-4026-a947-c4939d508258",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "未真实澄清且未读取草稿，仅报告 source->source，缺其余三组合。",
+    "先按 areaIds/memberRefs 查询，随后名称查询补至来源 6 点；最后全来源 filter candidateCount=7（1 面+6 点）补证完整来源集合。",
+    "所报来源面内四点、外部两点、全部 7 对象与工具及 fixture 一致。",
+    "“可提供数量合计 11 辆”紧接按 availableCount 相加说明，末尾再说明来源未直接提供合计；在完整上下文中属于正确属性求和，不硬判事实错误。",
+    "梧湾戊/己经度 112.98207/112.98258 超过来源面最大经度 112.9802；东侧外部及 areaIds 为空均有依据。",
+    "末尾保存需要明确指示属可选动作邀请，不改变分析 scope。"
+  ],
+  "evidence": [
+    {
+      "message_id": "ef78f4e6",
+      "quote": "溪湾物资区内资源点：共 4 个",
+      "basis": "只有原始用户请求，无实际澄清回复。所有查询和计算都使用 situation；缺三个其他适用组合。",
+      "category": "scope_omission"
+    },
+    {
+      "message_id": "ef78f4e6",
+      "quote": "situation 来源共 7 个对象（1 个区域和 6 个资源点）",
+      "basis": "call_00_zfdo7ityflisr3y1mn2mn7d0 完整来源筛选 candidateCount=7，provenance 列 1 area+6 resource；与 sourceBefore 一致。",
+      "category": "verified_extra_fact"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "default_draft_end": false,
+  "default_source_end": true,
+  "other_source_optional": false,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "failureTags": [
+    "unresolved_candidate_source",
+    "unresolved_reference_source",
+    "missing_conditional_pairs",
+    "default_source_end"
+  ],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": true,
+  "optional_boundary_offer": false
+}

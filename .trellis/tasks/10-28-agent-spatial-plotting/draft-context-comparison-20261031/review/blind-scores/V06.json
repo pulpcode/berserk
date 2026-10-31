@@ -1,0 +1,116 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V06",
+  "caseId": "G03",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "actual_reported_pairs_correct": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft and source conditions",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "default_source_boundary": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "a0dba978",
+      "quote": "来源区域自带的成员引用是 3 个来源资源（g03-s-p01 至 g03-s-p03），与本会话草稿的同名点不是同一批对象",
+      "basis": "3 个来源引用数及身份区分正确，但“同名点”无依据且与真实数据冲突：sourceBefore/允许的G03 fixture为石溪甲/乙/丙，草稿为青岚甲/乙/丙/丁/戊；工具只读来源area及memberRefs，并未读来源点名称。",
+      "category": "false_cross_source_homonyms"
+    }
+  ],
+  "recovery": null,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "ace3df3f",
+      "tool_call_id": "call_00_d823z2bar01ahd71sz2jqi0g"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "draft_hash_after": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "cfcc5ea2-1e15-40db-86e2-0c265360689a",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "cfcc5ea2-1e15-40db-86e2-0c265360689a",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "false_cross_source_homonyms"
+  ],
+  "evidence": [
+    {
+      "message_id": "a0dba978",
+      "quote": "来源系统态势中的青岚仓区",
+      "basis": "两次 classify_points 均完整5草稿点，来源面命中丙/丁2，草稿面命中甲/乙2；所有有效条件结果已完整提供。",
+      "category": "verified_main_answer"
+    },
+    {
+      "message_id": "a0dba978",
+      "quote": "来源区域自带的成员引用是 3 个来源资源（g03-s-p01 至 g03-s-p03），与本会话草稿的同名点不是同一批对象",
+      "basis": "3 个来源引用数及身份区分正确，但“同名点”无依据且与真实数据冲突：sourceBefore/允许的G03 fixture为石溪甲/乙/丙，草稿为青岚甲/乙/丙/丁/戊；工具只读来源area及memberRefs，并未读来源点名称。",
+      "category": "false_cross_source_homonyms"
+    }
+  ],
+  "observations": [
+    "完整两条件答案使主任务通过；末尾“请确认”没有阻止给出完整答案，无实际user回复，不能把预设偏好灌入scope。",
+    "过程“边界不一致”出现在两面实际几何读取之后，支持过程事实通过。",
+    "0.0024°向东、约240–250米是23.18纬度的合理粗略估算，非测量级精度；两面跨度、点东西侧位置均支持。",
+    "“真实仓区边界”把来源边界作为真实边界的措辞偏强，记录为表述风险；硬失败证据仅采用明确的同名点错误。"
+  ],
+  "optional_boundary_offer": false
+}
