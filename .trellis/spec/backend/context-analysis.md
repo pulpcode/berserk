@@ -24,6 +24,16 @@ Successful tools return `{systemId,query,queriedAt,data,mapReferences?}` with ac
 
 Scope checks cover rule recipients, admission/execution, query, delivery and content reads (including lists, search, errors, downloads and imports). Source administration alone is insufficient to read combined scoped content. Such administrators retain minimum operational metadata. A seat's later private analysis remains private. Dynamic revocation/governance is outside this increment.
 
+### Resource reads and optional task discovery
+
+`situation_query` accepts optional `objectTypes` (`road`, `resource`, `area`), applied by the source before pagination for current and changes. Exact references must agree with the requested types. The decoder verifies returned rows satisfy the requested filter. Omitting it preserves legacy behavior.
+
+A situation system may declare `resourceCapability`. Basic exact-object and type reads do not require task mappings. `ContextService.queryTaskResources` is the optional task discovery adapter, not an authorization substitute: current-only task/relation/category filtering requires declared capability; task mapping currently supports explicit `identity`, and potential support requires the implemented `explicit-task-relation` rule. Missing mapping/rule blocks only that discovery operation, not unrelated basic reads. Never infer a shared task identity from equal strings.
+
+Current responses optionally carry `resourceCoverage:{status:'complete'|'partial',reason?}`. Partial requires a nonempty reason (at most 1000 characters); unknown keys/statuses and this field on changes responses are rejected. Preserve coverage on the final page and empty results. Legacy responses may omit it. The resource consumer checks its stability and retains declared gaps; having no next page does not override partial coverage.
+
+Source query completion does not prove task membership or a complete task inventory. Platform task business references provide related-object evidence, not assignment. See [Task Resource Queries](./task-resource-query.md) for the business consumer; these source filters alone do not complete that feature.
+
 ## 4. Validation & Error Matrix
 
 | Condition | Result |

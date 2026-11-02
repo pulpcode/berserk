@@ -102,11 +102,11 @@ export function publicResource(resource:TaskResource):TaskResource {
 /** Batch 2 adapter handoff only: no query implementation or whole-task completeness claim. */
 export interface ResourceSourceCapability {
   systemId:string; categories:NonNullable<TaskResource['category']>[]; units:NonNullable<TaskResource['quantity']>['unit'][];
-  relations:typeof RESOURCE_RELATIONS[number][]; taskIdMapping:string;
+  relations:typeof RESOURCE_RELATIONS[number][]; taskIdMapping?:string;
   supportRule?:{id:string;description:string}; filters:Array<'category'|'task'|'relation'>;
   pagination:'cursor'; snapshot:'fixed_revision';
 }
-export interface ResourceQueryScope {taskId:string;systemId:string;relation:typeof RESOURCE_RELATIONS[number];category?:TaskResource['category'];cursor?:string}
+export interface ResourceQueryScope {taskId?:string;systemId:string;relation?:typeof RESOURCE_RELATIONS[number];category?:TaskResource['category'];cursor?:string}
 export type ResourceCoverage = {systemId:string;scope:ResourceQueryScope;status:'complete'|'partial'|'unavailable'|'unsupported';asOf?:string;nextCursor?:string;reason?:string};
 /** Native message resolution belongs to the Pi consumer, not a parallel transcript store. */
 export const conversationResourceSupplementSchema = Type.Object({taskId:text,resourceRef:sourceRef,message:Type.Object({sessionId:uuid,entryId:text,role:Type.Literal('user')},strict),reportedAt:time,resource:resourceSchema},strict);
@@ -115,11 +115,11 @@ export function decodeConversationResourceSupplement(value:unknown):Conversation
   plain(value);if(!Check(conversationResourceSupplementSchema,value)) throw invalid();dates(value);decodeTaskResource(value.resource);return structuredClone(value);
 }
 
-const queryScopeSchema=Type.Object({taskId:text,systemId:text,relation:choices([...RESOURCE_RELATIONS]),category:Type.Optional(choices([...RESOURCE_CATEGORIES])),cursor:Type.Optional(text)},strict);
-const capabilitySchema=Type.Object({systemId:text,categories:Type.Array(choices([...RESOURCE_CATEGORIES]),{uniqueItems:true}),units:Type.Array(choices(['辆','艘','处','个','条','unknown']),{uniqueItems:true}),relations:Type.Array(choices([...RESOURCE_RELATIONS]),{uniqueItems:true}),taskIdMapping:text,supportRule:Type.Optional(Type.Object({id:text,description:Type.String({minLength:1,maxLength:1000})},strict)),filters:Type.Array(choices(['category','task','relation']),{uniqueItems:true}),pagination:Type.Literal('cursor'),snapshot:Type.Literal('fixed_revision')},strict);
+const queryScopeSchema=Type.Object({taskId:Type.Optional(text),systemId:text,relation:Type.Optional(choices([...RESOURCE_RELATIONS])),category:Type.Optional(choices([...RESOURCE_CATEGORIES])),cursor:Type.Optional(text)},strict);
+const capabilitySchema=Type.Object({systemId:text,categories:Type.Array(choices([...RESOURCE_CATEGORIES]),{uniqueItems:true}),units:Type.Array(choices(['辆','艘','处','个','条','unknown']),{uniqueItems:true}),relations:Type.Array(choices([...RESOURCE_RELATIONS]),{uniqueItems:true}),taskIdMapping:Type.Optional(text),supportRule:Type.Optional(Type.Object({id:text,description:Type.String({minLength:1,maxLength:1000})},strict)),filters:Type.Array(choices(['category','task','relation']),{uniqueItems:true}),pagination:Type.Literal('cursor'),snapshot:Type.Literal('fixed_revision')},strict);
 const coverageSchema=Type.Object({systemId:text,scope:queryScopeSchema,status:choices(['complete','partial','unavailable','unsupported']),asOf:Type.Optional(time),nextCursor:Type.Optional(text),reason:Type.Optional(Type.String({minLength:1,maxLength:1000,pattern:'\\S'}))},strict);
 export function decodeResourceCapability(value:unknown):ResourceSourceCapability {
-  plain(value);if(!Check(capabilitySchema,value) || value.relations.includes('potential_support') && !value.supportRule) throw invalid();return structuredClone(value);
+  plain(value);if(!Check(capabilitySchema,value)) throw invalid();return structuredClone(value);
 }
 export function decodeResourceCoverage(value:unknown):ResourceCoverage {
   plain(value);if(!Check(coverageSchema,value) || value.systemId!==value.scope.systemId) throw invalid();

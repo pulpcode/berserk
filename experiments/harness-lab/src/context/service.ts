@@ -1,3 +1,4 @@
+import type { ResourceQueryScope } from '../contracts/task-resources.js';
 import { mapReferences } from './map-references.js';
 import { RequestError } from '../contracts/errors.js';
 import type { ContextCatalog, ContextPrincipal, ContextQueryResult, ContextScopeSnapshot, ContextTool } from '../contracts/context.js';
@@ -33,6 +34,12 @@ export class ContextService {
       areas: s.areas ?? [],
     }))};
   }
+  /** Explicit, optional source task discovery. Basic queries never call this method implicitly. */
+  async queryTaskResources(scope: ResourceQueryScope, principal: ContextPrincipal, signal?: AbortSignal): Promise<ContextQueryResult> {
+    return this.query('situation_query',{systemId:scope.systemId,mode:'current',objectTypes:['resource'],
+      ...(scope.taskId===undefined?{}:{taskId:scope.taskId}),...(scope.relation===undefined?{}:{relation:scope.relation}),
+      ...(scope.category===undefined?{}:{category:scope.category}),...(scope.cursor===undefined?{}:{cursor:scope.cursor}),limit:100},principal,signal);
+  }
   async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal): Promise<ContextQueryResult> {
     signal?.throwIfAborted();
     const params = normalizeContextQuery(tool, input), system = this.config.systems.find(s => s.id === params.systemId);
@@ -42,6 +49,14 @@ export class ContextService {
     } else if (!this.config.scopes.some(s => s.seatIds.includes(principal.seatId) && s.systemIds.includes(params.systemId))) throw denied();
     if (!system) throw denied();
     if ((tool === 'situation_query') !== (system.adapter === 'mock-situation-http')) throw new RequestError('CONTEXT_UNSUPPORTED_FILTER', '所选系统不支持该查询工具。');
+    if (tool === 'situation_query' && 'mode' in params) {
+      const capability=system.resourceCapability;
+      const unsupported=()=>new RequestError('CONTEXT_UNSUPPORTED_FILTER','来源不支持本次资源关系或类别条件；基础对象读取仍可使用。');
+      if (params.taskId!==undefined && (!capability?.filters.includes('task') || capability.taskIdMapping!=='identity')) throw unsupported();
+      if (params.relation!==undefined && (!capability?.filters.includes('relation') || !capability.relations.includes(params.relation)
+        || params.relation==='potential_support' && capability.supportRule?.id!=='explicit-task-relation')) throw unsupported();
+      if (params.category!==undefined && (!capability?.filters.includes('category') || !capability.categories.includes(params.category))) throw unsupported();
+    }
     const path = tool === 'information_read' && 'reportId' in params ? `/reports/${encodeURIComponent(params.reportId!)}`
       : tool === 'information_search' ? '/reports' : 'mode' in params && params.mode === 'current' ? '/objects' : '/changes';
     const url = new URL(`${system.baseUrl}${path}`);

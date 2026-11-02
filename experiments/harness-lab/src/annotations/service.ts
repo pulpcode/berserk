@@ -355,6 +355,7 @@ export class AnnotationService {
     if(geometry.type==='MultiPolygon' || (geometry.type==='Polygon' && geometry.coordinates.length!==1)) throw new RequestError('SPATIAL_SAVE_UNSUPPORTED','当前标绘不能无损保存多面或含孔面；未删除任何部分。');
     const systems=new Set<string>();
     for(const p of result.provenance) {
+      if(p.input.kind==='resource'){const c=p.resourceContext;if(!c||c.owner.userId!==actor.userId||c.owner.seatId!==actor.seatId||c.owner.taskId!==workspace.taskSpaceId||c.owner.sessionId!==sessionId)throw new RequestError('SPATIAL_RESULT_INVALID','资源结果身份不匹配。');c.dependencies.systemIds.forEach(id=>systems.add(id));for(const ref of c.dependencies.annotations)this.accessible(actor,workspace.taskSpaceId,ref).requiredSystemIds.forEach(id=>systems.add(id));}
       if(p.input.kind==='source') systems.add(p.input.systemId);
       if(p.input.kind==='annotation') this.accessible(actor,workspace.taskSpaceId,p.input.ref).requiredSystemIds.forEach(id=>systems.add(id));
     }

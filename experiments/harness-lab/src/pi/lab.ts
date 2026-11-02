@@ -1,3 +1,7 @@
+import { TaskResourceService } from '../context/task-resources.js';
+import { extractResourceResult, type ResourceResult } from '../contracts/resource-results.js';
+import { taskResourceTools } from './task-resource-tools.js';
+import { resolveResourceResult, validateResourceDelivery } from './task-resource-results.js';
 import { SpatialInputs } from '../spatial/inputs.js';
 import type { SpatialResult } from '../contracts/spatial.js';
 import { extractSpatialResult } from '../contracts/spatial.js';
@@ -578,6 +582,28 @@ export class PiLab {
     const current=actor ?? this.annotations.actorForSeat(record.seatId);
     new SpatialInputs(this.annotations,this.context).authorize(result,{actor:current,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,signal:new AbortController().signal,check:()=>{},resolveResult:()=>{throw new Error('History projection does not resolve new results.');}});
   }
+  private authorizeResourceHistory(record: RecordState, result: ResourceResult, actor?: AnnotationActor) {
+    if (!this.annotations || record.service) throw new RequestError('RESOURCE_FORBIDDEN', '当前身份无法读取该资源结果。', 403);
+    const current = actor ?? this.annotations.actorForSeat(record.seatId);
+    const origin = resolveResourceResult(record.manager.getBranch(), result.resultRef);
+    validateResourceDelivery(record.manager.getBranch(), result);
+    if (!isDeepStrictEqual({ ...result, delivery: undefined }, { ...origin, delivery: undefined })) throw new RequestError('RESOURCE_RESULT_INVALID', '资源结果与原始调用不一致。', 409);
+    new TaskResourceService(this.annotations, this.context).authorize(result, { actor: current, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!, signal: new AbortController().signal, check: () => {}, resolveMessage: () => { throw new Error('History projection does not resolve new reports.'); } });
+  }
+  private authorizeResultHistory(record: RecordState, actor: AnnotationActor) {
+    // Keep native audit records intact; refuse sending revoked or damaged facts to the provider.
+    for (const entry of record.manager.getBranch()) {
+      if (entry.type !== 'message' || entry.message.role !== 'toolResult') continue;
+      const message = entry.message;
+      const text = message.content.filter(block => block.type === 'text').map(block => block.text).join('\n');
+      const spatial = extractSpatialResult(message.details, message.toolName, message.isError, text);
+      if (message.toolName === 'spatial_analyze' && ((message.details as {spatialRejected?: boolean} | undefined)?.spatialRejected || !message.isError && !spatial)) throw new RequestError('SPATIAL_RESULT_INVALID', '会话含未通过完整性校验的空间结果；原始记录保留，请在新会话重新分析。', 409);
+      if (spatial) this.authorizeSpatialHistory(record, spatial, actor);
+      const resources = extractResourceResult(message.details, message.toolName, message.isError, text);
+      if (message.toolName === 'task_resource_query' && ((message.details as {resourceRejected?: boolean} | undefined)?.resourceRejected || !message.isError && !resources)) throw new RequestError('RESOURCE_RESULT_INVALID', '会话含未通过完整性校验的资源结果；原始记录保留，请在新会话重新查询。', 409);
+      if (resources) this.authorizeResourceHistory(record, resources, actor);
+    }
+  }
   private snapshot(record: RecordState): SessionSnapshot {
     const id = record.manager.getSessionId();
     const backgroundJob = record.service ? undefined : this.backgroundHooks?.getReservation?.(id);
@@ -599,9 +625,12 @@ export class PiLab {
       let spatialResult = message.role === 'toolResult' ? extractSpatialResult(message.details,message.toolName,message.isError,text) : undefined;
       if(message.role==='toolResult' && message.toolName==='spatial_analyze' && ((message.details as {spatialRejected?:boolean}|undefined)?.spatialRejected || !message.isError && !spatialResult)) text='空间结果未通过完整性校验，原始审计记录保留，不能继续使用该结果。';
       if(spatialResult) {try {this.authorizeSpatialHistory(record,spatialResult);} catch {spatialResult=null;text='当前身份无法读取此历史空间分析的来源；原记录保留，未替换为新数据。';}}
+      let resourceResult = message.role === 'toolResult' ? extractResourceResult(message.details, message.toolName, message.isError, text) : undefined;
+      if (message.role === 'toolResult' && message.toolName === 'task_resource_query' && ((message.details as {resourceRejected?: boolean} | undefined)?.resourceRejected || !message.isError && !resourceResult)) text = '资源结果未通过完整性校验，原始审计记录保留，不能继续使用该结果。';
+      if (resourceResult) { try { this.authorizeResourceHistory(record, resourceResult); } catch { resourceResult = null; text = '当前身份无法读取此历史资源结果或其原始依据；原记录保留，未替换为新数据。'; } }
       if (text || message.role === 'toolResult') messages.push({
         id: entry.id, ...(requestId ? { requestId } : {}), role: message.role === 'toolResult' ? 'tool' : message.role, text,
-        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult } : {}),
+        ...(message.role === 'toolResult' ? { toolName: publicToolName(message.toolName), toolCallId: message.toolCallId, isError: message.isError, annotationResult: extractAnnotationResult(message.details, message.toolName, message.isError, text), spatialResult, resourceResult } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && selections.has(requestId) ? { selections: selections.get(requestId) } : {}),
         ...(message.role === 'user' && requestId && !inputRequests.has(requestId) && history.inputs.has(requestId) ? { attachments: history.inputs.get(requestId) } : {}),
       });
@@ -757,6 +786,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         actor:active.annotationActor,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,
         requestId:active.id,signal:active.controller.signal,check:authorizeRequest,state:annotationState,skillIds:snapshot.skills.map(skill=>skill.id),
       }) : []),
+      ...(!active.background && this.annotations && active.annotationActor ? taskResourceTools(this.annotations, this.context, record.manager, {
+        actor: active.annotationActor, workspaceId: record.workspaceId, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
+        requestId: active.id, signal: active.controller.signal, check: authorizeRequest,
+      }) : []),
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {
@@ -845,14 +878,14 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }
     };
     session.agent.afterToolCall = async context => {
-      const mapResult = isMapTool(context.toolCall.name) || context.toolCall.name === 'spatial_analyze';
+      const mapResult = isMapTool(context.toolCall.name) || context.toolCall.name === 'spatial_analyze' || context.toolCall.name === 'task_resource_query';
       const actualContent = mapResult ? structuredClone(context.result.content) : undefined;
       const actualDetails = mapResult ? structuredClone(context.result.details) : undefined;
       const actualError = context.isError;
       let original: Awaited<ReturnType<NonNullable<typeof originalAfter>>>;
       try { original = await originalAfter?.(context); }
       catch (error) {
-        if (context.toolCall.name.startsWith('annotation_') || context.toolCall.name === 'situation_query' || context.toolCall.name === 'spatial_analyze') {
+        if (context.toolCall.name.startsWith('annotation_') || context.toolCall.name === 'situation_query' || context.toolCall.name === 'spatial_analyze' || context.toolCall.name === 'task_resource_query') {
           annotationState?.invalidate();
           this.stop(record, active, 'failure', '地图工具结果处理失败，请核对原操作回执；不继续后续写入。');
           throw error;
@@ -868,6 +901,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         || !isDeepStrictEqual(original?.details ?? result.details, actualDetails))) {
         annotationState?.rejectResult(toolCall.id);
         // Changed delivery cannot retain a successful structured receipt.
+        if (toolCall.name === 'task_resource_query') return { ...original, details: { resourceResult: null, resourceRejected: !actualError || Boolean((actualDetails as {resourceResult?: unknown} | undefined)?.resourceResult) } };
         if (toolCall.name === 'spatial_analyze') return {...original, details: {spatialResult: null, spatialRejected: !actualError || Boolean((actualDetails as {spatialResult?:unknown}|undefined)?.spatialResult)}};
         if (toolCall.name.startsWith('annotation_')) return {...original, details: {annotationResult: null}};
       }
@@ -879,6 +913,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     };
     session.agent.streamFunction = (selected, context, options) => {
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
+      if (!active.background && active.annotationActor) this.authorizeResultHistory(record, active.annotationActor);
       const purpose = active.compacting ? 'compaction' : 'reply';
       if (purpose === 'reply') annotationState?.beginInference();
       setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating');
@@ -1041,12 +1076,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       compacting: false, compactions: [], compactionStartIds: new Set(), usage: emptyUsage(), controller: new AbortController(), changes: [] };
     if (!active.background && this.annotations) {
       active.annotationActor = this.annotations.actorForSeat(record.seatId, actorUserId);
-      // Native history is authoritative: deny continuation rather than feed revoked result bodies to a model.
-      for(const entry of record.manager.getBranch()) if(entry.type==='message' && entry.message.role==='toolResult') {
-        const message=entry.message,result=extractSpatialResult(message.details,message.toolName,message.isError,message.content.filter(c=>c.type==='text').map(c=>c.text).join('\n'));
-        if(message.toolName==='spatial_analyze' && ((message.details as {spatialRejected?:boolean}|undefined)?.spatialRejected || !message.isError && !result)) throw new RequestError('SPATIAL_RESULT_INVALID','会话含未通过完整性校验的空间结果；原始记录保留，请在新会话重新分析。',409);
-        if(result) this.authorizeSpatialHistory(record,result,active.annotationActor);
-      }
+      this.authorizeResultHistory(record, active.annotationActor);
 
       const annotationContext = this.annotations.automaticContext(active.annotationActor, id);
       if (annotationContext) active.selections = {annotationContext};
@@ -1165,8 +1195,16 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             if (event.isError && isMapTool(event.toolName)) active.annotationState?.rejectResult(event.toolCallId);
             setPhase(record, active, 'preparing');
             const result = event.result as { content?: Array<{ type: string; text?: string }>; details?: unknown };
-            emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName),
-              text: result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '', isError: event.isError, annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || ''), spatialResult: extractSpatialResult(result.details, event.toolName, event.isError, result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '') });
+            let text = result.content?.filter(block => block.type === 'text').map(block => block.text || '').join('\n') || '';
+            let resourceResult = extractResourceResult(result.details, event.toolName, event.isError, text);
+            if (event.toolName === 'task_resource_query' && ((result.details as {resourceRejected?: boolean} | undefined)?.resourceRejected || !event.isError && !resourceResult)) text = '资源结果未通过完整性校验，不能继续使用该结果。';
+            if (resourceResult && this.annotations && active.annotationActor) {
+              try { new TaskResourceService(this.annotations, this.context).authorize(resourceResult, { actor: active.annotationActor, sessionId: id, taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!, signal: active.controller.signal, check: () => {}, resolveMessage: () => { throw new Error('Event projection does not resolve reports.'); } }); }
+              catch { resourceResult = null; text = '当前身份无法读取此资源结果的依据。'; }
+            }
+            emit({ ...base, type: 'tool.completed', toolCallId: event.toolCallId, toolName: publicToolName(event.toolName), text, isError: event.isError,
+              annotationResult: extractAnnotationResult(result.details, event.toolName, event.isError, text), resourceResult,
+              spatialResult: extractSpatialResult(result.details, event.toolName, event.isError, text) });
           }
         });
         if (!child && !active.background) {

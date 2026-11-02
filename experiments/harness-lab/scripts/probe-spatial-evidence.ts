@@ -35,8 +35,9 @@ export function spatialEvidenceGraph(observation:SpatialObservation){
       if(!observation.sourceSnapshot)return;
       // Area membership must be independently captured; do not infer it from output properties.
       if(input.areaIds?.length&&!observation.sourceAreaIds)return;
-      return observation.sourceSnapshot.filter(item=>item.source?.ref.systemId===input.systemId&&(!input.areaIds||input.areaIds.some(id=>observation.sourceAreaIds?.[itemIdentity(item)]?.includes(id)))&&(!input.objectRefs||input.objectRefs.some(ref=>same(ref,item.source!.ref)))&&(!input.revisions||input.revisions.every(value=>!same(value.ref,item.source!.ref)||value.revision===item.source!.revision)));
+      return observation.sourceSnapshot.filter(item=>item.source?.ref.systemId===input.systemId&&(!input.objectTypes||input.objectTypes.includes(item.source.ref.objectType))&&(!input.areaIds||input.areaIds.some(id=>observation.sourceAreaIds?.[itemIdentity(item)]?.includes(id)))&&(!input.objectRefs||input.objectRefs.some(ref=>same(ref,item.source!.ref)))&&(!input.revisions||input.revisions.every(value=>!same(value.ref,item.source!.ref)||value.revision===item.source!.revision)));
     }
+    if(input.kind==='resource')return; // Historical probe has no native resource snapshots; do not invent them.
     const prior=verified.get(input.resultRef);if(!prior)return;
     if(input.geometry===true)return prior.geometry?[{id:prior.resultRef,name:prior.operation,geometry:prior.geometry,properties:{}}]:undefined;
     // Frozen v1 omitted geometry meant original items; preserve that historical interpretation.

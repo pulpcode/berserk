@@ -12,7 +12,7 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
-Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Batch 1 does not add task-resource queries or change Skill defaults.
+Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Read [Task Resource Queries](./task-resource-query.md) for batch 2 read-only discovery, independent task relationships, native results and spatial/statistical use. Skill changes and live-model evaluations remain separate.
 
 Read [Professional Symbol Contract](./map-symbols.md) for annotation symbol/role fields, shared geometry validation and compatibility.
 

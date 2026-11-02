@@ -2,9 +2,9 @@
 
 ## 1. Scope / Trigger
 
-Read when changing resource metadata, annotation resource fields, source-resource decoding, fixed evidence references or publication projection. This batch introduces data contracts and lifecycle support, not a task-resource query engine or new Agent interpretation policy. See [Map Annotations](./map-annotations.md) for authorization, atomic revisions and host-controlled writes.
+Read when changing resource metadata, annotation resource fields, source-resource decoding, fixed evidence references or publication projection. This document covers batch 1 data contracts and lifecycle support. The implemented batch 2 query consumer is specified in [Task Resource Queries](./task-resource-query.md). See [Map Annotations](./map-annotations.md) for authorization, atomic revisions and host-controlled writes.
 
-The approved business rule version is `task-resources-v1`: explicit user scope wins; otherwise future task-resource queries consider related task sources, evidenced potential support, explicit resources in the current bound draft, task-adopted fixed publications and verifiable current-conversation supplements. Accessible data is not automatically task-related. The existing Skills remain unchanged until the query tool exists; do not describe this data-contract increment as an operational default-scope change.
+The approved business rule version is `task-resources-v1`: explicit user scope wins; otherwise task-resource queries consider related task sources, evidenced potential support, explicit resources in the current bound draft, task-adopted fixed publications and verifiable current-conversation supplements. Accessible data is not automatically task-related. Batch 2 implements the query tool; existing Skills remain unchanged until the separately approved Skill batch.
 
 ## 2. Contracts and Ownership
 
@@ -23,9 +23,9 @@ Resource fields distinguish:
 
 Each fact retains its own basis. Evidence can be a declaration, a source revision reference or a fixed annotation object reference. These declarations and locators do not certify objective truth. `informationRole` continues to describe observation/assessment/plan independently.
 
-The conversation-supplement contract carries a user-message locator, task/resource identity and report time. Its decoder checks structure only. Native-message existence, ownership and semantic applicability must be resolved by the future Pi consumer; do not build a second transcript store or pretend a model-supplied message ID verifies itself.
+The conversation-supplement contract carries a user-message locator, task/resource identity and report time. Its decoder checks structure only. The batch 2 Pi consumer verifies native-message existence and resource selection; semantic interpretation stays unverified. Do not build a second transcript store or pretend a model-supplied message ID verifies itself.
 
-Source capability, task mapping, support rule and coverage types are an adapter handoff, not an implemented remote task-query capability. No new environment key, SQL table or `task_resource_query` tool is added in this batch.
+Source capability, task mapping, support rule and coverage types are an adapter handoff. Batch 2 implements optional explicit identity mapping and source-declared support relations; it does not require every source to support task queries. No new environment key or SQL table is added. The `task_resource_query` tool belongs to batch 2.
 
 Coverage `partial` means incomplete coverage, not necessarily unread pages: it requires `asOf` and either a continuation cursor or a nonblank reason for a partial source that cannot continue. `complete` has a snapshot time and no next cursor; `unavailable`/`unsupported` require a reason and no cursor. Never present a complete page or a source's limited geographic coverage as a complete task inventory.
 
@@ -55,7 +55,7 @@ Use optional schemaVersion 1 fields and preserve absence. Never inject resource 
 | Inaccessible source/fixed annotation evidence | Reject through existing authorization, without leaking private content |
 | Publication references private annotation evidence | Preserve shared declaration values, remove private locators |
 | Legacy source count without new semantics | Keep legacy meaning; do not infer individual identity or assignment |
-| Resource query capability unavailable | Future consumer must report unsupported/partial coverage, never interpret it as zero resources |
+| Resource query capability unavailable | Consumer reports unsupported/partial relationship coverage; ordinary exact reads remain usable, never interpret unavailable discovery as zero resources |
 
 ## 6. Verification and Limits
 

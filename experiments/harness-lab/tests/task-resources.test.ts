@@ -186,7 +186,7 @@ it.each(['missing','aggregate','changed'] as const)('refuses refresh when explic
 it('defines capability and coverage failures distinctly from a complete empty source',async()=>{
   const {decodeResourceCapability,decodeResourceCoverage}=await import('../src/contracts/task-resources.js');
   const capability={systemId:'source',categories:['fire_engine','rescue_boat'],units:['辆','艘'],relations:['assigned','potential_support'],taskIdMapping:'mock taskId equality',supportRule:{id:'mock-support',description:'模拟任务支援关系'},filters:['category','task','relation'],pagination:'cursor',snapshot:'fixed_revision'};
-  expect(decodeResourceCapability(capability)).toEqual(capability);const {supportRule,...unsupported}=capability;void supportRule;expect(()=>decodeResourceCapability(unsupported)).toThrow();
+  expect(decodeResourceCapability(capability)).toEqual(capability);const {supportRule,...unsupported}=capability;void supportRule;expect(decodeResourceCapability(unsupported)).toEqual(unsupported);
   const scope={systemId:'source',taskId:'task-a',relation:'assigned'};
   expect(()=>decodeResourceCoverage({systemId:'source',scope,status:'partial',asOf:'2026-11-02T04:00:00Z'})).toThrow();
   for(const detail of [{nextCursor:'page-2'},{reason:'仅覆盖本站登记资源，无更多分页'}]) {

@@ -2,8 +2,9 @@ import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { RequestError } from '../../src/contracts/errors.js';
-import type { ContextFilters, ContextRef, InformationReport, SituationChange, SituationQueryParams } from '../../src/contracts/context.js';
-import { normalizeContextQuery } from '../../src/context/validation.js';
+import type { ContextFilters, ContextRef, InformationReport, SituationChange, SituationQueryParams, SituationObject, SituationResourceCoverage } from '../../src/contracts/context.js';
+import { decodeResourceCapability, type ResourceSourceCapability } from '../../src/contracts/task-resources.js';
+import { normalizeContextQuery, situationObject, situationResourceCoverage } from '../../src/context/validation.js';
 import { simulationPersistence } from './persistence.js';
 import { createControlApi, type NotificationTarget, type StoredAction } from './control-api.js';
 import { mapFixtures } from './map-fixtures.js';
@@ -26,10 +27,14 @@ function byTime<T>(items: T[], time: (item: T) => string | null, from?: string, 
 }
 
 /** Independent HTTP source. Control methods exist only in this process/test driver. */
-export function createMockContextServer(options: {token: string; controlToken?: string; databasePath?: string; instanceId?: string; day?: string; targets?: NotificationTarget[]}) {
+export function createMockContextServer(options: {token: string; controlToken?: string; databasePath?: string; instanceId?: string; day?: string; targets?: NotificationTarget[]; situationObjects?: SituationObject[]; resourceCapability?: ResourceSourceCapability; resourceCoverage?: SituationResourceCoverage}) {
   if (!options.token.trim()) throw new Error('MOCK_CONTEXT_API_TOKEN is required');
+  const resourceCapability=options.resourceCapability===undefined?undefined:decodeResourceCapability(options.resourceCapability);
+  const resourceCoverage=options.resourceCoverage===undefined?undefined:situationResourceCoverage(options.resourceCoverage);
+  if(resourceCapability && resourceCapability.systemId!=='situation') throw new Error('Mock resource capability belongs to situation');
+  const initialObjects=()=>options.situationObjects ? structuredClone(options.situationObjects.map(item=>situationObject(item,'situation'))) : objects();
   let epoch: string = randomUUID(); let intelGeneration = 0, situationGeneration = 0;
-  let reportData = reports(), objectData = objects(), changes: SituationChange[] = [];
+  let reportData = reports(), objectData = initialObjects(), changes: SituationChange[] = [];
   let intelAsOf = at('09:00'), situationAsOf = at('09:00');
   const persistence = simulationPersistence(options.databasePath);
   const instanceId = options.instanceId ?? 'legacy';
@@ -60,7 +65,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
   function reset() {
     if(options.instanceId)throw fail('INVALID_STAGE','地图实例请使用新的数据目录，不能重置编号。');
     epoch = randomUUID(); intelGeneration = situationGeneration = 0;
-    reportData = reports(); objectData = objects(); changes = []; intelAsOf = situationAsOf = at('09:00'); unavailable.clear(); save();
+    reportData = reports(); objectData = initialObjects(); changes = []; intelAsOf = situationAsOf = at('09:00'); unavailable.clear(); save();
   }
   function updateVehicles(count: number, time: string) {
     const index = objectData.findIndex(item => sameRef(item.ref, vehicleRef)), before = structuredClone(objectData[index]);
@@ -129,12 +134,12 @@ export function createMockContextServer(options: {token: string; controlToken?: 
     if (!detail && !isReports && !current && !isChanges) throw fail('NOT_FOUND', '查询接口不存在。', 404);
     const systemId = detail || isReports ? 'intel' : 'situation';
     const allowed = detail ? ['revision'] : isReports ? ['reportId', 'subjectId', 'objectRefs', 'areaIds', 'from', 'to', 'query', 'limit', 'cursor']
-      : ['objectRefs', 'areaIds', 'query', 'limit', 'cursor', ...(isChanges ? ['after', 'from', 'to'] : [])];
+      : ['objectRefs', 'areaIds', 'objectTypes', 'taskId', 'relation', 'category', 'query', 'limit', 'cursor', ...(isChanges ? ['after', 'from', 'to'] : [])];
     const raw: Record<string, unknown> = {systemId, ...(!detail && !isReports ? {mode: current ? 'current' : 'changes'} : {})};
     if (detail) raw.reportId = decodeURIComponent(detail[1]);
     for (const [key, value] of url.searchParams) {
       if (!allowed.includes(key) || url.searchParams.getAll(key).length !== 1) throw fail('INVALID_ARGUMENT', '未知或重复查询参数。');
-      if (key === 'objectRefs' || key === 'areaIds') { try { raw[key] = JSON.parse(value); } catch { throw fail('INVALID_ARGUMENT', '数组编码无效。'); } }
+      if (key === 'objectRefs' || key === 'areaIds' || key === 'objectTypes') { try { raw[key] = JSON.parse(value); } catch { throw fail('INVALID_ARGUMENT', '数组编码无效。'); } }
       else if (key === 'revision' || key === 'limit') {
         if (!/^[0-9]+$/.test(value)) throw fail('INVALID_ARGUMENT', '需要十进制整数。'); raw[key] = Number(value);
       } else raw[key] = value;
@@ -158,18 +163,27 @@ export function createMockContextServer(options: {token: string; controlToken?: 
     }
     const filters = params as SituationQueryParams;
     if (filters.objectRefs?.some(ref => ref.systemId !== 'situation' || !['road', 'resource', 'area'].includes(ref.objectType))) throw fail('UNSUPPORTED_FILTER', '不支持该系统或对象类型。');
+    const unsupported=()=>fail('UNSUPPORTED_FILTER','未配置所请求的资源查询能力。');
+    if(filters.taskId!==undefined && (!resourceCapability?.filters.includes('task') || resourceCapability.taskIdMapping!=='identity')) throw unsupported();
+    if(filters.relation!==undefined && (!resourceCapability?.filters.includes('relation') || !resourceCapability.relations.includes(filters.relation)
+      || filters.relation==='potential_support' && resourceCapability.supportRule?.id!=='explicit-task-relation')) throw unsupported();
+    if(filters.category!==undefined && (!resourceCapability?.filters.includes('category') || !resourceCapability.categories.includes(filters.category))) throw unsupported();
+    const resourceMatches=(item:SituationObject)=>
+      (!filters.objectTypes || filters.objectTypes.includes(item.ref.objectType))
+      && (filters.category===undefined || item.resourceData?.resource.category===filters.category)
+      && (filters.taskId===undefined || item.resourceData?.resource.taskRelations?.some(relation=>relation.taskId===filters.taskId && (filters.relation===undefined || relation.relation===filters.relation)));
     const unknownRefs = filters.objectRefs?.filter(ref => !objectData.some(o => sameRef(o.ref, ref))) ?? [];
     if (current) {
-      const selected = objectData.filter(o => matches({objectRefs: [o.ref], areaIds: o.areaIds}, filters, o.name))
+      const selected = objectData.filter(o => resourceMatches(o) && matches({objectRefs: [o.ref], areaIds: o.areaIds}, filters, o.name))
         .sort((a, b) => a.ref.objectType.localeCompare(b.ref.objectType) || a.ref.objectId.localeCompare(b.ref.objectId));
-      return {...page(selected, filters, 'situation', url.pathname), unknownRefs, changeCursor: head()};
+      return {...page(selected, filters, 'situation', url.pathname), unknownRefs, changeCursor: head(), ...(resourceCoverage ? {resourceCoverage} : {})};
     }
     let start = 0;
     if (filters.after !== undefined) {
       const positions = [changeCursor(100), ...changes.map(c => c.cursor)], index = positions.indexOf(filters.after);
       if (index < 0) throw fail('INVALID_CHANGE_CURSOR', '变化游标无效，请重新查询当前状态。'); start = index;
     }
-    const selected = changes.slice(start).filter(c => matches({objectRefs: [c.after.ref], areaIds: c.after.areaIds}, filters, c.after.name));
+    const selected = changes.slice(start).filter(c => resourceMatches(c.after) && matches({objectRefs: [c.after.ref], areaIds: c.after.areaIds}, filters, c.after.name));
     const timed = byTime(selected, c => c.effectiveAt, filters.from, filters.to);
     const result = page(timed.items, filters, 'situation', url.pathname, timed.timeUnknownCount);
     return {...result, unknownRefs, nextAfter: result.hasMore ? null : head()};

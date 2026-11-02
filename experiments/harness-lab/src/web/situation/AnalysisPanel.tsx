@@ -25,6 +25,7 @@ function scopeLabel(scope: SpatialInput): string {
   switch (scope.kind) {
     case 'source': return `来源 ${scope.systemId} · ${scope.objectRefs ? `指定 ${scope.objectRefs.length} 个对象` : scope.areaIds ? `区域 ${scope.areaIds.join('、')}` : '全部获准对象'}`;
     case 'annotation': return `固定标绘 ${'setId' in scope.ref ? `修订 r${scope.ref.revision}` : '发布版'} · ${scope.objectIds ? `指定 ${scope.objectIds.length} 个对象` : scope.layerIds ? `图层 ${scope.layerIds.join('、')}` : '整个版本'}`;
+    case 'resource': return `固定资源清单 · ${scope.itemIds ? `指定 ${scope.itemIds.length} 项` : '全部清单项'}`;
     case 'result': return `前序固定分析 · ${scope.geometry ? '生成范围' : scope.itemIds ? `指定 ${scope.itemIds.length} 个结果对象` : '结果对象集合'}`;
   }
 }
@@ -34,7 +35,7 @@ export function AnalysisPanel({ state, editing = false }: { state: AnalysisMapSt
   return <section className="analysis-panel" aria-label="空间分析结果">
     <header><strong>{analysisLabels[result.operation]}</strong><span>临时结果 · 只读</span></header>
     <p className="analysis-value">{analysisValue(result)}</p><p>{parameterLabel(result)}</p>
-    <p className="resource-help">候选范围已完整读取：{result.completeness.candidateCount} 个对象。计算时间：{new Date(result.createdAt).toLocaleString('zh-CN')}</p>
+    <p className="resource-help">{result.schemaVersion===3?`资源候选 ${result.completeness.totalCandidateCount} 项；位置可判断 ${result.completeness.candidateCount} 项，未分类 ${result.completeness.unclassified?.length??0} 项。`:`候选范围已完整读取：${result.completeness.candidateCount} 个对象。`}计算时间：{new Date(result.createdAt).toLocaleString('zh-CN')}</p>
     <div className="situation-actions"><button type="button" onClick={state.toggle} aria-pressed={state.visible}>{state.visible ? '隐藏分析' : '显示分析'}</button><button type="button" onClick={() => state.locate()} disabled={editing}>定位分析</button><button type="button" onClick={state.clear}>清除临时显示</button></div>
     {editing && <p className="resource-help">绘制期间保留视角；完成绘制后可定位分析。</p>}
     {result.values && 'groups' in result.values && <ul>{result.values.groups.map((group, index) => <li key={index}>{group.value === null ? '未分类' : String(group.value)}：{group.count}</li>)}</ul>}

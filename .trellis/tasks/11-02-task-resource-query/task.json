@@ -1,0 +1,44 @@
+{
+  "id": "task-resource-query",
+  "name": "task-resource-query",
+  "title": "第二批资源查询与任务关系判断",
+  "description": "按已批准修订实施第二批查询、独立关系判断、资源结果与空间衔接；24组离线检查，零真实模型",
+  "status": "in_progress",
+  "dev_type": "backend",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-02",
+  "completedAt": null,
+  "branch": "codex/agent-spatial-plotting",
+  "base_branch": "codex/agent-spatial-plotting",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-28-agent-spatial-plotting",
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {
+    "authorization": {
+      "date": "2026-11-02",
+      "baseline": "ea30f46",
+      "plan": ".trellis/tasks/10-28-agent-spatial-plotting/task-resources-20261102/02-query-and-spatial-tools.md",
+      "liveEvaluation": false
+    },
+    "implementation": {
+      "status": "verified",
+      "report": "results.md",
+      "review": "review.md",
+      "vitestDistinctFiles": 13,
+      "vitestDistinctTests": 226,
+      "desktopRegressions": 4,
+      "paidModelRequests": 0,
+      "unresolvedInScopeFindings": 0,
+      "nextAction": "待用户审阅本批实现和报告；第三、四批未启动，尚未提交推送"
+    }
+  }
+}
