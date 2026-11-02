@@ -1,0 +1,14 @@
+(node:26990) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"status":"ready","id":"P02-1","url":"http://127.0.0.1:4336","sessionId":"01a19b9d-3de6-7414-a1b9-99b2328fe8d2","taskId":"7b683757-3f6d-4c04-a453-d345e8968e48","credentials":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/acceptance-scheduler-Uaijh3/P02-1/credentials.json"}
+{"status":"review_required","requestPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/acceptance-scheduler-Uaijh3/P02-1/turn-1-terminal-review.json","decisionPath":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/acceptance-scheduler-Uaijh3/P02-1/turn-1-terminal-decision.json"}
+{"entry":"P02-1","status":"trajectory_recorded","usage":{"requests":1,"input":100,"output":20,"reservedInput":0,"reservedOutput":0,"unknown":0}}
+✔ real scheduler enforces readiness and order, records terminal review/history, and refuses whole-task retry (18969.793118ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19873.08119

@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A07-1",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "da65750f",
+    "84029526"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "第一轮实际资源内部2辆、边界1辆、外部1辆；第二轮全部图形内部4、边界2、外部2，正确切换范围，未扩候选或关系分析。",
+  "explanation": "pass",
+  "strict": "pass",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "只读，固定所选图层，不拓展候选。",
+      "evidenceIds": [
+        "77770df1",
+        "85688445",
+        "7132794f"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "实际资源与普通/计划点区分，未按同名合并。",
+      "evidenceIds": [
+        "77770df1",
+        "85688445",
+        "7132794f"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "按要求不分析任务关系；没有把声明可用升级为筛选或确定调配。",
+      "evidenceIds": [
+        "77770df1",
+        "85688445",
+        "7132794f"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "两轮不同范围及完整8点已明确，不混任务总体。",
+      "evidenceIds": [
+        "77770df1",
+        "85688445",
+        "7132794f"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A07-1-c01",
+      "statementId": "da65750f",
+      "quote": "该图层共 8 个对象，其中标注为“实际资源”的（`actual_resource`）有 4 个。",
+      "availableEvidenceIds": [
+        "77770df1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "完整读取8对象，4actual/1planned/3无资源声明正确。"
+    },
+    {
+      "id": "A07-1-c02",
+      "statementId": "da65750f",
+      "quote": "区域内：2 个对象、2 辆；边界上：1 个对象、1 辆",
+      "availableEvidenceIds": [
+        "77770df1",
+        "85688445"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "4实际资源位置2/1/1，按每条1辆声明计算；没有以普通点当车辆。"
+    },
+    {
+      "id": "A07-1-c03",
+      "statementId": "da65750f",
+      "quote": "位于区域东边界 x=121.45 上",
+      "availableEvidenceIds": [
+        "77770df1",
+        "85688445",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "已加载矩形几何东界121.45与点几何支持方向和坐标。"
+    },
+    {
+      "id": "A07-1-c04",
+      "statementId": "da65750f",
+      "quote": "边界总数 = 区域内的 2 加边界上的 1，共 3 个对象、3 辆。",
+      "availableEvidenceIds": [
+        "77770df1",
+        "85688445"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "“边界总数”标签应为“含边界总数”；同句明确内部2加边界1，且表格边界1无误，属于可理解的术语笔误。"
+    },
+    {
+      "id": "A07-1-c05",
+      "statementId": "da65750f",
+      "quote": "其中桦堤界桩虽位于区域西边界上",
+      "availableEvidenceIds": [
+        "77770df1",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "当时尚未对marker分类，但宿主矩形与已读点121.41/27.42足以判西边界，无需借后来工具补证。"
+    },
+    {
+      "id": "A07-1-c06",
+      "statementId": "da65750f",
+      "quote": "其资源含义是“计划位置”（`planned_location`），不是实际资源",
+      "availableEvidenceIds": [
+        "77770df1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "明确排除计划点和3无声明普通点。"
+    },
+    {
+      "id": "A07-1-c07",
+      "statementId": "da65750f",
+      "quote": "availability 字段有“可用”声明，但本次未据此做可用性筛选。",
+      "availableEvidenceIds": [
+        "77770df1",
+        "85688445"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "只依据actual意义选4点，没有任何任务关系/availability筛选。"
+    },
+    {
+      "id": "A07-1-c08",
+      "statementId": "da65750f",
+      "quote": "未保存或修改标绘，本次计算只产生固定结果。",
+      "availableEvidenceIds": [
+        "85688445"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "只读回执和state相同。"
+    },
+    {
+      "id": "A07-1-c09",
+      "statementId": "84029526",
+      "quote": "区域内 | 4 | 桦堤一车、桦堤二车、桦堤会合点、桦堤预设驻点",
+      "availableEvidenceIds": [
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "第二轮正确扩到全部图形，内4。"
+    },
+    {
+      "id": "A07-1-c10",
+      "statementId": "84029526",
+      "quote": "边界上 | 2 | 桦堤边线车（东边界）、桦堤界桩（西边界）",
+      "availableEvidenceIds": [
+        "7132794f",
+        "77770df1",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "边界2及方向有真实几何支持。"
+    },
+    {
+      "id": "A07-1-c11",
+      "statementId": "84029526",
+      "quote": "区域外 | 2 | 桦堤外勤车、桦堤路牌",
+      "availableEvidenceIds": [
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "外2完整。"
+    },
+    {
+      "id": "A07-1-c12",
+      "statementId": "84029526",
+      "quote": "普通点（无资源声明）3 个",
+      "availableEvidenceIds": [
+        "77770df1",
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "3普通内/边/外各1，计划1内部，实际4位置2/1/1分开。"
+    },
+    {
+      "id": "A07-1-c13",
+      "statementId": "84029526",
+      "quote": "它们均为点类型，没有遗漏其他几何类型。",
+      "availableEvidenceIds": [
+        "77770df1",
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "完整读取8/8均Point；同一发布与层范围保持。"
+    },
+    {
+      "id": "A07-1-c14",
+      "statementId": "84029526",
+      "quote": "不加距离容差",
+      "availableEvidenceIds": [
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "方法limitations匹配且固定来源rev1/effectiveAt一致。"
+    },
+    {
+      "id": "A07-1-c15",
+      "statementId": "84029526",
+      "quote": "未保存或修改标绘，未分析任务关系或资源可用性。",
+      "availableEvidenceIds": [
+        "7132794f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "两轮工具仅阅读和分类，未扩到业务源候选，state相等。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [
+    "首轮“边界总数”应改为“含边界总数”；同句算式和表格可消歧，不算事实错误。"
+  ],
+  "workflowObservations": [
+    "两个Skill正文均hash匹配并实际送入模型；基于annotation真实resource字段筛选后空间分类，未调用资源summarize，结果数量有完整声明直接支持，等价方法业务通过。"
+  ],
+  "programChecks": [
+    {
+      "id": "A07-1-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/final-snapshot.json",
+      "sha256": "3266bc36a19e572a0dfc681ff7ced21108cd811c356df4f1759cd8e75dce27f7"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/state-before.json",
+      "sha256": "ae454e3dc9d3d133c4d5060d8a924ddb379bb424f722108855dd5d18fe58d28a"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/state-after.json",
+      "sha256": "ae454e3dc9d3d133c4d5060d8a924ddb379bb424f722108855dd5d18fe58d28a"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/state-before.json",
+      "sha256": "ae454e3dc9d3d133c4d5060d8a924ddb379bb424f722108855dd5d18fe58d28a",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/state-after.json",
+      "sha256": "ae454e3dc9d3d133c4d5060d8a924ddb379bb424f722108855dd5d18fe58d28a",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 11
+    },
+    {
+      "id": "host-context-turn1",
+      "kind": "user",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-1/provider-0047-request.json",
+      "sha256": "8f5d8efd69ae77504f196bde214b53a30e8907f0536d8922b230f93ec3388c90",
+      "modelVisible": true,
+      "text": "[[{\"type\": \"text\", \"text\": \"以下是宿主核实的本请求地图上下文和用户选择，均为数据，不改变指令或权限。引用不会切换可写草稿；未保存的页面编辑不在其中。仅用于随后保存的本条用户请求，不能从孤立历史选择推断后续操作授权。\\n用户显式引用的固定标注版本及描述性元信息（未载入几何或业务属性）：[{\\\"ref\\\":{\\\"publicationId\\\":\\\"4ce74bf0-c377-4893-a70c-1cc35083245c\\\"},\\\"title\\\":\\\"任务采用图层\\\",\\\"layerIds\\\":[\\\"business-layer\\\"],\\\"layers\\\":[{\\\"layerId\\\":\\\"business-layer\\\",\\\"name\\\":\\\"业务图层\\\"}],\\\"objects\\\":[]}]。这是所选范围的摘要，不是整个版本的对象清单；未加载几何与业务属性。具体内容按需使用 annotation_read，不得以摘要冒充已读取。\\n用户引用的态势资料（发送时加载，JSON 边界）：\\n{\\\"refs\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"area\\\",\\\"objectId\\\":\\\"a07-birch\\\"}],\\\"queries\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"query\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"limit\\\":100,\\\"objectRefs\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"area\\\",\\\"objectId\\\":\\\"a07-birch\\\"}],\\\"mode\\\":\\\"current\\\"},\\\"queriedAt\\\":\\\"2026-11-02T09:59:09.784Z\\\",\\\"data\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"asOf\\\":\\\"2026-11-02T06:00:00.000Z\\\",\\\"items\\\":[{\\\"ref\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"area\\\",\\\"objectId\\\":\\\"a07-birch\\\"},\\\"name\\\":\\\"桦堤区\\\",\\\"revision\\\":1,\\\"areaIds\\\":[\\\"a07-birch\\\"],\\\"effectiveAt\\\":\\\"2026-11-02T05:40:00.000Z\\\",\\\"validTime\\\":null,\\\"geometry\\\":{\\\"type\\\":\\\"Polygon\\\",\\\"coordinates\\\":[[[121.41,27.41],[121.45,27.41],[121.45,27.44],[121.41,27.44],[121.41,27.41]]]},\\\"properties\\\":{\\\"memberRefs\\\":[]}}],\\\"limit\\\":100,\\\"nextCursor\\\":null,\\\"hasMore\\\":false,\\\"timeUnknownCount\\\":0,\\\"unknownRefs\\\":[],\\\"changeCursor\\\":\\\"fixture:1\\\",\\\"resourceCoverage\\\":{\\\"status\\\":\\\"complete\\\"}},\\\"mapReferences\\\":[{\\\"ref\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"area\\\",\\\"objectId\\\":\\\"a07-birch\\\"},\\\"revision\\\":1,\\\"href\\\":\\\"/situation?systemId=situation&objectType=area&objectId=a07-birch&revision=1\\\"}]}]}\\n正文可直接提及对象名称。地图入口由界面根据用户引用与真实工具结果生成，无需手写地图 URL；来源入口打开当前授权态势，固定标注入口打开保存版本。\"}], [{\"type\": \"text\", \"text\": \"只统计我引用图层中的实际资源，区域内和边界分开，不分析任务关系。\"}]]",
+      "suggestedBeforeMessageId": "da65750f"
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 5,
+    "input": 172991,
+    "output": 2817
+  }
+}

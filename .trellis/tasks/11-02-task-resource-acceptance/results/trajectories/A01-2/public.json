@@ -1,0 +1,1683 @@
+{
+  "slot": {
+    "id": "A01-2",
+    "caseId": "A01",
+    "repeat": 2,
+    "phase": "formal"
+  },
+  "recordedStatus": "trajectory_recorded",
+  "semanticReview": "pending_review",
+  "evidenceIssues": [],
+  "accounting": {
+    "actualRequests": 3,
+    "unknownUsageAttempts": 0,
+    "knownInput": 80818,
+    "knownOutput": 1666,
+    "usageComplete": true,
+    "rows": [
+      {
+        "id": 88,
+        "status": "finished",
+        "usage": {
+          "input": 24723,
+          "output": 205
+        },
+        "providerUsage": {
+          "input": 24723,
+          "output": 205
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0088-response-meta.json",
+          "sha256": "92a21b9dcb25cddc1e2633f57d339c2bccfc016e61d0cc56872e5693f603b14d"
+        }
+      },
+      {
+        "id": 89,
+        "status": "finished",
+        "usage": {
+          "input": 27453,
+          "output": 552
+        },
+        "providerUsage": {
+          "input": 27453,
+          "output": 552
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0089-response-meta.json",
+          "sha256": "a93eff9e2794e9ffac1f1182efc9f9dd4d8427e5c1c01e012845b1417e94aa95"
+        }
+      },
+      {
+        "id": 90,
+        "status": "finished",
+        "usage": {
+          "input": 28642,
+          "output": 909
+        },
+        "providerUsage": {
+          "input": 28642,
+          "output": 909
+        },
+        "providerComplete": true,
+        "finishReason": "stop",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0090-response-meta.json",
+          "sha256": "119b1a16b8f3707ca77a61ed1558def2114aa3e06633df24e497e129877bccf9"
+        }
+      }
+    ],
+    "issues": []
+  },
+  "state": {
+    "complete": true,
+    "changed": false,
+    "fields": [
+      {
+        "field": "task",
+        "changed": false,
+        "beforeHash": "0b39c370132be5826eb54a7d9b5570eb39e2cfba07c859338af4399ba2f7c001",
+        "afterHash": "0b39c370132be5826eb54a7d9b5570eb39e2cfba07c859338af4399ba2f7c001"
+      },
+      {
+        "field": "binding",
+        "changed": false,
+        "beforeHash": "7ec99225644cea03eebf43be6cde2f25455fc4e5c721b1e8ee8f85bf56844ed3",
+        "afterHash": "7ec99225644cea03eebf43be6cde2f25455fc4e5c721b1e8ee8f85bf56844ed3"
+      },
+      {
+        "field": "listing",
+        "changed": false,
+        "beforeHash": "45947a306d5e032974cc9ddbb556f5c0b7a0b2ccd72088b335873f95db2a644b",
+        "afterHash": "45947a306d5e032974cc9ddbb556f5c0b7a0b2ccd72088b335873f95db2a644b"
+      },
+      {
+        "field": "current",
+        "changed": false,
+        "beforeHash": "f7762b23ed74db9b0b9aed24f0e6332c0287b03744f016ef7fa118dea8a9b7f8",
+        "afterHash": "f7762b23ed74db9b0b9aed24f0e6332c0287b03744f016ef7fa118dea8a9b7f8"
+      },
+      {
+        "field": "draftDocument",
+        "changed": false,
+        "beforeHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "afterHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+      },
+      {
+        "field": "workspaceFiles",
+        "changed": false,
+        "beforeHash": "1d1160948001d278dd05da67e98ba89843d1d443da6efef03ea10dde60c9d234",
+        "afterHash": "1d1160948001d278dd05da67e98ba89843d1d443da6efef03ea10dde60c9d234"
+      }
+    ],
+    "before": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/state-before.json",
+      "sha256": "e42839842406b6ce4045cc1301a5d076543d9684361803bf675197cc09e6cf2e"
+    },
+    "after": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/state-after.json",
+      "sha256": "e42839842406b6ce4045cc1301a5d076543d9684361803bf675197cc09e6cf2e"
+    },
+    "interpretation": "pending_review"
+  },
+  "trajectory": [
+    {
+      "id": "message-1",
+      "sequence": 1,
+      "kind": "user",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6",
+      "text": "查一下本任务有哪些资源，任务相关和有依据的支援分开列；已分配、可用情况按证据说。",
+      "modelVisible": true,
+      "messageId": "a3ca7de5",
+      "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+      "sentences": []
+    },
+    {
+      "id": "message-2",
+      "sequence": 2,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6",
+      "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\"},\"queriedAt\":\"2026-11-02T10:12:46.881Z\",\"data\":{\"item\":{\"id\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\",\"title\":\"澄湾演练·澄湾物资联络\",\"goal\":\"核对澄湾演练的资源情况，为值班人员提供有据可查的清单。仅查询，不保存或修改业务资料。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":2,\"createdAt\":\"2026-11-02T10:12:40.058Z\",\"updatedAt\":\"2026-11-02T10:12:40.061Z\",\"context\":{\"businessRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a01-lantern\"}]}}}}",
+      "modelVisible": true,
+      "messageId": "fb948f3a",
+      "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+      "toolName": "task_read",
+      "toolCallId": "call_00_ebmju22i5uagrh1z1726mdyc",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-3",
+      "sequence": 3,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:12ffe3b6-d8b6-47ce-8b41-6b41905e9617:call_01_4lceibtg40vpsom5q7luujuw\",\"requestId\":\"12ffe3b6-d8b6-47ce-8b41-6b41905e9617\",\"toolCallId\":\"call_01_4lceibtg40vpsom5q7luujuw\",\"createdAt\":\"2026-11-02T10:12:46.892Z\",\"owner\":{\"userId\":\"42fa031b-18cb-4e7e-a4a2-2770b69e21cb\",\"seatId\":\"acceptance\",\"taskId\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\",\"sessionId\":\"01a19bbf-3169-74f3-b3e7-937f29c5dc08\"},\"parameters\":{\"operation\":\"query\",\"purpose\":\"task\"},\"statisticsScope\":{\"at\":\"2026-11-02T10:12:46.892Z\",\"relation\":\"related\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a01-lantern\\\"]\",\"name\":\"灯塔补给车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a01-lantern\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"availability\":{\"state\":\"unknown\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"物资簿未载当前班次状态\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a01-lantern，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a01-lantern\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:12:46.912Z\",\"data\":{\"entityId\":\"a01-lantern\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a01-lantern\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"availability\":{\"state\":\"unknown\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"物资簿未载当前班次状态\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a01-lantern，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"平台任务业务引用\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"mutual\\\",\\\"resource\\\",\\\"a01-petrel\\\"]\",\"name\":\"海燕协作艇\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"协作舟册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作登记一艘\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\",\"relation\":\"potential_support\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作联络单 M-71：可支援本任务，尚未调配\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a01-petrel，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a01-petrel，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"mutual\",\"objectType\":\"resource\",\"objectId\":\"a01-petrel\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:12:46.917Z\",\"data\":{\"entityId\":\"a01-petrel\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"协作舟册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作登记一艘\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\",\"relation\":\"potential_support\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作联络单 M-71：可支援本任务，尚未调配\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a01-petrel，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a01-petrel，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a01-lantern\\\"]\",\"name\":\"灯塔补给车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a01-lantern\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a01-lantern\\\"]\",\"category\":\"fire_engine\",\"relation\":\"related\",\"relationBasis\":[\"平台任务业务引用\"],\"availability\":\"unknown\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"mutual\\\",\\\"a01-petrel\\\"]\",\"name\":\"海燕协作艇\",\"recordIds\":[\"[\\\"mutual\\\",\\\"resource\\\",\\\"a01-petrel\\\"]\"],\"entityKey\":\"[\\\"mutual\\\",\\\"a01-petrel\\\"]\",\"category\":\"rescue_boat\",\"relation\":\"potential_support\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"},{\"source\":\"mutual\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\",\"sources\":[{\"source\":\"situation\",\"status\":\"unsupported\",\"reason\":\"未配置可靠的任务查询映射；不影响明确对象的基础读取。\"}]},\"dependencies\":{\"systemIds\":[\"situation\",\"mutual\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":2,\"itemCount\":2,\"knownEntityCount\":2,\"entityCount\":null,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":1,\"knownValue\":1,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a01-lantern\\\"]\"],\"limitations\":[]},{\"category\":\"rescue_boat\",\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"协作舟册\",\"value\":1,\"knownValue\":1,\"unknownCount\":0,\"recordIds\":[\"[\\\"mutual\\\",\\\"resource\\\",\\\"a01-petrel\\\"]\"],\"limitations\":[]}],\"limitations\":[\"多个来源实体身份没有跨系统映射，不能确定跨系统去重后的实体总数。\",\"仅统计有关系依据的已知部分，关系未确认项保留在清单；不能表示完整任务分配量。\"]},\"messageCandidates\":[],\"page\":{\"offset\":0,\"limit\":100,\"total\":2,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "e7df8143",
+      "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_01_4lceibtg40vpsom5q7luujuw",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-4",
+      "sequence": 4,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:12ffe3b6-d8b6-47ce-8b41-6b41905e9617:call_00_ve97e3hjehbjhqsw35x5lv0l\",\"requestId\":\"12ffe3b6-d8b6-47ce-8b41-6b41905e9617\",\"toolCallId\":\"call_00_ve97e3hjehbjhqsw35x5lv0l\",\"createdAt\":\"2026-11-02T10:12:53.189Z\",\"owner\":{\"userId\":\"42fa031b-18cb-4e7e-a4a2-2770b69e21cb\",\"seatId\":\"acceptance\",\"taskId\":\"43bf980b-c6f2-49d2-8f9a-94c989931b87\",\"sessionId\":\"01a19bbf-3169-74f3-b3e7-937f29c5dc08\"},\"parameters\":{\"operation\":\"summarize\",\"resultRef\":\"resource:12ffe3b6-d8b6-47ce-8b41-6b41905e9617:call_01_4lceibtg40vpsom5q7luujuw\",\"relation\":\"assigned\",\"availability\":\"all\"},\"statisticsScope\":{\"at\":\"2026-11-02T10:12:46.892Z\",\"relation\":\"assigned\",\"availability\":\"all\"},\"records\":[],\"items\":[],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"},{\"source\":\"mutual\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\",\"sources\":[{\"source\":\"situation\",\"status\":\"unsupported\",\"reason\":\"未配置可靠的任务查询映射；不影响明确对象的基础读取。\"}]},\"dependencies\":{\"systemIds\":[\"situation\",\"mutual\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":0,\"itemCount\":0,\"knownEntityCount\":0,\"entityCount\":null,\"quantities\":[],\"limitations\":[\"只统计已核实关系的部分；缺少完整关系资料，空名单不能表述为已分配零项。\"]},\"messageCandidates\":[],\"parentResultRef\":\"resource:12ffe3b6-d8b6-47ce-8b41-6b41905e9617:call_01_4lceibtg40vpsom5q7luujuw\",\"page\":{\"offset\":0,\"limit\":100,\"total\":0,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "48bc2c44",
+      "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_00_ve97e3hjehbjhqsw35x5lv0l",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-5",
+      "sequence": 5,
+      "kind": "assistant",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6",
+      "text": "已按本任务（澄湾演练·澄湾物资联络）做了一次只读资源查询，结果如下（数据截至来源快照 **2026-11-02T06:00:00Z**，查询时间 10:12:46Z）。本轮只查询，未保存或修改任何业务资料。\n\n## 一、任务相关资源\n\n| 资源 | 类别/数量 | 关系与依据 | 可用情况 |\n|---|---|---|---|\n| **灯塔补给车**（situation / resource / a01-lantern） | 消防车，1 辆（口径：澄湾演练独立清册） | 与本任务的关系为“任务相关”，依据是本任务的业务引用中已直接引用该对象（平台任务业务引用） | **未知**：物资簿未载当前班次状态；该资源有实际位置回报，但可用性没有证据 |\n\n## 二、有依据的支援资源\n\n| 资源 | 类别/数量 | 关系与依据 | 可用情况 |\n|---|---|---|---|\n| **海燕协作艇**（mutual / resource / a01-petrel） | 救援舟艇，1 艘（口径：协作舟册） | **潜在支援，尚未调配**；依据是来源任务映射与来源支援规则均已核实，协作联络单 M-71 声明“可支援本任务，尚未调配” | **可用**：班前检查显示设备与人员均可用；有实际位置回报 |\n\n## 三、关于“已分配”\n\n- 按“已分配”条件统计，本次返回 **0 条记录**。\n- 但关系覆盖不完整（关系覆盖状态为 partial；其中 situation 来源未配置可靠的任务查询映射），工具明确提示空名单**不能表述为“已分配零项”**。因此只能写：**在本次可查范围内未发现已分配记录，不能据此确认没有资源被分配。**\n\n## 四、使用限制（给值班人员的口径）\n\n1. 两项数量单位不同（1 辆 / 1 艘），且分别登记在两个不同口径中，**不能合并成一个总数**；跨系统实体未做映射，也无法确定去重后的实体总数。\n2. “潜在支援”不等于已调配、已到场；海燕协作艇仍需联络确认后才能计入实际力量。\n3. 灯塔补给车的可用状态是未知，不是可用，也不是不可用；如需带地点的清单，其实际位置点位虽已登记，但我本次未读取具体坐标，需要的话可再查。\n4. 本清单只覆盖有明确关系证据的已知部分，关系未确认的资源没有全部列入；若需要“全部授权资源”视角，可另按数据范围查询。\n\n如果需要，我可以再补一份含实际位置对照的清单，或按“可用/未知”分组统计。",
+      "modelVisible": true,
+      "messageId": "a9548f57",
+      "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+      "sentences": [
+        {
+          "index": 0,
+          "start": 0,
+          "end": 84,
+          "text": "已按本任务（澄湾演练·澄湾物资联络）做了一次只读资源查询，结果如下（数据截至来源快照 **2026-11-02T06:00:00Z**，查询时间 10:12:46Z）。"
+        },
+        {
+          "index": 1,
+          "start": 84,
+          "end": 104,
+          "text": "本轮只查询，未保存或修改任何业务资料。\n"
+        },
+        {
+          "index": 2,
+          "start": 104,
+          "end": 105,
+          "text": "\n"
+        },
+        {
+          "index": 3,
+          "start": 105,
+          "end": 117,
+          "text": "## 一、任务相关资源\n"
+        },
+        {
+          "index": 4,
+          "start": 117,
+          "end": 118,
+          "text": "\n"
+        },
+        {
+          "index": 5,
+          "start": 118,
+          "end": 148,
+          "text": "| 资源 | 类别/数量 | 关系与依据 | 可用情况 |\n"
+        },
+        {
+          "index": 6,
+          "start": 148,
+          "end": 166,
+          "text": "|---|---|---|---|\n"
+        },
+        {
+          "index": 7,
+          "start": 166,
+          "end": 328,
+          "text": "| **灯塔补给车**（situation / resource / a01-lantern） | 消防车，1 辆（口径：澄湾演练独立清册） | 与本任务的关系为“任务相关”，依据是本任务的业务引用中已直接引用该对象（平台任务业务引用） | **未知**：物资簿未载当前班次状态；该资源有实际位置回报，但可用性没有证据 |\n"
+        },
+        {
+          "index": 8,
+          "start": 328,
+          "end": 329,
+          "text": "\n"
+        },
+        {
+          "index": 9,
+          "start": 329,
+          "end": 343,
+          "text": "## 二、有依据的支援资源\n"
+        },
+        {
+          "index": 10,
+          "start": 343,
+          "end": 344,
+          "text": "\n"
+        },
+        {
+          "index": 11,
+          "start": 344,
+          "end": 374,
+          "text": "| 资源 | 类别/数量 | 关系与依据 | 可用情况 |\n"
+        },
+        {
+          "index": 12,
+          "start": 374,
+          "end": 392,
+          "text": "|---|---|---|---|\n"
+        },
+        {
+          "index": 13,
+          "start": 392,
+          "end": 554,
+          "text": "| **海燕协作艇**（mutual / resource / a01-petrel） | 救援舟艇，1 艘（口径：协作舟册） | **潜在支援，尚未调配**；依据是来源任务映射与来源支援规则均已核实，协作联络单 M-71 声明“可支援本任务，尚未调配” | **可用**：班前检查显示设备与人员均可用；有实际位置回报 |\n"
+        },
+        {
+          "index": 14,
+          "start": 554,
+          "end": 555,
+          "text": "\n"
+        },
+        {
+          "index": 15,
+          "start": 555,
+          "end": 568,
+          "text": "## 三、关于“已分配”\n"
+        },
+        {
+          "index": 16,
+          "start": 568,
+          "end": 569,
+          "text": "\n"
+        },
+        {
+          "index": 17,
+          "start": 569,
+          "end": 598,
+          "text": "- 按“已分配”条件统计，本次返回 **0 条记录**。\n"
+        },
+        {
+          "index": 18,
+          "start": 598,
+          "end": 680,
+          "text": "- 但关系覆盖不完整（关系覆盖状态为 partial；其中 situation 来源未配置可靠的任务查询映射），工具明确提示空名单**不能表述为“已分配零项”**。"
+        },
+        {
+          "index": 19,
+          "start": 680,
+          "end": 719,
+          "text": "因此只能写：**在本次可查范围内未发现已分配记录，不能据此确认没有资源被分配。"
+        },
+        {
+          "index": 20,
+          "start": 719,
+          "end": 722,
+          "text": "**\n"
+        },
+        {
+          "index": 21,
+          "start": 722,
+          "end": 723,
+          "text": "\n"
+        },
+        {
+          "index": 22,
+          "start": 723,
+          "end": 743,
+          "text": "## 四、使用限制（给值班人员的口径）\n"
+        },
+        {
+          "index": 23,
+          "start": 743,
+          "end": 744,
+          "text": "\n"
+        },
+        {
+          "index": 24,
+          "start": 744,
+          "end": 747,
+          "text": "1. "
+        },
+        {
+          "index": 25,
+          "start": 747,
+          "end": 820,
+          "text": "两项数量单位不同（1 辆 / 1 艘），且分别登记在两个不同口径中，**不能合并成一个总数**；跨系统实体未做映射，也无法确定去重后的实体总数。\n"
+        },
+        {
+          "index": 26,
+          "start": 820,
+          "end": 823,
+          "text": "2. "
+        },
+        {
+          "index": 27,
+          "start": 823,
+          "end": 862,
+          "text": "“潜在支援”不等于已调配、已到场；海燕协作艇仍需联络确认后才能计入实际力量。\n"
+        },
+        {
+          "index": 28,
+          "start": 862,
+          "end": 865,
+          "text": "3. "
+        },
+        {
+          "index": 29,
+          "start": 865,
+          "end": 933,
+          "text": "灯塔补给车的可用状态是未知，不是可用，也不是不可用；如需带地点的清单，其实际位置点位虽已登记，但我本次未读取具体坐标，需要的话可再查。\n"
+        },
+        {
+          "index": 30,
+          "start": 933,
+          "end": 936,
+          "text": "4. "
+        },
+        {
+          "index": 31,
+          "start": 936,
+          "end": 995,
+          "text": "本清单只覆盖有明确关系证据的已知部分，关系未确认的资源没有全部列入；若需要“全部授权资源”视角，可另按数据范围查询。\n"
+        },
+        {
+          "index": 32,
+          "start": 995,
+          "end": 996,
+          "text": "\n"
+        },
+        {
+          "index": 33,
+          "start": 996,
+          "end": 1033,
+          "text": "如果需要，我可以再补一份含实际位置对照的清单，或按“可用/未知”分组统计。"
+        }
+      ]
+    }
+  ],
+  "skillEvidence": {
+    "catalogInModelInput": "unknown_requires_provider_input_review",
+    "catalogsObservedInEvents": [
+      {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-events.sse",
+        "line": 3,
+        "type": "resources.loaded",
+        "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+        "catalog": [
+          {
+            "id": "synthesis",
+            "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+          },
+          {
+            "id": "review",
+            "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+          },
+          {
+            "id": "map-annotations",
+            "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+          },
+          {
+            "id": "spatial-analysis",
+            "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+          }
+        ]
+      }
+    ],
+    "selected": [],
+    "reads": [],
+    "interpretation": "observed_loading_only_not_semantic_success"
+  },
+  "events": [
+    {
+      "artifact": {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-events.sse",
+        "sha256": "025f7edd6adb7997066666a45057282e464f7533c2d72a35fac8f52770af3be2"
+      },
+      "events": [
+        {
+          "line": 1,
+          "type": "response.started",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 3,
+          "type": "resources.loaded",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "catalog": [
+            {
+              "id": "synthesis",
+              "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+            },
+            {
+              "id": "review",
+              "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+            },
+            {
+              "id": "map-annotations",
+              "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+            },
+            {
+              "id": "spatial-analysis",
+              "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+            }
+          ]
+        },
+        {
+          "line": 9,
+          "type": "tool.started",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_read",
+          "toolCallId": "call_00_ebmju22i5uagrh1z1726mdyc"
+        },
+        {
+          "line": 11,
+          "type": "tool.completed",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_read",
+          "toolCallId": "call_00_ebmju22i5uagrh1z1726mdyc",
+          "isError": false
+        },
+        {
+          "line": 13,
+          "type": "tool.started",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_4lceibtg40vpsom5q7luujuw"
+        },
+        {
+          "line": 15,
+          "type": "tool.completed",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_4lceibtg40vpsom5q7luujuw",
+          "isError": false
+        },
+        {
+          "line": 21,
+          "type": "tool.started",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_ve97e3hjehbjhqsw35x5lv0l"
+        },
+        {
+          "line": 23,
+          "type": "tool.completed",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_ve97e3hjehbjhqsw35x5lv0l",
+          "isError": false
+        },
+        {
+          "line": 31,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 33,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 35,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 37,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 39,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 41,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 43,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 45,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 47,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 49,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 51,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 53,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 55,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 57,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 59,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 61,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 63,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 65,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 67,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 69,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 71,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 73,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 75,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 77,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 79,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 81,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 83,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 85,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 87,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 89,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 91,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 93,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 95,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 97,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 99,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 101,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 103,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 105,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 107,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 109,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 111,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 113,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 115,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 117,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 119,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 121,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 123,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 125,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 127,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 129,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 131,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 133,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 135,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 137,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 139,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 141,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 143,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 145,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 147,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 149,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 151,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 153,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 155,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 157,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 159,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 161,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 163,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 165,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 167,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 169,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 171,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 173,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 175,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 177,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 179,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 181,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 183,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 185,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 187,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 189,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 191,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 193,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 195,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 197,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 199,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 201,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 203,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 205,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 207,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 209,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 211,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 213,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 215,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 217,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 219,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 221,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 223,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 225,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 227,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 229,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 231,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 233,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 235,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 237,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 239,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 241,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 243,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 245,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 247,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 249,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 251,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 253,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 255,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 257,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 259,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 261,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 263,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 265,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 267,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 269,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 271,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 273,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 275,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 277,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 279,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 281,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 283,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 285,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 287,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 289,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 291,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 293,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 295,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 297,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 299,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 301,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 303,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 305,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 307,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 309,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 311,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 313,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 315,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 317,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 319,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 321,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 323,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 325,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 327,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 329,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 331,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 333,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 335,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 337,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 339,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 341,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 343,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 345,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 347,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 349,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 351,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 353,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 355,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 357,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 359,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 361,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 363,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 365,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 367,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 369,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 371,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 373,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 375,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 377,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 379,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 381,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 383,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 385,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 387,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 389,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 391,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 393,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 395,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 397,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 399,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 401,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 403,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 405,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 407,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 409,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 411,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 413,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 415,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 417,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 419,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 421,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 423,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 425,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 427,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 429,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 431,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 433,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 435,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 437,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 439,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 441,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 443,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 445,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 447,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 449,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 451,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 453,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 455,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 457,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 459,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 461,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 463,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 465,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 467,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 469,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 471,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 473,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 475,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 477,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 479,
+          "type": "text.delta",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        },
+        {
+          "line": 487,
+          "type": "response.completed",
+          "requestId": "12ffe3b6-d8b6-47ce-8b41-6b41905e9617"
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/turn-1-snapshot.json",
+      "sha256": "4bc4124efeed584b84a4ccd9d3337a99d55481b4cf8e228a088d6a1a5be164e6"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/final-snapshot.json",
+      "sha256": "56826f5785ab54bcbf11a014767327e87c58a98a5dd0228587ef56643f3c2ef9"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0088-response-meta.json",
+      "sha256": "92a21b9dcb25cddc1e2633f57d339c2bccfc016e61d0cc56872e5693f603b14d"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0089-response-meta.json",
+      "sha256": "a93eff9e2794e9ffac1f1182efc9f9dd4d8427e5c1c01e012845b1417e94aa95"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0090-response-meta.json",
+      "sha256": "119b1a16b8f3707ca77a61ed1558def2114aa3e06633df24e497e129877bccf9"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/result.json",
+      "sha256": "85fc7e441adf22730a76f2f8ee6a38b86035a69b02c63e558b0a2b94f8921713"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+Offline first-failure audit (transcribed from tool output; no live requests).
+
+1. prepare /tmp/task-resource-acceptance-offline-runtime
+   failed to load config ... EPERM ... node_modules/.vite-temp/vite.config.ts.timestamp-....mjs
+   Cause: installed node_modules symlink resolves outside writable workspace.
+   Fix: frozen Vite build uses --configLoader runner. Separate preparation -2 passed.
+
+2. node --import ./experiments/harness-lab/node_modules/tsx/dist/loader.mjs --test .trellis/tasks/11-02-task-resource-acceptance/runtime.test.ts
+   Initial sandbox result: 9 tests / 4 pass / 5 fail.
+   Error: listen EPERM: operation not permitted 127.0.0.1
+   Follow-up: identical localhost-only deterministic suite run with approved sandbox escalation.
+
+3. First permitted localhost suite:
+   9 tests / 7 pass / 2 fail.
+   P01: CONTEXT_INVALID_RESPONSE — 来源返回的数据不符合查询契约，无法作为完整资料使用。
+   Native P02 selection admission had modelAttempts=0, same source contract error.
+   Cause: area.properties lacked required memberRefs. Author corrected fixture to {memberRefs:[]} and added complete SituationObject boundary validation.
+
+4. Expanded native suite:
+   12 tests / 11 pass / 1 fail; duration 133430.731744ms.
+   spatial_analyze tool result:
+   {"code":"ERR_MODULE_NOT_FOUND","message":"Cannot find package 'tsx' imported from /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/[worker eval]","outcome":"not_committed"}
+   Provider continuation fake attempted to consume a missing successful spatial result and failed; retained ledger blocked unmetered follow-up sends. Native request eventually failed.
+   Cause: task CLI launched at repository root; native spatial worker requires product package cwd for its public tsx registration.
+   Fix: keep cwd at immutable product root for trial lifetime, restore on close. No product code edited.
+   Targeted rerun: 1/1 pass, query→classify→summarize→read→final, 5 actual fake HTTP responses.
+
+Final reproducible logs: offline-tests.txt (42/42), scheduler-tests.txt (1/1), typecheck.txt, lint.txt.
+Initial test temporary fixture directories were removed by test teardown; this file preserves the observed failure messages and counts, not their deleted raw artifacts.

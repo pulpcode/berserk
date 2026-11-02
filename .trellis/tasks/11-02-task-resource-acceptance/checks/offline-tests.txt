@@ -1,0 +1,52 @@
+✔ 12 independent cases, two immutable A07 turns, exact frozen case coverage (2.18335ms)
+✔ business data validates with actual resource and annotation boundary decoders (131.997963ms)
+✔ literal geometric expectations cross-check independently against fresh coordinates (1.843976ms)
+✔ A03 identity evidence establishes only the controlled pair; names do not merge (0.355088ms)
+✔ A05 independent quantities and disjoint aggregate membership retain units (0.750519ms)
+✔ A06 complete zero and terminal partial are separate factual inputs (0.520651ms)
+✔ A08 has genuine unresolved region ambiguity without initial user intent leakage (1.093826ms)
+✔ P04 update changes actual source facts while frozen first snapshot remains untouched (2.358722ms)
+✔ A02 prior user statement retains real selected source and independent publication (0.521474ms)
+✔ repeat semantics remain stable after fixed evidence time; only declared past expiration exists (5.857185ms)
+✔ model-visible modules never import review oracle or expected-answer functions (10.124436ms)
+✔ observer forwards the original body, headers, signal and complete response bytes (55.510506ms)
+✔ unmetered HTTP or successful SSE blocks the next actual outbound attempt (22.300564ms)
+✔ stream truncation and cancellation preserve failed attempts and prohibit further requests (16.320912ms)
+✔ a metered transient error can be retried, while auth/quota failure cannot (28.70178ms)
+✔ response model drift remains a batch stop after recreating the provider (13.382971ms)
+✔ reservation gates cover request cap, input and output without adding an attempt (567.668629ms)
+(node:26065) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ approved immutable schedule is exactly 4 public then 8 forward and 8 reversed (2975.978453ms)
+✔ all 12 fixtures seed actual source HTTP, login task, publications and independent drafts without model calls (43289.230487ms)
+✔ A06 complete zero, partial data and unavailable are separate real HTTP results (3034.314373ms)
+✔ actual configuredRuntime continues query → spatial classify → summarize → fixed read without payload changes (14590.896264ms)
+✔ actual native transient retry remains enabled, with each metered HTTP attempt accounted (9351.284281ms)
+✔ ordinary clarification is explicitly reviewed and final question punctuation is irrelevant (2.699077ms)
+✔ actual interaction question waits for reviewed fact then native continuation completes (7172.595287ms)
+✔ unmetered failure, overflow and cap prevent subsequent outbound attempts (7.280619ms)
+✔ response model consistency is persistent across separate provider instances (2.802934ms)
+✔ ordinary text clarification resumes same native session only with frozen reviewed fact (7022.564097ms)
+✔ P04 second real user turn reads first fixed snapshot after controller source update (12802.75281ms)
+✔ native unknown-usage error cannot send its retry outside budget admission (24970.710276ms)
+✔ twelve explicitly constructed cases cover six classes twice against frozen outcomes (26.48959ms)
+✔ later confirmation cannot be relabeled evidence available at the original assertion (0.632697ms)
+✔ final correction cannot erase early errors or silently omit early messages (0.496884ms)
+✔ each assistant statement needs claims or an explicit nonfactual review (0.840824ms)
+✔ the acceptance batch requires distinct review identities (0.424479ms)
+✔ protocol faults are separate, with original annotations retained (0.312432ms)
+✔ complete recorded trajectory can contain an unfinished business task (0.329047ms)
+✔ review disagreement requires an explicit resolution preserving both passes (0.395205ms)
+✔ program checks compare actual structured observations and cannot grant semantic success (0.398562ms)
+✔ snapshots verify exact saved bytes and distinguish missing files (0.820925ms)
+✔ fixed denominator excludes public successes and retains missing/protocol entries (2.951595ms)
+✔ 15/16 passes ordinary failures but one critical failure vetoes acceptance (4.032101ms)
+✔ reports repeat results, both-success counts, double failures and duplicate slots (2.397681ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126330.774838

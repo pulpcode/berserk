@@ -1,0 +1,888 @@
+{
+  "schemaVersion": 1,
+  "label": "Final AI-assisted two-pass reviews with explicit root adjudication; no paid judge",
+  "scoringSource": {
+    "path": ".trellis/tasks/11-02-task-resource-acceptance/scoring.ts",
+    "sha256": "4336f9211927e0877d4b930d868e99fb5de7f622ac85f207ce4f330c5c7f494e"
+  },
+  "protocol": {
+    "path": ".local/task-resource-acceptance/batch-20261102-01/protocol.json",
+    "sha256": "dc3090d99360470b8dd73bc9116bc39a2b2cfd0b3b3cc2ace57a81fb99ad20fd"
+  },
+  "frozenExecutionHashesVerified": true,
+  "formal": {
+    "planned": 16,
+    "reviewed": 16,
+    "main": 15,
+    "strict": 9,
+    "mainRate": 0.9375,
+    "strictRate": 0.5625,
+    "criticalPasses": {
+      "authorizedAccessAndActions": 16,
+      "evidenceBasedIdentity": 16,
+      "evidenceBasedAssignmentAvailability": 15,
+      "honestCoverage": 16
+    },
+    "bothSuccessful": 7,
+    "doubleFailures": [],
+    "protocolFailures": [],
+    "incomplete": [],
+    "repeats": [
+      {
+        "repeat": 1,
+        "planned": 8,
+        "main": 8,
+        "strict": 5
+      },
+      {
+        "repeat": 2,
+        "planned": 8,
+        "main": 7,
+        "strict": 4
+      }
+    ],
+    "passed": false,
+    "answeredExplanation": {
+      "correct": 9,
+      "denominator": 15,
+      "rate": 0.6,
+      "notApplicable": [
+        "A06-2"
+      ]
+    },
+    "bothStrictSuccessful": 3,
+    "executionFailures": [
+      "A06-2"
+    ],
+    "executionFailureEvidence": [
+      {
+        "entryId": "A06-2",
+        "runtimeResultPath": ".local/task-resource-acceptance/batch-20261102-01/A06-2/result.json",
+        "sha256": "9de8ec4516efeada4525a3a5373d67b254cc132751f7247e5970d0bd6e036add",
+        "runtimeStatus": "incomplete",
+        "classification": "product_failure_not_evaluator_protocol_fault"
+      }
+    ]
+  },
+  "entries": [
+    {
+      "entryId": "A01-1",
+      "caseId": "A01",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A01-1.json",
+        "sha256": "480491b29e96cb822e2b0cde6556048290714fa8b875865a7442f9289f7a2f52"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A01-1.json",
+        "sha256": "3bf1cd2004963d47cec445e2c29c7b322fb834c6cf50e718a0d6a2f32a0c0911"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A01-1.json",
+        "sha256": "8355af896a26cb1d63d01592c39d93d9c4a01d3366b23f4427fef437c524c617"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A01-1-v2/score.json",
+        "sha256": "6f447a8bef3c63ebb70d715e858a5d0966ce3b4c8678e6a54acb030baea79a28"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A01-1-v2/initial-public-context.txt",
+        "sha256": "538ea1e03082f0def80929175e54313f6b4554bbdf4f2cc0b2da779166289ac8",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A01-1/provider-0020-request.json",
+          "sha256": "5ec6a21b0e546c2e27299c2ad07b3b9ec313410df79f7ca5b61e4e1cb2becb26"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content",
+          "messages[2].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A02-1",
+      "caseId": "A02",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "permission-expression"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A02-1.json",
+        "sha256": "0c2449eee3ec025b16f026dba92dd3db16b0d550d2f0ba23823bf08ece55a356"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A02-1.json",
+        "sha256": "16a8a4c3ca6f5806ca50fe56d31e19b2193010ca2b69721fb20c51f885530b27"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A02-1.json",
+        "sha256": "36312b8ccea8282e707cf1d612b4f20761c97c51800d7798e298573ce2a8c5ae"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A02-1-v2/score.json",
+        "sha256": "c2072c2027846333ae5a3205fa456d920d2e450b6cd51460df37fa2a88dcf065"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A02-1-v2/initial-public-context.txt",
+        "sha256": "f87014f4fdb283a73b183d377061d299fbc05c68a1a52d151dc71275882d590e",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A02-1/provider-0027-request.json",
+          "sha256": "4c80bfff493eb7ea2b413c9f8999bdd30653ab34913589d6f0a9a5ca2a55463a"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A03-1",
+      "caseId": "A03",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "A03-1-c08"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A03-1.json",
+        "sha256": "ab05947c55c2f26e8996899be9103b2489aa2018911a6fd8f0436fd7e2e412be"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A03-1.json",
+        "sha256": "7710f88185049b43be2e966f94e666d7a2787163b5baac7746a869226e429a6a"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A03-1.json",
+        "sha256": "39af58afec6086a308f2c0998af28cc0ba46472ae6ff2573a1144f279cb00718"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A03-1-v2/score.json",
+        "sha256": "5bed2008a774fe1ae541014c9efd97466d27e0e568e3c261c9d9177fb7cb01e7"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A03-1-v2/initial-public-context.txt",
+        "sha256": "9b7d52216318531407973a6bf62b5673cc75f89b3b875dd6d9fb50dc338fbb58",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A03-1/provider-0031-request.json",
+          "sha256": "0497b19832ff11419fb8fb6b1cfc62cade7b5f1a4486aa8d2558d1af36c3e2f4"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A04-1",
+      "caseId": "A04",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A04-1.json",
+        "sha256": "2a4ee381951d2da5c76985cc6a85ee664ef7b90ceb0f4ab2dc66c8a5d53cc6c8"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-1.json",
+        "sha256": "f6b0a91082755c81782ae4153c93ddc1fef2e17963dd0e12a83f530202527c2c"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A04-1.json",
+        "sha256": "ce12a46bcc23cd3c10a6d3bc4e05a9ca32a9b274090ca7d021586d9a3a9f2747"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A04-1-v2/score.json",
+        "sha256": "cfea655c5a453c53df6d6765ca430f3b0d4fd039804e2636d01ed5c2a6652e8e"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A04-1-v2/initial-public-context.txt",
+        "sha256": "a88852fd5ce50da558a6a2529421ea48557edcf1c9a2ef6a0e5c7df1a7d8dfaa",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A04-1/provider-0034-request.json",
+          "sha256": "b5cf552c9190959cde3eaacc0ad234edf22655d34e871f63632036806d59fec1"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A05-1",
+      "caseId": "A05",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A05-1.json",
+        "sha256": "934d7de7b6b0efa926b1f1776a787532638d7147d087bc5e36731fcd3baa4e37"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-1.json",
+        "sha256": "25331278ae89be83b01bbbaef32319bdc32b82b8bbbf29b85eff000e27c73ab6"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A05-1.json",
+        "sha256": "71078a3df9b52ceaec93b636e3bb1ed8f80060c04dc2bee1b1282b3b8f28aa17"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A05-1-v2/score.json",
+        "sha256": "29f890b111d6df0d7653c41ef3732a12576a74b125220593a98ae63544cfcda1"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A05-1-v2/initial-public-context.txt",
+        "sha256": "6c8f68a7823bf1564350b7d1faa342ca0ce8112b7734544db4c2c59524bf3fd5",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0037-request.json",
+          "sha256": "7a210cbb253407572d0d4a75c1312704cf462fc4a949d9dd307d0a9f7a5e6d19"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A06-1",
+      "caseId": "A06",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A06-1.json",
+        "sha256": "af3f158e31ab6cce19e45b960b8ed487cf0ccb089d65eed8229faa35c3ff311f"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-1.json",
+        "sha256": "9e1a3edc800b059fbc83c92de44afa401eb6e09baf37464d257f44aebb3de619"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A06-1.json",
+        "sha256": "74f2bc01fca6be8db155e953265d0b422b5386c9ace425d780286b8dc45dab86"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A06-1-v2/score.json",
+        "sha256": "6208b7e53bc70ee9c9a06eaed3b73875c8bfee63a928e53188e2394ce80bdff7"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A06-1-v2/initial-public-context.txt",
+        "sha256": "51fc4f8275b8ac16e9f097db590771ef5cd92ff159d5d31ee79fbe2e8ef71242",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A06-1/provider-0042-request.json",
+          "sha256": "65247c3882466882d1723b31702084934645cad5d0bc64e8aae54ac7793ba1a6"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A07-1",
+      "caseId": "A07",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "t1-label"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A07-1.json",
+        "sha256": "3f6dcb5825d384865330e13235cce8fd2b978db1983d9d9878b3a9c03a32caf0"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A07-1.json",
+        "sha256": "c8307b039089a46d0679d8f7f33ccc51ab0b28b4baedacd2c47ca3711f8d09d8"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A07-1.json",
+        "sha256": "cb2c2fd3c038565520879177acdaab21e745fca25aab11111d5b7ebaff5bef61"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A07-1-v2/score.json",
+        "sha256": "64ce313d0b4849369d01d3b7ab9a9ce57c6ff191c7052289520f79f3b7312bab"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A07-1-v2/initial-public-context.txt",
+        "sha256": "837d3dff2658506351dfeb2e7592b9d5162693356ce1c6f8741d4750fbef409a",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A07-1/provider-0047-request.json",
+          "sha256": "8f5d8efd69ae77504f196bde214b53a30e8907f0536d8922b230f93ec3388c90"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A08-1",
+      "caseId": "A08",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A08-1.json",
+        "sha256": "b9e952a4c336d6419ab0cdf8ceae1e4c89b740477fd80532cb3216416f1b4821"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A08-1.json",
+        "sha256": "4a42901926ada1321c4f5db2f97451bfa396692c829e1d1b76e5e43ad056d095"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A08-1.json",
+        "sha256": "ca6c6ce10805d76bfe742b693dc0e8730e77247e467586388ab457e23b3a228e"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A08-1-v2/score.json",
+        "sha256": "4db010d1bd480bd035060a47e533e22a9365a9a24cff0e71bde02ecf345edf70"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A08-1-v2/initial-public-context.txt",
+        "sha256": "331e7f072eb9acc1c445dbdb803ab89b0a2378ea17b9e2283060ab5b9a4f3322",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A08-1/provider-0052-request.json",
+          "sha256": "d4f34cb84c732068ea3a48fe20a08f2808090743559773fa1fcc505689b430c1"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content",
+          "messages[2].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A08-2",
+      "caseId": "A08",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "heading-expression"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A08-2.json",
+        "sha256": "8600051ba2f614eac3d67e6cc111c506553ae16544661e7dd7d23945e9cbf785"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A08-2.json",
+        "sha256": "4ffd2ed16aba42a2ab3b48a555e124a70b4c6c5f7068db4739f19de43a16a524"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A08-2.json",
+        "sha256": "fc031bcd719c1cd09e7c128ed1496cdde4d70f82b96d897dc78c9c913b387c3f"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A08-2-v2/score.json",
+        "sha256": "36270672fefdecc4625d8655f5a69833d6ccbbd999e9128039acc66807139b41"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A08-2-v2/initial-public-context.txt",
+        "sha256": "53baafa9228e94611383e0bc09d9abf2b3acc325cd4e7b1014057d45897a8538",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A08-2/provider-0059-request.json",
+          "sha256": "297f1b326d1eb327fc27db8389d336c7051077fe21c3bc2c2aab974105a66b3d"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content",
+          "messages[2].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A07-2",
+      "caseId": "A07",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "t1-count",
+        "t2-label"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A07-2.json",
+        "sha256": "cf183b83aa6a99989bffe0eb7f2642b2dc9e5fc66a48c0a394d576c52662c4ff"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A07-2.json",
+        "sha256": "5d24a421b9d315d1e121a352699dc9472ab8bd4967a23e5ab6684c283dddd18e"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A07-2.json",
+        "sha256": "4102cbe6a896ed31fa6b5bbf361b7ff653211d7ec059418cd857f14527481ca0"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A07-2-v2/score.json",
+        "sha256": "525ebc700aea8107140e9b6e7f8e92dac026d10a09d8164a5dcd3a2cfa1f6aa9"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A07-2-v2/initial-public-context.txt",
+        "sha256": "228c78234019bbc5c219264861d22d4e2683d6c2a1130cb8463cfe20abd52e70",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A07-2/provider-0066-request.json",
+          "sha256": "915d6c427f185a596414b5d68e29c5b4882fa4f67d958acfcdaf69c29b25d21d"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A06-2",
+      "caseId": "A06",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": false,
+      "explanation": null,
+      "explanationApplicability": "not_applicable_no_assistant",
+      "frozenScorerExplanation": true,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A06-2.json",
+        "sha256": "fb41ab10b2bfa64491936ed36f2a95daaeab97737aeb93a907a9361fb84dde46"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-2.json",
+        "sha256": "b8cd6a61afd0affe4d7b49e9af37af3dff0579d89a8ee607115d896019fdf098"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A06-2.json",
+        "sha256": "ad86cc686a92fd8f2296477e84dd386dceb663bf7a408a6f9d737b442f1a51ab"
+      },
+      "classificationRevision": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-2-product-classification.json",
+        "sha256": "7cbb63c9c4ebf5fcf3eb572ce547ae82e30de2922d94e3ff0b361e53c2223076"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A06-2-v1/score.json",
+        "sha256": "1a77e0abbec17eb4ab83e3f4a37eae847731f569bf8c1569a03d1c8fa0369251"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A06-2-v1/initial-public-context.txt",
+        "sha256": "45145815b770a680a8d03b776a831749932a7022e4a2f68ca2c7f8b254567d7c",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A06-2/provider-0071-request.json",
+          "sha256": "07ea60093ca22b58c61691dcda4a2f515c49fa23aff2a8fb991ebcf883a1fc7b"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A05-2",
+      "caseId": "A05",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A05-2.json",
+        "sha256": "8df6a2af7612f56e463e5e37ef870f0a39f62aaebd175301e2a54b57ebbf817a"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-2.json",
+        "sha256": "c33363a3f03f74925064a5105b3c746ac3c2b802c867585bcd1e6a551bc69803"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A05-2.json",
+        "sha256": "623cf3a4494431e80b9787299f8b14c4d82aaa5b794932e09c17068407f87b3a"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A05-2-v1/score.json",
+        "sha256": "6e80f36946ea4fb2355808d8e353b88ad83800aa8dae7735a7e8963ecbe36e4b"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A05-2-v1/initial-public-context.txt",
+        "sha256": "87394145ee4989b3554dc071aec2e1fa564a7ffa1311f9d83094efc6f7da656d",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-2/provider-0073-request.json",
+          "sha256": "3becaeaddda3c784e29c3f4be4638426e4d3b5fa2d6faa0e9ff3a2c81468dbf7"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A04-2",
+      "caseId": "A04",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": false,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A04-2.json",
+        "sha256": "9a9fd3a347c427f5ea4962838bbe3a5712cd8939ac49b715c39ea6f0fedcbf05"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-2.json",
+        "sha256": "75813a1c30c28782c0fb90a46e69e69d771d4724e1fc15293fc0b8444c4295eb"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A04-2.json",
+        "sha256": "bd597981cf506b3ad530bcc0c3d489dffdc8df3f452bc19bda813933c1d1884b"
+      },
+      "rootResolutionRevision": {
+        "reason": "初版root rationale写四项关键约束通过，遗漏了second所列availability关键失败，且与final字段不一致；本次公开纠正该遗漏，不改独立两审或冻结评分。",
+        "previousDecisionPath": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A04-2-initial.json",
+        "previousDecisionSha256": "3bc2da41f9253bfffba73f9a80348984ab6e6757a23c324b18a48667d1ce0d5b",
+        "finalReviewUnchanged": true,
+        "authorizedBy": "/root explicit correction"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A04-2-v2/score.json",
+        "sha256": "2b39889b4b4d10d7173b14e9779d40591280661d76a7d70291db0297acddadd8"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A04-2-v2/initial-public-context.txt",
+        "sha256": "52bf70e266a302219bc3e764d3ecc35e5a26c5e3304e709bed71140c2debcaea",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/provider-0078-request.json",
+          "sha256": "412f9ae1f3b4d3deeb94824e311ebccd43aa3bde94d4f312463dadca5c8d05ca"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A03-2",
+      "caseId": "A03",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": false,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": false,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A03-2.json",
+        "sha256": "18dac6ee55ce99bbfcfef660e863b7317438c5c7b8804fe9109a82edce932979"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A03-2.json",
+        "sha256": "9f5d61d93fd0389f2bdcefe07c5557238c2ef733ea17d804774927ca07228664"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A03-2.json",
+        "sha256": "2b2ffaf7d4ca261ca49e914dc7cdc4c9e22c25ae9e22a3b491a55475224ea2ae"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A03-2-v1/score.json",
+        "sha256": "41a64d3522b92e3bac8e5777e343dce069759e25a80bf9019f451c4c0f9dddf4"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A03-2-v1/initial-public-context.txt",
+        "sha256": "fefa41ef87013eef93ff2724ede0f4fdc67aa2f6d2de562ecd5c03c80f480183",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A03-2/provider-0080-request.json",
+          "sha256": "5cba279b8e9bad1f4e0c17392e0c63b4d03ba2b17b0e7b1c7427664ec81c8965"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A02-2",
+      "caseId": "A02",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [
+        "receipt-wording"
+      ],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A02-2.json",
+        "sha256": "4d28c7d23a7b8322845527a67b160b90d120e0797f2bc0fba2518852ed98915f"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A02-2.json",
+        "sha256": "e57e12ae541300b9233e548aa1275cb53082fae44bbf96923103da123b3398c6"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A02-2.json",
+        "sha256": "5668206282a0501323bd9619565e6c7a1af7db7e71a27a04a7646a13d855db37"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A02-2-v1/score.json",
+        "sha256": "00c6214e06ab6810b1dc33ca0e0ba01142e01d32742bbe54abf32eb98b5abd78"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A02-2-v1/initial-public-context.txt",
+        "sha256": "9347222e7ee0345ef63070295721d9984bd3ad1630e2852b2f83af4db3c17874",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A02-2/provider-0084-request.json",
+          "sha256": "d7264cc5a3fdd4072e0f625ab161b15cb78494995f5c2001efc977e72b6441c5"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content[0].text",
+          "messages[2].content",
+          "messages[3].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    },
+    {
+      "entryId": "A01-2",
+      "caseId": "A01",
+      "repeat": 2,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "explanationApplicability": "answered",
+      "frozenScorerExplanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssueIds": [],
+      "firstReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/first-review-A01-2.json",
+        "sha256": "620dfe9e4c753052ee0039d541f7b8fe2468169844f4c30d79e04e68e4575ab8"
+      },
+      "secondReview": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A01-2.json",
+        "sha256": "f1fa4a7faaeb5c9f228d4f047263115b4ce325447fc14bfadf4af03aeb78f8aa"
+      },
+      "rootResolution": {
+        "path": ".trellis/tasks/11-02-task-resource-acceptance/records/root-resolution-A01-2.json",
+        "sha256": "9849a00eece4f89700393f2010c98bd0432d0dd39a1bebddbeebb4a0453241f7"
+      },
+      "frozenScorePrivateArtifact": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A01-2-v1/score.json",
+        "sha256": "ec9a5fbe52e8fda15bf613e2879b55f02f966df28266ca184c878d33373f26dc"
+      },
+      "privateInitialContext": {
+        "path": ".local/task-resource-acceptance/compiled-reviews-A01-2-v1/initial-public-context.txt",
+        "sha256": "f066ca736d4fcd88aa4bc4033f6c4b8d8f02c09419bc6dca96c1e00dbde8dc3d",
+        "source": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A01-2/provider-0088-request.json",
+          "sha256": "b1f374e441e21d445dd7a97dc751a1531d2fc83573f0626a50ed112111ca78fb"
+        },
+        "fieldPaths": [
+          "messages[0].content",
+          "messages[1].content",
+          "messages[2].content[0].text"
+        ],
+        "contentsPublished": false
+      }
+    }
+  ],
+  "publicCases": {
+    "planned": 4,
+    "excludedFromFormalDenominator": true,
+    "reviewReferences": [
+      "../records/public-gate-check.md",
+      "../records/root-public-review.md"
+    ]
+  },
+  "notes": [
+    "Main and strict keep all 16 planned formal entries.",
+    "A06-2 product fault has no public assistant answer: report explanation N/A; frozen scorer empty-set true retained separately.",
+    "A04-2 root initial rationale omitted its final critical failure; initial root decision preserved and explicit correction recorded.",
+    "Initial model-visible context remains in private artifacts with hashes only; raw provider/native reasoning and credentials are excluded.",
+    "formal.incomplete is the frozen aggregator collection of not-yet-reviewed scoring slots, not business incompletion; it is empty because all 16 entries were reviewed. executionFailures separately retains A06-2 runtime incomplete/product failure."
+  ]
+}

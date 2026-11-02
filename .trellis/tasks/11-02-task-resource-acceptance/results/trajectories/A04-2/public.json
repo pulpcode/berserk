@@ -1,0 +1,1878 @@
+{
+  "slot": {
+    "id": "A04-2",
+    "caseId": "A04",
+    "repeat": 2,
+    "phase": "formal"
+  },
+  "recordedStatus": "trajectory_recorded",
+  "semanticReview": "pending_review",
+  "evidenceIssues": [],
+  "accounting": {
+    "actualRequests": 2,
+    "unknownUsageAttempts": 0,
+    "knownInput": 57463,
+    "knownOutput": 1776,
+    "usageComplete": true,
+    "rows": [
+      {
+        "id": 78,
+        "status": "finished",
+        "usage": {
+          "input": 24997,
+          "output": 284
+        },
+        "providerUsage": {
+          "input": 24997,
+          "output": 284
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/provider-0078-response-meta.json",
+          "sha256": "36a55954441ce3b5cf778324715bd1a42c6bb0ff12e734aa9e8c8e79c58cfd8e"
+        }
+      },
+      {
+        "id": 79,
+        "status": "finished",
+        "usage": {
+          "input": 32466,
+          "output": 1492
+        },
+        "providerUsage": {
+          "input": 32466,
+          "output": 1492
+        },
+        "providerComplete": true,
+        "finishReason": "stop",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/provider-0079-response-meta.json",
+          "sha256": "6f8a49c1bfa7b85a7dba51538134ca055b123f9fd19f0f977cdd88e03da2516a"
+        }
+      }
+    ],
+    "issues": []
+  },
+  "state": {
+    "complete": true,
+    "changed": false,
+    "fields": [
+      {
+        "field": "task",
+        "changed": false,
+        "beforeHash": "49bdbe49a9012ba8d7c912705c9825e90cd5358ed2f6f04cc13cd9738cee86ab",
+        "afterHash": "49bdbe49a9012ba8d7c912705c9825e90cd5358ed2f6f04cc13cd9738cee86ab"
+      },
+      {
+        "field": "binding",
+        "changed": false,
+        "beforeHash": "63b9b9da2d5c82825587ff32af5f44b8e39e5d42f19e8d68feebb7568caf08fe",
+        "afterHash": "63b9b9da2d5c82825587ff32af5f44b8e39e5d42f19e8d68feebb7568caf08fe"
+      },
+      {
+        "field": "listing",
+        "changed": false,
+        "beforeHash": "60a192b7f37a554a7b86d6d3a51af116bf08fa0a694d3d6ed240cd560871171f",
+        "afterHash": "60a192b7f37a554a7b86d6d3a51af116bf08fa0a694d3d6ed240cd560871171f"
+      },
+      {
+        "field": "current",
+        "changed": false,
+        "beforeHash": "4fbca1721223fb439b601f16082fa6b0fed15996eac1b67e8b9f01dfda19a095",
+        "afterHash": "4fbca1721223fb439b601f16082fa6b0fed15996eac1b67e8b9f01dfda19a095"
+      },
+      {
+        "field": "draftDocument",
+        "changed": false,
+        "beforeHash": "39821e412031cbca0e94e5ca4e8a026260e5deb345cff3789ef64e14fd183b87",
+        "afterHash": "39821e412031cbca0e94e5ca4e8a026260e5deb345cff3789ef64e14fd183b87"
+      },
+      {
+        "field": "workspaceFiles",
+        "changed": false,
+        "beforeHash": "3b5ac10ee313dbed245d9d70cbbd8d09a1a701d9b34028627510a7d78369d7b7",
+        "afterHash": "3b5ac10ee313dbed245d9d70cbbd8d09a1a701d9b34028627510a7d78369d7b7"
+      }
+    ],
+    "before": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/state-before.json",
+      "sha256": "dc6d088b2aec48e232501625c45aa91a99b4d6af40adaa8c84bb35fe89316896"
+    },
+    "after": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/state-after.json",
+      "sha256": "dc6d088b2aec48e232501625c45aa91a99b4d6af40adaa8c84bb35fe89316896"
+    },
+    "interpretation": "pending_review"
+  },
+  "trajectory": [
+    {
+      "id": "message-1",
+      "sequence": 1,
+      "kind": "user",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-snapshot.json",
+      "sha256": "d8bc90fb9a3c65dc87bc5cee13e168b7bfc9f897c102d96180df2cb6cf3a4918",
+      "text": "哪些已分配给本任务而且目前可用？有条件支援、不可用和待核实的也分别列出。",
+      "modelVisible": true,
+      "messageId": "3f4e13c2",
+      "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+      "sentences": []
+    },
+    {
+      "id": "message-2",
+      "sequence": 2,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-snapshot.json",
+      "sha256": "d8bc90fb9a3c65dc87bc5cee13e168b7bfc9f897c102d96180df2cb6cf3a4918",
+      "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\"},\"queriedAt\":\"2026-11-02T10:09:24.927Z\",\"data\":{\"item\":{\"id\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"title\":\"澄湾演练·东埠班次资源\",\"goal\":\"核对澄湾演练的资源情况，为值班人员提供有据可查的清单。仅查询，不保存或修改业务资料。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":2,\"createdAt\":\"2026-11-02T10:09:19.430Z\",\"updatedAt\":\"2026-11-02T10:09:19.433Z\"}}}",
+      "modelVisible": true,
+      "messageId": "51b3730e",
+      "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+      "toolName": "task_read",
+      "toolCallId": "call_00_fin6inyng86obe2hcuh48jt1",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-3",
+      "sequence": 3,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-snapshot.json",
+      "sha256": "d8bc90fb9a3c65dc87bc5cee13e168b7bfc9f897c102d96180df2cb6cf3a4918",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:4d705440-2f02-4fee-8008-4a367898fe18:call_01_bltx2m8b20o7qpvaaqb6dcbz\",\"requestId\":\"4d705440-2f02-4fee-8008-4a367898fe18\",\"toolCallId\":\"call_01_bltx2m8b20o7qpvaaqb6dcbz\",\"createdAt\":\"2026-11-02T10:09:24.936Z\",\"owner\":{\"userId\":\"b7f1bf0c-89b2-402f-8e48-27f266597cd9\",\"seatId\":\"acceptance\",\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"sessionId\":\"01a19bbc-213f-71c9-a572-af7a9614b638\"},\"parameters\":{\"operation\":\"query\",\"purpose\":\"task\"},\"statisticsScope\":{\"at\":\"2026-11-02T10:09:24.936Z\",\"relation\":\"related\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cedar\\\"]\",\"name\":\"雪松作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-cedar\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-cedar，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-cedar，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-cedar，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-cedar\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-cedar\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-cedar\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-cedar，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-cedar，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-cedar，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-fir\\\"]\",\"name\":\"冷杉作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-fir\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"related\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"联络资料相关，未收到分配单\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-fir，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-fir，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-fir\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-fir\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-fir\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"related\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"联络资料相关，未收到分配单\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-fir，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-fir，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cypress\\\"]\",\"name\":\"柏木支援车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-cypress\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"potential_support\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作名单 Q-19：尚未分配\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"需桥梁检查放行后方可支援，尚无放行回执\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\",\"conditions\":[\"通行检查放行，当前未收到放行回执\"]},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-cypress，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-cypress\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-cypress\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-cypress\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"potential_support\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"协作名单 Q-19：尚未分配\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"需桥梁检查放行后方可支援，尚无放行回执\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\",\"conditions\":[\"通行检查放行，当前未收到放行回执\"]},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-cypress，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-ash\\\"]\",\"name\":\"白蜡作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-ash\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-ash，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"unavailable\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"检修单 K-62：液压故障\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-ash，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-ash\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-ash\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-ash\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-ash，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"unavailable\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"检修单 K-62：液压故障\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-ash，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-maple\\\"]\",\"name\":\"枫木作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-maple\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-maple，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"上班次检查，已过有效期\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\",\"validUntil\":\"2026-11-02T05:30:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-maple，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-maple\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-maple\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-maple\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-maple，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"上班次检查，已过有效期\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\",\"validUntil\":\"2026-11-02T05:30:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-maple，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-larch\\\"]\",\"name\":\"落叶松作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-larch\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-larch，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-larch，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-larch，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-larch\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T10:09:24.949Z\",\"data\":{\"entityId\":\"a04-larch\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a04-larch\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a04-larch，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a04-larch，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a04-larch，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"82bb020b-7a33-432b-b32e-1bd76d6c11b9\\\",\\\"revision\\\":3},\\\"a04-conflicting-report\\\"]\",\"name\":\"落叶松作业车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 现场签报 C-83\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"91b0c1ce-3a95-48a1-a9d4-0e928332ec79\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 现场签报 C-83，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"unavailable\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"现场签报 C-83：电路故障；与班前检查同时有效\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 现场签报 C-83，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"annotation\":{\"ref\":{\"setId\":\"82bb020b-7a33-432b-b32e-1bd76d6c11b9\",\"revision\":3},\"objectId\":\"a04-conflicting-report\",\"hash\":\"3a361187904bb331e8b756424a82659a12d7919681ddd4587d541f5a8943cba7\"},\"association\":{\"source\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a04-larch\"},\"sourceRevision\":1,\"entityId\":\"a04-larch\"},\"relationBasis\":[\"当前任务的明确固定标绘资料\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a04-cedar\\\"]\",\"name\":\"雪松作业车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cedar\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-cedar\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a04-fir\\\"]\",\"name\":\"冷杉作业车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-fir\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-fir\\\"]\",\"category\":\"fire_engine\",\"relation\":\"related\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a04-cypress\\\"]\",\"name\":\"柏木支援车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cypress\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-cypress\\\"]\",\"category\":\"fire_engine\",\"relation\":\"potential_support\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"unknown\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a04-ash\\\"]\",\"name\":\"白蜡作业车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-ash\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-ash\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"unavailable\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a04-maple\\\"]\",\"name\":\"枫木作业车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-maple\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-maple\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"unknown\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a04-larch\\\"]\",\"name\":\"落叶松作业车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-larch\\\"]\",\"[\\\"annotation\\\",{\\\"setId\\\":\\\"82bb020b-7a33-432b-b32e-1bd76d6c11b9\\\",\\\"revision\\\":3},\\\"a04-conflicting-report\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a04-larch\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\",\"当前任务的明确固定标绘资料\"],\"availability\":\"conflict\",\"limitations\":[\"可用状态存在冲突。\"],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"},{\"source\":\"{\\\"setId\\\":\\\"82bb020b-7a33-432b-b32e-1bd76d6c11b9\\\",\\\"revision\\\":3}\",\"status\":\"complete\",\"asOf\":\"2026-11-02T10:09:20.262Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[{\"setId\":\"82bb020b-7a33-432b-b32e-1bd76d6c11b9\",\"revision\":3}]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":7,\"itemCount\":6,\"knownEntityCount\":6,\"entityCount\":6,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":6,\"knownValue\":6,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cedar\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-fir\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-cypress\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-ash\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-maple\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a04-larch\\\"]\"],\"limitations\":[]}],\"limitations\":[\"仅统计有关系依据的已知部分，关系未确认项保留在清单；不能表示完整任务分配量。\"]},\"messageCandidates\":[],\"page\":{\"offset\":0,\"limit\":100,\"total\":6,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "bec533b1",
+      "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_01_bltx2m8b20o7qpvaaqb6dcbz",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-4",
+      "sequence": 4,
+      "kind": "assistant",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-snapshot.json",
+      "sha256": "d8bc90fb9a3c65dc87bc5cee13e168b7bfc9f897c102d96180df2cb6cf3a4918",
+      "text": "已完成本任务的资源查询（查询时间 2026-11-02 10:09:24 UTC；业务来源快照 asOf 2026-11-02T06:00:00Z，来源对象 situation/resource 均为修订 1；另加本任务固定标绘修订 3）。共 6 个已知实体、7 条记录，全部为消防车，单位“辆”，范围“澄湾演练独立清册”。分组如下：\n\n## 1. 已分配给本任务且目前可用\n| 名称 | 对象 | 依据 |\n|---|---|---|\n| 雪松作业车 | a04-cedar | 调配单 a04-cedar（本任务有效至撤销，无撤销记录）；班前检查确认“设备和人员均可用” |\n\n**1 辆。**\n\n## 2. 有条件支援（尚未分配）\n| 名称 | 对象 | 条件与缺口 |\n|---|---|---|\n| 柏木支援车 | a04-cypress | 关系为潜在支援，协作名单 Q-19 注明“尚未分配”；来源虽登记可用，但附条件“通行检查放行，当前未收到放行回执”，系统因此把可用性归为未知 |\n\n即：**未分配，且放行条件未满足**，不能计入现有可用力量。\n\n## 3. 已分配但不可用\n| 名称 | 对象 | 依据 |\n|---|---|---|\n| 白蜡作业车 | a04-ash | 调配单 a04-ash 有效；检修单 K-62 记“液压故障”，状态为不可用 |\n\n**1 辆。**\n\n## 4. 已分配但待核实\n| 名称 | 对象 | 待核实点 |\n|---|---|---|\n| 枫木作业车 | a04-maple | 调配单有效；可用性仅有“上班次检查”记录，有效期止于 2026-11-02T05:30:00Z，查询时已过期，系统按未知处理 |\n| 落叶松作业车 | a04-larch | 两组记录冲突：班前检查称设备和人员可用；本任务固定标绘中“现场签报 C-83”称电路故障、不可用，二者同时有效，系统判定为冲突，需现场确认 |\n\n**2 辆待核实。**\n\n## 5. 另需注意：相关但未分配\n- **冷杉作业车（a04-fir）**：关系仅为“相关”，证据注明“联络资料相关，未收到分配单”，可用性登记为可用。它不属于本任务已分配力量，不能与其他资源合计为本任务可用量。\n\n## 使用限制\n- 关系覆盖为 **partial**：只依据实际存在的关联证据，已有平台引用不保证任务分配名单完整，因此上表不能当作完整任务分配总量。\n- 条件、有效期和冲突均保留按原始时间记为事实；柏木的“未放行”、枫木的“检查过期”和落叶松的“签报冲突”都是原始记录状态，我没有做推定。\n- 本次仅查询，未保存或修改任何业务资料。",
+      "modelVisible": true,
+      "messageId": "253686a7",
+      "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+      "sentences": [
+        {
+          "index": 0,
+          "start": 0,
+          "end": 120,
+          "text": "已完成本任务的资源查询（查询时间 2026-11-02 10:09:24 UTC；业务来源快照 asOf 2026-11-02T06:00:00Z，来源对象 situation/resource 均为修订 1；另加本任务固定标绘修订 3）。"
+        },
+        {
+          "index": 1,
+          "start": 120,
+          "end": 162,
+          "text": "共 6 个已知实体、7 条记录，全部为消防车，单位“辆”，范围“澄湾演练独立清册”。"
+        },
+        {
+          "index": 2,
+          "start": 162,
+          "end": 168,
+          "text": "分组如下：\n"
+        },
+        {
+          "index": 3,
+          "start": 168,
+          "end": 169,
+          "text": "\n"
+        },
+        {
+          "index": 4,
+          "start": 169,
+          "end": 175,
+          "text": "## 1. "
+        },
+        {
+          "index": 5,
+          "start": 175,
+          "end": 188,
+          "text": "已分配给本任务且目前可用\n"
+        },
+        {
+          "index": 6,
+          "start": 188,
+          "end": 205,
+          "text": "| 名称 | 对象 | 依据 |\n"
+        },
+        {
+          "index": 7,
+          "start": 205,
+          "end": 219,
+          "text": "|---|---|---|\n"
+        },
+        {
+          "index": 8,
+          "start": 219,
+          "end": 290,
+          "text": "| 雪松作业车 | a04-cedar | 调配单 a04-cedar（本任务有效至撤销，无撤销记录）；班前检查确认“设备和人员均可用” |\n"
+        },
+        {
+          "index": 9,
+          "start": 290,
+          "end": 291,
+          "text": "\n"
+        },
+        {
+          "index": 10,
+          "start": 291,
+          "end": 297,
+          "text": "**1 辆。"
+        },
+        {
+          "index": 11,
+          "start": 297,
+          "end": 300,
+          "text": "**\n"
+        },
+        {
+          "index": 12,
+          "start": 300,
+          "end": 301,
+          "text": "\n"
+        },
+        {
+          "index": 13,
+          "start": 301,
+          "end": 307,
+          "text": "## 2. "
+        },
+        {
+          "index": 14,
+          "start": 307,
+          "end": 319,
+          "text": "有条件支援（尚未分配）\n"
+        },
+        {
+          "index": 15,
+          "start": 319,
+          "end": 339,
+          "text": "| 名称 | 对象 | 条件与缺口 |\n"
+        },
+        {
+          "index": 16,
+          "start": 339,
+          "end": 353,
+          "text": "|---|---|---|\n"
+        },
+        {
+          "index": 17,
+          "start": 353,
+          "end": 450,
+          "text": "| 柏木支援车 | a04-cypress | 关系为潜在支援，协作名单 Q-19 注明“尚未分配”；来源虽登记可用，但附条件“通行检查放行，当前未收到放行回执”，系统因此把可用性归为未知 |\n"
+        },
+        {
+          "index": 18,
+          "start": 450,
+          "end": 451,
+          "text": "\n"
+        },
+        {
+          "index": 19,
+          "start": 451,
+          "end": 482,
+          "text": "即：**未分配，且放行条件未满足**，不能计入现有可用力量。\n"
+        },
+        {
+          "index": 20,
+          "start": 482,
+          "end": 483,
+          "text": "\n"
+        },
+        {
+          "index": 21,
+          "start": 483,
+          "end": 489,
+          "text": "## 3. "
+        },
+        {
+          "index": 22,
+          "start": 489,
+          "end": 497,
+          "text": "已分配但不可用\n"
+        },
+        {
+          "index": 23,
+          "start": 497,
+          "end": 514,
+          "text": "| 名称 | 对象 | 依据 |\n"
+        },
+        {
+          "index": 24,
+          "start": 514,
+          "end": 528,
+          "text": "|---|---|---|\n"
+        },
+        {
+          "index": 25,
+          "start": 528,
+          "end": 589,
+          "text": "| 白蜡作业车 | a04-ash | 调配单 a04-ash 有效；检修单 K-62 记“液压故障”，状态为不可用 |\n"
+        },
+        {
+          "index": 26,
+          "start": 589,
+          "end": 590,
+          "text": "\n"
+        },
+        {
+          "index": 27,
+          "start": 590,
+          "end": 596,
+          "text": "**1 辆。"
+        },
+        {
+          "index": 28,
+          "start": 596,
+          "end": 599,
+          "text": "**\n"
+        },
+        {
+          "index": 29,
+          "start": 599,
+          "end": 600,
+          "text": "\n"
+        },
+        {
+          "index": 30,
+          "start": 600,
+          "end": 606,
+          "text": "## 4. "
+        },
+        {
+          "index": 31,
+          "start": 606,
+          "end": 614,
+          "text": "已分配但待核实\n"
+        },
+        {
+          "index": 32,
+          "start": 614,
+          "end": 633,
+          "text": "| 名称 | 对象 | 待核实点 |\n"
+        },
+        {
+          "index": 33,
+          "start": 633,
+          "end": 647,
+          "text": "|---|---|---|\n"
+        },
+        {
+          "index": 34,
+          "start": 647,
+          "end": 734,
+          "text": "| 枫木作业车 | a04-maple | 调配单有效；可用性仅有“上班次检查”记录，有效期止于 2026-11-02T05:30:00Z，查询时已过期，系统按未知处理 |\n"
+        },
+        {
+          "index": 35,
+          "start": 734,
+          "end": 829,
+          "text": "| 落叶松作业车 | a04-larch | 两组记录冲突：班前检查称设备和人员可用；本任务固定标绘中“现场签报 C-83”称电路故障、不可用，二者同时有效，系统判定为冲突，需现场确认 |\n"
+        },
+        {
+          "index": 36,
+          "start": 829,
+          "end": 830,
+          "text": "\n"
+        },
+        {
+          "index": 37,
+          "start": 830,
+          "end": 839,
+          "text": "**2 辆待核实。"
+        },
+        {
+          "index": 38,
+          "start": 839,
+          "end": 842,
+          "text": "**\n"
+        },
+        {
+          "index": 39,
+          "start": 842,
+          "end": 843,
+          "text": "\n"
+        },
+        {
+          "index": 40,
+          "start": 843,
+          "end": 849,
+          "text": "## 5. "
+        },
+        {
+          "index": 41,
+          "start": 849,
+          "end": 861,
+          "text": "另需注意：相关但未分配\n"
+        },
+        {
+          "index": 42,
+          "start": 861,
+          "end": 920,
+          "text": "- **冷杉作业车（a04-fir）**：关系仅为“相关”，证据注明“联络资料相关，未收到分配单”，可用性登记为可用。"
+        },
+        {
+          "index": 43,
+          "start": 920,
+          "end": 951,
+          "text": "它不属于本任务已分配力量，不能与其他资源合计为本任务可用量。\n"
+        },
+        {
+          "index": 44,
+          "start": 951,
+          "end": 952,
+          "text": "\n"
+        },
+        {
+          "index": 45,
+          "start": 952,
+          "end": 960,
+          "text": "## 使用限制\n"
+        },
+        {
+          "index": 46,
+          "start": 960,
+          "end": 1029,
+          "text": "- 关系覆盖为 **partial**：只依据实际存在的关联证据，已有平台引用不保证任务分配名单完整，因此上表不能当作完整任务分配总量。\n"
+        },
+        {
+          "index": 47,
+          "start": 1029,
+          "end": 1099,
+          "text": "- 条件、有效期和冲突均保留按原始时间记为事实；柏木的“未放行”、枫木的“检查过期”和落叶松的“签报冲突”都是原始记录状态，我没有做推定。\n"
+        },
+        {
+          "index": 48,
+          "start": 1099,
+          "end": 1120,
+          "text": "- 本次仅查询，未保存或修改任何业务资料。"
+        }
+      ]
+    }
+  ],
+  "skillEvidence": {
+    "catalogInModelInput": "unknown_requires_provider_input_review",
+    "catalogsObservedInEvents": [
+      {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-events.sse",
+        "line": 3,
+        "type": "resources.loaded",
+        "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+        "catalog": [
+          {
+            "id": "synthesis",
+            "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+          },
+          {
+            "id": "review",
+            "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+          },
+          {
+            "id": "map-annotations",
+            "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+          },
+          {
+            "id": "spatial-analysis",
+            "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+          }
+        ]
+      }
+    ],
+    "selected": [],
+    "reads": [],
+    "interpretation": "observed_loading_only_not_semantic_success"
+  },
+  "events": [
+    {
+      "artifact": {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-events.sse",
+        "sha256": "636e571c9b62d2dff83f04713bd0e569bc6888eba29e4bfb2d784562124dca90"
+      },
+      "events": [
+        {
+          "line": 1,
+          "type": "response.started",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 3,
+          "type": "resources.loaded",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+          "catalog": [
+            {
+              "id": "synthesis",
+              "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+            },
+            {
+              "id": "review",
+              "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+            },
+            {
+              "id": "map-annotations",
+              "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+            },
+            {
+              "id": "spatial-analysis",
+              "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+            }
+          ]
+        },
+        {
+          "line": 9,
+          "type": "tool.started",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+          "toolName": "task_read",
+          "toolCallId": "call_00_fin6inyng86obe2hcuh48jt1"
+        },
+        {
+          "line": 11,
+          "type": "tool.completed",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+          "toolName": "task_read",
+          "toolCallId": "call_00_fin6inyng86obe2hcuh48jt1",
+          "isError": false
+        },
+        {
+          "line": 13,
+          "type": "tool.started",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_bltx2m8b20o7qpvaaqb6dcbz"
+        },
+        {
+          "line": 15,
+          "type": "tool.completed",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_bltx2m8b20o7qpvaaqb6dcbz",
+          "isError": false
+        },
+        {
+          "line": 21,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 23,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 25,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 27,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 29,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 31,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 33,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 35,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 37,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 39,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 41,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 43,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 45,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 47,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 49,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 51,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 53,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 55,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 57,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 59,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 61,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 63,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 65,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 67,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 69,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 71,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 73,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 75,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 77,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 79,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 81,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 83,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 85,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 87,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 89,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 91,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 93,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 95,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 97,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 99,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 101,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 103,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 105,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 107,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 109,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 111,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 113,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 115,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 117,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 119,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 121,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 123,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 125,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 127,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 129,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 131,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 133,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 135,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 137,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 139,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 141,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 143,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 145,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 147,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 149,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 151,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 153,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 155,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 157,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 159,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 161,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 163,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 165,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 167,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 169,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 171,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 173,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 175,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 177,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 179,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 181,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 183,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 185,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 187,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 189,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 191,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 193,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 195,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 197,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 199,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 201,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 203,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 205,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 207,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 209,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 211,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 213,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 215,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 217,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 219,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 221,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 223,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 225,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 227,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 231,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 233,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 235,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 237,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 239,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 241,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 243,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 245,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 247,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 249,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 251,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 253,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 255,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 257,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 259,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 261,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 263,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 265,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 267,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 269,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 271,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 273,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 275,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 277,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 279,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 281,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 283,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 285,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 287,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 289,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 291,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 293,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 295,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 297,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 299,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 301,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 303,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 305,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 307,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 309,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 311,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 313,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 315,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 317,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 319,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 321,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 323,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 325,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 327,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 329,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 331,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 333,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 335,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 337,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 339,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 341,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 343,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 345,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 347,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 349,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 351,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 353,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 355,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 357,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 359,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 361,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 363,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 365,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 367,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 369,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 371,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 373,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 375,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 377,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 379,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 381,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 383,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 385,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 387,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 389,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 391,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 393,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 395,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 397,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 399,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 401,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 403,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 405,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 407,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 409,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 411,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 413,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 415,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 417,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 419,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 421,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 423,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 425,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 427,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 429,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 431,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 433,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 435,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 437,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 439,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 441,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 443,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 445,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 447,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 449,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 451,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 453,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 455,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 457,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 459,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 461,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 463,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 465,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 467,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 469,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 471,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 473,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 475,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 477,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 479,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 481,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 483,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 485,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 487,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 489,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 491,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 493,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 495,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 497,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 499,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 501,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 503,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 505,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 507,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 509,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 511,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 513,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 515,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 517,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 519,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 521,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 523,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 525,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 527,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 529,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 531,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 533,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 535,
+          "type": "text.delta",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        },
+        {
+          "line": 543,
+          "type": "response.completed",
+          "requestId": "4d705440-2f02-4fee-8008-4a367898fe18"
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/turn-1-snapshot.json",
+      "sha256": "d8bc90fb9a3c65dc87bc5cee13e168b7bfc9f897c102d96180df2cb6cf3a4918"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/final-snapshot.json",
+      "sha256": "c4b3e6c31408ce0ea4abc7f4391599332bd007195c41f616bae092f065e1c3af"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/provider-0078-response-meta.json",
+      "sha256": "36a55954441ce3b5cf778324715bd1a42c6bb0ff12e734aa9e8c8e79c58cfd8e"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/provider-0079-response-meta.json",
+      "sha256": "6f8a49c1bfa7b85a7dba51538134ca055b123f9fd19f0f977cdd88e03da2516a"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A04-2/result.json",
+      "sha256": "9867a1088ec30aacc170a999d2431016ab4fbd81e7448f2a9eb187e839f2b9f0"
+    }
+  ]
+}

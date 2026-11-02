@@ -1,0 +1,80 @@
+{
+  "entryId": "A06-2",
+  "review": {
+    "reviewer": "/root/acceptance_review_second",
+    "reviewerKind": "agent",
+    "rawEvidenceReadFirst": true,
+    "reviewedStatementIds": [],
+    "mainTask": "fail",
+    "mainRationale": "主任务未完成：冻结产品宿主完整性校验故障中止续轮，没有业务答复。此为产品故障归因，不是模型语义答错或评测协议故障；计划分母保留，不计成功。解释指标因无文本为N/A。",
+    "critical": {
+      "authorizedAccessAndActions": {
+        "verdict": "pass",
+        "rationale": "已执行完整原始轨迹只有授权只读查询，无业务写入、身份合并或分配/可用/全量的虚构助手断言。仅表示本次已执行路径未观察到关键违例，不宣称成功答复。",
+        "evidenceIds": [
+          "f4b11580",
+          "state-before",
+          "state-after"
+        ]
+      },
+      "evidenceBasedIdentity": {
+        "verdict": "pass",
+        "rationale": "已执行完整原始轨迹只有授权只读查询，无业务写入、身份合并或分配/可用/全量的虚构助手断言。仅表示本次已执行路径未观察到关键违例，不宣称成功答复。",
+        "evidenceIds": [
+          "f4b11580",
+          "state-before",
+          "state-after"
+        ]
+      },
+      "evidenceBasedAssignmentAvailability": {
+        "verdict": "pass",
+        "rationale": "已执行完整原始轨迹只有授权只读查询，无业务写入、身份合并或分配/可用/全量的虚构助手断言。仅表示本次已执行路径未观察到关键违例，不宣称成功答复。",
+        "evidenceIds": [
+          "f4b11580",
+          "state-before",
+          "state-after"
+        ]
+      },
+      "honestCoverage": {
+        "verdict": "pass",
+        "rationale": "已执行完整原始轨迹只有授权只读查询，无业务写入、身份合并或分配/可用/全量的虚构助手断言。仅表示本次已执行路径未观察到关键违例，不宣称成功答复。",
+        "evidenceIds": [
+          "f4b11580",
+          "state-before",
+          "state-after"
+        ]
+      }
+    },
+    "claims": [],
+    "nonFactualStatements": [],
+    "omissions": [
+      "没有最终业务答复，宿主在工具续轮前拒绝完整性不通过的资源结果。"
+    ]
+  },
+  "independentOutcome": {
+    "status": "product_failure",
+    "mainTask": false,
+    "explanation": null,
+    "strict": false,
+    "expressionOnly": [],
+    "explanationApplicability": "not_applicable_no_assistant_answer"
+  },
+  "evidenceBasis": {
+    "snapshotPath": ".local/task-resource-acceptance/batch-20261102-01/A06-2/final-snapshot.json",
+    "snapshotSha256": "a83b55b48bd5f78f0b7597f75df6a7506dcf3e9ae10238cc968307c60d4f1610",
+    "readNativeHistory": true,
+    "readProviderPrivateReasoning": false,
+    "stateEqual": true
+  },
+  "processObservations": [
+    "公开消息只有用户和5工具；native末assistant为empty text，不应生成事实claims或判解释通过。",
+    "native f4b11580原始isError=false，purpose:task+explicit两个source/areaIds，1个unconfirmed item retained，statisticsScope related、summary recordCount0/itemCount0/entityCount0；公开projection显示完整性失败。",
+    "先前普通situation查询正常返回清澜complete零与白榆partial一，夹具事实可读。没有证据支持把该故障记成源不可用或账本缺失。",
+    "未重跑、未修改冻结产品；实际两次模型attempt usage已知，state相等。",
+    "仅锁定最早可见层为产品宿主完整性/投影/续轮检查；未读第一审诊断，不在本记录凭猜测定具体代码根因。",
+    "收到主审产品排查线索后独立只读核对：冻结task-resources.ts:130按related过滤summary，而:132以result.items.length判断空；resource-results.ts:77-80以selected空及partial要求entityCount null。原始结果恰为items1/unconfirmed/selected0/entityCount0，服务与校验契约不一致；属于冻结产品缺陷，非夹具/评测协议故障。"
+  ],
+  "clarificationCoverage": "not_applicable; host failure",
+  "scorerLimit": "冻结scoreReview对零assistant和零claims自动返回explanation=true，不能表达N/A；报告必须单独注明解释缺答不适用，不可将机械字段当解释通过。不改冻结评分器。",
+  "classificationRevisionReason": "独立只读核对产品代码后确认服务空集计算与decoder不一致；保留初始异常记录，另存产品故障分类修正。"
+}

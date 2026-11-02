@@ -1,0 +1,21 @@
+✔ initial context projects system/user text only with exact paths and rejects secrets (7.666851ms)
+✔ mapping accepts wrappers without normalizing independent labels or quotes (1.007095ms)
+✔ compiler checks evidence while preserving originals and pending differences (29.957886ms)
+✔ wrong quote and later-state backfill remain validation errors (13.307923ms)
+✔ source hash drift stops before creating an output directory (8.783832ms)
+✔ explicit root resolution is hash-bound and produces a score without changing either review (12.555315ms)
+✔ no-answer product failure keeps frozen score and reports explanation N/A separately (11.648571ms)
+✔ public projection retains whole process and exact sentence offsets without private fields (22.46592ms)
+✔ changed snapshots retain both original statements and flag revision for review (1.164705ms)
+✔ known secret/private-reasoning payload embedded in public text fails closed (4.101213ms)
+✔ per-trial accounting includes failed native retries and retains missing usage (0.519849ms)
+✔ ledger/metadata disagreement and orphan metadata remain visible (0.238066ms)
+✔ batch export retains 20 planned slots, writes pending review templates and ignores private files (31.411852ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 258.528135

@@ -1,0 +1,1796 @@
+{
+  "slot": {
+    "id": "A05-1",
+    "caseId": "A05",
+    "repeat": 1,
+    "phase": "formal"
+  },
+  "recordedStatus": "trajectory_recorded",
+  "semanticReview": "pending_review",
+  "evidenceIssues": [],
+  "accounting": {
+    "actualRequests": 5,
+    "unknownUsageAttempts": 0,
+    "knownInput": 196880,
+    "knownOutput": 3382,
+    "usageComplete": true,
+    "rows": [
+      {
+        "id": 37,
+        "status": "finished",
+        "usage": {
+          "input": 25180,
+          "output": 469
+        },
+        "providerUsage": {
+          "input": 25180,
+          "output": 469
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0037-response-meta.json",
+          "sha256": "5925f7825817ac6909c08908bb6c9ec97fabb9a5ad9166ed7602253a3e2b08d4"
+        }
+      },
+      {
+        "id": 38,
+        "status": "finished",
+        "usage": {
+          "input": 33187,
+          "output": 687
+        },
+        "providerUsage": {
+          "input": 33187,
+          "output": 687
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0038-response-meta.json",
+          "sha256": "ff4ad84b6c0ec3459a10ba5a58f28879607478ed4f1737692a56b203e430be57"
+        }
+      },
+      {
+        "id": 39,
+        "status": "finished",
+        "usage": {
+          "input": 42084,
+          "output": 291
+        },
+        "providerUsage": {
+          "input": 42084,
+          "output": 291
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0039-response-meta.json",
+          "sha256": "538d6a9247102b4dc51029078298e3c99cadbda32794cc8a39be3836c4f049ba"
+        }
+      },
+      {
+        "id": 40,
+        "status": "finished",
+        "usage": {
+          "input": 44137,
+          "output": 708
+        },
+        "providerUsage": {
+          "input": 44137,
+          "output": 708
+        },
+        "providerComplete": true,
+        "finishReason": "tool_calls",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0040-response-meta.json",
+          "sha256": "50afcc3f7060c85ca7cb941b2537c62b47d5fe305addcf4e990f2e66f72e34e8"
+        }
+      },
+      {
+        "id": 41,
+        "status": "finished",
+        "usage": {
+          "input": 52292,
+          "output": 1227
+        },
+        "providerUsage": {
+          "input": 52292,
+          "output": 1227
+        },
+        "providerComplete": true,
+        "finishReason": "stop",
+        "models": [
+          "deepseek-v4-1-flash-261017"
+        ],
+        "artifact": {
+          "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0041-response-meta.json",
+          "sha256": "c62139afbcce6b5256901da45046764b670c5d80a60f5f78d43d9a7aa6b633d5"
+        }
+      }
+    ],
+    "issues": []
+  },
+  "state": {
+    "complete": true,
+    "changed": false,
+    "fields": [
+      {
+        "field": "task",
+        "changed": false,
+        "beforeHash": "e7af2e7acf09a9649e94a756b9167958289c533cf175c53c2454cf20bd9bf9b8",
+        "afterHash": "e7af2e7acf09a9649e94a756b9167958289c533cf175c53c2454cf20bd9bf9b8"
+      },
+      {
+        "field": "binding",
+        "changed": false,
+        "beforeHash": "c68a4e4f2292d4816a61bb5c247cb4dfc71105195f3d3ea64e13731c75b12228",
+        "afterHash": "c68a4e4f2292d4816a61bb5c247cb4dfc71105195f3d3ea64e13731c75b12228"
+      },
+      {
+        "field": "listing",
+        "changed": false,
+        "beforeHash": "45947a306d5e032974cc9ddbb556f5c0b7a0b2ccd72088b335873f95db2a644b",
+        "afterHash": "45947a306d5e032974cc9ddbb556f5c0b7a0b2ccd72088b335873f95db2a644b"
+      },
+      {
+        "field": "current",
+        "changed": false,
+        "beforeHash": "94d6c51e6de1456ca6b03f239019cc27602d04f4d01f8007656884857b1efa1d",
+        "afterHash": "94d6c51e6de1456ca6b03f239019cc27602d04f4d01f8007656884857b1efa1d"
+      },
+      {
+        "field": "draftDocument",
+        "changed": false,
+        "beforeHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "afterHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+      },
+      {
+        "field": "workspaceFiles",
+        "changed": false,
+        "beforeHash": "90ed4953c0de61f3cfbc064cae5ae0fa18d333cd390257118e35e697ff08231e",
+        "afterHash": "90ed4953c0de61f3cfbc064cae5ae0fa18d333cd390257118e35e697ff08231e"
+      }
+    ],
+    "before": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/state-before.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148"
+    },
+    "after": {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/state-after.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148"
+    },
+    "interpretation": "pending_review"
+  },
+  "trajectory": [
+    {
+      "id": "message-1",
+      "sequence": 1,
+      "kind": "user",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "按实际位置统计青沙作业区内的资源，边界另列；数量按类别和单位分开，无法定位的不要当区域外。",
+      "modelVisible": true,
+      "messageId": "386029ad",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "sentences": []
+    },
+    {
+      "id": "message-2",
+      "sequence": 2,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"id\":\"spatial-analysis\",\"name\":\"空间分析\",\"description\":\"分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。\",\"version\":\"2\",\"hash\":\"5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330\",\"content\":\"---\\nname: spatial-analysis\\ndescription: 分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持组合分析、边界判断、固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。\\n---\\n\\n使用平台提供的真实对象与空间工具完成分析。底图、页面可见范围和隐藏图层只是显示状态，不能作为候选数据或权限。卫星影像里看见的道路、建筑不会自动成为可计算对象。空间计算不会自动保存标绘。\\n\\n## 本次工作顺序\\n\\n明确对象和用户需要的结论 → 选方法并执行 → 对照结果答复。已有有效读取或计算足够时直接复用，不为了流程重复调用。短任务可以直接给结果。\\n\\n过程说明、追问选项和最终回答按下文“核对答复”处理；无需每次调用前说明。计算前只说准备做什么，收到结果后再报告已核实事实。\\n\\n## 明确本次范围\\n\\n从当前请求确定起点、候选集合、目标区域、属性条件、固定版本和所需效果（分析、预览或保存）。分别确认参照对象与候选集合的来源，两者可以不同。用户显式限定优先；任务背景、自动草稿和其他资料用于理解，不能自动变成本次要解决的问题。例如“仅统计所选图层”应保留该限定，不引入其他来源的同名对象或额外分析背景中的资源需求。\\n\\n地图上单击、查看和编辑不表示用户引用。只有宿主随本条消息核实传入的引用或仍适用的明确前文可确定对象。标注引用指向固定保存版本，来源引用读取发送时的最新数据；未保存编辑不在其中。引用的区域只确定边界，不自动限定资源候选来自该区域所属系统。\\n\\n先区分问题，再选范围和工具：\\n\\n| 问题 | 方法 |\\n| --- | --- |\\n| 测所引用面的面积、数指定图层点数 | 原空间/标绘工具，不要求资源声明 |\\n| 仅查来源 A 中某范围的船 | task_resource_query query，purpose:data，明确 sources/annotations 条件；任务关系未知不阻断普通数据分析 |\\n| 本任务有哪些资源 | query，purpose:task；未另限范围时采用工具的默认任务线索，不默认只读草稿或扫描全部授权来源 |\\n| 区域内、本任务已分配且可用的资源 | 任务资源查询 Q → spatial_analyze classify_points（候选 kind:resource/resultRef:Q，边界为已核实区域）→ task_resource_query summarize（Q、空间结果S、relation:assigned、availability:available、position:interior） |\\n\\n默认任务线索包括平台相关引用、当前绑定草稿的明确资源、采用发布版及有依据的支援；来源不必支持任务查询。明确限定优先，数据命中不证明任务相关，相关不等于已分配或可用。不要用一段范围说明提前结束可完成的任务。\\n\\n用户指定的草稿点仍可作为纯图形候选，不自动升级为真实可用资源。任务资源工具按可靠实体身份归并，普通来源引用、同名和图标不能去重；其他联合分析也必须保留身份依据。资源查询 Q 的 records 是原记录，items 是组织后的项目，两者都不一定是确定实体总数。\\n\\n缺少身份、字段或版本时先定向读取；仍有会改变答案的真实选择才聚焦追问。只有明确比较来源或确有独立解释时，完整分别给条件答案；不把所有来源组合枚举作为任务资源默认流程。“本会话”本身不指定草稿。不要猜坐标、边界或道路连接。\\n\\n资源数量按单位、含义、范围和时间分组，使用 task_resource_query summarize，不用空间对象计数替代业务数量。内部/边界/外部分别按对应 position 统计；缺实际位置单列，不能算外部。coverage、relationshipCoverage、spatialCoverage 分别是数据、任务关联和位置的缺口；knownEntityCount 只是已知部分，entityCount:null 不是0。数量中的 knownValue/unknownCount 也不能拼成确定总量。availability 可区分 available/unavailable/unknown/conflict，支援待确认不算已分配。\\n\\nread 的 offset/limit 只是固定清单分页，单页不是全集，summarize 基于固定结果全量。后续统计保持原查询时间和缺口；新的最新状态需要新查询。用户原文引用可核查不等于解释被认证，unverified_user_report 不自动覆盖来源事实。卡片数字可引用，但仍须答全用户要求的名单、数量、状态和待核验项，不能只说“见卡片”。\\n\\n## 选择方法\\n\\n先核对真实几何类型、必要属性、单位和坐标约定：输入采用 WGS84 经度/纬度；不能把米制坐标或其他坐标系直接当经纬度。前提不满足时定向查缺口或说明限制，不凭名称补齐几何、字段或做未经支持的转换。\\n\\n- 两点相距多远：measure 的 distance；点离一条线多远：point_to_line。它们是地理距离，不是沿道路行驶距离。不要把经纬度差当米，也不要拿线的端点代替整条线。\\n- 线有多长：length；面有多大：area。折线长度包含各段，面面积来自真实轮廓，不能用端点距离或包围盒替代。结果单位分别为 m 和 m²；需要展示千米、平方千米时按 1000、1000000 换算，保留合理精度。\\n- 区域包含对象、对象相交或分离：relate。contains 要求 input 为一个面、target 为一个被判断对象，是区域覆盖目标并包含边界；intersects 包括边界接触；disjoint 是没有交集。部分相交不等于完全位于区域内，相交也不表示道路连通。需要区分点在内部、边界和外部时，用 classify_points，input 为候选点、target 为一个面，按 classifications 和 values 回答。线面等其他类型不能套用点分类。\\n- 区域内且符合属性的对象：filter。确定候选范围后再按真实字段与空间条件筛选。空间条件中的 target 是参照区域或对象；input 是待筛选集合。缺失字段与不匹配不是一回事，以工具报告的数据缺口为准。\\n- 最近的 N 个：先完成全部限定条件，再 nearest。input 为候选点集合，target 为一个参考点。按地理距离排序；同距按完整对象身份稳定排序，N 不因并列自动扩大。明确实际候选范围，不把局部范围的最近说成全部来源的最近。\\n- 需要点或线周围的范围几何：buffer，距离用 distanceM 的米数。后续用 resultRef 引用生成的 geometry。若只需判断某个点距线是否不超过阈值，可测距或按距离过滤，不必额外生成面。缓冲是近似范围，不能自行扩大阈值或承诺测绘级精度。\\n- 按类别计数：先获得符合条件的集合，再 summarize 指定实际属性字段。按完整对象身份去重；null 是单独类别，字段缺失要按错误处理。不能先统计全部候选，再把它描述成区域内数量。\\n\\n用户问“宽度”时，先看是否已明确某条边长、两点距离或某方向跨度；口径明确且现有工具可表达就计算，否则说明缺口或澄清。需要实际几何、明确方向和适用方法，不能直接把经纬度差当成米。只问成员或边界时，直接回答这些结论，无需附加无关尺寸。\\n\\n## 执行、引用与恢复\\n\\n一次 spatial_analyze 执行一个操作。按实际依赖组织 Pi 的正常调用：例如“线周边某距离内的可用对象分类数量”，可先 buffer，再用范围结果 filter，并把筛选结果交给 summarize；需要最近若干对象时，在全部筛选完成后 nearest。等价的正确方法可以省略不必要步骤。\\n\\ninput 的 kind 为 source 时保留完整 systemId/objectType/objectId 身份和明确的来源/区域候选范围；kind 为 annotation 时使用固定 ref 与必要的图层或对象选择；kind 为 result 时使用宿主实际返回的 resultRef。引用筛选集合使用结果 items；引用缓冲面使用 geometry:true。结果同时有生成几何和原对象时，必须指定 geometry:true 选生成几何，或 geometry:false / itemIds 选原对象；referenceItems 是参照对象，不是后续候选。不要从摘要抄坐标、编造结果引用，或把重新查询后的变化数据说成前一次快照。\\n\\n对“刚才的范围”“继续统计”等续问，使用已知真实 resultRef；需要恢复内容时用 spatial_analyze 的 read 操作。读取固定结果不会刷新来源。指定旧范围用于区域筛选时，让 spatial.target 沿实际结果依赖使用原范围几何；不能重新 buffer 或用原点距离阈值替代固定多边形。用户要最新情况时重新查询、重新分析，并区分两次依据。\\n\\n工具负责权限、类型组合、分页收集、版本、有效几何和规模限制；Skill 不授予权限。不能因为用户说“全部”就把当前页当全量，也不能扩大原先限定的区域。工具失败、缺失几何/属性、版本变化和超限都不是零命中。只在完整的实际候选范围内得到空集合时说明没有匹配对象。\\n\\n遇到错误，先看错误标识和缺口：参数方向或 geometry/items 选择错误按契约纠正，保留同一固定结果继续，不额外请求确认；对象身份歧义用查询或澄清解决；来源变化需核实是否接受新快照；来源不可用或不支持的算法条件要明确说明，不靠改小范围或猜测数据制造成功。保留已成功的固定结果，不能把失败步骤包装成完整组合分析。一次参数错误不证明工具完全不支持该类几何，应核对实际类型和输入方向。\\n\\n## 核对答复\\n\\n先回答用户明确要求的名单、数量、状态和方法，再补必要依据。中途说明、问题选项和最终答复都以当时已有证据为准；目录选项不附加无依据的常见程度、用途或优劣。用业务语言说明计算，确需字段名时核对真实返回，不凭印象补写。\\n\\n每个数字都说明对应范围：草稿总数、图层总数、本次查询数量、本次计算输入数和命中数不能混用。某个条件下零匹配，只说明该条件未命中，不说明全层或草稿为空。用户要求完整名单和总数时必须读齐该范围，不能只报告计算输入来回避要求。\\n\\n仍适用的用户明确信息、读取、计算或回执可以复用，保留来源和时间含义；旧助手自述不是依据，后来结果不能替先前说法补证。必要结论缺少依据时定向查询或说明缺口；无关尺寸、排名和存储方式不顺带猜测。已发出的误述应明确更正，不能用后一句正确数字默默覆盖。按以下字段核对实际结论：\\n\\n- **对象和数值：** 对照 items、values、单位及真实引用。nearest 用 items 顺序和 distanceM；candidateCount 是输入候选数，不是命中数；spatial_analyze 的 summarize.total 是对象数，不是属性求和或容量。需要汇总数量属性时，先取得完整候选的实际字段，核对单位、是否重复及该字段代表什么，再基于这些数值计算；不能把缺失字段当成零。一个车辆类别点不自动等于一辆车或某种运力。点分类按 classifications 核对身份，内部和边界分开；含边界总数为二者之和。\\n- **范围和时间：** 对照 scope、completeness、provenance 和固定版本。查过哪些对象，以实际读取为据；哪些对象参加计算，以该次 input/target 和结果为据。完整空结果才说明该范围无匹配；对象名称不是空间关系证据。未请求的字段不能当作空值，多来源读取不承诺同一瞬时。method / limitations 决定精度和适用条件。\\n- **动作状态：** 分析结果生成、保存草稿、发布和设为任务当前分别以对应成功回执为据。只读分析可以说“范围已生成，本次没有添加草稿对象”；不能推断“只在内存”或“从未保存”。内部留存机制通常与用户问题无关；确实被问到而无依据时说明尚不能确认。\\n\\n一句话表达一项事实，结论的细分程度以实际证据为准。contains 命中表示位于区域内部或边界，不能单独细分；已有 classify_points 分类或充分几何依据时，才说明内部、边界或外部。不要为简短而把仍未区分的结果说成确定位置。\\n\\n用户只问哪些点在区域内，回答实际成员及是否含边界即可；明确问线长时则必须给出测量值和单位，不能靠省略指标完成任务。单位换算、分类相加或明确数量字段求和可以基于完整已有证据直接推导，精度与输入和方法相符，无需为每句话再调用工具。\\n\\n先给所需结论，再说明相关范围和必要限制。地图入口由界面产生，无须手写 URL 或原始几何 JSON。“最快到达”“道路可通行”“最适合派遣”需要路网或专业依据；必要时询问是否改为地理距离，不能暗中替换问题。普通标绘编辑走既有工具，不额外做空间分析。\\n\\n## 保存分析结果\\n\\n仅分析或预览不发起保存、发布或采用。用户明确要求保存时，读取 map-annotations 方法并沿用已有草稿、图层和版本流程；已有足够固定依据时不重复读取。通过 annotation_from_analysis 的真实 resultRef 保存已展示几何，或选择结果中的具体对象；不手工重画，也不重算后替换原结果。原请求已要求保存就不再重复征求批准。\\n\\nannotation_from_analysis 保存原几何、名称及目标图层，不接收信息性质、样式或备注。逐项核对用户明确要求与实际保存内容；有未完成且现有工具支持的属性要求时，以同一已保存对象ID用 annotation_action update_object 继续，不重复创建对象、不重算范围、不重复询问已明确内容。修改完整替换字段先按 map-annotations 读取和保留，未要求的字段不擅自补齐。回执和提交内容足够时不机械重读；不足时只补读相关字段。后续步骤失败时说明已完成和未完成部分，不把一次保存成功说成全部完成。\\n\\n保存工具会重新检查权限和草稿版本，只有能无损表达的几何可保存。含孔或多面结果不能靠删除孔、取第一块或包围盒降级。保存失败保留分析事实，按标绘错误/回执规则处理；未知写入结果先核对原回执，不换标识重试。保存、发布和设为任务当前是不同动作，不自动发布或采用。\\n\"}",
+      "modelVisible": true,
+      "messageId": "d6aaf616",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "skill.read",
+      "toolCallId": "call_00_70t0fittjhskxv6g2s6t79w6",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-3",
+      "sequence": 3,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":100,\"areaIds\":[\"a05-sand\"],\"objectTypes\":[\"resource\"],\"mode\":\"current\"},\"queriedAt\":\"2026-11-02T09:56:46.812Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-11-02T06:00:00.000Z\",\"items\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-a\"},\"name\":\"青沙一车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.02,27.02]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-a\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-a\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-a，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-a，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-a，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-b\"},\"name\":\"青沙二车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.03,27.025]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-b\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-b\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-b，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-b，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-b，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-edge\"},\"name\":\"青沙沿线车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.01,27.02]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-edge\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-edge\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-edge，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-edge，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-edge，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-far\"},\"name\":\"青沙外勤车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.07,27.02]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-far\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-far\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-far，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-far，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-far，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-site\"},\"name\":\"青沙登记车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.02,27.02]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-site\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-site\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-site，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-site，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"site\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"几何为登记站址，车辆实际位置未上报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-plan\"},\"name\":\"青沙待调车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.03,27.03]},\"properties\":{},\"resourceData\":{\"entityId\":\"a05-plan\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-plan\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-plan，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-plan，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"planned\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"拟调度位置，不是现场回报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-missing\"},\"name\":\"青沙失联车\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":null,\"properties\":{},\"resourceData\":{\"entityId\":\"a05-missing\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-missing\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-missing，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-missing，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-missing，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-boats\"},\"name\":\"青沙舟组\",\"revision\":1,\"areaIds\":[\"a05-sand\"],\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.04,27.02]},\"properties\":{},\"resourceData\":{\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"aggregate\",\"quantity\":{\"value\":4,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"舟组点名：独立四艘，成员 QSB-31至34\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-boats，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-boats，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-boats，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"coverage\":{\"scope\":\"青沙舟组全体，无其他成员记录\",\"memberEntityIds\":[\"QSB-31\",\"QSB-32\",\"QSB-33\",\"QSB-34\"],\"complete\":true}}}],\"limit\":100,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"fixture:1\",\"resourceCoverage\":{\"status\":\"complete\"}},\"mapReferences\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-a\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-a&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-b\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-b&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-edge\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-edge&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-far\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-far&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-site\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-site&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-plan\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-plan&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-boats\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=a05-boats&revision=1\"}]}",
+      "modelVisible": true,
+      "messageId": "fdd63689",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "situation_query",
+      "toolCallId": "call_01_20ntrx4ovh19vh0l6cottdjr",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-4",
+      "sequence": 4,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"requestId\":\"11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3\",\"toolCallId\":\"call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"createdAt\":\"2026-11-02T09:56:54.341Z\",\"owner\":{\"userId\":\"c81b9ce7-77e5-4c9c-b752-0abcc7a23ae2\",\"seatId\":\"acceptance\",\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"sessionId\":\"01a19bb0-8b1a-70d3-b164-b6afb9b004b3\"},\"parameters\":{\"operation\":\"query\",\"purpose\":\"data\",\"sources\":[{\"systemId\":\"situation\",\"areaIds\":[\"a05-sand\"]}]},\"statisticsScope\":{\"at\":\"2026-11-02T09:56:54.341Z\",\"relation\":\"all\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\",\"name\":\"青沙一车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-a\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-a，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-a，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-a，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-a\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-a\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-a\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-a，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-a，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-a，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\",\"name\":\"青沙二车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-b\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-b，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-b，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-b，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-b\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-b\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-b\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-b，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-b，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-b，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\",\"name\":\"青沙沿线车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-edge\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-edge，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-edge，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-edge，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-edge\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-edge\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-edge\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-edge，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-edge，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-edge，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\",\"name\":\"青沙外勤车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-far\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-far，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-far，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-far，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-far\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-far\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-far\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-far，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-far，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-far，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-site\\\"]\",\"name\":\"青沙登记车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-site\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-site，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-site，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"site\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"几何为登记站址，车辆实际位置未上报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-site\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-site\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-site\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-site，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-site，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"site\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"几何为登记站址，车辆实际位置未上报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-plan\\\"]\",\"name\":\"青沙待调车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-plan\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-plan，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-plan，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"planned\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"拟调度位置，不是现场回报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-plan\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-plan\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-plan\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-plan，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-plan，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"planned\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"拟调度位置，不是现场回报\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-missing\\\"]\",\"name\":\"青沙失联车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-missing\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-missing，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-missing，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-missing，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-missing\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-missing\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-missing\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-missing，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-missing，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-missing，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"]},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"name\":\"青沙舟组\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"aggregate\",\"quantity\":{\"value\":4,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"舟组点名：独立四艘，成员 QSB-31至34\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-boats，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-boats，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-boats，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-boats\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"aggregate\",\"quantity\":{\"value\":4,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"舟组点名：独立四艘，成员 QSB-31至34\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-boats，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-boats，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-boats，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"coverage\":{\"scope\":\"青沙舟组全体，无其他成员记录\",\"memberEntityIds\":[\"QSB-31\",\"QSB-32\",\"QSB-33\",\"QSB-34\"],\"complete\":true}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"name\":\"青沙一车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"name\":\"青沙二车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"name\":\"青沙沿线车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"name\":\"青沙外勤车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"name\":\"青沙登记车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-site\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"positionReason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\",\"limitations\":[]},{\"id\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"name\":\"青沙待调车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-plan\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"positionReason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\",\"limitations\":[]},{\"id\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"name\":\"青沙失联车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-missing\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"positionReason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\",\"limitations\":[]},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"name\":\"青沙舟组\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\"],\"category\":\"rescue_boat\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[\"没有可靠实体关联，是否重复未确认。\"],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":8,\"itemCount\":8,\"knownEntityCount\":7,\"entityCount\":null,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":7,\"knownValue\":7,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-site\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-plan\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-missing\\\"]\"],\"limitations\":[]},{\"category\":\"rescue_boat\",\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"value\":4,\"knownValue\":4,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\"],\"limitations\":[]}],\"limitations\":[\"存在实体身份未确认记录；记录数不能作为确定实体总数。\"]},\"messageCandidates\":[],\"page\":{\"offset\":0,\"limit\":100,\"total\":8,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "f591cdda",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_00_abv4c0gz5cc2tymlmfdaw6cj",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-5",
+      "sequence": 5,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"format\":\"spatial.model-result.v3\",\"data\":{\"schemaVersion\":3,\"resultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"requestId\":\"11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3\",\"toolCallId\":\"call_00_pi0n69rqnjxkt24o1rb8agth\",\"operation\":\"classify_points\",\"parameters\":{\"operation\":\"classify_points\",\"input\":{\"kind\":\"resource\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\"},\"target\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"a05-sand\"}]}},\"createdAt\":\"2026-11-02T09:56:58.608Z\",\"scope\":[{\"kind\":\"resource\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\"},{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"a05-sand\"}]}],\"completeness\":{\"status\":\"partial\",\"candidateCount\":5,\"totalCandidateCount\":8,\"unclassified\":[{\"id\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"}]},\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"name\":\"青沙一车\",\"properties\":{\"category\":\"fire_engine\",\"relation\":\"assigned\",\"availability\":\"available\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"name\":\"青沙二车\",\"properties\":{\"category\":\"fire_engine\",\"relation\":\"assigned\",\"availability\":\"available\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"name\":\"青沙沿线车\",\"properties\":{\"category\":\"fire_engine\",\"relation\":\"assigned\",\"availability\":\"available\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"name\":\"青沙外勤车\",\"properties\":{\"category\":\"fire_engine\",\"relation\":\"assigned\",\"availability\":\"available\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"name\":\"青沙舟组\",\"properties\":{\"category\":\"rescue_boat\",\"relation\":\"assigned\",\"availability\":\"available\"},\"geometryType\":\"Point\"}],\"resourceInput\":{\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"itemIds\":[\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"[\\\"situation\\\",\\\"a05-missing\\\"]\"]},\"referenceItems\":[{\"id\":\"[\\\"situation\\\",\\\"area\\\",\\\"a05-sand\\\"]\",\"name\":\"青沙作业区\",\"properties\":{\"memberRefs\":[],\"name\":\"青沙作业区\",\"objectType\":\"area\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"a05-sand\"},\"revision\":1,\"queriedAt\":\"2026-11-02T09:56:58.607Z\",\"effectiveAt\":\"2026-11-02T05:40:00.000Z\",\"validTime\":null},\"geometryType\":\"Polygon\"}],\"method\":\"Turf 7.2.0 booleanPointInPolygon; WGS84 planar topology; closed coverage vs strict interior\",\"limitations\":[\"按经纬度线段判断单个 Polygon（含孔）；外环和内环边界均为 boundary，孔内部为 exterior。\",\"不增加隐含距离容差；边界附近不等于位于边界，不声称测绘级精度。\"],\"provenance\":[{\"input\":{\"kind\":\"resource\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\"},\"queriedAt\":\"2026-11-02T09:56:54.341Z\",\"asOf\":\"2026-11-02T09:56:54.341Z\",\"resourceContext\":{\"owner\":{\"userId\":\"c81b9ce7-77e5-4c9c-b752-0abcc7a23ae2\",\"seatId\":\"acceptance\",\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"sessionId\":\"01a19bb0-8b1a-70d3-b164-b6afb9b004b3\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[]},\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"}}},{\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"a05-sand\"}]},\"queriedAt\":\"2026-11-02T09:56:58.607Z\",\"asOf\":\"2026-11-02T06:00:00.000Z\",\"sourceRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"a05-sand\",\"revision\":1}]}],\"classifications\":[{\"itemId\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"position\":\"boundary\"},{\"itemId\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"position\":\"exterior\"},{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"position\":\"interior\"}],\"values\":{\"total\":5,\"interior\":3,\"boundary\":1,\"exterior\":1}},\"meaning\":{\"scope\":\"范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。\",\"counts\":\"输入5个点：内部3、边界1、外部1；items包含全部候选，不能把items长度当范围命中数。 本次完整候选8项，3项位置缺失或不适用，单列未分类，不属于外部或未命中。\",\"effect\":\"本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。\"}}",
+      "modelVisible": true,
+      "messageId": "04e3cd9a",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "spatial_analyze",
+      "toolCallId": "call_00_pi0n69rqnjxkt24o1rb8agth",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-6",
+      "sequence": 6,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_1ao4w9t32hzxo66movnl0oxy\",\"requestId\":\"11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3\",\"toolCallId\":\"call_00_1ao4w9t32hzxo66movnl0oxy\",\"createdAt\":\"2026-11-02T09:57:04.706Z\",\"owner\":{\"userId\":\"c81b9ce7-77e5-4c9c-b752-0abcc7a23ae2\",\"seatId\":\"acceptance\",\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"sessionId\":\"01a19bb0-8b1a-70d3-b164-b6afb9b004b3\"},\"parameters\":{\"operation\":\"summarize\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"position\":\"interior\",\"relation\":\"all\",\"availability\":\"all\"},\"statisticsScope\":{\"at\":\"2026-11-02T09:56:54.341Z\",\"relation\":\"all\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\",\"name\":\"青沙一车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-a\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-a，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-a，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-a，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-a\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-a\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-a\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-a，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-a，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-a，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\",\"name\":\"青沙二车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-b\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-b，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-b，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-b，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-b\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-b\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-b\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-b，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-b，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-b，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"name\":\"青沙舟组\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"aggregate\",\"quantity\":{\"value\":4,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"舟组点名：独立四艘，成员 QSB-31至34\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-boats，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-boats，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-boats，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-boats\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"aggregate\",\"quantity\":{\"value\":4,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"舟组点名：独立四艘，成员 QSB-31至34\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-boats，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-boats，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-boats，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"coverage\":{\"scope\":\"青沙舟组全体，无其他成员记录\",\"memberEntityIds\":[\"QSB-31\",\"QSB-32\",\"QSB-33\",\"QSB-34\"],\"complete\":true}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"name\":\"青沙一车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-a\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"name\":\"青沙二车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-b\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\",\"name\":\"青沙舟组\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\"],\"category\":\"rescue_boat\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[\"没有可靠实体关联，是否重复未确认。\"],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":3,\"itemCount\":3,\"knownEntityCount\":2,\"entityCount\":null,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":2,\"knownValue\":2,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-a\\\"]\",\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-b\\\"]\"],\"limitations\":[]},{\"category\":\"rescue_boat\",\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"青沙舟组全体，无其他成员记录\",\"value\":4,\"knownValue\":4,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-boats\\\"]\"],\"limitations\":[]}],\"limitations\":[\"存在实体身份未确认记录；记录数不能作为确定实体总数。\",\"空间分类未覆盖缺位置或不适用的位置；这些资源没有计入外部。\"]},\"messageCandidates\":[],\"parentResultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"spatialCoverage\":{\"status\":\"partial\",\"candidateCount\":5,\"totalCandidateCount\":8,\"unclassified\":[{\"id\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"}]},\"page\":{\"offset\":0,\"limit\":100,\"total\":3,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "077f8917",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_00_1ao4w9t32hzxo66movnl0oxy",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-7",
+      "sequence": 7,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_01_g45irxbmk1njppxdwbkfcq1j\",\"requestId\":\"11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3\",\"toolCallId\":\"call_01_g45irxbmk1njppxdwbkfcq1j\",\"createdAt\":\"2026-11-02T09:57:04.739Z\",\"owner\":{\"userId\":\"c81b9ce7-77e5-4c9c-b752-0abcc7a23ae2\",\"seatId\":\"acceptance\",\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"sessionId\":\"01a19bb0-8b1a-70d3-b164-b6afb9b004b3\"},\"parameters\":{\"operation\":\"summarize\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"position\":\"boundary\",\"relation\":\"all\",\"availability\":\"all\"},\"statisticsScope\":{\"at\":\"2026-11-02T09:56:54.341Z\",\"relation\":\"all\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\",\"name\":\"青沙沿线车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-edge\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-edge，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-edge，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-edge，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-edge\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-edge\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-edge\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-edge，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-edge，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-edge，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"name\":\"青沙沿线车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-edge\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":1,\"itemCount\":1,\"knownEntityCount\":1,\"entityCount\":null,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":1,\"knownValue\":1,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-edge\\\"]\"],\"limitations\":[]}],\"limitations\":[\"空间分类未覆盖缺位置或不适用的位置；这些资源没有计入外部。\"]},\"messageCandidates\":[],\"parentResultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"spatialCoverage\":{\"status\":\"partial\",\"candidateCount\":5,\"totalCandidateCount\":8,\"unclassified\":[{\"id\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"}]},\"page\":{\"offset\":0,\"limit\":100,\"total\":1,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "8d7b1355",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_01_g45irxbmk1njppxdwbkfcq1j",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-8",
+      "sequence": 8,
+      "kind": "tool",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "{\"format\":\"resource.model-result.v1\",\"data\":{\"schemaVersion\":1,\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_02_0f7ehun156mazjykizsgyz3i\",\"requestId\":\"11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3\",\"toolCallId\":\"call_02_0f7ehun156mazjykizsgyz3i\",\"createdAt\":\"2026-11-02T09:57:04.764Z\",\"owner\":{\"userId\":\"c81b9ce7-77e5-4c9c-b752-0abcc7a23ae2\",\"seatId\":\"acceptance\",\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"sessionId\":\"01a19bb0-8b1a-70d3-b164-b6afb9b004b3\"},\"parameters\":{\"operation\":\"summarize\",\"resultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"position\":\"exterior\",\"relation\":\"all\",\"availability\":\"all\"},\"statisticsScope\":{\"at\":\"2026-11-02T09:56:54.341Z\",\"relation\":\"all\",\"availability\":\"all\"},\"records\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\",\"name\":\"青沙外勤车\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-far\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-far，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-far，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-far，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"a05-far\"},\"revision\":1,\"asOf\":\"2026-11-02T06:00:00.000Z\",\"queriedAt\":\"2026-11-02T09:56:54.360Z\",\"data\":{\"entityId\":\"a05-far\",\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"fire_engine\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"数量登记 a05-far\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"taskRelations\":[{\"taskId\":\"eed8d4ef-1d38-4d5b-807f-f52727bad29f\",\"relation\":\"assigned\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"调配单 a05-far，本任务有效至撤销（当前无撤销记录）\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}],\"availability\":{\"state\":\"available\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"班前检查 a05-far，设备和人员均可用\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"定位回报 a05-far，现场实际位置\"}],\"reportedAt\":\"2026-11-02T05:40:00.000Z\",\"effectiveAt\":\"2026-11-02T05:00:00.000Z\"}}}},\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"geometryType\":\"Point\"}],\"items\":[{\"id\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"name\":\"青沙外勤车\",\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\"],\"entityKey\":\"[\\\"situation\\\",\\\"a05-far\\\"]\",\"category\":\"fire_engine\",\"relation\":\"assigned\",\"relationBasis\":[\"来源任务映射已核实\",\"来源支援规则已核实\"],\"availability\":\"available\",\"limitations\":[],\"geometryType\":\"Point\"}],\"coverage\":[{\"source\":\"situation\",\"status\":\"complete\",\"asOf\":\"2026-11-02T06:00:00.000Z\"}],\"relationshipCoverage\":{\"status\":\"partial\",\"reason\":\"仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。\"},\"dependencies\":{\"systemIds\":[\"situation\"],\"annotations\":[]},\"messages\":[],\"exclusions\":[],\"summary\":{\"recordCount\":1,\"itemCount\":1,\"knownEntityCount\":1,\"entityCount\":null,\"quantities\":[{\"category\":\"fire_engine\",\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"澄湾演练独立清册\",\"value\":1,\"knownValue\":1,\"unknownCount\":0,\"recordIds\":[\"[\\\"situation\\\",\\\"resource\\\",\\\"a05-far\\\"]\"],\"limitations\":[]}],\"limitations\":[\"空间分类未覆盖缺位置或不适用的位置；这些资源没有计入外部。\"]},\"messageCandidates\":[],\"parentResultRef\":\"resource:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_abv4c0gz5cc2tymlmfdaw6cj\",\"spatialResultRef\":\"spatial:11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3:call_00_pi0n69rqnjxkt24o1rb8agth\",\"spatialCoverage\":{\"status\":\"partial\",\"candidateCount\":5,\"totalCandidateCount\":8,\"unclassified\":[{\"id\":\"[\\\"situation\\\",\\\"a05-site\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-plan\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"},{\"id\":\"[\\\"situation\\\",\\\"a05-missing\\\"]\",\"reason\":\"缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。\"}]},\"page\":{\"offset\":0,\"limit\":100,\"total\":1,\"hasMore\":false}}}",
+      "modelVisible": true,
+      "messageId": "ae9568e2",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "toolName": "task_resource_query",
+      "toolCallId": "call_02_0f7ehun156mazjykizsgyz3i",
+      "isError": false,
+      "sentences": []
+    },
+    {
+      "id": "message-9",
+      "sequence": 9,
+      "kind": "assistant",
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970",
+      "text": "已按实际位置完成分类统计（依据：situation 来源，青沙作业区 a05-sand 第 1 修订，来源快照时间 2026-11-02T06:00:00Z，本次查询 2026-11-02T09:56:54Z；共 8 条资源记录，来源覆盖状态 complete）。\n\n## 一、区域内部（interior，3 条记录）\n\n| 资源 | 类别 | 数量 | 单位 |\n|---|---|---|---|\n| 青沙一车 | 消防车 | 1 | 辆 |\n| 青沙二车 | 消防车 | 1 | 辆 |\n| 青沙舟组（成员 QSB-31～34，登记为整体报数） | 救援舟艇 | 4 | 艘 |\n\n分类合计：**消防车 2 辆；救援舟艇 4 艘**。\n\n## 二、边界上（boundary，1 条记录，单独列出）\n\n- 青沙沿线车（消防车，1 辆）——点位落在作业区多边形边线上。按方法，边界不计入内部，也不计入外部。\n\n## 三、区域外（exterior，1 条记录）\n\n- 青沙外勤车（消防车，1 辆）。\n\n## 四、无实际位置可判（未分类，未计入区域外，3 条记录）\n\n| 资源 | 类别/数量 | 未分类原因 |\n|---|---|---|\n| 青沙登记车 | 消防车 1 辆 | 几何是登记站址，车辆实际位置未上报 |\n| 青沙待调车 | 消防车 1 辆 | 仅有拟调度位置，不是现场回报 |\n| 青沙失联车 | 消防车 1 辆 | 无几何 |\n\n合计 3 辆消防车，位置未知。\n\n## 五、口径与限制\n\n- 这几条资源共登记**消防车 7 辆、救援舟艇 4 艘**。按位置拆开：内部 2 辆+4 艘；边界 1 辆；外部 1 辆；位置不明 3 辆。内部+边界合计为 3 辆、4 艘，若值班口径只看“区内或边上”。\n- 单位按类别分开，未合并跨单位总数（辆与艘不可相加）。\n- 位置判定方法：Turf 7.2.0 点在多边形内判断，WGS84 经纬度，未加距离容差；边界附近不等于位于边界，也不代表测绘级精度。\n- 缺口：实体身份未完全确认（青沙舟组为整体记录，是否与个别实体重复未确认），已知实体数 7、确定实体总数为空，记录数不等于确定实体总数；任务关联覆盖为部分（仅按已有实际关联证据）。\n- 本次仅只读查询与分类统计，未保存或修改任何业务资料，也未生成标绘。",
+      "modelVisible": true,
+      "messageId": "16683a5a",
+      "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+      "sentences": [
+        {
+          "index": 0,
+          "start": 0,
+          "end": 133,
+          "text": "已按实际位置完成分类统计（依据：situation 来源，青沙作业区 a05-sand 第 1 修订，来源快照时间 2026-11-02T06:00:00Z，本次查询 2026-11-02T09:56:54Z；共 8 条资源记录，来源覆盖状态 complete）。\n"
+        },
+        {
+          "index": 1,
+          "start": 133,
+          "end": 134,
+          "text": "\n"
+        },
+        {
+          "index": 2,
+          "start": 134,
+          "end": 160,
+          "text": "## 一、区域内部（interior，3 条记录）\n"
+        },
+        {
+          "index": 3,
+          "start": 160,
+          "end": 161,
+          "text": "\n"
+        },
+        {
+          "index": 4,
+          "start": 161,
+          "end": 183,
+          "text": "| 资源 | 类别 | 数量 | 单位 |\n"
+        },
+        {
+          "index": 5,
+          "start": 183,
+          "end": 201,
+          "text": "|---|---|---|---|\n"
+        },
+        {
+          "index": 6,
+          "start": 201,
+          "end": 224,
+          "text": "| 青沙一车 | 消防车 | 1 | 辆 |\n"
+        },
+        {
+          "index": 7,
+          "start": 224,
+          "end": 247,
+          "text": "| 青沙二车 | 消防车 | 1 | 辆 |\n"
+        },
+        {
+          "index": 8,
+          "start": 247,
+          "end": 293,
+          "text": "| 青沙舟组（成员 QSB-31～34，登记为整体报数） | 救援舟艇 | 4 | 艘 |\n"
+        },
+        {
+          "index": 9,
+          "start": 293,
+          "end": 294,
+          "text": "\n"
+        },
+        {
+          "index": 10,
+          "start": 294,
+          "end": 321,
+          "text": "分类合计：**消防车 2 辆；救援舟艇 4 艘**。\n"
+        },
+        {
+          "index": 11,
+          "start": 321,
+          "end": 322,
+          "text": "\n"
+        },
+        {
+          "index": 12,
+          "start": 322,
+          "end": 352,
+          "text": "## 二、边界上（boundary，1 条记录，单独列出）\n"
+        },
+        {
+          "index": 13,
+          "start": 352,
+          "end": 353,
+          "text": "\n"
+        },
+        {
+          "index": 14,
+          "start": 353,
+          "end": 385,
+          "text": "- 青沙沿线车（消防车，1 辆）——点位落在作业区多边形边线上。"
+        },
+        {
+          "index": 15,
+          "start": 385,
+          "end": 405,
+          "text": "按方法，边界不计入内部，也不计入外部。\n"
+        },
+        {
+          "index": 16,
+          "start": 405,
+          "end": 406,
+          "text": "\n"
+        },
+        {
+          "index": 17,
+          "start": 406,
+          "end": 431,
+          "text": "## 三、区域外（exterior，1 条记录）\n"
+        },
+        {
+          "index": 18,
+          "start": 431,
+          "end": 432,
+          "text": "\n"
+        },
+        {
+          "index": 19,
+          "start": 432,
+          "end": 450,
+          "text": "- 青沙外勤车（消防车，1 辆）。\n"
+        },
+        {
+          "index": 20,
+          "start": 450,
+          "end": 451,
+          "text": "\n"
+        },
+        {
+          "index": 21,
+          "start": 451,
+          "end": 482,
+          "text": "## 四、无实际位置可判（未分类，未计入区域外，3 条记录）\n"
+        },
+        {
+          "index": 22,
+          "start": 482,
+          "end": 483,
+          "text": "\n"
+        },
+        {
+          "index": 23,
+          "start": 483,
+          "end": 506,
+          "text": "| 资源 | 类别/数量 | 未分类原因 |\n"
+        },
+        {
+          "index": 24,
+          "start": 506,
+          "end": 520,
+          "text": "|---|---|---|\n"
+        },
+        {
+          "index": 25,
+          "start": 520,
+          "end": 560,
+          "text": "| 青沙登记车 | 消防车 1 辆 | 几何是登记站址，车辆实际位置未上报 |\n"
+        },
+        {
+          "index": 26,
+          "start": 560,
+          "end": 597,
+          "text": "| 青沙待调车 | 消防车 1 辆 | 仅有拟调度位置，不是现场回报 |\n"
+        },
+        {
+          "index": 27,
+          "start": 597,
+          "end": 623,
+          "text": "| 青沙失联车 | 消防车 1 辆 | 无几何 |\n"
+        },
+        {
+          "index": 28,
+          "start": 623,
+          "end": 624,
+          "text": "\n"
+        },
+        {
+          "index": 29,
+          "start": 624,
+          "end": 640,
+          "text": "合计 3 辆消防车，位置未知。\n"
+        },
+        {
+          "index": 30,
+          "start": 640,
+          "end": 641,
+          "text": "\n"
+        },
+        {
+          "index": 31,
+          "start": 641,
+          "end": 652,
+          "text": "## 五、口径与限制\n"
+        },
+        {
+          "index": 32,
+          "start": 652,
+          "end": 653,
+          "text": "\n"
+        },
+        {
+          "index": 33,
+          "start": 653,
+          "end": 684,
+          "text": "- 这几条资源共登记**消防车 7 辆、救援舟艇 4 艘**。"
+        },
+        {
+          "index": 34,
+          "start": 684,
+          "end": 724,
+          "text": "按位置拆开：内部 2 辆+4 艘；边界 1 辆；外部 1 辆；位置不明 3 辆。"
+        },
+        {
+          "index": 35,
+          "start": 724,
+          "end": 757,
+          "text": "内部+边界合计为 3 辆、4 艘，若值班口径只看“区内或边上”。\n"
+        },
+        {
+          "index": 36,
+          "start": 757,
+          "end": 786,
+          "text": "- 单位按类别分开，未合并跨单位总数（辆与艘不可相加）。\n"
+        },
+        {
+          "index": 37,
+          "start": 786,
+          "end": 855,
+          "text": "- 位置判定方法：Turf 7.2.0 点在多边形内判断，WGS84 经纬度，未加距离容差；边界附近不等于位于边界，也不代表测绘级精度。\n"
+        },
+        {
+          "index": 38,
+          "start": 855,
+          "end": 947,
+          "text": "- 缺口：实体身份未完全确认（青沙舟组为整体记录，是否与个别实体重复未确认），已知实体数 7、确定实体总数为空，记录数不等于确定实体总数；任务关联覆盖为部分（仅按已有实际关联证据）。\n"
+        },
+        {
+          "index": 39,
+          "start": 947,
+          "end": 982,
+          "text": "- 本次仅只读查询与分类统计，未保存或修改任何业务资料，也未生成标绘。"
+        }
+      ]
+    }
+  ],
+  "skillEvidence": {
+    "catalogInModelInput": "unknown_requires_provider_input_review",
+    "catalogsObservedInEvents": [
+      {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-events.sse",
+        "line": 3,
+        "type": "resources.loaded",
+        "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+        "catalog": [
+          {
+            "id": "synthesis",
+            "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+          },
+          {
+            "id": "review",
+            "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+          },
+          {
+            "id": "map-annotations",
+            "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+          },
+          {
+            "id": "spatial-analysis",
+            "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+          }
+        ]
+      }
+    ],
+    "selected": [],
+    "reads": [
+      {
+        "statementId": "message-2",
+        "sequence": 2,
+        "toolCallId": "call_00_70t0fittjhskxv6g2s6t79w6",
+        "skillId": "spatial-analysis",
+        "skillName": "空间分析",
+        "skillVersion": "2",
+        "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+        "successfulResult": true,
+        "resultStatusKnown": true
+      }
+    ],
+    "interpretation": "observed_loading_only_not_semantic_success"
+  },
+  "events": [
+    {
+      "artifact": {
+        "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-events.sse",
+        "sha256": "a9ec03b818672cdace848448aa1ab726c4d8570577fe68beeaded291264ae1f5"
+      },
+      "events": [
+        {
+          "line": 1,
+          "type": "response.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 3,
+          "type": "resources.loaded",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "catalog": [
+            {
+              "id": "synthesis",
+              "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+            },
+            {
+              "id": "review",
+              "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+            },
+            {
+              "id": "map-annotations",
+              "hash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+            },
+            {
+              "id": "spatial-analysis",
+              "hash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+            }
+          ]
+        },
+        {
+          "line": 9,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "skill.read",
+          "toolCallId": "call_00_70t0fittjhskxv6g2s6t79w6"
+        },
+        {
+          "line": 11,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "skill.read",
+          "toolCallId": "call_00_70t0fittjhskxv6g2s6t79w6",
+          "isError": false
+        },
+        {
+          "line": 13,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "situation_query",
+          "toolCallId": "call_01_20ntrx4ovh19vh0l6cottdjr"
+        },
+        {
+          "line": 15,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "situation_query",
+          "toolCallId": "call_01_20ntrx4ovh19vh0l6cottdjr",
+          "isError": false
+        },
+        {
+          "line": 21,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_abv4c0gz5cc2tymlmfdaw6cj"
+        },
+        {
+          "line": 23,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_abv4c0gz5cc2tymlmfdaw6cj",
+          "isError": false
+        },
+        {
+          "line": 31,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "spatial_analyze",
+          "toolCallId": "call_00_pi0n69rqnjxkt24o1rb8agth"
+        },
+        {
+          "line": 33,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "spatial_analyze",
+          "toolCallId": "call_00_pi0n69rqnjxkt24o1rb8agth",
+          "isError": false
+        },
+        {
+          "line": 39,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_1ao4w9t32hzxo66movnl0oxy"
+        },
+        {
+          "line": 41,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_00_1ao4w9t32hzxo66movnl0oxy",
+          "isError": false
+        },
+        {
+          "line": 43,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_g45irxbmk1njppxdwbkfcq1j"
+        },
+        {
+          "line": 45,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_01_g45irxbmk1njppxdwbkfcq1j",
+          "isError": false
+        },
+        {
+          "line": 47,
+          "type": "tool.started",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_02_0f7ehun156mazjykizsgyz3i"
+        },
+        {
+          "line": 49,
+          "type": "tool.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3",
+          "toolName": "task_resource_query",
+          "toolCallId": "call_02_0f7ehun156mazjykizsgyz3i",
+          "isError": false
+        },
+        {
+          "line": 57,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 59,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 61,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 63,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 65,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 67,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 69,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 71,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 73,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 75,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 77,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 79,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 81,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 83,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 85,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 87,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 89,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 91,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 93,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 95,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 97,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 99,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 101,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 103,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 105,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 107,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 109,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 111,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 113,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 115,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 117,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 119,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 121,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 123,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 125,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 127,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 129,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 131,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 133,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 135,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 137,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 139,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 141,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 143,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 145,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 147,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 149,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 151,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 153,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 155,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 157,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 159,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 161,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 163,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 165,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 167,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 169,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 171,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 173,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 175,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 177,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 179,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 181,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 183,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 185,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 187,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 189,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 191,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 193,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 195,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 197,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 199,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 201,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 203,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 205,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 207,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 209,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 211,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 213,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 215,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 217,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 219,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 221,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 223,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 225,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 227,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 229,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 231,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 233,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 235,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 237,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 239,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 241,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 243,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 245,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 247,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 249,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 251,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 253,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 255,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 257,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 259,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 261,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 263,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 265,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 267,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 269,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 271,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 273,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 275,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 277,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 279,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 281,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 283,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 285,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 287,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 289,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 291,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 293,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 295,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 297,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 299,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 301,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 303,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 305,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 307,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 309,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 311,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 313,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 315,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 317,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 319,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 321,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 323,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 325,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 327,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 329,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 331,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 333,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 335,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 337,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 339,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 341,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 343,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 345,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 347,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 349,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 351,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 353,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 355,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 357,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 359,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 361,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 363,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 365,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 367,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 369,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 371,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 373,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 375,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 377,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 379,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 381,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 383,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 385,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 387,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 389,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 391,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 393,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 395,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 397,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 399,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 401,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 403,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 405,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 407,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 409,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 411,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 413,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 415,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 417,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 419,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 421,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 423,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 425,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 427,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 429,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 431,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 433,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 435,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 437,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 439,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 441,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 443,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 445,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 447,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 449,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 451,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 453,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 455,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 457,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 459,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 461,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 463,
+          "type": "text.delta",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        },
+        {
+          "line": 471,
+          "type": "response.completed",
+          "requestId": "11a69b0c-e6ce-4e1c-9783-eb05c80ce4a3"
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/turn-1-snapshot.json",
+      "sha256": "1fccc0b3950d531daa7ab2680f8b25a1b330237508714f331f02cf4af4d1b970"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/final-snapshot.json",
+      "sha256": "1d17a143cfa090edc2f19466fb5268ecdb5105193786b562ed473f2c508d8500"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0037-response-meta.json",
+      "sha256": "5925f7825817ac6909c08908bb6c9ec97fabb9a5ad9166ed7602253a3e2b08d4"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0038-response-meta.json",
+      "sha256": "ff4ad84b6c0ec3459a10ba5a58f28879607478ed4f1737692a56b203e430be57"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0039-response-meta.json",
+      "sha256": "538d6a9247102b4dc51029078298e3c99cadbda32794cc8a39be3836c4f049ba"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0040-response-meta.json",
+      "sha256": "50afcc3f7060c85ca7cb941b2537c62b47d5fe305addcf4e990f2e66f72e34e8"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/provider-0041-response-meta.json",
+      "sha256": "c62139afbcce6b5256901da45046764b670c5d80a60f5f78d43d9a7aa6b633d5"
+    },
+    {
+      "path": ".local/task-resource-acceptance/batch-20261102-01/A05-1/result.json",
+      "sha256": "d9152c011bb93132eefee814323bf8b300d88f1330302d152a14106c0c69d1aa"
+    }
+  ]
+}

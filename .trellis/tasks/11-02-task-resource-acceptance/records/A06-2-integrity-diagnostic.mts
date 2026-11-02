@@ -1,0 +1,12 @@
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { resourceResultValid, resourceRequestValid, projectResourceResult, extractResourceResult } from '/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/product/src/contracts/resource-results.ts';
+const path='/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A06-2/data/sessions/2026-11-02T10-05-49-765Z_01a19bb8-eb44-77b6-982b-b095f429ff09.jsonl';
+const raw=readFileSync(path,'utf8');
+const rows=raw.trim().split('\n').map(x=>JSON.parse(x));
+const entry=rows.find(e=>e.message?.role==='toolResult'&&e.message.toolName==='task_resource_query');
+const result=entry.message.details.resourceResult;
+const text=entry.message.content.find(x=>x.type==='text').text;
+const selected=result.items.filter(x=>x.relation!=='unconfirmed');
+const clone=structuredClone(result); clone.summary.entityCount=null;
+console.log(JSON.stringify({sourcePath:path,sourceSha256:createHash('sha256').update(raw).digest('hex'),toolMessageId:entry.id,requestValid:resourceRequestValid(result.parameters),parameters:result.parameters,allItems:result.items.length,selectedCount:selected.length,originalEntityCount:result.summary.entityCount,originalResultValid:resourceResultValid(result),originalProjectionMatches:JSON.stringify(JSON.parse(text).data)===JSON.stringify(projectResourceResult(result)),originalExtract:extractResourceResult(entry.message.details,'task_resource_query',false,text),cloneOnlyChange:'summary.entityCount: 0 -> null',cloneResultValid:resourceResultValid(clone),originalEvidenceUnmodified:readFileSync(path,'utf8')===raw},null,2));

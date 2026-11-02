@@ -1,0 +1,328 @@
+{
+  "label": "Observed successful skill.read/skill_read results only; not correctness or causal effect",
+  "totals": {
+    "all": {
+      "tasks": 20,
+      "tasksWithSuccessfulRead": 8,
+      "successfulReadCount": 11,
+      "bySkill": {
+        "map-annotations": 3,
+        "spatial-analysis": 8
+      }
+    },
+    "public": {
+      "tasks": 4,
+      "tasksWithSuccessfulRead": 2,
+      "successfulReadCount": 3,
+      "bySkill": {
+        "map-annotations": 1,
+        "spatial-analysis": 2
+      }
+    },
+    "formal": {
+      "tasks": 16,
+      "tasksWithSuccessfulRead": 6,
+      "successfulReadCount": 8,
+      "bySkill": {
+        "spatial-analysis": 6,
+        "map-annotations": 2
+      }
+    }
+  },
+  "entries": [
+    {
+      "entryId": "P01-1",
+      "phase": "public",
+      "successfulReads": [
+        {
+          "statementId": "message-2",
+          "sequence": 2,
+          "toolCallId": "call_00_iz2vvgib5a86k3chvh0p4pz6",
+          "skillId": "map-annotations",
+          "skillName": "态势标绘",
+          "skillVersion": "2",
+          "skillHash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        },
+        {
+          "statementId": "message-3",
+          "sequence": 3,
+          "toolCallId": "call_01_amazpkfkkfrck90vq2ejkptp",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 2,
+      "successfulReadCount": 2,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "P02-1",
+      "phase": "public",
+      "successfulReads": [
+        {
+          "statementId": "message-3",
+          "sequence": 3,
+          "toolCallId": "call_01_l74h2i0pslzguzjxe7qwfs56",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 1,
+      "successfulReadCount": 1,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "P03-1",
+      "phase": "public",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "P04-1",
+      "phase": "public",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A01-1",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A02-1",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A03-1",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A04-1",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A05-1",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-2",
+          "sequence": 2,
+          "toolCallId": "call_00_70t0fittjhskxv6g2s6t79w6",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 1,
+      "successfulReadCount": 1,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A06-1",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A07-1",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-2",
+          "sequence": 2,
+          "toolCallId": "call_00_fvh7eyhsd8c2sxsax1x25hox",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        },
+        {
+          "statementId": "message-3",
+          "sequence": 3,
+          "toolCallId": "call_01_q3qqqzwrwe6c8p364k4psxse",
+          "skillId": "map-annotations",
+          "skillName": "态势标绘",
+          "skillVersion": "2",
+          "skillHash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 2,
+      "successfulReadCount": 2,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A08-1",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-8",
+          "sequence": 8,
+          "toolCallId": "call_00_arogvs9a2wqyfkfqjh8c4l86",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 1,
+      "successfulReadCount": 1,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A08-2",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-9",
+          "sequence": 9,
+          "toolCallId": "call_00_hpl3y91em8nzqv02von2wrth",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 1,
+      "successfulReadCount": 1,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A07-2",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-2",
+          "sequence": 2,
+          "toolCallId": "call_00_l9ple1qqmt36zftqs78yegmg",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        },
+        {
+          "statementId": "message-3",
+          "sequence": 3,
+          "toolCallId": "call_01_kem4f1aot6gld6jnxj0papwv",
+          "skillId": "map-annotations",
+          "skillName": "态势标绘",
+          "skillVersion": "2",
+          "skillHash": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 2,
+      "successfulReadCount": 2,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A06-2",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A05-2",
+      "phase": "formal",
+      "successfulReads": [
+        {
+          "statementId": "message-2",
+          "sequence": 2,
+          "toolCallId": "call_00_pb5p70xpaxnisrh5zc5lrxn1",
+          "skillId": "spatial-analysis",
+          "skillName": "空间分析",
+          "skillVersion": "2",
+          "skillHash": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330",
+          "successfulResult": true,
+          "resultStatusKnown": true
+        }
+      ],
+      "attemptedReads": 1,
+      "successfulReadCount": 1,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A04-2",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A03-2",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A02-2",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    },
+    {
+      "entryId": "A01-2",
+      "phase": "formal",
+      "successfulReads": [],
+      "attemptedReads": 0,
+      "successfulReadCount": 0,
+      "catalogInModelInput": "unknown_requires_provider_input_review"
+    }
+  ],
+  "limitations": [
+    "Zero tool reads does not mean no host-delivered rules.",
+    "Successful tool result does not independently prove subsequent model receipt or rule compliance.",
+    "Catalog delivery into actual model input remains unassessed in this projection."
+  ]
+}

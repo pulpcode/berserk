@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-11-02T09:31:45.909099+00:00",
+  "method": "cua native Chrome existing signed-in Agent Plan subscription page",
+  "url": "https://console.volcengine.com/ark/region:cn-beijing/subscription/agent-plan",
+  "plan": "Agent Plan Medium",
+  "fiveHourUsedAFP": 1.105,
+  "fiveHourLimitAFP": 10000,
+  "weekUsedAFP": 1.105,
+  "weekLimitAFP": 35000,
+  "monthUsedPercent": 34.69,
+  "monthLimitAFP": 100000,
+  "resetText": "2小时50分钟后重置",
+  "overageEnabled": false,
+  "overageEvidence": "使用配置显示开启超额后付费按钮；未点击或修改",
+  "caveat": "额度观测不是本批费用估计，token不换算AFP；未读取或显示平台密钥"
+}

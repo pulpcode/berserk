@@ -1,0 +1,33 @@
+{
+  "sourcePath": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A06-2/data/sessions/2026-11-02T10-05-49-765Z_01a19bb8-eb44-77b6-982b-b095f429ff09.jsonl",
+  "sourceSha256": "dba7862a2d5c5c217cc196e6131c584ecd87317d411f97d2e7759ebff0362435",
+  "toolMessageId": "f4b11580",
+  "requestValid": true,
+  "parameters": {
+    "operation": "query",
+    "purpose": "task",
+    "sources": [
+      {
+        "systemId": "situation",
+        "areaIds": [
+          "a06-elm"
+        ]
+      },
+      {
+        "systemId": "patrol",
+        "areaIds": [
+          "a06-elm"
+        ]
+      }
+    ]
+  },
+  "allItems": 1,
+  "selectedCount": 0,
+  "originalEntityCount": 0,
+  "originalResultValid": false,
+  "originalProjectionMatches": true,
+  "originalExtract": null,
+  "cloneOnlyChange": "summary.entityCount: 0 -> null",
+  "cloneResultValid": true,
+  "originalEvidenceUnmodified": true
+}
