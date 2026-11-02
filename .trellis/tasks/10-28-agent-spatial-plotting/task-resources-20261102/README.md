@@ -1,10 +1,10 @@
 # 任务资源分析：后续四批开发方案
 
-2026-11-02｜第一、二批已提交；第三批实现与离线检查完成；第四批保留范围稿｜分支 `codex/agent-spatial-plotting`。
+2026-11-02｜前三批已提交；第四批详细技术方案待审阅｜分支 `codex/agent-spatial-plotting`。
 
-本目录保存四批独立方案。用户于 2026-11-02 确认默认资源范围，要求先提交四批方案，再实施第一批。第二批已获准并完成实施及离线验收，第三、四批仍须分别审阅；本次未启动模型测评。
+本目录保存四批独立方案。用户于 2026-11-02 确认默认资源范围，要求先提交四批方案，再实施第一批。第二批已获准并完成实施及离线验收，第三批已批准并完成；第四批详细方案待审阅，本次未启动模型测评。
 
-当前进展：四批初稿已提交 `2a5fd9f`；第一批实现与检查记录已提交 `ea30f46`，见[完成报告](../../11-02-task-resource-contracts/results.md)。[第二批方案](02-query-and-spatial-tools.md)已基于该实现详细展开，包含工具分工、数据处理、实施顺序与 24 组离线检查，用户审阅修订与 D15 五例后已批准第二批实施，实现和检查结果已提交 `56fa186`，见[第二批报告](../../11-02-task-resource-query/results.md)。[第三批方案](03-interaction-skills-runtime.md)已详细展开，包含架构、交互规则、Skill/工具/配置职责、实施顺序和 26 组离线验收，方案已提交 `d194f4c`，用户批准后第三批实现与离线检查已完成，见[第三批结果](../../11-02-task-resource-experience/results.md)。第四批未开始，无真实模型调用。
+当前进展：四批初稿已提交 `2a5fd9f`；第一批实现与检查记录已提交 `ea30f46`，见[完成报告](../../11-02-task-resource-contracts/results.md)。[第二批方案](02-query-and-spatial-tools.md)已基于该实现详细展开，包含工具分工、数据处理、实施顺序与 24 组离线检查，用户审阅修订与 D15 五例后已批准第二批实施，实现和检查结果已提交 `56fa186`，见[第二批报告](../../11-02-task-resource-query/results.md)。[第三批方案](03-interaction-skills-runtime.md)已详细展开，包含架构、交互规则、Skill/工具/配置职责、实施顺序和 26 组离线验收，方案已提交 `d194f4c`，用户批准后第三批实现与离线检查已完成并提交 `12e1cc9`，见[第三批结果](../../11-02-task-resource-experience/results.md)。第四批现已详细展开，拟4项公开流程检查＋8道新题各2次，共20次完整任务；未开始实施或真实模型调用。
 
 第三批审阅修订：已确认保留“选中后主动点击引用”的交互，撤回单击自动带入；补充来源发送时读取与标注固定版本的例子，以及导入资源身份与手工旧标注补绑的区别。该修订已纳入第三批实施；检查结果见第三批报告。
 
@@ -27,7 +27,7 @@
 | [第三批：交互、Skill 与运行配置](03-interaction-skills-runtime.md) | 主动引用的显示与发送、资源表单、两份 Skill、共享模型配置和结果展示 | 第二批工具可用；第一批规则稳定 | 用户的实际选择、工具处理和回答形成完整流程 |
 | [第四批：新版验收](04-acceptance.md) | 公开回归、新题封存、完整对话评分、失败归因 | 前三批离线检查通过，版本与评分冻结 | 给出有证据的通过或未通过结论，明确剩余问题 |
 
-每批完成只代表该批通过。**第一批不交付可用的新查询工具；完整业务流程在第三批形成，第四批验证效果。** 第三批现已详细展开，真实模型预算为 0；第四批实施前另行细化题目及预算，不提前运行。
+每批完成只代表该批通过。**第一批不交付可用的新查询工具；完整业务流程在第三批形成，第四批验证效果。** 第三批现已详细展开，真实模型预算为 0；[第四批方案](04-acceptance.md)已细化逐题要求、架构、评分、预算和停止规则，待审阅，不提前运行。
 
 ## 架构与职责
 
@@ -72,11 +72,11 @@ flowchart TD
 
 第一批业务规则已确认，数据承载已实现。第二批已批准，实施记录见[任务文件](../../11-02-task-resource-query/prd.md)。可回看[第二批方案](02-query-and-spatial-tools.md)，重点看第 2 节现有能力、第 6 节数据查询与任务关系判断、第 11 节 D15 具体例子，以及第 13 节审阅边界。每批仍独立成文，避免将多轮方案追加成一份长文件。
 
-沿用当前 worktree 与 `codex/agent-spatial-plotting` 分支。第一批已按此前授权提交；第二批已获准实施及离线检查，尚未提交第二批变更，不执行真实模型测评。不推送、合并或部署，不改写旧测评目录和原始评分。
+沿用当前 worktree 与 `codex/agent-spatial-plotting` 分支。前三批实现与检查已分别提交；第四批方案已落盘待审阅，尚未实施，不执行真实模型测评。不推送、合并或部署，不改写旧测评目录和原始评分。
 
 ## 参考依据
 
 - [本次共享讨论](https://chatgpt.com/share/6ae74a13-0c38-83ec-a78d-73bcd27036bc)：四批顺序与业务查询、空间计算分工。讨论中的建议在本目录整理为待审设计，不当成已经实现的能力。
 - 当前契约：[标绘对象](../../../../experiments/harness-lab/src/contracts/annotations.ts)、[来源查询](../../../../experiments/harness-lab/src/contracts/context.ts)、[任务上下文](../../../../experiments/harness-lab/src/contracts/access.ts)、[空间结果](../../../../experiments/harness-lab/src/contracts/spatial.ts)。
 - 当前实现：[来源校验](../../../../experiments/harness-lab/src/context/validation.ts)、[空间输入](../../../../experiments/harness-lab/src/spatial/inputs.ts)、[标绘编辑器](../../../../experiments/harness-lab/src/web/annotations/FeatureEditor.tsx)、[Pi 运行](../../../../experiments/harness-lab/src/pi/lab.ts)、[出网请求](../../../../experiments/harness-lab/src/pi/controlled-stream.ts)。
-- 当前规范：[资源字段与生命周期](../../../spec/backend/task-resources.md)、[多来源查询](../../../spec/backend/context-analysis.md)、[会话标绘](../../../spec/backend/map-annotations.md)、[空间分析](../../../spec/backend/spatial-analysis.md)。第一批已同步；后三批拟改行为须在获准并实现后同步，不能提前写成已有能力。
+- 当前规范：[资源字段与生命周期](../../../spec/backend/task-resources.md)、[多来源查询](../../../spec/backend/context-analysis.md)、[会话标绘](../../../spec/backend/map-annotations.md)、[空间分析](../../../spec/backend/spatial-analysis.md)。前三批规范已随实现同步；第四批拟建测评流程仍是待审设计，不能提前写成已有能力。
