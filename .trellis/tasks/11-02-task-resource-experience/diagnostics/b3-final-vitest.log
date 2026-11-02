@@ -1,0 +1,526 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:11642) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11636) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11637) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11638) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11641) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11644) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11643) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11639) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11635) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11645) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/task-resource-query.test.ts (37 tests | 37 failed) 6110ms
+     × D01 queries default task resources, merges controlled imports and classifies five resources 108ms
+     × D02 keeps ordinary four-point annotation reading available without new resource semantics 44ms
+     × D03 preserves two same-name cross-system records and does not certify an entity total 42ms
+     × D04 does not treat a manual source reference as a controlled identity or inherited availability 38ms
+     × D05 one source entity with conflicting reports remains one entity and not available 40ms
+     × D06 aggregate and detail respect explicit coverage=false, station geometry is not vehicle geometry 38ms
+     × D06 aggregate and detail respect explicit coverage=true, station geometry is not vehicle geometry 76ms
+     × D07 preserves known quantities separately from unknown counts and different units 66ms
+     × D08 planned position retains the resource as unclassified, never outside 38ms
+     × D09 registered region selection remains distinct from actual geometry 45ms
+     × D10 an empty source and failed source never become a complete zero-resource task 37ms
+     × D11 adopted publication is fixed while another session draft changes 39ms
+     × D12 preserves exact user report, never converts assistant prose into evidence or mutates facts 42ms
+     × D13 reads more than one full resource page without consuming unrelated geometry-less records 49ms
+     × D14 rejects incomplete snapshot data without a successful partial sum or retries 63ms
+     × D14 rejects incomplete cursor data without a successful partial sum or retries 42ms
+     × D14 rejects incomplete duplicate data without a successful partial sum or retries 44ms
+     × D14 rejects incomplete missing data without a successful partial sum or retries 49ms
+     × D14 never mixes changing source snapshots across separate exact-reference selections 71ms
+     × D15-a no source task API is needed for platform-linked resource reads 39ms
+     × D15-b explicit source region query retains both unrelated resources for spatial analysis 38ms
+     × D15-c missing all task links does not trigger broad scans or certify zero assignment 57ms
+     × D15-d explicit data scope keeps related and unknown records without manufacturing assignment 192ms
+     × D15-e optional source task discovery works only with actual capability complete 100ms
+     × D15-e optional source task discovery works only with actual capability no-map 158ms
+     × D15-e optional source task discovery works only with actual capability no-rule 93ms
+     × D16 rechecks source permissions and owner binding on read, summary and spatial use 173ms
+     × D16 does not admit another seat private draft or an unbound session 172ms
+     × D17 expired and conditional status is not made current by query time; a later effective report can supersede expired facts 223ms
+     × D17 identical entity IDs from different source namespaces never establish cross-source identity 136ms
+     × D17 an ordinary copy loses controlled identity while the imported record keeps its association 710ms
+     × D17 different annotation sets with identical contents are independent records without entity evidence 295ms
+     × D18 classifies independent inside/boundary/outside/hole points and retains every missing-position reason 184ms
+   × D21 source and adopted-publication changes do not mutate old fixed pages or totals 592ms
+   × D06 comparable quantities respect valid coverage without hiding separate facts 709ms
+   × D06 comparable quantities respect missing coverage without hiding separate facts 607ms
+   × D06 comparable quantities respect expired coverage without hiding separate facts 657ms
+(node:11721) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/pi/provider-payload.test.ts (4 tests | 2 failed) 6092ms
+   ✓ inserts one fixed system snapshot immediately before the current user on the wire, without changing native history  1884ms
+   ✓ keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references  2253ms
+   × delivers the deployed 'spatial-analysis' catalog and exact body through native on-demand skill_read 656ms
+   × delivers the deployed 'map-annotations' catalog and exact body through native on-demand skill_read 1297ms
+(node:11785) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | tests/pi/composer-input.test.ts > controlled composer inputs through native Pi sessions > rejects foreign composer evidence without rewriting files
+发现无法安全加载的会话文件，已保留原文件。
+已登记会话 01a19b43-867b-765c-82dd-a28406d15a63 无法加载，原文件保留且禁止续跑。
+
+stderr | tests/pi/composer-input.test.ts > controlled composer inputs through native Pi sessions > rejects duplicate composer evidence without rewriting files
+发现无法安全加载的会话文件，已保留原文件。
+已登记会话 01a19b43-8b9e-765c-82dd-a2866dc42abc 无法加载，原文件保留且禁止续跑。
+
+ ✓ tests/task-resources.test.ts (15 tests) 19562ms
+   ✓ round-trips declarations through service, selected reads, native tool projection and restart without manufacturing identity  606ms
+   ✓ rejects invalid fields and forged authority atomically with no receipt or revision  469ms
+   ✓ establishes association only from explicit source metadata, preserves independent facts on refresh and removes identity on ordinary copy  1305ms
+   ✓ does not reinterpret legacy availableCount and rejects incompatible source identity/foreign evidence  1460ms
+   ✓ keeps new evidence in source authorization and redacts private locators consistently in publication and derivation  1361ms
+   ✓ rejects nonexistent private evidence and denied source evidence without partial mutations  762ms
+   ✓ inherits evidence-only source restrictions in a fresh draft even after the dependent object is deleted  1354ms
+   ✓ rejects existing foreign private evidence and derives the public projection across seats without private locators  2593ms
+   ✓ loads all twelve independent development cases and exercises their actual source, annotation and supplement decoders  2679ms
+   ✓ refuses refresh when explicit source entity becomes missing without updating geometry or revision  1682ms
+   ✓ refuses refresh when explicit source entity becomes aggregate without updating geometry or revision  1478ms
+   ✓ refuses refresh when explicit source entity becomes changed without updating geometry or revision  1621ms
+   ✓ exposes controlled source imports through the authorized HTTP route with CAS and receipts  2182ms
+stderr | tests/pi/composer-input.test.ts > controlled composer inputs through native Pi sessions > rejects body composer evidence without rewriting files
+发现无法安全加载的会话文件，已保留原文件。
+已登记会话 01a19b43-9359-765c-82dd-a2884c9aaf09 无法加载，原文件保留且禁止续跑。
+
+stderr | tests/pi/composer-input.test.ts > controlled composer inputs through native Pi sessions > rejects late composer evidence without rewriting files
+发现无法安全加载的会话文件，已保留原文件。
+已登记会话 01a19b43-9868-765c-82dd-a28bf096b48e 无法加载，原文件保留且禁止续跑。
+
+stderr | tests/pi/composer-input.test.ts > controlled composer inputs through native Pi sessions > rejects unknown-key composer evidence without rewriting files
+发现无法安全加载的会话文件，已保留原文件。
+已登记会话 01a19b43-9ed0-765c-82dd-a28c36533622 无法加载，原文件保留且禁止续跑。
+
+(node:11904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/task-resource-spatial.test.ts (15 tests) 25575ms
+   ✓ D18 resource classification preserves five candidates, independent counts and two unknown positions  1413ms
+   ✓ D18 keeps missing positions through nearest, result reuse and resource read without changing old geometry algorithms  2001ms
+   ✓ D19 rejects unrelated spatial summaries and keeps unclassified positions out of explicit exterior counts  2817ms
+   ✓ D20/D21 rejects forged identities, partition counts, dropped dependencies and tampered model projection  1616ms
+   ✓ D16 rechecks source and fixed annotation dependencies on resource read and derived spatial reuse  1614ms
+   ✓ D24 saves exact derived geometry, carries source ACL, and never publishes private result locators  2211ms
+   ✓ D22 honours cancellation before resource/spatial access and rejects sibling session ownership  1416ms
+   ✓ D22 resource records limit never yields a truncated successful inventory  1759ms
+   ✓ D22 resource pages limit never yields a truncated successful inventory  1429ms
+   ✓ D22 resource bytes limit never yields a truncated successful inventory  1531ms
+   ✓ D22 resource cancel limit never yields a truncated successful inventory  1362ms
+   ✓ D18/D20 generated resource buffers remain reusable geometry without becoming resource positions  2805ms
+   ✓ D18 resource nonpoint positions reject point-only operations instead of becoming missing data  1508ms
+   ✓ D19 counts requested availability and rejects changed quantities even when text matches details  1045ms
+   ✓ D22 partial final source page retains known rows and its coverage reason  1045ms
+ ✓ tests/pi/background-runner.test.ts (21 tests) 31881ms
+     ✓ isolates service resources and history, reads saved results after restart without registering a seat  1250ms
+     ✓ uses frozen allowed Agents with one model slot; children have separate histories under the job  1634ms
+     ✓ returns an ask-policy tool error and lets preprocess continue with an allowed read  1228ms
+     ✓ returns an ask-policy tool error and lets seat_analysis continue with an allowed read  995ms
+     ✓ keeps a normal inability reply as an execution result instead of classifying business completion  1513ms
+     ✓ runs ordinary inspection chains and file scripts in preprocess but never executes a denied command  2107ms
+     ✓ runs ordinary inspection chains and file scripts in seat_analysis but never executes a denied command  2097ms
+     ✓ terminates background work on policy infrastructure failure rather than returning a recoverable block  1446ms
+     ✓ uses existing native file tools and records a fixed output result  1417ms
+     ✓ honors a durable reservation, uses predefined IDs and continues the same seat session later  1794ms
+     ✓ recovers an empty preallocated native session after binding failed, without duplicates  1412ms
+     ✓ cancels active service model work and does not accept an automatic replay  1035ms
+     ✓ honors cancellation while the native session is still being prepared  1730ms
+     ✓ acknowledges cancellation after native completion while the queue is verifying the saved result  1306ms
+     ✓ releases the model slot while a foreground session waits for a person  1763ms
+     ✓ rejects unfrozen resource snapshots before model work  1301ms
+     ✓ does not return a successful result when the saved native evidence cannot be verified  1531ms
+     ✓ rejects a seat result whose saved native header belongs to another session  1560ms
+     ✓ reuses native overflow compaction inside service work and preserves originals on restart  1924ms
+     ✓ fails closed on a damaged native compaction without rewriting or dropping the original history  1167ms
+     ✓ rejects completed parent output when the child evidence disappears before verification  1667ms
+ ✓ tests/pi/compaction.test.ts (22 tests) 33136ms
+     ✓ compacts before a new prompt with native output allowance, retains raw history and keeps instructions separate  1877ms
+     ✓ fails empty summary without saving or continuing the user request  1361ms
+     ✓ fails tool call summary without saving or continuing the user request  1187ms
+     ✓ fails length summary without saving or continuing the user request  820ms
+     ✓ fails authentication summary without saving or continuing the user request  1442ms
+     ✓ cancels an in-flight summary through AgentSession.abort then permits a new request  1369ms
+     ✓ retains saved summaries and resumes from disk without replaying raw tools  1640ms
+     ✓ rejects malformed native summaries and boundaries without changing the file  1888ms
+     ✓ retains the saved summary and continues an interrupted raw request only on new input  1908ms
+     ✓ performs one native overflow recovery (second failure=false) without replaying the user  1708ms
+     ✓ performs one native overflow recovery (second failure=true) without replaying the user  1719ms
+     ✓ retains queued input through native overflow recovery with one actual consumption  1036ms
+     ✓ compacts a long tool turn repeatedly with dual native summaries, preserves original tool text and never replays tools  1776ms
+     ✓ bounds transient reply retries at three extra attempts  1397ms
+     ✓ bounds transient compaction retries at three extra attempts  1731ms
+     ✓ cancels retry backoff without allowing another attempt  1420ms
+     ✓ continues beyond 120 seconds by default and still responds to user cancellation  1325ms
+     ✓ stops a summary at an explicit whole-request deadline  1685ms
+   ✓ poisons the manager after a native compaction append failure and never appends a terminal result  1616ms
+   ✓ rejects forged compaction ownership attached to a later request  1590ms
+   ✓ keeps the committed summary when cancelled between native append and the completion event  1431ms
+   ✓ keeps recent raw content out of the first summary and includes it when a later compaction ages it out  1207ms
+(node:11949) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11955) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11957) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/context-resource-query.test.ts (12 tests | 10 failed) 52ms
+     × preserves old configuration and exact reads without any resource capability or source task ID 12ms
+     × filters mixed objects before paging, binds cursor to filters, and never needs task mapping 16ms
+     × applies object type filtering to changes before pagination and retains the source change position 1ms
+     ✓ rejects invalid and contradictory filters instead of broadening the source request 3ms
+     × retains a partial reason across real HTTP pages and on the final page without a cursor 5ms
+     × preserves an empty partial response and leaves legacy responses unchanged 1ms
+     × strictly rejects malformed coverage and does not add current-only coverage to changes 1ms
+     × queries actual declared source relationships, task mapping and category with no inferred assignment 3ms
+     × keeps basic reads available when mapping or support rules are missing, while refusing unsupported discovery 2ms
+     × source HTTP refuses undeclared filters independently of the host config 1ms
+     ✓ rejects source responses that ignore the requested type, task or category 3ms
+     × does not expose capability internals or bypass seat authorization 3ms
+(node:11962) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/composer-input.test.ts (26 tests) 33524ms
+     ✓ loads explicit Skill once without a synthetic tool call and retains its exact version after restart  1294ms
+     ✓ rejects stale skill before model work and releases the session  1396ms
+     ✓ rejects stale agent before model work and releases the session  878ms
+     ✓ keeps autonomous skill_read and unselected text behavior unchanged  1240ms
+     ✓ passes Skill and file references to selected analyst without expanding tool permissions  1847ms
+     ✓ passes Skill and file references to selected reviewer without expanding tool permissions  2484ms
+     ✓ does not copy selected inputs to a different autonomous child and does not manufacture delegation on clarification  1876ms
+     ✓ preserves stopped preparation evidence without replaying a selection on the next request  1339ms
+     ✓ cancels selected child work without re-delegating after restart  1719ms
+     ✓ rejects foreign composer evidence without rewriting files  1665ms
+     ✓ rejects duplicate composer evidence without rewriting files  1556ms
+     ✓ rejects body composer evidence without rewriting files  1634ms
+     ✓ rejects late composer evidence without rewriting files  1496ms
+     ✓ rejects unknown-key composer evidence without rewriting files  1479ms
+     ✓ rejects duplicate input before the user message and a late input within the active request  1442ms
+     ✓ retains original selected Skill and role history through native automatic compaction and restart  2163ms
+     ✓ blocks altered child inputs even when their standalone hash and native body remain valid  1932ms
+     ✓ retains selected input agreement in both parent start and child origin  1613ms
+     ✓ returns only role metadata and rejects foreign scope or extra selection authority  2319ms
+     ✓ deduplicates completed uploads and path references before enforcing the combined cap  2111ms
+ ✓ tests/pi/task-resource.test.ts (8 tests) 27486ms
+   ✓ uses actual native query → classify → summarize → read and keeps snapshots across restart  5127ms
+   ✓ fails closed after a hook changes successful resource metadata  2822ms
+   ✓ ordinary recoverable query errors do not poison future requests  3304ms
+   ✓ reads original resource results after actual native automatic compaction  3386ms
+   ✓ hides revoked annotation dependencies and rejects continuation before invoking the provider  2919ms
+   ✓ rechecks permission between tool completion and the next provider call in the same request  2817ms
+   ✓ D21 native read pages stay fixed after draft edits and a fresh query observes the new draft  3179ms
+   ✓ B3 T17/T19 follows explicit area selection through deployed Skill and actual assigned/available statistics  3929ms
+(node:11965) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/model-thinking.test.ts (18 tests) 15757ms
+   ✓ captures actual SDK wire off on reply + tool continuation, with no required thought text  2169ms
+   ✓ captures actual SDK wire high on reply + tool continuation, with no required thought text  1713ms
+   ✓ uses the same mode in foreground, delegated child and parent continuation  1754ms
+   ✓ uses the same mode for service background execution  1138ms
+   ✓ captures high mode on actual automatic compaction and subsequent reply  1712ms
+   ✓ keeps a reserved request unchanged and applies a saved mode only to the next request  1157ms
+   ✓ legacy custom-ark-alias preserves actual wire through unrelated save; explicit off opts in  1659ms
+   ✓ legacy deepseek preserves actual wire through unrelated save; explicit off opts in  737ms
+   ✓ preserves high parameters across Pi native retry while provider transport does not retry  2697ms
+ ✓ tests/annotation-edit-changes.test.ts (10 tests) 17ms
+ ✓ tests/annotation-results.test.ts (13 tests) 24ms
+ ✓ tests/pi/task-resource-results.test.ts (12 tests) 52ms
+ ✓ tests/pi/spatial.test.ts (12 tests) 40593ms
+   ✓ runs buffer → filter → statistics and saves exact original geometry, then reads after restart without recomputing  3574ms
+   ✓ rejects altered native result details as downstream authority  2047ms
+   ✓ saves the fixed geometry and completes 'save only' through existing tools without duplicate objects  4033ms
+   ✓ saves the fixed geometry and completes 'information role' through existing tools without duplicate objects  4096ms
+   ✓ saves the fixed geometry and completes 'note' through existing tools without duplicate objects  4059ms
+   ✓ records uncertain exact-save effects and blocks a second same-output write  4283ms
+   ✓ rejects missing attributes, unsupported empty-scope target, cancellation and foreign fixed references  2957ms
+   ✓ reads and saves a fixed result after actual native automatic compaction  4032ms
+   ✓ keeps ordinary spatial parameter/data failures recoverable in a later request  2204ms
+   ✓ delivers result-selection ambiguity and recovers with the same fixed geometry in the native loop  2616ms
+   ✓ retains mixed v1/v2 native history and reuses the fixed classification after restart without recomputation  4394ms
+   ✓ exposes a relevant method entry on unsupported geometry without automatically reading its body  2295ms
+(node:11982) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/model-config.test.ts (5 tests) 880ms
+   ✓ preserves preset provenance and rejects corrupt numeric fields instead of defaulting  550ms
+ ✓ tests/pi/subagent.test.ts (30 tests) 42060ms
+     ✓ delegates, reads allowed resources, returns final text, separates history/usage and restores persisted cards  1386ms
+     ✓ returns authentication child failures as native tool errors while the parent can explain  1849ms
+     ✓ returns empty child failures as native tool errors while the parent can explain  1277ms
+     ✓ returns truncated child failures as native tool errors while the parent can explain  962ms
+     ✓ cancels nested model work and blocks a queued second delegation without self-deadlock  1475ms
+     ✓ uses explicit parent deadlines for children without creating a fresh time budget  1238ms
+     ✓ closes child tool admission when cancellation arrives in its public tool-start update  1485ms
+     ✓ keeps per-request role/configuration snapshots, supports new tool-free roles, and rejects unknown/extra authority  2394ms
+     ✓ restores incomplete starts as interrupted, never replays them, and rejects tampered linkage  1704ms
+     ✓ continues the interrupted parent when the child and its returned result are complete  2397ms
+     ✓ stops the whole parent on a failed end-link commit without claiming child success  1514ms
+     ✓ stops parent admission when child native persistence fails before its model work  1918ms
+     ✓ preserves a readable parent while blocking truncated child history after restart  1529ms
+     ✓ preserves a readable parent while blocking missing child history after restart  1752ms
+     ✓ preserves a readable parent while blocking body-mismatch child history after restart  1713ms
+     ✓ preserves a readable parent while blocking missing-terminal child history after restart  2101ms
+     ✓ rejects inconsistent parent-result native evidence  1659ms
+     ✓ rejects inconsistent parent-error-flag native evidence  1870ms
+     ✓ rejects inconsistent parent-tool-text native evidence  1655ms
+     ✓ cancels a child during native retry and accounts its own attempts  1254ms
+     ✓ cancels a child during native compaction and accounts its own attempts  1811ms
+     ✓ completes native child compaction separately and returns to the same parent tool loop  973ms
+     ✓ runs analyst then reviewer with role-specific tools and the original readonly instruction snapshot after a parent write  741ms
+     ✓ does not register child writes, recursion, shell or role-undeclared tools  320ms
+     ✓ rejects unregistered or invalid delegation arguments: {"agent":"missing","task":"test"}  428ms
+     ✓ rejects unregistered or invalid delegation arguments: {"agent":"analyst","task":" "}  363ms
+     ✓ keeps two workspaces independently active and stopping one parent leaves the other child running  1785ms
+     ✓ keeps missing child usage unknown rather than folding zero tokens into parent usage  1008ms
+     ✓ preserves a long child result verbatim while native parent overflow recovery compacts before continuing  1209ms
+ ✓ tests/pi/model-settings.test.ts (9 tests) 8731ms
+   ✓ uses the new endpoint, key and model on the next real adapter call and restores them after restart  1969ms
+   ✓ retains a key only for the same provider and normalized destination, and rejects stale saves  737ms
+   ✓ configures an initially unconfigured environment without returning the write-only key  628ms
+   ✓ rejects unsafe or extra fields and untrusted origins without changing configuration  584ms
+   ✓ blocks configuration updates while any session is reserved or running  720ms
+   ✓ reserves the update across disk writes, rejects concurrent starts and saves, and settles before publishing  1425ms
+   ✓ leaves runtime and secret files unchanged when persistence fails, and releases the update reservation  1087ms
+   ✓ fails closed on corrupted, duplicate-key, oversized or symlinked local settings  387ms
+   ✓ keeps history readable but rejects unknown capacity before reserving or writing a message  1192ms
+ ✓ tests/annotation-map-evidence.test.ts (6 tests) 100ms
+ ✓ tests/pi/annotation-workflow.test.ts (24 tests) 42892ms
+   ✓ runs three source writes from one assistant output sequentially using its own successful CAS chain  2108ms
+   ✓ does not use a same-output read prematurely, but retains it for the following inference  1761ms
+   ✓ requires source observations from an earlier inference as well as a draft read  1373ms
+   ✓ does not absorb an external write inserted between two same-output writes  2062ms
+   ✓ blocks subsequent writes after a schema error even though the invalid call never entered execute  2021ms
+   ✓ creates without reading empty state and advances immediately for a following same-output edit  2515ms
+   ✓ keeps replay receipts identifiable and never uses an old receipt to rewind the next write  1439ms
+   ✓ retains editing bases when ordinary native followUp input is consumed  2555ms
+   ✓ retains editing bases when ordinary native steer input is consumed  2077ms
+   ✓ retains committed data on cancellation and does not carry edit bases into the next request  2776ms
+   ✓ invalidates bases after native automatic compaction even when the summary mentions the old revision  2110ms
+   ✓ does not establish edit authority by reading a fixed historical reference  1800ms
+   ✓ requires observed current sequence and rejects external adoption without absorbing its latest value  2244ms
+   ✓ stops later writes when a committed service result is lost and recovers only through the original receipt  2243ms
+   ✓ retains known bases through a native transient model retry without replaying the completed write  3451ms
+   ✓ recovers an invalid create after source reads without the old draft/source ping-pong  1485ms
+   ✓ pauses after the second schema failure, retains the first commit and resumes without rereading  1809ms
+   ✓ reports every known missing resource in one failed import without querying sources  627ms
+   ✓ retains source reads after a draft conflict and recovers by reading only the draft  505ms
+   ✓ retains draft and other source reads when one source changed; only that source needs rereading  610ms
+   ✓ requires original receipt reconciliation after unknown write (commit-generic)  725ms
+   ✓ requires original receipt reconciliation after unknown write (commit-request-error)  1632ms
+   ✓ requires original receipt reconciliation after unknown write (no-commit)  1764ms
+   ✓ rejects source-cache overflow without forgetting existing usable sources  1197ms
+ ✓ tests/pi/model-catalog.test.ts (9 tests) 10968ms
+   ✓ keeps legacy schema v1 as the default and persists a second profile across restart  1846ms
+   ✓ keeps legacy schema v2 as the default and persists a second profile across restart  1040ms
+   ✓ isolates simultaneous same-name models by profile endpoint, credentials and output limit  1026ms
+   ✓ runs a configured profile when the default has neither credentials nor known capacity  857ms
+   ✓ persists an empty conversation model choice without invoking a provider or adding a message  1291ms
+   ✓ rejects invalid or unavailable choices and switching a reserved conversation without mutating its selection  1031ms
+   ✓ refuses to resume a conversation with profile-id-tampered model selection history  1380ms
+   ✓ refuses to resume a conversation with extra-key-tampered model selection history  1349ms
+   ✓ refuses to resume a conversation with session-binding-tampered model selection history  1145ms
+ ✓ tests/pi/map-skill.test.ts (7 tests) 7347ms
+     ✓ exposes one effective catalog without rewriting the legacy workspace index  496ms
+     ✓ loads the body only on demand and preserves actual Skill reads through restart  1628ms
+     ✓ continues a two-Skill historical record and reopens mixed explicit selections without changing old bytes  1001ms
+     ✓ retains strict ID, body hash, resource membership and duplicate checks for new records  1040ms
+     ✓ forwards an explicitly selected map method to a read-only child without adding map tools  1214ms
+     ✓ keeps the catalog lightweight and loads exact content only after skill_read  1091ms
+     ✓ delivers explicit spatial content without synthetic read calls and preserves strict metadata validation  874ms
+(node:11983) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ tests/context-composer-map.test.ts (4 tests | 4 failed) 839ms
+   × loads explicit refs only, deduplicates, and stores actual query data in compatible native composer input 28ms
+   × denies scope escalation, missing objects and invalid reference payload before model use 23ms
+   × loads data before the actual Pi model request and reopens native history without requerying 761ms
+   × derives only source-backed spatial links, keeping report revisions separate from object revisions 2ms
+ ✓ tests/annotation-from-source.test.ts (42 tests) 48067ms
+   ✓ copies exact geometry and host UTC query time, persists a bounded receipt, and replays without another source query  433ms
+   ✓ refreshes one source geometry in place while preserving identity, business fields, other references and fixed versions  577ms
+   ✓ rejects revision source without committing a draft or receipt  786ms
+   ✓ rejects missing source without committing a draft or receipt  980ms
+   ✓ rejects offline source without committing a draft or receipt  1177ms
+   ✓ rejects invalid-ring source without committing a draft or receipt  1169ms
+   ✓ rejects holes source without committing a draft or receipt  864ms
+   ✓ rejects duplicate source without committing a draft or receipt  1128ms
+   ✓ rejects partial source without committing a draft or receipt  1380ms
+   ✓ does not infer a missing object from other returned geometry or create a draft implicitly  1461ms
+   ✓ rejects refresh with wrong-source rather than replacing a different logical object  1165ms
+   ✓ rejects refresh with duplicates rather than replacing a different logical object  1767ms
+   ✓ rejects refresh with wrong-kind rather than replacing a different logical object  1540ms
+   ✓ rejects refresh with wrong-layer rather than replacing a different logical object  1507ms
+   ✓ keeps concurrent manual changes and rejects stale source writes after the HTTP wait  1856ms
+   ✓ rechecks cancel after awaiting source data and does not write  1172ms
+   ✓ rechecks scope after awaiting source data and does not write  1897ms
+   ✓ rechecks request after awaiting source data and does not write  1234ms
+   ✓ denies source access before fetch and rechecks source grants for an old receipt  1612ms
+   ✓ keeps the captured account and refuses a disabled account even if a new account occupies its seat  3172ms
+   ✓ does not return a different task receipt through the scoped tool and rejects injected authority/coordinates  1916ms
+   ✓ returns one durable effect for simultaneous identical calls despite different host query times  1549ms
+   ✓ refuses a task archived during the source wait and blocks already archived tasks before any fetch  2800ms
+   ✓ keeps same-seat conversations isolated when another draft is referenced or its object id is reused  947ms
+   ✓ atomically imports a host batch and replays original intent after state and source revisions advance  1073ms
+   ✓ keeps the entire source batch unchanged when the second item encounters missing  1124ms
+   ✓ keeps the entire source batch unchanged when the second item encounters offline  876ms
+   ✓ keeps the entire source batch unchanged when the second item encounters revision  525ms
+   ✓ rejects invalid batch targets and unknown authority before any source request  332ms
+   ✓ creates from a fixed baseline without empty-read authority and isolates host replay by session and intent  396ms
+   ✓ keeps ordinary host writes bound to prior read versions while replay ignores advanced mechanical state  1453ms
+   ✓ rejects capacity overflow atomically and keeps original per-object metadata during a batch refresh  1230ms
+   ✓ rechecks authorization for a host replay and rejects stale empty-state creation after another client created a draft  1040ms
+   ✓ rechecks direct creation after preparation when another client changes binding  995ms
+   ✓ rechecks direct creation after preparation when another client changes create  1037ms
+   ✓ rechecks direct creation after preparation when another client changes cancel  420ms
+   ✓ rechecks direct creation after preparation when another client changes revoke  1857ms
+   ✓ keeps explicit symbol and role metadata on a source snapshot refresh without inferring equipment type  607ms
+ ✓ tests/pi/skill-metadata.test.ts (9 tests) 89ms
+ ✓ tests/pi/annotation-source-history.test.ts (1 test) 1746ms
+   ✓ runs source import through native Pi, reopens its exact history and recovers the fixed receipt without querying changed sources  1743ms
+(node:11986) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/resource-preflight.test.ts (1 test) 158ms
+(node:11990) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/skill-discovery.test.ts (1 test) 462ms
+   ✓ offers only captured Skill candidates, omits an empty catalog, and retains server membership checks  459ms
+ ✓ tests/pi/transport.test.ts (3 tests) 1855ms
+   ✓ uses actual HTTP byte progress for idle timeout (heartbeats=true)  730ms
+   ✓ uses actual HTTP byte progress for idle timeout (heartbeats=false)  498ms
+   ✓ enforces the explicit provider request timeout while HTTP idle timing is disabled  624ms
+ ✓ tests/annotations-acceptance.test.ts (2 tests) 14731ms
+   ✓ isolates conversation drafts, freezes publication content, and gates whole-version adoption without approval  10019ms
+   ✓ allows a private-space owner to adopt a publication without public management rights  4708ms
+ ✓ tests/pi/annotations.test.ts (30 tests) 51868ms
+     ✓ matches the adoption description to actual formal task permissions and schema  2791ms
+     ✓ reopens a native v1/v2/v3/v4 conversation and appends new map requests as v5 without rewriting old input  2359ms
+     ✓ preserves cancelled v5 preparation without executing it or replaying selections on continuation  2919ms
+     ✓ uses provider-compatible object roots and homogeneous coordinate arrays while the service rejects invalid latitude  2779ms
+     ✓ captures only fixed draft identity and refreshes it next request, without auto-reading map contents  3016ms
+     ✓ keeps automatic context size constant when a saved map grows from 2 to 500 objects  3404ms
+     ✓ resolves explicit fixed selections as metadata, paged geometry is read only by the actual tool, and restart preserves versions  3092ms
+     ✓ requires a current draft read and keeps own-session write target even with a reference to another draft  3115ms
+     ✓ rereads the original fixed revision after native automatic compaction without rewriting selected history  3508ms
+     ✓ deduplicates native call actions, checks cancellation, and exposes no foreign session authority fields  2171ms
+     ✓ keeps legacy custom input validation and rejects forged geometry in v2 descriptive selections  2223ms
+     ✓ does not expose another task receipt through a current-task annotation tool  2523ms
+     ✓ accepts reference IDs via ordinary message API but keeps rich references out of the text queue  2511ms
+     ✓ does not pass annotation writes or automatic draft context to delegated children  744ms
+     ✓ captures the real account and refuses a pending write after that account is replaced within the same seat  2528ms
+   ✓ returns actual selector-scoped counts and pages without pretending unread fields are empty  1696ms
+   ✓ delivers named draft reads through the native schema and permits a later edit using the original host basis  1872ms
+   ✓ uses fixed-version layer names and never establishes editing evidence from a fixed read or failed name match  916ms
+   ✓ rejects simultaneous ID and name selectors through native validation even for an empty draft  1065ms
+   ✓ retains exact structured receipt entries through real native compaction and restart  852ms
+   ✓ delivers exact object-name results in the native loop, keeps fixed reads readonly, and reopens old/new reads unchanged  692ms
+   ✓ rejects malformed object-name selectors through native schema even without a draft: {"objectNames":["集合点 A"],"objectIds":["a"]}  733ms
+   ✓ rejects malformed object-name selectors through native schema even without a draft: {"objectNames":[]}  807ms
+   ✓ rejects malformed object-name selectors through native schema even without a draft: {"objectNames":[" "]}  573ms
+   ✓ rejects malformed object-name selectors through native schema even without a draft: {"objectNames":["x","x"]}  410ms
+   ✓ exports the shared bounded symbol catalog and roundtrips professional styles through actual Pi tools  755ms
+   ✓ edits only requested fields from actual draft evidence and preserves provenance, nulls and absent legacy values  600ms
+   ✓ removes heading and a business key explicitly without turning missing values into zero or null  354ms
+   ✓ rejects a stale complete style then lets the native loop reread and preserve concurrent style and note changes  426ms
+   ✓ reads the explicitly selected set and edits only the current draft despite identical object IDs and names  430ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 53 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/context-composer-map.test.ts > loads explicit refs only, deduplicates, and stores actual query data in compatible native composer input
+ FAIL  tests/context-composer-map.test.ts > denies scope escalation, missing objects and invalid reference payload before model use
+ FAIL  tests/context-composer-map.test.ts > loads data before the actual Pi model request and reopens native history without requerying
+ FAIL  tests/context-composer-map.test.ts > derives only source-backed spatial links, keeping report revisions separate from object revisions
+ FAIL  tests/context-resource-query.test.ts > resource source filtering is independent of task relationships > preserves old configuration and exact reads without any resource capability or source task ID
+ FAIL  tests/context-resource-query.test.ts > resource source filtering is independent of task relationships > filters mixed objects before paging, binds cursor to filters, and never needs task mapping
+ FAIL  tests/context-resource-query.test.ts > resource source filtering is independent of task relationships > applies object type filtering to changes before pagination and retains the source change position
+ FAIL  tests/context-resource-query.test.ts > D22 source business coverage is independent of paging completion > retains a partial reason across real HTTP pages and on the final page without a cursor
+ FAIL  tests/context-resource-query.test.ts > D22 source business coverage is independent of paging completion > preserves an empty partial response and leaves legacy responses unchanged
+ FAIL  tests/context-resource-query.test.ts > D22 source business coverage is independent of paging completion > strictly rejects malformed coverage and does not add current-only coverage to changes
+ FAIL  tests/context-resource-query.test.ts > optional source task and support discovery is implemented and gated > queries actual declared source relationships, task mapping and category with no inferred assignment
+ FAIL  tests/context-resource-query.test.ts > optional source task and support discovery is implemented and gated > keeps basic reads available when mapping or support rules are missing, while refusing unsupported discovery
+ FAIL  tests/context-resource-query.test.ts > optional source task and support discovery is implemented and gated > source HTTP refuses undeclared filters independently of the host config
+ FAIL  tests/context-resource-query.test.ts > optional source task and support discovery is implemented and gated > does not expose capability internals or bypass seat authorization
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D01 queries default task resources, merges controlled imports and classifies five resources
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D02 keeps ordinary four-point annotation reading available without new resource semantics
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D03 preserves two same-name cross-system records and does not certify an entity total
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D04 does not treat a manual source reference as a controlled identity or inherited availability
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D05 one source entity with conflicting reports remains one entity and not available
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D06 aggregate and detail respect explicit coverage=false, station geometry is not vehicle geometry
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D06 aggregate and detail respect explicit coverage=true, station geometry is not vehicle geometry
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D07 preserves known quantities separately from unknown counts and different units
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D08 planned position retains the resource as unclassified, never outside
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D09 registered region selection remains distinct from actual geometry
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D10 an empty source and failed source never become a complete zero-resource task
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D11 adopted publication is fixed while another session draft changes
+ FAIL  tests/task-resource-query.test.ts > independent first-batch business fixtures run through actual services > D12 preserves exact user report, never converts assistant prose into evidence or mutates facts
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D13 reads more than one full resource page without consuming unrelated geometry-less records
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D14 rejects incomplete snapshot data without a successful partial sum or retries
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D14 rejects incomplete cursor data without a successful partial sum or retries
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D14 rejects incomplete duplicate data without a successful partial sum or retries
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D14 rejects incomplete missing data without a successful partial sum or retries
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D14 never mixes changing source snapshots across separate exact-reference selections
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-a no source task API is needed for platform-linked resource reads
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-b explicit source region query retains both unrelated resources for spatial analysis
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-c missing all task links does not trigger broad scans or certify zero assignment
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-d explicit data scope keeps related and unknown records without manufacturing assignment
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-e optional source task discovery works only with actual capability complete
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-e optional source task discovery works only with actual capability no-map
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D15-e optional source task discovery works only with actual capability no-rule
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D16 rechecks source permissions and owner binding on read, summary and spatial use
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D16 does not admit another seat private draft or an unbound session
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D17 expired and conditional status is not made current by query time; a later effective report can supersede expired facts
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D17 identical entity IDs from different source namespaces never establish cross-source identity
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D17 an ordinary copy loses controlled identity while the imported record keeps its association
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D17 different annotation sets with identical contents are independent records without entity evidence
+ FAIL  tests/task-resource-query.test.ts > D13—D18 source coverage, relationship and geometry boundaries > D18 classifies independent inside/boundary/outside/hole points and retains every missing-position reason
+ FAIL  tests/task-resource-query.test.ts > D21 source and adopted-publication changes do not mutate old fixed pages or totals
+ FAIL  tests/task-resource-query.test.ts > D06 comparable quantities respect valid coverage without hiding separate facts
+ FAIL  tests/task-resource-query.test.ts > D06 comparable quantities respect missing coverage without hiding separate facts
+ FAIL  tests/task-resource-query.test.ts > D06 comparable quantities respect expired coverage without hiding separate facts
+Error: listen EPERM: operation not permitted 127.0.0.1
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/53]⎯
+
+ FAIL  tests/pi/provider-payload.test.ts > delivers the deployed 'spatial-analysis' catalog and exact body through native on-demand skill_read
+AssertionError: expected '分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲…' to contain '组合分析'
+
+Expected: "组合分析"
+Received: "分析任务资源的范围、关系、状态、位置和数量；对明确图形进行测距、面积、缓冲、筛选、邻近排序与分类统计，支持固定结果续问及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。"
+
+ ❯ tests/pi/provider-payload.test.ts:188:68
+    186|   const description=skill.content.split('\n').find(line=>line.startsWi…
+    187|   expect(catalog.description).toBe(description);
+    188|   for(const capability of capabilities)expect(catalog.description).toC…
+       |                                                                    ^
+    189|   const request=lab.start(session.id,`请读取 ${id} 的操作方法。`);
+    190|   await request.run(()=>{});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/53]⎯
+
+ FAIL  tests/pi/provider-payload.test.ts > delivers the deployed 'map-annotations' catalog and exact body through native on-demand skill_read
+AssertionError: expected '查询、编辑、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本…' to contain '创建'
+
+Expected: "创建"
+Received: "查询、编辑、导入、比较或发布地图标注；说明资源声明、可信来源身份、固定版本、字段保留和保存回执的使用方法。"
+
+ ❯ tests/pi/provider-payload.test.ts:188:68
+    186|   const description=skill.content.split('\n').find(line=>line.startsWi…
+    187|   expect(catalog.description).toBe(description);
+    188|   for(const capability of capabilities)expect(catalog.description).toC…
+       |                                                                    ^
+    189|   const request=lab.start(session.id,`请读取 ${id} 的操作方法。`);
+    190|   await request.run(()=>{});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/53]⎯
+
+
+ Test Files  4 failed | 26 passed (30)
+      Tests  53 failed | 355 passed (408)
+   Start at  15:57:15
+   Duration  56.94s (transform 14.82s, setup 0ms, import 87.66s, tests 472.65s, environment 7ms)
+
+JSON report written to /tmp/b3-final-vitest.json

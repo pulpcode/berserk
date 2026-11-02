@@ -56,3 +56,20 @@ it('preserves ordinary Object prototype key deletions and does not swallow forbi
  const d=compareFeatureEdits(at(base),at(local),at(base));expect(d.find(item=>item.field==='toString')!.local).toBeUndefined();expect(mergeFeatureEdits(at(base),d,{})!.feature.attributes).toEqual({count:4});
  const unsafe={...feature,attributes:JSON.parse('{"__proto__":null}')};const preserved=preserveUntouchedFields(feature,feature,unsafe);expect(Object.hasOwn(preserved.attributes!,'__proto__')).toBe(true);expect(JSON.stringify(preserved.attributes)).toBe('{"__proto__":null}');
 });
+
+it('keeps untouched resource facts, timestamps, evidence and identity during ordinary edits',()=>{
+ const original:AnnotationFeature={...feature,resource:{meaning:'actual_resource',quantity:{value:null,unit:'艘',meaning:'available',scope:'东港',evidence:[{kind:'declaration',note:'队伍报告'}],reportedAt:'2026-11-02T10:00:00Z',conditions:['天气允许']},availability:{state:'unknown',evidence:[{kind:'declaration',note:'未核实'}]}},resourceAssociation:{source:{systemId:'s',objectType:'resource',objectId:'r'},sourceRevision:1,entityId:'boat'}};
+ const initial={...original,note:'',style:{...original.style,color:'#000000'}};
+ const renamed=preserveUntouchedFields(original,initial,{...initial,name:'新名称'});
+ expect(renamed.resource).toEqual(original.resource);expect(renamed.resourceAssociation).toEqual(original.resourceAssociation);
+ expect(featureUpdate(at(original),at(renamed))!.changes).toEqual({name:'新名称'});
+ const local={...original,resource:{...original.resource!,availability:{state:'available' as const,evidence:[{kind:'declaration' as const,note:'已核实'}]}}};
+ const latest={...original,resource:{...original.resource!,position:{meaning:'actual' as const,appliesTo:'resource' as const,evidence:[{kind:'declaration' as const,note:'定位上报'}]}}};
+ const changes=compareFeatureEdits(at(original),at(local),at(latest));expect(changes.every(d=>!d.conflict)).toBe(true);
+ const merged=mergeFeatureEdits(at(latest),changes,{})!;
+ expect(merged.feature.resource).toEqual({...latest.resource,availability:local.resource.availability});
+ expect(merged.feature.resourceAssociation).toEqual(original.resourceAssociation);
+ expect(featureUpdate(at(latest),merged)!.changes.resource).toEqual(merged.feature.resource);
+ const divergent={...original,resource:{...original.resource!,availability:{state:'unavailable' as const,evidence:[{kind:'declaration' as const,note:'检修'}]}}};
+ expect(mergeFeatureEdits(at(divergent),compareFeatureEdits(at(original),at(local),at(divergent)),{})).toBeUndefined();
+});

@@ -1,0 +1,42 @@
+{
+  "id": "task-resource-experience",
+  "name": "task-resource-experience",
+  "title": "第三批资源交互、Skill与运行配置",
+  "description": "执行已批准第三批B3-01—06与T01—26；显式引用、资源表单与卡片、Skill、共享推理配置；0真实模型",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-02",
+  "completedAt": null,
+  "branch": "codex/agent-spatial-plotting",
+  "base_branch": "codex/agent-spatial-plotting",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-28-agent-spatial-plotting",
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {
+    "authorization": {
+      "planCommit": "d194f4c",
+      "productBaseline": "56fa186",
+      "liveEvaluation": false
+    },
+    "implementation": {
+      "status": "verified",
+      "report": "results.md",
+      "review": "review.md",
+      "vitestDistinctFiles": 30,
+      "vitestDistinctTests": 409,
+      "desktopDistinctTests": 15,
+      "paidModelRequests": 0,
+      "nextAction": "待用户审阅实现；未自动提交或部署，第四批尚未执行"
+    }
+  }
+}

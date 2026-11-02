@@ -26,6 +26,13 @@ describe('deployed map Skill and native compatibility',()=>{
     const f=await setup(),path=join(f.dir,'workspace-index.json'),before=await readFile(path,'utf8');
     const info=await f.lab.resources.info(f.session.workspaceId);
     expect(info.skills.map(s=>s.id)).toEqual(['synthesis','review','map-annotations','spatial-analysis']);
+    for (const id of ['map-annotations', 'spatial-analysis']) {
+      const delivered = await f.lab.resources.readSkill(f.session.workspaceId, id);
+      expect(delivered.version).toBe('2');
+      expect(info.skills.find(item => item.id === id)).toMatchObject({ version: delivered.version, hash: delivered.hash, description: delivered.description });
+      expect(delivered.hash).toBe(hashContent(delivered.content));
+      expect(Buffer.byteLength(delivered.content)).toBeLessThan(16384);
+    }
     const body=await f.lab.resources.readSkill(f.session.workspaceId,'map-annotations');
     expect(body.hash).toBe(hashContent(body.content)); expect(Buffer.byteLength(body.content)).toBeLessThan(16384);
     expect(body.content).toContain('新增对象不等于新建图层');

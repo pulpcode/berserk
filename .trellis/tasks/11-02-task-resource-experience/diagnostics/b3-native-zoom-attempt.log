@@ -1,0 +1,38 @@
+(node:15064) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:15068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15068) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls (7.3s)
+
+
+  1) tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 
+
+    Error: expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not 1
+
+      115 |       await test.info().attach('native-browser-zoom-attempt', { body: JSON.stringify({ before, after }), contentType: 'application/json' });
+      116 |       await page.screenshot({ path: test.info().outputPath('model-settings-native-zoom-attempt.png') });
+    > 117 |       expect(after.ratio).not.toBe(before.ratio);
+          |                               ^
+      118 |     }
+      119 |     expect(env.fake.calls).toHaveLength(0);
+      120 |   } finally { await env.close(); }
+        at /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab/tests/e2e/model-selection.spec.ts:117:31
+
+    Error Context: ../../../../../../../../tmp/b3-native-zoom-attempt/model-selection-thinking-s-143ad-s-saved-without-model-calls/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../tmp/b3-native-zoom-attempt/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../tmp/b3-native-zoom-attempt/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 

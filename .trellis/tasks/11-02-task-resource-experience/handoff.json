@@ -1,0 +1,191 @@
+{
+  "planCommit": "d194f4c",
+  "productBaseline": "56fa186",
+  "branch": "codex/agent-spatial-plotting",
+  "implementationCommit": null,
+  "realModelCalls": 0,
+  "protocols": {
+    "composerReadable": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "resourceResult": 1,
+    "spatialReadable": [
+      1,
+      2,
+      3
+    ],
+    "modelSettingsReadable": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "modelSettingsWritten": [
+      4,
+      5
+    ]
+  },
+  "skills": {
+    "spatial-analysis": 2,
+    "map-annotations": 2
+  },
+  "files": [
+    {
+      "path": "experiments/harness-lab/.env.ark-plan.example",
+      "sha256": "a072ad3ef08b043f56d663b6390c868b376041db49ba6846c680d6a67b2894d1"
+    },
+    {
+      "path": "experiments/harness-lab/.env.example",
+      "sha256": "eed6e7dd8bdb4235e62ce1eff7886710d6e9fefdd94adac1e4b5865651c094a0"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "sha256": "9f4ae00262f9862fe58b62adf079878fd45ad2a5062a8818553aa2dd7d1e1aa5"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "sha256": "5d4dc65dd4e61b2bddfa8517403c208a0ffb0d8120740cd5da70b869da9a7330"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-resources-v1/expected.json",
+      "sha256": "2ed32bdcb1fc6fb47f855cfa6ad614a77d4669436b3633fe6b4a3bb13ad87b68"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/task-resources-v1/inputs.json",
+      "sha256": "855d74074f34604cce0494074687a48840cfbec4dffd95c966dafbbdf2b932b2"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/index.ts",
+      "sha256": "2b6e7bd2418f249ac3b679a9bcb654068a1af3b13add1cfa76a3d9e86b08802e"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/controlled-stream.ts",
+      "sha256": "5c57cdd18e96b4c4735362bf0ae6aaf7728a8a3f8d5fbf217cf6a3d91aba7e71"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/lab.ts",
+      "sha256": "d628124c1591d737316fd0fd12439b002805999ad2ecfed50a42561d60c90f11"
+    },
+    {
+      "path": "experiments/harness-lab/src/pi/model-runtime.ts",
+      "sha256": "204ece3c21d8eca849b8aec24201f348c415ecf532a61995e0039ec959bce5d2"
+    },
+    {
+      "path": "experiments/harness-lab/src/resources/service.ts",
+      "sha256": "b5d11599dc62abeb5b165ccc095d65e389ecb26b044c7cc0d0c44f6c120e9d05"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/annotation-routes.ts",
+      "sha256": "54ccd339226a61915edbb61274fec1fe95d9062b52043969e31a8c5d5453a5cb"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/app.ts",
+      "sha256": "6189b2b8c7f188617b0c976c54ea9ab8b47f4d4dbf6870471eb79e1dca9ea5cd"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/config.ts",
+      "sha256": "f5001d991259e5f78ee8d9f8da081cd5963068f78e31d62aacd7e21f185e9ba2"
+    },
+    {
+      "path": "experiments/harness-lab/src/server/model-settings.ts",
+      "sha256": "accb811891da594cabfe405f5c41af8e6b0c061de806119a421c3cc2e85ed0d3"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ChatMessage.tsx",
+      "sha256": "7b4c3dc146eec1d7334cf341a29567cc178eb061aa43a8174f46f3368865bb67"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/MapReferenceChips.tsx",
+      "sha256": "e56cc7ccbe0a28108e3413525991527e4171776345794828ad7f2d65835cd46e"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ModelSettings.tsx",
+      "sha256": "33cd8a0b7a1593d6b33b212675faadb4d0404de83666c34d815ec6be83412c89"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/ResourceResultCard.tsx",
+      "sha256": "604f2eccea26215962554f4d224ed54e65d332ee824477f0334a50be1b4f88fa"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/AnnotationWorkspace.tsx",
+      "sha256": "dee40a553ad584c522ab8449949fb5be79b61b29bb5a8d31a28db9f1601e1857"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/FeatureEditor.tsx",
+      "sha256": "a4c18a612538456a7f40d461e702e3a9aebc8d88820ad7d54b76e720beb075d5"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/ResourceFacts.tsx",
+      "sha256": "944303a1eaeabba25afd8556792e3be7a037a137e1ed7018086555bcb44f3973"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/ResourceFields.tsx",
+      "sha256": "821b55b3d6e26296db584c619844808febcccfb46320529fde27e037de624197"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/SourceImport.tsx",
+      "sha256": "17dad2a127ae140051cfd0f11c290f7220449a98209ee8f2eb92bf498e2afbdb"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/annotations/edit-changes.ts",
+      "sha256": "23427ef3761dcad0ff19e5a25edbe544999964bcbd6ee64fc9cd1c95a858a1cd"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/main.tsx",
+      "sha256": "6ac701563e0723d899832f09cf386a3dcbfcd7d140c25aa78c0986c858f3c0ae"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/resource-result.css",
+      "sha256": "a71fa1165365491f28f80f61f63c2da12a24d12733c950081a46f59107c2bdaf"
+    },
+    {
+      "path": "experiments/harness-lab/src/web/situation/SituationView.tsx",
+      "sha256": "5fff1e8719700291b1235a3405f398ddb09f5bee9d451bf52501e927f406f0c8"
+    },
+    {
+      "path": "experiments/harness-lab/tests/annotation-edit-changes.test.ts",
+      "sha256": "566c574a9d539c6ae666823403bff846fca06cfc8b758ac61e78f50475895696"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/annotations.spec.ts",
+      "sha256": "752d5a330aaaeaf3e2c86520f17357ae4d52beda41625051709dd7da4dbc6485"
+    },
+    {
+      "path": "experiments/harness-lab/tests/e2e/model-selection.spec.ts",
+      "sha256": "080ccfdf6eff64f7ed78800be0e5f87b54850ee8fb50fc63ede70930e524d035"
+    },
+    {
+      "path": "experiments/harness-lab/tests/model-config.test.ts",
+      "sha256": "dd9f34665ad49e073127d9e8dd2cec103bb51cab4e71ce79e4832d5c758322ba"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/map-skill.test.ts",
+      "sha256": "3f2ce26b459d0165976b620d7a8da0571ed51af66b1c9c65723a7f030ecb3620"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/model-catalog.test.ts",
+      "sha256": "4e6fe8318c792a3bfe5bfaf629ad835c457900a740a44d228bb527689c402739"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/model-settings.test.ts",
+      "sha256": "876f428d11d800f136f02a444a6d7e78fa413c7179276debe8af0f744fcf34e7"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/model-thinking.test.ts",
+      "sha256": "d61ff2d0debafd762154b96c563091772e86dd033659489826ad8e1ce00649e0"
+    },
+    {
+      "path": "experiments/harness-lab/tests/pi/task-resource.test.ts",
+      "sha256": "51c663d6f762c35e5d8fea73204f1138e79c62f263144934261bbfe92a089f05"
+    },
+    {
+      "path": "experiments/harness-lab/tests/task-resources.test.ts",
+      "sha256": "fd899efdcc5dd4ffa6609f0e333be260d59ebac50411f88aa5c103e964bf5604"
+    }
+  ]
+}

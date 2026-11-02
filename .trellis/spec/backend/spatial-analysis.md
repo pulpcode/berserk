@@ -40,7 +40,7 @@ The controlled spatial Skill distinguishes the reference object from the candida
 
 Read scope is established by actual reads; computation scope is established by the operation inputs/targets and result. `candidateCount` is not a match count, and `summarize.total` counts objects rather than summing a quantity attribute. A quantity claim needs the actual complete field values, units and identity coverage; missing fields are not zero, and an observed count is not evidence of capacity or availability. Existing complete numeric evidence supports simple arithmetic without a new tool. Object names do not establish geometric relationships. Short positive result statements must still cover requested names, counts, units and relevant limitations; they are not a reason to omit answerable parts of the task.
 
-Only the two controlled Skill bodies change for this guidance; their frontmatter descriptions and the existing tool schema/result contracts are preserved. Delivery tests establish which exact body reached the model, not whether it selected or followed the method. The R11 old/new × on-demand/preloaded comparison remains a separate model-effectiveness gate.
+The original guidance changed only controlled Skill bodies. Batch 3 now updates their descriptions and versions together with the task-resource workflow; see [Task Resource Experience](task-resource-experience.md). Existing tool schema/result contracts remain preserved. Delivery tests establish which exact body reached the model, not whether it selected or followed the method. The R11 old/new × on-demand/preloaded comparison remains a separate model-effectiveness gate.
 
 ## 4. Native evidence, authorization and saves
 

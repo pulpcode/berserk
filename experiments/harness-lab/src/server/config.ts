@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import type { ModelParameters } from '../contracts/index.js';
+import type { ModelParameters, ModelThinkingMode } from '../contracts/index.js';
 
 export type ParameterSource = 'preset' | 'explicit' | 'unknown';
 export interface ResolvedModelParameters extends ModelParameters {
@@ -8,6 +8,7 @@ export interface ResolvedModelParameters extends ModelParameters {
   contextReady: boolean;
 }
 export interface LabConfig extends ResolvedModelParameters {
+  thinkingMode?: ModelThinkingMode;
   provider: string;
   model: string;
   baseUrl: string;
@@ -39,6 +40,15 @@ export function normalizeModelEndpoint(value: string): string {
   } catch {
     throw new Error('模型地址必须为不含凭证、查询参数或片段的 HTTPS 地址。');
   }
+}
+/** Exact model + endpoint capabilities; provider is a user-defined registry name, not proof. */
+export function resolveModelThinking(identity: { model: string; baseUrl: string }, requested: unknown = 'off'): { thinkingMode: ModelThinkingMode; thinkingSupported: boolean } {
+  if (requested !== 'off' && requested !== 'high') throw new Error('推理模式只能为 off 或 high。');
+  const endpoint = normalizeModelEndpoint(identity.baseUrl);
+  const supported = (['https://api.deepseek.com', 'https://api.deepseek.com/v1'].includes(endpoint) && identity.model === 'deepseek-flash')
+    || (endpoint === 'https://ark.cn-beijing.volces.com/api/plan/v3' && identity.model === 'deepseek-v4.1-flash');
+  if (requested === 'high' && !supported) throw new Error('尚未核实此模型 ID 与 API 地址支持开启推理，请使用已支持的组合或保留原模式。');
+  return { thinkingMode: requested, thinkingSupported: supported };
 }
 /** Only this verified provider/model/endpoint tuple receives the official preset. */
 export function resolveModelParameters(identity: { provider: string; model: string; baseUrl: string }, values: ModelParameterOverrides = {}): ResolvedModelParameters {
@@ -105,7 +115,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LabConfig {
   if (env.LLM_MAX_OUTPUT_TOKENS !== undefined) parameters.maxOutputTokens = integer(env, 'LLM_MAX_OUTPUT_TOKENS', 0, 1, 2_000_000);
   const legacy = ['REQUEST_TIMEOUT_MS', 'MAX_TOOL_CALLS', 'MAX_OUTPUT_TOKENS'].filter(name => env[name] !== undefined);
   if (legacy.length) console.warn(`已忽略旧实验配置：${legacy.join('、')}。整轮时限请使用 AGENT_RUN_TIMEOUT_MS；模型输出能力请使用 LLM_MAX_OUTPUT_TOKENS 或模型设置；不再限制累计工具次数。`);
-  return { ...identity, ...resolveModelParameters(identity, parameters), listenHost, publicOrigin,
+  return { ...identity, ...resolveModelParameters(identity, parameters), thinkingMode: env.LLM_THINKING_MODE === undefined ? undefined : resolveModelThinking(identity, env.LLM_THINKING_MODE).thinkingMode, listenHost, publicOrigin,
     apiKey: env.LLM_API_KEY?.trim() || '', dataDir: resolve(env.LAB_DATA_DIR || '.local'),
     ...(mode === 'login' ? { auth: { secret: env.LAB_SESSION_SECRET!, sessionMs: integer(env, 'LAB_SESSION_HOURS', 8, 1, 168) * 3600000 } } : {}),
     seatId, testSeats: parseTestSeats(env.LAB_TEST_SEATS, seatId), hitlDemoEnabled: env.LAB_HITL_DEMO_ENABLED === 'true',

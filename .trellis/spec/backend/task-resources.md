@@ -4,7 +4,7 @@
 
 Read when changing resource metadata, annotation resource fields, source-resource decoding, fixed evidence references or publication projection. This document covers batch 1 data contracts and lifecycle support. The implemented batch 2 query consumer is specified in [Task Resource Queries](./task-resource-query.md). See [Map Annotations](./map-annotations.md) for authorization, atomic revisions and host-controlled writes.
 
-The approved business rule version is `task-resources-v1`: explicit user scope wins; otherwise task-resource queries consider related task sources, evidenced potential support, explicit resources in the current bound draft, task-adopted fixed publications and verifiable current-conversation supplements. Accessible data is not automatically task-related. Batch 2 implements the query tool; existing Skills remain unchanged until the separately approved Skill batch.
+The approved business rule version is `task-resources-v1`: explicit user scope wins; otherwise task-resource queries consider related task sources, evidenced potential support, explicit resources in the current bound draft, task-adopted fixed publications and verifiable current-conversation supplements. Accessible data is not automatically task-related. Batch 2 implements the query tool; batch 3 UI and controlled Skills are specified in [Task Resource Experience](task-resource-experience.md).
 
 ## 2. Contracts and Ownership
 

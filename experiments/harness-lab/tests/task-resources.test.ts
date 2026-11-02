@@ -198,3 +198,15 @@ it('defines capability and coverage failures distinctly from a complete empty so
   const inputs=JSON.parse(await readFile(new URL('../fixtures/task-resources-v1/inputs.json',import.meta.url),'utf8'));
   for(const value of inputs.cases[9].coverage) expect(decodeResourceCoverage(value)).toEqual(value);
 });
+
+it('exposes controlled source imports through the authorized HTTP route with CAS and receipts',async()=>{
+ const s=await setup();const {default:Fastify}=await import('fastify');const {annotationRoutes}=await import('../src/server/annotation-routes');const {apiScope}=await import('../src/server/seat-scope');
+ const app=Fastify();clean.push(()=>app.close());await annotationRoutes(app,s.service,apiScope({seatId:'a',testSeats:[{id:'a',name:'甲'},{id:'b',name:'乙'}]}));
+ const path=`/api/test-seats/a/sessions/${s.session}/annotation/from-source`;
+ const input={clientActionId:randomUUID(),mode:'add',sourceRef,expectedSourceRevision:1,expectedRevision:1,layerId:'places',objectId:'http-import'};
+ const first=await app.inject({method:'POST',url:path,payload:input});expect(first.statusCode).toBe(200);expect(first.json().action).toBe('from_source');expect(s.objects()[0].resourceAssociation?.entityId).toBe('vehicle-1');
+ const calls=s.fetch.mock.calls.length;expect((await app.inject({method:'POST',url:path,payload:input})).json()).toEqual(first.json());expect(s.fetch.mock.calls).toHaveLength(calls);
+ for(const payload of [{...input,clientActionId:randomUUID(),objectId:'stale'},{...input,clientActionId:randomUUID(),expectedRevision:2,objectId:'forged',resourceAssociation:{entityId:'forged'}},{...input,clientActionId:randomUUID(),expectedRevision:2,expectedSourceRevision:2,objectId:'wrong-source'}])expect((await app.inject({method:'POST',url:path,payload})).statusCode).toBeGreaterThanOrEqual(400);
+ expect((await app.inject({method:'POST',url:path.replace('/a/','/b/'),payload:{...input,clientActionId:randomUUID(),expectedRevision:2}})).statusCode).toBeGreaterThanOrEqual(400);
+ expect(s.objects()).toHaveLength(1);expect(s.head().revision).toBe(2);expect((await app.inject({method:'GET',url:`/api/test-seats/a/annotation-actions/${input.clientActionId}`})).json()).toEqual(first.json());
+});

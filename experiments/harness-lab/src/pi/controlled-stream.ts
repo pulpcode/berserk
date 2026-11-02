@@ -1,6 +1,6 @@
 import { createAssistantMessageEventStream, type AssistantMessage, type Context, type Model, type Api, type SimpleStreamOptions } from '@earendil-works/pi-ai';
 import type { ModelRuntime } from '@earendil-works/pi-coding-agent';
-import type { LabConfig } from '../server/config.js';
+import { resolveModelThinking, type LabConfig } from '../server/config.js';
 import type { UsageSummary } from '../contracts/index.js';
 import { tokenUsage } from './compaction-history.js';
 import type { ModelPermits } from '../background/model-permits.js';
@@ -50,8 +50,10 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
       if (purpose === 'compaction') usage.compactionAttempts++; else usage.replyAttempts++;
       admission?.started();
       progress();
+      const thinking = resolveModelThinking(config, config.thinkingMode);
       const upstream = runtime.streamSimple(selected, context, {
         ...options, signal: combined,
+        reasoning: thinking.thinkingMode === 'high' ? 'high' : undefined,
         apiKey: config.apiKey, maxRetries: 0,
         fetch: async (input, init) => {
           transportActive = true;
@@ -67,7 +69,9 @@ export function controlledStream(runtime: ModelRuntime, config: Readonly<LabConf
         ...(config.llmRequestTimeoutMs ? { timeoutMs: config.llmRequestTimeoutMs } : {}),
         onPayload: payload => {
           if (typeof payload !== 'object' || payload === null) throw new Error('Provider message payload unavailable');
-          const providerOptions = config.provider.toLowerCase() === 'deepseek' ? { thinking: { type: 'disabled' } } : {};
+          // Preserve the previous payload for unspecified or unverified DeepSeek configurations.
+          // Verified profiles use Pi's native thinkingFormat mapping.
+          const providerOptions = (!thinking.thinkingSupported || config.thinkingMode === undefined) && config.provider.toLowerCase() === 'deepseek' ? { thinking: { type: 'disabled' } } : {};
           if (purpose === 'compaction') return { ...payload, ...providerOptions };
           if (!('messages' in payload) || !Array.isArray(payload.messages)) throw new Error('Provider message payload unavailable');
           const messages: unknown[] = payload.messages;

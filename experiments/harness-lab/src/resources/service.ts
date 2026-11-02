@@ -9,8 +9,8 @@ import { atomicWrite, hashContent, Mutex, readControlled, type WriteHooks } from
 const skills = [
   { id: 'synthesis', name: '资料综合写作', version: '1' },
   { id: 'review', name: '结果检查', version: '1' },
-  { id: 'spatial-analysis', name: '空间分析', version: '1' },
-  { id: 'map-annotations', name: '态势标绘', version: '1' },
+  { id: 'spatial-analysis', name: '空间分析', version: '2' },
+  { id: 'map-annotations', name: '态势标绘', version: '2' },
 ];
 export const controlledSkillIds: readonly string[] = skills.map(skill => skill.id);
 /** Add deployed map methods without migrating the strict legacy workspace index. */

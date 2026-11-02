@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { AnnotationService, AnnotationActor } from '../annotations/service.js';
 import * as validate from '../annotations/validation.js';
-import type { AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationReadInput } from '../contracts/annotations.js';
+import type { AnnotationFromSourceInput, AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationReadInput } from '../contracts/annotations.js';
 import { identityOf } from './auth.js';
 import type { apiScope } from './seat-scope.js';
 
@@ -20,6 +20,12 @@ export async function annotationRoutes(app: FastifyInstance,service: AnnotationS
   app.get<{Params:{setId:string;revision:string}}>(`${base}/annotations/:setId/revisions/:revision`,{schema:{params:scope.params({setId:uuid,revision:{type:'string',pattern:'^[1-9][0-9]*$'}}),querystring:empty}},request=>service.privateVersion(actor(request),request.params.setId,Number(request.params.revision)));
   app.get<{Params:{id:string}}>(`${base}/annotation-publications/:id`,{schema:{params,querystring:empty}},request=>service.publishedVersion(actor(request),request.params.id));
   app.post<{Params:{id:string};Body:AnnotationAction}>(`${base}/sessions/:id/annotation/actions`,{bodyLimit:256*1024,schema:{params,querystring:empty}},request=>service.action(actor(request),request.params.id,request.body));
+  app.post<{Params:{id:string};Body:AnnotationFromSourceInput}>(`${base}/sessions/:id/annotation/from-source`,{bodyLimit:256*1024,schema:{params,querystring:empty}},async(request,reply)=>{
+    const controller=new AbortController(),abort=()=>controller.abort();
+    request.raw.once('aborted',abort);reply.raw.once('close',abort);
+    try{return await service.fromSource(actor(request),request.params.id,request.body,controller.signal);}
+    finally{request.raw.off('aborted',abort);reply.raw.off('close',abort);}
+  });
   app.post<{Params:{id:string};Body:AnnotationCurrentInput}>(`${base}/tasks/:id/annotations/current`,{schema:{params,querystring:empty}},request=>service.setCurrent(actor(request),request.params.id,request.body));
   app.post<{Params:{id:string};Body:AnnotationReadInput}>(`${base}/tasks/:id/annotations/read`,{schema:{params,querystring:empty}},request=>service.read(actor(request),request.params.id,request.body));
   app.post<{Params:{id:string}}>(`${base}/tasks/:id/annotations/compare`,{schema:{params,querystring:empty}},request=>{

@@ -138,3 +138,51 @@ it('D21 native read pages stay fixed after draft edits and a fresh query observe
  expect(JSON.parse(results[1].text).data.page).toMatchObject({offset:0,total:2,hasMore:true});expect(JSON.parse(results[2].text).data.page).toMatchObject({offset:1,total:2,hasMore:false});
  expect(results[3].resourceResult!.items[0].name).toBe('新的救援车名');
 });
+
+it('B3 T17/T19 follows explicit area selection through deployed Skill and actual assigned/available statistics', async () => {
+  let queryRef = '';
+  const s = await setup((context, index) => {
+    if (index === 0) return { tools: [{ name: 'skill_read', arguments: { id: 'spatial-analysis' } }] };
+    if (index === 1) return { tools: [{ name: 'task_resource_query', arguments: { operation: 'query', purpose: 'task' } }] };
+    if (index === 2) {
+      queryRef = lastResource(context).resultRef;
+      return { tools: [{ name: 'spatial_analyze', arguments: { operation: 'classify_points', input: { kind: 'resource', resultRef: queryRef }, target: { kind: 'annotation', ref: chosen, objectIds: ['area'] } } }] };
+    }
+    if (index === 3) {
+      const message = context.messages.findLast(m => m.role === 'toolResult' && m.toolName === 'spatial_analyze')!;
+      const result = JSON.parse((message.content as Array<{type:string;text:string}>).filter(c => c.type === 'text').map(c => c.text).join('\n')).data;
+      return { tools: [{ name: 'task_resource_query', arguments: { operation: 'summarize', resultRef: queryRef, spatialResultRef: result.resultRef, relation: 'assigned', availability: 'available', position: 'interior' } }] };
+    }
+    if (index === 4) return { tools: [{ name: 'task_resource_query', arguments: { operation: 'read', resultRef: lastResource(context).resultRef, offset: 0, limit: 1 } }] };
+    return { text: '已完成指定范围的资源统计；未知信息仍需核验。' };
+  });
+  const binding = s.lab.annotations!.binding(s.actor, s.session.id);
+  const evidence = [{ kind: 'declaration' as const, note: '受控测试中的明确资源报告' }];
+  const resource = { meaning: 'actual_resource' as const, category: 'vehicle' as const, granularity: 'individual' as const,
+    quantity: { value: 1, unit: '辆' as const, meaning: 'entities' as const, scope: '测试个体', evidence },
+    taskRelations: [{ taskId: binding.taskId, relation: 'assigned' as const, evidence }],
+    availability: { state: 'available' as const, evidence }, position: { meaning: 'actual' as const, appliesTo: 'resource' as const, evidence } };
+  const update = s.lab.annotations!.action(s.actor, s.session.id, { action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [
+    { op: 'update_object', objectId: 'r1', changes: { resource } },
+    { op: 'add_object', layerId: 'resources', feature: { objectId: 'r2', kind: 'point', name: '故障车', geometry: { type: 'Point', coordinates: [120, 30] }, resource: { ...resource, availability: { state: 'unavailable', evidence } } } },
+    { op: 'add_object', layerId: 'resources', feature: { objectId: 'r3', kind: 'point', name: '位置待核验车', geometry: { type: 'Point', coordinates: [120, 30] }, resource: { ...resource, position: { meaning: 'planned', appliesTo: 'resource', evidence } } } },
+  ] });
+  const chosen = update.ref!, skill = await s.lab.resources.readSkill(s.session.workspaceId, 'spatial-analysis');
+  const request = s.lab.start(s.session.id, '只统计所引用区域内部、本任务已分配且可用的车辆，列出未知位置。', { annotationRefs: [{ ...chosen, objectIds: ['area'] }] }, 'alpha');
+  await request.run(() => {});
+  const snapshot = s.lab.get(s.session.id, 'alpha'), tools = snapshot.messages.filter(m => m.role === 'tool');
+  expect(tools.map(m => [m.toolName, m.isError])).toEqual([['skill.read', false], ['task_resource_query', false], ['spatial_analyze', false], ['task_resource_query', false], ['task_resource_query', false]]);
+  expect(s.fake.calls[0].context.systemPrompt).toContain(skill.description);
+  expect(JSON.stringify(s.fake.calls[0].context)).not.toContain(skill.content);
+  expect(s.lab.getRequestResources(s.session.id, request.requestId, 'alpha')).toMatchObject({ readSkills: [skill] });
+  expect(skill.version).toBe('2');
+  expect(snapshot.messages.find(m => m.role === 'user')?.selections?.annotationRefs?.[0]).toMatchObject({ ref: chosen, objectIds: ['area'] });
+  const summary = tools[3].resourceResult!;
+  expect(summary.items.map(i => i.name)).toEqual(['救援车']);
+  expect(summary.statisticsScope).toMatchObject({ relation: 'assigned', availability: 'available' });
+  expect(summary.summary.quantities).toEqual([expect.objectContaining({ value: 1, unit: '辆', meaning: 'entities' })]);
+  expect(summary.spatialCoverage).toMatchObject({ status: 'partial', candidateCount: 2, totalCandidateCount: 3, unclassified: [expect.objectContaining({ reason: expect.stringContaining('计划') })] });
+  expect(summary.summary.entityCount).toBeNull();
+  expect(tools[4].resourceResult!.items).toEqual(summary.items);
+  expect(s.lab.annotations!.binding(s.actor, s.session.id).draft?.headRevision).toBe(2);
+});

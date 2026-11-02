@@ -1,0 +1,12 @@
+(node:14665) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:14671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14671) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/annotations.spec.ts:817:1 › resource form keeps unknowns and evidence, rejects multi-entity individual, and saves through real draft (12.2s)
+  ✓  2 tests/e2e/annotations.spec.ts:864:1 › map references remain explicit, removable and fixed; unsaved map editing permits ordinary chat (12.4s)
+
+  2 passed (30.2s)

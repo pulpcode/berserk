@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:14379) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14378) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/model-settings.test.ts (10 tests) 3522ms
+   ✓ accepts explicit thinking through all settings HTTP routes without weakening validation or legacy omission  575ms
+   ✓ uses the new endpoint, key and model on the next real adapter call and restores them after restart  510ms
+   ✓ retains a key only for the same provider and normalized destination, and rejects stale saves  305ms
+   ✓ configures an initially unconfigured environment without returning the write-only key  301ms
+   ✓ blocks configuration updates while any session is reserved or running  367ms
+   ✓ reserves the update across disk writes, rejects concurrent starts and saves, and settles before publishing  333ms
+   ✓ leaves runtime and secret files unchanged when persistence fails, and releases the update reservation  491ms
+   ✓ keeps history readable but rejects unknown capacity before reserving or writing a message  363ms
+ ✓ tests/pi/model-catalog.test.ts (9 tests) 3591ms
+   ✓ keeps legacy schema v1 as the default and persists a second profile across restart  684ms
+   ✓ keeps legacy schema v2 as the default and persists a second profile across restart  336ms
+   ✓ isolates simultaneous same-name models by profile endpoint, credentials and output limit  363ms
+   ✓ runs a configured profile when the default has neither credentials nor known capacity  472ms
+   ✓ persists an empty conversation model choice without invoking a provider or adding a message  324ms
+   ✓ rejects invalid or unavailable choices and switching a reserved conversation without mutating its selection  307ms
+   ✓ refuses to resume a conversation with profile-id-tampered model selection history  519ms
+   ✓ refuses to resume a conversation with extra-key-tampered model selection history  313ms
+
+ Test Files  2 passed (2)
+      Tests  19 passed (19)
+   Start at  16:09:19
+   Duration  6.79s (transform 2.04s, setup 0ms, import 6.02s, tests 7.11s, environment 0ms)
+
+JSON report written to /tmp/b3-http-fix-vitest.json

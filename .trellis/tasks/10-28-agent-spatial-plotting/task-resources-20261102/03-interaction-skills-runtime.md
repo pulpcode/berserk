@@ -1,6 +1,6 @@
 # 第三批：让地图引用、资源工具和回答接起来
 
-2026-11-02｜详细方案，待审阅，未实施｜[四批总览](README.md)
+2026-11-02｜已批准并完成实施与离线检查｜[四批总览](README.md)
 
 基线：第二批提交 `56fa186`，分支 `codex/agent-spatial-plotting`。第二批已通过 226 项相关离线检查及 4 项桌面回归，见[报告](../../11-02-task-resource-query/results.md)。这些结果证明工具行为，不证明真实模型会选对方法或解释正确。
 
@@ -316,3 +316,9 @@ flowchart TD
 - 引用与原生历史：[来源消息装配](../../../../experiments/harness-lab/src/context/composer.ts)、[composer-input](../../../../experiments/harness-lab/src/pi/composer-input.ts)、[资源工具](../../../../experiments/harness-lab/src/pi/task-resource-tools.ts)、[资源结果解析](../../../../experiments/harness-lab/src/pi/task-resource-results.ts)。
 - 方法：[空间 Skill](../../../../experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md)、[标绘 Skill](../../../../experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md)、[受控目录](../../../../experiments/harness-lab/src/resources/service.ts)。
 - 运行：[配置解析](../../../../experiments/harness-lab/src/server/config.ts)、[模型设置](../../../../experiments/harness-lab/src/server/model-settings.ts)、[Pi 会话](../../../../experiments/harness-lab/src/pi/lab.ts)、[实际请求](../../../../experiments/harness-lab/src/pi/controlled-stream.ts)。
+
+## 实施结果（2026-11-02）
+
+本方案提交 `d194f4c` 后获准实施。已完成B3-01—06，30个文件409项相关离线测试、15个不同桌面用例通过，类型/lint/构建通过。真实模型调用0，第四批未启动。见[结果报告](../../11-02-task-resource-experience/results.md)、[独立审核](../../11-02-task-resource-experience/review.md)与[验收映射](../../11-02-task-resource-experience/acceptance-trace.md)。
+
+实施按现有代码澄清了三点：资源卡分页复用授权会话快照，不另调用模型；产品没有独立手动压缩入口，核对自动压缩及共用适配；保留原有Pi会话级瞬态重试，T23“不自动重试”不代表整个产品禁用重试。旧缺省模型配置保留原请求行为，不等于已核实远端关闭思考。详细边界见[执行说明](../../11-02-task-resource-experience/execution-notes.md)。

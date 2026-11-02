@@ -118,7 +118,11 @@ export interface ModelParameters {
   compactionReserveTokens: number | null;
   compactionKeepRecentTokens: number | null;
 }
+export type ModelThinkingMode = 'off' | 'high';
 export interface ModelSettings extends ModelParameters {
+  thinkingMode?: ModelThinkingMode;
+  thinkingSupported?: boolean;
+  thinkingExplicit?: boolean;
   contextSource: 'preset' | 'explicit' | 'unknown';
   outputSource: 'preset' | 'explicit' | 'unknown';
   contextReady: boolean;
@@ -143,6 +147,7 @@ export interface ModelChoices { defaultModelId: string; models: ModelChoice[] }
 export interface ModelProfile extends ModelSettings { id: string }
 export interface ModelCatalog { version: string; models: ModelProfile[] }
 export interface ModelSettingsUpdate {
+  thinkingMode?: ModelThinkingMode;
   contextWindow?: number;
   maxOutputTokens?: number;
   compactionReserveTokens?: number;

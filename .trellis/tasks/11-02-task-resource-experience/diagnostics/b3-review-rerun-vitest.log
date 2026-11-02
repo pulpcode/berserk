@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:12499) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12502) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12504) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/context-resource-query.test.ts (12 tests) 432ms
+ ✓ tests/pi/skill-metadata.test.ts (9 tests) 29ms
+(node:12506) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12503) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12500) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12501) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/pi/skill-discovery.test.ts (1 test) 632ms
+   ✓ offers only captured Skill candidates, omits an empty catalog, and retains server membership checks  630ms
+ ✓ tests/context-composer-map.test.ts (4 tests) 1395ms
+   ✓ loads data before the actual Pi model request and reopens native history without requerying  1246ms
+ ✓ tests/pi/provider-payload.test.ts (4 tests) 3152ms
+   ✓ inserts one fixed system snapshot immediately before the current user on the wire, without changing native history  1206ms
+   ✓ keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references  669ms
+   ✓ delivers the deployed 'spatial-analysis' catalog and exact body through native on-demand skill_read  670ms
+   ✓ delivers the deployed 'map-annotations' catalog and exact body through native on-demand skill_read  604ms
+ ✓ tests/pi/map-skill.test.ts (7 tests) 4424ms
+     ✓ exposes one effective catalog without rewriting the legacy workspace index  751ms
+     ✓ loads the body only on demand and preserves actual Skill reads through restart  635ms
+     ✓ continues a two-Skill historical record and reopens mixed explicit selections without changing old bytes  517ms
+     ✓ retains strict ID, body hash, resource membership and duplicate checks for new records  726ms
+     ✓ forwards an explicitly selected map method to a read-only child without adding map tools  635ms
+     ✓ keeps the catalog lightweight and loads exact content only after skill_read  688ms
+     ✓ delivers explicit spatial content without synthetic read calls and preserves strict metadata validation  470ms
+ ✓ tests/pi/task-resource.test.ts (8 tests) 8121ms
+   ✓ uses actual native query → classify → summarize → read and keeps snapshots across restart  2439ms
+   ✓ fails closed after a hook changes successful resource metadata  871ms
+   ✓ ordinary recoverable query errors do not poison future requests  941ms
+   ✓ reads original resource results after actual native automatic compaction  778ms
+   ✓ hides revoked annotation dependencies and rejects continuation before invoking the provider  498ms
+   ✓ rechecks permission between tool completion and the next provider call in the same request  533ms
+   ✓ D21 native read pages stay fixed after draft edits and a fresh query observes the new draft  932ms
+   ✓ B3 T17/T19 follows explicit area selection through deployed Skill and actual assigned/available statistics  1125ms
+ ✓ tests/task-resource-query.test.ts (37 tests) 14987ms
+     ✓ D01 queries default task resources, merges controlled imports and classifies five resources  971ms
+     ✓ D06 aggregate and detail respect explicit coverage=true, station geometry is not vehicle geometry  642ms
+     ✓ D07 preserves known quantities separately from unknown counts and different units  510ms
+     ✓ D08 planned position retains the resource as unclassified, never outside  810ms
+     ✓ D09 registered region selection remains distinct from actual geometry  1061ms
+     ✓ D10 an empty source and failed source never become a complete zero-resource task  388ms
+     ✓ D11 adopted publication is fixed while another session draft changes  778ms
+     ✓ D12 preserves exact user report, never converts assistant prose into evidence or mutates facts  482ms
+     ✓ D13 reads more than one full resource page without consuming unrelated geometry-less records  427ms
+     ✓ D14 rejects incomplete snapshot data without a successful partial sum or retries  428ms
+     ✓ D14 rejects incomplete cursor data without a successful partial sum or retries  519ms
+     ✓ D14 rejects incomplete duplicate data without a successful partial sum or retries  376ms
+     ✓ D14 rejects incomplete missing data without a successful partial sum or retries  310ms
+     ✓ D15-a no source task API is needed for platform-linked resource reads  305ms
+     ✓ D15-b explicit source region query retains both unrelated resources for spatial analysis  669ms
+     ✓ D16 does not admit another seat private draft or an unbound session  385ms
+     ✓ D18 classifies independent inside/boundary/outside/hole points and retains every missing-position reason  1044ms
+   ✓ D21 source and adopted-publication changes do not mutate old fixed pages or totals  432ms
+
+ Test Files  8 passed (8)
+      Tests  82 passed (82)
+   Start at  15:59:53
+   Duration  16.80s (transform 3.60s, setup 0ms, import 22.94s, tests 33.17s, environment 1ms)
+
+JSON report written to /tmp/b3-review-rerun-vitest.json

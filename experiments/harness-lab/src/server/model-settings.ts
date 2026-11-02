@@ -4,11 +4,11 @@ import { join } from 'node:path';
 import type { ModelSettings, ModelSettingsUpdate, ModelCatalog, ModelChoices } from '../contracts/index.js';
 import { RequestError } from '../contracts/errors.js';
 import { atomicWrite, checkDirectory, parseJsonStrict, readControlled } from '../resources/files.js';
-import { normalizeModelEndpoint, resolveModelParameters, modelParameterKeys, type LabConfig, type ModelParameterOverrides, type ResolvedModelParameters } from './config.js';
+import { normalizeModelEndpoint, resolveModelParameters, resolveModelThinking, modelParameterKeys, type LabConfig, type ModelParameterOverrides, type ResolvedModelParameters } from './config.js';
 
 type ModelIdentity = Pick<LabConfig, 'provider' | 'model' | 'baseUrl'>;
-export type ModelConfig = ModelIdentity & Pick<LabConfig, 'apiKey'> & ResolvedModelParameters;
-interface StoredSettings extends ModelConfig { schemaVersion: 2; version: string }
+export type ModelConfig = ModelIdentity & Pick<LabConfig, 'apiKey' | 'thinkingMode'> & ResolvedModelParameters;
+interface StoredSettings extends ModelConfig { schemaVersion: 4; version: string }
 interface PreparedSettings extends StoredSettings { id: string }
 const maxSettingsBytes = 1024 * 1024;
 const versionPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -51,37 +51,42 @@ function resolve(identity: ModelIdentity, values: ModelParameterOverrides): Reso
   try { return resolveModelParameters(identity, values); }
   catch (error) { throw new RequestError('INVALID_INPUT', error instanceof Error ? error.message : '模型容量或压缩参数不正确。'); }
 }
+function thinking(identity: ModelIdentity, mode: unknown) {
+  try { const resolved = resolveModelThinking(identity, mode); return { ...resolved, thinkingMode: mode === undefined ? undefined : resolved.thinkingMode }; }
+  catch (error) { throw new RequestError('INVALID_INPUT', error instanceof Error ? error.message : '推理模式不正确。'); }
+}
 function sameIdentity(a: ModelIdentity, b: ModelIdentity) {
   return a.provider === b.provider && a.model === b.model && a.baseUrl === b.baseUrl;
 }
 function decode(text: string, environment?: LabConfig, allowUnconfigured = false): StoredSettings {
-  const value = object(parseJsonStrict(text), ['schemaVersion', 'version', 'provider', 'model', 'baseUrl', 'apiKey', ...modelParameterKeys]);
-  if ((value.schemaVersion !== 1 && value.schemaVersion !== 2) || typeof value.version !== 'string' || !versionPattern.test(value.version)) throw invalid();
+  const value = object(parseJsonStrict(text), ['schemaVersion', 'version', 'provider', 'model', 'baseUrl', 'apiKey', 'thinkingMode', ...modelParameterKeys]);
+  if (![1, 2, 4].includes(value.schemaVersion as number) || typeof value.version !== 'string' || !versionPattern.test(value.version)) throw invalid();
+  if (value.schemaVersion !== 4 && value.thinkingMode !== undefined) throw invalid();
   if (value.schemaVersion === 1 && modelParameterKeys.some(field => value[field] !== undefined)) throw invalid();
   const apiKey = key(value.apiKey);
   if (!apiKey && !allowUnconfigured) throw invalid();
   const identity = modelFields(value);
   const parameters = value.schemaVersion === 1 && environment && sameIdentity(identity, modelFields({ ...environment }))
     ? explicitParameters(environment) : overrides(value);
-  return { schemaVersion: 2, version: value.version, ...identity, apiKey, ...resolve(identity, parameters) };
+  return { schemaVersion: 4, version: value.version, ...identity, apiKey, ...resolve(identity, parameters), ...thinking(identity, value.thinkingMode) };
 }
 function encode(next: StoredSettings): string {
   const { schemaVersion, version, provider, model, baseUrl, apiKey } = next;
-  return `${JSON.stringify({ schemaVersion, version, provider, model, baseUrl, apiKey, ...explicitParameters(next) }, null, 2)}\n`;
+  return `${JSON.stringify({ schemaVersion, version, provider, model, baseUrl, apiKey, thinkingMode: next.thinkingMode, ...explicitParameters(next) }, null, 2)}\n`;
 }
 
 /** Catalogs reuse the single-profile validator, endpoint/key policy and atomic writer. */
 function decodeCatalog(text: string, environment?: LabConfig): { current: StoredSettings; profiles: Map<string, StoredSettings> } {
   const value = parseJsonStrict(text) as Record<string, unknown>;
-  if (!value || value.schemaVersion !== 3) return { current: decode(text, environment), profiles: new Map() };
+  if (!value || (value.schemaVersion !== 3 && value.schemaVersion !== 5)) return { current: decode(text, environment), profiles: new Map() };
   object(value, ['schemaVersion', 'version', 'models']);
   if (typeof value.version !== 'string' || !versionPattern.test(value.version) || !Array.isArray(value.models) || !value.models.length) throw invalid();
   const profiles = new Map<string, StoredSettings>();
   for (const raw of value.models) {
-    const item = object(raw, ['id', 'provider', 'model', 'baseUrl', 'apiKey', ...modelParameterKeys]);
+    const item = object(raw, ['id', 'provider', 'model', 'baseUrl', 'apiKey', 'thinkingMode', ...modelParameterKeys]);
     const { id, ...fields } = item;
     if (typeof id !== 'string' || (id !== 'default' && !versionPattern.test(id)) || profiles.has(id)) throw invalid();
-    profiles.set(id, decode(JSON.stringify({ ...fields, schemaVersion: 2, version: value.version }), undefined, id === 'default'));
+    profiles.set(id, decode(JSON.stringify({ ...fields, schemaVersion: value.schemaVersion === 3 ? 2 : 4, version: value.version }), undefined, id === 'default'));
   }
   const current = profiles.get('default'); if (!current) throw invalid();
   profiles.delete('default'); return { current, profiles };
@@ -89,9 +94,9 @@ function decodeCatalog(text: string, environment?: LabConfig): { current: Stored
 function encodeCatalog(current: StoredSettings, profiles: Map<string, StoredSettings>): string {
   if (!profiles.size) return encode(current);
   const models = [['default', current], ...profiles] as Array<[string, StoredSettings]>;
-  return `${JSON.stringify({ schemaVersion: 3, version: current.version, models: models.map(([id, model]) => {
+  return `${JSON.stringify({ schemaVersion: 5, version: current.version, models: models.map(([id, model]) => {
     const { provider, model: name, baseUrl, apiKey } = model;
-    return { id, provider, model: name, baseUrl, apiKey, ...explicitParameters(model) };
+    return { id, provider, model: name, baseUrl, apiKey, thinkingMode: model.thinkingMode, ...explicitParameters(model) };
   }) }, null, 2)}\n`;
 }
 
@@ -107,7 +112,7 @@ export class ModelSettingsStore {
       const raw = await readControlled(path, maxSettingsBytes, true);
       const identity = modelFields({ ...config });
       const stored = raw === null ? undefined : decodeCatalog(raw, config);
-      const current = !stored ? { schemaVersion: 2 as const, version: randomUUID(), ...identity, apiKey: key(config.apiKey), ...resolve(identity, explicitParameters(config)) } : stored.current;
+      const current = !stored ? { schemaVersion: 4 as const, version: randomUUID(), ...identity, apiKey: key(config.apiKey), ...resolve(identity, explicitParameters(config)), ...thinking(identity, config.thinkingMode) } : stored.current;
       return new ModelSettingsStore(path, current, raw, stored?.profiles);
     } catch { throw stateError(); }
   }
@@ -131,18 +136,18 @@ export class ModelSettingsStore {
     const { provider, model, baseUrl, apiKey } = current;
     const version = this.current.version;
     const { contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady } = current;
-    return { provider, model, baseUrl, version, configured: Boolean(apiKey), source: this.raw === null ? 'environment' : 'local', contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady };
+    return { ...resolveModelThinking(current, current.thinkingMode), thinkingExplicit: current.thinkingMode !== undefined, provider, model, baseUrl, version, configured: Boolean(apiKey), source: this.raw === null ? 'environment' : 'local', contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady };
   }
 
   config(id = 'default'): ModelConfig {
     const current = this.profile(id);
     const { provider, model, baseUrl, apiKey } = current;
     const { contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady } = current;
-    return { provider, model, baseUrl, apiKey, contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady };
+    return { thinkingMode: current.thinkingMode, provider, model, baseUrl, apiKey, contextWindow, maxOutputTokens, compactionReserveTokens, compactionKeepRecentTokens, contextSource, outputSource, contextReady };
   }
 
   prepare(input: ModelSettingsUpdate, id = 'default', create = false): PreparedSettings {
-    const value = object(input, ['provider', 'model', 'baseUrl', 'apiKey', 'expectedVersion', ...modelParameterKeys]);
+    const value = object(input, ['provider', 'model', 'baseUrl', 'apiKey', 'thinkingMode', 'expectedVersion', ...modelParameterKeys]);
     const fields = modelFields(value);
     if (typeof value.expectedVersion !== 'string' || !versionPattern.test(value.expectedVersion)) throw invalid();
     if (value.expectedVersion !== this.current.version) throw conflict();
@@ -153,7 +158,7 @@ export class ModelSettingsStore {
       throw new RequestError('MODEL_API_KEY_REQUIRED', '请填写 API Key；更换服务商或地址时需要重新填写对应密钥。');
     }
     const parameters = { ...(current && sameIdentity(fields, current) ? explicitParameters(current) : {}), ...overrides(value) };
-    return { schemaVersion: 2, version: randomUUID(), id: create ? randomUUID() : id, ...fields, apiKey: suppliedKey || current!.apiKey, ...resolve(fields, parameters) };
+    return { schemaVersion: 4, version: randomUUID(), id: create ? randomUUID() : id, ...fields, apiKey: suppliedKey || current!.apiKey, ...resolve(fields, parameters), ...thinking(fields, value.thinkingMode !== undefined ? value.thinkingMode : (current && sameIdentity(fields, current) ? current.thinkingMode : undefined)) };
   }
 
   async save(next: PreparedSettings): Promise<void> {

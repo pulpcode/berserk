@@ -6,11 +6,14 @@ import { getMapSymbol } from '../../contracts/map-symbols';
 import { symbolAssetUrl } from '../map-symbols';
 import { SymbolPicker } from './SymbolPicker';
 import { preserveUntouchedFields } from './edit-changes';
+import { ResourceFields } from './ResourceFields';
+import { type ResourceEvidence, decodeTaskResource, resourceEvidence } from '../../contracts/task-resources';
 import { randomUUID } from '../random-uuid';
 
 export interface FeatureHeadingEditor { objectId: string; change: (heading: number) => void }
 
-export function FeatureEditor({ headingEditor, feature, layers, layerId, busy, save, cancel, dirty, preview, notice, review, saveDisabled, cancelDisabled }: { cancelDisabled?:boolean; notice?:string; review?:ReactNode; saveDisabled?:boolean; headingEditor?: Ref<FeatureHeadingEditor>; feature?: AnnotationFeature; layers: AnnotationLayer[]; layerId: string; busy: boolean; save: (feature: AnnotationFeature, layerId: string) => Promise<boolean>; cancel: (saved?:boolean) => void; dirty: (value: boolean) => void; preview: (value:AnnotationFeature | undefined,layerId:string)=>void }) {
+export function FeatureEditor({ evidenceChoices=[], taskId, headingEditor, feature, layers, layerId, busy, save, cancel, dirty, preview, notice, review, saveDisabled, cancelDisabled }: { evidenceChoices?:ResourceEvidence[]; taskId?:string; cancelDisabled?:boolean; notice?:string; review?:ReactNode; saveDisabled?:boolean; headingEditor?: Ref<FeatureHeadingEditor>; feature?: AnnotationFeature; layers: AnnotationLayer[]; layerId: string; busy: boolean; save: (feature: AnnotationFeature, layerId: string) => Promise<boolean>; cancel: (saved?:boolean) => void; dirty: (value: boolean) => void; preview: (value:AnnotationFeature | undefined,layerId:string)=>void }) {
+  const [resource,setResource]=useState(feature?.resource);
   const [objectId]=useState(()=>feature?.objectId || randomUUID());
   const [role,setRole]=useState<AnnotationFeature['informationRole']>(feature ? feature.informationRole : 'plan');
   const [symbolId,setSymbolId]=useState(feature?.style?.symbolId || '');const [iconSize,setIconSize]=useState(feature?.style?.iconSize ?? 32);const [heading,setHeading]=useState(feature?.style?.heading?.toString() || '');const [lineEnd,setLineEnd]=useState(feature?.style?.lineEnd || 'none');
@@ -35,11 +38,12 @@ export function FeatureEditor({ headingEditor, feature, layers, layerId, busy, s
       if(!name.trim())throw new Error('请输入对象名称。');
       if (kind==='point' && symbolId && (!definition || !Number.isFinite(iconSize) || iconSize<20 || iconSize>64 || heading!=='' && (!Number.isFinite(Number(heading)) || Number(heading)<0 || Number(heading)>=360))) throw new Error('请检查标号、尺寸（20–64 px）和方向（0 至小于 360°）。');
       const geometry={type:kind==='point'||kind==='text'?'Point':kind==='line'?'LineString':'Polygon',coordinates:coords} as SituationGeometry;
-      const saved=await save(preserve({...feature,objectId,kind,name:name.trim(),note,attributes:attrs,geometry,informationRole:role,style}),target);
+      if(resource)decodeTaskResource(resource);
+      const saved=await save(preserve({...feature,objectId,kind,name:name.trim(),note,attributes:attrs,geometry,informationRole:role,style,...(resource?{resource}:{})}),target);
       if(saved){dirty(false);cancel(true);}
     }catch(error){setError(error instanceof Error?error.message:'坐标格式无效。');}
   }
-  return <form className="annotation-feature-form" aria-label="标注对象编辑" onSubmit={event=>{event.preventDefault();void submit();}} onChange={()=>dirty(true)}>
+  return <form className="annotation-feature-form" aria-label="标注对象编辑" onSubmit={event=>{event.preventDefault();void submit();}} onChange={()=>{dirty(true);setError('');}}>
     <div className="annotation-feature-fields">{notice&&<p className="annotation-edit-notice" role="status">{notice}</p>}{review}<fieldset disabled={busy}>
     {kind==='point'&&<><div className="annotation-current-symbol">{definition?<img src={symbolAssetUrl(definition.id)} alt="" width="36" height="36"/>:<span aria-hidden="true" className={`annotation-symbol ${symbol}`} style={{width:20,height:20,background:color}}/>}<div><strong>{definition?.name || '普通点'}</strong>{definition&&<small>{definition.sourceKind==='standard'?`标准 ${definition.standardRef}`:'应用扩展'}{definition.orientation==='upright'?' · 固定直立':''}</small>}</div><button ref={pickerButton} type="button" aria-label="更换图标" aria-expanded={pickerOpen} aria-controls={pickerId} onClick={()=>setPickerOpen(!pickerOpen)}>更换</button></div><div id={pickerId} className="annotation-symbol-replacement" hidden={!pickerOpen} onChange={event=>event.stopPropagation()} onKeyDown={event=>{if(event.key==='Enter'&&!event.nativeEvent.isComposing&&event.target instanceof HTMLInputElement)event.preventDefault();}}><SymbolPicker value={symbolId} select={id=>{setSymbolId(id);setHeading('');setPickerOpen(false);dirty(true);pickerButton.current?.focus();}}/>{symbolId&&<button type="button" onClick={()=>{setSymbolId('');setHeading('');setPickerOpen(false);dirty(true);pickerButton.current?.focus();}}>改用普通点</button>}</div></>}
     <label>对象名称<input value={name} maxLength={200} onChange={e=>setName(e.target.value)}/></label>
@@ -62,6 +66,7 @@ export function FeatureEditor({ headingEditor, feature, layers, layerId, busy, s
       <details open={!feature}><summary>坐标</summary><label>坐标 JSON（经度在前）<textarea rows={5} value={coordinates} onChange={e=>setCoordinates(e.target.value)}/></label><p className="resource-help">经度在前。面使用单个闭合环，不支持带洞面。</p></details>
       <details><summary>业务属性</summary><label>业务属性 JSON<textarea rows={3} value={attributes} onChange={e=>setAttributes(e.target.value)}/></label></details>
       {feature?.sourceRefs?.length ? <details><summary>来源关联 · 快照，不自动跟随</summary>{feature.sourceRefs.map(ref=><p key={JSON.stringify([ref.systemId,ref.objectType,ref.objectId])}>{ref.systemId} / {ref.objectType} / {ref.objectId}{ref.revision!==undefined?` · r${ref.revision}`:''}</p>)}</details>:null}
+      <ResourceFields taskId={taskId} value={resource} change={value=>{setResource(value);dirty(true);}} association={feature?.resourceAssociation} evidenceChoices={[...resourceEvidence(feature?.resource),...(feature?.sourceRefs||[]).filter(ref=>ref.revision!==undefined).map(({revision,queriedAt,...ref})=>{void queriedAt;return {kind:'source' as const,ref,revision:revision!};}),...evidenceChoices]}/>
       <p className="resource-help">保存至会话草稿；发布或采用不代表已到场。</p>
     </details>
     </fieldset></div>

@@ -1,0 +1,46 @@
+(node:14035) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:14039) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:14039) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls (10.6s)
+
+
+  1) tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('已保存，下次发送消息时使用新配置。', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('已保存，下次发送消息时使用新配置。', { exact: true }) with timeout 5000ms
+      - waiting for getByText('已保存，下次发送消息时使用新配置。', { exact: true })
+
+
+      102 |     await thinking.focus(); await thinking.selectOption('high');
+      103 |     await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    > 104 |     await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
+          |                                                                        ^
+      105 |     await expect(thinking).toHaveValue('high');
+      106 |     expect(env.lab.modelSettings()).toMatchObject({ thinkingExplicit: true, thinkingMode: 'high', thinkingSupported: true });
+      107 |     await expect(page.locator('#model-key')).toHaveValue('');
+        at /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab/tests/e2e/model-selection.spec.ts:104:72
+
+    Error Context: ../../../../../../../../tmp/b3-model-settings-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../tmp/b3-model-settings-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../tmp/b3-model-settings-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 
