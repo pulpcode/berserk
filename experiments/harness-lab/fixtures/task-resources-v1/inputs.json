@@ -1,0 +1,2508 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "B1-S01",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          },
+          "name": "R1",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R1"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R1"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R2"
+          },
+          "name": "R2",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R2"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "potential_support",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R2"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R2"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "conditions": [
+                  "调配待确认"
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R2"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R2"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R2"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R3"
+          },
+          "name": "R3",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R3"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "unrelated-task",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R3"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R3"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R3"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R3"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R3"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R4"
+          },
+          "name": "R4",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R4"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R4"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "unavailable",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R4"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R4"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R4"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R4"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R5"
+          },
+          "name": "R5",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": null,
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R5"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R5"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R5"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "unknown",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R5"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R5"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R5"
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "objectId": "D1",
+          "kind": "point",
+          "name": "D1",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              105,
+              3
+            ]
+          },
+          "resource": {
+            "meaning": "actual_resource",
+            "category": "fire_engine",
+            "granularity": "individual",
+            "quantity": {
+              "value": 1,
+              "unit": "辆",
+              "meaning": "entities",
+              "scope": "task-a",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ],
+              "effectiveAt": "2026-11-02T04:00:00Z"
+            },
+            "taskRelations": [
+              {
+                "taskId": "task-a",
+                "relation": "assigned",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              }
+            ],
+            "availability": {
+              "state": "available",
+              "effectiveAt": "2026-11-02T04:00:00Z",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "position": {
+              "meaning": "planned",
+              "appliesTo": "resource",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "kind": "source",
+                "ref": {
+                  "systemId": "source",
+                  "objectType": "resource",
+                  "objectId": "R1"
+                },
+                "revision": 1
+              }
+            ]
+          }
+        },
+        {
+          "objectId": "D2",
+          "kind": "point",
+          "name": "D2",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "resource": {
+            "meaning": "actual_resource",
+            "category": "rescue_boat",
+            "granularity": "individual",
+            "quantity": {
+              "value": 1,
+              "unit": "艘",
+              "meaning": "entities",
+              "scope": "task-a",
+              "evidence": [
+                {
+                  "kind": "declaration",
+                  "note": "当前任务草稿用户报告，状态未知。"
+                }
+              ],
+              "effectiveAt": "2026-11-02T04:00:00Z"
+            },
+            "taskRelations": [
+              {
+                "taskId": "task-a",
+                "relation": "related",
+                "evidence": [
+                  {
+                    "kind": "declaration",
+                    "note": "当前任务草稿用户报告，状态未知。"
+                  }
+                ]
+              }
+            ],
+            "availability": {
+              "state": "unknown",
+              "effectiveAt": "2026-11-02T04:00:00Z",
+              "evidence": [
+                {
+                  "kind": "declaration",
+                  "note": "当前任务草稿用户报告，状态未知。"
+                }
+              ]
+            },
+            "position": {
+              "meaning": "actual",
+              "appliesTo": "resource",
+              "evidence": [
+                {
+                  "kind": "declaration",
+                  "note": "当前任务草稿用户报告，状态未知。"
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "kind": "declaration",
+                "note": "当前任务草稿用户报告，状态未知。"
+              }
+            ]
+          }
+        },
+        {
+          "objectId": "D3",
+          "kind": "point",
+          "name": "D3",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "resource": {
+            "meaning": "planned_location"
+          }
+        },
+        {
+          "objectId": "D4",
+          "kind": "point",
+          "name": "D4",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          }
+        }
+      ],
+      "controlledImports": [
+        {
+          "objectId": "D1",
+          "sourceRef": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          }
+        }
+      ],
+      "region": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103,
+              1
+            ],
+            [
+              104,
+              1
+            ],
+            [
+              104,
+              2
+            ],
+            [
+              103,
+              2
+            ],
+            [
+              103,
+              1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B1-S02",
+      "taskId": "task-a",
+      "annotations": [
+        {
+          "objectId": "P1",
+          "kind": "point",
+          "name": "P1",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          }
+        },
+        {
+          "objectId": "P2",
+          "kind": "point",
+          "name": "P2",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          }
+        },
+        {
+          "objectId": "P3",
+          "kind": "point",
+          "name": "P3",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          }
+        },
+        {
+          "objectId": "P4",
+          "kind": "point",
+          "name": "P4",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          }
+        }
+      ],
+      "request": {
+        "kind": "count_graphics",
+        "layerId": "places"
+      }
+    },
+    {
+      "id": "B1-S03",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "same-1"
+          },
+          "name": "救援车一号",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "same-1"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "same-1"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "same-1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "same-1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "same-1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "same-1"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "second",
+            "objectType": "resource",
+            "objectId": "same-2"
+          },
+          "name": "救援车一号",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "second",
+                      "objectType": "resource",
+                      "objectId": "same-2"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "second",
+                        "objectType": "resource",
+                        "objectId": "same-2"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "second",
+                      "objectType": "resource",
+                      "objectId": "same-2"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "second",
+                      "objectType": "resource",
+                      "objectId": "same-2"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "second",
+                    "objectType": "resource",
+                    "objectId": "same-2"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "same-2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "B1-S04",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          },
+          "name": "R1",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R1"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R1"
+          }
+        }
+      ],
+      "annotations": [
+        {
+          "objectId": "manual",
+          "kind": "point",
+          "name": "manual",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "sourceRefs": [
+            {
+              "systemId": "source",
+              "objectType": "resource",
+              "objectId": "R1",
+              "revision": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B1-S05",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "boat-report-a"
+          },
+          "name": "boat-report-a",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "rescue_boat",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "艘",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-a"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "boat-report-a"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-a"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-a"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "boat-report-a"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "boat-1"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "boat-report-b"
+          },
+          "name": "boat-report-b",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "rescue_boat",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "艘",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-b"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "boat-report-b"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "unavailable",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-b"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat-report-b"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "boat-report-b"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "boat-1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "B1-S06",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "station"
+          },
+          "name": "station",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "aggregate",
+              "quantity": {
+                "value": 3,
+                "unit": "辆",
+                "meaning": "available",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "station"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "station"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "station"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "site",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "station"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "station"
+                  },
+                  "revision": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          },
+          "name": "R1",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R1"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R1"
+          }
+        }
+      ],
+      "coverageAlternatives": [
+        {
+          "scope": "station",
+          "memberEntityIds": [
+            "R1",
+            "R2",
+            "R3"
+          ],
+          "complete": true
+        },
+        null
+      ]
+    },
+    {
+      "id": "B1-S07",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "cars"
+          },
+          "name": "cars",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "aggregate",
+              "quantity": {
+                "value": 2,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "cars"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "cars"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "cars"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "cars"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "cars"
+                  },
+                  "revision": 1
+                }
+              ]
+            }
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "boat"
+          },
+          "name": "boat",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "rescue_boat",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "艘",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "boat"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "boat"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "boat"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "boat"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "unknown-boat"
+          },
+          "name": "unknown-boat",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "rescue_boat",
+              "granularity": "unknown",
+              "quantity": {
+                "value": null,
+                "unit": "艘",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "unknown-boat"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "unknown-boat"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "unknown-boat"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "unknown-boat"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "unknown-boat"
+                  },
+                  "revision": 1
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "B1-S08",
+      "taskId": "task-a",
+      "annotations": [
+        {
+          "objectId": "plan-car",
+          "kind": "point",
+          "name": "plan-car",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "resource": {
+            "meaning": "actual_resource",
+            "category": "fire_engine",
+            "granularity": "individual",
+            "quantity": {
+              "value": 1,
+              "unit": "辆",
+              "meaning": "entities",
+              "scope": "task-a",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ],
+              "effectiveAt": "2026-11-02T04:00:00Z"
+            },
+            "taskRelations": [
+              {
+                "taskId": "task-a",
+                "relation": "assigned",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              }
+            ],
+            "availability": {
+              "state": "available",
+              "effectiveAt": "2026-11-02T04:00:00Z",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "position": {
+              "meaning": "planned",
+              "appliesTo": "resource",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "kind": "source",
+                "ref": {
+                  "systemId": "source",
+                  "objectType": "resource",
+                  "objectId": "R1"
+                },
+                "revision": 1
+              }
+            ]
+          }
+        }
+      ],
+      "controlledImports": [
+        {
+          "objectId": "plan-car",
+          "sourceRef": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          }
+        }
+      ],
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          },
+          "name": "R1",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "R1"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "planned",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "R1"
+          }
+        }
+      ],
+      "region": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103,
+              1
+            ],
+            [
+              104,
+              1
+            ],
+            [
+              104,
+              2
+            ],
+            [
+              103,
+              2
+            ],
+            [
+              103,
+              1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B1-S09",
+      "taskId": "task-a",
+      "sources": [
+        {
+          "ref": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "outside"
+          },
+          "name": "outside",
+          "revision": 1,
+          "areaIds": [
+            "A"
+          ],
+          "effectiveAt": "2026-11-02T04:00:00Z",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              105,
+              3
+            ]
+          },
+          "properties": {},
+          "resourceData": {
+            "resource": {
+              "meaning": "actual_resource",
+              "category": "fire_engine",
+              "granularity": "individual",
+              "quantity": {
+                "value": 1,
+                "unit": "辆",
+                "meaning": "entities",
+                "scope": "task-a",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "outside"
+                    },
+                    "revision": 1
+                  }
+                ],
+                "effectiveAt": "2026-11-02T04:00:00Z"
+              },
+              "taskRelations": [
+                {
+                  "taskId": "task-a",
+                  "relation": "assigned",
+                  "evidence": [
+                    {
+                      "kind": "source",
+                      "ref": {
+                        "systemId": "source",
+                        "objectType": "resource",
+                        "objectId": "outside"
+                      },
+                      "revision": 1
+                    }
+                  ]
+                }
+              ],
+              "availability": {
+                "state": "available",
+                "effectiveAt": "2026-11-02T04:00:00Z",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "outside"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "position": {
+                "meaning": "actual",
+                "appliesTo": "resource",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "outside"
+                    },
+                    "revision": 1
+                  }
+                ]
+              },
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "outside"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "entityId": "outside"
+          }
+        }
+      ],
+      "region": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103,
+              1
+            ],
+            [
+              104,
+              1
+            ],
+            [
+              104,
+              2
+            ],
+            [
+              103,
+              2
+            ],
+            [
+              103,
+              1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B1-S10",
+      "taskId": "task-a",
+      "sources": [],
+      "coverage": [
+        {
+          "systemId": "source",
+          "scope": {
+            "taskId": "task-a",
+            "systemId": "source",
+            "relation": "assigned"
+          },
+          "status": "complete",
+          "asOf": "2026-11-02T04:00:00Z"
+        },
+        {
+          "systemId": "second",
+          "scope": {
+            "taskId": "task-a",
+            "systemId": "second",
+            "relation": "assigned"
+          },
+          "status": "unavailable",
+          "reason": "离线"
+        }
+      ]
+    },
+    {
+      "id": "B1-S11",
+      "taskId": "task-a",
+      "annotations": [
+        {
+          "objectId": "published-car",
+          "kind": "point",
+          "name": "published-car",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              103.5,
+              1.5
+            ]
+          },
+          "resource": {
+            "meaning": "actual_resource",
+            "category": "fire_engine",
+            "granularity": "individual",
+            "quantity": {
+              "value": 1,
+              "unit": "辆",
+              "meaning": "entities",
+              "scope": "task-a",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ],
+              "effectiveAt": "2026-11-02T04:00:00Z"
+            },
+            "taskRelations": [
+              {
+                "taskId": "task-a",
+                "relation": "assigned",
+                "evidence": [
+                  {
+                    "kind": "source",
+                    "ref": {
+                      "systemId": "source",
+                      "objectType": "resource",
+                      "objectId": "R1"
+                    },
+                    "revision": 1
+                  }
+                ]
+              }
+            ],
+            "availability": {
+              "state": "available",
+              "effectiveAt": "2026-11-02T04:00:00Z",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "position": {
+              "meaning": "actual",
+              "appliesTo": "resource",
+              "evidence": [
+                {
+                  "kind": "source",
+                  "ref": {
+                    "systemId": "source",
+                    "objectType": "resource",
+                    "objectId": "R1"
+                  },
+                  "revision": 1
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "kind": "source",
+                "ref": {
+                  "systemId": "source",
+                  "objectType": "resource",
+                  "objectId": "R1"
+                },
+                "revision": 1
+              }
+            ]
+          }
+        }
+      ],
+      "fixedPublication": {
+        "publicationId": "00000000-0000-4000-8000-000000000011"
+      },
+      "laterDraftChanges": {
+        "objectId": "published-car",
+        "availability": "unavailable"
+      }
+    },
+    {
+      "id": "B1-S12",
+      "taskId": "task-a",
+      "supplements": [
+        {
+          "taskId": "task-a",
+          "resourceRef": {
+            "systemId": "source",
+            "objectType": "resource",
+            "objectId": "R1"
+          },
+          "message": {
+            "sessionId": "00000000-0000-4000-8000-000000000012",
+            "entryId": "user-12",
+            "role": "user"
+          },
+          "reportedAt": "2026-11-02T04:00:00Z",
+          "resource": {
+            "meaning": "actual_resource",
+            "availability": {
+              "state": "unavailable",
+              "effectiveAt": "2026-11-02T04:00:00Z",
+              "evidence": [
+                {
+                  "kind": "declaration",
+                  "note": "用户 user-12 明确报告故障；未修改外部来源。"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "ignoredMessages": [
+        {
+          "entryId": "assistant-13",
+          "role": "assistant",
+          "text": "重复早先可用说法"
+        }
+      ],
+      "messages": [
+        {
+          "entryId": "user-12",
+          "role": "user",
+          "text": "R1 这辆车在 2026-11-02 04:00 UTC 故障了，此信息适用于 task-a。"
+        }
+      ]
+    }
+  ]
+}

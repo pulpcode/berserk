@@ -1,0 +1,5 @@
+# task-resources-v1 synthetic development cases
+
+`inputs.json` contains twelve constructed cases with explicit record identity, resource facts, references and business times. `expected.json` is the independent business oracle transcribed from the approved plan; it is not generated from query code or from the inputs. These are development cases, not real external integrations or heldout evaluation cases.
+
+Offline tests validate and round-trip actual source/annotation/supplement contracts, controlled imports, authorization and fixed publication behavior. They do not execute resource selection, entity merging, quantity aggregation or spatial classification. Expected inclusion/count/conflict conclusions are the handoff for batch 2 and must not be reported as an implemented query engine. S01/S08 controlledImports describe operations that must resolve the exact authorized source; the fixture does not grant ordinary callers permission to assign entity identity. S12 is a typed native-message consumption contract; the future consumer must verify the message exists, belongs to the authorized branch, and is a user report before treating it as applicable evidence.

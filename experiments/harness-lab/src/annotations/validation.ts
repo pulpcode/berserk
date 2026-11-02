@@ -1,3 +1,4 @@
+import { decodeTaskResource, decodeResourceAssociation } from '../contracts/task-resources.js';
 import type { AnnotationAction, AnnotationBaseInput, AnnotationCurrentInput, AnnotationDocument, AnnotationFeature, AnnotationFromSourceInput, AnnotationFromSourcesInput, AnnotationHostIntent, AnnotationLayer, AnnotationOperation, AnnotationReadInput, AnnotationRef, AnnotationSelection } from '../contracts/annotations.js';
 import { getMapSymbol, MAP_SYMBOL_ICON_SIZE } from '../contracts/map-symbols.js';
 import { validateAnnotationGeometry } from '../contracts/annotation-geometry.js';
@@ -48,10 +49,12 @@ function style(value: unknown, kind: AnnotationFeature['kind']): AnnotationFeatu
   return {...object};
 }
 export function feature(value: unknown): AnnotationFeature {
-  const object=record(value,['objectId','kind','name','geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'],['objectId','kind','name','geometry']);
+  const object=record(value,['objectId','kind','name','geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole','resource','resourceAssociation'],['objectId','kind','name','geometry']);
   if(!['point','line','polygon','text'].includes(String(object.kind))) throw invalid();
   const kind=object.kind as AnnotationFeature['kind'];
   const result: AnnotationFeature={objectId:id(object.objectId),kind,name:string(object.name),geometry:validateAnnotationGeometry(object.geometry,kind)};
+  if(object.resource!==undefined) result.resource=decodeTaskResource(object.resource);
+  if(object.resourceAssociation!==undefined) result.resourceAssociation=decodeResourceAssociation(object.resourceAssociation);
   if(object.note!==undefined) result.note=string(object.note,8000,true);
   if(object.attributes!==undefined) {
     if(!object.attributes || typeof object.attributes!=='object' || Array.isArray(object.attributes) || Object.keys(object.attributes).length>50) throw invalid();
@@ -95,13 +98,13 @@ function operations(value: unknown): AnnotationOperation[] {
     const item=record(value,['op','title','layer','layerId','changes','feature','objectId','source','newObjectId'],['op']);
     switch(item.op) {
       case 'rename_set': record(item,['op','title']); return {op:item.op,title:string(item.title)};
-      case 'add_layer': {record(item,['op','layer']); const normalized=layer(item.layer); if(normalized.features.some(f=>f.originFeatureRef)) throw invalid('通过 copy_object 复制已有对象。'); return {op:item.op,layer:normalized};}
+      case 'add_layer': {record(item,['op','layer']); const normalized=layer(item.layer); if(normalized.features.some(f=>f.originFeatureRef || f.resourceAssociation)) throw invalid('通过 copy_object 复制已有对象。'); return {op:item.op,layer:normalized};}
       case 'update_layer': {record(item,['op','layerId','changes']); const change=record(item.changes,['name','order','defaultVisible'],[]); if(!Object.keys(change).length) throw invalid();
         if(change.name!==undefined) change.name=string(change.name); if(change.order!==undefined) change.order=integer(change.order,0,100000); if(change.defaultVisible!==undefined && typeof change.defaultVisible!=='boolean') throw invalid();
         return {op:item.op,layerId:id(item.layerId),changes:change};}
       case 'delete_layer': record(item,['op','layerId']); return {op:item.op,layerId:id(item.layerId)};
-      case 'add_object': {record(item,['op','layerId','feature']); const normalized=feature(item.feature); if(normalized.originFeatureRef) throw invalid('通过 copy_object 复制已有对象。'); return {op:item.op,layerId:id(item.layerId),feature:normalized};}
-      case 'update_object': {record(item,['op','objectId','changes','layerId'],['op','objectId','changes']); const change=record(item.changes,['kind','name','geometry','note','attributes','style','sourceRefs','informationRole'],[]); if(!Object.keys(change).length && item.layerId===undefined) throw invalid(); return {op:item.op,objectId:id(item.objectId),changes:change,...(item.layerId!==undefined ? {layerId:id(item.layerId)} : {})} as AnnotationOperation;}
+      case 'add_object': {record(item,['op','layerId','feature']); const normalized=feature(item.feature); if(normalized.originFeatureRef || normalized.resourceAssociation) throw invalid('通过 copy_object 复制已有对象。'); return {op:item.op,layerId:id(item.layerId),feature:normalized};}
+      case 'update_object': {record(item,['op','objectId','changes','layerId'],['op','objectId','changes']); const change=record(item.changes,['kind','name','geometry','note','attributes','style','sourceRefs','informationRole','resource'],[]); if(!Object.keys(change).length && item.layerId===undefined) throw invalid(); return {op:item.op,objectId:id(item.objectId),changes:change,...(item.layerId!==undefined ? {layerId:id(item.layerId)} : {})} as AnnotationOperation;}
       case 'delete_object': record(item,['op','objectId']); return {op:item.op,objectId:id(item.objectId)};
       case 'copy_object': record(item,['op','source','objectId','newObjectId','layerId']); return {op:item.op,source:ref(item.source),objectId:id(item.objectId),newObjectId:id(item.newObjectId),layerId:id(item.layerId)};
       default: throw invalid('不支持的标注操作。');
@@ -168,7 +171,7 @@ export function readInput(value: unknown): AnnotationReadInput {
     const names=object[field];
     if(names!==undefined && (!Array.isArray(names) || !names.length || names.length>32 || new Set(names).size!==names.length || names.some(value=>typeof value!=='string' || !value.trim() || value.length>120))) throw invalid(`${field} 须为 1～32 个不重复的非空${field==='layerNames' ? '图层' : '对象'}名称，每项不超过 120 字符。`);
   }
-  if(object.fields!==undefined && (!Array.isArray(object.fields) || object.fields.length>7 || new Set(object.fields).size!==object.fields.length || object.fields.some(f=>!['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'].includes(String(f))))) throw invalid();
+  if(object.fields!==undefined && (!Array.isArray(object.fields) || object.fields.length>9 || new Set(object.fields).size!==object.fields.length || object.fields.some(f=>!['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole','resource','resourceAssociation'].includes(String(f))))) throw invalid();
   return {ref:ref(object.ref),...(object.layerIds!==undefined ? {layerIds:ids(object.layerIds)} : {}),...(object.layerNames!==undefined ? {layerNames:[...object.layerNames as string[]]} : {}),...(object.objectIds!==undefined ? {objectIds:ids(object.objectIds)} : {}),...(object.objectNames!==undefined ? {objectNames:[...object.objectNames as string[]]} : {}),...(object.fields!==undefined ? {fields:object.fields as AnnotationReadInput['fields']} : {}),...page(object.offset,object.limit)};
 }
 /** Stable object-key order makes action retries independent of JSON serialization order. */

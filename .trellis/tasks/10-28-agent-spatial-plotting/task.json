@@ -18,7 +18,9 @@
   "commit": null,
   "pr_url": null,
   "subtasks": [],
-  "children": [],
+  "children": [
+    "11-02-task-resource-contracts"
+  ],
   "parent": null,
   "relatedFiles": [],
   "notes": "",
@@ -362,5 +364,13 @@
     "reserveExecuted": 0,
     "productChanges": false,
     "nextStep": "审阅来源选择遗漏与解释错误；不自动修改或启用保留题"
+  },
+  "taskResourceContracts20261102": {
+    "status": "verified",
+    "task": ".trellis/tasks/11-02-task-resource-contracts",
+    "planCommit": "2a5fd9f",
+    "report": ".trellis/tasks/11-02-task-resource-contracts/results.md",
+    "paidModelRequests": 0,
+    "nextStep": "按用户要求提交第一批；细化第二批方案待审，不实施或测评"
   }
 }

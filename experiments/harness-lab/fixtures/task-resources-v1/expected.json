@@ -1,0 +1,14 @@
+{
+  "B1-S01": {"include":["R1","R2","D2","R4","R5"],"sameEntity":[["R1","D1"]],"exclude":["D3","R3"],"unclassified":["D4"],"confirmedInside":{"fire_engine":{"value":1,"unit":"辆"}},"supportInside":["R2"],"availabilityUnknown":["D2"],"unavailable":["R4"],"positionUnknown":["R5"]},
+  "B1-S02": {"graphicCount":4,"resourceCount":"not_requested"},
+  "B1-S03": {"independentRecords":["same-1","same-2"],"entityCount":null,"gap":"缺少跨系统同实体依据"},
+  "B1-S04": {"referenceOnly":"manual","sameEntity":[],"inheritAvailability":false},
+  "B1-S05": {"sameEntity":[["boat-report-a","boat-report-b"]],"availability":"conflict","confirmedAvailable":0},
+  "B1-S06": {"withoutCoverage":"分别报告汇总3辆与明细，不能相加成4辆","withCoverage":"明细已包含在汇总内","stationPositionAppliesToEntities":false},
+  "B1-S07": {"knownQuantities":[{"category":"fire_engine","value":2,"unit":"辆"},{"category":"rescue_boat","value":1,"unit":"艘"}],"unknownQuantity":["unknown-boat"],"mixedUnitTotal":null},
+  "B1-S08": {"include":["plan-car"],"actualPosition":"unknown","confirmedInside":0},
+  "B1-S09": {"registeredArea":"A","actualPosition":"exterior"},
+  "B1-S10": {"completeEmpty":["source"],"uncovered":["second"],"taskTotal":null},
+  "B1-S11": {"read":"fixedPublication","followLaterDraft":false},
+  "B1-S12": {"keepUserReport":"user-12","availability":"unavailable","effectiveAt":"2026-11-02T04:00:00Z","ignoreAsNewEvidence":["assistant-13"],"externalOrDraftWrite":false}
+}

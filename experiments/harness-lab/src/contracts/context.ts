@@ -1,3 +1,4 @@
+import type { SourceResource } from './task-resources.js';
 /** Capability-validation contracts; these are not a universal domain data model. */
 export interface ContextRef { systemId: string; objectType: string; objectId: string }
 export interface ContextScopeSnapshot { scopeId: string; systemIds: string[] }
@@ -40,6 +41,7 @@ export interface SituationObject {
   ref: ContextRef; name: string; revision: number; areaIds: string[];
   effectiveAt: string | null; validTime: ContextTimeRange | null;
   geometry?: SituationGeometry | null;
+  resourceData?: SourceResource;
   properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | Record<string, never>;
 }
 export interface SituationChange {

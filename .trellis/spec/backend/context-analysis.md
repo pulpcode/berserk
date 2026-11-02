@@ -14,6 +14,8 @@ This contract describes the implemented validation only. Mock roads, resources, 
 
 ## 3. Contracts
 
+Optional source resource metadata is defined in [Task Resource Semantics](./task-resources.md). Legacy resource quantities remain unchanged; the new adapter handoff types alone do not implement task-related/support queries or authorize a whole-task completeness claim.
+
 `LAB_CONTEXT_CONFIG` names a controlled absolute JSON configuration. Credentials come from each system's `tokenEnv`. The configuration is static for one service process. Source `systemId` is host metadata frozen at admission; the sender cannot select identity or scope. Profile `contextScopeId` becomes `{scopeId,systemIds}` in the saved profile snapshot. Missing configuration never grants unrestricted access. Invalid new configuration disables related operations while legacy workflows and queue controls remain usable; an invalid profile is projected with `configurationError`. A query-capable profile with an omitted scope is invalid too, not a legacy unscoped profile.
 
 A principal is either the authenticated seat or the internal service `{profileId,jobId,scope}`. Service task queries see only active public tasks; seat queries see their authorized metadata. Task matching unions reference, area and text candidates and returns match reasons; candidate membership is not a risk conclusion. Business references and focus filters are not authorization.

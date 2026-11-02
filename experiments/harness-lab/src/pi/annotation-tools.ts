@@ -1,3 +1,4 @@
+import { resourceSchema } from '../contracts/task-resources.js';
 import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE, MAP_SYMBOL_STANDARD } from '../contracts/map-symbols.js';
 import { annotationToolResult } from './annotation-results.js';
 import type { AnnotationReadInput } from '../contracts/annotations.js';
@@ -24,7 +25,7 @@ const readSelection = {
   objectNames: Type.Optional(Type.Array(Type.String({minLength: 1, maxLength: 120, pattern: '\\S'}), {minItems: 1, maxItems: 32, uniqueItems: true, description: '按本次固定版本中的对象名称精确匹配，与 objectIds 互斥；与 layerIds/layerNames 取交集。不忽略空格或大小写，不模糊匹配。零匹配仅表示本次版本和范围未找到；同名对象全部保留并分页，不自动选第一个。objects.total 是所有所列名称合并后的匹配数，不保证每个名称都命中。根据返回 name/objectId/layerId 核对候选；几何仍由 fields 选择。'})),
 };
 const readSelectionConstraints = {allOf: [{not: {required: ['layerIds', 'layerNames']}}, {not: {required: ['objectIds', 'objectNames']}}]};
-const readFields = Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole'].map(value => Type.Literal(value))), {
+const readFields = Type.Optional(Type.Array(Type.Union(['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole','resource','resourceAssociation'].map(value => Type.Literal(value))), {
   uniqueItems: true, description: '选择额外字段。基础摘要始终包含 objectId/name/kind/layerId，不应将它们填入 fields；省略或空数组均仅返回摘要。未请求字段不代表字段为空。',
 }));
 export const annotationRefSchema = Type.Union([Type.Object({setId: uuid, revision}, strict), Type.Object({publicationId: uuid}, strict)]);
@@ -44,8 +45,10 @@ const style = Type.Object({color: Type.Optional(Type.String({pattern: '^#[0-9a-f
   lineEnd: Type.Optional(Type.Union([Type.Literal('none'),Type.Literal('arrow')], {description:'仅用于 line；箭头是显示样式，不改变折线几何。'})),
   lineStyle: Type.Optional(Type.Union(['solid','dashed','dotted'].map(value => Type.Literal(value)))), symbol: Type.Optional(Type.Union(['circle','square','triangle'].map(value => Type.Literal(value)))), label: Type.Optional(Type.String({maxLength: 200}))}, strict);
 const geometryRef = Type.Unsafe<Static<typeof geometry>>({$ref: '#/$defs/geometry'});
+const resourceRef = Type.Unsafe<Static<typeof resourceSchema>>({$ref: '#/$defs/resource'});
 const styleRef = Type.Unsafe<Static<typeof style>>({$ref: '#/$defs/style'});
 const featureFields = {kind: Type.Union(['point','line','polygon','text'].map(value => Type.Literal(value))), name, geometry: geometryRef,
+  resource: Type.Optional(resourceRef),
   informationRole: Type.Optional(Type.Union(['observation','assessment','plan'].map(value=>Type.Literal(value)), {description:'现场记录/研判/拟定方案，按用户意图明确设置；未提供保持未注明，发布或采用不会变为已到场。'})),
   note: Type.Optional(Type.String({maxLength: 4000})), attributes: Type.Optional(Type.Record(Type.String(), Type.Union([Type.String(),Type.Number(),Type.Boolean(),Type.Null()]), {description: 'update_object 中为完整替换；先读取原 attributes，仅调整指定键，保留其他键及 null。删除键须在完整新对象中有意移除。'})), style: Type.Optional(styleRef),
   sourceRefs: Type.Optional(Type.Array(Type.Object({systemId: id, objectType: id, objectId: id, revision: Type.Optional(revision), queriedAt: Type.Optional(Type.String())}, strict), {maxItems: 20}))};
@@ -106,7 +109,7 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
     }
   };
   const canSetCurrent = service.canSetCurrent(scope.actor, scope.taskId);
-  const actionSchema = Type.Union([...actionSchemas, currentSchema], {type: 'object', $defs: {geometry, style, feature, operations}});
+  const actionSchema = Type.Union([...actionSchemas, currentSchema], {type: 'object', $defs: {geometry, style, resource:resourceSchema, feature, operations}});
   if (!canSetCurrent) actionSchema.anyOf.splice(-1, 1);
   return [
     defineTool({name: 'annotation_list', label: '浏览任务标注', description: '列出本任务可见的草稿和发布版本及当前设定，只有版本元信息、不含对象字段；发布说明 note 不是对象备注。current.publication 是任务独立选择的发布版；current.publication:null 才表示读取时尚未设置，缺少 current 只是未提供状态。基线、草稿修订和历史回答都不能代替本次查询。采用者字段不证明操作所属会话，也不等于发布者。不会切换本会话编辑目标。drafts/publications 分别是可见草稿/发布版分页，不是地图对象清单。',

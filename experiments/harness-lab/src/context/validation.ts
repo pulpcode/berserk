@@ -1,3 +1,4 @@
+import { decodeSourceResource, resourceEvidence } from '../contracts/task-resources.js';
 import { RequestError } from '../contracts/errors.js';
 import type { ContextData, ContextQueryParams, ContextRef, ContextTool, SituationObject } from '../contracts/context.js';
 
@@ -77,12 +78,17 @@ function report(value: unknown, detail: boolean) {
 }
 export function situationObject(value: unknown, systemId: string): SituationObject {
   const keys = ['ref', 'name', 'revision', 'areaIds', 'effectiveAt', 'validTime', 'properties'];
-  const r = contextRecord(value, [...keys, 'geometry'], keys), ref = contextRef(r.ref);
+  const r = contextRecord(value, [...keys, 'geometry', 'resourceData'], keys), ref = contextRef(r.ref);
   if (ref.systemId !== systemId || !['road', 'resource', 'area'].includes(ref.objectType)) throw invalid();
   contextText(r.name, 200); contextInteger(r.revision); textList(r.areaIds); nullableTime(r.effectiveAt); timeRange(r.validTime);
+  if(r.resourceData!==undefined) {
+    if(ref.objectType!=='resource') throw invalid();
+    const data=decodeSourceResource(r.resourceData);
+    if(resourceEvidence(data.resource).some(item=>item.kind==='source' && item.ref.systemId!==systemId)) throw invalid();
+  }
   if (ref.objectType === 'resource') {
-    const p = contextRecord(r.properties, ['availableCount', 'unit'], ['availableCount', 'unit']);
-    contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();
+    const p = contextRecord(r.properties, ['availableCount', 'unit'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    if(Object.keys(p).length) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
   } else if (ref.objectType === 'area') {
     const p = contextRecord(r.properties, ['memberRefs'], ['memberRefs']);
     for (const member of refList(p.memberRefs)) if (member.systemId !== systemId || !['road', 'resource', 'area'].includes(member.objectType)) throw invalid();

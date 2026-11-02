@@ -40,6 +40,8 @@ Source restrictions are monotonic across inherited data and introduced structure
 
 ### Candidate meaning and reporting guidance
 
+The optional resource-data extension and controlled source entity association are specified in [Task Resource Semantics](./task-resources.md). That first batch does not yet replace the following existing Skill interpretation policy with a task-resource query workflow. Explicit resource declarations remain evidence-bearing reports, not certification of current physical availability.
+
 An annotation is a spatial object with its own fixed identity and optional business attributes; its geometry kind, layer name, symbol or editable `sourceRefs` does not certify a real currently available resource. A user-designated draft point collection is a valid analysis input without resource-registration proof. A source-derived annotation is a snapshot, not a live view of the source, and ordinary source references alone are not host-copy provenance.
 
 The controlled map Skill uses explicit references and verifiable prior context to locate the intended data. “This conversation” alone does not select the draft. When several plausible sources would change the answer, query enough candidate metadata to resolve them, then clarify or give complete separate conditional answers. Do not default to draft/source priority, replace the requested scope with task background, or merge datasets unless the user requests a combined result. Deduplication needs verifiable identity rather than a shared name; unresolved datasets remain separately reported. These are interpretation instructions, not a new selector, resource schema or backend eligibility gate.

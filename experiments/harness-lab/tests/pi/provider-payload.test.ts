@@ -142,7 +142,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
   expect(reportDefinition.description).toContain('仍有多个合理候选再简短询问');
   expect(reportDefinition.description).toContain('一次保存成功不代表所有要求完成');
   expect(reportDefinition.description).toContain('已有输入足够时允许正确且可复核的推导');
-  expect(JSON.stringify(reportDefinition.parameters)).toContain('按明确名称、唯一别名或已确认选择匹配类型');
+  expect(JSON.stringify(reportDefinition.parameters)).toContain('按已明确类型及本目录别名选择真实 ID，不编造 ID');
   const saveDefinition=definitions.find(tool=>tool.name==='annotation_from_analysis')!;
   expect(saveDefinition.description).toContain('不接收信息性质、样式或备注');
   expect(saveDefinition.description).toContain('同一对象ID用 annotation_action update_object 继续完成');
