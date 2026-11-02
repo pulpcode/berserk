@@ -1,3 +1,4 @@
+import legacyOverlap from './pi/fixtures/resource-result-v1-overlap.json';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
@@ -16,7 +17,7 @@ import { SpatialAnalysisService } from '../src/spatial/service.js';
 import { resourceResultValid, type ResourceQuery, type ResourceResult } from '../src/contracts/resource-results.js';
 import type { AnnotationFeature } from '../src/contracts/annotations.js';
 import type { ContextRef, SituationObject, SituationGeometry, Position } from '../src/contracts/context.js';
-import type { ResourceSourceCapability, SourceResource } from '../src/contracts/task-resources.js';
+import { decodeSourceResource, type ResourceSourceCapability, type SourceResource } from '../src/contracts/task-resources.js';
 import type { SpatialResult } from '../src/contracts/spatial.js';
 
 interface Fixture {id:string;taskId:string;sources?:SituationObject[];annotations?:AnnotationFeature[];controlledImports?:Array<{objectId:string;sourceRef:ContextRef}>;coverageAlternatives?:Array<SourceResource['coverage']|null>;region?:SituationGeometry;messages?:Array<{entryId:string;role:string;text:string}>}
@@ -31,7 +32,7 @@ const rawResource=(id:string,coordinates:Position|null=[103.5,1.5]):SituationObj
 const query:ResourceQuery={operation:'query',purpose:'data',sources:[{systemId:'source'}]};
 
 // Independent wire source supplies facts and filters only, never ResourceResult or expected answers.
-async function setup(fixture?:Fixture,options:{capabilities?:Record<string,ResourceSourceCapability>;businessRefs?:ContextRef[];sources?:SituationObject[];fault?:'snapshot'|'selection-snapshot'|'cursor'|'duplicate'|'missing';unavailable?:string[]}={}) {
+async function setup(fixture?:Fixture,options:{capabilities?:Record<string,ResourceSourceCapability>;businessRefs?:ContextRef[];sources?:SituationObject[];fault?:'snapshot'|'selection-snapshot'|'cursor'|'duplicate'|'missing';unavailable?:string[];partial?:boolean}={}) {
  const dir=await mkdtemp(join(tmpdir(),'resource-service-'));clean.push(()=>rm(dir,{recursive:true,force:true}));
  const db=await openDatabase(dir);clean.push(()=>db.close());const access=new AccessStore(db);
  const userId=randomUUID();db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run('a','A',1,0);db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(userId,'a','A','a','test-salt','test-hash');const identity=access.identity(userId)!;
@@ -52,7 +53,7 @@ async function setup(fixture?:Fixture,options:{capabilities?:Record<string,Resou
   if(options.fault==='duplicate'&&offset)items=[{...all[0],name:'同一ID被改名',revision:2}];
   if(options.fault==='missing')items=[];
   const more=options.fault==='cursor'||offset+limit<all.length;
-  res.end(JSON.stringify({systemId,asOf:(options.fault==='snapshot'&&offset||options.fault==='selection-snapshot'&&requests.length>1)?'2026-11-02T04:01:00Z':'2026-11-02T04:00:00Z',items,limit,nextCursor:more?options.fault==='cursor'?'1':String(offset+limit):null,hasMore:more,timeUnknownCount:0,unknownRefs:refs?.filter(r=>!all.some(o=>JSON.stringify(o.ref)===JSON.stringify(r)))??[],changeCursor:'fixed-source-1'}));
+  res.end(JSON.stringify({systemId,...(options.partial?{resourceCoverage:{status:'partial',reason:'仍有缺口，分页结束不代表全量'}}:{}),asOf:(options.fault==='snapshot'&&offset||options.fault==='selection-snapshot'&&requests.length>1)?'2026-11-02T04:01:00Z':'2026-11-02T04:00:00Z',items,limit,nextCursor:more?options.fault==='cursor'?'1':String(offset+limit):null,hasMore:more,timeUnknownCount:0,unknownRefs:refs?.filter(r=>!all.some(o=>JSON.stringify(o.ref)===JSON.stringify(r)))??[],changeCursor:'fixed-source-1'}));
  });
  await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});clean.push(()=>new Promise<void>(resolve=>{server.closeAllConnections();server.close(()=>resolve());}));
  const base=`http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -213,8 +214,72 @@ it.each(['valid','missing','expired'] as const)('D06 comparable quantities respe
  if(mode!=='missing')f.sources![0].resourceData!.coverage=f.coverageAlternatives![0]!;
  if(mode==='expired')f.sources![0].resourceData!.resource.quantity!.validUntil='2026-11-02T04:30:00Z';
  const s=await setup(f),result=await s.run();
- if(mode==='valid'){expect(result.summary.quantities.map(q=>q.value)).toEqual([3]);}
+ // Complete all-member coverage does not identify the available subset. Keep both source declarations.
+ if(mode==='valid'){expect(result.summary.quantities.map(q=>q.value)).toEqual([null]);expect(result.records.map(r=>r.resource.quantity!.value)).toEqual([3,1]);}
  else if(mode==='missing'){expect(result.summary.quantities.every(q=>q.value===null)).toBe(true);}
  else {expect(result.summary.quantities).toContainEqual(expect.objectContaining({value:1}));expect(result.summary.quantities).toContainEqual(expect.objectContaining({value:null}));}
  expect(resourceResultValid(result)).toBe(true);
+});
+
+it('T02 keeps original unconfirmed rows while an empty selected task set remains unknown',async()=>{
+ const s=await setup(undefined,{sources:[rawResource('unconfirmed')]});
+ const r=await s.run({...query,purpose:'task'});
+ expect(r.records).toHaveLength(1);expect(r.items).toHaveLength(1);
+ expect(r.summary).toMatchObject({recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null});
+ expect(resourceResultValid(r)).toBe(true);
+});
+it('T06 complete overlapping member declarations count their union, not their sum',async()=>{
+ const a=rawResource('A'),b=rawResource('B');
+ for(const [row,members] of [[a,['X','Y']],[b,['Y','Z']]] as const){delete row.resourceData!.entityId;row.resourceData!.resource.granularity='aggregate';row.resourceData!.resource.quantity!.value=2;row.resourceData!.coverage={scope:'fleet',complete:true,memberEntityIds:[...members]};}
+ const s=await setup(undefined,{sources:[a,b]});const r=await s.run();
+ expect(r.summary.quantities).toEqual([expect.objectContaining({value:3,knownValue:3})]);
+ expect(resourceResultValid(r)).toBe(true);
+});
+
+it.each([false,true])('T01/T05 empty source partial=%s distinguishes known zero from unknown total',async partial=>{
+ const s=await setup(undefined,{partial});const r=await s.run();
+ expect(r.summary).toMatchObject({recordCount:0,itemCount:0,knownEntityCount:0,entityCount:partial?null:0});
+ expect(r.coverage[0].status).toBe(partial?'partial':'complete');expect(resourceResultValid(r)).toBe(true);
+});
+it('T03 data query then task summary uses the same empty-selection rules',async()=>{
+ const s=await setup(undefined,{sources:[rawResource('unknown')]});const data=await s.run();
+ expect(data.summary.entityCount).toBe(1);
+ const task=s.resources.summarize({operation:'summarize',resultRef:data.resultRef,relation:'related'},data,s.scope,randomUUID(),'selected');
+ expect(task.summary).toMatchObject({recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null});expect(resourceResultValid(task)).toBe(true);
+ expect(data.records).toHaveLength(1);expect(task.records).toHaveLength(0);
+});
+it.each([false,true])('T04 mixed relationship records preserve final-page coverage partial=%s',async partial=>{
+ const known=rawResource('known'),unknown=rawResource('unknown');
+ const s=await setup(undefined,{sources:[known,unknown],businessRefs:[known.ref],partial});
+ const r=await s.run({...query,purpose:'task'});
+ expect(r.records).toHaveLength(2);expect(r.items).toHaveLength(2);
+ expect(r.summary).toMatchObject({recordCount:1,itemCount:1,knownEntityCount:1,entityCount:1});
+ expect(r.coverage[0].status).toBe(partial?'partial':'complete');expect(r.relationshipCoverage.status).toBe('partial');expect(resourceResultValid(r)).toBe(true);
+});
+
+it('T10 actual controlled import is deduplicated with source members across multiple aggregates',async()=>{
+ const x=rawResource('X'),a=rawResource('A'),b=rawResource('B');
+ for(const [r,ids] of [[a,['X','Y']],[b,['X','Z']]] as const){delete r.resourceData!.entityId;r.resourceData!.resource.granularity='aggregate';r.resourceData!.resource.quantity!.value=2;r.resourceData!.coverage={scope:'fleet',complete:true,memberEntityIds:[...ids]};}
+ const s=await setup(undefined,{sources:[a,b,x]});
+ await s.annotations.fromSource(s.actor,s.session,{clientActionId:randomUUID(),mode:'add',sourceRef:x.ref,expectedSourceRevision:1,expectedRevision:s.head().revision,layerId:'resources',objectId:'imported-X'});
+ const r=await s.run({...query,annotations:[{ref:s.head()}]});
+ expect(r.records).toHaveLength(4);expect(r.items).toHaveLength(3);expect(r.summary.quantities[0]).toMatchObject({value:3,knownValue:3});expect(resourceResultValid(r)).toBe(true);
+});
+
+it('T13 actual service recomputes v1 parent into a new v2 result without rewriting the old result',async()=>{
+ const s=await setup();const old=structuredClone(legacyOverlap) as ResourceResult;
+ old.owner={...s.actor,taskId:s.task.id,sessionId:s.session};const bytes=JSON.stringify(old);
+ expect(resourceResultValid(old)).toBe(true);s.resources.authorize(old,s.scope);
+ const fresh=s.resources.summarize({operation:'summarize',resultRef:old.resultRef},old,s.scope,randomUUID(),'recompute');
+ expect(fresh.schemaVersion).toBe(2);expect(fresh.resultRef).not.toBe(old.resultRef);expect(fresh.parentResultRef).toBe(old.resultRef);
+ expect(fresh.summary.quantities[0]).toMatchObject({value:3,knownValue:3});expect(resourceResultValid(fresh)).toBe(true);
+ expect(JSON.stringify(old)).toBe(bytes);expect(old.summary.quantities[0].value).toBe(4);
+});
+
+it.each(['unknown',undefined] as const)('T09 missing identity with granularity=%s cannot imply disjoint additive counts',async granularity=>{
+ const rows=[rawResource('A'),rawResource('B')];
+ for(const r of rows){delete r.resourceData!.entityId;if(granularity)r.resourceData!.resource.granularity=granularity;else delete r.resourceData!.resource.granularity;r.resourceData!.resource.quantity!.value=2;expect(()=>decodeSourceResource(r.resourceData)).not.toThrow();}
+ const s=await setup(undefined,{sources:rows});
+ const both=await s.run();expect(both.records).toHaveLength(2);expect(both.summary.quantities[0]).toMatchObject({value:null,knownValue:0,unknownCount:2});expect(resourceResultValid(both)).toBe(true);
+ const single=await s.run({...query,sources:[{systemId:'source',objectRefs:[rows[0].ref]}]});expect(single.summary.quantities[0]).toMatchObject({value:2,knownValue:2});expect(resourceResultValid(single)).toBe(true);
 });

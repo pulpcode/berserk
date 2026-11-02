@@ -1,3 +1,7 @@
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { ContextService } from '../../src/context/service.js';
+import type { SituationObject } from '../../src/contracts/context.js';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -185,4 +189,39 @@ it('B3 T17/T19 follows explicit area selection through deployed Skill and actual
   expect(summary.summary.entityCount).toBeNull();
   expect(tools[4].resourceResult!.items).toEqual(summary.items);
   expect(s.lab.annotations!.binding(s.actor, s.session.id).draft?.headRevision).toBe(2);
+});
+
+it.each(['T02','T06','T08'] as const)('T14 %s real HTTP decoding → native tools → restart/read → spatial continuation',async mode=>{
+ const evidence=[{kind:'declaration' as const,note:'本地HTTP合成事实'}];
+ const make=(id:string,members?:string[]):SituationObject=>({ref:{systemId:'source',objectType:'resource',objectId:id},name:id,revision:1,areaIds:['A'],effectiveAt:null,validTime:null,properties:{},geometry:null,resourceData:{resource:{meaning:'actual_resource',category:'vehicle',granularity:'aggregate',quantity:{value:2,unit:'辆',meaning:'entities',scope:'fleet',evidence}},...(members?{coverage:{scope:'fleet',complete:true,memberEntityIds:members}}:{})}});
+ const rows=mode==='T02'?[make('unknown')]:[make('A',['X','Y']),make('B',mode==='T06'?['Y','Z']:undefined)];
+ let requests=0;
+ const server=createServer((_req,res)=>{requests++;res.setHeader('content-type','application/json');res.end(JSON.stringify({systemId:'source',asOf:'2026-11-02T00:00:00Z',items:rows,limit:100,nextCursor:null,hasMore:false,timeUnknownCount:0,unknownRefs:[],changeCursor:'fixed'}));});
+ await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));clean.push(()=>new Promise<void>(resolve=>{server.closeAllConnections();server.close(()=>resolve());}));
+ const context=new ContextService({systems:[{id:'source',name:'真实解码模拟来源',adapter:'mock-situation-http',baseUrl:`http://127.0.0.1:${(server.address() as AddressInfo).port}`,tokenEnv:'TEST_TOKEN'}],scopes:[{id:'scope',name:'测试',systemIds:['source'],seatIds:['alpha']}]},{TEST_TOKEN:'synthetic'});
+ let ref='';
+ const s=await setup((messages,index)=>{
+  if(index===0)return {tools:[{name:'task_resource_query',arguments:{operation:'query',purpose:mode==='T02'?'task':'data',sources:[{systemId:'source'}]}}]};
+  if(index===1){ref=lastResource(messages).resultRef;return {tools:[{name:'task_resource_query',arguments:{operation:'read',resultRef:ref}}]};}
+  if(index===2)return {tools:[{name:'spatial_analyze',arguments:{operation:'classify_points',input:{kind:'resource',resultRef:ref},target:{kind:'annotation',ref:s.ref,objectIds:['area']}}}]};
+  return {text:'已沿用结果；没有补造缺失位置。'};
+ });
+ s.lab.context=context;s.lab.annotations!.context=context;
+ await s.lab.start(s.session.id,'读取并沿用明确来源结果',{},'alpha').run(()=>{});
+ const before=s.lab.get(s.session.id,'alpha'),tools=before.messages.filter(m=>m.role==='tool');
+ expect(tools.map(m=>[m.toolName,m.isError])).toEqual([['task_resource_query',false],['task_resource_query',false],['spatial_analyze',false]]);
+ const result=tools[0].resourceResult!;
+ expect(result.schemaVersion).toBe(2);expect(result.records).toHaveLength(rows.length);
+ if(mode==='T02')expect(result.summary).toMatchObject({recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null});
+ else expect(result.summary.quantities[0]).toMatchObject({value:mode==='T06'?3:null,knownValue:mode==='T06'?3:2});
+ expect(tools[2].spatialResult!.completeness).toMatchObject({status:'partial',candidateCount:0,totalCandidateCount:rows.length});
+ expect(tools[2].spatialResult!.completeness.unclassified).toHaveLength(rows.length);
+ const bytes=JSON.stringify(result);expect(requests).toBe(1);
+ await s.lab.close();
+ const fake=await fakeRuntime(s.config,(_context,index)=>index===0?{tools:[{name:'task_resource_query',arguments:{operation:'read',resultRef:ref}}]}:{text:'旧结果已读取'});
+ const reopened=await PiLab.create(s.config,fake.runtime);clean.push(()=>reopened.close());reopened.context=context;reopened.annotations!.context=context;
+ expect(reopened.get(s.session.id,'alpha').messages).toEqual(before.messages);
+ await reopened.start(s.session.id,'继续读固定结果',{},'alpha').run(()=>{});
+ const read=reopened.get(s.session.id,'alpha').messages.findLast(m=>m.toolName==='task_resource_query')!;
+ expect(read.isError).toBe(false);const {delivery,...original}=read.resourceResult!;expect(delivery).toBeDefined();expect(JSON.stringify(original)).toBe(bytes);expect(requests).toBe(1);
 });

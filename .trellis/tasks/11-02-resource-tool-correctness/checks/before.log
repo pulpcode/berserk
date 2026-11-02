@@ -1,0 +1,74 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run --reporter=dot tests/task-resource-query.test.ts -t T02|T06
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:53875) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+-------------------------------------xx
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/task-resource-query.test.ts > T02 keeps original unconfirmed rows while an empty selected task set remains unknown
+AssertionError: expected { Object (recordCount, itemCount, ...) } to match object { Object (recordCount, itemCount, ...) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "entityCount": null,
++   "entityCount": 0,
+    "itemCount": 0,
+    "knownEntityCount": 0,
+    "recordCount": 0,
+  }
+
+ ❯ tests/task-resource-query.test.ts:226:20
+    224|  const r=await s.run({...query,purpose:'task'});
+    225|  expect(r.records).toHaveLength(1);expect(r.items).toHaveLength(1);
+    226|  expect(r.summary).toMatchObject({recordCount:0,itemCount:0,knownEntit…
+       |                    ^
+    227|  expect(resourceResultValid(r)).toBe(true);
+    228| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/task-resource-query.test.ts > T06 complete overlapping member declarations count their union, not their sum
+AssertionError: expected [ { category: 'fire_engine', …(8) } ] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "knownValue": 3,
+-     "value": 3,
++     "category": "fire_engine",
++     "knownValue": 4,
++     "limitations": [],
++     "meaning": "entities",
++     "recordIds": [
++       "[\"source\",\"resource\",\"A\"]",
++       "[\"source\",\"resource\",\"B\"]",
++     ],
++     "scope": "fleet",
++     "unit": "辆",
++     "unknownCount": 0,
++     "value": 4,
+    },
+  ]
+
+ ❯ tests/task-resource-query.test.ts:233:31
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 37 skipped (39)
+   Start at  22:09:10
+   Duration  1.43s (transform 355ms, setup 0ms, import 739ms, tests 533ms, environment 0ms)
+

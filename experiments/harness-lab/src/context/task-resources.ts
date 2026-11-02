@@ -1,4 +1,4 @@
-import { summarizeResources } from '../contracts/resource-summary.js';
+import { summarizeResources, resourceStatisticsItems, resourceEntityCountUnknown } from '../contracts/resource-summary.js';
 import type { AnnotationService, AnnotationActor } from '../annotations/service.js';
 import type { ContextService } from './service.js';
 import type { ContextRef } from '../contracts/context.js';
@@ -51,7 +51,7 @@ export class TaskResourceService {
   if(binding.taskId!==scope.taskId)throw fail('FORBIDDEN','任务与当前会话不一致。');
   if(request.purpose==='data'&&!request.sources?.length&&!request.annotations?.length)throw fail('SCOPE_REQUIRED','明确数据查询需要来源范围或固定标绘引用。');
   const task=this.annotations.access?.get(scope.taskId,scope.actor.seatId),refs=task?.context?.businessRefs??[];
-  const result:ResourceResult={schemaVersion:1,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),owner:{...scope.actor,taskId:scope.taskId,sessionId:scope.sessionId},parameters:structuredClone(request),statisticsScope:{at:'',relation:request.purpose==='task'?'related':'all',availability:'all'},records:[],items:[],coverage:[],relationshipCoverage:{status:'partial',reason:'仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。'},dependencies:{systemIds:[],annotations:[]},messages:[],exclusions:[],summary:{recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null,quantities:[],limitations:[]}};
+  const result:ResourceResult={schemaVersion:2,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),owner:{...scope.actor,taskId:scope.taskId,sessionId:scope.sessionId},parameters:structuredClone(request),statisticsScope:{at:'',relation:request.purpose==='task'?'related':'all',availability:'all'},records:[],items:[],coverage:[],relationshipCoverage:{status:'partial',reason:'仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。'},dependencies:{systemIds:[],annotations:[]},messages:[],exclusions:[],summary:{recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null,quantities:[],limitations:[]}};
   result.statisticsScope.at=result.createdAt;
   let rawCount=0,pages=0;const sourceSnapshots=new Map<string,string>(),invalidSources=new Set<string>();
   const add=(record:ResourceRecord,count=true)=>{if(count&&++rawCount>500)throw fail('LIMIT','资源读取超过500条，未截断为完整清单。');if(result.records.some(r=>r.id===record.id))return;
@@ -127,10 +127,11 @@ export class TaskResourceService {
   result.dependencies.systemIds=[...new Set(result.dependencies.systemIds)];result.dependencies.annotations=[...new Map(result.dependencies.annotations.map(ref=>[JSON.stringify(ref),ref])).values()];
   result.items=organizeResources(result.records,scope.taskId,result.createdAt);
   for(const report of result.messages)for(const item of result.items)if(item.recordIds.some(id=>{const record=result.records.find(r=>r.id===id);return record?.source&&key(record.source.ref)===key(report.resourceRef)||record?.association&&key(record.association.source)===key(report.resourceRef);})){item.availability='unknown';item.limitations.push('存在需核实的用户报告，原文保留；未将模型解释认证为来源事实。');}
-  result.summary=summarizeResources(result.records,request.purpose==='task'?result.items.filter(i=>i.relation!=='unconfirmed'):result.items,result.createdAt);
+  const selected=resourceStatisticsItems(result);
+  result.summary=summarizeResources(result.records,selected,result.createdAt);
   if(request.purpose==='task')result.summary.limitations.push('仅统计有关系依据的已知部分，关系未确认项保留在清单；不能表示完整任务分配量。');
-  if(!result.items.length&&(request.purpose==='task'||result.coverage.some(c=>c.status!=='complete')))result.summary.entityCount=null;
-  if(!result.items.length)result.summary.limitations.push(request.purpose==='task'?'没有读到明确关联资源，不证明任务现实中没有资源或已分配数量为零。':'本次明确范围内没有可分类资源；请同时核对未分类记录和来源覆盖。');
+  if(resourceEntityCountUnknown(result,selected))result.summary.entityCount=null;
+  if(!selected.length)result.summary.limitations.push(request.purpose==='task'?'没有读到明确关联资源，不证明任务现实中没有资源或已分配数量为零。':'本次明确范围内没有可分类资源；请同时核对未分类记录和来源覆盖。');
   if(result.coverage.some(c=>c.status!=='complete'))result.summary.limitations.push('来源未完整覆盖，数量仅对应已知部分。');
   this.authorize(result,scope);if(Buffer.byteLength(JSON.stringify(result))>1024*1024)throw fail('LIMIT','资源结果超过1MiB，未截断输出。');return result;
  }
@@ -150,12 +151,12 @@ export class TaskResourceService {
   if(availability!=='all')items=items.filter(i=>i.availability===availability);
   if(relation!=='all')items=items.filter(i=>relation==='related'?i.relation!=='unconfirmed':i.relation===relation);
   const ids=new Set(items.flatMap(i=>i.recordIds));
-  const result:ResourceResult={...structuredClone(parent),resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),parameters:structuredClone(request),statisticsScope:{at:parent.statisticsScope.at,relation,availability},parentResultRef:parent.resultRef,...(spatial?{spatialResultRef:spatial.resultRef,spatialCoverage:structuredClone(spatial.completeness)}:{}),records:parent.records.filter(r=>ids.has(r.id)),items:structuredClone(items),summary:summarizeResources(parent.records,items,parent.statisticsScope.at)};
+  const result:ResourceResult={...structuredClone(parent),schemaVersion:2,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),parameters:structuredClone(request),statisticsScope:{at:parent.statisticsScope.at,relation,availability},parentResultRef:parent.resultRef,...(spatial?{spatialResultRef:spatial.resultRef,spatialCoverage:structuredClone(spatial.completeness)}:{}),records:parent.records.filter(r=>ids.has(r.id)),items:structuredClone(items),summary:summarizeResources(parent.records,items,parent.statisticsScope.at)};
   delete result.delivery;
   if(!spatial)delete result.spatialResultRef;
   if(spatial)for(const p of spatial.provenance){if(p.input.kind==='source')result.dependencies.systemIds.push(p.input.systemId);if(p.input.kind==='annotation')result.dependencies.annotations.push(p.input.ref);if(p.resourceContext){result.dependencies.systemIds.push(...p.resourceContext.dependencies.systemIds);result.dependencies.annotations.push(...p.resourceContext.dependencies.annotations);}}
   result.dependencies.systemIds=[...new Set(result.dependencies.systemIds)];result.dependencies.annotations=[...new Map(result.dependencies.annotations.map(ref=>[JSON.stringify(ref),ref])).values()];
-  if(!items.length&&(parent.coverage.some(c=>c.status!=='complete')||parent.relationshipCoverage.status==='partial'&&relation!=='all'))result.summary.entityCount=null;
+  if(resourceEntityCountUnknown(result,items))result.summary.entityCount=null;
   if(parent.relationshipCoverage.status==='partial'&&relation!=='all')result.summary.limitations.push('只统计已核实关系的部分；缺少完整关系资料，空名单不能表述为已分配零项。');
   if(result.spatialCoverage?.status==='partial'){result.summary.entityCount=null;result.summary.limitations.push('空间分类未覆盖缺位置或不适用的位置；这些资源没有计入外部。');}
   if(parent.coverage.some(c=>c.status!=='complete'))result.summary.limitations.push('来源覆盖不完整，仅统计已知部分。');

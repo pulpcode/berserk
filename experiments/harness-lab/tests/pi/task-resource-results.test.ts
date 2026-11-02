@@ -1,7 +1,9 @@
+import oldOverlap from './fixtures/resource-result-v1-overlap.json';
+import { summarizeResources } from '../../src/contracts/resource-summary.js';
 import { expect, it } from 'vitest';
 import type { SessionEntry } from '@earendil-works/pi-coding-agent';
 import { resolveResourceResult, resourceToolResult, resolveResourceMessage, resourceUserMessages, validateResourceDelivery } from '../../src/pi/task-resource-results.js';
-import type { ResourceResult } from '../../src/contracts/resource-results.js';
+import { resourceResultValid, type ResourceResult } from '../../src/contracts/resource-results.js';
 import { RESOURCE_ENTRY } from '../../src/pi/resource-tools.js';
 import { recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
 import type { SituationCurrent } from '../../src/contracts/context.js';
@@ -92,4 +94,16 @@ it('D20 summaries retain the native parent statistics time and cannot rebind the
  const changed=structuredClone(summary);changed.statisticsScope.at=changed.createdAt;
  Object.assign((entries.at(-1) as Extract<SessionEntry,{type:'message'}>).message,resourceToolResult(changed));
  expect(()=>resolveResourceResult(entries,changed.resultRef)).toThrow('固定时间');
+});
+
+it('T13 freezes legacy overlap=4 bytes and native reading, while v2 recomputation requires3',()=>{
+ const old=oldOverlap as ResourceResult,bytes=JSON.stringify(old);
+ const native=(r:ResourceResult)=>[{type:'custom',customType:RESOURCE_ENTRY,data:{requestId:r.requestId}},{type:'message',message:{role:'assistant',content:[{type:'toolCall',id:r.toolCallId,name:'task_resource_query',arguments:r.parameters}]}},{type:'message',message:{role:'toolResult',toolCallId:r.toolCallId,toolName:'task_resource_query',isError:false,...resourceToolResult(r)}}] as unknown as SessionEntry[];
+ expect(resourceResultValid(old)).toBe(true);expect(resolveResourceResult(native(old),old.resultRef).summary.quantities[0].value).toBe(4);
+ expect(JSON.stringify(old)).toBe(bytes);
+ const fresh:ResourceResult={...structuredClone(old),schemaVersion:2,resultRef:'resource:new:sum',requestId:'new',toolCallId:'sum',parameters:{operation:'summarize',resultRef:old.resultRef},parentResultRef:old.resultRef,summary:summarizeResources(old.records,old.items,old.statisticsScope.at)};
+ expect(fresh.summary.quantities[0]).toMatchObject({value:3,knownValue:3});
+ expect(resolveResourceResult([...native(old),...native(fresh)],fresh.resultRef)).toEqual(fresh);
+ const relabeled={...structuredClone(old),schemaVersion:2};expect(resourceResultValid(relabeled)).toBe(false);
+ const invalid=structuredClone(result);invalid.summary.entityCount=0;expect(resourceResultValid(invalid)).toBe(false);
 });
