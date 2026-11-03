@@ -1,0 +1,236 @@
+{
+  "reviewer": "independent_review_one",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "reviewedStatementIds": [
+    "message-5"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "交集仅桤岸1辆，条件未确认蕨港、过期茶岬、未知沁洲、故障榕坡、冲突柏屿及related/support/U三类均齐全且正确；副本不重复，缺回执不取消已明确放行。",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "仅任务及所引用图层/霁浦来源只读核对，未写入或额外操作。",
+      "evidenceIds": [
+        "message-1",
+        "message-2",
+        "message-3",
+        "message-4"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "真实受控association把副本与jp-clear合并，柏屿两objectId按同entity e43保留证据，未无据身份合并或重复计数。",
+      "evidenceIds": [
+        "message-3",
+        "message-4",
+        "message-5"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "按证据区分assigned/related/support/U以及可用/条件/过期/故障/未知/冲突；未凭引用认定分配，未用缺回执否定放行。",
+      "evidenceIds": [
+        "message-3",
+        "message-4",
+        "message-5"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "明确partial关系覆盖和6assigned不是完整总量；区分summary相关8与候选9；没有虚构空间覆盖或现实全部。",
+      "evidenceIds": [
+        "message-4",
+        "message-5"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "N04-2-c01",
+      "statementId": "message-5",
+      "quote": "## 核对结论（来源：霁浦调度 `n04-jipu`，来源快照 asOf 2026-11-03T03:31:26.501Z；引用图层 `霁浦受控副本`（setId 20530c07…，revision 3），均固定版本）\n\n按当前任务 6426a922… 的关联证据与统计时点 2026-11-03T03:32:05.678Z，本次共核到 **9 辆**保障车：6 辆有分配依据、1 辆仅相关、1 辆潜在支援、1 辆关系未确认。",
+      "availableEvidenceIds": [
+        "message-2",
+        "message-3",
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "来源asOf、引用固定rev3与统计时点精确；9实体=6assigned+1related+1potential_support+1unconfirmed。均固定版本按本次快照/固定结果理解，不表示来源永久不可变。"
+    },
+    {
+      "id": "N04-2-c02",
+      "statementId": "message-5",
+      "quote": "### 一、已分配且当前可确认可用（1 辆）\n| 资源 | 依据要点 | 有效期 |\n|---|---|---|\n| **桤岸保障车**（jp-clear，实体 jp-e10） | 任务关系 assigned，依据为“来源任务映射已核实 + 现行调度令”；可用状态 available，注明“已放行，可出动；尚未收到通信回执，回执不是放行条件” | 可用依据有效至 2026-11-04T03:31:26Z |",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "只有桤岸assigned且available；现行调度令、已放行、缺回执但非条件均原文有据，有效截止截秒正确。"
+    },
+    {
+      "id": "N04-2-c03",
+      "statementId": "message-5",
+      "quote": "补充：引用图层里只有 **“桤岸保障车副本”** 1 个对象，它关联到同一来源资源 `jp-clear`（revision 1）、同一实体 jp-e10，因此属于同一辆车的受控副本，**不另计数量**；该图层没有其他独立资源。",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "图层完整仅一副本，association到jp-clear rev1/e10，与来源同实体；Q合并到e10不重复。"
+    },
+    {
+      "id": "N04-2-c04",
+      "statementId": "message-5",
+      "quote": "### 二、已分配但当前不能确认可用（3 辆，待核实）\n- **蕨港保障车**（jp-cond）：关系 assigned；但可用字段附有“须完成承载复核后方可使用”，复核尚未确认（conditions_unconfirmed），因此统计判定为 **未知**，未确认为可用。需要注意：原始记录中该字段写作 available，但带条件；这与复核结论“未知”的差异应核实，不宜按可用处理。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "三辆本节未知成立；蕨港原availability available但条件未核实，tool unknown/conditions_unconfirmed。差异应核实是建议，前句已正确解释，不将其称为工具冲突或事实状态自相矛盾。"
+    },
+    {
+      "id": "N04-2-c05",
+      "statementId": "message-5",
+      "quote": "- **茶岬保障车**（jp-expired）：关系 assigned；可用依据的上报、生效时间为 01:51/01:41，**validUntil 2026-11-03T02:11:26Z，已早于统计时点**，且注明“没有续期”，因此统计判定为 **未知（依据过期）**，不能当作可用，也不能当作不可用。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "茶岬关系仍assigned，可用reported01:51/effective01:41、until02:11在统计03:32之前，无续期；unknown不能推为可用或不可用。"
+    },
+    {
+      "id": "N04-2-c06",
+      "statementId": "message-5",
+      "quote": "- **沁洲保障车**（jp-unknown）：关系 assigned；可用状态明确标注“最新可用状态未核实”，判定为 **未知**。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "沁洲assigned、最新可用状态未核实，工具declared_unknown一致。"
+    },
+    {
+      "id": "N04-2-c07",
+      "statementId": "message-5",
+      "quote": "### 三、故障（1 辆，已确认为不可用）\n- **榕坡保障车**（jp-fault）：关系 assigned；不可用，依据为“制动系统故障，暂停出动”（依据有效至 2026-11-03T03:31…→ 2026-11-04T03:31:26Z）。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "榕坡assigned/制动故障/unavailable正确；括号有效至中出现03日03:31…→04日03:31:26的残缺箭头，最终明确截止04日正确，可读作删改痕迹。未明确标effectiveAt或有效起点，不能强行给省略箭头唯一错误解释；应删除前半残片。若将箭头读作有效起点范围，则起点错误，附录保留此争议。"
+    },
+    {
+      "id": "N04-2-c08",
+      "statementId": "message-5",
+      "quote": "### 四、证据冲突（1 辆，需裁决）\n- **柏屿保障车**（实体 jp-e43）：关系 assigned，但同一实体有两条统计时点均有效的记录，互相矛盾：\n  - `jp-dual-ready`：可用，“调度台报告可用”；\n  - `jp-dual-fault`：不可用，“检修台报告液压故障”。\n  结论：**冲突**，保留双方依据，不能择一认定，也不能降为未知。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "柏屿e43两个objectId同实体、同有效时间可用/不可用，真实conflict保留两事实；不择一不降unknown正确。"
+    },
+    {
+      "id": "N04-2-c09",
+      "statementId": "message-5",
+      "quote": "### 五、仅相关 / 潜在支援 / 关系未确认（3 辆）\n| 类别 | 资源 | 可用状态 | 说明 |\n|---|---|---|---|\n| 仅相关 related | **枫埠保障车**（jp-related） | available | 仅与任务相关，“未下达分配令”，**不属于已分配** |\n| 潜在支援 potential_support | **苔湾保障车**（jp-support） | available | “潜在支援，尚未转为分配” |\n| 关系未确认 unconfirmed | **槐堤保障车**（jp-refonly） | available | 任务关系未确认；可用但**不能算作已分配**，平台引用本身不构成分配 |",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "枫埠related、苔湾potential_support、槐堤unconfirmed各available；三者不能确认为已分配，平台引用不构成分配。"
+    },
+    {
+      "id": "N04-2-c10",
+      "statementId": "message-5",
+      "quote": "### 六、范围与限制（须知）\n1. 关系覆盖为 **partial**：仅按实际关联证据判断，“已有平台引用不保证任务关联或分配名单完整”，因此上表 6 辆已分配**不代表完整分配量**。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "relationshipCoverage partial，6assigned只是有证据部分，不冒充完整分配总量。"
+    },
+    {
+      "id": "N04-2-c11",
+      "statementId": "message-5",
+      "quote": "2. 数量按单位/口径分组：车辆 8 辆（不含关系未确认的槐堤）；全部 9 辆均为“实体数”口径，非“可用数”。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "summary数量8对应related筛选不含槐堤；完整候选9实体含槐堤，均quantity1辆/entities/n04-vehicles，非available计数，解释准确。"
+    },
+    {
+      "id": "N04-2-c12",
+      "statementId": "message-5",
+      "quote": "3. 位置均为“实际位置”，是否落在任务关注范围内未做空间判断（本次未做空间分析）。",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际resource.position均actual/resource；原生三工具没有spatial_analyze，不将实际位置等同在任务区域内。"
+    },
+    {
+      "id": "N04-2-c13",
+      "statementId": "message-5",
+      "quote": "4. 以上是只读核对结果，未保存或修改任何业务资料、标注或任务当前设置。",
+      "availableEvidenceIds": [
+        "message-2",
+        "message-3",
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "三个工具全只读，原生无写动作，state-before/after相等；受控导入属于模型执行前准备，不反驳本次未保存。"
+    },
+    {
+      "id": "N04-2-c14",
+      "statementId": "message-5",
+      "quote": "### 建议核实顺序（模型建议，非资料事实）\n① 柏屿 `jp-e43` 的“调度台可用”与“检修台液压故障”以哪条为准；② 蕨港承载复核是否完成；③ 茶岬可用状态是否续期；④ 沁洲最新可用状态；⑤ 槐堤任务关系是否确认为分配。",
+      "availableEvidenceIds": [
+        "message-4"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "明确标注模型建议而非事实，核实顺序属于建议。柏屿双方报告、蕨港条件、茶岬续期、沁洲状态和槐堤关系这些建议前提均真实，不宣称已裁决或新事实。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "answer": {
+    "finalStatementIds": [
+      "message-5"
+    ],
+    "outcome": "answered",
+    "rationale": "完整业务终答含所有要求分类与证据解释。榕坡括号时间残片作为表达歧义单列，不掩盖主结果。",
+    "evidenceIds": [
+      "message-3",
+      "message-4",
+      "message-5"
+    ]
+  },
+  "scope": {
+    "requirement": "resolved",
+    "behavior": "direct",
+    "rationale": "来源与图层明确，直接核对任务分配/可用交集，无必要区域消歧或无据空间推定。",
+    "evidenceIds": [
+      "message-1",
+      "message-3",
+      "message-4",
+      "message-5"
+    ]
+  }
+}

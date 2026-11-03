@@ -1,0 +1,60 @@
+{
+  "method": "Reviewer first read user/evidence/process/final/fault fields with annotation/expected/category omitted; independent agent review, not human blind annotation.",
+  "comparedAfterFirstPass": true,
+  "matches": 13,
+  "total": 13,
+  "checks": [
+    {
+      "id": "C01",
+      "matches": true
+    },
+    {
+      "id": "C02",
+      "matches": true
+    },
+    {
+      "id": "C03",
+      "matches": true
+    },
+    {
+      "id": "C04",
+      "matches": true
+    },
+    {
+      "id": "C05",
+      "matches": true
+    },
+    {
+      "id": "C06",
+      "matches": true
+    },
+    {
+      "id": "C07",
+      "matches": true
+    },
+    {
+      "id": "C08",
+      "matches": true
+    },
+    {
+      "id": "C09",
+      "matches": true
+    },
+    {
+      "id": "C10",
+      "matches": true
+    },
+    {
+      "id": "C11",
+      "matches": true
+    },
+    {
+      "id": "C12",
+      "matches": true
+    },
+    {
+      "id": "C13",
+      "matches": true
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+(node:15771) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P04 only complete actual fixed query permits source revision update, old result remains unchanged (71782.647765ms)
+✖ dependency freeze includes symlink targets and nested transitive bytes (8.680974ms)
+✖ new N02 and N03 fixtures traverse actual native quantity tools with controlled identity and honest unknown totals (91017.280647ms)
+✔ N08 second native turn keeps original fixed layer and reads all its points without unrelated source access (44766.637943ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 208499.757343
+
+✖ failing tests:
+
+test at .trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:1:10454
+✖ dependency freeze includes symlink targets and nested transitive bytes (8.680974ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/private/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-oPulpl/dependency-target'
+  - '/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-oPulpl/dependency-target'
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:78:278)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/private/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-oPulpl/dependency-target',
+    expected: '/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-oPulpl/dependency-target',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:1:10995
+✖ new N02 and N03 fixtures traverse actual native quantity tools with controlled identity and honest unknown totals (91017.280647ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'failed'
+  - 'succeeded'
+  
+      at <anonymous> (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:83:166)
+      at async withTrial (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:25:152)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/runtime.test.ts:82:3)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'failed',
+    expected: 'succeeded',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

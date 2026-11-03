@@ -1,0 +1,7 @@
+{
+  "definition": "provider ledger.startedAt through response-meta.at; HTTP stream and response recording elapsed, excludes setup/hash/review waits, not isolated model compute",
+  "count": 89,
+  "secondsSum": 536.485,
+  "medianSeconds": 4.895,
+  "maxSeconds": 27.008
+}

@@ -1,0 +1,71 @@
+{
+  "classification": "Offline infrastructure failure; not evidence of quantity regression. Native query succeeded with one source unavailable, while local provider observer halted batch. Root cause pending runner transport cause inspection.",
+  "snapshotPath": "/private/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-9qYXfl/quantities-N03/turn-1-snapshot.json",
+  "sha256": "49fc365e364158d6e272f1c47864b2addc5b53bc92e491ae8c33dde2eab8c606",
+  "lastResult": {
+    "requestId": "ffdc342c-a307-437b-99d0-c2f8eac1365c",
+    "status": "failed",
+    "message": "503 overloaded: 模型服务暂时不可用，请稍后重试。",
+    "compactionIds": [],
+    "compactions": [],
+    "usageSummary": {
+      "modelAttempts": 5,
+      "replyAttempts": 5,
+      "compactionAttempts": 0,
+      "toolCalls": 1,
+      "unknownUsageAttempts": 4,
+      "actual": {
+        "input": 100,
+        "output": 20,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 120
+      }
+    }
+  },
+  "tools": [
+    {
+      "id": "a64b41f9",
+      "name": "task_resource_query",
+      "isError": false,
+      "summary": {
+        "recordCount": 2,
+        "itemCount": 2,
+        "knownEntityCount": 0,
+        "entityCount": null,
+        "quantities": [
+          {
+            "category": "rescue_boat",
+            "unit": "艘",
+            "meaning": "entities",
+            "scope": "n03-tingjing-boats",
+            "value": 5,
+            "knownValue": 5,
+            "unknownCount": 0,
+            "recordIds": [
+              "[\"n03-tingjing\",\"resource\",\"tj-upper\"]",
+              "[\"n03-tingjing\",\"resource\",\"tj-lower\"]"
+            ],
+            "limitations": []
+          }
+        ],
+        "limitations": [
+          "存在实体身份未确认记录；记录数不能作为确定实体总数。",
+          "来源未完整覆盖，数量仅对应已知部分。"
+        ]
+      },
+      "coverage": [
+        {
+          "source": "n03-shitai",
+          "status": "unavailable",
+          "reason": "业务资料来源暂不可用。"
+        },
+        {
+          "source": "n03-tingjing",
+          "status": "complete",
+          "asOf": "2026-11-03T01:17:02.425Z"
+        }
+      ]
+    }
+  ]
+}

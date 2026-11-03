@@ -1,0 +1,795 @@
+{
+  "kind": "execution-only-no-semantic-score",
+  "at": "2026-11-03T03:43:03.518334+00:00",
+  "batch": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-independent-acceptance/20261103-live-02",
+  "oldBatch": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-independent-acceptance/20261103-live-01",
+  "sourceLedgerUnchanged": true,
+  "sourceLedgerHash": "aa080ada79703da2abceb89087d12393b8faf694b6fcfa04d9e74a851e59ff54",
+  "finalLedgerHash": "1ddf7b66ea466de035772fd4bf091d153840835c60bca254ba5b2a407d303d22",
+  "resumeManifestHash": "08870ff41ffb0faddef2c8c09772c5d171cd52c076c17ce04b6c379ae49195eb",
+  "reusedEvidenceFilesVerified": 515,
+  "reusedSlots": [
+    "P01-1",
+    "P02-1",
+    "P03-1",
+    "P04-1",
+    "N01-1",
+    "N02-1",
+    "N03-1",
+    "N04-1",
+    "N05-1",
+    "N06-1"
+  ],
+  "executedSlots": [
+    "N07-1",
+    "N08-1",
+    "N08-2",
+    "N07-2",
+    "N06-2",
+    "N05-2",
+    "N04-2",
+    "N03-2",
+    "N02-2",
+    "N01-2"
+  ],
+  "oldTotals": {
+    "requests": 48,
+    "input": 1624623,
+    "output": 35216
+  },
+  "newTotals": {
+    "requests": 41,
+    "input": 1470035,
+    "output": 36235
+  },
+  "combinedTotals": {
+    "requests": 89,
+    "input": 3094658,
+    "output": 71451
+  },
+  "pending": 0,
+  "unknownPaidUsage": 0,
+  "halted": null,
+  "model": "deepseek-v4-1-flash-261017",
+  "unstarted": [],
+  "limits": {
+    "requests": 240,
+    "input": 8000000,
+    "output": 1000000
+  },
+  "oldN07Failure": {
+    "directory": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-independent-acceptance/20261103-live-01/N07-1",
+    "status": "batch_halted",
+    "providerRequests": 0,
+    "retained": true
+  },
+  "notes": [
+    "N06-1 preserves the original incomplete multi-question interaction without sending east or boundary answers.",
+    "N06-2 actual ordinary-text region question matched n06-region; only frozen east fact sent, then terminal answer recorded.",
+    "N02-1,N02-2,N03-2 did not call task_resource_query; tool-path coverage must be reported accurately.",
+    "Execution terminal status is not semantic acceptance; independent score review belongs to root.",
+    "No live-01 writes, no frozen runtime/product/Skill changes, no extra task retries or requests."
+  ],
+  "slots": [
+    {
+      "id": "P01-1",
+      "phase": "public",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 3,
+      "input": 89999,
+      "output": 1586,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "skill.read",
+        "annotation_read",
+        "spatial_analyze"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "cd91fc8f1e1874ed2e7ff9e021669034bb2cbce1cd355111861017f922e23cf7",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "fdbf36c02c25c26f12270a2360398aa6ffd7ecc22b463ad24b5785ef6997ff78",
+      "continuationHash": "ee855d7ef6054f7f6d06c2371eca69cc0cec21c059c77e607c880032eee34f9a"
+    },
+    {
+      "id": "P02-1",
+      "phase": "public",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 120247,
+      "output": 2201,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query"
+      ],
+      "toolErrors": [
+        {
+          "id": "c6bdf2ce",
+          "toolName": "task_resource_query",
+          "text": "Validation failed for tool \"task_resource_query\":\n  - sources.0: must not have additional properties\n  - resultRef: must have required properties resultRef\n  - root: must not have additional properties\n  - operation: must be equal to constant\n  - resultRef: must have required properties resultRef\n  - root: must not have additional properties\n  - operation: must be equal to constant\n  - root: must match a schema in anyOf\n\nReceived arguments:\n{\n  \"operation\": \"query\",\n  \"purpose\": \"data\",\n  \"sources\": [\n    {\n      \"systemId\": \"p02-weiting\",\n      \"objectTypes\": [\n        \"resource\"\n      ]\n    }\n  ]\n}"
+        },
+        {
+          "id": "6e1ee827",
+          "toolName": "task_resource_query",
+          "text": "Validation failed for tool \"task_resource_query\":\n  - sources.0: must not have additional properties\n  - resultRef: must have required properties resultRef\n  - root: must not have additional properties\n  - operation: must be equal to constant\n  - resultRef: must have required properties resultRef\n  - root: must not have additional properties\n  - operation: must be equal to constant\n  - root: must match a schema in anyOf\n\nReceived arguments:\n{\n  \"operation\": \"query\",\n  \"purpose\": \"data\",\n  \"sources\": [\n    {\n      \"systemId\": \"p02-shanjia\",\n      \"objectTypes\": [\n        \"resource\"\n      ]\n    }\n  ]\n}"
+        }
+      ],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "7758eb80ca452ee50b4312e8dc4d0d611da3d2a7d24f7543321174cf71110288",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "bf321dd312c90187608dcaa7910121335bf8f10a5c548ed15d4ebd545ece9f2c",
+      "continuationHash": "7b00dabeeec895bc8e61fac40ac9e9c98311ec4b67af5bafd457bed69f345907"
+    },
+    {
+      "id": "P03-1",
+      "phase": "public",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 12,
+      "input": 366121,
+      "output": 4363,
+      "stateChanged": false,
+      "toolCalls": [
+        "situation_query",
+        "task_read",
+        "situation_query",
+        "situation_query",
+        "situation_query",
+        "source.list",
+        "information_search",
+        "source.read",
+        "source.read",
+        "task_search",
+        "annotation_read",
+        "ask_user",
+        "skill.read",
+        "task_resource_query",
+        "spatial_analyze"
+      ],
+      "toolErrors": [
+        {
+          "id": "9f18dffa",
+          "toolName": "information_search",
+          "text": "CONTEXT_UNSUPPORTED_FILTER: 所选系统不支持该查询工具。"
+        }
+      ],
+      "decisions": [
+        {
+          "file": "browser-interaction-c94cda02-3002-44fc-a5fd-be7ad7b6d33b-decision.json",
+          "kind": "clarify",
+          "evidenceHash": "c7a46b69eec7501af74888be1421a14f49fc65945ec3e7ac79f6aa83fd661c69",
+          "evidenceId": "interaction:c94cda02-3002-44fc-a5fd-be7ad7b6d33b",
+          "factId": "p03-region",
+          "quote": "请选择要核验车辆的“南坪”区域（两个同名多边形）："
+        },
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "2e07a799c6dcd9a5dc911eb144e308dcae3332917ed3a05d5fb12b11b6b81d68",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "81df6da7a1f959971c3e8d8929f9f4c31161b60b7558e78f6cd936be99cee814",
+      "continuationHash": "cfbf134b360b2d6d82e02b445cfee3c1f2488206f145c2d726fce573494a8161"
+    },
+    {
+      "id": "P04-1",
+      "phase": "public",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 6,
+      "input": 214868,
+      "output": 3898,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "task_resource_query",
+        "situation_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "9486b710621302dac819ad9ad27a3cdfbf77ca2a1a8ad02be7da7a23ba5de396",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        },
+        {
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "fd52caa0edc944821d01c0b19153232d15933c18892c68c0cb4ea633acd811c4",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "0fd2106e537a625a310cdf92cebb4defa4a6405da53a340a3177afbc67cf0af6",
+      "continuationHash": "809c474a131c5e28a0e4658d9e2b30e3d3f0b8bd329b3b22c83ebc2584bb34dd"
+    },
+    {
+      "id": "N01-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 8,
+      "input": 296091,
+      "output": 6533,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "task_read",
+        "annotation_read",
+        "situation_query",
+        "situation_query",
+        "situation_query",
+        "situation_query",
+        "spatial_analyze",
+        "spatial_analyze",
+        "task_resource_query",
+        "task_resource_query",
+        "spatial_analyze",
+        "task_resource_query"
+      ],
+      "toolErrors": [
+        {
+          "id": "68c870db",
+          "toolName": "task_resource_query",
+          "text": "{\"code\":\"RESOURCE_RESULT_INVALID\",\"message\":\"空间结果不是由本次资源结果产生。\",\"outcome\":\"not_committed\"}"
+        }
+      ],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "0810ad3cbbc5f423fff8db18d75e160654047ddd74e54b174ec200de8dcc2d87",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "e67551a772b2ec23b24977bba51b362aa9fbd5dd7958e1a8afa623acc0049082",
+      "continuationHash": "ab22d858caa925624d6c8f34c30d4e9e2534d404901e672e30475e7a2260c98d"
+    },
+    {
+      "id": "N02-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 123326,
+      "output": 3301,
+      "stateChanged": false,
+      "toolCalls": [
+        "annotation_read",
+        "situation_query",
+        "situation_query",
+        "situation_query",
+        "annotation_read"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "0da0dd798a94cb0a6ee22f2a8e9747f3ac7219a348bcdf0bbe6adda949aeb5ed",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "266fa381f1bf5215a19da090bb9aeeb63f44b6c0482ae5042acd635fd8a558a9",
+      "continuationHash": "c1749631db200df493fca56ed9c215419fdfc90a453647dd8ed3272e2a5685f4"
+    },
+    {
+      "id": "N03-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 2,
+      "input": 63889,
+      "output": 2004,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "03e87883b8e79892c693865e57d14497d2a3a5961b657428c5e733e2f1b0ee39",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "528cedaf7f3794e61b9e617df4054239a8809eff3e753b79e061d3ce5bed4871",
+      "continuationHash": "13601990e238afbf39bd4ad3f55d470407f337a219f0b5f36be93fd19ae8df6f"
+    },
+    {
+      "id": "N04-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 2,
+      "input": 72509,
+      "output": 3416,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "annotation_read",
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "c4d9cb4aa61ffe9d7bc936c5d647ec36df7fc78a23aed2b565e4bb5234f24c56",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "fed5988dd5a181c99fa00e7542e7fdbc980f9082715e5002acfdcf6b30781ec3",
+      "continuationHash": "b0361ce59d3fbb12f572ba05b2d23f32a8c159f830e6c026ba6c0f2cbdf2705b"
+    },
+    {
+      "id": "N05-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 169094,
+      "output": 5560,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "annotation_read",
+        "skill.read",
+        "task_resource_query",
+        "situation_query",
+        "situation_query",
+        "spatial_analyze"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "d7a22cf004c3ce31592a58d6e57079693831ae3e139ac2ee264eafb0c63531d5",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "7a1b67484b9878f033ede8cb273d7fc0a42870caa2954f892f4a08ac773af84a",
+      "continuationHash": "0196cf017a8b1476fcf82cc1bacf3d4605f1109f450a28488d0f6b7de9f4332a"
+    },
+    {
+      "id": "N06-1",
+      "phase": "formal",
+      "origin": "reused_live_01",
+      "status": "incomplete",
+      "nativeFinalStatus": "cancelled",
+      "attempts": 3,
+      "input": 108479,
+      "output": 2354,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "skill.read",
+        "task_resource_query",
+        "situation_query",
+        "annotation_read",
+        "ask_user"
+      ],
+      "toolErrors": [
+        {
+          "id": "ae04ff3b",
+          "toolName": "ask_user",
+          "text": "当前请求已停止。"
+        }
+      ],
+      "decisions": [
+        {
+          "file": "browser-interaction-dd7926bd-936a-4836-86c7-870aa8fce57d-decision.json",
+          "kind": "incomplete",
+          "evidenceHash": "b3f2b388ce4b0ec503a00ea69f17be1f415f3aa79fd3624cffe3da9543bc568d",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "24728122a8e6adef75669f9bdd92e0fb8d3c7e4ff2f78f5dac7303ad98fd3174",
+      "continuationHash": "f0587059df37b527e20b5983a860f99280387edf48e2a98861a287cc6304f634"
+    },
+    {
+      "id": "N07-1",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 146061,
+      "output": 2994,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "annotation_read",
+        "task_resource_query",
+        "spatial_analyze",
+        "spatial_analyze"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "4412447d2142e9e55c88c0f61384b374eddb498abd2137711ac26edf3f2e9321",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "ff0afc9c4b594104adf033b7e9ec4cf3612108ef42803bc691ba11955c05700e",
+      "continuationHash": "3b7262fd3a5718aaba323529560e8eec2599852c945b1803df195f9eb0937217",
+      "executionAuditHash": "06e0293515913ec9e5aeb33655da2b99fe8c5d83e5cb3a68e8aae5a8672147b6"
+    },
+    {
+      "id": "N08-1",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 108297,
+      "output": 2624,
+      "stateChanged": false,
+      "toolCalls": [
+        "annotation_read",
+        "situation_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "28d5b636785ed78efe8d4ebcf275139407b625270433a0dcaf2e8e75e42dc29e",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        },
+        {
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "bf2ef38a8fc3360d092b88ccd479e9afa35f25509aecaeffa9bfcf8979924038",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "e1bff9be528339d724f3de30d687cb7d7ecb999277d0c8f8c0753e7cce8ab4d7",
+      "continuationHash": "4f6e823ad3fc4979e8e1c50e9b87fc0088c2f2e02a5f9908240874294f42de54",
+      "executionAuditHash": "27c117ed9b50521ce441b20f715322ef067b636ddf91a67918c05dc272a13f89"
+    },
+    {
+      "id": "N08-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 3,
+      "input": 80305,
+      "output": 1769,
+      "stateChanged": false,
+      "toolCalls": [
+        "annotation_read"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "097628e66ccc064cc892acc742ae8db641a03a4279d33b48dc363e2bbe78ab39",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        },
+        {
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "0c926daa2e5c26e17f8c4c5f2b8b0fbe60b70ab17ce84b2ce451fdc870e15d67",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "cd9d18cdabac0517901890d48c19b0d506b77e8122cab096d26433d1e62499f6",
+      "continuationHash": "e373b9b1ca548e46fb417d447ff1c141d01e72f8efe8d40a095963b11fb420d1",
+      "executionAuditHash": "1e8a6d43e4e6c3ec4095033160a96034381654fd85ab4fef10840bd5d787a087"
+    },
+    {
+      "id": "N07-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 162711,
+      "output": 4122,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "annotation_read",
+        "situation_query",
+        "task_resource_query",
+        "spatial_analyze",
+        "spatial_analyze"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "0588e204af478c581409ed241abb2e7838c8db04a7d520ec7a095b9ad4f4896a",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "0f1cc64f5c61b06d8d75f1d2df84bed325caaa2a51e94093be1fcca4c62ea444",
+      "continuationHash": "fef0efdccb1097596a6f8606976c6d8b7f0092235a7a0bc4107d02a77c5613f1",
+      "executionAuditHash": "f5d1ce8c0353e90f15aebb78583a2ad8b2bb21ab7467f6a602b76e5030fd3344"
+    },
+    {
+      "id": "N06-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 8,
+      "input": 329897,
+      "output": 5296,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "situation_query",
+        "situation_query",
+        "annotation_read",
+        "task_resource_query",
+        "skill.read",
+        "spatial_analyze",
+        "spatial_analyze",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "clarify",
+          "evidenceHash": "899f2a1839c98987b903374e7d7c84bdb086bd43eedcaeb488d6c13faa622496",
+          "evidenceId": "bc5cec24",
+          "factId": "n06-region",
+          "quote": "“北区”是指西块、东块，还是两块合并统计？"
+        },
+        {
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "fb997ac1792add9ccb408163a2fb980368cfeab52abdf27b80fb3ef916f23081",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "1cea9a46fb50d7e6edbb82da8f60ebaa9fdaa60fe8280c369c4292283affe877",
+      "continuationHash": "f700ee740bd2d34befdb4702939c8468f96ba8e473fb81e4e0db100b29169b1d",
+      "executionAuditHash": "1d399803af95515cac3d350fa232712781ddb64ac2ebbee39b0bbfd999bf8994"
+    },
+    {
+      "id": "N05-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 5,
+      "input": 221153,
+      "output": 6460,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "annotation_read",
+        "task_resource_query",
+        "task_resource_query",
+        "spatial_analyze",
+        "spatial_analyze",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query",
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "bf0b13110c315988375c4958580db888307b009d4125d98d3dc7332e4cb99097",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "8508b472d1ab404ca1acf0a61a852b6a8701e5675ecabdaf4aabba1a0628459b",
+      "continuationHash": "2d327f60711a32dbee2c415cbed5ac914e8ed1544e56d2792c4a05a2571ebd4f",
+      "executionAuditHash": "d3d74737ca0ef68a252c02af8b46c8b3b29754dcfd420914f2bf2bc741d09cfc"
+    },
+    {
+      "id": "N04-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 2,
+      "input": 72508,
+      "output": 3392,
+      "stateChanged": false,
+      "toolCalls": [
+        "task_read",
+        "annotation_read",
+        "task_resource_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "e411f3963678e9373aabca75346f77896119c8a1cb3740cb495de6b8c75a30ea",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "0b64aaa62989b913a13a9653208c8a9bcf0b6eda2cb093ade884149210f3cb04",
+      "continuationHash": "90d94595007f6a26368a35a44e66371756b45d929412919331f6b379ff17f1c1",
+      "executionAuditHash": "b358d46b8645243364bd0126081c281291ceee8d87b65c97917a0b5416504c2e"
+    },
+    {
+      "id": "N03-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 2,
+      "input": 58712,
+      "output": 2085,
+      "stateChanged": false,
+      "toolCalls": [
+        "situation_query",
+        "situation_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "97b1664730a308b87dcebd360023f071dfaf0e96e1e856bed8cdbfc8bde1bac8",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "3e904c3937720232db396099c3ff9434a4ee3c3271ab3ee01ec05c3bf2df87a3",
+      "continuationHash": "98f3908e18d264d026a8e7100dc71588c401521dd69a9f61c9544625874e7640",
+      "executionAuditHash": "eb745aeefbe693aedd2944f0e1bfc93c92688419d82d96c46a57000ae68ae881"
+    },
+    {
+      "id": "N02-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 4,
+      "input": 122661,
+      "output": 3059,
+      "stateChanged": false,
+      "toolCalls": [
+        "situation_query",
+        "annotation_read",
+        "situation_query",
+        "situation_query",
+        "situation_query"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "d1391e30ca053610f3cfcb6529444a333e881ee293508489f3c64cbf1d5ed2ef",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "6576a7549c7aa7d3d9e8da9a001b13c50ec827ac24e249cda96a5f28a7a2f387",
+      "continuationHash": "f41cafce2409ffb73f05ba1972f470ab6009e7c002e189d99555033572dcf515",
+      "executionAuditHash": "6f199459661e7d650d41af6203b17b573b859e0a6fba46c8b7865677aec4d257"
+    },
+    {
+      "id": "N01-2",
+      "phase": "formal",
+      "origin": "executed_live_02",
+      "status": "trajectory_recorded",
+      "nativeFinalStatus": "succeeded",
+      "attempts": 5,
+      "input": 167730,
+      "output": 4434,
+      "stateChanged": false,
+      "toolCalls": [
+        "skill.read",
+        "annotation_read",
+        "task_read",
+        "spatial_analyze",
+        "spatial_analyze",
+        "situation_query",
+        "task_resource_query",
+        "spatial_analyze"
+      ],
+      "toolErrors": [],
+      "decisions": [
+        {
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "evidenceHash": "d28d969004a1601df1050c34046f1d1b497d2b615a38b212a1131ea6a51d17b2",
+          "evidenceId": null,
+          "factId": null,
+          "quote": null
+        }
+      ],
+      "resultHash": "5a5963ceb5a6953c726c8d0e8ea5d2c6a33ead4a7cfe7dbc5ecd8503ef057c8c",
+      "continuationHash": "4c0f3a30ba504bd8b44ffc9c6f9d72d1cf39adb7695496aadda4feb75b9d3191",
+      "executionAuditHash": "84f57a187642e4581b86714b60c26be9f3903594642d3a5653aad360d29b67dd"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # 独立验收题包：逐题事实与人工预期
 
-状态：**待审阅、未冻结、未执行**。本文是合成 fixtures 的准备计划，以下来源、记录、账号、任务、标绘和引用目前均未据本文写入系统，不表示真实业务或现有系统数据。本文不授权模型调用、测评执行、产品修改或 runner 实现。
+状态：**已获执行授权，正在做执行前数据核对；未启动模型测评**。本文是合成 fixtures 的准备计划，以下来源、记录、账号、任务、标绘和引用目前均未据本文写入系统，不表示真实业务或现有系统数据。本题包于89b6623提交，用户随后批准执行；实际准备/运行状态见 execution-notes.md。产品和Skill保持冻结。
 
 独立编题仅使用已批准的 `10-28-agent-spatial-plotting/resource-followup-20261102/03-acceptance.md` 和 `experiments/harness-lab/src/contracts/{task-resources,context,annotations}.ts`；未读取旧测评具体样例、实现测试或产品统计函数。预期为下列集合、数字、矩形几何和证据的人工推导。
 
@@ -16,7 +16,7 @@
 - 来源事实依据默认为该行自身 `source` evidence（精确 systemId、objectType、objectId、revision），分别挂在 quantity、taskRelations、availability、position 上；必要的条件或业务口径另加表中逐字 declaration evidence。不能只挂最外层 evidence 代替具体事实的依据。标绘事实以 declaration evidence 明确“合成验收声明”，导入副本的事实与关联必须由真实受控导入产生。
 - 任务关系列 `U` 表示对本次任务明确 `unconfirmed`，不是 assigned、不是不存在关系；`A/R/S` 分别是 `assigned/related/potential_support`。状态 `可用/不可用/未知` 对应合法 `available/unavailable/unknown`。默认这些事实使用上述有效时间且无条件；表中其他状态均明列。普通点、区域和计划点没有任务关系和可用性要求。
 - 默认来源 capability：`pagination=cursor`、`snapshot=fixed_revision`；支持该题所用 category/unit，relations 为四种合法关系，filters 含 category/task/relation，`taskIdMapping="identity"`；支援规则 `id="explicit-task-relation"`，description 为“仅当记录为同一 taskId 明确声明 potential_support 时视作潜在支援，空间接近、平台引用和 related 不产生支援关系”。正文特别约定的 partial 覆盖优先于默认。Context HTTP 分页结束（hasMore=false）与业务 resourceCoverage 完整独立；默认限定来源及题定 scope 的 HTTP 数据齐全、resourceCoverage=complete，不能扩写为整个任务、所有来源或现实全量。
-- 每条来源及其名称/quantity/成员信息都必须能经真实 ContextService 的 situation_query 路径读出；TaskResource 查询的 records 未必携带 `properties`，不能假定其必有 memberRefs。需要读名称映射时使用合法数据路径读取下表单体对象。表中只有 API 已有的 `properties.memberRefs` 可用于成员对象引用，不添加自定义成员名称字段。
+- 每条来源及其名称/quantity/成员信息都必须能经真实 ContextService 的 situation_query 路径读出；资源对象的 `properties` 不支持 `memberRefs`（该字段仅适用于来源区域对象），不得写入聚合资源。成员身份用 `coverage.memberEntityIds`，名称与位置通过合法数据路径读取下表单体对象的 `entityId/name/geometry/position`，不添加自定义成员名称字段。
 - 只有 P03/N06 的冻结消歧回复由实际追问触发：普通文本或结构化选择均按其实际含义接续，不按是否有问号判断。已经给出答案、仅自述将澄清、或未问到对应歧义时，不主动发送选择来救场。其他题除明确规定的下一轮外，没有追加事实或提示。
 - 每题下列“工具缺陷”只对工具实际输出及故障证据判定；回答错误不能自动推定工具错误。已有三项工具硬门槛是：空统计中断、有充分成员依据仍重复计数、缺乏依据仍输出精确合计。`summary.entityCount=null` 本身不构成失败，特别是聚合对象没有 entityKey 时；应检查目标口径的 quantity/成员结果及工具是否无据宣称精确。统一全局评分、无答复处理、分母和预算由同目录 README 规定。
 
@@ -119,7 +119,7 @@ HTTP 冻结计划：青埠只有一页空 items，hasMore=false，resourceCovera
 
 **用户原文**：`把“鹭桥车籍”的“晨组车辆汇总”和“暮组车辆汇总”去重，给我车辆名称名单和数量。图层里引用的“沄桥运输车副本”也要核对，别重复算同一辆。`
 
-初始引用来源两个汇总对象与 `A(N02)` 的 `n02-copies/n02-copy-u`；来源 `n02-luqiao`，scope=`n02-fleet-entire`，数量都是车辆实体数。全部来源记录在同一 `systemId=n02-luqiao` 身份命名空间；参与数量去重的 category=vehicle、unit=辆、meaning=entities、scope、quantity.effectiveAt/validUntil 均相同，quantity.conditions 统一省略。coverage.scope 同为 n02-fleet-entire，查询 resourceCoverage=complete；capability 使用默认 identity task 映射和 explicit-task-relation 支援规则。来源可通过 situation_query 读到全部7行，下表各成员的 name/entityId 是真实可读映射，不依赖隐藏名单。两份汇总的 properties.memberRefs 分别是其成员单体的完整 ContextRef 数组，**不是新增字段**；是否读取它不影响可经单体字段独立证明姓名映射。
+初始引用来源两个汇总对象与 `A(N02)` 的 `n02-copies/n02-copy-u`；来源 `n02-luqiao`，scope=`n02-fleet-entire`，数量都是车辆实体数。全部来源记录在同一 `systemId=n02-luqiao` 身份命名空间；参与数量去重的 category=vehicle、unit=辆、meaning=entities、scope、quantity.effectiveAt/validUntil 均相同，quantity.conditions 统一省略。coverage.scope 同为 n02-fleet-entire，查询 resourceCoverage=complete；capability 使用默认 identity task 映射和 explicit-task-relation 支援规则。来源可通过 situation_query 读到全部7行，下表各成员的 name/entityId 是真实可读映射，不依赖隐藏名单。两份汇总的 `properties={}`；资源对象不支持 `properties.memberRefs`。通过本来源合法 situation_query 读取五个单体的 `entityId/name`，与完整 `coverage.memberEntityIds` 对应，可独立证明姓名映射。
 
 | systemId | objectId | entityId | 名称 | 任务关系 | 状态证据 | 数量口径 | 聚合成员 / 完整性 | geometry 与 position |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -205,7 +205,7 @@ HTTP 冻结计划：青埠只有一页空 items，hasMore=false，resourceCovera
 | n05-luting | lt-est | lt-e57 | 浦灯救生艇 | U / 可用 | 1艘/entities/n05-luting-boats | — | Point[121.015,31.025]；**estimated/resource**，证据“仅为估计位置” |
 | n05-luting | （无单体对象） | lt-e81仅见于完整成员表 | （仅已知成员ID lt-e81） | 未提供单体关系/状态事实 | 已含在lt-all的4艘中，不添加quantity | 不创建虚构单体 | 没有成员geometry/position；不得拿系泊站址补齐 |
 
-最后一行是聚合成员身份的展开说明，不生成来源 SituationObject。hk-all 的 properties.memberRefs 为四个车辆单体引用；lt-all 的 memberRefs 只能指向实际存在的 lt-in/lt-edge/lt-est，不构造 lt-e81 的假可读对象。完整成员ID已足以确定4艘的身份口径，缺的是其中成员实际位置。
+最后一行是聚合成员身份的展开说明，不生成来源 SituationObject。hk-all 与 lt-all 的 `properties={}`（资源对象不支持 `memberRefs`）；通过本来源合法 situation_query 读取四个车辆单体和三个实际存在的 lt-in/lt-edge/lt-est，以 `entityId` 对应完整成员ID，不构造 lt-e81 的假可读对象。完整成员ID已足以确定4艘的身份口径，缺的是其中成员实际位置。
 
 无后续用户事实。人工预期（所有数量都在各自 scope 内）：
 

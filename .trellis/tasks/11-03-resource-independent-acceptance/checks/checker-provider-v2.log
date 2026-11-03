@@ -1,0 +1,24 @@
+✔ E07 calibrated resolved, ambiguous single and comparison policies agree with deployed Skill (15.0807ms)
+✔ E08 product failure without a final answer is failed, with explanation N/A not empty-claims true (0.906117ms)
+✔ E08 no final answer retains an earlier false process claim rather than laundering it (0.96993ms)
+✔ E08 infrastructure fault remains separate, and inconsistent or disputed final classifications cannot pass (0.755202ms)
+✔ N-series denominator keeps product failures and reports explanation N/A separately (7.107252ms)
+✔ E07 ordinary clarification → frozen reply → final answer; no keyword/question-mark classifier (2.546554ms)
+✔ E07 structured clarification uses real API response mapping; wrong question/options/approval cannot be answered (0.848974ms)
+✔ E01–E06 seven historical quoted negatives keep original provenance; six positives are explicitly constructed (31.707974ms)
+✔ reviewer wording and evidence order do not create semantic disagreement (0.838113ms)
+✔ untrusted JSON new assessment fields cannot pass or crash via malformed enums, arrays or text (2.29871ms)
+✔ observer forwards the original body, headers, signal and complete response bytes (54.873263ms)
+✔ unmetered HTTP or successful SSE blocks the next actual outbound attempt (21.048821ms)
+✔ stream truncation and cancellation preserve failed attempts and prohibit further requests (29.560278ms)
+✔ a metered transient error can be retried, while auth/quota failure cannot (34.974165ms)
+✔ response model drift remains a batch stop after recreating the provider (15.746139ms)
+✔ reservation gates cover request cap, input and output without adding an attempt (614.666086ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 997.907345

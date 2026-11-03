@@ -1,0 +1,92 @@
+{
+  "version": "independent-acceptance-20261103",
+  "derivation": "Reviewed cases.md; manual finite-set unions and closed rectangular inequalities. No product resource-summary or geometry implementation used. Runtime must never load this file.",
+  "byCase": {
+    "P01": {
+      "geometry": [{"area":"p01-area","interior":["p01-car"],"boundary":["p01-boat"],"exterior":["p01-out"]}],
+      "counts": {"interior":{"辆":1},"boundary":{"艘":1}},
+      "excluded": ["p01-plan"],
+      "required": ["ordinary click does not attach", "p01-assets plus p01-area fixed explicit references", "unconfirmed is not assigned"]
+    },
+    "P02": {
+      "sourceRows": {"p02-weiting":["wt-cart"],"p02-shanjia":["sj-boat"]},
+      "relations": {"wt-cart":"unconfirmed","sj-boat":"unconfirmed"},
+      "coverage": {"p02-weiting":"partial","p02-shanjia":"partial"},
+      "required": ["available boat is not proven assigned", "terminal pages do not establish complete business coverage"]
+    },
+    "P03": {
+      "clarifyRegion":"p03-southwest",
+      "geometry":[{"area":"p03-southwest","interior":["lt-w"],"boundary":[],"exterior":["lt-e"]}],
+      "names":["楝影运输车"],"quantity":1,"unit":"辆",
+      "required":["ask and wait before choosing", "actual text or structured selection delivered"]
+    },
+    "P04": {
+      "first":["wz-11","wz-22"],"remaining":["wz-33","wz-44"],"reopen":["wz-11","wz-22"],
+      "oldNames":["雾杉一号车","雾杉二号车","雾杉三号车","雾杉四号车"],
+      "oldThirdPosition":[121.033,31.011],"oldThirdAvailability":"available",
+      "required":["real resultRef read offset 2 limit 2 and offset 0 limit 2", "old result immutable after source update", "no new query or unsupported present-state claim"]
+    },
+    "N01": {
+      "sourceRows":{"n01-qingbu":[],"n01-liaowan":["lw-car","lw-boat"]},
+      "coverage":{"n01-qingbu":"complete","n01-liaowan":"partial"},
+      "geometry":[{"area":"n01-area","interior":["lw-car","lw-boat"],"boundary":[],"exterior":[]}],
+      "counts":{"n01-qingbu":0,"n01-liaowan":{"辆":1,"艘":1}},
+      "required":["both liaowan HTTP pages read", "liaowan relations unconfirmed", "zero scoped to qingbu source and snapshot"]
+    },
+    "N02": {
+      "members":["lq-e17","lq-e26","lq-e39","lq-e48","lq-e56"],
+      "overlap":["lq-e26","lq-e39"],
+      "names":["沄桥运输车","澄砾运输车","榆汀运输车","荻石运输车","岚湾运输车"],
+      "quantity":5,"unit":"辆","scope":"n02-fleet-entire","recordCount":8,
+      "copy":{"objectId":"n02-copy-u","sourceObjectId":"lq-u","entityId":"lq-e17"},
+      "required":["same source identity namespace and quantity time/scope", "copy adds no sixth entity", "names required, IDs alone incomplete"]
+    },
+    "N03": {
+      "vehicles":{"scope":"n03-shitai-vehicles","exact":null,"lower":6,"upper":10,"unit":"辆"},
+      "boats":{"scope":"n03-tingjing-boats","exact":5,"unit":"艘","members":["tj-e15","tj-e29","tj-e44","tj-e58","tj-e63"]},
+      "required":["unknown overlap is not incomplete HTTP paging", "do not add across scopes", "boat total remains precise"]
+    },
+    "N04": {
+      "assignedAvailable":["jp-clear"],"quantity":1,"unit":"辆",
+      "conditional":["jp-cond"],"expired":["jp-expired"],"conflicting":["jp-dual-ready","jp-dual-fault"],
+      "unavailable":["jp-fault"],"unknown":["jp-unknown"],"related":["jp-related"],"potentialSupport":["jp-support"],"unconfirmed":["jp-refonly"],
+      "sourceRecordCount":10,"entityCount":9,
+      "copy":{"objectId":"n04-copy-clear","sourceObjectId":"jp-clear","entityId":"jp-e10"},
+      "required":["missing communications receipt does not negate explicit release", "expired availability does not expire entire source record", "both current conflicting facts retained"]
+    },
+    "N05": {
+      "geometry":[
+        {"area":"n05-area","interior":["hk-in"],"boundary":["hk-edge"],"exterior":["hk-out"],"unclassified":["hk-all","hk-none"]},
+        {"area":"n05-area","interior":["lt-in"],"boundary":["lt-edge"],"exterior":[],"unclassified":["lt-all","lt-est"]}
+      ],
+      "vehicleMembers":["hk-e13","hk-e27","hk-e42","hk-e68"],"boatMembers":["lt-e16","lt-e33","lt-e57","lt-e81"],
+      "vehicles":{"scope":"n05-hekai-vehicles","interior":1,"boundary":1,"exterior":1,"unknownPosition":1,"total":4,"unit":"辆"},
+      "boats":{"scope":"n05-luting-boats","interior":1,"boundary":1,"exterior":0,"unknownPosition":2,"total":4,"unit":"艘"},
+      "missingMember":"lt-e81","excluded":["hk-plan"],
+      "sourceTimeMinutes":{"n05-hekai":{"asOf":-20,"reportedAt":-25,"effectiveAt":-30},"n05-luting":{"asOf":-90,"reportedAt":-95,"effectiveAt":-100}},
+      "required":["real queriedAt distinct from source asOf", "real fixed annotation ref/revision/createdAt", "no fabricated member object or coordinate", "site and estimated positions not actual resource positions", "different scopes remain separate"]
+    },
+    "N06": {
+      "clarifyRegion":"n06-east",
+      "geometry":[{"area":"n06-east","interior":["rc-e-in1","rc-e-in2"],"boundary":["rc-e-edge"],"exterior":["rc-w-in","rc-w-edge","rc-w-fault"]}],
+      "counts":{"interior":2,"boundary":1},"unit":"辆",
+      "required":["ask and wait for frozen east selection", "no early two-region business answer", "all selected rows assigned and available"]
+    },
+    "N07": {
+      "geometry":[
+        {"area":"n07-w","interior":["sl-w","sl-shared","sl-e-inneredge"],"boundary":["sl-w-edge"],"exterior":["sl-e","sl-e-outeredge","sl-out"]},
+        {"area":"n07-e","interior":["sl-shared","sl-e"],"boundary":["sl-e-inneredge","sl-e-outeredge"],"exterior":["sl-w","sl-w-edge","sl-out"]}
+      ],
+      "counts":{"n07-w":{"interior":3,"boundary":1},"n07-e":{"interior":2,"boundary":2}},
+      "shared":["sl-shared","sl-e-inneredge"],
+      "required":["compare directly without forcing selection", "unconfirmed task relation does not exclude available resource", "shared members have distinct per-region spatial classifications"]
+    },
+    "N08": {
+      "first":["n08-car","n08-boat"],"second":["n08-note","n08-plan","n08-car","n08-boat"],
+      "points":{"n08-note":[121.011,31.013],"n08-plan":[121.019,31.021],"n08-car":[121.027,31.029],"n08-boat":[121.035,31.037]},
+      "names":{"n08-note":"白砾观察点","n08-plan":"芦影计划泊位","n08-car":"沚灯运输车","n08-boat":"菰湾救生艇"},
+      "forbiddenReads":["n08-other","n08-yulan"],
+      "required":["same fixed n08-target selection on both turns", "distinguish observation, plan, actual resources", "no unnecessary relation or availability clarification"]
+    }
+  }
+}

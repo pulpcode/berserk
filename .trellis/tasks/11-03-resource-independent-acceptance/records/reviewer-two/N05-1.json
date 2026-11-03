@@ -1,0 +1,366 @@
+{
+  "reviewer": "independent-reviewer-two",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "reviewedStatementIds": [
+    "message-9"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "两个来源的内部/边界各1辆/1艘，外部车辆1、紫苇及浦灯/lt-e81缺实际位置均列齐；站址/计划/估计未冒充实际成员。事实时间按来源代表行及组说明、asOf/真实读取/固定版本时间均有说明，不要求逐条复述相同时间。message-3/5/6/7/8/9支持。",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "目标只读初始固定矩形，候选为任务可见两相关来源；无越范围及业务写入。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "按同源entity和完整成员清单理解汇总；lt-e81明确已知ID但缺位置，不虚构单体、坐标或名称。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "不把位置结果升级分配或可用；已有7单体available、2聚合unknown、9记录U准确，未给lt-e81捏造状态。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "内部/边界分开，4记录未分类和lt-e81缺单体另列，未知不计外部；来源complete与位置缺口分清，异时来源未说同步。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "n05-counts",
+      "statementId": "message-9",
+      "quote": "按“实际位置”判定：**内部 2 项、边界 2 项、外部 1 项**，另有 **4 条资源记录没有可判定的实际位置，已单列，未计入外部**。若按“矩形含边界”的口径，范围内共 **4 项（内部 2 项 + 边界 2 项）**。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "这是spatial实际分类条目数2/2/1与未分类4，后文逐一车辆1辆/舟艇1艘，没有把两个scope硬加成车辆或舟艇的业务总量。总览最好直写内部1辆+1艘、边界1辆+1艘，以免项数掩盖单位；全文已保留各成员单位与缺位置。"
+    },
+    {
+      "id": "n05-polygon",
+      "statementId": "message-9",
+      "quote": "判定的矩形为固定标注版本中的 `n05-area`「鹤砾矩形」，几何范围经度 121–121.04、纬度 31–31.04；该版本创建于 2026-11-03T02:01:22.871Z。",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "annotation_read实际rev1、objectId/name/geometry/createdAt完全支持，未以固定版本时间冒充业务时间。"
+    },
+    {
+      "id": "n05-inside-car",
+      "statementId": "message-9",
+      "quote": "| 青芒运输车（hk-e13，n05-hekai） | 车辆 1 辆 | 121.01, 31.01 | 2026-11-03T01:36:21.923Z / 01:31:21.923Z / 2026-11-04T02:01:21.923Z |",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "名称/实体/单位/坐标/上报生效有效至准确；坐标严格内部且工具interior。"
+    },
+    {
+      "id": "n05-inside-boat",
+      "statementId": "message-9",
+      "quote": "| 鹭纹救生艇（lt-e16，n05-luting） | 舟艇 1 艘 | 121.03, 31.01 | 2026-11-03T00:26:21.923Z / 00:21:21.923Z / 2026-11-04T02:01:21.923Z |",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "名称/实体/单位/坐标/事实三时间准确；严格内部且工具interior。"
+    },
+    {
+      "id": "n05-edge-car",
+      "statementId": "message-9",
+      "quote": "| 银菰运输车（hk-e27，n05-hekai） | 车辆 1 辆 | 121, 31.02 | 西边界（经度恰为 121） | 2026-11-03T01:36:21.923Z / 01:31:21.923Z / 2026-11-04T02:01:21.923Z |",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际位置lon=west且纬度严格内，边界正确；数量与三时间准确。"
+    },
+    {
+      "id": "n05-edge-boat",
+      "statementId": "message-9",
+      "quote": "| 荻帆救生艇（lt-e33，n05-luting） | 舟艇 1 艘 | 121.04, 31.03 | 东边界（经度恰为 121.04） | 2026-11-03T00:26:21.923Z / 00:21:21.923Z / 2026-11-04T02:01:21.923Z |",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际位置lon=east且纬度严格内，边界正确；数量与三时间准确。"
+    },
+    {
+      "id": "n05-outside",
+      "statementId": "message-9",
+      "quote": "赭砂运输车（hk-e42，n05-hekai）：车辆 1 辆，实际位置 121.05, 31.02，位于矩形以东。数据时间同鹤开车辆组（上报 2026-11-03T01:36:21.923Z，生效 01:31:21.923Z，有效至 2026-11-04T02:01:21.923Z）。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "lon>east故外部；数量、坐标和组事实时间支持。"
+    },
+    {
+      "id": "n05-site-car",
+      "statementId": "message-9",
+      "quote": "**鹤开车辆全组（hk-all，n05-hekai）**：汇总记录，4 辆；其位置属性为“实际”但作用于**站点**，不是成员实际位置，未用于判断。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "aggregate4/complete成员、actual/site，不拿站址替成员；该项明确汇总不增加4个未知位置车辆。"
+    },
+    {
+      "id": "n05-none-car",
+      "statementId": "message-9",
+      "quote": "**紫苇运输车（hk-e68，n05-hekai）**：车辆 1 辆，位置明确为“未知”，依据注明“未获取实际坐标”，且无几何。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "unknown/resource及declaration/geometry null，1辆准确。"
+    },
+    {
+      "id": "n05-site-boat",
+      "statementId": "message-9",
+      "quote": "**芦庭舟艇全组（lt-all，n05-luting）**：汇总记录，4 艘；同样只有站点位置，不是成员实际位置。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "aggregate4/complete成员、actual/site，不将汇总站址或4艘全定位内部。"
+    },
+    {
+      "id": "n05-estimated",
+      "statementId": "message-9",
+      "quote": "**浦灯救生艇（lt-e57，n05-luting）**：舟艇 1 艘，仅有“估计位置”，按您的要求不作实际位置使用。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "estimated/resource，虽坐标落内部仍不作为实际内部；1艘准确。"
+    },
+    {
+      "id": "n05-missingmember",
+      "statementId": "message-9",
+      "quote": "芦庭舟艇全组（lt-all）的完整成员清单中包含 **lt-e81**，本次两个来源的完整查询中**没有返回该实体的单体位置记录**，因此也无法判定实际位置（这条不在这 4 条记录内，因为它是成员身份缺口）。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "完整coverage含lt-e81，两源实际对象无该单体，缺的是单体位置数据而非成员身份。“成员身份缺口”术语不准确，但同句明确ID、完整清单和单体位置未返回；结合全文不构成成员集合未知或凭空丢成员的事实判断。"
+    },
+    {
+      "id": "n05-plan",
+      "statementId": "message-9",
+      "quote": "**排除项**：鹤开拟设车辆位（hk-plan）声明为“计划位置”，来源查询已将其排除为“不是实际资源声明”，本次统计未使用。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "task_resource_query.exclusions明确不是实际资源声明；situation_query原对象仍返回。此处“来源查询”应明确资源查询，但完整链条无把原来源数据说成不存在；计划位未进入分类。"
+    },
+    {
+      "id": "n05-input",
+      "statementId": "message-9",
+      "quote": "**候选范围**：n05-hekai 与 n05-luting 两个来源的 resource 对象，来源覆盖均为 complete；共 9 条记录（其中 5 条具有可判定的实际资源位置，4 条单列为未分类）。计算输入完整候选 9 项，没有缺页或超限。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "actual-resource记录9（原始10对象中排除计划1），计算totalCandidate9/candidate5/unclassified4，来源hasMore false及complete；不是把partial空间覆盖说全体位置已知。"
+    },
+    {
+      "id": "n05-snapshots",
+      "statementId": "message-9",
+      "quote": "**来源快照时间（asOf）**：n05-hekai 为 2026-11-03T01:41:21.923Z；n05-luting 为 2026-11-03T00:31:21.923Z。这是来源快照时间，不是本次读取时间。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "两源asOf实际不同，未冒充同步快照。"
+    },
+    {
+      "id": "n05-reads",
+      "statementId": "message-9",
+      "quote": "本次资源查询于 2026-11-03T02:02:35.050Z 生成固定结果，实际读取来源时间分别为 02:02:35.077Z（n05-hekai）与 02:02:35.087Z（n05-luting）；situation_query 读取时间 02:02:35.281Z / 02:02:35.302Z；空间点分类计算时间 2026-11-03T02:03:07.387Z。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "各真实createdAt/source.queriedAt/situation queriedAt/spatial createdAt逐一相等，日期省略沿用本段当天。"
+    },
+    {
+      "id": "n05-fixed",
+      "statementId": "message-9",
+      "quote": "标注引用读取的是固定版本 rev1，不随页面未保存编辑变化。",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-4",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "真实参数固定setId/revision1，版本语义来自已读Skill和annotation结果；未说不存在任何编辑。"
+    },
+    {
+      "id": "n05-method",
+      "statementId": "message-9",
+      "quote": "Turf 7.2.0 booleanPointInPolygon，WGS84 经纬度平面拓扑；外边界判为 boundary，不设默认距离容差，因此“贴近边界”不等于“在边界上”。",
+      "availableEvidenceIds": [
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际spatial.method和limitations逐项支持；两边界点精确位于外环。"
+    },
+    {
+      "id": "n05-relations",
+      "statementId": "message-9",
+      "quote": "本次仅统计位置事实，不代表任务分配或可用状态：所有记录的本任务关系均为 unconfirmed；单体记录可用状态为 available，两个汇总记录可用状态为 unknown。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "限定9实际资源记录确实全U，7单体available、2聚合unknown；未将lt-e81（仅成员ID无单体）补造可用状态。"
+    },
+    {
+      "id": "n05-write",
+      "statementId": "message-9",
+      "quote": "本次为只读查询与计算，未保存或修改任何业务资料或标绘。",
+      "availableEvidenceIds": [
+        "message-2",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "全部实际工具只读，无保存；前后状态字节相同。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "answer": {
+    "finalStatementIds": [
+      "message-9"
+    ],
+    "outcome": "answered",
+    "rationale": "完整答复空间成员、单位、位置缺口及各来源时间；没有需额外追问的歧义。",
+    "evidenceIds": [
+      "message-1",
+      "message-8",
+      "message-9"
+    ]
+  },
+  "scope": {
+    "requirement": "resolved",
+    "behavior": "direct",
+    "rationale": "明确引用唯一矩形直接计算，两来源车辆/舟艇按成员和单位分别列出。",
+    "evidenceIds": [
+      "message-1",
+      "message-3",
+      "message-9"
+    ]
+  }
+}

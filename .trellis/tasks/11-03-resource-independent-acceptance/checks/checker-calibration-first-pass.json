@@ -1,0 +1,18 @@
+{
+  "method": "Reviewer first read user/evidence/process/final/fault fields with annotation/expected/category omitted; independent agent review, not human blind annotation.",
+  "judgments": [
+    {"id":"C01","main":true,"explanation":true,"strict":true},
+    {"id":"C02","main":false,"explanation":false,"strict":false},
+    {"id":"C03","main":true,"explanation":true,"strict":true,"note":"Scope qualified in full answer; no factual deduction for wording."},
+    {"id":"C04","main":true,"explanation":true,"strict":true},
+    {"id":"C05","main":false,"explanation":false,"strict":false,"critical":"unsupported availability"},
+    {"id":"C06","main":false,"explanation":true,"strict":false,"note":"Union numerically supported but unresolved answer-changing scope fails task."},
+    {"id":"C07","main":true,"explanation":true,"strict":true},
+    {"id":"C08","main":false,"explanation":null,"strict":false,"note":"No final; unauthorized narrowing of explicit comparison."},
+    {"id":"C09","main":false,"explanation":null,"strict":false,"processExplanation":false},
+    {"id":"C10","main":true,"explanation":true,"strict":true,"toolGate":"fail: member_deduplication"},
+    {"id":"C11","main":true,"explanation":false,"strict":false,"processExplanation":false},
+    {"id":"C12","main":false,"explanation":null,"strict":false,"toolGate":"fail: empty_selection_abort"},
+    {"id":"C13","main":true,"explanation":true,"strict":true,"toolGate":"fail: unsupported_exact_sum"}
+  ]
+}

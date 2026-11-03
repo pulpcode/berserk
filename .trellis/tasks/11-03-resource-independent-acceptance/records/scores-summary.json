@@ -1,0 +1,420 @@
+[
+  {
+    "entryId": "N01-1",
+    "caseId": "N01",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n01-query-types",
+      "n01-units"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N01-2",
+    "caseId": "N01",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n01r2-02",
+      "n01r2-06",
+      "n01r2-07"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N02-1",
+    "caseId": "N02",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n02-total",
+      "n02-relations"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N02-2",
+    "caseId": "N02",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": false,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n02r2-01",
+      "n02r2-05"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N03-1",
+    "caseId": "N03",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n03-heading"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N03-2",
+    "caseId": "N03",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n03r2-03",
+      "n03r2-13"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N04-1",
+    "caseId": "N04",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n04-related"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N04-2",
+    "caseId": "N04",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n04r2-05",
+      "n04r2-08"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N05-1",
+    "caseId": "N05",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": false,
+    "explanation": true,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "N05-1-c01",
+      "N05-1-c10",
+      "N05-1-c11",
+      "N05-1-c12"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N05-2",
+    "caseId": "N05",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": false,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "N05-2-c02"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N06-1",
+    "caseId": "N06",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": false,
+    "explanation": null,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n06-only",
+      "n06-different"
+    ],
+    "issues": [
+      "reviewed scope behavior violates clarification rule"
+    ]
+  },
+  {
+    "entryId": "N06-2",
+    "caseId": "N06",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": false,
+    "explanation": true,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": false,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n06r2-01"
+    ],
+    "issues": [
+      "reviewed scope behavior violates clarification rule"
+    ]
+  },
+  {
+    "entryId": "N07-1",
+    "caseId": "N07",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n07-method"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N07-2",
+    "caseId": "N07",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": false,
+    "explanation": false,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n07r2-exclusive"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N08-1",
+    "caseId": "N08",
+    "repeat": 1,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": false,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": false,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n08-measurement"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "N08-2",
+    "caseId": "N08",
+    "repeat": 2,
+    "cohort": "formal",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": false,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": false,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "n08r2-sum",
+      "n08r2-calculation"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "P01-1",
+    "caseId": "P01",
+    "repeat": 1,
+    "cohort": "public",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "p01-exclusion-heading",
+      "p01-declarations"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "P02-1",
+    "caseId": "P02",
+    "repeat": 1,
+    "cohort": "public",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "p02-opened-slice"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "P03-1",
+    "caseId": "P03",
+    "repeat": 1,
+    "cohort": "public",
+    "status": "reviewed",
+    "mainTask": true,
+    "explanation": true,
+    "strict": true,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "p03-source",
+      "p03-availability"
+    ],
+    "issues": []
+  },
+  {
+    "entryId": "P04-1",
+    "caseId": "P04",
+    "repeat": 1,
+    "cohort": "public",
+    "status": "reviewed",
+    "mainTask": false,
+    "explanation": true,
+    "strict": false,
+    "critical": {
+      "authorizedAccessAndActions": true,
+      "evidenceBasedIdentity": true,
+      "evidenceBasedAssignmentAvailability": true,
+      "honestCoverage": true
+    },
+    "expressionIssues": [
+      "p04-compare"
+    ],
+    "issues": []
+  }
+]

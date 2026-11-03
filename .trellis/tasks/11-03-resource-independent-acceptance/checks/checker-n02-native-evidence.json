@@ -1,0 +1,57 @@
+{
+  "path": "/private/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/independent-acceptance-offline-9qYXfl/quantities-N02/turn-1-snapshot.json",
+  "sha256": "90a41d3502a089d0c813f4c56aee2663b839805f57bdc43213bc75ef0f0f44ab",
+  "lastResult": {
+    "requestId": "907a58ab-e300-4022-a4a8-cc846cdd179a",
+    "status": "succeeded",
+    "compactionIds": [],
+    "compactions": [],
+    "usageSummary": {
+      "modelAttempts": 2,
+      "replyAttempts": 2,
+      "compactionAttempts": 0,
+      "toolCalls": 1,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 200,
+        "output": 40,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 240
+      }
+    }
+  },
+  "toolId": "67b9d2d9",
+  "isError": false,
+  "summary": {
+    "recordCount": 8,
+    "itemCount": 7,
+    "knownEntityCount": 5,
+    "entityCount": null,
+    "quantities": [
+      {
+        "category": "vehicle",
+        "unit": "辆",
+        "meaning": "entities",
+        "scope": "n02-fleet-entire",
+        "value": 5,
+        "knownValue": 5,
+        "unknownCount": 0,
+        "recordIds": [
+          "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-u\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-v\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-w\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-k\"]",
+          "[\"n02-luqiao\",\"resource\",\"lq-m\"]"
+        ],
+        "limitations": []
+      }
+    ],
+    "limitations": [
+      "存在实体身份未确认记录；记录数不能作为确定实体总数。"
+    ]
+  },
+  "controlledAssociationCount": 1
+}
