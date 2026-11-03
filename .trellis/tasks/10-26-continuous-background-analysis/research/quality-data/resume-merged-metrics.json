@@ -1,0 +1,976 @@
+[
+  {
+    "run": "new-spatial-1",
+    "version": "new",
+    "durationSeconds": 815.73,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 64,
+    "repairPrompts": 0,
+    "toolErrors": 10,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 906260,
+      "output": 165674,
+      "cacheRead": 13999360,
+      "cacheWrite": 0,
+      "totalTokens": 15071294
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 483569,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 46836,
+    "toolCalls": 92,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "information_read": 8,
+      "situation_query": 11,
+      "information_search": 2,
+      "analysis_current_read": 7,
+      "spatial_analyze": 7,
+      "analysis_calculate": 23,
+      "information_record_analysis_update": 17,
+      "analysis_evidence_read": 5
+    },
+    "audit": {
+      "requests": 64,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 64
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/new-spatial-1"
+  },
+  {
+    "run": "new-spatial-2",
+    "version": "new",
+    "durationSeconds": 775.38,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 68,
+    "repairPrompts": 0,
+    "toolErrors": 12,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 1115316,
+      "output": 168683,
+      "cacheRead": 15979648,
+      "cacheWrite": 0,
+      "totalTokens": 17263647
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 602792,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 44432,
+    "toolCalls": 103,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "information_read": 9,
+      "analysis_current_read": 15,
+      "situation_query": 12,
+      "information_search": 2,
+      "analysis_evidence_read": 11,
+      "analysis_calculate": 18,
+      "spatial_analyze": 5,
+      "information_record_analysis_update": 19
+    },
+    "audit": {
+      "requests": 68,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 68
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/new-spatial-2"
+  },
+  {
+    "run": "new-text-1",
+    "version": "new",
+    "durationSeconds": 681.39,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 61,
+    "repairPrompts": 0,
+    "toolErrors": 17,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 696461,
+      "output": 146630,
+      "cacheRead": 10093824,
+      "cacheWrite": 0,
+      "totalTokens": 10936915
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 372627,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 28195,
+    "toolCalls": 78,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 6,
+      "analysis_calculate": 39,
+      "information_record_analysis_update": 20
+    },
+    "audit": {
+      "requests": 61,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 61
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/new-text-1"
+  },
+  {
+    "run": "new-text-2",
+    "version": "new",
+    "durationSeconds": 580.14,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 49,
+    "repairPrompts": 0,
+    "toolErrors": 11,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 650117,
+      "output": 134391,
+      "cacheRead": 7478656,
+      "cacheWrite": 0,
+      "totalTokens": 8263164
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 346820,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 23589,
+    "toolCalls": 58,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 6,
+      "analysis_calculate": 20,
+      "information_record_analysis_update": 19
+    },
+    "audit": {
+      "requests": 49,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/new-text-2"
+  },
+  {
+    "run": "new-text-3",
+    "version": "new",
+    "durationSeconds": 232.54,
+    "publishedBatches": 4,
+    "attemptedBatches": 5,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 12,
+    "recordedTaskUpdates": 12,
+    "providerRequests": 24,
+    "repairPrompts": 0,
+    "toolErrors": 11,
+    "unknownUsageAttempts": 1,
+    "usage": {
+      "input": 219430,
+      "output": 52947,
+      "cacheRead": 890752,
+      "cacheWrite": 0,
+      "totalTokens": 1163129
+    },
+    "mechanismChecksPassed": false,
+    "failure": "{\"code\":\"CONTINUOUS_FAILED\",\"message\":\"本轮未正常完成，保留输入等待恢复。\"}\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 127207,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [
+      "deepseek-v4.1-flash"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 13881,
+    "toolCalls": 34,
+    "toolCallsByName": {
+      "analysis_task_candidates": 5,
+      "ls": 1,
+      "analysis_current_read": 5,
+      "analysis_calculate": 14,
+      "information_record_analysis_update": 9
+    },
+    "audit": {
+      "requests": 24,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 23,
+        "429": 1
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/new-text-3"
+  },
+  {
+    "run": "old-spatial-1",
+    "version": "old",
+    "durationSeconds": 314.9,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 47,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 325751,
+      "output": 48962,
+      "cacheRead": 4023808,
+      "cacheWrite": 0,
+      "totalTokens": 4398521
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 175081,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 14316,
+    "toolCalls": 73,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "information_read": 11,
+      "analysis_current_read": 14,
+      "situation_query": 15,
+      "information_search": 2,
+      "spatial_analyze": 1,
+      "information_record_analysis_update": 13,
+      "task_search": 2,
+      "task_read": 3
+    },
+    "audit": {
+      "requests": 47,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 47
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-spatial-1"
+  },
+  {
+    "run": "old-spatial-2",
+    "version": "old",
+    "durationSeconds": 269.11,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 53,
+    "providerRequests": 42,
+    "repairPrompts": 0,
+    "toolErrors": 2,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 374178,
+      "output": 41553,
+      "cacheRead": 3763584,
+      "cacheWrite": 0,
+      "totalTokens": 4179315
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 204757,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 10491,
+    "toolCalls": 58,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "information_search": 2,
+      "situation_query": 8,
+      "analysis_current_read": 16,
+      "information_record_analysis_update": 14,
+      "information_read": 6
+    },
+    "audit": {
+      "requests": 42,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 42
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-spatial-2"
+  },
+  {
+    "run": "old-spatial-3",
+    "version": "old",
+    "durationSeconds": 380.56,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 51,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 365785,
+      "output": 58127,
+      "cacheRead": 4898688,
+      "cacheWrite": 0,
+      "totalTokens": 5322600
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 198786,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 19890,
+    "toolCalls": 85,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "information_read": 9,
+      "situation_query": 19,
+      "task_read": 7,
+      "analysis_current_read": 11,
+      "spatial_analyze": 8,
+      "information_record_analysis_update": 13,
+      "information_search": 5,
+      "task_search": 1
+    },
+    "audit": {
+      "requests": 51,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 51
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-spatial-3"
+  },
+  {
+    "run": "old-text-1",
+    "version": "old",
+    "durationSeconds": 232.75,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 38,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 450699,
+      "output": 35859,
+      "cacheRead": 3437312,
+      "cacheWrite": 0,
+      "totalTokens": 3923870
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 241624,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 8624,
+    "toolCalls": 62,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 36,
+      "information_record_analysis_update": 13
+    },
+    "audit": {
+      "requests": 38,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 38
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-text-1"
+  },
+  {
+    "run": "old-text-2",
+    "version": "old",
+    "durationSeconds": 255.71,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 51,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 291366,
+      "output": 37574,
+      "cacheRead": 3757440,
+      "cacheWrite": 0,
+      "totalTokens": 4086380
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 157448,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 9323,
+    "toolCalls": 49,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 21,
+      "task_search": 2,
+      "information_record_analysis_update": 13
+    },
+    "audit": {
+      "requests": 51,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 51
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-text-2"
+  },
+  {
+    "run": "old-text-3",
+    "version": "old",
+    "durationSeconds": 249.73,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 49,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 452602,
+      "output": 35357,
+      "cacheRead": 4698496,
+      "cacheWrite": 0,
+      "totalTokens": 5186455
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 243561,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 8974,
+    "toolCalls": 62,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "information_record_analysis_update": 13
+    },
+    "audit": {
+      "requests": 49,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028/evidence/old-text-3"
+  },
+  {
+    "run": "new-spatial-3-resume",
+    "version": "new",
+    "durationSeconds": 739.57,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 51,
+    "providerRequests": 65,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 921067,
+      "output": 170862,
+      "cacheRead": 14989696,
+      "cacheWrite": 0,
+      "totalTokens": 16081625
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 486217,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 46280,
+    "toolCalls": 113,
+    "toolCallsByName": {
+      "information_read": 6,
+      "analysis_task_candidates": 12,
+      "situation_query": 12,
+      "analysis_current_read": 11,
+      "information_search": 1,
+      "analysis_evidence_read": 16,
+      "analysis_calculate": 32,
+      "information_record_analysis_update": 19,
+      "spatial_analyze": 4
+    },
+    "audit": {
+      "requests": 65,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 65
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-spatial-3-resume"
+  },
+  {
+    "run": "new-text-3-resume",
+    "version": "new",
+    "durationSeconds": 571.09,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 71,
+    "repairPrompts": 0,
+    "toolErrors": 15,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 850268,
+      "output": 135145,
+      "cacheRead": 12802176,
+      "cacheWrite": 0,
+      "totalTokens": 13787589
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 446940,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 26739,
+    "toolCalls": 86,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 15,
+      "analysis_calculate": 36,
+      "information_record_analysis_update": 21,
+      "task_read": 1
+    },
+    "audit": {
+      "requests": 71,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 71
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-text-3-resume"
+  },
+  {
+    "run": "new-variant-shared-object",
+    "version": "new",
+    "durationSeconds": 446.21,
+    "publishedBatches": 10,
+    "attemptedBatches": 11,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 30,
+    "recordedTaskUpdates": 30,
+    "providerRequests": 50,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 1,
+    "usage": {
+      "input": 785530,
+      "output": 106664,
+      "cacheRead": 8784128,
+      "cacheWrite": 0,
+      "totalTokens": 9676322
+    },
+    "mechanismChecksPassed": false,
+    "failure": "{\"code\":\"CONTINUOUS_FAILED\",\"message\":\"本轮未正常完成，保留输入等待恢复。\"}\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n",
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 410675,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [
+      "deepseek-v4.1-flash"
+    ],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 23693,
+    "toolCalls": 67,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 11,
+      "analysis_current_read": 18,
+      "analysis_calculate": 25,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 50,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49,
+        "429": 1
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-shared-object"
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "version": "new",
+    "durationSeconds": 550.2,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 58,
+    "repairPrompts": 0,
+    "toolErrors": 16,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 1384923,
+      "output": 126700,
+      "cacheRead": 16434304,
+      "cacheWrite": 0,
+      "totalTokens": 17945927
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 734468,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 23387,
+    "toolCalls": 94,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "analysis_calculate": 27,
+      "information_record_analysis_update": 18
+    },
+    "audit": {
+      "requests": 58,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 58
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-source-conflict"
+  },
+  {
+    "run": "new-variant-time-weight",
+    "version": "new",
+    "durationSeconds": 451.35,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 56,
+    "repairPrompts": 0,
+    "toolErrors": 9,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 502151,
+      "output": 104154,
+      "cacheRead": 6421376,
+      "cacheWrite": 0,
+      "totalTokens": 7027681
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 267089,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 17472,
+    "toolCalls": 54,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 3,
+      "analysis_calculate": 22,
+      "information_record_analysis_update": 16
+    },
+    "audit": {
+      "requests": 56,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 56
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-time-weight"
+  },
+  {
+    "run": "old-variant-shared-object",
+    "version": "old",
+    "durationSeconds": 240.77,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 49,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 470494,
+      "output": 39704,
+      "cacheRead": 4773632,
+      "cacheWrite": 0,
+      "totalTokens": 5283830
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 256361,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 9825,
+    "toolCalls": 64,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "ls": 1,
+      "task_read": 3,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 49,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 49
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-shared-object"
+  },
+  {
+    "run": "old-variant-source-conflict",
+    "version": "old",
+    "durationSeconds": 211.62,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 37,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 254425,
+      "output": 36872,
+      "cacheRead": 2199040,
+      "cacheWrite": 0,
+      "totalTokens": 2490337
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 139175,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 7245,
+    "toolCalls": 42,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 16,
+      "task_read": 1,
+      "information_record_analysis_update": 12
+    },
+    "audit": {
+      "requests": 37,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 37
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-source-conflict"
+  },
+  {
+    "run": "old-variant-time-weight",
+    "version": "old",
+    "durationSeconds": 223.96,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 50,
+    "repairPrompts": 0,
+    "toolErrors": 2,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 468437,
+      "output": 37302,
+      "cacheRead": 4864256,
+      "cacheWrite": 0,
+      "totalTokens": 5369995
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 253296,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 6742,
+    "toolCalls": 62,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 36,
+      "information_record_analysis_update": 14
+    },
+    "audit": {
+      "requests": 50,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 50
+      }
+    },
+    "evidenceRoot": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/old-variant-time-weight"
+  }
+]

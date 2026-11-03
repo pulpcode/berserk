@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-28T09:58:50.799Z",
+  "run": "new-text-3",
+  "round": "R5",
+  "url": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+  "status": 429,
+  "error": "insufficient_quota: 模型额度不足，请检查账户后重试。",
+  "requestId": "021793181531973efa62bfca375794f3a9b85f4d703cfec420b1e",
+  "paidCallsStopped": true,
+  "queuedPhaseExited": true,
+  "notStartedRuns": [
+    "new-spatial-3",
+    "old-variant-time-weight",
+    "old-variant-source-conflict",
+    "old-variant-shared-object",
+    "new-variant-time-weight",
+    "new-variant-source-conflict",
+    "new-variant-shared-object"
+  ],
+  "unfinishedRoundsInInterruptedRun": [
+    "R5 failed",
+    "R6 unstarted",
+    "R7 unstarted",
+    "R8 unstarted",
+    "R9 unstarted",
+    "R10 unstarted",
+    "R11 unstarted",
+    "R12 unstarted"
+  ]
+}

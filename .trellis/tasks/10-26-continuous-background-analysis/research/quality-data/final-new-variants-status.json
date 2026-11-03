@@ -1,0 +1,13 @@
+[
+  {
+    "name": "new-variant-shared-object-complete",
+    "fixture": "shared-object-input.json",
+    "status": "finished",
+    "startedAt": "2026-10-29T01:28:17.622Z",
+    "exitCode": 0,
+    "endedAt": "2026-10-29T01:37:15.926Z",
+    "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-FVPxdu/validation.json",
+    "requests": 66,
+    "providerFailure": false
+  }
+]

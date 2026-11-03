@@ -1,0 +1,396 @@
+{
+  "run": "new-variant-shared-object-complete",
+  "status": "complete",
+  "partial": false,
+  "plannedTaskRounds": 36,
+  "publishedTaskRounds": 36,
+  "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+  "fixtureHash": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+  "reviewSha256": "56342593827d01e7cc9504204b57475cc25d5d75dc7262da340dce9dcdc777da",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "三辆正常、东桥正常、30分钟余量正确，执行与司机/装载未知分开；出发前复核桥况按普通检查处理。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "04正常、2.5吨、09:50预计到达和40分钟余量正确，与B下午用车不冲突。",
+      "evidenceIssues": [
+        "建议称“与B的13:30集合同步”，任务只给14:00出发，没有既定13:30集合；如为新增建议应明确。"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "09时出发至12时解封180分钟、截止比解封早120分钟正确；明确道路阻断且改线未获批准。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "东桥封闭不复制到西桥C；车流变化明确为未证实的未来风险，未建立现有禁行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "正确保留道路禁行，并新增02/03故障导致1辆不足3辆的独立阻碍。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "04正常与西桥可用保持，未宣布已调车；不擅自改变已确认分配及改派须新指令按正常协调处理。",
+      "evidenceIssues": [
+        "摘要把C的40分钟余量写作20分钟余量；条件中20分钟行程与09:50到达本身正确。"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "道路恢复但车辆缺2辆保持，准确记录局部改善而未宣布整体可执行。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "把上午将04改派A直接等同B下午无已确认运力，未给借用/归还时段。"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "04正常与西桥可用保持，未宣布已调车；不擅自改变已确认分配及改派须新指令按正常协调处理。",
+      "evidenceIssues": [
+        "摘要把C的40分钟余量写作20分钟余量；条件中20分钟行程与09:50到达本身正确。"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "需求3降2、缺口2降1正确；但将出发—截止区间重叠等同04实际占用冲突，强制借车必须重排C。",
+      "evidenceIssues": [
+        "原文“04不能直接补位”“必须由业务方重排C时段”；没有实际借用、装卸、交接或返程时段，工具区间重叠不证明必然冲突。"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "把上午将04改派A直接等同B下午无已确认运力，未给借用/归还时段。"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "当前04仍正常，却根据A/C出发—截止区间重叠断言不存在任何兼用余量，并要求借04必须先重排C。",
+      "evidenceIssues": [
+        "原文“不存在既服务A又不影响C的时间余量”“必须先重排并书面调整C时段”；截止不是实际占用终点，缺交接/周转数据。"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "02恢复后01/02满足2辆需求；原替代方案明确不适用，35分钟确认窗口正确。",
+      "evidenceIssues": [
+        "摘要称“东桥早于08:15已恢复”，来源是自08:15恢复；其他条件写对，属于精确时刻措辞矛盾。"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "当前04正常且任务安排未改，条件均unchanged；没有把A车辆修复当C实际车辆恢复。",
+      "evidenceIssues": [
+        "“此前04被挤压协调风险基本消解”“运力不再受A挤压”把未经实施的假设借车写成历史挤压解除。"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "按版本识别晚到旧消息，保持东桥恢复；距09时30分钟正确，未将时间缩短标重要。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "保留B下午西桥、4.5吨与04分配，但持续将无来源的04额定载重/轴载核验作为必要执行条件。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "旧东桥消息不影响西桥C，04正常、时段与B不重叠保持。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "西桥限重不影响东桥A，01/02满足需求；距09时25分钟正确，调配须新指令未被当作实际已调车。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确判4.5吨在14时受到西桥限重，但另保留核载门槛并误称与上午A同时段用车。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "禁止B使用A的01/02，未核验下午借用与上午任务周转；R8还明确误称“A同时段需要2辆”。"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "2.5吨低于3吨，不因与B同车而误判超重；只有未来加货超3吨才需要重评。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "A自身仍两辆满足，但强称不得被抽调，泛指借给C或B都会立即使A不足，未区分下午B时段。",
+      "evidenceIssues": [
+        "既定分配不等于全天实际占用；应核验借用/交接而非直接把任何借给B的方案定为上午A不足。"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确记录当前04故障、修复时间未知与限重双重阻碍，没有断言14时必然未修好；核载门槛和无时序依据的借车禁令仍在。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "以01/02已分配上午A为理由禁止B借车，未核验下午使用与上午任务周转。"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "当前04故障、50分钟至出发及西桥2.5吨可通行正确；借车建议却要求相应调整A，未先核验实际周转。",
+      "evidenceIssues": [
+        "临时借01/02即要求调整A/明确延期或减车，沿用出发—截止窗口等同占用的未经证实推断。"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "次日检修无关判断正确；却在08:45以无就绪记录直接要求未就绪即判不能按09时发出，并虚设接近无法补救的临界。",
+      "evidenceIssues": [
+        "未给整备耗时，也未给实际尚未就绪事实；无记录不等于15分钟无法完成。",
+        "建议“一旦调出即同时损失A与C运力”没有借用时序依据，且C可能因借到车得到运力。"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确识别次日东桥检修不影响今日B及其绕行可能；限重与当前04故障保持，但额外核载条件/借车禁令未消除。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "以01/02已分配上午A为理由禁止B借车，未核验下午使用与上午任务周转。"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "次日东桥检修与今日C无关、04仍故障判断正确；仍将借01/02绑定必须明确A延迟或减车。",
+      "evidenceIssues": [
+        "原文“如确需，必须同时明确A的延迟或减车”；没有实际借车时刻及周转依据，不能先排除无需改A的可能。"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "东桥与车辆状态保持正确；却无整备时长依据判10分钟基本不具备整备时间，并禁止向包括下午B在内的任务借车。",
+      "evidenceIssues": [
+        "剩余10分钟算术正确，风险临界/整备不足判据没有来源。",
+        "没有借用归还时段即将01/02对C或下午B的任何借用排除。"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确保留13—15时限重对14时任务的阻碍，没有将上午取消外推为放行；额外核载门槛及借车禁令仍在。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。",
+        "以01/02已分配上午A为理由禁止B借车，未核验下午使用与上午任务周转。"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "当前车辆阻碍保持、上午不受新13—15时限制正确；仍以借01/02必须明确A延期/减车为必要前提。",
+      "evidenceIssues": [
+        "继续未经时序核验就要求借车伴随A延期或减车。",
+        "摘要“局部路径限制的解除”、理由“进一步放宽”把此前2.5吨就不受限写成C路径改善；正式状态仍met/unchanged。"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "01/02满足需求且未宣称已出发，建议立即确认能发则发属于正常临近检查；主执行方向正确。",
+      "evidenceIssues": [
+        "“已无整备时间”缺少整备时长依据；5分钟算术正确不能证明这一推断。",
+        "“C已可自用04，A不再被抽调/不再面临压力”把没有发生的假设借车复述为历史压力解除。"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "正确记录04恢复为重要局部改善，并保留14时限重；但完整结构仍保留未撤回的额定载重核验门槛。",
+      "evidenceIssues": [
+        "R0建立“未核实前不得按可执行处理”的核载门槛；后续额定载重条件持续unknown、未撤回。任务车货总重不等同于车辆额定载荷。"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04恢复、35分钟至出发以及上午无时段限制正确，但仍硬性禁止C加货超过3吨，错误沿用已取消的上午限制。",
+      "evidenceIssues": [
+        "正式建议“也不得给C加货超过3吨”；13—15时限制不适用于C上午时段，不是当前可施加的道路前提。",
+        "摘要“路径与运力阻碍均已解除”误称C此前有路径阻碍；原2.5吨始终未受限。"
+      ]
+    }
+  ],
+  "notes": [
+    "从R0新隔离会话完整运行，12批36任务格全部发布。昨日30格partial独立保留，本表不拼接旧后缀。",
+    "沿冻结shared-object输入/oracle以及前轮正式可见全文口径，评价摘要、条件、建议；条件级算术正确或回执真实不抵消无据执行前提。代理逐格复核，非人类盲评。",
+    "A R5/C R5由截止窗口重叠推实际借车必冲突并强制重排，不是普通协调提示；主代理与独立边界 reviewer 对该点定向交叉确认。",
+    "只说不擅自改既定分配、若确有改派须新指令或先核验时序，不扣核心。例如C R2/R3与A R8。明确无时序依据的必然冲突、必须延期/减车则扣。",
+    "A R12当前两辆满足且建议即时确认能发则发，没有新增硬性放行门槛，核心通过；无整备时间及历史被抽调说法仅扣依据。A R10却直接要求未就绪即视为不能按时发出，核心不通过。",
+    "评分敏感性：若把A R9、C R9/R10/R11的禁止/必须改计划全部理解成普通协调核查，这4格核心可通过；主分15/36会变19/36，主表保持前轮严格标准，不改历史。A/C R5有更明确“没有余量/必须重排”不包含在这组宽读。",
+    "A R0、C R0把桥况称时点快照并建议出发前复核，仍保持met；未明确要求独立新放行证明，因此不因未来不确定本身扣核心。",
+    "B R8—R12限重与车辆的主要变化均判断正确，R11没把上午取消外推至下午，R12车辆恢复被标重要；仍未撤回R0创建的额定载重硬门槛，所以全文核心不能据主摘要局部正确而通过。",
+    "R11冻结预期静默；实际A以10分钟确认窗口自行标重要（R10/R12也有类似标记）。临近出发可作一般提醒，但未提供整备时长/未就绪事实，不能说已无时间。提醒符合率由validation独立统计，不在本表另增分母。",
+    "C R11/R12的路径解除叙述与met→met相矛盾；R12又施加不适用上午的3吨禁令，不仅是措辞问题。",
+    "归档全部12批update已与实时validation逐批相等核对；数值按原任务独立算术检查。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 5,
+      "detail": "原生自由答复也以截止窗重叠要求先重排C；另把C余量写20分钟、把C额定载重缺失列合规疑问。后两项只在该轮raw出现，未另扣正式C5之外的格。"
+    },
+    {
+      "round": 10,
+      "detail": "原生与正式都以剩15分钟及无就绪记录直接建议未就绪即判无法按时发出。原生另称西桥总重/轴载口径未明确，实际源明确总重；仅列raw差异，不替代正式评分。"
+    },
+    {
+      "round": 11,
+      "detail": "原生标题“C路径完全放开”与正式摘要局部限制解除一致，均把原本未受限的C写成路径改善；正式条件保持met且不标重要，体现同一结果内文字/状态矛盾。"
+    },
+    {
+      "round": 12,
+      "detail": "原生与正式都保留B车辆局部改善及限重阻碍；也都对上午C提出不得超3吨和两项阻碍解除。A的假设抽调压力被复述成已消解状态。"
+    }
+  ]
+}

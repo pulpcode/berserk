@@ -1,0 +1,52 @@
+[
+  {
+    "run": "new-variant-shared-object-complete",
+    "version": "new",
+    "durationSeconds": 534.81,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 66,
+    "repairPrompts": 0,
+    "toolErrors": 18,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 711813,
+      "output": 126706,
+      "cacheRead": 11154432,
+      "cacheWrite": 0,
+      "totalTokens": 11992951
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 370699,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 21279,
+    "toolCalls": 84,
+    "toolCallsByName": {
+      "ls": 1,
+      "analysis_task_candidates": 12,
+      "task_read": 3,
+      "analysis_current_read": 7,
+      "analysis_calculate": 43,
+      "information_record_analysis_update": 18
+    },
+    "audit": {
+      "requests": 66,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 66
+      }
+    }
+  }
+]

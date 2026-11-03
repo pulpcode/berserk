@@ -1,6 +1,7 @@
 import type { ContextRef, ContextQueryResult } from '../../contracts/context';
 import { extractSpatialResult, type SpatialResult } from '../../contracts/spatial';
 import type { PublicMessage } from '../../contracts';
+import { extractTaskDiscovery } from '../../contracts/continuous';
 import { extractAnnotationResult, receiptMapEntry, type AnnotationMapEntry } from '../../contracts/annotation-results';
 export type { AnnotationMapEntry } from '../../contracts/annotation-results';
 export interface MapReference { ref: ContextRef; revision?: number; href: string }
@@ -86,9 +87,16 @@ export function requestMapEvidence(message: PublicMessage, preceding: PublicMess
 }
 
 /** Spatial geometry comes only from a verified native result belonging to this request. */
+export function taskDiscoveryEntry(message: PublicMessage) {
+  if (message.role !== 'tool' || message.isError || message.resultMissing || message.toolName !== 'analysis_task_candidates') return;
+  const result = extractTaskDiscovery({ taskDiscovery: message.taskDiscovery }, message.toolName, false, message.text);
+  return result && result.requestId === message.requestId && result.toolCallId === message.toolCallId ? result : undefined;
+}
 export function spatialMapEntries(messages: PublicMessage[]): SpatialResult[] {
   const results = new Map<string, SpatialResult>();
   for (const message of messages) {
+    const discovery = taskDiscoveryEntry(message);
+    if (discovery) { for (const result of discovery.spatialResults) results.set(result.resultRef, result); continue; }
     if (message.role !== 'tool' || message.isError || message.resultMissing || message.toolName !== 'spatial_analyze') continue;
     const result = extractSpatialResult({ spatialResult: message.spatialResult }, message.toolName, false, message.text);
     // A read preserves its origin but carries separately verified host delivery ownership.

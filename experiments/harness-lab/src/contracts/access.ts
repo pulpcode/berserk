@@ -12,11 +12,13 @@ export interface AuthSession {
   /** Public login choices contain no account details, responsibilities or permissions. */
   loginSeats?: Array<{id: string; name: string}>;
 }
+export type TaskBusinessRole = 'route' | 'resource' | 'location' | 'work_area' | 'reference';
 export interface TaskBusinessRef {
   systemId: string;
   objectType: string;
   objectId: string;
   label?: string;
+  role?: TaskBusinessRole;
 }
 export interface TaskContext {
   businessRefs?: TaskBusinessRef[];

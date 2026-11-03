@@ -59,7 +59,7 @@ async function setup(reply: (index:number) => Reply = index => index === 0 ? {to
     const rule=await overall.call('/api/information/rules',input);expect(rule.statusCode,rule.body).toBe(200);
     const response=await app.inject({method:'POST',url:'/api/integrations/intel/events',headers:{authorization:'Bearer test-token-at-least-24-characters'},payload:{sourceMessageId:randomUUID(),title:'道路变化',text:'道路通行状态变化，请研判。',uploadIds}});
     expect(response.statusCode,response.body).toBe(202);
-    const jobId=store.getEvent(response.json<{eventId:string}>().eventId).initialJobId!;
+    const jobId=store.getEvent(response.json<{eventId:string}>().eventId!).initialJobId!;
     await vi.waitFor(() => expect(['queued','running']).not.toContain(store.getJob(jobId).status),{timeout:10000});
     expect(store.getJob(jobId).status,JSON.stringify(store.getJob(jobId).error)).toBe('succeeded');
     await vi.waitFor(() => expect(store.listDeliveries(jobId).filter(d => d.status === 'delivered')).toHaveLength(1));
@@ -104,8 +104,8 @@ describe('supplementary delivery through native Pi and authenticated routes',() 
     // The task-information entry point is also recipient-visible and must use the same redaction.
     const {TaskLinkService}=await import('../src/background/task-links.js');
     const links=new TaskLinkService(context.lab.access!,context.store,{canRead:() => true,sourceName:() => '情报来源',readContent:async () => ({text:'原文',resultText:'结果',resultFiles:[]})});
-    links.update(actor,job.eventId,taskId,{revision:0,mode:'include',jobId:job.id,reason:'任务相关'});
-    const taskDetail=await links.detail(actor,taskId,job.eventId,job.id);
+    links.update(actor,job.eventId!,taskId,{revision:0,mode:'include',jobId:job.id,reason:'任务相关'});
+    const taskDetail=await links.detail(actor,taskId,job.eventId!,job.id);
     expect(taskDetail.job).not.toHaveProperty('recipientSuggestion');
 
   });
@@ -199,7 +199,7 @@ describe('supplementary delivery through native Pi and authenticated routes',() 
     const context=await setup(() => ({waitForAbort:true}),true);
     expect((await context.overall.call('/api/information/rules',context.ruleInput)).statusCode).toBe(200);
     const accepted=await context.app.inject({method:'POST',url:'/api/integrations/intel/events',headers:{authorization:'Bearer test-token-at-least-24-characters'},payload:{sourceMessageId:randomUUID(),title:'尚在分析的信息',text:'资料正文'}});
-    const jobId=context.store.getEvent(accepted.json<{eventId:string}>().eventId).initialJobId!;
+    const jobId=context.store.getEvent(accepted.json<{eventId:string}>().eventId!).initialJobId!;
     await vi.waitFor(() => expect(context.fake.calls).toHaveLength(1));
     const gate=context.pauseRead(),response=context.overall.call(`/api/information/jobs/${jobId}`).then(value=>value);
     await gate.entered;
@@ -224,7 +224,7 @@ describe('supplementary delivery through native Pi and authenticated routes',() 
       return content;
     });
     try {
-      const file=context.store.getEvent(job.eventId).files[0];
+      const file=context.store.getEvent(job.eventId!).files[0];
       const response=await context.overall.call(`/api/information/events/${job.eventId}/files/${file.id}`);
       expect([403,404]).toContain(response.statusCode);expect(response.body).not.toContain('payload');
       await vi.waitFor(() => expect(destroyed).toBe(true));

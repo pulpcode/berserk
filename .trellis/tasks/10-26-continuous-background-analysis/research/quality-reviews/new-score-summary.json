@@ -1,0 +1,50 @@
+{
+  "scope": "4 complete original runs only; pair with old same kind and index",
+  "runs": [
+    {
+      "run": "new-text-1",
+      "coreCorrect": 15,
+      "evidenceCorrect": 12,
+      "taskRounds": 36
+    },
+    {
+      "run": "new-text-2",
+      "coreCorrect": 23,
+      "evidenceCorrect": 13,
+      "taskRounds": 36
+    },
+    {
+      "run": "new-spatial-1",
+      "coreCorrect": 42,
+      "evidenceCorrect": 39,
+      "taskRounds": 53
+    },
+    {
+      "run": "new-spatial-2",
+      "coreCorrect": 52,
+      "evidenceCorrect": 41,
+      "taskRounds": 53
+    }
+  ],
+  "incomplete": [
+    {
+      "run": "new-text-3",
+      "coreCorrect": 8,
+      "evidenceCorrect": 7,
+      "taskRounds": 12,
+      "includedInAggregate": false,
+      "plannedTaskRounds": 36,
+      "unscoredTaskRounds": 24,
+      "interruption": "R5 方舟 HTTP 429 insufficient_quota"
+    }
+  ],
+  "notRun": [
+    "new-spatial-3",
+    "variants"
+  ],
+  "aggregate": {
+    "coreCorrect": 132,
+    "evidenceCorrect": 105,
+    "taskRounds": 178
+  }
+}

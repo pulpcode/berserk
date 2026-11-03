@@ -1,0 +1,655 @@
+{
+  "run": "old-text-2",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "7ba2ba844edab1b1954c0c11e82711772b866f8166c557f74867893a6d8adc66",
+  "denominator": 36,
+  "coreCorrect": 18,
+  "evidenceCorrect": 16,
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：道路、三辆已配车正常，已知条件无冲突；未声称完成。",
+      "issues": [],
+      "jobId": "a526ec78-1737-4c22-9a7c-3c637faab28c",
+      "source": "old-text-2/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：01次日下午已预留，与A时间不冲突；未保证未来已执行。",
+      "issues": [],
+      "jobId": "a526ec78-1737-4c22-9a7c-3c637faab28c",
+      "source": "old-text-2/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+          "locator": "限重"
+        }
+      ],
+      "jobId": "a526ec78-1737-4c22-9a7c-3c637faab28c",
+      "source": "old-text-2/review.json#/steps/0"
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：东桥封闭覆盖上午任务，原路线受阻。",
+      "issues": [],
+      "jobId": "05765eb3-5b65-4ccd-973b-f279e79ec798",
+      "source": "old-text-2/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：次日任务不受本次上午封闭影响。",
+      "issues": [],
+      "jobId": "05765eb3-5b65-4ccd-973b-f279e79ec798",
+      "source": "old-text-2/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+          "locator": "限重"
+        }
+      ],
+      "jobId": "05765eb3-5b65-4ccd-973b-f279e79ec798",
+      "source": "old-text-2/review.json#/steps/1"
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：封桥保留，01可用1辆低于3辆；未自行调车。",
+      "issues": [],
+      "jobId": "c4d08df8-a3f6-4050-a0bb-d7126fd4129a",
+      "source": "old-text-2/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：01正常，次日任务条件未变。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "resource_assignment",
+          "reason": "已知车辆04也正常，建议却称01为唯一已确认健康车辆。",
+          "locator": "唯一已确认健康车辆",
+          "excerpt": "前复核 01 状态与东桥是否仍管制；若 02/03 仍未修复，01 是唯一已确认健康车辆，应避免今日额外占用与损耗。\n4. 对 A 发布提醒；B、C 保持跟踪，暂不提醒。\n\n**直接限定上述结论的资料缺口**\n- 02"
+        }
+      ],
+      "jobId": "c4d08df8-a3f6-4050-a0bb-d7126fd4129a",
+      "source": "old-text-2/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：04正常，未将假设抽车当事实。",
+      "issues": [],
+      "jobId": "c4d08df8-a3f6-4050-a0bb-d7126fd4129a",
+      "source": "old-text-2/review.json#/steps/2"
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：道路恢复、车辆仍1<3；识别局部改善。",
+      "issues": [],
+      "jobId": "10b45dc2-4cec-46e5-866c-4556ed200a01",
+      "source": "old-text-2/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：次日任务无新增限制。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "resource_assignment",
+          "reason": "已知车辆04也正常，建议却称01为唯一已确认健康车辆。",
+          "locator": "唯一已确认健康车辆",
+          "excerpt": "1 出发前复核 01 状态与东桥通行；若 02/03 未修复，01 为唯一已确认健康车辆，今日应避免额外占用与损耗。\n4. A 继续发布提醒（仍不可执行）；B、C 保持跟踪，暂不提醒。\n\n**直接限定上述结论的资料缺口"
+        }
+      ],
+      "jobId": "10b45dc2-4cec-46e5-866c-4556ed200a01",
+      "source": "old-text-2/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：04及西桥条件未变。",
+      "issues": [],
+      "jobId": "10b45dc2-4cec-46e5-866c-4556ed200a01",
+      "source": "old-text-2/review.json#/steps/3"
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：最低需求降为2辆与分配3辆并不矛盾，却被列为任务内部不一致。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "最低需求降为2辆与分配3辆并不矛盾，却被列为任务内部不一致。",
+          "locator": "内部不一致"
+        }
+      ],
+      "jobId": "7c6ba8eb-6c10-406e-8c58-42ff2ff0055d",
+      "source": "old-text-2/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：需求仍1辆、预留未变。",
+      "issues": [],
+      "jobId": "7c6ba8eb-6c10-406e-8c58-42ff2ff0055d",
+      "source": "old-text-2/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：04需求及路线未变。",
+      "issues": [],
+      "jobId": "7c6ba8eb-6c10-406e-8c58-42ff2ff0055d",
+      "source": "old-text-2/review.json#/steps/5"
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "numeric",
+          "reason": "需2辆、可用2辆的备用是0，不是1。",
+          "locator": "仅1辆冗余"
+        }
+      ],
+      "jobId": "c87e9395-f193-402b-83f2-10ca1ba75362",
+      "source": "old-text-2/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：01及次日下午安排不变。",
+      "issues": [],
+      "jobId": "c87e9395-f193-402b-83f2-10ca1ba75362",
+      "source": "old-text-2/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+          "locator": "限重"
+        }
+      ],
+      "jobId": "c87e9395-f193-402b-83f2-10ca1ba75362",
+      "source": "old-text-2/review.json#/steps/6"
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。；明确的恢复通行通知被降为只是文字推定，要求额外现场依据才成立。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        },
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "明确的恢复通行通知被降为只是文字推定，要求额外现场依据才成立。",
+          "locator": "只能依据第2版的文字推定",
+          "excerpt": "版本在途。\n\n**直接限定上述结论的资料缺口**\n- 东桥“当前畅通”只能依据第2版的文字推定，没有现场核验或有效期限——若实际仍有余留管制，A 的路线条件需重新评估。\n- 装货完成、司机到岗、实际出发时间始终未提供，A 仍"
+        }
+      ],
+      "jobId": "813af49c-e584-4974-b9e9-16be39781f39",
+      "source": "old-text-2/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：旧转发不改变次日条件。",
+      "issues": [],
+      "jobId": "813af49c-e584-4974-b9e9-16be39781f39",
+      "source": "old-text-2/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "西桥正常通行被额外限重未核验限制，未保留已有通行事实。",
+          "locator": "限重"
+        }
+      ],
+      "jobId": "813af49c-e584-4974-b9e9-16be39781f39",
+      "source": "old-text-2/review.json#/steps/7"
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：西桥限重不影响东桥任务。",
+      "issues": [],
+      "jobId": "7109b1da-b9fb-4468-8fe7-32fa7651cb3e",
+      "source": "old-text-2/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：路线及日期均不适用西桥限重。",
+      "issues": [],
+      "jobId": "7109b1da-b9fb-4468-8fe7-32fa7651cb3e",
+      "source": "old-text-2/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。",
+          "locator": "过磅"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "numeric",
+          "reason": "taskCoverage将3吨阈值写成30吨；虽然2.5吨在两者下均可通行，关键数值仍错误。",
+          "locator": "30吨"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "time_source",
+          "reason": "09:50是计划到达时点，正文却具体指认为过桥时点，桥所在行程位置未给定。",
+          "locator": "约 09:50 过桥",
+          "excerpt": "变为“有明确阈值”） | 车04 总重 2.5 吨；09:30 出发、约 09:50 过桥，**落在限行窗口内但未超过 3 吨，属于“其余车辆正常通行”**，路线条件成立。需注意：2.5 吨是任务声明值，若实际过磅超过 "
+        }
+      ],
+      "jobId": "7109b1da-b9fb-4468-8fe7-32fa7651cb3e",
+      "source": "old-text-2/review.json#/steps/8"
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        }
+      ],
+      "jobId": "ea99d45a-86c9-4c11-9911-8defdf9f8fd0",
+      "source": "old-text-2/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：次日下午01预留不被04故障改变。",
+      "issues": [],
+      "jobId": "ea99d45a-86c9-4c11-9911-8defdf9f8fd0",
+      "source": "old-text-2/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。；未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。",
+          "locator": "过磅"
+        },
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "invented_conflict",
+          "reason": "未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+          "locator": "09:30"
+        }
+      ],
+      "jobId": "ea99d45a-86c9-4c11-9911-8defdf9f8fd0",
+      "source": "old-text-2/review.json#/steps/9"
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        }
+      ],
+      "jobId": "0871d108-8831-4914-ae75-464f9213358f",
+      "source": "old-text-2/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时落入次日13—16封闭，原路线受阻。",
+      "issues": [],
+      "jobId": "0871d108-8831-4914-ae75-464f9213358f",
+      "source": "old-text-2/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "invented_conflict",
+          "reason": "未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+          "locator": "09:30"
+        }
+      ],
+      "jobId": "0871d108-8831-4914-ae75-464f9213358f",
+      "source": "old-text-2/review.json#/steps/10"
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        }
+      ],
+      "jobId": "65bb918a-8a0c-41c7-882c-d5d8966cd69c",
+      "source": "old-text-2/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。",
+          "locator": "稳定性"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "numeric",
+          "reason": "JT-03 08:45发布、08:50取消，相隔5分钟而非25分钟。",
+          "locator": "25 分钟"
+        }
+      ],
+      "jobId": "65bb918a-8a0c-41c7-882c-d5d8966cd69c",
+      "source": "old-text-2/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "invented_conflict",
+          "reason": "未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。",
+          "locator": "09:30"
+        }
+      ],
+      "jobId": "65bb918a-8a0c-41c7-882c-d5d8966cd69c",
+      "source": "old-text-2/review.json#/steps/11"
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。",
+          "locator": "02"
+        }
+      ],
+      "jobId": "95340277-8b96-41a1-a1fb-832b77b11c89",
+      "source": "old-text-2/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。",
+          "locator": "稳定性"
+        }
+      ],
+      "jobId": "95340277-8b96-41a1-a1fb-832b77b11c89",
+      "source": "old-text-2/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。",
+          "locator": "过磅"
+        }
+      ],
+      "jobId": "95340277-8b96-41a1-a1fb-832b77b11c89",
+      "source": "old-text-2/review.json#/steps/12"
+    }
+  ],
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}

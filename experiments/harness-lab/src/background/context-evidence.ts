@@ -1,7 +1,7 @@
 import type { PublicMessage, SessionSnapshot } from '../contracts/index.js';
 import type { BackgroundEvent } from '../contracts/background.js';
 
-const queryTools = new Set(['information_search', 'information_read', 'situation_query', 'task_search', 'task_read']);
+const queryTools = new Set(['information_search', 'information_read', 'situation_query', 'task_search', 'task_read', 'analysis_task_candidates', 'spatial_analyze']);
 export function queryEvidence(snapshot: SessionSnapshot | null, requestId: string): PublicMessage[] {
   return snapshot?.messages.filter(message => message.requestId === requestId && message.role === 'tool'
     && !message.isError && !message.resultMissing && queryTools.has(message.toolName ?? '')) ?? [];

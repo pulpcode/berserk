@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ArrowUp, ChevronDown, Pencil } from 'lucide-react';
 import type { Identity, TaskSpace } from '../contracts/access';
 import type { ModelChoices } from '../contracts/index';
@@ -7,8 +7,8 @@ import { InformationText } from './information-ui';
 import { TaskContextSummary } from './TaskContextEditor';
 import { ModelPicker } from './ModelPicker';
 
-export function TaskHome({ taskId, task, identity, edit, draft, setDraft, models, modelId, chooseModel, modelsError, refreshModels, busy, error, start }: {
-  taskId: string; task?: TaskSpace; identity: Identity; edit: () => void;
+export function TaskHome({ taskId, task, identity, edit, assessment, draft, setDraft, models, modelId, chooseModel, modelsError, refreshModels, busy, error, start }: {
+  assessment?: ReactNode; taskId: string; task?: TaskSpace; identity: Identity; edit: () => void;
   draft: string; setDraft: (text: string) => void; models?: ModelChoices; modelId: string; chooseModel: (id: string) => void;
   modelsError: string; refreshModels: () => void; busy: boolean; error: string; start: () => void;
 }) {
@@ -33,6 +33,7 @@ export function TaskHome({ taskId, task, identity, edit, draft, setDraft, models
         {task ? <><div id={`${descriptionId}-text`} className={`task-description-body${full ? '' : ' is-preview'}`}><InformationText>{(full || !longDescription ? task.goal : `${preview}${preview !== task.goal ? '…' : ''}`) || '暂无说明，可先提出问题或补充任务目标。'}</InformationText>{(full || !longDescription) && <TaskContextSummary context={task.context} />}</div>{longDescription && <button className="task-description-more" aria-expanded={full} aria-controls={`${descriptionId}-text`} onClick={() => setFull(value => !value)}>{full ? '收起全文' : '展开全文'}</button>}</> : <p role="status">正在读取任务说明…</p>}
       </div>
     </section>
+    {assessment}
     <form className="task-home-composer" onSubmit={event => { event.preventDefault(); if (ready && !busy && draft.trim()) start(); }} aria-busy={busy}>
       <h2>新建对话</h2><p>围绕{task?.visibility === 'private' ? '这个空间' : '这个任务'}，你想先处理什么？</p>
       <label htmlFor={domId(`task-question-${taskId}`)}>问题或工作要求</label>

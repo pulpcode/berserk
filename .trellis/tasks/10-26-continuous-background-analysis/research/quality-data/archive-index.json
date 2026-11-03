@@ -1,0 +1,68 @@
+[
+  {
+    "run": "new-spatial-1",
+    "file": "archives/new-spatial-1.tar.gz",
+    "sha256": "e7ea03e3b5b5be195d81422e0911a3b63532030f0a0270d5e37c826569a2fce0",
+    "bytes": 9360004
+  },
+  {
+    "run": "new-spatial-2",
+    "file": "archives/new-spatial-2.tar.gz",
+    "sha256": "bf869fd6d662153f7ffb30cb582a2fc2cdc5c222a2fbef3561ed5734f7199615",
+    "bytes": 10863917
+  },
+  {
+    "run": "new-text-1",
+    "file": "archives/new-text-1.tar.gz",
+    "sha256": "8c596e9fb4b460e2c1781dc8b11d221ea094d49ba583409071077e501acadfd5",
+    "bytes": 6497214
+  },
+  {
+    "run": "new-text-2",
+    "file": "archives/new-text-2.tar.gz",
+    "sha256": "b34ce76c93294a38d37a1afcce6cd28b78c8a34f56a757700150f2693f514613",
+    "bytes": 4765550
+  },
+  {
+    "run": "new-text-3",
+    "file": "archives/new-text-3.tar.gz",
+    "sha256": "4a27404021808bedb8af2e5620bd1dbbb008fe2e6d3a8292bd4cac544d498acd",
+    "bytes": 967931
+  },
+  {
+    "run": "old-spatial-1",
+    "file": "archives/old-spatial-1.tar.gz",
+    "sha256": "4841d6089e4b0447d9b8d8420da198e7a1481d712ee000b08b2074fff012f547",
+    "bytes": 3297273
+  },
+  {
+    "run": "old-spatial-2",
+    "file": "archives/old-spatial-2.tar.gz",
+    "sha256": "2e70028879cd3a412b3ff5afd6f4b02d959a5b664c6dfc2df7b3c298e1faeab3",
+    "bytes": 3068086
+  },
+  {
+    "run": "old-spatial-3",
+    "file": "archives/old-spatial-3.tar.gz",
+    "sha256": "7b75ea5b71183600dd0d5b8ecddb69ff1c2b85a4d738a871879afc76604a78f2",
+    "bytes": 4116067
+  },
+  {
+    "run": "old-text-1",
+    "file": "archives/old-text-1.tar.gz",
+    "sha256": "f02b4661dfb853ce1a5e23ebe4569ee80d729f69ed19a0bc3ee77dc89a05c873",
+    "bytes": 1756287
+  },
+  {
+    "run": "old-text-2",
+    "file": "archives/old-text-2.tar.gz",
+    "sha256": "8b0f359735a1aa14532f3f1421a1bb19e78c55f437e72fbbfb644f331d65a9f9",
+    "bytes": 2311402
+  },
+  {
+    "run": "old-text-3",
+    "file": "archives/old-text-3.tar.gz",
+    "sha256": "d7c4f3fb37e9bad8431de595cc72c7e65e5307416eefad650f99631b089edc70",
+    "bytes": 2274586
+  }
+]

@@ -126,8 +126,17 @@ function classificationValid(result:SpatialResult):boolean {
 /** Strict shared decoder: absence is legacy; null rejects damaged new evidence without fallback. */
 export function extractSpatialResult(details:unknown,toolName:string,isError=false,text?:string):SpatialResult|null|undefined {
   if(!object(details) || !Object.hasOwn(details,'spatialResult')) return;
-  const v=details.spatialResult;
-  if(isError || toolName!=='spatial_analyze' || !object(v) || !keys(v,['schemaVersion','resultRef','requestId','toolCallId','operation','parameters','delivery','createdAt','scope','completeness','items','referenceItems','geometry','values','method','limitations','provenance',...(v.schemaVersion===2?['classifications']:[])]) || (v.schemaVersion!==1 && v.schemaVersion!==2) || !uuid(v.requestId) || !str(v.toolCallId,256)
+  if(isError || toolName!=='spatial_analyze') return null;
+  const result=decodeSpatialResult(details.spatialResult);
+  if(!result) return null;
+  try {
+    if(text!==undefined) {const model:unknown=JSON.parse(text);if(!object(model) || !keys(model,['format','data']) || model.format!==spatialModelFormat(result) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null;}
+    return result;
+  } catch {return null;}
+}
+/** Validate a fixed calculation snapshot independently of its native tool envelope. */
+export function decodeSpatialResult(v:unknown):SpatialResult|null {
+  if(!object(v) || !keys(v,['schemaVersion','resultRef','requestId','toolCallId','operation','parameters','delivery','createdAt','scope','completeness','items','referenceItems','geometry','values','method','limitations','provenance',...(v.schemaVersion===2?['classifications']:[])]) || (v.schemaVersion!==1 && v.schemaVersion!==2) || !uuid(v.requestId) || !str(v.toolCallId,256)
     || v.resultRef!==`spatial:${v.requestId}:${encodeURIComponent(v.toolCallId)}` || !spatialRequestValid(v.parameters) || v.parameters.operation==='read' || v.parameters.operation!==v.operation
     || !time(v.createdAt) || !object(v.completeness) || !keys(v.completeness,['status','candidateCount']) || v.completeness.status!=='complete' || !integer(v.completeness.candidateCount)
     || !Array.isArray(v.scope) || !v.scope.length || v.scope.length>2 || !v.scope.every(inputValid)
@@ -143,7 +152,6 @@ export function extractSpatialResult(details:unknown,toolName:string,isError=fal
   if(result.operation==='measure' && result.values && 'unit' in result.values && result.values.unit!==(result.parameters.operation==='measure' && result.parameters.metric==='area'?'m²':'m')) return null;
   try {
     if(new TextEncoder().encode(JSON.stringify(result)).length>1024*1024) return null;
-    if(text!==undefined) {const model:unknown=JSON.parse(text);if(!object(model) || !keys(model,['format','data']) || model.format!==spatialModelFormat(result) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null;}
     return structuredClone(result);
   } catch {return null;}
 }

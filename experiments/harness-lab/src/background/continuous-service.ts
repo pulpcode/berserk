@@ -1,0 +1,266 @@
+import { renderAssessment } from '../contracts/assessment-render.js';
+import { validateAssessment } from './assessment-quality.js';
+import { calculate, type CalculationInput } from '../pi/analysis-calculation.js';
+import type { AssessmentSource } from '../contracts/continuous.js';
+import { discoverTasks } from './task-discovery.js';
+import { extractTaskDiscovery, type TaskDiscovery } from '../contracts/continuous.js';
+import { randomUUID, createHash } from 'node:crypto';
+import { isDeepStrictEqual } from 'node:util';
+import { mkdir } from 'node:fs/promises';
+import { basename, join } from 'node:path';
+import type { Identity, TaskSpace } from '../contracts/access.js';
+import type { BackgroundJob, BackgroundPage, BackgroundAction, BackgroundAnalysisInput } from '../contracts/background.js';
+import type { AnalysisUpdateInput, AnalysisUpdate, ContinuousStream, ContinuousStreamInput, ContinuousRound, ContinuousRoundDetail, ContinuousCurrentQuery, ContinuousCurrentResult, ContinuousInputEvidence } from '../contracts/continuous.js';
+import type { SessionSnapshot, FileRef, ComposerSelection } from '../contracts/index.js';
+import { RequestError } from '../contracts/errors.js';
+import type { TaskAssessmentEvidence, BackgroundExecutor } from './executor.js';
+import { snapshotBackgroundProfile } from '../pi/background-runner.js';
+import { Mutex } from '../resources/files.js';
+import { queryEvidence } from './context-evidence.js';
+import { ContinuousStore } from './continuous-store.js';
+import { type BackgroundService } from './service.js';
+
+const missing=()=>new RequestError('CONTINUOUS_NOT_FOUND','研判不存在或无权访问。',404);
+function finalText(snapshot:SessionSnapshot|null,requestId:string){const id=snapshot?.turns?.find(t=>t.requestId===requestId)?.finalMessageId;return snapshot?.messages.find(m=>m.id===id&&m.requestId===requestId&&m.role==='assistant'&&!m.isError)?.text??'';}
+function processingStatements(snapshot:SessionSnapshot|null,requestId:string){const id=snapshot?.turns?.find(t=>t.requestId===requestId)?.finalMessageId;const end=snapshot?.messages.findIndex(m=>m.id===id)??-1;return snapshot?.messages.slice(0,end).filter(m=>m.role==='assistant'&&m.requestId===requestId&&!m.isError).map(m=>m.text).filter(Boolean).join('\n\n');}
+const invalid=(text:string)=>new RequestError('INVALID_INPUT',text);
+const readonlyTools=new Set(['read','ls','find','source_list','source_read','skill_read','information_search','information_read','situation_query','task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_calculate','analysis_evidence_read','analysis_task_candidates','spatial_analyze']);
+export class ContinuousService {
+  readonly store:ContinuousStore;
+  private readonly preparations=new Mutex();
+  private readonly qualitySources=new Map<string,AssessmentSource[]>();
+  private readonly discoveries=new Map<string,TaskDiscovery>();
+  constructor(readonly host:BackgroundService,readonly executor:BackgroundExecutor){this.store=new ContinuousStore(host.store);}
+  manage(actor:Identity,stream:ContinuousStream){for(const id of stream.sourceIds)this.host.permission(actor,id,true);}
+  assertStream(stream:ContinuousStream){
+    const {host}=this;host.assertContext(undefined,stream.profile.contextScope);
+    const profile=host.config.profiles.find(p=>p.id===stream.profileId);if(!profile||stream.profile.skillIds.some(id=>!profile.skillIds.includes(id))||stream.profile.tools.some(t=>!['task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_calculate','analysis_evidence_read','analysis_task_candidates'].includes(t)&&!profile.tools.includes(t)))throw missing();
+    for(const sourceId of stream.sourceIds){const source=host.source(sourceId);if(!source.allowedProfileIds.includes(stream.profileId))throw missing();for(const seatId of stream.recipientSeatIds){if(!source.allowedRecipientSeatIds.includes(seatId)||!host.lab.access!.identityForSeat(seatId))throw missing();host.assertContext(seatId,stream.profile.contextScope);}}
+  }
+  canRead(actor:Identity,stream:ContinuousStream){
+    try {const current=this.host.lab.access!.identity(actor.userId);if(!current||current.seatId!==actor.seatId||stream.sourceIds.some(id=>!this.host.config.sources.some(s=>s.sourceId===id)))return false;this.host.assertContext(actor.seatId,stream.profile.contextScope);
+      const recipient=stream.recipientSeatIds.includes(actor.seatId)&&stream.sourceIds.every(id=>this.host.source(id).allowedRecipientSeatIds.includes(actor.seatId));
+      return recipient||stream.sourceIds.every(id=>!!this.host.store.effectivePermission(current,id));
+    }catch{return false;}
+  }
+  access(actor:Identity){return {enabled:true,canRead:this.store.streams().some(s=>this.canRead(actor,s)),canManage:this.host.config.sources.some(s=>this.host.store.effectivePermission(actor,s.sourceId)==='manage')};}
+  publicStream(stream:ContinuousStream):ContinuousStream{return {...stream,profile:{...stream.profile,instructions:'',resources:[],skills:undefined,agents:undefined}};}
+  streams(actor:Identity){return {items:this.store.streams().filter(s=>{try{this.manage(actor,s);return true;}catch{return false;}}).map(s=>this.publicStream(s))};}
+  async configure(actor:Identity,input:ContinuousStreamInput,options:{id?:string;revision?:number;clientActionId?:string}){
+    if(!input || typeof input.name!=='string'||!input.name.trim()||input.name.length>100||!Array.isArray(input.sourceIds)||!input.sourceIds.length||input.sourceIds.length>100||new Set(input.sourceIds).size!==input.sourceIds.length||!Array.isArray(input.recipientSeatIds)||!input.recipientSeatIds.length||new Set(input.recipientSeatIds).size!==input.recipientSeatIds.length||typeof input.enabled!=='boolean')throw invalid('请填写配置名称、来源集合和共同接收席位。');
+    if((input.quietMs!==undefined&&(!Number.isSafeInteger(input.quietMs)||input.quietMs<0||input.quietMs>60000))||(input.maxWaitMs!==undefined&&(!Number.isSafeInteger(input.maxWaitMs)||input.maxWaitMs<1||input.maxWaitMs>300000))||(input.quietMs??5000)>(input.maxWaitMs??30000))throw invalid('合并等待时间无效。');
+    for(const id of input.sourceIds)this.host.permission(actor,id,true);
+    const previous=options.id?this.store.current(options.id):undefined;if(previous){this.manage(actor,previous);if(previous.revision!==options.revision)throw new RequestError('CONTINUOUS_CONFLICT','配置已变化。',409);}
+    const configured=this.host.config.profiles.find(p=>p.id===input.profileId);if(!configured)throw invalid('处理方案不存在。');
+    // The continuous capability is a strictly read-only subset, independent of legacy profile execution.
+    const profile=await snapshotBackgroundProfile(this.host.lab,{...configured,tools:[...new Set([...configured.tools.filter(t=>readonlyTools.has(t)),'task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_calculate','analysis_evidence_read','analysis_task_candidates'])],agentIds:[]});
+    const scope=this.host.configuredProfileScope(configured);if(!scope)throw invalid('持续研判需要明确的共同资料范围。');profile.contextScope=scope;
+    const time=new Date().toISOString();const stream:ContinuousStream={...input,name:input.name.trim(),id:previous?.id??randomUUID(),epochId:randomUUID(),revision:previous?previous.revision+1:1,profile,sessionId:randomUUID(),state:input.enabled?'active':'paused',createdAt:time,updatedAt:time,createdByUserId:actor.userId,pendingInputs:0};this.assertStream(stream);
+    for(const id of input.sourceIds)this.host.permission(actor,id,true);
+    return options.clientActionId?this.store.receipt(actor.userId,options.clientActionId,input,()=>this.store.create(stream,previous)):this.store.create(stream,previous);
+  }
+  control(actor:Identity,id:string,input:{revision:number;action:'pause'|'resume';clientActionId:string}){
+    const stream=this.store.streams().find(s=>s.epochId===id)??this.store.current(id);this.manage(actor,stream);
+    return this.store.receipt(actor.userId,input.clientActionId,{id,...input},()=>{const latest=this.store.stream(stream.epochId);if(latest.revision!==input.revision)throw new RequestError('CONTINUOUS_CONFLICT','配置已变化。',409);
+      if(input.action==='resume'){this.assertStream(latest);if(this.host.store.listJobs().some(j=>j.streamEpochId===latest.epochId&&j.status==='running'))throw new RequestError('CONTINUOUS_CONFLICT','请先等待当前轮次结束。',409);}
+      const retired=!this.store.streams(true).some(s=>s.epochId===latest.epochId);
+      const next=this.store.save({...latest,state:input.action==='pause'?'paused':retired?'retired':'active',pauseReason:input.action==='pause'?'人员暂停':undefined,sessionId:input.action==='resume'&&!this.host.store.listJobs().some(j=>j.streamEpochId===latest.epochId&&j.status==='queued')?randomUUID():latest.sessionId,revision:latest.revision+1,updatedAt:new Date().toISOString()});void this.host.pump();return next;});
+  }
+  private round(job:BackgroundJob):ContinuousRound {
+    if(job.kind!=='continuous_analysis')throw missing();const stream=this.store.stream(job.streamEpochId),publication=this.store.publication(job.id);
+    return {jobId:job.id,streamId:stream.id,epochId:stream.epochId,streamName:stream.name,sourceIds:stream.sourceIds,batch:this.store.batch(job.batchId),status:job.status,publication:publication.status,createdAt:job.createdAt,publishedAt:publication.publishedAt,archivedTaskIds:publication.archivedTaskIds,resultRef:job.result,update:publication.update,error:job.error??(publication.reason?{code:'UNPUBLISHED',message:publication.reason}:undefined),pendingInputs:stream.pendingInputs,streamState:stream.state,pauseReason:stream.pauseReason,latestJobId:stream.latestJobId};
+  }
+  rounds(actor:Identity,query:{taskId?:string;epochId?:string;offset?:number;limit?:number}={}):BackgroundPage<ContinuousRound>{
+    if(query.taskId)this.host.lab.access!.get(query.taskId,actor.seatId);
+    const offset=query.offset??0,limit=query.limit??25;if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>200)throw invalid('分页参数无效。');
+    const items=this.host.store.listJobs().filter(j=>j.kind==='continuous_analysis'&&(!query.epochId||j.streamEpochId===query.epochId)&&this.canRead(actor,this.store.stream(j.streamEpochId))).map(j=>this.round(j)).filter(r=>(r.publication==='published'||r.sourceIds.every(id=>this.host.store.effectivePermission(actor,id)==='manage'))&&(!query.taskId||r.update?.taskUpdates.some(t=>t.taskId===query.taskId)||r.batch.requiredTaskIds.includes(query.taskId)));
+    return {items:items.slice(offset,offset+limit),total:items.length,offset,limit};
+  }
+  current(actor:Identity,taskId:string){this.host.lab.access!.get(taskId,actor.seatId);return {items:this.store.streams().flatMap(stream=>{if(!this.canRead(actor,stream))return [];const jobId=this.store.baseline(stream.epochId,taskId);return jobId?[this.round(this.host.store.getJob(jobId))]:[];})};}
+  private async inputEvidence(job:BackgroundJob):Promise<ContinuousInputEvidence[]>{if(job.kind!=='continuous_analysis')throw missing();return Promise.all(this.store.inputs(this.store.batch(job.batchId)).map(async input=>input.kind==='task_revision'?input:{...input,event:await (async()=>{const event=this.host.store.getEvent(input.eventId);return {id:event.id,sourceId:event.sourceId,sourceMessageId:event.sourceMessageId,title:event.title,text:await this.host.eventText(event),occurredAt:event.occurredAt,receivedAt:event.receivedAt,files:event.files};})()}));}
+  private evidence(snapshot:SessionSnapshot|null,requestId:string){const queries=queryEvidence(snapshot,requestId),ids=new Set(queries.map(m=>m.id));return [...queries,...(snapshot?.messages??[]).filter(m=>m.requestId===requestId&&m.role==='tool'&&!m.isError&&!m.resultMissing&&['source_read','source_list','source.read','source.list','read','ls','find'].includes(m.toolName??'')&&!ids.has(m.id))];}
+  private assertPublishedSnapshot(job:BackgroundJob,snapshot:SessionSnapshot|null):asserts snapshot is SessionSnapshot {
+    const publication=this.store.publication(job.id),result=job.result;
+    if(!snapshot||job.status!=='succeeded'||publication.status!=='published'||!result?.finalMessageId||snapshot.id!==result.sessionId||result.sessionId!==job.sessionId||result.requestId!==job.requestId||!snapshot.turns?.some(t=>t.requestId===job.requestId&&t.status==='succeeded'&&t.finalMessageId===result.finalMessageId)||!snapshot.messages.some(m=>m.id===result.finalMessageId&&m.requestId===job.requestId&&m.role==='assistant'&&!m.isError)||!publication.update||!this.verified(job,snapshot,publication.update))throw new RequestError('CONTINUOUS_EVIDENCE_MISSING','固定研判的原生正文或变化记录无法核验。',409);
+  }
+  async detail(actor:Identity,jobId:string):Promise<ContinuousRoundDetail>{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||this.store.publication(jobId).status!=='published'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();const snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile);this.assertPublishedSnapshot(job,snapshot);const inputs=await this.inputEvidence(job);if(!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return {...this.round(job),text:renderAssessment(this.store.publication(job.id).update!)??finalText(snapshot,job.requestId),processingText:[processingStatements(snapshot,job.requestId),this.store.publication(job.id).update?.assessmentSources?finalText(snapshot,job.requestId):''].filter(Boolean).join('\n\n'),queryMessages:this.evidence(snapshot,job.requestId),inputs};}
+  async readCurrent(epochId:string,query:ContinuousCurrentQuery):Promise<ContinuousCurrentResult>{
+    const stream=this.store.stream(epochId);this.assertStream(stream);
+    const offset=query.offset??0,limit=query.limit??20,textOffset=query.textOffset??0,textLimit=query.textLimit??16000;
+    if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>50||!Number.isSafeInteger(textOffset)||textOffset<0||!Number.isSafeInteger(textLimit)||textLimit<1||textLimit>32000)throw invalid('分页参数无效。');
+    const items=this.host.store.listJobs().filter(j=>j.streamEpochId===epochId&&this.store.publication(j.id).status==='published').map(j=>this.round(j)).filter(r=>!query.taskId||r.update?.taskUpdates.some(t=>t.taskId===query.taskId));
+    const result:ContinuousCurrentResult={items:items.slice(offset,offset+limit).map(r=>({...r,update:undefined})),total:items.length};
+    const jobId=query.jobId??(query.taskId?this.store.baseline(epochId,query.taskId):undefined);
+    if(query.evidenceId&&!jobId)throw invalid('分段读取须指定固定 jobId 或任务基线。');
+    if(jobId){
+      const round=items.find(r=>r.jobId===jobId);if(!round)throw missing();
+      const job=this.host.store.getJob(jobId),snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile);this.assertPublishedSnapshot(job,snapshot);
+      const inputs=await this.inputEvidence(job),queryMessages=this.evidence(snapshot,job.requestId),text=renderAssessment(round.update!)??finalText(snapshot,job.requestId),processingText=processingStatements(snapshot,job.requestId);
+      const evidence=[{id:'result',kind:'result' as const,text},{id:'native-answer',kind:'result' as const,text:finalText(snapshot,job.requestId)},{id:'processing',kind:'processing' as const,text:processingText??''},...inputs.map(input=>({id:`input:${input.id}`,kind:'input' as const,text:JSON.stringify(input)})),...queryMessages.map(message=>({id:`tool:${message.id}`,kind:'tool' as const,text:JSON.stringify(message)}))];
+      this.assertStream(this.store.stream(epochId));
+      if(query.section==='evidence'||query.evidenceId){
+        result.evidenceIndex=evidence.slice(offset,offset+limit).map(({id,kind,text})=>({id,kind,length:text.length}));result.evidenceTotal=evidence.length;
+      }
+      if(query.evidenceId){const selected=evidence.find(e=>e.id===query.evidenceId);if(!selected)throw missing();if(textOffset>selected.text.length)throw invalid('读取位置超出固定证据长度。');const end=Math.min(selected.text.length,textOffset+textLimit);result.evidence={id:selected.id,text:selected.text.slice(textOffset,end),offset:textOffset,total:selected.text.length,...(end<selected.text.length?{nextOffset:end}:{})};}
+      else {
+        result.detail={...round,text,processingText,queryMessages:query.section==='evidence'?queryMessages:[],inputs:query.section==='evidence'?inputs:undefined};
+        if(Buffer.byteLength(JSON.stringify(result))>256*1024){delete result.detail;result.evidenceIndex=evidence.slice(offset,offset+limit).map(({id,kind,text})=>({id,kind,length:text.length}));result.evidenceTotal=evidence.length;}
+      }
+    }
+    if(Buffer.byteLength(JSON.stringify(result))>256*1024)throw invalid('结果过大，请缩小分页范围。');return result;
+  }
+  record(job:BackgroundJob,input:AnalysisUpdateInput,evidence:TaskAssessmentEvidence,toolCallId:string,signal?:AbortSignal){
+    signal?.throwIfAborted();if(job.kind!=='continuous_analysis')throw missing();const current=this.host.store.getJob(job.id);if(current.status!=='running'||current.cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));
+    const reason=(v:unknown)=>typeof v==='string'&&!!v.trim()&&v.length<=3000;
+    if(!input||!Array.isArray(input.taskUpdates)||input.taskUpdates.length>100||input.taskUpdates.some(t=>!t)||!input.unassigned||typeof input.unassigned.significant!=='boolean'||!reason(input.unassigned.reason)||!Array.isArray(input.uncertainties)||input.uncertainties.length>100||input.uncertainties.some(v=>!reason(v)))throw invalid('请完整记录任务变化、未归属变化及资料缺口。');
+    const batch=this.store.batch(job.batchId),discovery=this.discoveries.get(job.id);
+    if(!discovery)throw new RequestError('TASK_DISCOVERY_REQUIRED','请先调用 analysis_task_candidates 完整核验本轮任务清单。',409);
+    const currentTasks=this.host.lab.access!.listActivePublic();
+    if(currentTasks.length!==discovery.tasks.length || currentTasks.some(task=>!discovery.tasks.some(item=>item.task.id===task.id&&item.task.revision===task.revision))){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务清单已改变，请重新核验。',409);}
+    const supplied=input.taskCoverage??input.taskUpdates.map(item=>({taskId:item.taskId,status:item.change==='uncertain'?'uncertain' as const:'assessed' as const,reason:item.reason}));
+    if(!Array.isArray(supplied)||supplied.some(item=>!item))throw invalid('taskCoverage 必须是完整的任务覆盖数组。');
+    const expectedTaskIds=discovery.tasks.map(item=>item.task.id),suppliedTaskIds=supplied.map(item=>item.taskId),updatedTaskIds=input.taskUpdates.map(item=>item.taskId);
+    const missingTaskIds=expectedTaskIds.filter(id=>!suppliedTaskIds.includes(id));
+    const unknownTaskIds=[...new Set([...suppliedTaskIds,...updatedTaskIds].filter(id=>!expectedTaskIds.includes(id)))];
+    const conflictingTaskIds=[...new Set([...suppliedTaskIds.filter((id,index)=>suppliedTaskIds.indexOf(id)!==index),...updatedTaskIds.filter((id,index)=>updatedTaskIds.indexOf(id)!==index)])];
+    if(missingTaskIds.length||unknownTaskIds.length||conflictingTaskIds.length)throw new RequestError('TASK_COVERAGE_MISSING',`本轮任务覆盖不完整或存在重复，请核对具体任务：${JSON.stringify({missingTaskIds,unknownTaskIds,conflictingTaskIds})}`,409);
+    const taskCoverage=supplied.map(item=>{
+      const found=discovery.tasks.find(candidate=>candidate.task.id===item.taskId),update=input.taskUpdates.find(update=>update.taskId===item.taskId);
+      if(!found||!['assessed','unrelated','uncertain'].includes(item.status)||!reason(item.reason))throw invalid(`任务覆盖说明的status或reason无效：${JSON.stringify({taskId:item.taskId})}`);
+      if(item.status==='unrelated' ? found.candidate!=='unrelated'||!!update : !update || item.status==='uncertain'&&update.change!=='uncertain')throw new RequestError('TASK_COVERAGE_MISSING',`候选或待核实任务须有明确研判；只有已核验无关联任务可标记unrelated：${JSON.stringify({conflictingTaskIds:[item.taskId],status:item.status,candidate:found.candidate,hasTaskUpdate:!!update})}`,409);
+      return {...item,taskRevision:found.task.revision,taskTitle:found.task.title};
+    });
+    const observed=new Map([...evidence.tasks,...discovery.tasks.map(item=>[item.task.id,item.task.revision] as const)]);
+    this.observeQualitySources(job,evidence);
+    const taskUpdates=input.taskUpdates.map((item,taskIndex)=>{
+      const field=`taskUpdates[${taskIndex}].inputIds`;
+      if(!Array.isArray(item.inputIds)||!item.inputIds.length)throw invalid(`${field} 必须是非空输入引用数组。`);
+      const seen=new Set<string>();
+      for(const [index,id] of item.inputIds.entries()) {
+        const path=`${field}[${index}]`;
+        if(seen.has(id))throw invalid(`输入引用重复：${JSON.stringify({path,value:id})}`);
+        seen.add(id);
+        if(typeof id!=='string'||!batch.inputIds.includes(id)&&!this.store.db.prepare('SELECT 1 FROM continuous_inputs WHERE id=? AND epoch_id=? AND consumed=1').get(id,job.streamEpochId))throw invalid(`输入引用不存在或不在获准范围：${JSON.stringify({path,value:id,currentBatchInputIds:batch.inputIds})}。同一配置时期（epoch）已消费的历史输入引用也允许；请依据实际相关资料选择引用，不要删除任务覆盖来绕过错误。`);
+      }
+      if(!['initial','changed','unchanged','retracted','uncertain'].includes(item.change))throw invalid(`taskUpdates[${taskIndex}].change 无效。`);
+      if(!reason(item.reason))throw invalid(`taskUpdates[${taskIndex}].reason 必须是非空说明且不超过3000字符。`);
+      if(typeof item.significant!=='boolean')throw invalid(`taskUpdates[${taskIndex}].significant 必须是布尔值。`);
+      const row=this.store.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(item.taskId),task=row?JSON.parse(String(row.data)) as TaskSpace:undefined;
+      if(task&&observed.has(task.id)&&observed.get(task.id)!==task.revision){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务说明已改变，请重新查询当前版本后记录。',409);}
+      if(!task||task.visibility!=='public'||task.state!=='active'||observed.get(task.id)!==task.revision)throw new RequestError('TASK_NOT_QUERIED','请先成功查询当前活动公共任务版本。',409);
+      let assessment;
+      try {assessment=validateAssessment(item.assessment!,item.taskId,this.store.publication(this.store.baseline(job.streamEpochId,item.taskId)??'').update?.taskUpdates.find(t=>t.taskId===item.taskId)?.assessment,this.qualitySources.get(job.id)??[],job.streamEpochId);}catch(error){throw invalid(error instanceof Error?error.message:'研判结构不完整');}
+      const change=assessment.conditions.some(c=>c.status==='unknown')?'uncertain' as const:!this.store.baseline(job.streamEpochId,item.taskId)?'initial' as const:assessment.conditions.every(c=>c.change==='unchanged')?'unchanged' as const:assessment.conditions.every(c=>c.status==='not_applicable')?'retracted' as const:'changed' as const;
+      return {...item,change,reason:assessment.summary,assessment,significant:assessment.conditions.some(c=>c.significant),taskRevision:task.revision,taskTitle:task.title,previousJobId:this.store.baseline(job.streamEpochId,item.taskId)};
+    });
+    const update:AnalysisUpdate={...input,taskUpdates,taskCoverage,assessmentSources:(this.qualitySources.get(job.id)??[]).filter(source=>taskUpdates.some(t=>t.assessment.conditions.some(c=>c.evidence.some(e=>e.id===source.id)))).map(source=>source.kind==='calculation'?source:{...source,text:'',length:source.length??source.text.length,digest:source.digest??createHash('sha256').update(source.text).digest('hex'),excerpts:[...new Set(taskUpdates.flatMap(t=>t.assessment.conditions.flatMap(c=>c.evidence.filter(e=>e.id===source.id).map(e=>e.quote))))]}),discoveryToolCallId:discovery.toolCallId,discoveryDigest:createHash('sha256').update(JSON.stringify(discovery)).digest('hex'),toolCallId,recordedAt:new Date().toISOString()};
+    const issue=this.store.publicationIssue(job,update);
+    if(issue==='stale'){this.store.savePublication(job,{...this.store.publication(job.id),status:'pending',revisionConflict:true});throw new RequestError('TASK_REVISION_CHANGED','任务版本或基线已变化，请重新核验。',409);}
+    if(issue==='missing')throw invalid(`必要重评任务尚未引用本批任务修订输入：${JSON.stringify({requiredTaskInputIssues:this.store.requiredTaskInputIssues(job,update)})}。合法历史输入不能替代本轮任务变更依据；请核对所列字段并引用实际相关的本批任务修订。`);
+    this.store.savePublication(job,{status:'pending',update});return {update,published:false as const};
+  }
+  private verified(job:BackgroundJob,snapshot:SessionSnapshot,update:AnalysisUpdate,finalMessageId=snapshot.turns?.find(t=>t.requestId===job.requestId)?.finalMessageId){
+    if(snapshot.recoveryWarning)return false;
+    const end=snapshot.messages.findIndex(m=>m.id===finalMessageId);if(end<0)return false;
+    const before=snapshot.messages.slice(0,end);
+    if(update.discoveryToolCallId){
+      const message=before.find(m=>m.role==='tool'&&!m.isError&&!m.resultMissing&&m.requestId===job.requestId&&m.toolName==='analysis_task_candidates'&&m.toolCallId===update.discoveryToolCallId);
+      const discovery=message&&extractTaskDiscovery({taskDiscovery:message.taskDiscovery},message.toolName!,false,message.text);
+      if(!discovery||discovery.requestId!==job.requestId||createHash('sha256').update(JSON.stringify(discovery)).digest('hex')!==update.discoveryDigest)return false;
+    }
+    for(const source of update.assessmentSources??[]){
+      if(source.id.startsWith('tool:')&&source.jobId===job.id&&!before.some(m=>m.role==='tool'&&!m.isError&&!m.resultMissing&&m.requestId===job.requestId&&`tool:${m.toolCallId}`===source.id&&(source.digest?createHash('sha256').update(m.text).digest('hex')===source.digest:m.text===source.text)))return false;
+      if(source.kind==='calculation'&&source.jobId===job.id&&!before.some(m=>m.role==='tool'&&!m.isError&&!m.resultMissing&&m.requestId===job.requestId&&m.toolName==='analysis_calculate'&&`calculation:${m.toolCallId}`===source.id&&(source.digest?createHash('sha256').update(m.text).digest('hex')===source.digest:m.text===source.text)))return false;
+    }
+    return before.some(m=>{if(m.role!=='tool'||m.isError||m.resultMissing||m.requestId!==job.requestId||m.toolName!=='information_record_analysis_update'||m.toolCallId!==update.toolCallId)return false;try{const parsed=JSON.parse(m.text);return parsed.published===false&&isDeepStrictEqual(parsed.update,update);}catch{return false;}});
+  }
+  private completion(job:BackgroundJob,snapshot:SessionSnapshot,stopped:()=>boolean):'ready'|'missing'|'stale' {
+    if(job.kind!=='continuous_analysis'||stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();
+    this.assertStream(this.store.stream(job.streamEpochId));
+    if(snapshot.recoveryWarning)throw new RequestError('CONTINUOUS_EVIDENCE_MISSING','原生记录损坏，不能自动补做。',409);
+    const publication=this.store.publication(job.id),update=publication.update;
+    if(publication.revisionConflict)return 'stale';
+    if(update && this.store.publicationIssue(job,update)==='stale')return 'stale';
+    if(!update || !this.verified(job,snapshot,update,snapshot.messages.at(-1)?.id))return 'missing';
+    return this.store.publicationIssue(job,update)==='missing'?'missing':'ready';
+  }
+  async execute(job:BackgroundJob,stopped:()=>boolean){
+    if(job.kind!=='continuous_analysis')throw missing();const stream=this.store.stream(job.streamEpochId),batch=this.store.batch(job.batchId),inputs=this.store.inputs(batch);
+    try {
+      this.assertStream(stream);const directory=join(this.host.files.root,'streams',stream.epochId,stream.sessionId);await mkdir(join(directory,'files'),{recursive:true,mode:0o700});
+      const files:FileRef[]=[],parts:string[]=[];
+      for(const input of inputs){if(input.kind==='task_revision'){parts.push(`任务说明修订（人员维护条件，不是模型推断）：inputId=${input.id}\n${JSON.stringify(input.task)}`);continue;}const event=this.host.store.getEvent(input.eventId);parts.push(`来源资料 inputId=${input.id} eventId=${event.id} sourceId=${event.sourceId} occurredAt=${event.occurredAt??'未知'} receivedAt=${event.receivedAt}\n${event.title}\n${await this.host.eventText(event)}`);
+        for(const file of event.files){const path=`${file.id}-${file.name}`;await this.host.files.copies.import({fileId:file.id,name:file.name,size:file.size,hash:file.hash,createdAt:''},join(directory,'files'),path);files.push({path,name:basename(path),size:file.size,hash:file.hash});}}
+      if(stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();
+      const result=await this.executor.execute(job,{text:`${stream.profile.goal}\n\n本轮批次 ${batch.id}，输入截止 ${batch.inputCutoff}。必要重评任务：${JSON.stringify(batch.requiredTaskIds)}。先调用 analysis_task_candidates 完整核验任务关联，逐一记录全部返回任务；几何相交仅是候选，需核对时间和业务限制。未定位对象或缺几何不能认定无关联。旧研判中的建议、假设及条件句不能成为事实，实际调配/改线必须有新的业务来源依据。上一发布轮次：${batch.previousJobId??'无'}。以 analysis_current_read 获取各任务上一已发布判断；旧判断是待复核观点，不能冒充事实。逐任务比较事实、推断和人员条件变化；遗漏任务不代表无风险。结论只覆盖已核验的条件；局部约束解除不等于整体可执行或全部风险解除。先区分任务要求、适用业务规则、已确认事件与普通检查建议。新增影响执行的条件时，在reason和evidence中说明其必要性依据及对任务的实际影响；资料未提供本身不证明它是必要条件，不得把已确认事实降为无依据疑问。确有必要条件但证据不足时标为待核实并限定结论；有证据证明不满足时保留阻碍，不能一律回答未知。普通检查与备选方案放在recommendations，不作为新的执行前提；方案尚待核实不改变当前已确认安排。未发布历史不作为基线。业务新旧依据来源时间／版本，不能按接收顺序覆盖。候选返回assessmentBaselines和assessmentSources。以其固定条件ID、状态为比较基准，逐项复核旧条件的原始依据、适用对象和时段，以及本轮资料是否修订或替代该依据。旧条件须完整交代，但不要求继续认可：依据有效则保留，事实变化则更新，旧判断错误则corrected，条件不再适用则withdrawn并标not_applicable，均说明理由；不因本轮未重复提及就让已有事实失效。新增阻碍、纠正或宣布解除前核对原文；预览不足时用analysis_evidence_read分页读取，旧摘要与旧推断不是事实证明。区分真实变化与纠正旧误判，原先未受阻不能说成阻碍解除；限制只影响其适用范围，摘要、条件与建议须使用同一有效依据。使用analysis_calculate核算关键时间与数量前，先核对输入字段的业务含义、单位、对象和时段。计划起止、到达截止与实际资源占用区间不能互换，既定分配不自动代表全天独占；区间重叠只有在独占、占用和交接等依据足以支持时才构成实际冲突。缺周转资料时只说明替代方案能否成立待核实，不能断言必须调整其他任务；明确实际冲突则应指出。剩余时间减少不直接证明准备不足，须有准备耗时及当前未就绪等依据。填写assessment完整结构，总体仍受阻不能覆盖重要局部改善；significant基于有依据的重要影响，不仅因倒计时变化或未实施方案的提出／放弃就提醒。完成后记录完整变化元数据，再给出最终答复；界面以成功记录的结构研判为准。\n\n${parts.join('\n\n')}`,directory,files,profile:stream.profile,continuous:{stream,batch,inputs,requiredTaskIds:batch.requiredTaskIds},readAssessmentSource:(id,offset,limit,signal)=>this.readQualitySource(job,id,offset,limit,signal),calculateAnalysis:(input,id,signal,evidence)=>this.calculateFor(job,input,id,signal,evidence),recordAnalysisUpdate:(input,evidence,id,signal)=>this.record(job,input,evidence,id,signal),checkAnalysisCompletion:snapshot=>this.completion(job,snapshot,stopped),readTaskCandidates:async(id,signal)=>{const checked=()=>{if(stopped()||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));};const discovery=await discoverTasks(this.host.lab.access!,this.host.lab.context!,inputs,id=>this.host.store.getEvent(id),{principal:{kind:'service',profileId:stream.profileId,jobId:job.id,scope:stream.profile.contextScope!},requestId:job.requestId,toolCallId:id,signal:signal??new AbortController().signal,check:checked,baseline:id=>this.store.baseline(stream.epochId,id)});checked();const sources:AssessmentSource[]=[...(await this.inputEvidence(job)).map(i=>({id:`input:${i.id}`,text:i.kind==='event'?`${i.event?.title}\n${i.event?.text}\n业务时间：${i.event?.occurredAt??'未提供'}`:JSON.stringify(i.task),kind:'input' as const,jobId:job.id})),...discovery.tasks.map(t=>({id:`task:${t.task.id}:${t.task.revision}`,text:JSON.stringify(t.task),kind:'task' as const,jobId:job.id})),...(discovery.sourceQueries??[]).map((q,index)=>({id:`query:${job.id}:${index}`,text:JSON.stringify(q),kind:'query' as const,jobId:job.id})),...discovery.spatialResults.map((r,index)=>({id:`spatial:${job.id}:${index}`,text:JSON.stringify(r),kind:'query' as const,jobId:job.id}))];
+        discovery.assessmentBaselines=[];
+        for(const t of discovery.tasks){const previousId=this.store.baseline(stream.epochId,t.task.id);if(previousId){await this.readCurrent(stream.epochId,{jobId:previousId,taskId:t.task.id});const previous=this.store.publication(previousId).update;discovery.assessmentBaselines.push({taskId:t.task.id,jobId:previousId,assessment:previous?.taskUpdates.find(u=>u.taskId===t.task.id)?.assessment});for(const source of previous?.assessmentSources??[])if(!sources.some(s=>s.id===source.id))sources.push(source);}else discovery.assessmentBaselines.push({taskId:t.task.id});}
+        discovery.assessmentSources=sources.map(source=>({...source,text:(source.excerpts?.[0]??source.text).slice(0,300),length:source.length??source.text.length,truncated:!!source.excerpts||source.text.length>300,excerpts:undefined}));this.qualitySources.set(job.id,sources);checked();this.discoveries.set(job.id,discovery);return discovery;},readAnalysisCurrent:async(query,signal)=>{signal?.throwIfAborted();const result=await this.readCurrent(stream.epochId,query);if(result.evidence&&/^(input|tool):/.test(result.evidence.id)){const origin=query.jobId??this.store.baseline(stream.epochId,query.taskId??'');if(origin){const original=this.host.store.getJob(origin),snapshot=await this.executor.read(original,this.store.stream(stream.epochId).profile);this.assertPublishedSnapshot(original,snapshot);const sourceMessage=result.evidence.id.startsWith('tool:')?snapshot.messages.find(m=>m.id===result.evidence!.id.slice(5)):undefined;if(result.evidence.id.startsWith('tool:')&&!sourceMessage?.toolName?.match(/^(information_read|information_search|situation_query|read|source_read|source\.read|spatial_analyze)$/))return result;const source={id:`history:${origin}:${result.evidence.id}:${result.evidence.offset}`,text:result.evidence.text,kind:'query' as const,jobId:origin};const sources=this.qualitySources.get(job.id);if(sources&&!sources.some(s=>s.id===source.id))sources.push(source);Object.assign(result.evidence,{citationId:source.id});}}return result;},onEvent:event=>{if(event.type==='text.delta')this.host.store.setPhase(job.id,'generating');else if(event.type==='tool.started')this.host.store.setPhase(job.id,'tool');},publish:async()=>{throw invalid('持续研判不允许写入文件。');}});
+      const snapshot=result.snapshot,terminal=snapshot.lastResult,final=snapshot.turns?.find(t=>t.requestId===job.requestId)?.finalMessageId;if(!terminal||terminal.requestId!==job.requestId||terminal.status!=='succeeded'||!final||snapshot.recoveryWarning)throw new RequestError('CONTINUOUS_FAILED','本轮未正常完成，保留输入等待恢复。',409);
+      this.assertStream(this.store.stream(job.streamEpochId));
+      this.host.store.transaction(()=>{
+        const latest=this.host.store.getJob(job.id);if(latest.cancelRequestedAt||stopped())throw missing();
+        const update=this.store.publication(job.id).update;
+        const finished=this.host.store.finishJob(job.id,latest.revision,{status:'succeeded',result:{sessionId:job.sessionId!,requestId:job.requestId,finalMessageId:final,files:[]},usage:terminal.usageSummary});
+        if((!update||!this.verified(job,snapshot,update))&&this.store.publication(job.id).revisionConflict){this.store.savePublication(job,{status:'superseded',reason:'任务版本已改变，输入保留待重新评估。'});return;}
+        if(!update||!this.verified(job,snapshot,update)){this.store.savePublication(job,{status:'unpublished',reason:'缺少完整变化记录或对应原生证据。'});this.store.pause(stream.epochId,'缺少完整变化记录，需要核对后恢复。');return;}
+        try {this.store.publish(finished,update);}catch(error){if(!(error instanceof RequestError))throw error;this.store.savePublication(job,{status:'unpublished',update,reason:error.message});this.store.pause(stream.epochId,error.message);}
+      });
+    }catch(error){const latest=this.host.store.getJob(job.id);if(latest.status==='running')this.host.store.finishJob(job.id,latest.revision,{status:latest.cancelRequestedAt?'cancelled':stopped()?'interrupted':'failed',error:{code:error instanceof RequestError?error.code:'CONTINUOUS_FAILED',message:error instanceof RequestError?error.message:'持续研判执行失败。'}});this.store.savePublication(job,{...this.store.publication(job.id),status:'unpublished',reason:'执行未完成，需显式恢复。'});this.store.pause(job.streamEpochId,'执行未完成，保留输入等待恢复。');}finally{this.discoveries.delete(job.id);this.qualitySources.delete(job.id);}
+  }
+  private async readQualitySource(job:BackgroundJob,id:string,offset:number,limit:number,signal?:AbortSignal){
+    signal?.throwIfAborted();if(job.kind!=='continuous_analysis'||this.host.store.getJob(job.id).status!=='running'||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));
+    if(!Number.isSafeInteger(offset)||offset<0||!Number.isSafeInteger(limit)||limit<1||limit>16000)throw invalid('证据分页无效。');
+    const sources=this.qualitySources.get(job.id),source=sources?.find(s=>s.id===id);if(!source)throw missing();
+    let text=source.text;
+    if(source.excerpts){
+      const origin=this.host.store.getJob(source.jobId);if(origin.streamEpochId!==job.streamEpochId)throw missing();
+      const snapshot=await this.executor.read(origin,this.store.stream(job.streamEpochId).profile);this.assertPublishedSnapshot(origin,snapshot);
+      if(id.startsWith('input:')){const input=(await this.inputEvidence(origin)).find(i=>`input:${i.id}`===id);if(!input)throw missing();text=input.kind==='event'?`${input.event?.title}\n${input.event?.text}\n业务时间：${input.event?.occurredAt??'未提供'}`:JSON.stringify(input.task);}
+      else if(id.startsWith('tool:')){const message=snapshot.messages.find(m=>m.toolCallId===id.slice(5)&&m.role==='tool'&&!m.isError&&!m.resultMissing);if(!message)throw missing();text=message.text;}
+      else if(id.startsWith('history:')){const marker=id.indexOf(':',8),originalId=id.slice(marker+1,id.lastIndexOf(':')),start=Number(id.slice(id.lastIndexOf(':')+1));const result=await this.readCurrent(job.streamEpochId,{jobId:source.jobId,section:'evidence',evidenceId:originalId,textOffset:start,textLimit:Math.min(source.length??16000,32000)});text=result.evidence?.text??'';}
+      else {const message=snapshot.messages.find(m=>m.toolName==='analysis_task_candidates'&&!m.isError&&m.requestId===origin.requestId);const d=message&&extractTaskDiscovery({taskDiscovery:message.taskDiscovery},message.toolName!,false,message.text);if(!d)throw missing();if(id.startsWith('task:')){const task=d.tasks.find(t=>`task:${t.task.id}:${t.task.revision}`===id);if(!task)throw missing();text=JSON.stringify(task.task);}else if(id.startsWith('query:'))text=JSON.stringify(d.sourceQueries?.[Number(id.split(':').at(-1))]);else if(id.startsWith('spatial:'))text=JSON.stringify(d.spatialResults[Number(id.split(':').at(-1))]);else throw missing();}
+      if(!text||source.digest&&createHash('sha256').update(text).digest('hex')!==source.digest)throw invalid('固定原始证据无法核验。');
+      source.text=text;delete source.excerpts;
+    }
+    signal?.throwIfAborted();this.assertStream(this.store.stream(job.streamEpochId));if(offset>text.length)throw invalid('读取位置超出证据长度。');const end=Math.min(offset+limit,text.length);return {id,text:text.slice(offset,end),offset,total:text.length,...(end<text.length?{nextOffset:end}:{})};
+  }
+  private observeQualitySources(job:BackgroundJob,evidence?:TaskAssessmentEvidence){
+    const sources=this.qualitySources.get(job.id);if(!sources)return;
+    for(const m of evidence?.messages??[])if(m.requestId===job.requestId&&m.role==='tool'&&!m.isError&&!m.resultMissing&&m.toolCallId&&['information_read','information_search','situation_query','read','source_read','source.read','spatial_analyze'].includes(m.toolName??'')){
+      const id=`tool:${m.toolCallId}`;if(!sources.some(s=>s.id===id))sources.push({id,text:m.text,kind:'query',jobId:job.id});
+    }
+  }
+  private calculateFor(job:BackgroundJob,input:CalculationInput,id:string,signal?:AbortSignal,evidence?:TaskAssessmentEvidence){
+    signal?.throwIfAborted();if(job.kind!=='continuous_analysis'||this.host.store.getJob(job.id).status!=='running'||this.host.store.getJob(job.id).cancelRequestedAt)throw missing();this.assertStream(this.store.stream(job.streamEpochId));
+    this.observeQualitySources(job,evidence);
+    const sources=this.qualitySources.get(job.id);if(!sources)throw invalid('请先核验任务并读取来源。');
+    if(!Array.isArray(input.evidence)||!input.evidence.length||input.evidence.some(e=>!e.quote||!sources.some(s=>s.id===e.id&&(s.excerpts?s.excerpts.some(part=>part.includes(e.quote)):s.text.includes(e.quote)))))throw invalid('计算依据不是获准原文。');
+    if(input.evidence.length!==input.values.length)throw invalid('每个计算输入须按顺序提供一条来源引用。');
+    const units:Record<string,string[]>= {kg:['kg','千克','公斤'],t:['t','吨'],m:['m','米'],km:['km','公里'],minutes:['minutes','分钟'],hours:['hours','小时'],辆:['辆'],人:['人'],件:['件']};
+    input.values.forEach((v,index)=>{const quote=input.evidence[index].quote;
+      if(typeof v==='string'?!quote.includes(v):![...quote.matchAll(/(?<![\d.])-?\d+(?:\.\d+)?(?![\d.])/g)].some(m=>Number(m[0])===v))throw invalid(`values[${index}]未出现在对应引文，不能猜测数值或日期。`);
+      if(typeof v==='number'){const source=sources.find(s=>s.id===input.evidence[index].id);if(source?.kind==='calculation'){const calculated=JSON.parse(source.text) as {result:unknown;unit:string};if(calculated.result!==v||calculated.unit!==input.unit)throw invalid('后续计算必须引用前次实际结果及相同单位。');return;}const aliases=units[input.unit]??[input.unit];if(!aliases.some(unit=>quote.includes(`${v}${unit}`)||quote.includes(`${v} ${unit}`)))throw invalid(`values[${index}]的单位未匹配对应原文；数量比较必须同单位。`);}
+    });
+    const result={id:`calculation:${id}`,...calculate(input)};sources.push({id:result.id,text:JSON.stringify(result),kind:'calculation',jobId:job.id});return result;
+  }
+  async openFile(actor:Identity,jobId:string,fileId:string){const detail=await this.detail(actor,jobId),file=detail.inputs?.flatMap(i=>i.event?.files??[]).find(f=>f.id===fileId);if(!file)throw missing();const content=await this.host.files.copies.open({fileId:file.id,name:file.name,size:file.size,hash:file.hash,createdAt:''});try{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return content;}catch(error){content.stream.destroy();throw error;}}
+  async analysisOptions(actor:Identity,jobId:string,taskId:string){await this.detail(actor,jobId);return this.host.taskOptions(actor,taskId);}
+  async findAnalysis(actor:Identity,jobId:string,clientActionId:string){await this.detail(actor,jobId);const action=this.host.store.findAction(actor.userId,clientActionId);if(!action||action.continuousJobId!==jobId||action.seatId!==actor.seatId)return null;this.host.lab.access!.get(action.taskSpaceId!,actor.seatId);return action;}
+  async analyse(actor:Identity,jobId:string,input:BackgroundAnalysisInput):Promise<BackgroundAction>{return this.preparations.run(async()=>{
+    const detail=await this.detail(actor,jobId),task=this.host.lab.access!.get(input.taskSpaceId,actor.seatId,true);
+    if(input.mode!=='conversation'||!input.goal?.trim()||input.goal.length>16000||input.fileIds?.length||(input.skillIds?.length??0)>1||(input.agentIds?.length??0)>1)throw invalid('请选择私有对话接续，填写目标；持续结果不含可导入输出文件。');
+    const digest=createHash('sha256').update(JSON.stringify([jobId,input])).digest('hex');let action=this.host.store.findAction(actor.userId,input.clientActionId);
+    if(action){if(action.continuousJobId!==jobId||action.inputHash!==digest)throw invalid('操作标识已用于其他内容。');if(action.status==='completed')return action;}
+    const workspace=await this.host.lab.workspaces.ensureWorkspace(task.id,actor.seatId,task.title),selection:ComposerSelection={};
+    if(input.skillIds?.[0]){const skill=await this.host.lab.resources.readSkill(workspace.id,input.skillIds[0],actor.seatId);selection.skill={id:skill.id,hash:skill.hash};}
+    if(input.agentIds?.[0]){const agents=await this.host.lab.agents(workspace.id,actor.seatId),agent=agents.find(a=>a.name===input.agentIds![0]);if(!agent)throw invalid('Agent 不存在。');selection.agent={name:agent.name,hash:agent.hash};}
+    const draft=`${input.goal.trim()}\n\n固定研判引用：${detail.streamName}\njobId=${jobId} requestId=${detail.resultRef!.requestId} finalMessageId=${detail.resultRef!.finalMessageId}\n输入截止：${detail.batch.inputCutoff}。这是先前模型判断，讨论中的假设不会自动成为共享事实。${input.includeResult?`\n\n${detail.text}`:''}`;
+    if(draft.length>16000)throw invalid('研判较长，请取消直接带入结果。');
+    await this.detail(actor,jobId);this.host.lab.access!.get(task.id,actor.seatId,true);
+    action??=this.host.store.beginAction({userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'analysis',inputHash:digest,continuousJobId:jobId,taskSpaceId:task.id,workspaceId:workspace.id,sessionId:randomUUID(),analysis:input,draft,selection,fileRefs:[]});
+    await this.host.lab.createSession(workspace.id,actor.seatId,undefined,action.sessionId);
+    await this.detail(actor,jobId);return this.host.store.updateAction(action.id,action.revision,{status:'completed'});
+  });}
+  async deliver(id:string){const delivery=this.host.store.getDelivery(id),job=this.host.store.getJob(delivery.jobId);if(job.kind!=='continuous_analysis')throw missing();try{const stream=this.store.stream(job.streamEpochId);this.assertStream(stream);if(this.store.publication(job.id).status!=='published'||!this.canRead(this.host.lab.access!.identityForSeat(delivery.recipientSeatId)!,stream))throw missing();const snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile),update=this.store.publication(job.id).update;if(!snapshot||!update||!this.verified(job,snapshot,update))throw missing();this.assertPublishedSnapshot(job,snapshot);this.assertStream(this.store.stream(job.streamEpochId));this.host.store.updateDelivery(id,delivery.revision,'delivered');}catch{this.host.store.updateDelivery(id,delivery.revision,'failed',{code:'CONTINUOUS_DELIVERY_FAILED',message:'通知暂未完成，请核对权限后重试。'});}}
+}

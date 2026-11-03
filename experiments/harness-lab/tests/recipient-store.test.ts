@@ -125,10 +125,10 @@ describe('supplementary delivery storage', () => {
 
   it('migrates v3/v4 without inventing historic reviews and rejects missing v5 indexes and approvals', async () => {
     const {store, db} = await setup(); const old = running(store, false); finish(store, old);
-    db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; PRAGMA user_version=4;'); new BackgroundStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8); expect(store.listDeliveries()).toHaveLength(1); expect(store.listDeliveryReviews()).toEqual([]);
-    db.exec('DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; DROP TABLE information_task_overrides; PRAGMA user_version=3;'); new BackgroundStore(db);
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8); expect(store.listDeliveries()).toHaveLength(1);
+    db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; PRAGMA user_version=4;'); new BackgroundStore(db);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11); expect(store.listDeliveries()).toHaveLength(1); expect(store.listDeliveryReviews()).toEqual([]);
+    db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE inbox_handling; DROP TABLE background_delivery_reviews; DROP TABLE information_task_overrides; PRAGMA user_version=3;'); new BackgroundStore(db);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11); expect(store.listDeliveries()).toHaveLength(1);
     db.exec('DROP INDEX background_delivery_reviews_pending'); expect(() => new BackgroundStore(db)).toThrow();
   });
 
@@ -165,9 +165,9 @@ it('upgrades main v5 reviews without losing decisions and initializes only histo
   const review = store.reviewForJob(job.id)!; const input = approve(); store.decideDeliveryReview(review.id,input,actors.overall);
   const fixed = store.listDeliveries(job.id).find(item => !item.reviewId)!; store.updateDelivery(fixed.id,fixed.revision,'delivered');
   const before = store.getDeliveryReview(review.id);
-  db.exec('DROP TABLE inbox_handling; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=5;');
+  db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE inbox_handling; ALTER TABLE seats DROP COLUMN view_work_overview; PRAGMA user_version=5;');
   new AccessStore(db); const reopened = new BackgroundStore(db);
-  expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
+  expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11);
   expect(reopened.getDeliveryReview(review.id)).toEqual(before);
   expect(reopened.decideDeliveryReview(review.id,input,actors.overall)).toEqual(before);
   expect(reopened.handling(fixed.id)).toMatchObject({state:'legacy',revision:1});
@@ -183,9 +183,9 @@ it('upgrades branch v6 without resetting existing handling receipts or overview 
   const actor = new AccessStore(db).identity(actors.intel.userId)!;
   const input = {state:'completed' as const,revision:1,clientActionId:randomUUID()};
   const receipt = store.handleInbox(actor,delivery.id,input);
-  db.exec('DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN responsibility; ALTER TABLE seats DROP COLUMN responsibility_revision; PRAGMA user_version=6;');
+  db.exec('DROP TABLE IF EXISTS continuous_actions; DROP TABLE IF EXISTS continuous_publications; DROP TABLE IF EXISTS continuous_current; DROP TABLE IF EXISTS continuous_batches; DROP TABLE IF EXISTS continuous_inputs; DROP TABLE IF EXISTS continuous_streams; DROP TABLE background_delivery_reviews; ALTER TABLE seats DROP COLUMN responsibility; ALTER TABLE seats DROP COLUMN responsibility_revision; PRAGMA user_version=6;');
   const access = new AccessStore(db), reopened = new BackgroundStore(db);
-  expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(8);
+  expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(11);
   expect(access.identity(actor.userId)?.viewWorkOverview).toBe(true);
   expect(reopened.handleInbox(actor,delivery.id,input)).toEqual(receipt);
   expect(reopened.listDeliveryReviews()).toEqual([]);

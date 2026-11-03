@@ -1,0 +1,12 @@
+{
+  "actualRuntimeDriver": {
+    "path": "experiments/harness-lab/.local/continuous-validation/quality-final-20261029-092754/run.mjs",
+    "sha256": "f42a1460ffdffecef8f635b3ce2bfc2b639d5eadfe334ff2df71b21c6426df4f"
+  },
+  "safeReviewCopy": {
+    "path": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-runner/final-run.mjs",
+    "sha256": "a473c309143b4aba464205c0b6632058ded99aefab61453f8b9f0edca69e70f3"
+  },
+  "actualDifferenceFromPreviousDriver": "仅收窄variant列表至shared-object，run ID增加-complete；探针、产品、输入未修改。",
+  "reviewCopyDifference": "只增加显式QUALITY_RUN_ROOT保护；实际历史驱动不替换。"
+}

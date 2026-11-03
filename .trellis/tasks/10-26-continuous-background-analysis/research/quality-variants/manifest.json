@@ -1,0 +1,10 @@
+{
+  "frozenAt": "2026-10-28",
+  "purpose": "独立变体；每组旧新各1次；预期不输入被测模型",
+  "inputs": {
+    "time-weight-input.json": "b3d5477bf0efa9da741dab6bd4ebd650e1c31c6cbee35b9728a096aed660f2e4",
+    "shared-object-input.json": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+    "source-conflict-input.json": "7272dc3931bc62bfa299da55292dd593a89b8c014f74632c05b0a8c11aec1946"
+  },
+  "preRunCorrection": "共享对象变体B已改为当天下午，运行前同步将标题次日改为下午，避免夹具自相矛盾；尚未执行任何变体。"
+}

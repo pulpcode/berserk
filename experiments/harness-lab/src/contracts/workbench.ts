@@ -3,7 +3,7 @@ import type { BackgroundPage } from './background.js';
 
 export type WorkbenchBucket = 'actionable' | 'following' | 'done' | 'legacy';
 export interface WorkbenchItem {
-  key: string; id: string; kind: 'work' | 'information' | 'delivery_review'; title: string;
+  key: string; id: string; kind: 'work' | 'information' | 'delivery_review' | 'continuous'; title: string;
   state: string; bucket: WorkbenchBucket; label: string; source: string;
   tasks: Array<{id:string;title:string}>; updatedAt: string;
   /** Information versions remain distinct even when titles and tasks match. */
@@ -12,7 +12,7 @@ export interface WorkbenchItem {
 export interface WorkbenchPage extends BackgroundPage<WorkbenchItem> {
   /** Null means some sections failed; never report incomplete totals as zero. */
   counts: Record<'actionable'|'following'|'done'|'all',number|null>;
-  sections: Record<'work'|'information'|'delivery_review','available'|'unavailable'|'error'>;
+  sections: Record<'work'|'information'|'delivery_review'|'continuous','available'|'unavailable'|'error'>;
   generatedAt: string;
 }
 export interface WorkOverviewItem {

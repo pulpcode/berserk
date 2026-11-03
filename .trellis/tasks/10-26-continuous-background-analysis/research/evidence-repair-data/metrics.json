@@ -1,0 +1,100 @@
+[
+  {
+    "run": "new-variant-shared-object",
+    "version": "new",
+    "durationSeconds": 566.26,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 51,
+    "repairPrompts": 0,
+    "toolErrors": 13,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 547871,
+      "output": 116120,
+      "cacheRead": 5905024,
+      "cacheWrite": 0,
+      "totalTokens": 6569015
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 289160,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 26563,
+    "toolCalls": 55,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "analysis_current_read": 3,
+      "ls": 1,
+      "analysis_calculate": 23,
+      "information_record_analysis_update": 16
+    },
+    "audit": {
+      "requests": 51,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 51
+      }
+    }
+  },
+  {
+    "run": "old-variant-shared-object",
+    "version": "old",
+    "durationSeconds": 720.08,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 54,
+    "repairPrompts": 0,
+    "toolErrors": 20,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 982891,
+      "output": 154816,
+      "cacheRead": 10478848,
+      "cacheWrite": 0,
+      "totalTokens": 11616555
+    },
+    "mechanismChecksPassed": true,
+    "failure": null,
+    "nativeSessions": 1,
+    "nativeCompactions": 0,
+    "maxInputTokensPerRequest": 519020,
+    "actualResponseModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "configuredModelsOnFailedAttempts": [],
+    "nativeProviders": [
+      "volcengine-agent-plan"
+    ],
+    "nativeReasoningTokens": 28556,
+    "toolCalls": 86,
+    "toolCallsByName": {
+      "analysis_task_candidates": 12,
+      "ls": 1,
+      "analysis_current_read": 16,
+      "analysis_calculate": 39,
+      "information_record_analysis_update": 18
+    },
+    "audit": {
+      "requests": 54,
+      "allExactArkUrl": true,
+      "statuses": {
+        "200": 54
+      }
+    }
+  }
+]

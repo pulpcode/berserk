@@ -11,12 +11,12 @@ import { InformationText, informationError, jobLabels, useInformationQuery } fro
 
 type AnalysisDraft = { taskSpaceId: string; goal: string; includeResult: boolean; fileIds: string[]; skillIds: string[]; agentIds: string[]; pending?: BackgroundAnalysisInput };
 export interface ContinuationProps {
-  scope: string; visible: boolean; base: string; jobId?: string; fixedTaskId?: string; preferredTaskIds?: string[];
+  conversationOnly?: boolean; scope: string; visible: boolean; base: string; jobId?: string; fixedTaskId?: string; preferredTaskIds?: string[];
   files: BackgroundFile[]; resultFiles: BackgroundFile[]; tasks: TaskSpace[]; workspaces: Workspace[];
   prepared: (action: BackgroundAction, current: () => boolean, sendNow?: boolean) => Promise<boolean>; openSession: (id: string) => void; changed: () => void;
 }
 /** Mounted per origin. Persisted drafts are seat-partitioned, and async results retain their originating page. */
-export function InformationContinuation({ scope, visible, base, jobId: sourceJobId, fixedTaskId, preferredTaskIds = [], files, resultFiles, tasks, prepared, openSession, changed }: ContinuationProps) {
+export function InformationContinuation({ conversationOnly = false, scope, visible, base, jobId: sourceJobId, fixedTaskId, preferredTaskIds = [], files, resultFiles, tasks, prepared, openSession, changed }: ContinuationProps) {
   const { api, storageKey } = useApi();
   const key = storageKey(`axon.information-draft:${scope}`);
   const [stored, setStored] = useState<AnalysisDraft | undefined>(() => { try { const saved = JSON.parse(sessionStorage.getItem(key) || 'null'); if(saved)return saved; return scope.startsWith('inbox:') ? JSON.parse(sessionStorage.getItem(storageKey('axon.inbox-drafts')) || '{}')[scope.slice(6)] : undefined; } catch { return undefined; } });
@@ -137,7 +137,7 @@ export function InformationContinuation({ scope, visible, base, jobId: sourceJob
       </div>
     </fieldset>
     {task?.state === 'archived' && <p role="status">任务已归档，可查看历史，重新开启后才能开展处理。</p>}
-    <div className="information-actions continuation-actions"><button type="submit" className="primary-action" disabled={disabled}><Send size={16} aria-hidden="true" />{busy ? '正在准备…' : '发送并进入对话'}</button><button type="button" disabled={disabled} onClick={() => setConfirm(true)}><Clock3 size={16} aria-hidden="true" />后台处理</button></div>
+    <div className="information-actions continuation-actions"><button type="submit" className="primary-action" disabled={disabled}><Send size={16} aria-hidden="true" />{busy ? '正在准备…' : '发送并进入对话'}</button>{!conversationOnly && <button type="button" disabled={disabled} onClick={() => setConfirm(true)}><Clock3 size={16} aria-hidden="true" />后台处理</button>}</div>
   </form>
     {error && <p className="resource-error" role="alert">{error}</p>}{notice && <p className="resource-success" role="status">{notice}</p>}
     {draft.pending && <div className="information-actions"><button disabled={busy} onClick={() => void queryAction()}>查询本次结果</button>{action?.status === 'preparing' && <button disabled={busy} onClick={() => void submit(draft.pending!.mode, true)}>继续原操作</button>}</div>}

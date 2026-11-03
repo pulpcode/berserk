@@ -1,0 +1,2160 @@
+[
+  {
+    "run": "new-spatial-1",
+    "plannedTaskRounds": 53,
+    "scoredTaskRounds": 53,
+    "partial": false,
+    "coreCorrect": 42,
+    "evidenceCorrect": 39,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-spatial-1.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "reason": "把明确无区域限制的第1版按发布时间08:00缩窄为瞬时状态，凭空要求09—12时另行放行确认。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "把明确无区域限制的第1版按发布时间08:00缩窄为瞬时状态，凭空要求09—12时另行放行确认。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "正确确认改走r2解除区域限制，却新增与E同通道协同确认作为整体可执行前提。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。"
+      },
+      {
+        "round": 6,
+        "task": "E",
+        "reason": "路线正常判断正确，但把同通道协调列为剩余缺口，缺少实际冲突或容量约束来源。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。"
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。 摘要还误称D不进入work-w，实际r1与work-w相交。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。"
+      },
+      {
+        "round": 11,
+        "task": "D",
+        "reason": "正确识别管制边界缺失，但把仍可计算的r1与work-w相交条件降为unknown，混淆作业区关系与管制区关系。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "区域主状态正确，但将未给定作业点细分/排程提升为必须补齐的开工前提；取消管制后仍延续。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "issues": [
+          "来源有效期与发布时间混淆，已知无管制变成待核"
+        ]
+      },
+      {
+        "round": 0,
+        "task": "B",
+        "issues": [
+          "来源没有已生效禁令，却写没有显示限制解除；核心仍明确本批不构成约束"
+        ]
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": [
+          "来源有效期与发布时间混淆，已知无管制变成待核"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": [
+          "无道路容量/冲突依据，将相隔30分钟同路提升为放行门槛"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "E",
+        "issues": [
+          "同通道间隔30分钟被新增为执行门槛"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "B",
+        "issues": [
+          "D路线尚未知，摘要擅自断言D与B路线不同；时段不同故核心不受影响正确"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛",
+          "09:40点时刻与09:30—10:30区间写作相差50分钟，实际50分钟是到结束的差而非窗口重叠时长"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "D",
+        "issues": [
+          "建议把未走r2的情况直接归为与C协调进场，缺少路线依据；09:40至10:30的50分钟不是点与区间重叠时长"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛",
+          "D路线与C作业区相交被写成不进入，与同轮D条件和工具相矛盾"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "D",
+        "issues": [
+          "zone-z缺失不使r1/work-w几何失效"
+        ]
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": [
+          "无来源的作业点清单必查门槛"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "new-spatial-2",
+    "plannedTaskRounds": 53,
+    "scoredTaskRounds": 53,
+    "partial": false,
+    "coreCorrect": 52,
+    "evidenceCorrect": 41,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-spatial-2.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "B",
+        "reason": "本轮无管制，却要求先取得独立覆盖14:00的来源确认才可执行，新增放行门槛。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "B",
+        "issues": [
+          "把当前通知时效范围之外直接转化为必须补独立放行来源"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位",
+          "边界只向北扩、经度不变，纬30.01的r1穿越长度未增加，却称范围变长"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": [
+          "D先前路线未知，却写不再共路/只剩A与E、协同压力减轻，暗含D原在r2的无据历史"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "issues": [
+          "沿用“通知第1版对14:00时段的覆盖”并标满足，理由却用新版禁令不覆盖14:00，标题/判定含义错位"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "E",
+        "issues": [
+          "D先前路线未知，却写不再共路/只剩A与E、协同压力减轻，暗含D原在r2的无据历史"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "E",
+        "issues": [
+          "替代路线条件因缺边界无法评估，却继续记not_applicable；主结论待核实正确"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "new-text-1",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 36,
+    "partial": false,
+    "coreCorrect": 15,
+    "evidenceCorrect": 12,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-1.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "reason": "道路恢复/车辆缺口判断正确，但建议09:30前修复即可09:00出发、09:30前到达，行动时间不成立。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "道路恢复/车辆缺口判断正确，但建议09:30前修复即可09:00出发、09:30前到达，行动时间不成立。"
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "持续把未提供的车辆04载重能力列为执行必查前提，超出任务既定约束。"
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。"
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。 将C专用04故障说成A冗余进一步下降。"
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。"
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。"
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。"
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "reason": "主结论两辆达标正确，但仍把旧三辆均可用的复合条件保留为受阻，没有退出已失效任务要求。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "即便道路/车辆主状态判断正确，仍保留无依据载重缺口，并将明确总重2.5吨重新解释为可能仅货重。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "A",
+        "issues": [
+          "无依据断言当天自行改派必然影响次日B整备"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "issues": [
+          "修复时间晚于建议出发时间"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": [
+          "修复时间晚于建议出发时间"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛",
+          "已知总重被降为口径待核"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件",
+          "04并非A备用车辆"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "issues": [
+          "声称为C抽调01或02均直接影响B预留；B仅预留01且在次日"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛",
+          "已知总重被降为口径待核"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "B",
+        "issues": [
+          "将14:00—15:00任务窗口写成行程；实际行程为14:00—14:30"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛",
+          "已知总重被降为口径待核",
+          "08:45到最晚10:10为85分钟，条件仍写约90分钟换车弹性"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛",
+          "已知总重被降为口径待核"
+        ]
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": [
+          "旧三辆条件继续作为当前受阻条件",
+          "业务08:55，建议却说已到09:00发车时刻"
+        ]
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": [
+          "无来源新增载重能力门槛",
+          "已知总重被降为口径待核"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "new-text-2",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 36,
+    "partial": false,
+    "coreCorrect": 23,
+    "evidenceCorrect": 13,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-2.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。"
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。"
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "reason": "两辆达标判断正确，建议却禁止抽用B预留的01；A本就已分配01且与次日B不重叠。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "issues": [
+          "当天A正常用车被视为须额外确认次日B预留"
+        ]
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "issues": [
+          "当天A正常用车被视为须额外确认次日B预留"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": [
+          "当天A正常用车被视为须额外确认次日B预留",
+          "A需求3降2被称为加剧对01依赖，依据不成立"
+        ]
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确",
+          "把A已分配01当作临时挪用B资源"
+        ]
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "issues": [
+          "修复时间未知却断言次日仅01/02可用，提前固化未来车况"
+        ]
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": [
+          "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": [
+          "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "issues": [
+          "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+        ]
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": [
+          "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+        ]
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": [
+          "新增车辆载重能力核验门槛",
+          "04恢复只消除替代需求，却将“04之外后备车辆可用性”记为满足"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "new-text-3",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 12,
+    "partial": true,
+    "coreCorrect": 8,
+    "evidenceCorrect": 7,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-3-incomplete.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。"
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "持续新增车辆04核定载重必查门槛；已分配车辆与2.5吨总重之外无来源支持此执行阻碍。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "issues": [
+          "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "A",
+        "issues": [
+          "没有西桥绕行里程/耗时来源，却断言大概率无法维持10:00时限"
+        ]
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": [
+          "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+        ]
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "issues": [
+          "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+        ]
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": [
+          "无依据新增核载资料缺口，R2/R3明确称决定能否装运"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-1",
+    "plannedTaskRounds": 53,
+    "scoredTaskRounds": 53,
+    "partial": false,
+    "coreCorrect": 39,
+    "evidenceCorrect": 24,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-1.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "reason": "核心不符合：通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。"
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。"
+      },
+      {
+        "round": 3,
+        "task": "E",
+        "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。；人员已确认实际路线r2，仍要求独立证明可达原起终点才可推进。"
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。"
+      },
+      {
+        "round": 5,
+        "task": "E",
+        "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "核心不符合：封控取消后，逐点作业安排被增加为恢复原计划进入的必要确认条件，而来源未给出点位缺失导致当前通行受阻。"
+      },
+      {
+        "round": 9,
+        "task": "D",
+        "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "核心不符合：边界重合被继续当成权威性缺口，要求重核实际已给定的全域覆盖。"
+      },
+      {
+        "round": 10,
+        "task": "D",
+        "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。"
+      },
+      {
+        "round": 11,
+        "task": "D",
+        "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。"
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "E",
+        "issues": null
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-2",
+    "plannedTaskRounds": 53,
+    "scoredTaskRounds": 53,
+    "partial": false,
+    "coreCorrect": 43,
+    "evidenceCorrect": 43,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-2.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "reason": "核心不符合：已有有效时段通知仍被要求在该时段再次确认无限制才可执行。"
+      },
+      {
+        "round": 0,
+        "task": "B",
+        "reason": "核心不符合：B在09—12之外却被列为未核验，并要求专门下午通知；不存在适用限制。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：已有有效时段通知仍被要求在该时段再次确认无限制才可执行。"
+      },
+      {
+        "round": 0,
+        "task": "E",
+        "reason": "核心不符合：r2已核验几何分离，却因相同区域标签保存为需关注的不确定，未接受无关联结果。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "核心不符合：已确认r2实际路线仍被额外起终点是否在禁区外条件限定。"
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "reason": "核心不符合：B在09—12之外却被列为未核验，并要求专门下午通知；不存在适用限制。"
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "reason": "核心不符合：B在09—12之外却被列为未核验，并要求专门下午通知；不存在适用限制。"
+      },
+      {
+        "round": 9,
+        "task": "D",
+        "reason": "核心不符合：路线已确认且无管制，仍以起终点是否在限行范围为缺口限制可行结论。"
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "reason": "核心不符合：已确认r2实际路线仍被额外起终点是否在禁区外条件限定。"
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "reason": "核心不符合：待核实的现场协同可能性被称为未消失的现存问题，新增解除封控后的持续约束。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "issues": null
+      }
+    ]
+  },
+  {
+    "run": "old-spatial-3",
+    "plannedTaskRounds": 53,
+    "scoredTaskRounds": 53,
+    "partial": false,
+    "coreCorrect": 40,
+    "evidenceCorrect": 23,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-3.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "reason": "核心不符合：初始无封控且有有效时段，仍要求额外时段通知才确认可通行；B也被要求先补下午资料。"
+      },
+      {
+        "round": 0,
+        "task": "B",
+        "reason": "核心不符合：初始无封控且有有效时段，仍要求额外时段通知才确认可通行；B也被要求先补下午资料。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：初始无封控且有有效时段，仍要求额外时段通知才确认可通行；B也被要求先补下午资料。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "核心不符合：把重合边界称为业务异常/可能引用错误，要求先核实才接受来源定义的范围。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "核心不符合：边界重合无依据被当成错录可能，明确称区外判断不能作为稳定事实；A另增加起卸点前提。"
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "reason": "核心不符合：14时在管制结束后，仍将无12时后来源作为限制B通行判断的前提。"
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "reason": "核心不符合：把重合边界称为业务异常/可能引用错误，要求先核实才接受来源定义的范围。"
+      },
+      {
+        "round": 5,
+        "task": "E",
+        "reason": "核心不符合：边界重合无依据被当成错录可能，明确称区外判断不能作为稳定事实；A另增加起卸点前提。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "核心不符合：封控已取消，仍把未细分作业点位置作为开工必要条件，新增与通行判定无关的门槛。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "核心不符合：把重合边界称为业务异常/可能引用错误，要求先核实才接受来源定义的范围。"
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "reason": "核心不符合：无几何不能影响14时处于09—12之外这一确定关系；引入未发生的延期而标未知并提醒。"
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "reason": "核心不符合：仍把14时归为未核验，并把上一轮自造不确定性描述为本轮解除。"
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "reason": "核心不符合：同一保存理由写“但已禁行”又写“不再受限”，当前状态自相矛盾。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "E",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "D",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "E",
+        "issues": null
+      }
+    ]
+  },
+  {
+    "run": "old-text-1",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 36,
+    "partial": false,
+    "coreCorrect": 8,
+    "evidenceCorrect": 6,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-1.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 1,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "reason": "核心不符合：已恢复正常通行仍被限定为需独立现场来源验证，未给定新的限行依据。"
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "核心不符合：已恢复正常通行仍被限定为需独立现场来源验证，未给定新的限行依据。"
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "reason": "核心不符合：已恢复正常通行仍被限定为需独立现场来源验证，未给定新的限行依据。"
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "reason": "核心不符合：已恢复正常通行仍被限定为需独立现场来源验证，未给定新的限行依据。"
+      },
+      {
+        "round": 7,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "核心不符合：西桥初始正常，未出现适用限制；却把额外限重确认持续列为必要条件。"
+      },
+      {
+        "round": 8,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "核心不符合：任务已明确总重2.5吨，却要求另证实际总重后合规判断才成立。"
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 10,
+        "task": "B",
+        "reason": "核心不符合：C当天上午与B次日下午没有已确认调车或占用重叠，却引入车辆竞争并要求统筹。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "核心不符合：C当天上午与B次日下午没有已确认调车或占用重叠，却引入车辆竞争并要求统筹。"
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。；C当天上午与B次日下午没有已确认调车或占用重叠，却引入车辆竞争并要求统筹。"
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "reason": "核心不符合：C当天上午与B次日下午没有已确认调车或占用重叠，却引入车辆竞争并要求统筹。"
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "reason": "核心不符合：04仍已分配给C，却被列为全局/供A使用的唯一备用，资源用途混淆。"
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "reason": "核心不符合：已确认的车辆01次日下午预留被反复降为缺乏证据，增加独立确认前提。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "核心不符合：任务已明确总重2.5吨，却要求另证实际总重后合规判断才成立。；04仍已分配给C，却被列为全局/供A使用的唯一备用，资源用途混淆。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 1,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": null
+      }
+    ]
+  },
+  {
+    "run": "old-text-2",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 36,
+    "partial": false,
+    "coreCorrect": 18,
+    "evidenceCorrect": 16,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-2.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。"
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "reason": "核心不符合：最低需求降为2辆与分配3辆并不矛盾，却被列为任务内部不一致。"
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。"
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。；明确的恢复通行通知被降为只是文字推定，要求额外现场依据才成立。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "核心不符合：西桥正常通行被额外限重未核验限制，未保留已有通行事实。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。"
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。"
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。；未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。"
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "核心不符合：未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。"
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。"
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "reason": "核心不符合：版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。"
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "reason": "核心不符合：未给定09:30车辆占用结束情况，却断定两车同时占用、调车必然使A失败，扩大了原本未分配可用车的结论。"
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "reason": "核心不符合：02已修复恢复使用，却把再次复检/验收作为准许发车的新增条件。"
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "reason": "核心不符合：版本取消被无依据质疑稳定性/可靠性并作为必须再确认的理由。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "核心不符合：已知总重2.5吨被降为推测或计划值，必须过磅才判定合规。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": null
+      }
+    ]
+  },
+  {
+    "run": "old-text-3",
+    "plannedTaskRounds": 36,
+    "scoredTaskRounds": 36,
+    "partial": false,
+    "coreCorrect": 21,
+    "evidenceCorrect": 12,
+    "source": ".trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-3.json",
+    "coreFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "reason": "核心不符合：任务已经明确分配01/02/03，却追加09:00是否被其他用途占用这一必要缺口。"
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "reason": "核心不符合：西桥正常被新增限重必须确认后才放行的前置条件覆盖。"
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "reason": "核心不符合：任务明确总重2.5吨，仍怀疑只是货重并要求口径确认；后续轮次继续继承此条件。"
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "reason": "核心不符合：任务明确总重2.5吨，仍怀疑只是货重并要求口径确认；后续轮次继续继承此条件。"
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "reason": "核心不符合：任务明确总重2.5吨，仍怀疑只是货重并要求口径确认；后续轮次继续继承此条件。"
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "reason": "核心不符合：已确认的01次日下午预留被降为尚未独立确认。"
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "reason": "核心不符合：任务明确总重2.5吨，仍怀疑只是货重并要求口径确认；后续轮次继续继承此条件。"
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "reason": "核心不符合：已确认的01次日下午预留被降为尚未独立确认。"
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "reason": "核心不符合：任务明确总重2.5吨，仍怀疑只是货重并要求口径确认；后续轮次继续继承此条件。"
+      }
+    ],
+    "evidenceFailures": [
+      {
+        "round": 0,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 0,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 1,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 2,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 3,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 5,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 6,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 7,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 8,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 9,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 10,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 11,
+        "task": "C",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "A",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "B",
+        "issues": null
+      },
+      {
+        "round": 12,
+        "task": "C",
+        "issues": null
+      }
+    ]
+  }
+]

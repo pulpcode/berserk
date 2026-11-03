@@ -1,0 +1,923 @@
+{
+  "run": "old-spatial-1",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "1b9ba42758b48789dceef3fec415f64d5d6f6122a1f10f9791ec2ecd719723c0",
+  "denominator": 53,
+  "coreCorrect": 39,
+  "evidenceCorrect": 24,
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。",
+          "locator": "本次判断不自动延续",
+          "excerpt": "新修订，若出现09:00—12:00内的限制，则按新版本内容重新评估，本次判断不自动延续。\n2. 对 C：需业务方补充作业点清单或坐标，才能判断哪些作业点位于 zone-z 内，并仅针对这部分点做安排。\n3. 对 B、"
+        }
+      ],
+      "jobId": "c80f7adb-0456-4081-a1a2-3421c94f784a",
+      "source": "old-spatial-1/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时无适用限制。",
+      "issues": [],
+      "jobId": "c80f7adb-0456-4081-a1a2-3421c94f784a",
+      "source": "old-spatial-1/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "通知本有09—12有效时段，却把该时段无管制作为需重新取得依据才成立的条件。",
+          "locator": "本次判断不自动延续",
+          "excerpt": "新修订，若出现09:00—12:00内的限制，则按新版本内容重新评估，本次判断不自动延续。\n2. 对 C：需业务方补充作业点清单或坐标，才能判断哪些作业点位于 zone-z 内，并仅针对这部分点做安排。\n3. 对 B、"
+        }
+      ],
+      "jobId": "c80f7adb-0456-4081-a1a2-3421c94f784a",
+      "source": "old-spatial-1/review.json#/steps/0"
+    },
+    {
+      "round": 0,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "unrelated",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r2与边界分离，合法无关联。",
+      "issues": [],
+      "jobId": "c80f7adb-0456-4081-a1a2-3421c94f784a",
+      "source": "old-spatial-1/review.json#/steps/0"
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：10时r1穿过禁入区，受限。",
+      "issues": [],
+      "jobId": "eaafea6e-6202-4576-b171-e370df5483e3",
+      "source": "old-spatial-1/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时在09—12之外，不受限。",
+      "issues": [],
+      "jobId": "eaafea6e-6202-4576-b171-e370df5483e3",
+      "source": "old-spatial-1/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：仅部分区域受限，具体点位待核。",
+      "issues": [],
+      "jobId": "eaafea6e-6202-4576-b171-e370df5483e3",
+      "source": "old-spatial-1/review.json#/steps/1"
+    },
+    {
+      "round": 1,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "unrelated",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r2在区外，无影响。",
+      "issues": [],
+      "jobId": "eaafea6e-6202-4576-b171-e370df5483e3",
+      "source": "old-spatial-1/review.json#/steps/1"
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r1仍相交且时间重叠，保留限制。",
+      "issues": [],
+      "jobId": "2c2db68a-045c-4311-aebe-a2932978e305",
+      "source": "old-spatial-1/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时仍在禁行时段外。",
+      "issues": [],
+      "jobId": "2c2db68a-045c-4311-aebe-a2932978e305",
+      "source": "old-spatial-1/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：只北扩，东界不变，仍部分重叠（按勘误）。",
+      "issues": [],
+      "jobId": "2c2db68a-045c-4311-aebe-a2932978e305",
+      "source": "old-spatial-1/review.json#/steps/2"
+    },
+    {
+      "round": 2,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r2因北扩新增相交，10:30受限。",
+      "issues": [],
+      "jobId": "2c2db68a-045c-4311-aebe-a2932978e305",
+      "source": "old-spatial-1/review.json#/steps/2"
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+          "locator": "未确认前，A、C、E",
+          "excerpt": "work-w 完全重合，既可能是封控区缩至作业范围，也可能是边界错录。未确认前，A、C、E 的结论都只能算条件性结论。\n2. C：按现边界，09:30–10:30 内无车辆可进入作业范围；需业务方决定延至12:00后或另"
+        }
+      ],
+      "jobId": "dcf3f625-6226-4f1e-912c-f8d8e54f55de",
+      "source": "old-spatial-1/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时不受09—12限制。",
+      "issues": [],
+      "jobId": "dcf3f625-6226-4f1e-912c-f8d8e54f55de",
+      "source": "old-spatial-1/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+          "locator": "未确认前，A、C、E",
+          "excerpt": "work-w 完全重合，既可能是封控区缩至作业范围，也可能是边界错录。未确认前，A、C、E 的结论都只能算条件性结论。\n2. C：按现边界，09:30–10:30 内无车辆可进入作业范围；需业务方决定延至12:00后或另"
+        }
+      ],
+      "jobId": "dcf3f625-6226-4f1e-912c-f8d8e54f55de",
+      "source": "old-spatial-1/review.json#/steps/3"
+    },
+    {
+      "round": 3,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仅因边界与作业区重合便怀疑错录，要求先确认权威性才接受已知几何结论。",
+          "locator": "未确认前，A、C、E",
+          "excerpt": "work-w 完全重合，既可能是封控区缩至作业范围，也可能是边界错录。未确认前，A、C、E 的结论都只能算条件性结论。\n2. C：按现边界，09:30–10:30 内无车辆可进入作业范围；需业务方决定延至12:00后或另"
+        }
+      ],
+      "jobId": "dcf3f625-6226-4f1e-912c-f8d8e54f55de",
+      "source": "old-spatial-1/review.json#/steps/3"
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。；人员已确认实际路线r2，仍要求独立证明可达原起终点才可推进。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。",
+          "locator": "边界为权威"
+        },
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "人员已确认实际路线r2，仍要求独立证明可达原起终点才可推进。",
+          "locator": "确认 r2 实际可达原起终点",
+          "excerpt": "件性）**\n1. A：可按 r2、10:00 推进，但出发前须由业务方确认 r2 实际可达原起终点（任务条件已声明改线，但无来源佐证连通性），并复核通知是否再修订；如通知再扩展边界至 r2 所在纬度，A 与 E 会同时受影响。\n"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "time_source",
+          "reason": "任务更新时间是宿主2026-10-28 UTC时间，误拼接成11-10 08:44业务时间；本轮推送业务时刻08:20。",
+          "locator": "2026-11-10 08:44",
+          "excerpt": "**结论（业务时钟 2026-11-10 08:44，任务 A 修订后）**\n\n**本批发生的变化（事实）**\n- 唯一新输入是任务 A 的任务修订（revision 2，updat"
+        }
+      ],
+      "jobId": "4f41b854-0e91-4e8e-9e3f-865b6ae99d14",
+      "source": "old-spatial-1/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。",
+          "locator": "边界为权威"
+        }
+      ],
+      "jobId": "4f41b854-0e91-4e8e-9e3f-865b6ae99d14",
+      "source": "old-spatial-1/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：W仍全部覆盖，限制保留。",
+      "issues": [],
+      "jobId": "4f41b854-0e91-4e8e-9e3f-865b6ae99d14",
+      "source": "old-spatial-1/review.json#/steps/5"
+    },
+    {
+      "round": 5,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "仍把边界权威性另行确认当作无约束前提；B时间已在管制之外也被限定。",
+          "locator": "边界为权威"
+        }
+      ],
+      "jobId": "4f41b854-0e91-4e8e-9e3f-865b6ae99d14",
+      "source": "old-spatial-1/review.json#/steps/5"
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：维持已确认r2，不自动回退r1。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "1b698da3-d1b5-487a-9d70-b24ac6615c3f",
+      "source": "old-spatial-1/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时不受本次限制。",
+      "issues": [],
+      "jobId": "1b698da3-d1b5-487a-9d70-b24ac6615c3f",
+      "source": "old-spatial-1/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：封控取消后，逐点作业安排被增加为恢复原计划进入的必要确认条件，而来源未给出点位缺失导致当前通行受阻。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        },
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "封控取消后，逐点作业安排被增加为恢复原计划进入的必要确认条件，而来源未给出点位缺失导致当前通行受阻。",
+          "locator": "但须业务方确认",
+          "excerpt": "C：可按 09:30–10:30 恢复原计划进入作业范围，但须业务方确认人员、装载与逐点作业安排（本次仅确认通行限制已解除）。"
+        }
+      ],
+      "jobId": "1b698da3-d1b5-487a-9d70-b24ac6615c3f",
+      "source": "old-spatial-1/review.json#/steps/6"
+    },
+    {
+      "round": 6,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：r2无新增约束。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "1b698da3-d1b5-487a-9d70-b24ac6615c3f",
+      "source": "old-spatial-1/review.json#/steps/6"
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：旧v2不覆盖v5取消，r2保持。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "83017295-a20a-43fd-809e-eedfaca8c5ba",
+      "source": "old-spatial-1/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：旧转发不增加14时限制。",
+      "issues": [],
+      "jobId": "83017295-a20a-43fd-809e-eedfaca8c5ba",
+      "source": "old-spatial-1/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：v5取消有效，不因边界仍在而恢复封控。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "83017295-a20a-43fd-809e-eedfaca8c5ba",
+      "source": "old-spatial-1/review.json#/steps/7"
+    },
+    {
+      "round": 7,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：旧转发不增加r2约束。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "83017295-a20a-43fd-809e-eedfaca8c5ba",
+      "source": "old-spatial-1/review.json#/steps/7"
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：新建D不改变A的r2安排。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "d7158732-33f1-4a25-9520-7c68196d42ca",
+      "source": "old-spatial-1/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：B14时安排无变化。",
+      "issues": [],
+      "jobId": "d7158732-33f1-4a25-9520-7c68196d42ca",
+      "source": "old-spatial-1/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：取消有效，C无禁入限制。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "d7158732-33f1-4a25-9520-7c68196d42ca",
+      "source": "old-spatial-1/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "D",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：首次评估路线缺失，不猜r1/r2；当前取消不等于路线已核验。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "time_source",
+          "reason": "宿主08:45创建/修改被误当业务08:45；实际业务时刻R8为08:35、R9为08:40。",
+          "locator": "08:45"
+        }
+      ],
+      "jobId": "d7158732-33f1-4a25-9520-7c68196d42ca",
+      "source": "old-spatial-1/review.json#/steps/8"
+    },
+    {
+      "round": 8,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：新增D不改变E的r2安排。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "d7158732-33f1-4a25-9520-7c68196d42ca",
+      "source": "old-spatial-1/review.json#/steps/8"
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：A保持实际r2。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "148f4781-d584-4cc3-97f7-aab0be2a4e8d",
+      "source": "old-spatial-1/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：B14时不与D09:40混同。",
+      "issues": [],
+      "jobId": "148f4781-d584-4cc3-97f7-aab0be2a4e8d",
+      "source": "old-spatial-1/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：C无管制限制。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "148f4781-d584-4cc3-97f7-aab0be2a4e8d",
+      "source": "old-spatial-1/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "D",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+          "locator": "路线"
+        },
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "time_source",
+          "reason": "宿主08:45创建/修改被误当业务08:45；实际业务时刻R8为08:35、R9为08:40。",
+          "locator": "08:45"
+        }
+      ],
+      "jobId": "148f4781-d584-4cc3-97f7-aab0be2a4e8d",
+      "source": "old-spatial-1/review.json#/steps/9"
+    },
+    {
+      "round": 9,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：E保持r2，无新增限制。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "148f4781-d584-4cc3-97f7-aab0be2a4e8d",
+      "source": "old-spatial-1/review.json#/steps/9"
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r2区外，不受恢复管制影响。",
+      "issues": [],
+      "jobId": "b0225daf-648e-4a02-98d0-98c1f3c631c7",
+      "source": "old-spatial-1/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时在09—12之外。",
+      "issues": [],
+      "jobId": "b0225daf-648e-4a02-98d0-98c1f3c631c7",
+      "source": "old-spatial-1/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：边界重合被继续当成权威性缺口，要求重核实际已给定的全域覆盖。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "边界重合被继续当成权威性缺口，要求重核实际已给定的全域覆盖。",
+          "locator": "若边界错录，D、C结论需重算",
+          "excerpt": "边界，但边界仍为修订3且与work-w完全重合，其权威性未由来源确认；若边界错录，D、C结论需重算。\", \"D的r1路线仅由任务条件确认，无来源说明可送达仓库与医院；r2仅为讨论方案，未批准，不得当作可立即改线。\", \"本日通知"
+        }
+      ],
+      "jobId": "b0225daf-648e-4a02-98d0-98c1f3c631c7",
+      "source": "old-spatial-1/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "D",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+          "locator": "路线"
+        }
+      ],
+      "jobId": "b0225daf-648e-4a02-98d0-98c1f3c631c7",
+      "source": "old-spatial-1/review.json#/steps/10"
+    },
+    {
+      "round": 10,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：r2区外，不受限。",
+      "issues": [],
+      "jobId": "b0225daf-648e-4a02-98d0-98c1f3c631c7",
+      "source": "old-spatial-1/review.json#/steps/10"
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：缺几何导致r2空间影响待核，未当零命中。",
+      "issues": [],
+      "jobId": "bbc46f7e-4a77-49d8-9592-9d836afb16f6",
+      "source": "old-spatial-1/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时仍在09—12之外，不依赖边界。",
+      "issues": [],
+      "jobId": "bbc46f7e-4a77-49d8-9592-9d836afb16f6",
+      "source": "old-spatial-1/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：范围待核，管制仍有效，不宣告解除。",
+      "issues": [],
+      "jobId": "bbc46f7e-4a77-49d8-9592-9d836afb16f6",
+      "source": "old-spatial-1/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "D",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+          "locator": "路线"
+        }
+      ],
+      "jobId": "bbc46f7e-4a77-49d8-9592-9d836afb16f6",
+      "source": "old-spatial-1/review.json#/steps/11"
+    },
+    {
+      "round": 11,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：缺几何不能确认r2区外。",
+      "issues": [],
+      "jobId": "bbc46f7e-4a77-49d8-9592-9d836afb16f6",
+      "source": "old-spatial-1/review.json#/steps/11"
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：取消且边界恢复，A仍r2。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "2b91987f-a34f-4666-b964-f4ac4743ae91",
+      "source": "old-spatial-1/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "核心符合：14时仍不受适用管制影响。",
+      "issues": [],
+      "jobId": "2b91987f-a34f-4666-b964-f4ac4743ae91",
+      "source": "old-spatial-1/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：取消且缺口消除，C本项限制解除。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "2b91987f-a34f-4666-b964-f4ac4743ae91",
+      "source": "old-spatial-1/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "D",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "核心不符合：已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+      "issues": [
+        {
+          "coreFailure": true,
+          "evidenceFailure": true,
+          "category": "unsupported_condition",
+          "reason": "已确认的实际路线r1仍被要求提供独立来源可达性佐证，形成持续额外前提。",
+          "locator": "可达性",
+          "excerpt": "D 的 r1 可达性仅来自任务条件"
+        }
+      ],
+      "jobId": "2b91987f-a34f-4666-b964-f4ac4743ae91",
+      "source": "old-spatial-1/review.json#/steps/12"
+    },
+    {
+      "round": 12,
+      "task": "E",
+      "published": true,
+      "coverageStatus": "assessed",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "核心符合：取消且几何恢复，r2不受限。",
+      "issues": [
+        {
+          "coreFailure": false,
+          "evidenceFailure": true,
+          "category": "unsupported_doubt",
+          "reason": "继续保留无来源的边界权威性疑问；本轮同时明确无封控，未据此否定当前通行结论，单列依据问题。",
+          "locator": "边界"
+        }
+      ],
+      "jobId": "2b91987f-a34f-4666-b964-f4ac4743ae91",
+      "source": "old-spatial-1/review.json#/steps/12"
+    }
+  ],
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}

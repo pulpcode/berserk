@@ -1,0 +1,76 @@
+{
+  "old": {
+    "runs": [
+      "old-spatial-1",
+      "old-spatial-2",
+      "old-text-1",
+      "old-text-2"
+    ],
+    "published": 48,
+    "coverage": 178,
+    "coreCorrect": 108,
+    "evidenceCorrect": 89,
+    "taskRounds": 178,
+    "batchCorrect": 38,
+    "batchScored": 38,
+    "textTaskCorrect": 66,
+    "textTaskScored": 66,
+    "spatialRequiredTaskCorrect": 22,
+    "spatialRequiredTaskScored": 22,
+    "durationSecondsTotal": 1072.47,
+    "durationSecondsMean": 268.1175,
+    "requests": 178,
+    "toolCalls": 242,
+    "toolErrors": 5,
+    "repairPrompts": 0,
+    "compactions": 0,
+    "usage": {
+      "input": 1441994,
+      "output": 163948,
+      "cacheRead": 14982144,
+      "cacheWrite": 0,
+      "totalTokens": 16588086
+    }
+  },
+  "new": {
+    "runs": [
+      "new-spatial-1",
+      "new-spatial-2",
+      "new-text-1",
+      "new-text-2"
+    ],
+    "published": 48,
+    "coverage": 178,
+    "coreCorrect": 132,
+    "evidenceCorrect": 105,
+    "taskRounds": 178,
+    "batchCorrect": 37,
+    "batchScored": 38,
+    "textTaskCorrect": 64,
+    "textTaskScored": 66,
+    "spatialRequiredTaskCorrect": 22,
+    "spatialRequiredTaskScored": 22,
+    "durationSecondsTotal": 2852.64,
+    "durationSecondsMean": 713.16,
+    "requests": 242,
+    "toolCalls": 331,
+    "toolErrors": 50,
+    "repairPrompts": 0,
+    "compactions": 0,
+    "usage": {
+      "input": 3368154,
+      "output": 615378,
+      "cacheRead": 47551488,
+      "cacheWrite": 0,
+      "totalTokens": 51535020
+    }
+  },
+  "ratios": {
+    "durationSecondsTotal": 2.659878598002741,
+    "requests": 1.3595505617977528,
+    "toolCalls": 1.3677685950413223,
+    "toolErrors": 10.0,
+    "outputTokens": 3.753495010613121,
+    "totalTokens": 3.1067490245710085
+  }
+}

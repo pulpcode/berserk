@@ -44,7 +44,7 @@ export function TaskPanel({identity,task,visibility,suggestion,showInformation,c
       <p className="resource-help">{isPublic?'所有席位可使用工作任务；任务说明由获授权席位统一管理，文件与对话各自独立。':'仅本席位可查看和管理，用于自己的资料、指令与对话。'}{base?.state==='archived'?` 此${kind}已归档，历史仍可查看。`:''}</p>
       <label htmlFor="task-title">{kind}名称</label><input id="task-title" value={title} disabled={!canManage || busy} onChange={e=>setTitle(e.target.value)} maxLength={60} required/>
       <label htmlFor="task-goal">目标与说明</label><textarea id="task-goal" value={goal} disabled={!canManage || busy} onChange={e=>setGoal(e.target.value)} maxLength={8000} rows={6} required={isPublic}/>
-      <>{suggestion && <><label htmlFor="task-association-reason">关联理由</label><textarea id="task-association-reason" value={reason} disabled={busy} onChange={event=>setReason(event.target.value)} maxLength={1500} rows={3} required/><p className="resource-help">请确认名称与目标适合公开。原信息、分析正文与附件保留原有访问权限，创建后不会自动开展分析。</p></>}</>
+      <>{suggestion && <><label htmlFor="task-association-reason">关联理由</label><textarea id="task-association-reason" value={reason} disabled={busy} onChange={event=>setReason(event.target.value)} maxLength={1500} rows={3} required/><p className="resource-help">请确认名称与目标适合公开。原信息、分析正文与附件保留原有访问权限；已启用的持续分析配置会按获准资料范围核对新任务。</p></>}</>
       <TaskContextEditor draft={context} change={value=>{setContext(value);setContextDirty(true);setContextErrors({});}} disabled={!canManage || busy} errors={contextErrors}/>
       {base && <p className="resource-help">{isPublic?'创建席位':'所属席位'}：{base.ownerSeatId} · {base.state==='active'?'进行中':'已归档'}</p>}
       {error && <p className="resource-error" role="alert">{error}</p>}

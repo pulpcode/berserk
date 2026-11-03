@@ -1,0 +1,14 @@
+[
+  {
+    "run": "new-variant-shared-object",
+    "file": "archives/new-variant-shared-object.tar.gz",
+    "sha256": "911c72d0e0572f9fc6f055944cfdb045d74a9df2b229d02b8234b72089299c3b",
+    "bytes": 4430253
+  },
+  {
+    "run": "old-variant-shared-object",
+    "file": "archives/old-variant-shared-object.tar.gz",
+    "sha256": "9d6719ac987b008c0cd769bbf3341e6c96cdf9f28d4bb694764cdfb97ba77c39",
+    "bytes": 5988476
+  }
+]

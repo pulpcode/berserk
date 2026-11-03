@@ -1,0 +1,534 @@
+# 完整评分说明与边界敏感性
+
+本文件从独立逐格评分元数据离线导出，不更改主评分。所有备注与原生/正式差异均保留；原始文件含逐格引用。
+
+## new-spatial-1
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-spatial-1.json`；核心42/53，依据39/53；partial=False。
+
+```json
+{
+  "run": "new-spatial-1",
+  "notes": [
+    "采用spatial-multi-task-oracle及errata：R2 C仍部分覆盖，R3 C全覆盖；R12输入恢复的是修订3的W几何。",
+    "一般未来更新提醒、装载司机未知、可行状态下建议现场协调不扣；明确将协调/点位清单列为未满足执行前提则扣。",
+    "正式结构中的错误不能由同轮其他任务的正确结果抵消。",
+    "R4重复不评分；E R0/R1覆盖清单unrelated正确，计通过。",
+    "raw自由答复不替代正式结果；本表不对提醒数量或成本重复评分。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 9,
+      "detail": "原生明确r1与work-w相交，正式C摘要却说D不进入work-w；正式D条件正确不能抵消C错误。"
+    },
+    {
+      "round": 11,
+      "detail": "原生整体说空间结论全部失效，正式D进一步把仍有几何的r1/work-w关系降unknown；本表按正式条件扣分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生把限制解除后的现场协同也列为未落实，正式A/E较收敛；正式C仍把作业点排程列实质前提，按正式逐任务评分。"
+    }
+  ]
+}
+```
+
+## new-spatial-2
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-spatial-2.json`；核心52/53，依据41/53；partial=False。
+
+```json
+{
+  "run": "new-spatial-2",
+  "notes": [
+    "采用原空间oracle及勘误；R2 C部分覆盖、R3全部覆盖均正确。",
+    "C明确可执行、仅建议出发前确认点位清单，没有像spatial1写为不可缺的开工强条件，故不扣核心。A/E同路建议协调亦未限制主结论。",
+    "条件标题与理由矛盾只扣依据呈现；稳定ID不能保证条件名称/含义自动更新。",
+    "R4无新批次；E R0/R1正确unrelated计通过。",
+    "原生自由答复不替代正式结构评分。",
+    "已逐轮核对正式归档review.update与评分时实时validation.detail.update完全一致；来源版本d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 9,
+      "detail": "原生推断段明确D过去没有路线，但同文表格及正式A/E仍称不再共路线/只剩A与E；无据旧状态在正式结果中保留。"
+    },
+    {
+      "round": 1,
+      "detail": "原生与正式都把B先前人为增加的14:00无依据缺口称已闭合；按本轮禁令时间外不受影响核心通过，条件旧标题矛盾另扣依据。"
+    },
+    {
+      "round": 12,
+      "detail": "原生开头概称五项全部恢复，正式B明确维持无变化；仅按正式逐任务结果计分。"
+    }
+  ]
+}
+```
+
+## new-text-1
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-1.json`；核心15/36，依据12/36；partial=False。
+
+```json
+{
+  "run": "new-text-1",
+  "notes": [
+    "评分对象为保存assessment的summary、全部conditions及recommendations；不是只看主结论或工具数值。",
+    "一般未来路况核查、装载/司机未提供、明确条件性改派不扣核心。",
+    "R4重复消息没有新研判，不列任务轮。",
+    "所有C轮的载重门槛为持续错误；R9—R11虽缺车主结论正确，旧无据门槛仍在正式结果。",
+    "原生自由答复未作为正式结论计分；其差异不抵消结构结果错误。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 5,
+      "detail": "原生自由答复只说最晚09:30发车，正式recommendations额外写09:30修复即可09:00出发；以正式结构计时间建议错。"
+    },
+    {
+      "round": 10,
+      "detail": "原生自由答复笼统称A顺延至11-11同样撞上13—16检修；正式结构限定11-11下午，未将该raw额外错误计入正式核心分。"
+    },
+    {
+      "round": 11,
+      "detail": "原生标题称A已到发车时点但正文写08:50距09:00还有10分钟；正式结构写发车前10分钟，未把raw矛盾计入正式分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生与正式均说已到09:00时刻，同时依据业务时钟08:55；正式分已扣数值依据。"
+    }
+  ]
+}
+```
+
+## new-text-2
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-2.json`；核心23/36，依据13/36；partial=False。
+
+```json
+{
+  "run": "new-text-2",
+  "notes": [
+    "采用整份结构判断，不仅摘要。C R9—R11理由已明确旧载重问题不适用，故只记状态元数据不一致；不把已撤回门槛重复算核心错。",
+    "A R6后旧条件标题未更新但理由明确03故障/2辆达标，记依据呈现错误；区别于text1仍把三辆均可用列为受阻。",
+    "一般未来车况复核、司机装载未知和条件性获批调配不扣。",
+    "R4无新批次，36格；raw自由答复不能覆盖正式结果。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 6,
+      "detail": "原生与正式都在正确指出A使用01/02后又禁止抽用B预留01，跨日资源误关联在两处均存在。"
+    },
+    {
+      "round": 9,
+      "detail": "原生资料缺口另写西桥限重口径与期限未说明；正式结构按明确2.5吨及08:30—11:00，不把原生额外疑问计入正式分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生与正式均将04恢复等同04之外后备满足；主车恢复与备用车可用是不同条件。"
+    }
+  ]
+}
+```
+
+## new-text-3
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/new-score-text-3-incomplete.json`；核心8/12，依据7/12；partial=True。
+
+```json
+{
+  "run": "new-text-3",
+  "status": "incomplete",
+  "includedInPairedAggregate": false,
+  "notes": [
+    "本次R0—R3四轮成功发布，R4重复不产生批次，R5上游失败后停止；仅评已发布12个任务轮。",
+    "核心8/12、依据7/12仅为中断前观察，不算第三次完整run、不混入完整同序号配对分母。",
+    "没有new-spatial-3或变体语义评分；这些测试未完成不能推断结果。",
+    "原生自由答复不是正式主评分对象。"
+  ],
+  "plannedTaskRounds": 36,
+  "publishedTaskRounds": 12,
+  "unscoredTaskRounds": 24,
+  "interruption": "R5 方舟 HTTP 429 insufficient_quota；停止全部付费测试",
+  "partial": true
+}
+```
+
+## old-spatial-1
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-1.json`；核心39/53，依据24/53；partial=False。
+
+```json
+{
+  "run": "old-spatial-1",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "1b9ba42758b48789dceef3fec415f64d5d6f6122a1f10f9791ec2ecd719723c0",
+  "denominator": 53,
+  "coreCorrect": 39,
+  "evidenceCorrect": 24,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## old-spatial-2
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-2.json`；核心43/53，依据43/53；partial=False。
+
+```json
+{
+  "run": "old-spatial-2",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "886fdd5ace6173128789bd8849328a6113c26b81468de7caef27f0940c840325",
+  "denominator": 53,
+  "coreCorrect": 43,
+  "evidenceCorrect": 43,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## old-spatial-3
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-spatial-3.json`；核心40/53，依据23/53；partial=False。
+
+```json
+{
+  "run": "old-spatial-3",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "c8495b9c2bfd4971cadeb3e5df145997872f653d4a07f2a800731a4c84c45d45",
+  "denominator": 53,
+  "coreCorrect": 40,
+  "evidenceCorrect": 23,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## old-text-1
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-1.json`；核心8/36，依据6/36；partial=False。
+
+```json
+{
+  "run": "old-text-1",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "7a99ce7b96d03233f764a8b0a3a38e6321d1b3c0f6ad2c9feabcc980f99cb919",
+  "denominator": 36,
+  "coreCorrect": 8,
+  "evidenceCorrect": 6,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## old-text-2
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-2.json`；核心18/36，依据16/36；partial=False。
+
+```json
+{
+  "run": "old-text-2",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "7ba2ba844edab1b1954c0c11e82711772b866f8166c557f74867893a6d8adc66",
+  "denominator": 36,
+  "coreCorrect": 18,
+  "evidenceCorrect": 16,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## old-text-3
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/old-score-text-3.json`；核心21/36，依据12/36；partial=False。
+
+```json
+{
+  "run": "old-text-3",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "78e00b4c4d6e1fe55a90d2cf29a71fe9ce939874689ca021e20c36f8547f400e",
+  "denominator": 36,
+  "coreCorrect": 21,
+  "evidenceCorrect": 12,
+  "notes": [
+    "逐轮读取发布全文、持久任务理由及资料缺口；不以工具成功或模型自算结果作正确性依据。",
+    "一般未来变化提醒、司机装载未提供不扣；明确已给事实降未知或无依据增加成立前提扣核心。",
+    "仅数值/转写错误而不改变当前约束与建议可只扣依据；不存在的实际冲突、不可能建议及矛盾状态扣核心。",
+    "空间统一采用已公开勘误：R2-C仍部分、R3-C才全覆盖。该勘误在早期首个空间运行之后形成，不称完全无修订预注册。",
+    "批次和任务提醒由quality_validation独立统计，本评分不把提醒成败混入核心正确。"
+  ]
+}
+```
+
+## new-spatial-3-resume
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-new-spatial-3-score.json`；核心48/53，依据33/53；partial=False。
+
+```json
+{
+  "run": "new-spatial-3-resume",
+  "status": "complete",
+  "partial": false,
+  "plannedTaskRounds": 53,
+  "publishedTaskRounds": 53,
+  "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+  "fixtureHash": "112f032c6d9a9e83a2ea82066d5499d07fda3945076c28d2170d99c934667b64",
+  "reviewSha256": "42bf22915f16ec0daab32e34434418996f64356d65ccd72b7aab7898ba0e7372",
+  "notes": [
+    "采用原空间样本及统一勘误：R2 C仍部分覆盖，R3才全部覆盖。该勘误是在首次原空间运行后制定，不能声称完全无修订预注册答案。",
+    "评分正式摘要、条件、建议全文；一般出发前查看更新不扣，明确需新版/独立放行证明才能解除期限外限制则扣。C R5/R10只说先复核是否延续，作为一般检查未扣；R1/R3及E R2明确否认依据期限恢复/要求新版本则扣。",
+    "口径敏感性：若将所有到期后复核都视为一般谨慎，C R1/R3和E R2三格可从不通过变通过，核心48/53会变51/53；本次主分保持前轮明确新增放行门槛的严格标准。",
+    "R5 A和R10 A摘要/理由明确区域限制不适用，blocked只列依据呈现矛盾，不因全局区域状态条目而反转正确任务主结论。",
+    "A/E同路协调建议明确无容量依据不作硬约束，C取消后点位索取也仅建议，均未当成无据执行门槛扣核心。",
+    "R11明确缺边界与保守风险，未以零命中宣称解除；C保守停派属于oracle允许的有条件既有风险。",
+    "E R0/R1正确unrelated计通过；R4重复无新批次。全53格归档update已与实时validation一致；代理逐格复核而非人类盲评。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 1,
+      "detail": "原生自由答复与正式结果都将A假设推迟12时后的方案直接称为与B14时排程冲突；没有实际选择该方案或时段重叠证据，正式结果按核心错误计。"
+    },
+    {
+      "round": 2,
+      "detail": "原生自由答复建议E推迟12时后，正式建议进一步要求第4版出现后才确认恢复；按正式可见结果的新增放行前提计错。原生与正式均把C未覆盖东侧半区说成极窄区域，另计依据错误。"
+    },
+    {
+      "round": 11,
+      "detail": "原生自由答复将A当前空间可行性列为未知；正式条件仍将已确认可行避开禁入区的路径标为met，与缺边界的理由矛盾。正式摘要方向正确，因此只扣依据呈现。"
+    }
+  ]
+}
+```
+
+## new-text-3-resume
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-new-text-3-score.json`；核心19/36，依据12/36；partial=False。
+
+```json
+{
+  "run": "new-text-3-resume",
+  "status": "complete",
+  "partial": false,
+  "plannedTaskRounds": 36,
+  "publishedTaskRounds": 36,
+  "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+  "fixtureHash": "a4188e43bfed071b1eff4c31cefac16ed723be6ef03fbdacff2c1051e9ab0199",
+  "reviewSha256": "5ca393b30cf73de9c91405e680dcc5df6a782beb0af697f6b0b02f5118c33bd1",
+  "notes": [
+    "沿用前轮严格口径：正式summary、conditions、recommendations共同评分；任一无据必要前提均计核心错。",
+    "B R6/R7/R8/R9/R12针对今日既定使用写需重新核对，不是仅在未来真实改派/延期时自愿建议复核；沿用旧text2相同口径。若将这类建议宽泛视为一般复核，核心会由19/36变为24/36，此为口径敏感性，不改历史评分。",
+    "C R9—R11虽主状态正确受阻，旧无据核载条件仍unknown且未明确撤回，区别前轮text2已明确“不适用”的例外。",
+    "条件标题与理由冲突只计依据呈现，不能用稳定ID宣称语义已一致。",
+    "R4重复无新研判，不列任务轮。原new-text-3的中断记录未覆盖，本次从R0重新完整运行。",
+    "全部归档update已核对与实时validation.detail.update一致；这是代理逐格复核，非人类盲评。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 6,
+      "detail": "原生自由答复只建议B出发前常规核查；正式B建议额外要求因A今日既定用车重新举证次日预留，按正式结果扣核心。"
+    },
+    {
+      "round": 10,
+      "detail": "正式C建议要求核对次日时间，原生仅说JT-03不构成C改道方案；时间混入按正式建议列依据问题。"
+    },
+    {
+      "round": 12,
+      "detail": "原生和正式都把08:55写成已到09:00；原生甚至写现已09:00。正确的5分钟工具值未阻止正文时间错误。"
+    }
+  ]
+}
+```
+
+## new-variant-shared-object
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-new-variant-shared-object-score.json`；核心16/30，依据13/30；partial=True。
+
+```json
+{
+  "run": "new-variant-shared-object",
+  "status": "incomplete",
+  "partial": true,
+  "plannedTaskRounds": 36,
+  "publishedTaskRounds": 30,
+  "unscoredTaskRounds": 6,
+  "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+  "fixtureHash": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+  "reviewSha256": "b8e3f35f0b6f511bd39de7ef945fdf101cfdf56e7700e6b967f6dfd8f09a576a",
+  "notes": [
+    "只评分已发布R0—R10（R4重复无批次）的30格。R11上游HTTP429 insufficient_quota失败未发布，R12未执行；planned36、未评分6，不将缺测算通过或语义失败。",
+    "本组不进入两组完整变体主对照；可与旧版相同前缀30格作探索性比较。尤其R11上午限制缩短及R12车辆恢复而B仍限重的判断没有新版实测结果。",
+    "采用冻结shared-object变体oracle。正式保存的摘要、条件、建议全文作为主对象，工具算对不能抵消错误建议；本表为代理逐格复核，非人类盲评。",
+    "A R3/R5/R9、B R9及C R9的强禁令/必须同步改计划，按缺乏时段证据的必要前提扣核心；C R5仅先测算条件式后果、未否认当前可执行，只扣依据。若将前述强禁令全理解为一般协调提醒，A R3/R5/R9、B R9四格核心可通过，主分会从16/30变20/30；C R9另有等修复必改截止的独立问题，仍不通过。保持前轮严格规则。",
+    "C R9/R10“等修复即重定截止”以及B R10“无论何种方案都≤3吨/改期”分别构成独立错误，不以摘要主状态正确抵消。",
+    "C R0—R7仅把未来限重列作缺口/后续变化，没有明确需要新增限重证明才可执行，未像B的明确门槛一样扣核心。C R8明确2.5吨合规、只在未来装载变化时重评，未当成已知总重失效。",
+    "已核对归档所有已发布update与实时validation一致；保留旧partial记录及产品冻结。通知与机械机制由独立汇总统计，不混入语义30格。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 3,
+      "detail": "原生自由答复同样说不要调04、会直接阻断C与B；不是正式结构单独引入。"
+    },
+    {
+      "round": 5,
+      "detail": "原生与正式都写08:49任务维护，与注入08:20业务时钟不一致；原生也重复调04必阻断B的禁令。"
+    },
+    {
+      "round": 9,
+      "detail": "原生自由答复把A与C人数/车数简单相加，称无法同时执行并要求二选一；正式任务建议也强制改A/C计划。没有实际调配/周转时段依据。"
+    },
+    {
+      "round": 10,
+      "detail": "原生与正式均要求等04修复就推迟C/重定截止，并将B恢复条件缩成≤3吨或改期，漏掉当日绕行选项。"
+    }
+  ]
+}
+```
+
+## new-variant-source-conflict
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-new-variant-source-conflict-score.json`；核心24/36，依据19/36；partial=False。
+
+```json
+{
+  "run": "new-variant-source-conflict",
+  "notes": [
+    "逐格审核正式投影全文（摘要、条件、建议），AI代理复核而非人工盲评。",
+    "普通未来路况核验、明确条件性的未来调配复核不扣；已确认总重降成疑问、核载参数变成必要前提按原严格口径扣。",
+    "A R2/R3以B次日预留解释今日余量属于依据牵连，但未禁止A使用01，不扣核心。A R7假设改西桥后会挤占C窗口缺容量和行程依据，仅扣依据；当前任务主判断未被替换。",
+    "R1/R2的120分钟明确是到解封时点差，不扣算术；R10 B明确说‘到达将晚约60分钟’，故按16:00+30min=16:30与15:00差90min扣依据。",
+    "B R11摘要将预留写待核实与条件met矛盾；主计划与预留建议保持，所以只扣依据。若视为合并句误写而忽略，依据可19→20，主核心不变。",
+    "独立review代理定向复核R0—3及R7/R8，与上述边界一致；提醒另统计，R8C无影响的限重条件重要标记作为任务级误报案例。"
+  ],
+  "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-source-conflict/review.json",
+  "sourceSha256": "7995cabfe60100e088578d5bdbe0b5952033e4a75e5d004d411a968e4ae3c81d",
+  "summary": {
+    "rows": 36,
+    "coreCorrect": 24,
+    "evidenceCorrect": 19
+  }
+}
+```
+
+## new-variant-time-weight
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-new-variant-time-weight-score.json`；核心24/36，依据14/36；partial=False。
+
+```json
+{
+  "run": "new-variant-time-weight",
+  "notes": [
+    "逐格审核正式保存后投影全文，包含摘要、条件、建议；评分为AI代理复核，不是人工盲评。",
+    "未来出发前普通复核、未确认装载司机及实际出发状态不扣；将已分配车辆另加核载验证作为执行必要前提按原严格口径扣。",
+    "B保持01跨日预留满足，与旧time-weight要求重新证明是否被A/C占用的情形不同；不因次日桥况未知而扣。",
+    "条件标题与理由冲突而主执行判断明确正确时只扣依据，沿用原样本规则。",
+    "R5 A无需求调整记录、B曾占用01属字面依据错误，若把它们理解为无进一步调整/曾计划占用，则依据可由14/36变为16/36；主分保留全文字面标准。",
+    "独立review代理定向交叉复核支持24/36核心，确认主要依据错误；未对被测模型增加任何提示。"
+  ],
+  "source": "experiments/harness-lab/.local/continuous-validation/quality-resume-20261028-205505/evidence/new-variant-time-weight/review.json",
+  "sourceSha256": "ac2995e832aa4b7b8b48f819909d5ebd590a3defb4578971b43df1523fb75ee6",
+  "summary": {
+    "rows": 36,
+    "coreCorrect": 24,
+    "evidenceCorrect": 14
+  }
+}
+```
+
+## old-variant-shared-object
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-old-variant-shared-object.json`；核心24/36，依据12/36；partial=False。
+
+```json
+{
+  "run": "old-variant-shared-object",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "91656266a2774469e2cd7ad0c083f1dfb127a3b117003f86bfab57c6e1261093",
+  "denominator": 36,
+  "coreCorrect": 24,
+  "evidenceCorrect": 12,
+  "notes": [
+    "36任务轮均发布；同原严格全文标准，首段正确不遮蔽额外必要条件。",
+    "R8 B超重/C不超重、R11上午取消不释放B14时、R12 B修车不释放重量限制，主方向正确。R12 C声称两项阻碍解除属于虚构道路解除，核心扣。",
+    "R9—11将2辆与4辆次对比是公共关键依据错误，适用于三任务；没有因此将当前04故障跟踪或B限重主判断整体判错。",
+    "B R9—11明确写修复时间未知、14时能否等到修复无法判定；故不按“14时必未修复”扣分。",
+    "R11输入自身对原窗口描述有差异，模型按明确新13—15规则判断并请求澄清合理，不因此扣分。",
+    "A R6—8要求重新确认已知可用组合，沿严格既有分配口径扣；若宽松视普通实际发车核对，核心和依据各+3（不改变主分）。",
+    "未来实际调车/改线才重新核验总重和排程合理，不把这些条件句当实际冲突扣分；装载/司机/实际出发未知本身不扣。",
+    "R12 B条件改善已记录但不重要属于通知评分，未混入本文件核心判断分。",
+    "不与上轮只看主方向的评分直接横比。"
+  ]
+}
+```
+
+## old-variant-source-conflict
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-old-variant-source-conflict.json`；核心14/36，依据9/36；partial=False。
+
+```json
+{
+  "run": "old-variant-source-conflict",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "e7c96e050a862974bb46c1fb607dcb07ddd895012875f46f66db2402b60afb39",
+  "denominator": 36,
+  "coreCorrect": 14,
+  "evidenceCorrect": 9,
+  "notes": [
+    "严格阅读全文，不能以正确首段替代后文新增门槛的评价；与之前冻结旧/新全文评分同口径。",
+    "R7真冲突、R8撤回的主方向正确；R8仍有修后再检和总重未知等独立问题，不把通知到达当语义通过。",
+    "C原车总重明确；若未来换成不同车辆，重新核验新车总重合理，未因此扣分。",
+    "A R3唯一重估门槛混入2.5吨级（如需要）按跨任务额外条件扣；若宽松理解为一般按需匹配建议，核心+1但原封闭时间误写仍使依据失败。",
+    "A R12因未确认装载即要求按延误事件处理扣，不因普通出发前装载/司机核查扣。",
+    "B R2/3/5/6/8/10/11为额外预留再确认或无关修复门槛；若宽松看成普通提醒，核心/依据各+7。R12“C不再必须借01”是明确假设固化，不能用此宽松处理。",
+    "R5官方业务时点08:20至09:00为40分钟；文本沿用45分钟只计依据错误。",
+    "通知另由汇总脚本评分；不和前轮只看主方向的分数横比。"
+  ]
+}
+```
+
+## old-variant-time-weight
+
+来源：`.trellis/tasks/10-26-continuous-background-analysis/research/quality-reviews/resume-old-variant-time-weight.json`；核心14/36，依据13/36；partial=False。
+
+```json
+{
+  "run": "old-variant-time-weight",
+  "sourceRevision": "2321f72",
+  "reviewSha256": "7f259c9366041965887e044ace89a85d2c194f51f687ea513c394512ad053b6a",
+  "denominator": 36,
+  "coreCorrect": 14,
+  "evidenceCorrect": 13,
+  "notes": [
+    "独立阅读全文、变化理由、覆盖和直接限定结论的资料缺口；评分不调用被测模型或计算工具。",
+    "36任务轮：R0/1/2/3/5/6/7/8/9/10/11/12 × ABC；R4重复不进入语义分母。",
+    "总重4.2>4，09:40+35=10:15，11:00-10:15=45分钟；A09:00+30=09:30，10:00-09:30=30分钟，均独立计算。",
+    "C R8主结论正确但口径疑问计依据失败；R12明确用口径未知限定减载，按已知事实降格同时扣核心。",
+    "边界敏感性：若将B已确认异日预留却仍列占用未知的9格全部宽松解释为普通临行提醒，则核心与依据各增加9；主评分沿用既有严格标准不改。A/C普通装载、司机未知或未来实际改派才重评不扣。",
+    "不与上轮只看主方向的评分直接横比；通知由独立汇总脚本评分，本文件不混入通知分。"
+  ]
+}
+```

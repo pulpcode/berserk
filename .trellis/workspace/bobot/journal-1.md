@@ -1228,3 +1228,98 @@
 ### Next Steps
 
 - 审阅research/r2-results-20261018.md；90%验收未通过，保留两处评分歧义，不自动追加测试。
+
+
+## Session 42: 实现持续后台研判并完成隔离验证
+
+**Date**: 2026-10-26
+**Task**: 实现持续后台研判并完成隔离验证
+**Branch**: `codex/continuous-background-analysis`
+
+### Summary
+
+完成来源批次自动接续、任务修订重评、固定历史与重要提醒；保留未提交变更供审阅。
+
+### Main Changes
+
+- 新增持续配置代次、组合授权、原子发布、原生证据分页与显式恢复；不替换线上服务。
+- 任务当前研判、固定版本私有讨论、静默记录及重要提醒接入既有桌面界面。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 类型检查、Lint、构建通过；全量1150/1151、浏览器200/201的两个夹具问题修复后，相关34/34和5/5复测通过。
+- [OK] 腾讯云独立真实模型5轮与6轮机制通过；P1结论过强定向修正，保留P2措辞及时间精度局限与原始证据。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅implementation-report.md及模型精度局限，再决定提交、合并与生产发布。
+
+
+## Session 43: 任务关联与空间接续实现及分版本测评
+
+**Date**: 2026-10-27
+**Task**: 任务关联与空间接续实现及分版本测评
+**Branch**: `codex/continuous-background-analysis`
+
+### Summary
+
+分别提交旧测评和批准方案后实现任务用途、完整候选、后台空间权限与固定证据、首次任务触发。当前1196项测试及lint/typecheck/build通过；原六次线上5次完整，语义未通过；诊断v2线上被模型额度阻断。实现代码及本轮报告保留待审阅，未部署生产。
+
+### Main Changes
+
+- 复用Pi和既有空间服务，不新建执行引擎；精确记录错误反馈与发布规则复用
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4fadedc` | (see git log) |
+| `fbb7ff8` | (see git log) |
+
+### Testing
+
+- [OK] v1六次：67/72批次发布、242/267任务轮覆盖；公开空间oracle坐标勘误并保留全部失败
+- [OK] v2：1196/1196；单独空间前三批通过链路，R3 insufficient_quota，未计完整成功
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 恢复模型额度后补齐当前版回归；按报告处理事实保持、空间解释及重要标记一致性
+
+
+## Session 44: 完成方舟路由核验与六次原样本回归
+
+**Date**: 2026-10-28
+**Task**: 完成方舟路由核验与六次原样本回归
+**Branch**: `codex/continuous-background-analysis`
+
+### Summary
+
+复用已有方舟Agent Plan配置，在本机隔离环境完成六次真实模型回归；259请求全走方舟，72批次发布、267任务轮覆盖。文本核心97/108、通知30/33；空间业务159/159、完整依据146/159、必须任务提醒33/33。保留全部语义错误及跨平台历史对照限制，未改产品代码、未部署生产、未自动提交。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 六次原样本live运行及独立语义复核完成；源文件/输入/审计/原始归档哈希核对通过；请求守卫拒绝错误主机路径模型与重定向；git diff --check通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 保持review；另行审阅事实保持、空间依据、历史复述与提醒一致性修复方向，不将本次跨平台差异归因代码。

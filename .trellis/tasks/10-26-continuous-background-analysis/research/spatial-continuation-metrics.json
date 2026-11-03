@@ -1,0 +1,163 @@
+[
+  {
+    "run": "spatial-1",
+    "version": "v1",
+    "durationSeconds": 312.8,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 53,
+    "providerRequests": 61,
+    "repairPrompts": 0,
+    "toolErrors": 4,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 328079,
+      "output": 39776,
+      "cacheRead": 5896704,
+      "cacheWrite": 0,
+      "totalTokens": 6264559
+    },
+    "mechanismChecksPassed": true,
+    "failure": null
+  },
+  {
+    "run": "spatial-2",
+    "version": "v1",
+    "durationSeconds": 501.95,
+    "publishedBatches": 7,
+    "attemptedBatches": 8,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 28,
+    "recordedTaskUpdates": 26,
+    "providerRequests": 53,
+    "repairPrompts": 2,
+    "toolErrors": 12,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 285912,
+      "output": 38028,
+      "cacheRead": 4815488,
+      "cacheWrite": 0,
+      "totalTokens": 5139428
+    },
+    "mechanismChecksPassed": false,
+    "failure": "{\"error\":{\"code\":\"CONTINUOUS_NOT_FOUND\",\"message\":\"研判不存在或无权访问。\"}}\n\n404 !== 200\n"
+  },
+  {
+    "run": "spatial-3",
+    "version": "v1",
+    "durationSeconds": 352.18,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 53,
+    "recordedTaskUpdates": 53,
+    "providerRequests": 81,
+    "repairPrompts": 1,
+    "toolErrors": 7,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 548950,
+      "output": 38109,
+      "cacheRead": 11875456,
+      "cacheWrite": 0,
+      "totalTokens": 12462515
+    },
+    "mechanismChecksPassed": true,
+    "failure": null
+  },
+  {
+    "run": "spatial-diagnostics-1",
+    "version": "v2",
+    "durationSeconds": 66.68,
+    "publishedBatches": 3,
+    "attemptedBatches": 4,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 12,
+    "recordedTaskUpdates": 12,
+    "providerRequests": 15,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 1,
+    "usage": {
+      "input": 97661,
+      "output": 9494,
+      "cacheRead": 435840,
+      "cacheWrite": 0,
+      "totalTokens": 542995
+    },
+    "mechanismChecksPassed": false,
+    "failure": "{\"code\":\"CONTINUOUS_FAILED\",\"message\":\"本轮未正常完成，保留输入等待恢复。\"}\n+ actual - expected\n\n+ 'failed'\n- 'succeeded'\n"
+  },
+  {
+    "run": "text-1",
+    "version": "v1",
+    "durationSeconds": 190.61,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 39,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 419421,
+      "output": 26065,
+      "cacheRead": 3341056,
+      "cacheWrite": 0,
+      "totalTokens": 3786542
+    },
+    "mechanismChecksPassed": true,
+    "failure": null
+  },
+  {
+    "run": "text-2",
+    "version": "v1",
+    "durationSeconds": 215.11,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 48,
+    "repairPrompts": 0,
+    "toolErrors": 1,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 302601,
+      "output": 28428,
+      "cacheRead": 3731456,
+      "cacheWrite": 0,
+      "totalTokens": 4062485
+    },
+    "mechanismChecksPassed": true,
+    "failure": null
+  },
+  {
+    "run": "text-3",
+    "version": "v1",
+    "durationSeconds": 184.83,
+    "publishedBatches": 12,
+    "attemptedBatches": 12,
+    "plannedBatches": 12,
+    "coveredTaskRounds": 36,
+    "recordedTaskUpdates": 36,
+    "providerRequests": 46,
+    "repairPrompts": 0,
+    "toolErrors": 0,
+    "unknownUsageAttempts": 0,
+    "usage": {
+      "input": 280770,
+      "output": 25681,
+      "cacheRead": 2966272,
+      "cacheWrite": 0,
+      "totalTokens": 3272723
+    },
+    "mechanismChecksPassed": true,
+    "failure": null
+  }
+]

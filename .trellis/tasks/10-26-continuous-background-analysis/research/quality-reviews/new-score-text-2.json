@@ -1,0 +1,362 @@
+{
+  "run": "new-text-2",
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。",
+      "evidenceIssues": [
+        "当天A正常用车被视为须额外确认次日B预留"
+      ]
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。",
+      "evidenceIssues": [
+        "当天A正常用车被视为须额外确认次日B预留"
+      ]
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "任务日期已明确错开，仍要求A在11-10用01必须重新确认与次日B的优先级/先后，凭空增加调度冲突门槛。",
+      "evidenceIssues": [
+        "当天A正常用车被视为须额外确认次日B预留",
+        "A需求3降2被称为加剧对01依赖，依据不成立"
+      ]
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "两辆达标判断正确，建议却禁止抽用B预留的01；A本就已分配01且与次日B不重叠。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确",
+        "把A已分配01当作临时挪用B资源"
+      ]
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "修复时间未知却断言次日仅01/02可用，提前固化未来车况"
+      ]
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "04载重匹配理由说已不适用，状态仍为unknown；车辆受阻主结论正确"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": [
+        "条件标题仍称01/02/03状态正常且标满足，而理由明确03故障；两辆门槛判断正确"
+      ]
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "任务路线、车辆门槛及日期变化正确；一般出发前核验未作为新事实。",
+      "evidenceIssues": []
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "主状态正确，但无依据把车辆04车型/核载参数列为未满足的必要执行条件并跨轮保留。",
+      "evidenceIssues": [
+        "新增车辆载重能力核验门槛",
+        "04恢复只消除替代需求，却将“04之外后备车辆可用性”记为满足"
+      ]
+    }
+  ],
+  "notes": [
+    "采用整份结构判断，不仅摘要。C R9—R11理由已明确旧载重问题不适用，故只记状态元数据不一致；不把已撤回门槛重复算核心错。",
+    "A R6后旧条件标题未更新但理由明确03故障/2辆达标，记依据呈现错误；区别于text1仍把三辆均可用列为受阻。",
+    "一般未来车况复核、司机装载未知和条件性获批调配不扣。",
+    "R4无新批次，36格；raw自由答复不能覆盖正式结果。"
+  ],
+  "rawDifferences": [
+    {
+      "round": 6,
+      "detail": "原生与正式都在正确指出A使用01/02后又禁止抽用B预留01，跨日资源误关联在两处均存在。"
+    },
+    {
+      "round": 9,
+      "detail": "原生资料缺口另写西桥限重口径与期限未说明；正式结构按明确2.5吨及08:30—11:00，不把原生额外疑问计入正式分。"
+    },
+    {
+      "round": 12,
+      "detail": "原生与正式均将04恢复等同04之外后备满足；主车恢复与备用车可用是不同条件。"
+    }
+  ]
+}

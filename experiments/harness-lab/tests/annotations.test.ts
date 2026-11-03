@@ -197,9 +197,9 @@ it.each([1,7,8])('migrates v%i once and keeps Access/Background constructors fro
   // setup created the anonymous schema; reset only this empty fixture's annotation tables.
   for(const name of [...annotationTables].reverse()) db.exec(`DROP TABLE ${name}`);
   if(version>=7) {new AccessStore(db);if(version===8)new BackgroundStore(db);}
-  new AnnotationStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version===1 ? 1 : version===7 ? 9 : 10);
+  new AnnotationStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version===1 ? 1 : version===7 ? 9 : 12);
   new AnnotationStore(db);
-  if(version>=7) {new AccessStore(db);new BackgroundStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(10);new AccessStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(10);}
+  if(version>=7) {new AccessStore(db);new BackgroundStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(12);new AccessStore(db);expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(12);}
   db.exec('DROP TABLE annotation_actions');expect(()=>new AnnotationStore(db)).toThrow('状态');
   if(version>=7) expect(()=>new AccessStore(db)).toThrow('状态');
   expect(db.prepare("SELECT name FROM sqlite_master WHERE name='annotation_actions'").get()).toBeUndefined();

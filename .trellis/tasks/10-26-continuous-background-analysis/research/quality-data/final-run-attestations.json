@@ -1,0 +1,29 @@
+[
+  {
+    "run": "new-variant-shared-object-complete",
+    "sourceRevision": "d7efac1ab35f727eb790488101bff7eabdd1ad059306975457cacf81a3cd66fe",
+    "fixtureHash": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+    "runnerHash": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41",
+    "publicConfig": {
+      "LLM_PROVIDER": "volcengine-agent-plan",
+      "LLM_MODEL": "deepseek-v4.1-flash",
+      "LLM_BASE_URL": "https://ark.cn-beijing.volces.com/api/plan/v3",
+      "LLM_CONTEXT_WINDOW": "1048576",
+      "LLM_MAX_OUTPUT_TOKENS": "393216",
+      "LLM_HTTP_IDLE_TIMEOUT_MS": "300000"
+    },
+    "observedRequestParameterSets": [
+      {
+        "parameters": {
+          "max_tokens": 393216,
+          "model": "deepseek-v4.1-flash",
+          "stream": true,
+          "stream_options": {
+            "include_usage": true
+          }
+        },
+        "requests": 66
+      }
+    ]
+  }
+]

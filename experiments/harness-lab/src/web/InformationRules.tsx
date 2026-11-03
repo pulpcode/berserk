@@ -1,3 +1,4 @@
+import { ContinuousRules } from './ContinuousRules';
 import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -8,6 +9,7 @@ import { informationError, informationTime, InformationPagination, useInformatio
 
 type Editor = { key: string; base?: InformationRule; draft: InformationRuleInput; latest?: InformationRule; clientActionId: string; conflict: boolean };
 export function InformationRules({ visible, capabilities, tasks, selectedId, select }: { visible: boolean; capabilities: InformationCapabilities; tasks: TaskSpace[]; selectedId: string; select: (id: string) => void }) {
+  const [mode, setMode] = useState<'event' | 'continuous'>('event');
   const { api } = useApi(); const [offset, setOffset] = useState(0); const [sourceId, setSourceId] = useState('');
   const query = new URLSearchParams({ offset: String(offset), limit: '25', ...(sourceId ? { sourceId } : {}) });
   const rules = useInformationQuery<BackgroundPage<InformationRule>>(`/api/information/rules?${query}`, visible);
@@ -59,7 +61,9 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
     finally { lock.current = false; setBusy(false); }
   }
   return <section className="information-rules" hidden={!visible} aria-label="处理与投递规则">
-    <div className="information-toolbar"><label>规则来源<select value={sourceId} onChange={event => { setSourceId(event.target.value); setOffset(0); }}><option value="">全部来源</option>{capabilities.sources.map(item => <option value={item.sourceId} key={item.sourceId}>{item.name}</option>)}</select></label><button onClick={rules.refresh}><RefreshCw size={15} aria-hidden="true" />刷新规则</button>{managed.length > 0 && <button className="primary-action" onClick={() => open()}><Plus size={16} aria-hidden="true" />新建规则</button>}</div>
+    <nav className="information-tabs" aria-label="处理模式"><button aria-pressed={mode === 'event'} onClick={() => setMode('event')}>逐条处理</button>{managed.length > 0 && <button aria-pressed={mode === 'continuous'} onClick={() => setMode('continuous')}>持续后台研判</button>}</nav>
+    {managed.length > 0 && <ContinuousRules visible={visible && mode === 'continuous'} capabilities={capabilities} />}
+    <div hidden={mode !== 'event'}><div className="information-toolbar"><label>规则来源<select value={sourceId} onChange={event => { setSourceId(event.target.value); setOffset(0); }}><option value="">全部来源</option>{capabilities.sources.map(item => <option value={item.sourceId} key={item.sourceId}>{item.name}</option>)}</select></label><button onClick={rules.refresh}><RefreshCw size={15} aria-hidden="true" />刷新规则</button>{managed.length > 0 && <button className="primary-action" onClick={() => open()}><Plus size={16} aria-hidden="true" />新建规则</button>}</div>
     {rules.error && <p className="resource-error" role="alert">{rules.error}</p>}
     <div className="information-split"><div className="information-list"><ul>{rules.data?.items.map(rule => <li key={rule.id}><button aria-current={editor?.key === rule.id ? 'true' : undefined} onClick={() => open(rule)}><strong>{rule.name}</strong><span>{rule.enabled ? '已启用' : '已停用'} · {capabilities.sources.find(item => item.sourceId === rule.sourceId)?.name || rule.sourceId}</span><small>版本 {rule.revision} · {informationTime(rule.updatedAt)}</small></button></li>)}</ul>{rules.data && !rules.data.items.length && <p className="information-empty">尚无处理规则。</p>}<InformationPagination page={rules.data} change={setOffset} /></div>
       <div className="information-detail">{!editor ? <p className="information-empty">选择规则查看详情{managed.length ? '，或新建一条处理与投递规则' : ''}。</p> : <form className="information-form" onSubmit={event => { event.preventDefault(); void save(); }}>
@@ -80,7 +84,7 @@ export function InformationRules({ visible, capabilities, tasks, selectedId, sel
         {editor.conflict && <button type="button" disabled={busy} onClick={() => void latest()}>{editor.base ? '查看最新规则' : '核对保存结果'}</button>}
         {editor.latest && <aside className="task-comparison"><strong>最新规则（你的编辑仍保留）</strong><p>{editor.latest.name} · {editor.latest.enabled ? '启用' : '停用'} · 版本 {editor.latest.revision}</p><p>处理方案：{capabilities.profiles.find(item => item.id === editor.latest!.profileId)?.name || editor.latest.profileId}</p><p>固定接收席位：{editor.latest.recipientSeatIds.map(id => capabilities.seats.find(seat => seat.id === id)?.name || id).join('、')}</p><p>补充候选：{editor.latest.supplementaryDelivery?.candidateSeatIds.map(id=>capabilities.seats.find(seat=>seat.id===id)?.name || id).join('、') || '未开启'}</p><button type="button" onClick={() => { setEditor(current => current?.latest ? { ...current, base: current.latest, latest: undefined, conflict: false } : current); setError(''); }}>已核对，继续合并编辑</button></aside>}
         {canEdit && <button className="primary-action" type="submit" disabled={busy || editor.conflict || Boolean(profile?.configurationError) || !editor.draft.name.trim() || !editor.draft.profileId || !editor.draft.recipientSeatIds.length || Boolean(editor.draft.supplementaryDelivery && !editor.draft.supplementaryDelivery.candidateSeatIds.length)}>{busy ? '保存中…' : '保存规则'}</button>}
-      </form>}</div></div>
+      </form>}</div></div></div>
   </section>;
 }
 function inputOf(rule: InformationRule): InformationRuleInput { const { name, sourceId, profileId, recipientSeatIds, supplementaryDelivery, publicTaskId, enabled } = rule; return { name, sourceId, profileId, recipientSeatIds, supplementaryDelivery, publicTaskId, enabled }; }

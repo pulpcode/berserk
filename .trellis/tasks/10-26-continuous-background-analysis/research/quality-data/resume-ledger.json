@@ -1,0 +1,145 @@
+{
+  "plannedFullRuns": 18,
+  "actualAttempts": 19,
+  "completeAttempts": 17,
+  "incompleteAttempts": 2,
+  "originalCompletePairs": 6,
+  "variantCompletePairs": 2,
+  "exploratorySharedPrefixTaskRoundsEach": 30,
+  "firstStage": {
+    "complete": 10,
+    "incomplete": 1
+  },
+  "resumeStage": {
+    "complete": 7,
+    "incomplete": 1
+  },
+  "resumeOf": "/Users/lau/.codex/worktrees/continuous-background-analysis/berserk/experiments/harness-lab/.local/continuous-validation/quality-20261028",
+  "resumeAuthorizedAt": "2026-10-28T12:55:05.578236+00:00",
+  "resumePhases": {
+    "new-status.json": [
+      {
+        "name": "new-text-3-resume",
+        "status": "finished",
+        "startedAt": "2026-10-28T12:55:39.237Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:05:14.908Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-ZMIf5O/validation.json",
+        "requests": 71,
+        "providerFailure": false
+      },
+      {
+        "name": "new-spatial-3-resume",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:05:14.915Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:17:38.801Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-spatial-VVFEcn/validation.json",
+        "requests": 65,
+        "providerFailure": false
+      }
+    ],
+    "old-variants-status.json": [
+      {
+        "name": "old-variant-time-weight",
+        "fixture": "time-weight-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:17:38.908Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:21:26.489Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-M5PyrB/validation.json",
+        "requests": 50,
+        "providerFailure": false
+      },
+      {
+        "name": "old-variant-source-conflict",
+        "fixture": "source-conflict-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:21:26.494Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:25:01.582Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-DsahK3/validation.json",
+        "requests": 37,
+        "providerFailure": false
+      },
+      {
+        "name": "old-variant-shared-object",
+        "fixture": "shared-object-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:25:01.583Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:29:04.469Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-qeb69g/validation.json",
+        "requests": 49,
+        "providerFailure": false
+      }
+    ],
+    "new-variants-status.json": [
+      {
+        "name": "new-variant-time-weight",
+        "fixture": "time-weight-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:29:04.564Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:36:39.496Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-XBAfzl/validation.json",
+        "requests": 56,
+        "providerFailure": false
+      },
+      {
+        "name": "new-variant-source-conflict",
+        "fixture": "source-conflict-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:36:39.504Z",
+        "exitCode": 0,
+        "endedAt": "2026-10-28T13:45:53.745Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-gmKp0y/validation.json",
+        "requests": 58,
+        "providerFailure": false
+      },
+      {
+        "name": "new-variant-shared-object",
+        "fixture": "shared-object-input.json",
+        "status": "finished",
+        "startedAt": "2026-10-28T13:45:53.751Z",
+        "exitCode": 1,
+        "endedAt": "2026-10-28T13:53:24.572Z",
+        "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/axon-continuous-multi-Oi2ndS/validation.json",
+        "requests": 50,
+        "providerFailure": true,
+        "stopReason": "upstream_failure"
+      }
+    ]
+  },
+  "incompleteActualRuns": [
+    "new-text-3",
+    "new-variant-shared-object"
+  ],
+  "allProviderRequests": 980,
+  "allKnownUsage": {
+    "input": 11485260,
+    "output": 1683160,
+    "cacheRead": 144290176,
+    "totalTokens": 157458596
+  },
+  "unknownUsageAttempts": 2,
+  "preflightTokensSeparate": {
+    "initial": 9,
+    "resume": 9
+  },
+  "checks": {
+    "oldSourceFiles": 234,
+    "newSourceFiles": 237,
+    "inputs": 5,
+    "publicConfigUnchanged": true,
+    "verifiedArchives": 19,
+    "allExactArkUrl": true,
+    "allActualResponseModelsSame": true,
+    "businessHttpStatuses": {
+      "200": 978,
+      "429": 2
+    }
+  },
+  "archiveCount": 19,
+  "noResumeCompleteFile": true
+}

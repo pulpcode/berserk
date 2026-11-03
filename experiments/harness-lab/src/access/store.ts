@@ -1,5 +1,6 @@
 import { checkAnnotationTables } from '../annotations/store.js';
 import { upgradeSeatColumns } from './schema.js';
+import { enqueueContinuousTaskChange } from '../background/continuous-store.js';
 import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
@@ -29,7 +30,7 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3,4,5,6,7,8,9,10].includes(version)) {
+    if([2,3,4,5,6,7,8,9,10,11,12].includes(version)) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
       this.upgradeOverview(version);
@@ -47,9 +48,9 @@ export class AccessStore {
     this.upgradeOverview(2);
   }
   private upgradeOverview(version: number) {
-    if ([9,10].includes(version)) checkAnnotationTables(this.db);
+    if ([9,10,12].includes(version)) checkAnnotationTables(this.db);
     const hasBackground = !!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name GLOB 'background_*'").get();
-    if (hasBackground || [3,4,6,8,10].includes(version)) { new BackgroundStore(this.db); return; }
+    if (hasBackground || [3,4,6,8,10,11,12].includes(version)) { new BackgroundStore(this.db); return; }
     if (![2,5,7,9].includes(version)) throw stateError();
     this.db.exec('BEGIN IMMEDIATE');
     try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${version === 9 ? 9 : 7}; COMMIT`); }
@@ -145,6 +146,7 @@ export class AccessStore {
     const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {})};
     this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task));
     this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id);
+    enqueueContinuousTaskChange(this.db,task);
     return task;
   }
   update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false): TaskSpace {
@@ -162,7 +164,13 @@ export class AccessStore {
     }
     if (!next.title.trim() || next.title.length > 60 || next.goal.length > 8000 || (next.visibility === 'public' && !next.goal.trim())) throw new RequestError('INVALID_INPUT','请填写有效的任务名称与目标。');
     next.title = next.title.trim(); next.goal = next.goal.trim();
-    this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify(next),id); return next;
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const current = this.get(id,actor.seatId);if(current.revision!==revision)throw conflict();
+      this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify(next),id);
+      enqueueContinuousTaskChange(this.db,next);
+      this.db.exec('COMMIT');return next;
+    } catch(error){this.db.exec('ROLLBACK');throw error;}
   }
   /** Synchronous admission, held only for the actual write/request lifetime. No execution queue. */
   acquire(id: string, seatId: string): () => void {

@@ -252,7 +252,7 @@ test('workspace navigation preserves separate drafts and dismisses stale pickers
 test('Chinese composition filters the browsed directory and caret movement abandons the trigger safely', async ({ page }) => {
   const env = await setup(page);
   try {
-    await page.goto('/'); await input(page).pressSequentially('请查看 @pla');
+    await page.goto('/'); await expect(input(page)).toBeEnabled(); await input(page).pressSequentially('请查看 @pla');
     await visible(page).getByRole('option', { name: /^项目文件或文件夹/ }).click();
     await visible(page).getByRole('option', { name: /^plans / }).click();
     await expect(visible(page).getByRole('option', { name: /方案.md/ })).toBeVisible();

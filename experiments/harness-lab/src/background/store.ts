@@ -1,3 +1,4 @@
+import { migrateContinuous } from './continuous-schema.js';
 import { checkAnnotationTables } from '../annotations/store.js';
 import { upgradeSeatColumns } from '../access/schema.js';
 import { createHash, randomUUID } from 'node:crypto';
@@ -70,7 +71,7 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     if (origin?.kind === 'task_information' && (origin.eventId !== data.eventId || origin.taskSpaceId !== data.taskSpaceId)) throw stateError();
     if (origin?.kind === 'inbox' && origin.deliveryId !== data.deliveryId) throw stateError();
     if (origin && data.kind === 'preprocess') throw stateError();
-    for (const field of ['id','eventId','jobId','initialJobId','sessionId','requestId','taskSpaceId','workspaceId','deliveryId','actionId','retryOfJobId','ruleId','reviewId']) {
+    for (const field of ['id','eventId','jobId','initialJobId','sessionId','requestId','taskSpaceId','workspaceId','deliveryId','actionId','retryOfJobId','ruleId','reviewId','continuousJobId']) {
       if (data[field] !== undefined && (typeof data[field] !== 'string' || !UUID.test(data[field]))) throw stateError();
     }
     if (data.sourceId !== undefined && (typeof data.sourceId !== 'string' || !/^[a-zA-Z0-9_-]{1,64}$/.test(data.sourceId))) throw stateError();
@@ -118,15 +119,15 @@ function normalizeRule(input: InformationRuleInput): InformationRuleInput {
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
     const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if ([9,10].includes(version)) checkAnnotationTables(db);
+    if ([9,10,12].includes(version)) checkAnnotationTables(db);
     const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
     const anyBackground = [...actual].some(name => name.startsWith('background_'));
     const fresh = !anyBackground && [2,5,7,9].includes(version);
     if (!fresh) {
-      if (![3,4,5,6,8,10].includes(version) || tables.some(table => !actual.has(table))) throw stateError();
+      if (![3,4,5,6,8,10,11,12].includes(version) || tables.some(table => !actual.has(table))) throw stateError();
       if (version >= 4 && !actual.has('information_task_overrides')) throw stateError();
-      if ([5,8,10].includes(version) && !actual.has('background_delivery_reviews')) throw stateError();
-      if ([6,8,10].includes(version) && !actual.has('inbox_handling')) throw stateError();
+      if ([5,8,10,11,12].includes(version) && !actual.has('background_delivery_reviews')) throw stateError();
+      if ([6,8,10,11,12].includes(version) && !actual.has('inbox_handling')) throw stateError();
       this.validateIntegrity(version >= 4,actual.has('background_delivery_reviews'));
       if (actual.has('inbox_handling')) this.validateHandling();
     }
@@ -160,8 +161,9 @@ export class BackgroundStore {
       if (!actual.has('inbox_handling')) db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
         INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';`);
       this.validateIntegrity(true,true); this.validateHandling();
-      db.exec(`PRAGMA user_version=${version >= 9 ? 10 : 8}`);
+      db.exec(`PRAGMA user_version=${version >= 11 ? version : version >= 9 ? 10 : 8}`);
     });
+    migrateContinuous(db);
   }
 
   private validateHandling() {
@@ -216,7 +218,7 @@ export class BackgroundStore {
       }
     }
     for (const job of jobs.values()) {
-      if (events.get(job.eventId)?.sourceId !== job.sourceId || !job.requestId) throw stateError();
+      if ((job.kind !== 'continuous_analysis' && events.get(job.eventId)?.sourceId !== job.sourceId) || !job.requestId) throw stateError();
       if (job.kind === 'preprocess' && (!job.ruleSnapshot || job.ruleSnapshot.rule.sourceId !== job.sourceId || job.ruleSnapshot.rule.profileId !== job.ruleSnapshot.profile.id)) throw stateError();
       if (job.ruleSnapshot && !validCandidateSnapshot(job.ruleSnapshot)) throw stateError();
       if (job.recipientSuggestion) assertCandidateRecipients(job, job.recipientSuggestion.recipients);
@@ -236,11 +238,11 @@ export class BackgroundStore {
     const deliveries = this.listDeliveries();
     for (const delivery of deliveries) {
       const job = jobs.get(delivery.jobId);
-      if (!job || job.kind !== 'preprocess' || job.status !== 'succeeded' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId) throw stateError();
+      if (!job || !['preprocess','continuous_analysis'].includes(job.kind) || job.status !== 'succeeded' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId) throw stateError();
       if (delivery.reviewId) {
         const review = reviewMap.get(delivery.reviewId);
         if (!review || review.jobId !== job.id || review.status !== 'approved' || !review.recipients?.some(recipient => recipient.seatId === delivery.recipientSeatId)) throw stateError();
-      } else if (!job.ruleSnapshot?.rule.recipientSeatIds.includes(delivery.recipientSeatId)) throw stateError();
+      } else if (job.kind !== 'continuous_analysis' && !job.ruleSnapshot?.rule.recipientSeatIds.includes(delivery.recipientSeatId)) throw stateError();
     }
     for (const review of reviewMap.values()) {
       if (review.status === 'approved' && review.recipients!.some(recipient => !deliveries.some(delivery => delivery.reviewId === review.id && delivery.recipientSeatId === recipient.seatId))) throw stateError();
@@ -267,9 +269,10 @@ export class BackgroundStore {
   }
 
   transaction<T>(fn: () => T): T {
-    this.db.exec('BEGIN IMMEDIATE');
-    try { const result = fn(); this.db.exec('COMMIT'); return result; }
-    catch (error) { this.db.exec('ROLLBACK'); throw error; }
+    const name = `background_${randomUUID().replaceAll('-', '')}`;
+    this.db.exec(`SAVEPOINT ${name}`);
+    try { const result = fn(); this.db.exec(`RELEASE ${name}`); return result; }
+    catch (error) { this.db.exec(`ROLLBACK TO ${name}; RELEASE ${name}`); throw error; }
   }
 
   getEvent(id: string) { return decode<BackgroundEvent>(this.db.prepare('SELECT * FROM background_events WHERE id=?').get(id)); }
@@ -277,7 +280,7 @@ export class BackgroundStore {
     const row = this.db.prepare('SELECT * FROM background_events WHERE source_id=? AND message_id=?').get(sourceId, sourceMessageId);
     return row ? decode<BackgroundEvent>(row) : undefined;
   }
-  backlogSize() { return Number(this.db.prepare("SELECT (SELECT count(*) FROM background_events WHERE initial_job_id IS NULL)+(SELECT count(*) FROM background_jobs WHERE status='queued') AS n").get()?.n); }
+  backlogSize() { return Number(this.db.prepare("SELECT (SELECT count(*) FROM background_events WHERE initial_job_id IS NULL AND json_extract(data,'$.continuousEpochId') IS NULL)+(SELECT count(*) FROM background_jobs WHERE status='queued' AND kind!='continuous_analysis') AS n").get()?.n) + (this.db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_inputs'").get() ? Number(this.db.prepare('SELECT count(*) n FROM continuous_inputs WHERE consumed=0').get()?.n) : 0); }
 
   /** The snapshot was prepared on disk first. Recheck rule revision inside this synchronous transaction. */
   acceptEvent(event: BackgroundEvent, options: {initialJob?: BackgroundJob; capacity: number; expectedRule?: Pick<InformationRule, 'id' | 'revision'> | null}): BackgroundEvent {
@@ -304,6 +307,7 @@ export class BackgroundStore {
     return this.transaction(() => {
       if (action) { const previous = this.findAction(action.userId, action.clientActionId); if (previous) { this.assertSameAction(previous, action); if (previous.jobId) return this.getJob(previous.jobId); } }
       const event = this.getEvent(eventId);
+      if (event.continuousEpochId) throw conflict('该信息已纳入持续研判。');
       if (event.initialJobId) { if (action) throw conflict('该信息已经启动初始处理，请查看原记录。'); return this.getJob(event.initialJobId); }
       this.assertRuleCurrent(event.sourceId, snapshot.rule);
       if (job.eventId !== event.id || job.sourceId !== event.sourceId || job.kind !== 'preprocess') throw conflict();
@@ -316,10 +320,10 @@ export class BackgroundStore {
   }
 
   getJob(id: string) { return decode<BackgroundJob>(this.db.prepare('SELECT * FROM background_jobs WHERE id=?').get(id)); }
-  private insertJob(job: BackgroundJob) {
+  insertJob(job: BackgroundJob) {
     if (job.status !== 'queued' || job.revision !== 1 || !job.requestId || (job.kind === 'seat_analysis' && (!job.userId || !job.seatId || !job.taskSpaceId || !job.workspaceId || !job.sessionId))) throw conflict('作业入队信息不完整。');
     if (job.sessionId && this.sessionReservation(job.sessionId)) throw conflict('会话已有排队或执行中的后台分析。');
-    this.db.prepare('INSERT INTO background_jobs VALUES(?,?,?,?,?,?,?,?,?,?)').run(job.id, job.eventId, job.sourceId, job.kind, job.status, job.createdAt, job.sessionId ?? null, job.seatId ?? null, job.taskSpaceId ?? null, JSON.stringify(job));
+    this.db.prepare('INSERT INTO background_jobs VALUES(?,?,?,?,?,?,?,?,?,?)').run(job.id, job.eventId ?? null, job.sourceId ?? null, job.kind, job.status, job.createdAt, job.sessionId ?? null, job.seatId ?? null, job.taskSpaceId ?? null, JSON.stringify(job));
   }
   enqueueJob(job: BackgroundJob, capacity: number, action?: NewBackgroundAction): BackgroundJob {
     return this.transaction(() => {
@@ -385,7 +389,7 @@ export class BackgroundStore {
       return next;
     });
   }
-  private saveJob(job: BackgroundJob): BackgroundJob {
+  saveJob(job: BackgroundJob): BackgroundJob {
     this.db.prepare('UPDATE background_jobs SET status=?,session_id=?,data=? WHERE id=?').run(job.status, job.sessionId ?? null, JSON.stringify(job), job.id); return job;
   }
   /** The service has checked current scope rights; this synchronous CAS binds the recorded tool result to the running job. */
@@ -421,10 +425,10 @@ export class BackgroundStore {
   }
 
   getDelivery(id: string) { return decode<BackgroundDelivery>(this.db.prepare('SELECT * FROM background_deliveries WHERE id=?').get(id)); }
-  private insertDelivery(job: BackgroundJob, seatId: string, time: string, reviewId?: string) {
-    const delivery: BackgroundDelivery = {id: randomUUID(), eventId: job.eventId, jobId: job.id, sourceId: job.sourceId,
+  insertDelivery(job: BackgroundJob, seatId: string, time: string, reviewId?: string) {
+    const delivery: BackgroundDelivery = {id: randomUUID(), jobId: job.id, ...(job.kind === 'continuous_analysis' ? {streamEpochId:job.streamEpochId} : {eventId:job.eventId,sourceId:job.sourceId}),
       recipientSeatId: seatId, status: 'pending', revision: 1, createdAt: time, updatedAt: time, ...(reviewId ? {reviewId} : {})};
-    this.db.prepare('INSERT INTO background_deliveries VALUES(?,?,?,?,?,?,?,?)').run(delivery.id, delivery.eventId, delivery.jobId, delivery.sourceId, seatId, delivery.status, delivery.createdAt, JSON.stringify(delivery));
+    this.db.prepare('INSERT INTO background_deliveries VALUES(?,?,?,?,?,?,?,?)').run(delivery.id, delivery.eventId ?? null, delivery.jobId, delivery.sourceId ?? null, seatId, delivery.status, delivery.createdAt, JSON.stringify(delivery));
     return delivery;
   }
   private decodeReview(row: Record<string, unknown> | undefined): BackgroundDeliveryReview {
@@ -613,5 +617,10 @@ export class BackgroundStore {
   listJobs() { return this.db.prepare('SELECT * FROM background_jobs ORDER BY rowid DESC').all().map(row => decode<BackgroundJob>(row)); }
   listDeliveries(jobId?: string) { return this.db.prepare(`SELECT * FROM background_deliveries${jobId ? ' WHERE job_id=?' : ''} ORDER BY rowid DESC`).all(...(jobId ? [jobId] : [])).map(row => decode<BackgroundDelivery>(row)); }
   /** Stable FIFO, independent of reverse-chronological observation lists. */
-  queuedJobs(limit = 100): BackgroundJob[] { return this.db.prepare("SELECT * FROM background_jobs WHERE status='queued' ORDER BY created_at,rowid LIMIT ?").all(limit).map(row => decode<BackgroundJob>(row)); }
+  queuedJobs(limit = 100, options: {continuousOnly?:boolean; skipPausedContinuous?:boolean} = {}): BackgroundJob[] {
+    const clauses=["status='queued'"];
+    if(options.continuousOnly)clauses.push("kind='continuous_analysis'");
+    if(options.skipPausedContinuous)clauses.push("(kind!='continuous_analysis' OR EXISTS (SELECT 1 FROM continuous_streams s WHERE s.epoch_id=json_extract(background_jobs.data,'$.streamEpochId') AND json_extract(s.data,'$.state')!='paused'))");
+    return this.db.prepare(`SELECT * FROM background_jobs WHERE ${clauses.join(' AND ')} ORDER BY created_at,rowid LIMIT ?`).all(limit).map(row=>decode<BackgroundJob>(row));
+  }
 }

@@ -1,0 +1,50 @@
+[
+  {
+    "run": "new-spatial-3-resume",
+    "file": "archives/new-spatial-3-resume.tar.gz",
+    "sha256": "16b1594571c7c9970bbcf9635a2a5b77a80ac53b415522aabdefc3f809b6d9ff",
+    "bytes": 9074064
+  },
+  {
+    "run": "new-text-3-resume",
+    "file": "archives/new-text-3-resume.tar.gz",
+    "sha256": "d258854856e35d3af7afa0aad778bec092ad84c6f469ce90fc13044dc849dfd5",
+    "bytes": 6632625
+  },
+  {
+    "run": "new-variant-shared-object",
+    "file": "archives/new-variant-shared-object.tar.gz",
+    "sha256": "b8ac516a853833192e5c636a66daa5ef266dc63fdf26a1944de09d916bcaced6",
+    "bytes": 4717654
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "file": "archives/new-variant-source-conflict.tar.gz",
+    "sha256": "8cdddde8f246fae9f2b0780458efd0b9922b5d3bd4cdbd652f5a3fdda68134a6",
+    "bytes": 8194435
+  },
+  {
+    "run": "new-variant-time-weight",
+    "file": "archives/new-variant-time-weight.tar.gz",
+    "sha256": "b6a947f3f30956706c2e4e80ed4306f2327902baf648344d754518f140285239",
+    "bytes": 4201978
+  },
+  {
+    "run": "old-variant-shared-object",
+    "file": "archives/old-variant-shared-object.tar.gz",
+    "sha256": "c62622ec36c15644a61f627617aebd051b40a8ffc8a312f244dfedafc12c2146",
+    "bytes": 2295250
+  },
+  {
+    "run": "old-variant-source-conflict",
+    "file": "archives/old-variant-source-conflict.tar.gz",
+    "sha256": "952bcae6531eccd2fa1501f7ae3738771ed7415b7f8efbbe098b46388a3d0279",
+    "bytes": 1657020
+  },
+  {
+    "run": "old-variant-time-weight",
+    "file": "archives/old-variant-time-weight.tar.gz",
+    "sha256": "cc6f738730be09044861afe785c8ccf4bc3971624c38214df439c09f698f4e3a",
+    "bytes": 2172984
+  }
+]

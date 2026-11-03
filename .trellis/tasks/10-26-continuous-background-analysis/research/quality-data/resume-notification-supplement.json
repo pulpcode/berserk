@@ -1,0 +1,22 @@
+[
+  {
+    "run": "old-variant-shared-object",
+    "round": 12,
+    "task": "B",
+    "jobId": "e34e1a10-8a02-4e90-8bd7-19d96391aad6",
+    "actualSignificant": false,
+    "observation": "记录承认04修复使B双重阻塞解除一项，但因重量限制仍在未标重要。",
+    "interpretation": "按局部重要改善设计意图，应单独关注B车辆恢复；预先变体量化只约定批次提醒，本项作为补充漏标案例，不回改分母。",
+    "includedInFrozenQuantitativeScore": false
+  },
+  {
+    "run": "new-variant-source-conflict",
+    "round": 8,
+    "task": "C",
+    "jobId": "ac0d067e-6bec-439f-ae76-1fd5694d5968",
+    "actualSignificant": true,
+    "observation": "C新增限重适配条件initial/met/important；同条理由已确认2.5吨小于3吨，通行不受限。A冲突撤回应提醒使批次仍正确。",
+    "interpretation": "C重要标记是任务级误报；作为补充案例，不临时扩大变体批次提醒分母。",
+    "includedInFrozenQuantitativeScore": false
+  }
+]

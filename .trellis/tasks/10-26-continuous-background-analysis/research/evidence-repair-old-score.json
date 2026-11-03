@@ -1,0 +1,742 @@
+{
+  "run": "old-variant-shared-object",
+  "sourceRevision": "1e12a94",
+  "status": "complete",
+  "partial": false,
+  "reviewSha256": "697719c58e042a7cb350a7f6b2e153c4409a1efc18a313a9a1be1381a13b340f",
+  "fixtureHash": "2a3757d8eacb92643e55efdd5657c601c2d2c1854a6c1df15570859bce1eb386",
+  "denominator": 36,
+  "coreCorrect": 23,
+  "evidenceCorrect": 9,
+  "rows": [
+    {
+      "round": 0,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "道路与3辆车满足、09:30到达及30分钟余量正确；装载/司机/实际出发未知来自任务原文，不算自造门槛。",
+      "excerpts": [
+        "路线与车辆条件已满足"
+      ],
+      "jobId": "33b73b20-47c2-4f7d-8800-90399415e7e7",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/0",
+      "conditionNotes": []
+    },
+    {
+      "round": 0,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。未进行错误载重计算，不仅因资料缺失扣分。",
+      "excerpts": [
+        "4.5吨车货总重与04载重能力的匹配无来源"
+      ],
+      "jobId": "33b73b20-47c2-4f7d-8800-90399415e7e7",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/0",
+      "conditionNotes": [
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 0,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "车辆已确认分配且正常，却以额定载重匹配缺资料限定装载可行；建议又将总重2.5吨称为货重。",
+      "excerpts": [
+        "载重是否匹配无来源，不能据此确认装载可行"
+      ],
+      "jobId": "33b73b20-47c2-4f7d-8800-90399415e7e7",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/0",
+      "conditionNotes": []
+    },
+    {
+      "round": 1,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "识别东桥封闭、原09:30推算失效，截止比解封早120分钟；替代方案仅待业务确认，没有冒充已调配。",
+      "excerpts": [
+        "10:00截止又早于解封120分钟"
+      ],
+      "jobId": "155a04a9-de20-4593-acc3-9e18451b7270",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/1",
+      "conditionNotes": []
+    },
+    {
+      "round": 1,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。未进行错误载重计算，不仅因资料缺失扣分。",
+      "excerpts": [
+        "装载、司机到岗与4.5吨载重匹配仍无资料"
+      ],
+      "jobId": "155a04a9-de20-4593-acc3-9e18451b7270",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/1",
+      "conditionNotes": [
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 1,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。未进行错误载重计算，不仅因资料缺失扣分。",
+      "excerpts": [
+        "装载、司机到岗与2.5吨载重匹配仍无资料"
+      ],
+      "jobId": "155a04a9-de20-4593-acc3-9e18451b7270",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/1",
+      "conditionNotes": [
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "新增车辆缺口和道路阻碍正确；但称改派04会同时冲突上午C、下午B并必须同步调整，没有实际借用/归还时序。",
+      "excerpts": [
+        "会与C 09:30—09:50、B 14:00—15:00的用车安排冲突，必须由业务方决定并同步调整C/B"
+      ],
+      "jobId": "e854c55c-63a7-4d0e-abe6-dc3555c2e235",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/2",
+      "conditionNotes": []
+    },
+    {
+      "round": 2,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。西桥条件仅引东桥资料，依据支持不足。",
+      "excerpts": [
+        "装载、司机与4.5吨载重匹配仍无资料"
+      ],
+      "jobId": "e854c55c-63a7-4d0e-abe6-dc3555c2e235",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/2",
+      "conditionNotes": [
+        {
+          "id": "59cc6586029db0ce3ce42be9",
+          "name": "B任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "e8259183e5d0bd7af345ab81",
+          "name": "B任务车辆04下午可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        },
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04正常保持正确；却说未落实的改派会连带击穿上午C及下午B，且要求必须替换C，缺实际周转依据；额外核载疑问继续。",
+      "excerpts": [
+        "改派会连带击穿两任务"
+      ],
+      "jobId": "e854c55c-63a7-4d0e-abe6-dc3555c2e235",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/2",
+      "conditionNotes": [
+        {
+          "id": "0961277fa889a99d24e5ba33",
+          "name": "C任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "道路恢复/车辆仍缺2辆正确；建议把改派其他车辆直接写成会与C/B冲突，无具体调配或时序依据。",
+      "excerpts": [
+        "或改派其他车辆（会与C/B冲突）"
+      ],
+      "jobId": "0580a7f1-1367-40fe-ad39-057f121e3b38",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/3",
+      "conditionNotes": []
+    },
+    {
+      "round": 3,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。西桥条件仅引东桥资料，依据支持不足。",
+      "excerpts": [
+        "装载、司机与4.5吨载重匹配仍无资料"
+      ],
+      "jobId": "0580a7f1-1367-40fe-ad39-057f121e3b38",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/3",
+      "conditionNotes": [
+        {
+          "id": "59cc6586029db0ce3ce42be9",
+          "name": "B任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "e8259183e5d0bd7af345ab81",
+          "name": "B任务车辆04下午可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        },
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "C状态未变正确；但假设挪用04即要求必须给C替代车辆，未先核对借用/交接时段，不能只按核载普通建议放行。西桥通行仅引东桥恢复也不足。",
+      "excerpts": [
+        "若确需挪用，须同时给出C替代车辆"
+      ],
+      "jobId": "0580a7f1-1367-40fe-ad39-057f121e3b38",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/3",
+      "conditionNotes": [
+        {
+          "id": "0961277fa889a99d24e5ba33",
+          "name": "C任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "最低3降2、当前1辆、缺口缩1正确；但仍要求假设借04必须同步重排C/B，未核对实际占用。",
+      "excerpts": [
+        "须由业务方决定并同步重排C/B"
+      ],
+      "jobId": "c02af2bc-ebea-4fdd-9400-3414ec77cd5e",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/5",
+      "conditionNotes": []
+    },
+    {
+      "round": 5,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。西桥条件仅引东桥资料，依据支持不足。",
+      "excerpts": [
+        "装载、司机与4.5吨载重匹配仍无资料"
+      ],
+      "jobId": "c02af2bc-ebea-4fdd-9400-3414ec77cd5e",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/5",
+      "conditionNotes": [
+        {
+          "id": "59cc6586029db0ce3ce42be9",
+          "name": "B任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "e8259183e5d0bd7af345ab81",
+          "name": "B任务车辆04下午可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        },
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "C既定安排保持正确；无据载重匹配仍列为整体缺口，且未来调用04就必须替换C未先核验时序。",
+      "excerpts": [
+        "装载、司机与2.5吨载重匹配仍无资料"
+      ],
+      "jobId": "c02af2bc-ebea-4fdd-9400-3414ec77cd5e",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/5",
+      "conditionNotes": [
+        {
+          "id": "0961277fa889a99d24e5ba33",
+          "name": "C任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "02修复后01/02满足2辆、撤去替代必要性、35分钟至出发正确；核实装载/司机及简短交接按一般执行协调建议，不据必须一词判新增放行门槛。",
+      "excerpts": [
+        "已分配车辆中可用2辆，达到rev2“至少2辆”要求"
+      ],
+      "jobId": "d0d23f05-de29-4b67-a2d7-2065b41a720b",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/6",
+      "conditionNotes": []
+    },
+    {
+      "round": 6,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。西桥条件仅引东桥资料，依据支持不足。",
+      "excerpts": [
+        "装载、司机与4.5吨载重匹配仍无资料"
+      ],
+      "jobId": "d0d23f05-de29-4b67-a2d7-2065b41a720b",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/6",
+      "conditionNotes": [
+        {
+          "id": "59cc6586029db0ce3ce42be9",
+          "name": "B任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "e8259183e5d0bd7af345ab81",
+          "name": "B任务车辆04下午可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        },
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 6,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "主条件与原计划保持正确；核载疑问未单独成为不得执行的前提，条件性结论已有任务明确的装载/司机未知支撑，按普通检查处理。西桥条件仅引东桥资料，依据支持不足。",
+      "excerpts": [
+        "装载、司机与2.5吨载重匹配仍无资料"
+      ],
+      "jobId": "d0d23f05-de29-4b67-a2d7-2065b41a720b",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/6",
+      "conditionNotes": [
+        {
+          "id": "0961277fa889a99d24e5ba33",
+          "name": "C任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "晚到旧版本未覆盖恢复事实，车辆2辆与计划到达保持；没有倒计时误报。",
+      "excerpts": [
+        "不要因这封晚到转发重新排改线或推迟"
+      ],
+      "jobId": "7ba8f333-b257-40f3-bb42-18908a192bec",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/7",
+      "conditionNotes": []
+    },
+    {
+      "round": 7,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "正确忽略旧东桥通知；本轮未在主结论新增核载障碍，出发前确认按普通建议处理。西桥通行条件仅引东桥恢复/旧发布时间，不支持西桥原状。",
+      "excerpts": [
+        "转发件为更旧版本的东桥封闭通知，不改变西桥通行"
+      ],
+      "jobId": "7ba8f333-b257-40f3-bb42-18908a192bec",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/7",
+      "conditionNotes": [
+        {
+          "id": "59cc6586029db0ce3ce42be9",
+          "name": "B任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "e8259183e5d0bd7af345ab81",
+          "name": "B任务车辆04下午可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        },
+        {
+          "id": "d40010de82b32aa0fb6a2ba6",
+          "name": "B任务装车、司机到岗与实际出发状态",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 7,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "忽略旧东桥通知、04与40分钟余量正确；出发前核载确认按普通建议处理。西桥通行仅引东桥通知，引用与证明对象不符。",
+      "excerpts": [
+        "晚到转发件只涉东桥且属已失效的第1版，西桥通行状态未变"
+      ],
+      "jobId": "7ba8f333-b257-40f3-bb42-18908a192bec",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/7",
+      "conditionNotes": [
+        {
+          "id": "0961277fa889a99d24e5ba33",
+          "name": "C任务经西桥通行条件",
+          "issue": "状态方向正确，但当前确切引用仅涉及东桥，不直接支持西桥原状；应区分沿基准正确保留和引用支持充分。"
+        },
+        {
+          "id": "12e47947add463381f8686d3",
+          "name": "C任务车辆04可用",
+          "issue": "把额定载重匹配缺资料混入可用性或装载条件；保留为复合项，不能拆分虚构记录。"
+        }
+      ]
+    },
+    {
+      "round": 8,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "A东桥路线不受西桥限重影响，2辆正常保持；下午可能借车明确为新方案需决定，未认定实际已借或已冲突。",
+      "excerpts": [
+        "A经东桥、不受该限制"
+      ],
+      "jobId": "d38ee7bf-b854-4d86-9137-30fa638b4c78",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/8",
+      "conditionNotes": []
+    },
+    {
+      "round": 8,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "4.5吨超过3吨且14时在禁行内正确；拆载协调按方案核对处理。摘要却称15时结束晚于15时截止，两者实际相同。",
+      "excerpts": [
+        "禁行持续到15:00，晚于B的15:00截止"
+      ],
+      "jobId": "d38ee7bf-b854-4d86-9137-30fa638b4c78",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/8",
+      "conditionNotes": []
+    },
+    {
+      "round": 8,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "2.5小于3正确，却将已明确总重重新质疑为货重，并要求先过磅确认才能维持条件性可行。",
+      "excerpts": [
+        "唯一保留：2.5吨是否即整车总重尚无自重数据"
+      ],
+      "jobId": "d38ee7bf-b854-4d86-9137-30fa638b4c78",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/8",
+      "conditionNotes": [
+        {
+          "id": "a06d51a97314b85b097a6c7a",
+          "name": "C任务总重2.5吨是否超出西桥3吨限重",
+          "issue": "met方向正确，但总重已明确仍虚疑货重/缺自重并要求过磅。"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "自身2辆满足正确；却将包括下午B在内的假设借车都定为直接冲击A最低2辆，缺借用归还时序。",
+      "excerpts": [
+        "若业务方决定调用，会直接冲击A的“至少2辆”"
+      ],
+      "jobId": "5f392865-5f03-49e3-8acf-432cd33f4648",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/9",
+      "conditionNotes": []
+    },
+    {
+      "round": 9,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "当前04故障与限重双重阻碍正确，未断言14时必未修好；却把B下午换车写成会与A上午任务竞争并必须统一裁决，缺周转依据。",
+      "excerpts": [
+        "会与A（09:00—约09:30）及C的紧急需求相互竞争"
+      ],
+      "jobId": "5f392865-5f03-49e3-8acf-432cd33f4648",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/9",
+      "conditionNotes": [
+        {
+          "id": "30b044204cc8c226705b02da",
+          "name": "车辆02/03故障不改变B的04预留",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 9,
+      "task": "C",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "04故障新增障碍正确；但借01/02必与A直接冲突要求二选优先级，没有实际占用/交接依据；另02/03条件名与04故障导致blocked相矛盾。",
+      "excerpts": [
+        "与A 09:00需2辆车直接冲突"
+      ],
+      "jobId": "5f392865-5f03-49e3-8acf-432cd33f4648",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/9",
+      "conditionNotes": [
+        {
+          "id": "5bf3b0f94c0c5cf87c4ccc86",
+          "name": "车辆02/03故障不改变C的车辆分配",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        },
+        {
+          "id": "a06d51a97314b85b097a6c7a",
+          "name": "C任务总重2.5吨是否超出西桥3吨限重",
+          "issue": "met方向正确，但总重已明确仍虚疑货重/缺自重并要求过磅。"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": true,
+      "reason": "正确识别次日检修不影响今日A，未因15分钟倒计时增设无法出发结论；一般就绪确认不扣。",
+      "excerpts": [
+        "本通知不构成今日约束"
+      ],
+      "jobId": "8cc49144-b2c7-4f17-8f45-c2d221412ce0",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/10",
+      "conditionNotes": []
+    },
+    {
+      "round": 10,
+      "task": "B",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "当前两项阻碍保留正确；假设延到11月11日时仍断言西桥禁超3吨，将只对10日生效的限制延伸次日。",
+      "excerpts": [
+        "届时西桥也不允许超3吨车辆"
+      ],
+      "jobId": "8cc49144-b2c7-4f17-8f45-c2d221412ce0",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/10",
+      "conditionNotes": [
+        {
+          "id": "30b044204cc8c226705b02da",
+          "name": "车辆02/03故障不改变B的04预留",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 10,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "次日东桥通知无关、04故障保持正确；借车提请业务决定未在本轮直接断言必延误。02/03无关条件仍因04故障标受阻，标签与理由矛盾。",
+      "excerpts": [
+        "04仍故障，C分配仍失效，维持受阻"
+      ],
+      "jobId": "8cc49144-b2c7-4f17-8f45-c2d221412ce0",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/10",
+      "conditionNotes": [
+        {
+          "id": "5bf3b0f94c0c5cf87c4ccc86",
+          "name": "车辆02/03故障不改变C的车辆分配",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "task": "A",
+      "published": true,
+      "coreCorrect": false,
+      "evidenceCorrect": false,
+      "reason": "本通知不影响A方向正确；仍称C/B任何借车都会冲击A最低2辆并需书面优先级，没有区分下午B。",
+      "excerpts": [
+        "若业务方提出借车会冲击A“至少2辆”"
+      ],
+      "jobId": "0dd0e412-5ae9-42ec-9163-de35ce359810",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/11",
+      "conditionNotes": []
+    },
+    {
+      "round": 11,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "14时仍处13—15限制、04仍故障正确；提前出发明确只是待核实方案。02/03无关条件仍因04故障标受阻，名称与实际理由不符。",
+      "excerpts": [
+        "04仍故障，B预留仍失效，维持受阻"
+      ],
+      "jobId": "0dd0e412-5ae9-42ec-9163-de35ce359810",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/11",
+      "conditionNotes": [
+        {
+          "id": "30b044204cc8c226705b02da",
+          "name": "车辆02/03故障不改变B的04预留",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 11,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "明确上午不限重且瓶颈仍是04故障，未宣称曾有重量阻碍解除。02/03无关条件仍被04故障驱动为受阻，名称含义不一致。",
+      "excerpts": [
+        "原因仅为车辆"
+      ],
+      "jobId": "0dd0e412-5ae9-42ec-9163-de35ce359810",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/11",
+      "conditionNotes": [
+        {
+          "id": "5bf3b0f94c0c5cf87c4ccc86",
+          "name": "车辆02/03故障不改变C的车辆分配",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "task": "A",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "01/02保持可用、实际就绪未知正确；即时确认按普通建议处理。但08:55到09:00正好5分钟写成不足5分钟，且把假设借车需求写成已消失、B不再需支援过于确定。",
+      "excerpts": [
+        "距出发已不足5分钟"
+      ],
+      "jobId": "1c94e6cc-b976-4f1c-9c21-a12f7f284b85",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/12",
+      "conditionNotes": []
+    },
+    {
+      "round": 12,
+      "task": "B",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "04恢复的重要局部改善保留，14时重量障碍未撤，替代方案明确待业务决定。02/03无关条件因04修复从blocked到met，重复了对象/条件名称混淆。",
+      "excerpts": [
+        "04已恢复使用、故障仅剩03，B的预留恢复有效，改判满足"
+      ],
+      "jobId": "1c94e6cc-b976-4f1c-9c21-a12f7f284b85",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/12",
+      "conditionNotes": [
+        {
+          "id": "30b044204cc8c226705b02da",
+          "name": "车辆02/03故障不改变B的04预留",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    },
+    {
+      "round": 12,
+      "task": "C",
+      "published": true,
+      "coreCorrect": true,
+      "evidenceCorrect": false,
+      "reason": "04修复使车辆/到达改善、替代不再适用正确，40分钟余量正确且未沿用上午3吨禁令。02/03无关条件被04修复标恢复，名称/变化含义仍不一致。",
+      "excerpts": [
+        "04已恢复，故障仅剩03，C所用04正常，原前提恢复成立"
+      ],
+      "jobId": "1c94e6cc-b976-4f1c-9c21-a12f7f284b85",
+      "source": "experiments/harness-lab/.local/continuous-validation/evidence-repair-20261029-151616/evidence/old-variant-shared-object/review.json#/steps/12",
+      "conditionNotes": [
+        {
+          "id": "5bf3b0f94c0c5cf87c4ccc86",
+          "name": "车辆02/03故障不改变C的车辆分配",
+          "issue": "条件名称指02/03故障与分配关系，实际状态/变化由04故障和修复驱动；混合条件含义不一致。"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "修复前源码为1e12a94，本次独立运行，不使用2321f72的24/36或此前同源码15/36作为本次分数。",
+    "严格全文评审包括摘要、条件、建议；装载/司机/实际出发未知由任务明确给出，不扣。普通未来核查、未经批准不得擅自调配也不扣。",
+    "本次B/C的核载疑问多为复合记录。与主代理交叉复核后，不能仅凭未知与装载司机并列、整体条件性可行就认定硬门槛；真实装载/司机未知本已足以限定执行状态。没有明确单独禁止执行时按普通检查处理。",
+    "核载边界敏感性：主评分将B R0/R1/R2/R3/R5/R6及C R1/R6这8格按普通检查通过；若把它们全部解释为新必要前提，核心23/36将降为15/36。C R0明确不能据此确认装载可行；C R2有连带击穿两任务、C R3/R5有必须替代、C R8有总重变未知和过磅前提，均有独立失败理由，不在这8格中。B R0/R1与C R1不因真实缺资料陈述自动扣依据；其他有确切引用问题者保留依据失败。",
+    "A R6的出发前简短交接/装载核对没有把当前满足改成受阻，按一般协调，不单凭必须一词扣分；A R8及B R8的未来调配须决定/同步评估同理。",
+    "A R2/R3/R5、A R9/R11、B R9及C R9明确把未经时序核验的调配写成必冲突或必须调整，属于核心失败；有无真实调配与某一备选方案能否成立分别检查。",
+    "西桥正常R2—R7仅引用东桥资料属于本轮证据支持不足；可从初始原文知道西桥正常，因此不据此把核心结论判错。",
+    "B/C R9—R12的02/03无关条件由04故障/修复驱动：整体车辆判断正确，但条件名称、前态变化理由不一致，仅扣依据并给条件操作复核定位。",
+    "A R12仍未声称实际发车，核心通过；不足5分钟与假设支援需求消失计依据问题。B R11/R12提前13时方案保留条件性，未当成已执行，不扣。",
+    "R5业务时间没有在任务修订goal显式提供；沿用最近来源08:15计算45分钟不作为核心或依据扣分，不能用仅测试驱动知道的08:20要求模型。",
+    "本文件是Agent独立复核，非人类盲评；提醒及条件操作280条由独立汇总另计，不混入36格分母。"
+  ]
+}

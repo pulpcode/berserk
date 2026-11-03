@@ -47,7 +47,7 @@ export function contextTools(context: ContextService, tasks: TaskQueryService | 
         after: Type.Optional(Type.String({minLength: 1, maxLength: 2048}))}, {additionalProperties: false}), executionMode: 'sequential',
       execute: (callId, params, signal) => execute(scoped => context.query('situation_query', params, principal, scoped), signal, result => observeSituation?.(result, callId))}),
     ...(tasks ? [
-      defineTool({name: 'task_search', label: '查询相关任务', description: '查询可见活动任务的目标与关注范围。businessRefs、areaIds、query 按并集查找候选，返回命中原因；候选不代表受影响，需结合任务时间和业务资料判断。服务身份仅查活动公共任务，不读取任务文件或会话。',
+      defineTool({name: 'task_search', label: '查询相关任务', description: '查询可见活动任务的目标与关注范围。businessRefs、areaIds、query 按并集查找候选；query按完整文字包含匹配，不拆分多个关键词；无命中仅表示当前筛选未找到，可不带筛选分页列出全部活动任务。返回命中原因；候选不代表受影响，需结合任务时间和业务资料判断。服务身份仅查活动公共任务，不读取任务文件或会话。',
         parameters: Type.Object({businessRefs: Type.Optional(refs), areaIds: Type.Optional(Type.Array(id, {maxItems: 10})), query: filters.query, limit: filters.limit, cursor: filters.cursor}, {additionalProperties: false}), executionMode: 'sequential',
         execute: (_id, params, signal) => execute(scoped => tasks.search(params, principal, scoped), signal, result => observeTasks?.(result.data.items, true))}),
       defineTool({name: 'task_read', label: '读取任务', description: '按 taskId 读取获准任务的目标、业务引用和关注范围；不创建工作区或读取文件、聊天。',
