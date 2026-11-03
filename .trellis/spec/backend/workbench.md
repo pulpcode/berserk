@@ -26,6 +26,14 @@ Apply authorization and all filters before counts, ordering and pagination. Aggr
 
 Formal default navigation is `/work`; old `/inbox` and `/information` links normalize with replace semantics. Conversation links remain explicit. Creating a legacy test-mode project clears the preceding session URL so reload restores the newly selected project instead of reopening the old conversation. Retain the existing activity stream, draft ownership and prepared handoff state. Sidebar indicators are spinner (running), blue dot (unread), amber dot (waiting); errors are red, and accessible descriptions remain. No repeated status text in conversation rows.
 
+The desktop workbench has one page heading and no repeated context title or introductory paragraph. Its status filters and type/task/search fields share a left edge. Type/task/search labels sit to the left of their controls and align vertically at the center; wrap complete field groups when desktop space narrows. Keep the empty detail pane as a selection prompt, without a nested bordered card or assignment form.
+
+Assignment starts from the workbench header. `WorkInboxHandle.assign(trigger)` opens the existing assignment Panel, which selects the project before showing the workspace-keyed draft and file picker. Opening, changing projects or cancelling must not prepare/commit work or call a model. Preserve separate drafts per workspace, the current type filter and the existing explicit preparation/confirmation steps; closing returns focus to the triggering button. No available project yields an explicit explanation rather than an inert disabled action in the detail pane.
+
+Work-handoff list status badges use the existing per-seat `WorkbenchItem.bucket`: `actionable` is amber (including creator-side acceptance), `following` is blue, and completed/history states are neutral. Keep type text separate and neutral, retain explicit status labels, and leave the selected-row accent independent. Never infer the badge color from creator/assignee direction alone. Narrow desktop list panes may wrap the status group without squeezing the title to one-character lines.
+
+When the workbench type filter is `work`, omit the repeated work-handoff type text inside each handoff row while retaining its status badge. Restore the type text for the all-types filter.
+
 ## 4. Validation & Error Matrix
 
 | Condition | Result |

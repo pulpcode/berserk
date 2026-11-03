@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test, expect, type Page } from '@playwright/test';
@@ -10,6 +10,7 @@ import { parseBackgroundConfig } from '../../src/background/config';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import type { WorkPrepareInput } from '../../src/contracts/collaboration';
 
 const catalog = { systems: [{ id: 'external', name: '业务资料系统', objectTypes: ['record'], capabilities: ['information_search', 'information_read'], areas: [{ id: 'area-01', name: '第一片区' }] }] };
 const initialContext = { businessRefs: [{ systemId: 'external', objectType: 'record', objectId: '001', label: '原始对象' }], focus: { areaIds: ['area-01'], time: { from: '2026-10-01T01:00:00.000Z' }, topics: ['现有主题'] } };
@@ -43,9 +44,156 @@ async function setup(background = false) {
   };
   return { lab, actor, task, fake, store, app, token, attach, close: async () => { for (const page of pages) if (!page.isClosed()) { await page.goto('about:blank'); await page.unrouteAll({ behavior: 'wait' }); } await app.close(); await rm(dir, { recursive: true, force: true }); } };
 }
-async function login(page: Page) {
-  await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption('a'); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
+async function login(page: Page, seatId = 'a') {
+  await page.goto('/'); await page.getByLabel('席位', { exact: true }).selectOption(seatId); await page.getByLabel('密码', { exact: true }).fill('test-password-123'); await page.getByRole('button', { name: '登录', exact: true }).click(); await expect(page.getByRole('button', { name: '设置', exact: true })).toBeVisible();
 }
+
+test('handoff badges follow the current responsibility through submission and completion', async ({ page, browser }) => {
+  const env = await setup(); await env.attach(page);
+  const recipient = await browser.newPage(); await env.attach(recipient);
+  try {
+    const service = env.lab.collaboration!;
+    const workspaceA = await env.lab.workspaces.ensureWorkspace(env.task.id, 'a', env.task.title);
+    const workspaceB = await env.lab.workspaces.ensureWorkspace(env.task.id, 'b', env.task.title);
+    const act = async (seatId: string, input: WorkPrepareInput) => {
+      const action = await service.prepare({ seatId }, input, { source: 'page', clientActionId: randomUUID() });
+      return service.commitPage({ seatId }, action.operationId);
+    };
+    await act('b', { kind: 'assign', taskSpaceId: env.task.id, payload: { workspaceId: workspaceB.id, assigneeSeatId: 'a', title: '核实道路通行情况', goal: '整理道路现状。', inputPaths: [] } });
+    const sent = await act('a', { kind: 'assign', taskSpaceId: env.task.id, payload: { workspaceId: workspaceA.id, assigneeSeatId: 'b', title: '修订交通处置方案', goal: '补充交通安排。', inputPaths: [] } });
+    await login(page);
+    await page.getByRole('button', { name: /^全部 \d/ }).click();
+    const incoming = page.locator('.workbench-list').getByRole('button', { name: /核实道路通行情况/ });
+    const outgoing = page.locator('.workbench-list').getByRole('button', { name: /修订交通处置方案/ });
+    await expect(incoming.locator('.work-item-meta')).toContainText('工作交接');
+    await expect(incoming.locator('.work-item-status')).toHaveText('待签收');
+    await expect(incoming.locator('.work-item-status')).toHaveClass(/work-item-status-actionable/);
+    await expect(outgoing.locator('.work-item-status')).toHaveText('待对方签收');
+    await expect(outgoing.locator('.work-item-status')).toHaveClass(/work-item-status-following/);
+    await page.screenshot({ path: test.info().outputPath('workbench-handoff-badges-desktop.png') });
+    await page.getByRole('combobox', { name: '事项类型', exact: true }).selectOption('work');
+    for (const row of [incoming, outgoing]) {
+      await expect(row.locator('.work-item-meta')).not.toContainText('工作交接');
+      await expect(row.locator('.work-item-status')).toBeVisible();
+    }
+    await page.reload();
+    await expect(page.getByRole('combobox', { name: '事项类型', exact: true })).toHaveValue('work');
+    await expect(incoming.locator('.work-item-meta')).not.toContainText('工作交接');
+    await expect(outgoing.locator('.work-item-meta')).not.toContainText('工作交接');
+    await expect(incoming.locator('.work-item-status')).toHaveText('待签收');
+    await expect(outgoing.locator('.work-item-status')).toHaveText('待对方签收');
+    await page.screenshot({ path: test.info().outputPath('workbench-handoff-filtered-desktop.png') });
+    await page.getByRole('combobox', { name: '事项类型', exact: true }).selectOption('');
+    for (const row of [incoming, outgoing]) await expect(row.locator('.work-item-meta')).toContainText('工作交接');
+    await page.setViewportSize({ width: 837, height: 900 });
+    expect(await incoming.locator('strong').evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(100);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('workbench-handoff-badges-narrow.png') });
+    await act('b', { kind: 'claim', workItemId: sent.workItemId, expectedRevision: sent.revision, payload: {} });
+    const working = service.read({ seatId: 'b' }, sent.workItemId);
+    await writeFile(join(env.lab.workspaces.filesDirectory(workspaceB.id, 'b'), '交通方案.md'), '# 已补充交通安排');
+    const submitted = await act('b', { kind: 'submit', workItemId: sent.workItemId, expectedRevision: working.revision, payload: { workspaceId: workspaceB.id, path: '交通方案.md' } });
+    await page.getByRole('button', { name: '刷新待办', exact: true }).click();
+    await expect(outgoing.locator('.work-item-status')).toHaveText('待我验收');
+    await expect(outgoing.locator('.work-item-status')).toHaveClass(/work-item-status-actionable/);
+    await login(recipient, 'b');
+    await recipient.getByRole('button', { name: /^全部 \d/ }).click();
+    const submittedByRecipient = recipient.locator('.workbench-list').getByRole('button', { name: /修订交通处置方案/ });
+    await expect(submittedByRecipient.locator('.work-item-status')).toHaveText('等待验收');
+    await expect(submittedByRecipient.locator('.work-item-status')).toHaveClass(/work-item-status-following/);
+    await act('a', { kind: 'review', workItemId: sent.workItemId, expectedRevision: submitted.revision, payload: { submissionId: submitted.submissionId!, decision: 'accept' } });
+    await page.getByRole('button', { name: '刷新待办', exact: true }).click();
+    await recipient.getByRole('button', { name: '刷新待办', exact: true }).click();
+    for (const row of [outgoing, submittedByRecipient]) {
+      await expect(row.locator('.work-item-status')).toHaveText('已完成');
+      await expect(row.locator('.work-item-status')).toHaveClass(/work-item-status-done/);
+      await expect(row.locator('.work-item-status')).not.toHaveClass(/work-item-status-(actionable|following)/);
+    }
+    expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); await recipient.close(); }
+});
+
+test('workbench assignment selects a project, retains separate drafts and opens from information details', async ({ page }) => {
+  const env = await setup(true); await env.attach(page);
+  try {
+    const first = await env.lab.workspaces.ensureWorkspace(env.task.id, 'a', env.task.title);
+    const otherTask = env.lab.access!.create(env.actor, { title: '另一项工作任务', goal: '独立工作', visibility: 'public', clientActionId: randomUUID() });
+    const second = await env.lab.workspaces.ensureWorkspace(otherTask.id, 'a', otherTask.title);
+    await env.app.inject({ method: 'POST', url: '/api/integrations/incoming/events', headers: { host: '127.0.0.1', authorization: `Bearer ${env.token}` }, payload: { sourceMessageId: randomUUID(), title: '待核实的道路信息', text: '核实道路情况。' } });
+    await expect.poll(() => env.store!.listDeliveries().filter(item => item.status === 'delivered').length).toBe(1);
+    const preparations: string[] = [];
+    page.on('request', request => { if (request.method() === 'POST' && new URL(request.url()).pathname.endsWith('/work-items/prepare')) preparations.push(request.url()); });
+    await login(page);
+    await expect(page.locator('.workspace-header')).not.toBeVisible();
+    await expect(page.locator('.header-title')).not.toContainText('工作待办');
+    await expect(page.getByText('处理席位交接与外部信息，继续需要回应的对话。', { exact: true })).toHaveCount(0);
+    await expect(page.locator('.work-detail-placeholder')).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath('workbench-desktop.png') });
+    const assign = page.locator('.workbench-actions').getByRole('button', { name: '分派工作', exact: true });
+    const entryUrl = page.url();
+    const historyLength = await page.evaluate(() => history.length);
+    await assign.click();
+    const dialog = page.getByRole('dialog', { name: '分派工作', exact: true });
+    await expect(dialog.getByLabel('工作标题')).toHaveCount(0);
+    await dialog.getByRole('combobox', { name: '选择项目', exact: true }).selectOption(first.id);
+    await dialog.getByLabel('工作标题').fill('第一项目的草稿');
+    await dialog.getByLabel('工作目标').fill('第一项目目标');
+    await dialog.getByRole('combobox', { name: '选择项目', exact: true }).selectOption(second.id);
+    await expect(dialog.getByLabel('工作标题')).toHaveValue('');
+    await dialog.getByLabel('工作标题').fill('第二项目的草稿');
+    await dialog.getByRole('combobox', { name: '选择项目', exact: true }).selectOption(first.id);
+    await expect(dialog.getByLabel('工作标题')).toHaveValue('第一项目的草稿');
+    await expect(dialog.getByLabel('工作目标')).toHaveValue('第一项目目标');
+    await page.keyboard.press('Escape');
+    await expect(assign).toBeFocused();
+    expect(page.url()).toBe(entryUrl);
+    expect(await page.evaluate(() => history.length)).toBe(historyLength);
+    await page.getByRole('combobox', { name: '事项类型', exact: true }).selectOption('information');
+    await expect(page.locator('.work-detail-placeholder')).toBeVisible();
+    await page.locator('.workbench-list').getByRole('button', { name: /待核实的道路信息/ }).click();
+    await expect(page.getByRole('heading', { name: '待核实的道路信息', exact: true })).toBeVisible();
+    await assign.click();
+    await expect(dialog).toBeVisible();
+    await expect(page.getByRole('combobox', { name: '事项类型', exact: true })).toHaveValue('information');
+    await dialog.getByRole('combobox', { name: '选择项目', exact: true }).selectOption(second.id);
+    await expect(dialog.getByLabel('工作标题')).toHaveValue('第二项目的草稿');
+    await page.keyboard.press('Escape');
+    await expect(assign).toBeFocused();
+    expect(preparations).toEqual([]);
+    expect(env.lab.collaboration!.list({ seatId: 'a' })).toEqual([]);
+    await page.setViewportSize({ width: 1000, height: 800 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('workbench-desktop-narrow.png') });
+    await assign.click();
+    await dialog.getByLabel('工作目标').fill('第二项目的交接目标');
+    await dialog.getByRole('button', { name: '核对分派内容', exact: true }).click();
+    const confirmation = page.getByRole('dialog', { name: '确认交接内容', exact: true });
+    await expect(confirmation).toContainText('工作：第二项目的草稿');
+    await expect(confirmation).toContainText('目标：第二项目的交接目标');
+    await expect(confirmation.getByRole('region', { name: '本次附件', exact: true })).toContainText('本次附件：0 个');
+    await confirmation.getByRole('button', { name: '取消本次操作', exact: true }).click();
+    await expect(confirmation).toHaveCount(0);
+    expect(preparations).toHaveLength(1);
+    expect(env.lab.collaboration!.list({ seatId: 'a' })).toEqual([]);
+  } finally { await env.close(); }
+});
+
+test('workbench explains when no project is available for assignment', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    await login(page);
+    const assign = page.locator('.workbench-actions').getByRole('button', { name: '分派工作', exact: true });
+    await assign.click();
+    const dialog = page.getByRole('dialog', { name: '分派工作', exact: true });
+    await expect(dialog.getByRole('status')).toContainText('暂无可分派的项目');
+    await expect(dialog.getByRole('combobox', { name: '选择项目', exact: true })).toBeDisabled();
+    await expect(dialog.getByLabel('工作标题')).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(assign).toBeFocused();
+    expect(env.lab.collaboration!.list({ seatId: 'a' })).toEqual([]);
+    expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
 
 
 test('unified inbox opens legacy links, changes handling explicitly and recovers a lost response', async ({ page }) => {

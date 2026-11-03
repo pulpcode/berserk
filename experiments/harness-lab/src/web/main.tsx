@@ -436,8 +436,8 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     <div className="app-content" inert={sidebarOpen || undefined}>
       {(directory.error || chat.activityError) && <DirectoryStatus connectionError={directory.connectionError || chat.activityConnectionError} taskError={Boolean(directory.error)} activityError={Boolean(chat.activityError)} retry={() => { directory.refresh(); return chat.refreshActivity().catch(() => {}); }} />}
     <main hidden={view === 'information'} className="workspace" inert={sidebarOpen || undefined}>
-      <header className="workspace-header">
-        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button><span>{view === 'work' ? '工作待办' : view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : snapshot?.title || '新对话'}</span></div>
+      <header className={`workspace-header${view === 'work' ? ' workbench-context-header' : ''}`}>
+        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button>{view !== 'work' && <span>{view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : snapshot?.title || '新对话'}</span>}</div>
         {view === 'situation' && <div className="map-titlebar-slot" ref={setMapToolbarTarget}/>}
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title : undefined}>{view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title || '相关任务' : '所有项目'}</span>
         <div className="workspace-tools" role="group" aria-label="项目工具">
