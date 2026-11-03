@@ -1,0 +1,790 @@
+{
+  "freezeHash": "345ea31d4a18dc0d680f9a94c9c74e91137d558ddcb03d5ae90050bd7c5c87cb",
+  "attempts": [
+    {
+      "id": 1,
+      "trialId": "P01-A-1",
+      "startedAt": "2026-11-03T07:53:01.466Z",
+      "status": "finished",
+      "reserve": {
+        "input": 81238,
+        "output": 32768
+      },
+      "usage": {
+        "input": 23760,
+        "output": 323
+      }
+    },
+    {
+      "id": 2,
+      "trialId": "P01-A-1",
+      "startedAt": "2026-11-03T07:53:17.018Z",
+      "status": "finished",
+      "reserve": {
+        "input": 83693,
+        "output": 32768
+      },
+      "usage": {
+        "input": 24387,
+        "output": 253
+      }
+    },
+    {
+      "id": 3,
+      "trialId": "P01-A-1",
+      "startedAt": "2026-11-03T07:53:55.946Z",
+      "status": "finished",
+      "reserve": {
+        "input": 86070,
+        "output": 32768
+      },
+      "usage": {
+        "input": 24948,
+        "output": 459
+      }
+    },
+    {
+      "id": 4,
+      "trialId": "P01-A-1",
+      "startedAt": "2026-11-03T07:54:25.565Z",
+      "status": "finished",
+      "reserve": {
+        "input": 89216,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25711,
+        "output": 173
+      }
+    },
+    {
+      "id": 5,
+      "trialId": "P02-A-1",
+      "startedAt": "2026-11-03T08:08:10.040Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87710,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25643,
+        "output": 494
+      }
+    },
+    {
+      "id": 6,
+      "trialId": "P02-A-1",
+      "startedAt": "2026-11-03T08:08:26.738Z",
+      "status": "finished",
+      "reserve": {
+        "input": 108568,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30367,
+        "output": 576
+      }
+    },
+    {
+      "id": 7,
+      "trialId": "P02-A-1",
+      "startedAt": "2026-11-03T08:08:44.361Z",
+      "status": "finished",
+      "reserve": {
+        "input": 150214,
+        "output": 32768
+      },
+      "usage": {
+        "input": 42747,
+        "output": 495
+      }
+    },
+    {
+      "id": 8,
+      "trialId": "P02-A-1",
+      "startedAt": "2026-11-03T08:09:01.974Z",
+      "status": "finished",
+      "reserve": {
+        "input": 163626,
+        "output": 32768
+      },
+      "usage": {
+        "input": 46948,
+        "output": 2680
+      }
+    },
+    {
+      "id": 9,
+      "trialId": "P02-A-1",
+      "startedAt": "2026-11-03T08:09:47.162Z",
+      "status": "finished",
+      "reserve": {
+        "input": 265006,
+        "output": 32768
+      },
+      "usage": {
+        "input": 78570,
+        "output": 1180
+      }
+    },
+    {
+      "id": 10,
+      "trialId": "D01-A-1",
+      "startedAt": "2026-11-03T08:22:27.570Z",
+      "status": "finished",
+      "reserve": {
+        "input": 92118,
+        "output": 32768
+      },
+      "usage": {
+        "input": 26999,
+        "output": 930
+      }
+    },
+    {
+      "id": 11,
+      "trialId": "D01-A-1",
+      "startedAt": "2026-11-03T08:22:59.327Z",
+      "status": "finished",
+      "reserve": {
+        "input": 114648,
+        "output": 32768
+      },
+      "usage": {
+        "input": 32376,
+        "output": 597
+      }
+    },
+    {
+      "id": 12,
+      "trialId": "D01-A-1",
+      "startedAt": "2026-11-03T08:23:29.087Z",
+      "status": "finished",
+      "reserve": {
+        "input": 134101,
+        "output": 32768
+      },
+      "usage": {
+        "input": 38361,
+        "output": 1312
+      }
+    },
+    {
+      "id": 13,
+      "trialId": "D02-A-1",
+      "startedAt": "2026-11-03T08:31:46.142Z",
+      "status": "finished",
+      "reserve": {
+        "input": 88043,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25715,
+        "output": 843
+      }
+    },
+    {
+      "id": 14,
+      "trialId": "D02-A-1",
+      "startedAt": "2026-11-03T08:32:06.099Z",
+      "status": "finished",
+      "reserve": {
+        "input": 130813,
+        "output": 32768
+      },
+      "usage": {
+        "input": 37083,
+        "output": 2068
+      }
+    },
+    {
+      "id": 15,
+      "trialId": "D02-A-1",
+      "startedAt": "2026-11-03T08:32:31.797Z",
+      "status": "finished",
+      "reserve": {
+        "input": 178024,
+        "output": 32768
+      },
+      "usage": {
+        "input": 50821,
+        "output": 302
+      }
+    },
+    {
+      "id": 16,
+      "trialId": "D02-A-1",
+      "startedAt": "2026-11-03T08:32:47.420Z",
+      "status": "finished",
+      "reserve": {
+        "input": 184789,
+        "output": 32768
+      },
+      "usage": {
+        "input": 52858,
+        "output": 4583
+      }
+    },
+    {
+      "id": 17,
+      "trialId": "D03-A-1",
+      "startedAt": "2026-11-03T08:42:41.457Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87710,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25644,
+        "output": 494
+      }
+    },
+    {
+      "id": 18,
+      "trialId": "D03-A-1",
+      "startedAt": "2026-11-03T08:42:58.684Z",
+      "status": "finished",
+      "reserve": {
+        "input": 107775,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30169,
+        "output": 352
+      }
+    },
+    {
+      "id": 19,
+      "trialId": "D03-A-1",
+      "startedAt": "2026-11-03T08:43:15.015Z",
+      "status": "finished",
+      "reserve": {
+        "input": 148403,
+        "output": 32768
+      },
+      "usage": {
+        "input": 42333,
+        "output": 558
+      }
+    },
+    {
+      "id": 20,
+      "trialId": "D03-A-1",
+      "startedAt": "2026-11-03T08:43:31.844Z",
+      "status": "finished",
+      "reserve": {
+        "input": 162138,
+        "output": 32768
+      },
+      "usage": {
+        "input": 46693,
+        "output": 1701
+      }
+    },
+    {
+      "id": 21,
+      "trialId": "D04-A-1",
+      "startedAt": "2026-11-03T08:50:57.321Z",
+      "status": "finished",
+      "reserve": {
+        "input": 88162,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25785,
+        "output": 734
+      }
+    },
+    {
+      "id": 22,
+      "trialId": "D04-A-1",
+      "startedAt": "2026-11-03T08:51:15.152Z",
+      "status": "finished",
+      "reserve": {
+        "input": 94119,
+        "output": 32768
+      },
+      "usage": {
+        "input": 27343,
+        "output": 306
+      }
+    },
+    {
+      "id": 23,
+      "trialId": "D04-A-1",
+      "startedAt": "2026-11-03T08:51:31.330Z",
+      "status": "finished",
+      "reserve": {
+        "input": 156577,
+        "output": 32768
+      },
+      "usage": {
+        "input": 44523,
+        "output": 661
+      }
+    },
+    {
+      "id": 24,
+      "trialId": "D04-A-1",
+      "startedAt": "2026-11-03T08:51:50.325Z",
+      "status": "finished",
+      "reserve": {
+        "input": 170690,
+        "output": 32768
+      },
+      "usage": {
+        "input": 48810,
+        "output": 1694
+      }
+    },
+    {
+      "id": 25,
+      "trialId": "D05-A-1",
+      "startedAt": "2026-11-03T08:59:08.107Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87773,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25651,
+        "output": 171
+      }
+    },
+    {
+      "id": 26,
+      "trialId": "D05-A-1",
+      "startedAt": "2026-11-03T08:59:35.388Z",
+      "status": "finished",
+      "reserve": {
+        "input": 92845,
+        "output": 32768
+      },
+      "usage": {
+        "input": 27104,
+        "output": 851
+      }
+    },
+    {
+      "id": 27,
+      "trialId": "D05-A-1",
+      "startedAt": "2026-11-03T09:00:45.606Z",
+      "status": "finished",
+      "reserve": {
+        "input": 97482,
+        "output": 32768
+      },
+      "usage": {
+        "input": 28266,
+        "output": 652
+      }
+    },
+    {
+      "id": 28,
+      "trialId": "D05-A-1",
+      "startedAt": "2026-11-03T09:01:12.102Z",
+      "status": "finished",
+      "reserve": {
+        "input": 106309,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30650,
+        "output": 772
+      }
+    },
+    {
+      "id": 29,
+      "trialId": "D06-A-1",
+      "startedAt": "2026-11-03T09:08:47.209Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87758,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25652,
+        "output": 407
+      }
+    },
+    {
+      "id": 30,
+      "trialId": "D06-A-1",
+      "startedAt": "2026-11-03T09:09:16.208Z",
+      "status": "finished",
+      "reserve": {
+        "input": 108517,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30538,
+        "output": 470
+      }
+    },
+    {
+      "id": 31,
+      "trialId": "D06-A-1",
+      "startedAt": "2026-11-03T09:10:14.677Z",
+      "status": "finished",
+      "reserve": {
+        "input": 111951,
+        "output": 32768
+      },
+      "usage": {
+        "input": 31334,
+        "output": 202
+      }
+    },
+    {
+      "id": 32,
+      "trialId": "D06-A-1",
+      "startedAt": "2026-11-03T09:10:40.921Z",
+      "status": "finished",
+      "reserve": {
+        "input": 115393,
+        "output": 32768
+      },
+      "usage": {
+        "input": 32346,
+        "output": 463
+      }
+    },
+    {
+      "id": 33,
+      "trialId": "D06-A-2",
+      "startedAt": "2026-11-03T09:19:12.069Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87758,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25646,
+        "output": 288
+      }
+    },
+    {
+      "id": 34,
+      "trialId": "D06-A-2",
+      "startedAt": "2026-11-03T09:19:27.667Z",
+      "status": "finished",
+      "reserve": {
+        "input": 107930,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30415,
+        "output": 510
+      }
+    },
+    {
+      "id": 35,
+      "trialId": "D06-A-2",
+      "startedAt": "2026-11-03T09:20:18.839Z",
+      "status": "finished",
+      "reserve": {
+        "input": 111362,
+        "output": 32768
+      },
+      "usage": {
+        "input": 31245,
+        "output": 200
+      }
+    },
+    {
+      "id": 36,
+      "trialId": "D06-A-2",
+      "startedAt": "2026-11-03T09:20:33.049Z",
+      "status": "finished",
+      "reserve": {
+        "input": 114825,
+        "output": 32768
+      },
+      "usage": {
+        "input": 32257,
+        "output": 319
+      }
+    },
+    {
+      "id": 37,
+      "trialId": "D05-A-2",
+      "startedAt": "2026-11-03T09:26:51.017Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87773,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25657,
+        "output": 190
+      }
+    },
+    {
+      "id": 38,
+      "trialId": "D05-A-2",
+      "startedAt": "2026-11-03T09:27:19.326Z",
+      "status": "finished",
+      "reserve": {
+        "input": 92958,
+        "output": 32768
+      },
+      "usage": {
+        "input": 27137,
+        "output": 571
+      }
+    },
+    {
+      "id": 39,
+      "trialId": "D05-A-2",
+      "startedAt": "2026-11-03T09:28:22.264Z",
+      "status": "finished",
+      "reserve": {
+        "input": 96744,
+        "output": 32768
+      },
+      "usage": {
+        "input": 28020,
+        "output": 400
+      }
+    },
+    {
+      "id": 40,
+      "trialId": "D04-A-2",
+      "startedAt": "2026-11-03T09:36:01.341Z",
+      "status": "finished",
+      "reserve": {
+        "input": 88162,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25792,
+        "output": 438
+      }
+    },
+    {
+      "id": 41,
+      "trialId": "D04-A-2",
+      "startedAt": "2026-11-03T09:36:21.845Z",
+      "status": "finished",
+      "reserve": {
+        "input": 109160,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30554,
+        "output": 627
+      }
+    },
+    {
+      "id": 42,
+      "trialId": "D04-A-2",
+      "startedAt": "2026-11-03T09:36:43.454Z",
+      "status": "finished",
+      "reserve": {
+        "input": 156149,
+        "output": 32768
+      },
+      "usage": {
+        "input": 44426,
+        "output": 519
+      }
+    },
+    {
+      "id": 43,
+      "trialId": "D04-A-2",
+      "startedAt": "2026-11-03T09:37:03.581Z",
+      "status": "finished",
+      "reserve": {
+        "input": 169951,
+        "output": 32768
+      },
+      "usage": {
+        "input": 48627,
+        "output": 1620
+      }
+    },
+    {
+      "id": 44,
+      "trialId": "D03-A-2",
+      "startedAt": "2026-11-03T09:46:10.598Z",
+      "status": "finished",
+      "reserve": {
+        "input": 87710,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25643,
+        "output": 616
+      }
+    },
+    {
+      "id": 45,
+      "trialId": "D03-A-2",
+      "startedAt": "2026-11-03T09:46:40.545Z",
+      "status": "finished",
+      "reserve": {
+        "input": 109045,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30468,
+        "output": 790
+      }
+    },
+    {
+      "id": 46,
+      "trialId": "D03-A-2",
+      "startedAt": "2026-11-03T09:47:16.958Z",
+      "status": "finished",
+      "reserve": {
+        "input": 151716,
+        "output": 32768
+      },
+      "usage": {
+        "input": 43055,
+        "output": 567
+      }
+    },
+    {
+      "id": 47,
+      "trialId": "D03-A-2",
+      "startedAt": "2026-11-03T09:47:50.214Z",
+      "status": "finished",
+      "reserve": {
+        "input": 165387,
+        "output": 32768
+      },
+      "usage": {
+        "input": 47304,
+        "output": 1852
+      }
+    },
+    {
+      "id": 48,
+      "trialId": "D03-A-2",
+      "startedAt": "2026-11-03T09:48:28.781Z",
+      "status": "finished",
+      "reserve": {
+        "input": 214999,
+        "output": 32768
+      },
+      "usage": {
+        "input": 62670,
+        "output": 1043
+      }
+    },
+    {
+      "id": 49,
+      "trialId": "D02-A-2",
+      "startedAt": "2026-11-03T10:01:01.490Z",
+      "status": "finished",
+      "reserve": {
+        "input": 88043,
+        "output": 32768
+      },
+      "usage": {
+        "input": 25718,
+        "output": 367
+      }
+    },
+    {
+      "id": 50,
+      "trialId": "D02-A-2",
+      "startedAt": "2026-11-03T10:01:30.317Z",
+      "status": "finished",
+      "reserve": {
+        "input": 107756,
+        "output": 32768
+      },
+      "usage": {
+        "input": 30080,
+        "output": 359
+      }
+    },
+    {
+      "id": 51,
+      "trialId": "D02-A-2",
+      "startedAt": "2026-11-03T10:01:58.842Z",
+      "status": "finished",
+      "reserve": {
+        "input": 168900,
+        "output": 32768
+      },
+      "usage": {
+        "input": 47991,
+        "output": 513
+      }
+    },
+    {
+      "id": 52,
+      "trialId": "D02-A-2",
+      "startedAt": "2026-11-03T10:02:29.407Z",
+      "status": "finished",
+      "reserve": {
+        "input": 177187,
+        "output": 32768
+      },
+      "usage": {
+        "input": 50416,
+        "output": 998
+      }
+    },
+    {
+      "id": 53,
+      "trialId": "D02-A-2",
+      "startedAt": "2026-11-03T10:02:59.786Z",
+      "status": "finished",
+      "reserve": {
+        "input": 222346,
+        "output": 32768
+      },
+      "usage": {
+        "input": 63860,
+        "output": 2835
+      }
+    },
+    {
+      "id": 54,
+      "trialId": "D01-A-2",
+      "startedAt": "2026-11-03T10:11:22.263Z",
+      "status": "finished",
+      "reserve": {
+        "input": 92118,
+        "output": 32768
+      },
+      "usage": {
+        "input": 27009,
+        "output": 866
+      }
+    },
+    {
+      "id": 55,
+      "trialId": "D01-A-2",
+      "startedAt": "2026-11-03T10:11:53.840Z",
+      "status": "finished",
+      "reserve": {
+        "input": 99376,
+        "output": 32768
+      },
+      "usage": {
+        "input": 29089,
+        "output": 456
+      }
+    },
+    {
+      "id": 56,
+      "trialId": "D01-A-2",
+      "startedAt": "2026-11-03T10:12:22.853Z",
+      "status": "finished",
+      "reserve": {
+        "input": 118133,
+        "output": 32768
+      },
+      "usage": {
+        "input": 34949,
+        "output": 1639
+      }
+    }
+  ],
+  "responseModel": "deepseek-v4-1-flash-261017"
+}

@@ -1,0 +1,33 @@
+{
+  "entry": {
+    "id": "P01-A-1",
+    "caseId": "P01",
+    "group": "A",
+    "repeat": 1,
+    "phase": "public"
+  },
+  "status": "trajectory_recorded",
+  "stateChanged": false,
+  "model": "deepseek-v4-1-flash-261017",
+  "usage": {
+    "requests": 4,
+    "input": 98806,
+    "output": 1208,
+    "reservedInput": 0,
+    "reservedOutput": 0,
+    "unknown": 0
+  },
+  "groupUsage": {
+    "requests": 4,
+    "input": 98806,
+    "output": 1208,
+    "reservedInput": 0,
+    "reservedOutput": 0,
+    "unknown": 0
+  },
+  "semanticReview": "pending",
+  "startedAt": "2026-11-03T07:52:29.450Z",
+  "finishedAt": "2026-11-03T07:55:12.726Z",
+  "wallMs": 163276,
+  "wallTimeIncludesHumanReview": true
+}

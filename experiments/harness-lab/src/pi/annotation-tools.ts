@@ -1,7 +1,7 @@
 import { resourceSchema } from '../contracts/task-resources.js';
 import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE, MAP_SYMBOL_STANDARD } from '../contracts/map-symbols.js';
 import { annotationToolResult } from './annotation-results.js';
-import type { AnnotationReadInput } from '../contracts/annotations.js';
+import type { AnnotationReadInput, LoadedAnnotationSelection } from '../contracts/annotations.js';
 import { createHash } from 'node:crypto';
 import { defineTool } from '@earendil-works/pi-coding-agent';
 import { Type, type Static } from 'typebox';
@@ -84,7 +84,7 @@ export function annotationActionId(requestId: string, toolCallId: string): strin
   const value = createHash('sha256').update(JSON.stringify([requestId, toolCallId])).digest('hex');
   return `${value.slice(0,8)}-${value.slice(8,12)}-5${value.slice(13,16)}-a${value.slice(17,20)}-${value.slice(20,32)}`;
 }
-export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState; skillIds?: readonly string[]}) {
+export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState; skillIds?: readonly string[]; resolveReference?: (reference: {requestId:string;index:number}) => LoadedAnnotationSelection}) {
   const state = scope.state ?? new AnnotationRequestState();
   const execute = async <T>(callId: string, work: (signal: AbortSignal, dispatch: () => void, committed: () => void) => T | Promise<T>, signal?: AbortSignal, toolName = 'annotation_action', query?: Partial<AnnotationReadInput> & {mode?: string}) => {
     const scoped = signal ? AbortSignal.any([scope.signal, signal]) : scope.signal;
@@ -118,14 +118,24 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
         state.observeCurrent(result.current.sequence, callId); return result;
       }, signal, 'annotation_list')}),
-    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页；过滤范围读完不等于全图读完。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定 ref 的 set 与 objectId 共同定位对象，不能按同名或跨 set 相同短 ID 替换目标；页面选中和未保存输入不在工具可读内容中。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
+    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'reference 按宿主展示的requestId/index读取用户完整显式引用，自动保留固定版本和图层/对象范围，不建立可写依据；不同时填写ref或筛选条件，fields和分页不扩大范围。沿用同一范围可复用定位，用户明确改范围时按新要求处理。draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页；过滤范围读完不等于全图读完。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定 ref 的 set 与 objectId 共同定位对象，不能按同名或跨 set 相同短 ID 替换目标；页面选中和未保存输入不在工具可读内容中。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
       parameters: Type.Union([
         Type.Object({mode: Type.Literal('draft'), ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
+        Type.Object({mode: Type.Literal('reference'), reference: Type.Object({requestId: uuid, index: Type.Integer({minimum:0,maximum:19})},strict), fields: readFields, ...pagination},strict),
         Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
         Type.Object({mode: Type.Literal('compare'), left: annotationRefSchema, right: annotationRefSchema, ...pagination}, strict),
         Type.Object({mode: Type.Literal('receipt'), clientActionId: uuid}, strict),
         Type.Object({mode: Type.Literal('receipt'), requestId: uuid, toolCallId: Type.String({minLength: 1, maxLength: 256})}, strict),
-      ], {type: 'object'}), executionMode: 'sequential', execute: (callId, params, signal) => execute(callId, () => {
+      ], {type: 'object'}), executionMode: 'sequential', execute: (callId, params, signal) => {
+      const query: Partial<AnnotationReadInput> & {mode?:string} = {...params};
+      return execute(callId, () => {
+        if (params.mode === 'reference') {
+          if (!scope.resolveReference) throw new RequestError('ANNOTATION_REFERENCE_NOT_FOUND','当前会话没有可解析的显式引用。',404);
+          const selected = scope.resolveReference(params.reference);
+          const input = {ref:selected.ref,layerIds:selected.layerIds,objectIds:selected.objectIds,fields:params.fields,offset:params.offset,limit:params.limit};
+          Object.assign(query, input, {mode:'read'});
+          return service.read(scope.actor,scope.taskId,input);
+        }
         if (params.mode === 'draft') {
           const binding = service.binding(scope.actor, scope.sessionId);
           const result = binding.draft ? service.read(scope.actor, scope.taskId, {ref: {setId: binding.draft.setId, revision: binding.draft.headRevision}, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, objectNames: params.objectNames, fields: params.fields, offset: params.offset, limit: params.limit}) : null;
@@ -140,7 +150,8 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
           return receipt;
         }
         return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, objectNames: params.objectNames, fields: params.fields, offset: params.offset, limit: params.limit});
-      }, signal, 'annotation_read', params)}),
+      }, signal, 'annotation_read', query);
+    }}),
     defineTool({name:'annotation_from_source',label:'按来源生成或刷新标注',
       description:'将已查询的来源对象精确标到本会话已有草稿和图层中；宿主重新查询并核对来源修订，保存原几何及本次真实查询时间，无需抄写坐标或时间。来源缺几何/修订变化时明确失败，不估算。add 使用来源名称；refresh 要求目标恰有一个匹配来源且几何类型兼容，保留标注ID、名称、样式、说明、属性及其他来源引用，只替换几何与该来源修订/时间。业务说明和属性不会自动更新，变化详情按需 situation_query 后另用 annotation_action 编辑。自定义规划区域使用 annotation_action；意图不清先澄清。1～20 项 items 整批原子保存；已有草稿须先读取本会话 draft；本轮新建成功的草稿无需重复读取。来源须先查询并收到结果再保存，版本条件由宿主维护。结果 fromSources[].queriedAt 是本工具新查询的 UTC 原值，不是此前查询时间；说明文件可按固定修订读取 sourceRefs，勿只改时区后缀。不发布、不设为任务当前。',
       parameters:annotationFromSourceSchema,executionMode:'sequential',

@@ -1,0 +1,50 @@
+{
+  "entryId": "D02-B-2",
+  "kind": "offline-claim-supplement",
+  "reviewer": "review-two-resume",
+  "originalReviewPreserved": ".trellis/tasks/11-03-resource-scope-model-comparison/checks/review-two/D02-B-2.json",
+  "originalReviewSha256": "6bd5a3b6ace0024206a535af6f274337b48f333c03ec4b8afa8174167c41ba66",
+  "trigger": "Root要求补审具体hk-plan类型推断；本补审未读取首审文件，仅独立回查模型可见证据。",
+  "claim": {
+    "statementId": "025d0e34",
+    "quote": "另有一条记录 hk-plan 在资源查询阶段即被排除，原因是「不是实际资源声明」（计划位置）",
+    "verdict": "unsupported",
+    "evidenceIds": [
+      "9b0e4301",
+      "69d54f58",
+      "4afb4a11",
+      "bc983a3f"
+    ],
+    "rationale": "所有出现该对象的真实工具响应只暴露排除id及reason“不是实际资源声明。”；records/items没有该对象，首provider没有hk-plan/拟设/该对象planned_location属性，未执行补读该对象的situation_query。source query原始后台数据即便确为计划位置也不是模型当时可见证据。ID的plan后缀是线索，不是业务meaning字段；用户泛称站址和计划位置不可用亦未指认hk-plan。相同reason同时覆盖meaning=annotation和planned_location，不能从非实际资源推出特定计划类型。"
+  },
+  "proposedAdjudication": {
+    "mainTask": true,
+    "strict": false,
+    "finalExplanation": false,
+    "criticalUnchanged": true,
+    "reason": "附加类型解释缺依据；已要求的区域统计、成员缺口、时间和数量并未因此算错。不是把“未证实”冒充“已证明该对象非计划”。"
+  },
+  "evidence": [
+    {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-scope-model-comparison/20261103-live-01/D02-B-2/final-snapshot.json",
+      "sha256": "82403d2d26a04d4c1aeddf9986aa24699df77902f02648420c358161795e27d7"
+    },
+    {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-scope-model-comparison/20261103-live-01/D02-B-2/provider-0051-request.json",
+      "sha256": "4d16b85bd3b7a39bdbf24b64c294d84413284bc779074bf41a0011ba5f5ee072"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/task-resources.ts",
+      "line": 58,
+      "role": "审阅者契约核对；不是补给模型的事后证据"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/task-resources.ts",
+      "line": 27,
+      "role": "meaning枚举含annotation、planned_location，否定排除reason唯一推导"
+    }
+  ],
+  "correctionToInitialReview": "初评把原始数据真实类型/ID命名与工具排除原因连读，未将模型可见字段与后台事实严格分开；据本次字段核对修正该附加claim，初评文件保持不动。",
+  "noProviderCalls": true,
+  "noProductChanges": true
+}

@@ -77,8 +77,8 @@ it('inserts one fixed system snapshot immediately before the current user on the
   expect(JSON.stringify(payloads)).not.toContain(config.apiKey);
 });
 
-it('keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references', async () => {
-  const payloads: Array<{messages: WireMessage[]; tools: Array<{function: {name: string; description: string; parameters: {anyOf: Array<{required?: string[]; properties: Record<string, {description?: string}>}>}}}>}> = [];
+it('keeps annotation receipts in native details and UI while the actual provider receives projected content and v6 references', async () => {
+  const payloads: Array<{messages: WireMessage[]; tools: Array<{function: {name: string; description: string; parameters: {anyOf: Array<{required?: string[]; properties: Record<string, {description?: string; const?: string}>}>}}}>}> = [];
   let publicationId = '';
   vi.stubGlobal('fetch', async (input: Request | string | URL, init?: RequestInit) => {
     payloads.push(JSON.parse(String(init?.body ?? (input instanceof Request ? await input.text() : ''))));
@@ -113,8 +113,14 @@ it('keeps annotation receipts in native details and UI while the actual provider
   // Verify descriptions survive native schema conversion without loading the optional Skill.
   expect(lab.getRequestResources(session.id,request.requestId,'alpha')).toMatchObject({readSkills:[]});
   const definitions=payloads[0].tools.map(tool=>tool.function);
+  expect(definitions.find(tool=>tool.name==='spatial_analyze')!.description).toContain('先提出聚焦澄清并等待');
+  expect(definitions.find(tool=>tool.name==='spatial_analyze')!.description).not.toContain('询问或完整分列条件答案');
   const readDefinition=definitions.find(tool=>tool.name==='annotation_read')!;
-  for(const branch of readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)) {
+  const referenceBranch=readDefinition.parameters.anyOf.find(branch=>branch.properties.mode.const==='reference')!;
+  expect(referenceBranch.required).toContain('reference');
+  expect(referenceBranch.properties).not.toHaveProperty('layerIds');
+  expect(wire).toContain('requestId');
+  for(const branch of readDefinition.parameters.anyOf.filter(branch=>'layerIds' in branch.properties)) {
     for(const optional of ['layerIds','layerNames','objectIds','objectNames','fields']) expect(branch.required??[]).not.toContain(optional);
     expect(branch.properties.fields.description).toContain('基础摘要始终包含 objectId/name/kind/layerId');
     expect(branch.properties.fields.description).toContain('省略或空数组均仅返回摘要');
@@ -130,7 +136,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
     expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 或 layerNames 时取交集');
     expect(branch.properties.layerIds.description).toContain('同时指定 objectIds 时取交集');
   }
-  expect(readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)).toHaveLength(2);
+  expect(readDefinition.parameters.anyOf.filter(branch=>'layerIds' in branch.properties)).toHaveLength(2);
   expect(readDefinition.description).toContain('未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页');
   expect(readDefinition.description).toContain('可涉及标题、图层和对象，不是对象总数');
   expect(definitions.find(tool=>tool.name==='annotation_list')!.description).toContain('发布说明 note 不是对象备注');
@@ -153,7 +159,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
   expect(read.data.query).toEqual({objectIds:['north'],fields:['note','attributes']});
   expect(read.data.objects.total).toBe(1);
   const native=(await Promise.all((await readdir(join(dir,'sessions'))).map(file=>readFile(join(dir,'sessions',file),'utf8')))).join('\n');
-  expect(native).toContain(receipt.hash!);expect(native).toContain('berserk.composer-input.v5');
+  expect(native).toContain(receipt.hash!);expect(native).toContain('berserk.composer-input.v6');
   await lab.close();
   const reopened=await PiLab.create(config);cleanup.push(()=>reopened.close());
   expect(reopened.get(session.id,'alpha').messages).toEqual(snapshot.messages);

@@ -1,0 +1,13 @@
+{
+  "baseCommit": "af35e3134f64455fe390c64c2ff39e37f4704f08",
+  "workingTreeSnapshot": true,
+  "patch": "product-working-tree.patch",
+  "patchSha256": "5ae1e7549370c2495f023c9c45314e0d5489d1be70c8c93393bf3ccce29cf893",
+  "includedPaths": [
+    "experiments/harness-lab/src",
+    "experiments/harness-lab/fixtures/skills",
+    "experiments/harness-lab/tests",
+    ".trellis/spec/backend"
+  ],
+  "note": "The live runtime was frozen from the uncommitted working tree, not the base commit alone. runtime-integrity.json records actual frozen runtime files."
+}

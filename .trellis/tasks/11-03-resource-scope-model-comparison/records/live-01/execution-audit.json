@@ -1,0 +1,572 @@
+{
+  "completedSlots": 28,
+  "publicSlots": 4,
+  "formalSlots": 24,
+  "realTaskRetries": 0,
+  "extraModelTasks": 0,
+  "allStatesUnchanged": true,
+  "frozenProtocolFilesVerified": 106,
+  "frozenRuntimeFilesVerified": 321,
+  "workingTreeSnapshot": true,
+  "groups": {
+    "public-A": {
+      "slots": 2,
+      "usage": {
+        "requests": 9,
+        "input": 323081,
+        "output": 6633,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 393.361,
+      "providerSeconds": 52.169000000000004,
+      "semanticDecisionWaitSeconds": 52.99030327796936,
+      "otherPreparationAndOrchestrationSeconds": 288.20169672203065,
+      "decisions": [
+        {
+          "slot": "P01-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 18.918330430984497
+        },
+        {
+          "slot": "P01-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 19.2104070186615
+        },
+        {
+          "slot": "P02-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.861565828323364
+        }
+      ]
+    },
+    "public-B": {
+      "slots": 2,
+      "usage": {
+        "requests": 9,
+        "input": 340728,
+        "output": 9634,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 695.144,
+      "providerSeconds": 271.11,
+      "semanticDecisionWaitSeconds": 68.60705423355103,
+      "otherPreparationAndOrchestrationSeconds": 355.42694576644897,
+      "decisions": [
+        {
+          "slot": "P01-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.49840784072876
+        },
+        {
+          "slot": "P01-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 29.273524522781372
+        },
+        {
+          "slot": "P02-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.835121870040894
+        }
+      ]
+    },
+    "formal-A": {
+      "slots": 12,
+      "usage": {
+        "requests": 47,
+        "input": 1655082,
+        "output": 39706,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 2317.32,
+      "providerSeconds": 302.241,
+      "semanticDecisionWaitSeconds": 495.15813398361206,
+      "otherPreparationAndOrchestrationSeconds": 1519.9208660163881,
+      "decisions": [
+        {
+          "slot": "D01-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.320323705673218
+        },
+        {
+          "slot": "D02-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.18064594268799
+        },
+        {
+          "slot": "D03-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 13.904893159866333
+        },
+        {
+          "slot": "D04-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 18.330960750579834
+        },
+        {
+          "slot": "D05-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 34.79458737373352
+        },
+        {
+          "slot": "D05-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 40.55288648605347
+        },
+        {
+          "slot": "D06-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.12628149986267
+        },
+        {
+          "slot": "D06-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 31.996112823486328
+        },
+        {
+          "slot": "D06-A-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 21.85848569869995
+        },
+        {
+          "slot": "D06-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.77017045021057
+        },
+        {
+          "slot": "D05-A-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 22.190881490707397
+        },
+        {
+          "slot": "D05-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.0172061920166
+        },
+        {
+          "slot": "D04-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 15.665303945541382
+        },
+        {
+          "slot": "D03-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 110.72304105758667
+        },
+        {
+          "slot": "D02-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 32.69751286506653
+        },
+        {
+          "slot": "D01-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.0288405418396
+        }
+      ]
+    },
+    "formal-B": {
+      "slots": 12,
+      "usage": {
+        "requests": 49,
+        "input": 2009998,
+        "output": 62036,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 3573.632,
+      "providerSeconds": 1715.863,
+      "semanticDecisionWaitSeconds": 347.8094091415405,
+      "otherPreparationAndOrchestrationSeconds": 1509.9595908584595,
+      "decisions": [
+        {
+          "slot": "D01-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 34.52129769325256
+        },
+        {
+          "slot": "D02-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 11.323655128479004
+        },
+        {
+          "slot": "D03-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 35.882771253585815
+        },
+        {
+          "slot": "D04-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 19.594806432724
+        },
+        {
+          "slot": "D05-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 13.882959604263306
+        },
+        {
+          "slot": "D05-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 8.160208702087402
+        },
+        {
+          "slot": "D06-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 9.3142991065979
+        },
+        {
+          "slot": "D06-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 12.514525175094604
+        },
+        {
+          "slot": "D06-B-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 36.703060150146484
+        },
+        {
+          "slot": "D06-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 31.91856622695923
+        },
+        {
+          "slot": "D05-B-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 23.844014167785645
+        },
+        {
+          "slot": "D05-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 27.96484136581421
+        },
+        {
+          "slot": "D04-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 21.59385919570923
+        },
+        {
+          "slot": "D03-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.81775164604187
+        },
+        {
+          "slot": "D02-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 25.977464199066162
+        },
+        {
+          "slot": "D01-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 9.795329093933105
+        }
+      ]
+    },
+    "all-A": {
+      "slots": 14,
+      "usage": {
+        "requests": 56,
+        "input": 1978163,
+        "output": 46339,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 2710.681,
+      "providerSeconds": 354.41,
+      "semanticDecisionWaitSeconds": 548.1484372615814,
+      "otherPreparationAndOrchestrationSeconds": 1808.1225627384188,
+      "decisions": [
+        {
+          "slot": "P01-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 18.918330430984497
+        },
+        {
+          "slot": "P01-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 19.2104070186615
+        },
+        {
+          "slot": "P02-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.861565828323364
+        },
+        {
+          "slot": "D01-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.320323705673218
+        },
+        {
+          "slot": "D02-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.18064594268799
+        },
+        {
+          "slot": "D03-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 13.904893159866333
+        },
+        {
+          "slot": "D04-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 18.330960750579834
+        },
+        {
+          "slot": "D05-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 34.79458737373352
+        },
+        {
+          "slot": "D05-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 40.55288648605347
+        },
+        {
+          "slot": "D06-A-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.12628149986267
+        },
+        {
+          "slot": "D06-A-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 31.996112823486328
+        },
+        {
+          "slot": "D06-A-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 21.85848569869995
+        },
+        {
+          "slot": "D06-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.77017045021057
+        },
+        {
+          "slot": "D05-A-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 22.190881490707397
+        },
+        {
+          "slot": "D05-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 33.0172061920166
+        },
+        {
+          "slot": "D04-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 15.665303945541382
+        },
+        {
+          "slot": "D03-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 110.72304105758667
+        },
+        {
+          "slot": "D02-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 32.69751286506653
+        },
+        {
+          "slot": "D01-A-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.0288405418396
+        }
+      ]
+    },
+    "all-B": {
+      "slots": 14,
+      "usage": {
+        "requests": 58,
+        "input": 2350726,
+        "output": 71670,
+        "unknown": 0,
+        "reservedInput": 0,
+        "reservedOutput": 0
+      },
+      "wallSeconds": 4268.776,
+      "providerSeconds": 1986.973,
+      "semanticDecisionWaitSeconds": 416.41646337509155,
+      "otherPreparationAndOrchestrationSeconds": 1865.3865366249083,
+      "decisions": [
+        {
+          "slot": "P01-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 14.49840784072876
+        },
+        {
+          "slot": "P01-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 29.273524522781372
+        },
+        {
+          "slot": "P02-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.835121870040894
+        },
+        {
+          "slot": "D01-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 34.52129769325256
+        },
+        {
+          "slot": "D02-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 11.323655128479004
+        },
+        {
+          "slot": "D03-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 35.882771253585815
+        },
+        {
+          "slot": "D04-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 19.594806432724
+        },
+        {
+          "slot": "D05-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 13.882959604263306
+        },
+        {
+          "slot": "D05-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 8.160208702087402
+        },
+        {
+          "slot": "D06-B-1",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 9.3142991065979
+        },
+        {
+          "slot": "D06-B-1",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 12.514525175094604
+        },
+        {
+          "slot": "D06-B-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 36.703060150146484
+        },
+        {
+          "slot": "D06-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 31.91856622695923
+        },
+        {
+          "slot": "D05-B-2",
+          "file": "turn-2-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 23.844014167785645
+        },
+        {
+          "slot": "D05-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 27.96484136581421
+        },
+        {
+          "slot": "D04-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 21.59385919570923
+        },
+        {
+          "slot": "D03-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 24.81775164604187
+        },
+        {
+          "slot": "D02-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 25.977464199066162
+        },
+        {
+          "slot": "D01-B-2",
+          "file": "turn-1-terminal-decision.json",
+          "kind": "final",
+          "reviewToDecisionSeconds": 9.795329093933105
+        }
+      ]
+    }
+  },
+  "timeCaveat": "Provider duration is ledger start to response-meta completion, including HTTP/stream. Semantic decision waiting is local review-to-decision mtime, includes operator polling/read/write. Remaining wall time includes fixture/browser/runtime hash checks and other orchestration; approval wait before slot start is not in wallMs."
+}

@@ -1,0 +1,31 @@
+{
+  "source": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/records/aggregate.json",
+  "sourceSha256": "4befd4cfe54b6ef3cf1a09e865d04ce9bef0f9409846667e36333e19a665e659",
+  "offlineOnly": true,
+  "modelRequests": 0,
+  "originalToolGate": "pass",
+  "correctedToolGate": "unverified",
+  "rows": [
+    {
+      "gate": "empty_selection_abort",
+      "status": "pass",
+      "requiredCase": "P02"
+    },
+    {
+      "gate": "member_deduplication",
+      "status": "unverified",
+      "requiredCase": "N02"
+    },
+    {
+      "gate": "unsupported_exact_sum",
+      "status": "pass",
+      "requiredCase": "N03"
+    }
+  ],
+  "unchanged": {
+    "main": 12,
+    "strict": 8,
+    "acceptancePassed": false
+  },
+  "reason": "冻结规则要求指定P02/N02/N03路径；N02没有资源汇总调用，N05不能替代。已覆盖路径无已审同根回归，不等于指定覆盖齐全。"
+}

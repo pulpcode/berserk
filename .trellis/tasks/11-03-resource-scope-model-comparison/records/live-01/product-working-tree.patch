@@ -1,0 +1,535 @@
+diff --git a/.trellis/spec/backend/conversation-references.md b/.trellis/spec/backend/conversation-references.md
+index 1048a22..455555d 100644
+--- a/.trellis/spec/backend/conversation-references.md
++++ b/.trellis/spec/backend/conversation-references.md
+@@ -33,7 +33,7 @@ Map object references use complete `{systemId,objectType,objectId}` keys, at mos
+ 
+ Persist `berserk.composer-input.v1` through Pi's public custom-message API with `display:false`, owning workspace/session/request IDs and resolved selections. Save ordinary user text separately. Native history decoding validates ownership, hashes, body, ordering and duplicate records. Old histories require no migration. Normal Pi compaction can summarize this input; full JSONL remains available.
+ 
+-New map-bearing selections use `berserk.composer-input.v5` while method/role-only inputs retain v1; existing v1/v2/v3/v4 histories remain readable with their exact original text. V5 preserves v4 explanations of the fixed draft baseline, owned draft revision and draft-only writability next to automatic metadata; this block does not provide task-current adoption state. These essential meanings are always supplied without requiring a selected Skill or `skill_read`. V5 omits only annotation selection metadata hashes from model text, retaining original native details and explicitly limiting selection summaries to their selected range. See [Map Annotations](./map-annotations.md) for the version routing and rollback contract. Do not modify old template output to update instructions for new requests.
++New explicit annotation selections use `berserk.composer-input.v6`; other map-bearing selections use v5 while method/role-only inputs retain v1; existing v1/v2/v3/v4 histories remain readable with their exact original text. V5 preserves v4 explanations of the fixed draft baseline, owned draft revision and draft-only writability next to automatic metadata; this block does not provide task-current adoption state. These essential meanings are always supplied without requiring a selected Skill or `skill_read`. V5 omits only annotation selection metadata hashes from model text, retaining original native details and explicitly limiting selection summaries to their selected range. See [Map Annotations](./map-annotations.md) for the version routing and rollback contract. Do not modify old template output to update instructions for new requests.
+ 
+ When the parent calls the selected role, `selectedChildInput` forwards the Skill body and file references in addition to the actual task. Other roles do not receive that automatic selection. Children retain their readonly tool whitelist; an analyst can use an already loaded Skill without acquiring `skill_read`. Do not copy parent history into child context. Do not overwrite the parent-generated task or add hidden retries/forced dispatch.
+ 
+@@ -75,3 +75,5 @@ Bad: reporting a completed delegation from a selection tag, trusting browser-sup
+ Wrong: silently retry a model that ignored a role or method until the test passes.
+ 
+ Correct: inspect the delivered input and actual delegation task, fix a demonstrated ambiguity if present, rerun the same acceptance scenario and retain the earlier failure in the validation report.
++
++Explicit annotation selections use composer v6 locators as specified in [Map Annotations](map-annotations.md#complete-explicit-reference-reads-2026-11-03). Other map inputs remain v5. Keep old template bytes and strict readers intact.
+diff --git a/.trellis/spec/backend/map-annotations.md b/.trellis/spec/backend/map-annotations.md
+index 1886387..8e0f4d4 100644
+--- a/.trellis/spec/backend/map-annotations.md
++++ b/.trellis/spec/backend/map-annotations.md
+@@ -44,7 +44,7 @@ The optional resource-data extension and controlled source entity association ar
+ 
+ An annotation is a spatial object with its own fixed identity and optional business attributes; its geometry kind, layer name, symbol or editable `sourceRefs` does not certify a real currently available resource. A user-designated draft point collection is a valid analysis input without resource-registration proof. A source-derived annotation is a snapshot, not a live view of the source, and ordinary source references alone are not host-copy provenance.
+ 
+-The controlled map Skill uses explicit references and verifiable prior context to locate the intended data. “This conversation” alone does not select the draft. When several plausible sources would change the answer, query enough candidate metadata to resolve them, then clarify or give complete separate conditional answers. Do not default to draft/source priority, replace the requested scope with task background, or merge unrelated datasets without an explicit combined request. Task-resource business questions use the approved default discovery and reliable-identity merging rules; this exception does not widen explicitly limited or pure-shape questions. Deduplication needs verifiable identity rather than a shared name; unresolved datasets remain separately reported. These are interpretation instructions, not a new selector, resource schema or backend eligibility gate.
++The controlled map Skill uses explicit references and verifiable prior context to locate the intended data. “This conversation” alone does not select the draft. When several plausible sources would change the answer, query enough candidate metadata to resolve them, then clarify and wait before business statistics for an ambiguous single-scope question. Give separate results only for explicit comparison, authorized multiple scopes, or a question intrinsically asking for separate analyses. Do not default to draft/source priority, replace the requested scope with task background, or merge unrelated datasets without an explicit combined request. Task-resource business questions use the approved default discovery and reliable-identity merging rules; this exception does not widen explicitly limited or pure-shape questions. Deduplication needs verifiable identity rather than a shared name; unresolved datasets remain separately reported. These are interpretation instructions, not a new selector, resource schema or backend eligibility gate.
+ 
+ Public process text and final answers use evidence available at the time of the statement. A later result cannot justify an earlier completion claim. Distinguish a planned operation from a successful receipt, and state draft-save, publication and adoption effects separately. Prefer short factual statements while preserving requested information; do not append unverified widths, storage mechanisms or global current-state claims. The Skill provides independent wording examples without evaluation fixture answers. This guidance does not automatically verify the model's prose or establish model-quality acceptance.
+ 
+@@ -92,7 +92,7 @@ Use `focus.areaIds` for regional discovery and returned complete refs for exact
+ 
+ Automatic draft context only includes current set/revision, baseline and writability. It must not grow with the number of layers or objects. Explicit annotationRefs are validated references with bounded host-derived descriptive metadata; they do not automatically load geometry or all object properties. Old contextRefs keep their existing send-time external source semantics.
+ 
+-New inputs containing `context`, `annotationContext` or `annotationRefs` use `berserk.composer-input.v5`; method/role-only inputs remain v1. Preserve exact v1/v2/v3/v4 content generators and strict decoding: persisted text is compared byte-for-byte. V5 preserves v4 baseline/current explanations and uses the same bounded data fields and UI map-entry guidance. It explains next to automatic metadata that `baseRef` is the fixed derivation baseline (or the selected baseline before draft creation; null means none), not evidence of past or current adoption; `draft.revision` is the owned draft revision; `writable` grants draft editing only, not adoption authority. The automatic block does not provide task-current state; it does not deny separately obtained current-query evidence. Adopting a publication does not change a conversation baseline or draft. Both history readers recognize v5 and reject unknown versions; request ownership, ordering, Skill snapshots and readonly child restrictions remain enforced. A rollback must retain v5 readers for already-saved records. Native tool results record actual read fields; no synthetic tool success, second transcript, summary cache or memory system. Re-read a fixed revision after native compaction when exact data is needed.
++New inputs containing explicit `annotationRefs` use `berserk.composer-input.v6` (see complete-reference reads below); inputs containing only `context` or `annotationContext` use v5, and method/role-only inputs remain v1. Preserve exact v1/v2/v3/v4 content generators and strict decoding: persisted text is compared byte-for-byte. V5 preserves v4 baseline/current explanations and uses the same bounded data fields and UI map-entry guidance. It explains next to automatic metadata that `baseRef` is the fixed derivation baseline (or the selected baseline before draft creation; null means none), not evidence of past or current adoption; `draft.revision` is the owned draft revision; `writable` grants draft editing only, not adoption authority. The automatic block does not provide task-current state; it does not deny separately obtained current-query evidence. Adopting a publication does not change a conversation baseline or draft. Both history readers recognize v1–v6 and reject unknown versions; request ownership, ordering, Skill snapshots and readonly child restrictions remain enforced. A rollback must retain readers for all already-saved versions, including v6. Native tool results record actual read fields; no synthetic tool success, second transcript, summary cache or memory system. Re-read a fixed revision after native compaction when exact data is needed.
+ 
+ Tool descriptions follow the same `canSetCurrent` decision as the action schema. Essential baseline/current semantics live in automatic input and tool descriptions, not only in the optionally loaded Skill. A successful edit receipt proves that action's effect; ordinary save/publish reports need not summarize task-current state. Absent `current` is neither `current.publication:null` nor evidence that the baseline is adopted. Task-current claims use this request's actual query or actual successful adoption result, limited to read/commit time; historical assistant text, old receipts and `replayed:true` cannot substitute. Successful adoption does not require a redundant readback merely to report its result. Actor fields do not establish an unreturned operation session. The map Skill distinguishes source facts, discussion and saved fields, with targeted reading only when evidence is insufficient. These are reporting instructions, not automatic prose verification; service receipts and existing UI entry behavior remain unchanged.
+ 
+@@ -199,3 +199,11 @@ Wrong: equate a working map button or a successful save with an accurate explana
+ - **Cases:** base—normal names match; good—zero name matches plus same-scope exact ID returns separate correction hint; bad—searching another layer or counting hint as a match. Empty selected query does not prove empty draft.
+ - **Tests:** same-version hint, no hint outside selected layer/version, cross-session denial and revoked access; partial/collision no replacement; actual-empty/no-ID behavior; query pagination; legacy/new receipt extraction and tampered meaning; browser reopening of both histories.
+ - **Wrong vs correct:** writing a receipt-read summary as a fresh save misstates the action. Say that this call read an existing receipt; preserve the original action/version/object facts in data.
++
++## Complete explicit-reference reads (2026-11-03)
++
++`annotation_read mode:reference` accepts only `{reference:{requestId,index},fields?,offset?,limit?}`. The host resolves that locator from `composerHistory` in the current native branch/workspace/session, preserving the complete fixed ref and layer/object choice; no new reference store or permission token exists. Missing/foreign locators fail; never fall back to the whole version or latest data. `AnnotationService.read` still rechecks task/seat/source permissions. The v2 read projection echoes resolved selectors and the actual ref without mutating original tool-call arguments. It does not establish draft writability. Old read/draft/compare/receipt interfaces remain available.
++
++Only inputs with explicit annotationRefs now use composer v6, adding requestId/index locators to the unchanged v5 model text. Automatic context/source-only inputs remain v5, method-only inputs v1. Preserve exact v1–v5 generators/decoding. Native v6 details retain the existing record shape, not another locator registry. History decoding, reopen and compaction use the same templates and ownership checks; rollback requires a reader compatible with v6.
++
++The locator preserves a selected range, not inferred user intent. A later explicit new scope may legitimately use ordinary source/read tools; this feature does not globally prohibit out-of-scope calls. Test original layer pagination, object choices, cross-session rejection, no selector override, native compaction/restart and actual provider schema.
+diff --git a/.trellis/spec/backend/task-resource-experience.md b/.trellis/spec/backend/task-resource-experience.md
+index f042574..be95c85 100644
+--- a/.trellis/spec/backend/task-resource-experience.md
++++ b/.trellis/spec/backend/task-resource-experience.md
+@@ -37,3 +37,5 @@ The controlled `map-annotations` and `spatial-analysis` catalog/body versions ar
+ Explicit user scope wins. Pure shapes retain ordinary spatial methods. Task-resource questions use the approved default discovery and evidence-based identity merging; the old rule requiring explicit joint-analysis wording does not prohibit that task workflow. When the user needs one scope, existing evidence cannot resolve it, and the choice changes the answer, clarify before giving the single-scope result. Separate conditional answers are appropriate only for explicit comparison, authorized multiple scopes, or a question intrinsically asking for separate analyses. Valid explicit references or prior confirmation allow direct work; homonyms alone do not mandate a question. An optional closing invitation cannot replace required clarification. Reading a Skill or displaying a correct card does not prove correct model reasoning or prose.
+ 
+ Run affected Vitest, typecheck, lint/boundaries, build and desktop Playwright. Test real services/native Pi with deterministic provider outputs, including unknowns, concurrent edits, imports, fixed history, pagination and revocation. Actual SDK payload tests and browser screenshots are distinct from live-model effectiveness. Batch 3 has zero real provider calls; no automatic fourth-batch evaluation.
++
++A summary with spatialResultRef but no position selects the spatial result items, not implicitly interior points. Its card labels that selected result collection; only explicit position gets interior/boundary/exterior text. This presentation must not alter the stored statistics.
+diff --git a/experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md b/experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md
+index f639e0a..944a9f5 100644
+--- a/experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md
++++ b/experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md
+@@ -89,3 +89,5 @@ style、attributes、geometry 和 sourceRefs 如传入均整体替换，不会
+ 一句话说明一项事实。读取、编辑、发布和采用分别表述，不把它们压成一个含混状态；正常成功直接说明，无须逐句添加免责声明。
+ 
+ 地图按钮由界面根据用户引用和真实工具结果生成，正文无需拼 URL。查询来源的按钮打开当前状态，固定标注按钮打开保存版本。Skill 不授予额外工具或权限。
++
++已有宿主明确引用时，可用 annotation_read mode:reference 和其 requestId/index 读取完整固定选择，无需重填版本和筛选ID。跨轮沿用同一图层保留其范围；用户明确改看来源或其他范围时按新要求处理。读取引用不建立当前草稿可写依据。
+diff --git a/experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md b/experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md
+index 4d61702..d4840a1 100644
+--- a/experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md
++++ b/experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md
+@@ -30,7 +30,7 @@ description: 分析任务资源的范围、关系、状态、位置和数量；
+ 
+ 用户指定的草稿点仍可作为纯图形候选，不自动升级为真实可用资源。任务资源工具按可靠实体身份归并，普通来源引用、同名和图标不能去重；其他联合分析也必须保留身份依据。资源查询 Q 的 records 是原记录，items 是组织后的项目，两者都不一定是确定实体总数。
+ 
+-缺少身份、字段或版本时先定向读取。用户需要单一范围的结论，现有证据不能确定该范围，而且不同选择会改变结果时，先提出聚焦澄清。用户明确要求比较、允许多范围，或问题本身要求分别分析时，才并列给出结果。已有明确引用或前文确认时直接处理；不因同名就机械追问，也不能先合并多个区域再用结尾邀请代替必要澄清。“本会话”本身不指定草稿。不要猜坐标、边界或道路连接。
++缺少身份、字段或版本时先定向读取。用户需要单一范围的结论，现有证据不能确定该范围，而且不同选择会改变结果时，先提出聚焦澄清。用户明确要求比较、允许多范围，或问题本身要求分别分析时，才并列给出结果。已有明确引用或前文确认时直接处理；固定标注引用可用 annotation_read mode:reference 及宿主给出的 requestId/index 完整读取，避免漏传图层或对象范围；用户明确改变范围时按新要求处理。不因同名就机械追问，也不能先合并多个区域再用结尾邀请代替必要澄清。“本会话”本身不指定草稿。不要猜坐标、边界或道路连接。
+ 
+ 资源数量按单位、含义、范围和时间分组，使用 task_resource_query summarize，不用空间对象计数替代业务数量。内部/边界/外部分别按对应 position 统计；缺实际位置单列，不能算外部。coverage、relationshipCoverage、spatialCoverage 分别是数据、任务关联和位置的缺口；knownEntityCount 只是已知部分，entityCount:null 不是0。数量中的 knownValue/unknownCount 也不能拼成确定总量。每组数量保留自己的scope；同单位但不同筛选集合不能说成单位不同。完整汇总成员可支持同口径实体去重，但不证明成员实际位置或可用子集，不能仅因汇总没有单体entityId就说成员身份未知。availability 可区分 available/unavailable/unknown/conflict，支援待确认不算已分配。原因用于解释状态：未收到放行回执表示是否放行未确认，不是未放行；过期可用证据不证明当前不可用；有效可用与不可用证据冲突时保留conflict及双方依据。平台引用只支持相关，分配或支援须各有实际证据。
+ 
+@@ -87,3 +87,5 @@ input 的 kind 为 source 时保留完整 systemId/objectType/objectId 身份和
+ annotation_from_analysis 保存原几何、名称及目标图层，不接收信息性质、样式或备注。逐项核对用户明确要求与实际保存内容；有未完成且现有工具支持的属性要求时，以同一已保存对象ID用 annotation_action update_object 继续，不重复创建对象、不重算范围、不重复询问已明确内容。修改完整替换字段先按 map-annotations 读取和保留，未要求的字段不擅自补齐。回执和提交内容足够时不机械重读；不足时只补读相关字段。后续步骤失败时说明已完成和未完成部分，不把一次保存成功说成全部完成。
+ 
+ 保存工具会重新检查权限和草稿版本，只有能无损表达的几何可保存。含孔或多面结果不能靠删除孔、取第一块或包围盒降级。保存失败保留分析事实，按标绘错误/回执规则处理；未知写入结果先核对原回执，不换标识重试。保存、发布和设为任务当前是不同动作，不自动发布或采用。
++
++答复核对：来源对象、汇总成员与实际标绘对象分别说明；工具已排除的计划记录不要再扣一次。同一对象对不同区域的内部/边界分类分别引用对应结果，不用一句概括覆盖差异。用户要求的时间与范围必须答全，允许清楚的共用时间表；额外方位、处理数量或建议中的事实也须有依据。
+diff --git a/experiments/harness-lab/src/pi/annotation-tools.ts b/experiments/harness-lab/src/pi/annotation-tools.ts
+index 669bccc..0ab3434 100644
+--- a/experiments/harness-lab/src/pi/annotation-tools.ts
++++ b/experiments/harness-lab/src/pi/annotation-tools.ts
+@@ -1,7 +1,7 @@
+ import { resourceSchema } from '../contracts/task-resources.js';
+ import { MAP_SYMBOLS, MAP_SYMBOL_ICON_SIZE, MAP_SYMBOL_STANDARD } from '../contracts/map-symbols.js';
+ import { annotationToolResult } from './annotation-results.js';
+-import type { AnnotationReadInput } from '../contracts/annotations.js';
++import type { AnnotationReadInput, LoadedAnnotationSelection } from '../contracts/annotations.js';
+ import { createHash } from 'node:crypto';
+ import { defineTool } from '@earendil-works/pi-coding-agent';
+ import { Type, type Static } from 'typebox';
+@@ -84,7 +84,7 @@ export function annotationActionId(requestId: string, toolCallId: string): strin
+   const value = createHash('sha256').update(JSON.stringify([requestId, toolCallId])).digest('hex');
+   return `${value.slice(0,8)}-${value.slice(8,12)}-5${value.slice(13,16)}-a${value.slice(17,20)}-${value.slice(20,32)}`;
+ }
+-export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState; skillIds?: readonly string[]}) {
++export function annotationTools(service: AnnotationService, scope: {actor: AnnotationActor; sessionId: string; taskId: string; requestId: string; signal: AbortSignal; check: () => void; state?: AnnotationRequestState; skillIds?: readonly string[]; resolveReference?: (reference: {requestId:string;index:number}) => LoadedAnnotationSelection}) {
+   const state = scope.state ?? new AnnotationRequestState();
+   const execute = async <T>(callId: string, work: (signal: AbortSignal, dispatch: () => void, committed: () => void) => T | Promise<T>, signal?: AbortSignal, toolName = 'annotation_action', query?: Partial<AnnotationReadInput> & {mode?: string}) => {
+     const scoped = signal ? AbortSignal.any([scope.signal, signal]) : scope.signal;
+@@ -118,14 +118,24 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
+         const result = {...service.list(scope.actor, scope.taskId, params.offset, params.limit), current: service.current(scope.actor, scope.taskId)};
+         state.observeCurrent(result.current.sequence, callId); return result;
+       }, signal, 'annotation_list')}),
+-    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页；过滤范围读完不等于全图读完。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定 ref 的 set 与 objectId 共同定位对象，不能按同名或跨 set 相同短 ID 替换目标；页面选中和未保存输入不在工具可读内容中。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
++    defineTool({name: 'annotation_read', label: '读取地图标注', description: 'reference 按宿主展示的requestId/index读取用户完整显式引用，自动保留固定版本和图层/对象范围，不建立可写依据；不同时填写ref或筛选条件，fields和分页不扩大范围。沿用同一范围可复用定位，用户明确改范围时按新要求处理。draft 读取本会话当前草稿（或明确未建草稿状态），收到结果后才可编辑。read 读取明确固定版本，不建立可写依据。返回图层信息及对象基础摘要，额外字段通过 fields 选择；未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页。objects.total 是本次筛选后分页前的数量；hasMore 只表示同一筛选范围还有后续页，末页不证明已读前页；过滤范围读完不等于全图读完。compare 比较两个固定版本，changes.total/counts 是变化项数量，可涉及标题、图层和对象，不是对象总数；receipt 按动作ID，或原始 requestId + toolCallId 查询已提交动作，不会重放。读取引用不会改变可写草稿。固定 ref 的 set 与 objectId 共同定位对象，不能按同名或跨 set 相同短 ID 替换目标；页面选中和未保存输入不在工具可读内容中。固定版本不代表任务当前；历史 receipt 是原动作结果，不能说成本请求刚完成的操作。',
+       parameters: Type.Union([
+         Type.Object({mode: Type.Literal('draft'), ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
++        Type.Object({mode: Type.Literal('reference'), reference: Type.Object({requestId: uuid, index: Type.Integer({minimum:0,maximum:19})},strict), fields: readFields, ...pagination},strict),
+         Type.Object({mode: Type.Literal('read'), ref: annotationRefSchema, ...readSelection, fields: readFields, ...pagination}, {...strict, ...readSelectionConstraints}),
+         Type.Object({mode: Type.Literal('compare'), left: annotationRefSchema, right: annotationRefSchema, ...pagination}, strict),
+         Type.Object({mode: Type.Literal('receipt'), clientActionId: uuid}, strict),
+         Type.Object({mode: Type.Literal('receipt'), requestId: uuid, toolCallId: Type.String({minLength: 1, maxLength: 256})}, strict),
+-      ], {type: 'object'}), executionMode: 'sequential', execute: (callId, params, signal) => execute(callId, () => {
++      ], {type: 'object'}), executionMode: 'sequential', execute: (callId, params, signal) => {
++      const query: Partial<AnnotationReadInput> & {mode?:string} = {...params};
++      return execute(callId, () => {
++        if (params.mode === 'reference') {
++          if (!scope.resolveReference) throw new RequestError('ANNOTATION_REFERENCE_NOT_FOUND','当前会话没有可解析的显式引用。',404);
++          const selected = scope.resolveReference(params.reference);
++          const input = {ref:selected.ref,layerIds:selected.layerIds,objectIds:selected.objectIds,fields:params.fields,offset:params.offset,limit:params.limit};
++          Object.assign(query, input, {mode:'read'});
++          return service.read(scope.actor,scope.taskId,input);
++        }
+         if (params.mode === 'draft') {
+           const binding = service.binding(scope.actor, scope.sessionId);
+           const result = binding.draft ? service.read(scope.actor, scope.taskId, {ref: {setId: binding.draft.setId, revision: binding.draft.headRevision}, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, objectNames: params.objectNames, fields: params.fields, offset: params.offset, limit: params.limit}) : null;
+@@ -140,7 +150,8 @@ export function annotationTools(service: AnnotationService, scope: {actor: Annot
+           return receipt;
+         }
+         return service.read(scope.actor, scope.taskId, {ref: params.ref, layerIds: params.layerIds, layerNames: params.layerNames, objectIds: params.objectIds, objectNames: params.objectNames, fields: params.fields, offset: params.offset, limit: params.limit});
+-      }, signal, 'annotation_read', params)}),
++      }, signal, 'annotation_read', query);
++    }}),
+     defineTool({name:'annotation_from_source',label:'按来源生成或刷新标注',
+       description:'将已查询的来源对象精确标到本会话已有草稿和图层中；宿主重新查询并核对来源修订，保存原几何及本次真实查询时间，无需抄写坐标或时间。来源缺几何/修订变化时明确失败，不估算。add 使用来源名称；refresh 要求目标恰有一个匹配来源且几何类型兼容，保留标注ID、名称、样式、说明、属性及其他来源引用，只替换几何与该来源修订/时间。业务说明和属性不会自动更新，变化详情按需 situation_query 后另用 annotation_action 编辑。自定义规划区域使用 annotation_action；意图不清先澄清。1～20 项 items 整批原子保存；已有草稿须先读取本会话 draft；本轮新建成功的草稿无需重复读取。来源须先查询并收到结果再保存，版本条件由宿主维护。结果 fromSources[].queriedAt 是本工具新查询的 UTC 原值，不是此前查询时间；说明文件可按固定修订读取 sourceRefs，勿只改时区后缀。不发布、不设为任务当前。',
+       parameters:annotationFromSourceSchema,executionMode:'sequential',
+diff --git a/experiments/harness-lab/src/pi/composer-input.ts b/experiments/harness-lab/src/pi/composer-input.ts
+index 5809a38..f76a9ad 100644
+--- a/experiments/harness-lab/src/pi/composer-input.ts
++++ b/experiments/harness-lab/src/pi/composer-input.ts
+@@ -13,7 +13,8 @@ export const COMPOSER_INPUT_V2 = 'berserk.composer-input.v2';
+ export const COMPOSER_INPUT_V3 = 'berserk.composer-input.v3';
+ export const COMPOSER_INPUT_V4 = 'berserk.composer-input.v4';
+ export const COMPOSER_INPUT_V5 = 'berserk.composer-input.v5';
+-export const composerInputType = (selection: LoadedComposerSelection) => selection.context || selection.annotationContext || selection.annotationRefs ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
++export const COMPOSER_INPUT_V6 = 'berserk.composer-input.v6';
++export const composerInputType = (selection: LoadedComposerSelection) => selection.annotationRefs ? COMPOSER_INPUT_V6 : selection.context || selection.annotationContext ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
+ export interface ComposerInputRecord extends LoadedComposerSelection { workspaceId: string; sessionId: string; requestId: string }
+ const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
+ const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
+@@ -92,21 +93,26 @@ export function composerInputTextV5(selection: LoadedComposerSelection): string
+     ...(selection.skill || selection.agent ? [composerInputText({skill: selection.skill, agent: selection.agent})] : []),
+   ].join('\n');
+ }
+-export function recordedComposerText(selection: LoadedComposerSelection, type = composerInputType(selection)) {
++export function recordedComposerText(selection: LoadedComposerSelection & {requestId?: string}, type = composerInputType(selection)) {
+   if (type === COMPOSER_INPUT) return composerInputText(selection);
+   if (type === COMPOSER_INPUT_V2) return composerInputTextV2(selection);
+   if (type === COMPOSER_INPUT_V3) return composerInputTextV3(selection);
+   if (type === COMPOSER_INPUT_V4) return composerInputTextV4(selection);
++  if (type === COMPOSER_INPUT_V6) {
++    if (!selection.requestId || !UUID.test(selection.requestId) || !selection.annotationRefs?.length) throw stateError();
++    return composerInputTextV5(selection) + '\n按完整显式引用读取：annotation_read mode:reference，reference取以下定位，宿主保留其固定版本和完整图层/对象范围，无需重新填写筛选ID。定位：' + JSON.stringify(selection.annotationRefs.map((reference,index)=>({requestId:selection.requestId,index,title:reference.title}))) + '。后续沿用同一范围可复用定位；用户明确改范围时按新要求处理，不能把旧引用当作永久限制。';
++  }
+   if (type === COMPOSER_INPUT_V5) return composerInputTextV5(selection);
+   throw stateError();
+ }
+ export function decodeComposerInput(value: unknown, workspaceId: string, sessionId?: string, type = COMPOSER_INPUT): ComposerInputRecord {
+-  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5;
+-  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
++  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6;
++  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
+     || typeof value.sessionId !== 'string' || !UUID.test(value.sessionId) || (sessionId !== undefined && value.sessionId !== sessionId)
+     || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || (!value.skill && !value.agent && !value.context && !value.annotationContext && !value.annotationRefs)
+     || (type === COMPOSER_INPUT_V2 && !value.annotationContext && !value.annotationRefs)
+-    || ((type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5) && !value.context && !value.annotationContext && !value.annotationRefs)
++    || ((type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6) && !value.context && !value.annotationContext && !value.annotationRefs)
++    || (type === COMPOSER_INPUT_V6 && !value.annotationRefs)
+     || (value.annotationContext !== undefined && !validAnnotationContext(value.annotationContext, String(value.sessionId)))
+     || (value.annotationRefs !== undefined && !validAnnotationSelections(value.annotationRefs))
+     || (mapInput && Buffer.byteLength(JSON.stringify({context: value.context, annotationRefs: value.annotationRefs})) > 256 * 1024)
+@@ -126,3 +132,10 @@ export function composerHistory(entries: SessionEntry[], workspaceId: string, se
+ export function selectedChildInput(selection: LoadedComposerSelection | undefined, files: FileRef[], role: string) {
+   return selection?.agent?.name === role ? { ...(selection.skill ? { skill: selection.skill } : {}), files } : undefined;
+ }
++
++/** Resolve an existing native input selection; this locator is not a new permission. */
++export function resolveAnnotationReference(entries: SessionEntry[], workspaceId: string, sessionId: string, reference: {requestId: string; index: number}) {
++  const selected = composerHistory(entries, workspaceId, sessionId).get(reference.requestId)?.annotationRefs?.[reference.index];
++  if (!UUID.test(reference.requestId) || !Number.isSafeInteger(reference.index) || reference.index < 0 || !selected) throw new RequestError('ANNOTATION_REFERENCE_NOT_FOUND', '本会话分支未找到该显式引用，请核对引用定位。', 404);
++  return structuredClone(selected);
++}
+diff --git a/experiments/harness-lab/src/pi/history-evidence.ts b/experiments/harness-lab/src/pi/history-evidence.ts
+index 9667726..7219fe1 100644
+--- a/experiments/harness-lab/src/pi/history-evidence.ts
++++ b/experiments/harness-lab/src/pi/history-evidence.ts
+@@ -1,5 +1,5 @@
+ import { MODEL_SELECTION, decodeModelSelection } from './model-selection.js';
+-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
++import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, recordedComposerText, decodeComposerInput, validSkill as skill } from './composer-input.js';
+ import { INTERACTION_REQUESTED, INTERACTION_RESOLVED, COMMAND_POLICY, interactionHistory } from './interactions.js';
+ import type { SessionEntry } from '@earendil-works/pi-coding-agent';
+ import type { ConversationTurn, PublicMessage, InstructionUpdate, RequestResourcesRecord, RequestResult } from '../contracts/index.js';
+@@ -123,7 +123,7 @@ export function validateHistoryEvidence(entries: SessionEntry[], workspaceId: st
+       } else if (currentRequest && !message.isError) throw stateError();
+     }
+     if (entry.type === 'custom_message' && entry.customType.startsWith('berserk.')) {
+-      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5].includes(entry.customType)) {
++      if ([COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6].includes(entry.customType)) {
+         const input = decodeComposerInput(entry.details, workspaceId, parentSessionId, entry.customType);
+         const resources = requests.get(input.requestId);
+         if (currentRequestHasUser || currentRequest !== input.requestId || composerInputs.has(input.requestId) || entry.display !== false
+diff --git a/experiments/harness-lab/src/pi/lab.ts b/experiments/harness-lab/src/pi/lab.ts
+index 1b951a9..8b8cd60 100644
+--- a/experiments/harness-lab/src/pi/lab.ts
++++ b/experiments/harness-lab/src/pi/lab.ts
+@@ -23,7 +23,7 @@ import type { ContextPrincipal } from '../contracts/context.js';
+ import { MODEL_SELECTION, selectedModelId } from './model-selection.js';
+ import { AccessStore } from '../access/store.js';
+ import { openDatabase, assertDataMode } from '../access/database.js';
+-import { composerInputType, agentInfo, composerHistory, recordedComposerText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
++import { composerInputType, resolveAnnotationReference, agentInfo, composerHistory, recordedComposerText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
+ import { isDeepStrictEqual } from 'node:util';
+ import { randomUUID, createHash } from 'node:crypto';
+ import { mkdir, readdir, writeFile, lstat } from 'node:fs/promises';
+@@ -764,6 +764,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅
+       ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
+         actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
+         requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState, skillIds: snapshot.skills.map(skill => skill.id),
++        resolveReference: reference => resolveAnnotationReference(record.manager.getBranch(), record.workspaceId, record.manager.getSessionId(), reference),
+       }) : []),
+       ...(!active.background && this.annotations && active.annotationActor && annotationState ? spatialTools(this.annotations, this.context, record.manager, {
+         actor:active.annotationActor,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,
+@@ -1130,7 +1131,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅
+       if (active.files?.length) await session.sendCustomMessage({ customType: FILE_INPUT, display: false,
+         content: fileReferenceText(active.files), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, files: active.files } });
+       if (active.selections) await session.sendCustomMessage({ customType: composerInputType(active.selections), display: false,
+-        content: recordedComposerText(active.selections), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
++        content: recordedComposerText({...active.selections,requestId:active.id}), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
+       if (!active.reason) {
+         unsubscribe = session.subscribe(event => {
+           if (record.active !== active || active.reason) return;
+diff --git a/experiments/harness-lab/src/pi/spatial-tools.ts b/experiments/harness-lab/src/pi/spatial-tools.ts
+index 4123367..89e2bb9 100644
+--- a/experiments/harness-lab/src/pi/spatial-tools.ts
++++ b/experiments/harness-lab/src/pi/spatial-tools.ts
+@@ -40,7 +40,7 @@ export const spatialAnalyzeSchema=Type.Union([
+ export function spatialTools(annotations:AnnotationService,context:ContextService|undefined,manager:SessionManager,scope:{actor:AnnotationActor;sessionId:string;taskId:string;requestId:string;signal:AbortSignal;check:()=>void;state:AnnotationRequestState;skillIds?:readonly string[]}) {
+   const service=new SpatialAnalysisService(annotations,context);
+   const captured=(signal?:AbortSignal)=>({...scope,signal:signal?AbortSignal.any([scope.signal,signal]):scope.signal,check:()=>{scope.check();annotations.actorForSeat(scope.actor.seatId,scope.actor.userId);annotations.binding(scope.actor,scope.sessionId);},resolveResourceResult:(ref:string)=>resolveResourceResult(manager.getBranch(),ref),resolveResult:(ref:string)=>resolveSpatialResult(manager.getBranch(),ref)});
+-  return [defineTool({name:'spatial_analyze',label:'空间分析',description:'先明确参照对象与候选集合各自的数据来源和范围；当前请求或有效前文已明确就执行，仍有会改变答案的选择时询问或完整分列条件答案，不默认选一个来源。只读基础空间分析。kind:resource 直接使用 task_resource_query 的固定 resultRef，保留缺位置项为未分类，不计为外部；schemaVersion 3 的 completeness 单列完整候选与未分类数。input 为明确来源范围、固定标绘版本或本会话真实 resultRef；来源范围自动完整分页（最多500对象），缺几何/字段、缺页或超限明确失败，不能解释为零。source objectRefs最多20个完整引用，areaIds最多10个区域标签；省略 objectRefs/areaIds 表示该来源全体授权对象；与当前视口无关。measure: distance点点球面米、point_to_line点到线最短米、length折线米、area面平方米。relate: input contains target（闭区域包含边界），对点命中不能单独区分内部与边界；intersects含边界接触，disjoint分离。filter: spatial.target 是区域或参考点/线，contains 表示区域包含候选；distanceM 为点候选到参考点/线距离≤阈值，attributes为实际顶层标量字段的AND条件。nearest: input候选点，target单点；先完成所有筛选后取count，同距按完整身份排序，不代表最快/路线/专业派遣。classify_points: input候选点，target单个Polygon（可含孔）；classifications 按 itemId 返回 interior内部/boundary边界/exterior外部，values 返回各类数量与 total。孔内为外部，内外环边界均为边界，不加距离容差，不支持MultiPolygon。summarize按实际字段去重分类。buffer仅点线，距离(0,50000]米，生成几何可通过{kind:result,resultRef,geometry:true}继续使用；若结果含生成geometry，必须显式选择geometry:true使用固定生成范围，或geometry:false/itemIds使用原对象；都省略时返回AMBIGUOUS，不会默取原点。结果未生成geometry时可省略选择并复用items。显式选择读取原快照，无需重算或额外用户确认。read按resultRef读取固定原结果并重检权限，不替换为最新数据。scope 是实际计算选择，candidateCount 是该次输入候选数量，items 是可继续使用的结果集合，referenceItems 仅为参照对象；nearest 保留返回顺序及 distanceM。每次一项操作，无需复制坐标。',
++  return [defineTool({name:'spatial_analyze',label:'空间分析',description:'先明确参照对象与候选集合各自的数据来源和范围；当前请求或有效前文已明确就执行，用户需要单一范围而仍有会改变答案的选择时先提出聚焦澄清并等待，再进行业务统计；仅在用户明确要求比较、允许多范围或问题本身要求分别分析时并列结果，不默认选一个来源，不先统计多区再以结尾邀请代替澄清。只读基础空间分析。kind:resource 直接使用 task_resource_query 的固定 resultRef，保留缺位置项为未分类，不计为外部；schemaVersion 3 的 completeness 单列完整候选与未分类数。input 为明确来源范围、固定标绘版本或本会话真实 resultRef；来源范围自动完整分页（最多500对象），缺几何/字段、缺页或超限明确失败，不能解释为零。source objectRefs最多20个完整引用，areaIds最多10个区域标签；省略 objectRefs/areaIds 表示该来源全体授权对象；与当前视口无关。measure: distance点点球面米、point_to_line点到线最短米、length折线米、area面平方米。relate: input contains target（闭区域包含边界），对点命中不能单独区分内部与边界；intersects含边界接触，disjoint分离。filter: spatial.target 是区域或参考点/线，contains 表示区域包含候选；distanceM 为点候选到参考点/线距离≤阈值，attributes为实际顶层标量字段的AND条件。nearest: input候选点，target单点；先完成所有筛选后取count，同距按完整身份排序，不代表最快/路线/专业派遣。classify_points: input候选点，target单个Polygon（可含孔）；classifications 按 itemId 返回 interior内部/boundary边界/exterior外部，values 返回各类数量与 total。孔内为外部，内外环边界均为边界，不加距离容差，不支持MultiPolygon。summarize按实际字段去重分类。buffer仅点线，距离(0,50000]米，生成几何可通过{kind:result,resultRef,geometry:true}继续使用；若结果含生成geometry，必须显式选择geometry:true使用固定生成范围，或geometry:false/itemIds使用原对象；都省略时返回AMBIGUOUS，不会默取原点。结果未生成geometry时可省略选择并复用items。显式选择读取原快照，无需重算或额外用户确认。read按resultRef读取固定原结果并重检权限，不替换为最新数据。scope 是实际计算选择，candidateCount 是该次输入候选数量，items 是可继续使用的结果集合，referenceItems 仅为参照对象；nearest 保留返回顺序及 distanceM。每次一项操作，无需复制坐标。',
+     parameters:spatialAnalyzeSchema,executionMode:'sequential',execute:async(callId,params,signal)=>{
+       try {const active=captured(signal);const result=await service.analyze(params as unknown as SpatialRequest,active,scope.requestId,callId);
+         return spatialToolResult(params.operation==='read'?{...result,delivery:{requestId:scope.requestId,toolCallId:callId}}:result);
+diff --git a/experiments/harness-lab/src/web/ResourceResultCard.tsx b/experiments/harness-lab/src/web/ResourceResultCard.tsx
+index af67dc7..f28cd31 100644
+--- a/experiments/harness-lab/src/web/ResourceResultCard.tsx
++++ b/experiments/harness-lab/src/web/ResourceResultCard.tsx
+@@ -46,7 +46,7 @@ export function ResourceResultCard({result}:{result:ResourceResult}) {
+     <header><strong>{result.delivery?'读取已有资源结果':result.parameters.operation==='summarize'?'资源统计结果':'资源查询结果'}</strong><button type="button" disabled={shown.busy} onClick={()=>void readPage(shown.page)}>重新读取此结果</button></header>
+     {shown.busy&&<p role="status">正在核对结果访问权限…</p>}{shown.error&&<p role="alert">{shown.error}</p>}
+     {data&&<><p className="resource-help">固定结果 · 统计时间 {data.statisticsScope.at}。重新读取不会刷新来源或生成新结果。</p>
+-    <dl className="resource-statistics"><dt>统计范围内记录</dt><dd>{data.summary.recordCount} 条</dd><dt>统计范围内条目</dt><dd>{data.summary.itemCount} 项</dd><dt>实体数量</dt><dd>{data.summary.entityCount===null?`未知（已识别 ${data.summary.knownEntityCount} 个实体）`:`${data.summary.entityCount} 个`}</dd><dt>统计范围</dt><dd>{resourceRelationLabels[data.statisticsScope.relation]} · {availabilityLabels[data.statisticsScope.availability]}{data.parameters.operation==='summarize'&&data.parameters.spatialResultRef?` · 空间位置：${{interior:'范围内部',boundary:'范围边界',exterior:'范围外部'}[data.parameters.position??'interior']}`:''}</dd></dl>
++    <dl className="resource-statistics"><dt>统计范围内记录</dt><dd>{data.summary.recordCount} 条</dd><dt>统计范围内条目</dt><dd>{data.summary.itemCount} 项</dd><dt>实体数量</dt><dd>{data.summary.entityCount===null?`未知（已识别 ${data.summary.knownEntityCount} 个实体）`:`${data.summary.entityCount} 个`}</dd><dt>统计范围</dt><dd>{resourceRelationLabels[data.statisticsScope.relation]} · {availabilityLabels[data.statisticsScope.availability]}{data.parameters.operation==='summarize'&&data.parameters.spatialResultRef?` · 空间位置：${data.parameters.position?{interior:'范围内部',boundary:'范围边界',exterior:'范围外部'}[data.parameters.position]:'按所选空间结果集合统计'}`:''}</dd></dl>
+     {!!data.summary.quantities.length&&<ul aria-label="按口径分别统计的数量">{data.summary.quantities.map((q,i)=><li key={i}>{resourceCategoryLabels[q.category]||q.category} · {q.scope} · {meaningLabels[q.meaning]||q.meaning}：{q.value===null?`未知（已知部分 ${q.knownValue}，${q.unknownCount} 项未知）`:q.value} {q.unit==='unknown'?'单位未知':q.unit}{q.limitations.length>0&&<p>{readableText(q.limitations.join('；'),data)}</p>}</li>)}</ul>}
+     <details><summary>数据与任务关系覆盖情况</summary><p>来源范围：{data.dependencies.systemIds.join('、')||'未包含来源系统'}</p><p>固定标注版本：{data.dependencies.annotations.map(annotationLabel).join('、')||'未包含标注版本'}</p>{data.parameters.operation==='query'&&<><p>来源选择：{data.parameters.sources?.map(source=>`${source.systemId} · ${source.objectRefs?.map(ref=>ref.objectId).join('、')||source.areaIds?.join('、')||source.query||'所请求来源范围'}`).join('；')||'按任务发现的来源'}</p><p>标注选择：{data.parameters.annotations?.map(ref=>`${annotationLabel(ref.ref)} · ${ref.objectIds?.join('、')||ref.layerIds?.join('、')||'整个版本'}`).join('；')||'按任务发现的标注'}</p></>}<ul>{data.coverage.map((c,i)=><li key={i}>{locatorLabel(c.source,data)}：{statusLabels[c.status]}{c.reason?` · ${c.reason}`:''}{c.asOf?` · 数据时间 ${c.asOf}`:''}</li>)}</ul><p>任务关系：{statusLabels[data.relationshipCoverage.status]} · {readableText(data.relationshipCoverage.reason,data)}</p>{data.relationshipCoverage.sources?.map((c,i)=><p key={i}>{locatorLabel(c.source,data)}：{statusLabels[c.status]} · {c.reason}</p>)}{data.spatialCoverage&&<p>空间筛选：{statusLabels[data.spatialCoverage.status]}，可判断 {data.spatialCoverage.candidateCount} 项；位置无法判断 {data.spatialCoverage.unclassified?.length??0} 项。</p>}{data.spatialCoverage?.unclassified?.map(row=><p key={row.id}>{locatorLabel(row.id,data)}：{readableText(row.reason,data)}</p>)}{resourceSummaryLimitations(data).map((text,i)=><p key={i}>{readableText(text,data)}</p>)}{data.exclusions.map((row,i)=><p key={i}>未纳入 {locatorLabel(row.id,data)}：{readableText(row.reason,data)}</p>)}</details>
+     <p>{data.parameters.operation==='query'&&data.parameters.purpose==='task'?'下方列出完整候选，包含任务关系未确认的条目；未确认条目不计入上方任务统计。':'下方为本次固定结果名单。'}</p><p>条目 {data.items.length?shown.page*10+1:0}–{Math.min((shown.page+1)*10,data.items.length)} / {data.items.length}（上方统计涵盖完整固定结果）</p>
+diff --git a/experiments/harness-lab/tests/e2e/annotations.spec.ts b/experiments/harness-lab/tests/e2e/annotations.spec.ts
+index 00a0551..e43bb75 100644
+--- a/experiments/harness-lab/tests/e2e/annotations.spec.ts
++++ b/experiments/harness-lab/tests/e2e/annotations.spec.ts
+@@ -874,23 +874,29 @@ test('map references remain explicit, removable and fixed; unsaved map editing p
+  }finally{await env.close();}
+ });
+ 
+-test('resource statistic card shows real spatial filter and three separate gaps without recomputing totals',async({page})=>{
++for (const position of [undefined, 'interior'] as const) test(`resource statistic card shows real spatial filter ${position ?? 'selected collection'} and three separate gaps`,async({page})=>{
+  let ref:import('../../src/contracts/annotations').AnnotationRef;let resourceRef='';
+  const env=await setup(page,undefined,(context,index)=>{
+   const last=(name:string)=>{const message=context.messages.findLast(m=>m.role==='toolResult'&&m.toolName===name)!;return JSON.parse((message.content as Array<{type:string;text:string}>).filter(c=>c.type==='text').map(c=>c.text).join('\n')).data;};
+-  if(index===0)return {tools:[{name:'task_resource_query',arguments:{operation:'query',purpose:'task',sources:[{systemId:'source'}],annotations:[{ref,objectIds:['known','unknown']}]}}]};
++  if(index===0)return {tools:[{name:'task_resource_query',arguments:{operation:'query',purpose:'task',sources:[{systemId:'source'}],annotations:[{ref,objectIds:['known','boundary','exterior','unknown']}]}}]};
+   if(index===1){resourceRef=last('task_resource_query').resultRef;return {tools:[{name:'spatial_analyze',arguments:{operation:'classify_points',input:{kind:'resource',resultRef:resourceRef},target:{kind:'annotation',ref,objectIds:['area']}}}]};}
+-  if(index===2)return {tools:[{name:'task_resource_query',arguments:{operation:'summarize',resultRef:resourceRef,relation:'assigned',availability:'available',spatialResultRef:last('spatial_analyze').resultRef,position:'interior'}}]};
++  if(index===2)return {tools:[{name:'task_resource_query',arguments:{operation:'summarize',resultRef:resourceRef,relation:'assigned',availability:'available',spatialResultRef:last('spatial_analyze').resultRef,...(position ? {position} : {})}}]};
+   return {text:'固定范围统计已完成。'};
+  });try{
+   const {ContextService}=await import('../../src/context/service');env.lab.context=new ContextService({systems:[{id:'source',name:'部分来源',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TOKEN'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a']}]},{TOKEN:'synthetic'},{fetch:async()=>new Response(JSON.stringify({systemId:'source',asOf:'2026-11-02T04:00:00Z',items:[],limit:100,nextCursor:null,hasMore:false,timeUnknownCount:0,unknownRefs:[],changeCursor:'fixed',resourceCoverage:{status:'partial',reason:'来源只覆盖部分港区'}}),{headers:{'Content-Type':'application/json'}})});env.lab.annotations!.context=env.lab.context;
+   const evidence=[{kind:'declaration' as const,note:'现场报告'}];const saved=env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'resources',name:'救援资源',order:0,defaultVisible:true,features:[
+    {objectId:'known',name:'已分配救援船',kind:'point',geometry:{type:'Point',coordinates:[120,30]},resource:{meaning:'actual_resource',category:'vessel',position:{meaning:'actual',appliesTo:'resource',evidence},availability:{state:'available',evidence},taskRelations:[{taskId:env.task.id,relation:'assigned',evidence}]}},
++   ...([{objectId:'boundary',name:'边界救援船',coordinates:[119,30]},{objectId:'exterior',name:'范围外救援船',coordinates:[122,30]}] as const).map(item=>({objectId:item.objectId,name:item.name,kind:'point' as const,geometry:{type:'Point' as const,coordinates:[...item.coordinates] as [number,number]},resource:{meaning:'actual_resource' as const,category:'vessel' as const,position:{meaning:'actual' as const,appliesTo:'resource' as const,evidence},availability:{state:'available' as const,evidence},taskRelations:[{taskId:env.task.id,relation:'assigned' as const,evidence}]}})),
+    {objectId:'unknown',name:'位置和关系待确认船',kind:'point',geometry:{type:'Point',coordinates:[120,30]},resource:{meaning:'actual_resource',category:'vessel',availability:{state:'available',evidence}}},
+    {objectId:'area',name:'港区范围',kind:'polygon',geometry:{type:'Polygon',coordinates:[[[119,29],[121,29],[121,31],[119,31],[119,29]]]}},
+   ]}}]});ref=saved.ref!;
+   await env.lab.start(env.session.id,'统计港区已分配可用船',{},env.actor.seatId,undefined,env.actor.userId).run(()=>{});const results=env.lab.get(env.session.id,env.actor.seatId).messages.filter(m=>m.role==='tool');expect(results.every(r=>!r.isError)).toBe(true);
+-  await page.goto(`/?session=${env.session.id}`);await page.getByText('处理过程 · 3 次工具调用',{exact:true}).click();const tools=page.locator('.tool-result').filter({has:page.locator('.resource-result-card')});await tools.last().locator(':scope > summary').click();const card=tools.last().getByRole('region',{name:'资源查询结果'});await expect(card).toContainText('资源统计结果');await expect(card).toContainText('范围内部');await expect(card).toContainText('已分配');await card.getByText('数据与任务关系覆盖情况',{exact:true}).click();await expect(card).toContainText('来源只覆盖部分港区');await expect(card).toContainText('任务关系：部分');await expect(card).toContainText('位置无法判断 1 项');await page.screenshot({path:test.info().outputPath('resource-statistic-gaps-1440.png')});expect(env.errors).toEqual([]);
++  expect(results.find(r=>r.toolName==='spatial_analyze')!.spatialResult!.values).toEqual({total:3,interior:1,boundary:1,exterior:1});
++  const summary=results.at(-1)!.resourceResult!;expect(summary.summary.itemCount).toBe(position?1:3);expect(summary.items.map(item=>item.name).sort()).toEqual(position?['已分配救援船']:['已分配救援船','范围外救援船','边界救援船'].sort());
++  const calls=env.fake.calls.length;
++  await page.goto(`/?session=${env.session.id}`);await page.getByText('处理过程 · 3 次工具调用',{exact:true}).click();const tools=page.locator('.tool-result').filter({has:page.locator('.resource-result-card')});await tools.last().locator(':scope > summary').click();const card=tools.last().getByRole('region',{name:'资源查询结果'});await expect(card).toContainText('资源统计结果');const scope=card.locator('.resource-statistics');await expect(scope).toContainText(position?'空间位置：范围内部':'空间位置：按所选空间结果集合统计');if(!position)await expect(scope).not.toContainText('范围内部');
++  await expect(scope.locator('dt').filter({hasText:'统计范围内条目'}).locator('+ dd')).toHaveText(`${position?1:3} 项`);await expect(card).toContainText('已分配');await card.getByText('数据与任务关系覆盖情况',{exact:true}).click();await expect(card).toContainText('来源只覆盖部分港区');await expect(card).toContainText('任务关系：部分');await expect(card).toContainText('位置无法判断 1 项');await card.scrollIntoViewIfNeeded();await page.screenshot({path:test.info().outputPath(`resource-statistic-${position??'collection'}-1440.png`)});
++  await page.setViewportSize({width:1280,height:960});await page.getByRole('button',{name:'打开态势地图',exact:true}).click();const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await separator.focus();await separator.press('Home');const map=page.getByRole('complementary',{name:'地图工作区'});await expect(map.locator('.annotation-heading')).toContainText('草稿 r1');await expect(map.locator('.maplibregl-canvas')).toBeVisible();await card.scrollIntoViewIfNeeded();await expect(scope).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(await card.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);await page.screenshot({path:test.info().outputPath(`resource-statistic-${position??'collection'}-1280-split.png`)});expect(env.fake.calls.length).toBe(calls);expect(env.errors).toEqual([]);
+  }finally{await env.close();}
+ });
+ 
+diff --git a/experiments/harness-lab/tests/pi/annotations.test.ts b/experiments/harness-lab/tests/pi/annotations.test.ts
+index d9f0420..5abb492 100644
+--- a/experiments/harness-lab/tests/pi/annotations.test.ts
++++ b/experiments/harness-lab/tests/pi/annotations.test.ts
+@@ -8,7 +8,7 @@ import { MAP_SYMBOLS, MAP_SYMBOL_STANDARD } from '../../src/contracts/map-symbol
+ import { AgentSession } from '@earendil-works/pi-coding-agent';
+ import { PiLab } from '../../src/pi/lab.js';
+ import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
+-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
++import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+ import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
+ import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
+ import type { AnnotationReadResult, AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
+@@ -58,26 +58,26 @@ describe('annotation input and native tools', () => {
+       if(!allowed)expect(action.description).not.toContain('set_current');
+     }
+   });
+-  it('reopens a native v1/v2/v3/v4 conversation and appends new map requests as v5 without rewriting old input', async () => {
++  it('reopens a native v1/v2/v3/v4/v5 conversation and appends explicit references as v6 without rewriting old input', async () => {
+     const {lab,session,config,draft}=await setup();const skill=await lab.resources.readSkill(session.workspaceId,'review','alpha');
+     for(let i=0;i<5;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
+     const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]);await lab.close();
+     const entries=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
+-    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V5);expect(inputs).toHaveLength(5);
++    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V6);expect(inputs).toHaveLength(5);
+     inputs[0].customType=COMPOSER_INPUT;delete inputs[0].details.annotationContext;delete inputs[0].details.annotationRefs;
+-    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;
+-    for(const entry of inputs.slice(0,4))entry.content=recordedComposerText(entry.details,entry.customType);
++    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;inputs[4].customType=COMPOSER_INPUT_V5;
++    for(const entry of inputs.slice(0,5))entry.content=recordedComposerText(entry.details,entry.customType);
+     const old=entries.map(entry=>JSON.stringify(entry)).join('\n')+'\n';await writeFile(file,old);
+     const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>next.close());
+     expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(5);
+-    await ask(next,session.id);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
++    await ask(next,session.id,[draft.ref!]);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
+     const after=await readFile(file,'utf8');expect(after.startsWith(old)).toBe(true);
+-    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V5)).toHaveLength(2);
++    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V6)).toHaveLength(1);
+   });
+   it('preserves cancelled v5 preparation without executing it or replaying selections on continuation', async () => {
+     const {lab,session,config,draft,calls}=await setup();const request=lab.start(session.id,'检查固定参考',{annotationRefs:[draft.ref!]},'alpha');
+     const original=AgentSession.prototype.sendCustomMessage;
+-    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V5)lab.cancel(session.id,request.requestId,'alpha');});
++    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V6)lab.cancel(session.id,request.requestId,'alpha');});
+     await request.run(()=>{});spy.mockRestore();expect(calls).toHaveLength(0);expect(lab.get(session.id,'alpha').messages).toHaveLength(0);
+     await lab.close();const fake=await fakeRuntime(config,()=>({text:'新请求'}));const next=await PiLab.create(config,fake.runtime);clean.push(()=>next.close());
+     expect(next.get(session.id,'alpha').lastResult?.status).toBe('cancelled');
+@@ -159,7 +159,7 @@ describe('annotation input and native tools', () => {
+     lab.annotations!.action(actor, session.id, {action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]});
+     expect(lab.annotations!.read(actor, taskId, {ref, objectIds: ['a']}).objects.items).toHaveLength(1);
+     const path = join(config.dataDir, 'sessions', (await readdir(join(config.dataDir, 'sessions')))[0]);
+-    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V5);
++    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V6);
+     await lab.close(); const reopened = await PiLab.create(config, (await fakeRuntime(config, () => ({text: '继续'}))).runtime); clean.push(() => reopened.close());
+     expect(reopened.get(session.id, 'alpha').messages).toEqual(snapshot.messages);
+     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();
+@@ -570,3 +570,48 @@ it('reads the explicitly selected set and edits only the current draft despite i
+   expect(lab.annotations!.binding(actor,other.id).draft?.headRevision).toBe(1);
+   expect(lab.annotations!.version(actor,taskId,foreignRef)).toEqual(foreignBefore);
+ });
++
++it('reads a complete explicit layer reference through paging, compaction and restart without widening to another layer',async()=>{
++ let locator:{requestId:string;index:number}={requestId:randomUUID(),index:0};let replies=0;
++ const reply=(context: Parameters<Parameters<typeof fakeRuntime>[1]>[0]):Reply=>{
++  if(!context.tools?.length)return {text:'保留原引用定位及固定图层，继续查询。',usageInput:50};
++  replies++;
++  if(replies===1)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],limit:1}}]};
++  if(replies===2)return {text:'已读取第一点。'.repeat(500),usageInput:1800};
++  if(replies===3)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],offset:1,limit:1}}]};
++  return {text:'已读取原图层的第二点。'};
++ };
++ const {lab,session,actor,config,calls}=await setup(reply,{contextWindow:8192,maxOutputTokens:6000,compactionReserveTokens:7000,compactionKeepRecentTokens:128});
++ const saved=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_layer',layer:{layerId:'other',name:'未选图层',order:1,defaultVisible:true,features:[{objectId:'extra',kind:'point',name:'不应读到',geometry:{type:'Point',coordinates:[122,32]}}]}}]});
++ const request=lab.start(session.id,'只读我引用的图层',{annotationRefs:[{...saved.ref!,layerIds:['meeting']}]},'alpha');locator={requestId:request.requestId,index:0};await request.run(()=>{});
++ const first=lab.get(session.id,'alpha').messages.find(m=>m.toolName==='annotation_read')!;
++ expect(first.isError).not.toBe(true);expect(JSON.parse(first.text).data).toMatchObject({ref:saved.ref,query:{layerIds:['meeting']},objects:{total:2,hasMore:true,items:[{objectId:'a'}]}});
++ expect(JSON.stringify(calls[0].context.messages)).toContain(request.requestId);
++ const next=await ask(lab,session.id);expect(next.latestCompaction).toBeDefined();
++ expect(JSON.parse(next.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data.objects).toMatchObject({total:2,items:[{objectId:'b'}],hasMore:false});
++ await lab.close();
++ const reopened=await PiLab.create(config,(await fakeRuntime(config,(_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry']}}]}:{text:'续读完成'})).runtime);clean.push(()=>reopened.close());
++ const final=await ask(reopened,session.id);expect(final.recoveryWarning).toBeUndefined();
++ const data=JSON.parse(final.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data;
++ expect(data.objects.items.map((x:{objectId:string})=>x.objectId)).toEqual(['a','b']);expect(data.query.layerIds).toEqual(['meeting']);
++});
++
++it('rejects foreign and missing reference locators and extra selectors instead of falling back to a whole version',async()=>{
++ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
++ const {lab,session,draft,calls}=await setup((_ctx,index)=>index===0?{text:'记录引用'}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference}}]}:{text:'读取被拒绝'});
++ const request=lab.start(session.id,'引用一个对象',{annotationRefs:[{...draft.ref!,objectIds:['a']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
++ const other=await lab.createSession(session.workspaceId,'alpha');const failed=await ask(lab,other.id);
++ expect(failed.messages.find(m=>m.toolName==='annotation_read')).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
++ const tool=calls[0].context.tools!.find(t=>t.name==='annotation_read')!;
++ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference,layerIds:['meeting']}})).toThrow();
++ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference:{...reference,index:-1}}})).toThrow();
++});
++
++it('keeps split object references distinct and rejects an absent index without reading the entire set',async()=>{
++ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
++ const {lab,session,draft}=await setup((_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:1},fields:['geometry']}}]}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:2}}}]}:{text:'只读取指定第二个对象；缺失引用未回退'});
++ const request=lab.start(session.id,'分别引用两点',{annotationRefs:[{...draft.ref!,objectIds:['a']},{...draft.ref!,objectIds:['b']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
++ const reads=lab.get(session.id,'alpha').messages.filter(m=>m.toolName==='annotation_read');
++ expect(JSON.parse(reads[0].text).data).toMatchObject({ref:draft.ref,query:{objectIds:['b']},objects:{total:1,items:[{objectId:'b'}]}});
++ expect(reads[1]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
++});
+diff --git a/experiments/harness-lab/tests/pi/composer-input.test.ts b/experiments/harness-lab/tests/pi/composer-input.test.ts
+index f7fe6d0..e933632 100644
+--- a/experiments/harness-lab/tests/pi/composer-input.test.ts
++++ b/experiments/harness-lab/tests/pi/composer-input.test.ts
+@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
+ import { AgentSession, SessionManager } from '@earendil-works/pi-coding-agent';
+ import { PiLab } from '../../src/pi/lab.js';
+ import { createApp } from '../../src/server/app.js';
+-import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
++import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
+ import legacyInputs from './fixtures/composer-input-legacy.json';
+ import v3Inputs from './fixtures/composer-input-v3.json';
+ import v4Inputs from './fixtures/composer-input-v4.json';
+@@ -256,10 +256,10 @@ describe('map input v5 and fixed legacy evidence', () => {
+       expect(composerHistory(entries,record.workspaceId,record.sessionId).has(record.requestId)).toBe(true);
+     }
+   });
+-  it('routes all new map selections to v5 while leaving method-only and role-only inputs on v1', () => {
++  it('routes explicit annotation selections to v6, other map selections to v5 and methods/roles to v1', () => {
+     for(const selection of [{context:source.context},{annotationRefs:annotation.annotationRefs},{annotationContext:{sessionId:source.sessionId,draft:null,baseRef:null,writable:true}}, {...source,...method,annotationRefs:annotation.annotationRefs}]) {
+-      expect(composerInputType(selection)).toBe(COMPOSER_INPUT_V5);
+-      const text=recordedComposerText(selection);
++      expect(composerInputType(selection)).toBe('annotationRefs' in selection ? COMPOSER_INPUT_V6 : COMPOSER_INPUT_V5);
++      const text=recordedComposerText({...selection,requestId:source.requestId});
+       expect(text).not.toContain('(href)');expect(text).toContain('地图入口由界面');
+       expect(decodeComposerInput({...source,context:undefined,...selection},source.workspaceId,source.sessionId,COMPOSER_INPUT_V5)).toMatchObject(selection);
+     }
+@@ -267,7 +267,7 @@ describe('map input v5 and fixed legacy evidence', () => {
+     expect(composerInputType({agent:method.agent})).toBe(COMPOSER_INPUT);
+     expect(()=>decodeComposerInput(method,method.workspaceId,method.sessionId,COMPOSER_INPUT_V4)).toThrow();
+   });
+-  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4,COMPOSER_INPUT_V5])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
++  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4,COMPOSER_INPUT_V5,COMPOSER_INPUT_V6])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
+     const record={...source,annotationRefs:annotation.annotationRefs,skill:method.skill};
+     const text=recordedComposerText(record,type),entries=native(record,type,text);
+     expect(validateHistoryEvidence(entries,record.workspaceId,record.sessionId)?.status).toBe('interrupted');
+@@ -276,7 +276,7 @@ describe('map input v5 and fixed legacy evidence', () => {
+       {...record,permissions:['write']},{...record,annotationRefs:[{...annotation.annotationRefs![0],geometry:{}}]},
+     ];
+     for(const bad of corruptions)expect(()=>decodeComposerInput(bad,record.workspaceId,record.sessionId,type)).toThrow();
+-    for(const type of ['berserk.composer-input.v6','berserk.composer-input.v4-extra']) {
++    for(const type of ['berserk.composer-input.v7','berserk.composer-input.v4-extra']) {
+       expect(()=>decodeComposerInput(record,record.workspaceId,record.sessionId,type)).toThrow();
+       expect(()=>recordedComposerText(record,type)).toThrow();
+       expect(()=>composerHistory(native(record,type,text),record.workspaceId,record.sessionId)).toThrow();
+diff --git a/experiments/harness-lab/tests/pi/provider-payload.test.ts b/experiments/harness-lab/tests/pi/provider-payload.test.ts
+index c20f2c4..244dc4c 100644
+--- a/experiments/harness-lab/tests/pi/provider-payload.test.ts
++++ b/experiments/harness-lab/tests/pi/provider-payload.test.ts
+@@ -77,8 +77,8 @@ it('inserts one fixed system snapshot immediately before the current user on the
+   expect(JSON.stringify(payloads)).not.toContain(config.apiKey);
+ });
+ 
+-it('keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references', async () => {
+-  const payloads: Array<{messages: WireMessage[]; tools: Array<{function: {name: string; description: string; parameters: {anyOf: Array<{required?: string[]; properties: Record<string, {description?: string}>}>}}}>}> = [];
++it('keeps annotation receipts in native details and UI while the actual provider receives projected content and v6 references', async () => {
++  const payloads: Array<{messages: WireMessage[]; tools: Array<{function: {name: string; description: string; parameters: {anyOf: Array<{required?: string[]; properties: Record<string, {description?: string; const?: string}>}>}}}>}> = [];
+   let publicationId = '';
+   vi.stubGlobal('fetch', async (input: Request | string | URL, init?: RequestInit) => {
+     payloads.push(JSON.parse(String(init?.body ?? (input instanceof Request ? await input.text() : ''))));
+@@ -113,8 +113,14 @@ it('keeps annotation receipts in native details and UI while the actual provider
+   // Verify descriptions survive native schema conversion without loading the optional Skill.
+   expect(lab.getRequestResources(session.id,request.requestId,'alpha')).toMatchObject({readSkills:[]});
+   const definitions=payloads[0].tools.map(tool=>tool.function);
++  expect(definitions.find(tool=>tool.name==='spatial_analyze')!.description).toContain('先提出聚焦澄清并等待');
++  expect(definitions.find(tool=>tool.name==='spatial_analyze')!.description).not.toContain('询问或完整分列条件答案');
+   const readDefinition=definitions.find(tool=>tool.name==='annotation_read')!;
+-  for(const branch of readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)) {
++  const referenceBranch=readDefinition.parameters.anyOf.find(branch=>branch.properties.mode.const==='reference')!;
++  expect(referenceBranch.required).toContain('reference');
++  expect(referenceBranch.properties).not.toHaveProperty('layerIds');
++  expect(wire).toContain('requestId');
++  for(const branch of readDefinition.parameters.anyOf.filter(branch=>'layerIds' in branch.properties)) {
+     for(const optional of ['layerIds','layerNames','objectIds','objectNames','fields']) expect(branch.required??[]).not.toContain(optional);
+     expect(branch.properties.fields.description).toContain('基础摘要始终包含 objectId/name/kind/layerId');
+     expect(branch.properties.fields.description).toContain('省略或空数组均仅返回摘要');
+@@ -130,7 +136,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
+     expect(branch.properties.objectIds.description).toContain('同时指定 layerIds 或 layerNames 时取交集');
+     expect(branch.properties.layerIds.description).toContain('同时指定 objectIds 时取交集');
+   }
+-  expect(readDefinition.parameters.anyOf.filter(branch=>'fields' in branch.properties)).toHaveLength(2);
++  expect(readDefinition.parameters.anyOf.filter(branch=>'layerIds' in branch.properties)).toHaveLength(2);
+   expect(readDefinition.description).toContain('未指定 layerIds/layerNames/objectIds/objectNames 时，在该固定版本的全部对象中分页');
+   expect(readDefinition.description).toContain('可涉及标题、图层和对象，不是对象总数');
+   expect(definitions.find(tool=>tool.name==='annotation_list')!.description).toContain('发布说明 note 不是对象备注');
+@@ -153,7 +159,7 @@ it('keeps annotation receipts in native details and UI while the actual provider
+   expect(read.data.query).toEqual({objectIds:['north'],fields:['note','attributes']});
+   expect(read.data.objects.total).toBe(1);
+   const native=(await Promise.all((await readdir(join(dir,'sessions'))).map(file=>readFile(join(dir,'sessions',file),'utf8')))).join('\n');
+-  expect(native).toContain(receipt.hash!);expect(native).toContain('berserk.composer-input.v5');
++  expect(native).toContain(receipt.hash!);expect(native).toContain('berserk.composer-input.v6');
+   await lab.close();
+   const reopened=await PiLab.create(config);cleanup.push(()=>reopened.close());
+   expect(reopened.get(session.id,'alpha').messages).toEqual(snapshot.messages);
+diff --git a/experiments/harness-lab/tests/resource-explanations.test.ts b/experiments/harness-lab/tests/resource-explanations.test.ts
+index d40bb21..817f3de 100644
+--- a/experiments/harness-lab/tests/resource-explanations.test.ts
++++ b/experiments/harness-lab/tests/resource-explanations.test.ts
+@@ -126,3 +126,10 @@ it('bounds overlap explanations for 100 legal aggregates with 500 members withou
+   console.info(JSON.stringify({fixture:'100x500-aggregate-overlap',rawBytes,projectedBytes,elapsedMs:Math.round(elapsed)}));
+ });
+ function projectedPage(r:ResourceResult,offset:number,limit:number){const p=projectResourceResult(r,offset,limit);if(!('resultMeaning' in p))throw Error('expected v3');return p;}
++
++it.each([undefined,'interior','boundary','exterior'] as const)('labels the actual spatial summary selection: %s',position=>{
++ const r=result([row('a')]);r.parameters={operation:'summarize',resultRef:'parent',spatialResultRef:'spatial:fixed',...(position?{position}:{})};
++ const html=renderToStaticMarkup(createElement(ResourceResultCard,{result:r}));
++ expect(html).toContain(position?{interior:'范围内部',boundary:'范围边界',exterior:'范围外部'}[position]:'按所选空间结果集合统计');
++ if(!position)expect(html).not.toContain('空间位置：范围内部');
++});

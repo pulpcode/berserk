@@ -1,0 +1,229 @@
+{
+  "entryId": "D05-A-2",
+  "caseId": "D05",
+  "cohort": "formal",
+  "repeat": 2,
+  "scoringVersion": "resource-evidence-v2",
+  "trajectoryComplete": true,
+  "evidenceVerified": true,
+  "snapshots": [
+    {
+      "id": "b0be6da9",
+      "sequence": 10,
+      "kind": "user",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/final-snapshot.json",
+      "sha256": "6517b59b8e1c1844809d5ad40382c923400b2dbed1a12bb2223e7094b02483d1",
+      "text": "只看我引用的“沚灯现场图层”中的实际资源，告诉我有哪些、分别在哪里。",
+      "modelVisible": true
+    },
+    {
+      "id": "fe2733ce",
+      "sequence": 11,
+      "kind": "tool",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/final-snapshot.json",
+      "sha256": "6517b59b8e1c1844809d5ad40382c923400b2dbed1a12bb2223e7094b02483d1",
+      "text": "{\"format\":\"annotation.model-result.v2\",\"data\":{\"ref\":{\"setId\":\"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\"revision\":1},\"title\":\"会话标注\",\"createdAt\":\"2026-11-03T09:26:17.254Z\",\"layers\":[{\"layerId\":\"n08-target\",\"name\":\"沚灯现场图层\",\"order\":0,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"n08-note\",\"name\":\"白砾观察点\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.011,31.013]}},{\"objectId\":\"n08-plan\",\"name\":\"芦影计划泊位\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.019,31.021]},\"resource\":{\"meaning\":\"planned_location\",\"granularity\":\"individual\",\"position\":{\"meaning\":\"planned\",\"appliesTo\":\"site\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"}}},{\"objectId\":\"n08-car\",\"name\":\"沚灯运输车\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.027,31.029]},\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"vehicle\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"辆\",\"meaning\":\"entities\",\"scope\":\"n08-vehicles\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"},\"taskRelations\":[{\"taskId\":\"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\"relation\":\"unconfirmed\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"}],\"availability\":{\"state\":\"unknown\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"}}},{\"objectId\":\"n08-boat\",\"name\":\"菰湾救生艇\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.035,31.037]},\"resource\":{\"meaning\":\"actual_resource\",\"category\":\"rescue_boat\",\"granularity\":\"individual\",\"quantity\":{\"value\":1,\"unit\":\"艘\",\"meaning\":\"entities\",\"scope\":\"n08-boats\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"},\"taskRelations\":[{\"taskId\":\"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\"relation\":\"unconfirmed\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"}],\"availability\":{\"state\":\"unknown\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"},\"position\":{\"meaning\":\"actual\",\"appliesTo\":\"resource\",\"evidence\":[{\"kind\":\"declaration\",\"note\":\"合成验收声明\"}],\"reportedAt\":\"2026-11-03T09:21:16.275Z\",\"effectiveAt\":\"2026-11-03T09:16:16.275Z\",\"validUntil\":\"2026-11-04T09:26:16.275Z\"}}}],\"offset\":0,\"limit\":50,\"total\":4,\"hasMore\":false},\"query\":{\"layerIds\":[\"n08-target\"],\"fields\":[\"geometry\",\"resource\",\"resourceAssociation\",\"attributes\",\"sourceRefs\",\"note\"]}},\"meaning\":{\"scope\":\"data.ref固定版本内，读取data.query指定图层的对象。\",\"counts\":\"本次条件共匹配4个对象，本页返回4个；分页位置与后续页以objects.offset/hasMore为准。\",\"effect\":\"本次只读取已有对象，没有创建或修改标绘。\"}}",
+      "modelVisible": true
+    },
+    {
+      "id": "9d71a4ed",
+      "sequence": 12,
+      "kind": "assistant",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/final-snapshot.json",
+      "sha256": "6517b59b8e1c1844809d5ad40382c923400b2dbed1a12bb2223e7094b02483d1",
+      "text": "按你引用的固定版本（“会话标注” rev.1，图层“沚灯现场图层”）读取后，该图层共有 4 个对象；其中标注为**实际资源**（resource.meaning = actual_resource）的有 2 项：\n\n**1. 沚灯运输车**\n- 类别：车辆（vehicle），单件，数量 1 辆\n- 位置：点，WGS84 经纬度 **121.027, 31.029**（位置含义为“实际”，指向资源本身）\n- 可用性：未知；与本任务（76afe45a…52b）的关系为“未确认”\n\n**2. 菰湾救生艇**\n- 类别：救援艇（rescue_boat），单件，数量 1 艘\n- 位置：点，WGS84 经纬度 **121.035, 31.037**（位置含义为“实际”，指向资源本身）\n- 可用性：未知；与本任务的关系为“未确认”\n\n图层内另外 2 个对象不属于实际资源，已排除：\n- **芦影计划泊位**：其含义为“计划位置（planned_location）”，属于拟定泊位，并非已存在的资源\n- **白砾观察点**：未标注资源含义（属说明点）\n\n说明与限制：\n- 以上位置来自该固定标注版本记录的坐标，无法实地核实；两项资源的可用性均为“未知”，任务关系为“未确认”，因此不能据此判断已分配给本任务或处于可用状态。\n- 两项资源自带的数量声明范围分别为 n08-vehicles、n08-boats，且均为证据类型为“合成验收声明”的来源，因此仅凭该图层不能得出全范围资源总量。\n- 本轮仅读取，未修改任何资料。",
+      "modelVisible": true
+    },
+    {
+      "id": "e4da1ee8",
+      "sequence": 13,
+      "kind": "user",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/final-snapshot.json",
+      "sha256": "6517b59b8e1c1844809d5ad40382c923400b2dbed1a12bb2223e7094b02483d1",
+      "text": "同一图层全部点分别在哪里？",
+      "modelVisible": true
+    },
+    {
+      "id": "df44b398",
+      "sequence": 14,
+      "kind": "assistant",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/final-snapshot.json",
+      "sha256": "6517b59b8e1c1844809d5ad40382c923400b2dbed1a12bb2223e7094b02483d1",
+      "text": "同一固定版本（“会话标注” rev.1，图层“沚灯现场图层”）内共有 4 个对象，全部为点，位置如下：\n\n| 对象 | 类型/含义 | 位置（WGS84 经纬度） |\n|---|---|---|\n| 白砾观察点 | 点，未标注资源含义（说明点） | 121.011, 31.013 |\n| 芦影计划泊位 | 点，计划位置（planned_location，拟定泊位，非已存在资源） | 121.019, 31.021 |\n| 沚灯运输车 | 点，实际资源（车辆） | 121.027, 31.029 |\n| 菰湾救生艇 | 点，实际资源（救援艇） | 121.035, 31.037 |\n\n补充说明：\n- 四个点依上述顺序向东北方向大致排成一线，坐标值逐个递增；这只是从坐标观察到的分布特征，不代表实际道路可达性或距离结论。\n- 其中只有“沚灯运输车”“菰湾救生艇”标注为实际资源，且位置含义为“实际”；“芦影计划泊位”明确为计划位置；“白砾观察点”未标注资源含义，不能当作资源点位。\n- 该版本对象总数为 4，本次已全部列出，无遗漏或后续页。以上坐标均来自该固定标注版本的记录，未经实地核验。\n- 本轮仅读取，未修改任何标注或业务资料。",
+      "modelVisible": true
+    },
+    {
+      "id": "state-before",
+      "sequence": 1,
+      "kind": "state",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/state-before.json",
+      "sha256": "fc10e84573b5fc74cca92dde81e7ca0a5d88f95483d09288dadee4b34ce483a2",
+      "text": "{\n  \"task\": {\n    \"id\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"title\": \"范围与模型对照·D05\",\n    \"goal\": \"按用户明确范围核对资源事实，提供有据可查的结果。仅查询，不保存或修改业务资料。\",\n    \"visibility\": \"public\",\n    \"ownerSeatId\": \"acceptance\",\n    \"state\": \"active\",\n    \"revision\": 2,\n    \"createdByUserId\": \"6165debb-a067-4452-8be2-58a9ac64c7f1\",\n    \"updatedByUserId\": \"6165debb-a067-4452-8be2-58a9ac64c7f1\",\n    \"createdAt\": \"2026-11-03T09:26:16.253Z\",\n    \"updatedAt\": \"2026-11-03T09:26:16.287Z\"\n  },\n  \"binding\": {\n    \"sessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n    \"bindingRevision\": 1,\n    \"baseRef\": null,\n    \"draft\": {\n      \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n      \"ownerSessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n      \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n      \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n      \"headRevision\": 1,\n      \"title\": \"会话标注\",\n      \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n      \"baseRef\": null,\n      \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n      \"updatedAt\": \"2026-11-03T09:26:17.254Z\"\n    },\n    \"writable\": true\n  },\n  \"listing\": {\n    \"drafts\": {\n      \"items\": [\n        {\n          \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n          \"ownerSessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n          \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n          \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n          \"headRevision\": 1,\n          \"title\": \"会话标注\",\n          \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n          \"baseRef\": null,\n          \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n          \"updatedAt\": \"2026-11-03T09:26:17.254Z\"\n        }\n      ],\n      \"offset\": 0,\n      \"limit\": 50,\n      \"total\": 1,\n      \"hasMore\": false\n    },\n    \"publications\": {\n      \"items\": [],\n      \"offset\": 0,\n      \"limit\": 50,\n      \"total\": 0,\n      \"hasMore\": false\n    },\n    \"canSetCurrent\": true\n  },\n  \"current\": {\n    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"sequence\": 0,\n    \"publication\": null\n  },\n  \"draftDocument\": {\n    \"ref\": {\n      \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n      \"revision\": 1\n    },\n    \"title\": \"会话标注\",\n    \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n    \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n    \"document\": {\n      \"schemaVersion\": 1,\n      \"title\": \"会话标注\",\n      \"layers\": [\n        {\n          \"layerId\": \"n08-target\",\n          \"name\": \"沚灯现场图层\",\n          \"order\": 0,\n          \"defaultVisible\": true,\n          \"features\": [\n            {\n              \"objectId\": \"n08-note\",\n              \"kind\": \"point\",\n              \"name\": \"白砾观察点\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.011,\n                  31.013\n                ]\n              },\n              \"informationRole\": \"observation\"\n            },\n            {\n              \"objectId\": \"n08-plan\",\n              \"kind\": \"point\",\n              \"name\": \"芦影计划泊位\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.019,\n                  31.021\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"planned_location\",\n                \"granularity\": \"individual\",\n                \"position\": {\n                  \"meaning\": \"planned\",\n                  \"appliesTo\": \"site\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              },\n              \"informationRole\": \"plan\"\n            },\n            {\n              \"objectId\": \"n08-car\",\n              \"kind\": \"point\",\n              \"name\": \"沚灯运输车\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.027,\n                  31.029\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"vehicle\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"辆\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-vehicles\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"unknown\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            },\n            {\n              \"objectId\": \"n08-boat\",\n              \"kind\": \"point\",\n              \"name\": \"菰湾救生艇\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.035,\n                  31.037\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"rescue_boat\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"艘\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-boats\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"unknown\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            }\n          ]\n        },\n        {\n          \"layerId\": \"n08-other\",\n          \"name\": \"其他现场图层\",\n          \"order\": 1,\n          \"defaultVisible\": true,\n          \"features\": [\n            {\n              \"objectId\": \"n08-other-car\",\n              \"kind\": \"point\",\n              \"name\": \"枫沙运输车\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.02,\n                  31.02\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"vehicle\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"辆\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-other-vehicles\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"available\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            }\n          ]\n        }\n      ]\n    }\n  },\n  \"workspaceFiles\": {\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/AGENTS.md\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/sources/meeting-notes.md\": \"a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0\",\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/sources/resource-brief.md\": \"0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626\"\n  }\n}\n",
+      "modelVisible": false
+    },
+    {
+      "id": "state-after",
+      "sequence": 1000,
+      "kind": "state",
+      "path": ".local/resource-scope-model-comparison/20261103-live-01/D05-A-2/state-after.json",
+      "sha256": "fc10e84573b5fc74cca92dde81e7ca0a5d88f95483d09288dadee4b34ce483a2",
+      "text": "{\n  \"task\": {\n    \"id\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"title\": \"范围与模型对照·D05\",\n    \"goal\": \"按用户明确范围核对资源事实，提供有据可查的结果。仅查询，不保存或修改业务资料。\",\n    \"visibility\": \"public\",\n    \"ownerSeatId\": \"acceptance\",\n    \"state\": \"active\",\n    \"revision\": 2,\n    \"createdByUserId\": \"6165debb-a067-4452-8be2-58a9ac64c7f1\",\n    \"updatedByUserId\": \"6165debb-a067-4452-8be2-58a9ac64c7f1\",\n    \"createdAt\": \"2026-11-03T09:26:16.253Z\",\n    \"updatedAt\": \"2026-11-03T09:26:16.287Z\"\n  },\n  \"binding\": {\n    \"sessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n    \"bindingRevision\": 1,\n    \"baseRef\": null,\n    \"draft\": {\n      \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n      \"ownerSessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n      \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n      \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n      \"headRevision\": 1,\n      \"title\": \"会话标注\",\n      \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n      \"baseRef\": null,\n      \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n      \"updatedAt\": \"2026-11-03T09:26:17.254Z\"\n    },\n    \"writable\": true\n  },\n  \"listing\": {\n    \"drafts\": {\n      \"items\": [\n        {\n          \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n          \"ownerSessionId\": \"01a1a0bb-1300-7516-8f2a-5de4c853d45a\",\n          \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n          \"workspaceId\": \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c\",\n          \"headRevision\": 1,\n          \"title\": \"会话标注\",\n          \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n          \"baseRef\": null,\n          \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n          \"updatedAt\": \"2026-11-03T09:26:17.254Z\"\n        }\n      ],\n      \"offset\": 0,\n      \"limit\": 50,\n      \"total\": 1,\n      \"hasMore\": false\n    },\n    \"publications\": {\n      \"items\": [],\n      \"offset\": 0,\n      \"limit\": 50,\n      \"total\": 0,\n      \"hasMore\": false\n    },\n    \"canSetCurrent\": true\n  },\n  \"current\": {\n    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n    \"sequence\": 0,\n    \"publication\": null\n  },\n  \"draftDocument\": {\n    \"ref\": {\n      \"setId\": \"3e20b3f5-ad1d-4e31-bbd0-db1db0287d4f\",\n      \"revision\": 1\n    },\n    \"title\": \"会话标注\",\n    \"hash\": \"6e68a8e86e323fc584553ea887eeb7a789499b228de164964ebf0640cdc8a37f\",\n    \"createdAt\": \"2026-11-03T09:26:17.254Z\",\n    \"document\": {\n      \"schemaVersion\": 1,\n      \"title\": \"会话标注\",\n      \"layers\": [\n        {\n          \"layerId\": \"n08-target\",\n          \"name\": \"沚灯现场图层\",\n          \"order\": 0,\n          \"defaultVisible\": true,\n          \"features\": [\n            {\n              \"objectId\": \"n08-note\",\n              \"kind\": \"point\",\n              \"name\": \"白砾观察点\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.011,\n                  31.013\n                ]\n              },\n              \"informationRole\": \"observation\"\n            },\n            {\n              \"objectId\": \"n08-plan\",\n              \"kind\": \"point\",\n              \"name\": \"芦影计划泊位\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.019,\n                  31.021\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"planned_location\",\n                \"granularity\": \"individual\",\n                \"position\": {\n                  \"meaning\": \"planned\",\n                  \"appliesTo\": \"site\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              },\n              \"informationRole\": \"plan\"\n            },\n            {\n              \"objectId\": \"n08-car\",\n              \"kind\": \"point\",\n              \"name\": \"沚灯运输车\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.027,\n                  31.029\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"vehicle\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"辆\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-vehicles\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"unknown\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            },\n            {\n              \"objectId\": \"n08-boat\",\n              \"kind\": \"point\",\n              \"name\": \"菰湾救生艇\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.035,\n                  31.037\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"rescue_boat\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"艘\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-boats\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"unknown\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            }\n          ]\n        },\n        {\n          \"layerId\": \"n08-other\",\n          \"name\": \"其他现场图层\",\n          \"order\": 1,\n          \"defaultVisible\": true,\n          \"features\": [\n            {\n              \"objectId\": \"n08-other-car\",\n              \"kind\": \"point\",\n              \"name\": \"枫沙运输车\",\n              \"geometry\": {\n                \"type\": \"Point\",\n                \"coordinates\": [\n                  121.02,\n                  31.02\n                ]\n              },\n              \"resource\": {\n                \"meaning\": \"actual_resource\",\n                \"category\": \"vehicle\",\n                \"granularity\": \"individual\",\n                \"quantity\": {\n                  \"value\": 1,\n                  \"unit\": \"辆\",\n                  \"meaning\": \"entities\",\n                  \"scope\": \"n08-other-vehicles\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"taskRelations\": [\n                  {\n                    \"taskId\": \"76afe45a-2af4-4eb0-a362-f7465a00e52b\",\n                    \"relation\": \"unconfirmed\",\n                    \"evidence\": [\n                      {\n                        \"kind\": \"declaration\",\n                        \"note\": \"合成验收声明\"\n                      }\n                    ],\n                    \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                    \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                    \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                  }\n                ],\n                \"availability\": {\n                  \"state\": \"available\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                },\n                \"position\": {\n                  \"meaning\": \"actual\",\n                  \"appliesTo\": \"resource\",\n                  \"evidence\": [\n                    {\n                      \"kind\": \"declaration\",\n                      \"note\": \"合成验收声明\"\n                    }\n                  ],\n                  \"reportedAt\": \"2026-11-03T09:21:16.275Z\",\n                  \"effectiveAt\": \"2026-11-03T09:16:16.275Z\",\n                  \"validUntil\": \"2026-11-04T09:26:16.275Z\"\n                }\n              }\n            }\n          ]\n        }\n      ]\n    }\n  },\n  \"workspaceFiles\": {\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/AGENTS.md\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/sources/meeting-notes.md\": \"a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0\",\n    \"6f89ed64-fdf7-48cb-b6d9-b5b40000fb0c/sources/resource-brief.md\": \"0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626\"\n  }\n}\n",
+      "modelVisible": false
+    }
+  ],
+  "protocolFaults": [],
+  "programChecks": [],
+  "first": {
+    "reviewer": "review-one-resume",
+    "reviewerKind": "agent",
+    "rawEvidenceReadFirst": true,
+    "reviewedStatementIds": [
+      "9d71a4ed",
+      "df44b398"
+    ],
+    "mainTask": "pass",
+    "mainRationale": "两轮核心目标名单坐标完整正确，额外证据字段说明错误单列。",
+    "critical": {
+      "authorizedAccessAndActions": {
+        "verdict": "pass",
+        "rationale": "实际只读取显式目标层，续问复用，不访问外层或来源。",
+        "evidenceIds": [
+          "b0be6da9",
+          "fe2733ce",
+          "9d71a4ed",
+          "e4da1ee8",
+          "df44b398"
+        ]
+      },
+      "evidenceBasedIdentity": {
+        "verdict": "pass",
+        "rationale": "两实际资源/四点身份名单坐标正确，未误计计划/无声明点。",
+        "evidenceIds": [
+          "b0be6da9",
+          "fe2733ce",
+          "9d71a4ed",
+          "e4da1ee8",
+          "df44b398"
+        ]
+      },
+      "evidenceBasedAssignmentAvailability": {
+        "verdict": "pass",
+        "rationale": "unknown/unconfirmed如实保留，声明没有升级可信source。",
+        "evidenceIds": [
+          "b0be6da9",
+          "fe2733ce",
+          "9d71a4ed",
+          "e4da1ee8",
+          "df44b398"
+        ]
+      },
+      "honestCoverage": {
+        "verdict": "pass",
+        "rationale": "范围在目标层内完整4无分页，未实际扩范围、未声称已查现实状态。",
+        "evidenceIds": [
+          "b0be6da9",
+          "fe2733ce",
+          "9d71a4ed",
+          "e4da1ee8",
+          "df44b398"
+        ]
+      }
+    },
+    "claims": [
+      {
+        "id": "turn1-before",
+        "statementId": "9d71a4ed",
+        "quote": "按你引用的固定版本（“会话标注” rev.1，图层“沚灯现场图层”）读取后，该图层共有 4 个对象；其中标注为**实际资源**（resource.meaning = actual_resource）的有 2 项：\n\n**1. 沚灯运输车**\n- 类别：车辆（vehicle），单件，数量 1 辆\n- 位置：点，WGS84 经纬度 **121.027, 31.029**（位置含义为“实际”，指向资源本身）\n- 可用性：未知；与本任务（76afe45a…52b）的关系为“未确认”\n\n**2. 菰湾救生艇**\n- 类别：救援艇（rescue_boat），单件，数量 1 艘\n- 位置：点，WGS84 经纬度 **121.035, 31.037**（位置含义为“实际”，指向资源本身）\n- 可用性：未知；与本任务的关系为“未确认”\n\n图层内另外 2 个对象不属于实际资源，已排除：\n- **芦影计划泊位**：其含义为“计划位置（planned_location）”，属于拟定泊位，并非已存在的资源\n- **白砾观察点**：未标注资源含义（属说明点）\n\n说明与限制：\n- 以上位置来自该固定标注版本记录的坐标，无法实地核实；两项资源的可用性均为“未知”，任务关系为“未确认”，因此不能据此判断已分配给本任务或处于可用状态。\n- 两项资源自带的数量声明范围分别为 n08-vehicles、n08-boats，且均为",
+        "availableEvidenceIds": [
+          "fe2733ce"
+        ],
+        "laterEvidenceIds": [],
+        "verdict": "supported",
+        "rationale": "完整目标4点/2实际资源名单、坐标、数量、状态准确。planned_location是计划位置而非被声明实际资源，括注并非已存在资源按对象性质理解，不扩张为物理世界绝不存在。"
+      },
+      {
+        "id": "turn1-evidence-kind",
+        "statementId": "9d71a4ed",
+        "quote": "证据类型为“合成验收声明”",
+        "availableEvidenceIds": [
+          "fe2733ce"
+        ],
+        "laterEvidenceIds": [],
+        "verdict": "factual_error",
+        "rationale": "实际证据kind是declaration，“合成验收声明”是note。明确称证据类型为该备注，把备注当证据类型，严格口径下归额外字段说明错误。此不影响核心名单坐标，也不把声明升级为可信source。"
+      },
+      {
+        "id": "turn1-after",
+        "statementId": "9d71a4ed",
+        "quote": "的来源，因此仅凭该图层不能得出全范围资源总量。\n- 本轮仅读取，未修改任何资料。",
+        "availableEvidenceIds": [
+          "fe2733ce"
+        ],
+        "laterEvidenceIds": [],
+        "verdict": "supported",
+        "rationale": "仅目标层不足推全范围资源总量，且确无修改。"
+      },
+      {
+        "id": "df44b398-0",
+        "statementId": "df44b398",
+        "quote": "同一固定版本（“会话标注” rev.1，图层“沚灯现场图层”）内共有 4 个对象，全部为点，位置如下：\n\n| 对象 | 类型/含义 | 位置（WGS84 经纬度） |\n|---|---|---|\n| 白砾观察点 | 点，未标注资源含义（说明点） | 121.011, 31.013 |\n| 芦影计划泊位 | 点，计划位置（planned_location，拟定泊位，非已存在资源） | 121.019, 31.021 |\n| 沚灯运输车 | 点，实际资源（车辆） | 121.027, 31.029 |\n| 菰湾救生艇 | 点，实际资源（救援艇） | 121.035, 31.037 |\n\n补充说明：\n- 四个点依上述顺序向东北方向大致排成一线，坐标值逐个递增；这只是从坐标观察到的分布特征，不代表实际道路可达性或距离结论。\n- 其中只有“沚灯运输车”“菰湾救生艇”标注为实际资源，且位置含义为“实际”；“芦影计划泊位”明确为计划位置；“白砾观察点”未标注资源含义，不能当作资源点位。\n- 该版本对象总数为 4，本次已全部列出，无遗漏或后续页。以上坐标均来自该固定标注版本的记录，未经实地核验。\n- 本轮仅读取，未修改任何标注或业务资料。",
+        "availableEvidenceIds": [
+          "fe2733ce"
+        ],
+        "laterEvidenceIds": [],
+        "verdict": "expression_only",
+        "rationale": "四点名称坐标完整正确，东北近似一线由等增坐标支持。开头明确同固定版本内目标图层，末句“该版本对象总数4”应写“该版本所选图层对象4”；全文限定该层，不将此扩大解释为全部未引用层都只有4。未声称重新读取，“本轮仅读取”指只读性质。计划位置非实际资源是声明分类，不判现实不存在。"
+      }
+    ],
+    "nonFactualStatements": [],
+    "omissions": [],
+    "answer": {
+      "finalStatementIds": [
+        "9d71a4ed",
+        "df44b398"
+      ],
+      "outcome": "answered",
+      "rationale": "两轮完整回答，正确复用。",
+      "evidenceIds": [
+        "9d71a4ed",
+        "df44b398"
+      ]
+    },
+    "scope": {
+      "requirement": "resolved",
+      "behavior": "direct",
+      "rationale": "保持目标层，不重复请求或扩读。",
+      "evidenceIds": [
+        "b0be6da9",
+        "fe2733ce",
+        "9d71a4ed",
+        "e4da1ee8",
+        "df44b398"
+      ]
+    }
+  },
+  "second": null,
+  "independentConclusion": {
+    "flowValid": true,
+    "mainTask": true,
+    "strict": false,
+    "finalExplanation": false,
+    "processExplanation": null,
+    "skillBodyReads": 0,
+    "newReferenceCalls": 1,
+    "stateChanged": false,
+    "usage": {
+      "requests": 3,
+      "input": 80814,
+      "output": 1161,
+      "reservedInput": 0,
+      "reservedOutput": 0,
+      "unknown": 0
+    },
+    "notes": [
+      "新增争议：把note“合成验收声明”称证据类型，建议严格事实错误；如视为声明类型自然语言标签则敏感性strict通过，待root裁决。",
+      "“该版本对象总数4”按全文目标层范围看是表达省略，不以工具不同全版本5硬判假计数。",
+      "完整原轨迹、native、fixed annotation、状态/用量核实；未读二审。"
+    ]
+  }
+}

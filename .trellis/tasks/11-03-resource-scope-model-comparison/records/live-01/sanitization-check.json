@@ -1,0 +1,11 @@
+{
+  "archives": 28,
+  "archiveMembersScanned": 1314,
+  "exactCredentialScanPassed": true,
+  "excluded": [
+    "data/**",
+    "credentials.json"
+  ],
+  "noUnexpectedArchiveMembers": true,
+  "allArchiveHashesPassed": true
+}

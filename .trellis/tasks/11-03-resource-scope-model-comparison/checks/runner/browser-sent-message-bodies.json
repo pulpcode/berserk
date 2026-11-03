@@ -1,0 +1,14 @@
+[
+  {
+    "text": "只看我引用的测试图层，列出其中所有点的名称和坐标。",
+    "annotationRefs": [
+      {
+        "setId": "7fbdf36f-e651-4dc4-9b33-e907365a6f08",
+        "revision": 1,
+        "layerIds": [
+          "n08-target"
+        ]
+      }
+    ]
+  }
+]

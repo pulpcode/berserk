@@ -126,3 +126,10 @@ it('bounds overlap explanations for 100 legal aggregates with 500 members withou
   console.info(JSON.stringify({fixture:'100x500-aggregate-overlap',rawBytes,projectedBytes,elapsedMs:Math.round(elapsed)}));
 });
 function projectedPage(r:ResourceResult,offset:number,limit:number){const p=projectResourceResult(r,offset,limit);if(!('resultMeaning' in p))throw Error('expected v3');return p;}
+
+it.each([undefined,'interior','boundary','exterior'] as const)('labels the actual spatial summary selection: %s',position=>{
+ const r=result([row('a')]);r.parameters={operation:'summarize',resultRef:'parent',spatialResultRef:'spatial:fixed',...(position?{position}:{})};
+ const html=renderToStaticMarkup(createElement(ResourceResultCard,{result:r}));
+ expect(html).toContain(position?{interior:'范围内部',boundary:'范围边界',exterior:'范围外部'}[position]:'按所选空间结果集合统计');
+ if(!position)expect(html).not.toContain('空间位置：范围内部');
+});

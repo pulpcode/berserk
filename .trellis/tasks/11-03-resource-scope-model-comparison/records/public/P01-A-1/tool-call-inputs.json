@@ -1,0 +1,20 @@
+[
+  {
+    "firstObservedIn": "provider-0002-native-request.json",
+    "id": "call_00_6xp6i90nkd257u58myz78xik",
+    "type": "function",
+    "function": {
+      "name": "annotation_read",
+      "arguments": "{\"mode\":\"reference\",\"reference\":{\"requestId\":\"efc629bc-ffce-4b20-9465-f729f64e0194\",\"index\":0},\"fields\":[\"geometry\"],\"limit\":100}"
+    }
+  },
+  {
+    "firstObservedIn": "provider-0004-native-request.json",
+    "id": "call_00_mkintwh0le4t3lht11263flw",
+    "type": "function",
+    "function": {
+      "name": "annotation_read",
+      "arguments": "{\"fields\":[\"geometry\"],\"limit\":100,\"mode\":\"reference\",\"reference\":{\"index\":0,\"requestId\":\"efc629bc-ffce-4b20-9465-f729f64e0194\"}}"
+    }
+  }
+]

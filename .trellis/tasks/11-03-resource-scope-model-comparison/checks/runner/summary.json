@@ -1,0 +1,24 @@
+{
+  "liveModelCalls": 0,
+  "nativeTests": {
+    "passed": 29,
+    "total": 29,
+    "scope": "28 scheduled slots through real HTTP/Pi with deterministic model; tool reasoning replay and multi-question actual API"
+  },
+  "browser": {
+    "passed": true,
+    "case": "P01",
+    "scope": "first turn real reference click/send/render only; continuation covered native offline"
+  },
+  "unitLog": "runner-unit.log",
+  "typecheck": "passed",
+  "eslint": "passed",
+  "nativeEvidenceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/scope-native-offline-Eb07cj",
+  "browserEvidenceDirectory": "/tmp/scope-browser-offline-20261103",
+  "initialSandboxError": "EPERM localhost listen; preserved; permitted local-only rerun passed",
+  "notClaimed": [
+    "live model accuracy",
+    "independent acceptance eligibility",
+    "T01-T08 tool gate (separate check)"
+  ]
+}

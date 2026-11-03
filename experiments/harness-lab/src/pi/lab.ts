@@ -23,7 +23,7 @@ import type { ContextPrincipal } from '../contracts/context.js';
 import { MODEL_SELECTION, selectedModelId } from './model-selection.js';
 import { AccessStore } from '../access/store.js';
 import { openDatabase, assertDataMode } from '../access/database.js';
-import { composerInputType, agentInfo, composerHistory, recordedComposerText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
+import { composerInputType, resolveAnnotationReference, agentInfo, composerHistory, recordedComposerText, resolveComposerSelection, selectedChildInput } from './composer-input.js';
 import { isDeepStrictEqual } from 'node:util';
 import { randomUUID, createHash } from 'node:crypto';
 import { mkdir, readdir, writeFile, lstat } from 'node:fs/promises';
@@ -764,6 +764,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       ...(!active.background && this.annotations && active.annotationActor ? annotationTools(this.annotations, {
         actor: active.annotationActor, sessionId: record.manager.getSessionId(), taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!,
         requestId: active.id, signal: active.controller.signal, check: authorizeRequest, state: annotationState, skillIds: snapshot.skills.map(skill => skill.id),
+        resolveReference: reference => resolveAnnotationReference(record.manager.getBranch(), record.workspaceId, record.manager.getSessionId(), reference),
       }) : []),
       ...(!active.background && this.annotations && active.annotationActor && annotationState ? spatialTools(this.annotations, this.context, record.manager, {
         actor:active.annotationActor,sessionId:record.manager.getSessionId(),taskId:this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId!,
@@ -1130,7 +1131,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       if (active.files?.length) await session.sendCustomMessage({ customType: FILE_INPUT, display: false,
         content: fileReferenceText(active.files), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, files: active.files } });
       if (active.selections) await session.sendCustomMessage({ customType: composerInputType(active.selections), display: false,
-        content: recordedComposerText(active.selections), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
+        content: recordedComposerText({...active.selections,requestId:active.id}), details: { workspaceId: record.workspaceId, sessionId: id, requestId: active.id, ...active.selections } });
       if (!active.reason) {
         unsubscribe = session.subscribe(event => {
           if (record.active !== active || active.reason) return;

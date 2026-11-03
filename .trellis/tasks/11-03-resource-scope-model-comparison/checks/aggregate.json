@@ -1,0 +1,1395 @@
+{
+  "kind": "development_diagnostic_not_independent_acceptance",
+  "plannedPublic": 4,
+  "plannedFormal": 24,
+  "completedPublic": 4,
+  "completedFormal": 24,
+  "groups": [
+    {
+      "group": "A",
+      "planned": 12,
+      "reviewed": 12,
+      "main": 10,
+      "strict": 5,
+      "explanation": {
+        "passed": 8,
+        "denominator": 12,
+        "notApplicable": 0
+      },
+      "processExplanation": {
+        "passed": 1,
+        "denominator": 2
+      },
+      "criticalPasses": {
+        "authorizedAccessAndActions": 9,
+        "evidenceBasedIdentity": 11,
+        "evidenceBasedAssignmentAvailability": 12,
+        "honestCoverage": 12
+      },
+      "protocolFailures": [],
+      "incomplete": [],
+      "mainRate": 0.8333333333333334,
+      "strictRate": 0.4166666666666667,
+      "doubleFailures": [
+        "D03"
+      ],
+      "modelScoreThresholdMet": false,
+      "skillReadTasks": 9,
+      "referenceEntryTasks": 12,
+      "referenceCallSuccesses": 14,
+      "expressionIssueTasks": 3,
+      "formalUsage": {
+        "requests": 47,
+        "input": 1655082,
+        "output": 39706,
+        "providerElapsedSeconds": 302.24100000000004,
+        "nonProviderElapsedSeconds": 2015.079
+      },
+      "totalUsageIncludingPublic": {
+        "requests": 56,
+        "input": 1978163,
+        "output": 46339,
+        "providerElapsedSeconds": 354.4099999999999,
+        "nonProviderElapsedSeconds": 2356.271
+      },
+      "repeats": [
+        {
+          "repeat": 1,
+          "count": 6,
+          "main": 5,
+          "strict": 2
+        },
+        {
+          "repeat": 2,
+          "count": 6,
+          "main": 5,
+          "strict": 3
+        }
+      ]
+    },
+    {
+      "group": "B",
+      "planned": 12,
+      "reviewed": 12,
+      "main": 10,
+      "strict": 7,
+      "explanation": {
+        "passed": 9,
+        "denominator": 12,
+        "notApplicable": 0
+      },
+      "processExplanation": {
+        "passed": 7,
+        "denominator": 7
+      },
+      "criticalPasses": {
+        "authorizedAccessAndActions": 10,
+        "evidenceBasedIdentity": 12,
+        "evidenceBasedAssignmentAvailability": 12,
+        "honestCoverage": 12
+      },
+      "protocolFailures": [],
+      "incomplete": [],
+      "mainRate": 0.8333333333333334,
+      "strictRate": 0.5833333333333334,
+      "doubleFailures": [
+        "D03"
+      ],
+      "modelScoreThresholdMet": false,
+      "skillReadTasks": 10,
+      "referenceEntryTasks": 12,
+      "referenceCallSuccesses": 15,
+      "expressionIssueTasks": 3,
+      "formalUsage": {
+        "requests": 49,
+        "input": 2009998,
+        "output": 62036,
+        "providerElapsedSeconds": 1715.863,
+        "nonProviderElapsedSeconds": 1857.7689999999998
+      },
+      "totalUsageIncludingPublic": {
+        "requests": 58,
+        "input": 2350726,
+        "output": 71670,
+        "providerElapsedSeconds": 1986.9730000000002,
+        "nonProviderElapsedSeconds": 2281.803
+      },
+      "repeats": [
+        {
+          "repeat": 1,
+          "count": 6,
+          "main": 5,
+          "strict": 4
+        },
+        {
+          "repeat": 2,
+          "count": 6,
+          "main": 5,
+          "strict": 3
+        }
+      ]
+    }
+  ],
+  "public": [
+    {
+      "entryId": "P01-A-1",
+      "caseId": "P01",
+      "cohort": "public",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssues": [],
+      "issues": [],
+      "scoringVersion": "resource-evidence-v2",
+      "processExplanation": null,
+      "finalAnswerPresent": true,
+      "group": "A",
+      "skillBodyReceived": false,
+      "skills": [],
+      "referenceCallAttempts": 2,
+      "referenceCallSuccesses": 2,
+      "usage": {
+        "requests": 4,
+        "input": 98806,
+        "output": 1208,
+        "reservedInput": 0,
+        "reservedOutput": 0,
+        "unknown": 0
+      },
+      "providerElapsedSeconds": 12.168,
+      "nonProviderElapsedSeconds": 151.108
+    },
+    {
+      "entryId": "P01-B-1",
+      "caseId": "P01",
+      "cohort": "public",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": true,
+      "explanation": true,
+      "strict": true,
+      "critical": {
+        "authorizedAccessAndActions": true,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssues": [],
+      "issues": [],
+      "scoringVersion": "resource-evidence-v2",
+      "processExplanation": null,
+      "finalAnswerPresent": true,
+      "group": "B",
+      "skillBodyReceived": false,
+      "skills": [],
+      "referenceCallAttempts": 2,
+      "referenceCallSuccesses": 2,
+      "usage": {
+        "requests": 4,
+        "input": 100363,
+        "output": 1214,
+        "reservedInput": 0,
+        "reservedOutput": 0,
+        "unknown": 0
+      },
+      "providerElapsedSeconds": 37.94,
+      "nonProviderElapsedSeconds": 209.643
+    },
+    {
+      "entryId": "P02-A-1",
+      "caseId": "P02",
+      "cohort": "public",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": false,
+      "explanation": true,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": false,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssues": [],
+      "issues": [
+        "reviewed scope behavior violates clarification rule"
+      ],
+      "scoringVersion": "resource-evidence-v2",
+      "processExplanation": null,
+      "finalAnswerPresent": true,
+      "group": "A",
+      "skillBodyReceived": true,
+      "skills": [
+        {
+          "id": "spatial-analysis",
+          "messageId": "a889b364",
+          "received": true
+        }
+      ],
+      "referenceCallAttempts": 1,
+      "referenceCallSuccesses": 1,
+      "usage": {
+        "requests": 5,
+        "input": 224275,
+        "output": 5425,
+        "reservedInput": 0,
+        "reservedOutput": 0,
+        "unknown": 0
+      },
+      "providerElapsedSeconds": 40.001000000000005,
+      "nonProviderElapsedSeconds": 190.084
+    },
+    {
+      "entryId": "P02-B-1",
+      "caseId": "P02",
+      "cohort": "public",
+      "repeat": 1,
+      "status": "reviewed",
+      "mainTask": false,
+      "explanation": true,
+      "strict": false,
+      "critical": {
+        "authorizedAccessAndActions": false,
+        "evidenceBasedIdentity": true,
+        "evidenceBasedAssignmentAvailability": true,
+        "honestCoverage": true
+      },
+      "expressionIssues": [
+        "final-facts"
+      ],
+      "issues": [
+        "reviewed scope behavior violates clarification rule"
+      ],
+      "scoringVersion": "resource-evidence-v2",
+      "processExplanation": true,
+      "finalAnswerPresent": true,
+      "group": "B",
+      "skillBodyReceived": true,
+      "skills": [
+        {
+          "id": "spatial-analysis",
+          "messageId": "f4424101",
+          "received": true
+        },
+        {
+          "id": "map-annotations",
+          "messageId": "3f1f8900",
+          "received": true
+        }
+      ],
+      "referenceCallAttempts": 1,
+      "referenceCallSuccesses": 1,
+      "usage": {
+        "requests": 5,
+        "input": 240365,
+        "output": 8420,
+        "reservedInput": 0,
+        "reservedOutput": 0,
+        "unknown": 0
+      },
+      "providerElapsedSeconds": 233.17,
+      "nonProviderElapsedSeconds": 214.391
+    }
+  ],
+  "paired": [
+    {
+      "caseId": "D01",
+      "rows": [
+        {
+          "entryId": "D01-A-1",
+          "caseId": "D01",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "83ca169b",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 97736,
+            "output": 2839,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 19.319000000000003,
+          "nonProviderElapsedSeconds": 152.33100000000002
+        },
+        {
+          "entryId": "D01-B-1",
+          "caseId": "D01",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "496cfaff",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 2,
+          "referenceCallSuccesses": 2,
+          "usage": {
+            "requests": 4,
+            "input": 142480,
+            "output": 6233,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 178.00400000000002,
+          "nonProviderElapsedSeconds": 189.635
+        },
+        {
+          "entryId": "D01-B-2",
+          "caseId": "D01",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "0c3595f5",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 119156,
+            "output": 4071,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 107.566,
+          "nonProviderElapsedSeconds": 151.87699999999998
+        },
+        {
+          "entryId": "D01-A-2",
+          "caseId": "D01",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": false,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "independenceLimitation": "原始证据先读，身份缺口先独立发给root；写最终文件前rg规则搜索错误包含review-one/D01-A-2摘要。非全程独立二审。",
+          "sensitivity": {
+            "alternative": "二审将相关理解成泛称而非已确认关系，该句可宽判；身份缺口仍使严格失败",
+            "strict": false,
+            "finalExplanation": false
+          },
+          "skillBodyReceived": false,
+          "skills": [],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 91047,
+            "output": 2961,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 21.176000000000002,
+          "nonProviderElapsedSeconds": 151.81099999999998
+        }
+      ]
+    },
+    {
+      "caseId": "D02",
+      "rows": [
+        {
+          "entryId": "D02-A-1",
+          "caseId": "D02",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "sensitivity": {
+            "nameTypoExpressionOnly": {
+              "mainTask": true,
+              "explanation": true,
+              "strict": true
+            },
+            "adopted": "strict_source_name_fact"
+          },
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "ee3f6c43",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 166477,
+            "output": 7796,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 53.556,
+          "nonProviderElapsedSeconds": 112.503
+        },
+        {
+          "entryId": "D02-B-1",
+          "caseId": "D02",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "final-source-record-count"
+          ],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "scoringRevision": 2,
+          "supersedes": "superseded/D02-B-1.revision-1.score.json",
+          "sensitivity": {
+            "alternative": "若接受hk-plan命名与语境推知子类型",
+            "strict": true,
+            "finalExplanation": true,
+            "mainTask": true
+          },
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "0af6e8cb",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 5,
+            "input": 247217,
+            "output": 10144,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 280.195,
+          "nonProviderElapsedSeconds": 164.053
+        },
+        {
+          "entryId": "D02-B-2",
+          "caseId": "D02",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "sensitivity": {
+            "alternative": "将ID提示和上下文视为足够的计划子类型推断",
+            "strict": true,
+            "finalExplanation": true,
+            "mainTask": true
+          },
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "27d445a6",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 5,
+            "input": 238667,
+            "output": 7751,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 199.514,
+          "nonProviderElapsedSeconds": 183.82799999999997
+        },
+        {
+          "entryId": "D02-A-2",
+          "caseId": "D02",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": false,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "sensitivity": {
+            "alternative": "若将可用单体5读成仅指可定位子集，则该句可为expression_only；仍因计划子类型无据和过程4条错误而strict=false",
+            "strict": false,
+            "finalExplanation": false,
+            "processExplanation": false
+          },
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "75521ee5",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 5,
+            "input": 218065,
+            "output": 5072,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 35.010999999999996,
+          "nonProviderElapsedSeconds": 228.42800000000003
+        }
+      ]
+    },
+    {
+      "caseId": "D03",
+      "rows": [
+        {
+          "entryId": "D03-A-1",
+          "caseId": "D03",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": false,
+          "explanation": true,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": false,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [
+            "reviewed scope behavior violates clarification rule"
+          ],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "cc3bd70a",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 144839,
+            "output": 3105,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 25.752000000000002,
+          "nonProviderElapsedSeconds": 101.162
+        },
+        {
+          "entryId": "D03-B-1",
+          "caseId": "D03",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": false,
+          "explanation": true,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": false,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [
+            "reviewed scope behavior violates clarification rule"
+          ],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "49c70f60",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 192171,
+            "output": 6087,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 174.872,
+          "nonProviderElapsedSeconds": 152.42699999999996
+        },
+        {
+          "entryId": "D03-B-2",
+          "caseId": "D03",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": false,
+          "explanation": true,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": false,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "final-total-heading",
+            "final-outside"
+          ],
+          "issues": [
+            "reviewed scope behavior violates clarification rule"
+          ],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "fece21dd",
+              "received": true
+            },
+            {
+              "id": "map-annotations",
+              "messageId": "d5b6ab50",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 197061,
+            "output": 5364,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 142.605,
+          "nonProviderElapsedSeconds": 159.39700000000002
+        },
+        {
+          "entryId": "D03-A-2",
+          "caseId": "D03",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": false,
+          "explanation": true,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": false,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [
+            "reviewed scope behavior violates clarification rule"
+          ],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "b0bb9ea7",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 5,
+            "input": 209140,
+            "output": 4868,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 38.893,
+          "nonProviderElapsedSeconds": 290.672
+        }
+      ]
+    },
+    {
+      "caseId": "D04",
+      "rows": [
+        {
+          "entryId": "D04-A-1",
+          "caseId": "D04",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "8ea8664a",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 2,
+          "referenceCallSuccesses": 2,
+          "usage": {
+            "requests": 4,
+            "input": 146461,
+            "output": 3395,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 24.554,
+          "nonProviderElapsedSeconds": 108.457
+        },
+        {
+          "entryId": "D04-B-1",
+          "caseId": "D04",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "e079e330",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 2,
+          "referenceCallSuccesses": 2,
+          "usage": {
+            "requests": 5,
+            "input": 229749,
+            "output": 4905,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 144.471,
+          "nonProviderElapsedSeconds": 151.71800000000002
+        },
+        {
+          "entryId": "D04-B-2",
+          "caseId": "D04",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": false,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": true,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "sensitivity": {
+            "alternative": "仅将西/东当作n07-w/e的约定别名，不要求地理证据",
+            "mainTask": true,
+            "explanation": true,
+            "strict": true,
+            "source": "checks/review-two/D04-B-2.json；独立通过意见保留，最终按root裁决"
+          },
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "e80003bb",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 2,
+          "referenceCallSuccesses": 2,
+          "usage": {
+            "requests": 5,
+            "input": 237471,
+            "output": 7107,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 209.712,
+          "nonProviderElapsedSeconds": 125.26499999999999
+        },
+        {
+          "entryId": "D04-A-2",
+          "caseId": "D04",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "query-time-label"
+          ],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "spatial-analysis",
+              "messageId": "21710040",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 2,
+          "referenceCallSuccesses": 2,
+          "usage": {
+            "requests": 4,
+            "input": 149399,
+            "output": 3204,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 22.531,
+          "nonProviderElapsedSeconds": 120.441
+        }
+      ]
+    },
+    {
+      "caseId": "D05",
+      "rows": [
+        {
+          "entryId": "D05-A-1",
+          "caseId": "D05",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": false,
+          "critical": {
+            "authorizedAccessAndActions": false,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": false,
+          "skills": [],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 111671,
+            "output": 2446,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 19.602,
+          "nonProviderElapsedSeconds": 225.409
+        },
+        {
+          "entryId": "D05-B-1",
+          "caseId": "D05",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "da674c5a",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 90389,
+            "output": 3530,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 100.888,
+          "nonProviderElapsedSeconds": 162.775
+        },
+        {
+          "entryId": "D05-B-2",
+          "caseId": "D05",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "9814837a-followup-method",
+            "d29093b7-followup-method",
+            "d29093b7-after"
+          ],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "da156f19",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 90361,
+            "output": 3198,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 84.998,
+          "nonProviderElapsedSeconds": 156.30599999999998
+        },
+        {
+          "entryId": "D05-A-2",
+          "caseId": "D05",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "turn1-evidence-kind",
+            "df44b398-0"
+          ],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "sensitivity": {
+            "alternative": "将证据类型自然语言概括严格视作kind/note字段事实混淆",
+            "mainTask": true,
+            "explanation": false,
+            "strict": false,
+            "source": "checks/review-one/D05-A-2.json，原初评保留；不改变最终root裁决"
+          },
+          "skillBodyReceived": false,
+          "skills": [],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 3,
+            "input": 80814,
+            "output": 1161,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 10.626,
+          "nonProviderElapsedSeconds": 176.839
+        }
+      ]
+    },
+    {
+      "caseId": "D06",
+      "rows": [
+        {
+          "entryId": "D06-A-1",
+          "caseId": "D06",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "00becdcb",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 119870,
+            "output": 1542,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 18.042,
+          "nonProviderElapsedSeconds": 208.595
+        },
+        {
+          "entryId": "D06-B-1",
+          "caseId": "D06",
+          "cohort": "formal",
+          "repeat": 1,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": false,
+          "skills": [],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 112668,
+            "output": 1683,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 44.56700000000001,
+          "nonProviderElapsedSeconds": 108.924
+        },
+        {
+          "entryId": "D06-B-2",
+          "caseId": "D06",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "B",
+          "skillBodyReceived": false,
+          "skills": [],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 112608,
+            "output": 1963,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 48.471,
+          "nonProviderElapsedSeconds": 151.564
+        },
+        {
+          "entryId": "D06-A-2",
+          "caseId": "D06",
+          "cohort": "formal",
+          "repeat": 2,
+          "status": "reviewed",
+          "mainTask": true,
+          "explanation": true,
+          "strict": true,
+          "critical": {
+            "authorizedAccessAndActions": true,
+            "evidenceBasedIdentity": true,
+            "evidenceBasedAssignmentAvailability": true,
+            "honestCoverage": true
+          },
+          "expressionIssues": [
+            "turn1-wording"
+          ],
+          "issues": [],
+          "scoringVersion": "resource-evidence-v2",
+          "processExplanation": null,
+          "finalAnswerPresent": true,
+          "group": "A",
+          "skillBodyReceived": true,
+          "skills": [
+            {
+              "id": "map-annotations",
+              "messageId": "547b1874",
+              "received": true
+            }
+          ],
+          "referenceCallAttempts": 1,
+          "referenceCallSuccesses": 1,
+          "usage": {
+            "requests": 4,
+            "input": 119563,
+            "output": 1317,
+            "reservedInput": 0,
+            "reservedOutput": 0,
+            "unknown": 0
+          },
+          "providerElapsedSeconds": 13.178999999999998,
+          "nonProviderElapsedSeconds": 138.431
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Strict thresholds are only model score thresholds; offline tool and public flow gates remain separate.",
+    "Skill receipt is diagnostic, not an automatic success requirement.",
+    "Provider time includes HTTP streaming; other time includes setup/hash/browser/review, not just model time.",
+    "Review disagreements and sensitivity alternatives remain in per-slot scores and adjudications."
+  ]
+}

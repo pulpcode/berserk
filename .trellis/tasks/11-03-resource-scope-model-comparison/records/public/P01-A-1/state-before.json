@@ -1,0 +1,322 @@
+{
+  "task": {
+    "id": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+    "title": "范围与模型对照·P01",
+    "goal": "按用户明确范围核对资源事实，提供有据可查的结果。仅查询，不保存或修改业务资料。",
+    "visibility": "public",
+    "ownerSeatId": "acceptance",
+    "state": "active",
+    "revision": 2,
+    "createdByUserId": "0ec06a94-6e20-4352-b037-a57b1cf9783e",
+    "updatedByUserId": "0ec06a94-6e20-4352-b037-a57b1cf9783e",
+    "createdAt": "2026-11-03T07:52:43.302Z",
+    "updatedAt": "2026-11-03T07:52:43.332Z"
+  },
+  "binding": {
+    "sessionId": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+    "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+    "workspaceId": "b663bfb5-518f-45a9-ae20-bff5cfecaaa0",
+    "bindingRevision": 1,
+    "baseRef": null,
+    "draft": {
+      "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+      "ownerSessionId": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+      "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+      "workspaceId": "b663bfb5-518f-45a9-ae20-bff5cfecaaa0",
+      "headRevision": 1,
+      "title": "会话标注",
+      "hash": "9e5a6971dd242150797a5f7de0813cff263cd0562ba5c1cad1557e81292cc356",
+      "baseRef": null,
+      "createdAt": "2026-11-03T07:52:44.077Z",
+      "updatedAt": "2026-11-03T07:52:44.077Z"
+    },
+    "writable": true
+  },
+  "listing": {
+    "drafts": {
+      "items": [
+        {
+          "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+          "ownerSessionId": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+          "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+          "workspaceId": "b663bfb5-518f-45a9-ae20-bff5cfecaaa0",
+          "headRevision": 1,
+          "title": "会话标注",
+          "hash": "9e5a6971dd242150797a5f7de0813cff263cd0562ba5c1cad1557e81292cc356",
+          "baseRef": null,
+          "createdAt": "2026-11-03T07:52:44.077Z",
+          "updatedAt": "2026-11-03T07:52:44.077Z"
+        }
+      ],
+      "offset": 0,
+      "limit": 50,
+      "total": 1,
+      "hasMore": false
+    },
+    "publications": {
+      "items": [],
+      "offset": 0,
+      "limit": 50,
+      "total": 0,
+      "hasMore": false
+    },
+    "canSetCurrent": true
+  },
+  "current": {
+    "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+    "sequence": 0,
+    "publication": null
+  },
+  "draftDocument": {
+    "ref": {
+      "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+      "revision": 1
+    },
+    "title": "会话标注",
+    "hash": "9e5a6971dd242150797a5f7de0813cff263cd0562ba5c1cad1557e81292cc356",
+    "createdAt": "2026-11-03T07:52:44.077Z",
+    "document": {
+      "schemaVersion": 1,
+      "title": "会话标注",
+      "layers": [
+        {
+          "layerId": "n08-target",
+          "name": "测试图层",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "n08-car",
+              "kind": "point",
+              "name": "沚灯运输车",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  121.027,
+                  31.029
+                ]
+              },
+              "resource": {
+                "meaning": "actual_resource",
+                "category": "vehicle",
+                "granularity": "individual",
+                "quantity": {
+                  "value": 1,
+                  "unit": "辆",
+                  "meaning": "entities",
+                  "scope": "n08-vehicles",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "taskRelations": [
+                  {
+                    "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+                    "relation": "unconfirmed",
+                    "evidence": [
+                      {
+                        "kind": "declaration",
+                        "note": "合成验收声明"
+                      }
+                    ],
+                    "reportedAt": "2026-11-03T07:47:43.322Z",
+                    "effectiveAt": "2026-11-03T07:42:43.322Z",
+                    "validUntil": "2026-11-04T07:52:43.322Z"
+                  }
+                ],
+                "availability": {
+                  "state": "unknown",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "position": {
+                  "meaning": "actual",
+                  "appliesTo": "resource",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                }
+              }
+            },
+            {
+              "objectId": "n08-boat",
+              "kind": "point",
+              "name": "菰湾救生艇",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  121.035,
+                  31.037
+                ]
+              },
+              "resource": {
+                "meaning": "actual_resource",
+                "category": "rescue_boat",
+                "granularity": "individual",
+                "quantity": {
+                  "value": 1,
+                  "unit": "艘",
+                  "meaning": "entities",
+                  "scope": "n08-boats",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "taskRelations": [
+                  {
+                    "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+                    "relation": "unconfirmed",
+                    "evidence": [
+                      {
+                        "kind": "declaration",
+                        "note": "合成验收声明"
+                      }
+                    ],
+                    "reportedAt": "2026-11-03T07:47:43.322Z",
+                    "effectiveAt": "2026-11-03T07:42:43.322Z",
+                    "validUntil": "2026-11-04T07:52:43.322Z"
+                  }
+                ],
+                "availability": {
+                  "state": "unknown",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "position": {
+                  "meaning": "actual",
+                  "appliesTo": "resource",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "layerId": "n08-other",
+          "name": "其他现场图层",
+          "order": 1,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "n08-other-car",
+              "kind": "point",
+              "name": "枫沙运输车",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  121.02,
+                  31.02
+                ]
+              },
+              "resource": {
+                "meaning": "actual_resource",
+                "category": "vehicle",
+                "granularity": "individual",
+                "quantity": {
+                  "value": 1,
+                  "unit": "辆",
+                  "meaning": "entities",
+                  "scope": "n08-other-vehicles",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "taskRelations": [
+                  {
+                    "taskId": "8490de11-69e0-46a2-ab3f-1973f3d035b7",
+                    "relation": "unconfirmed",
+                    "evidence": [
+                      {
+                        "kind": "declaration",
+                        "note": "合成验收声明"
+                      }
+                    ],
+                    "reportedAt": "2026-11-03T07:47:43.322Z",
+                    "effectiveAt": "2026-11-03T07:42:43.322Z",
+                    "validUntil": "2026-11-04T07:52:43.322Z"
+                  }
+                ],
+                "availability": {
+                  "state": "available",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                },
+                "position": {
+                  "meaning": "actual",
+                  "appliesTo": "resource",
+                  "evidence": [
+                    {
+                      "kind": "declaration",
+                      "note": "合成验收声明"
+                    }
+                  ],
+                  "reportedAt": "2026-11-03T07:47:43.322Z",
+                  "effectiveAt": "2026-11-03T07:42:43.322Z",
+                  "validUntil": "2026-11-04T07:52:43.322Z"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "workspaceFiles": {
+    "b663bfb5-518f-45a9-ae20-bff5cfecaaa0/AGENTS.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "b663bfb5-518f-45a9-ae20-bff5cfecaaa0/sources/meeting-notes.md": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0",
+    "b663bfb5-518f-45a9-ae20-bff5cfecaaa0/sources/resource-brief.md": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+  }
+}

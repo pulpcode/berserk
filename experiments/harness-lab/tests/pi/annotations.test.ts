@@ -8,7 +8,7 @@ import { MAP_SYMBOLS, MAP_SYMBOL_STANDARD } from '../../src/contracts/map-symbol
 import { AgentSession } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
 import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
 import type { AnnotationReadResult, AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
@@ -58,26 +58,26 @@ describe('annotation input and native tools', () => {
       if(!allowed)expect(action.description).not.toContain('set_current');
     }
   });
-  it('reopens a native v1/v2/v3/v4 conversation and appends new map requests as v5 without rewriting old input', async () => {
+  it('reopens a native v1/v2/v3/v4/v5 conversation and appends explicit references as v6 without rewriting old input', async () => {
     const {lab,session,config,draft}=await setup();const skill=await lab.resources.readSkill(session.workspaceId,'review','alpha');
     for(let i=0;i<5;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
     const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]);await lab.close();
     const entries=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
-    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V5);expect(inputs).toHaveLength(5);
+    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V6);expect(inputs).toHaveLength(5);
     inputs[0].customType=COMPOSER_INPUT;delete inputs[0].details.annotationContext;delete inputs[0].details.annotationRefs;
-    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;
-    for(const entry of inputs.slice(0,4))entry.content=recordedComposerText(entry.details,entry.customType);
+    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;inputs[4].customType=COMPOSER_INPUT_V5;
+    for(const entry of inputs.slice(0,5))entry.content=recordedComposerText(entry.details,entry.customType);
     const old=entries.map(entry=>JSON.stringify(entry)).join('\n')+'\n';await writeFile(file,old);
     const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>next.close());
     expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(5);
-    await ask(next,session.id);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
+    await ask(next,session.id,[draft.ref!]);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
     const after=await readFile(file,'utf8');expect(after.startsWith(old)).toBe(true);
-    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V5)).toHaveLength(2);
+    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V6)).toHaveLength(1);
   });
   it('preserves cancelled v5 preparation without executing it or replaying selections on continuation', async () => {
     const {lab,session,config,draft,calls}=await setup();const request=lab.start(session.id,'检查固定参考',{annotationRefs:[draft.ref!]},'alpha');
     const original=AgentSession.prototype.sendCustomMessage;
-    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V5)lab.cancel(session.id,request.requestId,'alpha');});
+    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V6)lab.cancel(session.id,request.requestId,'alpha');});
     await request.run(()=>{});spy.mockRestore();expect(calls).toHaveLength(0);expect(lab.get(session.id,'alpha').messages).toHaveLength(0);
     await lab.close();const fake=await fakeRuntime(config,()=>({text:'新请求'}));const next=await PiLab.create(config,fake.runtime);clean.push(()=>next.close());
     expect(next.get(session.id,'alpha').lastResult?.status).toBe('cancelled');
@@ -159,7 +159,7 @@ describe('annotation input and native tools', () => {
     lab.annotations!.action(actor, session.id, {action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]});
     expect(lab.annotations!.read(actor, taskId, {ref, objectIds: ['a']}).objects.items).toHaveLength(1);
     const path = join(config.dataDir, 'sessions', (await readdir(join(config.dataDir, 'sessions')))[0]);
-    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V5);
+    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V6);
     await lab.close(); const reopened = await PiLab.create(config, (await fakeRuntime(config, () => ({text: '继续'}))).runtime); clean.push(() => reopened.close());
     expect(reopened.get(session.id, 'alpha').messages).toEqual(snapshot.messages);
     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();
@@ -569,4 +569,49 @@ it('reads the explicitly selected set and edits only the current draft despite i
   expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:head.headRevision}).document.layers[0].features[0]).toEqual({...ownBefore,style:{...ownBefore.style,iconSize:56}});
   expect(lab.annotations!.binding(actor,other.id).draft?.headRevision).toBe(1);
   expect(lab.annotations!.version(actor,taskId,foreignRef)).toEqual(foreignBefore);
+});
+
+it('reads a complete explicit layer reference through paging, compaction and restart without widening to another layer',async()=>{
+ let locator:{requestId:string;index:number}={requestId:randomUUID(),index:0};let replies=0;
+ const reply=(context: Parameters<Parameters<typeof fakeRuntime>[1]>[0]):Reply=>{
+  if(!context.tools?.length)return {text:'保留原引用定位及固定图层，继续查询。',usageInput:50};
+  replies++;
+  if(replies===1)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],limit:1}}]};
+  if(replies===2)return {text:'已读取第一点。'.repeat(500),usageInput:1800};
+  if(replies===3)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],offset:1,limit:1}}]};
+  return {text:'已读取原图层的第二点。'};
+ };
+ const {lab,session,actor,config,calls}=await setup(reply,{contextWindow:8192,maxOutputTokens:6000,compactionReserveTokens:7000,compactionKeepRecentTokens:128});
+ const saved=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_layer',layer:{layerId:'other',name:'未选图层',order:1,defaultVisible:true,features:[{objectId:'extra',kind:'point',name:'不应读到',geometry:{type:'Point',coordinates:[122,32]}}]}}]});
+ const request=lab.start(session.id,'只读我引用的图层',{annotationRefs:[{...saved.ref!,layerIds:['meeting']}]},'alpha');locator={requestId:request.requestId,index:0};await request.run(()=>{});
+ const first=lab.get(session.id,'alpha').messages.find(m=>m.toolName==='annotation_read')!;
+ expect(first.isError).not.toBe(true);expect(JSON.parse(first.text).data).toMatchObject({ref:saved.ref,query:{layerIds:['meeting']},objects:{total:2,hasMore:true,items:[{objectId:'a'}]}});
+ expect(JSON.stringify(calls[0].context.messages)).toContain(request.requestId);
+ const next=await ask(lab,session.id);expect(next.latestCompaction).toBeDefined();
+ expect(JSON.parse(next.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data.objects).toMatchObject({total:2,items:[{objectId:'b'}],hasMore:false});
+ await lab.close();
+ const reopened=await PiLab.create(config,(await fakeRuntime(config,(_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry']}}]}:{text:'续读完成'})).runtime);clean.push(()=>reopened.close());
+ const final=await ask(reopened,session.id);expect(final.recoveryWarning).toBeUndefined();
+ const data=JSON.parse(final.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data;
+ expect(data.objects.items.map((x:{objectId:string})=>x.objectId)).toEqual(['a','b']);expect(data.query.layerIds).toEqual(['meeting']);
+});
+
+it('rejects foreign and missing reference locators and extra selectors instead of falling back to a whole version',async()=>{
+ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
+ const {lab,session,draft,calls}=await setup((_ctx,index)=>index===0?{text:'记录引用'}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference}}]}:{text:'读取被拒绝'});
+ const request=lab.start(session.id,'引用一个对象',{annotationRefs:[{...draft.ref!,objectIds:['a']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
+ const other=await lab.createSession(session.workspaceId,'alpha');const failed=await ask(lab,other.id);
+ expect(failed.messages.find(m=>m.toolName==='annotation_read')).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
+ const tool=calls[0].context.tools!.find(t=>t.name==='annotation_read')!;
+ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference,layerIds:['meeting']}})).toThrow();
+ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference:{...reference,index:-1}}})).toThrow();
+});
+
+it('keeps split object references distinct and rejects an absent index without reading the entire set',async()=>{
+ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
+ const {lab,session,draft}=await setup((_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:1},fields:['geometry']}}]}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:2}}}]}:{text:'只读取指定第二个对象；缺失引用未回退'});
+ const request=lab.start(session.id,'分别引用两点',{annotationRefs:[{...draft.ref!,objectIds:['a']},{...draft.ref!,objectIds:['b']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
+ const reads=lab.get(session.id,'alpha').messages.filter(m=>m.toolName==='annotation_read');
+ expect(JSON.parse(reads[0].text).data).toMatchObject({ref:draft.ref,query:{objectIds:['b']},objects:{total:1,items:[{objectId:'b'}]}});
+ expect(reads[1]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
 });

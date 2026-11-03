@@ -1,0 +1,16 @@
+✔ each group retains twelve denominator; no cross-model borrowing or public dilution (4.783773ms)
+✔ 28 unique slots, per group 12 diagnostics, order balanced and all fixture contracts decode (54.743228ms)
+✔ multi-question reverse-order mapping answers exact frozen facts; missing/new questions reject (5.609924ms)
+✔ A: actual transport preserves business inputs, uses fixed model, meters once and rejects retry after fault (30.52823ms)
+✔ B: actual transport preserves business inputs, uses fixed model, meters once and rejects retry after fault (5.192066ms)
+✔ separate group budget cannot borrow capacity; unknown usage is never zero/retryable (2.285328ms)
+✔ per-slot usage never includes another task; failed skill calls do not count as received bodies (540.115998ms)
+✔ provider 429 with reported usage halts next transport and missing SSE usage remains unknown (10.3602ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2059.3976

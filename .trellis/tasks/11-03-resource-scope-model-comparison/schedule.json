@@ -1,0 +1,200 @@
+{
+  "slots": [
+    {
+      "id": "P01-A-1",
+      "caseId": "P01",
+      "group": "A",
+      "repeat": 1,
+      "phase": "public"
+    },
+    {
+      "id": "P01-B-1",
+      "caseId": "P01",
+      "group": "B",
+      "repeat": 1,
+      "phase": "public"
+    },
+    {
+      "id": "P02-A-1",
+      "caseId": "P02",
+      "group": "A",
+      "repeat": 1,
+      "phase": "public"
+    },
+    {
+      "id": "P02-B-1",
+      "caseId": "P02",
+      "group": "B",
+      "repeat": 1,
+      "phase": "public"
+    },
+    {
+      "id": "D01-A-1",
+      "caseId": "D01",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D01-B-1",
+      "caseId": "D01",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D02-A-1",
+      "caseId": "D02",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D02-B-1",
+      "caseId": "D02",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D03-A-1",
+      "caseId": "D03",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D03-B-1",
+      "caseId": "D03",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D04-A-1",
+      "caseId": "D04",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D04-B-1",
+      "caseId": "D04",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D05-A-1",
+      "caseId": "D05",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D05-B-1",
+      "caseId": "D05",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D06-A-1",
+      "caseId": "D06",
+      "group": "A",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D06-B-1",
+      "caseId": "D06",
+      "group": "B",
+      "repeat": 1,
+      "phase": "formal"
+    },
+    {
+      "id": "D06-B-2",
+      "caseId": "D06",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D06-A-2",
+      "caseId": "D06",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D05-B-2",
+      "caseId": "D05",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D05-A-2",
+      "caseId": "D05",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D04-B-2",
+      "caseId": "D04",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D04-A-2",
+      "caseId": "D04",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D03-B-2",
+      "caseId": "D03",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D03-A-2",
+      "caseId": "D03",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D02-B-2",
+      "caseId": "D02",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D02-A-2",
+      "caseId": "D02",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D01-B-2",
+      "caseId": "D01",
+      "group": "B",
+      "repeat": 2,
+      "phase": "formal"
+    },
+    {
+      "id": "D01-A-2",
+      "caseId": "D01",
+      "group": "A",
+      "repeat": 2,
+      "phase": "formal"
+    }
+  ]
+}

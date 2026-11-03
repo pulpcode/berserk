@@ -1,0 +1,37 @@
+[
+  {
+    "path": "protocol.json",
+    "sha256": "4aa166dcffbecf306e02adb8545f0b119f98b0fec8977c995bec3cf25d2f7b9a",
+    "bytes": 6664998
+  },
+  {
+    "path": "runtime-integrity.json",
+    "sha256": "214e66b9f4a6755db72265d16965183551da93e84075592d431ccc1eaf5d6021",
+    "bytes": 6647800
+  },
+  {
+    "path": "schedule.json",
+    "sha256": "9912ec7092e3bcb6adf6876abd114c36bbdb07a39aed74fc40493086b270b486",
+    "bytes": 3027
+  },
+  {
+    "path": "readiness.json",
+    "sha256": "68776fa7eb957929d9d3e457da816c80e0bef7558c1ea0c3283629ec6ed4fd3d",
+    "bytes": 703
+  },
+  {
+    "path": "public-gate.json",
+    "sha256": "8565e6f38f5f734d0ca0f1c350ae09c77470e46af1e2520b1b828e91fd4efbc8",
+    "bytes": 685
+  },
+  {
+    "path": "ledger-A.json",
+    "sha256": "9f485128cdc548f170227269220422e56c6e0b2e7ea700eeea7af93cf98e7482",
+    "bytes": 15816
+  },
+  {
+    "path": "ledger-B.json",
+    "sha256": "caf0c443c68e2acefc11159607269796c45e792652fee405f2825a7623df2281",
+    "bytes": 16391
+  }
+]

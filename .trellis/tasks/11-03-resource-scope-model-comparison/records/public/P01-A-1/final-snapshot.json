@@ -1,0 +1,133 @@
+{
+  "id": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+  "workspaceId": "b663bfb5-518f-45a9-ae20-bff5cfecaaa0",
+  "title": "只看我引用的测试图层，列出其中所有点的名称和坐标。",
+  "updatedAt": "2026-11-03T07:54:27.750Z",
+  "modelId": "default",
+  "inputQueue": {
+    "revision": 4,
+    "available": false,
+    "reason": "当前回复已结束。",
+    "items": []
+  },
+  "messages": [
+    {
+      "id": "afd9ab03",
+      "requestId": "efc629bc-ffce-4b20-9465-f729f64e0194",
+      "role": "user",
+      "text": "只看我引用的测试图层，列出其中所有点的名称和坐标。",
+      "selections": {
+        "annotationContext": {
+          "sessionId": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+          "draft": {
+            "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        },
+        "annotationRefs": [
+          {
+            "ref": {
+              "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+              "revision": 1
+            },
+            "hash": "9e5a6971dd242150797a5f7de0813cff263cd0562ba5c1cad1557e81292cc356",
+            "title": "会话标注",
+            "layerIds": [
+              "n08-target"
+            ],
+            "layers": [
+              {
+                "layerId": "n08-target",
+                "name": "测试图层"
+              }
+            ],
+            "objects": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "f1f40dea",
+      "requestId": "efc629bc-ffce-4b20-9465-f729f64e0194",
+      "role": "tool",
+      "text": "{\"format\":\"annotation.model-result.v2\",\"data\":{\"ref\":{\"setId\":\"6716130c-51c8-498c-bdaa-b69fa6622fe5\",\"revision\":1},\"title\":\"会话标注\",\"createdAt\":\"2026-11-03T07:52:44.077Z\",\"layers\":[{\"layerId\":\"n08-target\",\"name\":\"测试图层\",\"order\":0,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"n08-car\",\"name\":\"沚灯运输车\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.027,31.029]}},{\"objectId\":\"n08-boat\",\"name\":\"菰湾救生艇\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.035,31.037]}}],\"offset\":0,\"limit\":100,\"total\":2,\"hasMore\":false},\"query\":{\"layerIds\":[\"n08-target\"],\"fields\":[\"geometry\"]}},\"meaning\":{\"scope\":\"data.ref固定版本内，读取data.query指定图层的对象。\",\"counts\":\"本次条件共匹配2个对象，本页返回2个；分页位置与后续页以objects.offset/hasMore为准。\",\"effect\":\"本次只读取已有对象，没有创建或修改标绘。\"}}",
+      "toolName": "annotation_read",
+      "toolCallId": "call_00_6xp6i90nkd257u58myz78xik",
+      "isError": false
+    },
+    {
+      "id": "4f0d34ea",
+      "requestId": "efc629bc-ffce-4b20-9465-f729f64e0194",
+      "role": "assistant",
+      "text": "我按你引用的固定版本读取了“测试图层”（n08-target）这一图层，图层中共有 2 个对象，且都是点，已全部返回（总数 2，没有后续分页）：\n\n| 点名称 | 坐标（WGS84，经度, 纬度） |\n|---|---|\n| 沚灯运输车 | 121.027, 31.029 |\n| 菰湾救生艇 | 121.035, 31.037 |\n\n说明：\n- 读取范围严格限于你引用的版本（标注集 6716130c…，修订 1），并且仅限于 n08-target 这一个图层；该图层没有线或面的几何。\n- 本次只是查询，没有创建或修改任何标绘；草稿与任务当前采用状态未受影响。\n- 我读取的字段只包括几何，没有核对名称以外的业务属性，例如资源类别和备注；如果你需要这些内容，我可以再按同一范围补充读取。"
+    },
+    {
+      "id": "afb8b656",
+      "requestId": "b9b25db8-9ab2-44c7-b3de-9c9d75e04c5d",
+      "role": "user",
+      "text": "沿用刚才的固定图层再列一次。",
+      "selections": {
+        "annotationContext": {
+          "sessionId": "01a1a065-6d02-77b4-afe0-13463f8f62c5",
+          "draft": {
+            "setId": "6716130c-51c8-498c-bdaa-b69fa6622fe5",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        }
+      }
+    },
+    {
+      "id": "f933d80a",
+      "requestId": "b9b25db8-9ab2-44c7-b3de-9c9d75e04c5d",
+      "role": "tool",
+      "text": "{\"format\":\"annotation.model-result.v2\",\"data\":{\"ref\":{\"setId\":\"6716130c-51c8-498c-bdaa-b69fa6622fe5\",\"revision\":1},\"title\":\"会话标注\",\"createdAt\":\"2026-11-03T07:52:44.077Z\",\"layers\":[{\"layerId\":\"n08-target\",\"name\":\"测试图层\",\"order\":0,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"n08-car\",\"name\":\"沚灯运输车\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.027,31.029]}},{\"objectId\":\"n08-boat\",\"name\":\"菰湾救生艇\",\"kind\":\"point\",\"layerId\":\"n08-target\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[121.035,31.037]}}],\"offset\":0,\"limit\":100,\"total\":2,\"hasMore\":false},\"query\":{\"layerIds\":[\"n08-target\"],\"fields\":[\"geometry\"]}},\"meaning\":{\"scope\":\"data.ref固定版本内，读取data.query指定图层的对象。\",\"counts\":\"本次条件共匹配2个对象，本页返回2个；分页位置与后续页以objects.offset/hasMore为准。\",\"effect\":\"本次只读取已有对象，没有创建或修改标绘。\"}}",
+      "toolName": "annotation_read",
+      "toolCallId": "call_00_mkintwh0le4t3lht11263flw",
+      "isError": false
+    },
+    {
+      "id": "a382c83e",
+      "requestId": "b9b25db8-9ab2-44c7-b3de-9c9d75e04c5d",
+      "role": "assistant",
+      "text": "我在同一定位（该定位保留你原先的固定版本和图层范围，本次未改动范围）中重新读取了固定版本（标注集 6716130c…，修订 1）的“测试图层”n08-target，结果与上次一致：\n\n共 2 个对象，且都是点，已全部返回（total 2，hasMore false）：\n\n1. 沚灯运输车 — 121.027, 31.029\n2. 菰湾救生艇 — 121.035, 31.037\n\n两点坐标均为 WGS84 的 [经度, 纬度] 顺序。\n\n本次仍为只读查询：没有创建或修改任何标绘，草稿修订未变，任务当前采用状态未涉及。"
+    }
+  ],
+  "active": null,
+  "turns": [
+    {
+      "requestId": "efc629bc-ffce-4b20-9465-f729f64e0194",
+      "status": "succeeded",
+      "finalMessageId": "4f0d34ea"
+    },
+    {
+      "requestId": "b9b25db8-9ab2-44c7-b3de-9c9d75e04c5d",
+      "status": "succeeded",
+      "finalMessageId": "a382c83e"
+    }
+  ],
+  "interactions": [],
+  "lastResult": {
+    "requestId": "b9b25db8-9ab2-44c7-b3de-9c9d75e04c5d",
+    "status": "succeeded",
+    "compactionIds": [],
+    "compactions": [],
+    "usageSummary": {
+      "modelAttempts": 2,
+      "replyAttempts": 2,
+      "compactionAttempts": 0,
+      "toolCalls": 1,
+      "unknownUsageAttempts": 0,
+      "actual": {
+        "input": 2403,
+        "output": 632,
+        "cacheRead": 48256,
+        "cacheWrite": 0,
+        "totalTokens": 51291
+      }
+    }
+  }
+}
