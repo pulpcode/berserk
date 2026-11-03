@@ -1,0 +1,39 @@
+{
+  "id": "resource-scope-model-comparison",
+  "name": "resource-scope-model-comparison",
+  "title": "澄清规则与引用读取修正及聚焦模型对照方案",
+  "description": "依据386de03和分享讨论，独立拟定规则一致、完整引用读取、评测修正及Flash/Qwen聚焦对照方案；待审阅，未实施或测评。",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": "harness-lab",
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-03",
+  "completedAt": null,
+  "branch": "codex/agent-spatial-plotting",
+  "base_branch": "codex/agent-spatial-plotting",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "prd.md",
+    "design.md",
+    "evaluation.md",
+    "implement.md",
+    "research/verified-findings.md"
+  ],
+  "notes": "当前只准备方案。提议4项公开检查+24次诊断，不自动重试或追加。旧原始评分和轨迹不改。",
+  "meta": {
+    "planningStatus": "awaiting_review",
+    "baselineCommit": "386de03506f00205b4e6655c942a18c258e979f6",
+    "implementationStarted": false,
+    "evaluationStarted": false,
+    "plannedPublicTasks": 4,
+    "plannedDiagnosticTasks": 24
+  }
+}
