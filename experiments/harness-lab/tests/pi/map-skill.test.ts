@@ -28,7 +28,7 @@ describe('deployed map Skill and native compatibility',()=>{
     expect(info.skills.map(s=>s.id)).toEqual(['synthesis','review','map-annotations','spatial-analysis']);
     for (const id of ['map-annotations', 'spatial-analysis']) {
       const delivered = await f.lab.resources.readSkill(f.session.workspaceId, id);
-      expect(delivered.version).toBe('2');
+      expect(delivered.version).toBe('3');
       expect(info.skills.find(item => item.id === id)).toMatchObject({ version: delivered.version, hash: delivered.hash, description: delivered.description });
       expect(delivered.hash).toBe(hashContent(delivered.content));
       expect(Buffer.byteLength(delivered.content)).toBeLessThan(16384);

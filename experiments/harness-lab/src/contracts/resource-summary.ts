@@ -1,10 +1,10 @@
 import type { ResourceRecord, ResourceItem, ResourceSummary, ResourceResult } from './resource-results.js';
 import { RequestError } from './errors.js';
 
-const namespace = (r: ResourceRecord) => r.association?.source.systemId ?? r.source?.ref.systemId;
+export const resourceNamespace = (r: ResourceRecord) => r.association?.source.systemId ?? r.source?.ref.systemId;
 const entityId = (r: ResourceRecord) => r.association?.entityId ?? r.source?.data?.entityId;
-const entity = (r: ResourceRecord) => entityId(r) ? JSON.stringify([namespace(r), entityId(r)]) : undefined;
-const signature = (r: ResourceRecord) => {
+const entity = (r: ResourceRecord) => entityId(r) ? JSON.stringify([resourceNamespace(r), entityId(r)]) : undefined;
+export const resourceQuantitySignature = (r: ResourceRecord) => {
   const q = r.resource.quantity;
   return JSON.stringify([r.resource.category ?? 'unknown', q?.unit, q?.meaning, q?.scope, q?.effectiveAt ?? null, q?.validUntil ?? null, q?.conditions ?? []]);
 };
@@ -23,9 +23,9 @@ export function resourceEntityCountUnknown(result: Pick<ResourceResult, 'coverag
 }
 
 /** A member list represents this quantity only for a complete, consistent entity count. */
-function members(r: ResourceRecord, at: string): string[] | undefined {
+export function resourceQuantityMembers(r: ResourceRecord, at: string): string[] | undefined {
   const q = r.resource.quantity;
-  if (!q || q.meaning !== 'entities' || !current(r, at) || !namespace(r)) return;
+  if (!q || q.meaning !== 'entities' || !current(r, at) || !resourceNamespace(r)) return;
   if (r.resource.granularity === 'individual' && entityId(r) && q.value === 1) return [entityId(r)!];
   const coverage = r.source?.data?.coverage;
   if (r.resource.granularity === 'aggregate' && coverage?.complete && coverage.scope === q.scope && coverage.memberEntityIds && new Set(coverage.memberEntityIds).size === q.value) return coverage.memberEntityIds;
@@ -37,16 +37,16 @@ export function summarizeResources(records: ResourceRecord[], items: ResourceIte
   const unknown = items.filter(i => !i.entityKey);
   const groups = new Map<string, ResourceRecord[]>();
   const seen = new Set<string>();
-  const conflicts = new Set(rows.filter(r => entity(r) && rows.some(other => entity(other) === entity(r) && (signature(other) !== signature(r) || other.resource.quantity?.value !== r.resource.quantity?.value))).map(r => entity(r)!));
+  const conflicts = new Set(rows.filter(r => entity(r) && rows.some(other => entity(other) === entity(r) && (resourceQuantitySignature(other) !== resourceQuantitySignature(r) || other.resource.quantity?.value !== r.resource.quantity?.value))).map(r => entity(r)!));
   for (const row of rows) {
     const q = row.resource.quantity;
     if (!q) { limitations.push(`记录 ${row.id} 数量未注明。`); continue; }
     const id = entity(row);
     // Conflicting copies stay in their own semantic groups as unknown evidence.
-    const dedup = id && JSON.stringify([id, signature(row), q.value]);
+    const dedup = id && JSON.stringify([id, resourceQuantitySignature(row), q.value]);
     if (dedup && seen.has(dedup)) continue;
     if (dedup) seen.add(dedup);
-    const key = JSON.stringify([signature(row), namespace(row) ?? ['declaration', row.id], row.resource.granularity === 'individual' && !id ? row.id : null]);
+    const key = JSON.stringify([resourceQuantitySignature(row), resourceNamespace(row) ?? ['declaration', row.id], row.resource.granularity === 'individual' && !id ? row.id : null]);
     groups.set(key, [...groups.get(key) ?? [], row]);
   }
   const quantities: ResourceSummary['quantities'] = [];
@@ -58,7 +58,7 @@ export function summarizeResources(records: ResourceRecord[], items: ResourceIte
     for (const row of groupRows) {
       const quantity = row.resource.quantity!, id = entity(row);
       const conflict = !!id && conflicts.has(id);
-      const set = conflict ? undefined : members(row, at);
+      const set = conflict ? undefined : resourceQuantityMembers(row, at);
       const coverage = row.source?.data?.coverage;
       const inconsistent = row.resource.granularity === 'aggregate' && quantity.meaning === 'entities' && coverage?.complete && coverage.memberEntityIds && (coverage.scope !== quantity.scope || coverage.memberEntityIds.length !== quantity.value);
       if (set) { for (const member of set) knownMembers.add(member); continue; }

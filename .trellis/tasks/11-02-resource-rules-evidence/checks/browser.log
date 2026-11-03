@@ -1,0 +1,20 @@
+
+> @berserk/harness-lab@0.1.0 test:e2e
+> playwright test tests/e2e/annotations.spec.ts --grep resource result card|resource statistic card --workers=1
+
+[WebServer] (node:3082) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:2968) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:3167) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3167) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/annotations.spec.ts:836:1 › resource result card uses native fixed result, pages through authorized snapshot and clears revoked content (10.6s)
+(node:3167) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 tests/e2e/annotations.spec.ts:877:1 › resource statistic card shows real spatial filter and three separate gaps without recomputing totals (7.6s)
+
+  2 passed (33.5s)

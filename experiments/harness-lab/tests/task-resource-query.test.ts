@@ -271,7 +271,7 @@ it('T13 actual service recomputes v1 parent into a new v2 result without rewriti
  old.owner={...s.actor,taskId:s.task.id,sessionId:s.session};const bytes=JSON.stringify(old);
  expect(resourceResultValid(old)).toBe(true);s.resources.authorize(old,s.scope);
  const fresh=s.resources.summarize({operation:'summarize',resultRef:old.resultRef},old,s.scope,randomUUID(),'recompute');
- expect(fresh.schemaVersion).toBe(2);expect(fresh.resultRef).not.toBe(old.resultRef);expect(fresh.parentResultRef).toBe(old.resultRef);
+ expect(fresh.schemaVersion).toBe(3);expect(fresh.resultRef).not.toBe(old.resultRef);expect(fresh.parentResultRef).toBe(old.resultRef);
  expect(fresh.summary.quantities[0]).toMatchObject({value:3,knownValue:3});expect(resourceResultValid(fresh)).toBe(true);
  expect(JSON.stringify(old)).toBe(bytes);expect(old.summary.quantities[0].value).toBe(4);
 });

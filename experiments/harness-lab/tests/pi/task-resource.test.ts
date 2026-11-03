@@ -179,7 +179,7 @@ it('B3 T17/T19 follows explicit area selection through deployed Skill and actual
   expect(s.fake.calls[0].context.systemPrompt).toContain(skill.description);
   expect(JSON.stringify(s.fake.calls[0].context)).not.toContain(skill.content);
   expect(s.lab.getRequestResources(s.session.id, request.requestId, 'alpha')).toMatchObject({ readSkills: [skill] });
-  expect(skill.version).toBe('2');
+  expect(skill.version).toBe('3');
   expect(snapshot.messages.find(m => m.role === 'user')?.selections?.annotationRefs?.[0]).toMatchObject({ ref: chosen, objectIds: ['area'] });
   const summary = tools[3].resourceResult!;
   expect(summary.items.map(i => i.name)).toEqual(['救援车']);
@@ -211,7 +211,7 @@ it.each(['T02','T06','T08'] as const)('T14 %s real HTTP decoding → native tool
  const before=s.lab.get(s.session.id,'alpha'),tools=before.messages.filter(m=>m.role==='tool');
  expect(tools.map(m=>[m.toolName,m.isError])).toEqual([['task_resource_query',false],['task_resource_query',false],['spatial_analyze',false]]);
  const result=tools[0].resourceResult!;
- expect(result.schemaVersion).toBe(2);expect(result.records).toHaveLength(rows.length);
+ expect(result.schemaVersion).toBe(3);expect(result.records).toHaveLength(rows.length);
  if(mode==='T02')expect(result.summary).toMatchObject({recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null});
  else expect(result.summary.quantities[0]).toMatchObject({value:mode==='T06'?3:null,knownValue:mode==='T06'?3:2});
  expect(tools[2].spatialResult!.completeness).toMatchObject({status:'partial',candidateCount:0,totalCandidateCount:rows.length});

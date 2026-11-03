@@ -1,0 +1,23 @@
+(node:2988) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ E07 ordinary adapter sends real frozen answer into same Pi session and continues a real tool (33061.305067ms)
+✔ E07 api adapter sends real frozen answer into same Pi session and continues a real tool (8365.028291ms)
+✔ E07 calibrated resolved, ambiguous single and comparison policies agree with deployed Skill (45.654604ms)
+✔ E08 product failure without a final answer is failed, with explanation N/A not empty-claims true (0.915588ms)
+✔ E08 no final answer retains an earlier false process claim rather than laundering it (0.440893ms)
+✔ E08 infrastructure fault remains separate, and inconsistent or disputed final classifications cannot pass (0.542116ms)
+✔ N-series denominator keeps product failures and reports explanation N/A separately (5.096355ms)
+✔ E07 ordinary clarification → frozen reply → final answer; no keyword/question-mark classifier (2.257619ms)
+✔ E07 structured clarification uses real API response mapping; wrong question/options/approval cannot be answered (0.640235ms)
+✔ E01–E06 seven historical quoted negatives keep original provenance; six positives are explicitly constructed (20.019364ms)
+✔ reviewer wording and evidence order do not create semantic disagreement (0.368226ms)
+✔ untrusted JSON new assessment fields cannot pass or crash via malformed enums, arrays or text (0.966119ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42276.225026
+

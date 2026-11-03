@@ -1,0 +1,128 @@
+{
+  "purpose": "公开校准引用材料；保留原判，不重跑、不改历史分数。不是新保留题。",
+  "cases": [
+    {
+      "id": "read-time-error",
+      "kind": "real_history",
+      "entryId": "A03-2",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A03-2/public.json",
+      "trajectorySha256": "127c9ca3b64cf71d193c5e0ad0f2fdf5c23edc26a9ddf5f9850539e64175e4cf",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A03-2.json",
+      "reviewSha256": "9f5d61d93fd0389f2bdcefe07c5557238c2ef733ea17d804774927ca07228664",
+      "statementId": "5594a761",
+      "quote": "当前会话固定标绘版本（revision 2，读取时间 2026-11-02T10:10:11Z）",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "10:10:11.629是标绘固定版本coverage.asOf（版本创建时间），本轮query createdAt10:10:16.400/实际源queriedAt16.413。将asOf误称读取时间属于过程时间错误；不是几个秒舍入误差。"
+    },
+    {
+      "id": "condition-overreach",
+      "kind": "real_history",
+      "entryId": "A04-2",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A04-2/public.json",
+      "trajectorySha256": "c9f65ec3d57e90ca7b80f6e5f86008421a30aeff0bfda6383fb1b13f574882f0",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-2.json",
+      "reviewSha256": "75813a1c30c28782c0fb90a46e69e69d771d4724e1fc15293fc0b8444c4295eb",
+      "statementId": "253686a7",
+      "quote": "**未分配，且放行条件未满足**",
+      "availableEvidenceIds": [
+        "bec533b1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "unsupported",
+      "rationale": "尚未分配有Q-19支持，但原始条件只“未收到放行回执”，只能证明未确认放行，不能确认实际未放行/条件事实不满足。可以说未证实满足，不能将未知提升为明确否定。"
+    },
+    {
+      "id": "no-inference-error",
+      "kind": "real_history",
+      "entryId": "A04-2",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A04-2/public.json",
+      "trajectorySha256": "c9f65ec3d57e90ca7b80f6e5f86008421a30aeff0bfda6383fb1b13f574882f0",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-2.json",
+      "reviewSha256": "75813a1c30c28782c0fb90a46e69e69d771d4724e1fc15293fc0b8444c4295eb",
+      "statementId": "253686a7",
+      "quote": "柏木的“未放行”、枫木的“检查过期”和落叶松的“签报冲突”都是原始记录状态，我没有做推定。",
+      "availableEvidenceIds": [
+        "bec533b1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "原始柏木状态是available+条件且尚无回执，整理unknown，并非“未放行”事实；最后再声称未推定把这一来源升级掩盖。其余maple/larch说明有据。"
+    },
+    {
+      "id": "overlap-error",
+      "kind": "real_history",
+      "entryId": "A05-1",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A05-1/public.json",
+      "trajectorySha256": "2f7323b35aad116a9fbcdda25dfad025086f5885bfcdbd4a977ef130779fe766",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-1.json",
+      "reviewSha256": "25331278ae89be83b01bbbaef32319bdc32b82b8bbbf29b85eff000e27c73ab6",
+      "statementId": "16683a5a",
+      "quote": "青沙舟组为整体记录，是否与个别实体重复未确认",
+      "availableEvidenceIds": [
+        "fdd63689",
+        "f591cdda"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "工具item确实给通用“没有可靠实体关联”提示，但真实先前situation_query已明确coverage complete=true、memberEntityIds QSB31—34，quantity.scope为“青沙舟组全体，无其他成员记录”，note为“独立四艘”。本次另外7个实体都是消防车，未有舟组成员记录，不能把工具泛化身份提示升级成该舟组是否与个别实体重复未知的具体业务缺口。确定实体数null的工具字段可准确照录，但括号业务解释无根据，属于额外解释事实错误。"
+    },
+    {
+      "id": "scope-error",
+      "kind": "real_history",
+      "entryId": "A05-2",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A05-2/public.json",
+      "trajectorySha256": "f7fadbf9327ecea2a22097c1c871663d2d9e7b8aa98f1d8908c6abaceeda71a6",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-2.json",
+      "reviewSha256": "c33363a3f03f74925064a5105b3c746ac3c2b802c867585bcd1e6a551bc69803",
+      "statementId": "68cc96cf",
+      "quote": "数量都来自清单的声明数量（scope 为“澄湾演练独立清册”）",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "122bfeff"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "消防车scope确为澄湾演练独立清册，但舟组scope明确“青沙舟组全体，无其他成员记录”。将所有声明数量的scope一概说为前者不实。数量分列计算仍正确，单独影响解释。"
+    },
+    {
+      "id": "reference-error",
+      "kind": "real_history",
+      "entryId": "A06-1",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A06-1/public.json",
+      "trajectorySha256": "0a0b043808090e39bfb10aba06e6d18639dfbd7bc41e28d7b0784edc2e5a1025",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-1.json",
+      "reviewSha256": "9e1a3edc800b059fbc83c92de44afa401eb6e09baf37464d257f44aebb3de619",
+      "statementId": "bde91566",
+      "quote": "需要由任务侧在平台上显式建立资源引用，才能把“关系未知”变为可据的分配或支援结论。",
+      "availableEvidenceIds": [
+        "e24ac5b1",
+        "324603ef",
+        "25e3f714"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "平台引用本身仅支持related，既非有据assigned/potential_support的充分条件，也非必要条件（来源taskRelations、明确标绘声明可独立提供关系）。现有证据只显示unconfirmed；把“显式建立引用”讲成转成分配/支援结论的必需途径属错误业务过程说明。应说补充分配/支援证据，平台引用仅关联。"
+    },
+    {
+      "id": "unit-error",
+      "kind": "real_history",
+      "entryId": "A08-1",
+      "trajectoryPath": ".trellis/tasks/11-02-task-resource-acceptance/results/trajectories/A08-1/public.json",
+      "trajectorySha256": "af4f9859656292f9c63997977e3186c00567b94d4d963a4de84abd4fbc94d8f7",
+      "reviewPath": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A08-1.json",
+      "reviewSha256": "4a42901926ada1321c4f5db2f97451bfa396692c829e1d1b76e5e43ad056d095",
+      "statementId": "e123566d",
+      "quote": "其中已分配 4 辆、可用 3 辆、不可用 1 辆，单位与含义不同，不做混加。",
+      "availableEvidenceIds": [
+        "49babd09"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "四/三/一均为同类fire_engine、单位辆、quantity.meaning entities；分配与可用筛选集合含义不同且有重叠，不能混加正确，但“单位不同”这个明确附加事实错误，非缺少工具证据。"
+    }
+  ]
+}
