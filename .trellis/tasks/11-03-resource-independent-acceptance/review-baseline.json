@@ -1,0 +1,40 @@
+{
+  "status": "review_baseline_only_not_execution_freeze",
+  "date": "2026-11-03",
+  "productCommit": "333cb5161ccd991d586c832430d96c7c18cdee5a",
+  "skillCatalogVersion": "3",
+  "resourceResultVersion": 3,
+  "scoringVersion": "resource-evidence-v2",
+  "files": [
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-results.ts",
+      "sha256": "a37f332217368c0188f0bb7aac578d17cfb5275d21245e1d3dc53e8224479abe"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-explanations.ts",
+      "sha256": "fcc708d1b3805f62bd8c29c5630c4896e7ad436d6eb63bf438b733956fda58d3"
+    },
+    {
+      "path": "experiments/harness-lab/src/contracts/resource-summary.ts",
+      "sha256": "82405e5f3c08b7f543879ae6ebe59c81bad8a97754113f7fc266bc7f5d4bff66"
+    },
+    {
+      "path": "experiments/harness-lab/src/context/task-resources.ts",
+      "sha256": "df4962e7987e19c65c9d2f4ae6016bcc4dcd1095c6002552f13577cc048fac2b"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "sha256": "33b219f397b3323fa81425c93ad8a84431a06a49c63643dedd00a27986e38d26"
+    },
+    {
+      "path": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "sha256": "0dc8a7ea99076f05458537bbee308055df83bd9f39c0f444aba06e2796d30819"
+    },
+    {
+      "path": ".trellis/tasks/11-02-resource-rules-evidence/evaluation-v2.ts",
+      "sha256": "dacf40b14179c4e7ddb8e641d4018110d8097bfaaafb305abc9df0729a9d6bd8"
+    }
+  ],
+  "liveExecutionAuthorized": false,
+  "note": "运行器和数据装载尚未建设；执行前必须冻结完整依赖与配置，不能将本文件当可执行放行。"
+}
