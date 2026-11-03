@@ -1,0 +1,520 @@
+[
+  {
+    "id": "C01-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C01-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C01-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "三对象类型、标准/扩展、坐标、plan、单次提交均正确。末句“固定直立/朝向未设置”含混，但朝向确未设置；不把歧义直接认定为错误。"
+  },
+  {
+    "id": "C01-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C01-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C01-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "三对象实际创建正确，但“冲锋舟…没有对应的国标符号”超出本系统22项目录能证明的范围；标记最终事实证据不足，不声称已查证所有国家标准。"
+  },
+  {
+    "id": "C02-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C02-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C02-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "未询问车型即选择水罐车并写入，违反冻结任务澄清要求；“默认消防车图标”无目录依据。waiting_user由完成后的发布邀请触发，非真正必要澄清。"
+  },
+  {
+    "id": "C02-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C02-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C02-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "未询问车型即选择水罐车并写入，违反冻结任务澄清要求；“最通用”无依据。waiting_user由完成后的坐标系条件邀请触发，非真正必要澄清。"
+  },
+  {
+    "id": "C03-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C03-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C03-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际唯一字段差异为heading45→90，原属性、null、样式、来源与身份保留。"
+  },
+  {
+    "id": "C03-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C03-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C03-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际唯一字段差异为heading45→90，原属性、null、样式、来源与身份保留。"
+  },
+  {
+    "id": "C04-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C04-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C04-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际唯一差异为name，缺失样式/角色/方向保持缺失；回答明确未逐字段读取但只提交name。"
+  },
+  {
+    "id": "C04-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C04-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C04-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际唯一差异为name，缺失样式/角色/方向保持缺失。"
+  },
+  {
+    "id": "C05-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C05-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C05-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "识别固定直立无人机，解释不能旋转；无写入、rev1与全部内容不变，达到预期安全拒绝。末尾替代方案选择导致驱动waiting_user，保留原状态，不等同核心失败。"
+  },
+  {
+    "id": "C05-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C05-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C05-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "识别固定直立无人机，解释不能旋转；无写入、rev1与全部内容不变。与第一轮类似的替代方案邀请却未被驱动判waiting_user，记录生命周期判定不一致。"
+  },
+  {
+    "id": "C06-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C06-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C06-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "仅新增attributes.contact；原有null、false、count、unit以及其他顶层字段保留。"
+  },
+  {
+    "id": "C06-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C06-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C06-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "仅新增attributes.contact；原有null、false、count、unit以及其他顶层字段保留。"
+  },
+  {
+    "id": "C07-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C07-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C07-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "只修改固定引用所属本会话target的iconSize48→56，decoy及另一个会话完整状态不变。"
+  },
+  {
+    "id": "C07-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C07-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C07-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "只修改固定引用所属本会话target的iconSize48→56，decoy及另一个会话完整状态不变；正确解释重名对象身份。"
+  },
+  {
+    "id": "C08-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C08-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C08-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "注入真实外部heading180及新备注后，旧写入CAS拒绝；读Skill/最新完整字段后只写heading90并保留新备注，真实只有一次成功Agent提交。未询问；冻结规则未要求每次强制询问，最终明确说明180→90。"
+  },
+  {
+    "id": "C08-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C08-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C08-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "同样真实CAS拒绝、读Skill/重读后保留外部备注并只提交一次heading90。过程以方向与备注不同字段解释，未充分说明同一方向也已变，但明确披露180→90；记解释不足，不据此认定关键错误。"
+  },
+  {
+    "id": "C09-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C09-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C09-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "来源1资源点、availableCount4辆、部署3点、不能确认逐车到场均正确，未相加、未写入。按实际sourceRefs和一致数据描述副本，未据此认证可用/到场；“本质上复制标注”建议收窄为带来源引用的标注，不在当前冻结题意下加罚。"
+  },
+  {
+    "id": "C09-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C09-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C09-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "核心计数与到场边界正确，先把区域名称误当ID得到0后自行改用文本和精确引用查询，未把0当不存在。未读informationRole但只称规划/标绘性质，未声称读取到plan字段；副本措辞保留证据边界建议。"
+  },
+  {
+    "id": "C10-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-1/turn-2-result.json"
+    ],
+    "completed": false,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "正确保存第一次500m固定范围，未重算、未破坏旧对象；遗漏明确要求informationRole=plan，转而要求再次确认，任务未完整完成。"
+  },
+  {
+    "id": "C10-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/C10-2/turn-2-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际两步新增固定范围并设置plan正确，旧对象完整保留；第一轮过滤origin读取后错误宣称整份草稿只有基点，实际还存在冲锋舟，跨轮最终事实不合格。"
+  },
+  {
+    "id": "F01-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F01-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F01-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "仅使用来源查询，西区资源名称/1个资源点/4辆分开报告，无草稿混入，无写入；真实区域ID查询确认范围完整。"
+  },
+  {
+    "id": "F01-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F01-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F01-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "仅使用来源查询，以区域memberRefs和返回资源核对名称/1点/4辆，无草稿混入和写入。"
+  },
+  {
+    "id": "F02-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-1/turn-2-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-1/turn-3-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "三个用户轮次均完成，先500后1500，最后以第一次结果geometry:true筛选resources且0命中；未重算/错误引用第二次结果，未写入。"
+  },
+  {
+    "id": "F02-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-2/turn-2-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F02-2/turn-3-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "固定首次500m范围筛选正确、0命中且无写入；最终额外估计边界点约2.9km、资源外约4.3km，与真值3.0276km、4.5414km不符，按常规取一位小数应约3.0km/4.5km。未取得实际距离结果；不是因没有调用工具单独判错，而是公开估值无法与已知几何和独立真值对上。"
+  },
+  {
+    "id": "F03-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F03-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F03-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "候选仅resources，最近两点与距离正确；占位参数错误未产生写入且自行恢复。最终“每个候选点均为单点，因而没有距离相同的并列情况”因果不成立，单点也可等距；结果无并列不能证明该推理。"
+  },
+  {
+    "id": "F03-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F03-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F03-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "完整读取限定resources/reference，nearest取5排序后准确报告前2名及距离；没有并入同名resources-other，附带状态与后3名都有实际结果依据，无写入。"
+  },
+  {
+    "id": "F04-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-1/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-1/turn-2-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "先预览不保存；后续保存首次固定resultRef，首写缺少本请求draft依据被拒绝，补读后一次成功提交；新增1对象且原16对象/4层完整保留，无发布采用。"
+  },
+  {
+    "id": "F04-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-2/turn-1-result.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F04-2/turn-2-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "先预览不保存；续问读取当前draft后保存同一固定resultRef，仅新增1对象，其余完整不变，无发布采用。"
+  },
+  {
+    "id": "F05-1",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F05-1/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F05-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际classify_points输出2内部、2边界、1外部，名称及4点计数正确；读取几何支持角点解释，方法与证据明确，无写入。"
+  },
+  {
+    "id": "F05-2",
+    "reviewer": "Codex independent trellis-check (AI evidence review, not human gold)",
+    "evidence": [
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F05-2/review.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/attempts.json",
+      "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027-executable/F05-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "filter contains得到正确4点和计数，核心正确；但仅摘要+filter不能细分内部/边界，却断言“边界点位于边界、严格内部会排除”。未读取几何或点分类，名称不足以证明边界；不能以后验fixture真值为当时公开方法解释补证。"
+  }
+]

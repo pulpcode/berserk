@@ -1,0 +1,97 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T03:17:03.961581+00:00",
+  "scope": "Five explicitly authorized missing-user-turn supplements; component review only, not a precomputed per-slot live gate",
+  "sourceHashes": {
+    "README.md": "ef868a7303ca608b0bd8fb6c08ea8f531a801021bd29bf9331780802908950f9",
+    "runner.test.ts": "f233241e430a958855ad37a983312611f9b7afcd5323915136a71655e9a0cd3b",
+    "runner.ts": "7b7e826b8e2773ceb586d7adf5c2efe9b270a2a48c15a0c32fb77a1012fb91d6",
+    "tsconfig.json": "6655e144469bc5bfc82b7c433aadd1f1106762179eae6ed30047a04088440ad1"
+  },
+  "rootSourceHashes": {
+    "live.ts": "75ba852d82923c1b11721d785acf2c32fed085e0ef46de84649a0aa6d06a4db6",
+    "cases.ts": "1b3f7b825827df88d1060c6310659660bb93b601bf508c96ad8f927b865f030a",
+    "provider.ts": "c59264653f4c7f078f10cf998471163327b6486e36324e12d723d36250a1422c",
+    "budget.ts": "866faa8878c0ce9211f9969c237d56443f1a25bcb7ac456e8f24eb73c7cfa829",
+    "closeout-fourth.ts": "275fed7399d5bd6edbecb751128ea8897a02ef63e650c0fe043af2fde79fe3a4"
+  },
+  "authorizationHash": "31b6873c5c90ff91cc9058aba8529d83eb8c548952fa7b2cef361e03f0d90eff",
+  "slotOrder": [
+    "D06-1-A",
+    "D10-1-A",
+    "D10-1-B",
+    "D18-1-B",
+    "D20-2-C"
+  ],
+  "missingUserTurns": [
+    1,
+    2,
+    1,
+    2,
+    1
+  ],
+  "tests": {
+    "pass": 4,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 74226.397126,
+    "mockDirectory": "/private/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/r14-offline-supplements-IEOMHT"
+  },
+  "typecheck": "pass",
+  "lint": "pass",
+  "rawPreservation": {
+    "partial-evidence-manifest.json": 1076,
+    "closeout-first-segment-manifest.json": 1169,
+    "closeout-second-segment-manifest.json": 1519,
+    "closeout-third-segment-manifest.json": 4635,
+    "protected-before.json": 179
+  },
+  "realModelCallsByReviewer": 0,
+  "officialClaimCreatedByReviewer": false,
+  "findingsFixed": [],
+  "findingsNotFixed": [],
+  "remainingExecutionPreconditions": [
+    "Fourth segment 21 rows must finish without batch stop and complete known usage",
+    "Prepare each slot only after predecessor has settled; inherit its complete cumulative requests once",
+    "Per-slot freeze must bind current original history, source, approved messages and latest ledger; independent gate required",
+    "No automatic retry or additional slot; model semantic scores require full original and supplemented public evidence"
+  ],
+  "evidence": [
+    "independent-tests.log",
+    "independent-types.log",
+    "independent-lint.log",
+    "independent-check.md"
+  ],
+  "mockChain": [
+    {
+      "slot": "D06-1-A",
+      "newRequests": 2,
+      "cumulativeRequests": 15,
+      "completedSupplementTurns": 1
+    },
+    {
+      "slot": "D10-1-A",
+      "newRequests": 5,
+      "cumulativeRequests": 20,
+      "completedSupplementTurns": 2
+    },
+    {
+      "slot": "D10-1-B",
+      "newRequests": 3,
+      "cumulativeRequests": 23,
+      "completedSupplementTurns": 1
+    },
+    {
+      "slot": "D18-1-B",
+      "newRequests": 5,
+      "cumulativeRequests": 28,
+      "completedSupplementTurns": 2
+    },
+    {
+      "slot": "D20-2-C",
+      "newRequests": 2,
+      "cumulativeRequests": 30,
+      "completedSupplementTurns": 1
+    }
+  ]
+}

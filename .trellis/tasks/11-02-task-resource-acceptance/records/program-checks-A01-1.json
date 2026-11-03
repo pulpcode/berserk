@@ -1,0 +1,29 @@
+[
+  {
+    "id": "A01-1-task-set",
+    "kind": "sets",
+    "expected": [
+      "a01-lantern",
+      "a01-petrel"
+    ],
+    "observed": [
+      "a01-lantern",
+      "a01-petrel"
+    ],
+    "evidenceIds": [
+      "9c15ffff"
+    ],
+    "affects": "main"
+  },
+  {
+    "id": "A01-1-readonly",
+    "kind": "state_diff",
+    "expected": true,
+    "observed": true,
+    "evidenceIds": [
+      "state-before",
+      "state-after"
+    ],
+    "affects": "authorizedAccessAndActions"
+  }
+]

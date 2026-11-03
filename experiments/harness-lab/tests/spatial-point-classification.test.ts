@@ -1,3 +1,4 @@
+import { spatialToolResult } from '../src/pi/spatial-results.js';
 import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -172,4 +173,15 @@ describe('classification authorized service and bounded worker',()=>{
     await expect(s.service.analyze({operation:'classify_points',input:s.input,target:s.target},s.scope,randomUUID(),'hole')).rejects.toMatchObject({code:'SPATIAL_GEOMETRY_INVALID'});
     s.controller.abort();await expect(s.service.analyze({operation:'classify_points',input:s.input,target:s.target},s.scope,randomUUID(),'cancel')).rejects.toThrow();
   });
+});
+
+it('preserves old v2 classification text while v3 explains all candidate positions',()=>{
+ const original=evidence(),before=JSON.stringify(original),legacy=text(original),tool=spatialToolResult(original),model=JSON.parse(tool.content[0].text);
+ expect(model.meaning.counts).toContain('内部1、边界1、外部0');
+ expect(model.meaning.counts).toContain('items包含全部候选');
+ expect(extractSpatialResult(tool.details,'spatial_analyze',false,tool.content[0].text)).toEqual(original);
+ expect(extractSpatialResult(tool.details,'spatial_analyze',false,legacy)).toEqual(original);
+ expect(JSON.stringify(original)).toBe(before);expect(text(original)).toBe(legacy);
+ model.meaning.counts='全部2个都在内部';
+ expect(extractSpatialResult(tool.details,'spatial_analyze',false,JSON.stringify(model))).toBeNull();
 });

@@ -1,0 +1,2890 @@
+{
+  "runs": [
+    {
+      "report": "b3-final-vitest.json",
+      "total": 408,
+      "passed": 355,
+      "failed": 53
+    },
+    {
+      "report": "b3-review-rerun-vitest.json",
+      "total": 82,
+      "passed": 82,
+      "failed": 0
+    },
+    {
+      "report": "b3-http-fix-vitest.json",
+      "total": 19,
+      "passed": 19,
+      "failed": 0
+    }
+  ],
+  "deduplication": "file + fullName + same-name parameter occurrence; later affected-file rerun replaces earlier result",
+  "deduplicatedTotal": 409,
+  "passed": 409,
+  "tests": [
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison preserves absent fields and untouched display defaults while changing a name",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison preserves hidden styles, null attributes and source identity for a heading-only edit",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison keeps explicit removal of heading and final attribute distinct from untouched absence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison merges different fields into latest, including separate attribute keys",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison requires an explicit choice for every divergent field, including null versus deletion",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison treats equal concurrent changes as resolved, without an empty update",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison treats geometry and source arrays as whole values and arbitrary attribute names safely",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "minimal annotation edit and three-way comparison compares records independent of property order, but distinguishes null, missing and empty",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "preserves ordinary Object prototype key deletions and does not swallow forbidden keys before validation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-edit-changes.test.ts",
+      "name": "keeps untouched resource facts, timestamps, evidence and identity during ordinary edits",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "copies exact geometry and host UTC query time, persists a bounded receipt, and replays without another source query",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "refreshes one source geometry in place while preserving identity, business fields, other references and fixed versions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects revision source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects missing source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects offline source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects invalid-ring source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects holes source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects duplicate source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects partial source without committing a draft or receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "does not infer a missing object from other returned geometry or create a draft implicitly",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects refresh with wrong-source rather than replacing a different logical object",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects refresh with duplicates rather than replacing a different logical object",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects refresh with wrong-kind rather than replacing a different logical object",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects refresh with wrong-layer rather than replacing a different logical object",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps concurrent manual changes and rejects stale source writes after the HTTP wait",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks cancel after awaiting source data and does not write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks scope after awaiting source data and does not write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks request after awaiting source data and does not write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "denies source access before fetch and rechecks source grants for an old receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the captured account and refuses a disabled account even if a new account occupies its seat",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "does not return a different task receipt through the scoped tool and rejects injected authority/coordinates",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "returns one durable effect for simultaneous identical calls despite different host query times",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "refuses a task archived during the source wait and blocks already archived tasks before any fetch",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps same-seat conversations isolated when another draft is referenced or its object id is reused",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "atomically imports a host batch and replays original intent after state and source revisions advance",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters missing",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters offline",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters cancel",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters revoke",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps the entire source batch unchanged when the second item encounters concurrent",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects invalid batch targets and unknown authority before any source request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "reports fresh versus concurrent replay accurately without double committing a source batch",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "creates from a fixed baseline without empty-read authority and isolates host replay by session and intent",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps ordinary host writes bound to prior read versions while replay ignores advanced mechanical state",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rejects capacity overflow atomically and keeps original per-object metadata during a batch refresh",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks authorization for a host replay and rejects stale empty-state creation after another client created a draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks direct creation after preparation when another client changes binding",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks direct creation after preparation when another client changes create",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks direct creation after preparation when another client changes cancel",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "rechecks direct creation after preparation when another client changes revoke",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-from-source.test.ts",
+      "name": "keeps explicit symbol and role metadata on a source snapshot refresh without inferring equipment type",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "fixed targets merge duplicate objects by version, preserving legacy whole versions and publications",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "legacy single source and batch source receipts project exact object selections",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "receipt queries and replayed results are explicitly original actions, never new writes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "malformed, missing and error payloads cannot manufacture successful map writes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "final answer collects only its own request; missing request IDs never borrow history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-map-evidence.test.ts",
+      "name": "many results collapse into bounded accessible disclosure; old receipts retain their label",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "projects only known annotation metadata, preserves original receipts and business hash attributes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"objectIds\":[\"north\"],\"fields\":[\"note\"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"layerIds\":[\"roads\"],\"fields\":[]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"layerNames\":[\"道路\"],\"objectIds\":[\"north\"],\"fields\":[]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"fields\":[\"style\",\"attributes\"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"objectNames\":[\"north\",\"不存在\"],\"fields\":[]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "echoes original selectors without inventing omitted fields: {\"layerNames\":[\"道路\"],\"objectNames\":[\"north\"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "requires valid paired metadata, keeps legacy receipts, and never falls back from missing/damaged new results",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "explains read scope and page counts without widening zero matches to an empty draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "accepts original v1 receipt text and strict v2 meanings, rejects changed meaning or extra fields",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "never describes a not_committed outcome as a successful write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotation-results.test.ts",
+      "name": "never describes a unknown outcome as a successful write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotations-acceptance.test.ts",
+      "name": "isolates conversation drafts, freezes publication content, and gates whole-version adoption without approval",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/annotations-acceptance.test.ts",
+      "name": "allows a private-space owner to adopt a publication without public management rights",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/context-composer-map.test.ts",
+      "name": "loads explicit refs only, deduplicates, and stores actual query data in compatible native composer input",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-composer-map.test.ts",
+      "name": "denies scope escalation, missing objects and invalid reference payload before model use",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-composer-map.test.ts",
+      "name": "loads data before the actual Pi model request and reopens native history without requerying",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-composer-map.test.ts",
+      "name": "derives only source-backed spatial links, keeping report revisions separate from object revisions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "resource source filtering is independent of task relationships preserves old configuration and exact reads without any resource capability or source task ID",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "resource source filtering is independent of task relationships filters mixed objects before paging, binds cursor to filters, and never needs task mapping",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "resource source filtering is independent of task relationships applies object type filtering to changes before pagination and retains the source change position",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "resource source filtering is independent of task relationships rejects invalid and contradictory filters instead of broadening the source request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "D22 source business coverage is independent of paging completion retains a partial reason across real HTTP pages and on the final page without a cursor",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "D22 source business coverage is independent of paging completion preserves an empty partial response and leaves legacy responses unchanged",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "D22 source business coverage is independent of paging completion strictly rejects malformed coverage and does not add current-only coverage to changes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "optional source task and support discovery is implemented and gated queries actual declared source relationships, task mapping and category with no inferred assignment",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "optional source task and support discovery is implemented and gated keeps basic reads available when mapping or support rules are missing, while refusing unsupported discovery",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "optional source task and support discovery is implemented and gated source HTTP refuses undeclared filters independently of the host config",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "optional source task and support discovery is implemented and gated rejects source responses that ignore the requested type, task or category",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/context-resource-query.test.ts",
+      "name": "optional source task and support discovery is implemented and gated does not expose capability internals or bypass seat authorization",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/model-config.test.ts",
+      "name": "applies verified preset only to the official model and endpoint, independently of key presence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/model-config.test.ts",
+      "name": "validates small-window parameters without requiring output <= reserve",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/model-config.test.ts",
+      "name": "reads v1 without rewriting, only supplements matching environment identity and saves v4",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/model-config.test.ts",
+      "name": "v2 unknown fields never borrow environment values; changing model drops old capabilities",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/model-config.test.ts",
+      "name": "preserves preset provenance and rejects corrupt numeric fields instead of defaulting",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D01 queries default task resources, merges controlled imports and classifies five resources",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D02 keeps ordinary four-point annotation reading available without new resource semantics",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D03 preserves two same-name cross-system records and does not certify an entity total",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D04 does not treat a manual source reference as a controlled identity or inherited availability",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D05 one source entity with conflicting reports remains one entity and not available",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D06 aggregate and detail respect explicit coverage=false, station geometry is not vehicle geometry",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D06 aggregate and detail respect explicit coverage=true, station geometry is not vehicle geometry",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D07 preserves known quantities separately from unknown counts and different units",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D08 planned position retains the resource as unclassified, never outside",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D09 registered region selection remains distinct from actual geometry",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D10 an empty source and failed source never become a complete zero-resource task",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D11 adopted publication is fixed while another session draft changes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "independent first-batch business fixtures run through actual services D12 preserves exact user report, never converts assistant prose into evidence or mutates facts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D13 reads more than one full resource page without consuming unrelated geometry-less records",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D14 rejects incomplete snapshot data without a successful partial sum or retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D14 rejects incomplete cursor data without a successful partial sum or retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D14 rejects incomplete duplicate data without a successful partial sum or retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D14 rejects incomplete missing data without a successful partial sum or retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D14 never mixes changing source snapshots across separate exact-reference selections",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-a no source task API is needed for platform-linked resource reads",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-b explicit source region query retains both unrelated resources for spatial analysis",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-c missing all task links does not trigger broad scans or certify zero assignment",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-d explicit data scope keeps related and unknown records without manufacturing assignment",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-e optional source task discovery works only with actual capability complete",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-e optional source task discovery works only with actual capability no-map",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D15-e optional source task discovery works only with actual capability no-rule",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D16 rechecks source permissions and owner binding on read, summary and spatial use",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D16 does not admit another seat private draft or an unbound session",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D17 expired and conditional status is not made current by query time; a later effective report can supersede expired facts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D17 identical entity IDs from different source namespaces never establish cross-source identity",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D17 an ordinary copy loses controlled identity while the imported record keeps its association",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D17 different annotation sets with identical contents are independent records without entity evidence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D13—D18 source coverage, relationship and geometry boundaries D18 classifies independent inside/boundary/outside/hole points and retains every missing-position reason",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D21 source and adopted-publication changes do not mutate old fixed pages or totals",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D06 comparable quantities respect valid coverage without hiding separate facts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D06 comparable quantities respect missing coverage without hiding separate facts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-query.test.ts",
+      "name": "D06 comparable quantities respect expired coverage without hiding separate facts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D18 resource classification preserves five candidates, independent counts and two unknown positions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D18 keeps missing positions through nearest, result reuse and resource read without changing old geometry algorithms",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D19 rejects unrelated spatial summaries and keeps unclassified positions out of explicit exterior counts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D20/D21 rejects forged identities, partition counts, dropped dependencies and tampered model projection",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D16 rechecks source and fixed annotation dependencies on resource read and derived spatial reuse",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D24 saves exact derived geometry, carries source ACL, and never publishes private result locators",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 honours cancellation before resource/spatial access and rejects sibling session ownership",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 resource records limit never yields a truncated successful inventory",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 resource pages limit never yields a truncated successful inventory",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 resource bytes limit never yields a truncated successful inventory",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 resource cancel limit never yields a truncated successful inventory",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D18/D20 generated resource buffers remain reusable geometry without becoming resource positions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D18 resource nonpoint positions reject point-only operations instead of becoming missing data",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D19 counts requested availability and rejects changed quantities even when text matches details",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resource-spatial.test.ts",
+      "name": "D22 partial final source page retains known rows and its coverage reason",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "round-trips declarations through service, selected reads, native tool projection and restart without manufacturing identity",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "rejects invalid fields and forged authority atomically with no receipt or revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "establishes association only from explicit source metadata, preserves independent facts on refresh and removes identity on ordinary copy",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "does not reinterpret legacy availableCount and rejects incompatible source identity/foreign evidence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "keeps new evidence in source authorization and redacts private locators consistently in publication and derivation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "rejects nonexistent private evidence and denied source evidence without partial mutations",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "inherits evidence-only source restrictions in a fresh draft even after the dependent object is deleted",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "rejects existing foreign private evidence and derives the public projection across seats without private locators",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "keeps fixed legacy shape and canonical hash with absent optional resource fields",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "loads all twelve independent development cases and exercises their actual source, annotation and supplement decoders",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "refuses refresh when explicit source entity becomes missing without updating geometry or revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "refuses refresh when explicit source entity becomes aggregate without updating geometry or revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "refuses refresh when explicit source entity becomes changed without updating geometry or revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "defines capability and coverage failures distinctly from a complete empty source",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/task-resources.test.ts",
+      "name": "exposes controlled source imports through the authorized HTTP route with CAS and receipts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-source-history.test.ts",
+      "name": "runs source import through native Pi, reopens its exact history and recovers the fixed receipt without querying changed sources",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "runs three source writes from one assistant output sequentially using its own successful CAS chain",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "does not use a same-output read prematurely, but retains it for the following inference",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "requires source observations from an earlier inference as well as a draft read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "does not absorb an external write inserted between two same-output writes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "blocks subsequent writes after a schema error even though the invalid call never entered execute",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "creates without reading empty state and advances immediately for a following same-output edit",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "keeps replay receipts identifiable and never uses an old receipt to rewind the next write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains editing bases when ordinary native followUp input is consumed",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains editing bases when ordinary native steer input is consumed",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains committed data on cancellation and does not carry edit bases into the next request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "invalidates bases after native automatic compaction even when the summary mentions the old revision",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "does not establish edit authority by reading a fixed historical reference",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "requires observed current sequence and rejects external adoption without absorbing its latest value",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "stops later writes when a committed service result is lost and recovers only through the original receipt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains known bases through a native transient model retry without replaying the completed write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "recovers an invalid create after source reads without the old draft/source ping-pong",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "pauses after the second schema failure, retains the first commit and resumes without rereading",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "reports every known missing resource in one failed import without querying sources",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains source reads after a draft conflict and recovers by reading only the draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "retains draft and other source reads when one source changed; only that source needs rereading",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "requires original receipt reconciliation after unknown write (commit-generic)",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "requires original receipt reconciliation after unknown write (commit-request-error)",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "requires original receipt reconciliation after unknown write (no-commit)",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotation-workflow.test.ts",
+      "name": "rejects source-cache overflow without forgetting existing usable sources",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools matches the adoption description to actual formal task permissions and schema",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools reopens a native v1/v2/v3/v4 conversation and appends new map requests as v5 without rewriting old input",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools preserves cancelled v5 preparation without executing it or replaying selections on continuation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools uses provider-compatible object roots and homogeneous coordinate arrays while the service rejects invalid latitude",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools captures only fixed draft identity and refreshes it next request, without auto-reading map contents",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools keeps automatic context size constant when a saved map grows from 2 to 500 objects",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools resolves explicit fixed selections as metadata, paged geometry is read only by the actual tool, and restart preserves versions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools requires a current draft read and keeps own-session write target even with a reference to another draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools rereads the original fixed revision after native automatic compaction without rewriting selected history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools deduplicates native call actions, checks cancellation, and exposes no foreign session authority fields",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools keeps legacy custom input validation and rejects forged geometry in v2 descriptive selections",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools does not expose another task receipt through a current-task annotation tool",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools accepts reference IDs via ordinary message API but keeps rich references out of the text queue",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools does not pass annotation writes or automatic draft context to delegated children",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "annotation input and native tools captures the real account and refuses a pending write after that account is replaced within the same seat",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "returns actual selector-scoped counts and pages without pretending unread fields are empty",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "delivers named draft reads through the native schema and permits a later edit using the original host basis",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "uses fixed-version layer names and never establishes editing evidence from a fixed read or failed name match",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects simultaneous ID and name selectors through native validation even for an empty draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "retains exact structured receipt entries through real native compaction and restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "delivers exact object-name results in the native loop, keeps fixed reads readonly, and reopens old/new reads unchanged",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects malformed object-name selectors through native schema even without a draft: {\"objectNames\":[\"集合点 A\"],\"objectIds\":[\"a\"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects malformed object-name selectors through native schema even without a draft: {\"objectNames\":[]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects malformed object-name selectors through native schema even without a draft: {\"objectNames\":[\" \"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects malformed object-name selectors through native schema even without a draft: {\"objectNames\":[\"x\",\"x\"]}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "exports the shared bounded symbol catalog and roundtrips professional styles through actual Pi tools",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "edits only requested fields from actual draft evidence and preserves provenance, nulls and absent legacy values",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "removes heading and a business key explicitly without turning missing values into zero or null",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "rejects a stale complete style then lets the native loop reread and preserve concurrent style and note changes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/annotations.test.ts",
+      "name": "reads the explicitly selected set and edits only the current draft despite identical object IDs and names",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter isolates service resources and history, reads saved results after restart without registering a seat",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter uses frozen allowed Agents with one model slot; children have separate histories under the job",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter returns an ask-policy tool error and lets preprocess continue with an allowed read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter returns an ask-policy tool error and lets seat_analysis continue with an allowed read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter keeps a normal inability reply as an execution result instead of classifying business completion",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter runs ordinary inspection chains and file scripts in preprocess but never executes a denied command",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter runs ordinary inspection chains and file scripts in seat_analysis but never executes a denied command",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter terminates background work on policy infrastructure failure rather than returning a recoverable block",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter uses existing native file tools and records a fixed output result",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter honors a durable reservation, uses predefined IDs and continues the same seat session later",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter recovers an empty preallocated native session after binding failed, without duplicates",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter cancels active service model work and does not accept an automatic replay",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter honors cancellation while the native session is still being prepared",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter acknowledges cancellation after native completion while the queue is verifying the saved result",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter releases the model slot while a foreground session waits for a person",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter rejects unfrozen resource snapshots before model work",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter does not return a successful result when the saved native evidence cannot be verified",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter rejects a seat result whose saved native header belongs to another session",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter reuses native overflow compaction inside service work and preserves originals on restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter fails closed on a damaged native compaction without rewriting or dropping the original history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/background-runner.test.ts",
+      "name": "native Pi background adapter rejects completed parent output when the child evidence disappears before verification",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction compacts before a new prompt with native output allowance, retains raw history and keeps instructions separate",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction fails empty summary without saving or continuing the user request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction fails tool call summary without saving or continuing the user request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction fails length summary without saving or continuing the user request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction fails authentication summary without saving or continuing the user request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction cancels an in-flight summary through AgentSession.abort then permits a new request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction retains saved summaries and resumes from disk without replaying raw tools",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction rejects malformed native summaries and boundaries without changing the file",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native default compaction retains the saved summary and continues an interrupted raw request only on new input",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work performs one native overflow recovery (second failure=false) without replaying the user",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work performs one native overflow recovery (second failure=true) without replaying the user",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work retains queued input through native overflow recovery with one actual consumption",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work compacts a long tool turn repeatedly with dual native summaries, preserves original tool text and never replays tools",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work bounds transient reply retries at three extra attempts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work bounds transient compaction retries at three extra attempts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work cancels retry backoff without allowing another attempt",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work continues beyond 120 seconds by default and still responds to user cancellation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "native recovery and sustained work stops a summary at an explicit whole-request deadline",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "poisons the manager after a native compaction append failure and never appends a terminal result",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "rejects forged compaction ownership attached to a later request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "keeps the committed summary when cancelled between native append and the completion event",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/compaction.test.ts",
+      "name": "keeps recent raw content out of the first summary and includes it when a later compaction ages it out",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions loads explicit Skill once without a synthetic tool call and retains its exact version after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects stale skill before model work and releases the session",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects stale agent before model work and releases the session",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions keeps autonomous skill_read and unselected text behavior unchanged",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions passes Skill and file references to selected analyst without expanding tool permissions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions passes Skill and file references to selected reviewer without expanding tool permissions",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions does not copy selected inputs to a different autonomous child and does not manufacture delegation on clarification",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions preserves stopped preparation evidence without replaying a selection on the next request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions cancels selected child work without re-delegating after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects foreign composer evidence without rewriting files",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects duplicate composer evidence without rewriting files",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects body composer evidence without rewriting files",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects late composer evidence without rewriting files",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects unknown-key composer evidence without rewriting files",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions rejects duplicate input before the user message and a late input within the active request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions retains original selected Skill and role history through native automatic compaction and restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions blocks altered child inputs even when their standalone hash and native body remain valid",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "controlled composer inputs through native Pi sessions retains selected input agreement in both parent start and child origin",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "composer HTTP scope and ordinary file input limits returns only role metadata and rejects foreign scope or extra selection authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "composer HTTP scope and ordinary file input limits deduplicates completed uploads and path references before enforcing the combined cap",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence keeps byte-exact v1/v2 and fixed v3/v4 source/annotation/method templates from their baselines",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence routes all new map selections to v5 while leaving method-only and role-only inputs on v1",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v3",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v4",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence preserves identity, body, request ordering, size and readonly checks for berserk.composer-input.v5",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/composer-input.test.ts",
+      "name": "map input v5 and fixed legacy evidence reads mixed fixed v1/v2/v3/v4 and new v5 native history without rewriting old entries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "deployed map Skill and native compatibility exposes one effective catalog without rewriting the legacy workspace index",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "deployed map Skill and native compatibility loads the body only on demand and preserves actual Skill reads through restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "deployed map Skill and native compatibility continues a two-Skill historical record and reopens mixed explicit selections without changing old bytes",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "deployed map Skill and native compatibility retains strict ID, body hash, resource membership and duplicate checks for new records",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "deployed map Skill and native compatibility forwards an explicitly selected map method to a read-only child without adding map tools",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "spatial Skill uses the existing native resource path keeps the catalog lightweight and loads exact content only after skill_read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/map-skill.test.ts",
+      "name": "spatial Skill uses the existing native resource path delivers explicit spatial content without synthetic read calls and preserves strict metadata validation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "keeps legacy schema v1 as the default and persists a second profile across restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "keeps legacy schema v2 as the default and persists a second profile across restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "isolates simultaneous same-name models by profile endpoint, credentials and output limit",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "runs a configured profile when the default has neither credentials nor known capacity",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "persists an empty conversation model choice without invoking a provider or adding a message",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "rejects invalid or unavailable choices and switching a reserved conversation without mutating its selection",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "refuses to resume a conversation with profile-id-tampered model selection history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "refuses to resume a conversation with extra-key-tampered model selection history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-catalog.test.ts",
+      "name": "refuses to resume a conversation with session-binding-tampered model selection history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "uses the new endpoint, key and model on the next real adapter call and restores them after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "retains a key only for the same provider and normalized destination, and rejects stale saves",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "configures an initially unconfigured environment without returning the write-only key",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "rejects unsafe or extra fields and untrusted origins without changing configuration",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "blocks configuration updates while any session is reserved or running",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "reserves the update across disk writes, rejects concurrent starts and saves, and settles before publishing",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "leaves runtime and secret files unchanged when persistence fails, and releases the update reservation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "fails closed on corrupted, duplicate-key, oversized or symlinked local settings",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "keeps history readable but rejects unknown capacity before reserving or writing a message",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "validates endpoint/model, accepts a custom registry alias, and keeps absent env mode unspecified",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "captures actual SDK wire off on reply + tool continuation, with no required thought text",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "captures actual SDK wire high on reply + tool continuation, with no required thought text",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "uses the same mode in foreground, delegated child and parent continuation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "uses the same mode for service background execution",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "keeps native compaction output allowance while applying the profile mode",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "captures high mode on actual automatic compaction and subsequent reply",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "reads legacy schema 1 without rewrite; explicit save/restart retains mode and CAS",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "reads legacy schema 2 without rewrite; explicit save/restart retains mode and CAS",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "reads legacy schema 3 without rewrite; explicit save/restart retains mode and CAS",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "keeps a reserved request unchanged and applies a saved mode only to the next request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "round trips a catalog with independent off/high profiles using schema 5",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "high mode keeps normal transport behavior: heartbeat, with zero provider retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "high mode keeps normal transport behavior: stall, with zero provider retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "high mode keeps normal transport behavior: cancel, with zero provider retries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "legacy custom-ark-alias preserves actual wire through unrelated save; explicit off opts in",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "legacy deepseek preserves actual wire through unrelated save; explicit off opts in",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-thinking.test.ts",
+      "name": "preserves high parameters across Pi native retry while provider transport does not retry",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/provider-payload.test.ts",
+      "name": "inserts one fixed system snapshot immediately before the current user on the wire, without changing native history",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/provider-payload.test.ts",
+      "name": "keeps annotation receipts in native details and UI while the actual provider receives projected content and v5 references",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/provider-payload.test.ts",
+      "name": "delivers the deployed 'spatial-analysis' catalog and exact body through native on-demand skill_read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/provider-payload.test.ts",
+      "name": "delivers the deployed 'map-annotations' catalog and exact body through native on-demand skill_read",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/resource-preflight.test.ts",
+      "name": "P0: recreates Pi with fresh explicit instructions while preserving native history and private resource entries",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-discovery.test.ts",
+      "name": "offers only captured Skill candidates, omits an empty catalog, and retains server membership checks",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata uses SDK YAML parsing while retaining the exact file for hashing",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata refreshes metadata and content together without changing an earlier snapshot",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 2,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 3,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 4,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 5,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 6,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/skill-metadata.test.ts",
+      "name": "controlled Skill metadata rejects malformed or mismatched deployed content",
+      "parameterOccurrence": 7,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "runs buffer → filter → statistics and saves exact original geometry, then reads after restart without recomputing",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "rejects altered native result details as downstream authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "saves the fixed geometry and completes 'save only' through existing tools without duplicate objects",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "saves the fixed geometry and completes 'information role' through existing tools without duplicate objects",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "saves the fixed geometry and completes 'note' through existing tools without duplicate objects",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "records uncertain exact-save effects and blocks a second same-output write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "rejects missing attributes, unsupported empty-scope target, cancellation and foreign fixed references",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "reads and saves a fixed result after actual native automatic compaction",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "keeps ordinary spatial parameter/data failures recoverable in a later request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "delivers result-selection ambiguity and recovers with the same fixed geometry in the native loop",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "retains mixed v1/v2 native history and reuses the fixed classification after restart without recomputation",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/spatial.test.ts",
+      "name": "exposes a relevant method entry on unsupported geometry without automatically reading its body",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi delegates, reads allowed resources, returns final text, separates history/usage and restores persisted cards",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi returns authentication child failures as native tool errors while the parent can explain",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi returns empty child failures as native tool errors while the parent can explain",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi returns truncated child failures as native tool errors while the parent can explain",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi cancels nested model work and blocks a queued second delegation without self-deadlock",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi uses explicit parent deadlines for children without creating a fresh time budget",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi closes child tool admission when cancellation arrives in its public tool-start update",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi keeps per-request role/configuration snapshots, supports new tool-free roles, and rejects unknown/extra authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi restores incomplete starts as interrupted, never replays them, and rejects tampered linkage",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi continues the interrupted parent when the child and its returned result are complete",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi stops the whole parent on a failed end-link commit without claiming child success",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi stops parent admission when child native persistence fails before its model work",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi preserves a readable parent while blocking truncated child history after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi preserves a readable parent while blocking missing child history after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi preserves a readable parent while blocking body-mismatch child history after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi preserves a readable parent while blocking missing-terminal child history after restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects inconsistent parent-result native evidence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects inconsistent parent-error-flag native evidence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects inconsistent parent-tool-text native evidence",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi cancels a child during native retry and accounts its own attempts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi cancels a child during native compaction and accounts its own attempts",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi completes native child compaction separately and returns to the same parent tool loop",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi runs analyst then reviewer with role-specific tools and the original readonly instruction snapshot after a parent write",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi does not register child writes, recursion, shell or role-undeclared tools",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects unregistered or invalid delegation arguments: {\"agent\":\"missing\",\"task\":\"test\"}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects unregistered or invalid delegation arguments: {\"agent\":\"analyst\",\"task\":\"test\",\"cwd\":\"/outside\"}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi rejects unregistered or invalid delegation arguments: {\"agent\":\"analyst\",\"task\":\" \"}",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi keeps two workspaces independently active and stopping one parent leaves the other child running",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi keeps missing child usage unknown rather than folding zero tokens into parent usage",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/subagent.test.ts",
+      "name": "independent read-only subagents through Pi preserves a long child result verbatim while native parent overflow recovery compacts before continuing",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "uses original successful native evidence and does not accept a copied result without its call",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects args tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects text tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects details tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects request tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects call tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects error tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "rejects delivery tampering as result authority",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "read delivery preserves origin identity and validates its actual page request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "does not treat assistant prose, compaction summaries, unselected users or road selections as resource reports",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "resolves only the first real user report bound to verified resource selections",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource-results.test.ts",
+      "name": "D20 summaries retain the native parent statistics time and cannot rebind their scope",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "uses actual native query → classify → summarize → read and keeps snapshots across restart",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "fails closed after a hook changes successful resource metadata",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "ordinary recoverable query errors do not poison future requests",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "reads original resource results after actual native automatic compaction",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "hides revoked annotation dependencies and rejects continuation before invoking the provider",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "rechecks permission between tool completion and the next provider call in the same request",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "D21 native read pages stay fixed after draft edits and a fresh query observes the new draft",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/task-resource.test.ts",
+      "name": "B3 T17/T19 follows explicit area selection through deployed Skill and actual assigned/available statistics",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-review-rerun-vitest.json"
+    },
+    {
+      "file": "tests/pi/transport.test.ts",
+      "name": "uses actual HTTP byte progress for idle timeout (heartbeats=true)",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/transport.test.ts",
+      "name": "uses actual HTTP byte progress for idle timeout (heartbeats=false)",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/transport.test.ts",
+      "name": "enforces the explicit provider request timeout while HTTP idle timing is disabled",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-final-vitest.json"
+    },
+    {
+      "file": "tests/pi/model-settings.test.ts",
+      "name": "accepts explicit thinking through all settings HTTP routes without weakening validation or legacy omission",
+      "parameterOccurrence": 1,
+      "status": "passed",
+      "report": "b3-http-fix-vitest.json"
+    }
+  ]
+}

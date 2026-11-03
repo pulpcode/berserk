@@ -106,6 +106,7 @@ async function registerApi(app: FastifyInstance, lab: PiLab, scope: ReturnType<t
       provider: { type: 'string', minLength: 1, maxLength: 80 }, model: { type: 'string', minLength: 1, maxLength: 200 },
       baseUrl: { type: 'string', minLength: 1, maxLength: 2048 }, expectedVersion: { type: 'string', format: 'uuid' },
       apiKey: { type: 'string', maxLength: 4096 },
+      thinkingMode: { type: 'string', enum: ['off', 'high'] },
       contextWindow: { type: 'integer', minimum: 8192, maximum: 2000000 },
       maxOutputTokens: { type: 'integer', minimum: 1, maximum: 2000000 },
       compactionReserveTokens: { type: 'integer', minimum: 1, maximum: 2000000 },

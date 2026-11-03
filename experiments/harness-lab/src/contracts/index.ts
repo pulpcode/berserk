@@ -1,4 +1,5 @@
 import type { TaskDiscovery } from './continuous.js';
+import type { ResourceResult } from './resource-results.js';
 import type { SpatialResult } from './spatial.js';
 import type { AnnotationResult } from './annotation-results.js';
 import type { AnnotationContext, AnnotationSelection, LoadedAnnotationSelection } from './annotations.js';
@@ -20,7 +21,7 @@ export interface PublicMessage {
   /** UI-only notice for an interrupted call, not a persisted tool result. */
   resultMissing?: true;
   annotationResult?: AnnotationResult | null;
-  spatialResult?: SpatialResult | null;
+  spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null;
   taskDiscovery?: TaskDiscovery | null;
   attachments?: FileRef[];
   selections?: LoadedComposerSelection;
@@ -119,7 +120,11 @@ export interface ModelParameters {
   compactionReserveTokens: number | null;
   compactionKeepRecentTokens: number | null;
 }
+export type ModelThinkingMode = 'off' | 'high';
 export interface ModelSettings extends ModelParameters {
+  thinkingMode?: ModelThinkingMode;
+  thinkingSupported?: boolean;
+  thinkingExplicit?: boolean;
   contextSource: 'preset' | 'explicit' | 'unknown';
   outputSource: 'preset' | 'explicit' | 'unknown';
   contextReady: boolean;
@@ -144,6 +149,7 @@ export interface ModelChoices { defaultModelId: string; models: ModelChoice[] }
 export interface ModelProfile extends ModelSettings { id: string }
 export interface ModelCatalog { version: string; models: ModelProfile[] }
 export interface ModelSettingsUpdate {
+  thinkingMode?: ModelThinkingMode;
   contextWindow?: number;
   maxOutputTokens?: number;
   compactionReserveTokens?: number;
@@ -167,7 +173,7 @@ export type StreamEvent = {
   | { type: 'instructions.updated'; change: InstructionUpdate }
   | { type: 'text.delta'; delta: string }
   | { type: 'tool.started'; toolCallId: string; toolName: string }
-  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; taskDiscovery?: TaskDiscovery | null }
+  | { type: 'tool.completed'; toolCallId: string; toolName: string; text: string; isError: boolean; annotationResult?: AnnotationResult | null; spatialResult?: SpatialResult | null; resourceResult?: ResourceResult | null; taskDiscovery?: TaskDiscovery | null }
   | { type: 'interaction.updated'; interaction: Interaction }
   | { type: 'subagent.updated'; subagent: SubagentSummary }
   | { type: 'files.output'; file: FileOutput }

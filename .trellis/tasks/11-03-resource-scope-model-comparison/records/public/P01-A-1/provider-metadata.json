@@ -1,0 +1,75 @@
+{
+  "intervals": [
+    {
+      "id": 1,
+      "group": "A",
+      "startedAt": "2026-11-03T07:53:01.469Z",
+      "finishedAt": "2026-11-03T07:53:04.781Z",
+      "providerMs": 3312,
+      "usage": {
+        "input": 23760,
+        "output": 323
+      },
+      "finishReason": "tool_calls",
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "requestHash": "88d46c82a494ee5df5eeb3d247806cbaa20b973d03bcefb3868dcacd16a80ec2",
+      "responseHash": "9626020a87689da111e79a2b5c2e67e8a70aaf5b6e195d37da3423d76b198db7"
+    },
+    {
+      "id": 2,
+      "group": "A",
+      "startedAt": "2026-11-03T07:53:17.022Z",
+      "finishedAt": "2026-11-03T07:53:19.796Z",
+      "providerMs": 2774,
+      "usage": {
+        "input": 24387,
+        "output": 253
+      },
+      "finishReason": "stop",
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "requestHash": "78ef06bd78712f7556bedee0d371073987890c2c6c826aab8d3057a1d522a6a3",
+      "responseHash": "12119b76c06e98aedf8b7b09d17579df42efa5f61450baecb3fc7bcdb7f78432"
+    },
+    {
+      "id": 3,
+      "group": "A",
+      "startedAt": "2026-11-03T07:53:55.949Z",
+      "finishedAt": "2026-11-03T07:53:59.838Z",
+      "providerMs": 3889,
+      "usage": {
+        "input": 24948,
+        "output": 459
+      },
+      "finishReason": "tool_calls",
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "requestHash": "2dc52190cb20908770d60f003a98b616e95775d2886ea45247f18737b1c7b67b",
+      "responseHash": "437febf1c5ebf0c068292af442ca266c7280a82a3a3fbeb5e4e3cc1e60cc80d8"
+    },
+    {
+      "id": 4,
+      "group": "A",
+      "startedAt": "2026-11-03T07:54:25.569Z",
+      "finishedAt": "2026-11-03T07:54:27.748Z",
+      "providerMs": 2179,
+      "usage": {
+        "input": 25711,
+        "output": 173
+      },
+      "finishReason": "stop",
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "requestHash": "ffb14c3548763752fd6ce49fe8d0cc4e0b3fa11e1904e4e373681738b876b8cf",
+      "responseHash": "e35b58e659a6732de2014bc258ffbd84970dce4f6a51eb22349fb4eff3168498"
+    }
+  ],
+  "providerMs": 12154,
+  "reasoningPrivate": true,
+  "wallTimeIncludesPreparationAndReview": true
+}

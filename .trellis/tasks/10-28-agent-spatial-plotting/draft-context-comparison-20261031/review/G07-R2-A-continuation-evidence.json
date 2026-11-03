@@ -1,0 +1,11 @@
+{
+  "decision": "accept_frozen_generic_rule",
+  "boundary": "明确请求来源选择，但使用后续口径且绑定两项来源；不视为独立消歧",
+  "files": {
+    "turn-1-checkpoint.json": "e71c53f85c2cacaf7ac179b4781b25981db669eba419cd183d89305a638c04d7",
+    "turn-1-decision.json": "9946561b1047a94fbce89fd7ecb8225f35731eebc8fde5a87dc427c842b5bbe7",
+    "turn-1-clarification.json": "c8035c0a312aa2b6c7cb8ad1738d86009649a532b7e55bdb6cf12717145be350"
+  },
+  "changedOriginalEvidence": false,
+  "newModelRequests": 0
+}

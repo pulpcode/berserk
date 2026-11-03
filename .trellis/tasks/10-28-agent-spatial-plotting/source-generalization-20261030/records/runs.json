@@ -1,0 +1,154 @@
+[
+  {
+    "id": "G01",
+    "caseId": "G01",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 4,
+    "modelIncomplete": false,
+    "scorePath": "../review/G01-score.json",
+    "scores": {
+      "scope_pass": true,
+      "geometry_and_members_pass": true,
+      "main_pass": true,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": true
+    }
+  },
+  {
+    "id": "G07",
+    "caseId": "G07",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 3,
+    "modelIncomplete": false,
+    "scorePath": "../review/G07-score.json",
+    "scores": {
+      "scope_pass": false,
+      "geometry_and_members_pass": false,
+      "main_pass": false,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  },
+  {
+    "id": "G04",
+    "caseId": "G04",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 4,
+    "modelIncomplete": false,
+    "scorePath": "../review/G04-score.json",
+    "scores": {
+      "scope_pass": false,
+      "geometry_and_members_pass": false,
+      "main_pass": false,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  },
+  {
+    "id": "G05",
+    "caseId": "G05",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 3,
+    "modelIncomplete": false,
+    "scorePath": "../review/G05-score.json",
+    "scores": {
+      "scope_pass": false,
+      "geometry_and_members_pass": false,
+      "main_pass": false,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  },
+  {
+    "id": "G02",
+    "caseId": "G02",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 4,
+    "modelIncomplete": false,
+    "scorePath": "../review/G02-score.json",
+    "scores": {
+      "scope_pass": true,
+      "geometry_and_members_pass": true,
+      "main_pass": true,
+      "process_facts_pass": true,
+      "final_facts_pass": false,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  },
+  {
+    "id": "G08",
+    "caseId": "G08",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 4,
+    "modelIncomplete": false,
+    "scorePath": "../review/G08-score.json",
+    "scores": {
+      "scope_pass": false,
+      "geometry_and_members_pass": false,
+      "main_pass": false,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  },
+  {
+    "id": "G03",
+    "caseId": "G03",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 4,
+    "modelIncomplete": false,
+    "scorePath": "../review/G03-score.json",
+    "scores": {
+      "scope_pass": true,
+      "geometry_and_members_pass": true,
+      "main_pass": true,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": true
+    }
+  },
+  {
+    "id": "G06",
+    "caseId": "G06",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "completed",
+    "requests": 3,
+    "modelIncomplete": false,
+    "scorePath": "../review/G06-score.json",
+    "scores": {
+      "scope_pass": false,
+      "geometry_and_members_pass": false,
+      "main_pass": false,
+      "process_facts_pass": true,
+      "final_facts_pass": true,
+      "no_business_effects_pass": true,
+      "strict_pass": false
+    }
+  }
+]

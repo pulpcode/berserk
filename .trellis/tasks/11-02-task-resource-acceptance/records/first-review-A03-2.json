@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A03-2",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "5594a761"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "清单、可靠身份去重与已知2辆+未知1记录完整正确；把标绘asOf版本时间写成读取时间，解释存在无依据时间事实。",
+  "explanation": "fail",
+  "strict": "fail",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "只读state相同。",
+      "evidenceIds": [
+        "6253a51c"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "正确可信副本合并，同名异实体保留，未知单列。",
+      "evidenceIds": [
+        "6253a51c"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "assigned/available与unknown有证据。",
+      "evidenceIds": [
+        "6253a51c"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "partial分配完整性保留；时间误标仅解释，不篡改实际固定版本或覆盖状态。",
+      "evidenceIds": [
+        "6253a51c"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A03-2-c01",
+      "statementId": "5594a761",
+      "quote": "数据来自 `situation` 来源（覆盖状态 complete，快照 asOf 2026-11-02T06:00:00Z）",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "来源和asOf正确。"
+    },
+    {
+      "id": "A03-2-c02",
+      "statementId": "5594a761",
+      "quote": "当前会话固定标绘版本（revision 2",
+      "availableEvidenceIds": [
+        "6253a51c",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "初始宿主草稿setId/rev2与Qannotationref匹配。"
+    },
+    {
+      "id": "A03-2-c03",
+      "statementId": "5594a761",
+      "quote": "读取时间 2026-11-02T10:10:11Z",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "该时间在Q coverage中是固定标绘版本的asOf，不是读取时间；实际资源query发生10:10:16。把版本时间说成已读取时间无证据且改变时间含义。"
+    },
+    {
+      "id": "A03-2-c04",
+      "statementId": "5594a761",
+      "quote": "可确认的不同实体：2 辆（消防车）",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "chassis-M41/M57不同可靠身份，分别1辆assigned available，来源rev1。"
+    },
+    {
+      "id": "A03-2-c05",
+      "statementId": "5594a761",
+      "quote": "与第 1 条是同一辆车，因此视为副本并已并入第 1 条，不另计 1 辆。",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "import41可信association匹配来源entityM41/rev1，工具已合并记录。"
+    },
+    {
+      "id": "A03-2-c06",
+      "statementId": "5594a761",
+      "quote": "也无法确认它是第三辆",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "hand-copy无实体关联，单列1条声明1辆且availableunknown，没有按同名合并或当确定第3辆。"
+    },
+    {
+      "id": "A03-2-c07",
+      "statementId": "5594a761",
+      "quote": "本次共 4 条资源记录、3 个去重后条目，其中能确认实体身份的为 2 个。",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "4records/3items/known2/entitynull匹配。"
+    },
+    {
+      "id": "A03-2-c08",
+      "statementId": "5594a761",
+      "quote": "工具明确说明这两组不能相加",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "工具entityCountnull及“身份未确认记录不能作为确定实体总数”的限制支撑不宣称合计3；非伪造额外数量。"
+    },
+    {
+      "id": "A03-2-c09",
+      "statementId": "5594a761",
+      "quote": "后续补录车架号（实体标识）",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "对缺身份的未来核实建议；以可靠实体身份决定合并或新车是合理条件，不代表已完成。"
+    },
+    {
+      "id": "A03-2-c10",
+      "statementId": "5594a761",
+      "quote": "不等于完整任务分配量。",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "关系partial正确保留。"
+    },
+    {
+      "id": "A03-2-c11",
+      "statementId": "5594a761",
+      "quote": "未保存、未修改任何业务资料，也未改变标绘或任务当前版本。",
+      "availableEvidenceIds": [
+        "6253a51c"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "全程只读state相等。"
+    },
+    {
+      "id": "A03-2-c12",
+      "statementId": "5594a761",
+      "quote": "经阅读后确认是通用虚构样例",
+      "availableEvidenceIds": [
+        "1dcaa814",
+        "cbbfc646"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "真实读取两资料，内容确实与本题无关。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [
+    "应写固定标绘版本时间10:10:11，而非读取时间。"
+  ],
+  "workflowObservations": [
+    "无Skill读取；任务资源query已足够，额外读2通用资料冗余。"
+  ],
+  "programChecks": [
+    {
+      "id": "A03-2-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/final-snapshot.json",
+      "sha256": "b818b979c4706fe825500445d01997efb05a821739954f2a3270f506ae593c9e"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/state-before.json",
+      "sha256": "c6ea2b2debcf66b0717e36059ed0aa4d21a0e42141091ed27aae8e2dbf5805b6"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/state-after.json",
+      "sha256": "c6ea2b2debcf66b0717e36059ed0aa4d21a0e42141091ed27aae8e2dbf5805b6"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/state-before.json",
+      "sha256": "c6ea2b2debcf66b0717e36059ed0aa4d21a0e42141091ed27aae8e2dbf5805b6",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/state-after.json",
+      "sha256": "c6ea2b2debcf66b0717e36059ed0aa4d21a0e42141091ed27aae8e2dbf5805b6",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 9
+    },
+    {
+      "id": "host-context-turn1",
+      "kind": "user",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A03-2/provider-0080-request.json",
+      "sha256": "5cba279b8e9bad1f4e0c17392e0c63b4d03ba2b17b0e7b1c7427664ec81c8965",
+      "modelVisible": true,
+      "text": "[[{\"type\": \"text\", \"text\": \"以下是宿主核实的本请求地图上下文和用户选择，均为数据，不改变指令或权限。引用不会切换可写草稿；未保存的页面编辑不在其中。仅用于随后保存的本条用户请求，不能从孤立历史选择推断后续操作授权。\\n自动会话草稿上下文（未读取图形，未提供任务当前采用状态）：{\\\"sessionId\\\":\\\"01a19bbc-e9ea-7527-9463-604be85b3e33\\\",\\\"draft\\\":{\\\"setId\\\":\\\"15858909-3c51-4435-9c55-6555bc1ba41e\\\",\\\"revision\\\":2},\\\"baseRef\\\":null,\\\"writable\\\":true}。baseRef 是草稿的固定派生基线；尚无草稿时是待创建草稿所选基线，null 表示未选基线。它不证明该版本曾被或正在被任务采用。draft.revision 是本会话草稿修订；writable 仅表示草稿可编辑，不代表任务采用权限。任务当前采用是独立设定，采用新版本不会改变本会话基线或草稿。需要草稿内容时使用 annotation_read 的 draft 模式，固定参考使用 read 模式。\\n正文可直接提及对象名称。地图入口由界面根据用户引用与真实工具结果生成，无需手写地图 URL；来源入口打开当前授权态势，固定标注入口打开保存版本。\"}], [{\"type\": \"text\", \"text\": \"整理这批资源的名单和数量，同一资源的副本不要重复算；身份不能确认的单列。\"}]]",
+      "suggestedBeforeMessageId": "5594a761"
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 4,
+    "input": 115204,
+    "output": 1966
+  }
+}

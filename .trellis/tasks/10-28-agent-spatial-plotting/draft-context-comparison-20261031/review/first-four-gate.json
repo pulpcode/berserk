@@ -1,0 +1,48 @@
+{
+  "decision": "pass",
+  "slots": [
+    {
+      "slotId": "G01-R1-A",
+      "requests": 3,
+      "input": 65734,
+      "output": 1273,
+      "wireInvariant": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G01-R1-B",
+      "requests": 4,
+      "input": 77577,
+      "output": 1177,
+      "wireInvariant": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G07-R1-B",
+      "requests": 4,
+      "input": 90309,
+      "output": 1653,
+      "wireInvariant": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G07-R1-A",
+      "requests": 6,
+      "input": 146055,
+      "output": 3367,
+      "wireInvariant": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    }
+  ],
+  "paidRequestCount": 17,
+  "actualClarificationExercised": false,
+  "initialPairEquality": [
+    "G01",
+    "G07"
+  ],
+  "noBusinessScoreClaim": true
+}

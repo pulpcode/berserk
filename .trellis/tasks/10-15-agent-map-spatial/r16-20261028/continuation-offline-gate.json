@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "freezeHash": "9abeb5c4b600e53b2adf6dba22260f39ffedeeb3db8d16b0bed9f466bd273aee",
+  "evidence": [
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-check.md",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-check-evidence.json",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-case-check.md",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-runner-checks.md",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-offline-logs/runner-native-final.log",
+    ".trellis/tasks/10-15-agent-map-spatial/r16-20261028/continuation-offline-logs/runner-unmapped-final.log"
+  ],
+  "createdAt": "2026-10-28T09:59:36.014Z"
+}

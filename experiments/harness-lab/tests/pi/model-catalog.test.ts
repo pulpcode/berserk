@@ -77,7 +77,7 @@ it.each([1, 2])('keeps legacy schema v%s as the default and persists a second pr
   expect(catalog.models.find(model => model.id === 'default')).toMatchObject({ model: legacy.model, baseUrl: legacy.baseUrl, version: second.version });
   expect(catalog.version).toBe(second.version); expect(catalog.version).not.toBe(initial.version);
   expect((await stat(settingsPath)).mode & 0o777).toBe(0o600);
-  expect(JSON.parse(await readFile(settingsPath, 'utf8'))).toMatchObject({ schemaVersion: 3, version: catalog.version });
+  expect(JSON.parse(await readFile(settingsPath, 'utf8'))).toMatchObject({ schemaVersion: 5, version: catalog.version });
   await app.close();
   const restored = await PiLab.create({ ...config, apiKey: 'different-environment-key' }); cleanup.push(() => restored.close());
   expect(restored.modelCatalog()).toEqual(catalog);

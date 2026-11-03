@@ -1,0 +1,9 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "1d614ea292fb6ddd4522d987637da9978056908bde24c783e548779206d97433",
+  "limits": {
+    "requests": 64,
+    "input": 2000000,
+    "output": 200000
+  }
+}

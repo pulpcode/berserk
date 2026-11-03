@@ -1,0 +1,123 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V20",
+  "caseId": "G06",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->source",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [
+    "source->source"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "default_draft_end": true,
+  "default_source_end": false,
+  "default_source_boundary": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "bfbefac9",
+      "quote": "需要注意的唯一同名是——本会话草稿“参照对象”图层里也有一个名为“云桥作业区”的面",
+      "full_context": "- **重名**：6 个资源点名称互不相同（甲乙丙丁戊己），不存在资源点重名；需要注意的唯一同名是——本会话草稿“参照对象”图层里也有一个名为“云桥作业区”的面（g06-d-region），但它的经度范围是 119.3148～119.3200，与来源面并不重合。本次判定用的是来源面，没有使用这个同名草稿面；如果改用草稿面，结果可能不同，需要的话我可以另算一组对照。",
+      "basis": "call_01_6wnwsshssbb9j4oh6muva961 仅来源面及memberRefs，未读来源点名称；call_02_jgcrh0sa0zgh6wdbvqihryvi 只读草稿。G06实际来源p02/p03均为联络点，未读取来源点不能穷尽同名仅为面。保持与V17相同独立判读，未因主任务遗漏自动推定事实错。",
+      "category": "unsupported_exhaustive_homonym_claim",
+      "disputed_interpretation": "前句明确6个点，若“唯一同名”仍限于已读草稿及来源面则正确；本评分把面跨来源比较后的唯一措辞视为总体穷尽。请root与V17统一复核。"
+    }
+  ],
+  "recovery": null,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "a0969fb8"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "02177d5df57cd76318563889e8bad1a0bf98f3923ecbad78d8fc5abefdcbf375",
+    "draft_hash_after": "02177d5df57cd76318563889e8bad1a0bf98f3923ecbad78d8fc5abefdcbf375",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "c8d2f2ed-b52f-4b09-b617-60ce9c258098",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "c8d2f2ed-b52f-4b09-b617-60ce9c258098",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "missing_conditional_pairs",
+    "default_draft_end",
+    "unsupported_exhaustive_homonym_claim"
+  ],
+  "evidence": [
+    {
+      "message_id": "bfbefac9",
+      "quote": "候选来源",
+      "basis": "用户只固定来源系统边界，未固定候选。只有草稿6点->来源面乙丙丁戊4个，缺完整来源5候选->来源面两个不同ID联络点条件。未获得user澄清。",
+      "category": "scope_and_required_members_omission"
+    },
+    {
+      "message_id": "bfbefac9",
+      "quote": "需要注意的唯一同名是——本会话草稿“参照对象”图层里也有一个名为“云桥作业区”的面",
+      "full_context": "- **重名**：6 个资源点名称互不相同（甲乙丙丁戊己），不存在资源点重名；需要注意的唯一同名是——本会话草稿“参照对象”图层里也有一个名为“云桥作业区”的面（g06-d-region），但它的经度范围是 119.3148～119.3200，与来源面并不重合。本次判定用的是来源面，没有使用这个同名草稿面；如果改用草稿面，结果可能不同，需要的话我可以另算一组对照。",
+      "basis": "call_01_6wnwsshssbb9j4oh6muva961 仅来源面及memberRefs，未读来源点名称；call_02_jgcrh0sa0zgh6wdbvqihryvi 只读草稿。G06实际来源p02/p03均为联络点，未读取来源点不能穷尽同名仅为面。保持与V17相同独立判读，未因主任务遗漏自动推定事实错。",
+      "category": "unsupported_exhaustive_homonym_claim",
+      "disputed_interpretation": "前句明确6个点，若“唯一同名”仍限于已读草稿及来源面则正确；本评分把面跨来源比较后的唯一措辞视为总体穷尽。请root与V17统一复核。"
+    }
+  ],
+  "observations": [
+    "草稿6候选全部分类，乙丙丁戊4 interior、甲己2 exterior正确；时间、修订号和计算方法吻合实际工具。",
+    "无实际用户回复及业务写入，固定分析记录不算写入。",
+    "“与来源面并不重合”结合给出的经度跨度理解为并非完全重合，不误判为两面没有交集；有实际几何支持。另算草稿边界对照单列optional_boundary_offer=true，不属于尚未确定的资源候选来源留选做，other_source_optional=false。",
+    "other_source_optional按冻结主观察口径仅记未确定资源候选来源留选做；已明确题的其他边界邀请不计，已改记optional_boundary_offer。main/strict保持原独立分数。"
+  ],
+  "optional_boundary_offer": true
+}

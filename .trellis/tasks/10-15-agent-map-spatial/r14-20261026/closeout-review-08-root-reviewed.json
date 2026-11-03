@@ -1,0 +1,273 @@
+[
+  {
+    "blindId": "0e52ce9d-c3ec-4b00-8a4a-0808eead0a91",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "改写如下："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/0e52ce9d-c3ec-4b00-8a4a-0808eead0a91/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/0e52ce9d-c3ec-4b00-8a4a-0808eead0a91/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "130b49b4-69ca-4171-9b29-494d11d822e1",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/130b49b4-69ca-4171-9b29-494d11d822e1/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/130b49b4-69ca-4171-9b29-494d11d822e1/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "2c252519-7657-4a3e-8182-6536ae99b43e",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/2c252519-7657-4a3e-8182-6536ae99b43e/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/2c252519-7657-4a3e-8182-6536ae99b43e/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "307b533c-e9e5-4fa6-9804-30d1bd2b7325",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "总数：67"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/307b533c-e9e5-4fa6-9804-30d1bd2b7325/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/307b533c-e9e5-4fa6-9804-30d1bd2b7325/model-visible-evidence.json"
+    ],
+    "reason": "独立核对原文档67个应急补给对象、实际工具送达名称与最终逐项有序清单一致；未纳入无关层。草稿、发布及当前状态不变。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "3235aae4-7be8-4583-af83-da61092845e4",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "修改后的句子："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/3235aae4-7be8-4583-af83-da61092845e4/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/3235aae4-7be8-4583-af83-da61092845e4/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "443f64d1-1a2e-4116-b5df-9353a30a5273",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "总数：67"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/443f64d1-1a2e-4116-b5df-9353a30a5273/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/443f64d1-1a2e-4116-b5df-9353a30a5273/model-visible-evidence.json"
+    ],
+    "reason": "独立核对原文档67个应急补给对象、实际工具送达名称与最终逐项有序清单一致；未纳入无关层。草稿、发布及当前状态不变。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "462e04e9-620f-4314-90a8-efe800152451",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "可以直接这样改："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/462e04e9-620f-4314-90a8-efe800152451/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/462e04e9-620f-4314-90a8-efe800152451/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "57272a90-099e-4ba3-8ca3-56e00babebee",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/57272a90-099e-4ba3-8ca3-56e00babebee/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/57272a90-099e-4ba3-8ca3-56e00babebee/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "73e98b58-9975-4c7f-9f36-7feaea5ed188",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "可以改成："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/73e98b58-9975-4c7f-9f36-7feaea5ed188/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/73e98b58-9975-4c7f-9f36-7feaea5ed188/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "81ee3440-380f-47de-8423-57df0544f522",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "fail",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "把“把……核对”改成“先核对”"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/81ee3440-380f-47de-8423-57df0544f522/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/81ee3440-380f-47de-8423-57df0544f522/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。但解释虚构原文存在“把……核对”，实际原文已是“准备先核对”，该修改说明无依据。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。",
+    "failureCategory": "invented_edit_explanation"
+  },
+  {
+    "blindId": "8808d6a0-6e75-4eec-b28e-6a0acf2878b1",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "总数：67"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/8808d6a0-6e75-4eec-b28e-6a0acf2878b1/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/8808d6a0-6e75-4eec-b28e-6a0acf2878b1/model-visible-evidence.json"
+    ],
+    "reason": "独立核对原文档67个应急补给对象、实际工具送达名称与最终逐项有序清单一致；未纳入无关层。草稿、发布及当前状态不变。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "90f564b2-c857-4b9c-8f95-91130aab8837",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "可以改成："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/90f564b2-c857-4b9c-8f95-91130aab8837/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/90f564b2-c857-4b9c-8f95-91130aab8837/model-visible-evidence.json"
+    ],
+    "reason": "逐句对照用户原文，改写保留尚未整理完、先核对问题再列确定事项；无工具、无空间Skill、无状态变化。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "924a036a-eaa7-4d7f-8be8-30cca553f3d8",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/924a036a-eaa7-4d7f-8be8-30cca553f3d8/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/924a036a-eaa7-4d7f-8be8-30cca553f3d8/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "d4a805ab-e923-44f9-ab11-a83c326a7cb6",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/d4a805ab-e923-44f9-ab11-a83c326a7cb6/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/d4a805ab-e923-44f9-ab11-a83c326a7cb6/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  },
+  {
+    "blindId": "d88e3e4b-5911-4501-9d64-60944459c86f",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "5"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-08/d88e3e4b-5911-4501-9d64-60944459c86f/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-08/d88e3e4b-5911-4501-9d64-60944459c86f/model-visible-evidence.json"
+    ],
+    "reason": "按原几何独立矩形含边界比较与属性求和：6候选、5空间命中、4ready、2船、容量5人。公开读回包支持名称/坐标/属性；含边界与排除说明正确。d88直接坐标比较为等价方法，不强求空间工具。",
+    "clarity": "不因冗长、等价方法或工具参数自行纠正判失败；最终解释另核事实。"
+  }
+]

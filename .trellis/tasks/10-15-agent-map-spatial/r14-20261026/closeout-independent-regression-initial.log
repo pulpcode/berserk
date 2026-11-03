@@ -1,0 +1,231 @@
+(node:28707) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/closeout-clarification.test.ts (4849.624252ms)
+(node:28708) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ provider http_error preserves first failure and refuses automatic retry (2232.524873ms)
+✖ provider response_model_drift preserves first failure and refuses automatic retry (1593.320854ms)
+✖ provider missing_usage preserves first failure and refuses automatic retry (2468.069472ms)
+✖ provider truncated preserves first failure and refuses automatic retry (2217.669817ms)
+✖ task boundary unnecessary follows the frozen continuation rule (1786.462639ms)
+✖ task boundary unknown follows the frozen continuation rule (1792.729606ms)
+✖ task boundary missing_result follows the frozen continuation rule (1593.297619ms)
+✖ task boundary data_gap follows the frozen continuation rule (2439.680432ms)
+✖ task boundary optional_invitation follows the frozen continuation rule (2475.150902ms)
+✖ D06 ordinary/API questions receive only the frozen choice and continue native tools (3015.519692ms)
+✔ only distinct successful generated buffers satisfy dependent user turns (0.560959ms)
+✔ execution gate rejects blocked, unreviewed or drifted code before live claim (5.310439ms)
+✖ repeated D06 question is not answered twice and does not stop unrelated scheduled tasks (1983.811244ms)
+✔ two buffers in first preview cannot substitute for missing second preview (0.549197ms)
+(node:28709) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/provider-budget.test.ts (4836.243895ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 5
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28504.657345
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:7898
+✖ provider http_error preserves first failure and refuses automatic retry (2232.524873ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:60:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:7898
+✖ provider response_model_drift preserves first failure and refuses automatic retry (1593.320854ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:60:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:7898
+✖ provider missing_usage preserves first failure and refuses automatic retry (2468.069472ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:60:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:7898
+✖ provider truncated preserves first failure and refuses automatic retry (2217.669817ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:60:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:9285
+✖ task boundary unnecessary follows the frozen continuation rule (1786.462639ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:68:14)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:9285
+✖ task boundary unknown follows the frozen continuation rule (1792.729606ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:67:57)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:9285
+✖ task boundary missing_result follows the frozen continuation rule (1593.297619ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:68:14)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:9285
+✖ task boundary data_gap follows the frozen continuation rule (2439.680432ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:68:14)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:9285
+✖ task boundary optional_invitation follows the frozen continuation rule (2475.150902ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:68:14)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:11059
+✖ D06 ordinary/API questions receive only the frozen choice and continue native tools (3015.519692ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"D06-1-C","entryId":"D06-1-C","caseId":"D06","group":"C","round":1,"repetition":1,"ordinal":16,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0,"runtimeBuildMs":2232},{"id":"D06-1-A","entryId":"D06-1-A","caseId":"D06","group":"A","round":1,"repetition":1,"ordinal":17,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"D06-1-B","entryId":"D06-1-B","caseId":"D06","group":"B","round":1,"repetition":1,"ordinal":18,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0}],"total":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0},"stop":"模拟服务启动失败，请核对本期模拟配置。"}
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:79:173)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:1:15531
+✖ repeated D06 question is not answered twice and does not stop unrelated scheduled tasks (1983.811244ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"D06-1-C","entryId":"D06-1-C","caseId":"D06","group":"C","round":1,"repetition":1,"ordinal":16,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0,"runtimeBuildMs":1342},{"id":"D06-1-A","entryId":"D06-1-A","caseId":"D06","group":"A","round":1,"repetition":1,"ordinal":17,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"D06-1-B","entryId":"D06-1-B","caseId":"D06","group":"B","round":1,"repetition":1,"ordinal":18,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0}],"total":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0},"stop":"模拟服务启动失败，请核对本期模拟配置。"}
+  + actual - expected
+  
+  + '模拟服务启动失败，请核对本期模拟配置。'
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/live.test.ts:111:173)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '模拟服务启动失败，请核对本期模拟配置。',
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

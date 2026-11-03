@@ -1,0 +1,113 @@
+{
+  "freezeHash": "9abeb5c4b600e53b2adf6dba22260f39ffedeeb3db8d16b0bed9f466bd273aee",
+  "account": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-10-28T09:11:00Z",
+    "sourceEvidence": "Authenticated Agent Plan Medium UI observation: five-hour used 3453.026/10000; week32.18%/35000 and month12.72%/100000 rounded; conservative remaining values recorded. Flash selected updated1017; 开启超额后付费 confirms disabled. Other account usage observed between initial and current check. No settings changed. User explicitly removed artificial monetary/token/request caps.",
+    "observedOverageEnabled": false,
+    "remainingAfp": {
+      "fiveHour": 6546.974,
+      "week": 23733,
+      "month": 87270
+    },
+    "externalUseReserveAfp": 0,
+    "sharedUsePolicy": "observed_shared_usage"
+  },
+  "requests": [
+    {
+      "id": 1,
+      "trialId": "Q07-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 61349,
+      "outputReserve": 32768,
+      "afpReserve": 11.764625,
+      "usage": {
+        "input": 16374,
+        "output": 256
+      },
+      "afp": 2.07875
+    },
+    {
+      "id": 2,
+      "trialId": "Q07-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 75461,
+      "outputReserve": 32768,
+      "afpReserve": 13.528625,
+      "usage": {
+        "input": 19488,
+        "output": 209
+      },
+      "afp": 2.462125
+    },
+    {
+      "id": 3,
+      "trialId": "Q07-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 78101,
+      "outputReserve": 32768,
+      "afpReserve": 13.858625,
+      "usage": {
+        "input": 20330,
+        "output": 439
+      },
+      "afp": 2.596125
+    },
+    {
+      "id": 4,
+      "trialId": "Q07-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 81451,
+      "outputReserve": 32768,
+      "afpReserve": 14.277375,
+      "usage": {
+        "input": 21086,
+        "output": 945
+      },
+      "afp": 2.753875
+    },
+    {
+      "id": 5,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 61461,
+      "outputReserve": 32768,
+      "afpReserve": 11.778625,
+      "usage": {
+        "input": 16401,
+        "output": 506
+      },
+      "afp": 2.113375
+    },
+    {
+      "id": 6,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 87496,
+      "outputReserve": 32768,
+      "afpReserve": 15.033,
+      "usage": {
+        "input": 22134,
+        "output": 249
+      },
+      "afp": 2.797875
+    },
+    {
+      "id": 7,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "failed",
+      "inputReserve": 90288,
+      "outputReserve": 32768,
+      "afpReserve": 15.382,
+      "reason": "provider_http_429"
+    }
+  ],
+  "halted": "provider_http_429"
+}

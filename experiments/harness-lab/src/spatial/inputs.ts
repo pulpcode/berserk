@@ -1,14 +1,16 @@
+import type { ResourceResult } from '../contracts/resource-results.js';
+import { TaskResourceService } from '../context/task-resources.js';
 import type { AnnotationService, AnnotationActor } from '../annotations/service.js';
 import type { ContextService } from '../context/service.js';
 import type { SpatialInput, SpatialItem, SpatialProvenance, SpatialResult } from '../contracts/spatial.js';
 import { spatialError, validateItems, LIMITS } from './validation.js';
 import type { ContextPrincipal, ContextRef } from '../contracts/context.js';
 interface SpatialExecutionScope {check:()=>void; signal:AbortSignal; resolveResult:(ref:string)=>SpatialResult}
-export interface SpatialForegroundScope extends SpatialExecutionScope {actor:AnnotationActor; sessionId:string; taskId:string}
+export interface SpatialForegroundScope extends SpatialExecutionScope {actor:AnnotationActor; sessionId:string; taskId:string; resolveResourceResult?:(ref:string)=>ResourceResult}
 export interface SpatialServiceScope extends SpatialExecutionScope {principal:Extract<ContextPrincipal,{kind:'service'}>}
 export type SpatialScope = SpatialForegroundScope | SpatialServiceScope;
 export const sourceKey=(ref:ContextRef)=>JSON.stringify([ref.systemId,ref.objectType,ref.objectId]);
-export interface SpatialDataset {items:SpatialItem[]; provenance:SpatialProvenance[]}
+export interface SpatialDataset {items:SpatialItem[]; provenance:SpatialProvenance[]; unclassified?:Array<{id:string;reason:string}>;resourceInput?:{resultRef:string;itemIds:string[]}}
 export class SpatialInputs {
   constructor(readonly annotations:AnnotationService|undefined,readonly context?:ContextService) {}
   private check(scope:SpatialScope) {
@@ -26,25 +28,33 @@ export class SpatialInputs {
     const systems=new Set('principal' in scope?scope.principal.scope.systemIds:this.context?.catalog(scope.actor.seatId).systems.map(s=>s.id)??[]);
     for(const p of result.provenance) {
       if(p.input.kind==='source' && !systems.has(p.input.systemId)) throw spatialError('FORBIDDEN','当前身份无法读取分析的来源。');
-      if(p.input.kind==='annotation') {
-        if('principal' in scope) throw spatialError('FORBIDDEN','后台空间分析不能读取标绘或由标绘派生的结果。');
-        this.annotations!.version(scope.actor,scope.taskId,p.input.ref);
-      }
+      if(p.input.kind==='resource'){if('principal' in scope)throw spatialError('FORBIDDEN','后台不能读取席位资源结果。');const c=p.resourceContext;if(!c||c.owner.userId!==scope.actor.userId||c.owner.seatId!==scope.actor.seatId||c.owner.taskId!==scope.taskId||c.owner.sessionId!==scope.sessionId||c.dependencies.systemIds.some(id=>!systems.has(id)))throw spatialError('FORBIDDEN','资源结果的身份或来源权限已失效。');for(const ref of c.dependencies.annotations)this.annotations!.version(scope.actor,scope.taskId,ref);}
+      if(p.input.kind==='annotation') {if('principal' in scope)throw spatialError('FORBIDDEN','后台不能读取标绘结果。');this.annotations!.version(scope.actor,scope.taskId,p.input.ref);}
     }
   }
   async read(input:SpatialInput,scope:SpatialScope):Promise<SpatialDataset> {
     this.check(scope);
-    let items:SpatialItem[]=[],provenance:SpatialProvenance[]=[];
-    if(input.kind==='result') {
+    let items:SpatialItem[]=[],provenance:SpatialProvenance[]=[],unclassified:Array<{id:string;reason:string}>=[];let resourceInput:SpatialDataset['resourceInput'];
+    if(input.kind==='resource'){
+      if('principal' in scope)throw spatialError('FORBIDDEN','后台不能读取席位资源结果。');
+      if(!scope.resolveResourceResult)throw spatialError('RESULT_NOT_FOUND','当前运行环境不能解析资源结果。');
+      const result=scope.resolveResourceResult(input.resultRef);new TaskResourceService(this.annotations!,this.context).authorize(result,{...scope,resolveMessage:()=>{throw spatialError('RESULT_INVALID','不可在读取资源结果时重新解释消息。');}});
+      if(input.itemIds?.some(id=>!result.items.some(i=>i.id===id)))throw spatialError('OBJECT_NOT_FOUND','资源结果不含所选对象。');
+      for(const item of result.items.filter(i=>!input.itemIds||input.itemIds.includes(i.id))){if(!item.geometry)unclassified.push({id:item.id,reason:item.positionReason??'位置未确认。'});else items.push({id:item.id,name:item.name,geometry:structuredClone(item.geometry),properties:{category:item.category,relation:item.relation,availability:item.availability}});}
+      resourceInput={resultRef:result.resultRef,itemIds:[...items.map(i=>i.id),...unclassified.map(i=>i.id)]};
+      provenance=[{input:structuredClone(input),queriedAt:result.createdAt,asOf:result.createdAt,resourceContext:{owner:structuredClone(result.owner),dependencies:structuredClone(result.dependencies),coverage:structuredClone(result.coverage),relationshipCoverage:structuredClone(result.relationshipCoverage)}}];
+    }else if(input.kind==='result') {
       const result=scope.resolveResult(input.resultRef);this.authorize(result,scope);
-      provenance=structuredClone(result.provenance);
+      provenance=structuredClone(result.provenance);resourceInput=structuredClone(result.resourceInput);unclassified=structuredClone(result.completeness.unclassified??[]);
       if(result.geometry && input.geometry===undefined && !input.itemIds) throw spatialError('AMBIGUOUS','该结果同时包含生成范围和原对象。沿用固定范围请指定 geometry:true；使用原对象请指定 geometry:false 或 itemIds。无需重算范围或额外确认。');
       if(input.geometry) {
         if(input.itemIds || !result.geometry) throw spatialError('GEOMETRY_MISSING','该结果未生成独立范围；可指定结果中的对象。');
         items=[{id:result.resultRef,name:'分析范围',geometry:structuredClone(result.geometry),properties:{}}];
+        // Generated geometry is not an entity position; retain provenance without granting resource-summary membership.
+        resourceInput=undefined;
       } else {
         items=structuredClone(result.items);
-        if(input.itemIds) {if(input.itemIds.some(id=>!items.some(i=>i.id===id))) throw spatialError('OBJECT_NOT_FOUND','所选分析对象不在固定结果中。');items=items.filter(i=>input.itemIds!.includes(i.id));}
+        if(input.itemIds) {unclassified=unclassified.filter(i=>input.itemIds!.includes(i.id));if(input.itemIds.some(id=>!items.some(i=>i.id===id))) throw spatialError('OBJECT_NOT_FOUND','所选分析对象不在固定结果中。');items=items.filter(i=>input.itemIds!.includes(i.id));}
       }
     } else if(input.kind==='annotation') {
       if('principal' in scope) throw spatialError('FORBIDDEN','后台空间分析仅允许获准业务来源与本会话的可信结果。');
@@ -61,7 +71,7 @@ export class SpatialInputs {
       let cursor:string|undefined,asOf:string|undefined,changeCursor:string|undefined;
       const seen=new Set<string>(),expected=new Map(input.revisions?.map(v=>[sourceKey(v.ref),v.revision])??[]);
       do {
-        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},'principal' in scope?scope.principal:{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.objectTypes?{objectTypes:input.objectTypes}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},'principal' in scope?scope.principal:{kind:'seat',seatId:scope.actor.seatId},scope.signal);
         scope.signal.throwIfAborted();scope.check();
         if(!('changeCursor' in query.data)) throw spatialError('INCOMPLETE','来源未返回当前对象快照。');
         const data=query.data;
@@ -83,6 +93,6 @@ export class SpatialInputs {
       } while(cursor);
       if(input.objectRefs?.some(ref=>!items.some(i=>i.id===sourceKey(ref))) || [...expected.keys()].some(key=>!items.some(i=>i.id===key))) throw spatialError('INCOMPLETE','指定对象未完整返回。');
     }
-    validateItems(items);return {items,provenance};
+    validateItems(items);return {items,provenance,...(resourceInput?{resourceInput}:{}),...(provenance.some(p=>p.input.kind==='resource')?{unclassified}:{})};
   }
 }

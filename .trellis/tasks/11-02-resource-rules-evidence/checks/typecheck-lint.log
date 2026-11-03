@@ -1,0 +1,8 @@
+Commands: npm run typecheck && npm run lint && npm run build
+Combined exit code: 0
+
+> @berserk/harness-lab@0.1.0 lint
+> eslint . && node scripts/check-boundaries.mjs
+
+Pi and browser dependency boundaries passed.
+

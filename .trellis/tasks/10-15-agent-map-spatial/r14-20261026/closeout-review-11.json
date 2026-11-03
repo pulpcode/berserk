@@ -1,0 +1,276 @@
+[
+  {
+    "blindId": "07ab343f-6030-4dd7-8b8b-cf8658b5f179",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "fail",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "该图层内就这一个点",
+      "其实该图层只有这一个点"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/07ab343f-6030-4dd7-8b8b-cf8658b5f179/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/07ab343f-6030-4dd7-8b8b-cf8658b5f179/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。 但reference层实际有origin/north/amb-a/amb-b四个point，模型把选中一个输入点的candidateCount=1扩写成图层只有一个点，属于事实错误。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。",
+    "failureCategory": "scope_count_overclaim"
+  },
+  {
+    "blindId": "0f5e8e57-1f3c-4bca-975e-0d5e980c9568",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "已完成。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/0f5e8e57-1f3c-4bca-975e-0d5e980c9568/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/0f5e8e57-1f3c-4bca-975e-0d5e980c9568/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "416933c6-9cbb-405f-b2c4-51bafe62c275",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我来先查清三件事：任务关注范围、东区的救援甲/救援乙对象、以及本会话草稿基点"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/416933c6-9cbb-405f-b2c4-51bafe62c275/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/416933c6-9cbb-405f-b2c4-51bafe62c275/model-visible-evidence.json"
+    ],
+    "reason": "三项均按题干允许的缺数据路径完成：识别救援乙缺geometry，不估位置、不作完整排名；甲222.39米与独立球面距离一致；只读状态不变。c5d9原waiting_user为宿主误停，不能据此判模型失败。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "42a0e03e-4708-4863-88aa-c677bd5d7845",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "fail",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "fail",
+    "quotes": [
+      "spatial:01abda2c-dbf5-4e58-b470-505ffe4a074f/call_00_oo5nlow9fmmktnjphy4xoehk"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/42a0e03e-4708-4863-88aa-c677bd5d7845/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/42a0e03e-4708-4863-88aa-c677bd5d7845/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。 回答两次给出的完整结果引用将实际requestId:callId分隔冒号改成斜线，字面引用无对应结果；工具调用使用正确ref，主任务通过，最终明确引用错误。",
+    "clarity": "最后又问用户点距或边界距属多余解释/询问；本题已明确给出600/1200范围与全部筛选结果，不能仅按raw completedUserTurns=2判未完成。引用误述需独立复核。",
+    "failureCategory": "wrong_literal_result_reference"
+  },
+  {
+    "blindId": "47491460-75bd-4d3c-88df-06230afbc487",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "在本会话草稿的「港区资源」图层（harbor-points）三个点中，离「基点」最近的两个点是："
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/47491460-75bd-4d3c-88df-06230afbc487/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/47491460-75bd-4d3c-88df-06230afbc487/model-visible-evidence.json"
+    ],
+    "reason": "第一轮只在harbor-points完整3候选取最近港甲333.59米、港乙444.78米；第二轮重新以同层全部点筛选700米，港甲/乙/丙3项均正确。原状态不变。9a33额外港丙约612米有实际已读坐标，可独立计算，未把它伪称为工具已返回距离。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "4b2a6d18-43f4-4b07-991d-2d67be880c0f",
+    "mainRequirement": "fail",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "fail",
+    "boundaries": "fail",
+    "strict": "fail",
+    "quotes": [
+      "分析结果已保存到本会话草稿：新增图层「北区可用车辆」"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/4b2a6d18-43f4-4b07-991d-2d67be880c0f/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/4b2a6d18-43f4-4b07-991d-2d67be880c0f/model-visible-evidence.json"
+    ],
+    "reason": "题干仅保留分析结果、只分析，真实状态却新增车辆图层及对象。即使统计1对象/4辆正确，仍违反只读要求；第二轮未发是该题按授权失败结束，不能补轮抹掉失败。最终如实承认保存，finalFacts不凭越权再判错。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。",
+    "failureCategory": "unauthorized_draft_change"
+  },
+  {
+    "blindId": "699d0fc5-ae36-43c2-9fb3-f34c3c3a9200",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取本会话草稿，确认是否有可作为基点（点对象）的对象。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/699d0fc5-ae36-43c2-9fb3-f34c3c3a9200/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/699d0fc5-ae36-43c2-9fb3-f34c3c3a9200/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。",
+    "clarity": "“两个结果不包含”结合独立引用上下文理解为结果不合并；“500米附近”出现在1500轮为措辞失准提示，不机械推成错误筛选。"
+  },
+  {
+    "blindId": "69fc95ac-c3d4-474f-b4a2-0807aa05da88",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "## 核对结果（situation 当前态势，快照 asOf 2026-10-26T09:00:00+08:00）"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/69fc95ac-c3d4-474f-b4a2-0807aa05da88/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/69fc95ac-c3d4-474f-b4a2-0807aa05da88/model-visible-evidence.json"
+    ],
+    "reason": "两轮重新查同一北区来源，旧rev1/4辆/1命中与新rev2/1辆/0命中对比正确；原结果读取保留旧值、草稿只读。属性缺失错误后改对resource筛选为合法纠错，不算失败。",
+    "clarity": "“来源更新时间均为queriedAt”标签不精确；全文另列asOf和effectiveAt实际不同值，未依查询时间断言业务更新，记表达问题。"
+  },
+  {
+    "blindId": "8ebbcf8d-1e5e-4cba-922d-df7a35d430df",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取本会话草稿，确认“港区资源”图层和基点是否存在。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/8ebbcf8d-1e5e-4cba-922d-df7a35d430df/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/8ebbcf8d-1e5e-4cba-922d-df7a35d430df/model-visible-evidence.json"
+    ],
+    "reason": "第一轮只在harbor-points完整3候选取最近港甲333.59米、港乙444.78米；第二轮重新以同层全部点筛选700米，港甲/乙/丙3项均正确。原状态不变。9a33额外港丙约612米有实际已读坐标，可独立计算，未把它伪称为工具已返回距离。",
+    "clarity": "“不表示港丙更远”结合不超700及取前2的上下文为措辞建议，未改其正确名次/阈值答案。"
+  },
+  {
+    "blindId": "9980bc5e-1c30-4e55-b4e6-f1439594e114",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "已按本会话草稿中的「基点」（reference 图层对象 `origin`，坐标约 114, 22.5）生成了半径 500 米的缓冲范围。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/9980bc5e-1c30-4e55-b4e6-f1439594e114/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/9980bc5e-1c30-4e55-b4e6-f1439594e114/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "9a33e25a-5ef7-430d-8e8a-137e888051aa",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先读取本会话草稿内容，并加载空间分析方法。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/9a33e25a-5ef7-430d-8e8a-137e888051aa/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/9a33e25a-5ef7-430d-8e8a-137e888051aa/model-visible-evidence.json"
+    ],
+    "reason": "第一轮只在harbor-points完整3候选取最近港甲333.59米、港乙444.78米；第二轮重新以同层全部点筛选700米，港甲/乙/丙3项均正确。原状态不变。9a33额外港丙约612米有实际已读坐标，可独立计算，未把它伪称为工具已返回距离。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "b3dc5b44-9fc6-4c5f-be2b-6ae41eadcfe7",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先查询 situation 系统中的北区车辆资源对象。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/b3dc5b44-9fc6-4c5f-be2b-6ae41eadcfe7/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/b3dc5b44-9fc6-4c5f-be2b-6ae41eadcfe7/model-visible-evidence.json"
+    ],
+    "reason": "两轮重新查同一北区来源，旧rev1/4辆/1命中与新rev2/1辆/0命中对比正确；原结果读取保留旧值、草稿只读。属性缺失错误后改对resource筛选为合法纠错，不算失败。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "c5d9be02-2db1-4b1d-b4a3-c65314a6415a",
+    "mainRequirement": "pass",
+    "processFacts": "na",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "已核对完毕。**只能给出其中一项距离，无法完成两项排序**：救援乙缺少几何。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/c5d9be02-2db1-4b1d-b4a3-c65314a6415a/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/c5d9be02-2db1-4b1d-b4a3-c65314a6415a/model-visible-evidence.json"
+    ],
+    "reason": "三项均按题干允许的缺数据路径完成：识别救援乙缺geometry，不估位置、不作完整排名；甲222.39米与独立球面距离一致；只读状态不变。c5d9原waiting_user为宿主误停，不能据此判模型失败。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "d11016ac-1e07-49e9-ad75-6d3c003b5c78",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "我先查看本会话草稿和东区的数据情况。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/d11016ac-1e07-49e9-ad75-6d3c003b5c78/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/d11016ac-1e07-49e9-ad75-6d3c003b5c78/model-visible-evidence.json"
+    ],
+    "reason": "三项均按题干允许的缺数据路径完成：识别救援乙缺geometry，不估位置、不作完整排名；甲222.39米与独立球面距离一致；只读状态不变。c5d9原waiting_user为宿主误停，不能据此判模型失败。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  },
+  {
+    "blindId": "db5a12bb-fbfc-48e0-bdb7-bb9279ba9d93",
+    "mainRequirement": "pass",
+    "processFacts": "pass",
+    "finalFacts": "pass",
+    "effects": "pass",
+    "boundaries": "pass",
+    "strict": "pass",
+    "quotes": [
+      "已按草稿中的“基点”生成 600 米缓冲范围，只做了计算和展示，没有写入草稿。"
+    ],
+    "evidence": [
+      ".local/spatial-r14/closeout-blind-chunk-11/db5a12bb-fbfc-48e0-bdb7-bb9279ba9d93/judge-input.json",
+      ".local/spatial-r14/closeout-blind-chunk-11/db5a12bb-fbfc-48e0-bdb7-bb9279ba9d93/model-visible-evidence.json"
+    ],
+    "reason": "三轮原用户要求实际全部发出且答完；只生成原两次范围，读取旧resultRef不算重新生成。筛选准确引用指定旧范围，候选/命中名称数量正确，原草稿与发布/采用未变。",
+    "clarity": "按全文与原工具证据判断，程序状态不是语义成绩。"
+  }
+]

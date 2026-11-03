@@ -1,10 +1,12 @@
+import type { ResourceResult } from './resource-results.js';
 import type { AnnotationRef } from './annotations.js';
 import type { ContextRef, ContextTimeRange, Position, SituationGeometry } from './context.js';
 
 export type SpatialGeometry = SituationGeometry | {type:'MultiPolygon'; coordinates:Position[][][]};
 export type SpatialInput =
-  | {kind:'source'; systemId:string; objectRefs?:ContextRef[]; areaIds?:string[]; revisions?:Array<{ref:ContextRef; revision:number}>}
+  | {kind:'source'; systemId:string; objectRefs?:ContextRef[]; objectTypes?:string[]; areaIds?:string[]; revisions?:Array<{ref:ContextRef; revision:number}>}
   | {kind:'annotation'; ref:AnnotationRef; layerIds?:string[]; objectIds?:string[]}
+  | {kind:'resource'; resultRef:string; itemIds?:string[]}
   | {kind:'result'; resultRef:string; itemIds?:string[]; geometry?:boolean};
 export type SpatialRelation = 'contains' | 'intersects' | 'disjoint';
 export type SpatialAttribute = {field:string; op:'eq'|'ne'|'gt'|'gte'|'lt'|'lte'; value:string|number|boolean|null};
@@ -22,21 +24,23 @@ export interface SpatialItem {
   source?:{ref:ContextRef; revision:number; queriedAt:string; effectiveAt?:string|null; validTime?:ContextTimeRange|null};
   annotation?:{ref:AnnotationRef; objectId:string}; distanceM?:number;
 }
-export interface SpatialProvenance {input:SpatialInput; queriedAt:string; asOf:string; hash?:string; sourceRefs?:Array<ContextRef & {revision:number}>}
+export interface SpatialProvenance {input:SpatialInput; queriedAt:string; asOf:string; hash?:string; sourceRefs?:Array<ContextRef & {revision:number}>; resourceContext?:Pick<ResourceResult,'owner'|'dependencies'|'coverage'|'relationshipCoverage'>}
 export type SpatialPointPosition = 'interior' | 'boundary' | 'exterior';
 export interface SpatialPointClassification {itemId:string; position:SpatialPointPosition}
 export interface SpatialClassificationCounts {total:number; interior:number; boundary:number; exterior:number}
 export type SpatialValues = SpatialClassificationCounts | {value:number; unit:'m'|'m²'} | {relation:SpatialRelation; matches:boolean} | {total:number; groups:Array<{value:string|number|boolean|null; count:number}>};
 export interface SpatialResult {
-  schemaVersion:1|2; resultRef:string; requestId:string; toolCallId:string; operation:Exclude<SpatialRequest['operation'],'read'>;
+  schemaVersion:1|2|3; resultRef:string; requestId:string; toolCallId:string; operation:Exclude<SpatialRequest['operation'],'read'>;
   parameters:Exclude<SpatialRequest,{operation:"read"}>;
   delivery?:{requestId:string;toolCallId:string};
-  createdAt:string; scope:SpatialInput[]; completeness:{status:'complete'; candidateCount:number};
+  createdAt:string; scope:SpatialInput[]; completeness:{status:'complete'|'partial'; candidateCount:number; totalCandidateCount?:number; unclassified?:Array<{id:string;reason:string}>};
+  resourceInput?:{resultRef:string;itemIds:string[]};
   classifications?:SpatialPointClassification[];
   items:SpatialItem[]; referenceItems?:SpatialItem[]; geometry?:SpatialGeometry; values?:SpatialValues; method:string; limitations:string[]; provenance:SpatialProvenance[];
 }
 export const SPATIAL_MODEL_FORMAT = 'spatial.model-result.v1';
 export const SPATIAL_CLASSIFICATION_MODEL_FORMAT = 'spatial.model-result.v2';
+export const SPATIAL_EXPLAINED_MODEL_FORMAT = 'spatial.model-result.v3';
 export const spatialModelFormat=(result:SpatialResult)=>result.schemaVersion===2?SPATIAL_CLASSIFICATION_MODEL_FORMAT:SPATIAL_MODEL_FORMAT;
 /** Model projection retains identities/counts, but never asks the model to transcribe geometry. */
 export function projectSpatialResult(result:SpatialResult) {
@@ -57,11 +61,13 @@ const contextRef=(v:unknown):boolean=>object(v) && keys(v,['systemId','objectTyp
 const fixedRef=(v:unknown)=>object(v) && (keys(v,['publicationId']) && uuid(v.publicationId) || keys(v,['setId','revision']) && uuid(v.setId) && integer(v.revision,1,Number.MAX_SAFE_INTEGER));
 function inputValid(v:unknown):v is SpatialInput {
   if(!object(v)) return false;
-  if(v.kind==='source') return keys(v,['kind','systemId','objectRefs','areaIds','revisions']) && sourceText(v.systemId)
+  if(v.kind==='source') return keys(v,['kind','systemId','objectRefs','objectTypes','areaIds','revisions']) && sourceText(v.systemId)
     && (v.objectRefs===undefined || Array.isArray(v.objectRefs) && v.objectRefs.length>0 && v.objectRefs.length<=20 && v.objectRefs.every(r=>contextRef(r) && (r as ContextRef).systemId===v.systemId))
+    && (v.objectTypes===undefined || Array.isArray(v.objectTypes) && v.objectTypes.length>0 && v.objectTypes.length<=3 && v.objectTypes.every(t=>['road','resource','area'].includes(String(t))) && new Set(v.objectTypes).size===v.objectTypes.length && (v.objectRefs===undefined || (v.objectRefs as ContextRef[]).every(r=>(v.objectTypes as string[]).includes(r.objectType))))
     && (v.areaIds===undefined || Array.isArray(v.areaIds) && v.areaIds.length>0 && v.areaIds.length<=10 && v.areaIds.every(sourceText))
     && (v.revisions===undefined || Array.isArray(v.revisions) && v.revisions.length<=100 && new Set(v.revisions.map(r=>object(r) && object(r.ref)?JSON.stringify([r.ref.systemId,r.ref.objectType,r.ref.objectId]):null)).size===v.revisions.length && v.revisions.every(r=>object(r) && keys(r,['ref','revision']) && contextRef(r.ref) && (r.ref as ContextRef).systemId===v.systemId && integer(r.revision,1,Number.MAX_SAFE_INTEGER)));
   if(v.kind==='annotation') return keys(v,['kind','ref','layerIds','objectIds']) && fixedRef(v.ref) && (v.layerIds===undefined || ids(v.layerIds,32)) && (v.objectIds===undefined || ids(v.objectIds));
+  if(v.kind==='resource') return keys(v,['kind','resultRef','itemIds']) && str(v.resultRef) && v.resultRef.startsWith('resource:') && (v.itemIds===undefined || Array.isArray(v.itemIds) && v.itemIds.length>0 && v.itemIds.length<=500 && v.itemIds.every(i=>str(i)) && new Set(v.itemIds).size===v.itemIds.length);
   if(v.kind==='result') return keys(v,['kind','resultRef','itemIds','geometry']) && str(v.resultRef) && v.resultRef.startsWith('spatial:') && (v.geometry===undefined || typeof v.geometry==='boolean') && !(v.geometry && v.itemIds)
     && (v.itemIds===undefined || Array.isArray(v.itemIds) && v.itemIds.length>0 && v.itemIds.length<=500 && v.itemIds.every(i=>str(i)) && new Set(v.itemIds).size===v.itemIds.length);
   return false;
@@ -109,7 +115,8 @@ function valuesValid(v:unknown,op:SpatialResult['operation']):boolean {
 /** V2 is reserved for point classification; never synthesize classifications for v1 history. */
 function classificationValid(result:SpatialResult):boolean {
   if(result.schemaVersion===1) return result.operation!=='classify_points' && result.classifications===undefined;
-  if(result.schemaVersion!==2 || result.operation!=='classify_points' || result.geometry!==undefined
+  if(result.schemaVersion===3 && result.operation!=='classify_points') return result.classifications===undefined;
+  if(![2,3].includes(result.schemaVersion) || result.operation!=='classify_points' || result.geometry!==undefined
     || result.completeness.candidateCount!==result.items.length || result.items.some(item=>item.geometry.type!=='Point')
     || result.referenceItems?.length!==1 || result.referenceItems[0].geometry.type!=='Polygon'
     || !Array.isArray(result.classifications) || result.classifications.length!==result.items.length) return false;
@@ -123,6 +130,13 @@ function classificationValid(result:SpatialResult):boolean {
   return !!values && 'interior' in values && values.total===result.items.length
     && values.interior===counts.interior && values.boundary===counts.boundary && values.exterior===counts.exterior;
 }
+
+function resourceContextValid(v:unknown):boolean {
+ if(!object(v)||!keys(v,['owner','dependencies','coverage','relationshipCoverage'])||!object(v.owner)||!keys(v.owner,['userId','seatId','taskId','sessionId'])||!Object.values(v.owner).every(x=>str(x,128))||!['userId','seatId','taskId','sessionId'].every(k=>str((v.owner as Record<string,unknown>)[k],128)))return false;
+ if(!object(v.dependencies)||!keys(v.dependencies,['systemIds','annotations'])||!Array.isArray(v.dependencies.systemIds)||!v.dependencies.systemIds.every(sourceText)||!Array.isArray(v.dependencies.annotations)||!v.dependencies.annotations.every(fixedRef))return false;
+ return Array.isArray(v.coverage)&&v.coverage.length<=100&&v.coverage.every(c=>object(c)&&keys(c,['source','status','reason','asOf'])&&str(c.source)&&['complete','partial','unavailable','unsupported'].includes(String(c.status))&&(c.reason===undefined||str(c.reason))&&(c.asOf===undefined||time(c.asOf)))&&object(v.relationshipCoverage)&&keys(v.relationshipCoverage,['status','reason','sources'])&&['complete','partial'].includes(String(v.relationshipCoverage.status))&&str(v.relationshipCoverage.reason)&&(v.relationshipCoverage.sources===undefined||Array.isArray(v.relationshipCoverage.sources)&&v.relationshipCoverage.sources.every(c=>object(c)&&keys(c,['source','status','reason','asOf'])&&str(c.source)&&['complete','partial','unavailable','unsupported'].includes(String(c.status))&&(c.reason===undefined||str(c.reason))&&(c.asOf===undefined||time(c.asOf))));
+}
+
 /** Strict shared decoder: absence is legacy; null rejects damaged new evidence without fallback. */
 export function extractSpatialResult(details:unknown,toolName:string,isError=false,text?:string):SpatialResult|null|undefined {
   if(!object(details) || !Object.hasOwn(details,'spatialResult')) return;
@@ -130,22 +144,25 @@ export function extractSpatialResult(details:unknown,toolName:string,isError=fal
   const result=decodeSpatialResult(details.spatialResult);
   if(!result) return null;
   try {
-    if(text!==undefined) {const model:unknown=JSON.parse(text);if(!object(model) || !keys(model,['format','data']) || model.format!==spatialModelFormat(result) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null;}
+    if(text!==undefined) {const model:unknown=JSON.parse(text);if(!object(model) || JSON.stringify(model.data)!==JSON.stringify(projectSpatialResult(result))) return null; if(model.format===spatialModelFormat(result)) {if(!keys(model,['format','data'])) return null;} else if(model.format!==SPATIAL_EXPLAINED_MODEL_FORMAT || !keys(model,['format','data','meaning']) || JSON.stringify(model.meaning)!==JSON.stringify(spatialResultMeaning(result))) return null;}
     return result;
   } catch {return null;}
 }
 /** Validate a fixed calculation snapshot independently of its native tool envelope. */
 export function decodeSpatialResult(v:unknown):SpatialResult|null {
-  if(!object(v) || !keys(v,['schemaVersion','resultRef','requestId','toolCallId','operation','parameters','delivery','createdAt','scope','completeness','items','referenceItems','geometry','values','method','limitations','provenance',...(v.schemaVersion===2?['classifications']:[])]) || (v.schemaVersion!==1 && v.schemaVersion!==2) || !uuid(v.requestId) || !str(v.toolCallId,256)
+  if(!object(v) || !keys(v,['schemaVersion','resultRef','requestId','toolCallId','operation','parameters','delivery','createdAt','scope','completeness','items','referenceItems','geometry','values','method','limitations','provenance',...([2,3].includes(Number(v.schemaVersion))?['classifications']:[]),...(v.schemaVersion===3?['resourceInput']:[])]) || ![1,2,3].includes(Number(v.schemaVersion)) || !uuid(v.requestId) || !str(v.toolCallId,256)
     || v.resultRef!==`spatial:${v.requestId}:${encodeURIComponent(v.toolCallId)}` || !spatialRequestValid(v.parameters) || v.parameters.operation==='read' || v.parameters.operation!==v.operation
-    || !time(v.createdAt) || !object(v.completeness) || !keys(v.completeness,['status','candidateCount']) || v.completeness.status!=='complete' || !integer(v.completeness.candidateCount)
+    || !time(v.createdAt) || !object(v.completeness) || !keys(v.completeness,v.schemaVersion===3?['status','candidateCount','totalCandidateCount','unclassified']:['status','candidateCount']) || !(v.schemaVersion===3?['complete','partial'].includes(String(v.completeness.status)):v.completeness.status==='complete') || !integer(v.completeness.candidateCount)
     || !Array.isArray(v.scope) || !v.scope.length || v.scope.length>2 || !v.scope.every(inputValid)
-    || !Array.isArray(v.provenance) || !v.provenance.length || v.provenance.length>100 || !v.provenance.every(p=>object(p) && keys(p,['input','queriedAt','asOf','hash','sourceRefs']) && inputValid(p.input) && p.input.kind!=='result' && time(p.queriedAt) && time(p.asOf) && (p.hash===undefined || typeof p.hash==='string' && /^[0-9a-f]{64}$/.test(p.hash)) && (p.sourceRefs===undefined || Array.isArray(p.sourceRefs) && p.sourceRefs.length<=100 && p.sourceRefs.every(r=>object(r) && keys(r,['systemId','objectType','objectId','revision']) && contextRef({systemId:r.systemId,objectType:r.objectType,objectId:r.objectId}) && integer(r.revision,1,Number.MAX_SAFE_INTEGER))))
+    || !Array.isArray(v.provenance) || !v.provenance.length || v.provenance.length>100 || !v.provenance.every(p=>object(p) && keys(p,['input','queriedAt','asOf','hash','sourceRefs','resourceContext']) && inputValid(p.input) && p.input.kind!=='result' && (p.input.kind==='resource'?resourceContextValid(p.resourceContext):p.resourceContext===undefined) && time(p.queriedAt) && time(p.asOf) && (p.hash===undefined || typeof p.hash==='string' && /^[0-9a-f]{64}$/.test(p.hash)) && (p.sourceRefs===undefined || Array.isArray(p.sourceRefs) && p.sourceRefs.length<=100 && p.sourceRefs.every(r=>object(r) && keys(r,['systemId','objectType','objectId','revision']) && contextRef({systemId:r.systemId,objectType:r.objectType,objectId:r.objectId}) && integer(r.revision,1,Number.MAX_SAFE_INTEGER))))
     || !Array.isArray(v.items) || v.items.length>500 || !v.items.every(itemValid) || new Set(v.items.map(i=>i.id)).size!==v.items.length
     || (v.referenceItems!==undefined && (!Array.isArray(v.referenceItems) || v.referenceItems.length>500 || !v.referenceItems.every(itemValid) || new Set(v.referenceItems.map(i=>i.id)).size!==v.referenceItems.length))
     || (v.geometry!==undefined && !spatialGeometryValid(v.geometry)) || (v.operation==='buffer' && v.geometry===undefined) || !valuesValid(v.values,v.operation as SpatialResult['operation']) || !str(v.method,4000) || !Array.isArray(v.limitations) || v.limitations.length>20 || !v.limitations.every(l=>str(l,4000))) return null;
   if(v.delivery!==undefined && (!object(v.delivery) || !keys(v.delivery,['requestId','toolCallId']) || !uuid(v.delivery.requestId) || !str(v.delivery.toolCallId,256))) return null;
   const result=v as unknown as SpatialResult;
+  if(result.schemaVersion===3){const c=result.completeness;if(!integer(c.totalCandidateCount)||!Array.isArray(c.unclassified)||!c.unclassified.every(x=>object(x)&&keys(x,['id','reason'])&&str(x.id)&&str(x.reason))||new Set(c.unclassified.map(x=>x.id)).size!==c.unclassified.length||c.totalCandidateCount!==c.candidateCount+c.unclassified.length||c.status!==(c.unclassified.length?'partial':'complete'))return null;}
+  if(result.resourceInput&&(!object(result.resourceInput)||!keys(result.resourceInput,['resultRef','itemIds'])||!str(result.resourceInput.resultRef)||!result.provenance.some(p=>p.input.kind==='resource'&&p.input.resultRef===result.resourceInput!.resultRef)||!Array.isArray(result.resourceInput.itemIds)||!result.resourceInput.itemIds.every(i=>str(i))||new Set(result.resourceInput.itemIds).size!==result.resourceInput.itemIds.length||result.items.some(i=>!result.resourceInput!.itemIds.includes(i.id))||result.completeness.unclassified?.some(i=>!result.resourceInput!.itemIds.includes(i.id))))return null;
+  if(result.schemaVersion!==3&&result.provenance.some(p=>p.input.kind==='resource'))return null;
   if(!classificationValid(result)) return null;
   const params=result.parameters,target='target' in params?params.target:params.operation==='filter'?params.spatial?.target:undefined;
   if(JSON.stringify(result.scope)!==JSON.stringify([params.input,...(target?[target]:[])])) return null;
@@ -154,4 +171,27 @@ export function decodeSpatialResult(v:unknown):SpatialResult|null {
     if(new TextEncoder().encode(JSON.stringify(result)).length>1024*1024) return null;
     return structuredClone(result);
   } catch {return null;}
+}
+
+/** Display-only interpretation. Never adds evidence or changes the stored result schema. */
+export function spatialResultMeaning(result:SpatialResult) {
+  const count=result.completeness.candidateCount;
+  let counts:string;
+  switch(result.operation) {
+    case 'filter':counts=`筛选前输入${count}个对象，满足本次全部条件${result.items.length}个；items是命中对象。`;break;
+    case 'nearest':counts=`输入候选${count}个，返回最近${result.items.length}个；items保持计算排序。`;break;
+    case 'classify_points': {
+      const values=result.values as SpatialClassificationCounts;
+      counts=`输入${count}个点：内部${values.interior}、边界${values.boundary}、外部${values.exterior}；items包含全部候选，不能把items长度当范围命中数。`;break;
+    }
+    case 'buffer':counts=`本次缓冲输入${count}个对象；items是原输入，geometryType对应生成范围。`;break;
+    case 'summarize':counts=`本次统计${count}个输入对象；values.groups按属性分组计对象数，不是属性数值求和。`;break;
+    default:counts=`本次输入${count}个对象；items是计算输入，测量值或关系判断见values。`;
+  }
+  return {
+    scope:'范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。',
+    counts:result.schemaVersion===3?`${counts} 本次完整候选${result.completeness.totalCandidateCount}项，${result.completeness.unclassified!.length}项位置缺失或不适用，单列未分类，不属于外部或未命中。`:counts,
+    effect:result.delivery ? '本次读取已有固定分析结果，没有重新计算，也没有写入草稿；其他保存动作须查看相应回执。'
+      :'本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。',
+  };
 }

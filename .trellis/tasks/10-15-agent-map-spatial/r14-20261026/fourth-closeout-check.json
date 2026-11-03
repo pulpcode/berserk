@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T03:09:45.431949+00:00",
+  "scope": "Fourth segment original 21 not_executed slots only; pending supplements excluded",
+  "freezeHash": "fa4fa94e10ddc52b8239e77e37d922005f715fd7dd62813ba4f0528017ac8227",
+  "sourceHashes": {
+    "closeout-fourth.ts": "275fed7399d5bd6edbecb751128ea8897a02ef63e650c0fe043af2fde79fe3a4",
+    "closeout-fourth.test.ts": "6b24f2726bceb5101722353639f38ffb5557216869c2452dca2edb435f434366",
+    "live.ts": "75ba852d82923c1b11721d785acf2c32fed085e0ef46de84649a0aa6d06a4db6",
+    "cases.ts": "1b3f7b825827df88d1060c6310659660bb93b601bf508c96ad8f927b865f030a"
+  },
+  "protocolHash": "7230eb780990c3aed57ba7550ea32e273c54cd7ba3c343f3f85696a049b83271",
+  "evidence": [
+    "fourth-closeout-independent-tests.log",
+    "fourth-closeout-independent-types.log",
+    "fourth-closeout-independent-lint.log",
+    "fourth-closeout-check.md"
+  ],
+  "verification": {
+    "tests": {
+      "pass": 5,
+      "fail": 0,
+      "seconds": 56.35,
+      "mockRequests": 6
+    },
+    "typecheck": "pass",
+    "lint": "pass",
+    "rawCounts": {
+      "partial-evidence-manifest.json": 1076,
+      "closeout-first-segment-manifest.json": 1169,
+      "closeout-second-segment-manifest.json": 1519,
+      "closeout-third-segment-manifest.json": 4635
+    },
+    "rawUnchanged": 8399,
+    "archivedPriorDriverUnchanged": 37,
+    "protectedUnchanged": 179,
+    "realModelCallsByReviewer": 0,
+    "remaining": 21,
+    "first": "D07-2-A",
+    "last": "D01-2-C",
+    "firstNewRequestId": 574,
+    "carried": {
+      "requests": 573,
+      "input": 11056965,
+      "output": 189716,
+      "afp": 2982.36455,
+      "unknown": 0
+    },
+    "syntheticDay": "2026-10-26",
+    "archivedDriverCountsBySegment": [
+      32,
+      34,
+      37
+    ]
+  },
+  "findingsNotFixed": [],
+  "officialClaimCreatedByReviewer": false,
+  "reportingNote": "First report script incorrectly asserted every segment driver archive has 37 entries. Earlier segment archives legitimately contain 32 and 34; third contains 37. Corrected report-only assertion; all actual file hashes passed named rechecks. No source or original evidence changed."
+}

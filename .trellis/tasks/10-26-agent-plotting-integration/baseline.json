@@ -1,0 +1,20 @@
+{
+  "frontendProduct": "99cba1fdd1274cc951ba4b12bcffd2702321a52b",
+  "agentProduct": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+  "planCommit": "8da7fb18d39f40a2bd85de7e55e56a7335adad19",
+  "combinedBase": "8c11de3f622761633e423d8c0cc08f82fd0f8412",
+  "branch": "codex/agent-plotting-integration",
+  "worktree": "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk",
+  "combinationProductDelta": [
+    "experiments/harness-lab/.env.ark-plan.example",
+    "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+    "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md"
+  ],
+  "baselineHashes": {
+    "experiments/harness-lab/package-lock.json": "b99cf852da63f2c9628af3fc0f59188be7a29fe1e3dccad9a251926f2bb02e15",
+    "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md": "bca14ca50603ff0481100b212cd24a1614db45b65fa0d15b54e50139cd68ad58"
+  },
+  "existingPreviewUnchanged": "127.0.0.1:4324",
+  "engineeringTestPort": 5207,
+  "liveEvaluationExecuted": false
+}

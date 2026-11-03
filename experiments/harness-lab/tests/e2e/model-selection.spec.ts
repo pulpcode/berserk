@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { expect, test, type Page, type Route } from '@playwright/test';
+import { chromium, expect, test, type Page, type Route } from '@playwright/test';
 import { openDatabase } from '../../src/access/database';
 import { AccessStore } from '../../src/access/store';
 import { PiLab } from '../../src/pi/lab';
@@ -81,6 +81,56 @@ async function enter(page: Page, name: 'A' | 'B') {
   await page.getByRole('region', { name: `模型项目 ${name}`, exact: true }).getByRole('button', { name: '新会话', exact: true }).click();
   await expect(composer(page)).toBeEnabled();
 }
+
+test('thinking settings preserve legacy until an explicit supported mode is saved, without model calls', async ({ page }) => {
+  const extensionPath = process.env.B3_ZOOM_EXTENSION;
+  const zoomContext = extensionPath ? await chromium.launchPersistentContext('', { channel: 'chromium', headless: false, ignoreDefaultArgs: ['--disable-extensions'], viewport: { width: 1440, height: 960 }, args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`] }) : undefined;
+  if (zoomContext) page = await zoomContext.newPage();
+  const env = await setup(); await env.attach(page);
+  try {
+    await login(page, 'admin');
+    await page.getByRole('button', { name: '设置', exact: true }).click();
+    await expect(page.getByLabel('推理模式', { exact: true })).toHaveValue('legacy');
+    await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
+    await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
+    expect(env.lab.modelSettings().thinkingExplicit).toBe(false);
+    await page.getByLabel('服务商标识', { exact: true }).fill('ark-browser-check');
+    await page.getByLabel('模型 ID', { exact: true }).fill('deepseek-v4.1-flash');
+    await page.getByLabel('API 地址', { exact: true }).fill('https://ark.cn-beijing.volces.com/api/plan/v3');
+    await page.locator('#model-key').fill('offline-placeholder-not-a-real-key');
+    await page.getByLabel('上下文容量（token）', { exact: true }).fill('65536');
+    await page.getByLabel('最大输出能力（token）', { exact: true }).fill('8192');
+    const thinking = page.getByLabel('推理模式', { exact: true });
+    await thinking.focus(); await thinking.selectOption('high');
+    await page.getByRole('button', { name: '保存配置', exact: true }).click();
+    await expect(page.getByText('已保存，下次发送消息时使用新配置。', { exact: true })).toBeVisible();
+    await expect(thinking).toHaveValue('high');
+    expect(env.lab.modelSettings()).toMatchObject({ thinkingExplicit: true, thinkingMode: 'high', thinkingSupported: true });
+    await expect(page.locator('#model-key')).toHaveValue('');
+    await thinking.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: test.info().outputPath('model-thinking-settings-1440.png') });
+    if (process.env.B3_VERIFY_BROWSER_ZOOM === 'true') {
+      const before = await page.evaluate(() => ({ ratio: devicePixelRatio, width: innerWidth }));
+      let nativeFactor: number | undefined;
+      if (zoomContext) {
+        const worker = zoomContext.serviceWorkers()[0] ?? await zoomContext.waitForEvent('serviceworker');
+        nativeFactor = await worker.evaluate(async url => {
+          const chrome = (globalThis as unknown as { chrome: { tabs: { query: (query: object) => Promise<Array<{ id: number; url?: string }>>; setZoom: (id: number, factor: number) => Promise<void>; getZoom: (id: number) => Promise<number> } } }).chrome;
+          const tab = (await chrome.tabs.query({})).find(tab => tab.url === url)!;
+          await chrome.tabs.setZoom(tab.id, 1.25); return chrome.tabs.getZoom(tab.id);
+        }, page.url());
+        expect(nativeFactor).toBe(1.25);
+      } else await page.keyboard.press('Meta+-');
+      await page.waitForTimeout(500);
+      const after = await page.evaluate(() => ({ ratio: devicePixelRatio, width: innerWidth }));
+      await test.info().attach('native-browser-zoom-attempt', { body: JSON.stringify({ before, after, nativeFactor }), contentType: 'application/json' });
+      await page.screenshot({ path: test.info().outputPath('model-settings-native-zoom-attempt.png') });
+      expect(after.ratio).not.toBe(before.ratio);
+    }
+    expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); await zoomContext?.close(); }
+});
 
 test('administrators maintain the model catalog while ordinary seats select models per conversation', async ({ page, browser }) => {
   test.setTimeout(60000);

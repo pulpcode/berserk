@@ -1,0 +1,13 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "6ef6e7f726706ee9f1db0205526b2faac982b9aa78b7caf37f0f23a8f46ac64a",
+  "limits": {
+    "requests": 300,
+    "input": 8000000,
+    "output": 600000
+  },
+  "providerAllowanceVerified": true,
+  "billingNote": "2026-10-27 用户明确批准执行30个真实模型测评。控制台现场核对 Agent Plan Medium 包月有效至2026-11-23；5小时0/10000 AFP、周994.402/35000、月2451.158/100000；DeepSeek-V4.1-Flash超额后付费未开启。不充值、不切换端点。tokens上限不等于AFP换算保证。",
+  "observedAt": "2026-10-27T01:56:27.781817+00:00",
+  "source": "https://console.volcengine.com/ark/region:cn-beijing/subscription/agent-plan"
+}

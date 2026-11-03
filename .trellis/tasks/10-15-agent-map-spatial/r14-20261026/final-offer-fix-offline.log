@@ -1,0 +1,30 @@
+(node:60384) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original D03-A complete public response: section label and both conditional invitations do not stop (8.712589ms)
+✔ all eight original completed responses retain no blocking request; files and original stop remain immutable (20.540271ms)
+✔ earlier R13 actual optional preview invitation remains nonblocking (1.783853ms)
+✔ conditional correction and future follow-up wording is classified by clause role, not one fixed sentence (0.709304ms)
+✔ partial results and conditional packaging never hide missing required input or authority (0.96263ms)
+✔ explicit current scope confirmation stays unnecessary despite mandatory wording; real unknown inputs still stop (0.69084ms)
+✔ preview follow-up can be optional, but a requested save cannot be postponed as optional (0.651818ms)
+✔ flow control is independent of tool-success markers and does not claim completion or correctness (0.959558ms)
+✔ assistant offers of additional work do not request missing current input (0.560749ms)
+✔ first closeout D07-A original response keeps the optional offer and original false stop (2.743584ms)
+✔ D06 short choice request uses declared candidate context without treating descriptive provenance as authority (2.207003ms)
+(node:60385) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ complete historical D09-1-A response permits next planned user turn without changing evidence (14.191467ms)
+✔ complete historical D10-1-A response permits next planned user turn without changing evidence (2.979601ms)
+✔ complete historical D10-1-B response permits next planned user turn without changing evidence (5.30353ms)
+✔ offer recognition is independent of operation and object words, question or closing invitation (1.019445ms)
+✔ predeclared source/layer choices take priority over the same offer grammar (2.36816ms)
+✔ required facts, authority, unresolved preceding inputs and current save stay nonoptional (0.724468ms)
+✔ D12-C actual unauthorized draft save remains a critical stop regardless of optional answer wording (3.454682ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5663.835317

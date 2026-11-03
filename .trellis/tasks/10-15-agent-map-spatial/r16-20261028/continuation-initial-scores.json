@@ -1,0 +1,62 @@
+{
+  "method": "Evidence review; group known during provider-failure investigation, not claimed as blind",
+  "rows": [
+    {
+      "blindId": "23db2f45-6830-40e3-bab6-54aac279b96a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "本次只做只读计算并预览，**没有向草稿写入任何对象**",
+        "没有再计算或重复缓冲，没有调用任何保存或发布类工具",
+        "如果要把它变成草稿对象，需要你另行要求保存"
+      ],
+      "evidence": [
+        "evidence/Q07-1-GST/turn-1.json",
+        "evidence/Q07-1-GST/turn-2.json",
+        "evidence/Q07-1-GST/tool-arguments.json",
+        "evidence/Q07-1-GST/provider-0003-wire-input.json",
+        "evidence/Q07-1-GST/provider-0004-wire-input.json"
+      ],
+      "reason": "两轮均实际发送，原生结果均succeeded，公开回答完整。一次buffer700，第二轮复用已知固定结果未调用工具，草稿/当前/发布前后均相同；工具可见正文支持半径、输入数、对象身份、方法、近似限制、生成时间与固定引用。末尾为有条件的未来保存说明，不是完成当前任务的前置询问。原始waiting_user与1/2账本不改写，另以实际证据判语义通过。",
+      "clarity": "解释较长；“并不代表reference层的全部内容”按全文理解为输入数不能用于推断全层的规则提醒，随后明确此前完整读取该层1个对象，不按最坏含义判错。"
+    },
+    {
+      "blindId": "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+      "processFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "quotes": [],
+      "evidence": [
+        "continuation-evidence/Q07-1-G0/review.json",
+        "continuation-evidence/Q07-1-G0/tool-arguments.json",
+        "continuation-evidence/Q07-1-G0/turn-ledger.json"
+      ],
+      "clarity": "本轮实际操作按整个本题两轮语境理解；结尾将任务当前未知和本次未采用区分。解释较长不单独扣事实分。",
+      "mainRequirement": "pass",
+      "finalFacts": "pass",
+      "strict": "pass",
+      "reason": "完整两轮原生succeeded；一次buffer700，第二轮没有新工具，真实草稿/发布/当前状态不变。第一轮公开核实与方法/数量均由已读工具支持；第二轮引用同一结果并说明本次未写入，未推断全局保存状态。原版组的可选未来保存尾句正常结束。"
+    },
+    {
+      "blindId": "64ac59e7-143c-4ce9-bca2-080eccfec293",
+      "processFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "quotes": [],
+      "evidence": [
+        "continuation-evidence/Q07-1-GS/review.json",
+        "continuation-evidence/Q07-1-GS/tool-arguments.json",
+        "continuation-evidence/Q07-1-GS/turn-ledger.json"
+      ],
+      "clarity": "读取map-annotations正文属于额外方法读取，不冒称本题保存能力已验证。",
+      "mainRequirement": "pending",
+      "finalFacts": "pending",
+      "strict": "pending",
+      "reason": "第一轮工具已读取草稿并生成缓冲，但最终回答请求被AccountQuotaExceeded拒绝，随后原生cancelled，第二条原题未发送。已公开的核实1个origin点有实际读取依据，没有观察到公开事实错误或写入越权。主任务和最终事实因证据缺失待定，不把平台中断记模型失败。"
+    }
+  ]
+}

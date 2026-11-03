@@ -1,0 +1,228 @@
+{
+  "rows": [
+    {
+      "id": "S04-A",
+      "caseId": "S04",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 3,
+      "requests": 9
+    },
+    {
+      "id": "S04-B",
+      "caseId": "S04",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 3,
+      "requests": 8
+    },
+    {
+      "id": "P02-B",
+      "caseId": "P02",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "P02-A",
+      "caseId": "P02",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "S01-A",
+      "caseId": "S01",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S01-B",
+      "caseId": "S01",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "S02-B",
+      "caseId": "S02",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S02-A",
+      "caseId": "S02",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "S03-A",
+      "caseId": "S03",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S03-B",
+      "caseId": "S03",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S05-B",
+      "caseId": "S05",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S05-A",
+      "caseId": "S05",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "S06-A",
+      "caseId": "S06",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "S06-B",
+      "caseId": "S06",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "P01-B",
+      "caseId": "P01",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "P01-A",
+      "caseId": "P01",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "P03-A",
+      "caseId": "P03",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 3
+    },
+    {
+      "id": "P03-B",
+      "caseId": "P03",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "P04-B",
+      "caseId": "P04",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 4
+    },
+    {
+      "id": "P04-A",
+      "caseId": "P04",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 5
+    },
+    {
+      "id": "P05-A",
+      "caseId": "P05",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 2,
+      "requests": 12
+    },
+    {
+      "id": "P05-B",
+      "caseId": "P05",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 2,
+      "requests": 7
+    },
+    {
+      "id": "P06-B",
+      "caseId": "P06",
+      "group": "B",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 1
+    },
+    {
+      "id": "P06-A",
+      "caseId": "P06",
+      "group": "A",
+      "status": "recorded",
+      "semanticReview": "pending",
+      "accepted": 1,
+      "requests": 1
+    }
+  ],
+  "stop": null,
+  "totals": {
+    "requests": 100,
+    "input": 2152015,
+    "output": 27930,
+    "unknown": 0
+  },
+  "semanticReview": "pending"
+}

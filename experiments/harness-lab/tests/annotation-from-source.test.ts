@@ -324,3 +324,19 @@ it.each(['binding','create','cancel','revoke'] as const)('rechecks direct creati
   expect(rows).toHaveLength(condition==='create' ? 1 : 0);
   if(condition==='create')expect(JSON.parse(String(rows[0].data))).toMatchObject({title:'另一客户端',headRevision:1});
 });
+
+
+it('keeps explicit symbol and role metadata on a source snapshot refresh without inferring equipment type',async()=>{
+  const {service,actor,session,response,objects}=await setup();
+  const resourceRef={systemId:'source',objectType:'resource',objectId:'resource-a'};
+  response.items=[{...source(),ref:resourceRef,properties:{availableCount:1,unit:'辆'},geometry:{type:'Point',coordinates:[103,1]}}];
+  const request={...input(),sourceRef:resourceRef};await service.fromSource(actor,session,request);
+  expect(objects()[0].style).toBeUndefined();expect(objects()[0].informationRole).toBeUndefined();
+  const style={symbolId:'xf3013-2020.6.2.1',iconSize:40,heading:180};
+  service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:'west',changes:{style,informationRole:'observation',geometry:{type:'Point',coordinates:[104,2]}}}]});
+  const before=objects()[0];response.items[0]={...response.items[0],revision:3,geometry:{type:'Point',coordinates:[105,3]}};
+  // Only an explicit refresh replaces the manually adjusted position.
+  expect(objects()[0]).toEqual(before);
+  await service.fromSource(actor,session,{...request,clientActionId:randomUUID(),mode:'refresh',expectedRevision:3,expectedSourceRevision:3});
+  expect(objects()[0]).toEqual({...before,geometry:response.items[0].geometry,sourceRefs:[{...resourceRef,revision:3,queriedAt:expect.any(String)}]});
+});

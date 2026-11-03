@@ -1,0 +1,33 @@
+{
+  "plannedTasks": 288,
+  "originalStartedTasks": 1,
+  "continuationStartedTasks": 2,
+  "combinedStartedTasks": 3,
+  "completeTaskEvidence": 2,
+  "platformInterruptedTasks": 1,
+  "notExecutedTasks": 285,
+  "originalRequests": 4,
+  "continuationRequests": 7,
+  "combinedRequests": 11,
+  "successfulRequests": 10,
+  "http429Requests": 1,
+  "unknownUsageRequests": 1,
+  "knownInputTokens": 193876,
+  "knownOutputTokens": 4476,
+  "originalKnownAfp": 9.991875,
+  "continuationKnownAfp": 14.802125,
+  "combinedKnownAfp": 24.794,
+  "unknownChargeNotImputedZero": true,
+  "stop": "provider_http_429",
+  "providerCode": "AccountQuotaExceeded",
+  "quotaWindow": "5-hour",
+  "providerResetAt": "2026-10-28T19:30:46+08:00",
+  "retryCount": 0,
+  "extraTasks": 0,
+  "first12CheckpointReached": false,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "semanticComparisonAvailable": false,
+  "oldRecordPreserved": true
+}

@@ -1,0 +1,17 @@
+{
+  "id": "P02-B",
+  "mainRequirement": "fail",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "fail",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "冻结业务口径要求写入前澄清车型；模型未澄清，保存无专业symbolId的普通点代替。它没有猜水罐车，明确说明普通点，故不判解释失真。坐标/名称/plan/旧对象及不发布采用均正确。",
+  "quotes": [
+    "你只要求“消防车”，未指定车型，因此我没有设置专业符号，只保留了普通点标号"
+  ],
+  "evidence": [
+    "P02-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

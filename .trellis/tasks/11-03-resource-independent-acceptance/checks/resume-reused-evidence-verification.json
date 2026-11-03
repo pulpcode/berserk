@@ -1,0 +1,56 @@
+{
+  "at": "2026-11-03T03:00:21.411Z",
+  "results": [
+    {
+      "entryId": "N01-1",
+      "snapshots": 15,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "N02-1",
+      "snapshots": 7,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "N03-1",
+      "snapshots": 4,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "N04-1",
+      "snapshots": 6,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "N05-1",
+      "snapshots": 9,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "N06-1",
+      "snapshots": 8,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "P01-1",
+      "snapshots": 6,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "P02-1",
+      "snapshots": 8,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "P03-1",
+      "snapshots": 20,
+      "hashesMatch": true
+    },
+    {
+      "entryId": "P04-1",
+      "snapshots": 11,
+      "hashesMatch": true
+    }
+  ],
+  "providerRequests": 0
+}

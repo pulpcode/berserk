@@ -13,7 +13,8 @@ export const COMPOSER_INPUT_V2 = 'berserk.composer-input.v2';
 export const COMPOSER_INPUT_V3 = 'berserk.composer-input.v3';
 export const COMPOSER_INPUT_V4 = 'berserk.composer-input.v4';
 export const COMPOSER_INPUT_V5 = 'berserk.composer-input.v5';
-export const composerInputType = (selection: LoadedComposerSelection) => selection.context || selection.annotationContext || selection.annotationRefs ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
+export const COMPOSER_INPUT_V6 = 'berserk.composer-input.v6';
+export const composerInputType = (selection: LoadedComposerSelection) => selection.annotationRefs ? COMPOSER_INPUT_V6 : selection.context || selection.annotationContext ? COMPOSER_INPUT_V5 : COMPOSER_INPUT;
 export interface ComposerInputRecord extends LoadedComposerSelection { workspaceId: string; sessionId: string; requestId: string }
 const object = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
 const exact = (value: Record<string, unknown>, keys: string[]) => Object.keys(value).every(key => keys.includes(key));
@@ -92,21 +93,26 @@ export function composerInputTextV5(selection: LoadedComposerSelection): string 
     ...(selection.skill || selection.agent ? [composerInputText({skill: selection.skill, agent: selection.agent})] : []),
   ].join('\n');
 }
-export function recordedComposerText(selection: LoadedComposerSelection, type = composerInputType(selection)) {
+export function recordedComposerText(selection: LoadedComposerSelection & {requestId?: string}, type = composerInputType(selection)) {
   if (type === COMPOSER_INPUT) return composerInputText(selection);
   if (type === COMPOSER_INPUT_V2) return composerInputTextV2(selection);
   if (type === COMPOSER_INPUT_V3) return composerInputTextV3(selection);
   if (type === COMPOSER_INPUT_V4) return composerInputTextV4(selection);
+  if (type === COMPOSER_INPUT_V6) {
+    if (!selection.requestId || !UUID.test(selection.requestId) || !selection.annotationRefs?.length) throw stateError();
+    return composerInputTextV5(selection) + '\n按完整显式引用读取：annotation_read mode:reference，reference取以下定位，宿主保留其固定版本和完整图层/对象范围，无需重新填写筛选ID。定位：' + JSON.stringify(selection.annotationRefs.map((reference,index)=>({requestId:selection.requestId,index,title:reference.title}))) + '。后续沿用同一范围可复用定位；用户明确改范围时按新要求处理，不能把旧引用当作永久限制。';
+  }
   if (type === COMPOSER_INPUT_V5) return composerInputTextV5(selection);
   throw stateError();
 }
 export function decodeComposerInput(value: unknown, workspaceId: string, sessionId?: string, type = COMPOSER_INPUT): ComposerInputRecord {
-  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5;
-  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
+  const mapInput = type === COMPOSER_INPUT_V2 || type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6;
+  if (![COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6].includes(type) || !object(value) || !exact(value, ['workspaceId', 'sessionId', 'requestId', 'skill', 'agent', 'context', ...(mapInput ? ['annotationContext', 'annotationRefs'] : [])]) || value.workspaceId !== workspaceId
     || typeof value.sessionId !== 'string' || !UUID.test(value.sessionId) || (sessionId !== undefined && value.sessionId !== sessionId)
     || typeof value.requestId !== 'string' || !UUID.test(value.requestId) || (!value.skill && !value.agent && !value.context && !value.annotationContext && !value.annotationRefs)
     || (type === COMPOSER_INPUT_V2 && !value.annotationContext && !value.annotationRefs)
-    || ((type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5) && !value.context && !value.annotationContext && !value.annotationRefs)
+    || ((type === COMPOSER_INPUT_V3 || type === COMPOSER_INPUT_V4 || type === COMPOSER_INPUT_V5 || type === COMPOSER_INPUT_V6) && !value.context && !value.annotationContext && !value.annotationRefs)
+    || (type === COMPOSER_INPUT_V6 && !value.annotationRefs)
     || (value.annotationContext !== undefined && !validAnnotationContext(value.annotationContext, String(value.sessionId)))
     || (value.annotationRefs !== undefined && !validAnnotationSelections(value.annotationRefs))
     || (mapInput && Buffer.byteLength(JSON.stringify({context: value.context, annotationRefs: value.annotationRefs})) > 256 * 1024)
@@ -125,4 +131,11 @@ export function composerHistory(entries: SessionEntry[], workspaceId: string, se
 }
 export function selectedChildInput(selection: LoadedComposerSelection | undefined, files: FileRef[], role: string) {
   return selection?.agent?.name === role ? { ...(selection.skill ? { skill: selection.skill } : {}), files } : undefined;
+}
+
+/** Resolve an existing native input selection; this locator is not a new permission. */
+export function resolveAnnotationReference(entries: SessionEntry[], workspaceId: string, sessionId: string, reference: {requestId: string; index: number}) {
+  const selected = composerHistory(entries, workspaceId, sessionId).get(reference.requestId)?.annotationRefs?.[reference.index];
+  if (!UUID.test(reference.requestId) || !Number.isSafeInteger(reference.index) || reference.index < 0 || !selected) throw new RequestError('ANNOTATION_REFERENCE_NOT_FOUND', '本会话分支未找到该显式引用，请核对引用定位。', 404);
+  return structuredClone(selected);
 }

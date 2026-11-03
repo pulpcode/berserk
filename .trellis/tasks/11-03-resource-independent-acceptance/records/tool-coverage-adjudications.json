@@ -1,0 +1,9 @@
+[
+  {
+    "entryId": "N04-1",
+    "gate": "member_deduplication",
+    "coverage": "not_exercised",
+    "verdict": "pending",
+    "rationale": "原始两审确认单体/受控副本和同entity双记录归并正确，但这不是本轮待修复的重叠汇总完整成员去重路径。两位均在保留原判的附录中确认应改为未覆盖。副本正确仍记产品观察，主任务成绩不变，不用这一观察宣告聚合缺陷修复验证通过。"
+  }
+]

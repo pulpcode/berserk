@@ -3,13 +3,16 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { validateToolArguments } from '@earendil-works/pi-ai';
+import { MAP_SYMBOLS, MAP_SYMBOL_STANDARD } from '../../src/contracts/map-symbols.js';
 import { AgentSession } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime, testConfig, type Reply } from './fake-runtime.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V2, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, composerInputText, recordedComposerText, decodeComposerInput } from '../../src/pi/composer-input.js';
 import { AnnotationRequestState } from '../../src/pi/annotation-state.js';
 import { annotationActionId, annotationTools } from '../../src/pi/annotation-tools.js';
-import type { AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
+import type { AnnotationReadResult, AnnotationRef, AnnotationSelection } from '../../src/contracts/annotations.js';
+import { ContextService } from '../../src/context/service.js';
 import { createApp } from '../../src/server/app.js';
 import { openDatabase } from '../../src/access/database.js';
 import { AccessStore } from '../../src/access/store.js';
@@ -55,26 +58,26 @@ describe('annotation input and native tools', () => {
       if(!allowed)expect(action.description).not.toContain('set_current');
     }
   });
-  it('reopens a native v1/v2/v3/v4 conversation and appends new map requests as v5 without rewriting old input', async () => {
+  it('reopens a native v1/v2/v3/v4/v5 conversation and appends explicit references as v6 without rewriting old input', async () => {
     const {lab,session,config,draft}=await setup();const skill=await lab.resources.readSkill(session.workspaceId,'review','alpha');
     for(let i=0;i<5;i++)await lab.start(session.id,'检查引用',{skill,annotationRefs:[draft.ref!]},'alpha').run(()=>{});
     const file=join(config.dataDir,'sessions',(await readdir(join(config.dataDir,'sessions')))[0]);await lab.close();
     const entries=(await readFile(file,'utf8')).trim().split('\n').map(line=>JSON.parse(line));
-    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V5);expect(inputs).toHaveLength(5);
+    const inputs=entries.filter(entry=>entry.customType===COMPOSER_INPUT_V6);expect(inputs).toHaveLength(5);
     inputs[0].customType=COMPOSER_INPUT;delete inputs[0].details.annotationContext;delete inputs[0].details.annotationRefs;
-    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;
-    for(const entry of inputs.slice(0,4))entry.content=recordedComposerText(entry.details,entry.customType);
+    inputs[1].customType=COMPOSER_INPUT_V2;inputs[2].customType=COMPOSER_INPUT_V3;inputs[3].customType=COMPOSER_INPUT_V4;inputs[4].customType=COMPOSER_INPUT_V5;
+    for(const entry of inputs.slice(0,5))entry.content=recordedComposerText(entry.details,entry.customType);
     const old=entries.map(entry=>JSON.stringify(entry)).join('\n')+'\n';await writeFile(file,old);
     const next=await PiLab.create(config,(await fakeRuntime(config,()=>({text:'继续'}))).runtime);clean.push(()=>next.close());
     expect(next.get(session.id,'alpha').recoveryWarning).toBeUndefined();expect(next.get(session.id,'alpha').messages.filter(m=>m.role==='user')).toHaveLength(5);
-    await ask(next,session.id);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
+    await ask(next,session.id,[draft.ref!]);expect(next.get(session.id,'alpha').lastResult?.status).toBe('succeeded');
     const after=await readFile(file,'utf8');expect(after.startsWith(old)).toBe(true);
-    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V5)).toHaveLength(2);
+    expect(after.trim().split('\n').map(line=>JSON.parse(line)).filter(entry=>entry.customType===COMPOSER_INPUT_V6)).toHaveLength(1);
   });
   it('preserves cancelled v5 preparation without executing it or replaying selections on continuation', async () => {
     const {lab,session,config,draft,calls}=await setup();const request=lab.start(session.id,'检查固定参考',{annotationRefs:[draft.ref!]},'alpha');
     const original=AgentSession.prototype.sendCustomMessage;
-    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V5)lab.cancel(session.id,request.requestId,'alpha');});
+    const spy=vi.spyOn(AgentSession.prototype,'sendCustomMessage').mockImplementation(async function(this:AgentSession,message,options){await original.call(this,message,options);if(message.customType===COMPOSER_INPUT_V6)lab.cancel(session.id,request.requestId,'alpha');});
     await request.run(()=>{});spy.mockRestore();expect(calls).toHaveLength(0);expect(lab.get(session.id,'alpha').messages).toHaveLength(0);
     await lab.close();const fake=await fakeRuntime(config,()=>({text:'新请求'}));const next=await PiLab.create(config,fake.runtime);clean.push(()=>next.close());
     expect(next.get(session.id,'alpha').lastResult?.status).toBe('cancelled');
@@ -156,7 +159,7 @@ describe('annotation input and native tools', () => {
     lab.annotations!.action(actor, session.id, {action: 'apply', clientActionId: randomUUID(), expectedRevision: 1, operations: [{op: 'delete_object', objectId: 'a'}]});
     expect(lab.annotations!.read(actor, taskId, {ref, objectIds: ['a']}).objects.items).toHaveLength(1);
     const path = join(config.dataDir, 'sessions', (await readdir(join(config.dataDir, 'sessions')))[0]);
-    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V5);
+    expect(await readFile(path, 'utf8')).toContain(COMPOSER_INPUT_V6);
     await lab.close(); const reopened = await PiLab.create(config, (await fakeRuntime(config, () => ({text: '继续'}))).runtime); clean.push(() => reopened.close());
     expect(reopened.get(session.id, 'alpha').messages).toEqual(snapshot.messages);
     expect(reopened.get(session.id, 'alpha').recoveryWarning).toBeUndefined();
@@ -208,7 +211,10 @@ describe('annotation input and native tools', () => {
     expect(lab.annotations!.receipt(actor, annotationActionId(requestId, 'retry-call'))?.ref).toBeDefined();
     const read = tools.find(tool => tool.name === 'annotation_read')!;
     const recovered = await read.execute('inspect-receipt', {mode: 'receipt', requestId, toolCallId: 'retry-call'} as never, undefined, undefined, {} as never);
-    expect(recovered.content).toEqual(first.content);
+    const originalModel=JSON.parse((first.content[0] as {text:string}).text),readModel=JSON.parse((recovered.content[0] as {text:string}).text);
+    expect(readModel.data).toEqual(originalModel.data);
+    expect(readModel.meaning.effect).toContain('没有重新执行写入');
+    expect(originalModel.meaning.effect).toContain('本次动作已成功');
     expect(recovered.details.annotationResult).toMatchObject({origin:'receipt_read',receipt:first.details.annotationResult!.receipt});
     expect(JSON.stringify(action.parameters)).not.toContain('sessionId');
     controller.abort(); await expect(action.execute('after-stop', params as never, undefined, undefined, {} as never)).rejects.toThrow();
@@ -403,4 +409,209 @@ it.each([
  const {lab,session,calls}=await setup((_context,index)=>index===0 ? {tools:[{name:'annotation_read',arguments:{mode:'draft',...selectors}}]} : {text:'修正查询'});
  const empty=await lab.createSession(session.workspaceId,'alpha'),snapshot=await ask(lab,empty.id);
  expect(calls).toHaveLength(2);expect(snapshot.messages.find(message=>message.role==='tool')).toMatchObject({isError:true});
+});
+
+
+it('exports the shared bounded symbol catalog and roundtrips professional styles through actual Pi tools',async()=>{
+  const {lab,session,actor,taskId}=await setup();
+  const state=new AnnotationRequestState();state.observeDraft(lab.annotations!.binding(actor,session.id));state.beginInference();
+  const tools=annotationTools(lab.annotations!,{actor,taskId,sessionId:session.id,requestId:randomUUID(),signal:new AbortController().signal,check:()=>{},state});
+  const action=tools.find(tool=>tool.name==='annotation_action')!,read=tools.find(tool=>tool.name==='annotation_read')!;
+  const schema=action.parameters as unknown as {$defs:{style:{properties:{symbolId:{anyOf:Array<{const:string;description:string}>}}}}};
+  expect(schema.$defs.style.properties.symbolId.anyOf.map(item=>item.const)).toEqual(MAP_SYMBOLS.map(symbol=>symbol.id));
+  for (const symbol of MAP_SYMBOLS) {
+    const description=schema.$defs.style.properties.symbolId.anyOf.find(item=>item.const===symbol.id)!.description;
+    expect(description).toContain(symbol.name);
+    expect(description).toContain(symbol.sourceKind==='standard' ? `标准符号 ${MAP_SYMBOL_STANDARD} ${symbol.standardRef}` : '应用扩展（非标准符号）');
+    expect(description).toContain(symbol.orientation==='heading' ? '支持 heading' : '固定直立，不支持 heading');
+    for(const alias of symbol.aliases)expect(description).toContain(alias);
+  }
+  expect(new Set(schema.$defs.style.properties.symbolId.anyOf.map(item=>item.const)).size).toBe(22);
+  const style={symbolId:'app.rescue-inflatable-boat',iconSize:48,heading:90};
+  const args={action:'apply',operations:[{op:'update_object',objectId:'a',changes:{style,informationRole:'plan'}}]};
+  expect(()=>validateToolArguments(action,{type:'toolCall',id:'save-symbol',name:action.name,arguments:args})).not.toThrow();
+  await action.execute('save-symbol',args as never,undefined,undefined,{} as never);
+  const query={mode:'draft',objectIds:['a'],fields:['style','informationRole']};
+  expect(()=>validateToolArguments(read,{type:'toolCall',id:'read-symbol',name:read.name,arguments:query})).not.toThrow();
+  const result=await read.execute('read-symbol',query as never,undefined,undefined,{} as never);
+  expect(JSON.parse(result.content.filter(item=>item.type==='text').map(item=>item.text).join(''))).toMatchObject({data:{objects:{items:[{objectId:'a',style,informationRole:'plan'}]},query:{fields:['style','informationRole']}}});
+  for(const invalidStyle of [{symbolId:'unknown'},{...style,iconSize:65},{...style,heading:360}]){
+    const invalid={...args,operations:[{...args.operations[0],changes:{style:invalidStyle,informationRole:'plan'}}]};
+    expect(()=>validateToolArguments(action,{type:'toolCall',id:'bad',name:action.name,arguments:invalid})).toThrow();
+  }
+  state.beginInference();
+  const before=lab.annotations!.binding(actor,session.id).draft!;
+  await expect(action.execute('upright-invalid',{...args,operations:[{...args.operations[0],changes:{style:{symbolId:'xf3013-2020.6.1.21',heading:90}}}]} as never,undefined,undefined,{} as never)).rejects.toThrow('INVALID_INPUT');
+  expect(lab.annotations!.binding(actor,session.id).draft).toEqual(before);
+});
+
+function lastAnnotationRead(context: Parameters<Parameters<typeof fakeRuntime>[1]>[0]): AnnotationReadResult {
+  const message=context.messages.findLast(item=>item.role==='toolResult'&&item.toolName==='annotation_read');
+  if(!message || message.role!=='toolResult')throw new Error('Expected a real annotation_read result');
+  return JSON.parse(message.content.filter(item=>item.type==='text').map(item=>item.text).join('\n')).data as AnnotationReadResult;
+}
+
+it('edits only requested fields from actual draft evidence and preserves provenance, nulls and absent legacy values',async()=>{
+  const fields=['style','attributes','geometry','sourceRefs','originFeatureRef','informationRole','note'];
+  const {lab,session,actor,taskId}=await setup((context,index)=>{
+    if(index===0)return {tools:[{name:'annotation_read',arguments:{mode:'draft',objectIds:['boat','b'],fields}}]};
+    if(index===1){
+      const boat=lastAnnotationRead(context).objects.items.find(item=>item.objectId==='boat')!;
+      return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[
+        {op:'update_object',objectId:'boat',changes:{style:{...boat.style,heading:90}}},
+        {op:'update_object',objectId:'b',changes:{name:'历史点的新名称'}},
+      ]}}]};
+    }
+    if(index===2)return {tools:[{name:'annotation_read',arguments:{mode:'draft',objectIds:['boat'],fields:['attributes']}}]};
+    if(index===3){
+      const boat=lastAnnotationRead(context).objects.items[0];
+      return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'boat',changes:{attributes:{...boat.attributes,contact:'值守员'}}}]}}]};
+    }
+    return {text:'已保存方向、名称和联系人。'};
+  });
+  lab.annotations!.context=new ContextService({systems:[{id:'situation',name:'合成来源',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'UNUSED_TEST_TOKEN'}],scopes:[{id:'synthetic',name:'合成范围',systemIds:['situation'],seatIds:['alpha']}]},{UNUSED_TEST_TOKEN:'synthetic-test-only'});
+  const seed=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'a',changes:{
+    style:{symbolId:'app.rescue-inflatable-boat',iconSize:48,heading:45,label:'舟一',color:'#123456',opacity:0.8},
+    attributes:{unit:'艘',count:1,confirmed:false,unknown:null,empty:''},informationRole:'plan',
+    sourceRefs:[{systemId:'situation',objectType:'resource',objectId:'synthetic-boat',revision:3,queriedAt:'2026-10-26T00:00:00Z'}],
+  }}]});
+  const copied=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'copy_object',source:seed.ref!,objectId:'a',newObjectId:'boat',layerId:'meeting'}]});
+  const original=lab.annotations!.version(actor,taskId,copied.ref!).document;
+  const boat=original.layers[0].features.find(item=>item.objectId==='boat')!;
+  expect(boat.originFeatureRef).toBeDefined();
+  const snapshot=await ask(lab,session.id,[{...copied.ref!,objectIds:['boat']}]);
+  expect(snapshot.lastResult?.status).toBe('succeeded');
+  expect(snapshot.messages.filter(item=>item.role==='tool').every(item=>!item.isError)).toBe(true);
+  const head=lab.annotations!.binding(actor,session.id).draft!;
+  expect(head.headRevision).toBe(5);
+  const expected=structuredClone(original);
+  expected.layers[0].features=expected.layers[0].features.map(item=>item.objectId==='boat' ? {...item,style:{...item.style,heading:90},attributes:{...item.attributes,contact:'值守员'}} : item.objectId==='b' ? {...item,name:'历史点的新名称'} : item);
+  expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:head.headRevision}).document).toEqual(expected);
+  expect(expected.layers[0].features.find(item=>item.objectId==='b')).not.toHaveProperty('informationRole');
+  expect(expected.layers[0].features.find(item=>item.objectId==='b')).not.toHaveProperty('style');
+  expect(lab.annotations!.version(actor,taskId,copied.ref!).document).toEqual(original);
+});
+
+it('removes heading and a business key explicitly without turning missing values into zero or null',async()=>{
+  const {lab,session,actor,taskId}=await setup();
+  const saved=lab.annotations!.action(actor,session.id,{action:'apply',expectedRevision:1,clientActionId:randomUUID(),operations:[{op:'update_object',objectId:'a',changes:{
+    style:{symbolId:'app.rescue-inflatable-boat',heading:45,iconSize:48,label:'保留标签'},attributes:{remove:'删除',keep:null,zero:0},
+  }}]});
+  const original=lab.annotations!.version(actor,taskId,saved.ref!).document.layers[0].features[0];
+  const state=new AnnotationRequestState();
+  const tools=annotationTools(lab.annotations!,{actor,taskId,sessionId:session.id,requestId:randomUUID(),signal:new AbortController().signal,check:()=>{},state});
+  const read=tools.find(item=>item.name==='annotation_read')!,action=tools.find(item=>item.name==='annotation_action')!;
+  const readResult=await read.execute('read-to-clear',{mode:'draft',objectIds:['a'],fields:['style','attributes']} as never,undefined,undefined,{} as never);
+  const data=JSON.parse(readResult.content.filter(item=>item.type==='text').map(item=>item.text).join('')).data as AnnotationReadResult;
+  const style={...data.objects.items[0].style},attributes={...data.objects.items[0].attributes};
+  delete style.heading;delete attributes.remove;
+  state.beginInference();
+  const params={action:'apply',operations:[{op:'update_object',objectId:'a',changes:{style,attributes}}]};
+  expect(()=>validateToolArguments(action,{type:'toolCall',id:'clear',name:action.name,arguments:params})).not.toThrow();
+  await action.execute('clear',params as never,undefined,undefined,{} as never);
+  const head=lab.annotations!.binding(actor,session.id).draft!;
+  const feature=lab.annotations!.version(actor,taskId,{setId:head.setId,revision:head.headRevision}).document.layers[0].features[0];
+  expect(feature).toEqual({...original,style:{symbolId:'app.rescue-inflatable-boat',iconSize:48,label:'保留标签'},attributes:{keep:null,zero:0}});
+  expect(feature.style).not.toHaveProperty('heading');expect(feature.attributes).not.toHaveProperty('remove');
+});
+
+it('rejects a stale complete style then lets the native loop reread and preserve concurrent style and note changes',async()=>{
+  const originalStyle={symbolId:'app.rescue-inflatable-boat',heading:45,iconSize:48,label:'原标签'};
+  const {lab,session,actor,taskId}=await setup((context,index)=>{
+    if(index===0 || index===2)return {tools:[{name:'annotation_read',arguments:{mode:'draft',objectIds:['a'],fields:['style','note']}}]};
+    if(index===1 || index===3){
+      const latest=lastAnnotationRead(context).objects.items[0];
+      return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'a',changes:{style:{...latest.style,heading:90}}}]}}]};
+    }
+    return {text:'已保存方向，并保留最新标签和备注。'};
+  });
+  const seeded=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'a',changes:{style:originalStyle,attributes:{unknown:null},informationRole:'plan'}}]});
+  const original=lab.annotations!.version(actor,taskId,seeded.ref!).document.layers[0].features[0];
+  let inserted=false;
+  await lab.start(session.id,'方向仍改90度，保留其他最新修改。',{},'alpha').run(event=>{
+    if(event.type==='tool.completed'&&event.toolName==='annotation_read'&&!inserted){
+      inserted=true;
+      lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:'a',changes:{style:{...originalStyle,heading:180,label:'人工新标签'},note:'人工新备注'}}]});
+    }
+  });
+  expect(inserted).toBe(true);
+  const writes=lab.get(session.id,'alpha').messages.filter(item=>item.toolName==='annotation_action');
+  expect(writes).toHaveLength(2);
+  expect(writes[0]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_CONFLICT')});
+  expect(writes[1].isError).not.toBe(true);
+  const head=lab.annotations!.binding(actor,session.id).draft!;
+  expect(head.headRevision).toBe(4);
+  expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:4}).document.layers[0].features[0]).toEqual({...original,style:{...originalStyle,heading:90,label:'人工新标签'},note:'人工新备注'});
+  expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:3}).document.layers[0].features[0].style?.heading).toBe(180);
+});
+
+it('reads the explicitly selected set and edits only the current draft despite identical object IDs and names',async()=>{
+  const {lab,session,actor,taskId,draft}=await setup((context,index)=>{
+    if(index===0)return {tools:[{name:'annotation_read',arguments:{mode:'read',ref:foreignRef,objectIds:['a'],fields:['style']}}]};
+    if(index===1)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'a',changes:{name:'不能仅凭参考版写入'}}]}}]};
+    if(index===2)return {tools:[{name:'annotation_read',arguments:{mode:'draft',objectIds:['a'],fields:['style']}}]};
+    if(index===3){
+      const read=lastAnnotationRead(context);expect(read.ref).toEqual(ownRef);
+      return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'a',changes:{style:{...read.objects.items[0].style,iconSize:56}}}]}}]};
+    }
+    return {text:'已修改本会话对象尺寸。'};
+  });
+  const other=await lab.createSession(session.workspaceId,'alpha');
+  const foreignRef=lab.annotations!.action(actor,other.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:draft.ref,operations:[{op:'update_object',objectId:'a',changes:{style:{symbolId:'app.rescue-vessel',iconSize:64,heading:180}}}]}).ref!;
+  const ownRef=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'a',changes:{style:{symbolId:'app.rescue-inflatable-boat',iconSize:32,heading:45}}}]}).ref!;
+  const foreignBefore=lab.annotations!.version(actor,taskId,foreignRef);
+  const ownBefore=lab.annotations!.version(actor,taskId,ownRef).document.layers[0].features[0];
+  const snapshot=await ask(lab,session.id,[{...ownRef,objectIds:['a']}]);
+  const writes=snapshot.messages.filter(item=>item.toolName==='annotation_action');
+  expect(writes[0]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_READ_REQUIRED')});
+  expect(writes[1].isError).not.toBe(true);
+  const head=lab.annotations!.binding(actor,session.id).draft!;
+  expect(lab.annotations!.version(actor,taskId,{setId:head.setId,revision:head.headRevision}).document.layers[0].features[0]).toEqual({...ownBefore,style:{...ownBefore.style,iconSize:56}});
+  expect(lab.annotations!.binding(actor,other.id).draft?.headRevision).toBe(1);
+  expect(lab.annotations!.version(actor,taskId,foreignRef)).toEqual(foreignBefore);
+});
+
+it('reads a complete explicit layer reference through paging, compaction and restart without widening to another layer',async()=>{
+ let locator:{requestId:string;index:number}={requestId:randomUUID(),index:0};let replies=0;
+ const reply=(context: Parameters<Parameters<typeof fakeRuntime>[1]>[0]):Reply=>{
+  if(!context.tools?.length)return {text:'保留原引用定位及固定图层，继续查询。',usageInput:50};
+  replies++;
+  if(replies===1)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],limit:1}}]};
+  if(replies===2)return {text:'已读取第一点。'.repeat(500),usageInput:1800};
+  if(replies===3)return {tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry'],offset:1,limit:1}}]};
+  return {text:'已读取原图层的第二点。'};
+ };
+ const {lab,session,actor,config,calls}=await setup(reply,{contextWindow:8192,maxOutputTokens:6000,compactionReserveTokens:7000,compactionKeepRecentTokens:128});
+ const saved=lab.annotations!.action(actor,session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_layer',layer:{layerId:'other',name:'未选图层',order:1,defaultVisible:true,features:[{objectId:'extra',kind:'point',name:'不应读到',geometry:{type:'Point',coordinates:[122,32]}}]}}]});
+ const request=lab.start(session.id,'只读我引用的图层',{annotationRefs:[{...saved.ref!,layerIds:['meeting']}]},'alpha');locator={requestId:request.requestId,index:0};await request.run(()=>{});
+ const first=lab.get(session.id,'alpha').messages.find(m=>m.toolName==='annotation_read')!;
+ expect(first.isError).not.toBe(true);expect(JSON.parse(first.text).data).toMatchObject({ref:saved.ref,query:{layerIds:['meeting']},objects:{total:2,hasMore:true,items:[{objectId:'a'}]}});
+ expect(JSON.stringify(calls[0].context.messages)).toContain(request.requestId);
+ const next=await ask(lab,session.id);expect(next.latestCompaction).toBeDefined();
+ expect(JSON.parse(next.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data.objects).toMatchObject({total:2,items:[{objectId:'b'}],hasMore:false});
+ await lab.close();
+ const reopened=await PiLab.create(config,(await fakeRuntime(config,(_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:locator,fields:['geometry']}}]}:{text:'续读完成'})).runtime);clean.push(()=>reopened.close());
+ const final=await ask(reopened,session.id);expect(final.recoveryWarning).toBeUndefined();
+ const data=JSON.parse(final.messages.filter(m=>m.toolName==='annotation_read').at(-1)!.text).data;
+ expect(data.objects.items.map((x:{objectId:string})=>x.objectId)).toEqual(['a','b']);expect(data.query.layerIds).toEqual(['meeting']);
+});
+
+it('rejects foreign and missing reference locators and extra selectors instead of falling back to a whole version',async()=>{
+ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
+ const {lab,session,draft,calls}=await setup((_ctx,index)=>index===0?{text:'记录引用'}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference}}]}:{text:'读取被拒绝'});
+ const request=lab.start(session.id,'引用一个对象',{annotationRefs:[{...draft.ref!,objectIds:['a']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
+ const other=await lab.createSession(session.workspaceId,'alpha');const failed=await ask(lab,other.id);
+ expect(failed.messages.find(m=>m.toolName==='annotation_read')).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
+ const tool=calls[0].context.tools!.find(t=>t.name==='annotation_read')!;
+ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference,layerIds:['meeting']}})).toThrow();
+ expect(()=>validateToolArguments(tool,{type:'toolCall',id:'bad',name:tool.name,arguments:{mode:'reference',reference:{...reference,index:-1}}})).toThrow();
+});
+
+it('keeps split object references distinct and rejects an absent index without reading the entire set',async()=>{
+ let reference:{requestId:string;index:number}={requestId:randomUUID(),index:0};
+ const {lab,session,draft}=await setup((_ctx,index)=>index===0?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:1},fields:['geometry']}}]}:index===1?{tools:[{name:'annotation_read',arguments:{mode:'reference',reference:{...reference,index:2}}}]}:{text:'只读取指定第二个对象；缺失引用未回退'});
+ const request=lab.start(session.id,'分别引用两点',{annotationRefs:[{...draft.ref!,objectIds:['a']},{...draft.ref!,objectIds:['b']}]},'alpha');reference={requestId:request.requestId,index:0};await request.run(()=>{});
+ const reads=lab.get(session.id,'alpha').messages.filter(m=>m.toolName==='annotation_read');
+ expect(JSON.parse(reads[0].text).data).toMatchObject({ref:draft.ref,query:{objectIds:['b']},objects:{total:1,items:[{objectId:'b'}]}});
+ expect(reads[1]).toMatchObject({isError:true,text:expect.stringContaining('ANNOTATION_REFERENCE_NOT_FOUND')});
 });

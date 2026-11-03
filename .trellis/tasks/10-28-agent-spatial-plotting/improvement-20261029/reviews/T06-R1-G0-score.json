@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T06-R1-G0",
+  "strict": "pass",
+  "reason": "4点名单完整；全层4与buffer输入1正确区分；结果引用、半径、近似说明与工具一致，无写入。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T06-R1-G0/gate/1-checkpoint.json"
+  ]
+}

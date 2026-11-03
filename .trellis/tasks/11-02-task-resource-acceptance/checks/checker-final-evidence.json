@@ -1,0 +1,213 @@
+{
+  "entries": [
+    {
+      "entryId": "P01-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 4,
+      "ledgerRequests": 4,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": false,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "P02-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": false,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "P03-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 6,
+      "ledgerRequests": 6,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": false,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "P04-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 4,
+      "ledgerRequests": 4,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": false,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A01-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 7,
+      "ledgerRequests": 7,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A02-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 4,
+      "ledgerRequests": 4,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A03-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 3,
+      "ledgerRequests": 3,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A04-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 3,
+      "ledgerRequests": 3,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A05-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A06-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A07-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A08-1",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 7,
+      "ledgerRequests": 7,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A08-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 7,
+      "ledgerRequests": 7,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A07-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A06-2",
+      "resultStatus": "incomplete",
+      "stateEqual": true,
+      "requestArtifacts": 2,
+      "ledgerRequests": 2,
+      "toolMessagesNotDeliveredToNextModel": [
+        "f4b11580",
+        "bdb8be20"
+      ],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A05-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 5,
+      "ledgerRequests": 5,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A04-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 2,
+      "ledgerRequests": 2,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A03-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 4,
+      "ledgerRequests": 4,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A02-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 4,
+      "ledgerRequests": 4,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    },
+    {
+      "entryId": "A01-2",
+      "resultStatus": "trajectory_recorded",
+      "stateEqual": true,
+      "requestArtifacts": 3,
+      "ledgerRequests": 3,
+      "toolMessagesNotDeliveredToNextModel": [],
+      "firstReviewExists": true,
+      "firstReviewEvidenceHashesMatch": true
+    }
+  ],
+  "usage": {
+    "requests": 90,
+    "input": 2900996,
+    "output": 57986
+  },
+  "note": "A06-2 rejected tool result and final annotation_list not sent to another model because host stopped; preserved in native history/public error, not a delivery omission."
+}

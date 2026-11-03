@@ -1,0 +1,137 @@
+{
+  "rows": [
+    {
+      "blindId": "14e86d52-b572-45e2-9e6f-3769edc5ee9b",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/model-visible-evidence.json#/observedMessages/5",
+        ".local/spatial-r14/closeout-blind-chunk-03/14e86d52-b572-45e2-9e6f-3769edc5ee9b/completion.json"
+      ],
+      "reason": "分别核对草稿基点、两项来源候选和乙的再次读取；甲测距222.39016046694258m，乙无geometry。答案同时列出已知距离和缺口，明确不能完整排序，满足D08的数据不足完成路径。序号1在全文中明确限定为唯一可计算项，并未断言甲在完整候选中最近。baseRef=null由实际wire宿主上下文提供；各有1辆的附加说明限定为记录数量。",
+      "clarity": "甲表格序号1可去掉以免误读，但后文明确相对次序未知，不判排序错误。"
+    },
+    {
+      "blindId": "2dd9ef6b-3923-4fe4-a158-4c529cac7346",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/model-visible-evidence.json#/observedMessages/2",
+        ".local/spatial-r14/closeout-blind-chunk-03/2dd9ef6b-3923-4fe4-a158-4c529cac7346/completion.json"
+      ],
+      "reason": "草稿读取确定唯一图层dock-points和区域dock-zone；classify_points完整分类三候选，内部2、边界0、外部1。答案列栈桥仓、堤头仓及2点，排除外港仓，边界0及不加距离容差均有工具依据。状态不变。",
+      "clarity": "方法和边界0之间的“因此”衔接不够精准；数值本身来自分类回执，不据此判事实错误。"
+    },
+    {
+      "blindId": "7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/model-visible-evidence.json#/observedMessages/4",
+        ".local/spatial-r14/closeout-blind-chunk-03/7a62a2cc-0b08-4f96-bf7c-a4b2cee9f5ee/completion.json"
+      ],
+      "reason": "完整两候选的计算实际返回SPATIAL_GEOMETRY_MISSING，随后仅对甲测距222.39016046694258m。最终如实解释乙缺几何、无法给出两对象完整排名，不把单独甲的结果冒充完整排序。已知距离及工具错误均在回答前可见。状态不变。",
+      "clarity": "无影响判定的表达问题。"
+    },
+    {
+      "blindId": "c7641ced-8850-4aa4-b555-d126492fcc4a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/model-visible-evidence.json#/observedMessages/2",
+        ".local/spatial-r14/closeout-blind-chunk-03/c7641ced-8850-4aa4-b555-d126492fcc4a/completion.json"
+      ],
+      "reason": "读取全部三候选后用固定草稿区域作contains筛选，完整结果仅栈桥仓、堤头仓。答案两点名单/总数与回执一致。使用filter而不是classify_points属于等价正确方法。参照面所在reference和候选dock-points确为两个图层；全文未把dock-zone冒充图层。只读状态不变。",
+      "clarity": "“未保存分析结果”按本次未执行用户保存操作理解；固定resultRef的自动产生不等于用户保存。"
+    },
+    {
+      "blindId": "fd28f36f-de4e-4768-a434-d92b5ef6d659",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "两项候选都确实存在，且都是点对象（WGS84）"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/visibleTranscript/10",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/judge-input.json#/stateEvidence/0",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/model-visible-evidence.json#/observedMessages/5",
+        ".local/spatial-r14/closeout-blind-chunk-03/fd28f36f-de4e-4768-a434-d92b5ef6d659/completion.json"
+      ],
+      "reason": "主任务已完成：完整候选甲乙均查询，乙缺geometry使首次计算失败；单独甲得到222.39016046694258m，最终给约222.4m并解释无法完成两项排序。但“且都是点对象（WGS84）”处于“核实情况”下，把乙未被证实的几何类型说成事实。乙的查询仅给objectType=resource，geometry缺失；工具错误同样不提供Point类型。后文承认缺失不补足前句依据，故最终事实与严格失败。这里不宣称乙一定不是点，只判附加事实没有证据。WGS84作为平台计算约定本身不另判错。",
+      "clarity": "应写“两项资源候选存在，甲有点几何，乙未返回几何”。业务泛称资源点与已核实具体几何类型应区分；本句在核实语境中超出普通称呼。",
+      "failureCategory": "unsupported_geometry_type_claim"
+    }
+  ],
+  "reviewProcess": {
+    "scope": "all 5 anonymous records",
+    "independentDecisionBeforeReadingPrimary": true,
+    "primaryReadOnlyAfterIndependentDecisionReportedToParent": true,
+    "privateReasoningRead": false,
+    "groupMappingRead": false,
+    "modelApiCalls": 0
+  },
+  "comparison": {
+    "primaryPath": ".trellis/tasks/10-15-agent-map-spatial/r14-20261026/closeout-review-03.json",
+    "primarySha256": "f48b043a7af9c7c01e203b3290aa4a767d172c6b658b81f16b4be67d321fa628",
+    "verdictDifferences": [],
+    "rationaleClarification": "WGS84的平台计算约定不单独判错；明确失败依据为把无geometry的乙断言成已核实Point。未改任何初评。"
+  },
+  "totals": {
+    "reviewed": 5,
+    "mainPass": 5,
+    "strictPass": 4,
+    "strictFail": 1,
+    "pending": 0
+  }
+}

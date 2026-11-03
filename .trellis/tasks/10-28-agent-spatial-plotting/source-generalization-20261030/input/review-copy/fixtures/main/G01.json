@@ -1,0 +1,309 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G01",
+  "logical_source_system_id": "fixture-source-g01",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g01-d-region",
+          "name": "桐港区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  118.24,
+                  24.47
+                ],
+                [
+                  118.244,
+                  24.47
+                ],
+                [
+                  118.244,
+                  24.474
+                ],
+                [
+                  118.24,
+                  24.474
+                ],
+                [
+                  118.24,
+                  24.47
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g01-d-p01",
+          "name": "梧桐甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              118.2408,
+              24.4708
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g01-d-p02",
+          "name": "梧桐乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              118.2412,
+              24.4728
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g01-d-p03",
+          "name": "梧桐丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              118.2428,
+              24.4708
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g01-d-p04",
+          "name": "梧桐丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              118.2432,
+              24.4728
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g01-d-p05",
+          "name": "梧桐戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              118.247,
+              24.4708
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "area",
+          "objectId": "g01-s-region"
+        },
+        "name": "桐港区",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                118.242,
+                24.47
+              ],
+              [
+                118.246,
+                24.47
+              ],
+              [
+                118.246,
+                24.474
+              ],
+              [
+                118.242,
+                24.474
+              ],
+              [
+                118.242,
+                24.47
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g01",
+              "objectType": "resource",
+              "objectId": "g01-s-p01"
+            },
+            {
+              "systemId": "fixture-source-g01",
+              "objectType": "resource",
+              "objectId": "g01-s-p02"
+            },
+            {
+              "systemId": "fixture-source-g01",
+              "objectType": "resource",
+              "objectId": "g01-s-p03"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "resource",
+          "objectId": "g01-s-p01"
+        },
+        "name": "青桐甲",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2429,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "resource",
+          "objectId": "g01-s-p02"
+        },
+        "name": "青桐乙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2449,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "resource",
+          "objectId": "g01-s-p03"
+        },
+        "name": "青桐丙",
+        "revision": 1,
+        "areaIds": [
+          "g01-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2453,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "resource",
+          "objectId": "g01-s-p04"
+        },
+        "name": "青桐丁",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2471,
+            24.4709
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g01",
+          "objectType": "resource",
+          "objectId": "g01-s-p05"
+        },
+        "name": "青桐戊",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            118.2474,
+            24.4729
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

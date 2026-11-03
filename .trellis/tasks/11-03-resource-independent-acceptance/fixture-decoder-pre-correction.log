@@ -1,0 +1,41 @@
+✔ exact twelve reviewed cases and exact user text; no copied old-round inputs (3.717373ms)
+✖ every fixture uses real contract decoders; import intents never fabricate associations (55.646535ms)
+✔ source rows and annotation names, exact entity IDs and Point coordinates match reviewed tables (4.695316ms)
+✔ independent geometry oracle verifies interior, boundary, exterior and unusable positions (2.745603ms)
+✔ source fact evidence is attached per fact and time shifts with one immutable trial anchor (4.44991ms)
+✔ N01 and P02 retain terminal business partial; paging requirement is explicit (0.486129ms)
+✔ N02 complete compatible members independently union to five, with readable names and single import (0.787694ms)
+✔ N03 unknown intersection remains missing, independent boats union exactly five (0.431085ms)
+✔ N04 expired availability leaves record and relation valid; equal-current opposing facts retained (0.532202ms)
+✔ N05 missing member stays absent and site/estimated coordinates do not repair actual positions (0.836966ms)
+✔ P03/N06 hidden selection only controller-side; N07 comparison has no rescuing choice (0.697487ms)
+✔ P04 source update uses actual update timestamp without mutating old facts (0.757209ms)
+✔ N08 target layer two-turn meanings and positions never include decoy (0.414822ms)
+✔ runtime-visible modules cannot load independent oracle or product summary to derive expected facts (13.654129ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 13
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1908.984542
+
+✖ failing tests:
+
+test at .trellis/tasks/11-03-resource-independent-acceptance/fixtures.test.ts:1:2293
+✖ every fixture uses real contract decoders; import intents never fabricate associations (55.646535ms)
+  Error: 查询参数无效，请核对字段、标识、时间或分页条件。
+      at invalid (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab/src/context/validation.ts:5:23)
+      at contextRecord (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab/src/context/validation.ts:9:112)
+      at situationObject (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab/src/context/validation.ts:100:15)
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.trellis/tasks/11-03-resource-independent-acceptance/fixtures.test.ts:44:31)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'CONTEXT_INVALID_ARGUMENT',
+    statusCode: 400
+  }

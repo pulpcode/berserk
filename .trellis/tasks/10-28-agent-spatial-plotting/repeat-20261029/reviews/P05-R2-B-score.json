@@ -1,0 +1,16 @@
+{
+  "id": "P05-R2-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "先保存缺少本轮读取依据被拒后补读并成功保存同一700米固定范围，补plan备注正确，旧对象保留；恢复错误未造成错误事实或漏做要求。",
+  "evidence": [
+    "P05-R2-B/gate/2-checkpoint.json",
+    "P05-R2-B/browser-review.json"
+  ],
+  "clarity": [],
+  "browser": "pass"
+}

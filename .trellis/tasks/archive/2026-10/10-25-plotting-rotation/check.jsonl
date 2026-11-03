@@ -1,0 +1,5 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端规范与质量检查入口"}
+{"file": ".trellis/spec/frontend/map-symbols.md", "reason": "标绘、符号、预览、相机与生命周期契约"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "现有持久化、权限、编辑依据与冲突边界"}
+{"file": ".trellis/spec/backend/situation-map.md", "reason": "来源隔离与地图、底图所有权"}
+{"file": ".trellis/tasks/10-25-plotting-rotation/research/rotation-context.md", "reason": "当前旋转路径与手柄稳定性风险"}

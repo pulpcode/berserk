@@ -1,0 +1,23 @@
+{
+  "actualBrowser": true,
+  "apiMocked": false,
+  "sendCount": 1,
+  "sessionId": "01a1a05f-f10c-735c-9dbe-d080a9f2d7b9",
+  "taskId": "02468617-aec5-4318-a669-751b42080247",
+  "selectedWithoutReference": false,
+  "explicitFixedReferences": [
+    {
+      "setId": "7fbdf36f-e651-4dc4-9b33-e907365a6f08",
+      "revision": 1,
+      "layerIds": [
+        "n08-target"
+      ]
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "01-before-selection.png",
+    "03-explicit-references.png",
+    "04-after-reply.png"
+  ]
+}

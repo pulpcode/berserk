@@ -1,0 +1,52 @@
+(node:88816) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 24 frozen tasks, six historical, 144 balanced independent slots and exact prompt extraction (4.098391ms)
+✔ only D05/D06 scripted choices; anticipated gaps and optional invitations do not stop (2.139983ms)
+▶ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries
+  ✔ D01 (9931.772017ms)
+  ✔ D02 (8885.087671ms)
+  ✔ D03 (9481.070254ms)
+  ✖ D04 (9078.03666ms)
+  ✔ D05 (8988.21665ms)
+  ✔ D06 (9241.90024ms)
+  ✔ D07 (8963.991928ms)
+  ✔ D08 (9041.463888ms)
+  ✔ D09 (9355.874251ms)
+  ✔ D10 (9203.990729ms)
+  ✔ D11 (9007.823384ms)
+  ✔ D12 (9609.945776ms)
+  ✔ D13 (9192.152013ms)
+  ✔ D14 (9447.321799ms)
+  ✔ D15 (9150.023227ms)
+  ✔ D16 (9373.796037ms)
+  ✔ D17 (9343.465864ms)
+  ✔ D18 (9218.977645ms)
+  ✔ D19 (9141.339445ms)
+  ✔ D20 (9393.670652ms)
+  ✔ D21 (9217.339049ms)
+  ✔ D22 (9106.578743ms)
+  ✔ D23 (9610.166759ms)
+  ✔ D24 (9189.810563ms)
+✖ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries (225680.068076ms)
+✔ source customizer leaves historical source data byte-equivalent (0.363587ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 26
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 228662.558698
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:1:5109
+✖ D04 (9078.03666ms)
+  Error: POST /api/context/situation: HTTP 502
+      at mapTrialRequest (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/experiments/harness-lab/scripts/probe-situation-map.ts:57:27)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:53:17)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r14-20261026/cases.test.ts:43:24)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)

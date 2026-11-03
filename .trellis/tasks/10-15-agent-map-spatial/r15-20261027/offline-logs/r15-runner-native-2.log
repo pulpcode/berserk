@@ -1,0 +1,171 @@
+(node:53302) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ missing freeze refuses before secrets and does not claim live slot (273.621059ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"Source drift\n+ actual - expected\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n      'case-materials.json': 'ff1c8be0d53053f7c8c26ed757556d6dc82b50a4714a2097604d42666c017f6e',\n      'case-specs.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n+     'cases-http.test.ts': 'a0edf1eb2c9e45287409a63bc64a0612303dcd3e6008a220fff9d5afadc60ecc',\n-     'cases-http.test.ts': '1ce9d95c824116c26065ce97f1af2a4ecf6c071a141eb9c8418fee0ec2d34e2e',\n      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n      'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n+     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n-     'cases.ts': '3c8f953fe47304b85db466110e0d77d562f4844e695e9f2961773bbe97580d80',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n","completed":1,"planned":16,"usage":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0}}
+✖ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (17630.673235ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"provider_http_429","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider http_error preserves first failure and never retries (17197.215259ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n+     'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n-     'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n      'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n","completed":1,"planned":4,"usage":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0}}
+✖ provider response_model_drift preserves first failure and never retries (17930.813232ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"unknown_or_empty_usage","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider missing_usage preserves first failure and never retries (16290.411169ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n        'src/contracts/annotations.ts': 'd9397adf8d73c0dd8a0c622a19f599d19022285c920ed718409cfaa7fb11bc32',\n+       'src/contracts/spatial.ts': '43c6c57a17986059286a5f12558c90c76384e1a477a7571c128fc6222977862e',\n-       'src/contracts/spatial.ts': '15135e15a5bd8e67cd2dc8af624c84c9831e3c3301bf39c530e128fd7ff408e8',\n        'src/pi/annotation-results.ts': '2bab2614c0da23bd739e3f81bec014ecf32239b115c56dccebfd9270204a9678',\n        'src/pi/spatial-results.ts': '71a071e6a993dad3521acbeb236a6314f78009dc040d78281e4eca4570b78bc2'\n      }\n    },\n    schedule: [\n","completed":1,"planned":4,"usage":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0}}
+✖ provider truncated preserves first failure and never retries (23981.306609ms)
+{"entry":"P02-1-GS","status":"incomplete","stop":"Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n      'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n+     'cases.ts': '06c235bcbf98dd49d25db606a7353528b4b9e960308b90db1c2089787a4092c0',\n-     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n...\n      'review-rules.md': 'b7bca0ff1b38cfff2f348b32942fb7a0c3209cc10807d97ba8716a37271b1e91',\n+     'review-tools.test.ts': '8e83e4186c3d9a78d1196c788d530e0cf6dbdf96ab016e8b84684ad6e5dc0810',\n      'review-tools.ts': 'a4cc69ad01b303908f92f8bceff1e5bb1c3cd65a11c54fb620be358ce6a7638f',\n      'runtime.ts': 'f5b73a4c53b46848f09a681e118ea485404a9b3dfe8b1981fa37d86a77ac58ab',\n      'schedule.json': '9ceaf5c01747f93e2301ee8a941d1aee576bf67438de2e10644d540cb8314302',\n      'skill-candidates.json': '25a59f07add57212d9e0383315fc491f88da611c86aa9bee8a2fce426f502c73',\n      'tsconfig.json': '57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10'\n","completed":1,"planned":4,"usage":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0}}
+✖ unmapped plain clarification remains pending and independent tasks continue (18359.834086ms)
+{"entry":"P02-1-GS","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"P02-1-GT","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":2,"planned":4,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"P02-1-GST","status":"incomplete","stop":"parent_schema_drift\n+ actual - expected\n\n+ 'e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1'\n- '38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606'\n","completed":3,"planned":4,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+✖ unmapped api clarification remains pending and independent tasks continue (20745.115873ms)
+✔ offline gate requires approval evidence matching exact frozen code (1.016654ms)
+✔ reading an old buffer does not count as a new generation (0.395581ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 5
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 136490.252688
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:1424
+✖ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (17630.673235ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"P01-1-G0","entryId":"P01-1-G0","caseId":"P01","group":"G0","round":1,"repetition":1,"ordinal":1,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1075,"initializationMs":3484,"prepared":true,"startedAt":"2026-10-27T09:04:20.995Z","blindId":"ebe12a25-7545-42a5-8e22-da2449a91d92","stop":"Source drift\n+ actual - expected\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n      'case-materials.json': 'ff1c8be0d53053f7c8c26ed757556d6dc82b50a4714a2097604d42666c017f6e',\n      'case-specs.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n+     'cases-http.test.ts': 'a0edf1eb2c9e45287409a63bc64a0612303dcd3e6008a220fff9d5afadc60ecc',\n-     'cases-http.test.ts': '1ce9d95c824116c26065ce97f1af2a4ecf6c071a141eb9c8418fee0ec2d34e2e',\n      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n      'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n+     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n-     'cases.ts': '3c8f953fe47304b85db466110e0d77d562f4844e695e9f2961773bbe97580d80',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n","endedAt":"2026-10-27T09:04:21.500Z","elapsedMs":505},{"id":"P01-1-GS","entryId":"P01-1-GS","caseId":"P01","group":"GS","round":1,"repetition":1,"ordinal":2,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1007,"initializationMs":3346,"prepared":true},{"id":"P01-1-GT","entryId":"P01-1-GT","caseId":"P01","group":"GT","round":1,"repetition":1,"ordinal":3,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1091,"initializationMs":2907,"prepared":true},{"id":"P01-1-GST","entryId":"P01-1-GST","caseId":"P01","group":"GST","round":1,"repetition":1,"ordinal":4,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":900,"initializationMs":3057,"prepared":true},{"id":"P07-1-GT","entryId":"P07-1-GT","caseId":"P07","group":"GT","round":1,"repetition":1,"ordinal":25,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P07-1-GST","entryId":"P07-1-GST","caseId":"P07","group":"GST","round":1,"repetition":1,"ordinal":26,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P07-1-G0","entryId":"P07-1-G0","caseId":"P07","group":"G0","round":1,"repetition":1,"ordinal":27,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P07-1-GS","entryId":"P07-1-GS","caseId":"P07","group":"GS","round":1,"repetition":1,"ordinal":28,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P08-1-GST","entryId":"P08-1-GST","caseId":"P08","group":"GST","round":1,"repetition":1,"ordinal":29,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P08-1-G0","entryId":"P08-1-G0","caseId":"P08","group":"G0","round":1,"repetition":1,"ordinal":30,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P08-1-GS","entryId":"P08-1-GS","caseId":"P08","group":"GS","round":1,"repetition":1,"ordinal":31,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P08-1-GT","entryId":"P08-1-GT","caseId":"P08","group":"GT","round":1,"repetition":1,"ordinal":32,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P12-1-GST","entryId":"P12-1-GST","caseId":"P12","group":"GST","round":1,"repetition":1,"ordinal":45,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P12-1-G0","entryId":"P12-1-G0","caseId":"P12","group":"G0","round":1,"repetition":1,"ordinal":46,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P12-1-GS","entryId":"P12-1-GS","caseId":"P12","group":"GS","round":1,"repetition":1,"ordinal":47,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0},{"id":"P12-1-GT","entryId":"P12-1-GT","caseId":"P12","group":"GT","round":1,"repetition":1,"ordinal":48,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":0,"completedUserTurns":0}],"total":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0},"stop":"Source drift\n+ actual - expected\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n      'case-materials.json': 'ff1c8be0d53053f7c8c26ed757556d6dc82b50a4714a2097604d42666c017f6e',\n      'case-specs.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n+     'cases-http.test.ts': 'a0edf1eb2c9e45287409a63bc64a0612303dcd3e6008a220fff9d5afadc60ecc',\n-     'cases-http.test.ts': '1ce9d95c824116c26065ce97f1af2a4ecf6c071a141eb9c8418fee0ec2d34e2e',\n      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n      'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n+     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n-     'cases.ts': '3c8f953fe47304b85db466110e0d77d562f4844e695e9f2961773bbe97580d80',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n"}
+  + actual - expected
+  
+  + 'Source drift\n' +
+  +   '+ actual - expected\n' +
+  +   '\n' +
+  +   '  {\n' +
+  +   '    automaticResume: false,\n' +
+  +   '    automaticRetries: false,\n' +
+  +   '    driver: {\n' +
+  +   "      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n" +
+  +   "      'case-materials.json': 'ff1c8be0d53053f7c8c26ed757556d6dc82b50a4714a2097604d42666c017f6e',\n" +
+  +   "      'case-specs.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n" +
+  +   "+     'cases-http.test.ts': 'a0edf1eb2c9e45287409a63bc64a0612303dcd3e6008a220fff9d5afadc60ecc',\n" +
+  +   "-     'cases-http.test.ts': '1ce9d95c824116c26065ce97f1af2a4ecf6c071a141eb9c8418fee0ec2d34e2e',\n" +
+  +   "      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n" +
+  +   "      'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n" +
+  +   "+     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n" +
+  +   "-     'cases.ts': '3c8f953fe47304b85db466110e0d77d562f4844e695e9f2961773bbe97580d80',\n" +
+  +   "      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n" +
+  +   "      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n" +
+  +   "      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n" +
+  +   "      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n" +
+  +   "      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n"
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:55:127)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: "Source drift\n+ actual - expected\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n      'case-materials.json': 'ff1c8be0d53053f7c8c26ed757556d6dc82b50a4714a2097604d42666c017f6e',\n      'case-specs.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n+     'cases-http.test.ts': 'a0edf1eb2c9e45287409a63bc64a0612303dcd3e6008a220fff9d5afadc60ecc',\n-     'cases-http.test.ts': '1ce9d95c824116c26065ce97f1af2a4ecf6c071a141eb9c8418fee0ec2d34e2e',\n      'cases.json': '333760fe7932d53465acbe7f7277453b909d6c3af70da28cfcb80ab82ac9715d',\n      'cases.test.ts': '43eb906e079f9eae60806bd29b9cf2b223c39433e4203be5a7438de92dfc3165',\n+     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n-     'cases.ts': '3c8f953fe47304b85db466110e0d77d562f4844e695e9f2961773bbe97580d80',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n",
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider response_model_drift preserves first failure and never retries (17930.813232ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:7850
+✖ provider truncated preserves first failure and never retries (23981.306609ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:68:143)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:9130
+✖ unmapped plain clarification remains pending and independent tasks continue (18359.834086ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"P02-1-GS","entryId":"P02-1-GS","caseId":"P02","group":"GS","round":1,"repetition":1,"ordinal":5,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1002,"initializationMs":3123,"prepared":true,"startedAt":"2026-10-27T09:05:54.984Z","blindId":"b807779e-21cf-456e-8a14-ceb22104e2bd","stop":"Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n      'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n+     'cases.ts': '06c235bcbf98dd49d25db606a7353528b4b9e960308b90db1c2089787a4092c0',\n-     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n...\n      'review-rules.md': 'b7bca0ff1b38cfff2f348b32942fb7a0c3209cc10807d97ba8716a37271b1e91',\n+     'review-tools.test.ts': '8e83e4186c3d9a78d1196c788d530e0cf6dbdf96ab016e8b84684ad6e5dc0810',\n      'review-tools.ts': 'a4cc69ad01b303908f92f8bceff1e5bb1c3cd65a11c54fb620be358ce6a7638f',\n      'runtime.ts': 'f5b73a4c53b46848f09a681e118ea485404a9b3dfe8b1981fa37d86a77ac58ab',\n      'schedule.json': '9ceaf5c01747f93e2301ee8a941d1aee576bf67438de2e10644d540cb8314302',\n      'skill-candidates.json': '25a59f07add57212d9e0383315fc491f88da611c86aa9bee8a2fce426f502c73',\n      'tsconfig.json': '57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10'\n","endedAt":"2026-10-27T09:05:55.246Z","elapsedMs":262},{"id":"P02-1-GT","entryId":"P02-1-GT","caseId":"P02","group":"GT","round":1,"repetition":1,"ordinal":6,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1388,"initializationMs":3284,"prepared":true},{"id":"P02-1-GST","entryId":"P02-1-GST","caseId":"P02","group":"GST","round":1,"repetition":1,"ordinal":7,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":978,"initializationMs":3275,"prepared":true},{"id":"P02-1-G0","entryId":"P02-1-G0","caseId":"P02","group":"G0","round":1,"repetition":1,"ordinal":8,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1277,"initializationMs":3529,"prepared":true}],"total":{"requests":0,"input":0,"output":0,"afp":0,"unknown":0},"stop":"Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n      'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n+     'cases.ts': '06c235bcbf98dd49d25db606a7353528b4b9e960308b90db1c2089787a4092c0',\n-     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n...\n      'review-rules.md': 'b7bca0ff1b38cfff2f348b32942fb7a0c3209cc10807d97ba8716a37271b1e91',\n+     'review-tools.test.ts': '8e83e4186c3d9a78d1196c788d530e0cf6dbdf96ab016e8b84684ad6e5dc0810',\n      'review-tools.ts': 'a4cc69ad01b303908f92f8bceff1e5bb1c3cd65a11c54fb620be358ce6a7638f',\n      'runtime.ts': 'f5b73a4c53b46848f09a681e118ea485404a9b3dfe8b1981fa37d86a77ac58ab',\n      'schedule.json': '9ceaf5c01747f93e2301ee8a941d1aee576bf67438de2e10644d540cb8314302',\n      'skill-candidates.json': '25a59f07add57212d9e0383315fc491f88da611c86aa9bee8a2fce426f502c73',\n      'tsconfig.json': '57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10'\n"}
+  + actual - expected
+  
+  + 'Source drift\n' +
+  +   '+ actual - expected\n' +
+  +   '... Skipped lines\n' +
+  +   '\n' +
+  +   '  {\n' +
+  +   '    automaticResume: false,\n' +
+  +   '    automaticRetries: false,\n' +
+  +   '    driver: {\n' +
+  +   "      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n" +
+  +   '...\n' +
+  +   "      'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n" +
+  +   "+     'cases.ts': '06c235bcbf98dd49d25db606a7353528b4b9e960308b90db1c2089787a4092c0',\n" +
+  +   "-     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n" +
+  +   "      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n" +
+  +   "      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n" +
+  +   "      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n" +
+  +   "      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n" +
+  +   "      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n" +
+  +   '...\n' +
+  +   "      'review-rules.md': 'b7bca0ff1b38cfff2f348b32942fb7a0c3209cc10807d97ba8716a37271b1e91',\n" +
+  +   "+     'review-tools.test.ts': '8e83e4186c3d9a78d1196c788d530e0cf6dbdf96ab016e8b84684ad6e5dc0810',\n" +
+  +   "      'review-tools.ts': 'a4cc69ad01b303908f92f8bceff1e5bb1c3cd65a11c54fb620be358ce6a7638f',\n" +
+  +   "      'runtime.ts': 'f5b73a4c53b46848f09a681e118ea485404a9b3dfe8b1981fa37d86a77ac58ab',\n" +
+  +   "      'schedule.json': '9ceaf5c01747f93e2301ee8a941d1aee576bf67438de2e10644d540cb8314302',\n" +
+  +   "      'skill-candidates.json': '25a59f07add57212d9e0383315fc491f88da611c86aa9bee8a2fce426f502c73',\n" +
+  +   "      'tsconfig.json': '57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10'\n"
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:73:160)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: "Source drift\n+ actual - expected\n... Skipped lines\n\n  {\n    automaticResume: false,\n    automaticRetries: false,\n    driver: {\n      'budget.ts': '750459dba976879d5c7a1d99584e9db037a3ac9e0a57d4412c7df8d1b3b3bad6',\n...\n      'cases.test.ts': 'a3a3f0713a47e83c7c9a80d68aadc2fafdeb261159533678d097fd0405d13b47',\n+     'cases.ts': '06c235bcbf98dd49d25db606a7353528b4b9e960308b90db1c2089787a4092c0',\n-     'cases.ts': 'e784c0c51c71c8f0b74342e7fdb548b0e17f7ca6b5c060b810fb45ed26089275',\n      'check.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'data.ts': 'c1d4186919c5f00cb341269398685e7fbbb2c27da54d5887a053b4e6a732dc26',\n      'design.md': '4bf98f8d8b6ee8432de29fcf2db24c846c0f286431926cc70fa51a4a13763adc',\n      'implement.jsonl': '777cdcaaef7a892cd6d484fcc112056996cd3dfcf669b728e70c3b04d4baecf4',\n      'implement.md': '392179096afe9821e1f15c68f19e1e293bf571aaba6abfcb7ae337620952aa9e',\n...\n      'review-rules.md': 'b7bca0ff1b38cfff2f348b32942fb7a0c3209cc10807d97ba8716a37271b1e91',\n+     'review-tools.test.ts': '8e83e4186c3d9a78d1196c788d530e0cf6dbdf96ab016e8b84684ad6e5dc0810',\n      'review-tools.ts': 'a4cc69ad01b303908f92f8bceff1e5bb1c3cd65a11c54fb620be358ce6a7638f',\n      'runtime.ts': 'f5b73a4c53b46848f09a681e118ea485404a9b3dfe8b1981fa37d86a77ac58ab',\n      'schedule.json': '9ceaf5c01747f93e2301ee8a941d1aee576bf67438de2e10644d540cb8314302',\n      'skill-candidates.json': '25a59f07add57212d9e0383315fc491f88da611c86aa9bee8a2fce426f502c73',\n      'tsconfig.json': '57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10'\n",
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:9130
+✖ unmapped api clarification remains pending and independent tasks continue (20745.115873ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"P02-1-GS","entryId":"P02-1-GS","caseId":"P02","group":"GS","round":1,"repetition":1,"ordinal":5,"split":"development","status":"waiting_user","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1035,"initializationMs":3138,"prepared":true,"startedAt":"2026-10-27T09:06:14.705Z","blindId":"e740fb45-99fd-42df-a0ff-aee22e71600c","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:06:15.355Z","elapsedMs":650},{"id":"P02-1-GT","entryId":"P02-1-GT","caseId":"P02","group":"GT","round":1,"repetition":1,"ordinal":6,"split":"development","status":"waiting_user","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1010,"initializationMs":3529,"prepared":true,"startedAt":"2026-10-27T09:06:15.356Z","blindId":"a7f7ae78-f6b3-4e4d-a650-e7771196ccb2","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:06:15.725Z","elapsedMs":369},{"id":"P02-1-GST","entryId":"P02-1-GST","caseId":"P02","group":"GST","round":1,"repetition":1,"ordinal":7,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1039,"initializationMs":4180,"prepared":true,"startedAt":"2026-10-27T09:06:15.726Z","blindId":"d3118d54-6095-4a37-b060-811f3abf8f6f","stop":"parent_schema_drift\n+ actual - expected\n\n+ 'e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1'\n- '38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606'\n","endedAt":"2026-10-27T09:06:15.985Z","elapsedMs":259},{"id":"P02-1-G0","entryId":"P02-1-G0","caseId":"P02","group":"G0","round":1,"repetition":1,"ordinal":8,"split":"development","status":"not_executed","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1497,"initializationMs":3763,"prepared":true}],"total":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0},"stop":"parent_schema_drift\n+ actual - expected\n\n+ 'e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1'\n- '38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606'\n"}
+  + actual - expected
+  
+  + 'parent_schema_drift\n' +
+  +   '+ actual - expected\n' +
+  +   '\n' +
+  +   "+ 'e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1'\n" +
+  +   "- '38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606'\n"
+  - undefined
+  
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:73:160)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: "parent_schema_drift\n+ actual - expected\n\n+ 'e36f1998866dabb99e0166e2a6a9bf1a7d801c6a4727f26e561721b3872604a1'\n- '38d5cde37173ec9ae55b9abe587a0df3980acb86773b64f0f4af6adff35cf606'\n",
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

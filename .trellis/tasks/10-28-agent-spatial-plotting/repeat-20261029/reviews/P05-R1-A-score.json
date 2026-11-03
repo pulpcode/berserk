@@ -1,0 +1,16 @@
+{
+  "id": "P05-R1-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "两轮完成700米固定范围保存及同对象plan/备注，无重算，旧对象保留，过程/最终事实与实际回执一致；进入浏览器同对象核验。",
+  "evidence": [
+    "P05-R1-A/gate/2-checkpoint.json",
+    "P05-R1-A/browser-review.json"
+  ],
+  "clarity": [],
+  "browser": "pass"
+}

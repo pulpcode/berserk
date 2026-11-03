@@ -1,0 +1,104 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V32",
+  "caseId": "G03",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->draft"
+  ],
+  "missing_pairs": [
+    "draft->source"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "default_source_boundary": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "0adb7fe9"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "draft_hash_after": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "66c30235-a77b-4e35-906e-7db8e18748d0",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "66c30235-a77b-4e35-906e-7db8e18748d0",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "unresolved_reference_source",
+    "missing_required_pairs"
+  ],
+  "observations": [
+    "已算草稿->草稿名单数量正确，但参照来源未解决；未报另一要求组合故geometry_and_members_pass=false。",
+    "候选来源明确为草稿，故default_draft_end=false，仅单列default_draft_boundary=true；不能混入候选来源默认指标。",
+    "全部公开事实均局限于实际读取/计算，有完整支持。未读取来源不是事实失败。"
+  ],
+  "evidence": [
+    {
+      "message_id": "4933f27d",
+      "quote": "用于判断范围的是同一版本中 reference 图层的面对象“青岚仓区”",
+      "basis": "用户只固定草稿resources全部候选，并未选参照边界来源。仅call_00_5lu93wwwibbbybl0bvxb37vr计算draft->draft甲乙2，缺draft->source丙丁2条件。",
+      "category": "scope_and_missing_pairs"
+    }
+  ],
+  "default_draft_boundary": true,
+  "optional_boundary_offer": false
+}

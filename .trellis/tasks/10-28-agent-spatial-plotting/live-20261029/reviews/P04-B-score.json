@@ -1,0 +1,14 @@
+{
+  "id": "P04-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "模型第二次读取已是并发更新后的r2，再改heading保存r3，人工补充备注及所有其他属性保留；无实际CAS错误，属于主动重读避开冲突，不宣称已验证错误后恢复。",
+  "evidence": [
+    "P04-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

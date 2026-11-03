@@ -1,5 +1,6 @@
+import { decodeSourceResource, resourceEvidence, RESOURCE_CATEGORIES, RESOURCE_RELATIONS } from '../contracts/task-resources.js';
 import { RequestError } from '../contracts/errors.js';
-import type { ContextData, ContextQueryParams, ContextRef, ContextTool, SituationObject } from '../contracts/context.js';
+import type { ContextData, ContextQueryParams, ContextRef, ContextTool, SituationObject, SituationResourceCoverage } from '../contracts/context.js';
 
 const invalid = () => new RequestError('CONTEXT_INVALID_ARGUMENT', '查询参数无效，请核对字段、标识、时间或分页条件。');
 export function contextRecord(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
@@ -34,7 +35,7 @@ const filters = ['objectRefs', 'areaIds', 'query', 'limit', 'cursor'];
 export function normalizeContextQuery(tool: ContextTool, value: unknown): ContextQueryParams {
   const allowed = tool === 'information_read' ? ['systemId', 'reportId', 'revision']
     : tool === 'information_search' ? ['systemId', 'reportId', 'subjectId', 'from', 'to', ...filters]
-      : ['systemId', 'mode', 'from', 'to', 'after', ...filters];
+      : ['systemId', 'mode', 'from', 'to', 'after', 'objectTypes', 'taskId', 'relation', 'category', ...filters];
   const raw = contextRecord(value, allowed, ['systemId']);
   const result: Record<string, unknown> = {systemId: contextText(raw.systemId)};
   if (tool === 'information_read') {
@@ -52,6 +53,16 @@ export function normalizeContextQuery(tool: ContextTool, value: unknown): Contex
     for (const key of ['from', 'to'] as const) if (raw[key] !== undefined) result[key] = contextTimestamp(raw[key]);
     if (raw.from !== undefined && raw.to !== undefined && Date.parse(String(raw.from)) >= Date.parse(String(raw.to))) throw invalid();
     if (tool === 'situation_query') {
+      if(raw.taskId!==undefined) result.taskId=contextText(raw.taskId);
+      if(raw.relation!==undefined) {if(!RESOURCE_RELATIONS.includes(raw.relation as typeof RESOURCE_RELATIONS[number]) || raw.taskId===undefined) throw invalid();result.relation=raw.relation;}
+      if(raw.category!==undefined) {if(!RESOURCE_CATEGORIES.includes(raw.category as typeof RESOURCE_CATEGORIES[number])) throw invalid();result.category=raw.category;}
+      if ([raw.taskId,raw.relation,raw.category].some(v=>v!==undefined) && (raw.mode!=='current' || (result.objectRefs as ContextRef[]|undefined)?.some(ref=>ref.objectType!=='resource'))) throw invalid();
+      if(raw.objectTypes!==undefined) {
+        const types=textList(raw.objectTypes,true);
+        if(new Set(types).size!==types.length || types.some(t=>!['road','resource','area'].includes(t)) || (result.objectRefs as ContextRef[]|undefined)?.some(ref=>!types.includes(ref.objectType))) throw invalid();
+        if ([raw.taskId,raw.relation,raw.category].some(v=>v!==undefined) && (types.length!==1 || types[0]!=='resource')) throw invalid();
+        result.objectTypes=types;
+      }
       if (raw.mode !== 'current' && raw.mode !== 'changes') throw invalid(); result.mode = raw.mode;
       if (raw.mode === 'current' && ['from', 'to', 'after'].some(key => raw[key] !== undefined)) throw invalid();
       if (raw.after !== undefined) {
@@ -77,12 +88,17 @@ function report(value: unknown, detail: boolean) {
 }
 export function situationObject(value: unknown, systemId: string): SituationObject {
   const keys = ['ref', 'name', 'revision', 'areaIds', 'effectiveAt', 'validTime', 'properties'];
-  const r = contextRecord(value, [...keys, 'geometry'], keys), ref = contextRef(r.ref);
+  const r = contextRecord(value, [...keys, 'geometry', 'resourceData'], keys), ref = contextRef(r.ref);
   if (ref.systemId !== systemId || !['road', 'resource', 'area'].includes(ref.objectType)) throw invalid();
   contextText(r.name, 200); contextInteger(r.revision); textList(r.areaIds); nullableTime(r.effectiveAt); timeRange(r.validTime);
+  if(r.resourceData!==undefined) {
+    if(ref.objectType!=='resource') throw invalid();
+    const data=decodeSourceResource(r.resourceData);
+    if(resourceEvidence(data.resource).some(item=>item.kind==='source' && item.ref.systemId!==systemId)) throw invalid();
+  }
   if (ref.objectType === 'resource') {
-    const p = contextRecord(r.properties, ['availableCount', 'unit'], ['availableCount', 'unit']);
-    contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();
+    const p = contextRecord(r.properties, ['availableCount', 'unit'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    if(Object.keys(p).length) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
   } else if (ref.objectType === 'area') {
     const p = contextRecord(r.properties, ['memberRefs'], ['memberRefs']);
     for (const member of refList(p.memberRefs)) if (member.systemId !== systemId || !['road', 'resource', 'area'].includes(member.objectType)) throw invalid();
@@ -109,6 +125,12 @@ export function situationObject(value: unknown, systemId: string): SituationObje
   return value as SituationObject;
 }
 const sameRef = (a: ContextRef, b: ContextRef) => a.systemId === b.systemId && a.objectType === b.objectType && a.objectId === b.objectId;
+export function situationResourceCoverage(value: unknown): SituationResourceCoverage {
+  const r = contextRecord(value, ['status', 'reason'], ['status']);
+  if (r.status !== 'complete' && r.status !== 'partial') throw invalid();
+  if (r.status === 'partial' || r.reason !== undefined) contextText(r.reason, 1000);
+  return {status: r.status, ...(r.reason === undefined ? {} : {reason: r.reason as string})};
+}
 /** Decode once at the HTTP boundary; retain the exact validated source content. */
 export function decodeContextResponse(tool: ContextTool, params: ContextQueryParams, value: unknown): ContextData {
   try {
@@ -117,7 +139,8 @@ export function decodeContextResponse(tool: ContextTool, params: ContextQueryPar
     const changes = tool === 'situation_query' && !current;
     const keys = ['systemId', 'asOf', ...(detail ? ['item'] : ['items', 'limit', 'nextCursor', 'hasMore', 'timeUnknownCount']),
       ...(current ? ['unknownRefs', 'changeCursor'] : changes ? ['unknownRefs', 'nextAfter'] : [])];
-    const r = contextRecord(value, keys, keys);
+    const r = contextRecord(value, [...keys, ...(current ? ['resourceCoverage'] : [])], keys);
+    if (current && r.resourceCoverage !== undefined) situationResourceCoverage(r.resourceCoverage);
     if (r.systemId !== params.systemId) throw invalid(); contextTimestamp(r.asOf);
     if (detail) {
       report(r.item, true); const item = r.item as Record<string, unknown>;
@@ -137,6 +160,14 @@ export function decodeContextResponse(tool: ContextTool, params: ContextQueryPar
           if (!sameRef(before.ref, after.ref) || before.revision >= after.revision || c.effectiveAt !== after.effectiveAt) throw invalid();
         }
       }, r.hasMore === true);
+      if ((current || changes) && 'mode' in params) {
+        for(const rawItem of r.items as Array<SituationObject | {after:SituationObject}>) {
+          const item='after' in rawItem?rawItem.after:rawItem;
+          if(params.objectTypes && !params.objectTypes.includes(item.ref.objectType)
+            || params.category!==undefined && item.resourceData?.resource.category!==params.category
+            || params.taskId!==undefined && !item.resourceData?.resource.taskRelations?.some(relation=>relation.taskId===params.taskId && (params.relation===undefined || relation.relation===params.relation))) throw invalid();
+        }
+      }
       if (current || changes) {
         const requested = 'objectRefs' in params ? params.objectRefs ?? [] : [];
         for (const ref of refList(r.unknownRefs)) if (!requested.some(item => sameRef(item, ref))) throw invalid();

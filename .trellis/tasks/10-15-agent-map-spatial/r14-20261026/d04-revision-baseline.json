@@ -1,0 +1,373 @@
+{
+  "reason": "D04用户批准改为草稿前的冻结事实，其他23题不得改变",
+  "oldD04Plan": "### D04｜缺少数量字段不能当作零【新构造】\n\n**数据：** 来源西区有车场甲、车场乙、车场丙三个车辆资源对象。甲的 `availableCount=4`，乙缺少该字段，丙为 2；已提供数量的单位均为“辆”。三个对象都能完整读到，不是分页缺失。\n\n**用户原话：**\n\n> 查询 situation 来源西区的车辆资源：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。只查询，不修改。\n\n**应完成：** 3 个资源点；甲 4 辆、丙 2 辆、乙未知；已知记录合计 6 辆，不能确定完整总数。\n\n**重点评分：** 不能把乙按零计，不能把“已知合计 6”说成完整总数；也不应因一项缺失而漏掉用户要求的点数和已知数值。正确说明缺口就是本题完成。\n",
+  "oldD04Spec": {
+    "id": "D04",
+    "title": "缺少数量字段不能当作零【新构造】",
+    "category": "sources",
+    "historical": false,
+    "prompts": [
+      "查询 situation 来源西区的车辆资源：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。只查询，不修改。"
+    ],
+    "expectedDescription": "3 个资源点；甲 4 辆、丙 2 辆、乙未知；已知记录合计 6 辆，不能确定完整总数。",
+    "scoring": "不能把乙按零计，不能把“已知合计 6”说成完整总数；也不应因一项缺失而漏掉用户要求的点数和已知数值。正确说明缺口就是本题完成。"
+  },
+  "oldD04Frozen": {
+    "id": "D04",
+    "title": "缺少数量字段不能当作零【新构造】",
+    "category": "sources",
+    "historical": false,
+    "prompts": [
+      "查询 situation 来源西区的车辆资源：有几个资源点？各点记录了多少辆车？如果数量字段不全，请列出缺失对象，并说明能否确定总车辆数。只查询，不修改。"
+    ],
+    "expectedDescription": "3 个资源点；甲 4 辆、丙 2 辆、乙未知；已知记录合计 6 辆，不能确定完整总数。",
+    "scoring": "不能把乙按零计，不能把“已知合计 6”说成完整总数；也不应因一项缺失而漏掉用户要求的点数和已知数值。正确说明缺口就是本题完成。",
+    "draftLayers": [
+      {
+        "layerId": "reference",
+        "name": "参照对象",
+        "order": 0,
+        "defaultVisible": true,
+        "features": [
+          {
+            "objectId": "origin",
+            "name": "基点",
+            "kind": "point",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114,
+                22.5
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "sourceScene": {
+      "objects": [
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "map-fixture-zone-west"
+          },
+          "name": "西区",
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-west"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  114,
+                  22.5
+                ],
+                [
+                  114.02,
+                  22.5
+                ],
+                [
+                  114.02,
+                  22.52
+                ],
+                [
+                  114,
+                  22.52
+                ],
+                [
+                  114,
+                  22.5
+                ]
+              ]
+            ]
+          },
+          "properties": {
+            "memberRefs": [
+              {
+                "systemId": "situation",
+                "objectType": "resource",
+                "objectId": "map-fixture-vehicles-west-01"
+              },
+              {
+                "systemId": "situation",
+                "objectType": "resource",
+                "objectId": "map-fixture-vehicles-west-02"
+              },
+              {
+                "systemId": "situation",
+                "objectType": "resource",
+                "objectId": "map-fixture-vehicles-west-03"
+              },
+              {
+                "systemId": "situation",
+                "objectType": "road",
+                "objectId": "map-fixture-road-west-01"
+              }
+            ]
+          }
+        },
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "resource",
+            "objectId": "map-fixture-vehicles-west-01"
+          },
+          "name": "车场甲",
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-west"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              114.004,
+              22.504
+            ]
+          },
+          "properties": {
+            "availableCount": 4,
+            "unit": "辆"
+          }
+        },
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "resource",
+            "objectId": "map-fixture-vehicles-west-02"
+          },
+          "name": "车场乙",
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-west"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              114.008,
+              22.508
+            ]
+          },
+          "properties": {}
+        },
+        {
+          "ref": {
+            "systemId": "situation",
+            "objectType": "resource",
+            "objectId": "map-fixture-vehicles-west-03"
+          },
+          "name": "车场丙",
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-west"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              114.012,
+              22.512
+            ]
+          },
+          "properties": {
+            "availableCount": 2,
+            "unit": "辆"
+          }
+        },
+        {
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-west"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": {
+            "from": "2026-10-26T09:00:00+08:00",
+            "to": "2026-10-26T11:00:00+08:00"
+          },
+          "ref": {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "map-fixture-road-west-01"
+          },
+          "name": "西区通道",
+          "properties": {
+            "passability": "open"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                103.8322866,
+                1.3047841
+              ],
+              [
+                103.8323264,
+                1.3047617
+              ],
+              [
+                103.8324948,
+                1.3046666
+              ],
+              [
+                103.8325992,
+                1.304608
+              ],
+              [
+                103.8329914,
+                1.3043877
+              ]
+            ]
+          }
+        },
+        {
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-east"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": {
+            "from": "2026-10-26T09:00:00+08:00",
+            "to": "2026-10-26T11:00:00+08:00"
+          },
+          "ref": {
+            "systemId": "situation",
+            "objectType": "road",
+            "objectId": "map-fixture-road-east-01"
+          },
+          "name": "东区通道",
+          "properties": {
+            "passability": "open"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                103.8351571,
+                1.3032537
+              ],
+              [
+                103.8357661,
+                1.3029095
+              ],
+              [
+                103.8358887,
+                1.3028412
+              ]
+            ]
+          }
+        },
+        {
+          "revision": 1,
+          "areaIds": [
+            "map-fixture-zone-east"
+          ],
+          "effectiveAt": "2026-10-26T09:00:00+08:00",
+          "validTime": {
+            "from": "2026-10-26T09:00:00+08:00",
+            "to": "2026-10-26T11:00:00+08:00"
+          },
+          "ref": {
+            "systemId": "situation",
+            "objectType": "area",
+            "objectId": "map-fixture-zone-east"
+          },
+          "name": "东区",
+          "properties": {
+            "memberRefs": [
+              {
+                "systemId": "situation",
+                "objectType": "road",
+                "objectId": "map-fixture-road-east-01"
+              }
+            ]
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  103.8347,
+                  1.3025
+                ],
+                [
+                  103.8363,
+                  1.3025
+                ],
+                [
+                  103.8363,
+                  1.3039999999999998
+                ],
+                [
+                  103.8347,
+                  1.3039999999999998
+                ],
+                [
+                  103.8347,
+                  1.3025
+                ]
+              ]
+            ]
+          }
+        }
+      ],
+      "reports": [],
+      "asOf": "2026-10-26T09:00:00+08:00"
+    },
+    "expected": {
+      "names": [
+        "车场甲",
+        "车场乙",
+        "车场丙"
+      ],
+      "count": 3,
+      "counts": {
+        "车场甲": 4,
+        "车场乙": null,
+        "车场丙": 2
+      },
+      "knownTotal": 6,
+      "completeTotal": null,
+      "unit": "辆",
+      "expectedMissing": "车场乙.availableCount"
+    }
+  },
+  "other23": {
+    "D01": "2ee187f8979040f8abc2640d1f6297be27ffd822d4f7b4eb515cf7118d9bbfba",
+    "D02": "249980226c3068627b464e91ee510ba8cee939282d14aed5c74aeb590834b32b",
+    "D03": "30606592d57ff78feecd28448401185400cfd05a8fb526de04cf6a0677996e0d",
+    "D05": "8f6853bf1121218eb3241be5cb771ed8f376d93118c5553236c6e262bb0b9581",
+    "D06": "a48ac1bb334cae8c6970d54605a0058cd15b7edb051c422b4000c9d01a176b6c",
+    "D07": "5ff8195d3c9ee8213e4f32568f1927ada1d7e30c84042e745aa2c71e2e2ec087",
+    "D08": "4a0a56b6aa1ec1a07581da337b7eb716b9aa370ace6d3ca245c73d9930517b37",
+    "D09": "48b6071e967937da8f29d85cf86fd545e4e8f0d8a3c085739a1ccb5cca8c083e",
+    "D10": "51656f4582041230c7553647a6bc0eb101e200459e3e58a01966c75dc0f22bcf",
+    "D11": "a3da3b322437a2ac4c4578562ce998bbb095efce21cb7fdd1cff5f7e632f295d",
+    "D12": "4fa78a24ad09b8b4b766944f5e90845f65408b742544da9afea96fa74ce191cf",
+    "D13": "2769273e48f8508424ef9e0c7e20944c96cd0b4bb5966a45690e2f931c0a51cd",
+    "D14": "1f5dafedca6e1e977794659a173d0040b1199cff839e58275b509de49735eb3b",
+    "D15": "127a568fa14bbb2362d2ac1544ff78f25dda7d725865afb5a0cd3e76ed752f0b",
+    "D16": "f5176d2bb2083a90f1d99a6076cc13c32863d4c4bb5bb4b058e31a5c273fb777",
+    "D17": "5e31f80feef9cebd70b336fa2d018df1a7af8ade853d06eab2d762486d451199",
+    "D18": "abd24d4805066032ac4f4b3add133add5abf4688f5ee11f5e689060435280035",
+    "D19": "baf25cd355b9e22adbd0e2e6bcb58182a8319841c846f444d3948e65e8cbe944",
+    "D20": "554b13f993bcf93fb0495baf7950fc56bdd1a24bbc5445d230915dfa231ae6d8",
+    "D21": "8471118f5821c00944b3f5b762bb43f9c7d781a3880320170980acf1c007b7f2",
+    "D22": "47a4c7f2a62c66d231238af28b012cff23f67a7cd688b38be9cbe36d0ce00b11",
+    "D23": "e2d75f1831d45e3af7b41320aad9fd7376f0cc16ebd9be27d4ed7c5554db749b",
+    "D24": "a82f44b45c8d544534c05012956d7d127f9258f919b3af7a6e7c6bc7133cb0de"
+  },
+  "scheduleHash": "929c3a027e6fc92e949c6f2d72f37d3ac9eb1c9724b23d810a619e11d4ef3877",
+  "oldFailureLogs": {
+    "cases-offline-initial.log": "76992f681af800d08305ff355aab050625f1ad62b17876705fff3f24fe2f15b3",
+    "cases-offline-verified.log": "424bd53aaee5ad3aefa79982db75e7e584c16f4284e4b119316a10d66e764340"
+  }
+}

@@ -1,3 +1,4 @@
+import type { SourceResource, TaskResource, RESOURCE_RELATIONS } from './task-resources.js';
 /** Capability-validation contracts; these are not a universal domain data model. */
 export interface ContextRef { systemId: string; objectType: string; objectId: string }
 export interface ContextScopeSnapshot { scopeId: string; systemIds: string[] }
@@ -18,7 +19,7 @@ export interface InformationSearchParams extends ContextFilters {
 }
 export interface InformationReadParams { systemId: string; reportId: string; revision?: number }
 export interface SituationQueryParams extends ContextFilters {
-  systemId: string; mode: 'current' | 'changes'; from?: string; to?: string; after?: string;
+  objectTypes?: string[]; taskId?: string; relation?: typeof RESOURCE_RELATIONS[number]; category?: TaskResource['category']; systemId: string; mode: 'current' | 'changes'; from?: string; to?: string; after?: string;
 }
 export type ContextQueryParams = InformationSearchParams | InformationReadParams | SituationQueryParams;
 export interface ContextTimeRange { from: string | null; to: string | null }
@@ -40,12 +41,15 @@ export interface SituationObject {
   ref: ContextRef; name: string; revision: number; areaIds: string[];
   effectiveAt: string | null; validTime: ContextTimeRange | null;
   geometry?: SituationGeometry | null;
+  resourceData?: SourceResource;
   properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | Record<string, never>;
 }
 export interface SituationChange {
   cursor: string; effectiveAt: string | null; before: SituationObject; after: SituationObject;
 }
-export interface SituationCurrent extends ContextPage<SituationObject> { unknownRefs: ContextRef[]; changeCursor: string }
+/** Source-declared business coverage, independent of whether pagination has finished. */
+export interface SituationResourceCoverage { status: 'complete' | 'partial'; reason?: string }
+export interface SituationCurrent extends ContextPage<SituationObject> { unknownRefs: ContextRef[]; changeCursor: string; resourceCoverage?: SituationResourceCoverage }
 export interface SituationChanges extends ContextPage<SituationChange> { unknownRefs: ContextRef[]; nextAfter: string | null }
 export type ContextData = ContextPage<InformationReportIndex> | InformationDetail | SituationCurrent | SituationChanges;
 export interface MapReference { ref: ContextRef; revision?: number; href: string }

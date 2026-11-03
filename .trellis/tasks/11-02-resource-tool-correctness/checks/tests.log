@@ -1,0 +1,24 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run --reporter=dot tests/resource-summary.test.ts tests/context-resource-query.test.ts tests/task-resource-query.test.ts tests/task-resource-spatial.test.ts tests/pi/task-resource.test.ts tests/pi/task-resource-results.test.ts tests/pi/spatial.test.ts
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:55542) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55544) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55543) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+··············································(node:55540) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55541) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+····················································································
+
+ Test Files  7 passed (7)
+      Tests  130 passed (130)
+   Start at  22:17:29
+   Duration  20.54s (transform 3.18s, setup 0ms, import 10.57s, tests 56.69s, environment 1ms)
+

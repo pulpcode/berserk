@@ -50,3 +50,12 @@
 .analysis-items li { display:flex; gap:4px; margin:4px 0; }
 .analysis-items li>button:first-child { flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; text-align:left; overflow-wrap:anywhere; }
 .analysis-items button[aria-pressed=true] { background:var(--accent-soft); }
+
+.map-entry-context { display:flex; flex:none; align-items:center; justify-content:space-between; gap:8px 16px; flex-wrap:wrap; padding:8px 12px; border-bottom:1px solid var(--line); background:var(--surface,#fff); font-size:12px; }
+.map-entry-context>div { min-width:0; flex:1; }
+.map-entry-context strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+.map-entry-context span,.map-entry-context p { color:var(--muted); }
+.map-entry-context p { margin:3px 0 0; line-height:1.5; }
+.map-entry-context label { display:flex; align-items:center; gap:6px; margin:0; font-size:12px; }
+.map-entry-context select { max-width:240px; min-width:0; padding:5px 8px; border:1px solid var(--line); border-radius:6px; background:var(--surface,#fff); color:var(--ink); }
+.map-entry-context button { flex:none; }

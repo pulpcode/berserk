@@ -1,0 +1,33 @@
+{
+  "id": 45,
+  "entry": "Q20-1-GS",
+  "group": "GS",
+  "turn": 0,
+  "at": "2026-10-28T13:35:31.060Z",
+  "completed": true,
+  "payloadHash": "c086ee64742f812811a2f7e4676fdd5b5b5804b19e7fcc8659f460ddf596192c",
+  "wirePayloadHash": "85243f8b8aee6cf8db91e9871dfd713f3370d9b69a7a8c03a9be238455b74c85",
+  "tools": [
+    {
+      "id": "call_00_xbgt4yzdkkk7lpsrxxvzxwt6",
+      "name": "annotation_read",
+      "arguments": "{\"mode\": \"draft\", \"fields\": [\"geometry\", \"note\"], \"objectIds\": [\"origin\", \"center-b\"]}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 2242,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 1056,
+  "reasoningTokens": 246,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 19938,
+    "completion_tokens": 329
+  },
+  "responseSha256": "621b49e10af2b7d911cf97fa9d837d07aef6950794ad1ec0b65d99f47ee18d86"
+}

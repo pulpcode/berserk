@@ -1,0 +1,62 @@
+{
+  "executed": 8,
+  "recorded": 8,
+  "budget": {
+    "requests": 29,
+    "input": 638445,
+    "output": 13825,
+    "unknown": 0
+  },
+  "freezeUnchanged": true,
+  "freezeHash": "2408d2fa15299524281d8e638fdebec41547c955458aaf602abe540eb616eca1",
+  "allHTTP200": true,
+  "allExpectedModel": true,
+  "providerElapsedMs": 101065,
+  "reasoningTokens": 7277,
+  "effects": [
+    {
+      "caseId": "G01",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G07",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G04",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G05",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G02",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G08",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G03",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    },
+    {
+      "caseId": "G06",
+      "mapUnchanged": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "rawEvidenceFiles": 232,
+  "automaticRetries": false,
+  "additionalTrials": false,
+  "reserveCasesExecuted": 0
+}

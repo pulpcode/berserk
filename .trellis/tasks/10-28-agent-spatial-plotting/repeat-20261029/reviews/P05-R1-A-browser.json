@@ -1,0 +1,20 @@
+{
+  "id": "P05-R1-A",
+  "sessionId": "01a186b8-f678-779e-b6f0-527e0f41bee3",
+  "checkpointHash": "9119843fcceb010fd3fd0e3384bb03ca50c64e4049a820ddb3f66a25b78cc7ab",
+  "detailText": "临时范围\n\n空间标绘整合对照 · 39d11995 · r3 · 派生层 · 本会话可编辑\n\n引用此对象\n查看详情\n编辑属性与坐标\n拖动及顶点编辑\n删除对象",
+  "name": "临时范围",
+  "role": "plan",
+  "note": "待核实",
+  "saveEnabled": true,
+  "mutations": [
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A02-1",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "571be57a",
+    "b89e2cf8"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "两轮合计完成真实用户补充保存于会话、三实际资源/计划/未确认/状态分维清单；最终正确不能抹去前轮留存能力无据说明。",
+  "explanation": "fail",
+  "strict": "fail",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "无写入工具；后前业务状态相同；读取本任务当前草稿和采用版。",
+      "evidenceIds": [
+        "819fcdee",
+        "e044af70",
+        "2cbc9f03",
+        "9c3fa235"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "只报3记录/已知实体1、未可靠关联单列，未以同名或图标合并。",
+      "evidenceIds": [
+        "819fcdee",
+        "e044af70"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "bay related/source unknown/user unavailable区分；草稿available、艇unavailable；计划声明不当实际资源。",
+      "evidenceIds": [
+        "2f8b9109",
+        "819fcdee",
+        "e044af70",
+        "2cbc9f03"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "关系partial、版本独立及未知实体贡献明示；不以未出现当零。",
+      "evidenceIds": [
+        "819fcdee"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A02-1-c01",
+      "statementId": "571be57a",
+      "quote": "已记在这轮对话里，作为**你口述的补充**使用",
+      "availableEvidenceIds": [
+        "2f8b9109"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "原生用户消息保存；未调用任何写入工具。"
+    },
+    {
+      "id": "A02-1-c02",
+      "statementId": "571be57a",
+      "quote": "数量：1 辆（individual，实际资源）",
+      "availableEvidenceIds": [
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "第一请求宿主已按真实sourceRef加载源对象，数量、unknown、坐标120.31/26.32和05:00/05:40有先行上下文依据。"
+    },
+    {
+      "id": "A02-1-c03",
+      "statementId": "571be57a",
+      "quote": "驾驶员电话报告轮胎漏气，当前不能出车",
+      "availableEvidenceIds": [
+        "2f8b9109"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "用户实际原文；未冒充设备簿已核实。"
+    },
+    {
+      "id": "A02-1-c04",
+      "statementId": "571be57a",
+      "quote": "说明这条信息**确实尚未回填**",
+      "availableEvidenceIds": [
+        "2f8b9109",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "用户明确说未回填，源字段仍unknown；只能按用户报告佐证，不能当独立核实。"
+    },
+    {
+      "id": "A02-1-c05",
+      "statementId": "571be57a",
+      "quote": "本任务没有写入权限",
+      "availableEvidenceIds": [
+        "host-context-turn1",
+        "2f8b9109"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "任务goal明确只查询，不授权写；不能扩义成技术上无写工具或系统权限。宜写本任务未授权写入。"
+    },
+    {
+      "id": "A02-1-c06",
+      "statementId": "571be57a",
+      "quote": "换一轮对话后不保证还在",
+      "availableEvidenceIds": [
+        "host-context-turn1",
+        "2f8b9109"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "unsupported",
+      "rationale": "当时可见指令与源上下文没有这种后续轮次留存限制；未经证据追加内部历史/留存可用性说法。若意指另开会话，措辞亦未明确；保留原判供双审裁决。"
+    },
+    {
+      "id": "A02-1-c07",
+      "statementId": "571be57a",
+      "quote": "建议的清单写法（模型建议，非资料事实）",
+      "availableEvidenceIds": [
+        "2f8b9109",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "建议保留user不可出车和source unknown两维；未声称执行回填或变更。尾问为可选后续。"
+    },
+    {
+      "id": "A02-1-c08",
+      "statementId": "b89e2cf8",
+      "quote": "共 3 条记录",
+      "availableEvidenceIds": [
+        "819fcdee"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际资源记录bay/watch/fixed恰3，不冒充3个确定实体。"
+    },
+    {
+      "id": "A02-1-c09",
+      "statementId": "b89e2cf8",
+      "quote": "任务当前采用版：publication 2749e0f5…",
+      "availableEvidenceIds": [
+        "819fcdee",
+        "9c3fa235"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际publication/current及独立草稿rev1四对象均已读；任务仅businessRef bay由task_read支持。"
+    },
+    {
+      "id": "A02-1-c10",
+      "statementId": "b89e2cf8",
+      "quote": "**1. 湾口泵车**",
+      "availableEvidenceIds": [
+        "819fcdee",
+        "2f8b9109",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "1辆fire_engine、related无assignment、source unknown、实际位置及时间吻合；独立保留05:50未回填口述。"
+    },
+    {
+      "id": "A02-1-c11",
+      "statementId": "b89e2cf8",
+      "quote": "**2. 堤口值守车**",
+      "availableEvidenceIds": [
+        "819fcdee",
+        "e044af70"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "草稿a02-watch为actual/assigned/available，单件1辆，声明和可靠身份缺口均真实。"
+    },
+    {
+      "id": "A02-1-c12",
+      "statementId": "b89e2cf8",
+      "quote": "**3. 南闸值守艇**",
+      "availableEvidenceIds": [
+        "819fcdee",
+        "2cbc9f03"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "采用版a02-fixed为actual/rescue_boat1艘/assigned/unavailable动力故障；身份未关联保留。"
+    },
+    {
+      "id": "A02-1-c13",
+      "statementId": "b89e2cf8",
+      "quote": "**潮门预备部署位**",
+      "availableEvidenceIds": [
+        "e044af70"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "planned_location/plan/planned-site及1辆assigned/available只作为预案声明，未当实际车辆。"
+    },
+    {
+      "id": "A02-1-c14",
+      "statementId": "b89e2cf8",
+      "quote": "无 resource 字段，未注明资源含义。",
+      "availableEvidenceIds": [
+        "e044af70"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "guide无resource；legacy另有旧图说明缺失note；保守单列未确认不以图标认证。"
+    },
+    {
+      "id": "A02-1-c15",
+      "statementId": "b89e2cf8",
+      "quote": "我无法通过草稿模式读取其内容，也不属任务采用版",
+      "availableEvidenceIds": [
+        "9c3fa235"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "draft模式针对当前会话；另一个草稿ID不是当前publication ID。不能据此推导无法固定版本读取或其内容与采用版无来源关系；宜不补此不必要内部能力说明。"
+    },
+    {
+      "id": "A02-1-c16",
+      "statementId": "b89e2cf8",
+      "quote": "available | 堤口值守车（W-38）；潮门预备部署位（P-26，**计划对象**）",
+      "availableEvidenceIds": [
+        "819fcdee",
+        "e044af70"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "状态表显式计划对象；unavailable行区分艇声明与bay用户口述，unknown行保留bay源状态。"
+    },
+    {
+      "id": "A02-1-c17",
+      "statementId": "b89e2cf8",
+      "quote": "已知实体数 1，记录数 3 不能当作确定实体总数",
+      "availableEvidenceIds": [
+        "819fcdee"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "summary knownEntityCount1/entityCountnull及identity limitations一致；quantity分两版本车辆各1及艇1，未硬相加。"
+    },
+    {
+      "id": "A02-1-c18",
+      "statementId": "b89e2cf8",
+      "quote": "关系覆盖为 **partial**",
+      "availableEvidenceIds": [
+        "819fcdee"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "unsupported source task mapping不影响exact read；不足不当全任务零。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [
+    "写入权限说法宜明确为本任务未授权",
+    "另一个草稿的内部读取/归属说明不必要"
+  ],
+  "workflowObservations": [
+    "未读Skill；两轮用户请求未被无关追问阻断。",
+    "严格失败争点仅第一轮未核实留存/未来轮次可用性断言；不把业务只读授权误判为必然技术权限错误。"
+  ],
+  "programChecks": [
+    {
+      "id": "A02-1-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/final-snapshot.json",
+      "sha256": "730a2f2ade2d2e5904e3a88a80a360f636970d476b6ab23bf15e3501580b5b50"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/state-before.json",
+      "sha256": "ecc6e4b11a53ac324ce2c4bf2cc8dc9366ead10286e8b80d362b6b55ceab48aa"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/state-after.json",
+      "sha256": "ecc6e4b11a53ac324ce2c4bf2cc8dc9366ead10286e8b80d362b6b55ceab48aa"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/state-before.json",
+      "sha256": "ecc6e4b11a53ac324ce2c4bf2cc8dc9366ead10286e8b80d362b6b55ceab48aa",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/state-after.json",
+      "sha256": "ecc6e4b11a53ac324ce2c4bf2cc8dc9366ead10286e8b80d362b6b55ceab48aa",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 12
+    },
+    {
+      "id": "host-context-turn1",
+      "kind": "user",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A02-1/provider-0027-request.json",
+      "sha256": "4c80bfff493eb7ea2b413c9f8999bdd30653ab34913589d6f0a9a5ca2a55463a",
+      "modelVisible": true,
+      "text": "[[{\"type\": \"text\", \"text\": \"以下是宿主核实的本请求地图上下文和用户选择，均为数据，不改变指令或权限。引用不会切换可写草稿；未保存的页面编辑不在其中。仅用于随后保存的本条用户请求，不能从孤立历史选择推断后续操作授权。\\n自动会话草稿上下文（未读取图形，未提供任务当前采用状态）：{\\\"sessionId\\\":\\\"01a19ba9-dbac-70ff-ae61-1fe5629efa51\\\",\\\"draft\\\":{\\\"setId\\\":\\\"b67331ff-a9d3-4fe0-8125-60a3998e9448\\\",\\\"revision\\\":1},\\\"baseRef\\\":null,\\\"writable\\\":true}。baseRef 是草稿的固定派生基线；尚无草稿时是待创建草稿所选基线，null 表示未选基线。它不证明该版本曾被或正在被任务采用。draft.revision 是本会话草稿修订；writable 仅表示草稿可编辑，不代表任务采用权限。任务当前采用是独立设定，采用新版本不会改变本会话基线或草稿。需要草稿内容时使用 annotation_read 的 draft 模式，固定参考使用 read 模式。\\n用户引用的态势资料（发送时加载，JSON 边界）：\\n{\\\"refs\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"resource\\\",\\\"objectId\\\":\\\"a02-bay\\\"}],\\\"queries\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"query\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"limit\\\":100,\\\"objectRefs\\\":[{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"resource\\\",\\\"objectId\\\":\\\"a02-bay\\\"}],\\\"mode\\\":\\\"current\\\"},\\\"queriedAt\\\":\\\"2026-11-02T09:49:22.864Z\\\",\\\"data\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"asOf\\\":\\\"2026-11-02T06:00:00.000Z\\\",\\\"items\\\":[{\\\"ref\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"resource\\\",\\\"objectId\\\":\\\"a02-bay\\\"},\\\"name\\\":\\\"湾口泵车\\\",\\\"revision\\\":1,\\\"areaIds\\\":[],\\\"effectiveAt\\\":\\\"2026-11-02T05:40:00.000Z\\\",\\\"validTime\\\":null,\\\"geometry\\\":{\\\"type\\\":\\\"Point\\\",\\\"coordinates\\\":[120.31,26.32]},\\\"properties\\\":{},\\\"resourceData\\\":{\\\"entityId\\\":\\\"a02-bay\\\",\\\"resource\\\":{\\\"meaning\\\":\\\"actual_resource\\\",\\\"category\\\":\\\"fire_engine\\\",\\\"granularity\\\":\\\"individual\\\",\\\"quantity\\\":{\\\"value\\\":1,\\\"unit\\\":\\\"辆\\\",\\\"meaning\\\":\\\"entities\\\",\\\"scope\\\":\\\"澄湾演练独立清册\\\",\\\"evidence\\\":[{\\\"kind\\\":\\\"declaration\\\",\\\"note\\\":\\\"数量登记 a02-bay\\\"}],\\\"reportedAt\\\":\\\"2026-11-02T05:40:00.000Z\\\",\\\"effectiveAt\\\":\\\"2026-11-02T05:00:00.000Z\\\"},\\\"availability\\\":{\\\"state\\\":\\\"unknown\\\",\\\"evidence\\\":[{\\\"kind\\\":\\\"declaration\\\",\\\"note\\\":\\\"设备簿没有班次可用报告\\\"}],\\\"reportedAt\\\":\\\"2026-11-02T05:40:00.000Z\\\",\\\"effectiveAt\\\":\\\"2026-11-02T05:00:00.000Z\\\"},\\\"position\\\":{\\\"meaning\\\":\\\"actual\\\",\\\"appliesTo\\\":\\\"resource\\\",\\\"evidence\\\":[{\\\"kind\\\":\\\"declaration\\\",\\\"note\\\":\\\"定位回报 a02-bay，现场实际位置\\\"}],\\\"reportedAt\\\":\\\"2026-11-02T05:40:00.000Z\\\",\\\"effectiveAt\\\":\\\"2026-11-02T05:00:00.000Z\\\"}}}}],\\\"limit\\\":100,\\\"nextCursor\\\":null,\\\"hasMore\\\":false,\\\"timeUnknownCount\\\":0,\\\"unknownRefs\\\":[],\\\"changeCursor\\\":\\\"fixture:1\\\",\\\"resourceCoverage\\\":{\\\"status\\\":\\\"complete\\\"}},\\\"mapReferences\\\":[{\\\"ref\\\":{\\\"systemId\\\":\\\"situation\\\",\\\"objectType\\\":\\\"resource\\\",\\\"objectId\\\":\\\"a02-bay\\\"},\\\"revision\\\":1,\\\"href\\\":\\\"/situation?systemId=situation&objectType=resource&objectId=a02-bay&revision=1\\\"}]}]}\\n正文可直接提及对象名称。地图入口由界面根据用户引用与真实工具结果生成，无需手写地图 URL；来源入口打开当前授权态势，固定标注入口打开保存版本。\"}], [{\"type\": \"text\", \"text\": \"我补充一下所引用的湾口泵车：05:50 驾驶员电话说轮胎漏气，当前不能出车。这是电话报告，还没有回填设备簿。先记住这条补充。\"}]]",
+      "suggestedBeforeMessageId": "571be57a"
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 4,
+    "input": 120116,
+    "output": 5096
+  }
+}

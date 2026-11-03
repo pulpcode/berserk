@@ -1,0 +1,199 @@
+{
+  "batch": ".local/spatial-r7/batch-20261023",
+  "rawEvidenceFilesVerified": 395,
+  "requests": 53,
+  "responseModel": "deepseek-v4-1-flash-261017",
+  "groups": {
+    "A": {
+      "requests": 27,
+      "input": 537594,
+      "output": 4436,
+      "tools": 23,
+      "elapsedMs": 49097
+    },
+    "B": {
+      "requests": 26,
+      "input": 523738,
+      "output": 4075,
+      "tools": 21,
+      "elapsedMs": 46524
+    }
+  },
+  "rows": [
+    {
+      "entryId": "D17-A",
+      "status": "recorded",
+      "messages": 9,
+      "visibleMessages": [
+        1,
+        8
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 5,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D17-B",
+      "status": "recorded",
+      "messages": 8,
+      "visibleMessages": [
+        1,
+        7
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 5,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D21-B",
+      "status": "recorded",
+      "messages": 6,
+      "visibleMessages": [
+        1,
+        3,
+        5
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 3,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D21-A",
+      "status": "recorded",
+      "messages": 8,
+      "visibleMessages": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 4,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D22-A",
+      "status": "recorded",
+      "messages": 5,
+      "visibleMessages": [
+        1,
+        4
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 3,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D22-B",
+      "status": "recorded",
+      "messages": 7,
+      "visibleMessages": [
+        1,
+        4,
+        6
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 3,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D16-B",
+      "status": "recorded",
+      "messages": 13,
+      "visibleMessages": [
+        1,
+        4,
+        9,
+        12
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 9,
+      "stateUnchanged": false,
+      "save": {
+        "exactFirstGeometry": true,
+        "externalNotePreserved": true,
+        "conflictInjected": true
+      }
+    },
+    {
+      "entryId": "D16-A",
+      "status": "recorded",
+      "messages": 14,
+      "visibleMessages": [
+        1,
+        5,
+        7,
+        10,
+        13
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 9,
+      "stateUnchanged": false,
+      "save": {
+        "exactFirstGeometry": true,
+        "externalNotePreserved": true,
+        "conflictInjected": true
+      }
+    },
+    {
+      "entryId": "D02-A",
+      "status": "recorded",
+      "messages": 7,
+      "visibleMessages": [
+        1,
+        6
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 4,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D02-B",
+      "status": "recorded",
+      "messages": 8,
+      "visibleMessages": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 4,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D23-B",
+      "status": "recorded",
+      "messages": 3,
+      "visibleMessages": [
+        2
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 2,
+      "stateUnchanged": true,
+      "save": null
+    },
+    {
+      "entryId": "D23-A",
+      "status": "recorded",
+      "messages": 4,
+      "visibleMessages": [
+        1,
+        3
+      ],
+      "allSelectedBodiesPresent": true,
+      "providerCalls": 2,
+      "stateUnchanged": true,
+      "save": null
+    }
+  ],
+  "scope": "deterministic evidence audit, semantic review separate"
+}

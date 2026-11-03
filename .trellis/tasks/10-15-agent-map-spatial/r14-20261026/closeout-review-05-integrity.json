@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "blindId": "7492ef75-c871-4aff-80f0-44ae7f5d456e",
+      "publicToolReturnsMatched": 12,
+      "draftStateUnchanged": true
+    },
+    {
+      "blindId": "83c4b46c-1704-46df-ba43-3853d8e36087",
+      "publicToolReturnsMatched": 2,
+      "draftStateUnchanged": true
+    },
+    {
+      "blindId": "8f2f11dc-f7ee-44cb-8076-e896659035d7",
+      "publicToolReturnsMatched": 3,
+      "draftStateUnchanged": true
+    },
+    {
+      "blindId": "d9ad747d-7b8b-48d5-a00b-5471f6da1ce3",
+      "publicToolReturnsMatched": 9,
+      "draftStateUnchanged": true
+    },
+    {
+      "blindId": "dd5d49f4-0862-4d42-9163-cf4f43a24533",
+      "publicToolReturnsMatched": 3,
+      "draftStateUnchanged": true
+    }
+  ],
+  "privateReasoningUsed": false,
+  "modelCalls": 0
+}

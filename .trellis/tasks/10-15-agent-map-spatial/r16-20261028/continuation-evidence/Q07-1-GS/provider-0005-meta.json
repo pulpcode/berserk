@@ -1,0 +1,43 @@
+{
+  "id": 5,
+  "entry": "Q07-1-GS",
+  "group": "GS",
+  "turn": 0,
+  "at": "2026-10-28T10:00:22.022Z",
+  "completed": true,
+  "payloadHash": "cbc7ffd6ef2a94d07761e19e5f375b6e75dcc5ab1b5d3d1791202b525561b5f4",
+  "wirePayloadHash": "5e6bd9922f395d0920900cea6a78277aec2040beb4763cf152e16e2137bcc71d",
+  "tools": [
+    {
+      "id": "call_00_g81ceotje5b7fv0m2xy875b5",
+      "name": "skill_read",
+      "arguments": "{\"id\": \"spatial-analysis\"}"
+    },
+    {
+      "id": "call_01_ev65ul5x0egifrp9zo8ikpuw",
+      "name": "skill_read",
+      "arguments": "{\"id\": \"map-annotations\"}"
+    },
+    {
+      "id": "call_02_gtlabfvy6h67v454bpblp79p",
+      "name": "annotation_read",
+      "arguments": "{\"mode\": \"draft\", \"limit\": 20}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 3246,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 1783,
+  "reasoningTokens": 390,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 16401,
+    "completion_tokens": 506
+  },
+  "responseSha256": "81826650cfc6c8f9d93098fb0936c7c0d20b289206d529459ac2b09956281c72"
+}

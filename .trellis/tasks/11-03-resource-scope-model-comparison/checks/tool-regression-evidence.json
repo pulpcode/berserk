@@ -1,0 +1,203 @@
+{
+  "evidenceDirectory": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/scope-tool-regression-8uV99y",
+  "realModelRequests": 0,
+  "results": {
+    "passed": true,
+    "realModelRequests": 0,
+    "observations": [
+      {
+        "id": "T01",
+        "passed": true,
+        "realModelRequests": 0,
+        "deterministicProviderRequests": 5,
+        "toolNames": [
+          "task_resource_query",
+          "task_resource_query",
+          "task_resource_query",
+          "spatial_analyze"
+        ],
+        "queryRef": "resource:f5c87cbd-7909-487a-a1cd-5f91074142ff:12118131-e080-448e-bba3-1e84b489b5d5",
+        "summaryRef": "resource:f5c87cbd-7909-487a-a1cd-5f91074142ff:fb445b69-aa72-45ad-9bb0-9a3fa03ac66a",
+        "recordCount": 7,
+        "statistics": {
+          "recordCount": 0,
+          "itemCount": 0,
+          "knownEntityCount": 0,
+          "entityCount": null,
+          "quantities": [],
+          "limitations": [
+            "只统计已核实关系的部分；缺少完整关系资料，空名单不能表述为已分配零项。"
+          ]
+        },
+        "spatialCompleteness": {
+          "status": "partial",
+          "candidateCount": 5,
+          "totalCandidateCount": 7,
+          "unclassified": [
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            },
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            }
+          ]
+        },
+        "httpQueries": 2
+      },
+      {
+        "id": "T02",
+        "passed": true,
+        "realModelRequests": 0,
+        "deterministicProviderRequests": 5,
+        "toolNames": [
+          "task_resource_query",
+          "task_resource_query",
+          "task_resource_query",
+          "spatial_analyze"
+        ],
+        "queryRef": "resource:4b11245d-e5bd-4d0e-b28e-b11a37e43474:2175a6a0-eb9d-4414-9b99-1a73f9348d90",
+        "summaryRef": "resource:4b11245d-e5bd-4d0e-b28e-b11a37e43474:5188eed4-0139-4fe1-b971-85f41ece34fd",
+        "recordCount": 8,
+        "statistics": {
+          "recordCount": 8,
+          "itemCount": 7,
+          "knownEntityCount": 5,
+          "entityCount": null,
+          "quantities": [
+            {
+              "category": "vehicle",
+              "unit": "辆",
+              "meaning": "entities",
+              "scope": "n02-fleet-entire",
+              "value": 5,
+              "knownValue": 5,
+              "unknownCount": 0,
+              "recordIds": [
+                "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-u\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-v\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-w\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-k\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-m\"]"
+              ],
+              "limitations": []
+            }
+          ],
+          "limitations": [
+            "存在实体身份未确认记录；记录数不能作为确定实体总数。"
+          ]
+        },
+        "spatialCompleteness": {
+          "status": "partial",
+          "candidateCount": 5,
+          "totalCandidateCount": 7,
+          "unclassified": [
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            },
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            }
+          ]
+        },
+        "httpQueries": 2
+      },
+      {
+        "id": "T03",
+        "passed": true,
+        "realModelRequests": 0,
+        "deterministicProviderRequests": 5,
+        "toolNames": [
+          "task_resource_query",
+          "task_resource_query",
+          "task_resource_query",
+          "spatial_analyze"
+        ],
+        "queryRef": "resource:3ee03cfd-6af8-4d43-9a9b-8164ebf6b10c:34682ff7-3858-47b2-a037-2336a92a33bf",
+        "summaryRef": "resource:3ee03cfd-6af8-4d43-9a9b-8164ebf6b10c:022bcf5c-9438-46cd-8e1e-d2c62eae5321",
+        "recordCount": 7,
+        "statistics": {
+          "recordCount": 7,
+          "itemCount": 7,
+          "knownEntityCount": 5,
+          "entityCount": null,
+          "quantities": [
+            {
+              "category": "vehicle",
+              "unit": "辆",
+              "meaning": "entities",
+              "scope": "n02-fleet-entire",
+              "value": null,
+              "knownValue": 5,
+              "unknownCount": 1,
+              "recordIds": [
+                "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-u\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-v\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-w\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-k\"]",
+                "[\"n02-luqiao\",\"resource\",\"lq-m\"]"
+              ],
+              "limitations": [
+                "缺少可用于当前数量含义的完整成员依据，不推导去重合计。"
+              ]
+            }
+          ],
+          "limitations": [
+            "存在实体身份未确认记录；记录数不能作为确定实体总数。"
+          ]
+        },
+        "spatialCompleteness": {
+          "status": "partial",
+          "candidateCount": 5,
+          "totalCandidateCount": 7,
+          "unclassified": [
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-morning\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            },
+            {
+              "id": "[\"n02-luqiao\",\"resource\",\"lq-evening\"]",
+              "reason": "缺少有效且适用于资源的实际位置；计划、估计及站点位置未用于当前位置判断。"
+            }
+          ]
+        },
+        "httpQueries": 2
+      }
+    ]
+  },
+  "sha256": {
+    "runtime-integrity.json": "706150a421d38b6e1bcc1009384afb63fa00393f6e68ea0c9c97da9bc13b0e0b",
+    "tool-regression-results.json": "260301c752e2e03d4b0031debbece5cf54927f08a840bc48a788570068271202",
+    "T01/assertions.json": "5cdf7b52adee74be40a6e840dc8d97424c6ef490a1eef894e483e7e7935ccdf3",
+    "T01/snapshot.json": "c80a777cbd44974ff2202a4edc37c79151c00e18b057c6d160edab0e9a620267",
+    "T01/source-requests.jsonl": "e648e52ef335ce8e1e0cc786ea8f00c292c9005d8acc32143f676a53aad4750f",
+    "T01/controlled-import-receipts.json": "51017d70d4fe97f3a1424bd76c9c0ec7e5e261c5565b6a6183b27e457a50c52d",
+    "T01/area-version.json": "81ee0eab27ecb85e786fb0873f826881a8c4707a0e28b784062e4170febe8d6f",
+    "T01/manifest.json": "690d147e823ee0005ad5fa57cbfadf9bf2e35dab5cce537b6bebe78ae0c73ffb",
+    "T01/deterministic-provider-inputs.json": "0d142018316f1f101496d03c946f5b51688dc834441e0bfd5c8b5b8fb18b5cba",
+    "T01/data/sessions/2026-11-03T07-46-26-407Z_01a1a05f-a9e6-71e1-bd38-3500f8544701.jsonl": "3b920d42b967455f009bad68bfb75a05a72a93a5a697dfcc0798f5204e86bc9d",
+    "T02/assertions.json": "7d6661338d14d675dad1d1f594e9c28a185b2bd94e6449a1ebbb7c885ad9be4e",
+    "T02/snapshot.json": "104983cb287c98f71e57e6927d9e3febdc021daeee2e4b789a5be576a85ebc2c",
+    "T02/source-requests.jsonl": "334270209b5319707905304c3db1787f9c7cb076b73d00da8ee6c0e8814f13bd",
+    "T02/controlled-import-receipts.json": "884af87d5c1e2d30a91c05641faa63483cc6e7df0efe2e922e0d5cc4fc020659",
+    "T02/area-version.json": "7592b866173cc68bdfeeee1304e39533b3aa665b01cae7bf755e7624f4bb726b",
+    "T02/manifest.json": "62559fc387b011bd6ee8b36c811e09c5a66a805eba7041a25895baa5c5cbabbe",
+    "T02/deterministic-provider-inputs.json": "9ca67619e963eb25de1cc5e50a45d06616f97720722631cbd364ba36adc971e9",
+    "T02/data/sessions/2026-11-03T07-46-43-183Z_01a1a05f-eb6e-71e1-bd38-3502cd90f133.jsonl": "7ea119ff54ae25f3cf0e2c25f1a221c30991d7b083cf9d9642d8db630de8ea06",
+    "T03/assertions.json": "2021c4669fa890461bf0a3c2b8616080aecf5a5e66a3a8dd442df3b4de2d6e84",
+    "T03/snapshot.json": "a62f7cb23b046117f557d920e68058a5722ea57ed0637aaa8063805655cc0ae7",
+    "T03/source-requests.jsonl": "8d0b67a383c91630833c7683a5b7b13b37817e9907400b35e7e030e3b283c6d9",
+    "T03/controlled-import-receipts.json": "ecfd2a3d39188bcc5032d731d4e30ab5bce00d78c0fbc561022a67a5fb84abeb",
+    "T03/area-version.json": "fa3082a01b97f7887599a9bdb7538e19ae2944b7d8c60aec0f15f7d2a78a5e55",
+    "T03/manifest.json": "1c4aba7cf75bd21d3ebed874facfab5504af017f9c8a21e8fa445f27afcd2ef7",
+    "T03/deterministic-provider-inputs.json": "11e7f09e465aedcb7392ebead8c04f25b458e4e3087bf7f5872114d7829d40c6",
+    "T03/data/sessions/2026-11-03T07-47-05-160Z_01a1a060-4148-71e1-bd38-3504422ea705.jsonl": "8cc5d828d204334073556040a31fe4997f1ce62b9de46187c05b585b9a44dd06"
+  }
+}

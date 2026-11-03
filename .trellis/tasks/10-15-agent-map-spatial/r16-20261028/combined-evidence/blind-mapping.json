@@ -1,0 +1,23 @@
+[
+  {
+    "blindId": "23db2f45-6830-40e3-bab6-54aac279b96a",
+    "entryId": "Q07-1-GST",
+    "caseId": "Q07",
+    "group": "GST",
+    "round": 1
+  },
+  {
+    "blindId": "64ac59e7-143c-4ce9-bca2-080eccfec293",
+    "entryId": "Q07-1-GS",
+    "caseId": "Q07",
+    "group": "GS",
+    "round": 1
+  },
+  {
+    "blindId": "76e4b142-b7a1-4c36-bb44-b39089e89a8d",
+    "entryId": "Q07-1-G0",
+    "caseId": "Q07",
+    "group": "G0",
+    "round": 1
+  }
+]

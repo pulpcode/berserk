@@ -1,0 +1,107 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V26",
+  "caseId": "G01",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": false,
+  "aware_of_other_source_left_optional": true,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "6504e99d",
+      "tool_call_id": "call_00_9kli9h48ytz2lbswtao1i4yf"
+    }
+  ],
+  "candidate_completeness_pass": true,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "draft_hash_after": "8995de31b23acebdf5339715c50023b44802035a43c45c3f810707e3734ace94",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "e3036185-e05c-43ed-acfc-5e39a1b94305",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "e3036185-e05c-43ed-acfc-5e39a1b94305",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "草稿全部 5 点及来源区域按用户明确限定组合；正确命中梧桐丙、梧桐丁。",
+    "“计算使用 shuo 属实”是无意义措辞，不把它硬解释为算法事实错误；同一句后续点在面内判断、未加容差与工具一致。",
+    "草稿同名面“范围偏西”由已读两面经度区间 [118.24,118.244] 与 [118.242,118.246] 支持。",
+    "已明确范围下，另用草稿面计算的末尾邀请不属于必要追问。",
+    "other_source_optional按冻结主观察口径仅记未确定资源候选来源留选做；已明确题的其他边界邀请不计，已改记optional_boundary_offer。main/strict保持原独立分数。"
+  ],
+  "evidence": [
+    {
+      "message_id": "2352e984",
+      "quote": "对 resources 层的 5 个点做内、边界、外分类。",
+      "basis": "先前 annotation_read 已返回 resources 层 5 个 Point；同名区域两来源也均已实际读到。"
+    },
+    {
+      "message_id": "06b3c2ec",
+      "quote": "位于范围内的候选点：2 个",
+      "basis": "call_00_3k5zfqu7n9mdvlanesbcdrsi：complete candidateCount=5，内部 g01-d-p03/g01-d-p04，边界 0；与 oracle 一致。"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "failureTags": [],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": false,
+  "optional_boundary_offer": true
+}

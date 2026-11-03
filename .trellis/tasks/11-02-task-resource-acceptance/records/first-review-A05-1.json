@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A05-1",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "16683a5a"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "内部2辆4艘、边界1辆、外部1辆、位置未分类3辆完整正确；按实际位置且单位分开。",
+  "explanation": "pass",
+  "strict": "pass",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "实际只读、状态无变化。",
+      "evidenceIds": [
+        "f591cdda",
+        "04e3cd9a"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "实体未知与聚合数量分开。",
+      "evidenceIds": [
+        "f591cdda",
+        "04e3cd9a"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "没有把任务关系或可用性偷偷当本次额外条件。",
+      "evidenceIds": [
+        "f591cdda",
+        "04e3cd9a"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "来源complete、关系partial、空间5/8和3未分类各自保留。",
+      "evidenceIds": [
+        "f591cdda",
+        "04e3cd9a"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A05-1-c01",
+      "statementId": "16683a5a",
+      "quote": "共 8 条资源记录，来源覆盖状态 complete",
+      "availableEvidenceIds": [
+        "f591cdda",
+        "04e3cd9a"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "来源8记录完整读取；作业区rev1及06:00快照/09:56:54查询在来源及空间provenance中。"
+    },
+    {
+      "id": "A05-1-c02",
+      "statementId": "16683a5a",
+      "quote": "消防车 2 辆；救援舟艇 4 艘",
+      "availableEvidenceIds": [
+        "077f8917"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "内部一车二车各1，舟组aggregate4艘、成员QSB31-34；未把3点当业务数量。"
+    },
+    {
+      "id": "A05-1-c03",
+      "statementId": "16683a5a",
+      "quote": "青沙沿线车（消防车，1 辆）",
+      "availableEvidenceIds": [
+        "04e3cd9a",
+        "8d7b1355"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "boundary另列，和内部外部分开。"
+    },
+    {
+      "id": "A05-1-c04",
+      "statementId": "16683a5a",
+      "quote": "青沙外勤车（消防车，1 辆）",
+      "availableEvidenceIds": [
+        "04e3cd9a",
+        "ae9568e2"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "唯一exterior。"
+    },
+    {
+      "id": "A05-1-c05",
+      "statementId": "16683a5a",
+      "quote": "合计 3 辆消防车，位置未知。",
+      "availableEvidenceIds": [
+        "f591cdda",
+        "04e3cd9a",
+        "fdd63689"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "站址/计划位置/缺几何分别列未分类，每记录1辆，不当外部。"
+    },
+    {
+      "id": "A05-1-c06",
+      "statementId": "16683a5a",
+      "quote": "消防车 7 辆、救援舟艇 4 艘",
+      "availableEvidenceIds": [
+        "f591cdda"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "全查询数量分组正确，内部/边界/外部/未知分解一致。"
+    },
+    {
+      "id": "A05-1-c07",
+      "statementId": "16683a5a",
+      "quote": "内部+边界合计为 3 辆、4 艘",
+      "availableEvidenceIds": [
+        "077f8917",
+        "8d7b1355"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "同单位相加正确且明确含边界条件。"
+    },
+    {
+      "id": "A05-1-c08",
+      "statementId": "16683a5a",
+      "quote": "未加距离容差",
+      "availableEvidenceIds": [
+        "04e3cd9a"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "方法与limitations如实描述，未作测绘级承诺。"
+    },
+    {
+      "id": "A05-1-c09",
+      "statementId": "16683a5a",
+      "quote": "已知实体数 7、确定实体总数为空",
+      "availableEvidenceIds": [
+        "f591cdda"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "引用工具knownEntityCount/entityCount，未将实体数与数量或记录混同。"
+    },
+    {
+      "id": "A05-1-c10",
+      "statementId": "16683a5a",
+      "quote": "是否与个别实体重复未确认",
+      "availableEvidenceIds": [
+        "f591cdda"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "工具items确有身份缺口限定；该谨慎说法不改变4艘聚合业务数量证据。"
+    },
+    {
+      "id": "A05-1-c11",
+      "statementId": "16683a5a",
+      "quote": "任务关联覆盖为部分",
+      "availableEvidenceIds": [
+        "f591cdda"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "relationshipCoverage partial原样保留。"
+    },
+    {
+      "id": "A05-1-c12",
+      "statementId": "16683a5a",
+      "quote": "未保存或修改任何业务资料，也未生成标绘。",
+      "availableEvidenceIds": [
+        "04e3cd9a"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "只读空间结果与全部工具轨迹支持，state相同。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [],
+  "workflowObservations": [
+    "已读取spatial-analysis完整正文且hash匹配；来源query后资源query有重复读取，但统计仍基于固定Q/S，没有业务错误。"
+  ],
+  "programChecks": [
+    {
+      "id": "A05-1-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-1/final-snapshot.json",
+      "sha256": "1d17a143cfa090edc2f19466fb5268ecdb5105193786b562ed473f2c508d8500"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-1/state-before.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-1/state-after.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-1/state-before.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-1/state-after.json",
+      "sha256": "835e9e173661ae3ec4bf05288d900e20b86c8b76a1c6e425fedc936f6be19148",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 11
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 5,
+    "input": 196880,
+    "output": 3382
+  }
+}

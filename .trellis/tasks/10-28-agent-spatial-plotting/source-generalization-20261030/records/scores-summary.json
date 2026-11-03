@@ -1,0 +1,53 @@
+{
+  "planned": 8,
+  "executed": 8,
+  "scored": 8,
+  "unresolved": 0,
+  "mainPass": 3,
+  "strictPass": 2,
+  "processFactsPass": 8,
+  "finalFactsPass": 7,
+  "noBusinessEffectsPass": 8,
+  "spatialSkillRead": 8,
+  "mapAnnotationsSkillRead": 0,
+  "clarificationReplies": 0,
+  "automaticRetries": false,
+  "groups": {
+    "资源与边界都明确": {
+      "cases": [
+        "G01",
+        "G02"
+      ],
+      "total": 2,
+      "mainPass": 2,
+      "strictPass": 1
+    },
+    "只明确资源": {
+      "cases": [
+        "G03",
+        "G04"
+      ],
+      "total": 2,
+      "mainPass": 1,
+      "strictPass": 1
+    },
+    "只明确边界": {
+      "cases": [
+        "G05",
+        "G06"
+      ],
+      "total": 2,
+      "mainPass": 0,
+      "strictPass": 0
+    },
+    "两者都未明确": {
+      "cases": [
+        "G07",
+        "G08"
+      ],
+      "total": 2,
+      "mainPass": 0,
+      "strictPass": 0
+    }
+  }
+}

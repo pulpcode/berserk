@@ -1,0 +1,14 @@
+{
+  "id": "S01-R1-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "输入1与全层4点及500米预览正确。objects.total末句是匹配数通用限制，全文已给当前全层4；在本次无筛选恰好等于全层，记提示过度泛化的表达问题，不抹去明确计数。",
+  "evidence": [
+    "S01-R1-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

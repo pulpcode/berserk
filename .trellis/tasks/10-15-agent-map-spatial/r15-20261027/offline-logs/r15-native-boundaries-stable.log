@@ -1,0 +1,83 @@
+(node:69386) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ missing freeze refuses before secrets and does not claim live slot (183.947671ms)
+{"entry":"P01-1-G0","status":"recorded","completed":1,"planned":16,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"P01-1-GS","status":"recorded","completed":2,"planned":16,"usage":{"requests":4,"input":400,"output":40,"afp":0.055,"unknown":0}}
+{"entry":"P01-1-GT","status":"recorded","completed":3,"planned":16,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P01-1-GST","status":"recorded","completed":4,"planned":16,"usage":{"requests":8,"input":800,"output":80,"afp":0.11,"unknown":0}}
+{"id":"P07-1-GT","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GT","status":"recorded","completed":5,"planned":16,"usage":{"requests":25,"input":2500,"output":250,"afp":0.34375,"unknown":0}}
+{"id":"P07-1-GST","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GST","status":"recorded","completed":6,"planned":16,"usage":{"requests":42,"input":4200,"output":420,"afp":0.5775,"unknown":0}}
+{"id":"P07-1-G0","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-G0","status":"recorded","completed":7,"planned":16,"usage":{"requests":59,"input":5900,"output":590,"afp":0.8112500000000007,"unknown":0}}
+{"id":"P07-1-GS","warning":"12_requests_only_not_cancelled"}
+{"entry":"P07-1-GS","status":"recorded","completed":8,"planned":16,"usage":{"requests":76,"input":7600,"output":760,"afp":1.045000000000001,"unknown":0}}
+{"entry":"P08-1-GST","status":"recorded","completed":9,"planned":16,"usage":{"requests":85,"input":8500,"output":850,"afp":1.1687500000000004,"unknown":0}}
+{"entry":"P08-1-G0","status":"recorded","completed":10,"planned":16,"usage":{"requests":94,"input":9400,"output":940,"afp":1.2924999999999998,"unknown":0}}
+{"entry":"P08-1-GS","status":"recorded","completed":11,"planned":16,"usage":{"requests":103,"input":10300,"output":1030,"afp":1.4162499999999991,"unknown":0}}
+{"entry":"P08-1-GT","status":"recorded","completed":12,"planned":16,"usage":{"requests":112,"input":11200,"output":1120,"afp":1.5399999999999985,"unknown":0}}
+{"entry":"P12-1-GST","status":"recorded","completed":13,"planned":16,"usage":{"requests":118,"input":11800,"output":1180,"afp":1.622499999999998,"unknown":0}}
+{"entry":"P12-1-G0","status":"recorded","completed":14,"planned":16,"usage":{"requests":124,"input":12400,"output":1240,"afp":1.7049999999999976,"unknown":0}}
+{"entry":"P12-1-GS","status":"recorded","completed":15,"planned":16,"usage":{"requests":130,"input":13000,"output":1300,"afp":1.7874999999999972,"unknown":0}}
+{"entry":"P12-1-GT","status":"recorded","completed":16,"planned":16,"usage":{"requests":136,"input":13600,"output":1360,"afp":1.8699999999999968,"unknown":0}}
+✔ four factors use actual native Skill/tool loop, original result save, optional invitations and more than ten requests (92798.62198ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"provider_http_429","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider http_error preserves first failure and never retries (16681.397491ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"response_model_drift\n+ actual - expected\n\n  [\n+   'other'\n-   'deepseek-v4-1-flash-261017'\n  ]\n","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider response_model_drift preserves first failure and never retries (16832.343515ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"unknown_or_empty_usage","completed":1,"planned":4,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ provider missing_usage preserves first failure and never retries (16813.106195ms)
+{"entry":"P01-1-G0","status":"incomplete","stop":"output_truncated","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+✔ provider truncated preserves first failure and never retries (16534.496757ms)
+{"entry":"P02-1-GS","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"P02-1-GT","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":2,"planned":4,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"P02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":3,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P02-1-G0","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":4,"planned":4,"usage":{"requests":4,"input":400,"output":40,"afp":0.055,"unknown":0}}
+✔ unmapped plain clarification remains pending and independent tasks continue (17539.433304ms)
+{"entry":"P02-1-GS","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":1,"planned":4,"usage":{"requests":1,"input":100,"output":10,"afp":0.01375,"unknown":0}}
+{"entry":"P02-1-GT","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":2,"planned":4,"usage":{"requests":2,"input":200,"output":20,"afp":0.0275,"unknown":0}}
+{"entry":"P02-1-GST","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":3,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P02-1-G0","status":"waiting_user","stop":"waiting_user_unmapped_necessary_interaction","completed":4,"planned":4,"usage":{"requests":4,"input":400,"output":40,"afp":0.055,"unknown":0}}
+✔ unmapped api clarification remains pending and independent tasks continue (17697.709121ms)
+✔ offline gate requires approval evidence matching exact frozen code (1.183329ms)
+✔ reading an old buffer does not count as a new generation (0.302712ms)
+{"entry":"P05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"P05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by answer still fails only that task (19845.351302ms)
+{"entry":"P05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"P05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by plain still fails only that task (20079.519903ms)
+{"entry":"P05-1-G0","status":"incomplete","stop":"waiting_user_unmapped_necessary_interaction","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P05-1-GS","status":"incomplete","stop":"waiting_user_unmapped_necessary_interaction","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P05-1-GT","status":"incomplete","stop":"waiting_user_unmapped_necessary_interaction","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"P05-1-GST","status":"incomplete","stop":"waiting_user_unmapped_necessary_interaction","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✖ isolated unauthorized write followed by api still fails only that task (21340.881691ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259525.524115
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:1:11254
+✖ isolated unauthorized write followed by api still fails only that task (21340.881691ms)
+  AssertionError [ERR_ASSERTION]: {"rows":[{"id":"P05-1-G0","entryId":"P05-1-G0","caseId":"P05","group":"G0","round":1,"repetition":1,"ordinal":17,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1107,"initializationMs":3131,"prepared":true,"startedAt":"2026-10-27T09:21:22.527Z","blindId":"9adf8e0a-24e1-4844-99cd-0d44da6c1800","stopScope":"task","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:21:23.328Z","elapsedMs":801},{"id":"P05-1-GS","entryId":"P05-1-GS","caseId":"P05","group":"GS","round":1,"repetition":1,"ordinal":18,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1219,"initializationMs":3895,"prepared":true,"startedAt":"2026-10-27T09:21:23.329Z","blindId":"0a838d90-7e13-48f8-adc9-7a1bb6b67562","stopScope":"task","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:21:24.134Z","elapsedMs":805},{"id":"P05-1-GT","entryId":"P05-1-GT","caseId":"P05","group":"GT","round":1,"repetition":1,"ordinal":19,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":1153,"initializationMs":3158,"prepared":true,"startedAt":"2026-10-27T09:21:24.135Z","blindId":"4c31aae1-be4c-4bbc-b4d0-49331ec24191","stopScope":"task","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:21:24.859Z","elapsedMs":724},{"id":"P05-1-GST","entryId":"P05-1-GST","caseId":"P05","group":"GST","round":1,"repetition":1,"ordinal":20,"split":"development","status":"incomplete","semanticReview":"pending","plannedUserTurns":1,"completedUserTurns":0,"runtimeBuildMs":963,"initializationMs":3078,"prepared":true,"startedAt":"2026-10-27T09:21:24.860Z","blindId":"6ee0482f-36f0-4b32-b9e1-6b99993dd479","stopScope":"task","stop":"waiting_user_unmapped_necessary_interaction","endedAt":"2026-10-27T09:21:25.872Z","elapsedMs":1012}],"total":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r15-20261027/live.test.ts:91:258)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,1375 @@
+{
+  "freezeHash": "31905408c95f5eee08da8c6ca0235470e67abfc8b77fc913f7df29720db87b79",
+  "sourceUnchanged": true,
+  "productRevisions": {
+    "A": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
+    "B": "74986e0f1b4ac3a2fb62434673b3da4c5334ff14"
+  },
+  "planned": 30,
+  "recorded": 30,
+  "unexecuted": 0,
+  "historyExcluded": true,
+  "automaticRetries": 0,
+  "additionalTrials": 0,
+  "totals": {
+    "requests": 126,
+    "input": 2622762,
+    "output": 31622,
+    "unknown": 0
+  },
+  "allHttp200": true,
+  "allUsageKnown": true,
+  "models": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "requestedThinking": "enabled/high",
+  "groups": {
+    "A": {
+      "mainPass": 12,
+      "strictPass": 12,
+      "requests": 61,
+      "input": 1286652,
+      "output": 16051,
+      "providerElapsedMs": 137323,
+      "originalTurns": 18,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "tasks": 15,
+      "skills": {
+        "map-annotations": 1,
+        "spatial-analysis": 8
+      },
+      "anyMapSkill": 9
+    },
+    "B": {
+      "mainPass": 14,
+      "strictPass": 12,
+      "requests": 65,
+      "input": 1336110,
+      "output": 15571,
+      "providerElapsedMs": 145367,
+      "originalTurns": 18,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 2,
+      "tasks": 15,
+      "skills": {
+        "map-annotations": 1,
+        "spatial-analysis": 6
+      },
+      "anyMapSkill": 6
+    }
+  },
+  "byCase": {
+    "P02": {
+      "A": {
+        "mainPass": 0,
+        "strictPass": 0,
+        "total": 3
+      },
+      "B": {
+        "mainPass": 2,
+        "strictPass": 1,
+        "total": 3
+      }
+    },
+    "S02": {
+      "A": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      },
+      "B": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      }
+    },
+    "P05": {
+      "A": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      },
+      "B": {
+        "mainPass": 3,
+        "strictPass": 2,
+        "total": 3
+      }
+    },
+    "P01": {
+      "A": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      },
+      "B": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      }
+    },
+    "S01": {
+      "A": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      },
+      "B": {
+        "mainPass": 3,
+        "strictPass": 3,
+        "total": 3
+      }
+    }
+  },
+  "slots": [
+    {
+      "id": "P02-R1-A",
+      "caseId": "P02",
+      "group": "A",
+      "repeat": 1,
+      "mainPass": false,
+      "strictPass": false,
+      "score": {
+        "id": "P02-R1-A",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "fail",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "读取map-annotations仍未写前澄清车型，直接保存无symbolId普通点。坦诚未选具体符号，说明与实际相符；事后可选追问不补救。",
+        "evidence": [
+          "P02-R1-A/gate/1-checkpoint.json"
+        ]
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 63246,
+      "output": 1448,
+      "providerElapsedMs": 10429,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 2
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P02-R1-B",
+      "caseId": "P02",
+      "group": "B",
+      "repeat": 1,
+      "mainPass": false,
+      "strictPass": false,
+      "score": {
+        "id": "P02-R1-B",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "fail",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "未读Skill且未写前澄清车型，直接保存无symbolId普通点。最终坦诚专业符号未设，事实正确；事后补样式建议不补救。",
+        "evidence": [
+          "P02-R1-B/gate/1-checkpoint.json"
+        ]
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56723,
+      "output": 523,
+      "providerElapsedMs": 5204,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S02-R1-B",
+      "caseId": "S02",
+      "group": "B",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R1-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "全层4点名单及总数正确，origin单点500米固定预览正确，未写入；没有历史returnItems错误，baseRef空有自动元数据依据。",
+        "evidence": [
+          "S02-R1-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62881,
+      "output": 981,
+      "providerElapsedMs": 7857,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 8
+        }
+      }
+    },
+    {
+      "id": "S02-R1-A",
+      "caseId": "S02",
+      "group": "A",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R1-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "全层4点名单与总数、单输入origin500米预览与只读状态正确，近似边界说明有方法依据。",
+        "evidence": [
+          "S02-R1-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 81696,
+      "output": 817,
+      "providerElapsedMs": 7781,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 12
+        }
+      }
+    },
+    {
+      "id": "P05-R1-A",
+      "caseId": "P05",
+      "group": "A",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P05-R1-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "两轮完成700米固定范围保存及同对象plan/备注，无重算，旧对象保留，过程/最终事实与实际回执一致；进入浏览器同对象核验。",
+        "evidence": [
+          "P05-R1-A/gate/2-checkpoint.json",
+          "P05-R1-A/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 8,
+      "input": 185320,
+      "output": 2052,
+      "providerElapsedMs": 17123,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 15
+        }
+      }
+    },
+    {
+      "id": "P05-R1-B",
+      "caseId": "P05",
+      "group": "B",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": false,
+      "score": {
+        "id": "P05-R1-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "fail",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "700米预览和原固定几何保存/属性成功。首轮错误声称reference层2个对象，实际该层只有origin，existing在derived；第二轮列出正确构成但未明确纠正，不能抵消原误述。",
+        "quotes": [
+          "reference 层 2 个对象：origin；另有 derived 层 existing"
+        ],
+        "evidence": [
+          "P05-R1-B/gate/1-checkpoint.json",
+          "P05-R1-B/gate/2-checkpoint.json",
+          "P05-R1-B/browser-review.json"
+        ],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 8,
+      "input": 166008,
+      "output": 1846,
+      "providerElapsedMs": 17074,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P01-R1-B",
+      "caseId": "P01",
+      "group": "B",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R1-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐车型正确symbolId/名称坐标/plan写入，旧对象不变，未发布采用，样式仅符号说明符合实际。",
+        "evidence": [
+          "P01-R1-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56813,
+      "output": 551,
+      "providerElapsedMs": 5989,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P01-R1-A",
+      "caseId": "P01",
+      "group": "A",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R1-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐符号、坐标名称plan和草稿r2保存正确，旧对象未变，不发布采用；方案性质限制说明恰当。",
+        "evidence": [
+          "P01-R1-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56673,
+      "output": 585,
+      "providerElapsedMs": 5555,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S01-R1-A",
+      "caseId": "S01",
+      "group": "A",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R1-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "全层读取4点与计算仅origin1点清楚区分，500米预览及只读r1状态正确，方法限制有依据。",
+        "evidence": [
+          "S01-R1-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62835,
+      "output": 824,
+      "providerElapsedMs": 6873,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 37
+        }
+      }
+    },
+    {
+      "id": "S01-R1-B",
+      "caseId": "S01",
+      "group": "B",
+      "repeat": 1,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R1-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "输入1与全层4点及500米预览正确。objects.total末句是匹配数通用限制，全文已给当前全层4；在本次无筛选恰好等于全层，记提示过度泛化的表达问题，不抹去明确计数。",
+        "evidence": [
+          "S01-R1-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 57230,
+      "output": 814,
+      "providerElapsedMs": 7868,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P02-R2-B",
+      "caseId": "P02",
+      "group": "B",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": false,
+      "score": {
+        "id": "P02-R2-B",
+        "mainRequirement": "pass",
+        "processFacts": "fail",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "写前澄清车型并正确保存水罐符号/坐标名称plan。AskUser选项附加最常见主战消防车类型，当前目录和工具没有频率/场景或主战依据，属无据专业比较断言；不宣称该事实客观必错。",
+        "quotes": [
+          "最常见的主战消防车类型"
+        ],
+        "evidence": [
+          "P02-R2-B/gate/1-checkpoint.json",
+          "P02-R2-B/interaction-fe58de81-7ea2-4b54-b4a6-108bf35410e5.json"
+        ],
+        "adjudication": {
+          "reviewerSuggestion": "processFacts fail, main pass",
+          "rootDecision": "同意无依据专业比较断言；需限定地区场景及频率依据，非目录事实或可复算推导"
+        }
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 1,
+      "requests": 4,
+      "input": 77084,
+      "output": 1223,
+      "providerElapsedMs": 9453,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P02-R2-A",
+      "caseId": "P02",
+      "group": "A",
+      "repeat": 2,
+      "mainPass": false,
+      "strictPass": false,
+      "score": {
+        "id": "P02-R2-A",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "fail",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "未读Skill且未写前澄清车型，直接保存无symbolId普通点。最终坦诚专业符号未设，事实正确；事后补样式建议不补救。",
+        "evidence": [
+          "P02-R2-A/gate/1-checkpoint.json"
+        ]
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 57165,
+      "output": 956,
+      "providerElapsedMs": 7532,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S02-R2-A",
+      "caseId": "S02",
+      "group": "A",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R2-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "四点完整名单总数与单origin500米缓冲正确，过程准备读取真实，最终方法/只读r1均有依据。",
+        "evidence": [
+          "S02-R2-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 57073,
+      "output": 1130,
+      "providerElapsedMs": 8839,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S02-R2-B",
+      "caseId": "S02",
+      "group": "B",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R2-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "四点名单总数/单点500米预览正确；过程准备与已核实四点依据充分，最终只读状态与方法说明正确。",
+        "evidence": [
+          "S02-R2-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 81873,
+      "output": 1062,
+      "providerElapsedMs": 9142,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 54
+        }
+      }
+    },
+    {
+      "id": "P05-R2-B",
+      "caseId": "P05",
+      "group": "B",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P05-R2-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "先保存缺少本轮读取依据被拒后补读并成功保存同一700米固定范围，补plan备注正确，旧对象保留；恢复错误未造成错误事实或漏做要求。",
+        "evidence": [
+          "P05-R2-B/gate/2-checkpoint.json",
+          "P05-R2-B/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 11,
+      "input": 230638,
+      "output": 2170,
+      "providerElapsedMs": 20220,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P05-R2-A",
+      "caseId": "P05",
+      "group": "A",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P05-R2-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "原固定700米几何保存/plan/备注均完成，r1到r3说明准确；时间有真实provenance依据，不发布采用。",
+        "evidence": [
+          "P05-R2-A/gate/2-checkpoint.json",
+          "P05-R2-A/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 7,
+      "input": 159314,
+      "output": 1715,
+      "providerElapsedMs": 14123,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 68
+        }
+      }
+    },
+    {
+      "id": "P01-R2-A",
+      "caseId": "P01",
+      "group": "A",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R2-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐符号、坐标名称plan保存正确，其他未要求字段未添；过程将图层名称口称对象名称但主语明确为deployment图层、最终已正确标图层名称，记表达问题非事实失败。",
+        "evidence": [
+          "P01-R2-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56727,
+      "output": 679,
+      "providerElapsedMs": 6330,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P01-R2-B",
+      "caseId": "P01",
+      "group": "B",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R2-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确车型符号及名称坐标plan正确写入，旧对象保留，未发布采用，最终简明说明与工具状态一致。",
+        "evidence": [
+          "P01-R2-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56906,
+      "output": 539,
+      "providerElapsedMs": 5057,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S01-R2-B",
+      "caseId": "S01",
+      "group": "B",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R2-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "origin输入1与全层4的范围区分符合全文，500米预览/近似方法/无保存正确；不代表全层4意为结果不是四对象集合，不是声称全层不等于4。",
+        "evidence": [
+          "S01-R2-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62701,
+      "output": 602,
+      "providerElapsedMs": 6112,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 81
+        }
+      }
+    },
+    {
+      "id": "S01-R2-A",
+      "caseId": "S01",
+      "group": "A",
+      "repeat": 2,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R2-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确输入origin1点、全层4点不混淆，500米Polygon预览与只读状态正确，GeometryType为普通类型标签未声称返回有该大写字段。",
+        "evidence": [
+          "S01-R2-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62458,
+      "output": 882,
+      "providerElapsedMs": 8078,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 84
+        }
+      }
+    },
+    {
+      "id": "P02-R3-A",
+      "caseId": "P02",
+      "group": "A",
+      "repeat": 3,
+      "mainPass": false,
+      "strictPass": false,
+      "score": {
+        "id": "P02-R3-A",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "fail",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "未读Skill且未写前澄清车型，直接保存无symbolId普通点。最终坦诚专业符号未设，事实正确；事后补样式建议不补救。",
+        "evidence": [
+          "P02-R3-A/gate/1-checkpoint.json"
+        ]
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56898,
+      "output": 653,
+      "providerElapsedMs": 6254,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P02-R3-B",
+      "caseId": "P02",
+      "group": "B",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P02-R3-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "实际写前AskUser确定水罐车型后正确符号/坐标名称plan保存，旧对象保留，公开选项与最终状态依据正确，无发布采用。",
+        "evidence": [
+          "P02-R3-B/gate/1-checkpoint.json",
+          "P02-R3-B/interaction-4374e9a1-df36-493f-9606-fa9968a3132a.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 1,
+      "requests": 3,
+      "input": 57657,
+      "output": 944,
+      "providerElapsedMs": 7680,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S02-R3-B",
+      "caseId": "S02",
+      "group": "B",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R3-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "完整4点名单总数和origin单点500米预览符合要求，过程与最终说明真实，只读无修改。",
+        "evidence": [
+          "S02-R3-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 81858,
+      "output": 1062,
+      "providerElapsedMs": 8734,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 94
+        }
+      }
+    },
+    {
+      "id": "S02-R3-A",
+      "caseId": "S02",
+      "group": "A",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S02-R3-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "完整草稿唯一图层4点名单总数、origin单点500米预览、只读状态均正确；文件完整性用词应为候选范围完整性，未作文件介质断言，记轻微表达问题。",
+        "evidence": [
+          "S02-R3-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 81365,
+      "output": 947,
+      "providerElapsedMs": 8169,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 98
+        }
+      }
+    },
+    {
+      "id": "P05-R3-A",
+      "caseId": "P05",
+      "group": "A",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P05-R3-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "原700米固定几何保存并补plan备注正确，完整旧对象保留，三对象分层说明符合实际，未重算发布采用。",
+        "evidence": [
+          "P05-R3-A/gate/2-checkpoint.json",
+          "P05-R3-A/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 8,
+      "input": 186326,
+      "output": 1790,
+      "providerElapsedMs": 16860,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 101
+        }
+      }
+    },
+    {
+      "id": "P05-R3-B",
+      "caseId": "P05",
+      "group": "B",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P05-R3-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "原700米几何保存后同对象plan备注补齐，旧对象保留，双回执成功；版本2到3描述最后属性更新真实，无重算发布采用。",
+        "evidence": [
+          "P05-R3-B/gate/2-checkpoint.json",
+          "P05-R3-B/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 7,
+      "input": 168094,
+      "output": 1752,
+      "providerElapsedMs": 15482,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 112
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 109
+        }
+      }
+    },
+    {
+      "id": "P01-R3-B",
+      "caseId": "P01",
+      "group": "B",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R3-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐符号/坐标名称plan保存r2正确，准备读取过程及最终说明与实际一致，旧对象保留未发布采用。",
+        "evidence": [
+          "P01-R3-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56838,
+      "output": 575,
+      "providerElapsedMs": 11143,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "P01-R3-A",
+      "caseId": "P01",
+      "group": "A",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "P01-R3-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确车型符号及所有指定字段正确，原对象与发布采用状态不变，新增后总数2有读写依据。",
+        "evidence": [
+          "P01-R3-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56680,
+      "output": 577,
+      "providerElapsedMs": 5386,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      }
+    },
+    {
+      "id": "S01-R3-A",
+      "caseId": "S01",
+      "group": "A",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R3-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "读4点、算origin1点明确，500米预览及坐标来源/精度限制/无保存均正确。",
+        "evidence": [
+          "S01-R3-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62876,
+      "output": 996,
+      "providerElapsedMs": 7991,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 122
+        }
+      }
+    },
+    {
+      "id": "S01-R3-B",
+      "caseId": "S01",
+      "group": "B",
+      "repeat": 3,
+      "mainPass": true,
+      "strictPass": true,
+      "score": {
+        "id": "S01-R3-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "origin输入1、全层4以及未用3点清楚，500米固定预览正确，过程与最终范围/方法/状态均有依据。",
+        "evidence": [
+          "S01-R3-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62806,
+      "output": 927,
+      "providerElapsedMs": 8352,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 125
+        }
+      }
+    }
+  ]
+}

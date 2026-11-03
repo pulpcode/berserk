@@ -1,0 +1,104 @@
+{
+  "reviewer": "root Codex",
+  "reviewerKind": "agent",
+  "rawReadBeforeAnnotations": true,
+  "cases": [
+    {
+      "id": "C01",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "名单与complete覆盖吻合"
+    },
+    {
+      "id": "C02",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "明确区分用户报告和来源未知"
+    },
+    {
+      "id": "C03",
+      "mainTask": false,
+      "explanation": false,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "要求数量实际3却说4，主任务和解释均错"
+    },
+    {
+      "id": "C04",
+      "mainTask": false,
+      "explanation": false,
+      "criticalAssignmentAvailability": false,
+      "expressionIssue": false,
+      "reason": "无故障记录不能推导可用，主任务错且虚构可用"
+    },
+    {
+      "id": "C05",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "同一有效时段求已分配且可用交集有据"
+    },
+    {
+      "id": "C06",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "同类别同单位且不重叠，可相加7台"
+    },
+    {
+      "id": "C07",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": true,
+      "reason": "同一完整表述明确限定已返回部分，事实通过、表达可改善"
+    },
+    {
+      "id": "C08",
+      "mainTask": true,
+      "explanation": true,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": true,
+      "reason": "全文正确区分3记录2实体，表达可改善"
+    },
+    {
+      "id": "C09",
+      "mainTask": true,
+      "explanation": false,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "后来确认可完成任务，但早先名单无据不能补证"
+    },
+    {
+      "id": "C10",
+      "mainTask": true,
+      "explanation": false,
+      "criticalAssignmentAvailability": false,
+      "expressionIssue": false,
+      "reason": "后来完成主任务不能抵消早先无据分配可用"
+    },
+    {
+      "id": "C11",
+      "mainTask": true,
+      "explanation": false,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "读取名单正确，重新查询计算的过程说法错误"
+    },
+    {
+      "id": "C12",
+      "mainTask": true,
+      "explanation": false,
+      "criticalAssignmentAvailability": true,
+      "expressionIssue": false,
+      "reason": "读取名单正确，再次保存说法错误；没有真实写入不判操作越权"
+    }
+  ],
+  "amendment": "复核后将C05构造题干明确为已分配且可用的交集，移除交集未写全的歧义；不改答复、预期或root原判。"
+}

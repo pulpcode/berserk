@@ -1,0 +1,16 @@
+{
+  "id": "T03-R3-A",
+  "reviewer": "Codex trellis-check independent agent review",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "strict": "pass",
+  "reason": "明确来源未指定，分别完成草稿4/来源1。名单、成员与坐标差异有实际依据；可用1辆限定在来源快照availableCount属性；无写入。",
+  "expressionNotes": [
+    "“草稿集 revision1，共5个对象”措辞可更精确：完整草稿是6对象，但此句以“两次分类基于固定输入”及前文候选点集限定，指分类输入5点，不判全草稿总数错误。"
+  ],
+  "evidence": [
+    ".local/qwen-comparison-20261030/comparison/T03-R3-A/review.json"
+  ]
+}

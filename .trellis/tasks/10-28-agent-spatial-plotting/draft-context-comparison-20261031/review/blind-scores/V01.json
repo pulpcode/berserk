@@ -1,0 +1,126 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewId": "V01",
+  "caseId": "G07",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "actual_user_reply_count": 1,
+  "effective_required_pairs": [
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "source",
+  "ended_with_default_draft": false,
+  "ended_with_default_source": false,
+  "aware_of_other_source_left_optional": false,
+  "clarifications": {
+    "necessary_count": 1,
+    "unnecessary_count": 0,
+    "coupled_source_question_count": 1,
+    "actual_scope_replies": [
+      {
+        "message_id": "0f9f3856",
+        "text": "资源点用当前会话草稿 resources 层的全部点。边界用来源系统登记的“溪湾物资区”面。"
+      }
+    ]
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "6a3ab1f9",
+      "tool_call_id": "call_00_7bbj8tpq6oxdv2kqqm0cvvuk"
+    }
+  ],
+  "candidate_completeness_pass": true,
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "draft_hash_after": "f253f11d9c8fa3ed329d2f771ac7edf0efe4212678371f68679ac98771a6766b",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "8a4b74ca-f0d2-4f80-9aea-11dbe8a5dcf0",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "8a4b74ca-f0d2-4f80-9aea-11dbe8a5dcf0",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "首次只给两个同来源组合并真实要求确认来源；实际user一次答复明确两轴，最终仅要求draft->source并正确给溪湾丁/戊2点。",
+    "首轮来源只读区域标签成员4点，非全部来源6点；其答复说“按区域隶属范围完整查询，其下资源共4”有areaIds查询依据。过程“为确认无遗漏”是意图，未把查询标签等同几何的算法缺陷自动算作独立虚假事实。",
+    "首轮各已报名单及数量均正确；后续使用来源面得到2点，未覆盖先前数字而明确解释边界变更。",
+    "源码interactions为空，但messages包含真实user回复，按消息证据计1次必要澄清/两轴回答，不凭元数据空数组忽略实际用户。"
+  ],
+  "evidence": [
+    {
+      "message_id": "d3f0f409",
+      "quote": "请告诉我按哪一个来源作为后续口径",
+      "basis": "随后真实user消息0f9f3856回答两轴；不是自动补发选择或可选保存邀请。",
+      "category": "actual_clarification"
+    },
+    {
+      "message_id": "309579f3",
+      "quote": "2 个** —— **溪湾丁、溪湾戊",
+      "basis": "call_00_gsomw9m0fpihu2qvh4gdupn2 完整草稿候选6点对来源面，内部p04/p05，边界0外部4。",
+      "category": "verified_main_answer"
+    }
+  ],
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": {
+    "kind": "scope_resolved_by_actual_user_reply",
+    "before": "only two same-source conditions and awaiting source choice",
+    "after": "user explicitly chose draft candidates/source boundary; correct two points"
+  },
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "effectiveClarifications": 1,
+  "redundantClarifications": 0,
+  "failureTags": [],
+  "actual_reported_pairs_correct": true,
+  "default_source_boundary": false,
+  "answered_axes": [
+    "candidate",
+    "reference"
+  ],
+  "reported_pairs_before_clarification": [
+    "draft->draft",
+    "source->source"
+  ],
+  "first_round_source_candidate_completeness_pass": false,
+  "optional_boundary_offer": false
+}

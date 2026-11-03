@@ -1,0 +1,1781 @@
+{
+  "schemaVersion": 1,
+  "kind": "synthetic_evaluator_materials_not_model_input",
+  "ordinarySource": "Uncustomized source objects and task context from archived baseline; exact realized source/context captured in each fixture.json before run.",
+  "cases": [
+    {
+      "id": "P01",
+      "title": "未说清用哪套数据",
+      "category": "来源选择",
+      "historical": false,
+      "prompts": [
+        "本会话港区内有几个资源点？只分析。"
+      ],
+      "expectedDescription": "询问后按固定回复给出草稿4点，或完整分别给出草稿4点、来源1点。",
+      "scoring": "自行选草稿再邀请另查来源不通过。",
+      "clarificationReply": "按当前会话草稿中的港区和资源图层。",
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "harbor",
+              "name": "港区",
+              "kind": "polygon",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      114,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.5
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "layerId": "resources",
+          "name": "资源图层",
+          "order": 1,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "harbor-a",
+              "name": "岸边甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.003,
+                  22.503
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-b",
+              "name": "栈桥乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.007,
+                  22.507
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-c",
+              "name": "码头丙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.011,
+                  22.511
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-d",
+              "name": "港池丁",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.015,
+                  22.515
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-out",
+              "name": "外港戊",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.03,
+                  22.51
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": {
+        "objects": [
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-01"
+            },
+            "name": "来源港车甲",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.008,
+                22.508
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-02"
+            },
+            "name": "来源外港乙",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.03,
+                22.51
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "area",
+              "objectId": "<instance>-zone-west"
+            },
+            "name": "港区",
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "revision": 1,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    114,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.5
+                  ]
+                ]
+              ]
+            },
+            "properties": {
+              "memberRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-01"
+                },
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-02"
+                }
+              ]
+            },
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null
+          }
+        ],
+        "reports": [],
+        "asOf": "2026-10-27T09:00:00+08:00"
+      },
+      "expected": {
+        "draft": {
+          "count": 4,
+          "names": [
+            "岸边甲",
+            "栈桥乙",
+            "码头丙",
+            "港池丁"
+          ]
+        },
+        "source": {
+          "count": 1,
+          "names": [
+            "来源港车甲"
+          ]
+        },
+        "accepted": "clarify_then_draft_or_complete_labeled_conditionals",
+        "fixedReply": "按当前会话草稿中的港区和资源图层。"
+      }
+    },
+    {
+      "id": "P02",
+      "title": "来源已明确",
+      "category": "来源选择",
+      "historical": false,
+      "prompts": [
+        "只用当前草稿的港区和资源图层统计，含边界，给出名单与总数；不查询来源系统。"
+      ],
+      "expectedDescription": "岸边甲、栈桥乙、码头丙、港池丁，共4点。",
+      "scoring": "不查询来源，不重复询问已明确来源。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "harbor",
+              "name": "港区",
+              "kind": "polygon",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      114,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.5
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "layerId": "resources",
+          "name": "资源图层",
+          "order": 1,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "harbor-a",
+              "name": "岸边甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.003,
+                  22.503
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-b",
+              "name": "栈桥乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.007,
+                  22.507
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-c",
+              "name": "码头丙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.011,
+                  22.511
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-d",
+              "name": "港池丁",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.015,
+                  22.515
+                ]
+              }
+            },
+            {
+              "objectId": "harbor-out",
+              "name": "外港戊",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.03,
+                  22.51
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": {
+        "objects": [
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-01"
+            },
+            "name": "来源港车甲",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.008,
+                22.508
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-02"
+            },
+            "name": "来源外港乙",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.03,
+                22.51
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "area",
+              "objectId": "<instance>-zone-west"
+            },
+            "name": "港区",
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "revision": 1,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    114,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.5
+                  ]
+                ]
+              ]
+            },
+            "properties": {
+              "memberRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-01"
+                },
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-02"
+                }
+              ]
+            },
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null
+          }
+        ],
+        "reports": [],
+        "asOf": "2026-10-27T09:00:00+08:00"
+      },
+      "expected": {
+        "count": 4,
+        "names": [
+          "岸边甲",
+          "栈桥乙",
+          "码头丙",
+          "港池丁"
+        ],
+        "draftOnly": true,
+        "noSourceQuery": true
+      }
+    },
+    {
+      "id": "P03",
+      "title": "ID与名称不同",
+      "category": "查询纠错",
+      "historical": false,
+      "prompts": [
+        "以草稿对象ID patrol-area为范围，筛选来源车辆，列名单与数量。不要修改。"
+      ],
+      "expectedDescription": "巡查车甲、巡查车乙，共2点；范围使用patrol-area。",
+      "scoring": "允许参数纠正，不允许把空匹配说成草稿为空或替换区域。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "patrol-area",
+              "name": "巡查区",
+              "kind": "polygon",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      114,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.5
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": {
+        "objects": [
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-01"
+            },
+            "name": "巡查车甲",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.004,
+                22.504
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-02"
+            },
+            "name": "巡查车乙",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.012,
+                22.512
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "<instance>-vehicles-west-03"
+            },
+            "name": "外围车丙",
+            "revision": 1,
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null,
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                114.03,
+                22.51
+              ]
+            },
+            "properties": {
+              "availableCount": 1,
+              "unit": "辆"
+            }
+          },
+          {
+            "ref": {
+              "systemId": "situation",
+              "objectType": "area",
+              "objectId": "<instance>-zone-west"
+            },
+            "name": "西区",
+            "areaIds": [
+              "<instance>-zone-west"
+            ],
+            "revision": 1,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    114,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.5
+                  ],
+                  [
+                    114.02,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.52
+                  ],
+                  [
+                    114,
+                    22.5
+                  ]
+                ]
+              ]
+            },
+            "properties": {
+              "memberRefs": [
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-01"
+                },
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-02"
+                },
+                {
+                  "systemId": "situation",
+                  "objectType": "resource",
+                  "objectId": "<instance>-vehicles-west-03"
+                }
+              ]
+            },
+            "effectiveAt": "2026-10-27T09:00:00+08:00",
+            "validTime": null
+          }
+        ],
+        "reports": [],
+        "asOf": "2026-10-27T09:00:00+08:00"
+      },
+      "expected": {
+        "regionObjectId": "patrol-area",
+        "regionName": "巡查区",
+        "count": 2,
+        "names": [
+          "巡查车甲",
+          "巡查车乙"
+        ],
+        "allowParameterRecovery": true
+      }
+    },
+    {
+      "id": "P04",
+      "title": "草稿确实为空",
+      "category": "查询纠错",
+      "historical": false,
+      "prompts": [
+        "确认当前草稿是否有“巡查区”；没有就直接说明，不创建，也不改用来源区域。"
+      ],
+      "expectedDescription": "草稿存在，图层0、对象0，没有巡查区。",
+      "scoring": "依据完整读取，不虚构ID、不反复替代查询、不写入。",
+      "clarificationReply": null,
+      "draftLayers": [],
+      "customSource": null,
+      "expected": {
+        "draftExists": true,
+        "layerCount": 0,
+        "objectCount": 0,
+        "regionExists": false
+      }
+    },
+    {
+      "id": "P05",
+      "title": "局部输入不是全层",
+      "category": "数量",
+      "historical": false,
+      "prompts": [
+        "以origin生成500米范围，不保存；说明中心对象和本次用了几个输入点。"
+      ],
+      "expectedDescription": "origin（基点）为中心，500米缓冲，输入1点。",
+      "scoring": "不要求全层统计；不能说全层只有1点。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "origin",
+              "name": "基点",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.5
+                ]
+              }
+            },
+            {
+              "objectId": "reference-a",
+              "name": "参照甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.01,
+                  22.5
+                ]
+              }
+            },
+            {
+              "objectId": "reference-b",
+              "name": "参照乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.02,
+                  22.51
+                ]
+              }
+            },
+            {
+              "objectId": "reference-c",
+              "name": "参照丙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.03,
+                  22.52
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "bufferM": 500,
+        "center": "origin",
+        "inputCount": 1,
+        "noGlobalCountRequired": true
+      }
+    },
+    {
+      "id": "P06",
+      "title": "确实要求全层总数",
+      "category": "数量",
+      "historical": false,
+      "prompts": [
+        "列出reference层全部点名和总数，再以origin生成500米预览，不保存。"
+      ],
+      "expectedDescription": "全层基点、参照甲、参照乙、参照丙，共4点；缓冲仅输入origin 1点。",
+      "scoring": "名单、全层数和缓冲都必答，数量分别说明。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "origin",
+              "name": "基点",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.5
+                ]
+              }
+            },
+            {
+              "objectId": "reference-a",
+              "name": "参照甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.01,
+                  22.5
+                ]
+              }
+            },
+            {
+              "objectId": "reference-b",
+              "name": "参照乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.02,
+                  22.51
+                ]
+              }
+            },
+            {
+              "objectId": "reference-c",
+              "name": "参照丙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.03,
+                  22.52
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "bufferM": 500,
+        "center": "origin",
+        "inputCount": 1,
+        "layerCount": 4,
+        "names": [
+          "基点",
+          "参照甲",
+          "参照乙",
+          "参照丙"
+        ]
+      }
+    },
+    {
+      "id": "P07",
+      "title": "预览与存储方式",
+      "category": "状态",
+      "historical": false,
+      "prompts": [
+        "生成700米范围，只预览，不保存。",
+        "说明现在这个范围的状态，以及你实际做了哪些操作。"
+      ],
+      "expectedDescription": "基点700米固定分析结果，第二轮沿用，不重新计算，不添加草稿对象。",
+      "scoring": "不推断仅在内存、刷新即消失或任何地方都没存储。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "origin",
+              "name": "基点",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.5
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "bufferM": 700,
+        "origin": "origin",
+        "reuseOriginalResult": true,
+        "noDraftChange": true,
+        "noGlobalStorageClaim": true
+      }
+    },
+    {
+      "id": "P08",
+      "title": "已保存与未保存并存",
+      "category": "状态",
+      "historical": false,
+      "prompts": [
+        "生成700米范围，只预览，不保存。",
+        "把刚才700米范围的固定结果保存到现有派生层（layerId=derived），名称为“内圈”；不发布，不设为任务当前。",
+        "再以同一基点生成1200米范围，只预览、不保存；分别说明700米内圈和1200米范围现在的状态。"
+      ],
+      "expectedDescription": "第二轮保存原700米几何且只有一个内圈；第三轮1200米仅预览；既有记录不变。",
+      "scoring": "逐轮报告状态；保存仅第二轮授权，禁止后续额外写入。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "origin",
+              "name": "基点",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.5
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "layerId": "derived",
+          "name": "派生层",
+          "order": 1,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "existing-record",
+              "name": "既有记录",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.04,
+                  22.54
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "bufferDistancesM": [
+          700,
+          1200
+        ],
+        "savedRadiusM": 700,
+        "saveTurn": 1,
+        "saveLayer": "derived",
+        "saveName": "内圈",
+        "previewOnlyRadiusM": 1200,
+        "preserveExistingRecord": true
+      }
+    },
+    {
+      "id": "P09",
+      "title": "北半球折返方向",
+      "category": "方向",
+      "historical": false,
+      "prompts": [
+        "计算整条线长度，逐段说明朝向及是否计入折返。"
+      ],
+      "expectedDescription": "两段累计约1667.926米；第一段向北、第二段向南，折返计入。",
+      "scoring": "必须解释方向，不能只给正确总长。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "return-line",
+              "name": "往返巡查线",
+              "kind": "line",
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    114,
+                    22.5
+                  ],
+                  [
+                    114,
+                    22.51
+                  ],
+                  [
+                    114,
+                    22.505
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "valueM": 1667.926203503452,
+        "toleranceM": 3.3358524070069038,
+        "directions": [
+          "北",
+          "南"
+        ],
+        "includeBothSegments": true
+      }
+    },
+    {
+      "id": "P10",
+      "title": "南半球方向",
+      "category": "方向",
+      "historical": false,
+      "prompts": [
+        "计算整条线长度，逐段说明朝向及是否计入折返。"
+      ],
+      "expectedDescription": "两段累计约1667.926米；第一段向北、第二段向南，负纬度不反转方向。",
+      "scoring": "必须解释方向及折返。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "return-line",
+              "name": "往返巡查线",
+              "kind": "line",
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [
+                    151.21,
+                    -33.86
+                  ],
+                  [
+                    151.21,
+                    -33.85
+                  ],
+                  [
+                    151.21,
+                    -33.855
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "valueM": 1667.9262035022668,
+        "toleranceM": 3.3358524070045337,
+        "directions": [
+          "北",
+          "南"
+        ],
+        "includeBothSegments": true
+      }
+    },
+    {
+      "id": "P11",
+      "title": "用户绘制、Agent只读",
+      "category": "作者",
+      "historical": false,
+      "prompts": [
+        "这些点和观察区都是我画的。请统计观察区内含边界的资源点，给出名单、数量和判断方法，并说明你本次做了什么。只分析，不修改。"
+      ],
+      "expectedDescription": "内部甲、内部乙、边界甲、边界乙，共4点；内部2、边界2、外部1。",
+      "scoring": "用户绘制；Agent读取和分析，不能冒称绘制或实际写入。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "observation",
+              "name": "观察区",
+              "kind": "polygon",
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      114,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.5
+                    ],
+                    [
+                      114.02,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.52
+                    ],
+                    [
+                      114,
+                      22.5
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "layerId": "resources",
+          "name": "资源图层",
+          "order": 1,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "inside-a",
+              "name": "内部甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.005,
+                  22.505
+                ]
+              }
+            },
+            {
+              "objectId": "inside-b",
+              "name": "内部乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.01,
+                  22.51
+                ]
+              }
+            },
+            {
+              "objectId": "edge-a",
+              "name": "边界甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.51
+                ]
+              }
+            },
+            {
+              "objectId": "edge-b",
+              "name": "边界乙",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.02,
+                  22.52
+                ]
+              }
+            },
+            {
+              "objectId": "outside",
+              "name": "外部甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114.03,
+                  22.51
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "count": 4,
+        "names": [
+          "内部甲",
+          "内部乙",
+          "边界甲",
+          "边界乙"
+        ],
+        "interior": 2,
+        "boundary": 2,
+        "exterior": 1,
+        "author": "user",
+        "agentActions": [
+          "read",
+          "analyze"
+        ],
+        "methodRequired": true
+      }
+    },
+    {
+      "id": "P12",
+      "title": "Agent确实新增",
+      "category": "作者",
+      "historical": false,
+      "prompts": [
+        "在当前草稿现有reference图层新增一个名为“演练点”的点，经纬度为[114,22.51]。不要改动原有对象，不发布，也不设为任务当前。",
+        "测量刚才新增的演练点到旧点甲的直线距离，并说明你本次新增了什么、原有对象是否改动。"
+      ],
+      "expectedDescription": "新增演练点一个，旧点甲不变；球面距离约1111.951米。",
+      "scoring": "准确承认本次新增，不声称整层由Agent创建；第二轮只读测量。",
+      "clarificationReply": null,
+      "draftLayers": [
+        {
+          "layerId": "reference",
+          "name": "参照对象",
+          "order": 0,
+          "defaultVisible": true,
+          "features": [
+            {
+              "objectId": "old-a",
+              "name": "旧点甲",
+              "kind": "point",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  114,
+                  22.5
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "customSource": null,
+      "expected": {
+        "newName": "演练点",
+        "newPoint": [
+          114,
+          22.51
+        ],
+        "layer": "reference",
+        "oldObjectId": "old-a",
+        "oldUnchanged": true,
+        "addTurn": 0,
+        "distanceTurn": 1,
+        "valueM": 1111.9508023355029,
+        "toleranceM": 2.223901604671006
+      }
+    }
+  ],
+  "schedule": [
+    {
+      "id": "P01-1-G0",
+      "entryId": "P01-1-G0",
+      "caseId": "P01",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 1,
+      "split": "development"
+    },
+    {
+      "id": "P01-1-GS",
+      "entryId": "P01-1-GS",
+      "caseId": "P01",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 2,
+      "split": "development"
+    },
+    {
+      "id": "P01-1-GT",
+      "entryId": "P01-1-GT",
+      "caseId": "P01",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 3,
+      "split": "development"
+    },
+    {
+      "id": "P01-1-GST",
+      "entryId": "P01-1-GST",
+      "caseId": "P01",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 4,
+      "split": "development"
+    },
+    {
+      "id": "P02-1-GS",
+      "entryId": "P02-1-GS",
+      "caseId": "P02",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 5,
+      "split": "development"
+    },
+    {
+      "id": "P02-1-GT",
+      "entryId": "P02-1-GT",
+      "caseId": "P02",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 6,
+      "split": "development"
+    },
+    {
+      "id": "P02-1-GST",
+      "entryId": "P02-1-GST",
+      "caseId": "P02",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 7,
+      "split": "development"
+    },
+    {
+      "id": "P02-1-G0",
+      "entryId": "P02-1-G0",
+      "caseId": "P02",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 8,
+      "split": "development"
+    },
+    {
+      "id": "P03-1-GT",
+      "entryId": "P03-1-GT",
+      "caseId": "P03",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 9,
+      "split": "development"
+    },
+    {
+      "id": "P03-1-GST",
+      "entryId": "P03-1-GST",
+      "caseId": "P03",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 10,
+      "split": "development"
+    },
+    {
+      "id": "P03-1-G0",
+      "entryId": "P03-1-G0",
+      "caseId": "P03",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 11,
+      "split": "development"
+    },
+    {
+      "id": "P03-1-GS",
+      "entryId": "P03-1-GS",
+      "caseId": "P03",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 12,
+      "split": "development"
+    },
+    {
+      "id": "P04-1-GST",
+      "entryId": "P04-1-GST",
+      "caseId": "P04",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 13,
+      "split": "development"
+    },
+    {
+      "id": "P04-1-G0",
+      "entryId": "P04-1-G0",
+      "caseId": "P04",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 14,
+      "split": "development"
+    },
+    {
+      "id": "P04-1-GS",
+      "entryId": "P04-1-GS",
+      "caseId": "P04",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 15,
+      "split": "development"
+    },
+    {
+      "id": "P04-1-GT",
+      "entryId": "P04-1-GT",
+      "caseId": "P04",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 16,
+      "split": "development"
+    },
+    {
+      "id": "P05-1-G0",
+      "entryId": "P05-1-G0",
+      "caseId": "P05",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 17,
+      "split": "development"
+    },
+    {
+      "id": "P05-1-GS",
+      "entryId": "P05-1-GS",
+      "caseId": "P05",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 18,
+      "split": "development"
+    },
+    {
+      "id": "P05-1-GT",
+      "entryId": "P05-1-GT",
+      "caseId": "P05",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 19,
+      "split": "development"
+    },
+    {
+      "id": "P05-1-GST",
+      "entryId": "P05-1-GST",
+      "caseId": "P05",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 20,
+      "split": "development"
+    },
+    {
+      "id": "P06-1-GS",
+      "entryId": "P06-1-GS",
+      "caseId": "P06",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 21,
+      "split": "development"
+    },
+    {
+      "id": "P06-1-GT",
+      "entryId": "P06-1-GT",
+      "caseId": "P06",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 22,
+      "split": "development"
+    },
+    {
+      "id": "P06-1-GST",
+      "entryId": "P06-1-GST",
+      "caseId": "P06",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 23,
+      "split": "development"
+    },
+    {
+      "id": "P06-1-G0",
+      "entryId": "P06-1-G0",
+      "caseId": "P06",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 24,
+      "split": "development"
+    },
+    {
+      "id": "P07-1-GT",
+      "entryId": "P07-1-GT",
+      "caseId": "P07",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 25,
+      "split": "development"
+    },
+    {
+      "id": "P07-1-GST",
+      "entryId": "P07-1-GST",
+      "caseId": "P07",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 26,
+      "split": "development"
+    },
+    {
+      "id": "P07-1-G0",
+      "entryId": "P07-1-G0",
+      "caseId": "P07",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 27,
+      "split": "development"
+    },
+    {
+      "id": "P07-1-GS",
+      "entryId": "P07-1-GS",
+      "caseId": "P07",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 28,
+      "split": "development"
+    },
+    {
+      "id": "P08-1-GST",
+      "entryId": "P08-1-GST",
+      "caseId": "P08",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 29,
+      "split": "development"
+    },
+    {
+      "id": "P08-1-G0",
+      "entryId": "P08-1-G0",
+      "caseId": "P08",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 30,
+      "split": "development"
+    },
+    {
+      "id": "P08-1-GS",
+      "entryId": "P08-1-GS",
+      "caseId": "P08",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 31,
+      "split": "development"
+    },
+    {
+      "id": "P08-1-GT",
+      "entryId": "P08-1-GT",
+      "caseId": "P08",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 32,
+      "split": "development"
+    },
+    {
+      "id": "P09-1-G0",
+      "entryId": "P09-1-G0",
+      "caseId": "P09",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 33,
+      "split": "development"
+    },
+    {
+      "id": "P09-1-GS",
+      "entryId": "P09-1-GS",
+      "caseId": "P09",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 34,
+      "split": "development"
+    },
+    {
+      "id": "P09-1-GT",
+      "entryId": "P09-1-GT",
+      "caseId": "P09",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 35,
+      "split": "development"
+    },
+    {
+      "id": "P09-1-GST",
+      "entryId": "P09-1-GST",
+      "caseId": "P09",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 36,
+      "split": "development"
+    },
+    {
+      "id": "P10-1-GS",
+      "entryId": "P10-1-GS",
+      "caseId": "P10",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 37,
+      "split": "development"
+    },
+    {
+      "id": "P10-1-GT",
+      "entryId": "P10-1-GT",
+      "caseId": "P10",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 38,
+      "split": "development"
+    },
+    {
+      "id": "P10-1-GST",
+      "entryId": "P10-1-GST",
+      "caseId": "P10",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 39,
+      "split": "development"
+    },
+    {
+      "id": "P10-1-G0",
+      "entryId": "P10-1-G0",
+      "caseId": "P10",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 40,
+      "split": "development"
+    },
+    {
+      "id": "P11-1-GT",
+      "entryId": "P11-1-GT",
+      "caseId": "P11",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 41,
+      "split": "development"
+    },
+    {
+      "id": "P11-1-GST",
+      "entryId": "P11-1-GST",
+      "caseId": "P11",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 42,
+      "split": "development"
+    },
+    {
+      "id": "P11-1-G0",
+      "entryId": "P11-1-G0",
+      "caseId": "P11",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 43,
+      "split": "development"
+    },
+    {
+      "id": "P11-1-GS",
+      "entryId": "P11-1-GS",
+      "caseId": "P11",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 44,
+      "split": "development"
+    },
+    {
+      "id": "P12-1-GST",
+      "entryId": "P12-1-GST",
+      "caseId": "P12",
+      "group": "GST",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 45,
+      "split": "development"
+    },
+    {
+      "id": "P12-1-G0",
+      "entryId": "P12-1-G0",
+      "caseId": "P12",
+      "group": "G0",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 46,
+      "split": "development"
+    },
+    {
+      "id": "P12-1-GS",
+      "entryId": "P12-1-GS",
+      "caseId": "P12",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 47,
+      "split": "development"
+    },
+    {
+      "id": "P12-1-GT",
+      "entryId": "P12-1-GT",
+      "caseId": "P12",
+      "group": "GT",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 48,
+      "split": "development"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "error": "TimeoutError: locator.inputValue: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('form', { name: '标注对象编辑' }).getByLabel('信息性质', { exact: true })\u001b[22m\n",
+  "url": "http://127.0.0.1:5398/situation?taskId=da79b770-3ee5-4d71-8526-81cfe91189d3&sessionId=01a18847-e765-7460-b9f8-e36821782cac",
+  "body": "跳至相关信息\n新建对话\n工作待办\n态势地图\n工作任务\n【地图验证 map-97d0baaf】空间资料核对任务\n\n还没有对话\n\n【地图验证 map-97d0baaf】空间资料核对任务\n\n还没有对话\n\n【地图验证 map-97d0baaf】空间资料核对任务\n1\n以当前草稿reference层对象ID origin为中心生成700米范围，只预\n个人空间\n设置\n态势地图\n【地图验证 map-97d0baaf】空间资料核对任务\n本会话草稿 · 可编辑\n草稿 r3\n标绘工具\n对象编辑\n对象名称\n信息性质\n未注明\n拟定方案\n研判\n现场记录\n更多属性\n应用区域模板\n自定义区域\n搜救区域（应用表达）\n警戒区域（应用表达）\n颜色\n线宽\n线型\n实线\n虚线\n点线\n填充色\n填充透明度\n地图标签\n所属图层\n参照对象\n派生层\n备注\n坐标\n业务属性\n\n保存至会话草稿；发布或采用不代表已到场。\n\n保存对象\n取消编辑\n拟定 · 未保存 · 临时范围\n影像\n路网\n混合\nSource: Esri, Vantor, Earthstar Geographics, and the GIS User Community",
+  "mutations": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    }
+  ]
+}

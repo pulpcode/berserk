@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "round": "R13",
+  "reviewMode": "blind_agent_evidence_review",
+  "groupMappingRead": false,
+  "privateReasoningRead": false,
+  "rawBatchRead": false,
+  "newModelCalls": 0,
+  "frozenRules": "review-rules.md",
+  "rulesSha256": "8c6739863cff2af121a51631b19564c6f9494c767dbc6d8b5cdbea9c2249075e",
+  "evidenceDirectory": ".local/spatial-r13/blind-review-20261026",
+  "evidenceSha256": {
+    "0b08f16a-ecff-4222-8154-f3e99c1d6b57/judge-input.json": "378181c897eb4655f6f257e68241e8adc9855b901745034cbcbd990364da365e",
+    "0b08f16a-ecff-4222-8154-f3e99c1d6b57/model-visible-evidence.json": "43a0c238101ae8fcf569687acb7c4d5e60c6f7abb4570ba8ea87236bf87a6728",
+    "2c24a48e-8854-472f-86c1-5fa6a26de66a/judge-input.json": "5a8fbcb2a2dca2e23ed5a424ec140b8f57228f41b7e1c49cd7869a02e36559c8",
+    "2c24a48e-8854-472f-86c1-5fa6a26de66a/model-visible-evidence.json": "089426fdbe7bfc597b73570131ba5c18251f3aeffafda54ff71770a84746bb8e",
+    "32918a0a-2170-433a-b331-3af1ba2400d3/judge-input.json": "650fff4f55cac5504110e509e0060acd06370c3005ed4f1408584b8665b4174c",
+    "32918a0a-2170-433a-b331-3af1ba2400d3/model-visible-evidence.json": "9f5c8fc9b171cf710e6d89e658b0b85d934e80184db7fbaae08c5f8be04b30a7",
+    "79b87c97-3aa9-4cfd-b8b3-dee3a4f2f216/judge-input.json": "17b5a1f9a86286cff317ff3049c69fcdb3ee1e9469f13376b44a9ef39f496210",
+    "79b87c97-3aa9-4cfd-b8b3-dee3a4f2f216/model-visible-evidence.json": "ee39da78626e7fd291ff1b67da2d3140c234fa29e010f5460073e56b914cd447",
+    "80220c03-fdaa-4939-8f2c-ad2873cc6abe/judge-input.json": "d8134a41a0a6922ae4434e05cce7948f754f6bd305c5c7ef523b50b343f02a0c",
+    "80220c03-fdaa-4939-8f2c-ad2873cc6abe/model-visible-evidence.json": "b723a1988c357f2e1f33c6717aad4ac2920db5549f1877af9ee4b88c7090c7a5",
+    "8c03ed9a-eb5a-4cb4-92f1-899b8dbf6d89/judge-input.json": "11cddc33a9432dd90690cc638a8718b57142bde7f6ab0ca48e283588a362c6e0",
+    "8c03ed9a-eb5a-4cb4-92f1-899b8dbf6d89/model-visible-evidence.json": "9db0bef3525e09b020dcedcd76f80562eec3ae14de5847f237feccce943589f6",
+    "d5c0b6e7-3018-4e13-9dee-3378048a576b/judge-input.json": "61876f0f0f49353885cbc340ce32d576deb6611a455e3f73da502b262d4ff4bc",
+    "d5c0b6e7-3018-4e13-9dee-3378048a576b/model-visible-evidence.json": "cdced3b3e0c1b05a66f559a2f58ea35681f559c8bc79230876bdcdb07bdaf3df",
+    "dd13862a-8d67-406a-bd92-f983f38d2689/judge-input.json": "74844256e9b37300d17a611aac5df2b71afe1f03ff00d61a321a1fda3de4fdde",
+    "dd13862a-8d67-406a-bd92-f983f38d2689/model-visible-evidence.json": "b5ef2840eb3656a6e1d7b16a7832ec5d573dec25e5a5207383dcbb44dbc0afd9",
+    "e3086353-6373-4b48-890b-0128027d68cc/judge-input.json": "b226534b9570b2dc5291e40c8b3c3f8774c168d5b0323cbb299222c337e63365",
+    "e3086353-6373-4b48-890b-0128027d68cc/model-visible-evidence.json": "bbbdc042e26500deb01f43e3bf24d303dd00331d703298a3853d09b8d3fb8ff4",
+    "fef3c4cb-d848-419c-b089-483b45a22164/judge-input.json": "053015e1b06807974ffae33371fd211891e86c040e22f391bc9fb0bca465b2e9",
+    "fef3c4cb-d848-419c-b089-483b45a22164/model-visible-evidence.json": "35f9f1212fb9565160ccfcddb575c21f15c3280438c6100dcd57c1b2a545b34d"
+  },
+  "summary": {
+    "planned": 10,
+    "mainPass": 9,
+    "mainFail": 0,
+    "mainPending": 1,
+    "strictPass": 8,
+    "strictFail": 1,
+    "strictPending": 1,
+    "evaluatorInterruptedTasks": 1,
+    "notGeneralAccuracyEstimate": true
+  },
+  "rows": [
+    {
+      "blindId": "0b08f16a-ecff-4222-8154-f3e99c1d6b57",
+      "caseId": "F01",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "点数与车辆数分开计：西区资源点为 **1 个点**，其属性 `availableCount` 记录车辆 **4 辆**",
+        "两次查询（按“西区”文本、按区域 `areaIds` 筛选）返回结果一致"
+      ],
+      "evidence": [
+        "visibleTranscript[2,4] / actual sent tool messages：确实分别query=西区、areaIds=map-6e865de2-zone-west；资源类仅西区可用车辆，availableCount=4，hasMore=false。",
+        "stateEvidence[0] before==after；未查询草稿或写入。"
+      ],
+      "notes": [],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "fef3c4cb-d848-419c-b089-483b45a22164",
+      "caseId": "F01",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "我按两种方式交叉核对：按完整文本“西区”查询，以及按所属区域 `map-706ffed1-zone-west` 筛选；两种结果一致。",
+        "**资源点数量为 1 个**，车辆数量取该点 `availableCount` 字段值 **4 辆**"
+      ],
+      "evidence": [
+        "actual sent messages记录两次situation_query：query西区/limit50、areaIds西区/limit100；两次业务items一致：area/road/resource各一，资源属性4辆。",
+        "最终正文的asOf、revision、有效期与model-visible工具正文一致；stateEvidence[0] before==after。"
+      ],
+      "notes": [],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "e3086353-6373-4b48-890b-0128027d68cc",
+      "caseId": "F02",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "已用第一次生成的 500 米固定范围进行筛选（未使用 1500 米范围，也未重新生成缓冲）",
+        "**命中数量：0 个**，因此没有可报的名称。",
+        "最近的是资源甲，距离约 556 米，仍超出约 56 米。"
+      ],
+      "evidence": [
+        "visibleTranscript[5]生成500m、[8]生成1500m；[11]filter.target.resultRef精确指向[5]的spatial:7baf79e7…:call_00_f7a70…，不是第二结果。",
+        "actual sent messages工具项[16]：candidateCount=5/items=[]；[18]随后nearest(count5)返回555.9754、1224.8495、2270.7459、3027.6360、4541.3783米，支持最终全部距离和额外说明。",
+        "三轮stateEvidence均before==after；第三轮无新增buffer。"
+      ],
+      "notes": [
+        "最后提出1500m/600m是条件性未来选项，不是实际改用第二范围；其1500m可包含两点的推断有已返回距离及缓冲方法支持，不判越界。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 3,
+        "completedUserTurns": 3
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "8c03ed9a-eb5a-4cb4-92f1-899b8dbf6d89",
+      "caseId": "F02",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "clarity": "factual_error",
+      "quotes": [
+        "**结果：范围内 0 个资源点。**",
+        "500 m 缓冲面的大小约为经度 ±0.0047°、纬度 ±0.0045°，即纬度 22.5000～22.5045、经度 113.9953～114.0047 附近"
+      ],
+      "evidence": [
+        "visibleTranscript[4]生成500m、[7]生成1500m；[10]filter.target.resultRef引用首次500m；actual tool正文items=[]/candidateCount5，主任务正确。",
+        "model-visible-evidence.observedMessages[5]给出基点[114,22.5]及资源坐标；[9]buffer正文给出500m/method/Polygon摘要，未给包围盒。",
+        "宿主真值 visibleTranscript[4].spatialResult.geometry 的纬度最小/最大为22.495503398181377/22.50449660181862。最终声称的纬度下界22.5000漏掉整个南半边；其自述±0.0045也与该下界矛盾。真值只用于验错，未倒填模型输入。",
+        "三轮状态均不变，且第三轮没有重生成。"
+      ],
+      "notes": [
+        "判为额外范围数值误述，非候选选错、缓冲工具算错或主任务失败。即使可能是书写疏漏，公开数值仍错误；不能仅因零命中正确抵消。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 3,
+        "completedUserTurns": 3
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "2c24a48e-8854-472f-86c1-5fa6a26de66a",
+      "caseId": "F03",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "awkward",
+      "quotes": [
+        "候选范围：仅 `resources` 层的点，共 5 个参加排序",
+        "其余三个点（资源丙、边界点、资源外）距离更远，未进入前两名。",
+        "该层“备用资源”离基点其实很近，约 111 米"
+      ],
+      "evidence": [
+        "visibleTranscript[2] / model-visible item[5]已实际读到全部17个对象几何；origin[114,22.5]、other-point[114,22.501]及其余三个候选坐标均可见，不能套用旧R12“未读取几何”的判定。",
+        "nearest只以resources为input、origin为target，count2；actual tool[9]返回r1=555.975401m、r2=1224.849478m，candidateCount5。",
+        "已读坐标和返回球面R=6371008.8m支持备用资源约111.195m；余三个点显著更远有坐标依据。没有把其他图层加入排序。",
+        "stateEvidence[0] before==after。"
+      ],
+      "notes": [
+        "“断面直线地理距离”用词别扭，结合球面说明按地理直线距离理解，不升级为事实错。额外距离说明虽非必要，但本次具有真实坐标依据。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "dd13862a-8d67-406a-bd92-f983f38d2689",
+      "caseId": "F03",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "awkward",
+      "quotes": [
+        "**资源甲**：约 **556 米**（555.98 m）",
+        "**资源乙**：约 **1225 米**（1224.85 m）",
+        "`resources-other` 图层中也存在一个名为“资源”的图层（含“备用资源”点）"
+      ],
+      "evidence": [
+        "实际首次annotation_read总17条、hasMore=false，显示layerId=resources和resources-other都名资源；后读origin和resources五点几何。",
+        "nearest限定resources五ID，target为reference/origin；结果candidateCount5，r1/r2及距离完全吻合。",
+        "stateEvidence[0] before==after，其他图层仅作为定位/排除信息。"
+      ],
+      "notes": [
+        "“图层中也存在…图层”应改为“另有layerId=resources-other、名为资源的图层”；全文ID与备用点均明确，合理读法是重复名称层说明，不判嵌套图层事实错误。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "79b87c97-3aa9-4cfd-b8b3-dee3a4f2f216",
+      "caseId": "F04",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "**本次未保存**：没有新增草稿图层或对象，也没有发布、没有设为任务当前",
+        "几何直接取自那次 500 米缓冲预览的固定结果（未重画、未重算",
+        "revision 1 → **revision 2**，本次只写入了 `temp-range` 一个对象，其余原有对象与图层未改动"
+      ],
+      "evidence": [
+        "第一轮visibleTranscript[3]buffer成功，stateEvidence[0]完全不变，首轮“未保存”成立。",
+        "第二轮[7]annotation_from_analysis引用首轮spatial:48a20bd6…:call_00_jpldc…，derived/temp-range/临时范围；model-visible item[14]成功apply回执beforeRef1/afterRef2、objectIds[temp-range]、fromAnalysis同一resultRef。",
+        "独立比较stateEvidence[1]：恰新增temp-range，原16对象逐字相同、无删除、图层元信息相同；新对象geometry与首轮buffer逐字相同。publications/current逐字不变。"
+      ],
+      "notes": [
+        "“共享发布版和任务当前采用状态均未变更”在“本次只改动”语境指本次动作影响，不断言全局没有current；判通过。",
+        "可见工具仅读取spatial-analysis，未另读map-annotations：记录Skill执行遵守的诊断缺口；冻结评分规则不以特定Skill读取作为任务事实失败。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 2,
+        "completedUserTurns": 2
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "80220c03-fdaa-4939-8f2c-ad2873cc6abe",
+      "caseId": "F04",
+      "mainRequirement": "pending",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pending",
+      "boundaries": "pass",
+      "strict": "pending",
+      "clarity": "clear",
+      "quotes": [
+        "已完成预览，未保存到草稿。",
+        "结果目前只是分析结果，尚未写入任何图层，草稿修订仍为 1、16 个对象未变。",
+        "若需要，我可以把这个 500 米范围保存为草稿中的新标注（例如放入「派生」图层），或基于该范围继续做范围筛选、邻近排序等分析；若保存或后续分析需要指定名称、图层或候选来源，请告知。"
+      ],
+      "evidence": [
+        "actual tool[7]buffer500m成功，resultRef=spatial:a52bb21d…:call_00_i1ng…；provenance.asOf=2026-10-26T01:31:59.748Z、queriedAt=01:32:14.601Z与公开答复一致。",
+        "annotation_read已返回16对象/hasMore=false；stateEvidence[0] before==after，Polygon预览真实生成。",
+        "只收到第一条用户消息；protocolObservation plannedUserTurns2/completedUserTurns0、waiting_user_unmapped_plain_question。末尾是已完成预览后的条件性后续建议，无阻塞当前任务的待答事实/授权。"
+      ],
+      "notes": [
+        "已收到首轮的主任务、过程事实、最终事实和只读效果均通过。完整保存任务第二轮未发送，故不可能判整个F04通过，也不能判模型保存失败。",
+        "保留错误protocol原记录；不得自动补跑。应将“模型完成首轮”和“评测器遗漏第二轮”分开汇报。"
+      ],
+      "protocolObservation": {
+        "status": "waiting_user",
+        "stop": "waiting_user_unmapped_plain_question",
+        "plannedUserTurns": 2,
+        "completedUserTurns": 0
+      },
+      "protocolIssue": {
+        "kind": "false_positive_blocking_plain_clarification",
+        "responsibility": "evaluation_driver",
+        "actualFirstTurn": "completed_correctly",
+        "consequence": "Second preapproved user turn was never sent; full-task outcome unobserved."
+      },
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "32918a0a-2170-433a-b331-3af1ba2400d3",
+      "caseId": "F05",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "观察区 region 内（含边界）共有 4 个资源点：资源甲、资源乙、资源丙、边界点。",
+        "位于内部：资源乙、资源丙（2 个）",
+        "位于边界上：资源甲、边界点（2 个）"
+      ],
+      "evidence": [
+        "实际annotation_read(fields geometry)已读全部几何；classify_points仅resources对region，candidateCount5。",
+        "actual tool[8]为spatial.model-result.v2：classifications r1/edge boundary、r2/r3 interior、outside exterior；values total5/interior2/boundary2/exterior1。method/limitations直接支持平面拓扑、包含边界、无额外距离容差；items公开properties含outside busy。",
+        "资源外坐标[151.23,-33.83]、region经度151.2至151.22/纬度-33.86至-33.84，支持东北外侧说明；不是凭名字推断。状态不变。"
+      ],
+      "notes": [],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    },
+    {
+      "blindId": "d5c0b6e7-3018-4e13-9dee-3378048a576b",
+      "caseId": "F05",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "clarity": "clear",
+      "quotes": [
+        "包含边界在内，观察区内的资源点共 **4 个**",
+        "内部 2 个 + 边界 2 个 = 4 个；外部 1 个不计。",
+        "这里统计的是**你画的点对象个数**（5 个候选 → 4 个命中）"
+      ],
+      "evidence": [
+        "实际定向读取resources geometry/attributes/sourceRefs得到5条全部对象，并读取region真实矩形几何；范围不是根据宿主truth倒填。",
+        "actual tool[8]classify_points v2：r1/edge boundary、r2/r3 interior、outside exterior；属性ready/busy、boat/truck逐项匹配，method/limitations支持判断说明。",
+        "region[151.2,-33.86]至[151.22,-33.84]；r1西边/edge东北角亦在东边，说明正确。只读状态完全不变。"
+      ],
+      "notes": [
+        "“需要留意的两点”实际列三条是编辑层小问题，不是业务事实错误；不改变严格结果。"
+      ],
+      "protocolObservation": {
+        "status": "recorded",
+        "stop": null,
+        "plannedUserTurns": 1,
+        "completedUserTurns": 1
+      },
+      "protocolIssue": null,
+      "scope": "All received user turns and all public assistant text; full planned task is pending if evaluator withheld a later turn."
+    }
+  ],
+  "disputes": [
+    {
+      "blindId": "8c03ed9a-eb5a-4cb4-92f1-899b8dbf6d89",
+      "recommendation": "strict fail",
+      "reason": "纬度下界是可核实错误数值，不只是措辞；即使源于书写疏漏，不能抹去公开错误。"
+    },
+    {
+      "blindId": "dd13862a-8d67-406a-bd92-f983f38d2689",
+      "recommendation": "strict pass; wording issue",
+      "reason": "resources-other的图层嵌套措辞不顺，但上下文唯一指明真实ID/名称/点，按冻结全文语义规则处理。"
+    },
+    {
+      "blindId": "80220c03-fdaa-4939-8f2c-ad2873cc6abe",
+      "recommendation": "full-task pending, evaluator fault",
+      "reason": "首轮已完整答完，非用户阻塞；第二轮未发送。不得算模型真实失败。"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "workspaceId": "1914a1b3-a933-4fd9-b1ee-62c8d0a41e2b",
+  "instructions": [
+    {
+      "fileId": "common",
+      "name": "通用指令（AGENTS.md）",
+      "hash": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07",
+      "editable": false
+    },
+    {
+      "fileId": "workspace",
+      "name": "工作区指令（AGENTS.md）",
+      "hash": "94d7635a1e2af4318402f98e579b74e44ce587d87e4b9056d7fb8b298029efdd",
+      "editable": true
+    }
+  ],
+  "sources": [
+    {
+      "id": "meeting-notes",
+      "title": "项目讨论纪要",
+      "description": "通用资料示例：目标、约束与待办。",
+      "hash": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+    },
+    {
+      "id": "resource-brief",
+      "title": "资源与约束说明",
+      "description": "通用资料示例：人员、时间与交付条件。",
+      "hash": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+    }
+  ],
+  "skills": [
+    {
+      "id": "synthesis",
+      "name": "资料综合写作",
+      "description": "综合多份资料形成有来源、可执行的方案。",
+      "version": "1",
+      "hash": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+    },
+    {
+      "id": "review",
+      "name": "结果检查",
+      "description": "根据资料检查草稿的事实、约束与可执行性。",
+      "version": "1",
+      "hash": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+    },
+    {
+      "id": "map-annotations",
+      "name": "态势标绘",
+      "description": "查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。",
+      "version": "1",
+      "hash": "bdfcb0979100f5f32a2147c7c91979e0d6bf08134f6ba4db73803fbcde212f70"
+    },
+    {
+      "id": "spatial-analysis",
+      "name": "空间分析",
+      "description": "基于既有对象进行测距、面积、空间关系、缓冲、范围筛选、邻近排序和分类统计；处理组合分析、固定结果续问、边界判断及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。",
+      "version": "1",
+      "hash": "bca14ca50603ff0481100b212cd24a1614db45b65fa0d15b54e50139cd68ad58"
+    }
+  ]
+}

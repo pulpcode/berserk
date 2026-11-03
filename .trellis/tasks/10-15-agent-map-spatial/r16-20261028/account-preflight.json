@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-28T09:11:00Z",
+  "sourceEvidence": "Authenticated Agent Plan Medium UI observation: five-hour used 3453.026/10000; week32.18%/35000 and month12.72%/100000 rounded; conservative remaining values recorded. Flash selected updated1017; 开启超额后付费 confirms disabled. Other account usage observed between initial and current check. No settings changed. User explicitly removed artificial monetary/token/request caps.",
+  "observedOverageEnabled": false,
+  "remainingAfp": {
+    "fiveHour": 6546.974,
+    "week": 23733,
+    "month": 87270
+  },
+  "externalUseReserveAfp": 0,
+  "sharedUsePolicy": "observed_shared_usage"
+}

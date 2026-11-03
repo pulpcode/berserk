@@ -1,0 +1,118 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V04",
+  "caseId": "G02",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "actual_reported_pairs_correct": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "source->draft"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "source",
+  "final_reference_source": "draft",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "eefa9b12",
+      "quote": "但这份成员关系是针对来源区域边界计算的",
+      "basis": "situation_query 只返回 properties.memberRefs 的登记引用与几何，没有给出成员字段的生成机制或“由边界计算”的证据；该题名单恰与几何相符不证明成员登记由空间计算生成。实际 spatial_analyze 仅计算来源点对草稿面。",
+      "category": "unsupported_member_provenance"
+    }
+  ],
+  "recovery": {
+    "tool_issue": "placeholder object query returned unknownRefs",
+    "recovered_with": "完整来源查询及5点分类",
+    "public_fact_correction": false
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "771df065",
+      "tool_call_id": "call_00_7wojo9hqydenaymj33n83qqn"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unsupported_member_provenance"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "draft_hash_after": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "07407db2-be08-402f-b9fe-4af0ba2150f7",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "07407db2-be08-402f-b9fe-4af0ba2150f7",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "evidence": [
+    {
+      "message_id": "eefa9b12",
+      "quote": "但这份成员关系是针对来源区域边界计算的",
+      "basis": "situation_query 只返回 properties.memberRefs 的登记引用与几何，没有给出成员字段的生成机制或“由边界计算”的证据；该题名单恰与几何相符不证明成员登记由空间计算生成。实际 spatial_analyze 仅计算来源点对草稿面。",
+      "category": "unsupported_member_provenance"
+    },
+    {
+      "message_id": "eefa9b12",
+      "quote": "位于草稿 reference 层“白鹭作业区”范围内的为 0 个，名单为空",
+      "basis": "完整来源查询 5 resource Points；classify_points 全部 exterior，符合 G02 source->draft。",
+      "category": "verified_main_answer"
+    }
+  ],
+  "observations": [
+    "主任务正确且没有默认来源/边界；严格失败仅由成员关系生成方式的无依据断言导致。",
+    "0.0028° 北移由两面经纬度支持，约300米是合理粗略量级，不将其当精确测量；来源面内3点也能直接由已读取完整坐标验证。",
+    "placeholder 查询返回 unknownRefs，后续完整查询修复，未将未找到占位对象误述成来源无资源。",
+    "查询时刻04:26来自UTC回执，正文未显式时区，记录表达不清但未断言是+08时刻，不硬判时间错误。"
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": true
+}

@@ -1,0 +1,3128 @@
+{
+  "source": {
+    "schemaVersion": 1,
+    "syntheticDay": "2026-10-28",
+    "scope": "complete_tasks_native_skill",
+    "runtime": {
+      "baselineRevision": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+      "candidateRevision": "0cbe321e79765f14aae4debfa383126596f4e1cc",
+      "baselineTree": "151dc71bb2116cf8c6f9341b9e6c9b4e73cc0526",
+      "allowedProductDiff": [
+        "src/annotations/service.ts",
+        "src/contracts/annotations.ts",
+        "src/contracts/annotation-results.ts",
+        "src/contracts/spatial.ts",
+        "src/pi/annotation-results.ts",
+        "src/pi/spatial-results.ts"
+      ],
+      "toolOverlayHashes": {
+        "src/annotations/service.ts": "e7af82e061bd044687a646e73b655d8a384507ba0dff9236236e9f724fb4b3ea",
+        "src/contracts/annotations.ts": "d9397adf8d73c0dd8a0c622a19f599d19022285c920ed718409cfaa7fb11bc32",
+        "src/contracts/annotation-results.ts": "843e83c347672fe083e7ec6733a18d12d7a9d4a986c2a682e9b882f4b38393a8",
+        "src/contracts/spatial.ts": "43c6c57a17986059286a5f12558c90c76384e1a477a7571c128fc6222977862e",
+        "src/pi/annotation-results.ts": "2bab2614c0da23bd739e3f81bec014ecf32239b115c56dccebfd9270204a9678",
+        "src/pi/spatial-results.ts": "71a071e6a993dad3521acbeb236a6314f78009dc040d78281e4eca4570b78bc2"
+      },
+      "candidateSkills": {
+        "map-annotations": "c4e0dd9412ffc247c1b43f049fb78527bc27a28b4bff9bcff63fa4bfa6911da2",
+        "spatial-analysis": "ded2bc71274afdb9a5183ae29daf88e3a7f805f752ebb8e51c9e00cad328c8a0"
+      },
+      "allowedEvaluationFixtureDiff": [
+        "scripts/probe-situation-map.ts",
+        "scripts/mock-context/map-fixtures.ts"
+      ],
+      "loading": "native_on_demand",
+      "commonBusinessHash": "94d7635a1e2af4318402f98e579b74e44ce587d87e4b9056d7fb8b298029efdd",
+      "packageLockHash": "b99cf852da63f2c9628af3fc0f59188be7a29fe1e3dccad9a251926f2bb02e15",
+      "installedLockHash": "2e4a33b7e2a9a17dc1d05908ff3d91983a8fd8d3d30386dda9c5ebd7c1bcb5c5",
+      "skills": {
+        "map-annotations": "bdfcb0979100f5f32a2147c7c91979e0d6bf08134f6ba4db73803fbcde212f70",
+        "spatial-analysis": "bca14ca50603ff0481100b212cd24a1614db45b65fa0d15b54e50139cd68ad58"
+      },
+      "sdk": {
+        "node_modules/@earendil-works/pi-ai/package.json": "b54df5a36d523febdeebfc5682dc4faed101fee10aba913d5f3679582f018da3",
+        "node_modules/@earendil-works/pi-ai/dist/api/openai-completions.js": "1e2097ced37cf0e21aa5711297eecc77916de8a4ed81a9019bc7d97b22825fa3"
+      }
+    },
+    "driver": {
+      "budget.ts": "46be8f553d12e737c6f63ea5791bce305c62e7be5f975908428207d2199014b5",
+      "case-materials.json": "e0603426575c4a7833d18044176ae678726b7f815795c19e5d7304beabe98ef9",
+      "case-specs.json": "36a116c96384fe0649954f70885973e39187fde09e0dcad7957339593b54adad",
+      "cases-http.test.ts": "ce973ff3fa00fbe8f782c112355bb01d8ff63bfc361e5810ed9208bf163204c7",
+      "cases.json": "36a116c96384fe0649954f70885973e39187fde09e0dcad7957339593b54adad",
+      "cases.test.ts": "c3e12c592043b88f6548c6d4f363f7f032607fe8e96f8ad25bc746b3118efc57",
+      "cases.ts": "420f016473ecca147aa5e654a3027d33725501e1c253b75d045f0fa7dc1613b1",
+      "check.jsonl": "12298169e5b779bc0930353a0a4db0d0a3a641f9c61fe8e874e24d1858c7e0f2",
+      "data.ts": "5e55c9140e55acfa4701769314582c7201cb36e67908e72842e28f6a86679a60",
+      "design.md": "e579ad4776405270794c0305167e7257a65663dc5f65cbe79213fcf79dd40770",
+      "execution-amendment.md": "43b8f69c6f5be0f57c872615184451c13523d6d5d69194c7a8fe500eb49e4477",
+      "implement.jsonl": "12298169e5b779bc0930353a0a4db0d0a3a641f9c61fe8e874e24d1858c7e0f2",
+      "implement.md": "a8bcdd184c83c67723c54f48e04806ff3668b93c488924ea987ec2ec25a763d3",
+      "live.test.ts": "9ee53daa59695ea9fc2b98f52afa97c2a458c02601a3519b3cda1bdc25a8a35e",
+      "live.ts": "da31d8b016cb125d087802fa01c0545a8ce37af52e6fca8c087ace30469e78ef",
+      "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "plan.md": "8a45e2b62fdee43247d17479751b49050c6464af8518def3511d0398166daf98",
+      "prd.md": "e8d87a0a29ff29275571c41a84981c5cd4cd69a333ae01a24f3996d025a7d74d",
+      "provider-budget.test.ts": "ab15be8c6a73dbe5a9bc096fcb44dd7cd02fe186650c3159a84b007ae07f61fc",
+      "provider.ts": "8af1965b7259cb09bb673cdc1bb2be40bd56166f937676ab407121d2b907f006",
+      "review-rules.md": "eabaeb843fa5548d593d24a805ad61e1c48bbed2689b397e89d20e4c3920b476",
+      "review-tools.test.ts": "036c262c1b0e9451a76e55957426afc5aaee07213bd6b25a11f29ceaea78cd5c",
+      "review-tools.ts": "f643f1b5ec542b99c674fd34bf6a05911136a9accfc8284de94222db3e01ad64",
+      "runtime.ts": "a7b6873105c8cd254e4ed84222d096a5d69394acd69085bb18abe1637f1028a8",
+      "schedule.json": "f19bf8e20e380cbb5ec0f41d134aa0edacc9d61d4ea62771460045ba5ae6f05a",
+      "tasks.md": "11a06f56b8b5cd912450225a77b6f4cc4331746d0f23608b62aba016f4be42d2",
+      "tsconfig.json": "57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10"
+    },
+    "helpers": {
+      "r3-20261022/runtime.ts": "2a9e0fbbafe62afce38c8cd5fd3539a1388783c9053b28ed059471c160563fd8",
+      "r3-20261022/audit.ts": "e9e48f4b032d8922e969f7ab30209d876be3d338ddae7ff715d2667d8784a149",
+      "r3-20261022/cases.ts": "34b579b3c02b45f149351c27bd38ed963d293ba5ee850cee3c162ed3a80fb43b",
+      "r7-20261023/environment.ts": "24a29dabc31a0d9dcbcc3e750492ab607432ec6b158cdc988b83dc8553a2950b",
+      "r10-20261023/cases.ts": "5becd751835e985ff91254a7517d1307b9699391b0bb994f962c98783fe6cbed",
+      "round1-20261017/cases.ts": "14e73243f560bd291b381e2e2fff365139d40cecda03287ac726ef1f3e14aa66",
+      "r11-20261023/cases.ts": "fbcee0752386d5cd5100afa679b2c277a1ea225454aa18e7be9180e3ce225e69",
+      "r11-20261023/evidence.ts": "fbf4b2c054c49feb28a4090a674a617c4f2e1f1ea4923a09b6a57836c3434a24",
+      "r12-20261025/source-runtime.ts": "562ef66c5da678a5d8b47bf045fd2763d4e16c1f0fcedd9eb0e487023ad27cd0",
+      "r12-20261025/scoring.ts": "370e11abacb97cd8bb7efcbf10dcf8952e9f7356b377a9fbaa1bbf6600cccdb7",
+      "r12-20261025/reasoning-live.ts": "a0540ad5f18a136a6cd51400c846d1e93a192474cc018e3f7dd8eec3cfdf3811",
+      "r12-20261025/reasoning-prepare.ts": "8e712aa435a882469cad142f5ccd993976cad53da930d842c8c61e648882582d",
+      "r11-20261023/judge-format.ts": "34f76b864eb3e10c9ebf5991b1c18259caf25287ad4ec2c15e26ceb3e99316d8",
+      "r13-20261025/cases.ts": "929715625b774aea34a0aeab43a855a4591c62f23cd5c7a3dca523c1a0ccf7e7",
+      "r14-20261026/cases.ts": "83609106daa5d35ecbdcc550ff6b7e086ac7fdeb52ef6eb05eb183168753f69f",
+      "r14-20261026/data.ts": "3fd923f9951145983e72994b3a0816784b23ebd6d7ab3e32fe48609f07b4076b"
+    },
+    "historicalFixtures": {},
+    "httpHelpers": {
+      "probe-situation-map.ts": "ac862b321e0cf531a400e516461c1be352a90f700bf416b33ca374050aa45650",
+      "probe-source-annotations.ts": "72d7b72a77410da3a18d430178e8bdd55febf66f6ca9bd231bc6aa6de86a2245",
+      "probe-task-plan.ts": "82dc7713f739ac5ff13adf3a495a05bb03ccd75159be42b1355914b2c15e34d9",
+      "probe-spatial-cases.ts": "e66eb7dc5ece3668ef889f23ced6033824a3eadc5885d4c43f837538b0c678df"
+    },
+    "fixtureHelpers": {
+      "check.jsonl": "00616ff53bd227708cc228ca095fc81abc89481cd35d6691458ef7ce3b868683",
+      "design.md": "b6866c48c56c30e080e5eaeb6594e71a8ccdd4a856d973fb94130debd71bcb30",
+      "dialogue-excerpts.md": "3ddf4fe2fa0fa8fb08c5ad7ba6e38f95c5c512e8550f49190008f292df582eb1",
+      "evidence-index.json": "9166a506d60d195a9ba0a00f6059e96412a66778fa41976534d55901e22286fd",
+      "fixtures.ts": "1687f04d5b14bb09b4f36ecc3bb796b946ab2614b5a095c93ac89068d2deb32f",
+      "implement.jsonl": "00616ff53bd227708cc228ca095fc81abc89481cd35d6691458ef7ce3b868683",
+      "implement.md": "f92ea9f0a397c40da0c16213fc6887af74a231d6531c50bf6f1ef31809447da6",
+      "merge-record.md": "6d4f25547b489fb2aeee156c523595004a3226718ef0e2aa727b2db514835e04",
+      "native-smoke.test.ts": "ad324d52ebe4c89c3affaaba0e51ecb141b621310e5d7a2401359e5420bb7f0d",
+      "package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+      "prd.md": "ee901dc84a1531b5005462e6e90f7b95f05fdf9abccc666e092e9e9cf0d8e85c",
+      "pro-dialogue-excerpts.md": "8dc5c86fb6804d0a8d1065c4cfbd5e1311f6f3d3a9abd34357d757c0c5372821",
+      "pro-evidence-index.json": "9293bdb05f625c80566d8d3ff564eb0768188999bb37c86e51ae61cb6e49246e",
+      "pro-plan.md": "2af12182f22d98a5ff6d00a3ef9c833ba93db9a9027761e99127905cf2a10e8f",
+      "pro-ratings.json": "7dfe4d4f43e026cc8f8bdc347fdb2185b83bb628e9e377dec75585d0a3c08da4",
+      "pro-results.md": "4c30860c4ae041f4e29685d211adaf87bcf71354d5e18b56b043f5e3f3e5347b",
+      "ratings-primary.json": "5c5bb4f72abf48c607f769a4ad2c3215027d47c42194bc247c823d63c9338991",
+      "ratings-reviewer.json": "5088456b12eec81eb098cb3b7c18cce61566c2d483c1cd712c4e8beeb56c2fbe",
+      "ratings.json": "b0767839e521236097a4316bea4465af81c2074a6c2731afc3d6369241ee7dc7",
+      "results.md": "bcc03794be83506ff84d1a0c653bbcaf86ca26d9bb5f0ccc554073d4f333bf4a",
+      "review-rubric.md": "cc12073710af6c2bdd0684c31e05ddf7171bca8bbf1221332201623e354cd60d",
+      "run.test.ts": "0b13853ffbc398abc1a29070a8b6b16627de3f880d19dff93b0f73a2f28ed68f",
+      "run.ts": "941a479644da95e665edfc6555d40649105d8b17788c652b1c1c8c767f76e7d3",
+      "task.json": "583e9353131243068f55497c577d6350a605019ecaed0d0c3d00688fd3cba84c",
+      "tsconfig.json": "0566a3f955865f533ab269156d9f05550788a5c89ba6652e7dbf3f92b12877b4",
+      "validation.md": "26ac308038b1484a0aef68c5bc5e2db3ad0a95e1c0a378a2cc23426b511a0592"
+    },
+    "historyBaseline": {
+      "path": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/protected-before.json",
+      "sha256": "14f2f76ab4f5d03ad733bce191574b5e300f73ee30ca44c2d41165c3133e291b"
+    },
+    "schedule": [
+      {
+        "id": "Q07-1-GST",
+        "entryId": "Q07-1-GST",
+        "caseId": "Q07",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 1,
+        "split": "development"
+      },
+      {
+        "id": "Q07-1-G0",
+        "entryId": "Q07-1-G0",
+        "caseId": "Q07",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 2,
+        "split": "development"
+      },
+      {
+        "id": "Q07-1-GS",
+        "entryId": "Q07-1-GS",
+        "caseId": "Q07",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 3,
+        "split": "development"
+      },
+      {
+        "id": "Q07-1-GT",
+        "entryId": "Q07-1-GT",
+        "caseId": "Q07",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 4,
+        "split": "development"
+      },
+      {
+        "id": "Q08-1-G0",
+        "entryId": "Q08-1-G0",
+        "caseId": "Q08",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 5,
+        "split": "development"
+      },
+      {
+        "id": "Q08-1-GS",
+        "entryId": "Q08-1-GS",
+        "caseId": "Q08",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 6,
+        "split": "development"
+      },
+      {
+        "id": "Q08-1-GT",
+        "entryId": "Q08-1-GT",
+        "caseId": "Q08",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 7,
+        "split": "development"
+      },
+      {
+        "id": "Q08-1-GST",
+        "entryId": "Q08-1-GST",
+        "caseId": "Q08",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 8,
+        "split": "development"
+      },
+      {
+        "id": "Q20-1-GS",
+        "entryId": "Q20-1-GS",
+        "caseId": "Q20",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 9,
+        "split": "development"
+      },
+      {
+        "id": "Q20-1-GT",
+        "entryId": "Q20-1-GT",
+        "caseId": "Q20",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 10,
+        "split": "development"
+      },
+      {
+        "id": "Q20-1-GST",
+        "entryId": "Q20-1-GST",
+        "caseId": "Q20",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 11,
+        "split": "development"
+      },
+      {
+        "id": "Q20-1-G0",
+        "entryId": "Q20-1-G0",
+        "caseId": "Q20",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 12,
+        "split": "development"
+      },
+      {
+        "id": "Q01-1-GT",
+        "entryId": "Q01-1-GT",
+        "caseId": "Q01",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 13,
+        "split": "development"
+      },
+      {
+        "id": "Q01-1-GST",
+        "entryId": "Q01-1-GST",
+        "caseId": "Q01",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 14,
+        "split": "development"
+      },
+      {
+        "id": "Q01-1-G0",
+        "entryId": "Q01-1-G0",
+        "caseId": "Q01",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 15,
+        "split": "development"
+      },
+      {
+        "id": "Q01-1-GS",
+        "entryId": "Q01-1-GS",
+        "caseId": "Q01",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 16,
+        "split": "development"
+      },
+      {
+        "id": "Q02-1-GST",
+        "entryId": "Q02-1-GST",
+        "caseId": "Q02",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 17,
+        "split": "development"
+      },
+      {
+        "id": "Q02-1-G0",
+        "entryId": "Q02-1-G0",
+        "caseId": "Q02",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 18,
+        "split": "development"
+      },
+      {
+        "id": "Q02-1-GS",
+        "entryId": "Q02-1-GS",
+        "caseId": "Q02",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 19,
+        "split": "development"
+      },
+      {
+        "id": "Q02-1-GT",
+        "entryId": "Q02-1-GT",
+        "caseId": "Q02",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 20,
+        "split": "development"
+      },
+      {
+        "id": "Q03-1-G0",
+        "entryId": "Q03-1-G0",
+        "caseId": "Q03",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 21,
+        "split": "development"
+      },
+      {
+        "id": "Q03-1-GS",
+        "entryId": "Q03-1-GS",
+        "caseId": "Q03",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 22,
+        "split": "development"
+      },
+      {
+        "id": "Q03-1-GT",
+        "entryId": "Q03-1-GT",
+        "caseId": "Q03",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 23,
+        "split": "development"
+      },
+      {
+        "id": "Q03-1-GST",
+        "entryId": "Q03-1-GST",
+        "caseId": "Q03",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 24,
+        "split": "development"
+      },
+      {
+        "id": "Q04-1-GS",
+        "entryId": "Q04-1-GS",
+        "caseId": "Q04",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 25,
+        "split": "development"
+      },
+      {
+        "id": "Q04-1-GT",
+        "entryId": "Q04-1-GT",
+        "caseId": "Q04",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 26,
+        "split": "development"
+      },
+      {
+        "id": "Q04-1-GST",
+        "entryId": "Q04-1-GST",
+        "caseId": "Q04",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 27,
+        "split": "development"
+      },
+      {
+        "id": "Q04-1-G0",
+        "entryId": "Q04-1-G0",
+        "caseId": "Q04",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 28,
+        "split": "development"
+      },
+      {
+        "id": "Q05-1-GT",
+        "entryId": "Q05-1-GT",
+        "caseId": "Q05",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 29,
+        "split": "development"
+      },
+      {
+        "id": "Q05-1-GST",
+        "entryId": "Q05-1-GST",
+        "caseId": "Q05",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 30,
+        "split": "development"
+      },
+      {
+        "id": "Q05-1-G0",
+        "entryId": "Q05-1-G0",
+        "caseId": "Q05",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 31,
+        "split": "development"
+      },
+      {
+        "id": "Q05-1-GS",
+        "entryId": "Q05-1-GS",
+        "caseId": "Q05",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 32,
+        "split": "development"
+      },
+      {
+        "id": "Q06-1-GST",
+        "entryId": "Q06-1-GST",
+        "caseId": "Q06",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 33,
+        "split": "development"
+      },
+      {
+        "id": "Q06-1-G0",
+        "entryId": "Q06-1-G0",
+        "caseId": "Q06",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 34,
+        "split": "development"
+      },
+      {
+        "id": "Q06-1-GS",
+        "entryId": "Q06-1-GS",
+        "caseId": "Q06",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 35,
+        "split": "development"
+      },
+      {
+        "id": "Q06-1-GT",
+        "entryId": "Q06-1-GT",
+        "caseId": "Q06",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 36,
+        "split": "development"
+      },
+      {
+        "id": "Q09-1-G0",
+        "entryId": "Q09-1-G0",
+        "caseId": "Q09",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 37,
+        "split": "development"
+      },
+      {
+        "id": "Q09-1-GS",
+        "entryId": "Q09-1-GS",
+        "caseId": "Q09",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 38,
+        "split": "development"
+      },
+      {
+        "id": "Q09-1-GT",
+        "entryId": "Q09-1-GT",
+        "caseId": "Q09",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 39,
+        "split": "development"
+      },
+      {
+        "id": "Q09-1-GST",
+        "entryId": "Q09-1-GST",
+        "caseId": "Q09",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 40,
+        "split": "development"
+      },
+      {
+        "id": "Q10-1-GS",
+        "entryId": "Q10-1-GS",
+        "caseId": "Q10",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 41,
+        "split": "development"
+      },
+      {
+        "id": "Q10-1-GT",
+        "entryId": "Q10-1-GT",
+        "caseId": "Q10",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 42,
+        "split": "development"
+      },
+      {
+        "id": "Q10-1-GST",
+        "entryId": "Q10-1-GST",
+        "caseId": "Q10",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 43,
+        "split": "development"
+      },
+      {
+        "id": "Q10-1-G0",
+        "entryId": "Q10-1-G0",
+        "caseId": "Q10",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 44,
+        "split": "development"
+      },
+      {
+        "id": "Q11-1-GT",
+        "entryId": "Q11-1-GT",
+        "caseId": "Q11",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 45,
+        "split": "development"
+      },
+      {
+        "id": "Q11-1-GST",
+        "entryId": "Q11-1-GST",
+        "caseId": "Q11",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 46,
+        "split": "development"
+      },
+      {
+        "id": "Q11-1-G0",
+        "entryId": "Q11-1-G0",
+        "caseId": "Q11",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 47,
+        "split": "development"
+      },
+      {
+        "id": "Q11-1-GS",
+        "entryId": "Q11-1-GS",
+        "caseId": "Q11",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 48,
+        "split": "development"
+      },
+      {
+        "id": "Q12-1-GST",
+        "entryId": "Q12-1-GST",
+        "caseId": "Q12",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 49,
+        "split": "development"
+      },
+      {
+        "id": "Q12-1-G0",
+        "entryId": "Q12-1-G0",
+        "caseId": "Q12",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 50,
+        "split": "development"
+      },
+      {
+        "id": "Q12-1-GS",
+        "entryId": "Q12-1-GS",
+        "caseId": "Q12",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 51,
+        "split": "development"
+      },
+      {
+        "id": "Q12-1-GT",
+        "entryId": "Q12-1-GT",
+        "caseId": "Q12",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 52,
+        "split": "development"
+      },
+      {
+        "id": "Q13-1-G0",
+        "entryId": "Q13-1-G0",
+        "caseId": "Q13",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 53,
+        "split": "development"
+      },
+      {
+        "id": "Q13-1-GS",
+        "entryId": "Q13-1-GS",
+        "caseId": "Q13",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 54,
+        "split": "development"
+      },
+      {
+        "id": "Q13-1-GT",
+        "entryId": "Q13-1-GT",
+        "caseId": "Q13",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 55,
+        "split": "development"
+      },
+      {
+        "id": "Q13-1-GST",
+        "entryId": "Q13-1-GST",
+        "caseId": "Q13",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 56,
+        "split": "development"
+      },
+      {
+        "id": "Q14-1-GS",
+        "entryId": "Q14-1-GS",
+        "caseId": "Q14",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 57,
+        "split": "development"
+      },
+      {
+        "id": "Q14-1-GT",
+        "entryId": "Q14-1-GT",
+        "caseId": "Q14",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 58,
+        "split": "development"
+      },
+      {
+        "id": "Q14-1-GST",
+        "entryId": "Q14-1-GST",
+        "caseId": "Q14",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 59,
+        "split": "development"
+      },
+      {
+        "id": "Q14-1-G0",
+        "entryId": "Q14-1-G0",
+        "caseId": "Q14",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 60,
+        "split": "development"
+      },
+      {
+        "id": "Q15-1-GT",
+        "entryId": "Q15-1-GT",
+        "caseId": "Q15",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 61,
+        "split": "development"
+      },
+      {
+        "id": "Q15-1-GST",
+        "entryId": "Q15-1-GST",
+        "caseId": "Q15",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 62,
+        "split": "development"
+      },
+      {
+        "id": "Q15-1-G0",
+        "entryId": "Q15-1-G0",
+        "caseId": "Q15",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 63,
+        "split": "development"
+      },
+      {
+        "id": "Q15-1-GS",
+        "entryId": "Q15-1-GS",
+        "caseId": "Q15",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 64,
+        "split": "development"
+      },
+      {
+        "id": "Q16-1-GST",
+        "entryId": "Q16-1-GST",
+        "caseId": "Q16",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 65,
+        "split": "development"
+      },
+      {
+        "id": "Q16-1-G0",
+        "entryId": "Q16-1-G0",
+        "caseId": "Q16",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 66,
+        "split": "development"
+      },
+      {
+        "id": "Q16-1-GS",
+        "entryId": "Q16-1-GS",
+        "caseId": "Q16",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 67,
+        "split": "development"
+      },
+      {
+        "id": "Q16-1-GT",
+        "entryId": "Q16-1-GT",
+        "caseId": "Q16",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 68,
+        "split": "development"
+      },
+      {
+        "id": "Q17-1-G0",
+        "entryId": "Q17-1-G0",
+        "caseId": "Q17",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 69,
+        "split": "development"
+      },
+      {
+        "id": "Q17-1-GS",
+        "entryId": "Q17-1-GS",
+        "caseId": "Q17",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 70,
+        "split": "development"
+      },
+      {
+        "id": "Q17-1-GT",
+        "entryId": "Q17-1-GT",
+        "caseId": "Q17",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 71,
+        "split": "development"
+      },
+      {
+        "id": "Q17-1-GST",
+        "entryId": "Q17-1-GST",
+        "caseId": "Q17",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 72,
+        "split": "development"
+      },
+      {
+        "id": "Q18-1-GS",
+        "entryId": "Q18-1-GS",
+        "caseId": "Q18",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 73,
+        "split": "development"
+      },
+      {
+        "id": "Q18-1-GT",
+        "entryId": "Q18-1-GT",
+        "caseId": "Q18",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 74,
+        "split": "development"
+      },
+      {
+        "id": "Q18-1-GST",
+        "entryId": "Q18-1-GST",
+        "caseId": "Q18",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 75,
+        "split": "development"
+      },
+      {
+        "id": "Q18-1-G0",
+        "entryId": "Q18-1-G0",
+        "caseId": "Q18",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 76,
+        "split": "development"
+      },
+      {
+        "id": "Q19-1-GT",
+        "entryId": "Q19-1-GT",
+        "caseId": "Q19",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 77,
+        "split": "development"
+      },
+      {
+        "id": "Q19-1-GST",
+        "entryId": "Q19-1-GST",
+        "caseId": "Q19",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 78,
+        "split": "development"
+      },
+      {
+        "id": "Q19-1-G0",
+        "entryId": "Q19-1-G0",
+        "caseId": "Q19",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 79,
+        "split": "development"
+      },
+      {
+        "id": "Q19-1-GS",
+        "entryId": "Q19-1-GS",
+        "caseId": "Q19",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 80,
+        "split": "development"
+      },
+      {
+        "id": "Q21-1-GST",
+        "entryId": "Q21-1-GST",
+        "caseId": "Q21",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 81,
+        "split": "development"
+      },
+      {
+        "id": "Q21-1-G0",
+        "entryId": "Q21-1-G0",
+        "caseId": "Q21",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 82,
+        "split": "development"
+      },
+      {
+        "id": "Q21-1-GS",
+        "entryId": "Q21-1-GS",
+        "caseId": "Q21",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 83,
+        "split": "development"
+      },
+      {
+        "id": "Q21-1-GT",
+        "entryId": "Q21-1-GT",
+        "caseId": "Q21",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 84,
+        "split": "development"
+      },
+      {
+        "id": "Q22-1-G0",
+        "entryId": "Q22-1-G0",
+        "caseId": "Q22",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 85,
+        "split": "development"
+      },
+      {
+        "id": "Q22-1-GS",
+        "entryId": "Q22-1-GS",
+        "caseId": "Q22",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 86,
+        "split": "development"
+      },
+      {
+        "id": "Q22-1-GT",
+        "entryId": "Q22-1-GT",
+        "caseId": "Q22",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 87,
+        "split": "development"
+      },
+      {
+        "id": "Q22-1-GST",
+        "entryId": "Q22-1-GST",
+        "caseId": "Q22",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 88,
+        "split": "development"
+      },
+      {
+        "id": "Q23-1-GS",
+        "entryId": "Q23-1-GS",
+        "caseId": "Q23",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 89,
+        "split": "development"
+      },
+      {
+        "id": "Q23-1-GT",
+        "entryId": "Q23-1-GT",
+        "caseId": "Q23",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 90,
+        "split": "development"
+      },
+      {
+        "id": "Q23-1-GST",
+        "entryId": "Q23-1-GST",
+        "caseId": "Q23",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 91,
+        "split": "development"
+      },
+      {
+        "id": "Q23-1-G0",
+        "entryId": "Q23-1-G0",
+        "caseId": "Q23",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 92,
+        "split": "development"
+      },
+      {
+        "id": "Q24-1-GT",
+        "entryId": "Q24-1-GT",
+        "caseId": "Q24",
+        "group": "GT",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 93,
+        "split": "development"
+      },
+      {
+        "id": "Q24-1-GST",
+        "entryId": "Q24-1-GST",
+        "caseId": "Q24",
+        "group": "GST",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 94,
+        "split": "development"
+      },
+      {
+        "id": "Q24-1-G0",
+        "entryId": "Q24-1-G0",
+        "caseId": "Q24",
+        "group": "G0",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 95,
+        "split": "development"
+      },
+      {
+        "id": "Q24-1-GS",
+        "entryId": "Q24-1-GS",
+        "caseId": "Q24",
+        "group": "GS",
+        "round": 1,
+        "repetition": 1,
+        "ordinal": 96,
+        "split": "development"
+      },
+      {
+        "id": "Q01-2-G0",
+        "entryId": "Q01-2-G0",
+        "caseId": "Q01",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 97,
+        "split": "development"
+      },
+      {
+        "id": "Q01-2-GS",
+        "entryId": "Q01-2-GS",
+        "caseId": "Q01",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 98,
+        "split": "development"
+      },
+      {
+        "id": "Q01-2-GT",
+        "entryId": "Q01-2-GT",
+        "caseId": "Q01",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 99,
+        "split": "development"
+      },
+      {
+        "id": "Q01-2-GST",
+        "entryId": "Q01-2-GST",
+        "caseId": "Q01",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 100,
+        "split": "development"
+      },
+      {
+        "id": "Q02-2-GS",
+        "entryId": "Q02-2-GS",
+        "caseId": "Q02",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 101,
+        "split": "development"
+      },
+      {
+        "id": "Q02-2-GT",
+        "entryId": "Q02-2-GT",
+        "caseId": "Q02",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 102,
+        "split": "development"
+      },
+      {
+        "id": "Q02-2-GST",
+        "entryId": "Q02-2-GST",
+        "caseId": "Q02",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 103,
+        "split": "development"
+      },
+      {
+        "id": "Q02-2-G0",
+        "entryId": "Q02-2-G0",
+        "caseId": "Q02",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 104,
+        "split": "development"
+      },
+      {
+        "id": "Q03-2-GT",
+        "entryId": "Q03-2-GT",
+        "caseId": "Q03",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 105,
+        "split": "development"
+      },
+      {
+        "id": "Q03-2-GST",
+        "entryId": "Q03-2-GST",
+        "caseId": "Q03",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 106,
+        "split": "development"
+      },
+      {
+        "id": "Q03-2-G0",
+        "entryId": "Q03-2-G0",
+        "caseId": "Q03",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 107,
+        "split": "development"
+      },
+      {
+        "id": "Q03-2-GS",
+        "entryId": "Q03-2-GS",
+        "caseId": "Q03",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 108,
+        "split": "development"
+      },
+      {
+        "id": "Q04-2-GST",
+        "entryId": "Q04-2-GST",
+        "caseId": "Q04",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 109,
+        "split": "development"
+      },
+      {
+        "id": "Q04-2-G0",
+        "entryId": "Q04-2-G0",
+        "caseId": "Q04",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 110,
+        "split": "development"
+      },
+      {
+        "id": "Q04-2-GS",
+        "entryId": "Q04-2-GS",
+        "caseId": "Q04",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 111,
+        "split": "development"
+      },
+      {
+        "id": "Q04-2-GT",
+        "entryId": "Q04-2-GT",
+        "caseId": "Q04",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 112,
+        "split": "development"
+      },
+      {
+        "id": "Q05-2-G0",
+        "entryId": "Q05-2-G0",
+        "caseId": "Q05",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 113,
+        "split": "development"
+      },
+      {
+        "id": "Q05-2-GS",
+        "entryId": "Q05-2-GS",
+        "caseId": "Q05",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 114,
+        "split": "development"
+      },
+      {
+        "id": "Q05-2-GT",
+        "entryId": "Q05-2-GT",
+        "caseId": "Q05",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 115,
+        "split": "development"
+      },
+      {
+        "id": "Q05-2-GST",
+        "entryId": "Q05-2-GST",
+        "caseId": "Q05",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 116,
+        "split": "development"
+      },
+      {
+        "id": "Q06-2-GS",
+        "entryId": "Q06-2-GS",
+        "caseId": "Q06",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 117,
+        "split": "development"
+      },
+      {
+        "id": "Q06-2-GT",
+        "entryId": "Q06-2-GT",
+        "caseId": "Q06",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 118,
+        "split": "development"
+      },
+      {
+        "id": "Q06-2-GST",
+        "entryId": "Q06-2-GST",
+        "caseId": "Q06",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 119,
+        "split": "development"
+      },
+      {
+        "id": "Q06-2-G0",
+        "entryId": "Q06-2-G0",
+        "caseId": "Q06",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 120,
+        "split": "development"
+      },
+      {
+        "id": "Q07-2-GT",
+        "entryId": "Q07-2-GT",
+        "caseId": "Q07",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 121,
+        "split": "development"
+      },
+      {
+        "id": "Q07-2-GST",
+        "entryId": "Q07-2-GST",
+        "caseId": "Q07",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 122,
+        "split": "development"
+      },
+      {
+        "id": "Q07-2-G0",
+        "entryId": "Q07-2-G0",
+        "caseId": "Q07",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 123,
+        "split": "development"
+      },
+      {
+        "id": "Q07-2-GS",
+        "entryId": "Q07-2-GS",
+        "caseId": "Q07",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 124,
+        "split": "development"
+      },
+      {
+        "id": "Q08-2-GST",
+        "entryId": "Q08-2-GST",
+        "caseId": "Q08",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 125,
+        "split": "development"
+      },
+      {
+        "id": "Q08-2-G0",
+        "entryId": "Q08-2-G0",
+        "caseId": "Q08",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 126,
+        "split": "development"
+      },
+      {
+        "id": "Q08-2-GS",
+        "entryId": "Q08-2-GS",
+        "caseId": "Q08",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 127,
+        "split": "development"
+      },
+      {
+        "id": "Q08-2-GT",
+        "entryId": "Q08-2-GT",
+        "caseId": "Q08",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 128,
+        "split": "development"
+      },
+      {
+        "id": "Q09-2-G0",
+        "entryId": "Q09-2-G0",
+        "caseId": "Q09",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 129,
+        "split": "development"
+      },
+      {
+        "id": "Q09-2-GS",
+        "entryId": "Q09-2-GS",
+        "caseId": "Q09",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 130,
+        "split": "development"
+      },
+      {
+        "id": "Q09-2-GT",
+        "entryId": "Q09-2-GT",
+        "caseId": "Q09",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 131,
+        "split": "development"
+      },
+      {
+        "id": "Q09-2-GST",
+        "entryId": "Q09-2-GST",
+        "caseId": "Q09",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 132,
+        "split": "development"
+      },
+      {
+        "id": "Q10-2-GS",
+        "entryId": "Q10-2-GS",
+        "caseId": "Q10",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 133,
+        "split": "development"
+      },
+      {
+        "id": "Q10-2-GT",
+        "entryId": "Q10-2-GT",
+        "caseId": "Q10",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 134,
+        "split": "development"
+      },
+      {
+        "id": "Q10-2-GST",
+        "entryId": "Q10-2-GST",
+        "caseId": "Q10",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 135,
+        "split": "development"
+      },
+      {
+        "id": "Q10-2-G0",
+        "entryId": "Q10-2-G0",
+        "caseId": "Q10",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 136,
+        "split": "development"
+      },
+      {
+        "id": "Q11-2-GT",
+        "entryId": "Q11-2-GT",
+        "caseId": "Q11",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 137,
+        "split": "development"
+      },
+      {
+        "id": "Q11-2-GST",
+        "entryId": "Q11-2-GST",
+        "caseId": "Q11",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 138,
+        "split": "development"
+      },
+      {
+        "id": "Q11-2-G0",
+        "entryId": "Q11-2-G0",
+        "caseId": "Q11",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 139,
+        "split": "development"
+      },
+      {
+        "id": "Q11-2-GS",
+        "entryId": "Q11-2-GS",
+        "caseId": "Q11",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 140,
+        "split": "development"
+      },
+      {
+        "id": "Q12-2-GST",
+        "entryId": "Q12-2-GST",
+        "caseId": "Q12",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 141,
+        "split": "development"
+      },
+      {
+        "id": "Q12-2-G0",
+        "entryId": "Q12-2-G0",
+        "caseId": "Q12",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 142,
+        "split": "development"
+      },
+      {
+        "id": "Q12-2-GS",
+        "entryId": "Q12-2-GS",
+        "caseId": "Q12",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 143,
+        "split": "development"
+      },
+      {
+        "id": "Q12-2-GT",
+        "entryId": "Q12-2-GT",
+        "caseId": "Q12",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 144,
+        "split": "development"
+      },
+      {
+        "id": "Q13-2-G0",
+        "entryId": "Q13-2-G0",
+        "caseId": "Q13",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 145,
+        "split": "development"
+      },
+      {
+        "id": "Q13-2-GS",
+        "entryId": "Q13-2-GS",
+        "caseId": "Q13",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 146,
+        "split": "development"
+      },
+      {
+        "id": "Q13-2-GT",
+        "entryId": "Q13-2-GT",
+        "caseId": "Q13",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 147,
+        "split": "development"
+      },
+      {
+        "id": "Q13-2-GST",
+        "entryId": "Q13-2-GST",
+        "caseId": "Q13",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 148,
+        "split": "development"
+      },
+      {
+        "id": "Q14-2-GS",
+        "entryId": "Q14-2-GS",
+        "caseId": "Q14",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 149,
+        "split": "development"
+      },
+      {
+        "id": "Q14-2-GT",
+        "entryId": "Q14-2-GT",
+        "caseId": "Q14",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 150,
+        "split": "development"
+      },
+      {
+        "id": "Q14-2-GST",
+        "entryId": "Q14-2-GST",
+        "caseId": "Q14",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 151,
+        "split": "development"
+      },
+      {
+        "id": "Q14-2-G0",
+        "entryId": "Q14-2-G0",
+        "caseId": "Q14",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 152,
+        "split": "development"
+      },
+      {
+        "id": "Q15-2-GT",
+        "entryId": "Q15-2-GT",
+        "caseId": "Q15",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 153,
+        "split": "development"
+      },
+      {
+        "id": "Q15-2-GST",
+        "entryId": "Q15-2-GST",
+        "caseId": "Q15",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 154,
+        "split": "development"
+      },
+      {
+        "id": "Q15-2-G0",
+        "entryId": "Q15-2-G0",
+        "caseId": "Q15",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 155,
+        "split": "development"
+      },
+      {
+        "id": "Q15-2-GS",
+        "entryId": "Q15-2-GS",
+        "caseId": "Q15",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 156,
+        "split": "development"
+      },
+      {
+        "id": "Q16-2-GST",
+        "entryId": "Q16-2-GST",
+        "caseId": "Q16",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 157,
+        "split": "development"
+      },
+      {
+        "id": "Q16-2-G0",
+        "entryId": "Q16-2-G0",
+        "caseId": "Q16",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 158,
+        "split": "development"
+      },
+      {
+        "id": "Q16-2-GS",
+        "entryId": "Q16-2-GS",
+        "caseId": "Q16",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 159,
+        "split": "development"
+      },
+      {
+        "id": "Q16-2-GT",
+        "entryId": "Q16-2-GT",
+        "caseId": "Q16",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 160,
+        "split": "development"
+      },
+      {
+        "id": "Q17-2-G0",
+        "entryId": "Q17-2-G0",
+        "caseId": "Q17",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 161,
+        "split": "development"
+      },
+      {
+        "id": "Q17-2-GS",
+        "entryId": "Q17-2-GS",
+        "caseId": "Q17",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 162,
+        "split": "development"
+      },
+      {
+        "id": "Q17-2-GT",
+        "entryId": "Q17-2-GT",
+        "caseId": "Q17",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 163,
+        "split": "development"
+      },
+      {
+        "id": "Q17-2-GST",
+        "entryId": "Q17-2-GST",
+        "caseId": "Q17",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 164,
+        "split": "development"
+      },
+      {
+        "id": "Q18-2-GS",
+        "entryId": "Q18-2-GS",
+        "caseId": "Q18",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 165,
+        "split": "development"
+      },
+      {
+        "id": "Q18-2-GT",
+        "entryId": "Q18-2-GT",
+        "caseId": "Q18",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 166,
+        "split": "development"
+      },
+      {
+        "id": "Q18-2-GST",
+        "entryId": "Q18-2-GST",
+        "caseId": "Q18",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 167,
+        "split": "development"
+      },
+      {
+        "id": "Q18-2-G0",
+        "entryId": "Q18-2-G0",
+        "caseId": "Q18",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 168,
+        "split": "development"
+      },
+      {
+        "id": "Q19-2-GT",
+        "entryId": "Q19-2-GT",
+        "caseId": "Q19",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 169,
+        "split": "development"
+      },
+      {
+        "id": "Q19-2-GST",
+        "entryId": "Q19-2-GST",
+        "caseId": "Q19",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 170,
+        "split": "development"
+      },
+      {
+        "id": "Q19-2-G0",
+        "entryId": "Q19-2-G0",
+        "caseId": "Q19",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 171,
+        "split": "development"
+      },
+      {
+        "id": "Q19-2-GS",
+        "entryId": "Q19-2-GS",
+        "caseId": "Q19",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 172,
+        "split": "development"
+      },
+      {
+        "id": "Q20-2-GST",
+        "entryId": "Q20-2-GST",
+        "caseId": "Q20",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 173,
+        "split": "development"
+      },
+      {
+        "id": "Q20-2-G0",
+        "entryId": "Q20-2-G0",
+        "caseId": "Q20",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 174,
+        "split": "development"
+      },
+      {
+        "id": "Q20-2-GS",
+        "entryId": "Q20-2-GS",
+        "caseId": "Q20",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 175,
+        "split": "development"
+      },
+      {
+        "id": "Q20-2-GT",
+        "entryId": "Q20-2-GT",
+        "caseId": "Q20",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 176,
+        "split": "development"
+      },
+      {
+        "id": "Q21-2-G0",
+        "entryId": "Q21-2-G0",
+        "caseId": "Q21",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 177,
+        "split": "development"
+      },
+      {
+        "id": "Q21-2-GS",
+        "entryId": "Q21-2-GS",
+        "caseId": "Q21",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 178,
+        "split": "development"
+      },
+      {
+        "id": "Q21-2-GT",
+        "entryId": "Q21-2-GT",
+        "caseId": "Q21",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 179,
+        "split": "development"
+      },
+      {
+        "id": "Q21-2-GST",
+        "entryId": "Q21-2-GST",
+        "caseId": "Q21",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 180,
+        "split": "development"
+      },
+      {
+        "id": "Q22-2-GS",
+        "entryId": "Q22-2-GS",
+        "caseId": "Q22",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 181,
+        "split": "development"
+      },
+      {
+        "id": "Q22-2-GT",
+        "entryId": "Q22-2-GT",
+        "caseId": "Q22",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 182,
+        "split": "development"
+      },
+      {
+        "id": "Q22-2-GST",
+        "entryId": "Q22-2-GST",
+        "caseId": "Q22",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 183,
+        "split": "development"
+      },
+      {
+        "id": "Q22-2-G0",
+        "entryId": "Q22-2-G0",
+        "caseId": "Q22",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 184,
+        "split": "development"
+      },
+      {
+        "id": "Q23-2-GT",
+        "entryId": "Q23-2-GT",
+        "caseId": "Q23",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 185,
+        "split": "development"
+      },
+      {
+        "id": "Q23-2-GST",
+        "entryId": "Q23-2-GST",
+        "caseId": "Q23",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 186,
+        "split": "development"
+      },
+      {
+        "id": "Q23-2-G0",
+        "entryId": "Q23-2-G0",
+        "caseId": "Q23",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 187,
+        "split": "development"
+      },
+      {
+        "id": "Q23-2-GS",
+        "entryId": "Q23-2-GS",
+        "caseId": "Q23",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 188,
+        "split": "development"
+      },
+      {
+        "id": "Q24-2-GST",
+        "entryId": "Q24-2-GST",
+        "caseId": "Q24",
+        "group": "GST",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 189,
+        "split": "development"
+      },
+      {
+        "id": "Q24-2-G0",
+        "entryId": "Q24-2-G0",
+        "caseId": "Q24",
+        "group": "G0",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 190,
+        "split": "development"
+      },
+      {
+        "id": "Q24-2-GS",
+        "entryId": "Q24-2-GS",
+        "caseId": "Q24",
+        "group": "GS",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 191,
+        "split": "development"
+      },
+      {
+        "id": "Q24-2-GT",
+        "entryId": "Q24-2-GT",
+        "caseId": "Q24",
+        "group": "GT",
+        "round": 2,
+        "repetition": 2,
+        "ordinal": 192,
+        "split": "development"
+      },
+      {
+        "id": "Q01-3-GS",
+        "entryId": "Q01-3-GS",
+        "caseId": "Q01",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 193,
+        "split": "development"
+      },
+      {
+        "id": "Q01-3-GT",
+        "entryId": "Q01-3-GT",
+        "caseId": "Q01",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 194,
+        "split": "development"
+      },
+      {
+        "id": "Q01-3-GST",
+        "entryId": "Q01-3-GST",
+        "caseId": "Q01",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 195,
+        "split": "development"
+      },
+      {
+        "id": "Q01-3-G0",
+        "entryId": "Q01-3-G0",
+        "caseId": "Q01",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 196,
+        "split": "development"
+      },
+      {
+        "id": "Q02-3-GT",
+        "entryId": "Q02-3-GT",
+        "caseId": "Q02",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 197,
+        "split": "development"
+      },
+      {
+        "id": "Q02-3-GST",
+        "entryId": "Q02-3-GST",
+        "caseId": "Q02",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 198,
+        "split": "development"
+      },
+      {
+        "id": "Q02-3-G0",
+        "entryId": "Q02-3-G0",
+        "caseId": "Q02",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 199,
+        "split": "development"
+      },
+      {
+        "id": "Q02-3-GS",
+        "entryId": "Q02-3-GS",
+        "caseId": "Q02",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 200,
+        "split": "development"
+      },
+      {
+        "id": "Q03-3-GST",
+        "entryId": "Q03-3-GST",
+        "caseId": "Q03",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 201,
+        "split": "development"
+      },
+      {
+        "id": "Q03-3-G0",
+        "entryId": "Q03-3-G0",
+        "caseId": "Q03",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 202,
+        "split": "development"
+      },
+      {
+        "id": "Q03-3-GS",
+        "entryId": "Q03-3-GS",
+        "caseId": "Q03",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 203,
+        "split": "development"
+      },
+      {
+        "id": "Q03-3-GT",
+        "entryId": "Q03-3-GT",
+        "caseId": "Q03",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 204,
+        "split": "development"
+      },
+      {
+        "id": "Q04-3-G0",
+        "entryId": "Q04-3-G0",
+        "caseId": "Q04",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 205,
+        "split": "development"
+      },
+      {
+        "id": "Q04-3-GS",
+        "entryId": "Q04-3-GS",
+        "caseId": "Q04",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 206,
+        "split": "development"
+      },
+      {
+        "id": "Q04-3-GT",
+        "entryId": "Q04-3-GT",
+        "caseId": "Q04",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 207,
+        "split": "development"
+      },
+      {
+        "id": "Q04-3-GST",
+        "entryId": "Q04-3-GST",
+        "caseId": "Q04",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 208,
+        "split": "development"
+      },
+      {
+        "id": "Q05-3-GS",
+        "entryId": "Q05-3-GS",
+        "caseId": "Q05",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 209,
+        "split": "development"
+      },
+      {
+        "id": "Q05-3-GT",
+        "entryId": "Q05-3-GT",
+        "caseId": "Q05",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 210,
+        "split": "development"
+      },
+      {
+        "id": "Q05-3-GST",
+        "entryId": "Q05-3-GST",
+        "caseId": "Q05",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 211,
+        "split": "development"
+      },
+      {
+        "id": "Q05-3-G0",
+        "entryId": "Q05-3-G0",
+        "caseId": "Q05",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 212,
+        "split": "development"
+      },
+      {
+        "id": "Q06-3-GT",
+        "entryId": "Q06-3-GT",
+        "caseId": "Q06",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 213,
+        "split": "development"
+      },
+      {
+        "id": "Q06-3-GST",
+        "entryId": "Q06-3-GST",
+        "caseId": "Q06",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 214,
+        "split": "development"
+      },
+      {
+        "id": "Q06-3-G0",
+        "entryId": "Q06-3-G0",
+        "caseId": "Q06",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 215,
+        "split": "development"
+      },
+      {
+        "id": "Q06-3-GS",
+        "entryId": "Q06-3-GS",
+        "caseId": "Q06",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 216,
+        "split": "development"
+      },
+      {
+        "id": "Q07-3-GST",
+        "entryId": "Q07-3-GST",
+        "caseId": "Q07",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 217,
+        "split": "development"
+      },
+      {
+        "id": "Q07-3-G0",
+        "entryId": "Q07-3-G0",
+        "caseId": "Q07",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 218,
+        "split": "development"
+      },
+      {
+        "id": "Q07-3-GS",
+        "entryId": "Q07-3-GS",
+        "caseId": "Q07",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 219,
+        "split": "development"
+      },
+      {
+        "id": "Q07-3-GT",
+        "entryId": "Q07-3-GT",
+        "caseId": "Q07",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 220,
+        "split": "development"
+      },
+      {
+        "id": "Q08-3-G0",
+        "entryId": "Q08-3-G0",
+        "caseId": "Q08",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 221,
+        "split": "development"
+      },
+      {
+        "id": "Q08-3-GS",
+        "entryId": "Q08-3-GS",
+        "caseId": "Q08",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 222,
+        "split": "development"
+      },
+      {
+        "id": "Q08-3-GT",
+        "entryId": "Q08-3-GT",
+        "caseId": "Q08",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 223,
+        "split": "development"
+      },
+      {
+        "id": "Q08-3-GST",
+        "entryId": "Q08-3-GST",
+        "caseId": "Q08",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 224,
+        "split": "development"
+      },
+      {
+        "id": "Q09-3-GS",
+        "entryId": "Q09-3-GS",
+        "caseId": "Q09",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 225,
+        "split": "development"
+      },
+      {
+        "id": "Q09-3-GT",
+        "entryId": "Q09-3-GT",
+        "caseId": "Q09",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 226,
+        "split": "development"
+      },
+      {
+        "id": "Q09-3-GST",
+        "entryId": "Q09-3-GST",
+        "caseId": "Q09",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 227,
+        "split": "development"
+      },
+      {
+        "id": "Q09-3-G0",
+        "entryId": "Q09-3-G0",
+        "caseId": "Q09",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 228,
+        "split": "development"
+      },
+      {
+        "id": "Q10-3-GT",
+        "entryId": "Q10-3-GT",
+        "caseId": "Q10",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 229,
+        "split": "development"
+      },
+      {
+        "id": "Q10-3-GST",
+        "entryId": "Q10-3-GST",
+        "caseId": "Q10",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 230,
+        "split": "development"
+      },
+      {
+        "id": "Q10-3-G0",
+        "entryId": "Q10-3-G0",
+        "caseId": "Q10",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 231,
+        "split": "development"
+      },
+      {
+        "id": "Q10-3-GS",
+        "entryId": "Q10-3-GS",
+        "caseId": "Q10",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 232,
+        "split": "development"
+      },
+      {
+        "id": "Q11-3-GST",
+        "entryId": "Q11-3-GST",
+        "caseId": "Q11",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 233,
+        "split": "development"
+      },
+      {
+        "id": "Q11-3-G0",
+        "entryId": "Q11-3-G0",
+        "caseId": "Q11",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 234,
+        "split": "development"
+      },
+      {
+        "id": "Q11-3-GS",
+        "entryId": "Q11-3-GS",
+        "caseId": "Q11",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 235,
+        "split": "development"
+      },
+      {
+        "id": "Q11-3-GT",
+        "entryId": "Q11-3-GT",
+        "caseId": "Q11",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 236,
+        "split": "development"
+      },
+      {
+        "id": "Q12-3-G0",
+        "entryId": "Q12-3-G0",
+        "caseId": "Q12",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 237,
+        "split": "development"
+      },
+      {
+        "id": "Q12-3-GS",
+        "entryId": "Q12-3-GS",
+        "caseId": "Q12",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 238,
+        "split": "development"
+      },
+      {
+        "id": "Q12-3-GT",
+        "entryId": "Q12-3-GT",
+        "caseId": "Q12",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 239,
+        "split": "development"
+      },
+      {
+        "id": "Q12-3-GST",
+        "entryId": "Q12-3-GST",
+        "caseId": "Q12",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 240,
+        "split": "development"
+      },
+      {
+        "id": "Q13-3-GS",
+        "entryId": "Q13-3-GS",
+        "caseId": "Q13",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 241,
+        "split": "development"
+      },
+      {
+        "id": "Q13-3-GT",
+        "entryId": "Q13-3-GT",
+        "caseId": "Q13",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 242,
+        "split": "development"
+      },
+      {
+        "id": "Q13-3-GST",
+        "entryId": "Q13-3-GST",
+        "caseId": "Q13",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 243,
+        "split": "development"
+      },
+      {
+        "id": "Q13-3-G0",
+        "entryId": "Q13-3-G0",
+        "caseId": "Q13",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 244,
+        "split": "development"
+      },
+      {
+        "id": "Q14-3-GT",
+        "entryId": "Q14-3-GT",
+        "caseId": "Q14",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 245,
+        "split": "development"
+      },
+      {
+        "id": "Q14-3-GST",
+        "entryId": "Q14-3-GST",
+        "caseId": "Q14",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 246,
+        "split": "development"
+      },
+      {
+        "id": "Q14-3-G0",
+        "entryId": "Q14-3-G0",
+        "caseId": "Q14",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 247,
+        "split": "development"
+      },
+      {
+        "id": "Q14-3-GS",
+        "entryId": "Q14-3-GS",
+        "caseId": "Q14",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 248,
+        "split": "development"
+      },
+      {
+        "id": "Q15-3-GST",
+        "entryId": "Q15-3-GST",
+        "caseId": "Q15",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 249,
+        "split": "development"
+      },
+      {
+        "id": "Q15-3-G0",
+        "entryId": "Q15-3-G0",
+        "caseId": "Q15",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 250,
+        "split": "development"
+      },
+      {
+        "id": "Q15-3-GS",
+        "entryId": "Q15-3-GS",
+        "caseId": "Q15",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 251,
+        "split": "development"
+      },
+      {
+        "id": "Q15-3-GT",
+        "entryId": "Q15-3-GT",
+        "caseId": "Q15",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 252,
+        "split": "development"
+      },
+      {
+        "id": "Q16-3-G0",
+        "entryId": "Q16-3-G0",
+        "caseId": "Q16",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 253,
+        "split": "development"
+      },
+      {
+        "id": "Q16-3-GS",
+        "entryId": "Q16-3-GS",
+        "caseId": "Q16",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 254,
+        "split": "development"
+      },
+      {
+        "id": "Q16-3-GT",
+        "entryId": "Q16-3-GT",
+        "caseId": "Q16",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 255,
+        "split": "development"
+      },
+      {
+        "id": "Q16-3-GST",
+        "entryId": "Q16-3-GST",
+        "caseId": "Q16",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 256,
+        "split": "development"
+      },
+      {
+        "id": "Q17-3-GS",
+        "entryId": "Q17-3-GS",
+        "caseId": "Q17",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 257,
+        "split": "development"
+      },
+      {
+        "id": "Q17-3-GT",
+        "entryId": "Q17-3-GT",
+        "caseId": "Q17",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 258,
+        "split": "development"
+      },
+      {
+        "id": "Q17-3-GST",
+        "entryId": "Q17-3-GST",
+        "caseId": "Q17",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 259,
+        "split": "development"
+      },
+      {
+        "id": "Q17-3-G0",
+        "entryId": "Q17-3-G0",
+        "caseId": "Q17",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 260,
+        "split": "development"
+      },
+      {
+        "id": "Q18-3-GT",
+        "entryId": "Q18-3-GT",
+        "caseId": "Q18",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 261,
+        "split": "development"
+      },
+      {
+        "id": "Q18-3-GST",
+        "entryId": "Q18-3-GST",
+        "caseId": "Q18",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 262,
+        "split": "development"
+      },
+      {
+        "id": "Q18-3-G0",
+        "entryId": "Q18-3-G0",
+        "caseId": "Q18",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 263,
+        "split": "development"
+      },
+      {
+        "id": "Q18-3-GS",
+        "entryId": "Q18-3-GS",
+        "caseId": "Q18",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 264,
+        "split": "development"
+      },
+      {
+        "id": "Q19-3-GST",
+        "entryId": "Q19-3-GST",
+        "caseId": "Q19",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 265,
+        "split": "development"
+      },
+      {
+        "id": "Q19-3-G0",
+        "entryId": "Q19-3-G0",
+        "caseId": "Q19",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 266,
+        "split": "development"
+      },
+      {
+        "id": "Q19-3-GS",
+        "entryId": "Q19-3-GS",
+        "caseId": "Q19",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 267,
+        "split": "development"
+      },
+      {
+        "id": "Q19-3-GT",
+        "entryId": "Q19-3-GT",
+        "caseId": "Q19",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 268,
+        "split": "development"
+      },
+      {
+        "id": "Q20-3-G0",
+        "entryId": "Q20-3-G0",
+        "caseId": "Q20",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 269,
+        "split": "development"
+      },
+      {
+        "id": "Q20-3-GS",
+        "entryId": "Q20-3-GS",
+        "caseId": "Q20",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 270,
+        "split": "development"
+      },
+      {
+        "id": "Q20-3-GT",
+        "entryId": "Q20-3-GT",
+        "caseId": "Q20",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 271,
+        "split": "development"
+      },
+      {
+        "id": "Q20-3-GST",
+        "entryId": "Q20-3-GST",
+        "caseId": "Q20",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 272,
+        "split": "development"
+      },
+      {
+        "id": "Q21-3-GS",
+        "entryId": "Q21-3-GS",
+        "caseId": "Q21",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 273,
+        "split": "development"
+      },
+      {
+        "id": "Q21-3-GT",
+        "entryId": "Q21-3-GT",
+        "caseId": "Q21",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 274,
+        "split": "development"
+      },
+      {
+        "id": "Q21-3-GST",
+        "entryId": "Q21-3-GST",
+        "caseId": "Q21",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 275,
+        "split": "development"
+      },
+      {
+        "id": "Q21-3-G0",
+        "entryId": "Q21-3-G0",
+        "caseId": "Q21",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 276,
+        "split": "development"
+      },
+      {
+        "id": "Q22-3-GT",
+        "entryId": "Q22-3-GT",
+        "caseId": "Q22",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 277,
+        "split": "development"
+      },
+      {
+        "id": "Q22-3-GST",
+        "entryId": "Q22-3-GST",
+        "caseId": "Q22",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 278,
+        "split": "development"
+      },
+      {
+        "id": "Q22-3-G0",
+        "entryId": "Q22-3-G0",
+        "caseId": "Q22",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 279,
+        "split": "development"
+      },
+      {
+        "id": "Q22-3-GS",
+        "entryId": "Q22-3-GS",
+        "caseId": "Q22",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 280,
+        "split": "development"
+      },
+      {
+        "id": "Q23-3-GST",
+        "entryId": "Q23-3-GST",
+        "caseId": "Q23",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 281,
+        "split": "development"
+      },
+      {
+        "id": "Q23-3-G0",
+        "entryId": "Q23-3-G0",
+        "caseId": "Q23",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 282,
+        "split": "development"
+      },
+      {
+        "id": "Q23-3-GS",
+        "entryId": "Q23-3-GS",
+        "caseId": "Q23",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 283,
+        "split": "development"
+      },
+      {
+        "id": "Q23-3-GT",
+        "entryId": "Q23-3-GT",
+        "caseId": "Q23",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 284,
+        "split": "development"
+      },
+      {
+        "id": "Q24-3-G0",
+        "entryId": "Q24-3-G0",
+        "caseId": "Q24",
+        "group": "G0",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 285,
+        "split": "development"
+      },
+      {
+        "id": "Q24-3-GS",
+        "entryId": "Q24-3-GS",
+        "caseId": "Q24",
+        "group": "GS",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 286,
+        "split": "development"
+      },
+      {
+        "id": "Q24-3-GT",
+        "entryId": "Q24-3-GT",
+        "caseId": "Q24",
+        "group": "GT",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 287,
+        "split": "development"
+      },
+      {
+        "id": "Q24-3-GST",
+        "entryId": "Q24-3-GST",
+        "caseId": "Q24",
+        "group": "GST",
+        "round": 3,
+        "repetition": 3,
+        "ordinal": 288,
+        "split": "development"
+      }
+    ],
+    "limits": {
+      "requests": 3000,
+      "input": 60000000,
+      "output": 4000000,
+      "afp": 8000
+    },
+    "quartetReserve": {
+      "requests": 100,
+      "input": 1200000,
+      "output": 262144,
+      "afp": 200
+    },
+    "budgetPolicy": {
+      "mode": "unlimited_explicit_user_approval",
+      "authorization": "2026-10-28 用户：不设额度，开始测试",
+      "originalPlanLimits": {
+        "requests": 3000,
+        "input": 60000000,
+        "output": 4000000,
+        "afp": 8000
+      },
+      "originalPlanReserve": {
+        "requests": 100,
+        "input": 1200000,
+        "output": 262144,
+        "afp": 200
+      },
+      "fixedTaskSlots": 288,
+      "automaticRetries": false,
+      "additionalTrials": false
+    },
+    "model": {
+      "endpoint": "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions",
+      "groups": {
+        "G0": {
+          "requestModel": "deepseek-v4.1-flash",
+          "responseModel": "deepseek-v4-1-flash-261017",
+          "thinking": "enabled",
+          "effort": "high",
+          "afpInput": 1.25,
+          "afpOutput": 1.25
+        },
+        "GS": {
+          "requestModel": "deepseek-v4.1-flash",
+          "responseModel": "deepseek-v4-1-flash-261017",
+          "thinking": "enabled",
+          "effort": "high",
+          "afpInput": 1.25,
+          "afpOutput": 1.25
+        },
+        "GT": {
+          "requestModel": "deepseek-v4.1-flash",
+          "responseModel": "deepseek-v4-1-flash-261017",
+          "thinking": "enabled",
+          "effort": "high",
+          "afpInput": 1.25,
+          "afpOutput": 1.25
+        },
+        "GST": {
+          "requestModel": "deepseek-v4.1-flash",
+          "responseModel": "deepseek-v4-1-flash-261017",
+          "thinking": "enabled",
+          "effort": "high",
+          "afpInput": 1.25,
+          "afpOutput": 1.25
+        }
+      },
+      "maxTokens": 32768,
+      "outputLimitField": "max_completion_tokens",
+      "topP": "absent",
+      "temperature": "absent"
+    },
+    "automaticRetries": false,
+    "automaticResume": false
+  },
+  "freezeHash": "e37713a4813d0b7e87b16a7e1ad94a46970c8fa0992cc49177e60a9d41b39e6e",
+  "account": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-10-28T09:11:00Z",
+    "sourceEvidence": "Authenticated Agent Plan Medium UI observation: five-hour used 3453.026/10000; week32.18%/35000 and month12.72%/100000 rounded; conservative remaining values recorded. Flash selected updated1017; 开启超额后付费 confirms disabled. Other account usage observed between initial and current check. No settings changed. User explicitly removed artificial monetary/token/request caps.",
+    "observedOverageEnabled": false,
+    "remainingAfp": {
+      "fiveHour": 6546.974,
+      "week": 23733,
+      "month": 87270
+    },
+    "externalUseReserveAfp": 0,
+    "sharedUsePolicy": "observed_shared_usage"
+  },
+  "accountHash": "1c7cd02cc26090183cd0ab754c446136377fcd92378d3a3a93a866aaf75c183f",
+  "mode": "live",
+  "draftViolationScope": "isolated-task",
+  "budgetPolicy": {
+    "mode": "unlimited_explicit_user_approval",
+    "authorization": "2026-10-28 用户：不设额度，开始测试",
+    "originalPlanLimits": {
+      "requests": 3000,
+      "input": 60000000,
+      "output": 4000000,
+      "afp": 8000
+    },
+    "originalPlanReserve": {
+      "requests": 100,
+      "input": 1200000,
+      "output": 262144,
+      "afp": 200
+    },
+    "fixedTaskSlots": 288,
+    "automaticRetries": false,
+    "additionalTrials": false
+  },
+  "automaticRetries": false,
+  "automaticResume": false
+}

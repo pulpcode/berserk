@@ -1,0 +1,11 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "64ba973b357a7392c7ac49f0cac417b476e387a7e551b84e7b175fffdb1b7d4d",
+  "limits": {
+    "requests": 300,
+    "input": 8000000,
+    "output": 500000
+  },
+  "scope": "已批准24项；首4流程通过后继续20项；不自动重试或追加",
+  "authorizationSource": "2026-10-29 根会话转达用户明确批准 next-evaluation-plan.md"
+}

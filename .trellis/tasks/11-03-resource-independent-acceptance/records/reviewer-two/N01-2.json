@@ -1,0 +1,235 @@
+{
+  "reviewer": "independent-reviewer-two",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "reviewedStatementIds": [
+    "message-10"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "分别完成青埠resource快照真零/complete/无记录可判关系，蓼湾两实际内部对象1辆+1艘/分页读完但业务partial/U。必要三项逐源齐全，含糊叙述被同段限制明确限定，无确定错误结论。",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "只两来源resource和唯一引用面，未执行额外类型提议或写入。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9",
+        "message-10"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "两个不同来源实体保留，车/舟单位不同未混成两辆或做无据身份合并。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9",
+        "message-10"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "U明确保留，单体available不被视作assigned；青埠无记录不推关系否定。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9",
+        "message-10"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "青埠源快照限定真零与蓼湾业务partial分清，空间complete只限已同步两候选，不推全部任务或现实全量。",
+      "evidenceIds": [
+        "message-1",
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9",
+        "message-10"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "n01r2-01",
+      "statementId": "message-10",
+      "quote": "按“砾岸矩形”（标注固定版本 d3641c13 rev1，对象 n01-area）分别核对两个来源，结论不能互相替代：",
+      "availableEvidenceIds": [
+        "message-1",
+        "message-3"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "初始固定ref/rev1/objectId一致，限定两来源分别核对。"
+    },
+    {
+      "id": "n01r2-02",
+      "statementId": "message-10",
+      "quote": "区域内实际资源：**没有**。本次对该来源仅按 resource 类型查询（快照时间 2026-11-03T03:39:01.293Z，实际查询 03:40:38），返回 0 条、无后续页，来源资源覆盖状态为 complete；再与矩形做“包含”空间筛选，输入候选 0 个、命中 0 个，完整性为 complete。也就是说，该来源的快照中没有资源记录，区域内自然没有。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "source resource查询0/complete、对应区域filter0/complete与时间正确。查询后“再”可作逻辑解释顺序，但真实filter03:40:08先于独立situation03:40:38，应改“空间筛选也为0”避免时序误读；没有更早断言借后证补证。"
+    },
+    {
+      "id": "n01r2-03",
+      "statementId": "message-10",
+      "quote": "是否查全：这是“该来源快照内该类对象为空”，**不等于现实中当地没有资源**，也不能说明青埠台账其他类型对象（道路、区域）的情况。若需要，可另查这些类型。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "限定来源快照resource空不推现实/其他类型空。末句是未执行的可选提议，不是声称已有道路/区域资源。"
+    },
+    {
+      "id": "n01r2-04",
+      "statementId": "message-10",
+      "quote": "与本任务关系：无资源记录，因此无法建立任务关系判断，既不能说“已分配”，也不能说“不相关”。",
+      "availableEvidenceIds": [
+        "message-5",
+        "message-7",
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "青埠零记录无可判关系，既不编A也不由无记录断言不相关。"
+    },
+    {
+      "id": "n01r2-05",
+      "statementId": "message-10",
+      "quote": "区域内实际资源：**有 2 条**，均为实际资源（actual_resource），点位全部落在矩形内部（内部 2、边界 0、外部 0）：\n  - 蓼湾工程车（lw-car）：1 辆，可用状态为 available；\n  - 蓼湾轻舟（lw-boat）：1 艘，可用状态为 unknown（来源明确表示状态未确认）。",
+      "availableEvidenceIds": [
+        "message-6",
+        "message-8",
+        "message-9"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "两actual point严格内部，car1辆available/boat1艘unknown，内部2边0外0与实际classify和数量组相符。"
+    },
+    {
+      "id": "n01r2-06",
+      "statementId": "message-10",
+      "quote": "是否查全：本次空间筛选输入 2 个对象、完整分页、无遗漏（completeness complete），该来源当前资源记录即这 2 条。但来源覆盖状态为 **partial**（“只包含已接入站点，另有站点未同步”），所以不能排除未同步站点下还有资源；数量只能对应已接入部分。",
+      "availableEvidenceIds": [
+        "message-6",
+        "message-8",
+        "message-9"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "实际两次蓼湾读取均两页cursor1:1至hasMorefalse，空间候选完整2；同段立即强调来源partial与未同步站点，因此“当前即2”指本次已同步记录，不是源现实全量。建议将该句加“本次读到”更清楚，不强拆出前半句判全量造假。"
+    },
+    {
+      "id": "n01r2-07",
+      "statementId": "message-10",
+      "quote": "与本任务关系：两条记录均为 **unconfirmed**（本任务关系尚未确认），关系依据为“来源任务映射已核实、来源支援规则已核实”；关系覆盖为 partial，仅按实际关联证据判断。因此**不能视为已分配给本任务或已承诺支援**，只是与本任务存在待确认的关联线索。",
+      "availableEvidenceIds": [
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "U/relationshipCoverage partial及relationBasis两来源规则字段准确；“待确认关联线索”偏宽，建议直接写关系未知，避免读成已经证明相关。全文明确不能认定分配或支援，未升为related/potential_support。"
+    },
+    {
+      "id": "n01r2-08",
+      "statementId": "message-10",
+      "quote": "**口径与时间说明**：几何关系以矩形固定版本 rev1 为准（contains 含边界，后一步点位分类区分了内部/边界/外部）；",
+      "availableEvidenceIds": [
+        "message-3",
+        "message-5",
+        "message-6",
+        "message-9"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "固定rev1与工具contains closed boundary准确，classify后做且真实返回内部2/边0/外0。"
+    },
+    {
+      "id": "n01r2-09",
+      "statementId": "message-10",
+      "quote": "来源数据为查询时快照（青埠、蓼湾 asOf 均为 2026-11-03T03:39:01.293Z）；数量与可用性事实的上报时间为 2026-11-03T03:34:01.280Z、生效 03:29:01.280Z、有效至 2026-11-04T03:39:01.280Z。",
+      "availableEvidenceIds": [
+        "message-8"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "两asOf实际相同；业务reported/effective/until取现有蓼湾数量/availability事实，青埠明确无资源记录故不读成给空源捏造记录时间。"
+    },
+    {
+      "id": "n01r2-10",
+      "statementId": "message-10",
+      "quote": "本次只做查询与空间判定，未保存或修改任何业务资料或标绘。",
+      "availableEvidenceIds": [
+        "message-2",
+        "message-3",
+        "message-4",
+        "message-5",
+        "message-6",
+        "message-7",
+        "message-8",
+        "message-9"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "全部8工具只读/分析、state before/after同字节，无业务保存。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "answer": {
+    "finalStatementIds": [
+      "message-10"
+    ],
+    "outcome": "answered",
+    "rationale": "唯一终答完整覆盖存在性、完整性及任务关系，未以过程工具成功替代结果。",
+    "evidenceIds": [
+      "message-1",
+      "message-3",
+      "message-5",
+      "message-6",
+      "message-7",
+      "message-8",
+      "message-9",
+      "message-10"
+    ]
+  },
+  "scope": {
+    "requirement": "resolved",
+    "behavior": "direct",
+    "rationale": "唯一固定矩形和两指定来源范围明确，直接分来源答复。",
+    "evidenceIds": [
+      "message-1",
+      "message-3",
+      "message-5",
+      "message-6",
+      "message-7",
+      "message-8",
+      "message-9",
+      "message-10"
+    ]
+  }
+}

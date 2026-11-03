@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A07-2",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "9707b111",
+    "74c5b7d4"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "实际资源2/1/1，全部图形4/2/2，两轮范围和完整名单正确，只读且未扩展候选。",
+  "explanation": "pass",
+  "strict": "pass",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "固定所选图层，仅只读。",
+      "evidenceIds": [
+        "b443d884",
+        "0908d73f",
+        "bba25517"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "未把普通点计划点当实际资源，没有名称去重。",
+      "evidenceIds": [
+        "b443d884",
+        "0908d73f",
+        "bba25517"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "按要求未分析任务关系，可用声明不额外筛选。",
+      "evidenceIds": [
+        "b443d884",
+        "0908d73f",
+        "bba25517"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "实际4与全点8的完整范围清楚。",
+      "evidenceIds": [
+        "b443d884",
+        "0908d73f",
+        "bba25517"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A07-2-c01",
+      "statementId": "9707b111",
+      "quote": "该图层共有 8 个点对象。其中只有 4 个对象的资源声明是“实际资源”",
+      "availableEvidenceIds": [
+        "b443d884"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "完整固定发布图层8点，4actual各1辆fire_engine。"
+    },
+    {
+      "id": "A07-2-c02",
+      "statementId": "9707b111",
+      "quote": "区域内部 | 2 | 桦堤一车（a07-r1）、桦堤二车（a07-r2）",
+      "availableEvidenceIds": [
+        "b443d884",
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "内部2车来自已读数量和实际位置声明。"
+    },
+    {
+      "id": "A07-2-c03",
+      "statementId": "9707b111",
+      "quote": "边界上 | 1 | 桦堤边线车（a07-re）",
+      "availableEvidenceIds": [
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "boundary独立列1。"
+    },
+    {
+      "id": "A07-2-c04",
+      "statementId": "9707b111",
+      "quote": "区域外 | 1 | 桦堤外勤车（a07-ro）",
+      "availableEvidenceIds": [
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "exterior独立列1。"
+    },
+    {
+      "id": "A07-2-c05",
+      "statementId": "9707b111",
+      "quote": "内部 2 + 边界 1 = 3 个位于区内",
+      "availableEvidenceIds": [
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "3明确是内部加边界，宜写含边界；没有把strict内部2改成3的实际统计。"
+    },
+    {
+      "id": "A07-2-c06",
+      "statementId": "9707b111",
+      "quote": "资源含义是“计划位置”（planned_location）",
+      "availableEvidenceIds": [
+        "b443d884"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "计划点排除，另3普通无声明同样排除。"
+    },
+    {
+      "id": "A07-2-c07",
+      "statementId": "9707b111",
+      "quote": "外环与内环边界都计为“边界”，不加距离容差",
+      "availableEvidenceIds": [
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "方法limitations匹配，固定来源rev1/asOf正确。"
+    },
+    {
+      "id": "A07-2-c08",
+      "statementId": "9707b111",
+      "quote": "本次没有分析这些资源与本任务的关系，也没有做任何保存或修改",
+      "availableEvidenceIds": [
+        "0908d73f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "无关系查询/筛选及无写入，state相等。"
+    },
+    {
+      "id": "A07-2-c09",
+      "statementId": "74c5b7d4",
+      "quote": "这 8 个点对象都已通过计算判断位置，没有遗漏。",
+      "availableEvidenceIds": [
+        "b443d884",
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "同一固定图层完整8候选，分类无缺。"
+    },
+    {
+      "id": "A07-2-c10",
+      "statementId": "74c5b7d4",
+      "quote": "区域内 | 4 | 桦堤一车、桦堤二车、桦堤会合点、桦堤预设驻点",
+      "availableEvidenceIds": [
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "全部图形内4。"
+    },
+    {
+      "id": "A07-2-c11",
+      "statementId": "74c5b7d4",
+      "quote": "边界上 | 2 | 桦堤边线车、桦堤界桩",
+      "availableEvidenceIds": [
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "边界2。"
+    },
+    {
+      "id": "A07-2-c12",
+      "statementId": "74c5b7d4",
+      "quote": "区域外 | 2 | 桦堤外勤车、桦堤路牌",
+      "availableEvidenceIds": [
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "外2。"
+    },
+    {
+      "id": "A07-2-c13",
+      "statementId": "74c5b7d4",
+      "quote": "共 6 个落在区内",
+      "availableEvidenceIds": [
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "expression_only",
+      "rationale": "前半句明确内4+边2，宜补含边界字样。"
+    },
+    {
+      "id": "A07-2-c14",
+      "statementId": "74c5b7d4",
+      "quote": "实际资源点 4 个",
+      "availableEvidenceIds": [
+        "b443d884",
+        "0908d73f",
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "三种业务性质分组正确：实际4位置2/1/1，计划1内部，普通3各一位置；“图形类型”应称业务性质。"
+    },
+    {
+      "id": "A07-2-c15",
+      "statementId": "74c5b7d4",
+      "quote": "asOf 2026-11-02T10:04:02Z",
+      "availableEvidenceIds": [
+        "bba25517"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "固定发布asOf保留，区域rev1未变，未写草稿由effect及state支持。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [
+    "两处区内合计应注明含边界；同句明确相加和表格清楚分列，属于表达问题。",
+    "“图形类型”应称业务性质，全部对象几何类型都是Point。"
+  ],
+  "workflowObservations": [
+    "spatial-analysis/map-annotations完整正文hash均匹配，实际provider收到了全部工具。"
+  ],
+  "programChecks": [
+    {
+      "id": "A07-2-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-2/final-snapshot.json",
+      "sha256": "89309a76255d31b4502cfef6bcbae5eb191ed41e2aacc503e084f724aeab4ee7"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-2/state-before.json",
+      "sha256": "ee643448c19a282eb3ea001f0f210560b519eb9642ac91da78b4a6e14681157d"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-2/state-after.json",
+      "sha256": "ee643448c19a282eb3ea001f0f210560b519eb9642ac91da78b4a6e14681157d"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-2/state-before.json",
+      "sha256": "ee643448c19a282eb3ea001f0f210560b519eb9642ac91da78b4a6e14681157d",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A07-2/state-after.json",
+      "sha256": "ee643448c19a282eb3ea001f0f210560b519eb9642ac91da78b4a6e14681157d",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 11
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 5,
+    "input": 172815,
+    "output": 2360
+  }
+}

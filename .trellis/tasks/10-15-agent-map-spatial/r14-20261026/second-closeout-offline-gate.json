@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "freezeHash": "1e51c7720aadd287f27b5003b6d321b91384491e0a26e30291f4b575cebd999d",
+  "evidence": [
+    "second-closeout-check.md",
+    "second-closeout-check.json",
+    "second-closeout-final-offline.log"
+  ],
+  "authorization": "用户：进行修复，完成后续；同类遗漏继续修复，原19不重跑",
+  "remainingTrials": 125
+}

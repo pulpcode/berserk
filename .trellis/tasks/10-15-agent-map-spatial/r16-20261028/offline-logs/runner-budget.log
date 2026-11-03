@@ -1,0 +1,33 @@
+(node:55565) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ quartet admission is conservative; current quartet may continue beyond reserve, no per-task cutoff (7910.200122ms)
+✔ wire group configuration never edits native messages, tools, or private history (1.79004ms)
+✔ response contract permits E1 zero thinking and valid JSON wrong tool schema, rejects protocol errors (7.272489ms)
+✔ non-parent model requests use same group configuration and shared ledger (23.736287ms)
+✖ AFP counts thinking once as output, same Flash coefficient and account reserves are independent (22.185252ms)
+✔ only exact loaded Skill catalogue descriptions are normalized; extra schema differences remain visible (2.121867ms)
+✔ three identical tool results stop, changed arguments/evidence or a new user turn reset progress (0.455649ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12690.828855
+
+✖ failing tests:
+
+test at ../../.trellis/tasks/10-15-agent-map-spatial/r16-20261028/provider-budget.test.ts:1:5413
+✖ AFP counts thinking once as output, same Flash coefficient and account reserves are independent (22.185252ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/provider-budget.test.ts:48:9)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /account_window/,
+    operator: 'throws',
+    diff: 'simple'
+  }

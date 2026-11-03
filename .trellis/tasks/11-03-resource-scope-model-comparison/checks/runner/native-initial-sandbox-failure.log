@@ -1,0 +1,419 @@
+(node:61197) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ real HTTP/Pi frozen slot P01-A-1 (33029.947301ms)
+✖ real HTTP/Pi frozen slot P01-B-1 (471.584556ms)
+✖ real HTTP/Pi frozen slot P02-A-1 (459.606558ms)
+✖ real HTTP/Pi frozen slot P02-B-1 (427.955072ms)
+✖ real HTTP/Pi frozen slot D01-A-1 (533.566657ms)
+✖ real HTTP/Pi frozen slot D01-B-1 (531.160914ms)
+✖ real HTTP/Pi frozen slot D02-A-1 (654.357157ms)
+✖ real HTTP/Pi frozen slot D02-B-1 (554.481192ms)
+✖ real HTTP/Pi frozen slot D03-A-1 (492.644893ms)
+✖ real HTTP/Pi frozen slot D03-B-1 (566.83187ms)
+✖ real HTTP/Pi frozen slot D04-A-1 (451.805541ms)
+✖ real HTTP/Pi frozen slot D04-B-1 (419.293652ms)
+✖ real HTTP/Pi frozen slot D05-A-1 (417.454117ms)
+✖ real HTTP/Pi frozen slot D05-B-1 (416.31171ms)
+✖ real HTTP/Pi frozen slot D06-A-1 (425.666335ms)
+✖ real HTTP/Pi frozen slot D06-B-1 (452.954525ms)
+✖ real HTTP/Pi frozen slot D06-B-2 (491.180612ms)
+✖ real HTTP/Pi frozen slot D06-A-2 (449.556744ms)
+✖ real HTTP/Pi frozen slot D05-B-2 (586.613027ms)
+✖ real HTTP/Pi frozen slot D05-A-2 (862.003139ms)
+✖ real HTTP/Pi frozen slot D04-B-2 (686.16058ms)
+✖ real HTTP/Pi frozen slot D04-A-2 (533.168796ms)
+✖ real HTTP/Pi frozen slot D03-B-2 (746.518078ms)
+✖ real HTTP/Pi frozen slot D03-A-2 (440.303283ms)
+✖ real HTTP/Pi frozen slot D02-B-2 (437.056388ms)
+✖ real HTTP/Pi frozen slot D02-A-2 (457.474173ms)
+✖ real HTTP/Pi frozen slot D01-B-2 (458.281954ms)
+✖ real HTTP/Pi frozen slot D01-A-2 (465.757999ms)
+Retained deterministic evidence: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/scope-native-offline-w16k9Q
+✖ native two-question ask_user answered once through actual API (469.798079ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 0
+ℹ fail 29
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48296.211504
+
+✖ failing tests:
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot P01-A-1 (33029.947301ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot P01-B-1 (471.584556ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot P02-A-1 (459.606558ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot P02-B-1 (427.955072ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D01-A-1 (533.566657ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D01-B-1 (531.160914ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D02-A-1 (654.357157ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D02-B-1 (554.481192ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D03-A-1 (492.644893ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D03-B-1 (566.83187ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D04-A-1 (451.805541ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D04-B-1 (419.293652ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D05-A-1 (417.454117ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D05-B-1 (416.31171ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D06-A-1 (425.666335ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D06-B-1 (452.954525ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D06-B-2 (491.180612ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D06-A-2 (449.556744ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D05-B-2 (586.613027ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D05-A-2 (862.003139ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D04-B-2 (686.16058ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D04-A-2 (533.168796ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D03-B-2 (746.518078ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D03-A-2 (440.303283ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D02-B-2 (437.056388ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D02-A-2 (457.474173ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D01-B-2 (458.281954ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:1663
+✖ real HTTP/Pi frozen slot D01-A-2 (465.757999ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at .trellis/tasks/11-03-resource-scope-model-comparison/native-offline.test.ts:1:3221
+✖ native two-question ask_user answered once through actual API (469.798079ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1926:21)
+      at listenInCluster (node:net:2005:12)
+      at node:net:2214:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }

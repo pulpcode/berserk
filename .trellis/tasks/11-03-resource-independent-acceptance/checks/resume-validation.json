@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-03",
+  "scope": "evaluator-only reference equivalence and authorized budget-preserving continuation",
+  "unitTests": {
+    "reference": 15,
+    "resume": 10,
+    "passed": 25
+  },
+  "desktop": {
+    "path": "/private/tmp/resource-acceptance-resume-n07-20261103",
+    "resultSha256": "e63dce68344721c61998924709150f12b55dbf6e49e1726e9ae3666fde2d9f94",
+    "actualBrowser": true,
+    "apiMocked": false,
+    "liveModelCalls": 0,
+    "deterministicProviderRequests": 1,
+    "sentMessages": 1,
+    "attachmentCount": 2,
+    "errors": []
+  },
+  "files": {
+    "browser.ts": "3037e737e37838b345840d97e0aa524d20fc3c20fd27ae44acff9c0cd97b49b4",
+    "reference-check.ts": "1e53c9372e80c936d02ae2030a838fe59948cb1638a289cca26bf1ddac22c0aa",
+    "reference-check.test.ts": "dc9f6f1bbf5931b5752cf7586e8384b42dc55de735cfd0733ee74c81ff3f202a",
+    "resume.ts": "f74fe3e55944b1a3d2b3ad3524186a39cea65893c3aab931e6800fb0b9a8e7d6",
+    "resume.test.ts": "626deca9c0ff0b1b0595a7d9c184b3a76bc47547d4cbbf5492685820f74085a1"
+  },
+  "oldBatchModified": false,
+  "newLiveBatchCreated": false
+}

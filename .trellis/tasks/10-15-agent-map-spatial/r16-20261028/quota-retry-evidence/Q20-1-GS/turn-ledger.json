@@ -1,0 +1,38 @@
+[
+  {
+    "originalUserTurn": 0,
+    "prompt": "请生成700米范围，只预览不保存。如果缺少确定中心的信息，先问我。",
+    "status": "incomplete",
+    "requestIds": [
+      "45e642cd-7841-4aeb-8a12-cfd4958fd863"
+    ],
+    "clarificationReplies": [
+      {
+        "kind": "interaction",
+        "interactionId": "414d48ef-7429-434f-ba09-0e7185c816bb",
+        "response": {
+          "requestId": "45e642cd-7841-4aeb-8a12-cfd4958fd863",
+          "kind": "question",
+          "action": "answer",
+          "answers": [
+            {
+              "questionId": "center",
+              "text": "以当前草稿reference层的对象ID origin（基点）为中心。"
+            }
+          ]
+        }
+      }
+    ],
+    "completed": false,
+    "reason": "waiting_user_unmapped_plain_question"
+  },
+  {
+    "originalUserTurn": 1,
+    "prompt": "把刚才700米范围的固定结果保存到derived层，名称‘值守圈’，不发布，不设为任务当前。",
+    "status": "not_sent",
+    "requestIds": [],
+    "clarificationReplies": [],
+    "completed": false,
+    "reason": "waiting_user_unmapped_plain_question"
+  }
+]

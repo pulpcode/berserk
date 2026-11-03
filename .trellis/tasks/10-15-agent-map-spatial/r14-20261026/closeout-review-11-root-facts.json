@@ -1,0 +1,128 @@
+[
+  {
+    "blindId": "07ab343f-6030-4dd7-8b8b-cf8658b5f179",
+    "caseId": "D09",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "r1": 555.9754011676299,
+      "r2": 1224.8494778904726,
+      "r3": 2270.745882999107,
+      "edge": 3027.635964633257,
+      "outside": 4541.378291401586
+    }
+  },
+  {
+    "blindId": "0f5e8e57-1f3c-4bca-975e-0d5e980c9568",
+    "caseId": "D10",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "compare-a": 333.58524070079017,
+      "compare-b": 1000.7557221020169,
+      "compare-out": 2223.9016046705196
+    }
+  },
+  {
+    "blindId": "416933c6-9cbb-405f-b2c4-51bafe62c275",
+    "caseId": "D08",
+    "stateUnchanged": true
+  },
+  {
+    "blindId": "42a0e03e-4708-4863-88aa-c677bd5d7845",
+    "caseId": "D10",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "compare-a": 333.58524070079017,
+      "compare-b": 1000.7557221020169,
+      "compare-out": 2223.9016046705196
+    }
+  },
+  {
+    "blindId": "47491460-75bd-4d3c-88df-06230afbc487",
+    "caseId": "D11",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "港甲": 333.58524070079017,
+      "港乙": 444.7803209343869,
+      "港丙": 611.5729412846051
+    }
+  },
+  {
+    "blindId": "4b2a6d18-43f4-4b07-991d-2d67be880c0f",
+    "caseId": "D12",
+    "stateUnchanged": false
+  },
+  {
+    "blindId": "699d0fc5-ae36-43c2-9fb3-f34c3c3a9200",
+    "caseId": "D09",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "r1": 555.9754011676299,
+      "r2": 1224.8494778904726,
+      "r3": 2270.745882999107,
+      "edge": 3027.635964633257,
+      "outside": 4541.378291401586
+    }
+  },
+  {
+    "blindId": "69fc95ac-c3d4-474f-b4a2-0807aa05da88",
+    "caseId": "D12",
+    "stateUnchanged": true
+  },
+  {
+    "blindId": "8ebbcf8d-1e5e-4cba-922d-df7a35d430df",
+    "caseId": "D11",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "港甲": 333.58524070079017,
+      "港乙": 444.7803209343869,
+      "港丙": 611.5729412846051
+    }
+  },
+  {
+    "blindId": "9980bc5e-1c30-4e55-b4e6-f1439594e114",
+    "caseId": "D09",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "r1": 555.9754011676299,
+      "r2": 1224.8494778904726,
+      "r3": 2270.745882999107,
+      "edge": 3027.635964633257,
+      "outside": 4541.378291401586
+    }
+  },
+  {
+    "blindId": "9a33e25a-5ef7-430d-8e8a-137e888051aa",
+    "caseId": "D11",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "港甲": 333.58524070079017,
+      "港乙": 444.7803209343869,
+      "港丙": 611.5729412846051
+    }
+  },
+  {
+    "blindId": "b3dc5b44-9fc6-4c5f-be2b-6ae41eadcfe7",
+    "caseId": "D12",
+    "stateUnchanged": true
+  },
+  {
+    "blindId": "c5d9be02-2db1-4b1d-b4a3-c65314a6415a",
+    "caseId": "D08",
+    "stateUnchanged": true
+  },
+  {
+    "blindId": "d11016ac-1e07-49e9-ad75-6d3c003b5c78",
+    "caseId": "D08",
+    "stateUnchanged": true
+  },
+  {
+    "blindId": "db5a12bb-fbfc-48e0-bdb7-bb9279ba9d93",
+    "caseId": "D10",
+    "stateUnchanged": true,
+    "independentDistancesM": {
+      "compare-a": 333.58524070079017,
+      "compare-b": 1000.7557221020169,
+      "compare-out": 2223.9016046705196
+    }
+  }
+]

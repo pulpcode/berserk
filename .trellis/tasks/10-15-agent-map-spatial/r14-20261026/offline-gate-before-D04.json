@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "status": "blocked",
+  "freezeHash": null,
+  "reasons": [
+    "D04 unsupported source contract: resource requires availableCount and unit; approved missing-count source fixture returns HTTP 502. User decision required."
+  ],
+  "evidence": [
+    "check-cases.md",
+    "check.md",
+    "d04-review.md"
+  ]
+}

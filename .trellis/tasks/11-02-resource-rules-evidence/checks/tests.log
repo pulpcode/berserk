@@ -1,0 +1,31 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run --reporter=dot tests/resource-explanations.test.ts tests/resource-summary.test.ts tests/context-resource-query.test.ts tests/task-resource-query.test.ts tests/task-resource-spatial.test.ts tests/pi/task-resource.test.ts tests/pi/task-resource-results.test.ts tests/pi/spatial.test.ts tests/pi/map-skill.test.ts tests/resources.test.ts tests/pi/skill-discovery.test.ts tests/pi/skill-metadata.test.ts
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:3090) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3094) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3098) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+························································stdout | tests/resource-explanations.test.ts > bounds overlap explanations for 100 legal aggregates with 500 members without truncating data or counts
+{"fixture":"100x500-aggregate-overlap","rawBytes":437929,"projectedBytes":633388,"elapsedMs":452}
+
+········(node:3099) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3095) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3092) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3091) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+·····································································································
+
+ Test Files  12 passed (12)
+      Tests  165 passed (165)
+   Start at  08:38:26
+   Duration  30.20s (transform 10.46s, setup 0ms, import 60.21s, tests 91.65s, environment 174ms)
+

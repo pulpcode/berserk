@@ -1,0 +1,7 @@
+{"file": ".trellis/tasks/10-28-agent-spatial-plotting/task-resources-20261102/01-business-and-data.md", "reason": "已批准第一批业务规则与12样例"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "现有权限、快照、来源、公开投影与历史"}
+{"file": ".trellis/spec/backend/map-symbols.md", "reason": "可选字段兼容范例"}
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "来源能力、分页与授权"}
+{"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "保持空间输入与旧结果契约"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "共享契约与数据流"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "复用现有校验"}

@@ -1,0 +1,482 @@
+[
+  {
+    "id": "T01-R1-G0",
+    "caseId": "T01",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T01-R1-G1",
+    "caseId": "T01",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T01-R1-G2",
+    "caseId": "T01",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T07-R1-G1",
+    "caseId": "T07",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 8
+  },
+  {
+    "id": "T07-R1-G2",
+    "caseId": "T07",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 8
+  },
+  {
+    "id": "T07-R1-G0",
+    "caseId": "T07",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 11
+  },
+  {
+    "id": "T02-R1-G2",
+    "caseId": "T02",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T02-R1-G0",
+    "caseId": "T02",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T02-R1-G1",
+    "caseId": "T02",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T03-R1-G0",
+    "caseId": "T03",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T03-R1-G1",
+    "caseId": "T03",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T03-R1-G2",
+    "caseId": "T03",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T04-R1-G1",
+    "caseId": "T04",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T04-R1-G2",
+    "caseId": "T04",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T04-R1-G0",
+    "caseId": "T04",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T05-R1-G2",
+    "caseId": "T05",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T05-R1-G0",
+    "caseId": "T05",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T05-R1-G1",
+    "caseId": "T05",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T06-R1-G0",
+    "caseId": "T06",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T06-R1-G1",
+    "caseId": "T06",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 5
+  },
+  {
+    "id": "T06-R1-G2",
+    "caseId": "T06",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T08-R1-G1",
+    "caseId": "T08",
+    "repeat": 1,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 1
+  },
+  {
+    "id": "T08-R1-G2",
+    "caseId": "T08",
+    "repeat": 1,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 2
+  },
+  {
+    "id": "T08-R1-G0",
+    "caseId": "T08",
+    "repeat": 1,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 1
+  },
+  {
+    "id": "T01-R2-G1",
+    "caseId": "T01",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T01-R2-G2",
+    "caseId": "T01",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 5
+  },
+  {
+    "id": "T01-R2-G0",
+    "caseId": "T01",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T07-R2-G2",
+    "caseId": "T07",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 8
+  },
+  {
+    "id": "T07-R2-G0",
+    "caseId": "T07",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 9
+  },
+  {
+    "id": "T07-R2-G1",
+    "caseId": "T07",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 2,
+    "requests": 8
+  },
+  {
+    "id": "T02-R2-G0",
+    "caseId": "T02",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T02-R2-G1",
+    "caseId": "T02",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T02-R2-G2",
+    "caseId": "T02",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T03-R2-G1",
+    "caseId": "T03",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T03-R2-G2",
+    "caseId": "T03",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T03-R2-G0",
+    "caseId": "T03",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T04-R2-G2",
+    "caseId": "T04",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T04-R2-G0",
+    "caseId": "T04",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T04-R2-G1",
+    "caseId": "T04",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T05-R2-G0",
+    "caseId": "T05",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "id": "T05-R2-G1",
+    "caseId": "T05",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T05-R2-G2",
+    "caseId": "T05",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T06-R2-G1",
+    "caseId": "T06",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T06-R2-G2",
+    "caseId": "T06",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T06-R2-G0",
+    "caseId": "T06",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "id": "T08-R2-G2",
+    "caseId": "T08",
+    "repeat": 2,
+    "group": "G2",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 1
+  },
+  {
+    "id": "T08-R2-G0",
+    "caseId": "T08",
+    "repeat": 2,
+    "group": "G0",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 1
+  },
+  {
+    "id": "T08-R2-G1",
+    "caseId": "T08",
+    "repeat": 2,
+    "group": "G1",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 1
+  }
+]

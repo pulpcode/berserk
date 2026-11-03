@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T02-R2-G2",
+  "strict": "pass",
+  "reason": "实际symbolId为水罐，plan坐标名称正确；自选objectId文字不决定车型，不误判pump命名为符号错误；无其他修改。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T02-R2-G2/gate/1-checkpoint.json"
+  ]
+}

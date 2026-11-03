@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T03-R2-G1",
+  "strict": "pass",
+  "reason": "分别计算草稿4与来源1，输入和参照有证据，无写入；全部6对象参与分类可按全文理解为5候选加1参照，不判为6候选错误，记录表达可更严谨。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T03-R2-G1/gate/1-checkpoint.json"
+  ]
+}

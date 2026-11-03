@@ -1,0 +1,114 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V09",
+  "caseId": "G02",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "actual_reported_pairs_correct": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "source->draft"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "source",
+  "final_reference_source": "draft",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "18234741",
+      "quote": "两者经度范围相同（约 121.4744–121.4800），但草稿区域整体偏南约 0.0028° 纬距（约 0.3 km）。5 个资源点纬度都在 31.2367 以上，所以全部落在草稿边界之外。来源系统自身的该区域登记成员为鹭石甲、鹭石乙、鹭石丙；这 3 个也落在草稿边界之外，可见差异来自边界本身，而不是点有误。",
+      "basis": "call_00_o2kg3fzjbpd4g4wcjbfehdin 与 call_01_eb0txysboi64pvgtinlwen5d 读取两份边界和同一组来源点；call_00_6ysghjcfg4b8qar9kx2imh49 仅证明这5点相对指定草稿均 exterior。工具没有核验来源点真实位置是否有误，不能由边界差异排除点数据有误；未借oracle为模型补此依据。",
+      "category": "unsupported_extra_fact",
+      "disputed_note": "若整句仅意指保持同一组点时，换边界造成计算结果差异，则有支持；原句“而不是点有误”更强，排除点数据错误，本独立评分保留失败供root裁决。"
+    }
+  ],
+  "recovery": null,
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "7c1d9560"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unsupported_point_accuracy_causal_claim"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "draft_hash_after": "44b81751f65ee805452777881a3f9b623876997278fdd61a4058be1198d69727",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "0703adcc-c002-43e3-bb33-730dbd99dc8e",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "0703adcc-c002-43e3-bb33-730dbd99dc8e",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "evidence": [
+    {
+      "message_id": "18234741",
+      "quote": "范围内资源点 0 个",
+      "basis": "完整来源查询读全5资源，classify全部exterior，指定source->draft零命中正确。",
+      "category": "verified_main_answer"
+    },
+    {
+      "message_id": "18234741",
+      "quote": "两者经度范围相同（约 121.4744–121.4800），但草稿区域整体偏南约 0.0028° 纬距（约 0.3 km）。5 个资源点纬度都在 31.2367 以上，所以全部落在草稿边界之外。来源系统自身的该区域登记成员为鹭石甲、鹭石乙、鹭石丙；这 3 个也落在草稿边界之外，可见差异来自边界本身，而不是点有误。",
+      "basis": "call_00_o2kg3fzjbpd4g4wcjbfehdin 与 call_01_eb0txysboi64pvgtinlwen5d 读取两份边界和同一组来源点；call_00_6ysghjcfg4b8qar9kx2imh49 仅证明这5点相对指定草稿均 exterior。工具没有核验来源点真实位置是否有误，不能由边界差异排除点数据有误；未借oracle为模型补此依据。",
+      "category": "unsupported_extra_fact",
+      "disputed_note": "若整句仅意指保持同一组点时，换边界造成计算结果差异，则有支持；原句“而不是点有误”更强，排除点数据错误，本独立评分保留失败供root裁决。"
+    }
+  ],
+  "observations": [
+    "主任务指定来源全部点对草稿边界，完整且正确。",
+    "时间、版本、可用量2/5/1/3/4、边界经纬度及约300米位移均有实际读取支持；来源边界下甲乙丙3点也可由已读完整坐标验证。",
+    "末尾可选邀请不计真澄清，未产生用户回复。"
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

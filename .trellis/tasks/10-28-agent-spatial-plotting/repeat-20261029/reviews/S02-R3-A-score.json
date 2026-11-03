@@ -1,0 +1,14 @@
+{
+  "id": "S02-R3-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "完整草稿唯一图层4点名单总数、origin单点500米预览、只读状态均正确；文件完整性用词应为候选范围完整性，未作文件介质断言，记轻微表达问题。",
+  "evidence": [
+    "S02-R3-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

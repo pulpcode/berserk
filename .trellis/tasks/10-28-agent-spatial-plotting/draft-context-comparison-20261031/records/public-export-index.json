@@ -1,0 +1,162 @@
+[
+  {
+    "slotId": "G01-R1-A",
+    "reviewId": "V26",
+    "rawSha256": "78a8bc929f56762dd7ae869bb3f2b46b4f21cdf0a55ee955ab7564d0b2de9e6e"
+  },
+  {
+    "slotId": "G01-R1-B",
+    "reviewId": "V24",
+    "rawSha256": "3daf250be5b3dd5302bc4a4412502591fbdb4b116d63c1c6336702bf2069653b"
+  },
+  {
+    "slotId": "G07-R1-B",
+    "reviewId": "V05",
+    "rawSha256": "43355216a467e02dd80eae5f4da968fcbc32a368d93e66254cbda0d1c66b24bd"
+  },
+  {
+    "slotId": "G07-R1-A",
+    "reviewId": "V23",
+    "rawSha256": "005e4671caca75a909054424040770e5937c60d29abfe61ff0ca0cb537be2183"
+  },
+  {
+    "slotId": "G04-R1-A",
+    "reviewId": "V14",
+    "rawSha256": "e519251db2fec3a6c55b3a8bd53127969711d1a9b628d33a22a8f20e51426211"
+  },
+  {
+    "slotId": "G04-R1-B",
+    "reviewId": "V27",
+    "rawSha256": "80c0de58dabd887acc16ee53c2a5a82a456669ea5963c4c84fc15bf0bd5dd5f9"
+  },
+  {
+    "slotId": "G05-R1-B",
+    "reviewId": "V03",
+    "rawSha256": "dcddca4bfe197323ce7e5b3b30784feb062fa33289f4718726972e3a47deb067"
+  },
+  {
+    "slotId": "G05-R1-A",
+    "reviewId": "V10",
+    "rawSha256": "e962eb815ef60551410e6fd812a7c57c30f15026b3581a399a9c5a99f5691509"
+  },
+  {
+    "slotId": "G02-R1-A",
+    "reviewId": "V29",
+    "rawSha256": "f54d5646c40ad47719ef586da6a0718de4b7eb7f87b227768143c07eff84bf78"
+  },
+  {
+    "slotId": "G02-R1-B",
+    "reviewId": "V04",
+    "rawSha256": "b0c7a91f06641b38476b8e5eafd9bc8cdc9bf4c02bceddadb89f44c8721c46f7"
+  },
+  {
+    "slotId": "G08-R1-B",
+    "reviewId": "V19",
+    "rawSha256": "134d8374211c6472d42f32a9e0108117ae5d398ad3b9bd5a3992112eaea5c443"
+  },
+  {
+    "slotId": "G08-R1-A",
+    "reviewId": "V30",
+    "rawSha256": "3742877e1628c134495916da981c73879786cc5d08759566aa121b8dccb47c47"
+  },
+  {
+    "slotId": "G03-R1-A",
+    "reviewId": "V06",
+    "rawSha256": "fdc20083a4ede8ce691bc72b6d2a8828f71be3f2b8b3f1fbb52d6f37b04b5a7a"
+  },
+  {
+    "slotId": "G03-R1-B",
+    "reviewId": "V31",
+    "rawSha256": "7ffcc342fde135be9aa55878f266ca75dc6c2fb88e69e386fa276a87350bce45"
+  },
+  {
+    "slotId": "G06-R1-B",
+    "reviewId": "V17",
+    "rawSha256": "6629b8f994973d88b6bc64d81850df9e128e95ea132480c3d107bea148a8e94f"
+  },
+  {
+    "slotId": "G06-R1-A",
+    "reviewId": "V07",
+    "rawSha256": "31722fd8bf3dae8e47bd41e3d97c37cdf3e9d0cdfe360cf496c11313bacf3ea1"
+  },
+  {
+    "slotId": "G01-R2-B",
+    "reviewId": "V22",
+    "rawSha256": "e74c81a4d4a0efcc32a07626adfa18b6a4b057a0d64740c2a7b2b5ed50de4949"
+  },
+  {
+    "slotId": "G01-R2-A",
+    "reviewId": "V16",
+    "rawSha256": "e2b755a8eceec4fb6d1fb7020131da338652c3640e407a6d9c3d0bfc183e92cb"
+  },
+  {
+    "slotId": "G07-R2-A",
+    "reviewId": "V01",
+    "rawSha256": "366be1e7344fcfe355447d4f6e73addf90af30d35ef07d621a54067b4d8a1b56"
+  },
+  {
+    "slotId": "G07-R2-B",
+    "reviewId": "V13",
+    "rawSha256": "764c6c0665f7a59f6c508e29ecf7ccb273cbd3a8eb0324492555a97705314692"
+  },
+  {
+    "slotId": "G04-R2-B",
+    "reviewId": "V11",
+    "rawSha256": "920f43954cbd57896aec40c1ee34bcbfa7e5c0b0aaf93f6a99fd37036c405741"
+  },
+  {
+    "slotId": "G04-R2-A",
+    "reviewId": "V21",
+    "rawSha256": "a68f4753ca025ce2a663a8e38a5203bc5019bd5bedf270a01910273753ebb860"
+  },
+  {
+    "slotId": "G05-R2-A",
+    "reviewId": "V02",
+    "rawSha256": "34ce520f0ce3c08075de6432fe9c33786534d6aea846db7ba98a4f6dfe68299f"
+  },
+  {
+    "slotId": "G05-R2-B",
+    "reviewId": "V25",
+    "rawSha256": "b197d6bcb94a5ede713ff8d06426d78b0b2455799a5af05695ba56ac5712bd3b"
+  },
+  {
+    "slotId": "G02-R2-B",
+    "reviewId": "V09",
+    "rawSha256": "a152023281c94fbd6ad9f52fbf068410f4647fb5a7921c378a468502b4e6ebc8"
+  },
+  {
+    "slotId": "G02-R2-A",
+    "reviewId": "V18",
+    "rawSha256": "c8797351be2c4fafb1ba0015c48395f3e0510c6201d7ff7e6373db8f41e7cde7"
+  },
+  {
+    "slotId": "G08-R2-A",
+    "reviewId": "V12",
+    "rawSha256": "2b43b19d8c160e6337e57d8fa20dd294abccce94ae65aac1ab427dc73317ed87"
+  },
+  {
+    "slotId": "G08-R2-B",
+    "reviewId": "V15",
+    "rawSha256": "a4461c4ca741d4029f4cfeef8b4d6468f268938813ce3d834c4185e5843b838c"
+  },
+  {
+    "slotId": "G03-R2-B",
+    "reviewId": "V32",
+    "rawSha256": "aded762634193981f980e039aff805286f11dc442933a780fe99660296e55f9b"
+  },
+  {
+    "slotId": "G03-R2-A",
+    "reviewId": "V28",
+    "rawSha256": "4e5c87ff8bb893774c08f15887c614656ccdc752f31fe087209cb0802e4b9609"
+  },
+  {
+    "slotId": "G06-R2-A",
+    "reviewId": "V08",
+    "rawSha256": "33c23a5a8d76e4d3c52cd5d61f3d61866f8d523548298b073f406d6802ff8ce4"
+  },
+  {
+    "slotId": "G06-R2-B",
+    "reviewId": "V20",
+    "rawSha256": "9e4c2faa21223d02c6df600e4537ada4b5eac67855c1be63bbfc533a464fcd94"
+  }
+]

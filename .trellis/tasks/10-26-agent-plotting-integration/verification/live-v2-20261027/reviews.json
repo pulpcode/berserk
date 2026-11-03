@@ -1,0 +1,604 @@
+[
+  {
+    "id": "C01-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C01-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C01-1/provider-0003-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C01-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "三个指定坐标/符号/plan一次保存正确；“标准符号库没有”按本系统符号目录范围理解，不外推完整国家标准。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C01-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C01-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C01-2/provider-0006-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C01-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "三个对象写入正确，但最终声称冲锋舟“不在 XF/T 3013—2020 标准符号之列”；本系统目录的应用扩展标签不足以支持对完整标准的排除判断。沿用原批次同类口径，finalFacts=false。末尾换符号邀请不影响已完成的主任务。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C02-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C02-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C02-1/provider-0009-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C02-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "用户只说消防车，未澄清就创建水罐消防车。写后邀请换车型不等于写前澄清；“目录中最直接对应”无目录优先级依据。与原批次一致：完成动作但core/effects/final不通过，不计关键破坏性副作用。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C02-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C02-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C02-2/provider-0012-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C02-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "用户只说消防车，未澄清就创建水罐消防车；称其为通用类型缺乏依据。写后可修改提示不能补回澄清。完成动作但core/effects/final不通过。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C03-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C03-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C03-1/provider-0015-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C03-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "仅heading45→90；其余完整style、geometry、attributes、note、sourceRefs、informationRole及文档结构保持。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C03-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C03-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C03-2/provider-0018-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C03-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "仅heading45→90；完整样式和其他字段保留，一次成功写入。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C04-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C04-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C04-1/provider-0021-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C04-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "仅改name为集合点甲；旧普通点原本缺失的样式/性质字段未被补写。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C04-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C04-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C04-2/provider-0024-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C04-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "仅改name；其余字段保持。对未返回字段具体值的保留说明谨慎但不影响任务完成。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C05-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C05-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C05-1/provider-0026-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C05-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "读取目录/现有样式后正确说明消防无人机固定直立，不写入；提供替代建议不是必需用户澄清，安全拒绝按原rubric完成。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C05-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C05-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C05-2/provider-0029-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C05-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "尝试heading90被INVALID_INPUT/not_committed拒绝，随后正确说明不支持旋转、没有改动；不把一次受保护的失败调用计为副作用或主任务失败。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C06-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C06-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C06-1/provider-0032-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C06-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "完整保留unit/count/false/null，追加contact救援一队；其他内容保持，一次成功写入。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C06-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C06-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C06-2/provider-0035-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C06-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "同C06-1。初始“我先读取了”是动作引导语的时态不当，并无虚构具体读取结果，不单独扩大为过程事实失败。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C07-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C07-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-1/provider-0039-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-1/fixture.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "按本会话固定引用只把target.iconSize48→56；同名decoy不变。所有实际写入回执属于本会话；另一会话turn-1-result.other与otherBefore完全一致。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C07-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C07-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-2/provider-0043-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-2/fixture.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C07-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "按固定引用只改target.iconSize48→56；decoy不变，未以名称选错对象；所有实际写入回执属于本会话。 另一会话turn-1-result.other与otherBefore完全一致。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C08-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C08-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C08-1/provider-0048-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C08-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "首次旧版本写入冲突未提交；重读最新style后写heading90。最终保留外部最新note，其余字段不变，只有一次Agent成功写入。未读取note但只写style足以原样保留，不要求无关重读。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C08-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C08-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C08-2/provider-0054-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C08-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "冲突后读取方法与最新对象，保留最新外部note并按用户已明确意图改heading90，实际仅一次Agent提交。后续可选调整邀请不代表任务未完成。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C09-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C09-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C09-1/provider-0057-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C09-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "分别报告来源1点/availableCount4辆/草稿3点，不把plan或可用数当到场证据；只读。“资源点位于区域内”由当时已返回矩形面及点坐标可直接复核，允许等价推导，不强制新增工具。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C09-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C09-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C09-2/provider-0061-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C09-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "waiting_user",
+    "notes": "两次答复均分别报告1点/4辆/3草稿点，无到场认定；重复题干来自驱动回复误判，只读重复查询没有写入副作用。“每个图层各1个图层”为病句，未形成新的统计事实，不单独扣分。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "C10-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C10-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C10-1/provider-0069-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C10-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "预览不写，后用原resultRef保存一面，继续同对象update informationRole=plan；两个回执、一个新对象，原有内容完整保留。AEQD/32段来自实际method；“本次工具”按本次调用未做publish/adopt理解。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "C10-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/C10-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0076-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C10-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "写入同C10-1正确且完整。首轮最终答复“图层仍只有基点一个对象”仅有objectIds=[origin]筛选读取支持；即便指reference图层，也不能从对象筛选总数推图层总数，后续读取不能追补当时证据；finalFacts=false。AEQD方法本身有证据。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F01-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F01-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F01-1/provider-0079-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F01-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "只查询来源系统，按西区对象及车辆筛选返回1个车辆资源点和availableCount4，未读同名草稿。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F01-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F01-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F01-2/provider-0081-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F01-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "只查询来源，名称及各对象areaIds支持西区所属，结果1资源点/4辆正确，未混入草稿。把effectiveAt与validTime合称09–11措辞不精确：实际effectiveAt为09:00，validTime为09–11；不改变报告有效时段，记文案问题而不单独扩大失败。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F02-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F02-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F02-1/provider-0089-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F02-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "500m→1500m→原500m geometry:true filter链正确，5候选0命中，草稿未改。但第二轮最终答复额外声称“400米以内包含上一轮的范围”，400m无依据且不能包含500m范围；最终事实失败。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F02-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F02-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F02-2/provider-0096-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F02-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "正确引用第一次500m固定多边形筛选，5候选0命中。末尾用圆弧近似内缩解释名为边界点的对象在外（即使加“可能”），当时未取得该点几何/距离，不支持这种特定原因推断；独立夹具距离约3027.64m，并非500m边缘。另固定revision读取不能证明当前draft未变。finalFacts=false。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F03-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F03-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F03-1/provider-0100-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F03-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "候选严格resources五点，排除resources-other；最近r1/r2及555.98m、1224.85m正确；候选数与命中数说明一致。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F03-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F03-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F03-2/provider-0103-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F03-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "nearest实参确为resources全部5点，核心最近两点及距离正确，但最终声称同属resources的“资源外”未纳入候选，混淆未入前2与未参与比较；finalFacts=false。",
+    "strict": false,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F04-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F04-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F04-1/provider-0112-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F04-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "先预览无写，第二turn原resultRef保存derived临时范围；原16对象/图层不变，一次保存不发布采用。附加面积785082.7888m²来自实际measure结果。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F04-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F04-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F04-2/provider-0119-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F04-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "needs_review",
+    "notes": "实际两个用户turn均执行，第二turn固定结果保存成功；原16对象不变，仅增1面，无发布采用。驱动把末尾可选继续提示判needs_review，不代表未完成保存。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；实际任务已完成/安全拒绝，可选下一步邀请或说明被保守终态规则标记，不按该标签直接判语义失败。"
+  },
+  {
+    "id": "F05-1",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F05-1/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F05-1/provider-0123-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F05-1/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "classify_points返回内部2/边界2/外部1，正确列4个含边界成员，依据及候选范围/方法限制明确，未由对象名猜边界。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  },
+  {
+    "id": "F05-2",
+    "reviewer": "trellis-check/live_v2_review",
+    "evidence": [
+      ".local/agent-plotting-integration/live-v2-20261027/F05-2/review.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F05-2/provider-0127-native.json",
+      ".local/agent-plotting-integration/live-v2-20261027/F05-2/fixture.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "rawStatus": "recorded",
+    "notes": "classify_points及实际完整几何支撑内部2/边界2/外部1，4个成员正确。西侧/角点与禁入区重叠补充由当时已读坐标支持；未擅自扣除禁入区。",
+    "strict": true,
+    "protocolAdjudication": "原始状态保留；公开回答、工具及持久效果已足够独立判分。"
+  }
+]

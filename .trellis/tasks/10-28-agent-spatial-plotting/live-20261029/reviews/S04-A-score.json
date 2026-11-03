@@ -1,0 +1,16 @@
+{
+  "id": "S04-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "三个原题轮均执行；700/1200分别预览，保存仅用原700固定几何，旧对象保留，说明与实际相符。",
+  "evidence": [
+    "S04-A/gate/1-checkpoint.json",
+    "S04-A/gate/2-checkpoint.json",
+    "S04-A/gate/3-checkpoint.json"
+  ],
+  "clarity": []
+}

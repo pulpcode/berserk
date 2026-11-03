@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "freezeHash": "e0924b62a5842d91eda23272972b07ccfd84d4557d3878a81372fc928bb094ac",
+  "checkedAt": "2026-10-26T13:34:09.504Z",
+  "evidence": [
+    "check.md",
+    "check-cases.md",
+    "runner-check.md",
+    "d04-offline.log",
+    "d04-api-evidence.json"
+  ],
+  "authorization": "用户批准144项原计划及D04适配；不自动重试或追加"
+}

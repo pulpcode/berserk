@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A05-2",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "68cc96cf"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "位置分类与数量2辆4艘/边界1辆/外1辆/未知3辆正确完整；附加scope说明把舟组的独立scope错误归为车辆清册，解释失败。",
+  "explanation": "fail",
+  "strict": "fail",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "只读无状态改变。",
+      "evidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "聚合记录及未知实体保留，不把点数当数量。",
+      "evidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "本次8项任务关系有证，没有可用性擅自过滤。",
+      "evidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "来源complete/关系partial/空间5of8三类缺口明确；数量scope解释错误但未掩盖覆盖或改变集合。",
+      "evidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A05-2-c01",
+      "statementId": "68cc96cf",
+      "quote": "输入 8 项记录，其中 5 项有可用于判断的实际点位，3 项没有。",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "完整候选8/有效位置5/未分类3明确，区域版本与时间符合。"
+    },
+    {
+      "id": "A05-2-c02",
+      "statementId": "68cc96cf",
+      "quote": "青沙一车 a05-a、青沙二车 a05-b（各 1 辆）",
+      "availableEvidenceIds": [
+        "122bfeff"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "内部消防车2辆明细正确。"
+    },
+    {
+      "id": "A05-2-c03",
+      "statementId": "68cc96cf",
+      "quote": "青沙舟组 a05-boats（声明 4 艘，成员 QSB-31～34）",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "122bfeff"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "内部aggregate4艘，与单点数量区别清楚。"
+    },
+    {
+      "id": "A05-2-c04",
+      "statementId": "68cc96cf",
+      "quote": "青沙沿线车 a05-edge，点位落在区域边界线上",
+      "availableEvidenceIds": [
+        "d8c67564",
+        "66783e4d"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "boundary1辆单列。"
+    },
+    {
+      "id": "A05-2-c05",
+      "statementId": "68cc96cf",
+      "quote": "青沙外勤车 a05-far",
+      "availableEvidenceIds": [
+        "d8c67564",
+        "ffc3466f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "唯一exterior1辆。"
+    },
+    {
+      "id": "A05-2-c06",
+      "statementId": "68cc96cf",
+      "quote": "以上 3 项均为消防车，合计 3 辆",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "d8c67564"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "登记站址、计划位置、缺有效位置三个各1辆；未当外部或内部。"
+    },
+    {
+      "id": "A05-2-c07",
+      "statementId": "68cc96cf",
+      "quote": "数量都来自清单的声明数量（scope 为“澄湾演练独立清册”）",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "122bfeff"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "factual_error",
+      "rationale": "将所有声明数量scope说成独立清册不实：车辆scope为该清册，舟艇scope明确为“青沙舟组全体，无其他成员记录”。这是可核实的真实字段错误；主表正确且未跨scope混加，故只影响解释。"
+    },
+    {
+      "id": "A05-2-c08",
+      "statementId": "68cc96cf",
+      "quote": "车辆 3 辆（内部 2 + 边界 1）、舟艇 4 艘",
+      "availableEvidenceIds": [
+        "122bfeff",
+        "66783e4d"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "含边界按同类别单位相加正确。"
+    },
+    {
+      "id": "A05-2-c09",
+      "statementId": "68cc96cf",
+      "quote": "4 艘艇只由 1 个点位代表",
+      "availableEvidenceIds": [
+        "ea4ad92f",
+        "d8c67564",
+        "122bfeff"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "来源aggregate与4member声明和单Point真实；没有逐艘位置核验的限度解释合理。"
+    },
+    {
+      "id": "A05-2-c10",
+      "statementId": "68cc96cf",
+      "quote": "没有可靠实体关联，是否重复未确认",
+      "availableEvidenceIds": [
+        "ea4ad92f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "复述工具身份限制，没有擅合并。"
+    },
+    {
+      "id": "A05-2-c11",
+      "statementId": "68cc96cf",
+      "quote": "来源 situation 侧覆盖完整（asOf 2026-11-02T06:00:00Z）",
+      "availableEvidenceIds": [
+        "ea4ad92f"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "来源complete与任务关系partial分开；本次8项均明确assigned，不冒充完整分配。"
+    },
+    {
+      "id": "A05-2-c12",
+      "statementId": "68cc96cf",
+      "quote": "无距离容差",
+      "availableEvidenceIds": [
+        "d8c67564"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "实际方法limitations及5/8缺口匹配。"
+    },
+    {
+      "id": "A05-2-c13",
+      "statementId": "68cc96cf",
+      "quote": "未保存、未修改任何业务资料或标绘。",
+      "availableEvidenceIds": [
+        "d8c67564"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "只读工具与state相同。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [
+    "应分别说车辆scope=澄湾演练独立清册，舟艇scope=青沙舟组全体，无其他成员记录。"
+  ],
+  "workflowObservations": [
+    "spatial-analysis正文hash匹配；默认任务query恰好得到全部8项，三次summary显式relation all不额外筛选。"
+  ],
+  "programChecks": [
+    {
+      "id": "A05-2-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-2/final-snapshot.json",
+      "sha256": "cc3e4dc65f0ac683dc3e0f3ae3a0156a4b8988a879a96ce876e434483c77e15e"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-2/state-before.json",
+      "sha256": "e3601062ebaaf116b24dae574fa310adbffeb8c6deb21b2b61eb5ee453de64c7"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-2/state-after.json",
+      "sha256": "e3601062ebaaf116b24dae574fa310adbffeb8c6deb21b2b61eb5ee453de64c7"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-2/state-before.json",
+      "sha256": "e3601062ebaaf116b24dae574fa310adbffeb8c6deb21b2b61eb5ee453de64c7",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A05-2/state-after.json",
+      "sha256": "e3601062ebaaf116b24dae574fa310adbffeb8c6deb21b2b61eb5ee453de64c7",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 11
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 5,
+    "input": 178887,
+    "output": 3078
+  }
+}

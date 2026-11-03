@@ -1,0 +1,55 @@
+{
+  "caseId": "G01",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G01/review.json",
+  "sourceSha256": "af48ef9ef51b11040a8b1abb566df71ae3f9095c3d8831976a0f88c309fce565",
+  "requiredPairs": [
+    "draft->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "draft",
+      "reference": "source"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 4,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "failureTags": [],
+  "evidence": [
+    {
+      "quote": "我先读取本会话草稿，并查询“桐港区”，以确认它的面边界来源。",
+      "basis": "未来时读取计划；实际随后读取草稿并查询来源区域。"
+    },
+    {
+      "quote": "范围内候选点：梧桐丙、梧桐丁，共 2 个。",
+      "basis": "实际 classify_points 输入草稿 resources 全部5点、target 来源 g01-s-region；分类内部g01-d-p03/p04，边界0，外部3，与oracle一致。"
+    },
+    {
+      "quote": "这里按照你的指定使用来源面",
+      "basis": "题干明确要求来源系统登记的桐港区面；不是模型编造用户选择。"
+    }
+  ],
+  "notes": [
+    "末句没有保存、发布或采用，结合只分析要求及业务动作语境，解释为未执行这些业务写入；没有宣称分析结果只在内存或不留系统记录。",
+    "无工具错误，无多余追问。"
+  ]
+}

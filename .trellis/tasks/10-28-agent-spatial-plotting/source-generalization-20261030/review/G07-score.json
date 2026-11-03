@@ -1,0 +1,69 @@
+{
+  "caseId": "G07",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G07/review.json",
+  "sourceSha256": "f8a1b7c6de7c0b9f72b4fc43709d2ce404cce5c1b3d9514b9e0549c5b628d6c1",
+  "requiredPairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {},
+    "answered": [],
+    "redundant": 0
+  },
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 2,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "failureTags": [
+    "CANDIDATE_SOURCE",
+    "REFERENCE_SOURCE"
+  ],
+  "completedPairs": [
+    "draft->draft"
+  ],
+  "missingPairs": [
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "computedPairCorrect": true,
+  "evidence": [
+    {
+      "quote": "区域内 5 个，区域外 1 个",
+      "basis": "实际只用草稿6点与草稿区域计算，D→D的甲乙丙丁戊5点正确；未明确资源与边界来源且无澄清，遗漏另外3种组合。"
+    },
+    {
+      "quote": "本次输入的是“资源点”图层的全部 6 个点，并非整个草稿的全部对象",
+      "basis": "读取草稿共7对象，resources层6点，空间input对应全层；范围数量区分正确。"
+    },
+    {
+      "quote": "这些点是本会话草稿中的标绘点集，不是态势来源中已登记的资源实体，因此名单和数量仅表示“草稿点集在区域内的分布”。",
+      "basis": "结合完整句子，按本次计算对象类型/来源区别理解，不解释为已调查现实资源登记状态；草稿标绘身份由annotation读取支持。"
+    }
+  ],
+  "notes": [
+    "空间Skill在计算前已读取，但没有落实来源不明确时应澄清或完整分别报告的规则。",
+    "没有 situation_query；未发现并核对另一套来源数据。不能仅凭这一条轨迹证明模型故意将两项来源绑定为一个开关。",
+    "最终明确限定草稿口径，现有陈述本身正确；主任务失败来自选择和遗漏，不把同一遗漏再记作额外事实错误。",
+    "有关资源实体的句子可更精确为“本次仅核对草稿标绘，不代表已核实来源登记或现实可用性”；按全文未列为确定误述。"
+  ]
+}

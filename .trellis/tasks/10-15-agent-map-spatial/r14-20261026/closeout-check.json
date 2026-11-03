@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "scope": "R14 explicitly authorized remaining 136, offline review only",
+  "reviewedFreezeHash": "1747c7427225734cff6074960ee182181346f48aefa2e510d886428580013bb2",
+  "originalFreezeHash": "e0924b62a5842d91eda23272972b07ccfd84d4557d3878a81372fc928bb094ac",
+  "originalEvidenceFilesVerified": 1076,
+  "originalDriverFilesVerified": 28,
+  "protectedFilesVerified": 179,
+  "remaining": 136,
+  "firstRemaining": "D03-1-B",
+  "originalEightRepeated": false,
+  "inheritedTotals": {
+    "requests": 34,
+    "input": 626034,
+    "output": 12625,
+    "afp": 172.56015,
+    "unknown": 0
+  },
+  "changedOriginalDriver": [
+    "budget.ts",
+    "cases.ts",
+    "live.ts"
+  ],
+  "lint": "pass",
+  "typecheck": "pass",
+  "tests": {
+    "providerBudget": 5,
+    "clarification": 8,
+    "originalLoopAndStop": 14,
+    "closeoutAuthorResultsIndependentlyReviewed": 6
+  },
+  "unresolvedBlockingIssues": [],
+  "realModelCallsDuringReview": 0,
+  "realCloseoutClaimExists": false,
+  "executionGateWrittenByReviewer": false,
+  "evidence": [
+    "closeout-check.md",
+    "closeout-independent-unit.log",
+    "closeout-independent-regression-initial.log",
+    "closeout-independent-regression-verified.log",
+    "closeout-runner-offline.log",
+    "closeout-runner-check.md"
+  ],
+  "limitations": [
+    "Rule-based clarification classification is flow control, not semantic proof of task completion; later grading still checks omissions and all public claims.",
+    "Original sandboxed integration attempt failed while starting local services before mock-provider requests; rerun of same tests with local-server permission passed."
+  ]
+}

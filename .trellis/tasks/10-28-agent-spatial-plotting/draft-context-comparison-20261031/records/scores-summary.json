@@ -1,0 +1,314 @@
+{
+  "planned": 32,
+  "completed": 32,
+  "scored": 32,
+  "groups": {
+    "A": {
+      "total": 16,
+      "scope_pass": 7,
+      "geometry_and_members_pass": 7,
+      "main_pass": 7,
+      "process_facts_pass": 16,
+      "final_facts_pass": 14,
+      "no_business_effects_pass": 16,
+      "strict_pass": 5,
+      "skillReadTasks": 16,
+      "effectiveClarifications": 1,
+      "defaultDraftEnd": 4,
+      "defaultSourceEnd": 3,
+      "primary": {
+        "total": 8,
+        "scope_pass": 1,
+        "geometry_and_members_pass": 1,
+        "main_pass": 1,
+        "process_facts_pass": 8,
+        "final_facts_pass": 8,
+        "no_business_effects_pass": 8,
+        "strict_pass": 1,
+        "skillReadTasks": 8,
+        "effectiveClarifications": 1,
+        "defaultDraftEnd": 4,
+        "defaultSourceEnd": 3
+      },
+      "repeat": {
+        "1": {
+          "total": 8,
+          "scope_pass": 3,
+          "geometry_and_members_pass": 3,
+          "main_pass": 3,
+          "process_facts_pass": 8,
+          "final_facts_pass": 7,
+          "no_business_effects_pass": 8,
+          "strict_pass": 2,
+          "skillReadTasks": 8,
+          "effectiveClarifications": 0,
+          "defaultDraftEnd": 2,
+          "defaultSourceEnd": 2
+        },
+        "2": {
+          "total": 8,
+          "scope_pass": 4,
+          "geometry_and_members_pass": 4,
+          "main_pass": 4,
+          "process_facts_pass": 8,
+          "final_facts_pass": 7,
+          "no_business_effects_pass": 8,
+          "strict_pass": 3,
+          "skillReadTasks": 8,
+          "effectiveClarifications": 1,
+          "defaultDraftEnd": 2,
+          "defaultSourceEnd": 1
+        }
+      },
+      "usage": {
+        "requests": 74,
+        "input": 1722703,
+        "output": 39851,
+        "reasoningTokens": 22497,
+        "elapsedMs": 216455
+      }
+    },
+    "B": {
+      "total": 16,
+      "scope_pass": 5,
+      "geometry_and_members_pass": 5,
+      "main_pass": 5,
+      "process_facts_pass": 16,
+      "final_facts_pass": 13,
+      "no_business_effects_pass": 16,
+      "strict_pass": 3,
+      "skillReadTasks": 14,
+      "effectiveClarifications": 0,
+      "defaultDraftEnd": 4,
+      "defaultSourceEnd": 3,
+      "primary": {
+        "total": 8,
+        "scope_pass": 0,
+        "geometry_and_members_pass": 0,
+        "main_pass": 0,
+        "process_facts_pass": 8,
+        "final_facts_pass": 7,
+        "no_business_effects_pass": 8,
+        "strict_pass": 0,
+        "skillReadTasks": 8,
+        "effectiveClarifications": 0,
+        "defaultDraftEnd": 4,
+        "defaultSourceEnd": 3
+      },
+      "repeat": {
+        "1": {
+          "total": 8,
+          "scope_pass": 3,
+          "geometry_and_members_pass": 3,
+          "main_pass": 3,
+          "process_facts_pass": 8,
+          "final_facts_pass": 7,
+          "no_business_effects_pass": 8,
+          "strict_pass": 2,
+          "skillReadTasks": 7,
+          "effectiveClarifications": 0,
+          "defaultDraftEnd": 2,
+          "defaultSourceEnd": 1
+        },
+        "2": {
+          "total": 8,
+          "scope_pass": 2,
+          "geometry_and_members_pass": 2,
+          "main_pass": 2,
+          "process_facts_pass": 8,
+          "final_facts_pass": 6,
+          "no_business_effects_pass": 8,
+          "strict_pass": 1,
+          "skillReadTasks": 7,
+          "effectiveClarifications": 0,
+          "defaultDraftEnd": 2,
+          "defaultSourceEnd": 2
+        }
+      },
+      "usage": {
+        "requests": 72,
+        "input": 1586928,
+        "output": 31270,
+        "reasoningTokens": 16295,
+        "elapsedMs": 177311
+      }
+    }
+  },
+  "overall": {
+    "total": 32,
+    "scope_pass": 12,
+    "geometry_and_members_pass": 12,
+    "main_pass": 12,
+    "process_facts_pass": 32,
+    "final_facts_pass": 27,
+    "no_business_effects_pass": 32,
+    "strict_pass": 8,
+    "skillReadTasks": 30,
+    "effectiveClarifications": 1,
+    "defaultDraftEnd": 8,
+    "defaultSourceEnd": 6
+  },
+  "pairs": [
+    {
+      "caseId": "G01",
+      "repeat": 1,
+      "A_main": true,
+      "B_main": true,
+      "A_strict": true,
+      "B_strict": true,
+      "mainOutcome": "both_pass"
+    },
+    {
+      "caseId": "G01",
+      "repeat": 2,
+      "A_main": true,
+      "B_main": true,
+      "A_strict": true,
+      "B_strict": true,
+      "mainOutcome": "both_pass"
+    },
+    {
+      "caseId": "G02",
+      "repeat": 1,
+      "A_main": true,
+      "B_main": true,
+      "A_strict": true,
+      "B_strict": false,
+      "mainOutcome": "both_pass"
+    },
+    {
+      "caseId": "G02",
+      "repeat": 2,
+      "A_main": true,
+      "B_main": true,
+      "A_strict": true,
+      "B_strict": false,
+      "mainOutcome": "both_pass"
+    },
+    {
+      "caseId": "G03",
+      "repeat": 1,
+      "A_main": true,
+      "B_main": true,
+      "A_strict": false,
+      "B_strict": true,
+      "mainOutcome": "both_pass"
+    },
+    {
+      "caseId": "G03",
+      "repeat": 2,
+      "A_main": true,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "B_worse"
+    },
+    {
+      "caseId": "G04",
+      "repeat": 1,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G04",
+      "repeat": 2,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G05",
+      "repeat": 1,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G05",
+      "repeat": 2,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G06",
+      "repeat": 1,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G06",
+      "repeat": 2,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G07",
+      "repeat": 1,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G07",
+      "repeat": 2,
+      "A_main": true,
+      "B_main": false,
+      "A_strict": true,
+      "B_strict": false,
+      "mainOutcome": "B_worse"
+    },
+    {
+      "caseId": "G08",
+      "repeat": 1,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    },
+    {
+      "caseId": "G08",
+      "repeat": 2,
+      "A_main": false,
+      "B_main": false,
+      "A_strict": false,
+      "B_strict": false,
+      "mainOutcome": "both_fail"
+    }
+  ],
+  "pairOutcomes": {
+    "both_pass": 5,
+    "B_worse": 2,
+    "both_fail": 9
+  },
+  "adjudications": {
+    "V17": "按完整重名段落，前句明确限定本会话6个点；后续只/同名可沿用已读对象范围，不足以确定为全来源穷尽断言。表达仍不严谨；来源候选未处理继续判主任务失败。",
+    "V20": "与V17同口径：6个点的限定贯穿重名说明，不将唯一同名最宽解释成已核实所有来源资源；记录措辞问题，范围遗漏不豁免。",
+    "V21": "attributes在说明可用数量时可理解为属性泛称；实际值与availableCount字段正确，未提供API调用路径，不据此单独判确定事实错误。建议直接写来源属性。"
+  },
+  "factErrorSlots": [
+    "G02-R1-B",
+    "G03-R1-A",
+    "G05-R2-B",
+    "G02-R2-B",
+    "G03-R2-A"
+  ]
+}

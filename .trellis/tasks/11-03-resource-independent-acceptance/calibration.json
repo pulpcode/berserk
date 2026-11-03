@@ -1,0 +1,87 @@
+{
+  "kind": "constructed_offline_calibration_not_model_results",
+  "cases": [
+    {
+      "id": "C01", "category": "supported", "user": "列出引用范围里的车辆和数量。",
+      "evidence": "引用范围完整；实体为灯舟车、浅岑车，共2辆。",
+      "final": "引用范围内是灯舟车、浅岑车，共2辆。",
+      "annotation": { "main": "pass", "finalVerdict": "supported", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "名单及数量与完整范围证据一致。" },
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null }
+    },
+    {
+      "id": "C02", "category": "incorrect_count", "user": "这份名单有几辆？",
+      "evidence": "名单完整，甲乙丙3辆；没有别的车辆。", "final": "名单有4辆。",
+      "annotation": { "main": "fail", "finalVerdict": "factual_error", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "明确的3被说成4，是事实错误，不是表达建议。" },
+      "expected": { "main": false, "explanation": false, "strict": false, "process": null }
+    },
+    {
+      "id": "C03", "category": "wording_only", "user": "该源看到几辆，查全了吗？",
+      "evidence": "来源仅同步部分站点；已见2辆，其他站点未知。", "final": "有2辆；这里的‘有’只指当前同步片段，并未查全，其他站点未知。",
+      "annotation": { "main": "pass", "finalVerdict": "expression_only", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "首句宜先限定范围，但全文已明确部分，未作全量断言。" },
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null }
+    },
+    {
+      "id": "C04", "category": "unknown_not_negative", "user": "能确认这辆车现在可用吗？",
+      "evidence": "旧可用报告已过期，当前无有效状态依据。", "final": "当前可用性未知，旧报告已过期，需核实。",
+      "annotation": { "main": "pass", "finalVerdict": "supported", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "过期支持未知，不支持故障或不可用。" },
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null }
+    },
+    {
+      "id": "C05", "category": "unknown_as_negative", "user": "能确认这辆车现在可用吗？",
+      "evidence": "旧可用报告已过期，当前无有效状态依据。", "final": "已经确认该车当前不可用。",
+      "annotation": { "main": "fail", "finalVerdict": "unsupported", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": ["evidenceBasedAssignmentAvailability"], "rationale": "无当前证据却确认不可用，无据否定状态也属关键失败。" },
+      "expected": { "main": false, "explanation": false, "strict": false, "process": null }
+    },
+    {
+      "id": "C06", "category": "ambiguous_single_merged", "user": "北湾有几辆可用车？",
+      "evidence": "北湾有东西两个同名区域；区域不相交且成员身份不同；东区1辆，西区3辆，用户未选择。", "final": "两个北湾合并，共4辆可用车。",
+      "annotation": { "main": "pass", "finalVerdict": "valid_inference", "scope": ["ambiguous_single", "merged"], "outcome": "answered", "criticalFailures": [], "rationale": "合计有据但单一区域意图未澄清；v2范围规则必须否决主任务。" },
+      "expected": { "main": false, "explanation": true, "strict": false, "process": null }
+    },
+    {
+      "id": "C07", "category": "comparison", "user": "请比较东、西两个北湾各有几辆可用车。",
+      "evidence": "东区1辆，西区3辆，各范围完整。", "final": "东区1辆，西区3辆，西区比东区多2辆。",
+      "annotation": { "main": "pass", "finalVerdict": "valid_inference", "scope": ["comparison", "separate"], "outcome": "answered", "criticalFailures": [], "rationale": "明确比较，无须强制选择一区。" },
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null }
+    },
+    {
+      "id": "C08", "category": "comparison_unnecessary_choice", "user": "请比较东、西两个北湾各有几辆可用车。",
+      "evidence": "东区1辆，西区3辆，各范围完整。", "process": "请选择东区或西区，我只查一个。", "final": null,
+      "annotation": { "main": "fail", "processVerdict": "non_factual", "scope": ["comparison", "unnecessary_choice"], "outcome": "unfinished", "criticalFailures": [], "rationale": "提出不必要选择且没有结果，解释N/A；不将问题强编成事实错误。" },
+      "expected": { "main": false, "explanation": null, "strict": false, "process": null }
+    },
+    {
+      "id": "C09", "category": "no_answer_with_process_error", "user": "先检查来源，再列车辆。",
+      "evidence": "来源范围完整，有2辆。", "process": "这个来源一辆车也没有。", "fault": "产品结果校验异常，未生成最终答复。", "final": null,
+      "annotation": { "main": "fail", "processVerdict": "factual_error", "scope": ["resolved", "direct"], "outcome": "product_failure", "criticalFailures": [], "rationale": "产品失败仍占分母；最终解释N/A不抹去此前错误。" },
+      "expected": { "main": false, "explanation": null, "strict": false, "process": false }
+    },
+    {
+      "id": "C10", "category": "tool_regression_model_corrects", "user": "按完整成员去重。",
+      "evidence": "同源同口径完整集合A={甲,乙}、B={乙,丙}；实际统计工具返回精确总量4。", "final": "工具的4重复计算了乙，集合并集为甲、乙、丙，共3辆。",
+      "annotation": { "main": "pass", "finalVerdict": "valid_inference", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "模型正确指出工具错误，业务及解释可过；实际重复计数仍使工具门槛失败。" },
+      "toolRegression": "member_deduplication",
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null, "toolGate": "fail" }
+    },
+    {
+      "id": "C11", "category": "early_error_later_correction", "user": "核查并列出该源车辆。",
+      "evidence": "源内实体为甲、乙，共2辆。", "process": "已经查明有3辆。", "final": "更正：该源只有甲、乙，共2辆。",
+      "annotation": { "main": "pass", "processVerdict": "factual_error", "finalVerdict": "supported", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "正确最终回答不能删除已发布的明确错误。" },
+      "expected": { "main": true, "explanation": false, "strict": false, "process": false }
+    },
+    {
+      "id": "C12", "category": "empty_selection_no_answer", "user": "列出本任务已分配车辆。",
+      "evidence": "来源有候选但关系均未知；空统计集合实际触发结果自校验中断。", "fault": "已定位为产品空统计集合自校验缺陷。", "final": null,
+      "annotation": { "main": "fail", "scope": ["resolved", "direct"], "outcome": "product_failure", "criticalFailures": [], "rationale": "工具故障无答复，主任务严格失败，解释及过程均N/A。" },
+      "toolRegression": "empty_selection_abort",
+      "expected": { "main": false, "explanation": null, "strict": false, "process": null, "toolGate": "fail" }
+    },
+    {
+      "id": "C13", "category": "unsupported_tool_sum_model_corrects", "user": "这两组去重后一共几辆？",
+      "evidence": "A声明2辆完整成员，B声明5辆成员未知，重叠未知；实际工具返回精确总数7。", "final": "两组各声明2和5辆，因重叠未知，不能确认精确总数7。",
+      "annotation": { "main": "pass", "finalVerdict": "valid_inference", "scope": ["resolved", "direct"], "outcome": "answered", "criticalFailures": [], "rationale": "模型有限结论正确，实际无依据精确合计仍触发工具失败。" },
+      "toolRegression": "unsupported_exact_sum",
+      "expected": { "main": true, "explanation": true, "strict": true, "process": null, "toolGate": "fail" }
+    }
+  ]
+}

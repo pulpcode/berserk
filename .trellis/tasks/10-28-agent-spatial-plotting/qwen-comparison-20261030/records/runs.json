@@ -1,0 +1,62 @@
+[
+  {
+    "group": "A",
+    "repeat": 1,
+    "id": "T03-R1-A",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "group": "B",
+    "repeat": 1,
+    "id": "T03-R1-B",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 2
+  },
+  {
+    "group": "B",
+    "repeat": 2,
+    "id": "T03-R2-B",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 4
+  },
+  {
+    "group": "A",
+    "repeat": 2,
+    "id": "T03-R2-A",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "group": "A",
+    "repeat": 3,
+    "id": "T03-R3-A",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 3
+  },
+  {
+    "group": "B",
+    "repeat": 3,
+    "id": "T03-R3-B",
+    "caseId": "T03",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "accepted": 1,
+    "requests": 2
+  }
+]

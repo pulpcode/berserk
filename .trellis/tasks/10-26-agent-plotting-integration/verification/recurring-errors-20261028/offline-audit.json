@@ -1,0 +1,196 @@
+{
+  "kind": "offline_existing_evidence_audit",
+  "date": "2026-10-28",
+  "newProviderRequests": 0,
+  "wireRuleChecks": [
+    {
+      "slot": "C02-1",
+      "tool": "annotation_action",
+      "ruleFragment": "多个合理类型",
+      "allActualRequestsContainRule": true,
+      "requests": [
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-1/provider-0007-wire.json",
+          "sha256": "7147eb7c5df8020681e23f54dde765c52321cb946bf9b7ca6020937be05b2afc",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-1/provider-0008-wire.json",
+          "sha256": "64ba1a4524f9f605a0dc154788cd0cdb61c32a67c090a9e10ffd6b57cca2a657",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-1/provider-0009-wire.json",
+          "sha256": "20c9c8d040af64d1506ff7c1bc5ed88a3f6804299de98f4c247ac0a824bbc026",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "C02-2",
+      "tool": "annotation_action",
+      "ruleFragment": "多个合理类型",
+      "allActualRequestsContainRule": true,
+      "requests": [
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-2/provider-0010-wire.json",
+          "sha256": "221107664de85760ce5553d2b3162ad4e46279169472205e55bcac97ae803437",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-2/provider-0011-wire.json",
+          "sha256": "9401dca49c55b1f1dd5769df664098d40e65b3c80155c39d392931bb1a314c96",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C02-2/provider-0012-wire.json",
+          "sha256": "7e5ce1956abc11ed1699ec9f3c2589e401aecece9427a1a9592bdfb4c2de3d32",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "C01-2",
+      "tool": "annotation_action",
+      "ruleFragment": "标准/扩展说明",
+      "allActualRequestsContainRule": true,
+      "requests": [
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C01-2/provider-0004-wire.json",
+          "sha256": "bd603d22797cc6bf0ce633bf74ab780dc6569d1bc64aa04aff2c710b46684365",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C01-2/provider-0005-wire.json",
+          "sha256": "55d0df664dd87dca7abe66131dc493b6ca611cf071b15ef55b3362a7103906ca",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C01-2/provider-0006-wire.json",
+          "sha256": "8275cdd00cfe336d11cf14292b00adaef6d23e7e912f49980dd3daedbe23aee7",
+          "locations": [
+            "/parameters/$defs/style/properties/symbolId/description"
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "C10-2",
+      "tool": "annotation_read",
+      "ruleFragment": "过滤范围读完不等于全图读完",
+      "allActualRequestsContainRule": true,
+      "requests": [
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0070-wire.json",
+          "sha256": "06865e2d59229425bb3acbf99d63af13eb2167acb3a8591e8274fd75d2e034d5",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0071-wire.json",
+          "sha256": "ad307eeb1ecb9b37309d6d2e54890650cdcd17b15bd23efd40ea74c56694fd56",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0072-wire.json",
+          "sha256": "13a8f1474e63341084da2cc521ac2d3a3b04e423586cac5c378100b811a926ce",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0073-wire.json",
+          "sha256": "9e1634e056ef3794bfd1f22e57dec7a846633f43de414763e3c471d3b701eae6",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0074-wire.json",
+          "sha256": "681799132f0de618c793ffeb34accb7e69b5df30d6866470422607cdc1c51dc5",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0075-wire.json",
+          "sha256": "6d0d2b17a448b52479f10967040501296c766e44006b86106034d813b635ea12",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/C10-2/provider-0076-wire.json",
+          "sha256": "9b3a34f7930e9a21aa49bde4389de933197b52c07a796703de933c1aa2067897",
+          "locations": [
+            "/description"
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "F03-2",
+      "tool": "spatial_analyze",
+      "ruleFragment": "candidateCount 是该次输入候选数量",
+      "allActualRequestsContainRule": true,
+      "requests": [
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/F03-2/provider-0101-wire.json",
+          "sha256": "51b3ff5d848cceb9d6c7d2236a96c6a8e0809a88d0962b3ffdb52c05bfdb1607",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/F03-2/provider-0102-wire.json",
+          "sha256": "ea2f8db98acd79cbd7496ea464a97ec7f55ed30019998389a33c8dc6f0b6f201",
+          "locations": [
+            "/description"
+          ]
+        },
+        {
+          "file": ".local/agent-plotting-integration/live-v2-20261027/F03-2/provider-0103-wire.json",
+          "sha256": "3ef3e056714be50b2b93f93448f15fac5bba4a3c113b9cc417200a1180dad20a",
+          "locations": [
+            "/description"
+          ]
+        }
+      ]
+    }
+  ],
+  "c09RepeatedInput": {
+    "identical": true,
+    "files": [
+      ".local/agent-plotting-integration/live-v2-20261027/C09-2/turn-1-input.json",
+      ".local/agent-plotting-integration/live-v2-20261027/C09-2/turn-2-input.json"
+    ],
+    "causeLocation": "evaluation-v2/interactions.ts: replyFor generic keyword fallback + assessEnding explicitBlock",
+    "limit": "Byte equality and code path support duplication; not a new model trial.",
+    "frozenReplyFunctionReproduced": true,
+    "actualEndingReason": "explicit_current_dependency",
+    "actualEndingText": "4. 若需要认定“已到场”，还需要现场记录类信息（例如 observation 性质标注或来源系统中的到场确认），目前资料中没有。"
+  },
+  "limits": [
+    "Rule presence does not prove model attention or understanding.",
+    "Skill loading is diagnostic evidence, not a demonstrated root cause."
+  ]
+}

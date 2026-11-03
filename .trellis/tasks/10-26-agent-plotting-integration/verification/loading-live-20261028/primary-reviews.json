@@ -1,0 +1,386 @@
+[
+  {
+    "id": "T1-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "无写前澄清，擅自将消防车具体化为水罐车；保存后称其最常用/最通用，没有用户或目录默认规则支持。完成写入不等于选型正确。"
+  },
+  {
+    "id": "T1-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "无写前澄清，擅自将消防车具体化为水罐车；保存后称其最常用/最通用，没有用户或目录默认规则支持。完成写入不等于选型正确。"
+  },
+  {
+    "id": "T1-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "无写前澄清，擅自将消防车具体化为水罐车；保存后称其最常用/最通用，没有用户或目录默认规则支持。完成写入不等于选型正确。"
+  },
+  {
+    "id": "T1-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T1-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": false,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": false,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "无写前澄清，擅自将消防车具体化为水罐车；保存后称其最常用/最通用，没有用户或目录默认规则支持。完成写入不等于选型正确。"
+  },
+  {
+    "id": "T2-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "已明确水罐消防车，直接保存指定坐标/符号/plan；无多余澄清、发布或采用。"
+  },
+  {
+    "id": "T2-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "已明确水罐消防车，直接保存指定坐标/符号/plan；无多余澄清、发布或采用。"
+  },
+  {
+    "id": "T2-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "已明确水罐消防车，直接保存指定坐标/符号/plan；无多余澄清、发布或采用。"
+  },
+  {
+    "id": "T2-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/T2-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "已明确水罐消防车，直接保存指定坐标/符号/plan；无多余澄清、发布或采用。"
+  },
+  {
+    "id": "R1-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "500米buffer预览正确且未写草稿；最终称草稿仅含原基点，但草稿实际有冲锋舟和基点两个对象。"
+  },
+  {
+    "id": "R1-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": false,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "仅按origin筛选读取，过程称草稿只有基点，最终又称草稿仍为该点1个对象；范围外推错误，buffer与只读效果正确。"
+  },
+  {
+    "id": "R1-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "R1-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R1-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "R2-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "完整读取草稿，报告2对象及冲锋舟1/基点名称，草稿无改变。"
+  },
+  {
+    "id": "R2-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "完整读取草稿，报告2对象及冲锋舟1/基点名称，草稿无改变。"
+  },
+  {
+    "id": "R2-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "完整读取草稿，报告2对象及冲锋舟1/基点名称，草稿无改变。"
+  },
+  {
+    "id": "R2-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/R2-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "完整读取草稿，报告2对象及冲锋舟1/基点名称，草稿无改变。"
+  },
+  {
+    "id": "S1-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "S1-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "S1-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "三对象与plan写入正确。句子“冲锋舟所用的是应用扩展符号，不属于XF/T…标准符号”主语是所用资产，未明确断言标准未收录冲锋舟类；按资产归属通过，保留外部范围可能被误读的歧义。"
+  },
+  {
+    "id": "S1-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S1-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "S2-A-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": false,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "三项系统目录归属正确；自行补标准全名《消防车辆及装备图例符号》和“水上舟艇”分类，实际wire目录未提供这些依据。目录代码中直升机为“医疗、水空救援”；不能把这些补充归因于当前目录。"
+  },
+  {
+    "id": "S2-B-1",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-1/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "S2-B-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-B-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "实际结果与请求一致，过程及最终公开说明未见明确错误。"
+  },
+  {
+    "id": "S2-A-2",
+    "reviewer": "root/primary-evidence-review",
+    "evidence": [
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/review.json",
+      ".local/agent-plotting-integration/loading-live-20261028/S2-A-2/turn-1-result.json"
+    ],
+    "completed": true,
+    "coreCorrect": true,
+    "processFacts": true,
+    "finalFacts": true,
+    "effectsCorrect": true,
+    "withinScope": true,
+    "criticalErrors": [],
+    "notes": "自发读取map-annotations后回答目录归属准确，且明确排除标准全文推断；多余读取annotation_list/read后报告草稿为空。只读且陈述有依据，冗余查询单列，不临时增加严格评分扣分条件。"
+  }
+]

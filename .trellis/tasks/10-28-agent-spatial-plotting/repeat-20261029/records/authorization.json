@@ -1,0 +1,12 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "31905408c95f5eee08da8c6ca0235470e67abfc8b77fc913f7df29720db87b79",
+  "limits": {
+    "requests": 240,
+    "input": 6000000,
+    "output": 150000
+  },
+  "scope": "P02/S02/P05/P01/S01 x A/B x 3 independent new trials; no retries/additions",
+  "historicalBatchExcluded": true,
+  "archiveCommit": "260acb7e85a3f08e17234ae3cfbd6b3b5b12f3eb"
+}

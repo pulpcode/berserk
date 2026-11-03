@@ -1,0 +1,14 @@
+{
+  "id": "P06-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "系统目录三符号归属、编号、别名及朝向能力正确；消防艇补充亦有目录依据。非标准明确指当前目录的冲锋舟扩展条目，不推断外部标准全文；无地图读取或修改。",
+  "evidence": [
+    "P06-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

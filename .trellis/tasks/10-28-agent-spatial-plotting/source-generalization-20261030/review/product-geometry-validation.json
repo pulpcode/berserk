@@ -1,0 +1,203 @@
+{
+  "baseline": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "draft_documents_validated": 8,
+  "combination_checks": 32,
+  "passed": true,
+  "method": "Current product annotation document parser, spatial geometry validator and classifyPoint; no server or model",
+  "end_to_end_adapter_validated": false,
+  "paid_model_requests": 0,
+  "results": [
+    {
+      "case_id": "G01",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 4
+    },
+    {
+      "case_id": "G01",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G01",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G01",
+      "pair": "source->source",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G07",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 5
+    },
+    {
+      "case_id": "G07",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G07",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G07",
+      "pair": "source->source",
+      "passed": true,
+      "count": 4
+    },
+    {
+      "case_id": "G04",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 5
+    },
+    {
+      "case_id": "G04",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G04",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G04",
+      "pair": "source->source",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G05",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G05",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G05",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 4
+    },
+    {
+      "case_id": "G05",
+      "pair": "source->source",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G02",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G02",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G02",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 0
+    },
+    {
+      "case_id": "G02",
+      "pair": "source->source",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G08",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G08",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G08",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G08",
+      "pair": "source->source",
+      "passed": true,
+      "count": 0
+    },
+    {
+      "case_id": "G03",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G03",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G03",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 1
+    },
+    {
+      "case_id": "G03",
+      "pair": "source->source",
+      "passed": true,
+      "count": 3
+    },
+    {
+      "case_id": "G06",
+      "pair": "draft->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G06",
+      "pair": "draft->source",
+      "passed": true,
+      "count": 4
+    },
+    {
+      "case_id": "G06",
+      "pair": "source->draft",
+      "passed": true,
+      "count": 2
+    },
+    {
+      "case_id": "G06",
+      "pair": "source->source",
+      "passed": true,
+      "count": 2
+    }
+  ]
+}

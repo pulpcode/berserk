@@ -1,0 +1,28 @@
+(node:33664) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"Q07-1-GS","status":"recorded","completed":1,"planned":286,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"Q07-1-GT","status":"recorded","completed":2,"planned":286,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"Q08-1-G0","status":"recorded","completed":3,"planned":286,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"Q08-1-GS","status":"recorded","completed":4,"planned":286,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+{"entry":"Q08-1-GT","status":"recorded","completed":5,"planned":286,"usage":{"requests":15,"input":1500,"output":150,"afp":0.20625000000000007,"unknown":0}}
+{"entry":"Q08-1-GST","status":"recorded","completed":6,"planned":286,"usage":{"requests":18,"input":1800,"output":180,"afp":0.2475000000000001,"unknown":0}}
+{"entry":"Q20-1-GS","status":"recorded","completed":7,"planned":286,"usage":{"requests":20,"input":2000,"output":200,"afp":0.2750000000000001,"unknown":0}}
+{"entry":"Q20-1-GT","status":"recorded","completed":8,"planned":286,"usage":{"requests":22,"input":2200,"output":220,"afp":0.30250000000000005,"unknown":0}}
+{"entry":"Q20-1-GST","status":"recorded","completed":9,"planned":286,"usage":{"requests":24,"input":2400,"output":240,"afp":0.33,"unknown":0}}
+{"entry":"Q20-1-G0","status":"recorded","completed":10,"planned":286,"usage":{"requests":26,"input":2600,"output":260,"afp":0.3575,"unknown":0}}
+{"checkpoint":"first12_awaiting_review","directory":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/r16-offline-quota-retry-gfIRI1/new"}
+{"entry":"Q01-1-GT","status":"recorded","completed":11,"planned":286,"usage":{"requests":27,"input":2700,"output":270,"afp":0.37124999999999997,"unknown":0}}
+{"entry":"Q01-1-GST","status":"recorded","completed":12,"planned":286,"usage":{"requests":28,"input":2800,"output":280,"afp":0.38499999999999995,"unknown":0}}
+{"entry":"Q01-1-G0","status":"recorded","completed":13,"planned":286,"usage":{"requests":29,"input":2900,"output":290,"afp":0.39874999999999994,"unknown":0}}
+{"entry":"Q01-1-GS","status":"recorded","completed":14,"planned":286,"usage":{"requests":30,"input":3000,"output":300,"afp":0.4124999999999999,"unknown":0}}
+✔ native quota retry reuses two originals, starts fresh GS once, retains unknown usage, and gates old2 plus new10 (107979.179536ms)
+{"entry":"Q07-1-GS","status":"incomplete","stop":"provider_http_429","completed":1,"planned":286,"usage":{"requests":1,"input":0,"output":0,"afp":0,"unknown":1}}
+✔ a new quota failure halts this authorized retry without another retry or further tasks (16542.551393ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128921.70382

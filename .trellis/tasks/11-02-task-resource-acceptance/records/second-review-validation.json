@@ -1,0 +1,63 @@
+{
+  "reviewer": "/root/acceptance_review_second",
+  "reviewerKind": "agent",
+  "formalEntriesReviewed": 16,
+  "claimsChecked": 132,
+  "validation": {
+    "json": "pass",
+    "snapshotHashes": "pass",
+    "literalOriginalQuotes": "pass",
+    "evidenceIds": "pass",
+    "availableEvidencePrecedesAssertion": "pass",
+    "allPublicAssistantMessagesCovered": "pass",
+    "noPrivateReasoningRead": true,
+    "noFirstReviewerRecordsRead": true
+  },
+  "effectiveReviews": [
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A01-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A01-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A02-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A02-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A03-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A03-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A04-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A05-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-2-product-classification.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A07-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A07-2.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A08-1.json",
+    ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A08-2.json"
+  ],
+  "preservedSupersededClassification": ".trellis/tasks/11-02-task-resource-acceptance/records/second-review-A06-2.json",
+  "independentTotalsNotRootAdjudication": {
+    "mainPass": 14,
+    "mainDenominator": 16,
+    "explanationPass": 9,
+    "answeredExplanationDenominator": 15,
+    "explanationNotApplicable": [
+      "A06-2"
+    ],
+    "strictPass": 9,
+    "strictDenominator": 16,
+    "criticalFailures": [
+      {
+        "entryId": "A04-2",
+        "critical": "evidenceBasedAssignmentAvailability"
+      }
+    ]
+  },
+  "verification": {
+    "lint": "pass: repository-root explicit harness eslint config for task *.ts, previously run",
+    "typecheck": "pass: task tsconfig, previously run",
+    "tests": "not_applicable: review records only; no product/scorer changes"
+  },
+  "notes": [
+    "These are independent second-agent opinions, not human review or final resolved score.",
+    "Root must explicitly adjudicate differences with first reviewer; compilation must not silently normalize substantive claims.",
+    "A06-2 product-classification file supersedes initial protocol-failure assessment; retain both raw opinions in audit trail.",
+    "Frozen scorer boolean for explanation cannot express N/A; reporting must separately disclose missing assistant answer and 15 answered-task denominator."
+  ]
+}

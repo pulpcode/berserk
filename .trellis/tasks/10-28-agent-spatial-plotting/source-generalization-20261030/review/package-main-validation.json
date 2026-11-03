@@ -1,0 +1,137 @@
+{
+  "kind": "offline_fixture_and_oracle_validation",
+  "status": "pass",
+  "suites": [
+    "main"
+  ],
+  "case_count": 8,
+  "combination_count": 32,
+  "geometry_checks": [
+    "Decimal ray casting",
+    "Independent rectangle interval containment"
+  ],
+  "live_agent_calls": 0,
+  "product_adapter_validated": false,
+  "results": [
+    {
+      "case_id": "G01",
+      "quadrant": [
+        true,
+        true
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 5,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.0007,
+      "maximum_coordinate_span_degrees": 0.0074,
+      "fixture_sha256": "c88bdc0574b7e5241470b7cd1e11614bac32ce38fd08ae26c5eccc0c3f37693f"
+    },
+    {
+      "case_id": "G07",
+      "quadrant": [
+        false,
+        false
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 6,
+        "source": 6
+      },
+      "minimum_boundary_distance_degrees": 0.00085,
+      "maximum_coordinate_span_degrees": 0.01258,
+      "fixture_sha256": "6f9a1a3a7ba257d88256ddec8ae72e3d5ed4f2bc709a9a5381aae50cb12d53dc"
+    },
+    {
+      "case_id": "G04",
+      "quadrant": [
+        true,
+        false
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 6,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.00055,
+      "maximum_coordinate_span_degrees": 0.00781,
+      "fixture_sha256": "2982f8beccb122b3bf69e9e09476dd9c3047e194a2efff926f1d60fd4edbf8fc"
+    },
+    {
+      "case_id": "G05",
+      "quadrant": [
+        false,
+        true
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 4,
+        "source": 6
+      },
+      "minimum_boundary_distance_degrees": 0.00064,
+      "maximum_coordinate_span_degrees": 0.01136,
+      "fixture_sha256": "c011fff77aba6cf55b85929d9e46d139c90422b453171a3b84d38ee228679fdb"
+    },
+    {
+      "case_id": "G02",
+      "quadrant": [
+        true,
+        true
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 5,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.00098,
+      "maximum_coordinate_span_degrees": 0.01064,
+      "fixture_sha256": "9f9eef722eb53ac518dba91344e09e2700f6fe7ae5af67d3c84d20f90c92cb4a"
+    },
+    {
+      "case_id": "G08",
+      "quadrant": [
+        false,
+        false
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 5,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.00105,
+      "maximum_coordinate_span_degrees": 0.01155,
+      "fixture_sha256": "6980478eac02c579a097bc520080e3dd5b50159aebd9c05156abfed45dfd00ab"
+    },
+    {
+      "case_id": "G03",
+      "quadrant": [
+        true,
+        false
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 5,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.00084,
+      "maximum_coordinate_span_degrees": 0.00888,
+      "fixture_sha256": "ee2915f4c7faff10607875033186fa6ed5bf036be8a96cc551d3cd39f30c58eb"
+    },
+    {
+      "case_id": "G06",
+      "quadrant": [
+        false,
+        true
+      ],
+      "combinations_checked": 4,
+      "candidate_points": {
+        "draft": 6,
+        "source": 5
+      },
+      "minimum_boundary_distance_degrees": 0.00091,
+      "maximum_coordinate_span_degrees": 0.00962,
+      "fixture_sha256": "af2429516a662ad54b3b53213388e59e0acce65a88b8b6d93f4c92f914dcdfa6"
+    }
+  ]
+}

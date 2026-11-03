@@ -1,0 +1,21 @@
+{
+  "id": "T07-R1-G1",
+  "mainRequirement": "pass",
+  "processFacts": "not_applicable",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "两轮完成预览并将同一700米固定几何保存derived，补plan与待核实备注；原对象保留。浏览器打开同一temp-range对象，表单值正确且地图状态前后不变。最终“这两项目前均未发生”按前句本次操作范围理解，不硬判全局状态错误。",
+  "quotes": [],
+  "evidence": [
+    "T07-R1-G1/gate/1-checkpoint.json",
+    "T07-R1-G1/gate/2-checkpoint.json",
+    "T07-R1-G1-browser.json"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "clarityNotes": [
+    "“这两项目前均未发生”可更直白写成本次未发布/采用；结合本次限定不判事实错误。"
+  ]
+}

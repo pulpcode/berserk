@@ -1,0 +1,33 @@
+{
+  "files": {
+    ".local/spatial-r14/original-driver-before-closeout/data.ts": "3fd923f9951145983e72994b3a0816784b23ebd6d7ab3e32fe48609f07b4076b",
+    ".local/spatial-r14/original-driver-before-closeout/implement.md": "fa4eb0fd9c28024915e20fc178386a78ead12cd041286547ea54ac3b31f81ee1",
+    ".local/spatial-r14/original-driver-before-closeout/prd.md": "b009e7b5be34f2ddfc025c7d018c83162f84f2a59c560c10235019be1403f3a0",
+    ".local/spatial-r14/original-driver-before-closeout/review-tools.ts": "2ca56d468a79ff9777314e29e957c3cc2b90a4ddd7f57acdd6796440b9c3fd67",
+    ".local/spatial-r14/original-driver-before-closeout/review-rules.md": "bf87ef47567a4b1ab39ff768e6053f55f84e5da1b98cc5ffcea4f13cdd72100e",
+    ".local/spatial-r14/original-driver-before-closeout/live.ts": "a3482dc96795b39678c719d873722430b9af23778ae0c0bad36f74464aca61ac",
+    ".local/spatial-r14/original-driver-before-closeout/implement.jsonl": "0d7c60dc041e5337e7036139ced49f9fca1c47398de89c393b1eae11892edf75",
+    ".local/spatial-r14/original-driver-before-closeout/offline-review-calibration.json": "a3d7319cd898d2ef220eec35ccc91bff7c81ce46040485160c27114f18671145",
+    ".local/spatial-r14/original-driver-before-closeout/check.jsonl": "0d7c60dc041e5337e7036139ced49f9fca1c47398de89c393b1eae11892edf75",
+    ".local/spatial-r14/original-driver-before-closeout/runtime.ts": "4f5c5d57ecd986473426a12b1283364e47007cbbff5594140c032165718556b5",
+    ".local/spatial-r14/original-driver-before-closeout/offline-review-calibration.md": "1a8a70ae4eae087ec8e845aa529cea32894008b7bad016c3d51ba8734060e53a",
+    ".local/spatial-r14/original-driver-before-closeout/cases.ts": "375508492f2f83bdbcf6b53767e9b41ca05a30a42bf7d3de979ec0fccdd571ce",
+    ".local/spatial-r14/original-driver-before-closeout/package.json": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428",
+    ".local/spatial-r14/original-driver-before-closeout/cases.json": "307145c30ab43a7d003dc1489aea2db5ece65d420d2a55213e1d266db2d7925b",
+    ".local/spatial-r14/original-driver-before-closeout/budget.ts": "522e129ba51f1df1b8f72100a012ecc5c78431570b9ce258a850d61fcb327667",
+    ".local/spatial-r14/original-driver-before-closeout/plan.md": "6c4380aebb89aa976ee4e02978fcc630dbf475ed34b542ef17940390e62df059",
+    ".local/spatial-r14/original-driver-before-closeout/schedule.json": "929c3a027e6fc92e949c6f2d72f37d3ac9eb1c9724b23d810a619e11d4ef3877",
+    ".local/spatial-r14/original-driver-before-closeout/tsconfig.json": "57a83209851a9dcbb2d3b8154df60284644c452b17eda1ee2ece508a2c7fcd10",
+    ".local/spatial-r14/original-driver-before-closeout/design.md": "9f26fd51db3985325678587cbc31b4665c38118facdf0a3c921e150a1d10d9ae",
+    ".local/spatial-r14/original-driver-before-closeout/provider.ts": "c59264653f4c7f078f10cf998471163327b6486e36324e12d723d36250a1422c",
+    ".local/spatial-r14/original-driver-before-closeout/provider-budget.test.ts": "6bdfa6725620fc46187801fb6e4f4503ed51fc2ca8dad9dd5fe8282a65c2bf4c",
+    ".local/spatial-r14/original-driver-before-closeout/freeze-cases.ts": "84982ccb5b5b62b23f611f880c7bae52bc5a714f531b1daf263e5feffebc83cc",
+    ".local/spatial-r14/original-driver-before-closeout/review-tools.test.ts": "90b1d7fb42dca41bfdd8327958e41b698253f3410b04eebac8ed5db9cb3dd6bd",
+    ".local/spatial-r14/original-driver-before-closeout/live.test.ts": "4f15642dcec3eabfc59f8643dae178bf6e8747a2ab3a95bb1a5f87e054ab1c92",
+    ".local/spatial-r14/original-driver-before-closeout/cases.test.ts": "93e4e64d696e76e3412ec34c86b86e06d3213da09aa1bb8e97727dba097cccf6",
+    ".local/spatial-r14/original-driver-before-closeout/case-specs.json": "fca9d23a5da4b78653fe17cf0cda1b1ef04bdcc98a6e57bba6e08208b1878177",
+    ".local/spatial-r14/original-driver-before-closeout/protocol.md": "8e5ef40bf98cf607e947dac2610d0c646541b457f5379992f4e250b9814c7058",
+    ".local/spatial-r14/original-driver-before-closeout/d04.test.ts": "0ad60da745f18e11e964141a946699e95ca9402b7bbd9d2049c2bd2de81c4593"
+  },
+  "originalFreeze": "freeze.json"
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "baseUrl",
+    "model",
+    "responseModel",
+    "maxTokens",
+    "thinking"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "baseUrl": {
+      "const": "https://ark.cn-beijing.volces.com/api/plan/v3"
+    },
+    "model": {
+      "const": "deepseek-v4.1-flash"
+    },
+    "responseModel": {
+      "const": "deepseek-v4-1-flash-261017"
+    },
+    "maxTokens": {
+      "const": 8192
+    },
+    "thinking": {
+      "const": {
+        "type": "disabled"
+      }
+    },
+    "temperature": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2
+    }
+  }
+}

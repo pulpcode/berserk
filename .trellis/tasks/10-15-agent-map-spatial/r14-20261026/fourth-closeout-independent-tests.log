@@ -1,0 +1,18 @@
+(node:69462) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ third raw evidence and drivers remain intact; only original final 21 slots may execute (2840.068853ms)
+✔ original D08-2-B final answer already reports the explicitly allowed missing geometry outcome, without changing old halt (6.63666ms)
+✔ 573 inherited requests debit the same old window cap exactly once, and duplicate completion is rejected (1994.4468ms)
+✔ fourth freeze cannot legalize changes to existing driver, model, source data or scoring (3952.741275ms)
+{"entry":"D07-2-A","status":"recorded","completed":1,"planned":3,"usage":{"requests":575,"input":11057165,"output":189736,"afp":2982.3920499999986,"unknown":0}}
+{"entry":"D07-2-B","status":"recorded","completed":2,"planned":3,"usage":{"requests":577,"input":11057365,"output":189756,"afp":2982.4195499999987,"unknown":0}}
+{"entry":"D07-2-C","status":"recorded","completed":3,"planned":3,"usage":{"requests":579,"input":11057565,"output":189776,"afp":2982.540549999999,"unknown":0}}
+✔ native fourth mock runs D07 ABC only, starts request 574 and keeps all original data and claims (44686.513975ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56346.209226

@@ -1,0 +1,16 @@
+(node:99289) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ synthetic date comes from the frozen case manifest, never the execution day (10.94161ms)
+✔ two buffers in first preview cannot substitute for missing second preview (0.499803ms)
+{"entry":"D18-1-C","status":"recorded","completed":1,"planned":3,"usage":{"requests":8,"input":800,"output":80,"afp":0.484,"unknown":0}}
+{"entry":"D18-1-A","status":"recorded","completed":2,"planned":3,"usage":{"requests":16,"input":1600,"output":160,"afp":0.5940000000000002,"unknown":0}}
+{"entry":"D18-1-B","status":"recorded","completed":3,"planned":3,"usage":{"requests":24,"input":2400,"output":240,"afp":0.7040000000000005,"unknown":0}}
+✔ D18 native preview correction saves the second user-turn range rather than the global second buffer (19837.295603ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22552.430608

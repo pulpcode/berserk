@@ -1,0 +1,113 @@
+[
+  {
+    "id": "call_00_w0dyi6dca3sv4vqja9phj3t9",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft",
+      "layerNames": [
+        "reference"
+      ],
+      "objectIds": [
+        "origin"
+      ],
+      "fields": [
+        "geometry"
+      ]
+    },
+    "firstObservedRequest": 10
+  },
+  {
+    "id": "call_00_q3iwboocv5ff278x9df57whi",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft",
+      "limit": 100
+    },
+    "firstObservedRequest": 11
+  },
+  {
+    "id": "call_00_nrzztclqe01u05e2ebg0wk07",
+    "name": "skill_read",
+    "arguments": {
+      "id": "spatial-analysis"
+    },
+    "firstObservedRequest": 12
+  },
+  {
+    "id": "call_00_ddhqtb70lhuedj94js5c4vr6",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "b812bd0e-0f50-4e76-9298-90bbfec9c03b",
+          "revision": 1
+        },
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 700
+    },
+    "firstObservedRequest": 13
+  },
+  {
+    "id": "call_00_k7f6qwubttrj0atrdj7py81u",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 15
+  },
+  {
+    "id": "call_00_nwlb9v3bgynhw53sj9vvtf6l",
+    "name": "annotation_from_analysis",
+    "arguments": {
+      "resultRef": "spatial:b6993fa7-1b68-46de-b60a-84997aa1f163:call_00_ddhqtb70lhuedj94js5c4vr6",
+      "layerId": "derived",
+      "objectId": "inner-ring",
+      "name": "内圈"
+    },
+    "firstObservedRequest": 16
+  },
+  {
+    "id": "call_00_fgyztz8t3e47uhbjwpmnfjcx",
+    "name": "spatial_analyze",
+    "arguments": {
+      "input": {
+        "kind": "annotation",
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ],
+        "ref": {
+          "revision": 2,
+          "setId": "b812bd0e-0f50-4e76-9298-90bbfec9c03b"
+        }
+      },
+      "operation": "buffer",
+      "distanceM": 1200
+    },
+    "firstObservedRequest": 18
+  },
+  {
+    "id": "call_01_crqvy5zmqceqyy636jkkn9aq",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft",
+      "layerIds": [
+        "derived"
+      ],
+      "fields": [
+        "sourceRefs"
+      ]
+    },
+    "firstObservedRequest": 18
+  }
+]

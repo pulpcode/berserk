@@ -1,0 +1,91 @@
+{
+  "slots": 30,
+  "totals": {
+    "requests": 127,
+    "input": 2587137,
+    "output": 21114,
+    "unknown": 0
+  },
+  "allCountersAgree": true,
+  "httpStatuses": {
+    "200": 127
+  },
+  "responseModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "rawStatuses": {
+    "recorded": 22,
+    "needs_review": 7,
+    "waiting_user": 1
+  },
+  "rawNonRecorded": [
+    {
+      "id": "C01-2",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C02-1",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C05-1",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C05-2",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C08-2",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C09-1",
+      "status": "needs_review",
+      "completedTurns": 0
+    },
+    {
+      "id": "C09-2",
+      "status": "waiting_user",
+      "completedTurns": 0
+    },
+    {
+      "id": "F04-2",
+      "status": "needs_review",
+      "completedTurns": 1
+    }
+  ],
+  "stop": null,
+  "skillBodyDelivered": {
+    "map-annotations": [
+      "C08-2",
+      "F04-1"
+    ],
+    "spatial-analysis": [
+      "C10-1",
+      "C10-2",
+      "F02-1",
+      "F04-1",
+      "F04-2",
+      "F05-1",
+      "F05-2"
+    ]
+  },
+  "otherSessions": {
+    "C07-1": {
+      "unchanged": true,
+      "revision": 1,
+      "hash": "0065ed23df68c87402e62b5b573f6be2205dde11389c704b02d45804441bc9ba"
+    },
+    "C07-2": {
+      "unchanged": true,
+      "revision": 1,
+      "hash": "0065ed23df68c87402e62b5b573f6be2205dde11389c704b02d45804441bc9ba"
+    }
+  }
+}

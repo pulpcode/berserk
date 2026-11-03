@@ -1,0 +1,20 @@
+{
+  "id": "T03-R2-B",
+  "reviewer": "Codex trellis-check independent agent review",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "strict": "pass",
+  "reason": "两口径4/1完整，名单与数据范围有证据。全体来源filter真实失败后，按两条已读资源ref重做分类成功；公开限制对应实际失败范围，未推广为所有来源都不可分析。",
+  "recoveries": [
+    {
+      "error": "SPATIAL_UNSUPPORTED_REGION",
+      "explanation": "全体授权对象组合拓扑跨度>10°；已读来源成员道路103.83/1.30与港区114/22.5相距>10°。随后选择两条来源资源ref分类成功。"
+    }
+  ],
+  "evidence": [
+    ".local/qwen-comparison-20261030/comparison/T03-R2-B/review.json",
+    ".local/qwen-comparison-20261030/comparison/T03-R2-B/provider-0009-wire.json"
+  ]
+}

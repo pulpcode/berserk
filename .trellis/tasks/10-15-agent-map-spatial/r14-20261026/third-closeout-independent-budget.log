@@ -1,0 +1,15 @@
+(node:28467) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ triple admission is conservative; current triple may continue beyond reserve, no per-task cutoff (38075.331825ms)
+✔ wire group configuration never edits native messages, tools, or private history (1.706327ms)
+✔ response contract permits E1 zero thinking and valid JSON wrong tool schema, rejects protocol errors (8.523368ms)
+✔ non-parent model requests use same group configuration and shared ledger (25.427011ms)
+✔ AFP counts thinking once as output, Pro coefficient and account reserves are independent (4.323543ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41573.212494

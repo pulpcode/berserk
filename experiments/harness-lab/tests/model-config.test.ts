@@ -28,7 +28,7 @@ it('validates small-window parameters without requiring output <= reserve', () =
   expect(() => loadConfig({LAB_AUTH_MODE:'test', LLM_CONTEXT_WINDOW: 'invalid' })).toThrow('LLM_CONTEXT_WINDOW');
   expect(() => loadConfig({LAB_AUTH_MODE:'test', LLM_MAX_OUTPUT_TOKENS: '0' })).toThrow('LLM_MAX_OUTPUT_TOKENS');
 });
-it('reads v1 without rewriting, only supplements matching environment identity and saves v2', async () => {
+it('reads v1 without rewriting, only supplements matching environment identity and saves v4', async () => {
   const dataDir = await directory(); const path = join(dataDir, 'model-settings.json');
   const original = JSON.stringify(stored()); await writeFile(path, original);
   const env = loadConfig({LAB_AUTH_MODE:'test', LAB_DATA_DIR: dataDir, LLM_PROVIDER: identity.provider, LLM_MODEL: identity.model,
@@ -38,7 +38,7 @@ it('reads v1 without rewriting, only supplements matching environment identity a
   expect(await readFile(path, 'utf8')).toBe(original);
   expect((await ModelSettingsStore.open({ ...env, model: 'different-model' })).info()).toMatchObject({ contextWindow: null, maxOutputTokens: null, contextReady: false });
   await store.save(store.prepare({ ...identity, expectedVersion: store.info().version }));
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 2, contextWindow: 65536, maxOutputTokens: 8192 });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 4, contextWindow: 65536, maxOutputTokens: 8192 });
   expect((await ModelSettingsStore.open({ ...env, contextWindow: 8192, maxOutputTokens: 1024 })).info()).toEqual(store.info());
 });
 it('v2 unknown fields never borrow environment values; changing model drops old capabilities', async () => {

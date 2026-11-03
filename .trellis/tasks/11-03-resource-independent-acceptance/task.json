@@ -1,0 +1,35 @@
+{
+  "id": "resource-independent-acceptance",
+  "name": "resource-independent-acceptance",
+  "title": "资源两轮修复后的独立验收",
+  "description": "冻结333cb51完成4公开+16正式独立验收；N07评测引用修复后续测完成，未通过验收，待用户审阅结果。",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-03",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "codex/agent-spatial-plotting",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "10-28-agent-spatial-plotting",
+  "relatedFiles": [
+    "README.md",
+    "cases.md",
+    "scoring.md",
+    "schedule.json",
+    "review-baseline.json"
+  ],
+  "notes": "题包提交89b6623。原批48+续测41=89请求；输入3094658/输出71451，用量完整。正式主任务12/16、严格8/16，解释10/15另1项N/A；N06两遍主任务失败。旧N07零模型故障与N06-1未完成保留；产品/Skill未改，无额外重跑或追加。用户已要求将本轮修复、结果和报告提交并推送。",
+  "meta": {
+    "evaluationStatus": "completed",
+    "acceptancePassed": false
+  }
+}

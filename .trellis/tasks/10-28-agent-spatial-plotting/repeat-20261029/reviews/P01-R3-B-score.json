@@ -1,0 +1,14 @@
+{
+  "id": "P01-R3-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确水罐符号/坐标名称plan保存r2正确，准备读取过程及最终说明与实际一致，旧对象保留未发布采用。",
+  "evidence": [
+    "P01-R3-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

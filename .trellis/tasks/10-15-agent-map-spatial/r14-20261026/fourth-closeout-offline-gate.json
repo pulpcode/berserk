@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "freezeHash": "fa4fa94e10ddc52b8239e77e37d922005f715fd7dd62813ba4f0528017ac8227",
+  "evidence": [
+    "fourth-closeout-check.json",
+    "fourth-closeout-check.md",
+    "fourth-closeout-independent-tests.log",
+    "fourth-closeout-independent-types.log",
+    "fourth-closeout-independent-lint.log",
+    "fourth-closeout-check.md"
+  ],
+  "scope": "Original remaining 21 only; no retries, same cumulative budget"
+}

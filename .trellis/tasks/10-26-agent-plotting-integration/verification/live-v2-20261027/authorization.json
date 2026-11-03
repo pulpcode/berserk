@@ -1,0 +1,16 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "db514b3cb9e741d69dbbfec57d177593174cc50126fe004bb4ac16967ce256f5",
+  "limits": {
+    "requests": 300,
+    "input": 8000000,
+    "output": 600000
+  },
+  "providerAllowanceVerified": true,
+  "billingNote": "2026-10-27 用户要求完成测评。本批沿用原15题各2次、300请求/800万输入/60万输出上限。控制台现场核对Agent Plan Medium包月至2026-11-23；5小时0/10000 AFP、周3869.673/35000、月5326.43/100000。DeepSeek-V4.1-Flash超额后付费未开启，模型标记即将下线；不充值或换模型，实际响应漂移按驱动停止。AFP不是token固定换算。",
+  "observedAt": "2026-10-27T09:10:18.988316+00:00",
+  "source": "https://console.volcengine.com/ark/region:cn-beijing/subscription/agent-plan",
+  "userInstruction": "完成测评",
+  "scope": "15 original development cases x2; cross-scenario expansion excluded",
+  "productRevision": "359c3d654d7bcb362226767fd613ce06212d8480"
+}

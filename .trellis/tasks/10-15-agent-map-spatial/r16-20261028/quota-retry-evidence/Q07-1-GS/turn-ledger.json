@@ -1,0 +1,24 @@
+[
+  {
+    "originalUserTurn": 0,
+    "prompt": "以当前草稿reference层的对象ID origin生成700米范围，只预览，不保存。",
+    "status": "completed",
+    "requestIds": [
+      "f8df3034-646d-4f98-8b1f-b018ad4da86c"
+    ],
+    "clarificationReplies": [],
+    "completed": true,
+    "reason": null
+  },
+  {
+    "originalUserTurn": 1,
+    "prompt": "说明刚才这个范围现在的状态，以及你实际做了哪些操作；不要再次计算。",
+    "status": "completed",
+    "requestIds": [
+      "9490614b-50fd-4210-8af2-b82cc25b7e43"
+    ],
+    "clarificationReplies": [],
+    "completed": true,
+    "reason": null
+  }
+]

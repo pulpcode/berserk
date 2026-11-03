@@ -1,0 +1,14 @@
+{
+  "id": "P03-A",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "已读完整style后只改heading45到90，symbol/iconSize/label/color、名称坐标备注业务属性plan均保留；过程是计划而非提前宣告完成，最终与回执状态一致。",
+  "evidence": [
+    "P03-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

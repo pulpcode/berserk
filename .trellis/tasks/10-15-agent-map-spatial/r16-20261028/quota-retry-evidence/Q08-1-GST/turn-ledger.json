@@ -1,0 +1,35 @@
+[
+  {
+    "originalUserTurn": 0,
+    "prompt": "以当前草稿reference层的对象ID origin生成700米范围，只预览，不保存。",
+    "status": "completed",
+    "requestIds": [
+      "489997df-43e6-417f-90f0-20bd5950e89e"
+    ],
+    "clarificationReplies": [],
+    "completed": true,
+    "reason": null
+  },
+  {
+    "originalUserTurn": 1,
+    "prompt": "把刚才700米范围的固定结果保存到现有派生层（layerId=derived），名称为‘内圈’；不发布，不设为任务当前。",
+    "status": "completed",
+    "requestIds": [
+      "c417f40d-7933-4e4d-bd52-178397a3ad50"
+    ],
+    "clarificationReplies": [],
+    "completed": true,
+    "reason": null
+  },
+  {
+    "originalUserTurn": 2,
+    "prompt": "再以同一对象ID origin生成1200米范围，只预览、不保存；分别说明700米内圈和1200米范围现在的状态。",
+    "status": "completed",
+    "requestIds": [
+      "2cba8c0b-278a-4532-a7f1-2ba35dd2ace7"
+    ],
+    "clarificationReplies": [],
+    "completed": true,
+    "reason": null
+  }
+]

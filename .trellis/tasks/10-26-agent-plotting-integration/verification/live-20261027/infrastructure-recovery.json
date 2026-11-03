@@ -1,0 +1,12 @@
+{
+  "reason": "Sandbox EPERM prevented local service setup, before fixture or any model request. Unsandboxed loopback preflight passed. User-authorized 30-slot execution remains unstarted; preserve failed launch and reclaim only zero-request infrastructure attempt. No scored model trial retried.",
+  "originalBatch": "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027",
+  "originalClaim": {
+    "freezeHash": "6ef6e7f726706ee9f1db0205526b2faac982b9aa78b7caf37f0f23a8f46ac64a",
+    "directory": "/Users/lau/.codex/worktrees/agent-plotting-integration/berserk/.local/agent-plotting-integration/live-20261027",
+    "at": "2026-10-27T01:56:33.155Z",
+    "automaticRetries": false
+  },
+  "verifiedRequests": 0,
+  "scopeUnchanged": true
+}

@@ -14,6 +14,8 @@ This contract describes the implemented validation only. Mock roads, resources, 
 
 ## 3. Contracts
 
+Optional source resource metadata is defined in [Task Resource Semantics](./task-resources.md). Legacy resource quantities remain unchanged; the new adapter handoff types alone do not implement task-related/support queries or authorize a whole-task completeness claim.
+
 `LAB_CONTEXT_CONFIG` names a controlled absolute JSON configuration. Credentials come from each system's `tokenEnv`. The configuration is static for one service process. Source `systemId` is host metadata frozen at admission; the sender cannot select identity or scope. Profile `contextScopeId` becomes `{scopeId,systemIds}` in the saved profile snapshot. Missing configuration never grants unrestricted access. Invalid new configuration disables related operations while legacy workflows and queue controls remain usable; an invalid profile is projected with `configurationError`. A query-capable profile with an omitted scope is invalid too, not a legacy unscoped profile.
 
 A principal is either the authenticated seat or the internal service `{profileId,jobId,scope}`. Service task queries see only active public tasks; seat queries see their authorized metadata. Task matching unions reference, area and text candidates and returns match reasons; query is whole-string substring matching, not tokenized keyword search. Candidate membership is not a risk conclusion. `TaskBusinessRef.role?` is route/resource/location/work_area/reference, stored with existing context JSON and revision checks. Omitted roles are not silently inferred. Duplicate identities with conflicting roles are rejected. Project source query objectRefs to only systemId/objectType/objectId; task role and label are not source identity fields. Complete continuous discovery and initial task triggers are specified in [Continuous Background Analysis](continuous-analysis.md). Business references and focus filters are not authorization.
@@ -21,6 +23,16 @@ A principal is either the authenticated seat or the internal service `{profileId
 Successful tools return `{systemId,query,queriedAt,data,mapReferences?}` with actual HTTP/task data. The host derives optional map references from returned spatial objects or report object references, never from model prose. Pi records these normal tool results; do not build a second evidence database or reconstruct old facts from current sources. The information center and inbox expose successful queries from the originating request. A follow-up draft carries result and query references; preparing or viewing it does not call a model. Its selected task is a conversation/file save location, not the scope of discussion. Preserve the originating Inbox selection generation through all asynchronous preparation reads before navigating or writing its draft; see the frontend contract and [Situation Map](./situation-map.md).
 
 Scope checks cover rule recipients, admission/execution, query, delivery and content reads (including lists, search, errors, downloads and imports). Source administration alone is insufficient to read combined scoped content. Such administrators retain minimum operational metadata. A seat's later private analysis remains private. Dynamic revocation/governance is outside this increment.
+
+### Resource reads and optional task discovery
+
+`situation_query` accepts optional `objectTypes` (`road`, `resource`, `area`), applied by the source before pagination for current and changes. Exact references must agree with the requested types. The decoder verifies returned rows satisfy the requested filter. Omitting it preserves legacy behavior.
+
+A situation system may declare `resourceCapability`. Basic exact-object and type reads do not require task mappings. `ContextService.queryTaskResources` is the optional task discovery adapter, not an authorization substitute: current-only task/relation/category filtering requires declared capability; task mapping currently supports explicit `identity`, and potential support requires the implemented `explicit-task-relation` rule. Missing mapping/rule blocks only that discovery operation, not unrelated basic reads. Never infer a shared task identity from equal strings.
+
+Current responses optionally carry `resourceCoverage:{status:'complete'|'partial',reason?}`. Partial requires a nonempty reason (at most 1000 characters); unknown keys/statuses and this field on changes responses are rejected. Preserve coverage on the final page and empty results. Legacy responses may omit it. The resource consumer checks its stability and retains declared gaps; having no next page does not override partial coverage.
+
+Source query completion does not prove task membership or a complete task inventory. Platform task business references provide related-object evidence, not assignment. See [Task Resource Queries](./task-resource-query.md) for the business consumer; these source filters alone do not complete that feature.
 
 ## 4. Validation & Error Matrix
 

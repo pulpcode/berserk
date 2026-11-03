@@ -1,0 +1,310 @@
+{
+  "rows": [
+    {
+      "blindId": "026e69d9-e9f5-4eea-b888-f44b1d339b3e",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/026e69d9-e9f5-4eea-b888-f44b1d339b3e/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D13：候选严格取resources五点，origin只作参照；最近r1/r2及556米、1225米正确。已读五候选坐标支持其余三点更远的附加结论。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "190fcfa3-02a1-4d52-88d2-645b73bc739a",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "按此几何关系，如果这段岸线按直线理解，则水侧位于其东侧。这只是根据几何得出的推断，不等于真实岸线走向或水文情况。"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/190fcfa3-02a1-4d52-88d2-645b73bc739a/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D15：整段点到线513.617151634262米与独立球面真值513.617151725236米相符，主任务完成。但点在线东侧、垂足在线内，只能支持几何位置关系，不能确定哪侧是水面；没有水陆分布依据。最终补充解释有不成立的推断，虽自称推断并限制现实含义，仍不由给定几何推出。草稿及采用状态不变。",
+      "clarity": "",
+      "failureCategory": "unsupported_hydrological_inference"
+    },
+    {
+      "blindId": "1ac064b8-9624-467d-91ca-726e6fa5f071",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1ac064b8-9624-467d-91ca-726e6fa5f071/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D14：按三顶点的两段累计长度1667.9262035米，给1667.9米/约1.67公里；1111.95米北行与555.97米南行可由已读坐标独立复算，非首尾距离。状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "1dda9cdb-fc95-470a-8bb7-d3a9309c1f49",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1dda9cdb-fc95-470a-8bb7-d3a9309c1f49/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D14：读取实际三点折线并报告两段完整累计1667.93米/约1.668公里；与独立真值一致，坐标及方法有先行依据。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "1f56ae20-c3c5-4b29-a8cc-0006200456a3",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/visibleTranscript/10",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/1f56ae20-c3c5-4b29-a8cc-0006200456a3/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D17：首轮500米预览不改草稿；保存轮虽首次写入被READ_REQUIRED拒绝，但随后读取并成功将首轮固定几何原样保存为derived/temp-500m，名临时范围，修订1至2。实际几何深比较相等，仅新增该对象，旧对象/旧图层不变，未发布/采用。拒绝后的恢复不构成任务失败。",
+      "clarity": "queriedAt称为本次计算时间不够精确，字段实际是输入查询时间；原值如实引用，全文区分草稿快照与本次操作，记表达问题。预览结果未写草稿不等于声称只有内存。"
+    },
+    {
+      "blindId": "551fd6b3-0a1c-437b-b6f2-371b60899536",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/551fd6b3-0a1c-437b-b6f2-371b60899536/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D14：完整线长1667.93米/1.668公里及北行后南行正确；读取固定结果取得几何不是重新计算。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "6a5baeeb-ebe4-40b9-8332-e35a1fe19677",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/6a5baeeb-ebe4-40b9-8332-e35a1fe19677/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D16：实际L形面积3080511.81平方米/约3.0805平方公里正确。已读六个唯一顶点、一环无洞支持形状解释；独立按两个球面矩形复算3080511.808772平方米，外接矩形4107429.214516平方米，附加约4.11平方公里也正确。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "9807cf39-9858-489d-bf73-933f7b7a72f6",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/9807cf39-9858-489d-bf73-933f7b7a72f6/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D13：resources五点为候选，origin参照，r1/r2及556/1225米正确，其他图层未混入候选。只读状态不变。",
+      "clarity": "同时给0.56/1.22公里属于明确近似，准确米值已给，不把粗粒度单位显示机械算作越容差。"
+    },
+    {
+      "blindId": "9f940de1-cd88-4934-a652-07f84712069b",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "范围外：其余 10 个点均超出 500 米，最近的是「资源甲」（约 556 米）和「北点」（约 1.11 公里），其他对象更远"
+      ],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/9f940de1-cd88-4934-a652-07f84712069b/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D17：500米预览、11点包含检查仅origin命中、第二轮保存首轮固定几何均正确。实际只新增derived/temp-range，名临时范围，几何深比较与首轮结果相等，旧对象/图层及发布/采用状态不变。但预览末附加距离排名称其他点更远，已读tie-a(114,22.49)、tie-b(114,22.51)与north同为约1111.950802米，故该排他性排名错误。completion虽记incomplete，两轮用户请求已发、保存和最终回执均存在，主任务按实质完成判pass。",
+      "clarity": "“圆心含边界”措辞不清，结合只命中origin及closed范围可理解为边界口径，并未明确把圆心断言为边界，不再额外判错。",
+      "failureCategory": "unsupported_extra_ranking_ignores_ties"
+    },
+    {
+      "blindId": "ac853964-ad00-47a3-b97b-00c004070d53",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/7",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/8",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/visibleTranscript/9",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/ac853964-ad00-47a3-b97b-00c004070d53/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D17：首轮500米只读预览，次轮只新增derived/tmp-scope临时范围；几何与首次固定结果逐值相等，16个原有对象及原图层元数据不变，derived默认可见，修订1至2，发布/采用状态不变。过程对象身份有已读依据，最终数字/状态均对应真实结果。",
+      "clarity": ""
+    },
+    {
+      "blindId": "ae94ee16-6d4b-4aa3-808c-75f33db1d793",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/ae94ee16-6d4b-4aa3-808c-75f33db1d793/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D16：实际L形面面积3080511.81平方米、3.0805平方公里及球面方法正确；未用外接矩形，未改草稿或采用状态。完整性和候选数量与工具一致。",
+      "clarity": "“未保存结果”联系只读、未改草稿可理解为未保存标绘，不按单词断言错误；但已有固定resultRef，末尾“固化为可追溯分析结果”建议改为保存到草稿，避免让人误以为本次没有可追溯结果。"
+    },
+    {
+      "blindId": "bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/bc2a0d86-7445-4d7b-b7e3-f5124aa2f8e3/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D13：已读origin及resources全部五点，最近r1/r2及555.98米、1224.85米正确；其余三点更远有坐标依据，未混入其他图层候选。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "bd3e44c3-fdb3-4766-8d19-b0836b847661",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/bd3e44c3-fdb3-4766-8d19-b0836b847661/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D15：使用整段岸线点到线最短距离513.62米，与独立球面真值一致；说明候选最近位置可能为段内或端点是方法描述，并非把本次算成端点距。只读状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "d23ccd77-86f8-48b6-928c-3d4d523e5c55",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#/visibleTranscript/2",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#/visibleTranscript/6",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/d23ccd77-86f8-48b6-928c-3d4d523e5c55/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D15：过程确认两个对象的类型与图层有先行读取依据；整段点到线513.6米正确，球面近似/非航程等限制有工具支持，状态不变。",
+      "clarity": ""
+    },
+    {
+      "blindId": "f3351e45-19bf-4240-af5a-0ef1261f7e81",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [],
+      "evidence": [
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#/visibleTranscript/1",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#/visibleTranscript/3",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#/visibleTranscript/4",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#/visibleTranscript/5",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/judge-input.json#/stateEvidence",
+        ".local/spatial-r14/closeout-blind-chunk-10/f3351e45-19bf-4240-af5a-0ef1261f7e81/model-visible-evidence.json#/observedMessages"
+      ],
+      "reason": "D16：过程确认l-zone图层/类型有先行依据；实际轮廓面积3080511.81平方米与平方公里换算正确，方法说明与工具一致，未修改状态。",
+      "clarity": ""
+    }
+  ]
+}

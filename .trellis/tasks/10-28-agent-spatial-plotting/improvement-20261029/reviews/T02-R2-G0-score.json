@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T02-R2-G0",
+  "strict": "pass",
+  "reason": "水罐符号/坐标/名称/plan正确；过程计数和最终2对象、无来源关联符合执行；原对象未变。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T02-R2-G0/gate/1-checkpoint.json"
+  ]
+}

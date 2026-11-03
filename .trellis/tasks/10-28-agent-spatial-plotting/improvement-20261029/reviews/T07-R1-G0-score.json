@@ -1,0 +1,18 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T07-R1-G0",
+  "strict": "pass",
+  "reason": "完整完成700米预览到固定保存及plan/备注，范围计数正确；曾把ID当名称查询但正常恢复，不扣主任务或事实分。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T07-R1-G0/gate/1-checkpoint.json",
+    "T07-R1-G0/gate/2-checkpoint.json",
+    "T07-R1-G0-browser.json"
+  ]
+}

@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/backend/agent-scenario-validation.md", "reason": "隔离评测和证据评分"}
+{"file": ".trellis/spec/backend/map-annotations.md", "reason": "标绘API和状态"}
+{"file": ".trellis/spec/backend/spatial-analysis.md", "reason": "空间接口和精确结果"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "复用历史评测代码"}

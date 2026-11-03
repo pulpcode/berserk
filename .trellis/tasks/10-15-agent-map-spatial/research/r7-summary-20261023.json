@@ -1,0 +1,164 @@
+{
+  "groups": {
+    "A": {
+      "planned": 6,
+      "reviewed": 6,
+      "notReviewed": 0,
+      "corePass": 5,
+      "processFail": 0,
+      "finalFail": 1,
+      "strictPass": 5,
+      "strictFail": 1,
+      "pending": 0,
+      "incomplete": 0,
+      "strictRate": 0.8333333333333334
+    },
+    "B": {
+      "planned": 6,
+      "reviewed": 6,
+      "notReviewed": 0,
+      "corePass": 6,
+      "processFail": 0,
+      "finalFail": 0,
+      "strictPass": 6,
+      "strictFail": 0,
+      "pending": 0,
+      "incomplete": 0,
+      "strictRate": 1
+    }
+  },
+  "rows": [
+    {
+      "entryId": "D17-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "fail",
+      "process": "pass",
+      "final": "fail",
+      "effects": "pass",
+      "boundary": "fail",
+      "strict": "fail"
+    },
+    {
+      "entryId": "D17-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D21-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D21-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D22-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D22-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D16-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D16-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D02-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D02-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D23-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    },
+    {
+      "entryId": "D23-A",
+      "group": "A",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+(node:77626) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"P05-1-G0","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":4,"usage":{"requests":3,"input":300,"output":30,"afp":0.04125,"unknown":0}}
+{"entry":"P05-1-GS","status":"incomplete","stop":"unauthorized_draft_change","completed":2,"planned":4,"usage":{"requests":6,"input":600,"output":60,"afp":0.0825,"unknown":0}}
+{"entry":"P05-1-GT","status":"incomplete","stop":"unauthorized_draft_change","completed":3,"planned":4,"usage":{"requests":9,"input":900,"output":90,"afp":0.12375,"unknown":0}}
+{"entry":"P05-1-GST","status":"incomplete","stop":"unauthorized_draft_change","completed":4,"planned":4,"usage":{"requests":12,"input":1200,"output":120,"afp":0.16500000000000004,"unknown":0}}
+✔ isolated unauthorized write followed by api still fails only that task (20786.848866ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23979.698664

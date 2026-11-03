@@ -44,6 +44,36 @@ function captureProvider() {
   return calls;
 }
 
+it('accepts explicit thinking through all settings HTTP routes without weakening validation or legacy omission', async () => {
+  const fetch = vi.fn(() => { throw new Error('No provider calls allowed'); }); vi.stubGlobal('fetch', fetch);
+  const { app, lab, dir } = await setup({ provider: 'ark-http-check', model: 'deepseek-v4.1-flash', baseUrl: 'https://ark.cn-beijing.volces.com/api/plan/v3' });
+  let current = lab.modelSettings();
+  expect(current.thinkingExplicit).toBe(false);
+  const legacy = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(current, { contextWindow: 65536 }) });
+  expect(legacy.statusCode).toBe(200); current = legacy.json<ModelSettings>();
+  expect(current.thinkingExplicit).toBe(false);
+  expect(JSON.parse(await readFile(join(dir, 'model-settings.json'), 'utf8'))).not.toHaveProperty('thinkingMode');
+  const enabled = await app.inject({ method: 'PUT', url: '/api/settings/model', payload: update(current, { thinkingMode: 'high' }) });
+  expect(enabled.statusCode).toBe(200); current = enabled.json<ModelSettings>();
+  expect(current).toMatchObject({ thinkingMode: 'high', thinkingExplicit: true });
+  const created = await app.inject({ method: 'POST', url: '/api/settings/models', payload: update(current, { apiKey: 'offline-placeholder', contextWindow: 65536, maxOutputTokens: 8192, thinkingMode: 'off' }) });
+  expect(created.statusCode).toBe(201);
+  const profile = created.json<ModelSettings & { id: string }>();
+  expect(profile).toMatchObject({ thinkingMode: 'off', thinkingExplicit: true });
+  const changed = await app.inject({ method: 'PUT', url: `/api/settings/models/${profile.id}`, payload: update(profile, { thinkingMode: 'high' }) });
+  expect(changed.statusCode).toBe(200);
+  expect(changed.json()).toMatchObject({ thinkingMode: 'high', thinkingExplicit: true });
+  const version = lab.modelSettings().version;
+  for (const route of [{ method: 'PUT' as const, url: '/api/settings/model' }, { method: 'POST' as const, url: '/api/settings/models' }, { method: 'PUT' as const, url: `/api/settings/models/${profile.id}` }]) {
+    for (const extra of [{ thinkingMode: 'medium' }, { thinkingMode: null }, { thinkingMode: true }, { thinkingMode: 'high', unexpectedAuthority: true }]) {
+      const rejected = await app.inject({ ...route, payload: { ...update(lab.modelSettings()), ...extra } });
+      expect(rejected.statusCode).toBe(400);
+      expect(lab.modelSettings().version).toBe(version);
+    }
+  }
+  expect(fetch).not.toHaveBeenCalled();
+});
+
 it('uses the new endpoint, key and model on the next real adapter call and restores them after restart', async () => {
   const calls = captureProvider();
   const { app, lab, dir, config } = await setup({ provider: 'deepseek', baseUrl: 'https://old-model.invalid/v1' });
@@ -69,7 +99,7 @@ it('uses the new endpoint, key and model on the next real adapter call and resto
   expect(calls[1].body).not.toHaveProperty('thinking');
   const path = join(dir, 'model-settings.json');
   expect((await stat(path)).mode & 0o777).toBe(0o600);
-  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 2, version: next.version, apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 });
+  expect(JSON.parse(await readFile(path, 'utf8'))).toMatchObject({ schemaVersion: 4, version: next.version, apiKey: 'new-secret-only', contextWindow: 131072, maxOutputTokens: 8192 });
   await app.close();
   const restarted = await PiLab.create({ ...config, apiKey: 'different-env-key' }); cleanup.push(() => restarted.close());
   expect(restarted.modelSettings()).toEqual(next);

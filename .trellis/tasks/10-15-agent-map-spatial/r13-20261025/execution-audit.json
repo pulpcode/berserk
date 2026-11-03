@@ -1,0 +1,282 @@
+{
+  "date": "2026-10-26",
+  "planCommit": "94fbdbc",
+  "batch": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r13/batch-20261026",
+  "sourceFreezeCheck": "passed separately via sourceFreeze deep equality",
+  "historyAndProductCheck": {
+    "historicalFiles": 4532,
+    "productFiles": 7,
+    "unchanged": true
+  },
+  "rawResponsesVerified": 46,
+  "perTrialEvidenceHashesVerified": 421,
+  "errors": [],
+  "protocolTransportPassed": true,
+  "harnessSemanticIssue": "F04-E0 optional next-step offer misclassified as blocking clarification; full task pending, not model failure",
+  "totals": {
+    "requests": 46,
+    "input": 897796,
+    "output": 11830,
+    "unknown": 0
+  },
+  "groups": {
+    "E0": {
+      "requests": 22,
+      "input": 413505,
+      "output": 4002,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "toolCalls": 16,
+      "toolErrors": 0,
+      "elapsedMs": 41792,
+      "tasksWithSpatialSkillBody": 2,
+      "tasksWithMapSkillBody": 0
+    },
+    "E1": {
+      "requests": 24,
+      "input": 484291,
+      "output": 7828,
+      "reasoningTokens": 3649,
+      "responsesWithThinking": 23,
+      "toolCalls": 19,
+      "toolErrors": 0,
+      "elapsedMs": 58944,
+      "tasksWithSpatialSkillBody": 4,
+      "tasksWithMapSkillBody": 0
+    }
+  },
+  "pairs": [
+    {
+      "caseId": "F01",
+      "equalInitialBusiness": true,
+      "independentSessions": true
+    },
+    {
+      "caseId": "F02",
+      "equalInitialBusiness": true,
+      "independentSessions": true
+    },
+    {
+      "caseId": "F03",
+      "equalInitialBusiness": true,
+      "independentSessions": true
+    },
+    {
+      "caseId": "F04",
+      "equalInitialBusiness": true,
+      "independentSessions": true
+    },
+    {
+      "caseId": "F05",
+      "equalInitialBusiness": true,
+      "independentSessions": true
+    }
+  ],
+  "taskMetrics": [
+    {
+      "id": "F01-E0",
+      "group": "E0",
+      "caseId": "F01",
+      "status": "recorded",
+      "requests": 3,
+      "input": 52352,
+      "output": 546,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "thinkingHistoryMessagesObserved": 0,
+      "toolCalls": 2,
+      "toolErrors": 0,
+      "elapsedMs": 5638,
+      "skillReadIds": [],
+      "spatialSkillBodyDelivered": false,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": false
+    },
+    {
+      "id": "F01-E1",
+      "group": "E1",
+      "caseId": "F01",
+      "status": "recorded",
+      "requests": 3,
+      "input": 52705,
+      "output": 945,
+      "reasoningTokens": 416,
+      "responsesWithThinking": 3,
+      "thinkingHistoryMessagesObserved": 3,
+      "toolCalls": 2,
+      "toolErrors": 0,
+      "elapsedMs": 7069,
+      "skillReadIds": [],
+      "spatialSkillBodyDelivered": false,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": false
+    },
+    {
+      "id": "F02-E1",
+      "group": "E1",
+      "caseId": "F02",
+      "status": "recorded",
+      "requests": 8,
+      "input": 172568,
+      "output": 2891,
+      "reasoningTokens": 1439,
+      "responsesWithThinking": 8,
+      "thinkingHistoryMessagesObserved": 20,
+      "toolCalls": 6,
+      "toolErrors": 0,
+      "elapsedMs": 21890,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    },
+    {
+      "id": "F02-E0",
+      "group": "E0",
+      "caseId": "F02",
+      "status": "recorded",
+      "requests": 8,
+      "input": 164502,
+      "output": 1215,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "thinkingHistoryMessagesObserved": 0,
+      "toolCalls": 5,
+      "toolErrors": 0,
+      "elapsedMs": 16776,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    },
+    {
+      "id": "F03-E0",
+      "group": "E0",
+      "caseId": "F03",
+      "status": "recorded",
+      "requests": 5,
+      "input": 92920,
+      "output": 649,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "thinkingHistoryMessagesObserved": 0,
+      "toolCalls": 4,
+      "toolErrors": 0,
+      "elapsedMs": 6968,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    },
+    {
+      "id": "F03-E1",
+      "group": "E1",
+      "caseId": "F03",
+      "status": "recorded",
+      "requests": 4,
+      "input": 76478,
+      "output": 1182,
+      "reasoningTokens": 527,
+      "responsesWithThinking": 4,
+      "thinkingHistoryMessagesObserved": 6,
+      "toolCalls": 3,
+      "toolErrors": 0,
+      "elapsedMs": 8629,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    },
+    {
+      "id": "F04-E1",
+      "group": "E1",
+      "caseId": "F04",
+      "status": "recorded",
+      "requests": 6,
+      "input": 123219,
+      "output": 1466,
+      "reasoningTokens": 636,
+      "responsesWithThinking": 5,
+      "thinkingHistoryMessagesObserved": 11,
+      "toolCalls": 5,
+      "toolErrors": 0,
+      "elapsedMs": 12387,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    },
+    {
+      "id": "F04-E0",
+      "group": "E0",
+      "caseId": "F04",
+      "status": "waiting_user",
+      "requests": 3,
+      "input": 50978,
+      "output": 521,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "thinkingHistoryMessagesObserved": 0,
+      "toolCalls": 2,
+      "toolErrors": 0,
+      "elapsedMs": 5195,
+      "skillReadIds": [],
+      "spatialSkillBodyDelivered": false,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": false
+    },
+    {
+      "id": "F05-E0",
+      "group": "E0",
+      "caseId": "F05",
+      "status": "recorded",
+      "requests": 3,
+      "input": 52753,
+      "output": 1071,
+      "reasoningTokens": 0,
+      "responsesWithThinking": 0,
+      "thinkingHistoryMessagesObserved": 0,
+      "toolCalls": 3,
+      "toolErrors": 0,
+      "elapsedMs": 7215,
+      "skillReadIds": [],
+      "spatialSkillBodyDelivered": false,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": false
+    },
+    {
+      "id": "F05-E1",
+      "group": "E1",
+      "caseId": "F05",
+      "status": "recorded",
+      "requests": 3,
+      "input": 59321,
+      "output": 1344,
+      "reasoningTokens": 631,
+      "responsesWithThinking": 3,
+      "thinkingHistoryMessagesObserved": 3,
+      "toolCalls": 3,
+      "toolErrors": 0,
+      "elapsedMs": 8969,
+      "skillReadIds": [
+        "spatial-analysis"
+      ],
+      "spatialSkillBodyDelivered": true,
+      "mapSkillBodyDelivered": false,
+      "spatialSkillReadBeforeFirstCompute": true
+    }
+  ],
+  "automaticRetry": false,
+  "additionalEvaluations": 0,
+  "reasoningTokensIncludedInOutput": true
+}

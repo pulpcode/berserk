@@ -1,0 +1,118 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V03",
+  "caseId": "G05",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "source->draft"
+  ],
+  "reported_pairs": [
+    "draft->draft"
+  ],
+  "missing_pairs": [
+    "source->draft"
+  ],
+  "first_discovered_data_source": "draft",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft",
+  "default_draft_end": true,
+  "default_source_end": false,
+  "other_source_optional": true,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": null,
+  "skill_reads": [
+    {
+      "id": "map-annotations",
+      "version": "1",
+      "reported_hash": "af61230319540d0e5349fb7b5f5438f3c66149754558b5778c7e572fff9de374",
+      "actual_body_sha256": "af61230319540d0e5349fb7b5f5438f3c66149754558b5778c7e572fff9de374",
+      "hash_matches": true,
+      "message_id": "975ecafa",
+      "tool_call_id": "call_00_dx8aq3jsz2tnumhw7dao1vhr"
+    },
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "cdb2dc62",
+      "tool_call_id": "call_01_8st80cl8tbzup8q490inhzoo"
+    }
+  ],
+  "skills": [
+    {
+      "id": "map-annotations",
+      "bodySha256": "af61230319540d0e5349fb7b5f5438f3c66149754558b5778c7e572fff9de374"
+    },
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "missing_conditional_pairs",
+    "default_draft_end"
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "draft_hash_after": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "observations": [
+    "资源候选来源未知，没有实际追问及用户回复，只按草稿候选结束；末尾承认来源资源是另一组，却留待另查，未完成 source->draft 条件结果。",
+    "草稿 resources 全部 4 点正确参与，联络线被排除；内部资源甲/乙 2 点、外部松浦丙/丁、边界 0 与 oracle 一致。",
+    "“结果不区分贴近边界和明确出界”措辞含混：本工具确实不提供贴近距离分类，已有明确内/边界/外分类没有被改写；不据此硬判事实错误。"
+  ],
+  "evidence": [
+    {
+      "message_id": "088fa822",
+      "quote": "以上按“本会话草稿中的资源点对象”理解；如果你指的是态势来源系统里登记的资源对象，那是另一组数据，需要另行查询核对",
+      "basis": "只有原始 user 消息，interactions=[]；实际 classify_points 仅 g05-d-p01..04 -> g05-d-region。仍须来源六点对草稿面条件答案：资源甲、资源乙、杉浦丙、杉浦丁，共4。",
+      "category": "scope_and_required_members_omission"
+    }
+  ],
+  "default_source_boundary": false,
+  "optional_boundary_offer": false
+}

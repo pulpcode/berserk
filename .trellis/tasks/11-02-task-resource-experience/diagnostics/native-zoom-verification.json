@@ -1,0 +1,14 @@
+{
+  "kind": "executed assertion summary, not captured raw wire",
+  "commandLog": "b3-native-zoom-final-e2e.log",
+  "browser": "isolated headed bundled Chromium",
+  "mechanism": "chrome.tabs.setZoom/getZoom",
+  "verifiedNativeFactor": 1.25,
+  "verifiedDevicePixelRatioChanged": true,
+  "viewport": {
+    "width": 1440,
+    "height": 960
+  },
+  "realModelCalls": 0,
+  "screenshot": "../screenshots/model-settings-native-zoom-125.png"
+}

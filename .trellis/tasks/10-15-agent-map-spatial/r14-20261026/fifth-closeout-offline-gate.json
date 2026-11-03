@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "freezeHash": "7ce839e647d74171a0f1df99bf49c7a4a57309095e7af53d9dfb6b4cf63445b4",
+  "evidence": [
+    "fifth-closeout-check.json",
+    "fifth-closeout-check.md",
+    "fifth-closeout-check.md",
+    "fifth-closeout-independent-tests.log",
+    "fifth-closeout-independent-clarification.log",
+    "fifth-closeout-independent-types.log",
+    "fifth-closeout-independent-lint.log"
+  ],
+  "scope": "Original final11, cumulative609 requests retained, no retries"
+}

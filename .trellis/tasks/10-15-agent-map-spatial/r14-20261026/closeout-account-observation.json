@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-26T13:57:00Z",
+  "sourceEvidence": "Logged-in CUA Agent Plan subscription UI, read-only; no billing changes",
+  "observedOverageEnabled": null,
+  "usedAfp": {
+    "fiveHour": 172.559,
+    "week": 293.435,
+    "month": 1750.191
+  },
+  "remainingAfp": {
+    "fiveHour": 9827.441,
+    "week": 34706.565,
+    "month": 98249.809
+  },
+  "externalUseReserveAfp": 1000,
+  "sharedUsePolicy": "reserved_other_usage",
+  "previousLedgerAfpEstimate": 172.56015,
+  "note": "Raw current balance; with inherited ledger do not deduct historical consumption twice or replenish original authorization."
+}

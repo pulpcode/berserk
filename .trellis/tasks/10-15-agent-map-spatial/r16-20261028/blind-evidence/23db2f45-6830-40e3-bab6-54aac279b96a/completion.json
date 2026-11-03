@@ -1,0 +1,9 @@
+{
+  "status": "waiting_user",
+  "completedUserTurns": 1,
+  "plannedUserTurns": 2,
+  "sentOriginalUserTurns": 2,
+  "additionalClarificationTurns": 0,
+  "unissuedOriginalUserTurns": 0,
+  "stop": "waiting_user_unmapped_plain_question"
+}

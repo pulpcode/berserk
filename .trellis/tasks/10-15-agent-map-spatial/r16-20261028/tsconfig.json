@@ -1,0 +1,1 @@
+{"extends":"../../../../experiments/harness-lab/tsconfig.json","include":["*.ts"],"compilerOptions":{"types":[],"typeRoots":["../../../../experiments/harness-lab/node_modules/@types"]}}

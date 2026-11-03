@@ -1,0 +1,63 @@
+(node:61179) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 24 frozen tasks, six historical, 144 balanced independent slots and exact prompt extraction (4.879809ms)
+✔ only D05/D06 scripted choices; anticipated gaps and optional invitations do not stop (5.106283ms)
+▶ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries
+  ✔ D01 (10184.806221ms)
+  ✔ D02 (9171.062143ms)
+  ✔ D03 (9464.27496ms)
+  ✔ D04 (9257.973745ms)
+  ✔ D05 (9432.258726ms)
+  ✔ D06 (9065.963083ms)
+  ✔ D07 (9209.223471ms)
+  ✔ D08 (10021.391747ms)
+  ✔ D09 (10367.645693ms)
+  ✔ D10 (9858.300781ms)
+  ✔ D11 (11279.777897ms)
+  ✔ D12 (9474.594252ms)
+  ✔ D13 (9011.246419ms)
+  ✔ D14 (9324.326901ms)
+  ✔ D15 (9475.502421ms)
+  ✔ D16 (9563.90367ms)
+  ✔ D17 (11422.373382ms)
+  ✔ D18 (10146.635536ms)
+  ✔ D19 (15341.099164ms)
+  ✔ D20 (12672.883826ms)
+  ✔ D21 (9341.034828ms)
+  ✔ D22 (10279.852646ms)
+  ✔ D23 (10450.953067ms)
+  ✔ D24 (9444.761408ms)
+✔ all 24 real fixture preparations agree across A/B/C; source updates and write boundaries (246803.508815ms)
+✔ source customizer leaves historical source data byte-equivalent (0.421242ms)
+✔ D17 preview evidence follows user turns, allows corrections and excludes reads (0.925757ms)
+✔ D18 preview evidence follows user turns, allows corrections and excludes reads (0.469512ms)
+(node:61180) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original D03-A complete public response: section label and both conditional invitations do not stop (11.336568ms)
+✔ all eight original completed responses retain no blocking request; files and original stop remain immutable (25.474056ms)
+✔ earlier R13 actual optional preview invitation remains nonblocking (1.421858ms)
+✔ conditional correction and future follow-up wording is classified by clause role, not one fixed sentence (0.934715ms)
+✔ partial results and conditional packaging never hide missing required input or authority (1.036973ms)
+✔ explicit current scope confirmation stays unnecessary despite mandatory wording; real unknown inputs still stop (0.808142ms)
+✔ preview follow-up can be optional, but a requested save cannot be postponed as optional (0.909945ms)
+✔ flow control is independent of tool-success markers and does not claim completion or correctness (1.225714ms)
+✔ assistant offers of additional work do not request missing current input (0.748863ms)
+✔ first closeout D07-A original response keeps the optional offer and original false stop (3.73378ms)
+✔ D06 short choice request uses declared candidate context without treating descriptive provenance as authority (2.473997ms)
+(node:61181) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ complete historical D09-1-A response permits next planned user turn without changing evidence (16.127299ms)
+✔ complete historical D10-1-A response permits next planned user turn without changing evidence (3.08242ms)
+✔ complete historical D10-1-B response permits next planned user turn without changing evidence (5.729286ms)
+✔ offer recognition is independent of operation and object words, question or closing invitation (1.346211ms)
+✔ predeclared source/layer choices take priority over the same offer grammar (3.398391ms)
+✔ required facts, authority, unresolved preceding inputs and current save stay nonoptional (0.923231ms)
+✔ D12-C actual unauthorized draft save remains a critical stop regardless of optional answer wording (3.972891ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 250818.042437

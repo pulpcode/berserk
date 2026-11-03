@@ -1,0 +1,11 @@
+{
+  "purpose": "构造正例，与真实历史原句分开；只校准明确审阅到分数的转换，不表示模型生成效果。",
+  "cases": [
+    {"id":"E01-time-positive","kind":"constructed","evidence":"固定标绘版本创建于10:10:11；此次查询于10:10:16。","quote":"固定版本创建时间为10:10:11，本次查询时间为10:10:16。","verdict":"supported"},
+    {"id":"E02-state-positive","kind":"constructed","evidence":"未收到放行回执。车辆乙有当前有效的不可用记录。车辆丙仅有已过期可用证据。车辆丁当前有效的可用与不可用报告冲突。","quote":"放行是否完成尚未确认；乙不可用；丙当前可用性未知；丁状态冲突，保留双方报告。","verdict":"supported"},
+    {"id":"E03-member-positive","kind":"constructed","evidence":"舟组成员完整，为X、Y、Z三个实体，数量含义entities，范围与时间一致；X有实际位置，Y和Z无位置。","quote":"按完整成员名单计3艘；只有X可定位，Y和Z的位置待核实。","verdict":"supported"},
+    {"id":"E04-scope-positive","kind":"constructed","evidence":"车辆组scope为北岸清册，舟艇组scope为港内舟组。","quote":"车辆数量对应北岸清册，舟艇数量对应港内舟组，分别列示。","verdict":"supported"},
+    {"id":"E05-relation-positive","kind":"constructed","evidence":"平台有资源引用，只证明related；当前没有分配证据。","quote":"该资源与任务相关，但现有引用不能证明已分配，仍需分配依据。","verdict":"supported"},
+    {"id":"E06-set-positive","kind":"constructed","evidence":"全部为消防车，单位辆；已分配4辆，可用3辆、不可用1辆，集合有包含关系。","quote":"这些数量单位都是辆，但筛选集合不同且有重叠，不能相加。","verdict":"supported"}
+  ]
+}

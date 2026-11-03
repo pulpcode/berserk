@@ -1,0 +1,321 @@
+{
+  "kind": "offline_protocol_replay",
+  "realProviderRequests": 0,
+  "semanticScoresChanged": false,
+  "warning": "Text heuristic only; no model rerun or rescoring. needs_review is unresolved; finished does not prove completion.",
+  "counts": {
+    "finished": 23,
+    "needs_review": 5,
+    "needs_reply": 2
+  },
+  "rows": [
+    {
+      "id": "C01-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C01-1/review.json",
+      "sourceSha256": "f8ec97ebed37b3b8af7161c5aa2eaced562202b4251ace4cdbfa6394984b1bd1",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C01-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C01-2/review.json",
+      "sourceSha256": "fbdae9853833bec506be8ef30b9aa6f0da9e3c6f294bc861254c8467cdcd9f42",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C02-1",
+      "originalStatus": "waiting_user",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C02-1/review.json",
+      "sourceSha256": "07d4b11057938198ffbfeed29eda0ab7120779c5e68741942efe50a112183de3",
+      "ending": {
+        "kind": "needs_review",
+        "reason": "question_scope_uncertain",
+        "question": "- 需要发布或供其他席位查看时，请明确告知。"
+      }
+    },
+    {
+      "id": "C02-2",
+      "originalStatus": "waiting_user",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C02-2/review.json",
+      "sourceSha256": "561e8d2f07f5892e7c87ea372cc9e2eabe27837ff9aa2450cc4dbc7484f8edc1",
+      "ending": {
+        "kind": "needs_review",
+        "reason": "question_scope_uncertain",
+        "question": "如该数值来自其他坐标系（如某种本地平面坐标或 GCJ-02），位置会有偏差，请告知我可调整。"
+      }
+    },
+    {
+      "id": "C03-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C03-1/review.json",
+      "sourceSha256": "8c0df0c77b4bf0f64891dd75c101283817d1286aa350445c2bfe0a21c168cde9",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C03-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C03-2/review.json",
+      "sourceSha256": "ea09e8c0626e1f15d70f93db86baec8aa7a8894b5907c6e7629f1e5a5a89f231",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C04-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C04-1/review.json",
+      "sourceSha256": "f4220dc4647b963254fc5745cb74a03ba73e9bea375f88bd88097223fcaa1079",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C04-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C04-2/review.json",
+      "sourceSha256": "5c50d51c029700174041affedcb57054c9c108ec0446dee36e05777e060bebd6",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C05-1",
+      "originalStatus": "waiting_user",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C05-1/review.json",
+      "sourceSha256": "b52e99d6f204cb0e253fa34c88f9bce61e30338f9694be49acb80e5245a459a9",
+      "ending": {
+        "kind": "needs_review",
+        "reason": "question_scope_uncertain",
+        "question": "3. 如果你实际想旋转的是其他对象，请指明对象；"
+      }
+    },
+    {
+      "id": "C05-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C05-2/review.json",
+      "sourceSha256": "9f44c877b6b18be9c0be35895690ba939729db8151f073a2beb36ab14806d54b",
+      "ending": {
+        "kind": "needs_review",
+        "reason": "question_scope_uncertain",
+        "question": "可选的替代做法（请你确认后我再执行）："
+      }
+    },
+    {
+      "id": "C06-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C06-1/review.json",
+      "sourceSha256": "8cb116ec638109f1263b13c25e7e47ae8a17e928ae57335e9eea41e556a1c31a",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C06-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C06-2/review.json",
+      "sourceSha256": "f5304c93cc97fff4ba0b1bb64a4126b5045039426ebcbb36263a1a6ea1e165ec",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C07-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C07-1/review.json",
+      "sourceSha256": "db8975762a289b80c371ff38f8da1ee07b802dff4bd9e536139da62ecb2d6de0",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C07-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C07-2/review.json",
+      "sourceSha256": "8cc42e827bc748d855d676cea4157adbd3d32aa6cdb5782fbc08483f637b5968",
+      "ending": {
+        "kind": "needs_review",
+        "reason": "question_scope_uncertain",
+        "question": "如你原本指的是两个「冲锋舟 1」，或只按名称指代而实际想改的是 decoy，请告诉我，我再调整。"
+      }
+    },
+    {
+      "id": "C08-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C08-1/review.json",
+      "sourceSha256": "6d190eee4e21a433a1a1f59572fdbc67c222fbb09491f987d492a451dcf4e778",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C08-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C08-2/review.json",
+      "sourceSha256": "46288a4ea2dcc2703a157fdcbe1b5ac3a55f1ca57b3ce2459a60b282f000c772",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C09-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C09-1/review.json",
+      "sourceSha256": "0979031445517f09a1cfc73da8757cae87cbc08f86c1b38e1adbc30a0d097e79",
+      "ending": {
+        "kind": "needs_reply",
+        "reason": "explicit_current_dependency",
+        "question": "- 未读取到的内容不作为“无”：本次未查询 changes（变化记录）及特情报告，若需确认到场还需现场记录类信息（observation 角色或情报报告）。"
+      }
+    },
+    {
+      "id": "C09-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C09-2/review.json",
+      "sourceSha256": "f0aa0df84c39a3589abf86dc945922015ae5cb7bc52d48e49e81832f3d2b48e4",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C10-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C10-1/review.json",
+      "sourceSha256": "f82fac0aa6ed77145ac096d255660b8409801106e31cc8ace850e7a05774cec6",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "C10-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/C10-2/review.json",
+      "sourceSha256": "fdbd0a740a219678125419845f230a269351f3af40e00541ba28336601d5bd2d",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F01-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F01-1/review.json",
+      "sourceSha256": "f8681bf7e188210107fcb9b8ac3afa1f393045ea353f154e51f2c7c831edd59b",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F01-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F01-2/review.json",
+      "sourceSha256": "051ac93bbdfbd5c40a7d6419d4191eb4eb962f057089240885f55cb66c52badf",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F02-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F02-1/review.json",
+      "sourceSha256": "79d4e693f2833f04b9ef05ffafc73c671b29382153ae70d3e32d3cf709a048ee",
+      "ending": {
+        "kind": "needs_reply",
+        "reason": "current_task_question",
+        "question": "2. 如果你预期有对象位于范围内，请先确认候选范围：当前仅筛选了草稿“资源”图层。"
+      }
+    },
+    {
+      "id": "F02-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F02-2/review.json",
+      "sourceSha256": "cf61ab01b5a82f8776f599c6978405cdb52f373e94509233bc1aebbdd8903fec",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F03-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F03-1/review.json",
+      "sourceSha256": "76a443387327944dab190777b4bdab889876745685d994010791853253749ac1",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F03-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F03-2/review.json",
+      "sourceSha256": "1a74300448ed9f122bca00d843704ff580574d6f81381df632212a1e46c17fea",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F04-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F04-1/review.json",
+      "sourceSha256": "47009a8a509826a73db6b913db7743e3bf54c5375b64fac54e9f6a118d1fdf55",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F04-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F04-2/review.json",
+      "sourceSha256": "6a667a007d38fdffa0e234ae87e6d339a05f00edc8806c5cf505aaae8ab8eef7",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F05-1",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F05-1/review.json",
+      "sourceSha256": "e9b3e7d6d346f03377494b8c0f23edd63a2eedb1a096297307e44772a00bfed8",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    },
+    {
+      "id": "F05-2",
+      "originalStatus": "recorded",
+      "source": ".local/agent-plotting-integration/live-20261027-executable/F05-2/review.json",
+      "sourceSha256": "85dd89f8ca3a63e1f7a5c034a3011987a1192c381b65eba4bb8d584904e492f5",
+      "ending": {
+        "kind": "finished",
+        "reason": "no_blocking_request_detected"
+      }
+    }
+  ],
+  "sourcePathsRelativeTo": "repository_root"
+}

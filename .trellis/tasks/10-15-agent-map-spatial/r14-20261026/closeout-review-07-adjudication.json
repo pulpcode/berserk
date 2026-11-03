@@ -1,0 +1,15 @@
+{
+  "reviewer": "root",
+  "mode": "公开证据复核，已知双方结论，不宣称额外盲审",
+  "selected": "closeout-review-07-adjudicated.json",
+  "changes": [
+    "41377763最终作者归属错误改fail；没有凭此判实际写入",
+    "25720b3a未发保存轮，effects待定",
+    "processFacts延用初评对中间过程声明的口径；最终操作说明仍在finalFacts核对"
+  ],
+  "strict": {
+    "pass": 13,
+    "fail": 1,
+    "pending": 1
+  }
+}

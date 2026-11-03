@@ -1,0 +1,19 @@
+{
+  "businessTrials": 6,
+  "businessRequests": 17,
+  "input": 437068,
+  "output": 13518,
+  "withSmoke": {
+    "requests": 21,
+    "input": 438584,
+    "output": 13699
+  },
+  "rawEvidenceHashesVerified": 206,
+  "freezeUnchangedDuringExecution": true,
+  "frozenPlanPreserved": "records/executed-plan.md",
+  "postRunDocumentationChange": "plan header updated with completion and report link after final freeze",
+  "credentialsAbsentFromTaskArtifacts": true,
+  "productCodeChanged": false,
+  "automaticRetries": false,
+  "additionalTrials": false
+}

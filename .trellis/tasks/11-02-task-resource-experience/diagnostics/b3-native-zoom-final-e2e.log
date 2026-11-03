@@ -1,0 +1,11 @@
+(node:15578) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:15587) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15587) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✓  1 tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls (16.6s)
+
+  1 passed (22.0s)

@@ -1,0 +1,13 @@
+{
+  "checkpointHash": "8ae565dbf064f138ff867085fc771f8c90246c9a079f0d2a05201129e6edb86b",
+  "reviewer": "integration_review",
+  "reason": "首4原题轮次3/3/1/1与实际消息、gate发送一致，P02-A真实AskUser只回复一次；两S04原700几何正确保存，无重复发题或漏后续。24请求全部200且有用量，ledger/attempts一致、同模型enabled/high、原始tool schema一致。P02-B提前保存普通点为已保留的业务失败，不是流程故障。允许计划内剩余20项，不追加或重试。",
+  "pass": true,
+  "requests": 24,
+  "inputTokens": 536815,
+  "outputTokens": 6490,
+  "unknownUsage": 0,
+  "mainPass": 3,
+  "strictPass": 3,
+  "complete": 4
+}

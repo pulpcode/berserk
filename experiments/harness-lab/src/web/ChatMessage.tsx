@@ -9,6 +9,8 @@ import { MapLink, EvidenceMapLinks } from './situation/MapContext';
 import { requestMapEvidence } from './situation/evidence';
 import { AnnotationHistoryLinks } from './situation/MapContext';
 import { SelectionHistory } from './ComposerReferences';
+import { ResourceResultCard } from './ResourceResultCard';
+import { resourceResultValid } from '../contracts/resource-results';
 const MarkdownEvidence = createContext<PublicMessage[]>([]);
 function EvidenceLink({href,children}:{href?:string;children?:ReactNode}) {
   const evidence=useContext(MarkdownEvidence);
@@ -29,7 +31,7 @@ export function Message({ message, active, workspaceId, focusKey, focusTransfers
   const ToolIcon = message.toolName === 'bash' ? Terminal : message.toolName === 'write' || message.toolName === 'edit' ? PencilLine : Wrench;
   if (message.role === 'tool') return <details ref={focusRef as React.RefObject<HTMLDetailsElement>} className={`tool-result${message.isError && !cancelled ? ' failed' : ''}`}>
     <summary><ToolIcon size={15} aria-hidden="true" /><span>{message.resultMissing ? '未收到执行结果' : cancelled ? '命令已停止' : message.text ? (message.isError ? `${action}失败` : `已${action}`) : active ? `正在${action}` : `${action}未完成`}</span><ChevronDown size={14} aria-hidden="true" /></summary>
-    <EvidenceMapLinks messages={[message]}/><div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
+    {!message.isError&&!message.resultMissing&&message.toolName==='task_resource_query'&&resourceResultValid(message.resourceResult)&&<ResourceResultCard key={message.resourceResult.resultRef} result={message.resourceResult}/>}<EvidenceMapLinks messages={[message]}/><div className="tool-body"><span className="tool-label">{message.toolName}</span><pre>{message.text || (active ? '等待返回内容…' : '没有可用的返回内容。')}</pre></div>
   </details>;
   return <article ref={focusRef} className={`message ${message.role}`} aria-label={message.role === 'user' ? '你的消息' : 'Axon 的回复'}>
     <div className="message-content">{message.role === 'user' ? <><p>{message.text}</p><SelectionHistory selections={message.selections} /><AnnotationHistoryLinks message={message}/><EvidenceMapLinks messages={[message]}/>{message.attachments?.length ? <ul className="message-attachments" aria-label="本条消息引用的文件">{message.attachments.map((file, index) => <HistoricalFile key={`${workspaceId}:${file.path}:${file.hash}:${index}`} file={file} workspaceId={workspaceId} />)}</ul> : null}</> : <MarkdownEvidence.Provider value={evidence}><Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{message.text}</Markdown>{finalAnswer && <EvidenceMapLinks messages={requestMapEvidence(message,evidence)}/>}</MarkdownEvidence.Provider>}</div>

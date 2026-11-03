@@ -1,0 +1,21 @@
+(node:36620) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ actual D12-C draft violation is task-local only under the explicit amendment and unchanged ownership/boundaries (4.83858ms)
+✔ wrong D17/D18 saves and D19 edits remain failures scoped to the owned draft only (4.191868ms)
+✔ owned draft title content is distinct from inconsistent metadata or non-writable ownership (4.78125ms)
+✔ third segment binds 3764 prior files, exact remaining 110, unchanged data and single inherited 159-request ledger (1888.653052ms)
+{"entry":"D12-1-A","status":"incomplete","stop":"unauthorized_draft_change","completed":1,"planned":2,"usage":{"requests":163,"input":3033168,"output":61091,"afp":873.5862999999998,"unknown":0}}
+{"entry":"D12-1-B","status":"recorded","completed":2,"planned":2,"usage":{"requests":165,"input":3033368,"output":61111,"afp":873.6137999999997,"unknown":0}}
+✔ native third continuation isolated-draft: no replay, exact charge inheritance and correct stop scope (19942.268278ms)
+{"entry":"D12-1-A","status":"incomplete","stop":"unauthorized_source_change","completed":1,"planned":2,"usage":{"requests":163,"input":3033168,"output":61091,"afp":873.5862999999998,"unknown":0}}
+✔ native third continuation draft-and-source: no replay, exact charge inheritance and correct stop scope (17260.105367ms)
+{"entry":"D12-1-A","status":"waiting_user","stop":"waiting_user_unmapped_plain_question","completed":1,"planned":2,"usage":{"requests":163,"input":3033168,"output":61091,"afp":873.5862999999998,"unknown":0}}
+✔ native third continuation draft-and-clarification: no replay, exact charge inheritance and correct stop scope (17815.387569ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60685.337797

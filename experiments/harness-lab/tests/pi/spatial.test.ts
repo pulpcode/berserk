@@ -5,7 +5,8 @@ import { join } from 'node:path';
 import { afterEach,expect,it,vi } from 'vitest';
 import { PiLab } from '../../src/pi/lab.js';
 import { fakeRuntime,testConfig } from './fake-runtime.js';
-import type { SpatialInput,SpatialResult } from '../../src/contracts/spatial.js';
+import { projectSpatialResult, spatialModelFormat, type SpatialInput, type SpatialResult } from '../../src/contracts/spatial.js';
+import * as spatialResults from '../../src/pi/spatial-results.js';
 import { SpatialAnalysisService } from '../../src/spatial/service.js';
 import { annotationActionId } from '../../src/pi/annotation-tools.js';
 const fault=vi.hoisted(()=>({mode:''}));
@@ -17,7 +18,7 @@ vi.mock('@earendil-works/pi-coding-agent',async original=>{
   }};
 });
 const clean:Array<()=>Promise<unknown>>=[];
-afterEach(async()=>{fault.mode='';for(const fn of clean.splice(0).reverse()) await fn();});
+afterEach(async()=>{fault.mode='';vi.restoreAllMocks();for(const fn of clean.splice(0).reverse()) await fn();});
 async function setup(reply:Parameters<typeof fakeRuntime>[1],overrides:Partial<ReturnType<typeof testConfig>>={}) {
   const dir=await mkdtemp(join(tmpdir(),'spatial-native-'));clean.push(()=>rm(dir,{recursive:true,force:true}));
   const config=testConfig(dir,{seatId:'alpha',testSeats:[{id:'alpha',name:'甲'},{id:'bravo',name:'乙'}],...overrides});
@@ -70,6 +71,40 @@ it('rejects altered native result details as downstream authority',async()=>{
   expect(message.spatialResult).toBeNull();
   expect(message.text).not.toContain('altered');expect(message.text).not.toContain('中心');
   expect(()=>s.lab.start(s.session.id,'继续引用该结果',{},'alpha')).toThrow('完整性校验');
+});
+
+it.each([
+  {label:'save only',changes:undefined},
+  {label:'information role',changes:{informationRole:'plan' as const}},
+  {label:'note',changes:{note:'待现场核实'}},
+])('saves the fixed geometry and completes $label through existing tools without duplicate objects',async({changes})=>{
+  let resultRef='';
+  const s=await setup((context,index)=>{
+    if(index===0)return {tools:[{name:'spatial_analyze',arguments:{operation:'buffer',input:s.input,distanceM:250}},{name:'annotation_read',arguments:{mode:'draft'}}]};
+    if(index===1){resultRef=lastResult(context).resultRef;return {tools:[{name:'annotation_from_analysis',arguments:{resultRef,layerId:'points',objectId:'saved-range',name:'固定范围'}}]};}
+    if(index===2 && changes)return {tools:[{name:'annotation_action',arguments:{action:'apply',operations:[{op:'update_object',objectId:'saved-range',changes}]}}]};
+    return {text:'已完成明确要求。'};
+  });
+  const taskId=s.lab.workspaces.get(s.session.workspaceId,'alpha').taskSpaceId!;
+  const before=s.lab.annotations!.version(s.actor,taskId,s.ref).document;
+  // Script only provider choices; the native loop, saved revisions and object updates are real.
+  await s.lab.start(s.session.id,`保存固定范围${changes?.informationRole?'并标为拟定方案':changes?.note?'并添加备注“待现场核实”':''}`,{},'alpha').run(()=>{});
+  const snapshot=s.lab.get(s.session.id,'alpha'),tools=snapshot.messages.filter(m=>m.role==='tool');
+  expect(snapshot.lastResult?.status).toBe('succeeded');
+  expect(tools.every(m=>!m.isError)).toBe(true);
+  expect(tools.map(m=>m.toolName)).toEqual(['spatial_analyze','annotation_read','annotation_from_analysis',...(changes?['annotation_action']:[])]);
+  const binding=s.lab.annotations!.binding(s.actor,s.session.id),revision=changes?3:2;
+  expect(binding.draft?.headRevision).toBe(revision);
+  const after=s.lab.annotations!.version(s.actor,taskId,tools.at(-1)!.annotationResult!.receipt.ref!).document;
+  const feature=after.layers[0].features.find(f=>f.objectId==='saved-range')!;
+  expect(after.layers[0].features).toHaveLength(before.layers[0].features.length+1);
+  expect(after.layers[0].features.filter(f=>f.objectId!=='saved-range')).toEqual(before.layers[0].features);
+  expect(feature).toMatchObject({name:'固定范围',geometry:tools[0].spatialResult!.geometry,...changes});
+  if(!changes?.informationRole)expect(feature).not.toHaveProperty('informationRole');
+  if(!changes?.note)expect(feature).not.toHaveProperty('note');
+  expect(feature).not.toHaveProperty('style');
+  expect(tools[2].annotationResult?.receipt.fromAnalysis?.resultRef).toBe(resultRef);
+  expect(s.lab.annotations!.list(s.actor,taskId).publications.items).toEqual([]);
 });
 it('records uncertain exact-save effects and blocks a second same-output write',async()=>{
   const s=await setup((context,index)=>index===0?{tools:[{name:'spatial_analyze',arguments:{operation:'buffer',input:s.input,distanceM:100}},{name:'annotation_read',arguments:{mode:'draft'}}]}:index===1?{tools:[{name:'annotation_from_analysis',arguments:{resultRef:lastResult(context).resultRef,layerId:'points',objectId:'range',name:'范围'}},{name:'annotation_action',arguments:{action:'apply',operations:[{op:'rename_set',title:'不应写入'}]}}]}:{text:'需核对回执'});fault.mode='save';
@@ -147,6 +182,8 @@ it('delivers result-selection ambiguity and recovers with the same fixed geometr
 });
 
 it('retains mixed v1/v2 native history and reuses the fixed classification after restart without recomputation',async()=>{
+  // Write the historical envelopes through the real native session before reopening with the current adapter.
+  const historical=vi.spyOn(spatialResults,'spatialToolResult').mockImplementation(result=>({content:[{type:'text' as const,text:JSON.stringify({format:spatialModelFormat(result),data:projectSpatialResult(result)})}],details:{spatialResult:result}}));
   let classificationRef='';
   const s=await setup((_context,index)=>index===0?{tools:[
     {name:'spatial_analyze',arguments:{operation:'measure',metric:'distance',input:s.input,target:s.input}},
@@ -157,6 +194,7 @@ it('retains mixed v1/v2 native history and reuses the fixed classification after
   const snapshot=s.lab.get(s.session.id,'alpha'),results=snapshot.messages.filter(m=>m.toolName==='spatial_analyze');
   expect(results.map(m=>m.spatialResult?.schemaVersion)).toEqual([1,2]);
   expect(results[0].text).toContain('spatial.model-result.v1');expect(results[1].text).toContain('spatial.model-result.v2');
+  historical.mockRestore();
   const classification=results[1].spatialResult!;classificationRef=classification.resultRef;
   expect(classification.classifications?.map(c=>c.position)).toEqual(['boundary','interior','exterior']);
   expect(classification.values).toEqual({total:3,interior:1,boundary:1,exterior:1});
@@ -172,6 +210,8 @@ it('retains mixed v1/v2 native history and reuses the fixed classification after
   const after=reopened.get(s.session.id,'alpha').messages;
   const read=after.filter(m=>m.toolName==='spatial_analyze')[2];
   expect(read.spatialResult).toEqual({...classification,delivery:{requestId:read.requestId,toolCallId:read.toolCallId}});
+  expect(read.text).toContain('spatial.model-result.v3');expect(read.text).toContain('没有重新计算');
+  expect(after.filter(m=>m.toolName==='spatial_analyze').slice(0,2)).toEqual(results);
   expect(after.findLast(m=>m.toolName==='spatial_analyze')?.spatialResult?.schemaVersion).toBe(1);
   const saved=after.findLast(m=>m.toolName==='annotation_from_analysis')!;expect(saved.isError).toBe(false);
   const receipt=saved.annotationResult!.receipt;

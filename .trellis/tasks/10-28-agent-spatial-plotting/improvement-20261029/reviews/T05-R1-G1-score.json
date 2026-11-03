@@ -1,0 +1,16 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T05-R1-G1",
+  "strict": "pass",
+  "reason": "按显式普通点要求保存circle，无专业符号，plan/名称/坐标正确，过程与最终事实准确。",
+  "quotes": [],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T05-R1-G1/gate/1-checkpoint.json"
+  ]
+}

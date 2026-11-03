@@ -1,0 +1,11 @@
+{
+  "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('button', { name: '进入项目：空间资料核对任务', exact: true }).first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('button', { name: '进入项目：空间资料核对任务', exact: true }).first() with timeout 5000ms\n  - waiting for getByRole('button', { name: '进入项目：空间资料核对任务', exact: true }).first()\n",
+  "url": "http://127.0.0.1:5398/",
+  "body": "跳至工作待办\n新建对话\n工作待办\n态势地图\n工作任务\n【地图验证 map-97d0baaf】空间资料核对任务\n\n还没有对话\n\n【地图验证 map-97d0baaf】空间资料核对任务\n\n还没有对话\n\n【地图验证 map-97d0baaf】空间资料核对任务\n1\n以当前草稿reference层对象ID origin为中心生成700米范围，只预\n个人空间\n设置\n工作待办\n所有项目\n工作待办\n\n处理席位交接与外部信息，继续需要回应的对话。\n\n刷新待办\n待我处理\n0\n跟进中\n0\n已办\n0\n全部\n0\n事项类型\n全部类型\n工作交接\n外部信息\n关联任务\n全部任务\n【地图验证 map-97d0baaf】空间资料核对任务\n【地图验证 map-97d0baaf】空间资料核对任务\n【地图验证 map-97d0baaf】空间资料核对任务\n搜索事项\n\n暂无符合条件的事项。\n\n选择一项工作查看目标、资料与进度。\n\n选择项目\n请选择项目\n【地图验证 map-97d0baaf】空间资料核对任务\n分派工作",
+  "mutations": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login"
+    }
+  ]
+}

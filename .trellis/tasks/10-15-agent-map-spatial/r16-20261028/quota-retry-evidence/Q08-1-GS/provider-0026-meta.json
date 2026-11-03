@@ -1,0 +1,27 @@
+{
+  "id": 26,
+  "entry": "Q08-1-GS",
+  "group": "GS",
+  "turn": 2,
+  "at": "2026-10-28T13:34:06.404Z",
+  "completed": true,
+  "payloadHash": "cd23de4ab0e01b1dc53239f9eaee9e1a5767a2298d8ac21a4fbdf1a9eca33886",
+  "wirePayloadHash": "28e74839b8dd9bf5e7a01e184fe58de7517ce11a9b2cb3bad3b41aac8b06bb89",
+  "tools": [],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 3653,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 1164,
+  "reasoningTokens": 264,
+  "observedThinking": true,
+  "finishReason": "stop",
+  "usage": {
+    "prompt_tokens": 24090,
+    "completion_tokens": 680
+  },
+  "responseSha256": "ff5cfda6a970dea5f3475617ec20d1445dce1fd73c5b6adf33564b3efdbaeac1"
+}

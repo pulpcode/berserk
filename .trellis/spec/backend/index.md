@@ -14,6 +14,10 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 Read [Continuous Background Analysis](./continuous-analysis.md) for stream epochs, native continuation, task revision inputs, composite authorization, exact published evidence and recovery.
 
+Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Read [Task Resource Queries](./task-resource-query.md) for batch 2 read-only discovery, independent task relationships, native results and spatial/statistical use. Read [Task Resource Experience](./task-resource-experience.md) for explicit references, resource editing, result cards and batch 3 Skills; [Model Thinking](./model-thinking.md) covers shared effective runtime configuration. Live-model evaluations remain separate.
+
+Read [Professional Symbol Contract](./map-symbols.md) for annotation symbol/role fields, shared geometry validation and compatibility.
+
 Read [Foreground Spatial Analysis](./spatial-analysis.md) for bounded calculations, native result evidence, exact-result saves and independent analysis map layers.
 
 Read [Agent Scenario Validation](./agent-scenario-validation.md) for isolated live end-to-end probes, exact synthetic confirmations, evidence retention and semantic review boundaries.

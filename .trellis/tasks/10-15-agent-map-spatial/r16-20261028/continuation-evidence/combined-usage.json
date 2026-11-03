@@ -1,0 +1,23 @@
+{
+  "previous": {
+    "requests": 4,
+    "input": 78063,
+    "output": 1872,
+    "afp": 9.991875,
+    "unknown": 0
+  },
+  "continuation": {
+    "requests": 7,
+    "input": 115813,
+    "output": 2604,
+    "afp": 14.802124999999998,
+    "unknown": 1
+  },
+  "total": {
+    "requests": 11,
+    "input": 193876,
+    "output": 4476,
+    "afp": 24.793999999999997,
+    "unknown": 1
+  }
+}

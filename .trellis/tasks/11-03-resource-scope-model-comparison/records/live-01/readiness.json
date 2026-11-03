@@ -1,0 +1,16 @@
+{
+  "reviewer": "comparison_runner; parent root confirmed all offline gates",
+  "offlinePassed": true,
+  "materialsReviewed": true,
+  "evidence": [
+    "checks/runner/summary.json",
+    "checks/calibration.md",
+    "checks/tool-regression-evidence.json",
+    "checks/tool-regression-review.md",
+    "checks/product-offline.md",
+    "checks/product-static-review.md"
+  ],
+  "parentAttestation": "T01-T03 deterministic tool chain; product unit/type/lint/build; 2 browser tests; R1-R4 without blocker",
+  "modelAuthorization": "Existing 28-slot plan; first 4 public delegated then parent gate",
+  "priceChecked": "2026-11-03 official Qwen3.8-Max Beijing 12/36 CNY per million input/output; max <=66 CNY"
+}

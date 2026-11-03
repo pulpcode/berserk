@@ -1,0 +1,14 @@
+{
+  "id": "S02-R3-B",
+  "mainRequirement": "pass",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "完整4点名单总数和origin单点500米预览符合要求，过程与最终说明真实，只读无修改。",
+  "evidence": [
+    "S02-R3-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

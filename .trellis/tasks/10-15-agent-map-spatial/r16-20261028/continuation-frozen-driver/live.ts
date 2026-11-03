@@ -1,0 +1,214 @@
+/** R16 complete task comparison through existing HTTP/Pi, exactly 288 planned trials. */
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {appendFileSync,existsSync,readFileSync,writeFileSync} from 'node:fs';
+import {mkdir,cp,readdir} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {mapTrialAuth,mapTrialRequest,type startMapTrial} from '../../../../experiments/harness-lab/scripts/probe-situation-map.js';
+import {mapState} from '../../../../experiments/harness-lab/scripts/probe-source-annotations.js';
+import type {SimulationState} from '../../../../experiments/harness-lab/src/contracts/simulation.js';
+import type {SessionSnapshot,StreamEvent,WorkspaceResources} from '../../../../experiments/harness-lab/src/contracts/index.js';
+import {SSELines} from '../../10-17-map-query-native-evaluation/run.js';
+import {toolArguments,type ToolCallEvidence} from '../r11-20261023/evidence.js';
+import {summarizeTurns,spatialCallSummary,type ObservedTurn} from '../r12-20261025/scoring.js';
+import {Provider,endpoint,modelConfiguration,type Active as ProviderActive} from './provider.js';
+import {Ledger,limits,quartetReserve,budgetPolicy,maxTokens,offlineAccount,validateAccount,type Data as LedgerData,type AccountPreflight} from './budget.js';
+import {buildRuntime,runtimeFreeze,businessContext,liveEnvironment,groupEnvironment,offlineEnvironment,packageRoot,repo,hashes,save,digest,type Runtime} from './runtime.js';
+import {schedule,cases,prepareCase,clarificationResponse,plainClarificationKind,historicalFixtureHashes,clarificationReplyForTurn,criticalEffect,fixedPreviewEvidence,canonicalFixtureHash,canonicalFixture,beforeTurn,type Entry,type Prepared} from './cases.js';
+const root=fileURLToPath(new URL('.',import.meta.url));
+const local=join(repo,'.local/spatial-r16');
+export const liveClaim=join(local,'live-claim.json');
+export const continuationClaim=join(local,'continuation-after-q07-claim.json');
+const historyPath=join(root,'protected-before.json');
+const read=<T>(p:string)=>JSON.parse(readFileSync(p,'utf8')) as T;
+const fixedDocuments=['plan.md','execution-amendment.md','prd.md','design.md','implement.md','implement.jsonl','check.jsonl','review-rules.md','package.json','tsconfig.json','cases.json','case-specs.json','schedule.json','case-materials.json','tasks.md'];
+export function frozenSyntheticDay(value:{syntheticDay?:unknown}={syntheticDay:'2026-10-28'}):string{const day=value.syntheticDay;assert.equal(typeof day,'string','missing_frozen_synthetic_day');assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(day as string),'invalid_frozen_synthetic_day');assert.equal(new Date(`${day}T00:00:00Z`).toISOString().slice(0,10),day,'invalid_frozen_synthetic_day');return day as string;}
+export async function sourceFreeze(continuation?:Q07Continuation){
+ assert.deepEqual(read(join(root,'schedule.json')),schedule,'frozen_schedule_drift');
+ for(const [path,hash] of Object.entries(read<Record<string,string>>(historyPath)))assert.equal(digest(readFileSync(join(repo,path))),hash,`Protected historical/candidate file changed: ${path}`);
+ for(const name of fixedDocuments)assert.ok(existsSync(join(root,name)),`Missing frozen document ${name}`);
+ const files=(await readdir(root)).filter(n=>n.endsWith('.ts')||fixedDocuments.includes(n));
+ const helperPaths=['r3-20261022/runtime.ts','r3-20261022/audit.ts','r3-20261022/cases.ts','r7-20261023/environment.ts','r10-20261023/cases.ts','round1-20261017/cases.ts','r11-20261023/cases.ts','r11-20261023/evidence.ts','r12-20261025/source-runtime.ts','r12-20261025/scoring.ts','r12-20261025/reasoning-live.ts','r12-20261025/reasoning-prepare.ts','r11-20261023/judge-format.ts','r13-20261025/cases.ts','r14-20261026/cases.ts','r14-20261026/data.ts'];
+ return {schemaVersion:1,syntheticDay:frozenSyntheticDay(),scope:'complete_tasks_native_skill',...(continuation?{continuation}:{}),runtime:runtimeFreeze(),driver:Object.fromEntries(files.sort().map(n=>[n,digest(readFileSync(join(root,n)))])),helpers:Object.fromEntries(helperPaths.map(p=>[p,digest(readFileSync(resolve(root,'..',p)))])),historicalFixtures:historicalFixtureHashes(),httpHelpers:Object.fromEntries(['probe-situation-map.ts','probe-source-annotations.ts','probe-task-plan.ts','probe-spatial-cases.ts'].map(n=>[n,digest(readFileSync(join(packageRoot,'scripts',n)))])),fixtureHelpers:await hashes(resolve(root,'../../10-17-map-query-native-evaluation')),historyBaseline:{path:historyPath,sha256:digest(readFileSync(historyPath))},schedule,limits,quartetReserve,budgetPolicy,model:{endpoint,groups:modelConfiguration,maxTokens,outputLimitField:'max_completion_tokens',topP:'absent',temperature:'absent'},automaticRetries:false,automaticResume:false};
+}
+export interface Row extends Entry {status:'not_executed'|'started'|'recorded'|'waiting_user'|'incomplete'|'interrupted';semanticReview:'pending';stop?:string;stopScope?:'task'|'batch';blindId?:string;startedAt?:string;endedAt?:string;elapsedMs?:number;runtimeBuildMs?:number;initializationMs?:number;scriptedReplyMs?:number;prepared?:boolean;plannedUserTurns:number;completedUserTurns:number;sentOriginalUserTurns:number;additionalClarificationTurns:number;unissuedOriginalUserTurns:number}
+interface Active extends ProviderActive {prepared:Prepared;trial:Awaited<ReturnType<typeof startMapTrial>>;requestId?:string;events:StreamEvent[];interactions:unknown[];clarificationUsed:boolean}
+interface PreparedSlot {row:Row;runtime:Runtime;trial:Awaited<ReturnType<typeof startMapTrial>>;p:Prepared;directory:string}
+export interface RunOptions {directory:string;freezePath?:string;accountPath?:string;port?:number;env?:NodeJS.ProcessEnv;continueAfterQ07?:boolean;offline?:{transport:typeof fetch;entries?:Entry[];claimPath:string;continuationSource?:ContinuationPaths;onCheckpoint?:(checkpoint:Checkpoint,directory:string)=>Promise<void>}}
+export interface ContinuationPaths {claimPath:string;scorePath:string;authorizationPath:string}
+export interface Q07Continuation {kind:'r16_after_q07_once';priorDirectory:string;priorFreezeHash:string;priorClaim:{path:string;sha256:string};authorization:{path:string;sha256:string};score:{path:string;sha256:string;value:unknown};priorEvidence:Record<string,string>;reused:Row;pending:Entry[];canonicalHash:string;totals:ReturnType<Ledger['totals']>}
+const initialFreezeHash='e37713a4813d0b7e87b16a7e1ad94a46970c8fa0992cc49177e60a9d41b39e6e';
+const continuationPaths=():ContinuationPaths=>({claimPath:liveClaim,scorePath:join(root,'continuation-reused-score.json'),authorizationPath:join(root,'continuation-authorization.md')});
+/** This is the one approved stopped batch, not a generic resume mechanism. */
+export async function loadQ07Continuation(paths:ContinuationPaths=continuationPaths()):Promise<Q07Continuation>{
+ const prior=read<{scope:string;directory:string;freezeHash:string}>(paths.claimPath);assert.equal(prior.scope,'r16_complete_tasks_once');assert.equal(prior.freezeHash,initialFreezeHash,'not_the_authorized_original_freeze');
+ const rows=read<Row[]>(join(prior.directory,'runs.json')),protocol=read<{freezeHash:string;source:{schedule:Entry[];runtime:unknown;model:unknown;syntheticDay:string}}>(join(prior.directory,'protocol.json'));
+ assert.equal(protocol.freezeHash,prior.freezeHash);assert.equal(digest(JSON.stringify(protocol.source)),prior.freezeHash);assert.deepEqual(protocol.source.schedule,schedule);assert.deepEqual(protocol.source.runtime,runtimeFreeze(),'continuation_product_or_skill_changed');assert.equal(protocol.source.syntheticDay,frozenSyntheticDay());assert.deepEqual(protocol.source.model,{endpoint,groups:modelConfiguration,maxTokens,outputLimitField:'max_completion_tokens',topP:'absent',temperature:'absent'});
+ assert.equal(rows.length,288);for(const [index,row] of rows.entries())for(const [key,value] of Object.entries(schedule[index]))assert.deepEqual(row[key as keyof Row],value,'old_schedule_identity_changed');
+ const reused=rows[0];assert.equal(reused.id,'Q07-1-GST');assert.equal(reused.status,'waiting_user');assert.equal(reused.stop,'waiting_user_unmapped_plain_question');assert.ok(reused.blindId&&reused.startedAt&&reused.endedAt);assert.equal(reused.sentOriginalUserTurns,2);assert.equal(reused.unissuedOriginalUserTurns,0);
+ for(const row of rows.slice(1)){assert.equal(row.status,'not_executed','only_unstarted_slots_can_continue');assert.equal(row.startedAt,undefined);assert.equal(row.blindId,undefined);assert.equal(row.sentOriginalUserTurns,0);}
+ for(const n of [1,2]){const turn:{originalUserTurn:number;snapshot:SessionSnapshot}=read<{originalUserTurn:number;snapshot:SessionSnapshot}>(join(prior.directory,reused.id,`turn-${n}.json`));assert.equal(turn.originalUserTurn,n-1);assert.equal(turn.snapshot.lastResult?.status,'succeeded');assert.equal(turn.snapshot.active,null);assert.ok(!turn.snapshot.interactions?.some(i=>i.status==='pending'));}
+ const score=read<{reusedEntryId:string;rows:Array<{blindId:string;mainRequirement:string;strict:string}>;sourceHashes:Record<string,string>}>(paths.scorePath);assert.equal(score.reusedEntryId,reused.id);assert.equal(score.rows.length,1);assert.equal(score.rows[0].blindId,reused.blindId);assert.equal(score.rows[0].mainRequirement,'pass');assert.equal(score.rows[0].strict,'pass');for(const [file,hash] of Object.entries(score.sourceHashes))assert.equal(digest(readFileSync(join(root,file))),hash,'reused_score_source_changed');
+ const account=read<LedgerData>(join(prior.directory,'ledger.json'));assert.equal(account.freezeHash,prior.freezeHash);assert.equal(account.requests.length,4);assert.ok(account.requests.every(r=>r.trialId===reused.id&&r.status==='finished'&&r.usage&&typeof r.afp==='number'),'old_requests_not_complete_or_other_slot_started');
+ const totals={requests:account.requests.length,input:account.requests.reduce((v,r)=>v+r.usage!.input,0),output:account.requests.reduce((v,r)=>v+r.usage!.output,0),afp:account.requests.reduce((v,r)=>v+r.afp!,0),unknown:0};
+ const quartet=read<{ids:string[];canonicalHash:string;equalInitialBusiness:boolean}>(join(prior.directory,'Q07-r1-quartet.json'));assert.deepEqual(quartet.ids,schedule.slice(0,4).map(e=>e.id));assert.equal(quartet.equalInitialBusiness,true);assert.equal(digest(JSON.stringify(read(join(prior.directory,reused.id,'canonical-fixture.json')))),quartet.canonicalHash);
+ return {kind:'r16_after_q07_once',priorDirectory:resolve(prior.directory),priorFreezeHash:prior.freezeHash,priorClaim:{path:resolve(paths.claimPath),sha256:digest(readFileSync(paths.claimPath))},authorization:{path:resolve(paths.authorizationPath),sha256:digest(readFileSync(paths.authorizationPath))},score:{path:resolve(paths.scorePath),sha256:digest(readFileSync(paths.scorePath)),value:score},priorEvidence:await hashes(prior.directory),reused,pending:schedule.slice(1),canonicalHash:quartet.canonicalHash,totals};
+}
+export function scheduledBatches(entries:Entry[],continuation?:Q07Continuation){
+ assert.ok(entries.length>0);assert.equal(new Set(entries.map(e=>e.id)).size,entries.length);if(continuation)assert.deepEqual(entries,continuation.pending.slice(0,entries.length),'continuation_must_use_original_unstarted_prefix');
+ const batches:Entry[][]=[];for(const entry of entries){const last=batches.at(-1);if(last&&last[0].caseId===entry.caseId&&last[0].round===entry.round)last.push(entry);else batches.push([entry]);}
+ for(const [index,group] of batches.entries()){if(continuation&&index===0)assert.deepEqual(group,schedule.slice(1,4),'only_authorized_first_quartet_may_have_three');else assert.deepEqual(group.map(e=>e.group).sort(),['G0','GS','GST','GT']);}return batches;
+}
+export function combinedRows(rows:Row[],continuation?:Q07Continuation){return continuation?[continuation.reused,...rows]:rows;}
+export function combinedUsage(totals:ReturnType<Ledger['totals']>,continuation?:Q07Continuation){return continuation?Object.fromEntries(Object.entries(totals).map(([key,value])=>[key,value+continuation.totals[key as keyof typeof totals]])) as typeof totals:totals;}
+export interface Checkpoint {freezeHash:string;ids:string[];rows:Row[];totals:ReturnType<Ledger['totals']>;combinedTotals:ReturnType<Ledger['totals']>;reusedEntryId?:string;requiresRootReview:true}
+export function checkpointFor(freezeHash:string,rows:Row[],totals:ReturnType<Ledger['totals']>,continuation?:Q07Continuation):Checkpoint{
+ const combined=combinedRows(rows,continuation),first=combined.slice(0,12);assert.deepEqual(first.map(r=>r.id),schedule.slice(0,12).map(e=>e.id));assert.ok(first.every(r=>!['not_executed','started'].includes(r.status)),'first_twelve_not_finished');
+ const combinedTotals=combinedUsage(totals,continuation);
+ return {freezeHash,ids:first.map(r=>r.id),rows:first,totals,combinedTotals,...(continuation?{reusedEntryId:continuation.reused.id}:{}),requiresRootReview:true};
+}
+function bufferRefs(messages:ObservedTurn['snapshot']['messages']){return new Set(messages.flatMap(m=>{const r=m.spatialResult as {operation?:string;geometry?:unknown;resultRef?:string;delivery?:unknown}|undefined;return m.toolName==='spatial_analyze'&&!m.isError&&r?.operation==='buffer'&&r.geometry&&r.delivery===undefined&&typeof r.resultRef==='string'?[r.resultRef]:[];}));}
+export function availableBufferResults(messages:ObservedTurn['snapshot']['messages']){return bufferRefs(messages).size;}
+export function generatedBuffersInUserTurn(turn:number,records:Array<{originalUserTurn:number;snapshot:ObservedTurn['snapshot']}>){const before=bufferRefs(records.filter(t=>t.originalUserTurn<turn).at(-1)?.snapshot.messages??[]),after=bufferRefs(records.filter(t=>t.originalUserTurn===turn).at(-1)?.snapshot.messages??[]);return [...after].filter(ref=>!before.has(ref)).length;}
+
+export function reviewInput(p:Prepared,final:SessionSnapshot,turns:Array<ObservedTurn & {originalUserTurn?:number}>,calls:ToolCallEvidence[],blindId:string){return {schemaVersion:1,id:blindId,unit:'task',businessContext,evidenceRoles:{modelInput:'Only actual provider wire messages establish what the model received at each decision; public tool text is a view, not proof of hidden UI fields.',hostTruth:'spatialResult, annotationResult, stateEvidence and expectedBehavior verify actual results/effects; they do not prove the model read hidden geometry or values.'},userPrompts:turns.map(t=>t.prompt),visibleTranscript:final.messages.map(m=>({role:m.role,text:m.toolName==='skill_read'?'方法正文读取事件（不是本题数据）':m.text,requestId:m.requestId,toolCallId:m.toolCallId,toolInput:calls.find(c=>c.id===m.toolCallId)?.arguments,toolName:m.toolName,isError:m.isError,spatialResult:m.spatialResult,annotationResult:m.annotationResult})),stateEvidence:turns.map(t=>({turn:t.turn,originalUserTurn:t.originalUserTurn,before:t.before,after:t.after,criticalEffect:t.criticalEffect})),expectedBehavior:p.truth,temporalRule:'Assess each public claim against evidence available at its time; later receipts cannot support earlier completion claims.',reviewer:'pending_blinded_agent_evidence_review'};}
+export function assertExecutionGate(value:{status:string;freezeHash:string;evidence:string[]},freezeHash:string){assert.equal(value.status,'passed','offline_gate_not_passed');assert.equal(value.freezeHash,freezeHash,'offline_gate_source_drift');assert.ok(Array.isArray(value.evidence)&&value.evidence.length>0&&value.evidence.every(x=>typeof x==='string'&&x.length>0),'offline_gate_evidence_missing');}
+const taskScopedDraftViolations=new Set(['unauthorized_draft_change','wrong_saved_result','original_document_changed','wrong_rename','wrong_created_object','extra_created_objects']);
+/** Explicit R16 amendment: only the current isolated draft may fail one task without halting the batch. */
+export function criticalStopScope(critical:string|undefined,p:Prepared,after:Prepared['fixture']['before'],guards:{policy:'batch'|'isolated-task';sourceUnchanged:boolean;instructionUnchanged:boolean;requestSettled:boolean;hasGlobalFailure:boolean}):'task'|'batch'|undefined{
+ if(!critical)return undefined;
+ if(!taskScopedDraftViolations.has(critical)||guards.policy!=='isolated-task'||!guards.sourceUnchanged||!guards.instructionUnchanged||!guards.requestSettled||guards.hasGlobalFailure)return 'batch';
+ const before=p.fixture.before,old=before.binding.draft,next=after.binding.draft;
+ if(!old||!next||!before.version||!after.version||before.binding.writable!==true)return 'batch';
+ if(old.title!==before.version.document.title||next.title!==after.version.document.title)return 'batch';
+ if(before.binding.sessionId!==p.fixture.sessionId||old.ownerSessionId!==p.fixture.sessionId||before.binding.workspaceId!==p.fixture.workspaceId)return 'batch';
+ if(old.taskId!==before.binding.taskId||old.workspaceId!==before.binding.workspaceId||old.setId!==next.setId)return 'batch';
+ if(!('setId'in before.version.ref)||!('setId'in after.version.ref)||before.version.ref.setId!==old.setId||after.version.ref.setId!==old.setId)return 'batch';
+ if(JSON.stringify(before.current)!==JSON.stringify(after.current)||JSON.stringify(before.publications)!==JSON.stringify(after.publications))return 'batch';
+ const binding=structuredClone(after.binding);if(!binding.draft)return 'batch';
+ binding.draft.headRevision=old.headRevision;binding.draft.hash=old.hash;binding.draft.updatedAt=old.updatedAt;binding.draft.title=old.title;
+ if(JSON.stringify(binding)!==JSON.stringify(before.binding))return 'batch';
+ return 'task';
+}
+export async function runLive(options:RunOptions){
+ assert.equal(process.cwd(),packageRoot,'Run from experiments/harness-lab');
+ const draftViolationScope='isolated-task' as const;
+ const offline=options.offline,continuation=options.continueAfterQ07?await loadQ07Continuation(offline?.continuationSource??continuationPaths()):undefined;
+ const getFreeze=async()=>sourceFreeze(continuation?await loadQ07Continuation(offline?.continuationSource??continuationPaths()):undefined),frozen=await getFreeze(),freezeHash=digest(JSON.stringify(frozen)),directory=resolve(options.directory);
+ if(!offline){assert.ok(options.freezePath,'Live run requires frozen source');assert.deepEqual(read(options.freezePath),frozen,'Frozen source changed');assert.ok(directory.startsWith(local+'/'),'Live output must stay within R16');assertExecutionGate(read(join(root,continuation?'continuation-offline-gate.json':'offline-gate.json')),freezeHash);}
+ const entries=offline?.entries??continuation?.pending??schedule;assert.ok(offline||entries.length===(continuation?287:288));const batches=scheduledBatches(entries,continuation);
+ assert.ok(!existsSync(directory),'Refuse overwriting a batch');
+ const claim=offline?resolve(offline.claimPath):continuation?continuationClaim:liveClaim;
+ if(offline){assert.ok(claim.includes('/r16-offline-'),'Mock marker must be explicitly offline');assert.notEqual(claim,liveClaim);assert.notEqual(claim,continuationClaim);}
+ assert.ok(!existsSync(claim),'R16 batch already claimed; no replay/resume');
+ const account=offline?offlineAccount():read<AccountPreflight>(options.accountPath??'');validateAccount(account);if(!offline){assert.ok(Date.now()-Date.parse(account.checkedAt)<=5*60*60*1000,'account_observation_stale');}
+ const env=offline?offlineEnvironment():liveEnvironment(options.env??process.env),original=globalThis.fetch;
+ // Fixed batch marker survives process exit and is independent of output/prepared path.
+ writeFileSync(claim,JSON.stringify({scope:continuation?'r16_after_q07_once':'r16_complete_tasks_once',directory,freezeHash,...(continuation?{priorClaim:continuation.priorClaim,priorDirectory:continuation.priorDirectory,reusedEntryId:continuation.reused.id,pendingIds:continuation.pending.map(e=>e.id)}:{}),at:new Date().toISOString(),offlineSimulation:Boolean(offline),automaticRetries:false})+'\n',{flag:'wx',mode:0o600});
+ await mkdir(directory,{mode:0o700});
+ const ledger=new Ledger(join(directory,'ledger.json'),freezeHash,account),rows:Row[]=(continuation?.pending??entries).map(e=>({...e,status:'not_executed',semanticReview:'pending',plannedUserTurns:cases.find(c=>c.id===e.caseId)!.prompts.length,completedUserTurns:0,sentOriginalUserTurns:0,additionalClarificationTurns:0,unissuedOriginalUserTurns:cases.find(c=>c.id===e.caseId)!.prompts.length}));
+ const persistRows=()=>{save(join(directory,'runs.json'),rows);if(continuation){save(join(directory,'combined-usage.json'),{previous:continuation.totals,continuation:ledger.totals(),total:combinedUsage(ledger.totals(),continuation)});save(join(directory,'combined-runs.json'),combinedRows(rows,continuation));save(join(directory,'combined-evidence-index.json'),combinedRows(rows,continuation).map(row=>({entryId:row.id,blindId:row.blindId??null,originalStatus:row.status,evidenceDirectory:join(row.id===continuation.reused.id?continuation.priorDirectory:directory,row.id),reusedByIndependentReview:row.id===continuation.reused.id,sourceFreezeHash:row.id===continuation.reused.id?continuation.priorFreezeHash:freezeHash})));}};
+ save(join(directory,'protocol.json'),{source:frozen,freezeHash,account,accountHash:digest(JSON.stringify(account)),mode:offline?'offline-only':'live',draftViolationScope,budgetPolicy,automaticRetries:false,automaticResume:false});persistRows();
+ let active:Active|undefined,batchStop:string|undefined;
+ const cancel=async(reason:string)=>{if(!active)return;active.stop??=reason;if(active.requestId)await mapTrialRequest(active.trial.manifest,`/api/sessions/${active.prepared.fixture.sessionId}/cancel`,'planning','POST',{requestId:active.requestId}).catch(()=>{});};
+ const observer=new Provider({directory,original:offline?.transport??original,secret:env.LLM_API_KEY!,verify:async()=>{assert.deepEqual(await getFreeze(),frozen,'Source drift');assert.ok(active);assert.deepEqual(await hashes(active.runtime.root),active.runtime.hashes,'Runtime drift');},cancel},ledger);
+ const onSignal=()=>{observer.fatal??='operator_interrupt';ledger.halt('operator_interrupt');void cancel('operator_interrupt');};process.on('SIGINT',onSignal);process.on('SIGTERM',onSignal);globalThis.fetch=observer.fetch;
+ const runtimes=new Map<string,Runtime>(),day=frozen.syntheticDay;
+ try{
+  for(const [batchIndex,batch] of batches.entries()){
+   if((!offline||offline.onCheckpoint)&&batchIndex===3&&!observer.fatal&&!ledger.read().halted){const checkpoint=checkpointFor(freezeHash,rows,ledger.totals(),continuation);save(join(directory,'checkpoint-12.json'),checkpoint);console.info(JSON.stringify({checkpoint:'first12_awaiting_review',directory}));if(offline?.onCheckpoint)await offline.onCheckpoint(checkpoint,directory);while(!observer.fatal&&!ledger.read().halted&&!existsSync(join(directory,'checkpoint-12-approval.json')))await new Promise(r=>setTimeout(r,1000));if(!observer.fatal&&!ledger.read().halted){const approval=read<{freezeHash:string;ids:string[];decision:string}>(join(directory,'checkpoint-12-approval.json'));assert.equal(approval.freezeHash,freezeHash);assert.deepEqual(approval.ids,checkpoint.ids);assert.equal(approval.decision,'continue_remaining_276');}}
+   const batchRows=batch.map(e=>rows.find(row=>row.id===e.id)!);
+   if(observer.fatal||ledger.read().halted){batchStop=observer.fatal??ledger.read().halted;break;}
+   if(!ledger.canStartQuartet()){batchStop='ledger_halted_or_unknown_before_next_quartet';break;}
+   const prepared:PreparedSlot[]=[];
+   try{
+    // Prepare all four independent services before the first paid request of this quartet.
+    for(const [offset,row] of batchRows.entries()){
+     let runtime=runtimes.get(row.group);if(!runtime){const buildStarted=Date.now();runtime=await buildRuntime(join(directory,'runtime-builds'),row.group);row.runtimeBuildMs=Date.now()-buildStarted;runtimes.set(row.group,runtime);}else row.runtimeBuildMs=0;
+     const dir=join(directory,row.id);await mkdir(dir,{mode:0o700});
+     const prepareStarted=Date.now();
+     const trial=await runtime.start((options.port??4807)+offset,{...groupEnvironment(env,row.group),R16_CASE_ID:row.caseId,R16_SYNTHETIC_DAY:day},false,{background:'neutral'});
+     let item:PreparedSlot|undefined;
+     try{
+      const p=await prepareCase(trial.manifest,row.caseId);item={row,runtime,trial,p,directory:dir};prepared.push(item);
+      const workspace=p.fixture.workspaceId!,instruction=await trial.lab.resources.readInstruction(workspace,'workspace','seat-planning');await trial.lab.resources.updateInstruction(workspace,'workspace',businessContext,instruction.hash,undefined,'seat-planning');
+      const catalog=await mapTrialRequest<WorkspaceResources>(trial.manifest,`/api/workspaces/${workspace}/resources`,'planning');for(const [id,s] of Object.entries(runtime.skills))assert.equal(catalog.skills.find(c=>c.id===id)?.hash,s.hash);save(join(dir,'resources.json'),catalog);
+      row.initializationMs=Date.now()-prepareStarted;row.prepared=true;row.plannedUserTurns=p.prompts.length;row.unissuedOriginalUserTurns=p.prompts.length;save(join(dir,'fixture.json'),p);save(join(dir,'manifest.json'),trial.manifest);save(join(dir,'canonical-fixture.json'),canonicalFixture(p));persistRows();
+     }catch(error){if(!item)await trial.stop();throw error;}
+    }
+    for(const item of prepared){assert.equal(item.trial.manifest.day,day);assert.equal(canonicalFixtureHash(prepared[0].p),canonicalFixtureHash(item.p),'quartet_initial_business_state_differs');}
+    if(continuation&&batchIndex===0)assert.equal(canonicalFixtureHash(prepared[0].p),continuation.canonicalHash,'continued_first_quartet_differs_from_reused_original');
+    save(join(directory,`${batchRows[0].caseId}-r${batchRows[0].round}-quartet.json`),{preparedAt:new Date().toISOString(),syntheticDay:day,ids:prepared.map(p=>p.row.id),canonicalHash:canonicalFixtureHash(prepared[0].p),day,equalInitialBusiness:true,...(continuation&&batchIndex===0?{reusedEntryId:continuation.reused.id,reusedCanonicalHash:continuation.canonicalHash,fullQuartetIds:schedule.slice(0,4).map(e=>e.id)}:{}),independentSessions:prepared.map(p=>p.p.fixture.sessionId)});
+    for(const item of prepared){
+     if(observer.fatal||ledger.read().halted)break;
+     const {row,runtime,trial,p,directory:dir}=item;row.status='started';row.startedAt=new Date().toISOString();row.blindId=randomUUID();persistRows();
+     active={id:row.id,group:row.group,directory:dir,turn:0,runtime,requests:0,prepared:p,trial,events:[],interactions:[],clarificationUsed:false,lastProgressAt:Date.now()};observer.active=active;
+     const warningTimer=setTimeout(()=>{save(join(dir,'duration-warning.json'),{warning:'10_minutes_only_not_cancelled',at:new Date().toISOString()});console.info(JSON.stringify({id:row.id,warning:'10_minutes_only_not_cancelled'}));},600_000);
+     const progressTimer=setInterval(()=>{if(!active)return;console.info(JSON.stringify({entry:row.id,phase:'running',requests:active.requests,elapsedMs:Date.now()-Date.parse(row.startedAt!),idleMs:Date.now()-(active.lastProgressAt??Date.now())}));},30_000);
+     const turns:Array<ObservedTurn & {originalUserTurn:number;snapshot:SessionSnapshot}>=[];
+     const turnLedger=p.prompts.map((prompt,originalUserTurn)=>({originalUserTurn,prompt,status:'not_sent',requestIds:[] as string[],clarificationReplies:[] as unknown[],completed:false,reason:null as string|null}));save(join(dir,'turn-ledger.json'),turnLedger);
+     try{
+      for(let userTurn=0;userTurn<p.prompts.length;userTurn++){
+       const sourceUpdate=await beforeTurn(trial.manifest,p,userTurn);if(sourceUpdate)save(join(dir,`before-user-turn-${userTurn+1}-source-update.json`),sourceUpdate);
+       let text=p.prompts[userTurn],repeat=false;active.clarificationUsed=false;const turnEntry=turnLedger[userTurn];
+       do{
+        repeat=false;active.turn=turns.length;active.requestId=undefined;const isOriginal=turnEntry.status==='not_sent';
+        const before=await mapState(trial.manifest,p.fixture.sessionId);save(join(dir,`turn-${turns.length+1}-input.json`),{text,originalUserTurn:userTurn});
+        const pending:Promise<void>[]=[],seen=new Set<string>();
+        const response=await fetch(`${trial.manifest.url}/api/sessions/${p.fixture.sessionId}/messages`,{method:'POST',headers:{...await mapTrialAuth(trial.manifest,'planning'),'content-type':'application/json'},body:JSON.stringify({text})});assert.ok(response.ok&&response.body,`Message HTTP ${response.status}`);if(isOriginal){row.sentOriginalUserTurns++;row.unissuedOriginalUserTurns--;turnEntry.status='sent';}else{row.additionalClarificationTurns++;turnEntry.clarificationReplies.push({kind:'plain',text});}save(join(dir,'turn-ledger.json'),turnLedger);
+        const parser=new SSELines(value=>{const event=value as unknown as StreamEvent;active!.lastProgressAt=Date.now();active!.events.push(event);active!.requestId=event.requestId;if(event.requestId&&!turnEntry.requestIds.includes(event.requestId)){turnEntry.requestIds.push(event.requestId);save(join(dir,'turn-ledger.json'),turnLedger);}
+         if(event.type==='tool.started'&&active!.events.filter(e=>e.type==='tool.started').length===25)console.info(JSON.stringify({id:row.id,warning:'24_tools_only_not_cancelled'}));
+         if(event.type==='interaction.updated'&&event.interaction.status==='pending'&&!seen.has(event.interaction.interactionId)){
+          const interaction=event.interaction;seen.add(interaction.interactionId);const answer=clarificationResponse(p,interaction,active!.clarificationUsed,userTurn);active!.interactions.push({observed:interaction,scriptedResponse:answer??null});
+          pending.push((async()=>{if(answer){const replyStarted=Date.now();active!.clarificationUsed=true;row.additionalClarificationTurns++;turnEntry.clarificationReplies.push({kind:'interaction',interactionId:interaction.interactionId,response:answer});save(join(dir,'turn-ledger.json'),turnLedger);await mapTrialRequest(trial.manifest,`/api/sessions/${p.fixture.sessionId}/interactions/${interaction.interactionId}/response`,'planning','POST',answer);row.scriptedReplyMs=(row.scriptedReplyMs??0)+Date.now()-replyStarted;}else{save(join(dir,`unanswered-interaction-${interaction.interactionId}.json`),interaction);
+           const q=interaction.kind==='question'?interaction.questions.map(x=>x.prompt).join('。'):'';
+           const kind=interaction.kind==='question'?plainClarificationKind(p,{messages:[{role:'assistant',text:q}]} as SessionSnapshot,userTurn):'unsupported';
+           if(kind==='unnecessary'||(kind==='allowed'&&active!.clarificationUsed))await cancel('waiting_user_repeated_or_unmapped_interaction');
+           else if(interaction.kind==='question')await cancel('waiting_user_unmapped_necessary_interaction');else{observer.fatal??='unmapped_permission_interaction';ledger.halt(observer.fatal);await cancel(observer.fatal);}}})().catch(async()=>{observer.fatal??='interaction_failure';ledger.halt('interaction_failure');await cancel('interaction_failure');}));
+         }
+        });
+        const reader=response.body.getReader();try{for(;;){const part=await reader.read();if(part.done)break;appendFileSync(join(dir,`turn-${turns.length+1}.sse`),part.value,{mode:0o600});parser.push(part.value);}parser.push(new TextEncoder().encode('\n'));}finally{await Promise.all(pending);}
+        const snapshot=await mapTrialRequest<SessionSnapshot>(trial.manifest,`/api/sessions/${p.fixture.sessionId}`,'planning'),after=await mapState(trial.manifest,p.fixture.sessionId),instruction=await trial.lab.resources.readInstruction(p.fixture.workspaceId!,'workspace','seat-planning');
+        const sourceAfter=await mapTrialRequest<SimulationState>(trial.manifest,'/api/simulation','overall'),expectedSource=(p.sourceUpdates?.at(-1) as {after?:SimulationState}|undefined)?.after??p.sourceBefore;
+        const sourceUnchanged=JSON.stringify(sourceAfter)===JSON.stringify(expectedSource),instructionUnchanged=instruction.content===businessContext;
+        const record={turn:turns.length,originalUserTurn:userTurn,prompt:text,before,after,sourceAfter,snapshot,precedingStop:active.stop??null,criticalEffect:null as string|null,criticalStopScope:null as 'task'|'batch'|null,unmappedClarification:false};
+        const critical=(!sourceUnchanged?'unauthorized_source_change':undefined)??(!instructionUnchanged?'unauthorized_instruction_change':undefined)??criticalEffect(p,snapshot,after,userTurn,[...turns,record],before);
+        const unmappedClarification=Boolean(critical)&&plainClarificationKind(p,snapshot,userTurn)==='unsupported';record.unmappedClarification=unmappedClarification;
+        const stopScope=criticalStopScope(critical,p,after,{policy:draftViolationScope,sourceUnchanged,instructionUnchanged,requestSettled:snapshot.active===null&&snapshot.lastResult!==null&&snapshot.lastResult.requestId===active.requestId&&(snapshot.lastResult.status==='succeeded'||snapshot.lastResult.status==='cancelled'&&Boolean(active.stop?.startsWith('waiting_user')||active.stop==='unnecessary_confirmation')),hasGlobalFailure:Boolean(observer.fatal||ledger.read().halted)});record.criticalStopScope=stopScope??null;
+        record.criticalEffect=critical??null;turns.push(record);save(join(dir,`turn-${turns.length}.json`),{...record,originalUserTurn:userTurn});
+        if(critical){row.stopScope=stopScope;const reason=critical;if(stopScope==='batch'){observer.fatal??=reason;ledger.halt(reason);}if(stopScope==='task')active.stop=reason;await cancel(reason);if(stopScope==='task'){row.status='incomplete';break;}}
+        if(active.stop?.startsWith('waiting_user')){row.status='waiting_user';observer.fatal??=active.stop;ledger.halt(observer.fatal);break;}
+        if(active.stop||observer.fatal||snapshot.lastResult?.status!=='succeeded'){row.status=active.stop?.startsWith('waiting_user')?'waiting_user':'incomplete';if(!active.stop&&!observer.fatal){observer.fatal='native_turn_did_not_succeed';ledger.halt(observer.fatal);active.stop=observer.fatal;}break;}
+        if(snapshot.interactions?.some(i=>i.status==='pending')){row.status='waiting_user';active.stop='waiting_user_pending_interaction';observer.fatal??=active.stop;ledger.halt(observer.fatal);break;}
+        const clarification=plainClarificationKind(p,snapshot,userTurn);
+        if(clarification==='unsupported'||clarification==='uncertain'){row.status='waiting_user';active.stop='waiting_user_unmapped_plain_question';observer.fatal??=active.stop;ledger.halt(observer.fatal);break;}
+        if(clarification==='unnecessary'){row.status='waiting_user';active.stop='waiting_user_unmapped_plain_question';observer.fatal??=active.stop;ledger.halt(observer.fatal);break;}
+        if(clarification==='allowed'){
+         if(active.clarificationUsed){row.status='incomplete';active.stop='repeated_clarification_no_progress';observer.fatal??=active.stop;ledger.halt(observer.fatal);break;}
+         active.clarificationUsed=true;text=clarificationReplyForTurn(p,userTurn);repeat=true;save(join(dir,'scripted-plain-clarification.json'),{actualQuestion:snapshot.messages.filter(m=>m.role==='assistant').at(-1)?.text,response:text});
+        }
+       }while(repeat);
+       if(row.status!=='started'||active.stop||observer.fatal){turnEntry.status='incomplete';turnEntry.reason=active.stop??observer.fatal??row.status;save(join(dir,'turn-ledger.json'),turnLedger);break;}row.completedUserTurns++;turnEntry.completed=true;turnEntry.status='completed';save(join(dir,'turn-ledger.json'),turnLedger);
+       persistRows();
+      }
+      const final=await mapTrialRequest<SessionSnapshot>(trial.manifest,`/api/sessions/${p.fixture.sessionId}`,'planning'),after=await mapState(trial.manifest,p.fixture.sessionId);if(row.status==='started')row.status='recorded';row.stop=active.stop??observer.fatal;for(const t of turnLedger)if(!t.completed)t.reason??=row.stop??'not_sent_after_prior_incomplete';save(join(dir,'turn-ledger.json'),turnLedger);
+      save(join(dir,'review.json'),{entry:row,fixture:p,final,after,turns,events:active.events,interactions:active.interactions,semanticReview:'pending'});
+      const calls=toolArguments(dir);for(const a of observer.attempts.filter(a=>a.entry===row.id))for(const c of a.tools)if(!calls.some(x=>x.id===c.id)){let args:unknown;try{args=JSON.parse(c.arguments);}catch{args=c.arguments;}calls.push({id:c.id,name:c.name,arguments:args,firstObservedRequest:a.id});}
+      save(join(dir,'tool-arguments.json'),calls);save(join(dir,'deterministic-evidence.json'),{turns:summarizeTurns(turns),spatial:spatialCallSummary(calls,final.messages),criticalEffects:turns.map(t=>t.criticalEffect).filter(Boolean),skillReads:calls.filter(c=>c.name==='skill_read'),fixedPreviewEvidence:fixedPreviewEvidence(p,final,turns),saveReferences:calls.filter(c=>c.name==='annotation_from_analysis'),semanticReview:'pending'});save(join(dir,'judge-input.json'),reviewInput(p,final,turns,calls,row.blindId!));
+     }catch(error){row.status='interrupted';row.stop=(error instanceof Error?error.message:'execution_or_evidence_failure').split(env.LLM_API_KEY!).join('[REDACTED]');observer.fatal??=row.stop;ledger.halt(row.stop);save(join(dir,'failure.json'),{reason:row.stop});await cancel(row.stop);}
+     finally{clearTimeout(warningTimer);clearInterval(progressTimer);row.endedAt=new Date().toISOString();row.elapsedMs=Date.parse(row.endedAt)-Date.parse(row.startedAt!);console.info(JSON.stringify({entry:row.id,status:row.status,stop:row.stop,completed:rows.filter(x=>x.status!=='not_executed'&&x.status!=='started').length,planned:rows.length,usage:ledger.totals()}));save(join(dir,'result.json'),row);persistRows();observer.persist();active=undefined;observer.active=undefined;}
+    }
+   }catch(error){batchStop=(error instanceof Error?error.message:'pair_preparation_failure').split(env.LLM_API_KEY!).join('[REDACTED]');observer.fatal??=batchStop;ledger.halt(batchStop);save(join(directory,`${batchRows[0].caseId}-r${batchRows[0].round}-failure.json`),{reason:batchStop});}
+   finally{for(const item of prepared){try{await cp(join(item.trial.manifest.dataDir,'sessions'),join(item.directory,'native-sessions'),{recursive:true});}catch{observer.fatal??='native_evidence_copy_failure';ledger.halt(observer.fatal);}await item.trial.stop();save(join(item.directory,'evidence-hashes.json'),await hashes(item.directory));}}
+  }
+ }finally{
+  globalThis.fetch=original;process.off('SIGINT',onSignal);process.off('SIGTERM',onSignal);observer.persist();persistRows();save(join(directory,'batch-state.json'),{stop:batchStop??observer.fatal??ledger.read().halted??null,rows,totals:ledger.totals(),offlineSimulation:Boolean(offline),automaticRetries:false,automaticResume:false,semanticReview:'pending'});
+ }
+ return {rows,total:ledger.totals(),stop:batchStop??observer.fatal??ledger.read().halted};
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ const [mode,...args]=process.argv.slice(2);
+ if(mode==='prepare'||mode==='prepare-continuation'){assert.equal(args.length,1);assert.ok(!existsSync(args[0]),'Refuse overwriting freeze');void (async()=>sourceFreeze(mode==='prepare-continuation'?await loadQ07Continuation():undefined))().then(f=>{writeFileSync(args[0],JSON.stringify(f,null,2)+'\n',{flag:'wx',mode:0o600});console.info(JSON.stringify({prepared:args[0],taskTrials:mode==='prepare-continuation'?287:288,modelRequests:0}));});}
+ else{assert.ok(mode==='run'||mode==='continue-r16-after-q07','live.ts prepare[-continuation] NEW_FREEZE | run/continue-r16-after-q07 NEW_OUTPUT FREEZE ACCOUNT_PREFLIGHT [PORT]');const [directory,freezePath,accountPath,port]=args;assert.ok(directory&&freezePath&&accountPath);void runLive({directory,freezePath,accountPath,port:Number(port??4807),continueAfterQ07:mode==='continue-r16-after-q07'}).then(r=>{console.info(JSON.stringify(r));if(r.stop)process.exitCode=1;}).catch(error=>{console.error(error instanceof Error?error.message:'R16 failed');process.exitCode=1;});}
+}

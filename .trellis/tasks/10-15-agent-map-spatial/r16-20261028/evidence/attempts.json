@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "entry": "Q07-1-GST",
+    "group": "GST",
+    "turn": 0,
+    "at": "2026-10-28T09:19:18.052Z",
+    "completed": true,
+    "payloadHash": "0346301eeb6a34b5c12d20d71684c8a926687f5a7fec8bd46014605129e05631",
+    "wirePayloadHash": "ff927a22314337b2a501299ed547f31bb58a57f669452bd13ec37a366327d718",
+    "tools": [
+      {
+        "id": "call_00_ujxb178dy6jfz3jnmp38xy74",
+        "name": "skill_read",
+        "arguments": "{\"id\": \"spatial-analysis\"}"
+      },
+      {
+        "id": "call_01_9i6q76rnz9xzs1msnatwqtki",
+        "name": "annotation_read",
+        "arguments": "{\"mode\": \"draft\"}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 1837,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 334,
+    "reasoningTokens": 71,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 16386,
+      "completion_tokens": 140
+    },
+    "responseSha256": "dc4fbc5f279356e07d6289c2ce0b30e923716b41f23526d59889e966d252c5a3"
+  },
+  {
+    "id": 2,
+    "entry": "Q07-1-GST",
+    "group": "GST",
+    "turn": 0,
+    "at": "2026-10-28T09:19:20.415Z",
+    "completed": true,
+    "payloadHash": "5e13e3fe76fcae9e3aea50fb014a61fa924f627b9d8081af5e4802b994b869df",
+    "wirePayloadHash": "12dd1ca356005005152fd52235651f2cf9e911000f099aa800dd6f8ebf722854",
+    "tools": [
+      {
+        "id": "call_00_pi7ac6rq3y1ghfosu7mbzura",
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"734fcb13-790a-4170-85bb-9be56a3388c7\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 1504,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 370,
+    "reasoningTokens": 88,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 19747,
+      "completion_tokens": 219
+    },
+    "responseSha256": "d96967423bf73298b6f96071a408fb55b5191dfe31ab6f3533d966380636dad9"
+  },
+  {
+    "id": 3,
+    "entry": "Q07-1-GST",
+    "group": "GST",
+    "turn": 0,
+    "at": "2026-10-28T09:19:22.682Z",
+    "completed": true,
+    "payloadHash": "54437780972671f3b0bf0d5c1a5bc8550e1c7e70aa53497b42d69ef2183f7777",
+    "wirePayloadHash": "e1db50d3b8024d382342a757842cac14e6d441177de175b6a04395d0fc9b8809",
+    "tools": [],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 3239,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 0,
+    "reasoningTokens": 0,
+    "observedThinking": false,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 20694,
+      "completion_tokens": 229
+    },
+    "responseSha256": "5a151362478d87f9216ee9e0786741436f3b4042fe9dbe5b62515a4ce05561a6"
+  },
+  {
+    "id": 4,
+    "entry": "Q07-1-GST",
+    "group": "GST",
+    "turn": 1,
+    "at": "2026-10-28T09:19:26.631Z",
+    "completed": true,
+    "payloadHash": "01a2874bd6d023e77668ac3b93eca1d399743a5d74da8bb33fa02018cc294520",
+    "wirePayloadHash": "2de27c3d9ee9f33f9f351b4a8304be1fc9a9a155e517612212706d80f6e14d8a",
+    "tools": [],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 8278,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 2825,
+    "reasoningTokens": 796,
+    "observedThinking": true,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 21236,
+      "completion_tokens": 1284
+    },
+    "responseSha256": "06a0d399d2370f9aab0bd9467b43445c040ff0beb2d8b3f7affa8650e7b3d8e9"
+  }
+]

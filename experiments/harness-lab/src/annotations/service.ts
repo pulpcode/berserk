@@ -1,3 +1,4 @@
+import { publicResource, resourceEvidence, decodeSourceResource } from '../contracts/task-resources.js';
 import type { SpatialResult } from '../contracts/spatial.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync } from 'node:sqlite';
@@ -78,7 +79,10 @@ export class AnnotationService {
   }
   private publicDocument(document: AnnotationDocument): AnnotationDocument {
     const copy=structuredClone(document);
-    for(const layer of copy.layers) for(const feature of layer.features) if(feature.originFeatureRef && 'setId' in feature.originFeatureRef.ref) delete feature.originFeatureRef;
+    for(const layer of copy.layers) for(const feature of layer.features) {
+      if(feature.originFeatureRef && 'setId' in feature.originFeatureRef.ref) delete feature.originFeatureRef;
+      if(feature.resource) feature.resource=publicResource(feature.resource);
+    }
     return copy;
   }
   private publicationDTO(publication: StoredPublication): AnnotationPublication {
@@ -189,6 +193,11 @@ export class AnnotationService {
     }));
     if(normalized.objectIds?.some(id=>!objects.some(object=>object.objectId===id))) throw missing();
     const result: AnnotationReadResult={ref:version.ref,title:version.title,hash:version.hash,createdAt:version.createdAt,layers:layers.filter(layer=>(!normalized.objectIds && !normalized.objectNames) || layer.features.some(matchesObject)).map(({layerId,name,order,defaultVisible})=>({layerId,name,order,defaultVisible})),objects:pagination(objects,normalized.offset,normalized.limit)};
+    if(normalized.objectNames && objects.length===0) {
+      const hints=layers.flatMap(layer=>layer.features.filter(feature=>normalized.objectNames!.includes(feature.objectId))
+        .map(({objectId,name})=>({objectId,name,layerId:layer.layerId})));
+      if(hints.length) result.nameLookupHints=hints;
+    }
     if(Buffer.byteLength(JSON.stringify(result))>256*1024) throw validate.tooLarge();
     return result;
   }
@@ -283,12 +292,23 @@ export class AnnotationService {
         case 'update_layer':Object.assign(layer(operation.layerId),operation.changes);break;
         case 'delete_layer':layer(operation.layerId);copy.layers=copy.layers.filter(layer=>layer.layerId!==operation.layerId);break;
         case 'add_object':layer(operation.layerId).features.push(structuredClone(operation.feature));break;
-        case 'update_object': {const entry=object(operation.objectId);Object.assign(entry.feature,validate.feature({...entry.feature,...operation.changes})); if(operation.layerId && operation.layerId!==entry.layer.layerId) {const target=layer(operation.layerId);entry.layer.features=entry.layer.features.filter(f=>f.objectId!==operation.objectId);target.features.push(entry.feature);}break;}
+        case 'update_object': {const entry=object(operation.objectId);const previousCategory=entry.feature.resource?.category;Object.assign(entry.feature,validate.feature({...entry.feature,...operation.changes})); if(Object.hasOwn(operation.changes,'resource') && (entry.feature.resource?.meaning!=='actual_resource' || entry.feature.resource.granularity!=='individual' || entry.feature.resource.category!==previousCategory)) delete entry.feature.resourceAssociation; if(operation.layerId && operation.layerId!==entry.layer.layerId) {const target=layer(operation.layerId);entry.layer.features=entry.layer.features.filter(f=>f.objectId!==operation.objectId);target.features.push(entry.feature);}break;}
         case 'delete_object': {const entry=object(operation.objectId);entry.layer.features=entry.layer.features.filter(f=>f.objectId!==operation.objectId);break;}
-        case 'copy_object': {const source=this.accessible(actor,taskId,operation.source);source.requiredSystemIds.forEach(id=>systems.add(id)); const found=source.document.layers.flatMap(l=>l.features).find(f=>f.objectId===operation.objectId); if(!found) throw missing();layer(operation.layerId).features.push({...structuredClone(found),objectId:operation.newObjectId,originFeatureRef:{ref:operation.source,objectId:operation.objectId}});break;}
+        case 'copy_object': {const source=this.accessible(actor,taskId,operation.source);source.requiredSystemIds.forEach(id=>systems.add(id)); const found=source.document.layers.flatMap(l=>l.features).find(f=>f.objectId===operation.objectId); if(!found) throw missing();const cloned=structuredClone(found);delete cloned.resourceAssociation;layer(operation.layerId).features.push({...cloned,objectId:operation.newObjectId,originFeatureRef:{ref:operation.source,objectId:operation.objectId}});break;}
       }
       // Source restrictions are monotonic even when added content is deleted later in the same batch.
-      for(const feature of copy.layers.flatMap(l=>l.features)) for(const source of feature.sourceRefs ?? []) systems.add(source.systemId);
+      for(const feature of copy.layers.flatMap(l=>l.features)) {
+        for(const source of feature.sourceRefs ?? []) systems.add(source.systemId);
+        if(feature.resourceAssociation) systems.add(feature.resourceAssociation.source.systemId);
+        for(const evidence of resourceEvidence(feature.resource)) {
+          if(evidence.kind==='source') systems.add(evidence.ref.systemId);
+          if(evidence.kind==='annotation') {
+            const source=this.accessible(actor,taskId,evidence.ref);
+            if(!source.document.layers.some(layer=>layer.features.some(item=>item.objectId===evidence.objectId))) throw missing();
+            source.requiredSystemIds.forEach(id=>systems.add(id));
+          }
+        }
+      }
     }
     const normalized=validate.document(copy); this.allowedSystems(actor,[...systems]);
     return {document:normalized,requiredSystemIds:[...systems].sort()};
@@ -335,6 +355,7 @@ export class AnnotationService {
     if(geometry.type==='MultiPolygon' || (geometry.type==='Polygon' && geometry.coordinates.length!==1)) throw new RequestError('SPATIAL_SAVE_UNSUPPORTED','当前标绘不能无损保存多面或含孔面；未删除任何部分。');
     const systems=new Set<string>();
     for(const p of result.provenance) {
+      if(p.input.kind==='resource'){const c=p.resourceContext;if(!c||c.owner.userId!==actor.userId||c.owner.seatId!==actor.seatId||c.owner.taskId!==workspace.taskSpaceId||c.owner.sessionId!==sessionId)throw new RequestError('SPATIAL_RESULT_INVALID','资源结果身份不匹配。');c.dependencies.systemIds.forEach(id=>systems.add(id));for(const ref of c.dependencies.annotations)this.accessible(actor,workspace.taskSpaceId,ref).requiredSystemIds.forEach(id=>systems.add(id));}
       if(p.input.kind==='source') systems.add(p.input.systemId);
       if(p.input.kind==='annotation') this.accessible(actor,workspace.taskSpaceId,p.input.ref).requiredSystemIds.forEach(id=>systems.add(id));
     }
@@ -416,8 +437,11 @@ export class AnnotationService {
         const sourceRef={...source.ref,revision:source.revision,queriedAt:result.queriedAt};
         const kind=source.geometry.type==='Point' ? 'point' : source.geometry.type==='LineString' ? 'line' : 'polygon';
         if(existing && existing.geometry.type!==source.geometry.type) throw conflict('来源几何类型与目标标注不兼容，不能自动替换。');
+        const resourceData=source.resourceData===undefined ? undefined : decodeSourceResource(source.resourceData);
+        if(existing?.resourceAssociation && (!sameSource(existing.resourceAssociation.source) || !resourceData?.entityId || existing.resourceAssociation.entityId!==resourceData.entityId)) throw conflict('来源实体身份变化，不能自动改接。');
+        const resourceFields=resourceData ? {resource:resourceData.resource,...(resourceData.entityId ? {resourceAssociation:{source:source.ref,sourceRevision:source.revision,entityId:resourceData.entityId}} : {})} : {};
         operations.push(item.mode==='add'
-          ? {op:'add_object',layerId:item.layerId,feature:{objectId:item.objectId,kind,name:source.name,geometry:source.geometry,sourceRefs:[sourceRef]}}
+          ? {op:'add_object',layerId:item.layerId,feature:{objectId:item.objectId,kind,name:source.name,geometry:source.geometry,sourceRefs:[sourceRef],...resourceFields}}
           : {op:'update_object',objectId:item.objectId,changes:{geometry:source.geometry,sourceRefs:existing!.sourceRefs!.map(ref=>sameSource(ref) ? sourceRef : ref)}});
         results.push({mode:item.mode,layerId:item.layerId,objectId:item.objectId,sourceRef:source.ref,sourceRevision:source.revision,queriedAt:result.queriedAt,effectiveAt:source.effectiveAt,validTime:source.validTime});
       } catch(error) {throw this.sourceItemError(error,itemIndex,legacy);}

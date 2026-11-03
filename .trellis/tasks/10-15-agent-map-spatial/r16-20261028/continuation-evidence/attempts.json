@@ -1,0 +1,223 @@
+[
+  {
+    "id": 1,
+    "entry": "Q07-1-G0",
+    "group": "G0",
+    "turn": 0,
+    "at": "2026-10-28T10:00:05.868Z",
+    "completed": true,
+    "payloadHash": "99b4c20ad23d4362747e2fcb3c6006f88d74c9bb6d29b9d638eb06bb5e4e646f",
+    "wirePayloadHash": "eae4112acdedbc9d68e67cb4c9a26cd55b1712b81b81b66269c2b31b8062aed1",
+    "tools": [
+      {
+        "id": "call_00_ik83nqdz5mp3udhc3say4pod",
+        "name": "annotation_read",
+        "arguments": "{\"mode\": \"draft\"}"
+      },
+      {
+        "id": "call_01_izdlc1tyzjjlpqaqfarnp61l",
+        "name": "skill_read",
+        "arguments": "{\"id\": \"spatial-analysis\"}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 1891,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 466,
+    "reasoningTokens": 187,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 16374,
+      "completion_tokens": 256
+    },
+    "responseSha256": "e07feaa33edc132768d792a89f76ec6017004e49c4e9f581298b0c1d2b180781"
+  },
+  {
+    "id": 2,
+    "entry": "Q07-1-G0",
+    "group": "G0",
+    "turn": 0,
+    "at": "2026-10-28T10:00:08.777Z",
+    "completed": true,
+    "payloadHash": "c229b7e215b721bddc29c4cae320e88c84c780b345d6a0e5c1c821e11f1b8115",
+    "wirePayloadHash": "fa88d20f90be9e71bd5bdc8ab6222994fe87aa35e2706342cbd8f5a15e788e93",
+    "tools": [
+      {
+        "id": "call_00_ynwz9g522syvhepy69oq4f58",
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"c452f8d2-7354-4edb-af0c-d715777a349f\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 1578,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 182,
+    "reasoningTokens": 43,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 19488,
+      "completion_tokens": 209
+    },
+    "responseSha256": "3d9bcfc995d0114b1ee3391b0e7eee63406b4e5c5a68adb27bef6867922b790e"
+  },
+  {
+    "id": 3,
+    "entry": "Q07-1-G0",
+    "group": "G0",
+    "turn": 0,
+    "at": "2026-10-28T10:00:11.700Z",
+    "completed": true,
+    "payloadHash": "2a9aea92e49e0a2cb7c653909fba9c756d918f8151dfc22eac1b07a63d2c2ad9",
+    "wirePayloadHash": "079051d39de3ff01c1e06a1df4664cad10e53083b682c585d798e587b1ae3bd8",
+    "tools": [],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 3155,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 426,
+    "reasoningTokens": 198,
+    "observedThinking": true,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 20330,
+      "completion_tokens": 439
+    },
+    "responseSha256": "48b85bead258b82d78a39d504d35fa58f94248578d24a7e63cd4992942da176d"
+  },
+  {
+    "id": 4,
+    "entry": "Q07-1-G0",
+    "group": "G0",
+    "turn": 1,
+    "at": "2026-10-28T10:00:15.901Z",
+    "completed": true,
+    "payloadHash": "4ec7a6e99c87a774acb9634f5fbcf813d2bd4248db77f0e11ec930a286da01a4",
+    "wirePayloadHash": "add82c6d38236d446c420cb7fd61b0eb4b699d678a0f1c2628a4441a08cab584",
+    "tools": [],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 5042,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 1067,
+    "reasoningTokens": 483,
+    "observedThinking": true,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 21086,
+      "completion_tokens": 945
+    },
+    "responseSha256": "dc61d19feece814fa8c243f41fefc7efce97e29e0017fa62aa4cc586652be959"
+  },
+  {
+    "id": 5,
+    "entry": "Q07-1-GS",
+    "group": "GS",
+    "turn": 0,
+    "at": "2026-10-28T10:00:22.022Z",
+    "completed": true,
+    "payloadHash": "cbc7ffd6ef2a94d07761e19e5f375b6e75dcc5ab1b5d3d1791202b525561b5f4",
+    "wirePayloadHash": "5e6bd9922f395d0920900cea6a78277aec2040beb4763cf152e16e2137bcc71d",
+    "tools": [
+      {
+        "id": "call_00_g81ceotje5b7fv0m2xy875b5",
+        "name": "skill_read",
+        "arguments": "{\"id\": \"spatial-analysis\"}"
+      },
+      {
+        "id": "call_01_ev65ul5x0egifrp9zo8ikpuw",
+        "name": "skill_read",
+        "arguments": "{\"id\": \"map-annotations\"}"
+      },
+      {
+        "id": "call_02_gtlabfvy6h67v454bpblp79p",
+        "name": "annotation_read",
+        "arguments": "{\"mode\": \"draft\", \"limit\": 20}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 3246,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 1783,
+    "reasoningTokens": 390,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 16401,
+      "completion_tokens": 506
+    },
+    "responseSha256": "81826650cfc6c8f9d93098fb0936c7c0d20b289206d529459ac2b09956281c72"
+  },
+  {
+    "id": 6,
+    "entry": "Q07-1-GS",
+    "group": "GS",
+    "turn": 0,
+    "at": "2026-10-28T10:00:26.260Z",
+    "completed": true,
+    "payloadHash": "0760ac44af8a7ceb03c00e71b4a934ef601cff64bb106cf4eb2d649573ee80e7",
+    "wirePayloadHash": "94f8313a9545496bc29ad5cbb36e54a08d496fe0ec39533d0121551e820793f8",
+    "tools": [
+      {
+        "id": "call_00_l1xsp45ud6t2h3bb59f7m4mx",
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\": \"buffer\", \"input\": {\"kind\": \"annotation\", \"ref\": {\"setId\": \"86178d3b-ff8a-40b0-8ba7-8f05a687560d\", \"revision\": 1}, \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"]}, \"distanceM\": 700}"
+      }
+    ],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 200,
+    "elapsedMs": 1825,
+    "actualModels": [
+      "deepseek-v4-1-flash-261017"
+    ],
+    "reasoningCharacters": 259,
+    "reasoningTokens": 68,
+    "observedThinking": true,
+    "finishReason": "tool_calls",
+    "usage": {
+      "prompt_tokens": 22134,
+      "completion_tokens": 249
+    },
+    "responseSha256": "cc65d36e237656799e47529bd03d326530db7b86e0f266d91aae7dca8fad2489"
+  },
+  {
+    "id": 7,
+    "entry": "Q07-1-GS",
+    "group": "GS",
+    "turn": 0,
+    "at": "2026-10-28T10:00:29.281Z",
+    "completed": true,
+    "payloadHash": "b632dd28c5f6780edd15a7f5d67171a2353a830a40c2e7edd79732b24c769686",
+    "wirePayloadHash": "1e963c9106b2b0ce356b05ee7828eb8627c9e299a852a6f6ffeb5657698df830",
+    "tools": [],
+    "requestedThinking": "enabled",
+    "requestedEffort": "high",
+    "status": 429,
+    "elapsedMs": 231,
+    "actualModels": [],
+    "reasoningCharacters": 0,
+    "observedThinking": false,
+    "finishReason": "",
+    "error": "provider_http_429"
+  }
+]

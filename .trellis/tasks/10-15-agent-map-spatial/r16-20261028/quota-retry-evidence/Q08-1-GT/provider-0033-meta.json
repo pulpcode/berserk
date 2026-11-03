@@ -1,0 +1,33 @@
+{
+  "id": 33,
+  "entry": "Q08-1-GT",
+  "group": "GT",
+  "turn": 2,
+  "at": "2026-10-28T13:34:33.342Z",
+  "completed": true,
+  "payloadHash": "1b79f0bb0160dc941c6d9a59e16aff4d620ec80ea85538ec24ad6c54086894e4",
+  "wirePayloadHash": "9bd563f6c72a570f5a99f3107f19d4df3a7a05329120d99fe498084d27a66a82",
+  "tools": [
+    {
+      "id": "call_00_lrc1bp0g9dddalkfcmu01pjw",
+      "name": "annotation_read",
+      "arguments": "{\"fields\": [\"sourceRefs\"], \"mode\": \"draft\"}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 2610,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 1671,
+  "reasoningTokens": 393,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 23083,
+    "completion_tokens": 452
+  },
+  "responseSha256": "0859696918e250db313d9c5b2a53c630a849e3b65ae8fe4734f6d15667ce11b0"
+}

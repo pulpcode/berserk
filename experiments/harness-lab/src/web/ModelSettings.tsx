@@ -5,9 +5,9 @@ import { useApi, ApiFailure } from './api';
 
 const parameterFields = ['contextWindow', 'maxOutputTokens', 'compactionReserveTokens', 'compactionKeepRecentTokens'] as const;
 type ParameterField = typeof parameterFields[number];
-type Draft = Pick<Settings, 'provider' | 'model' | 'baseUrl'> & { apiKey: string } & Record<ParameterField, string>;
+type Draft = Pick<Settings, 'provider' | 'model' | 'baseUrl'> & { apiKey: string; thinkingMode: 'legacy' | 'off' | 'high' } & Record<ParameterField, string>;
 function toDraft(result: Settings): Draft {
-  return { provider: result.provider, model: result.model, baseUrl: result.baseUrl, apiKey: '',
+  return { provider: result.provider, model: result.model, baseUrl: result.baseUrl, apiKey: '', thinkingMode: result.thinkingExplicit === false || result.thinkingMode === undefined ? 'legacy' : result.thinkingMode,
     contextWindow: result.contextWindow?.toString() ?? '', maxOutputTokens: result.maxOutputTokens?.toString() ?? '',
     compactionReserveTokens: result.compactionReserveTokens?.toString() ?? '', compactionKeepRecentTokens: result.compactionKeepRecentTokens?.toString() ?? '' };
 }
@@ -64,7 +64,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
     const identity = field === 'provider' || field === 'model' || field === 'baseUrl';
     if (identity) { changedParameters.current.clear(); setIdentityEdited(true); }
     setDraft(previous => previous && { ...previous,
-      ...(identity ? { contextWindow: '', maxOutputTokens: '', compactionReserveTokens: '', compactionKeepRecentTokens: '' } : {}), [field]: value });
+      ...(identity ? { thinkingMode: 'legacy' as const, contextWindow: '', maxOutputTokens: '', compactionReserveTokens: '', compactionKeepRecentTokens: '' } : {}), [field]: value });
     setSuccess('');
   }
   async function save() {
@@ -78,7 +78,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
       parameters[field] = value;
     }
     pending.current = true; setSaving(true); busy?.(true); setError(''); setSuccess('');
-    const payload: ModelSettingsUpdate = { ...parameters, provider: draft.provider.trim(), model: draft.model.trim(), baseUrl: draft.baseUrl.trim(), expectedVersion: base.version, ...(draft.apiKey.trim() ? { apiKey: draft.apiKey.trim() } : {}) };
+    const payload: ModelSettingsUpdate = { ...parameters, ...(draft.thinkingMode === 'legacy' ? {} : { thinkingMode: draft.thinkingMode }), provider: draft.provider.trim(), model: draft.model.trim(), baseUrl: draft.baseUrl.trim(), expectedVersion: base.version, ...(draft.apiKey.trim() ? { apiKey: draft.apiKey.trim() } : {}) };
     try {
       const path = creating ? '/api/settings/models' : profileId === 'default' ? '/api/settings/model' : `/api/settings/models/${encodeURIComponent(profileId)}`;
       const result = await api<Settings | ModelProfile>(path, payload, creating ? 'POST' : 'PUT');
@@ -102,6 +102,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
           </div>
           <div className="settings-field"><label htmlFor="model-url">API 地址</label><input id="model-url" type="url" value={draft.baseUrl} onChange={event => edit('baseUrl', event.target.value)} maxLength={2048} required placeholder="https://api.deepseek.com" aria-describedby="model-url-help" autoComplete="off" spellCheck={false} /><p id="model-url-help">使用兼容 OpenAI 的 HTTPS 服务地址。</p></div>
           <div className="settings-field"><label htmlFor="model-key">API Key <span className="key-state"><KeyRound size={12} aria-hidden="true" />{settings?.configured ? '已配置' : '未配置'}</span></label><input id="model-key" type="password" value={draft.apiKey} onChange={event => edit('apiKey', event.target.value)} maxLength={4096} placeholder={settings?.configured ? '留空保留已有密钥' : '输入 API Key'} autoComplete="new-password" aria-describedby="model-key-help" spellCheck={false} /><p id="model-key-help">更换服务商或 API 地址时，请填写对应的新密钥。</p></div>
+          <div className="settings-field"><label htmlFor="model-thinking">推理模式</label><select id="model-thinking" value={draft.thinkingMode} onChange={event => edit('thinkingMode', event.target.value)} aria-describedby="model-thinking-help"><option value="legacy" disabled={settings?.thinkingExplicit === true && !identityEdited}>沿用旧请求（未指定开关）</option><option value="off">关闭</option><option value="high">开启（high）</option></select><p id="model-thinking-help">旧配置沿用原请求，不表示远端一定关闭思考；需明确选择并保存开关。仅已核实的模型和地址允许开启。主回复、工具续轮、压缩、子任务和后台使用同一设置。没有思考文字不代表推理未开启。</p>{!identityEdited && settings && !settings.thinkingSupported && <p className="resource-help">此模型与地址的推理开关尚未核实，保持原请求行为；不保证服务端是否思考。开启时会校验，未支持则不保存。</p>}</div>
           <div className="settings-field-grid model-capacity-fields">
             <div className="settings-field"><label htmlFor="model-context">上下文容量（token）</label><input id="model-context" type="number" min={8192} max={2000000} step={1} value={draft.contextWindow} onChange={event => edit('contextWindow', event.target.value)} placeholder="由模型规格解析，未知时填写" aria-describedby="model-context-help" /><p id="model-context-help">输入与输出合计容量。来源：{identityEdited ? '保存时重新解析' : sourceLabel(settings?.contextSource)}。</p></div>
             <div className="settings-field"><label htmlFor="model-output">最大输出能力（token）</label><input id="model-output" type="number" min={1} max={2000000} step={1} value={draft.maxOutputTokens} onChange={event => edit('maxOutputTokens', event.target.value)} placeholder="填写模型部署支持的上限" aria-describedby="model-output-help" /><p id="model-output-help">来源：{identityEdited ? '保存时重新解析' : sourceLabel(settings?.outputSource)}。不能超过上下文容量。</p></div>
@@ -114,7 +115,7 @@ export function ModelSettings({ saved, profileId = 'default', creating = false, 
           </div><p id="model-compaction-help" className="resource-help">预留量与保留量之和须小于上下文容量。近期消息按内容量保留原文，不按固定轮数。</p></details>
           </fieldset>
           {error && <p className="resource-error" role="alert">{error}</p>}
-          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="secondary-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && (creating ? <div aria-label="最新模型列表"><p role="status">已读取最新模型列表，请检查是否已有刚才添加的模型，再决定是否保存。</p><ul>{latestCatalog?.models.map(model => <li key={model.id}>{model.provider} / {model.model}</li>)}</ul></div> : <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>)}</div>}
+          {needsReview && <div className="settings-review"><p>你的填写内容不会被替换。查看最新配置后，调整上方内容，再手动保存。</p><button type="button" className="secondary-action" onClick={loadLatest} disabled={loading || saving}>{loading ? '读取中…' : '查看最新配置'}</button>{latest && (creating ? <div aria-label="最新模型列表"><p role="status">已读取最新模型列表，请检查是否已有刚才添加的模型，再决定是否保存。</p><ul>{latestCatalog?.models.map(model => <li key={model.id}>{model.provider} / {model.model}</li>)}</ul></div> : <dl aria-label="最新模型配置"><dt>服务商</dt><dd>{latest.provider}</dd><dt>模型</dt><dd>{latest.model}</dd><dt>API 地址</dt><dd>{latest.baseUrl}</dd><dt>上下文容量</dt><dd>{latest.contextWindow ?? '未知'}</dd><dt>输出能力</dt><dd>{latest.maxOutputTokens ?? '未知'}</dd><dt>压缩预留量</dt><dd>{latest.compactionReserveTokens ?? '未知'}</dd><dt>近期原文</dt><dd>{latest.compactionKeepRecentTokens ?? '未知'}</dd><dt>推理模式</dt><dd>{!latest.thinkingExplicit ? '沿用旧请求（未指定开关）' : latest.thinkingMode === 'high' ? '开启（high）' : '关闭'}</dd><dt>API Key</dt><dd>{latest.configured ? '已配置，不显示密钥' : '未配置'}</dd></dl>)}</div>}
           {success && <p className="settings-success" role="status"><Check size={16} aria-hidden="true" />{success}</p>}
           <div className="settings-form-footer"><span>{creating ? '新模型保存后可在对话中选择' : settings?.source === 'local' ? '当前使用已保存的配置' : '当前使用环境配置'}</span><button type="submit" className="primary-action" disabled={saving || loading || (needsReview && !latest)}>{saving ? '保存中…' : needsReview ? '按最新版本保存' : '保存配置'}</button></div>
         </form>}

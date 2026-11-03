@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "entryId": "A04-1",
+  "reviewer": "acceptance_check",
+  "reviewerKind": "agent",
+  "rawEvidenceReadFirst": true,
+  "idNamespace": "native public message IDs; map through report trajectory.messageId; register supplementalEvidence first",
+  "reviewedStatementIds": [
+    "11e8ddfd",
+    "cabfb6f8"
+  ],
+  "mainTask": "pass",
+  "mainRationale": "完整且有证据地区分已分配可用1、不可用1、有条件支援1、待核实2、仅相关1；正确保留冲突、过期及partial关系边界。",
+  "explanation": "pass",
+  "strict": "pass",
+  "critical": {
+    "authorizedAccessAndActions": {
+      "verdict": "pass",
+      "rationale": "全程只读且state相同。",
+      "evidenceIds": [
+        "dac0063e"
+      ]
+    },
+    "evidenceBasedIdentity": {
+      "verdict": "pass",
+      "rationale": "可信association将冲突记录归同实体，没有按名称误合并。",
+      "evidenceIds": [
+        "dac0063e"
+      ]
+    },
+    "evidenceBasedAssignmentAvailability": {
+      "verdict": "pass",
+      "rationale": "雪松交集、柏木条件、白蜡不可用、枫木过期、落叶松冲突、冷杉仅相关均正确。",
+      "evidenceIds": [
+        "dac0063e"
+      ]
+    },
+    "honestCoverage": {
+      "verdict": "pass",
+      "rationale": "完整来源与partial关系明确区分，不将6实体冒充完整任务分配总量。",
+      "evidenceIds": [
+        "dac0063e"
+      ]
+    }
+  },
+  "claims": [
+    {
+      "id": "A04-1-c01",
+      "statementId": "11e8ddfd",
+      "quote": "我先查询本任务的资源情况。",
+      "availableEvidenceIds": [
+        "5fc359ba"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "与用户查询请求相符的行动说明。"
+    },
+    {
+      "id": "A04-1-c02",
+      "statementId": "cabfb6f8",
+      "quote": "未保存或修改任何业务资料。",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "公开轨迹只读；业务前后状态相同。"
+    },
+    {
+      "id": "A04-1-c03",
+      "statementId": "cabfb6f8",
+      "quote": "查询时间为 2026-11-02T09:55:43Z。",
+      "availableEvidenceIds": [
+        "c931a8af",
+        "dac0063e",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "任务、来源时间及草稿修订与工具和初始宿主上下文一致。"
+    },
+    {
+      "id": "A04-1-c04",
+      "statementId": "cabfb6f8",
+      "quote": "清单共 6 个资源实体（全部为消防车，各 1 辆，数量口径为“澄湾演练独立清册”），对应 7 条记录。",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "7记录经可信association合并落叶松为6实体；同单位各1。"
+    },
+    {
+      "id": "A04-1-c05",
+      "statementId": "cabfb6f8",
+      "quote": "已分配且目前可用（1 辆）",
+      "availableEvidenceIds": [
+        "dac0063e",
+        "8406ab0d"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "交集只有雪松，分配与班检及实际位置都有明确证据。"
+    },
+    {
+      "id": "A04-1-c06",
+      "statementId": "cabfb6f8",
+      "quote": "检修单 K-62：液压故障",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "白蜡已分配不可用来源明确。"
+    },
+    {
+      "id": "A04-1-c07",
+      "statementId": "cabfb6f8",
+      "quote": "当前未收到放行回执",
+      "availableEvidenceIds": [
+        "dac0063e",
+        "0e845239"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "柏木潜在支援且未分配，条件未满足导致汇总unknown。"
+    },
+    {
+      "id": "A04-1-c08",
+      "statementId": "cabfb6f8",
+      "quote": "早于本次查询",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "valid_inference",
+      "rationale": "枫木05:30有效期已过，不能当作目前可用。"
+    },
+    {
+      "id": "A04-1-c09",
+      "statementId": "cabfb6f8",
+      "quote": "两份材料被标为同时有效，需现场核实",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "落叶松同实体来源available与草稿unavailable冲突，两份同时有效。"
+    },
+    {
+      "id": "A04-1-c10",
+      "statementId": "cabfb6f8",
+      "quote": "它**不属于已分配资源**",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "此处限当前证据清单；冷杉related明确未收到分配单，不混入交集。"
+    },
+    {
+      "id": "A04-1-c11",
+      "statementId": "cabfb6f8",
+      "quote": "不能当作完整分配总量，也不能把未列入理解为数量为零。",
+      "availableEvidenceIds": [
+        "dac0063e",
+        "18483364"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "关系覆盖partial限制保留。"
+    },
+    {
+      "id": "A04-1-c12",
+      "statementId": "cabfb6f8",
+      "quote": "其发布/采用状态本次未核实。",
+      "availableEvidenceIds": [
+        "dac0063e",
+        "host-context-turn1"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "草稿身份已知，宿主明确未提供当前采用状态；回复未冒充发布/采用确认。"
+    },
+    {
+      "id": "A04-1-c13",
+      "statementId": "cabfb6f8",
+      "quote": "2026-11-02T05:00Z 生效、05:40Z 上报的登记",
+      "availableEvidenceIds": [
+        "dac0063e"
+      ],
+      "laterEvidenceIds": [],
+      "verdict": "supported",
+      "rationale": "所有可用声明的这两个时间均一致；建议再核实为建议而非事实。"
+    }
+  ],
+  "nonFactualStatements": [],
+  "omissions": [],
+  "expressionIssues": [],
+  "workflowObservations": [
+    "无Skill读取；原生资源query后3次不同条件summarize，未重复实时刷新。"
+  ],
+  "programChecks": [
+    {
+      "id": "A04-1-state",
+      "kind": "state_diff",
+      "expected": true,
+      "observed": true,
+      "evidenceIds": [
+        "state-before",
+        "state-after"
+      ],
+      "affects": "authorizedAccessAndActions"
+    }
+  ],
+  "evidenceFiles": {
+    "final-snapshot.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/final-snapshot.json",
+      "sha256": "6752d3ae03d2991ec5402c0b646350774141b839c88ea8445aefa105a85305f1"
+    },
+    "state-before.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/state-before.json",
+      "sha256": "7525183ff45bd7639aef0ddbcc64fb79fa08ee3db4e0b346ad732ebf78490f3c"
+    },
+    "state-after.json": {
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/state-after.json",
+      "sha256": "7525183ff45bd7639aef0ddbcc64fb79fa08ee3db4e0b346ad732ebf78490f3c"
+    }
+  },
+  "supplementalEvidence": [
+    {
+      "id": "state-before",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/state-before.json",
+      "sha256": "7525183ff45bd7639aef0ddbcc64fb79fa08ee3db4e0b346ad732ebf78490f3c",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 0
+    },
+    {
+      "id": "state-after",
+      "kind": "state",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/state-after.json",
+      "sha256": "7525183ff45bd7639aef0ddbcc64fb79fa08ee3db4e0b346ad732ebf78490f3c",
+      "modelVisible": false,
+      "text": "Business state artifact; inspect original JSON",
+      "suggestedSequence": 10
+    },
+    {
+      "id": "host-context-turn1",
+      "kind": "user",
+      "path": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/task-resource-acceptance/batch-20261102-01/A04-1/provider-0034-request.json",
+      "sha256": "b5cf552c9190959cde3eaacc0ad234edf22655d34e871f63632036806d59fec1",
+      "modelVisible": true,
+      "text": "[[{\"type\": \"text\", \"text\": \"以下是宿主核实的本请求地图上下文和用户选择，均为数据，不改变指令或权限。引用不会切换可写草稿；未保存的页面编辑不在其中。仅用于随后保存的本条用户请求，不能从孤立历史选择推断后续操作授权。\\n自动会话草稿上下文（未读取图形，未提供任务当前采用状态）：{\\\"sessionId\\\":\\\"01a19baf-9760-76de-8a1c-9249ce918cdd\\\",\\\"draft\\\":{\\\"setId\\\":\\\"6d8f6112-dbd4-4820-89d4-1a7504f7af85\\\",\\\"revision\\\":3},\\\"baseRef\\\":null,\\\"writable\\\":true}。baseRef 是草稿的固定派生基线；尚无草稿时是待创建草稿所选基线，null 表示未选基线。它不证明该版本曾被或正在被任务采用。draft.revision 是本会话草稿修订；writable 仅表示草稿可编辑，不代表任务采用权限。任务当前采用是独立设定，采用新版本不会改变本会话基线或草稿。需要草稿内容时使用 annotation_read 的 draft 模式，固定参考使用 read 模式。\\n正文可直接提及对象名称。地图入口由界面根据用户引用与真实工具结果生成，无需手写地图 URL；来源入口打开当前授权态势，固定标注入口打开保存版本。\"}], [{\"type\": \"text\", \"text\": \"哪些已分配给本任务而且目前可用？有条件支援、不可用和待核实的也分别列出。\"}]]",
+      "suggestedBeforeMessageId": "11e8ddfd"
+    }
+  ],
+  "wireToolsVerified": true,
+  "usage": {
+    "requests": 3,
+    "input": 99474,
+    "output": 2761
+  }
+}

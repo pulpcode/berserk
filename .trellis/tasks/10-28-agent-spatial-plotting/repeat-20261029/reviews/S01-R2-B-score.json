@@ -1,0 +1,14 @@
+{
+  "id": "S01-R2-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "origin输入1与全层4的范围区分符合全文，500米预览/近似方法/无保存正确；不代表全层4意为结果不是四对象集合，不是声称全层不等于4。",
+  "evidence": [
+    "S01-R2-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

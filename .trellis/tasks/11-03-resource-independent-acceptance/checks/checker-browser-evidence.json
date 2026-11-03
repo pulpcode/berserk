@@ -1,0 +1,991 @@
+[
+  {
+    "caseId": "P01",
+    "body": [
+      {
+        "text": "只看我引用的“绀溪核验图层”和“绀溪矩形”，列出矩形内部及边界上的实际资源，内部和边界分开，给出各自数量。",
+        "annotationRefs": [
+          {
+            "setId": "ea4c86ab-7d6a-45b0-b9ea-4f777d699443",
+            "revision": 1,
+            "layerIds": [
+              "p01-assets"
+            ]
+          },
+          {
+            "setId": "ea4c86ab-7d6a-45b0-b9ea-4f777d699443",
+            "revision": 1,
+            "objectIds": [
+              "p01-area"
+            ]
+          }
+        ]
+      }
+    ],
+    "nativeUserIds": [
+      "d0f6a904"
+    ],
+    "nativeSelections": [
+      {
+        "annotationContext": {
+          "sessionId": "01a19eef-8977-77a7-bb82-1c7e9070d3b2",
+          "draft": {
+            "setId": "ea4c86ab-7d6a-45b0-b9ea-4f777d699443",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        },
+        "annotationRefs": [
+          {
+            "ref": {
+              "setId": "ea4c86ab-7d6a-45b0-b9ea-4f777d699443",
+              "revision": 1
+            },
+            "hash": "b208dd4571c14aaab6fd0d62a36717e224086000c1c61c4fbb28b195630d691e",
+            "title": "会话标注",
+            "layerIds": [
+              "p01-assets"
+            ],
+            "layers": [
+              {
+                "layerId": "p01-assets",
+                "name": "绀溪核验图层"
+              }
+            ],
+            "objects": []
+          },
+          {
+            "ref": {
+              "setId": "ea4c86ab-7d6a-45b0-b9ea-4f777d699443",
+              "revision": 1
+            },
+            "hash": "b208dd4571c14aaab6fd0d62a36717e224086000c1c61c4fbb28b195630d691e",
+            "title": "会话标注",
+            "objectIds": [
+              "p01-area"
+            ],
+            "layers": [],
+            "objects": [
+              {
+                "objectId": "p01-area",
+                "name": "绀溪矩形",
+                "kind": "polygon",
+                "layerId": "p01-regions"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "artifacts": {
+      "/private/tmp/resource-independent-browser-20261103-c/P01-offline/browser-turn-1/sent-message-bodies.json": "6c113873f8bc58e5e437db1816980e8b8c9d92bc46acd0cd2e6d0fefa2d331c0",
+      "/private/tmp/resource-independent-browser-20261103-c/P01-offline/browser-turn-1/result.json": "42ae91eb4fbf0ff714776b34a96ac51999ad83c1b2b7948bbb756f7ffa5542b2",
+      "/private/tmp/resource-independent-browser-20261103-c/P01-offline/browser-turn-1/native-snapshot.json": "20a018de05b883cb50855a32d13878040f6ad5814ad1c9aab25b0f1359034b16"
+    }
+  },
+  {
+    "caseId": "N02",
+    "body": [
+      {
+        "text": "把“鹭桥车籍”的“晨组车辆汇总”和“暮组车辆汇总”去重，给我车辆名称名单和数量。图层里引用的“沄桥运输车副本”也要核对，别重复算同一辆。",
+        "annotationRefs": [
+          {
+            "setId": "04797fcf-a847-48c9-bec8-2b52b644c6f7",
+            "revision": 3,
+            "objectIds": [
+              "n02-copy-u"
+            ]
+          }
+        ],
+        "contextRefs": [
+          {
+            "systemId": "n02-luqiao",
+            "objectType": "resource",
+            "objectId": "lq-morning"
+          },
+          {
+            "systemId": "n02-luqiao",
+            "objectType": "resource",
+            "objectId": "lq-evening"
+          }
+        ]
+      }
+    ],
+    "nativeUserIds": [
+      "9f2024d3"
+    ],
+    "nativeSelections": [
+      {
+        "annotationContext": {
+          "sessionId": "01a19eef-accb-77a7-bb82-1c8183d24981",
+          "draft": {
+            "setId": "04797fcf-a847-48c9-bec8-2b52b644c6f7",
+            "revision": 3
+          },
+          "baseRef": null,
+          "writable": true
+        },
+        "annotationRefs": [
+          {
+            "ref": {
+              "setId": "04797fcf-a847-48c9-bec8-2b52b644c6f7",
+              "revision": 3
+            },
+            "hash": "71cd0ea9408ec9aedd50989221ea4879cb2aa0b5d1efd2522bff86867c9d3fa8",
+            "title": "会话标注",
+            "objectIds": [
+              "n02-copy-u"
+            ],
+            "layers": [],
+            "objects": [
+              {
+                "objectId": "n02-copy-u",
+                "name": "沄桥运输车副本",
+                "kind": "point",
+                "layerId": "n02-copies"
+              }
+            ]
+          }
+        ],
+        "context": {
+          "refs": [
+            {
+              "systemId": "n02-luqiao",
+              "objectType": "resource",
+              "objectId": "lq-morning"
+            },
+            {
+              "systemId": "n02-luqiao",
+              "objectType": "resource",
+              "objectId": "lq-evening"
+            }
+          ],
+          "queries": [
+            {
+              "systemId": "n02-luqiao",
+              "query": {
+                "systemId": "n02-luqiao",
+                "limit": 100,
+                "objectRefs": [
+                  {
+                    "systemId": "n02-luqiao",
+                    "objectType": "resource",
+                    "objectId": "lq-morning"
+                  },
+                  {
+                    "systemId": "n02-luqiao",
+                    "objectType": "resource",
+                    "objectId": "lq-evening"
+                  }
+                ],
+                "mode": "current"
+              },
+              "queriedAt": "2026-11-03T01:04:35.726Z",
+              "data": {
+                "systemId": "n02-luqiao",
+                "asOf": "2026-11-03T01:04:29.062Z",
+                "items": [
+                  {
+                    "ref": {
+                      "systemId": "n02-luqiao",
+                      "objectType": "resource",
+                      "objectId": "lq-morning"
+                    },
+                    "name": "晨组车辆汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:29.054Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:29.054Z",
+                      "to": "2026-11-04T01:04:29.054Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "vehicle",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 3,
+                          "unit": "辆",
+                          "meaning": "entities",
+                          "scope": "n02-fleet-entire",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n02-luqiao",
+                                "objectType": "resource",
+                                "objectId": "lq-morning"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:29.054Z",
+                          "effectiveAt": "2026-11-03T00:54:29.054Z",
+                          "validUntil": "2026-11-04T01:04:29.054Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "34b4d85b-5e1f-425b-8c86-219e557c6ae5",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n02-luqiao",
+                                  "objectType": "resource",
+                                  "objectId": "lq-morning"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:29.054Z",
+                            "effectiveAt": "2026-11-03T00:54:29.054Z",
+                            "validUntil": "2026-11-04T01:04:29.054Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n02-luqiao",
+                                "objectType": "resource",
+                                "objectId": "lq-morning"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:29.054Z",
+                          "effectiveAt": "2026-11-03T00:54:29.054Z",
+                          "validUntil": "2026-11-04T01:04:29.054Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n02-fleet-entire",
+                        "complete": true,
+                        "memberEntityIds": [
+                          "lq-e17",
+                          "lq-e26",
+                          "lq-e39"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "ref": {
+                      "systemId": "n02-luqiao",
+                      "objectType": "resource",
+                      "objectId": "lq-evening"
+                    },
+                    "name": "暮组车辆汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:29.054Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:29.054Z",
+                      "to": "2026-11-04T01:04:29.054Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "vehicle",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 4,
+                          "unit": "辆",
+                          "meaning": "entities",
+                          "scope": "n02-fleet-entire",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n02-luqiao",
+                                "objectType": "resource",
+                                "objectId": "lq-evening"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:29.054Z",
+                          "effectiveAt": "2026-11-03T00:54:29.054Z",
+                          "validUntil": "2026-11-04T01:04:29.054Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "34b4d85b-5e1f-425b-8c86-219e557c6ae5",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n02-luqiao",
+                                  "objectType": "resource",
+                                  "objectId": "lq-evening"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:29.054Z",
+                            "effectiveAt": "2026-11-03T00:54:29.054Z",
+                            "validUntil": "2026-11-04T01:04:29.054Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n02-luqiao",
+                                "objectType": "resource",
+                                "objectId": "lq-evening"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:29.054Z",
+                          "effectiveAt": "2026-11-03T00:54:29.054Z",
+                          "validUntil": "2026-11-04T01:04:29.054Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n02-fleet-entire",
+                        "complete": true,
+                        "memberEntityIds": [
+                          "lq-e26",
+                          "lq-e39",
+                          "lq-e48",
+                          "lq-e56"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "limit": 100,
+                "nextCursor": null,
+                "hasMore": false,
+                "timeUnknownCount": 0,
+                "unknownRefs": [],
+                "changeCursor": "fixture:1",
+                "resourceCoverage": {
+                  "status": "complete"
+                }
+              },
+              "mapReferences": []
+            }
+          ]
+        }
+      }
+    ],
+    "artifacts": {
+      "/private/tmp/resource-independent-browser-20261103-c/N02-offline/browser-turn-1/sent-message-bodies.json": "a4790d0bb8016544b16c23c7d656a15dbb37a83de251472b8e8a8e98d4e70217",
+      "/private/tmp/resource-independent-browser-20261103-c/N02-offline/browser-turn-1/result.json": "ebff4d60402275b2e90f847735a69fc9ef9d23ced6d4e89901a2989f2e8cc24f",
+      "/private/tmp/resource-independent-browser-20261103-c/N02-offline/browser-turn-1/native-snapshot.json": "cac164fc164a10ed9285f9460a4dd2ed54a3b41cc40e24c86c0dd07b336c613b"
+    }
+  },
+  {
+    "caseId": "N03",
+    "body": [
+      {
+        "text": "这四份汇总合起来多少，哪些还不能确定？请按它们各自的统计范围分别说明：车辆看“石苔车辆范围”，舟艇看“汀镜舟艇范围”，不要把不同范围硬拼成一个数。",
+        "contextRefs": [
+          {
+            "systemId": "n03-shitai",
+            "objectType": "resource",
+            "objectId": "st-known"
+          },
+          {
+            "systemId": "n03-shitai",
+            "objectType": "resource",
+            "objectId": "st-unlisted"
+          },
+          {
+            "systemId": "n03-tingjing",
+            "objectType": "resource",
+            "objectId": "tj-upper"
+          },
+          {
+            "systemId": "n03-tingjing",
+            "objectType": "resource",
+            "objectId": "tj-lower"
+          }
+        ]
+      }
+    ],
+    "nativeUserIds": [
+      "351313da"
+    ],
+    "nativeSelections": [
+      {
+        "context": {
+          "refs": [
+            {
+              "systemId": "n03-shitai",
+              "objectType": "resource",
+              "objectId": "st-known"
+            },
+            {
+              "systemId": "n03-shitai",
+              "objectType": "resource",
+              "objectId": "st-unlisted"
+            },
+            {
+              "systemId": "n03-tingjing",
+              "objectType": "resource",
+              "objectId": "tj-upper"
+            },
+            {
+              "systemId": "n03-tingjing",
+              "objectType": "resource",
+              "objectId": "tj-lower"
+            }
+          ],
+          "queries": [
+            {
+              "systemId": "n03-shitai",
+              "query": {
+                "systemId": "n03-shitai",
+                "limit": 100,
+                "objectRefs": [
+                  {
+                    "systemId": "n03-shitai",
+                    "objectType": "resource",
+                    "objectId": "st-known"
+                  },
+                  {
+                    "systemId": "n03-shitai",
+                    "objectType": "resource",
+                    "objectId": "st-unlisted"
+                  }
+                ],
+                "mode": "current"
+              },
+              "queriedAt": "2026-11-03T01:04:46.970Z",
+              "data": {
+                "systemId": "n03-shitai",
+                "asOf": "2026-11-03T01:04:38.924Z",
+                "items": [
+                  {
+                    "ref": {
+                      "systemId": "n03-shitai",
+                      "objectType": "resource",
+                      "objectId": "st-known"
+                    },
+                    "name": "石苔明细车辆汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:38.918Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:38.918Z",
+                      "to": "2026-11-04T01:04:38.918Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "vehicle",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 4,
+                          "unit": "辆",
+                          "meaning": "entities",
+                          "scope": "n03-shitai-vehicles",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-shitai",
+                                "objectType": "resource",
+                                "objectId": "st-known"
+                              },
+                              "revision": 1
+                            },
+                            {
+                              "kind": "declaration",
+                              "note": "各自数量为同一车辆范围内不重复实体数，但未列成员汇总未披露身份，未声明与另一组是否重叠"
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "d1e9e298-6239-4464-872c-e9696e26fa8c",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n03-shitai",
+                                  "objectType": "resource",
+                                  "objectId": "st-known"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:38.918Z",
+                            "effectiveAt": "2026-11-03T00:54:38.918Z",
+                            "validUntil": "2026-11-04T01:04:38.918Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-shitai",
+                                "objectType": "resource",
+                                "objectId": "st-known"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n03-shitai-vehicles",
+                        "complete": true,
+                        "memberEntityIds": [
+                          "st-e12",
+                          "st-e24",
+                          "st-e37",
+                          "st-e49"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "ref": {
+                      "systemId": "n03-shitai",
+                      "objectType": "resource",
+                      "objectId": "st-unlisted"
+                    },
+                    "name": "石苔未列成员车辆汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:38.918Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:38.918Z",
+                      "to": "2026-11-04T01:04:38.918Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "vehicle",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 6,
+                          "unit": "辆",
+                          "meaning": "entities",
+                          "scope": "n03-shitai-vehicles",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-shitai",
+                                "objectType": "resource",
+                                "objectId": "st-unlisted"
+                              },
+                              "revision": 1
+                            },
+                            {
+                              "kind": "declaration",
+                              "note": "各自数量为同一车辆范围内不重复实体数，但未列成员汇总未披露身份，未声明与另一组是否重叠"
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "d1e9e298-6239-4464-872c-e9696e26fa8c",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n03-shitai",
+                                  "objectType": "resource",
+                                  "objectId": "st-unlisted"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:38.918Z",
+                            "effectiveAt": "2026-11-03T00:54:38.918Z",
+                            "validUntil": "2026-11-04T01:04:38.918Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-shitai",
+                                "objectType": "resource",
+                                "objectId": "st-unlisted"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n03-shitai-vehicles",
+                        "complete": false
+                      }
+                    }
+                  }
+                ],
+                "limit": 100,
+                "nextCursor": null,
+                "hasMore": false,
+                "timeUnknownCount": 0,
+                "unknownRefs": [],
+                "changeCursor": "fixture:1",
+                "resourceCoverage": {
+                  "status": "complete"
+                }
+              },
+              "mapReferences": []
+            },
+            {
+              "systemId": "n03-tingjing",
+              "query": {
+                "systemId": "n03-tingjing",
+                "limit": 100,
+                "objectRefs": [
+                  {
+                    "systemId": "n03-tingjing",
+                    "objectType": "resource",
+                    "objectId": "tj-upper"
+                  },
+                  {
+                    "systemId": "n03-tingjing",
+                    "objectType": "resource",
+                    "objectId": "tj-lower"
+                  }
+                ],
+                "mode": "current"
+              },
+              "queriedAt": "2026-11-03T01:04:46.979Z",
+              "data": {
+                "systemId": "n03-tingjing",
+                "asOf": "2026-11-03T01:04:38.924Z",
+                "items": [
+                  {
+                    "ref": {
+                      "systemId": "n03-tingjing",
+                      "objectType": "resource",
+                      "objectId": "tj-upper"
+                    },
+                    "name": "汀镜上段舟艇汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:38.918Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:38.918Z",
+                      "to": "2026-11-04T01:04:38.918Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "rescue_boat",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 2,
+                          "unit": "艘",
+                          "meaning": "entities",
+                          "scope": "n03-tingjing-boats",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-tingjing",
+                                "objectType": "resource",
+                                "objectId": "tj-upper"
+                              },
+                              "revision": 1
+                            },
+                            {
+                              "kind": "declaration",
+                              "note": "成员列表覆盖本汇总全部实体，使用本来源相同实体ID命名空间"
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "d1e9e298-6239-4464-872c-e9696e26fa8c",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n03-tingjing",
+                                  "objectType": "resource",
+                                  "objectId": "tj-upper"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:38.918Z",
+                            "effectiveAt": "2026-11-03T00:54:38.918Z",
+                            "validUntil": "2026-11-04T01:04:38.918Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-tingjing",
+                                "objectType": "resource",
+                                "objectId": "tj-upper"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n03-tingjing-boats",
+                        "complete": true,
+                        "memberEntityIds": [
+                          "tj-e15",
+                          "tj-e29"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "ref": {
+                      "systemId": "n03-tingjing",
+                      "objectType": "resource",
+                      "objectId": "tj-lower"
+                    },
+                    "name": "汀镜下段舟艇汇总",
+                    "revision": 1,
+                    "areaIds": [],
+                    "effectiveAt": "2026-11-03T00:54:38.918Z",
+                    "validTime": {
+                      "from": "2026-11-03T00:54:38.918Z",
+                      "to": "2026-11-04T01:04:38.918Z"
+                    },
+                    "geometry": null,
+                    "properties": {},
+                    "resourceData": {
+                      "resource": {
+                        "meaning": "actual_resource",
+                        "category": "rescue_boat",
+                        "granularity": "aggregate",
+                        "quantity": {
+                          "value": 3,
+                          "unit": "艘",
+                          "meaning": "entities",
+                          "scope": "n03-tingjing-boats",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-tingjing",
+                                "objectType": "resource",
+                                "objectId": "tj-lower"
+                              },
+                              "revision": 1
+                            },
+                            {
+                              "kind": "declaration",
+                              "note": "成员列表覆盖本汇总全部实体，使用本来源相同实体ID命名空间"
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        },
+                        "taskRelations": [
+                          {
+                            "taskId": "d1e9e298-6239-4464-872c-e9696e26fa8c",
+                            "relation": "unconfirmed",
+                            "evidence": [
+                              {
+                                "kind": "source",
+                                "ref": {
+                                  "systemId": "n03-tingjing",
+                                  "objectType": "resource",
+                                  "objectId": "tj-lower"
+                                },
+                                "revision": 1
+                              }
+                            ],
+                            "reportedAt": "2026-11-03T00:59:38.918Z",
+                            "effectiveAt": "2026-11-03T00:54:38.918Z",
+                            "validUntil": "2026-11-04T01:04:38.918Z"
+                          }
+                        ],
+                        "availability": {
+                          "state": "unknown",
+                          "evidence": [
+                            {
+                              "kind": "source",
+                              "ref": {
+                                "systemId": "n03-tingjing",
+                                "objectType": "resource",
+                                "objectId": "tj-lower"
+                              },
+                              "revision": 1
+                            }
+                          ],
+                          "reportedAt": "2026-11-03T00:59:38.918Z",
+                          "effectiveAt": "2026-11-03T00:54:38.918Z",
+                          "validUntil": "2026-11-04T01:04:38.918Z"
+                        }
+                      },
+                      "coverage": {
+                        "scope": "n03-tingjing-boats",
+                        "complete": true,
+                        "memberEntityIds": [
+                          "tj-e44",
+                          "tj-e58",
+                          "tj-e63"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "limit": 100,
+                "nextCursor": null,
+                "hasMore": false,
+                "timeUnknownCount": 0,
+                "unknownRefs": [],
+                "changeCursor": "fixture:1",
+                "resourceCoverage": {
+                  "status": "complete"
+                }
+              },
+              "mapReferences": []
+            }
+          ]
+        }
+      }
+    ],
+    "artifacts": {
+      "/private/tmp/resource-independent-browser-20261103-c/N03-offline/browser-turn-1/sent-message-bodies.json": "4983f69e9e0a1ea4d276e171541570db8675e9972eb364f6d96806025bb9fe5a",
+      "/private/tmp/resource-independent-browser-20261103-c/N03-offline/browser-turn-1/result.json": "52a318f1254f4c954b8a54bb0813e1aac3bfb6ab1fb0ec237ebc0bca56db4dc0",
+      "/private/tmp/resource-independent-browser-20261103-c/N03-offline/browser-turn-1/native-snapshot.json": "588c9a2d76f5b7f417df9e1f56b4315d2026051e7194077db499559f1e0d2bb8"
+    }
+  },
+  {
+    "caseId": "P01-explicit-binary",
+    "body": [
+      {
+        "text": "只看我引用的“绀溪核验图层”和“绀溪矩形”，列出矩形内部及边界上的实际资源，内部和边界分开，给出各自数量。",
+        "annotationRefs": [
+          {
+            "setId": "d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc",
+            "revision": 1,
+            "layerIds": [
+              "p01-assets"
+            ]
+          },
+          {
+            "setId": "d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc",
+            "revision": 1,
+            "objectIds": [
+              "p01-area"
+            ]
+          }
+        ]
+      }
+    ],
+    "nativeUserIds": [
+      "c031730e"
+    ],
+    "nativeSelections": [
+      {
+        "annotationContext": {
+          "sessionId": "01a19ef9-0370-7095-ad0b-4bc32e820f29",
+          "draft": {
+            "setId": "d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        },
+        "annotationRefs": [
+          {
+            "ref": {
+              "setId": "d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc",
+              "revision": 1
+            },
+            "hash": "302be9d1e59345cbc3146c1197c63a093df6570d9169de45174c0d1d3142facd",
+            "title": "会话标注",
+            "layerIds": [
+              "p01-assets"
+            ],
+            "layers": [
+              {
+                "layerId": "p01-assets",
+                "name": "绀溪核验图层"
+              }
+            ],
+            "objects": []
+          },
+          {
+            "ref": {
+              "setId": "d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc",
+              "revision": 1
+            },
+            "hash": "302be9d1e59345cbc3146c1197c63a093df6570d9169de45174c0d1d3142facd",
+            "title": "会话标注",
+            "objectIds": [
+              "p01-area"
+            ],
+            "layers": [],
+            "objects": [
+              {
+                "objectId": "p01-area",
+                "name": "绀溪矩形",
+                "kind": "polygon",
+                "layerId": "p01-regions"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "artifacts": {
+      "/private/tmp/resource-independent-browser-20261103-d/P01-offline/browser-turn-1/sent-message-bodies.json": "dbc42afffa4321cee3c9e345f6454fc5a03252e9fcf6dcb5c9f4351f193db1e2",
+      "/private/tmp/resource-independent-browser-20261103-d/P01-offline/browser-turn-1/result.json": "f5fc3ad7376869972c3eaf4faf65122d35f8385fc1c6a912b3924619c8b7d3d5",
+      "/private/tmp/resource-independent-browser-20261103-d/P01-offline/browser-turn-1/native-snapshot.json": "769800f0f9f02acd70b42894a3b9cf637cf42b4a0169d660edf52dce6bade749"
+    }
+  }
+]

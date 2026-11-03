@@ -1,0 +1,14 @@
+{
+  "id": "P01-R3-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确车型符号及所有指定字段正确，原对象与发布采用状态不变，新增后总数2有读写依据。",
+  "evidence": [
+    "P01-R3-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

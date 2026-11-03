@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-27T03:50:25.486431+00:00",
+  "scope": "One exact D06 zero-request bootstrap authentication recovery and copied-cache refresh for remaining authorized supplements",
+  "freezeHash": "d6dd0bb896591eaaf602af6505bde9735bec91c50514862cc00e298bcc0380f8",
+  "pendingCode": {
+    "README.md": "6b3aad5dffe9ec5d5b8f6b8c4465b84c4351326fbd471e8669f1409b76d35ae2",
+    "auth-recovery.test.ts": "9591b229a31405a4f505f9c2aa3e95a0cc8cc0714eb38eb2619f966be0805b58",
+    "auth-restore.ts": "ae698ff0b10bea94bbfe3fa7849e8d7685152a3c6f5ecdbe3d88de08dc7edf3d",
+    "bootstrap-recovery.ts": "5e47e426876288b0a5d43d94b9e2a3850e7ddbdbe7f61e6fb243724f801c33a0",
+    "runner.test.ts": "803b69dec7e9490fe3a129f3f9cca3659e4b702fe189eda19d3472bb202e53e2",
+    "runner.ts": "a74d42541b96cc22b22659f9d5f8332f25bcfc2c7e7413793f18b6eb7302de36",
+    "tsconfig.json": "6655e144469bc5bfc82b7c433aadd1f1106762179eae6ed30047a04088440ad1"
+  },
+  "authorization": {
+    "third": "979deeafa435c4a41b800eebd24f638bc7207224e1fc09366d8ad4c55dfd9087",
+    "unissuedTurns": "31b6873c5c90ff91cc9058aba8529d83eb8c548952fa7b2cef361e03f0d90eff",
+    "fifthLedger": "250a493b5be302d11fd9c8ad94950af54fe9373b8d97f31220357b4ff5d33540",
+    "authRecovery": "7d0a4b9016e9327d6e9ffdc5bd030d282ecece6d54148e8fbb9870cc078a2cff"
+  },
+  "rootSourceHash": "95c4c075b71ae448e289e3f15d4db5dd5a85a7018290dce5471181e167311a25",
+  "oldFailureEvidence": {
+    "failedEvidenceCount": 271,
+    "failedEvidenceHash": "e6877110b74a9f788d549786b9c588e9ae580e9aee120da24297b82733543663",
+    "oldClaimHash": "f69b02ae301930585b21c70f9e0c1ecc447a3b62f53a26fb4920183a6d2d059e",
+    "nativeCount": 1,
+    "cumulative": {
+      "requests": 650,
+      "input": 12467724,
+      "output": 216097,
+      "afp": 3349.8353749999987,
+      "unknown": 0
+    }
+  },
+  "onlyMessages": [
+    {
+      "text": "选择 layerId=rescue-coast 的“救援资源”图层。",
+      "businessTurn": 0
+    }
+  ],
+  "verification": {
+    "tests": {
+      "pass": 3,
+      "fail": 0,
+      "durationMs": 11559.541446,
+      "mockRequests": 1,
+      "newCumulativeRequests": 651
+    },
+    "typecheck": "pass",
+    "lint": "pass",
+    "rootFifthSourcesUnchanged": true,
+    "originalFailedClaimAndEvidenceUnchanged": true,
+    "realModelCallsByReviewer": 0,
+    "officialRecoveryClaimCreatedByReviewer": false
+  },
+  "findingsFixed": [],
+  "findingsNotFixed": [],
+  "executionPreconditions": [
+    "Use explicit prepare-recovery/run-recovery once with new recovery claim and independently matching freeze/gate",
+    "Original failed claim and 271 files must remain unchanged",
+    "Only original D06 choice may be sent; no model retry if any attempt or prior user message exists",
+    "D10 must inherit settled successful-scope recovery claim ledger, not old halted bootstrap ledger"
+  ],
+  "evidence": [
+    "independent-auth-recovery-check.md",
+    "independent-auth-recovery-tests.log",
+    "independent-auth-recovery-types.log",
+    "independent-auth-recovery-lint.log"
+  ]
+}

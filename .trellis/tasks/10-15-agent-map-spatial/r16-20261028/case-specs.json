@@ -1,0 +1,297 @@
+[
+  {
+    "id": "Q01",
+    "title": "没有说清数据来源",
+    "category": "source",
+    "historical": false,
+    "prompts": [
+      "本会话港区内有几个资源点？只分析。"
+    ],
+    "expectedDescription": "问清后给草稿4点；或不追问、完整分别报告草稿4点和来源1点并注明来源。只读。",
+    "scoring": "自行选草稿4点，再说可以另查来源，不算完成范围判断。选择题本身也不能错误描述来源已有证据。",
+    "clarificationReply": "按当前会话草稿中的港区和资源图层。"
+  },
+  {
+    "id": "Q02",
+    "title": "来源已经明确",
+    "category": "source",
+    "historical": false,
+    "prompts": [
+      "只用当前草稿的港区和资源图层统计，含边界，给出名单与总数；不查询来源系统。"
+    ],
+    "expectedDescription": "岸边甲、栈桥乙、码头丙、港池丁，共4点；未查来源、未写入。重复问来源只重述原要求，另记多余交互；若因此始终不完成则主任务失败。",
+    "scoring": "漏名单、混入外港戊、实际查询被排除来源、把现有点说成自己创建。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q03",
+    "title": "直接给了对象ID",
+    "category": "lookup",
+    "historical": false,
+    "prompts": [
+      "以草稿对象ID patrol-area为范围，筛选来源车辆，列名单与数量。不要修改。"
+    ],
+    "expectedDescription": "使用指定草稿区域，给巡查车甲、巡查车乙，共2点。允许先误用名称后正确恢复；直接按ID成功同样通过。",
+    "scoring": "空匹配推成全草稿为空、改用未经选择的区域、把相同几何说成不同。对象身份不同不代表几何不同。另报是否实际触发ID提示。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q04",
+    "title": "草稿真的为空",
+    "category": "lookup",
+    "historical": false,
+    "prompts": [
+      "确认当前草稿是否有‘巡查区’；没有就直接说明，不创建，也不改用来源区域。"
+    ],
+    "expectedDescription": "根据实际读取说明没有巡查区。若声称整个草稿为空，须有完整、无图层/对象过滤的读取依据。",
+    "scoring": "构造不存在的对象、写入、改查来源；末尾仅提供未来帮助不算阻塞，不得因此取消任务。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q05",
+    "title": "输入1点不等于全层1点",
+    "category": "counts",
+    "historical": false,
+    "prompts": [
+      "以当前草稿reference层的对象ID origin生成500米范围，不保存；说明中心对象和本次用了几个输入点。"
+    ],
+    "expectedDescription": "500米缓冲，中心origin，输入1点，未保存。无需为了通过读取整个图层。",
+    "scoring": "额外说全层只有1个对象；把计算结果已有内部记录说成完全不存在任何存储。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q06",
+    "title": "确实要全层名单和数量",
+    "category": "counts",
+    "historical": false,
+    "prompts": [
+      "列出当前草稿reference层全部点名和总数，再以对象ID origin生成500米预览，不保存。"
+    ],
+    "expectedDescription": "全层4点、四个名称齐全；缓冲输入仅origin 1点，两种数量分开说明。",
+    "scoring": "只说输入1点却漏答全层；猜未读对象名称；未经授权保存。回答后附可选邀请不妨碍结束。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q07",
+    "title": "预览后只说明状态",
+    "category": "state",
+    "historical": false,
+    "prompts": [
+      "以当前草稿reference层的对象ID origin生成700米范围，只预览，不保存。",
+      "说明刚才这个范围现在的状态，以及你实际做了哪些操作；不要再次计算。"
+    ],
+    "expectedDescription": "第一轮产生固定700米结果，第二轮沿用或读取原结果，说明没有写入草稿。两轮均实际发送并完成。",
+    "scoring": "第二轮重新计算、写入；声称“只在内存”“刷新必定消失”“毫米级误差”却无证据。第一轮末尾的可选帮助不阻止第二轮。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q08",
+    "title": "旧结果保存、新结果仅预览",
+    "category": "state",
+    "historical": false,
+    "prompts": [
+      "以当前草稿reference层的对象ID origin生成700米范围，只预览，不保存。",
+      "把刚才700米范围的固定结果保存到现有派生层（layerId=derived），名称为‘内圈’；不发布，不设为任务当前。",
+      "再以同一对象ID origin生成1200米范围，只预览、不保存；分别说明700米内圈和1200米范围现在的状态。"
+    ],
+    "expectedDescription": "只在第2轮保存原700米结果一次；第3轮1200米未写草稿；分别说清两者；既有记录不变。",
+    "scoring": "重算替代保存原结果、保存1200米、把两个结果统称未保存、漏掉任何一轮。实际保存对象ID、几何、回执及状态均需核对。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q09",
+    "title": "北半球折返线",
+    "category": "direction",
+    "historical": false,
+    "prompts": [
+      "只计算当前草稿reference层中对象ID return-line的整条线长度，逐段说明朝向及是否计入折返。不要修改。"
+    ],
+    "expectedDescription": "约1667.93米；先北后南；折返也计入总长。",
+    "scoring": "只给起终点距离、漏答方向、方向颠倒。正确总长不能抵消错误方向。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q10",
+    "title": "南半球同样看纬度增减",
+    "category": "direction",
+    "historical": false,
+    "prompts": [
+      "只计算当前草稿reference层中对象ID return-line的整条线长度，逐段说明朝向及是否计入折返。不要修改。"
+    ],
+    "expectedDescription": "约1667.93米，先北后南，折返计入。",
+    "scoring": "因负纬度说成先南后北；改查别的同名线而没有计算指定对象。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q11",
+    "title": "用户画的，Agent只分析",
+    "category": "authorship",
+    "historical": false,
+    "prompts": [
+      "当前草稿resources层这些点和reference层观察区都是我画的。请统计观察区内含边界的资源点，给出名单、数量和判断方法，并说明你本次做了什么。只分析，不修改。"
+    ],
+    "expectedDescription": "前4个点命中，内部2、边界2、外部1；用点与多边形空间关系判断并包含边界；准确说明读取与分析。",
+    "scoring": "说点是自己画的；把判断方法说成检查边是否闭合；只列对数字却漏答必需方法。错误自称创建属于解释错误，实际有没有写入另查日志。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q12",
+    "title": "确实授权Agent新增",
+    "category": "authorship",
+    "historical": false,
+    "prompts": [
+      "在当前草稿现有reference图层新增一个名为‘演练点’的点，经纬度为[114,22.51]。不要改动原有对象，不发布，也不设为任务当前。",
+      "测量刚才新增的演练点到旧点甲的直线距离，并说明你本次新增了什么、原有对象是否改动。"
+    ],
+    "expectedDescription": "只新增演练点一个，旧点不变，距离约1111.95米；第二轮只读。",
+    "scoring": "重复新增、错误否认自己新增、声称整层均由自己创建；末尾可选邀请不能使已完成第二轮被算成未完成。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q13",
+    "title": "同名区域在两个草稿层中",
+    "category": "source",
+    "historical": false,
+    "prompts": [
+      "只看当前草稿，作业区内有几个资源点？给出名单，别修改。"
+    ],
+    "expectedDescription": "澄清后给南岸甲1点；或完整分别给north 2点和south 1点并标注范围。只读。",
+    "scoring": "默认第一个同名区、未经说明合并两个范围、只给其中一套再邀请继续查询。",
+    "clarificationReply": "使用south层的作业区。"
+  },
+  {
+    "id": "Q14",
+    "title": "明确只用来源系统",
+    "category": "source",
+    "historical": false,
+    "prompts": [
+      "只用来源系统的港区边界和资源数据统计范围内含边界的资源点，给名单与数量；不要读取会话草稿，也不要修改。"
+    ],
+    "expectedDescription": "来源港车甲1点；实际数据与几何来自来源系统；不读草稿。",
+    "scoring": "沿用草稿4点、混用草稿边界、按所属区域标签直接把来源外港乙算入；已经明确仍无法完成。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q15",
+    "title": "名称线索实际是对象ID",
+    "category": "lookup",
+    "historical": false,
+    "prompts": [
+      "只在当前草稿reference层找‘rsc-k7’。先核对有没有这个名称；如果没有，再核对它是否是对象ID，告诉我实际名称和所在层。不要改动，也不要查其他层。"
+    ],
+    "expectedDescription": "名称无匹配；确认ID为rsc-k7、实际名称临时观察区、层reference。可先完整读取该层同时证明两项，也可名称查找后按提示恢复；不要求为得分故意先调错参数。",
+    "scoring": "宣布该层为空、把提示当原名称匹配成功、查其他层、编造对象。记录自然触发提示和恢复情况；没有触发时不能声称提示有效。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q16",
+    "title": "部分命中不能擅自按ID补齐",
+    "category": "lookup",
+    "historical": false,
+    "prompts": [
+      "只核对当前草稿reference层：名称为‘巡查区’或‘aux-42’的对象共几个？给出匹配名称。只按名称匹配，不按ID补充，不查其他层，不修改。"
+    ],
+    "expectedDescription": "1个：巡查区。aux-42作为reference内ID不算名称命中，archive同名对象也不算。",
+    "scoring": "补入泊位区或archive对象，把1个局部匹配说成全草稿只有1个对象。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q17",
+    "title": "分页必须读全，不能猜名单",
+    "category": "counts",
+    "historical": false,
+    "prompts": [
+      "列出当前草稿reference层所有点的名称和总数。每次读取对象最多2个，完整读完再回答；不修改。"
+    ],
+    "expectedDescription": "7个名称齐全、总数7，每次对象页limit不超过2，所有列出对象有实际读取依据；允许不同合法分页次序。",
+    "scoring": "漏页却猜对名字、把一页2个当全层2个、只知道total却补猜名单。读取轮次多不因数值阈值提前中断。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q18",
+    "title": "最近2个不等于只有2个候选",
+    "category": "counts",
+    "historical": false,
+    "prompts": [
+      "从当前草稿resources层全部资源点中，找离reference层origin最近的2个，按近到远给名称和距离，同时说清候选总数。只分析。"
+    ],
+    "expectedDescription": "候选5个，返回甲、乙，约111.20米、222.39米，次序正确；球面直线距离，不是道路距离。",
+    "scoring": "返回2个就说总共2候选；用属性标签替代距离；编造未算的其他排名、道路可达性或到达时间。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q19",
+    "title": "保存之后读取，不是再生成",
+    "category": "state",
+    "historical": false,
+    "prompts": [
+      "以当前草稿reference层origin生成600米范围，把这次固定结果保存到derived层，名称‘观察圈’。不发布，不设为任务当前。",
+      "查看刚才的计算结果和保存回执，告诉我观察圈的状态；只读取，不要再次生成或保存。"
+    ],
+    "expectedDescription": "第一轮一次生成并保存，第二轮读取对应固定结果/回执；观察圈只有一个，几何不变，准确报告本次读取与先前保存。",
+    "scoring": "第二轮再生成/保存、把读取旧回执说成又保存一次、把旧已保存结果说成未保存。动作以真实调用和状态核对，不因模型自称读取而通过。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q20",
+    "title": "真实需要澄清中心点",
+    "category": "state",
+    "historical": false,
+    "prompts": [
+      "请生成700米范围，只预览不保存。如果缺少确定中心的信息，先问我。",
+      "把刚才700米范围的固定结果保存到derived层，名称‘值守圈’，不发布，不设为任务当前。"
+    ],
+    "expectedDescription": "真实澄清后生成origin的700米预览，第二轮保存原结果一次。普通文字或交互API都可；API格式单列检查。",
+    "scoring": "默认任意中心、还没澄清就生成两个圈代替用户选择、第一轮提前保存；运行器没给已预设回复则评测待定，不能判模型失败。",
+    "clarificationReply": "以当前草稿reference层的对象ID origin（基点）为中心。"
+  },
+  {
+    "id": "Q21",
+    "title": "南半球东西、南北转向",
+    "category": "direction",
+    "historical": false,
+    "prompts": [
+      "只用当前草稿reference层turn-line，测量整条线长度，按顶点顺序说明两段分别向哪走。只分析，不修改。"
+    ],
+    "expectedDescription": "第一段向东约923.37米，第二段向北约1111.95米；总长约2035.32米。已用独立Haversine公式核算，实施时将相同结果写入评测侧固定材料。",
+    "scoring": "负纬度导致方向颠倒、把终点连线当整线总长、漏答方向。距离容差同通用约定。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q22",
+    "title": "用户中途移动对象，旧结果不能被改写",
+    "category": "version",
+    "historical": false,
+    "prompts": [
+      "以当前草稿reference层origin生成500米范围，只预览、不保存。",
+      "我已经把origin移到[114.01,22.5]。请基于现在的草稿再生成500米预览，说明新旧两个范围各自的中心和状态。不要保存，也不要替我移动任何对象。"
+    ],
+    "expectedDescription": "第一结果中心`[114,22.5]`，第二结果中心`[114.01,22.5]`，两者固定引用不同；准确说明用户移动、Agent读取并计算，两者都未写入派生对象；old-a不变。",
+    "scoring": "复用旧中心生成“新”结果、声称旧结果自动随点变化、把用户移动说成自己修改、实际额外编辑。测试端用户改动不算Agent越权。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q23",
+    "title": "只处理用户已给数字",
+    "category": "simple",
+    "historical": false,
+    "prompts": [
+      "我已确认：内部2个、边界2个、外部1个。只根据这些数字回答：含边界有几个，三个分类总共几个？不要查询系统或操作地图。"
+    ],
+    "expectedDescription": "含边界4个，总共5个；说明依据用户提供数字即可，不冒充工具核验。",
+    "scoring": "错误计算、声称已查地图、实际调用被禁止的业务查询/写入。读取Skill本身只记额外开销，不自动算事实失败。",
+    "clarificationReply": null
+  },
+  {
+    "id": "Q24",
+    "title": "只整理用户给定文本",
+    "category": "simple",
+    "historical": false,
+    "prompts": [
+      "把这三条记录按我给出的第1、第2、第3顺序排好，只回复名称：码头丙第3、岸边甲第1、栈桥乙第2。不查询任何系统，不操作地图。"
+    ],
+    "expectedDescription": "岸边甲、栈桥乙、码头丙；没有多加地图事实或动作。",
+    "scoring": "排序错误、漏项、实际查询/修改地图、编造当前位置。用于检查简单任务是否被不必要地拉进空间流程，不以Skill没读取为失败。",
+    "clarificationReply": null
+  }
+]

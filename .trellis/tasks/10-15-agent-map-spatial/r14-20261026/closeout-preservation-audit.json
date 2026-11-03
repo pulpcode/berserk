@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "manifest": "protected-before.json",
+      "checked": 179,
+      "mismatches": []
+    },
+    {
+      "manifest": "partial-evidence-manifest.json",
+      "checked": 1076,
+      "mismatches": []
+    },
+    {
+      "manifest": "closeout-first-segment-manifest.json",
+      "checked": 1169,
+      "mismatches": []
+    },
+    {
+      "manifest": "closeout-second-segment-manifest.json",
+      "checked": 1519,
+      "mismatches": []
+    }
+  ],
+  "allPreserved": true
+}

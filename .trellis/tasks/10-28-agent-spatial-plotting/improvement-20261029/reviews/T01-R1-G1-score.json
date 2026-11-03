@@ -1,0 +1,19 @@
+{
+  "id": "T01-R1-G1",
+  "mainRequirement": "pass",
+  "processFacts": "fail",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "写前通过AskUser澄清车型并按回答保存水罐符号、坐标名称plan；公开选项附加最常见的通用消防车类型，目录没有常见程度或通用性比较依据。",
+  "quotes": [
+    "最常见的通用消防车类型"
+  ],
+  "evidence": [
+    "T01-R1-G1/gate/1-checkpoint.json",
+    "T01-R1-G1/interaction-b26e50b0-fb01-498c-87f5-51eaa344cce1.json"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false
+}

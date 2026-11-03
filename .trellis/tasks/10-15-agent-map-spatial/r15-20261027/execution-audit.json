@@ -1,0 +1,1734 @@
+{
+  "schemaVersion": 1,
+  "planned": 48,
+  "ended": 48,
+  "modelRequests": 173,
+  "totals": {
+    "requests": 173,
+    "input": 3314823,
+    "output": 73470,
+    "afp": 423.53662499999973,
+    "unknown": 0
+  },
+  "requestConfigVerified": true,
+  "allRequestsCompletedKnownUsage": true,
+  "observedThinkingRequests": 167,
+  "automaticRetries": false,
+  "extraTasks": 0,
+  "groups": {
+    "G0": {
+      "trials": 12,
+      "requests": 42,
+      "input": 790195,
+      "output": 17337,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": 12,
+          "bodyObserved": 1,
+          "beforeFirstAnalysisOrWrite": 1,
+          "withAnalysisOrWrite": 10
+        },
+        "spatial-analysis": {
+          "catalogObserved": 12,
+          "bodyObserved": 9,
+          "beforeFirstAnalysisOrWrite": 8,
+          "withAnalysisOrWrite": 10
+        }
+      },
+      "idHintTasks": 0,
+      "afp": 100.9415
+    },
+    "GS": {
+      "trials": 12,
+      "requests": 47,
+      "input": 922233,
+      "output": 20888,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": 12,
+          "bodyObserved": 3,
+          "beforeFirstAnalysisOrWrite": 2,
+          "withAnalysisOrWrite": 10
+        },
+        "spatial-analysis": {
+          "catalogObserved": 12,
+          "bodyObserved": 9,
+          "beforeFirstAnalysisOrWrite": 7,
+          "withAnalysisOrWrite": 10
+        }
+      },
+      "idHintTasks": 0,
+      "afp": 117.890125
+    },
+    "GT": {
+      "trials": 12,
+      "requests": 42,
+      "input": 779235,
+      "output": 18036,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": 12,
+          "bodyObserved": 1,
+          "beforeFirstAnalysisOrWrite": 1,
+          "withAnalysisOrWrite": 10
+        },
+        "spatial-analysis": {
+          "catalogObserved": 12,
+          "bodyObserved": 7,
+          "beforeFirstAnalysisOrWrite": 5,
+          "withAnalysisOrWrite": 10
+        }
+      },
+      "idHintTasks": 0,
+      "afp": 99.658875
+    },
+    "GST": {
+      "trials": 12,
+      "requests": 42,
+      "input": 823160,
+      "output": 17209,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": 12,
+          "bodyObserved": 3,
+          "beforeFirstAnalysisOrWrite": 3,
+          "withAnalysisOrWrite": 10
+        },
+        "spatial-analysis": {
+          "catalogObserved": 12,
+          "bodyObserved": 10,
+          "beforeFirstAnalysisOrWrite": 9,
+          "withAnalysisOrWrite": 10
+        }
+      },
+      "idHintTasks": 0,
+      "afp": 105.046125
+    }
+  },
+  "plannedUserTurns": 64,
+  "sentUserTurns": 56,
+  "protectedFiles": {
+    "checked": 324,
+    "changed": []
+  },
+  "trials": [
+    {
+      "id": "P01-1-G0",
+      "caseId": "P01",
+      "group": "G0",
+      "blindId": "31ce1825-cbef-4b68-8807-051debace3b4",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 11985,
+      "elapsedMs": 13453,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 58327,
+        "output": 1665
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P01-1-GS",
+      "caseId": "P01",
+      "group": "GS",
+      "blindId": "3f82e42f-2947-4c5e-b98b-57ad8a205d2b",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 21565,
+      "elapsedMs": 23386,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 112005,
+        "output": 3655
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 1,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P01-1-GT",
+      "caseId": "P01",
+      "group": "GT",
+      "blindId": "5ae76959-7a5c-4e52-a169-0fcfa1c67cdd",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 16562,
+      "elapsedMs": 18115,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 78710,
+        "output": 2725
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P01-1-GST",
+      "caseId": "P01",
+      "group": "GST",
+      "blindId": "55173f0f-7805-45a9-89cc-01a53526b634",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 9621,
+      "elapsedMs": 10681,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 63598,
+        "output": 1423
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P02-1-GS",
+      "caseId": "P02",
+      "group": "GS",
+      "blindId": "116f26d2-a5ab-4f1d-83bd-47a7f5f47663",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 10507,
+      "elapsedMs": 11656,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 79777,
+        "output": 1414
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P02-1-GT",
+      "caseId": "P02",
+      "group": "GT",
+      "blindId": "8764d351-3f55-4d5f-b7cc-f054473d8bad",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 7184,
+      "elapsedMs": 8087,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 58099,
+        "output": 1037
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P02-1-GST",
+      "caseId": "P02",
+      "group": "GST",
+      "blindId": "5aea68df-8576-47be-937b-7a6a0f15813c",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 12965,
+      "elapsedMs": 14105,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 75557,
+        "output": 1086
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P02-1-G0",
+      "caseId": "P02",
+      "group": "G0",
+      "blindId": "0f0cf04b-3d59-47df-9337-ffbe8ef845cf",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 8135,
+      "elapsedMs": 9367,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 70152,
+        "output": 1056
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P03-1-GT",
+      "caseId": "P03",
+      "group": "GT",
+      "blindId": "3efbe5bb-5b38-44cb-912a-4eeb373fdaa6",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 5,
+      "providerMs": 11889,
+      "elapsedMs": 13272,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 91175,
+        "output": 1603
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P03-1-GST",
+      "caseId": "P03",
+      "group": "GST",
+      "blindId": "27e9e7de-8181-414f-989b-3dc8277edefa",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 5,
+      "providerMs": 12525,
+      "elapsedMs": 14027,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 105495,
+        "output": 1832
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P03-1-G0",
+      "caseId": "P03",
+      "group": "G0",
+      "blindId": "6899421e-966d-442d-b335-d6ea73b84a6b",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 5,
+      "providerMs": 13110,
+      "elapsedMs": 14618,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 102390,
+        "output": 1753
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P03-1-GS",
+      "caseId": "P03",
+      "group": "GS",
+      "blindId": "963a58fe-6faa-45bc-9421-89b8aa8b1360",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 5,
+      "providerMs": 12664,
+      "elapsedMs": 14079,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 102932,
+        "output": 1576
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P04-1-GST",
+      "caseId": "P04",
+      "group": "GST",
+      "blindId": "19db0ef4-51d8-40a1-8afd-83abdc20d513",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 4165,
+      "elapsedMs": 4779,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 33521,
+        "output": 481
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P04-1-G0",
+      "caseId": "P04",
+      "group": "G0",
+      "blindId": "fcf68a2f-7af9-482a-be4f-5288d8119683",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 6505,
+      "elapsedMs": 7046,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 33059,
+        "output": 436
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P04-1-GS",
+      "caseId": "P04",
+      "group": "GS",
+      "blindId": "d0b21607-6e27-4560-b33a-574505c77082",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 4496,
+      "elapsedMs": 4993,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 35305,
+        "output": 515
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P04-1-GT",
+      "caseId": "P04",
+      "group": "GT",
+      "blindId": "8dde53cd-65c2-4771-85b2-dea298a1cb2b",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 4946,
+      "elapsedMs": 5601,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 50158,
+        "output": 495
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P05-1-G0",
+      "caseId": "P05",
+      "group": "G0",
+      "blindId": "37936a1e-4478-48b6-9048-303cfe551410",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 10953,
+      "elapsedMs": 12396,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 74673,
+        "output": 1422
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P05-1-GS",
+      "caseId": "P05",
+      "group": "GS",
+      "blindId": "a1e3744c-61ba-4653-9d17-6481ad5e13e9",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 10388,
+      "elapsedMs": 11589,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 69308,
+        "output": 1383
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P05-1-GT",
+      "caseId": "P05",
+      "group": "GT",
+      "blindId": "c7b77fa7-ce7c-41ba-a316-dae4fbeec566",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 9760,
+      "elapsedMs": 11363,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 57517,
+        "output": 1431
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P05-1-GST",
+      "caseId": "P05",
+      "group": "GST",
+      "blindId": "d22389b8-ef0a-4a37-8337-53a8ca0e3e1d",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 7395,
+      "elapsedMs": 8409,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 57231,
+        "output": 1057
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P06-1-GS",
+      "caseId": "P06",
+      "group": "GS",
+      "blindId": "700531a9-023a-4164-8de8-2583f3be0d0b",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 10069,
+      "elapsedMs": 11256,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 61134,
+        "output": 780
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P06-1-GT",
+      "caseId": "P06",
+      "group": "GT",
+      "blindId": "24072ce8-6d96-4b8a-a0fa-ae4daa47e4bd",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 5230,
+      "elapsedMs": 6219,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 56332,
+        "output": 709
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P06-1-GST",
+      "caseId": "P06",
+      "group": "GST",
+      "blindId": "f4812f65-572b-4499-b468-9d13abf100f8",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 7318,
+      "elapsedMs": 8443,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 61455,
+        "output": 912
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P06-1-G0",
+      "caseId": "P06",
+      "group": "G0",
+      "blindId": "67c70232-a919-4c11-8ace-c8b537fef906",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 6602,
+      "elapsedMs": 7902,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 78764,
+        "output": 825
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P07-1-GT",
+      "caseId": "P07",
+      "group": "GT",
+      "blindId": "38def17c-fd70-4c8b-8ed2-0414b92594b1",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 4,
+      "providerMs": 11646,
+      "elapsedMs": 12894,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 69065,
+        "output": 1395
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P07-1-GST",
+      "caseId": "P07",
+      "group": "GST",
+      "blindId": "2c885099-99c2-4582-8a36-21115d4b9eac",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 14136,
+      "elapsedMs": 15651,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 101386,
+        "output": 1832
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P07-1-G0",
+      "caseId": "P07",
+      "group": "G0",
+      "blindId": "6149237d-b869-4196-9116-f35023f3ca36",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 2,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 8368,
+      "elapsedMs": 9401,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 56126,
+        "output": 780
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 1
+    },
+    {
+      "id": "P07-1-GS",
+      "caseId": "P07",
+      "group": "GS",
+      "blindId": "e990ac2d-26a3-4086-90ba-6161c4caf6ea",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 20057,
+      "elapsedMs": 21505,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 101067,
+        "output": 1894
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P08-1-GST",
+      "caseId": "P08",
+      "group": "GST",
+      "blindId": "e6060970-62d0-436f-b47c-15783a73ceef",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 3,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 5626,
+      "elapsedMs": 6151,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 36292,
+        "output": 653
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 2
+    },
+    {
+      "id": "P08-1-G0",
+      "caseId": "P08",
+      "group": "G0",
+      "blindId": "6a7ea1c4-39cf-4091-a5c0-e11581e2e43a",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 3,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 5859,
+      "elapsedMs": 6360,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 35798,
+        "output": 759
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 2
+    },
+    {
+      "id": "P08-1-GS",
+      "caseId": "P08",
+      "group": "GS",
+      "blindId": "8b665c0b-1d24-4ae1-b14c-c25558dc74ee",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 3,
+      "sentUserTurns": 1,
+      "requests": 2,
+      "providerMs": 7786,
+      "elapsedMs": 8248,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 36265,
+        "output": 1040
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 2
+    },
+    {
+      "id": "P08-1-GT",
+      "caseId": "P08",
+      "group": "GT",
+      "blindId": "6de6adef-0bc2-428b-b0a8-3f8fbef2f321",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 3,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 10172,
+      "elapsedMs": 10857,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": null
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 53277,
+        "output": 1255
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 2
+    },
+    {
+      "id": "P09-1-G0",
+      "caseId": "P09",
+      "group": "G0",
+      "blindId": "7a634afa-02bc-4386-b95b-0abb8e3f6f76",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 21167,
+      "elapsedMs": 22259,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 78863,
+        "output": 3320
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P09-1-GS",
+      "caseId": "P09",
+      "group": "GS",
+      "blindId": "a38c574c-c0ec-40b3-85ae-fd36ee802f07",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 18486,
+      "elapsedMs": 19577,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 70323,
+        "output": 2762
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P09-1-GT",
+      "caseId": "P09",
+      "group": "GT",
+      "blindId": "d1700ee1-faa6-4afb-b390-db85c50fc121",
+      "rawStatus": "waiting_user",
+      "rawStop": "waiting_user_unmapped_plain_question",
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 16946,
+      "elapsedMs": 17804,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 57382,
+        "output": 2379
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P09-1-GST",
+      "caseId": "P09",
+      "group": "GST",
+      "blindId": "b5a37a4e-9393-48db-bafd-18e6480aed38",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 17833,
+      "elapsedMs": 19101,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 79455,
+        "output": 2528
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P10-1-GS",
+      "caseId": "P10",
+      "group": "GS",
+      "blindId": "cfa62bd2-0c02-4941-b59a-35981a2b19e8",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 4,
+      "providerMs": 19030,
+      "elapsedMs": 21038,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 78616,
+        "output": 2954
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P10-1-GT",
+      "caseId": "P10",
+      "group": "GT",
+      "blindId": "53d1d018-bf3f-47e3-b263-08011f6aca42",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 17164,
+      "elapsedMs": 18108,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 54121,
+        "output": 2837
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P10-1-GST",
+      "caseId": "P10",
+      "group": "GST",
+      "blindId": "49bb8f82-3258-4003-8671-1910f4245ca3",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 15796,
+      "elapsedMs": 16667,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 58021,
+        "output": 2482
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P10-1-G0",
+      "caseId": "P10",
+      "group": "G0",
+      "blindId": "68427782-7105-4924-8164-80a0f8250f9e",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 16794,
+      "elapsedMs": 17751,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 56417,
+        "output": 2641
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P11-1-GT",
+      "caseId": "P11",
+      "group": "GT",
+      "blindId": "bfbb1a20-d566-4786-a230-3f18a5fb5fae",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 7299,
+      "elapsedMs": 8450,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 58069,
+        "output": 949
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P11-1-GST",
+      "caseId": "P11",
+      "group": "GST",
+      "blindId": "675280af-f7a4-4a76-bcef-8120ea7bad63",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 10598,
+      "elapsedMs": 11571,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 62885,
+        "output": 1541
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P11-1-G0",
+      "caseId": "P11",
+      "group": "G0",
+      "blindId": "682bfd9b-fc48-4617-ab9f-0693aaa0049a",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 9956,
+      "elapsedMs": 10911,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 58304,
+        "output": 1522
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P11-1-GS",
+      "caseId": "P11",
+      "group": "GS",
+      "blindId": "93d22bdd-0467-4fc2-8e9f-ec13f6c5d3d0",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 1,
+      "sentUserTurns": 1,
+      "requests": 3,
+      "providerMs": 7621,
+      "elapsedMs": 8666,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 62545,
+        "output": 1106
+      },
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P12-1-GST",
+      "caseId": "P12",
+      "group": "GST",
+      "blindId": "6445cbf3-4b46-4335-abca-c91f24faecf4",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 11480,
+      "elapsedMs": 13059,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 88264,
+        "output": 1382
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P12-1-G0",
+      "caseId": "P12",
+      "group": "G0",
+      "blindId": "5f39cf9f-da3c-4fcd-a9a8-33d3df09dcf0",
+      "rawStatus": "incomplete",
+      "rawStop": "unnecessary_confirmation",
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 9617,
+      "elapsedMs": 11093,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 87322,
+        "output": 1158
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P12-1-GS",
+      "caseId": "P12",
+      "group": "GS",
+      "blindId": "5b75b6e3-88c1-46f2-8e66-d8830647eaec",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 6,
+      "providerMs": 13843,
+      "elapsedMs": 15406,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 112956,
+        "output": 1809
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    },
+    {
+      "id": "P12-1-GT",
+      "caseId": "P12",
+      "group": "GT",
+      "blindId": "fc3b637e-b3cd-4c6c-add9-3e83a7dfec81",
+      "rawStatus": "recorded",
+      "rawStop": null,
+      "plannedUserTurns": 2,
+      "sentUserTurns": 2,
+      "requests": 5,
+      "providerMs": 10038,
+      "elapsedMs": 11414,
+      "skills": {
+        "map-annotations": {
+          "catalogObserved": true,
+          "bodyObserved": true,
+          "bodyBeforeFirstAnalysisOrWrite": true
+        },
+        "spatial-analysis": {
+          "catalogObserved": true,
+          "bodyObserved": false,
+          "bodyBeforeFirstAnalysisOrWrite": false
+        }
+      },
+      "exactIdHintObserved": false,
+      "usage": {
+        "input": 95330,
+        "output": 1221
+      },
+      "sentOriginalUserTurns": 2,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 0
+    }
+  ],
+  "notes": [
+    "rawStatus不是语义正确率；缺失后轮须另复核。",
+    "Skill正文实际出现在请求中才计读取；首次关键操作定义为空间分析或地图写入的那次请求，读取本身不算关键计算。",
+    "AFP由实际返回输入/输出和核实系数计算，不重复加思考token。"
+  ],
+  "sentOriginalUserTurns": 55,
+  "additionalClarificationTurns": [
+    {
+      "id": "P01-1-GS",
+      "count": 1
+    }
+  ],
+  "unissuedOriginalUserTurns": [
+    {
+      "id": "P07-1-G0",
+      "count": 1
+    },
+    {
+      "id": "P08-1-GST",
+      "count": 2
+    },
+    {
+      "id": "P08-1-G0",
+      "count": 2
+    },
+    {
+      "id": "P08-1-GS",
+      "count": 2
+    },
+    {
+      "id": "P08-1-GT",
+      "count": 2
+    }
+  ]
+}

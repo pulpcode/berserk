@@ -1,0 +1,23 @@
+{
+  "reviewer": "root",
+  "method": "初评、独立盲评及主会话公开历史核对；保留两个原评",
+  "mainAndStrictAgree": true,
+  "componentDifferences": [
+    {
+      "blindId": "11220224-cc06-46f4-9c73-ad5a82399252",
+      "dimension": "processFacts",
+      "primary": "na",
+      "independent": "pass"
+    }
+  ],
+  "resolution": "D06中间过程只有准备读取的意向，不含已发生事实；采用na，完整首轮澄清与末轮回复均在finalFacts核对。对总评无影响。",
+  "reviewedCount": 5,
+  "mainPass": 5,
+  "strictPass": 3,
+  "strictFail": 2,
+  "notes": [
+    "D10错误工具规则说明不能被最后正确名单抵消",
+    "D20原与补轮的仅内存说法均无依据，未写草稿与存储介质分开",
+    "未调用模型，不增加样本"
+  ]
+}

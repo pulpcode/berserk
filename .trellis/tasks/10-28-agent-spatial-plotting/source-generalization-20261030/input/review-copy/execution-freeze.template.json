@@ -1,0 +1,42 @@
+{
+  "status": "fill_before_live_execution",
+  "reference_commit": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "actual_runtime_commit": null,
+  "runtime_base_revision": null,
+  "runtime_file_hashes": null,
+  "skill_hashes": null,
+  "tool_schema_hash": null,
+  "product_system_instruction_hash": null,
+  "workspace_instruction_hash": null,
+  "neutral_task_background_hash": null,
+  "fixture_adaptation_hash": null,
+  "source_id_mapping_policy": null,
+  "state_normalization_policy": null,
+  "provider_request_payload_without_credentials": null,
+  "expected_response_model": "deepseek-v4-1-flash-261017",
+  "source_scene_business_time": "2026-10-30T09:00:00+08:00",
+  "global_budget": {
+    "max_model_requests": null,
+    "max_input_tokens": null,
+    "max_output_tokens_including_reasoning": null,
+    "max_estimated_cost": null,
+    "currency": null
+  },
+  "existing_stop_policy": null,
+  "sample_retry_policy": "none",
+  "main_order": [
+    "G01",
+    "G07",
+    "G04",
+    "G05",
+    "G02",
+    "G08",
+    "G03",
+    "G06"
+  ],
+  "repetitions": 1,
+  "clarification_policy": "PROTOCOL.md section 3; reply only to asked axes",
+  "reserve_release_condition": "Only after a targeted change and its hypothesis/configuration are frozen; otherwise keep reserved.",
+  "preflight_fixture_adapter_passed": null,
+  "protocol_version": "1.0.0"
+}

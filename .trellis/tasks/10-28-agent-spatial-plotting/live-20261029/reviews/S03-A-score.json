@@ -1,0 +1,14 @@
+{
+  "id": "S03-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "实际读取三个候选与参照，nearest返回最近甲乙及100.08/200.15米；全文区分候选3与输出2，只读状态与实际一致。",
+  "evidence": [
+    "S03-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

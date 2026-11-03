@@ -1,0 +1,100 @@
+{
+  "id": "C30",
+  "unit": "single_visible_claim_with_context",
+  "claim": "当前草稿「空间与标绘核对」（修订 1）共 16 个对象，其中点对象 10 个，线 2 个，面 3 个",
+  "claimContext": "当前草稿「空间与标绘核对」（修订 1）共 16 个对象，其中点对象 10 个，线 2 个，面 3 个",
+  "transcriptThroughClaim": [
+    {
+      "sourceLine": 6,
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "本会话资源图层的点按category分类计数，缺少该字段的点另列数量和名称。只分析，不修改。"
+          }
+        ]
+      }
+    },
+    {
+      "sourceLine": 7,
+      "message": {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "我来读取当前草稿中的图层和对象，以便按 category 分类计数。"
+          },
+          {
+            "type": "toolCall",
+            "id": "call_00_k57W50YY00CQyYsJ8b4P3545",
+            "name": "annotation_read",
+            "arguments": {
+              "mode": "draft"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceLine": 8,
+      "message": {
+        "role": "toolResult",
+        "toolCallId": "call_00_k57W50YY00CQyYsJ8b4P3545",
+        "toolName": "annotation_read",
+        "isError": false,
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"format\":\"annotation.model-result.v1\",\"data\":{\"status\":\"draft\",\"ref\":{\"setId\":\"93593112-56c0-4ce8-b8f7-80b41392603b\",\"revision\":1},\"title\":\"空间与标绘核对\",\"createdAt\":\"2026-10-22T04:26:48.770Z\",\"layers\":[{\"layerId\":\"reference\",\"name\":\"参照对象\",\"order\":0,\"defaultVisible\":true},{\"layerId\":\"resources\",\"name\":\"资源\",\"order\":1,\"defaultVisible\":true},{\"layerId\":\"ties\",\"name\":\"并列\",\"order\":2,\"defaultVisible\":true},{\"layerId\":\"derived\",\"name\":\"派生\",\"order\":3,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"origin\",\"name\":\"基点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"north\",\"name\":\"北点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"line\",\"name\":\"巡查线\",\"kind\":\"line\",\"layerId\":\"reference\"},{\"objectId\":\"return-line\",\"name\":\"往返线\",\"kind\":\"line\",\"layerId\":\"reference\"},{\"objectId\":\"region\",\"name\":\"观察区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"excluded\",\"name\":\"禁入区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"empty\",\"name\":\"空区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"amb-a\",\"name\":\"集合点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"amb-b\",\"name\":\"集合点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"r1\",\"name\":\"资源甲\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"r2\",\"name\":\"资源乙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"r3\",\"name\":\"资源丙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"edge\",\"name\":\"边界点\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"outside\",\"name\":\"资源外\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"tie-b\",\"name\":\"并列乙\",\"kind\":\"point\",\"layerId\":\"ties\"},{\"objectId\":\"tie-a\",\"name\":\"并列甲\",\"kind\":\"point\",\"layerId\":\"ties\"}],\"offset\":0,\"limit\":50,\"total\":16,\"hasMore\":false},\"query\":{}}}"
+          }
+        ]
+      }
+    },
+    {
+      "sourceLine": 9,
+      "message": {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "我需要读取这些点的 category 属性。共有 16 个对象，其中点是：基点、北点、集合点×2、资源甲/乙/丙、边界点、资源外、并列甲/乙（10 个点）等。我读取全部对象的 attributes 字段来核对 category。"
+          },
+          {
+            "type": "toolCall",
+            "id": "call_00_w3MmT1FhECWpQ457qlAp1277",
+            "name": "annotation_read",
+            "arguments": {
+              "mode": "draft",
+              "fields": [
+                "attributes"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "sourceLine": 10,
+      "message": {
+        "role": "toolResult",
+        "toolCallId": "call_00_w3MmT1FhECWpQ457qlAp1277",
+        "toolName": "annotation_read",
+        "isError": false,
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"format\":\"annotation.model-result.v1\",\"data\":{\"status\":\"draft\",\"ref\":{\"setId\":\"93593112-56c0-4ce8-b8f7-80b41392603b\",\"revision\":1},\"title\":\"空间与标绘核对\",\"createdAt\":\"2026-10-22T04:26:48.770Z\",\"layers\":[{\"layerId\":\"reference\",\"name\":\"参照对象\",\"order\":0,\"defaultVisible\":true},{\"layerId\":\"resources\",\"name\":\"资源\",\"order\":1,\"defaultVisible\":true},{\"layerId\":\"ties\",\"name\":\"并列\",\"order\":2,\"defaultVisible\":true},{\"layerId\":\"derived\",\"name\":\"派生\",\"order\":3,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"origin\",\"name\":\"基点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"north\",\"name\":\"北点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"line\",\"name\":\"巡查线\",\"kind\":\"line\",\"layerId\":\"reference\"},{\"objectId\":\"return-line\",\"name\":\"往返线\",\"kind\":\"line\",\"layerId\":\"reference\"},{\"objectId\":\"region\",\"name\":\"观察区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"excluded\",\"name\":\"禁入区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"empty\",\"name\":\"空区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"amb-a\",\"name\":\"集合点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"amb-b\",\"name\":\"集合点\",\"kind\":\"point\",\"layerId\":\"reference\"},{\"objectId\":\"r1\",\"name\":\"资源甲\",\"kind\":\"point\",\"layerId\":\"resources\",\"attributes\":{\"status\":\"ready\",\"category\":\"boat\"}},{\"objectId\":\"r2\",\"name\":\"资源乙\",\"kind\":\"point\",\"layerId\":\"resources\",\"attributes\":{\"status\":\"ready\"}},{\"objectId\":\"r3\",\"name\":\"资源丙\",\"kind\":\"point\",\"layerId\":\"resources\",\"attributes\":{\"status\":\"ready\",\"category\":\"boat\"}},{\"objectId\":\"edge\",\"name\":\"边界点\",\"kind\":\"point\",\"layerId\":\"resources\",\"attributes\":{\"status\":\"ready\",\"category\":\"truck\"}},{\"objectId\":\"outside\",\"name\":\"资源外\",\"kind\":\"point\",\"layerId\":\"resources\",\"attributes\":{\"status\":\"busy\",\"category\":\"boat\"}},{\"objectId\":\"tie-b\",\"name\":\"并列乙\",\"kind\":\"point\",\"layerId\":\"ties\"},{\"objectId\":\"tie-a\",\"name\":\"并列甲\",\"kind\":\"point\",\"layerId\":\"ties\"}],\"offset\":0,\"limit\":50,\"total\":16,\"hasMore\":false},\"query\":{\"fields\":[\"attributes\"]}}}"
+          }
+        ]
+      }
+    }
+  ],
+  "stateEvidence": {},
+  "evaluationInstructions": {
+    "judgmentUnit": "Judge only claim. claimContext contains selected wording of the answer, provided only for reference and scope; it is not an independent source or a gold answer.",
+    "contemporaneousEvidence": "transcriptThroughClaim retains its compatibility name but contains only visible messages strictly before the selected assistant answer. Use those actual user messages, tool calls and results as contemporaneous evidence. The selected answer and later messages are excluded.",
+    "stateEvidenceTiming": "stateEvidence is empty for this selection: no post-answer state or hidden fixture facts are supplied. claimContext does not establish that an action happened.",
+    "plansAndConditions": "A plan, condition or uncertainty is not a completed-action assertion. Simple arithmetic from visible data is allowed; judge the selected assertion using actual prior evidence."
+  }
+}

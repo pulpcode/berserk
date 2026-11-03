@@ -1,0 +1,13 @@
+{
+  "selected": "closeout-review-13-adjudicated.json",
+  "main": {
+    "pass": 4,
+    "fail": 1
+  },
+  "strict": {
+    "pass": 4,
+    "fail": 1
+  },
+  "agreement": "independent blind main/strict match; filtered-empty false global-empty statement retained as process failure; no claim UI displayed stopped tool prompt",
+  "originalReviewsPreserved": true
+}

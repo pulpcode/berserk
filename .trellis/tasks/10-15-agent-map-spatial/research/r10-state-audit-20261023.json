@@ -1,0 +1,103 @@
+{
+  "T01": {
+    "mapStateUnchanged": true
+  },
+  "T02": {
+    "mapStateUnchanged": true
+  },
+  "T03": {
+    "mapStateUnchanged": true
+  },
+  "T04": {
+    "mapStateUnchanged": true
+  },
+  "T05": {
+    "mapStateUnchanged": true,
+    "independentNumericMatch": true
+  },
+  "T06": {
+    "mapStateUnchanged": true,
+    "independentNumericMatch": true
+  },
+  "T07": {
+    "mapStateUnchanged": true,
+    "independentNumericMatch": true
+  },
+  "T08": {
+    "mapStateUnchanged": true,
+    "independentNumericMatch": true
+  },
+  "T09": {
+    "mapStateUnchanged": true
+  },
+  "T10": {
+    "mapStateUnchanged": true
+  },
+  "T11": {
+    "mapStateUnchanged": true
+  },
+  "T12": {
+    "mapStateUnchanged": true
+  },
+  "T13": {
+    "mapStateUnchanged": true,
+    "actuallyReadNames": 54,
+    "expectedNames": 58,
+    "unreadObjectIds": [
+      "obj-1-047",
+      "obj-1-048",
+      "obj-1-049",
+      "obj-1-050"
+    ],
+    "answerNamesMatchTruth": true,
+    "completeReadCoverage": false
+  },
+  "T14": {
+    "mapStateUnchanged": true
+  },
+  "T15": {
+    "mapStateUnchanged": true,
+    "realSourceUnavailable": true
+  },
+  "T16": {
+    "mapStateUnchanged": true,
+    "realMissingGeometryExposed": true
+  },
+  "T17": {
+    "mapStateUnchanged": true
+  },
+  "T18": {
+    "mapStateUnchanged": true
+  },
+  "T19": {
+    "mapStateUnchanged": true,
+    "actualAttributeUpdateOnly": true
+  },
+  "T20": {
+    "mapStateUnchanged": true
+  },
+  "T21": {
+    "savedObjects": 1,
+    "exactFirstGeometry": true,
+    "originalContentsPreserved": true,
+    "noPublishOrAdopt": true
+  },
+  "T22": {
+    "savedObjects": 1,
+    "exactFirstGeometry": true,
+    "originalContentsPreserved": true,
+    "noPublishOrAdopt": true,
+    "realConflictAndExternalNotePreserved": true
+  },
+  "T23": {
+    "savedObjects": 1,
+    "exactFirstGeometry": true,
+    "originalContentsPreserved": true,
+    "noPublishOrAdopt": true,
+    "originalReceiptRecovered": true
+  },
+  "T24": {
+    "exactSpecifiedRevisionPublished": true,
+    "draftAndCurrentUnchanged": true
+  }
+}

@@ -36,9 +36,13 @@ async function setup(page:Page, basemap?: (origin:string)=>unknown, reply: Param
  await page.goto('/');await page.getByLabel('席位',{exact:true}).selectOption('a');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();
  await expect(page.getByRole('button',{name:'进入项目：标注验证任务'})).toBeVisible();
  await page.goto(`/situation?taskId=${task.id}&sessionId=${session.id}`);
- await expect(page.locator('.annotation-heading')).toBeVisible();await expect(page.locator('.maplibregl-canvas').or(page.getByText('地图暂不可用，请通过图层与对象查看与引用。'))).toBeVisible();await openLayers(page);
+ await expect(page.locator('.annotation-heading')).toBeVisible();await expect(page.locator('.maplibregl-canvas').or(page.getByText('地图暂不可用，请通过图层与对象查看与引用。'))).toBeVisible();await openLayers(page);await openTools(page);
  return {lab,actor,task,session,second,requests,errors,dropNextAction:()=>{dropAction=true;},tiles:()=>tiles,fake,close:async()=>{page.on('dialog',dialog=>dialog.accept());await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});await app.close();await rm(dir,{recursive:true,force:true});}};
 }
+async function openTools(page:Page){const button=page.getByRole('button',{name:'标绘工具',exact:true});if(await button.getAttribute('aria-expanded')!=='true')await button.click();}
+async function openProperties(page:Page){const section=page.locator('.annotation-more-properties');if(await section.getAttribute('open')===null)await section.locator(':scope > summary').click();}
+async function openSymbolReplacement(page:Page){const button=page.getByRole('button',{name:'更换图标',exact:true});if(await button.getAttribute('aria-expanded')==='false')await button.click();}
+async function saveDraw(page:Page){await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);}
 async function openLayers(page:Page){if(!await page.locator('.annotation-sidebar').isVisible())await page.getByRole('button',{name:'图层与对象',exact:true}).click();await expect(page.locator('.annotation-sidebar')).toBeVisible();}
 async function expandGroup(page:Page,name:string){const button=page.getByRole('button',{name:`展开${name}`,exact:true});if(await button.isVisible())await button.click();}
 async function openVersions(page:Page){if(!await page.locator('.annotation-management').isVisible())await page.getByRole('button',{name:'版本与发布',exact:true}).click();}
@@ -46,7 +50,7 @@ async function pickOwn(page:Page,name:string){await openLayers(page);await expan
 async function addLayer(page:Page,name:string){await openLayers(page);await expandGroup(page,'本会话标注');await page.getByRole('region',{name:/^本会话标注 /}).getByRole('button',{name:'新建图层',exact:true}).click();await page.getByLabel('新图层名称').fill(name);await page.getByRole('button',{name:'添加图层',exact:true}).click();await expect(page.getByLabel('新图层名称')).not.toBeVisible();}
 async function layer(page:Page){await addLayer(page,'集合点');await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');}
 async function groupMore(group:import('@playwright/test').Locator){const button=group.locator(':scope > .annotation-tree-row .annotation-tree-more > button');if(await button.getAttribute('aria-expanded')==='false')await button.click();}
-async function point(page:Page,name='集合点 A') {await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);}
+async function point(page:Page,name='集合点 A') {await openTools(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);}
 
 test('independent drafts, fixed publication, current selection and native annotation reference',async({page})=>{
  const env=await setup(page);try{
@@ -72,14 +76,14 @@ test('official Terra Draw supports point line polygon Chinese labels, edit and c
   await layer(page);const canvas=page.locator('.maplibregl-canvas');await expect(canvas).toBeVisible();await expect.poll(env.tiles).toBeGreaterThan(0);
   const toolbar=page.getByRole('group',{name:'标注绘制工具'});
   for(const name of ['绘制点','绘制线','绘制面','放置文字','坐标新增']){const tool=toolbar.getByRole('button',{name,exact:true});await expect(tool).toHaveText('');await expect(tool).toHaveAttribute('title',name);}
-  expect((await toolbar.boundingBox())!.height).toBeLessThanOrEqual(44);await expect(toolbar.locator('.annotation-toolbar-target')).toHaveAttribute('title','当前绘制图层：集合点');
+  expect((await toolbar.boundingBox())!.width).toBeLessThanOrEqual(340);await expect(toolbar.locator('.annotation-toolbar-target')).toHaveAttribute('title','当前绘制图层：集合点');
   const box=(await canvas.boundingBox())!;const x=box.x+box.width/2,y=box.y+box.height/2;
-  await page.getByRole('button',{name:'绘制点',exact:true}).click();await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveAttribute('aria-pressed','true');await expect(toolbar.getByRole('status')).toContainText('点击地图放置');await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
-  await page.getByRole('button',{name:'绘制线',exact:true}).click();await page.mouse.click(x-60,y-30);page.once('dialog',dialog=>dialog.dismiss());await page.getByRole('button',{name:'工作待办',exact:true}).click();await expect(page.getByRole('button',{name:'退出绘制'})).toBeVisible();await page.mouse.click(x+40,y+20);await page.mouse.dblclick(x+100,y+50);await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');
-  await page.getByRole('button',{name:'绘制面',exact:true}).click();await page.mouse.click(x-90,y-80);await page.mouse.click(x+80,y-80);await page.mouse.click(x+80,y+80);await page.mouse.dblclick(x-90,y+80);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
-  await page.getByRole('button',{name:'放置文字',exact:true}).click();await page.mouse.click(x,y);await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');await expect(page.locator('.annotation-label')).toContainText('新文字注记');
+  await page.getByRole('button',{name:'绘制点',exact:true}).click();await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveAttribute('aria-pressed','true');await expect(toolbar.getByRole('status')).toContainText('点击地图放置');await page.mouse.click(x,y);await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
+  await page.getByRole('button',{name:'绘制线',exact:true}).click();await page.mouse.click(x-60,y-30);page.once('dialog',dialog=>dialog.dismiss());await page.getByRole('button',{name:'工作待办',exact:true}).click();await expect(page.getByRole('button',{name:'退出绘制'})).toBeVisible();await page.mouse.click(x+40,y+20);await page.mouse.dblclick(x+100,y+50);await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');
+  await page.getByRole('button',{name:'绘制面',exact:true}).click();await page.mouse.click(x-90,y-80);await page.mouse.click(x+80,y-80);await page.mouse.click(x+80,y+80);await page.mouse.dblclick(x-90,y+80);await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
+  await page.getByRole('button',{name:'放置文字',exact:true}).click();await page.mouse.click(x,y);await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');await expect(page.locator('.annotation-label').filter({hasText:'新文字注记'})).toBeVisible();
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);const doc=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,5).document;expect(doc.layers[0]!.features.map(item=>item.kind)).toEqual(['point','line','polygon','text']);
-  await pickOwn(page,'新文字注记 text');await page.getByRole('button',{name:'拖动及顶点编辑'}).click();const updatedBox=(await canvas.boundingBox())!;const cx=updatedBox.x+updatedBox.width/2,cy=updatedBox.y+updatedBox.height/2;await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+45,cy+20,{steps:5});await page.mouse.up();await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');
+  await pickOwn(page,'新文字注记 text');await page.getByRole('button',{name:'拖动及顶点编辑'}).click();const updatedBox=(await canvas.boundingBox())!;const cx=updatedBox.x+updatedBox.width/2,cy=updatedBox.y+updatedBox.height/2;await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+45,cy+20,{steps:5});await page.mouse.up();await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');
   await page.reload();await openLayers(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');await expect(page.locator('canvas')).toBeVisible();await groupMore(page.getByRole('region',{name:/^本会话标注 /}));await page.getByRole('button',{name:'定位此组',exact:true}).click();await expect(page.locator('.annotation-marker')).toHaveCount(4);expect(env.errors).toEqual([]);await page.waitForTimeout(750);await page.screenshot({path:test.info().outputPath('terra-draw-maplibre-6.4.png')});
  }finally{await env.close();}
 });
@@ -90,9 +94,8 @@ test('CAS retains form and no WebGL still permits explicit coordinate editing',a
   await layer(page);await expect(page.getByText('地图暂不可用，请通过图层与对象查看与引用。')).toBeVisible();await point(page);
   await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留我的修改');
   const binding=env.lab.annotations!.binding(env.actor,env.session.id);env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:binding.draft!.headRevision,operations:[{op:'rename_set',title:'Agent 已更新'}]});
-  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();
-  await page.getByRole('button',{name:'查看最新保存版本'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');
-  await page.getByRole('button',{name:'已核对最新版本，重新编辑'}).click();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,4).document.layers[0]!.features[0]!.name).toBe('保留我的修改');
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留我的修改');await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();
+  await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,4).document.layers[0]!.features[0]!.name).toBe('保留我的修改');
  }finally{await env.close();}
 });
 
@@ -217,9 +220,8 @@ test('layer tree separates expansion visibility and drawing target, including em
   await expect(target).toContainText('新标注将添加到：空白图层');
   const revision=env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision;
   await page.getByRole('button',{name:'绘制线',exact:true}).click();await openLayers(page);
-  page.once('dialog',dialog=>dialog.dismiss());await own.getByRole('button',{name:'隐藏空白图层',exact:true}).click();await expect(own.getByRole('button',{name:'隐藏空白图层',exact:true})).toHaveAttribute('aria-pressed','true');
-  page.once('dialog',dialog=>dialog.accept());await own.getByRole('button',{name:'隐藏空白图层',exact:true}).click();await expect(target).toContainText('绘制已暂停');await expect(page.getByRole('button',{name:'绘制线',exact:true})).toBeDisabled();
-  await target.getByRole('button',{name:'显示并继续',exact:true}).click();await expect(page.getByRole('button',{name:'绘制线',exact:true})).toBeEnabled();
+  await own.getByRole('button',{name:'隐藏空白图层',exact:true}).click();await expect(target).toContainText('绘制已暂停');await expect(page.getByRole('button',{name:'绘制线',exact:true})).toBeDisabled();
+  await target.getByRole('button',{name:'显示并继续',exact:true}).click();await expect(page.getByRole('button',{name:'继续未完成绘制',exact:true})).toBeEnabled();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'退出绘制',exact:true}).click();
   await own.getByRole('button',{name:'隐藏集合点',exact:true}).click();await own.getByRole('button',{name:'设为绘制目标：集合点',exact:true}).click();await expect(target).toContainText('新标注将添加到：集合点');await expect(own.getByRole('button',{name:'隐藏集合点',exact:true})).toHaveAttribute('aria-pressed','true');
   expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(revision);
   // A lost add response must not select a speculative target or allow a duplicate write.
@@ -306,7 +308,7 @@ test('basemap switches preserve selected annotations, camera, visibility, and un
   await expect.poll(vector.requests).toBeGreaterThan(0);await expect(page.getByRole('button',{name:'重试底图',exact:true})).toHaveCount(0);
   for(const name of ['混合','影像','路网'])await switcher.getByRole('button',{name,exact:true}).click();
   expect(await mapSnapshot(page)).toEqual(drawingCamera);
-  await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+110,y+60);
+  await page.mouse.click(x+30,y+10);await page.mouse.dblclick(x+110,y+60);await saveDraw(page);
   await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');
   const lineVersion=env.lab.annotations!.binding(env.actor,env.session.id).draft!;
   const line=env.lab.annotations!.privateVersion(env.actor,lineVersion.setId,3).document.layers[0]!.features.find(f=>f.kind==='line')!;
@@ -314,7 +316,7 @@ test('basemap switches preserve selected annotations, camera, visibility, and un
   await page.getByRole('button',{name:'绘制面',exact:true}).click();
   await page.mouse.click(x-90,y-70);await page.mouse.click(x+90,y-70);
   await switcher.getByRole('button',{name:'混合',exact:true}).click();await switcher.getByRole('button',{name:'影像',exact:true}).click();
-  await page.mouse.click(x+90,y+70);await page.mouse.dblclick(x-90,y+70);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
+  await page.mouse.click(x+90,y+70);await page.mouse.dblclick(x-90,y+70);await saveDraw(page);await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');
   const final=env.lab.annotations!.binding(env.actor,env.session.id).draft!;
   expect(env.lab.annotations!.privateVersion(env.actor,final.setId,4).document.layers[0]!.features.map(f=>f.kind)).toEqual(['point','line','polygon']);
   await openLayers(page);await expandGroup(page,'本会话标注');await page.getByRole('button',{name:'隐藏集合点',exact:true}).click();
@@ -345,7 +347,7 @@ test('solid annotation strokes remain painted after hybrid source switches and n
   await page.goto(`/?session=${env.session.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();
   await page.setViewportSize({width:1280,height:900});const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await separator.focus();await separator.press('End');
   await expect(page.getByRole('group',{name:'底图视图'})).toBeVisible();
-  const overlap=await page.evaluate(()=>{const box=(selector:string)=>document.querySelector(selector)!.getBoundingClientRect();const a=box('.annotation-editor-toolbar'),b=box('.situation-basemap-switch'),c=box('.situation-attribution');const intersect=(a:DOMRect,b:DOMRect)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;return {toolbarCredits:intersect(a,c),switchCredits:intersect(b,c),toolbarSwitch:intersect(a,b)};});
+  await openTools(page);const overlap=await page.evaluate(()=>{const box=(selector:string)=>document.querySelector(selector)!.getBoundingClientRect();const a=box('.annotation-editor-toolbar'),b=box('.situation-basemap-switch'),c=box('.situation-attribution');const intersect=(a:DOMRect,b:DOMRect)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;return {toolbarCredits:intersect(a,c),switchCredits:intersect(b,c),toolbarSwitch:intersect(a,b)};});
   expect(overlap).toEqual({toolbarCredits:false,switchCredits:false,toolbarSwitch:false});
   await page.screenshot({path:test.info().outputPath('basemap-narrow-controls.png')});expect(env.errors).toEqual([]);
  }finally{await env.close();}
@@ -399,5 +401,509 @@ test('native streamed publication result and reloaded history open the same fixe
   await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');
   expect(env.lab.get(env.session.id,'a').messages.find(message=>message.toolName==='annotation_action')!.annotationResult!.receipt).toEqual(receipt);
   expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('single map tools pause incomplete geometry, retain form and preview, without implicit writes',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try {
+  await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();const beforeEmpty=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await openTools(page);await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(beforeEmpty);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft).toBeNull();
+  await layer(page);await openTools(page);await page.getByRole('button',{name:'绘制线',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),original=await canvas.elementHandle();let box=(await canvas.boundingBox())!;
+  await page.mouse.click(box.x+box.width*.35,box.y+box.height*.45);
+  const first=await page.evaluate(({x,y})=>window.__basemapTestMap!.unproject([x,y]).toArray(),{x:box.width*.35,y:box.height*.45});
+  const before=await mapSnapshot(page),writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();
+  expect(await mapSnapshot(page)).toEqual(before);expect(await canvas.evaluate((element,old)=>element===old,original)).toBe(true);
+  expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(true);
+  expect(await page.evaluate(()=>window.__basemapTestMap!.getStyle().layers.filter(l=>l.id.startsWith('annotation-editor-')).every(l=>l.layout?.visibility==='none'))).toBe(true);
+  await openTools(page);await expect(page.getByRole('button',{name:'继续未完成绘制',exact:true})).toBeVisible();
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await page.getByRole('button',{name:'继续未完成绘制',exact:true}).click();box=(await canvas.boundingBox())!;
+  await page.mouse.click(box.x+box.width*.55,box.y+box.height*.5);await page.mouse.dblclick(box.x+box.width*.65,box.y+box.height*.6);
+  await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
+  await page.getByLabel('对象名称',{exact:true}).fill('拟定水域接近路线');await openProperties(page);await page.getByLabel('路线末端').selectOption('arrow');
+  await page.getByRole('button',{name:'标绘工具',exact:true}).click();await expect(page.locator('.annotation-tools-dock')).toBeHidden();await expect(page.locator('.annotation-label')).toContainText('未保存 · 拟定水域接近路线');
+  await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(page.locator('.annotation-label')).toHaveCount(0);await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();
+  await openTools(page);await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('拟定水域接近路线');await saveDraw(page);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!;
+  expect(feature.informationRole).toBe('plan');expect(feature.style?.lineEnd).toBe('arrow');expect(feature.geometry.type).toBe('LineString');if(feature.geometry.type==='LineString'){expect(feature.geometry.coordinates[0][0]).toBeCloseTo(first[0],5);expect(feature.geometry.coordinates[0][1]).toBeCloseTo(first[1],5);expect(feature.geometry.coordinates).toHaveLength(3);}
+  await page.evaluate(()=>window.__basemapTestMap!.setBearing(40));await expect(page.locator('.annotation-line-arrow')).toBeVisible();expect(env.errors).toEqual([]);
+  await page.screenshot({path:test.info().outputPath('single-map-retained-draft.png')});
+ } finally {await env.close();}
+});
+
+test('professional symbols keep identity, orientation and information role through editing and overlapping selection',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try {
+  await layer(page);await expect(page.getByRole('group',{name:'专业标号目录'}).getByRole('button')).toHaveCount(22);
+  const symbols=[['水罐消防车','xf3013-2020.6.2.1'],['救护车','xf3013-2020.6.2.30'],['消防艇','xf3013-2020.6.2.37'],['冲锋舟','app.rescue-inflatable-boat'],['救援舰船','app.rescue-vessel']] as const;
+  for(const [name,id] of symbols){
+   await page.getByRole('button',{name:'坐标新增',exact:true}).click();await openSymbolReplacement(page);await page.getByLabel('查找专业标号').fill(name);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:new RegExp(`^${name}`)}).click();await page.getByLabel('对象名称',{exact:true}).fill(name);await page.getByLabel('图标尺寸（px）').fill('48');await page.getByLabel('真北方向（°）').fill('30');await saveDraw(page);
+   const binding=env.lab.annotations!.binding(env.actor,env.session.id);const feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features.at(-1)!;expect(feature.style).toMatchObject({symbolId:id,iconSize:48,heading:30});expect(feature.informationRole).toBe('plan');
+  }
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:14}));
+  await page.getByRole('button',{name:'收起标绘工具',exact:true}).click();await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.queryRenderedFeatures().filter(f=>f.layer.id.includes(':symbols:')).length)).toBeGreaterThanOrEqual(5);
+  const position=await page.evaluate(()=>{const p=window.__basemapTestMap!.project([116.4,39.9]);return {x:p.x,y:p.y};});const box=(await page.locator('.maplibregl-canvas').boundingBox())!;await page.mouse.click(box.x+position.x,box.y+position.y);
+  await expect(page.getByText('此处有多个标注，请选择',{exact:true})).toBeVisible();await expect(page.locator('.annotation-overlap>button')).toHaveCount(5);
+  await page.screenshot({path:test.info().outputPath('professional-symbol-overlap.png')});
+  await page.getByRole('button',{name:'关闭重叠对象选择',exact:true}).click();
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const features=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features;
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:binding.draft!.headRevision,operations:features.map((feature,index)=>({op:'update_object' as const,objectId:feature.objectId,changes:{geometry:{type:'Point' as const,coordinates:[116.39+index*.004,39.9+(index%2)*.003] as [number,number]}}}))});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r7');
+  await openLayers(page);const own=page.getByRole('region',{name:/^本会话标注 /});await groupMore(own);await own.getByRole('button',{name:'定位此组',exact:true}).click();await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.398,39.9015],zoom:14}));
+  await page.screenshot({path:test.info().outputPath('professional-single-map-closed.png')});
+  await openTools(page);await page.screenshot({path:test.info().outputPath('professional-single-map-open.png')});
+  await page.setViewportSize({width:1000,height:900});await page.screenshot({path:test.info().outputPath('professional-single-map-narrow.png')});
+  expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(0);
+  await openVersions(page);await page.getByText('标注集名称与发布',{exact:true}).click();await page.getByLabel('发布名称',{exact:true}).fill('消防与水域救援部署');await page.getByRole('button',{name:'发布此保存修订',exact:true}).click();await expect(page.getByRole('alert')).toContainText('任务当前标注保持不变');
+  expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(0);
+  await page.getByText('我的草稿与已发布版本',{exact:true}).click();await page.getByRole('button',{name:'比较并设为当前',exact:true}).click();await page.getByRole('button',{name:'设为当前标注',exact:true}).click();
+  await expect.poll(()=>env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(1);
+  const publication=env.lab.annotations!.current(env.actor,env.task.id).publication!;
+  const fixed=env.lab.annotations!.publishedVersion(env.actor,publication.publicationId);
+  expect(fixed.document.layers[0]!.features.map(feature=>feature.informationRole)).toEqual(['plan','plan','plan','plan','plan']);
+  expect(fixed.document.layers[0]!.features.map(feature=>feature.style?.symbolId)).toEqual(symbols.map(([,id])=>id));expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+test('source polling and inspection preserve the independent draft target, form and revision',async({page})=>{
+ await page.clock.install();await captureMap(page);const env=await setup(page);
+ try {
+  let revision=1,queries=0;const sourceItem=mapFixtures('parallel-source','2026-10-11').objects.find(item=>item.ref.objectType==='resource')!;
+  await page.route('**/api/context/catalog',route=>route.fulfill({json:{systems:[{id:sourceItem.ref.systemId,name:'刷新验证来源',objectTypes:['resource'],capabilities:['situation_current'],areas:[]}]}}));
+  await page.route('**/api/context/situation',route=>{queries++;return route.fulfill({json:{systemId:sourceItem.ref.systemId,query:route.request().postDataJSON(),queriedAt:'2026-10-25T03:00:00Z',data:{items:[{...sourceItem,revision,geometry:{type:'Point',coordinates:[116.4+revision*.001,39.9]}}],hasMore:false,nextCursor:null,unknownRefs:[],changeCursor:String(revision),asOf:'2026-10-25T03:00:00Z'}}});});
+  await openLayers(page);await expandGroup(page,'来源态势');await page.locator('.source-query-controls > summary').click();await page.getByRole('button',{name:'刷新态势',exact:true}).click();await page.getByRole('button',{name:'查看全部获准态势',exact:true}).click();await expect.poll(()=>queries).toBeGreaterThan(0);
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('保持中的部署输入');
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  const camera=await mapSnapshot(page);const before=queries;revision=2;await page.clock.fastForward(16000);await expect.poll(()=>queries).toBeGreaterThan(before);await expect.poll(async()=>JSON.stringify((await mapSnapshot(page)).business)).toContain('116.402');expect({...await mapSnapshot(page),business:null}).toEqual({...camera,business:null});
+  await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保持中的部署输入');expect(env.lab.annotations!.binding(env.actor,env.session.id)).toEqual(binding);expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await openLayers(page);const source=page.getByRole('region',{name:'来源态势',exact:true});await source.getByRole('button',{name:'展开资源池',exact:true}).click();await source.getByRole('button',{name:new RegExp(sourceItem.name)}).click();await expect(page.locator('.situation-detail')).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).not.toBeVisible();
+  await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保持中的部署输入');await expect(page.getByLabel('所属图层')).toContainText('集合点');expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+
+test('entry hints explain global, task and editable conversation maps without creating drafts',async({page})=>{
+ const env=await setup(page);
+ try {
+  await expect(page.getByLabel('标绘上下文')).toContainText('标注验证任务');
+  await expect(page.getByLabel('标绘上下文')).toContainText('本会话草稿 · 可编辑');
+  const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.goto('/situation');
+  await expect(page.getByLabel('全局态势入口')).toContainText('全局态势 · 只读');
+  await expect(page.getByRole('button',{name:'标绘工具',exact:true})).toHaveCount(0);
+  await page.getByRole('combobox',{name:'进入任务',exact:true}).selectOption(env.task.id);
+  await expect(page.getByRole('region',{name:'任务详情',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'态势',exact:true}).click();
+  await expect(page.getByLabel('标绘上下文')).toContainText('任务当前方案 · 只读');
+  await openTools(page);await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveCount(0);
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  await expect(page.getByRole('button',{name:'任务说明',exact:true})).toHaveAttribute('aria-current','page');
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft).toBeNull();
+  expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+test('symbol selection places directly, compact properties retain drafts, and saves preserve the camera',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try {
+  await page.getByRole('button',{name:'新建标绘图层',exact:true}).click();
+  await page.getByLabel('新图层名称').fill('集合点');await page.getByRole('button',{name:'添加图层',exact:true}).click();
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12,bearing:27,pitch:35}));
+  const camera=async()=>{const {center,zoom,bearing,pitch}=await mapSnapshot(page);return {center,zoom,bearing,pitch};};
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  await expect(page.getByRole('button',{name:'绘制点',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'救护车 标准 6.2.30',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'使用普通点',exact:true})).toBeDisabled();
+  const canvas=page.locator('.maplibregl-canvas');const box=(await canvas.boundingBox())!;
+  await page.mouse.click(box.x+box.width*.4,box.y+box.height*.55);
+  await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('水罐消防车');
+  await expect(page.getByLabel('真北方向（°）')).toBeVisible();
+  await expect(page.getByLabel('图标尺寸（px）')).not.toBeVisible();
+  await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();
+  await expect(page.getByRole('group',{name:'专业标号目录'})).not.toBeVisible();
+  await openSymbolReplacement(page);
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'救护车 标准 6.2.30',exact:true}).click();
+  await expect(page.getByRole('button',{name:'更换图标',exact:true})).toBeFocused();
+  await expect(page.getByRole('button',{name:'退出绘制',exact:true})).toHaveCount(0);
+  await expect(page.getByRole('group',{name:'专业标号目录'})).not.toBeVisible();
+  await page.getByLabel('对象名称',{exact:true}).fill('救护车体验');await page.getByLabel('真北方向（°）').fill('42');
+  await page.setViewportSize({width:1000,height:900});
+  await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await openProperties(page);await page.getByLabel('地图标签',{exact:true}).fill('窄面板最后一项');
+  await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,80);await expect(page.getByLabel('地图标签',{exact:true})).toBeInViewport({ratio:1});
+  await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.screenshot({path:test.info().outputPath('compact-properties-narrow.png')});
+  const before=await camera();await saveDraw(page);expect(await camera()).toEqual(before);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const saved=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,binding.draft!.headRevision).document.layers[0]!.features[0]!;
+  expect(saved.style).toMatchObject({symbolId:'xf3013-2020.6.2.30',heading:42,label:'窄面板最后一项'});
+  await page.setViewportSize({width:1440,height:960});await pickOwn(page,'救护车体验 point');
+  await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.42,39.92],zoom:11,bearing:63,pitch:20}));
+  await page.getByLabel('对象名称',{exact:true}).fill('救护车已修改');
+  const editingCamera=await camera();await saveDraw(page);expect(await camera()).toEqual(editingCamera);
+  await pickOwn(page,'救护车已修改 point');
+  expect((await camera()).zoom).not.toBe(editingCamera.zoom);
+  await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  await page.screenshot({path:test.info().outputPath('compact-properties-wide.png')});
+  expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+
+test('read-only entry after a refresh failure still guards unsaved plotting input',async({page})=>{
+ const env=await setup(page);
+ try {
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();
+  await page.getByLabel('对象名称',{exact:true}).fill('刷新失败后保留的输入');
+  const origin=page.url();const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.route(`**/api/sessions/${env.session.id}/annotation`,route=>route.abort());
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();
+  await expect(page.getByLabel('标绘上下文')).toContainText('本会话 · 只读');
+  let dismissed=false;
+  page.once('dialog',dialog=>{dismissed=true;void dialog.dismiss();});
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  expect(dismissed).toBe(true);await expect(page).toHaveURL(origin);
+  await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('刷新失败后保留的输入');
+  page.once('dialog',dialog=>dialog.accept());
+  await page.getByRole('button',{name:'进入任务选择会话',exact:true}).click();
+  await expect(page.getByRole('region',{name:'任务详情',exact:true})).toBeVisible();
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  expect(env.errors).toEqual([]);
+ } finally {await env.close();}
+});
+
+async function rotationCamera(page:Page){const {center,zoom,bearing,pitch}=await mapSnapshot(page);return {center,zoom,bearing,pitch};}
+async function rotationPoint(page:Page){
+ return page.evaluate(()=>{const map=window.__basemapTestMap!;const source=map.getSource('annotation:preview:preview') as import('maplibre-gl').GeoJSONSource;const feature=(source.serialize().data as unknown as {features:Array<{geometry:{coordinates:[number,number]};properties:{rotation:number}}>}).features[0]!;const p=map.project(feature.geometry.coordinates),box=map.getContainer().getBoundingClientRect();return {coordinates:feature.geometry.coordinates,x:p.x+box.left,y:p.y+box.top,rotation:feature.properties.rotation};});
+}
+async function dragRotation(page:Page,delta:number){
+ const handle=page.getByRole('button',{name:'旋转标号方向',exact:true}),box=(await handle.boundingBox())!,point=await rotationPoint(page);
+ expect(await handle.evaluate(element=>{const bounds=element.getBoundingClientRect();return document.elementFromPoint(bounds.x+bounds.width/2,bounds.y+bounds.height/2)?.closest('.annotation-rotation-handle')===element;})).toBe(true);
+ const x=box.x+box.width/2,y=box.y+box.height/2,angle=Math.atan2(x-point.x,point.y-y),radius=Math.hypot(x-point.x,y-point.y);
+ await page.mouse.move(x,y);await page.mouse.down();
+ for(let step=1;step<=8;step++)await page.mouse.move(point.x+Math.sin(angle+delta*Math.PI/180*step/8)*radius,point.y-Math.cos(angle+delta*Math.PI/180*step/8)*radius);
+ await page.mouse.up();
+}
+
+test('rotation handle shares the numeric draft, preserves camera and coordinates, and saves only explicitly',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try{
+  await layer(page);await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12}));
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),box=(await canvas.boundingBox())!;await page.mouse.click(box.x+box.width*.43,box.y+box.height*.42);
+  const angle=page.getByLabel('真北方向（°）'),handle=page.getByRole('button',{name:'旋转标号方向',exact:true});
+  await expect(handle).toBeVisible();await expect(angle).toHaveValue('');await expect(page.locator('.annotation-rotation-angle')).toHaveText('真北 90°');
+  const initial=await rotationPoint(page),before=await rotationCamera(page),writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  const originalHandle=await handle.elementHandle();await handle.click({position:{x:5,y:15}});await expect(angle).toHaveValue('');
+  await dragRotation(page,45);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(135,0);
+  expect(await handle.evaluate((element,original)=>element===original,originalHandle)).toBe(true);expect((await rotationPoint(page)).coordinates).toEqual(initial.coordinates);
+  expect(await rotationCamera(page)).toEqual(before);
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await angle.fill('359');await dragRotation(page,2);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(1,0);
+  await angle.fill('0');await expect(page.locator('.annotation-rotation-angle')).toHaveText('真北 0°');
+  await openProperties(page);await page.getByLabel('图标尺寸（px）').fill('64');await page.locator('.annotation-more-properties > summary').click();
+  for(const camera of [{bearing:0,pitch:0,heading:0},{bearing:35,pitch:50,heading:90},{bearing:123,pitch:60,heading:359}]){
+   await page.evaluate(({bearing,pitch})=>window.__basemapTestMap!.jumpTo({bearing,pitch}),camera);await angle.fill(String(camera.heading));
+   await expect.poll(async()=>(await rotationPoint(page)).rotation).toBe((camera.heading+270)%360);
+   const tiltedCamera=await rotationCamera(page);await dragRotation(page,15);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo((camera.heading+15)%360,0);expect(await rotationCamera(page)).toEqual(tiltedCamera);expect((await rotationPoint(page)).coordinates).toEqual(initial.coordinates);
+   await expect.poll(()=>page.evaluate(()=>window.__basemapTestMap!.loaded())).toBe(true);
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   const location=await rotationPoint(page),h=(await handle.boundingBox())!,expected=Math.atan2(h.x+h.width/2-location.x,location.y-h.y-h.height/2);
+   const pixels=await page.screenshot({clip:{x:location.x-80,y:location.y-80,width:160,height:160},path:test.info().outputPath(`rotation-pixels-${camera.bearing}.png`)});
+   const principal=await page.evaluate(async encoded=>{const image=new Image();image.src=`data:image/png;base64,${encoded}`;await image.decode();const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const context=c.getContext('2d')!;context.drawImage(image,0,0);const data=context.getImageData(0,0,c.width,c.height).data;const points:Array<[number,number]>=[];for(let i=0;i<data.length;i+=4)if(data[i]>190&&data[i+1]<80&&data[i+2]<80)points.push([(i/4)%c.width,Math.floor(i/4/c.width)]);const mx=points.reduce((s,p)=>s+p[0],0)/points.length,my=points.reduce((s,p)=>s+p[1],0)/points.length;let xx=0,yy=0,xy=0;for(const [x,y]of points){xx+=(x-mx)**2;yy+=(y-my)**2;xy+=(x-mx)*(y-my);}return {count:points.length,axis:Math.atan2(2*xy,xx-yy)/2};},pixels.toString('base64'));
+   expect(principal.count).toBeGreaterThan(40);expect(Math.abs(Math.cos(principal.axis-(expected-Math.PI/2))),JSON.stringify({camera,principal,expected,location})).toBeGreaterThan(.97);
+  }
+  await angle.fill('42');await page.screenshot({path:test.info().outputPath('rotation-wide.png')});
+  await page.setViewportSize({width:1000,height:900});await expect(handle).toBeInViewport({ratio:1});await page.screenshot({path:test.info().outputPath('rotation-narrow.png')});
+  await page.getByLabel('对象名称',{exact:true}).fill('旋转消防车');const savedCamera=await rotationCamera(page);await saveDraw(page);await expect(handle).not.toBeVisible();expect(await rotationCamera(page)).toEqual(savedCamera);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id),feature=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!;
+  expect(feature.style?.heading).toBe(42);expect(feature.geometry.coordinates).toEqual(initial.coordinates);
+  await page.setViewportSize({width:1440,height:960});await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await dragRotation(page,70);page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();await expect(handle).not.toBeVisible();
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,2).document.layers[0]!.features[0]!.style?.heading).toBe(42);
+  await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await handle.click({position:{x:5,y:15}});await expect(angle).toHaveValue('42');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');
+  await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await pickOwn(page,'旋转消防车 point');await page.getByRole('button',{name:'拖动及顶点编辑',exact:true}).click();await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();await page.getByRole('button',{name:'继续对象编辑',exact:true}).click();await expect(handle).not.toBeVisible();expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('rotation guards restore pointer and gesture state across pause, hidden previews and symbol changes',async({page})=>{
+ await captureMap(page);const env=await setup(page);
+ try{
+  await layer(page);await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();await page.evaluate(()=>window.__basemapTestMap!.jumpTo({center:[116.4,39.9],zoom:12}));
+  await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();
+  const canvas=page.locator('.maplibregl-canvas'),box=(await canvas.boundingBox())!;await page.mouse.click(box.x+box.width*.43,box.y+box.height*.42);
+  const handle=page.getByRole('button',{name:'旋转标号方向',exact:true}),angle=page.getByLabel('真北方向（°）');await expect(handle).toBeVisible();
+  await page.evaluate(()=>window.__basemapTestMap!.scrollZoom.disable());
+  const h=(await handle.boundingBox())!;await page.mouse.move(h.x+h.width/2,h.y+h.height/2);await page.mouse.down();
+  expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(false);
+  await handle.dispatchEvent('pointercancel',{pointerId:1});await page.mouse.up();
+  expect(await page.evaluate(()=>({pan:window.__basemapTestMap!.dragPan.isEnabled(),scroll:window.__basemapTestMap!.scrollZoom.isEnabled()}))).toEqual({pan:true,scroll:false});await expect(angle).toHaveValue('');
+  await dragRotation(page,30);await expect.poll(async()=>Number(await angle.inputValue())).toBeCloseTo(120,0);
+  let activeHandle=(await handle.boundingBox())!;await page.mouse.move(activeHandle.x+15,activeHandle.y+15);await page.mouse.down();await handle.evaluate(element=>element.releasePointerCapture(1));await page.mouse.up();expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(true);
+  activeHandle=(await handle.boundingBox())!;await page.mouse.move(activeHandle.x+15,activeHandle.y+15);await page.mouse.down();await page.getByRole('button',{name:'标绘工具',exact:true}).evaluate(element=>(element as HTMLButtonElement).click());await page.mouse.up();await expect(handle).not.toBeVisible();expect(await page.evaluate(()=>window.__basemapTestMap!.dragPan.isEnabled())).toBe(true);await openTools(page);
+  const cameraBeforePan=await rotationCamera(page);await page.mouse.move(box.x+80,box.y+100);await page.mouse.down();await page.mouse.move(box.x+125,box.y+125,{steps:5});await page.mouse.up();await expect.poll(async()=>(await rotationCamera(page)).center).not.toEqual(cameraBeforePan.center);await page.evaluate(camera=>window.__basemapTestMap!.jumpTo({center:camera.center as [number,number],zoom:camera.zoom,bearing:camera.bearing,pitch:camera.pitch}),cameraBeforePan);
+  await page.getByRole('button',{name:'标绘工具',exact:true}).click();await expect(handle).not.toBeVisible();await openTools(page);await expect(handle).toBeVisible();
+  await page.getByRole('button',{name:'收起对象编辑',exact:true}).click();await expect(handle).not.toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(handle).toBeVisible();
+  await openLayers(page);await page.getByLabel('草稿 / 未保存预览',{exact:true}).uncheck();await expect(handle).not.toBeVisible();await page.getByLabel('草稿 / 未保存预览',{exact:true}).check();await expect(handle).toBeVisible();
+  const own=page.getByRole('region',{name:/^本会话标注 /});await expandGroup(page,'本会话标注');await own.getByRole('button',{name:'隐藏集合点',exact:true}).click();await expect(handle).not.toBeVisible();await own.getByRole('button',{name:'显示集合点',exact:true}).click();await expect(handle).toBeVisible();await page.getByRole('button',{name:'关闭图层与对象',exact:true}).click();
+  await openSymbolReplacement(page);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'集结地 标准 6.1.27',exact:true}).click();await expect(handle).not.toBeVisible();await expect(angle).toHaveCount(0);
+  await openSymbolReplacement(page);await page.getByRole('button',{name:'改用普通点',exact:true}).click();await expect(handle).not.toBeVisible();
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
+  await openSymbolReplacement(page);await page.getByRole('group',{name:'专业标号目录'}).getByRole('button',{name:'水罐消防车 标准 6.2.1',exact:true}).click();await angle.fill('180');await expect(handle).toBeVisible();env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();await expect(handle).not.toBeVisible();await expect(angle).toBeDisabled();await page.getByRole('button',{name:'查询保存回执',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);await expect(handle).not.toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('compact editor retains hidden styles and metadata while keeping advanced fields reachable',async({page})=>{
+ await captureMap(page);const env=await setup(page);const canvas=page.locator('.maplibregl-canvas'),originalCanvas=await canvas.elementHandle();
+ const mapFillsArea=async()=>{await expect.poll(async()=>{const map=(await canvas.boundingBox())!,area=(await page.locator('.annotation-main').boundingBox())!;return Math.max(Math.abs(map.width-area.width),Math.abs(map.height-area.height),Math.abs(map.x-area.x),Math.abs(map.y-area.y));}).toBeLessThan(2);};
+ try{
+  const original={objectId:'retained-properties',kind:'point' as const,name:'保留属性',informationRole:'plan' as const,note:'既有备注',attributes:{unit:'水域一队',count:3,confirmed:false,unknown:null},geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},style:{symbolId:'xf3013-2020.6.2.1',iconSize:44,heading:23,color:'#243647',fillColor:'#c9d2ab',label:'既有地图标签',symbol:'triangle' as const,lineStyle:'dotted' as const,size:12,width:6,opacity:.6}};
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'retained',name:'集合点',order:0,defaultVisible:true,features:[original]}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r1');await pickOwn(page,'保留属性 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();
+  const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
+  await page.setViewportSize({width:1280,height:720});await expect(page.getByLabel('对象名称',{exact:true})).toBeInViewport({ratio:1});await expect(page.getByLabel('真北方向（°）')).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await mapFillsArea();expect(await canvas.evaluate((element,original)=>element===original,originalCanvas)).toBe(true);
+  const card=page.getByRole('complementary',{name:'标绘工具面板',exact:true}),form=page.getByRole('form',{name:'标注对象编辑',exact:true}),originalForm=await form.elementHandle();
+  const compact=(await card.boundingBox())!,mapBox=(await canvas.boundingBox())!,cameraBeforeExpansion=await rotationCamera(page);
+  expect(compact.height).toBeLessThan(mapBox.height-150);
+  await openProperties(page);expect((await card.boundingBox())!.height).toBeGreaterThan(compact.height+40);await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  const fields=page.locator('.annotation-feature-fields'),footer=page.locator('.annotation-feature-footer'),footerBeforeFocus=(await footer.boundingBox())!;
+  await fields.hover();await page.mouse.wheel(0,140);await expect.poll(()=>fields.evaluate(element=>element.scrollTop)).toBeGreaterThan(0);
+  await page.getByRole('textbox',{name:'备注',exact:true}).focus();expect((await footer.boundingBox())!.y).toBeCloseTo(footerBeforeFocus.y,0);expect(await form.evaluate(element=>element.scrollTop)).toBe(0);await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await page.locator('.annotation-more-properties > summary').click();expect((await card.boundingBox())!.height).toBeCloseTo(compact.height,0);expect(await rotationCamera(page)).toEqual(cameraBeforeExpansion);expect(await form.evaluate((element,original)=>element===original,originalForm)).toBe(true);
+  const exterior={x:compact.x+compact.width/2,y:compact.y+compact.height+16};
+  expect(await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.classList.contains('maplibregl-canvas'),exterior)).toBe(true);
+  await page.mouse.move(exterior.x,exterior.y);await page.mouse.down();await page.mouse.move(exterior.x-45,exterior.y+10,{steps:5});await page.mouse.up();await expect.poll(async()=>(await rotationCamera(page)).center).not.toEqual(cameraBeforeExpansion.center);await page.evaluate(()=>window.__basemapTestMap!.stop());
+  const zoomBeforeWheel=(await rotationCamera(page)).zoom;await page.mouse.move(exterior.x,exterior.y);await page.mouse.wheel(0,-160);await expect.poll(async()=>(await rotationCamera(page)).zoom).toBeGreaterThan(zoomBeforeWheel);await page.evaluate(()=>window.__basemapTestMap!.stop());
+  await expect(page.locator('.annotation-current-symbol')).toContainText('标准 6.2.1');await expect(page.getByLabel('图标尺寸（px）')).not.toBeVisible();await expect(page.getByLabel('业务属性 JSON')).not.toBeVisible();
+  await openSymbolReplacement(page);expect((await card.boundingBox())!.height).toBeGreaterThan(compact.height+40);await page.getByLabel('查找专业标号').fill('消防车');await page.getByLabel('查找专业标号').press('Enter');await page.getByRole('button',{name:'更换图标',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('23');await expect(page.locator('.annotation-heading')).not.toContainText('未保存');expect(env.requests.filter(r=>r.path.endsWith('/annotation/actions'))).toHaveLength(writes);
+  await page.screenshot({path:test.info().outputPath('editor-simplified-wide.png')});
+  await page.getByLabel('对象名称',{exact:true}).fill('保留属性已更新');await saveDraw(page);
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id),saved=()=>env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).document.layers[0]!.features[0]!;
+  expect(saved()).toEqual({...original,name:'保留属性已更新'});
+  await pickOwn(page,'保留属性已更新 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await openProperties(page);await expect(page.getByLabel('标签颜色',{exact:true})).toHaveValue(original.style.color);await expect(page.getByLabel('图标尺寸（px）')).toHaveValue('44');
+  for(const label of ['填充色','填充透明度','点大小','点符号','线宽','线型'])await expect(page.getByLabel(label,{exact:true})).toHaveCount(0);
+  await expect(page.getByLabel('坐标 JSON（经度在前）')).not.toBeVisible();await page.getByText('业务属性',{exact:true}).click();
+  await page.setViewportSize({width:1000,height:900});const attributes=page.getByLabel('业务属性 JSON');await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,80);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});
+  await mapFillsArea();await page.screenshot({path:test.info().outputPath('editor-advanced-narrow.png')});
+  await page.setViewportSize({width:1000,height:620});await mapFillsArea();await attributes.fill(JSON.stringify({...original.attributes,contact:'值班室'}));await page.locator('.annotation-feature-fields').hover();await page.mouse.wheel(0,100);await expect(attributes).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'收起对象编辑',exact:true})).toBeInViewport({ratio:1});
+  const shortCard=(await card.boundingBox())!,switcher=(await page.getByRole('group',{name:'底图视图'}).boundingBox())!;expect(shortCard.y+shortCard.height).toBeLessThan(switcher.y);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('editor-floating-short.png')});await saveDraw(page);
+  expect(saved()).toEqual({...original,name:'保留属性已更新',attributes:{...original.attributes,contact:'值班室'}});expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('object edit preserves defaults, protects references and explicitly merges independent changes',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;const layerId=env.lab.annotations!.privateVersion(env.actor,setId,1).document.layers[0]!.layerId;
+  const original={objectId:'integration-boat',kind:'point' as const,name:'整合冲锋舟',geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},style:{symbolId:'app.rescue-inflatable-boat',heading:45,iconSize:48},attributes:{count:4,unknown:null}};
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'add_object',layerId,feature:original}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await pickOwn(page,'整合冲锋舟 point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();
+  await page.getByLabel('真北方向（°）').fill('90');await expect(page.getByText('这些修改尚未保存，Agent 只能读取已保存内容。')).toBeVisible();
+  const beforeUrl=page.url();await openLayers(page);await page.getByLabel('草稿 / 未保存预览').uncheck();await pickOwn(page,'整合冲锋舟 point');await page.getByRole('button',{name:'引用此对象',exact:true}).click();expect(page.url()).toBe(beforeUrl);await expect(page.getByText('请先保存或取消本地修改，再引用已保存内容。')).toBeVisible();await page.getByRole('button',{name:'继续对象编辑 · 未保存',exact:true}).click();await expect(page.getByLabel('真北方向（°）')).toHaveValue('90');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:original.objectId,changes:{name:'Agent 救援一队',attributes:{count:5,unknown:null,contact:'张队'}}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await page.getByRole('button',{name:'保存对象',exact:true}).click();
+  await expect(page.getByRole('region',{name:'核对对象修改'})).toContainText('Agent 救援一队');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(3);
+  await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);const saved=env.lab.annotations!.privateVersion(env.actor,setId,4).document.layers[0]!.features[0]!;
+  expect(saved).toEqual({...original,name:'Agent 救援一队',style:{...original.style,heading:90},attributes:{count:5,unknown:null,contact:'张队'}});
+  const last=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).at(-1)!.body;expect(last.operations).toEqual([{op:'update_object',objectId:original.objectId,changes:{style:{...original.style,heading:90}}}]);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('same-field choices reset on a second conflict and equal concurrent values do not create revisions',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const initial=env.lab.annotations!.binding(env.actor,env.session.id);const setId=initial.draft!.setId;const original=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!.features[0]!;
+  const rename=(revision:number,name:string)=>env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:revision,operations:[{op:'update_object',objectId:original.objectId,changes:{name}}]});
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('本地名称');rename(2,'Agent名称');
+  // Let the real service reject an old revision before refreshing the page state.
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.getByRole('button',{name:'合并我的修改并保存'})).toBeDisabled();
+  await expect(page.locator('.annotation-conflict')).toHaveCount(0);await expect(page.getByRole('button',{name:'查询保存回执'})).toHaveCount(0);
+  await page.getByRole('button',{name:'取消核对',exact:true}).click();await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('本地名称');
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.locator('.annotation-conflict')).toHaveCount(0);await page.screenshot({path:test.info().outputPath('annotation-conflict-review.png')});
+  await page.setViewportSize({width:1000,height:620});await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeInViewport({ratio:1});await page.getByLabel('采用名称').scrollIntoViewIfNeeded();await expect(page.getByLabel('采用名称')).toBeInViewport({ratio:1});await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeInViewport({ratio:1});await page.screenshot({path:test.info().outputPath('annotation-conflict-short.png')});await page.setViewportSize({width:1440,height:960});
+  await page.getByLabel('采用名称').selectOption('local');rename(3,'Agent第二次名称');await page.getByRole('button',{name:'合并我的修改并保存'}).click();
+  await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByLabel('采用名称')).toHaveValue('');await expect(page.getByRole('region',{name:'核对对象修改'})).toContainText('Agent第二次名称');
+  await page.getByLabel('采用名称').selectOption('local');await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.privateVersion(env.actor,setId,5).document.layers[0]!.features[0]!.name).toBe('本地名称');
+  await pickOwn(page,'本地名称 point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('同样名称');rename(5,'同样名称');await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r6');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByLabel('采用名称')).toHaveCount(0);await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(6);
+ }finally{await env.close();}
+});
+
+test('failed fixed-version refresh keeps the old pair and input focus, deleted object cannot be resurrected',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;const object=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!.features[0]!;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();const name=page.getByLabel('对象名称',{exact:true});await name.fill('不能丢失的输入');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'rename_set',title:'已保存的新版本'}]});
+  const pattern=`**/api/annotations/${setId}/revisions/3`;await page.route(pattern,route=>route.fulfill({status:503,json:{error:{code:'TEMPORARY_FAILURE',message:'固定内容加载失败'}}}));
+  // Programmatic refresh avoids moving focus with the mouse, like a message-driven refresh.
+  await page.getByRole('button',{name:'刷新标注',exact:true}).evaluate((button:HTMLButtonElement)=>button.click());await expect(page.getByText('固定内容加载失败',{exact:true})).toBeVisible();await expect(name).toBeFocused();await expect(name).toHaveValue('不能丢失的输入');await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();
+  await page.unroute(pattern);await page.getByRole('button',{name:'刷新标注',exact:true}).evaluate((button:HTMLButtonElement)=>button.click());await expect(page.locator('.annotation-heading')).toContainText('草稿 r3');await expect(name).toBeFocused();
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:3,operations:[{op:'delete_object',objectId:object.objectId}]});await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByText('此对象已被删除，本地输入仍保留；不能重新创建原对象。')).toBeVisible();await expect(name).toHaveValue('不能丢失的输入');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();expect(env.lab.annotations!.privateVersion(env.actor,setId,4).document.layers[0]!.features).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('revoked editing keeps local input but leaves explicit cancel reachable',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留只读后的输入');
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);const pattern=`**/api/sessions/${env.session.id}/annotation`;await page.route(pattern,route=>route.fulfill({json:{...binding,writable:false}}));
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('保留只读后的输入');await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeEnabled();
+  page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);await page.unroute(pattern);
+ }finally{await env.close();}
+});
+
+test('switching a baseline before first save stops old object edits even when IDs match',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const source=env.lab.annotations!.binding(env.actor,env.session.id).draft!;const old=env.lab.annotations!.privateVersion(env.actor,source.setId,2).document.layers[0]!.features[0]!;
+  env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),expectedBindingRevision:0,baseRef:{setId:source.setId,revision:2}});
+  await page.goto(`/situation?taskId=${env.task.id}&sessionId=${env.second.id}`);await expect(page.locator('.annotation-heading')).toBeVisible();await openTools(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('旧基线修改');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:old.objectId,changes:{name:'新的基线对象'}}]});
+  const binding=env.lab.annotations!.binding(env.actor,env.second.id);env.lab.annotations!.setBase(env.actor,env.second.id,{clientActionId:randomUUID(),expectedBindingRevision:binding.bindingRevision,baseRef:{setId:source.setId,revision:3}});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('草稿身份已变化，请保留或复制本地输入后取消旧编辑。')).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('旧基线修改');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();expect(env.lab.annotations!.binding(env.actor,env.second.id).draft).toBeNull();
+ }finally{await env.close();}
+});
+
+test('missing original receipt keeps the same pending action without resend or discarded input',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('未知保存结果');env.dropNextAction();await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存结果待确认',{exact:true})).toBeVisible();
+  const pattern='**/api/annotation-actions/*';await page.route(pattern,route=>route.fulfill({json:null}));await page.getByRole('button',{name:'查询保存回执'}).click();await expect(page.getByText('尚未查询到回执；未自动重试，编辑内容仍保留。',{exact:true})).toBeVisible();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('未知保存结果');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'取消编辑',exact:true})).toBeDisabled();await expect(page.getByRole('button',{name:'放弃本地修改',exact:true})).toHaveCount(0);expect(env.requests.filter(item=>item.path.endsWith('/annotation/actions')&&item.body.action==='apply')).toHaveLength(1);
+  await page.unroute(pattern);await page.getByRole('button',{name:'查询保存回执'}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+ }finally{await env.close();}
+});
+
+test('late snapshot cannot replace a newer paired version while local input stays editable',async({page})=>{
+ const env=await setup(page);let release=()=>{};
+ try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id);const setId=binding.draft!.setId;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('保留乱序加载时输入');
+  const rename=(revision:number,title:string)=>env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:revision,operations:[{op:'rename_set',title}]});rename(2,'第三版');
+  let entered=()=>{};const started=new Promise<void>(resolve=>{entered=resolve;});const gate=new Promise<void>(resolve=>{release=resolve;});const pattern=`**/api/annotations/${setId}/revisions/3`;
+  await page.route(pattern,async route=>{entered();await gate;await route.fallback();});await page.getByRole('button',{name:'刷新标注',exact:true}).click();await started;await expect(page.locator('.annotation-heading')).toContainText('草稿 r2');await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await page.getByLabel('对象名称',{exact:true}).fill('加载中继续输入');
+  rename(3,'第四版');await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');const response=page.waitForResponse(url=>url.url().includes(`/api/annotations/${setId}/revisions/3`));release();await response;await expect(page.locator('.annotation-heading')).toContainText('草稿 r4');await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('加载中继续输入');await page.getByRole('button',{name:'保存对象',exact:true}).click();await page.getByRole('button',{name:'合并我的修改并保存'}).click();await expect(page.locator('.annotation-heading')).toContainText('草稿 r5');expect(env.lab.annotations!.privateVersion(env.actor,setId,5).title).toBe('第四版');
+ }finally{release();await env.close();}
+});
+
+test('ordinary service validation keeps editable input and does not impersonate a version conflict',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await openProperties(page);await page.locator('.annotation-more-properties > details').filter({has:page.locator('summary',{hasText:'业务属性'})}).locator('summary').click();
+  await page.getByLabel('业务属性 JSON').fill('{"__proto__":null}');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByText('保存未完成',{exact:true})).toBeVisible();await expect(page.getByRole('region',{name:'核对对象修改'})).toHaveCount(0);await expect(page.getByLabel('业务属性 JSON')).toHaveValue('{"__proto__":null}');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+  await page.getByLabel('业务属性 JSON').fill('{"contact":"李队"}');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);const draft=env.lab.annotations!.binding(env.actor,env.session.id).draft!;expect(env.lab.annotations!.privateVersion(env.actor,draft.setId,3).document.layers[0]!.features[0]!.attributes).toEqual({contact:'李队'});
+ }finally{await env.close();}
+});
+
+test('new local object merges into a newer saved revision exactly once',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('并发新增点');
+  const binding=env.lab.annotations!.binding(env.actor,env.session.id);env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'rename_set',title:'Agent已更新标题'}]});
+  await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.getByRole('region',{name:'核对对象修改'})).toBeVisible();await expect(page.locator('.annotation-conflict')).toHaveCount(0);expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);
+  await page.getByRole('button',{name:'合并我的修改并保存',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);
+  const saved=env.lab.annotations!.privateVersion(env.actor,binding.draft!.setId,3).document;expect(saved.title).toBe('Agent已更新标题');expect(saved.layers[0]!.features).toHaveLength(1);expect(saved.layers[0]!.features[0]!.name).toBe('并发新增点');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(3);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('changed object kind or deleted original layer stops the old form without rewriting saved objects',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page);const binding=env.lab.annotations!.binding(env.actor,env.session.id),setId=binding.draft!.setId;const old=env.lab.annotations!.privateVersion(env.actor,setId,2).document.layers[0]!;const object=old.features[0]!;
+  await pickOwn(page,'集合点 A point');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('本地未保存名称');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'update_object',objectId:object.objectId,changes:{kind:'line',geometry:{type:'LineString',coordinates:[[116.4,39.9],[116.41,39.91]]}}}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('对象类型已变化，请取消旧编辑后重新打开。',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('本地未保存名称');page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();
+  await pickOwn(page,'集合点 A line');await page.getByRole('button',{name:'编辑属性与坐标'}).click();await page.getByLabel('对象名称',{exact:true}).fill('第二次本地输入');
+  env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:3,operations:[{op:'add_layer',layer:{layerId:'surviving',name:'接收层',order:1,defaultVisible:true,features:[]}},{op:'update_object',objectId:object.objectId,changes:{},layerId:'surviving'},{op:'delete_layer',layerId:old.layerId}]});
+  await page.getByRole('button',{name:'刷新标注',exact:true}).click();await expect(page.getByText('原目标图层已删除，本地输入仍保留。',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'保存对象',exact:true})).toBeDisabled();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('第二次本地输入');
+  const saved=env.lab.annotations!.privateVersion(env.actor,setId,4).document;expect(saved.layers).toHaveLength(1);expect(saved.layers[0]!.layerId).toBe('surviving');expect(saved.layers[0]!.features[0]!.name).toBe('集合点 A');expect(saved.layers[0]!.features[0]!.kind).toBe('line');expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(4);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('resource form keeps unknowns and evidence, rejects multi-entity individual, and saves through real draft',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await page.getByRole('button',{name:'坐标新增',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('港区救援资源');
+  await page.getByText('资源信息 · 可选',{exact:true}).click();await page.getByRole('combobox',{name:'标注代表什么',exact:true}).selectOption('actual_resource');await page.getByRole('combobox',{name:'资源类别',exact:true}).selectOption('vessel');await page.getByRole('combobox',{name:'单个资源还是汇总',exact:true}).selectOption('individual');await page.getByLabel('填写数量',{exact:true}).check();await page.getByRole('combobox',{name:'单位',exact:true}).selectOption('艘');await page.getByLabel('数量范围',{exact:true}).fill('港区一队');
+  await page.getByText('数量的依据、时间与条件',{exact:true}).click();await page.getByLabel('数量依据说明',{exact:true}).fill('值班员报告，等待核实');await page.getByLabel('报告时间',{exact:true}).fill('2026-11-02T10:00:00+08:00');await page.getByLabel('生效时间',{exact:true}).fill('2026-11-02T10:00:00+08:00');await page.getByLabel('失效时间',{exact:true}).fill('2026-11-03T10:00:00+08:00');await page.getByLabel('适用条件（每行一项）',{exact:true}).fill('天气允许\n现场确认');
+  await page.getByLabel('数量（留空为未知）',{exact:true}).fill('2');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form [role="alert"]')).toBeVisible();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);
+  await page.getByRole('combobox',{name:'与当前任务的关系',exact:true}).selectOption('potential_support');await page.getByText('任务关系的依据、时间与条件',{exact:true}).click();await page.getByLabel('任务关系依据说明',{exact:true}).fill('支援申请已确认');
+  await page.getByRole('combobox',{name:'可用状态',exact:true}).selectOption('unknown');await page.getByText('可用状态的依据、时间与条件',{exact:true}).click();await page.getByLabel('可用状态依据说明',{exact:true}).fill('尚未得到可用确认');
+  await page.getByRole('combobox',{name:'位置含义',exact:true}).selectOption('planned');await page.getByRole('combobox',{name:'位置代表',exact:true}).selectOption('site');await page.getByText('位置的依据、时间与条件',{exact:true}).click();await page.getByLabel('位置依据说明',{exact:true}).fill('计划集结站点');
+  for(const title of ['任务关系','可用状态','位置']){const basis=page.locator('.annotation-resource-fields details').filter({has:page.getByText(`${title}的依据、时间与条件`,{exact:true})});await basis.getByLabel('报告时间',{exact:true}).fill('2026-11-02T10:00:00+08:00');await basis.getByLabel('生效时间',{exact:true}).fill('2026-11-02T10:00:00+08:00');await basis.getByLabel('失效时间',{exact:true}).fill('2026-11-03T10:00:00+08:00');await basis.getByLabel('适用条件（每行一项）',{exact:true}).fill('需现场确认');}
+  await page.getByLabel('数量（留空为未知）',{exact:true}).fill('');
+  await page.locator('.annotation-resource-fields details').evaluateAll(nodes=>nodes.forEach(node=>(node as HTMLDetailsElement).open=false));await page.locator('.annotation-resource-fields').evaluate(node=>node.scrollIntoView({block:'start'}));await expect(page.locator('.annotation-feature-form [role="alert"]')).toHaveCount(0);await page.screenshot({path:test.info().outputPath('resource-form-1440.png')});await page.getByText('数量的依据、时间与条件',{exact:true}).click();await page.getByText('数量的依据、时间与条件',{exact:true}).evaluate(node=>node.scrollIntoView({block:'start'}));await page.screenshot({path:test.info().outputPath('resource-form-evidence-1440.png')});await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);
+  const ref=env.lab.annotations!.binding(env.actor,env.session.id).draft!;const saved=env.lab.annotations!.version(env.actor,env.task.id,{setId:ref.setId,revision:ref.headRevision}).document.layers[0].features[0];expect(saved.resource?.quantity).toMatchObject({value:null,unit:'艘',scope:'港区一队',conditions:['天气允许','现场确认'],reportedAt:'2026-11-02T10:00:00+08:00'});expect(saved.resourceAssociation).toBeUndefined();expect(saved.resource?.taskRelations?.[0]).toMatchObject({taskId:env.task.id,relation:'potential_support',conditions:['需现场确认']});expect(saved.resource?.availability?.state).toBe('unknown');expect(saved.resource?.position).toMatchObject({meaning:'planned',appliesTo:'site',reportedAt:'2026-11-02T10:00:00+08:00'});
+  const withOtherTask={...saved.resource!,taskRelations:[...saved.resource!.taskRelations!,{taskId:randomUUID(),relation:'related' as const,evidence:[{kind:'declaration' as const,note:'另一个任务的历史关系'}]}]};env.lab.annotations!.action(env.actor,env.session.id,{action:'apply',clientActionId:randomUUID(),expectedRevision:ref.headRevision,operations:[{op:'update_object',objectId:saved.objectId,changes:{resource:withOtherTask}}]});await page.reload();await openTools(page);
+  await pickOwn(page,'港区救援资源 point');await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('救援资源新名称');await page.getByRole('button',{name:'保存对象',exact:true}).click();await expect(page.locator('.annotation-feature-form')).toHaveCount(0);
+  const latest=env.lab.annotations!.binding(env.actor,env.session.id).draft!;expect(env.lab.annotations!.version(env.actor,env.task.id,{setId:latest.setId,revision:latest.headRevision}).document.layers[0].features[0].resource).toEqual(withOtherTask);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('resource result card uses native fixed result, pages through authorized snapshot and clears revoked content',async({page})=>{
+ let queried=false;let queryRef:import('../../src/contracts/annotations').AnnotationRef;const env=await setup(page,undefined,()=>queried?{text:'已查询固定结果。'}:(queried=true,{tools:[{name:'task_resource_query',arguments:{operation:'query',purpose:'data',annotations:[{ref:queryRef}]}}]}));try{
+  const annotations=env.lab.annotations!;const receipt=annotations.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'resources',name:'资源',order:0,defaultVisible:true,features:Array.from({length:12},(_,i)=>({objectId:`boat-${i}`,kind:'point' as const,name:`船舶候选 ${i+1}`,geometry:{type:'Point' as const,coordinates:[116+i*.001,39] as [number,number]},resource:{meaning:'actual_resource' as const,category:'vessel' as const,granularity:'individual' as const,quantity:{value:i===0?null:1,unit:'艘' as const,meaning:'entities' as const,scope:'港区',evidence:[{kind:'declaration' as const,note:'值班员报告'}],reportedAt:'2026-11-02T10:00:00Z',conditions:['待现场复核']}}}))}}]});
+  // The deterministic runtime invokes the real query tool using an exact saved reference.
+  queried=false;queryRef=receipt.ref!;
+  // Query the actual saved draft through native Pi execution; UI never computes the summary.
+  await env.lab.start(env.session.id,'查询资源',{},env.actor.seatId,undefined,env.actor.userId).run(()=>{});
+  await page.goto(`/?session=${env.session.id}`);await page.getByText('处理过程 · 1 次工具调用',{exact:true}).click();const tool=page.locator('.tool-result').filter({has:page.locator('.resource-result-card')});await tool.locator(':scope > summary').click();
+  const card=page.getByRole('region',{name:'资源查询结果'});await expect(card).toBeVisible();await expect(card).toContainText('未知');await expect(card).toContainText('12');await expect(card.getByText('船舶候选 1',{exact:true})).toBeVisible();
+  await card.getByRole('button',{name:'下一页',exact:true}).click();await expect(card.getByText('船舶候选 11',{exact:true})).toBeVisible();await card.getByText('查看依据与限制',{exact:true}).first().click();await expect(card).toContainText('值班员报告');await expect(card).toContainText('待现场复核');await expect(card).toContainText('固定标注版本时间');await expect(card).toContainText('该记录未提供可用状态声明或依据');await expect(card).toContainText('平台引用或固定标注关联不证明已分配或可用');await page.screenshot({path:test.info().outputPath('resource-card-1440.png')});
+  const calls=env.fake.calls.length;await page.route(`**/api/sessions/${env.session.id}`,route=>route.fulfill({status:403,json:{error:{code:'FORBIDDEN',message:'此结果已不可访问'}}}));await card.getByRole('button',{name:'重新读取此结果'}).click();await expect(card).toContainText('此结果已不可访问');await expect(card.getByText('船舶候选 11',{exact:true})).toHaveCount(0);expect(env.fake.calls.length).toBe(calls);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('explicit source import uses the real controlled route and preserves source identity without publishing',async({page})=>{
+ const env=await setup(page);try{
+  const {ContextService}=await import('../../src/context/service');const ref={systemId:'source',objectType:'resource',objectId:'boat-1'};
+  const item={ref,name:'海港救援船一号（来源对象）',revision:1,areaIds:[],effectiveAt:null,validTime:null,geometry:{type:'Point' as const,coordinates:[116.4,39.9] as [number,number]},properties:{},resourceData:{entityId:'boat-entity',resource:{meaning:'actual_resource' as const,category:'vessel' as const,granularity:'individual' as const}}};
+  const data={systemId:'source',asOf:'2026-11-02T04:00:00Z',items:[item],limit:100,nextCursor:null,hasMore:false,timeUnknownCount:0,unknownRefs:[],changeCursor:'fixed'};
+  env.lab.annotations!.context=new ContextService({systems:[{id:'source',name:'验证来源',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TOKEN'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a']}]},{TOKEN:'synthetic'},{fetch:async()=>new Response(JSON.stringify({...data,limit:20}),{headers:{'Content-Type':'application/json'}})});
+  await page.route('**/api/context/catalog',route=>route.fulfill({json:{systems:[{id:'source',name:'验证来源',capabilities:['situation_current'],objectTypes:['resource'],areas:[]}]}}));await page.route('**/api/context/situation',route=>route.fulfill({json:{systemId:'source',query:route.request().postDataJSON(),queriedAt:'2026-11-02T04:00:01Z',data}}));
+  await layer(page);await page.reload();await openLayers(page);await page.getByRole('button',{name:'展开来源态势',exact:true}).click();await page.getByText('筛选来源与范围',{exact:true}).click();await page.getByRole('button',{name:'查看全部获准态势',exact:true}).click();await page.getByRole('button',{name:'展开资源池',exact:true}).click();await page.getByRole('button',{name:new RegExp('海港救援船一号')}).first().click();
+  expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(1);await page.getByText('导入为会话标注',{exact:true}).click();await expect(page.getByText(/来源提供了实体标识/)).toBeVisible();await page.getByRole('button',{name:'确认导入到草稿',exact:true}).click();await expect(page.getByRole('button',{name:'已保存到会话草稿',exact:true})).toBeVisible();
+  const draft=env.lab.annotations!.binding(env.actor,env.session.id).draft!;const feature=env.lab.annotations!.version(env.actor,env.task.id,{setId:draft.setId,revision:draft.headRevision}).document.layers[0].features[0];expect(feature.resourceAssociation).toEqual({source:ref,sourceRevision:1,entityId:'boat-entity'});expect(feature.resource).toEqual(item.resourceData.resource);expect(env.lab.annotations!.current(env.actor,env.task.id).sequence).toBe(0);
+  expect(env.requests.filter(r=>r.path.endsWith('/annotation/from-source'))).toHaveLength(1);expect(env.requests.find(r=>r.path.endsWith('/annotation/from-source'))!.body).not.toHaveProperty('resourceAssociation');await page.screenshot({path:test.info().outputPath('resource-controlled-import-1440.png')});expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('map references remain explicit, removable and fixed; unsaved map editing permits ordinary chat',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);const name='港区救援船当前作业信息需要核对的较长对象名称'.repeat(5);await point(page,name);
+  await page.goto(`/?session=${env.session.id}`);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await pickOwn(page,`${name} point`);
+  const chips=page.getByLabel('本次引用的标注版本');await expect(chips.locator(':scope > span')).toHaveCount(0);await page.getByRole('button',{name:'引用此对象',exact:true}).click();await expect(chips).toContainText(name);await expect(chips).toContainText('r2');
+  await chips.getByTitle('在地图核对固定标注引用').focus();await page.keyboard.press('Enter');await expect(page.getByRole('region',{name:'标注对象操作'})).toContainText('只读参考');await page.getByRole('button',{name:'引用此对象',exact:true}).click();await expect(chips.locator(':scope > span')).toHaveCount(1);
+  await page.setViewportSize({width:1280,height:960});await expect(chips.getByTitle('在地图核对固定标注引用')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:test.info().outputPath('resource-explicit-reference-1280.png')});
+  await chips.getByRole('button',{name:'移除标注引用 1',exact:true}).focus();await page.keyboard.press('Enter');await expect(chips.locator(':scope > span')).toHaveCount(0);await pickOwn(page,`${name} point`);await expect(chips.locator(':scope > span')).toHaveCount(0);
+  await page.getByRole('button',{name:'编辑属性与坐标',exact:true}).click();await page.getByLabel('对象名称',{exact:true}).fill('尚未保存的新名称');await page.getByRole('button',{name:'关闭态势地图',exact:true}).click();await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('普通聊天，请确认收到');await page.getByRole('button',{name:'发送消息',exact:true}).click();await expect(page.getByText('已收到固定标注引用。',{exact:true})).toBeVisible();
+  expect(env.requests.find(r=>r.path.endsWith('/messages'))?.body.annotationRefs).toBeUndefined();expect(env.lab.annotations!.binding(env.actor,env.session.id).draft!.headRevision).toBe(2);await page.getByRole('button',{name:'打开态势地图',exact:true}).click();await expect(page.getByLabel('对象名称',{exact:true})).toHaveValue('尚未保存的新名称');page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'取消编辑',exact:true}).click();
+ }finally{await env.close();}
+});
+
+for (const position of [undefined, 'interior'] as const) test(`resource statistic card shows real spatial filter ${position ?? 'selected collection'} and three separate gaps`,async({page})=>{
+ let ref:import('../../src/contracts/annotations').AnnotationRef;let resourceRef='';
+ const env=await setup(page,undefined,(context,index)=>{
+  const last=(name:string)=>{const message=context.messages.findLast(m=>m.role==='toolResult'&&m.toolName===name)!;return JSON.parse((message.content as Array<{type:string;text:string}>).filter(c=>c.type==='text').map(c=>c.text).join('\n')).data;};
+  if(index===0)return {tools:[{name:'task_resource_query',arguments:{operation:'query',purpose:'task',sources:[{systemId:'source'}],annotations:[{ref,objectIds:['known','boundary','exterior','unknown']}]}}]};
+  if(index===1){resourceRef=last('task_resource_query').resultRef;return {tools:[{name:'spatial_analyze',arguments:{operation:'classify_points',input:{kind:'resource',resultRef:resourceRef},target:{kind:'annotation',ref,objectIds:['area']}}}]};}
+  if(index===2)return {tools:[{name:'task_resource_query',arguments:{operation:'summarize',resultRef:resourceRef,relation:'assigned',availability:'available',spatialResultRef:last('spatial_analyze').resultRef,...(position ? {position} : {})}}]};
+  return {text:'固定范围统计已完成。'};
+ });try{
+  const {ContextService}=await import('../../src/context/service');env.lab.context=new ContextService({systems:[{id:'source',name:'部分来源',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TOKEN'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a']}]},{TOKEN:'synthetic'},{fetch:async()=>new Response(JSON.stringify({systemId:'source',asOf:'2026-11-02T04:00:00Z',items:[],limit:100,nextCursor:null,hasMore:false,timeUnknownCount:0,unknownRefs:[],changeCursor:'fixed',resourceCoverage:{status:'partial',reason:'来源只覆盖部分港区'}}),{headers:{'Content-Type':'application/json'}})});env.lab.annotations!.context=env.lab.context;
+  const evidence=[{kind:'declaration' as const,note:'现场报告'}];const saved=env.lab.annotations!.action(env.actor,env.session.id,{action:'create_draft',clientActionId:randomUUID(),baseRef:null,operations:[{op:'add_layer',layer:{layerId:'resources',name:'救援资源',order:0,defaultVisible:true,features:[
+   {objectId:'known',name:'已分配救援船',kind:'point',geometry:{type:'Point',coordinates:[120,30]},resource:{meaning:'actual_resource',category:'vessel',position:{meaning:'actual',appliesTo:'resource',evidence},availability:{state:'available',evidence},taskRelations:[{taskId:env.task.id,relation:'assigned',evidence}]}},
+   ...([{objectId:'boundary',name:'边界救援船',coordinates:[119,30]},{objectId:'exterior',name:'范围外救援船',coordinates:[122,30]}] as const).map(item=>({objectId:item.objectId,name:item.name,kind:'point' as const,geometry:{type:'Point' as const,coordinates:[...item.coordinates] as [number,number]},resource:{meaning:'actual_resource' as const,category:'vessel' as const,position:{meaning:'actual' as const,appliesTo:'resource' as const,evidence},availability:{state:'available' as const,evidence},taskRelations:[{taskId:env.task.id,relation:'assigned' as const,evidence}]}})),
+   {objectId:'unknown',name:'位置和关系待确认船',kind:'point',geometry:{type:'Point',coordinates:[120,30]},resource:{meaning:'actual_resource',category:'vessel',availability:{state:'available',evidence}}},
+   {objectId:'area',name:'港区范围',kind:'polygon',geometry:{type:'Polygon',coordinates:[[[119,29],[121,29],[121,31],[119,31],[119,29]]]}},
+  ]}}]});ref=saved.ref!;
+  await env.lab.start(env.session.id,'统计港区已分配可用船',{},env.actor.seatId,undefined,env.actor.userId).run(()=>{});const results=env.lab.get(env.session.id,env.actor.seatId).messages.filter(m=>m.role==='tool');expect(results.every(r=>!r.isError)).toBe(true);
+  expect(results.find(r=>r.toolName==='spatial_analyze')!.spatialResult!.values).toEqual({total:3,interior:1,boundary:1,exterior:1});
+  const summary=results.at(-1)!.resourceResult!;expect(summary.summary.itemCount).toBe(position?1:3);expect(summary.items.map(item=>item.name).sort()).toEqual(position?['已分配救援船']:['已分配救援船','范围外救援船','边界救援船'].sort());
+  const calls=env.fake.calls.length;
+  await page.goto(`/?session=${env.session.id}`);await page.getByText('处理过程 · 3 次工具调用',{exact:true}).click();const tools=page.locator('.tool-result').filter({has:page.locator('.resource-result-card')});await tools.last().locator(':scope > summary').click();const card=tools.last().getByRole('region',{name:'资源查询结果'});await expect(card).toContainText('资源统计结果');const scope=card.locator('.resource-statistics');await expect(scope).toContainText(position?'空间位置：范围内部':'空间位置：按所选空间结果集合统计');if(!position)await expect(scope).not.toContainText('范围内部');
+  await expect(scope.locator('dt').filter({hasText:'统计范围内条目'}).locator('+ dd')).toHaveText(`${position?1:3} 项`);await expect(card).toContainText('已分配');await card.getByText('数据与任务关系覆盖情况',{exact:true}).click();await expect(card).toContainText('来源只覆盖部分港区');await expect(card).toContainText('任务关系：部分');await expect(card).toContainText('位置无法判断 1 项');await card.scrollIntoViewIfNeeded();await page.screenshot({path:test.info().outputPath(`resource-statistic-${position??'collection'}-1440.png`)});
+  await page.setViewportSize({width:1280,height:960});await page.getByRole('button',{name:'打开态势地图',exact:true}).click();const separator=page.getByRole('separator',{name:'调整对话与地图宽度'});await separator.focus();await separator.press('Home');const map=page.getByRole('complementary',{name:'地图工作区'});await expect(map.locator('.annotation-heading')).toContainText('草稿 r1');await expect(map.locator('.maplibregl-canvas')).toBeVisible();await card.scrollIntoViewIfNeeded();await expect(scope).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(await card.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);await page.screenshot({path:test.info().outputPath(`resource-statistic-${position??'collection'}-1280-split.png`)});expect(env.fake.calls.length).toBe(calls);expect(env.errors).toEqual([]);
+ }finally{await env.close();}
+});
+
+test('failed send restores only explicit fixed map references and keeps other session drafts separate',async({page})=>{
+ const env=await setup(page);try{
+  await layer(page);await point(page,'恢复核对对象');await pickOwn(page,'恢复核对对象 point');await page.getByRole('button',{name:'引用此对象',exact:true}).click();const chips=page.getByLabel('本次引用的标注版本');await expect(chips).toContainText('恢复核对对象');
+  await page.route(`**/api/sessions/${env.session.id}/messages`,route=>route.fulfill({status:503,json:{error:{code:'PREPARE_FAILED',message:'测试发送准备中断'}}}));const input=page.getByRole('textbox',{name:'发送消息',exact:true});await input.fill('检查这份固定标注');await page.getByRole('button',{name:'发送消息',exact:true}).click();await expect(page.getByText('测试发送准备中断',{exact:true})).toBeVisible();await expect(input).toHaveValue('检查这份固定标注');await expect(chips).toContainText('r2');expect(env.fake.calls).toHaveLength(0);
+  await page.goto(`/?session=${env.second.id}`);await expect(page.getByLabel('本次引用的标注版本').locator(':scope > span')).toHaveCount(0);await page.goto(`/?session=${env.session.id}`);await expect(chips).toContainText('恢复核对对象');await expect(input).toHaveValue('检查这份固定标注');
  }finally{await env.close();}
 });

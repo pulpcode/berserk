@@ -1,0 +1,156 @@
+{
+  "standard": "XF/T 3013-2020",
+  "sourceUrl": "https://www.mem.gov.cn/gk/zfxxgkpt/fdzdgknr/202101/W020210118711682130047.pdf",
+  "items": [
+    {
+      "id": "xf3013-2020.6.2.1",
+      "name": "水罐消防车",
+      "standardRef": "6.2.1",
+      "pdfPage": 11,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.2",
+      "name": "泡沫消防车",
+      "standardRef": "6.2.2",
+      "pdfPage": 12,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.5",
+      "name": "干粉消防车",
+      "standardRef": "6.2.5",
+      "pdfPage": 12,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.8",
+      "name": "泵浦消防车",
+      "standardRef": "6.2.8",
+      "pdfPage": 12,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.10",
+      "name": "云梯消防车",
+      "standardRef": "6.2.10",
+      "pdfPage": 12,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.11",
+      "name": "登高平台消防车",
+      "standardRef": "6.2.11",
+      "pdfPage": 12,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.12",
+      "name": "举高喷射消防车",
+      "standardRef": "6.2.12",
+      "pdfPage": 12,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.13",
+      "name": "抢险救援消防车",
+      "standardRef": "6.2.13",
+      "pdfPage": 13,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.14",
+      "name": "化学事故抢险救援消防车",
+      "standardRef": "6.2.14",
+      "pdfPage": 13,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.15",
+      "name": "化学洗消消防车",
+      "standardRef": "6.2.15",
+      "pdfPage": 13,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.16",
+      "name": "照明消防车",
+      "standardRef": "6.2.16",
+      "pdfPage": 13,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.17",
+      "name": "通信指挥消防车",
+      "standardRef": "6.2.17",
+      "pdfPage": 13,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.18",
+      "name": "排烟消防车",
+      "standardRef": "6.2.18",
+      "pdfPage": 13,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.23",
+      "name": "供水消防车",
+      "standardRef": "6.2.23",
+      "pdfPage": 13,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.30",
+      "name": "救护车",
+      "standardRef": "6.2.30",
+      "pdfPage": 14,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.35",
+      "name": "消防直升机",
+      "standardRef": "6.2.35",
+      "pdfPage": 15,
+      "method": "vector-transcription-of-source-bitmap"
+    },
+    {
+      "id": "xf3013-2020.6.2.36",
+      "name": "消防无人机",
+      "standardRef": "6.2.36",
+      "pdfPage": 15,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.2.37",
+      "name": "消防艇",
+      "standardRef": "6.2.37",
+      "pdfPage": 15,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.1.21",
+      "name": "战斗员",
+      "standardRef": "6.1.21",
+      "pdfPage": 11,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "xf3013-2020.6.1.27",
+      "name": "集结地",
+      "standardRef": "6.1.27",
+      "pdfPage": 11,
+      "method": "source-vector-paths"
+    },
+    {
+      "id": "app.rescue-inflatable-boat",
+      "name": "冲锋舟",
+      "method": "project-extension-approved-sample"
+    },
+    {
+      "id": "app.rescue-vessel",
+      "name": "救援舰船",
+      "method": "project-extension-approved-sample"
+    }
+  ]
+}

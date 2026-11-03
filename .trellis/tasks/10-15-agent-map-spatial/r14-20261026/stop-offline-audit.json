@@ -1,0 +1,26 @@
+{
+  "scope": "offline_existing_response_only",
+  "modelRequests": 0,
+  "sourceFreezeUnchanged": true,
+  "protectedFilesUnchanged": 179,
+  "caseId": "D03",
+  "entryId": "D03-1-A",
+  "actualClassifier": "unsupported",
+  "triggerSentences": [
+    {
+      "text": "## 需要你确认的两点",
+      "kind": "unnecessary"
+    },
+    {
+      "text": "如果你指的是别的东西，请告诉我。",
+      "kind": "unsupported"
+    },
+    {
+      "text": "如果你需要把结果保存到草稿图层，请告诉我目标图层。",
+      "kind": "unnecessary"
+    }
+  ],
+  "adjudication": "false_stop_after_complete_answer",
+  "originalRecordsModified": false,
+  "codeModified": false
+}

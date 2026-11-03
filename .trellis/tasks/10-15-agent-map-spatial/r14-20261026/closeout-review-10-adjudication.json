@@ -1,0 +1,12 @@
+{
+  "selected": "closeout-review-10-adjudicated.json",
+  "strict": {
+    "pass": 13,
+    "fail": 2
+  },
+  "main": {
+    "pass": 15
+  },
+  "agreement": "all strict and main verdicts agree; root checked failure originals and30 task state audit covers chunk09/10",
+  "originalReviewsPreserved": true
+}

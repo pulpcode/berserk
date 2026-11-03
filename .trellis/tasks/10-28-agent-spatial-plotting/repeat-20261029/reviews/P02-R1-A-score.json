@@ -1,0 +1,13 @@
+{
+  "id": "P02-R1-A",
+  "mainRequirement": "fail",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "fail",
+  "boundaries": "pass",
+  "strict": "fail",
+  "reason": "读取map-annotations仍未写前澄清车型，直接保存无symbolId普通点。坦诚未选具体符号，说明与实际相符；事后可选追问不补救。",
+  "evidence": [
+    "P02-R1-A/gate/1-checkpoint.json"
+  ]
+}

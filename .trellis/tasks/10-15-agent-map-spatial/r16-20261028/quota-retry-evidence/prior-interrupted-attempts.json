@@ -1,0 +1,36 @@
+[
+  {
+    "row": {
+      "id": "Q07-1-GS",
+      "entryId": "Q07-1-GS",
+      "caseId": "Q07",
+      "group": "GS",
+      "round": 1,
+      "repetition": 1,
+      "ordinal": 3,
+      "split": "development",
+      "status": "incomplete",
+      "semanticReview": "pending",
+      "plannedUserTurns": 2,
+      "completedUserTurns": 0,
+      "sentOriginalUserTurns": 1,
+      "additionalClarificationTurns": 0,
+      "unissuedOriginalUserTurns": 1,
+      "runtimeBuildMs": 1440,
+      "initializationMs": 2927,
+      "prepared": true,
+      "startedAt": "2026-10-28T10:00:21.003Z",
+      "blindId": "64ac59e7-143c-4ce9-bca2-080eccfec293",
+      "stop": "provider_http_429",
+      "endedAt": "2026-10-28T10:00:29.573Z",
+      "elapsedMs": 8570
+    },
+    "evidenceDirectory": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.local/spatial-r16/continuation-20261028/Q07-1-GS",
+    "sourceFreezeHash": "9abeb5c4b600e53b2adf6dba22260f39ffedeeb3db8d16b0bed9f466bd273aee",
+    "retryEntryId": "Q07-1-GS",
+    "authorization": {
+      "path": "/Users/lau/.codex/worktrees/agent-result-grounding/berserk/.trellis/tasks/10-15-agent-map-spatial/r16-20261028/quota-retry-authorization.md",
+      "sha256": "0d74e13742aac022ba7b7fe63f769164c63d34d7891b948e6016d4d3f56fac34"
+    }
+  }
+]

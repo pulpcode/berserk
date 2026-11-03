@@ -1,0 +1,35 @@
+[
+  {
+    "batch": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/r15-offline-isolated-write-vDney0/batch",
+    "rows": [
+      {
+        "id": "P05-1-G0",
+        "status": "incomplete",
+        "stop": "unauthorized_draft_change",
+        "scope": "task"
+      },
+      {
+        "id": "P05-1-GS",
+        "status": "incomplete",
+        "stop": "unauthorized_draft_change",
+        "scope": "task"
+      },
+      {
+        "id": "P05-1-GT",
+        "status": "incomplete",
+        "stop": "unauthorized_draft_change",
+        "scope": "task"
+      },
+      {
+        "id": "P05-1-GST",
+        "status": "incomplete",
+        "stop": "unauthorized_draft_change",
+        "scope": "task"
+      }
+    ],
+    "firstNativeStatus": "cancelled",
+    "precedingStop": "waiting_user_unmapped_necessary_interaction",
+    "criticalEffect": "unauthorized_draft_change",
+    "actualRequests": 12
+  }
+]

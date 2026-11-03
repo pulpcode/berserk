@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-26T09:50:09.439450+00:00",
+  "method": "read-only CUA logged-in Agent Plan subscription page",
+  "url": "https://console.volcengine.com/ark/region:cn-beijing/subscription/agent-plan",
+  "plan": "Medium",
+  "usedAfp": {
+    "fiveHour": 0,
+    "week": 120.876,
+    "month": 1577.632
+  },
+  "limitsAfp": {
+    "fiveHour": 10000,
+    "week": 35000,
+    "month": 100000
+  },
+  "remainingAfp": {
+    "fiveHour": 10000,
+    "week": 34879.124,
+    "month": 98422.368
+  },
+  "externalUseReserveAfp": 1000,
+  "sharedUsePolicy": "reserved_other_usage",
+  "accountPreflightComplete": true,
+  "note": "当前登录页面已核对余额；超额设置现状未核实，本次不会操作该设置。按现有观察余额保守扣减全部测试用量，另留1000AFP用于并行/延迟。正式启动时刷新余额。当前D04阻断，未启动模型。",
+  "observedOverageEnabled": null
+}

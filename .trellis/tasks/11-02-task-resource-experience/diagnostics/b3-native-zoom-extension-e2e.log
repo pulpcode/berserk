@@ -1,0 +1,27 @@
+(node:15288) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:15291) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15291) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+  ✘  1 tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls (30.1s)
+
+
+  1) tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 
+
+    Test timeout of 30000ms exceeded.
+
+    Error Context: ../../../../../../../../tmp/b3-native-zoom-extension-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../../../../tmp/b3-native-zoom-extension-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../../../../tmp/b3-native-zoom-extension-e2e/model-selection-thinking-s-143ad-s-saved-without-model-calls/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/e2e/model-selection.spec.ts:85:1 › thinking settings preserve legacy until an explicit supported mode is saved, without model calls 

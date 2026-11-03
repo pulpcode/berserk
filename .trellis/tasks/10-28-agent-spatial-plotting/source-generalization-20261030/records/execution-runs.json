@@ -1,0 +1,74 @@
+[
+  {
+    "id": "G01",
+    "caseId": "G01",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G07",
+    "caseId": "G07",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G04",
+    "caseId": "G04",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G05",
+    "caseId": "G05",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G02",
+    "caseId": "G02",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G08",
+    "caseId": "G08",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G03",
+    "caseId": "G03",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 4,
+    "modelIncomplete": false
+  },
+  {
+    "id": "G06",
+    "caseId": "G06",
+    "group": "A",
+    "status": "recorded",
+    "semanticReview": "pending",
+    "requests": 3,
+    "modelIncomplete": false
+  }
+]

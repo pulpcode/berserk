@@ -1,0 +1,14 @@
+{
+  "id": "P06-A",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "当前目录三项分类/编号/别名/方向正确；无对应标准条款编号在全文仅为目录扩展条目属性，不解释为外部标准全文排除。额外救援舰船目录条目真实，无地图改动。",
+  "evidence": [
+    "P06-A/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

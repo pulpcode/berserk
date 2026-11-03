@@ -1,0 +1,3 @@
+(node:16451) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[{"actualBrowser":true,"apiMocked":false,"sendCount":1,"sessionId":"01a19ef9-0370-7095-ad0b-4bc32e820f29","taskId":"9ffad531-68ea-4ea7-9d3f-824dec99660f","selectedWithoutReference":true,"explicitFixedReferences":[{"setId":"d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc","revision":1,"layerIds":["p01-assets"]},{"setId":"d9c61ade-1a7e-44a4-9e53-d4f643e2d1fc","revision":1,"objectIds":["p01-area"]}],"errors":[],"screenshots":["01-before-selection.png","02-selected-no-implicit-reference.png","03-explicit-references.png","04-after-reply.png"]}]

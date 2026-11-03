@@ -1,0 +1,15 @@
+{
+  "reviewer": "integration_review",
+  "freezeHash": "31905408c95f5eee08da8c6ca0235470e67abfc8b77fc913f7df29720db87b79",
+  "passGate": true,
+  "scope": "已批准P02/S02/P05/P01/S01×A/B×3共30槽，逐轮真实复核，无旧首4暂停",
+  "checks": [
+    "独立重新计算freeze与已存frozen逐值相同",
+    "新run/provider与旧实现差异限导入/预算/冻结claim/批次关口",
+    "30本地夹具唯一会话及旧数据题干回复复用",
+    "4槽原生受控mock回放、AskUser/两轮原题/固定几何逐值核对",
+    "240请求6M输入150k输出，自动重试false",
+    "评分/首次分歧分析口径在真实响应前冻结"
+  ],
+  "realModelRequestsByReviewer": 0
+}

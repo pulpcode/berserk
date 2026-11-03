@@ -132,7 +132,7 @@ it('matches names inside the requested historical revision and publication after
 it('authorizes the fixed snapshot before disclosing any name matches or candidate IDs',async()=>{
   const {service,actor,session,taskId,workspaces}=await setup();
   service.context=new ContextService({systems:[{id:'source',name:'范围',adapter:'mock-situation-http',baseUrl:'http://127.0.0.1:4401',tokenEnv:'TEST_QUERY'}],scopes:[{id:'scope',name:'范围',systemIds:['source'],seatIds:['a','b']}]},{TEST_QUERY:'test-only-token'});
-  const input=initial();input.operations[0].layer.features[0].sourceRefs=[{systemId:'source',objectType:'resource',objectId:'object',revision:1}];
+  const input=initial();input.operations[0].layer.features[0].name='具有来源权限的点';input.operations[0].layer.features[0].sourceRefs=[{systemId:'source',objectType:'resource',objectId:'object',revision:1}];
   input.operations.push({op:'add_layer',layer:{layerId:'secret-candidate',name:'集合点',order:1,defaultVisible:true,features:[]}});
   service.action(actor,session,input);const privateRef=draftRef(service,actor,session);
   const published=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:1,title:'共享'}).ref!;
@@ -142,6 +142,7 @@ it('authorizes the fixed snapshot before disclosing any name matches or candidat
     expect(()=>service.read(b,taskId,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
     expect(()=>service.read(actor,otherTask.taskSpaceId!,{ref:privateRef,layerNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND'}));
   }
+  expect(service.read(b,taskId,{ref:published,objectNames:['point-a']}).nameLookupHints).toEqual([{objectId:'point-a',name:'具有来源权限的点',layerId:'layer-a'}]);
   service.context.config.scopes[0].seatIds=['a'];
   expect(()=>service.read(b,taskId,{ref:published,layerNames:['集合点']})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
   for(const objectNames of [['point-a'],['不存在']])expect(()=>service.read(b,taskId,{ref:published,objectNames})).toThrow(expect.objectContaining({code:'ANNOTATION_NOT_FOUND',message:'标注不存在或无权访问。'}));
@@ -283,4 +284,77 @@ it('validates bounded exact object names independently of layer selectors and co
   expect(input).toMatchObject({objectNames:[' 基点 '],layerIds:['a']});expect(input.objectNames).not.toBe(objectNames);
   expect(validation.readInput({ref,objectNames:Array.from({length:32},(_,index)=>String(index))}).objectNames).toHaveLength(32);
   expect(()=>validation.selection({...ref,objectNames:['基点']})).toThrow();
+});
+
+
+it('preserves professional styles and information roles through fixed reads, copies, publication, derivation and adoption',async()=>{
+  const {service,actor,session,second,taskId}=await setup();
+  const feature:AnnotationFeature={...point(),style:{symbolId:'xf3013-2020.6.2.1',iconSize:48,heading:270},informationRole:'plan'};
+  const create=initial();create.operations[0].layer.features=[feature];service.action(actor,session,create);
+  const original=draftRef(service,actor,session),snapshot=service.version(actor,taskId,original);
+  expect(service.read(actor,taskId,{ref:original}).objects.items[0]).not.toHaveProperty('informationRole');
+  expect(service.read(actor,taskId,{ref:original,fields:['geometry','note','attributes','style','sourceRefs','originFeatureRef','informationRole']}).objects.items[0]).toMatchObject(feature);
+  const update={action:'apply' as const,clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object' as const,objectId:feature.objectId,changes:{informationRole:'assessment' as const}}]};
+  const saved=service.action(actor,session,update);expect(service.action(actor,session,update)).toEqual(saved);
+  expect(()=>service.action(actor,session,{...update,operations:[{...update.operations[0],changes:{informationRole:'plan'}}]})).toThrow('不同内容');
+  expect(service.version(actor,taskId,saved.ref!).hash).not.toBe(snapshot.hash);
+  expect(service.compare(actor,taskId,original,saved.ref!).changes.items).toEqual([{kind:'object',id:feature.objectId,change:'changed',fields:['informationRole']}]);
+  service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:2,operations:[{op:'copy_object',source:original,objectId:feature.objectId,newObjectId:'copy',layerId:'layer-a'}]});
+  const publication=service.action(actor,session,{action:'publish',clientActionId:randomUUID(),revision:3,title:'已发布部署'});
+  const published=service.version(actor,taskId,publication.ref!);
+  expect(published.document.layers[0].features).toEqual([{...feature,informationRole:'assessment'},{...feature,objectId:'copy'}]);
+  service.action(actor,second,{action:'create_draft',clientActionId:randomUUID(),baseRef:publication.ref});
+  expect(service.version(actor,taskId,draftRef(service,actor,second)).document).toEqual(published.document);
+  service.setCurrent(actor,taskId,{clientActionId:randomUUID(),publicationId:publication.publication!.publicationId,expectedCurrentSequence:0});
+  expect(service.version(actor,taskId,publication.ref!).document).toEqual(published.document);
+  expect(service.version(actor,taskId,original)).toEqual(snapshot);
+});
+
+it.each([
+  {style:{symbolId:'unknown'}}, {style:{symbolId:'xf3013-2020.6.2.1',iconSize:19}},
+  {style:{symbolId:'xf3013-2020.6.2.1',iconSize:65}}, {style:{symbolId:'xf3013-2020.6.2.1',iconSize:NaN}},
+  {style:{symbolId:'xf3013-2020.6.2.1',heading:Infinity}}, {style:{symbolId:'xf3013-2020.6.2.1',heading:-1}},
+  {style:{symbolId:'xf3013-2020.6.2.1',heading:360}}, {style:{symbolId:'xf3013-2020.6.1.21',heading:0}},
+  {style:{symbolId:'xf3013-2020.6.2.36',heading:90}}, {style:{iconSize:32}}, {style:{heading:90}},
+  {style:{lineEnd:'arrow'}}, {informationRole:'arrived'}, {informationRole:['plan']},
+  {kind:'text',style:{symbolId:'xf3013-2020.6.2.1'}},
+  {kind:'line',geometry:{type:'LineString',coordinates:[[103,1],[104,2]]},style:{symbolId:'app.rescue-vessel'}},
+])('rejects invalid symbol and role update atomically: %j',async changes=>{
+  const {service,actor,session,taskId}=await setup();service.action(actor,session,initial());
+  const ref=draftRef(service,actor,session),before=service.version(actor,taskId,ref),clientActionId=randomUUID();
+  expect(()=>service.action(actor,session,{action:'apply',clientActionId,expectedRevision:1,operations:[{op:'rename_set',title:'不能部分保存'},{op:'update_object',objectId:'point-a',changes:changes as never}]})).toThrow(expect.objectContaining({code:'INVALID_INPUT'}));
+  expect(draftRef(service,actor,session)).toEqual(ref);expect(service.version(actor,taskId,ref)).toEqual(before);expect(service.receipt(actor,clientActionId)).toBeNull();
+});
+
+it('keeps historical shape semantics and absent roles untouched while accepting line display arrows',()=>{
+  for(const symbol of ['circle','square','triangle'] as const){const old={...point(),style:{symbol,size:10}};expect(validation.feature(old)).toEqual(old);expect(validation.feature(old)).not.toHaveProperty('informationRole');}
+  const line:AnnotationFeature={objectId:'route',kind:'line',name:'接近路线',geometry:{type:'LineString',coordinates:[[103,1],[104,2]]},style:{lineEnd:'arrow',lineStyle:'dashed'},informationRole:'plan'};
+  expect(validation.feature(line)).toEqual(line);
+  for(const iconSize of [20,64])for(const heading of [0,359.9])expect(validation.feature({...point(),style:{symbolId:'app.rescue-inflatable-boat',iconSize,heading}}).style).toEqual({symbolId:'app.rescue-inflatable-boat',iconSize,heading});
+});
+
+it('offers exact ID hints only for zero name matches inside the same authorized snapshot and layer scope',async()=>{
+ const {service,actor,session,second,taskId}=await setup();
+ service.action(actor,session,{...initial(),operations:[
+  {op:'add_layer',layer:{layerId:'areas',name:'区域层',order:0,defaultVisible:true,features:[{...point('zone-id'),name:'巡查区'},{...point('other'),name:'zone-id'}]}},
+  {op:'add_layer',layer:{layerId:'other-layer',name:'其他',order:1,defaultVisible:true,features:[{...point('hidden-id'),name:'另一区'}]}},
+ ]});
+ const before=draftRef(service,actor,session);
+ // A real name match wins even when the string is another object's ID.
+ const named=service.read(actor,taskId,{ref:before,objectNames:['zone-id']});
+ expect(named.objects.items.map(o=>o.objectId)).toEqual(['other']);expect(named.nameLookupHints).toBeUndefined();
+ service.action(actor,session,{action:'apply',clientActionId:randomUUID(),expectedRevision:1,operations:[{op:'update_object',objectId:'other',changes:{name:'改名'}},{op:'add_object',layerId:'areas',feature:{...point('new-id'),name:'新对象'}}]});
+ const ref=draftRef(service,actor,session),snapshot=service.version(actor,taskId,ref);
+ const result=service.read(actor,taskId,{ref,layerNames:['区域层'],objectNames:['zone-id','hidden-id'],fields:['geometry','note']});
+ expect(result).toMatchObject({ref,layers:[],objects:{total:0,items:[]},nameLookupHints:[{objectId:'zone-id',name:'巡查区',layerId:'areas'}]});
+ expect(Object.keys(result.nameLookupHints![0])).toEqual(['objectId','name','layerId']);
+ expect(service.read(actor,taskId,{ref,objectNames:['巡查区','hidden-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectNames:['巡查区'],offset:99}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref:before,objectNames:['new-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectNames:['zone'],layerIds:['areas']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,layerIds:['other-layer'],objectNames:['zone-id']}).nameLookupHints).toBeUndefined();
+ expect(service.read(actor,taskId,{ref,objectIds:['zone-id']}).objects.items[0].objectId).toBe('zone-id');
+ service.action(actor,second,initial());
+ expect(service.read(actor,taskId,{ref:draftRef(service,actor,second),objectNames:['zone-id']}).nameLookupHints).toBeUndefined();
+ expect(service.version(actor,taskId,ref)).toEqual(snapshot);
 });

@@ -1,0 +1,96 @@
+[
+  {
+    "id": "call_00_de3kbc53chouqqx1a20l2nn3",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft",
+      "fields": [
+        "geometry",
+        "attributes"
+      ]
+    },
+    "firstObservedRequest": 28
+  },
+  {
+    "id": "call_01_a0fabe56betg3848vkoittlr",
+    "name": "skill_read",
+    "arguments": {
+      "id": "spatial-analysis"
+    },
+    "firstObservedRequest": 28
+  },
+  {
+    "id": "call_00_m5tw7zo3fzp4l3kkyek3n2r0",
+    "name": "spatial_analyze",
+    "arguments": {
+      "operation": "buffer",
+      "input": {
+        "kind": "annotation",
+        "ref": {
+          "setId": "357e238b-94eb-44f9-b75a-e4d37bf300d1",
+          "revision": 1
+        },
+        "layerIds": [
+          "reference"
+        ],
+        "objectIds": [
+          "origin"
+        ]
+      },
+      "distanceM": 700
+    },
+    "firstObservedRequest": 29
+  },
+  {
+    "id": "call_00_l6oin38x0o76c4aydiag2qra",
+    "name": "annotation_read",
+    "arguments": {
+      "mode": "draft"
+    },
+    "firstObservedRequest": 31
+  },
+  {
+    "id": "call_00_u6tkw2nb50fooqq5h60s2odp",
+    "name": "annotation_from_analysis",
+    "arguments": {
+      "resultRef": "spatial:6aa1615d-20f3-4633-9c2f-8a93209d9848:call_00_m5tw7zo3fzp4l3kkyek3n2r0",
+      "layerId": "derived",
+      "objectId": "inner-ring",
+      "name": "内圈"
+    },
+    "firstObservedRequest": 32
+  },
+  {
+    "id": "call_00_lrc1bp0g9dddalkfcmu01pjw",
+    "name": "annotation_read",
+    "arguments": {
+      "fields": [
+        "sourceRefs"
+      ],
+      "mode": "draft"
+    },
+    "firstObservedRequest": 34
+  },
+  {
+    "id": "call_00_5htmsfjz7jucyjs99vn31uhk",
+    "name": "spatial_analyze",
+    "arguments": {
+      "distanceM": 1200,
+      "input": {
+        "kind": "annotation",
+        "objectIds": [
+          "origin"
+        ],
+        "layerIds": [
+          "reference"
+        ],
+        "ref": {
+          "revision": 2,
+          "setId": "357e238b-94eb-44f9-b75a-e4d37bf300d1"
+        }
+      },
+      "operation": "buffer"
+    },
+    "firstObservedRequest": 35
+  }
+]

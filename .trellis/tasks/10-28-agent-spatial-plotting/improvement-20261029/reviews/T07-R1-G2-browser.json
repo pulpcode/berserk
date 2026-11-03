@@ -1,0 +1,31 @@
+{
+  "id": "T07-R1-G2",
+  "sessionId": "01a1884d-6104-7460-b9f8-e36bb248602f",
+  "objectId": "temp-range",
+  "layerId": "derived",
+  "ref": {
+    "setId": "86da38ec-6906-4a18-bd5c-e3b7440eb3ef",
+    "revision": 3
+  },
+  "detailText": "临时范围\n\n空间标绘整合对照 · 86da38ec · r3 · 派生层 · 本会话可编辑\n\n引用此对象\n查看详情\n编辑属性与坐标\n拖动及顶点编辑\n删除对象",
+  "name": "临时范围",
+  "role": "plan",
+  "note": "待核实",
+  "saveEnabled": true,
+  "mutations": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    },
+    {
+      "method": "POST",
+      "path": "/api/context/situation"
+    }
+  ],
+  "pageErrors": [],
+  "stateUnchanged": true
+}

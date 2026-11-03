@@ -1,0 +1,849 @@
+{
+  "slotId": "G05-R1-B",
+  "caseId": "G05",
+  "messages": [
+    {
+      "id": "666816ef",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "user",
+      "text": "边界固定用当前会话草稿 reference 层的“松浦港区”。本会话有哪些资源点位于这个范围内？列名称和数量，只分析。",
+      "selections": {
+        "annotationContext": {
+          "sessionId": "01a19033-f1e7-7210-ba08-a4c19dad5acf",
+          "draft": {
+            "setId": "28bcbf7e-c275-4459-9d8f-79ce2a588236",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        }
+      }
+    },
+    {
+      "id": "975ecafa",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "tool",
+      "text": "{\"id\":\"map-annotations\",\"name\":\"态势标绘\",\"description\":\"查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。\",\"version\":\"1\",\"hash\":\"af61230319540d0e5349fb7b5f5438f3c66149754558b5778c7e572fff9de374\",\"content\":\"---\\nname: map-annotations\\ndescription: 查询、创建、修改、比较或发布态势地图标注时，按需读取图层、对象、来源与版本的操作方法。\\n---\\n地图底图负责展示；来源态势、本会话标注、只读参考是内容分组。草稿中的业务图层承载对象；点、线、面、文字是对象类型。草稿、发布版、任务当前采用属于内容状态，不替换对象本身的业务颜色、线型或符号。\\n\\n## 区分来源对象与草稿对象\\n\\n来源系统中的对象和会话草稿中的标注各有身份、版本和属性。按来源生成的标注是一次读取的副本，不是实时来源；手工可编辑的 sourceRefs 只是引用，不能单凭它认证对象真实或当前可用。用户指定的草稿点可以参与空间分析，点的名称、图层名称或车辆符号不自动证明资源数量和可用状态。\\n\\n先看当前请求和仍适用的前文，是否已说清本次使用的数据来源和范围；“本会话”本身不等于“草稿”。明确就执行；少量目录或对象摘要能说明来源时先读，仍有会改变答案的选择时再询问，或完整分别给出条件答案。不默认草稿优先或来源系统优先，不用任务背景替换用户的分析对象。只有用户明确要求联合统计才合并；来源对象与地图副本不能直接相加，同名也不能作为去重依据。身份无法核实时分开报告。\\n\\n## 确定对象与读取依据\\n\\n每个会话拥有独立可写草稿。读取其他会话或历史版本只用于参考，不切换写入目标。发布产生固定版本；设为任务当前是另一个操作。仅在用户明确要求时发布或采用，权限由服务检查。\\n\\n创建新草稿须明确空白 baseRef:null 或固定基线，不要求先读取尚无草稿状态；服务检查不存在和绑定条件，不覆盖已有草稿。创建成功可继续向明确图层新增对象。修改已有草稿前用 annotation_read 的 draft 模式读取本会话草稿。先用摘要确定图层和对象，再按需读取指定对象的几何、说明等字段；不要为单对象问题读取全图。自动上下文中的版本号不表示已读内容。\\n\\n确定对象、类型和目标图层时，按以下顺序处理：\\n\\n1. 当前请求或仍适用的前文已说清对象、类型和图层，就直接执行；页面本地选中项不能代替已核实目标。\\n2. 少量目录或对象摘要可以说明选择时先读取；同名对象结合图层核对，分页未读完不能取第一个。没有匹配就说明，不反复读取同样内容。\\n3. 仍有不同选择且会改变保存对象时，写入前问清。不能以普通点、另一类型或空占位物替代用户要求的对象，再把保存成功当成完成。明确部分可以继续，存在歧义的写入等待回答。\\n4. 用户明确允许普通点、任选类型或某个默认值时，在该授权范围内执行，不再追问已明确的选择。显示尺寸可用规定默认值，编辑已有对象保留未要求修改的值；显示默认值不能替代业务类型、属性和信息性质。\\n\\n用户指定已有图层时，依据上述步骤明确目标 layerId 后写入。新增对象不等于新建图层；明确要求新图层时才创建。没有任何图层且用户要求开始标绘，可以按意图建层并说明。确定目标后仍须满足当前草稿读取、权限和版本条件。\\n\\n“引用此对象”给出固定版本和 objectId，引用元信息不等于已读取样式、几何或属性。以固定引用的 set 身份核对目标，再用 draft 模式读取当前可写对象；不能把其他 set 的同名或相同短 ID 当成本会话对象。历史/发布版可读参考，只有用户明确要求复制或派生才写入当前草稿。同一草稿的旧引用需核对当前对象；用户要改的字段已变化时比较旧值与新值，必要时确认，保留其他最新字段。对象已删除、类型不兼容或不可写时停止，不自动重建。\\n\\n未保存表单只在用户浏览器本地，Agent 只能读已保存内容。普通对话可以继续；用户要求按“刚拖动的方向”“正在填写的属性”接续而这些尚未保存时，请先保存再引用。没有有效引用或唯一前文依据的“这艘船”，请用户引用或明确对象，不能假装看到页面选中状态。\\n\\n复用来源位置或边界：先 situation_query 查询实际对象，再以完整 sourceRef 调用 annotation_from_source；多个独立对象可放入一次 items，整批原子保存。缺少几何、没有匹配或来源不可用要分别说明，不凭名称估算已有边界。用户要求自定义区域时，用 annotation_action 提交自定义几何并标明其含义。\\n\\n## 专业符号与信息性质\\n\\nsymbolId 从工具参数的共享目录选择，按已明确类型及匹配的别名选择，不自行编造 ID；泛称有多种类型时按上述顺序处理，不省略 symbolId 来绕过类型选择。用户明确要求普通点时不添加专业 symbolId。目录条目说明标准条款/应用扩展及方向能力；标准归属说明以本目录和实际核实的条款为限，不能从目录标签推断所有标准的收录情况。\\n\\n方向 heading 为真北 0°、顺时针，朝东是 90°；未提供不表示真实朝北。固定直立的战斗员、集结地、消防无人机不设置 heading，也不为满足旋转请求擅自换图标。专业符号保留标准原色，不能以业务状态重绘符号颜色。\\n\\ninformationRole 的 observation/assessment/plan 分别表示现场记录、研判和方案，按用户意图设置；历史对象未注明时保持缺省，不自动补成方案。该字段只是记录性质，不认证现实事实。来源对象数、草稿点数与 availableCount 等业务数量分别说明；图标、方案或发布/采用回执不证明资源已到场。\\n\\n## 修改与异常恢复\\n\\n逐项完成用户明确要求的修改。一次保存成功，不代表所有要求都已完成；对已经明确提出、且现有工具能够完成的要求，继续执行，不重复询问。按实际成功提交内容核对对象类型、名称、图层、备注、信息性质等要求，未要求的字段不擅自补齐。新歧义、权限不足、冲突或不确定回执仍按下述规则处理；无法完成时分别说明已完成内容和剩余缺口。\\n\\n普通修改用 annotation_action 的 operations；移动同一对象保留 objectId。update_object 仅合并顶层字段，只提交用户要求变化的字段：改名只传 name，移动只传 geometry，跨层通过 layerId 指明。\\n\\nstyle、attributes、geometry 和 sourceRefs 如传入均整体替换，不会自动合并其内部字段。改方向、尺寸、标签或线箭头时，先读完整 style，在该对象上仅修改目标键并提交完整新 style；不能只发 `{style:{heading:90}}` 或只补 symbolId 丢掉其他样式。添加一个业务键时先读 attributes，保留其他键、null 与缺省区别。清除 heading 或删除业务键时，从完整新对象中有意移除，不能用 0/null 代替清除。未修改的顶层字段不重传，未注明角色和 UI 默认样式不自行补齐。\\n\\n宿主管理本轮已读版本和自己的成功写入条件，无需填写 expectedRevision 等机械字段。多个独立写入可顺序执行；需要前一步实际结果才能决定的修改，收到结果后再生成。参数错误只修正参数；缺少依据按错误列出的资源补读；草稿或来源冲突只重读受影响资源并重新评估，其他读取记录保留，不能取最新版本强行覆盖。重读后以最新完整字段为基础重建修改；若双方改了同一字段且用户意图已不明确，先让用户确认，不沿用旧 style/attributes 覆盖最新其他键。同一次输出写入失败后，剩余地图写入暂停，先处理错误再决定后续操作。保存结果不确定时先查询原动作回执，确认后重新读取相关草稿或任务当前设定；未找到回执不等于未执行，不换 ID 重复保存。\\n\\n刷新来源几何用 refresh：保持标注身份和业务字段，但会替换人工调整的几何。来源属性或说明需要另行查询、明确编辑，不随几何刷新自动更新。来源查询时间 queriedAt、业务生效时间 effectiveAt 和有效区间 validTime 含义不同；保留原时间或正确转换时区，不能只替换时区后缀。\\n\\n## 过程与结果说明\\n\\n先回答用户要求的结果，再补影响理解的依据。中途说明、追问选项和最终回答遵守同一规则：只说当时证据支持的事实；无需逐次播报工具调用。操作前说准备做什么，收到回执后才说实际完成什么。\\n\\n数字必须带清范围：整份草稿、指定图层、本次查询和本次计算分别对应各自结果，不能互相替代。按名称条件未找到对象，只能说本次条件未匹配，不能说草稿为空；需要时保留原范围核对名称与ID。用户要求全层名单或总数时，读齐指定范围后完整回答，不能只给参与计算的对象数。\\n\\n询问选项使用真实目录中的名称和有依据的区别，不附加未经核实的常见程度、用途或优劣。用业务语言说明结果；用户需要字段名等技术细节时核对实际返回，不凭印象补写。无关尺寸、排名和内部存储方式不顺带推测。\\n\\n用户明确信息、仍适用的读取、计算和原始回执可以复用，保留其来源与时间含义；过去助手的自述和后来的结果不能替当时断言补证。完整证据支持的正确换算、汇总或推导可以直接做，不要求每句话调用工具。必要结论有缺口时定向核对或说明限制，不靠漏答、少解释避错，也不靠“可能”掩盖无依据的附加判断。\\n\\n按实际动作选择表述：\\n\\n| 已确认的动作 | 可报告的效果 |\\n| --- | --- |\\n| 分析生成了范围 | 范围已生成；本次分析没有添加草稿对象 |\\n| 草稿写入成功 | 指定对象已写入对应草稿版本 |\\n| 发布成功 | 已生成对应发布版本 |\\n| 设为任务当前成功 | 操作完成时，任务采用了对应发布版本 |\\n\\n分析结果可供会话续问使用，不等于已成为草稿对象；未添加草稿对象也不等于“只在内存”。这些动作不能互相推断：生成不代表保存，保存不代表发布，发布不代表采用。无需向用户附带猜测内部存储机制。若确实询问留存而证据不足，说明尚不能确认。\\n\\n失败按实际 code、outcome 和回执说明：not_committed 只说明本次动作未提交；unknown 表示效果尚待回查，不能宣布已完成或完全没写入。旧回执说明原动作，不是一次新执行。发现先前已发出的误述，明确更正并说明核实后的事实。请求未涉及的全局状态无需顺带总结。确实需要回答任务当前采用状态时，用 annotation_list 核实；历史对话只代表当时所知，修改回执缺少 current 字段不表示任务没有当前版本。“本次未采用”与“任务尚无当前版本”含义不同。\\n\\n来源事实、对话研判与标注实际保存字段分开表达。来源查询或回执里出现某项属性、业务时间，不等于该字段已保存到标注或发布版。优先使用已有充分证据，确有缺口时才按对象和字段定向读回，不要求每次成功保存后重复读取。操作归属仅按结果实际提供的身份信息表述，不凭相邻草稿列表推断操作会话，也不把发布者当作采用者；用户询问而字段不足时明确说明不能确认。\\n\\n一句话说明一项事实。读取、编辑、发布和采用分别表述，不把它们压成一个含混状态；正常成功直接说明，无须逐句添加免责声明。\\n\\n地图按钮由界面根据用户引用和真实工具结果生成，正文无需拼 URL。查询来源的按钮打开当前状态，固定标注按钮打开保存版本。Skill 不授予额外工具或权限。\\n\"}",
+      "toolName": "skill.read",
+      "toolCallId": "call_00_dx8aq3jsz2tnumhw7dao1vhr",
+      "isError": false
+    },
+    {
+      "id": "cdb2dc62",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "tool",
+      "text": "{\"id\":\"spatial-analysis\",\"name\":\"空间分析\",\"description\":\"基于既有对象进行测距、面积、空间关系、缓冲、范围筛选、邻近排序和分类统计；处理组合分析、固定结果续问、边界判断及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。\",\"version\":\"1\",\"hash\":\"464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb\",\"content\":\"---\\nname: spatial-analysis\\ndescription: 基于既有对象进行测距、面积、空间关系、缓冲、范围筛选、邻近排序和分类统计；处理组合分析、固定结果续问、边界判断及分析结果保存。道路导航、专业作业决策和纯标绘编辑不在本方法内。\\n---\\n\\n使用平台提供的真实对象与空间工具完成分析。底图、页面可见范围和隐藏图层只是显示状态，不能作为候选数据或权限。卫星影像里看见的道路、建筑不会自动成为可计算对象。空间计算不会自动保存标绘。\\n\\n## 本次工作顺序\\n\\n明确对象和用户需要的结论 → 选方法并执行 → 对照结果答复。已有有效读取或计算足够时直接复用，不为了流程重复调用。短任务可以直接给结果。\\n\\n过程说明、追问选项和最终回答按下文“核对答复”处理；无需每次调用前说明。计算前只说准备做什么，收到结果后再报告已核实事实。\\n\\n## 明确本次范围\\n\\n从当前请求确定起点、候选集合、目标区域、属性条件、固定版本和所需效果（分析、预览或保存）。分别确认参照对象与候选集合的来源，两者可以不同。用户显式限定优先；任务背景、自动草稿和其他资料用于理解，不能自动变成本次要解决的问题。例如“仅统计所选图层”应保留该限定，不引入其他来源的同名对象或额外分析背景中的资源需求。\\n\\n先判断本次参照对象和候选集合各自的数据来源、范围是否明确：当前请求或仍适用的前文已明确时直接使用；缺少身份、字段或版本时，用 situation_query / annotation_read 定向读取。少量候选摘要能说明选择时先读；仍有不同选择且会改变答案时询问，或完整分别给出各来源的条件答案。不要默认选一个来源，也不要在用户已明确时反复追问。“本会话”本身不指定草稿；查询成功只说明查到了该组数据，不证明它就是用户要分析的对象。读取多个对象后只选其中一部分计算，应区分读取范围与计算范围。不要猜坐标、边界、属性或未提供的道路连接。\\n\\n用户指定的草稿点是有效分析候选，无须先证明它是已登记资源；回答保留“草稿点集”的含义，不自动升级为真实可用资源。点数、属性中的数量、容量和可用状态分别依据实际数据。来源对象与其草稿副本不因同名就合并或去重；仅在用户明确要求联合统计且身份可核实时处理重复，否则分开报告。\\n\\n## 选择方法\\n\\n先核对真实几何类型、必要属性、单位和坐标约定：输入采用 WGS84 经度/纬度；不能把米制坐标或其他坐标系直接当经纬度。前提不满足时定向查缺口或说明限制，不凭名称补齐几何、字段或做未经支持的转换。\\n\\n- 两点相距多远：measure 的 distance；点离一条线多远：point_to_line。它们是地理距离，不是沿道路行驶距离。不要把经纬度差当米，也不要拿线的端点代替整条线。\\n- 线有多长：length；面有多大：area。折线长度包含各段，面面积来自真实轮廓，不能用端点距离或包围盒替代。结果单位分别为 m 和 m²；需要展示千米、平方千米时按 1000、1000000 换算，保留合理精度。\\n- 区域包含对象、对象相交或分离：relate。contains 要求 input 为一个面、target 为一个被判断对象，是区域覆盖目标并包含边界；intersects 包括边界接触；disjoint 是没有交集。部分相交不等于完全位于区域内，相交也不表示道路连通。需要区分点在内部、边界和外部时，用 classify_points，input 为候选点、target 为一个面，按 classifications 和 values 回答。线面等其他类型不能套用点分类。\\n- 区域内且符合属性的对象：filter。确定候选范围后再按真实字段与空间条件筛选。空间条件中的 target 是参照区域或对象；input 是待筛选集合。缺失字段与不匹配不是一回事，以工具报告的数据缺口为准。\\n- 最近的 N 个：先完成全部限定条件，再 nearest。input 为候选点集合，target 为一个参考点。按地理距离排序；同距按完整对象身份稳定排序，N 不因并列自动扩大。明确实际候选范围，不把局部范围的最近说成全部来源的最近。\\n- 需要点或线周围的范围几何：buffer，距离用 distanceM 的米数。后续用 resultRef 引用生成的 geometry。若只需判断某个点距线是否不超过阈值，可测距或按距离过滤，不必额外生成面。缓冲是近似范围，不能自行扩大阈值或承诺测绘级精度。\\n- 按类别计数：先获得符合条件的集合，再 summarize 指定实际属性字段。按完整对象身份去重；null 是单独类别，字段缺失要按错误处理。不能先统计全部候选，再把它描述成区域内数量。\\n\\n用户问“宽度”时，先看是否已明确某条边长、两点距离或某方向跨度；口径明确且现有工具可表达就计算，否则说明缺口或澄清。需要实际几何、明确方向和适用方法，不能直接把经纬度差当成米。只问成员或边界时，直接回答这些结论，无需附加无关尺寸。\\n\\n## 执行、引用与恢复\\n\\n一次 spatial_analyze 执行一个操作。按实际依赖组织 Pi 的正常调用：例如“线周边某距离内的可用对象分类数量”，可先 buffer，再用范围结果 filter，并把筛选结果交给 summarize；需要最近若干对象时，在全部筛选完成后 nearest。等价的正确方法可以省略不必要步骤。\\n\\ninput 的 kind 为 source 时保留完整 systemId/objectType/objectId 身份和明确的来源/区域候选范围；kind 为 annotation 时使用固定 ref 与必要的图层或对象选择；kind 为 result 时使用宿主实际返回的 resultRef。引用筛选集合使用结果 items；引用缓冲面使用 geometry:true。结果同时有生成几何和原对象时，必须指定 geometry:true 选生成几何，或 geometry:false / itemIds 选原对象；referenceItems 是参照对象，不是后续候选。不要从摘要抄坐标、编造结果引用，或把重新查询后的变化数据说成前一次快照。\\n\\n对“刚才的范围”“继续统计”等续问，使用已知真实 resultRef；需要恢复内容时用 spatial_analyze 的 read 操作。读取固定结果不会刷新来源。指定旧范围用于区域筛选时，让 spatial.target 沿实际结果依赖使用原范围几何；不能重新 buffer 或用原点距离阈值替代固定多边形。用户要最新情况时重新查询、重新分析，并区分两次依据。\\n\\n工具负责权限、类型组合、分页收集、版本、有效几何和规模限制；Skill 不授予权限。不能因为用户说“全部”就把当前页当全量，也不能扩大原先限定的区域。工具失败、缺失几何/属性、版本变化和超限都不是零命中。只在完整的实际候选范围内得到空集合时说明没有匹配对象。\\n\\n遇到错误，先看错误标识和缺口：参数方向或 geometry/items 选择错误按契约纠正，保留同一固定结果继续，不额外请求确认；对象身份歧义用查询或澄清解决；来源变化需核实是否接受新快照；来源不可用或不支持的算法条件要明确说明，不靠改小范围或猜测数据制造成功。保留已成功的固定结果，不能把失败步骤包装成完整组合分析。一次参数错误不证明工具完全不支持该类几何，应核对实际类型和输入方向。\\n\\n## 核对答复\\n\\n先回答用户明确要求的名单、数量、状态和方法，再补必要依据。中途说明、问题选项和最终答复都以当时已有证据为准；目录选项不附加无依据的常见程度、用途或优劣。用业务语言说明计算，确需字段名时核对真实返回，不凭印象补写。\\n\\n每个数字都说明对应范围：草稿总数、图层总数、本次查询数量、本次计算输入数和命中数不能混用。某个条件下零匹配，只说明该条件未命中，不说明全层或草稿为空。用户要求完整名单和总数时必须读齐该范围，不能只报告计算输入来回避要求。\\n\\n仍适用的用户明确信息、读取、计算或回执可以复用，保留来源和时间含义；旧助手自述不是依据，后来结果不能替先前说法补证。必要结论缺少依据时定向查询或说明缺口；无关尺寸、排名和存储方式不顺带猜测。已发出的误述应明确更正，不能用后一句正确数字默默覆盖。按以下字段核对实际结论：\\n\\n- **对象和数值：** 对照 items、values、单位及真实引用。nearest 用 items 顺序和 distanceM；candidateCount 是输入候选数，不是命中数；summarize.total 是对象数，不是属性求和或容量。需要汇总数量属性时，先取得完整候选的实际字段，核对单位、是否重复及该字段代表什么，再基于这些数值计算；不能把缺失字段当成零。一个车辆类别点不自动等于一辆车或某种运力。点分类按 classifications 核对身份，内部和边界分开；含边界总数为二者之和。\\n- **范围和时间：** 对照 scope、completeness、provenance 和固定版本。查过哪些对象，以实际读取为据；哪些对象参加计算，以该次 input/target 和结果为据。完整空结果才说明该范围无匹配；对象名称不是空间关系证据。未请求的字段不能当作空值，多来源读取不承诺同一瞬时。method / limitations 决定精度和适用条件。\\n- **动作状态：** 分析结果生成、保存草稿、发布和设为任务当前分别以对应成功回执为据。只读分析可以说“范围已生成，本次没有添加草稿对象”；不能推断“只在内存”或“从未保存”。内部留存机制通常与用户问题无关；确实被问到而无依据时说明尚不能确认。\\n\\n一句话表达一项事实，结论的细分程度以实际证据为准。contains 命中表示位于区域内部或边界，不能单独细分；已有 classify_points 分类或充分几何依据时，才说明内部、边界或外部。不要为简短而把仍未区分的结果说成确定位置。\\n\\n用户只问哪些点在区域内，回答实际成员及是否含边界即可；明确问线长时则必须给出测量值和单位，不能靠省略指标完成任务。单位换算、分类相加或明确数量字段求和可以基于完整已有证据直接推导，精度与输入和方法相符，无需为每句话再调用工具。\\n\\n先给所需结论，再说明相关范围和必要限制。地图入口由界面产生，无须手写 URL 或原始几何 JSON。“最快到达”“道路可通行”“最适合派遣”需要路网或专业依据；必要时询问是否改为地理距离，不能暗中替换问题。普通标绘编辑走既有工具，不额外做空间分析。\\n\\n## 保存分析结果\\n\\n仅分析或预览不发起保存、发布或采用。用户明确要求保存时，读取 map-annotations 方法并沿用已有草稿、图层和版本流程；已有足够固定依据时不重复读取。通过 annotation_from_analysis 的真实 resultRef 保存已展示几何，或选择结果中的具体对象；不手工重画，也不重算后替换原结果。原请求已要求保存就不再重复征求批准。\\n\\nannotation_from_analysis 保存原几何、名称及目标图层，不接收信息性质、样式或备注。逐项核对用户明确要求与实际保存内容；有未完成且现有工具支持的属性要求时，以同一已保存对象ID用 annotation_action update_object 继续，不重复创建对象、不重算范围、不重复询问已明确内容。修改完整替换字段先按 map-annotations 读取和保留，未要求的字段不擅自补齐。回执和提交内容足够时不机械重读；不足时只补读相关字段。后续步骤失败时说明已完成和未完成部分，不把一次保存成功说成全部完成。\\n\\n保存工具会重新检查权限和草稿版本，只有能无损表达的几何可保存。含孔或多面结果不能靠删除孔、取第一块或包围盒降级。保存失败保留分析事实，按标绘错误/回执规则处理；未知写入结果先核对原回执，不换标识重试。保存、发布和设为任务当前是不同动作，不自动发布或采用。\\n\"}",
+      "toolName": "skill.read",
+      "toolCallId": "call_01_8st80cl8tbzup8q490inhzoo",
+      "isError": false
+    },
+    {
+      "id": "456baea0",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "tool",
+      "text": "{\"format\":\"annotation.model-result.v2\",\"data\":{\"status\":\"draft\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"title\":\"空间资料\",\"createdAt\":\"2026-10-31T04:24:45.831Z\",\"layers\":[{\"layerId\":\"reference\",\"name\":\"参照对象\",\"order\":0,\"defaultVisible\":true},{\"layerId\":\"resources\",\"name\":\"资源点\",\"order\":1,\"defaultVisible\":true}],\"objects\":{\"items\":[{\"objectId\":\"g05-d-region\",\"name\":\"松浦港区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},{\"objectId\":\"g05-d-p01\",\"name\":\"资源甲\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g05-d-p02\",\"name\":\"资源乙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g05-d-p03\",\"name\":\"松浦丙\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g05-d-p04\",\"name\":\"松浦丁\",\"kind\":\"point\",\"layerId\":\"resources\"},{\"objectId\":\"g05-d-line01\",\"name\":\"联络线\",\"kind\":\"line\",\"layerId\":\"resources\"}],\"offset\":0,\"limit\":50,\"total\":6,\"hasMore\":false},\"query\":{}},\"meaning\":{\"scope\":\"读取data.ref固定版本的全部图层及对象，objects.items按页返回。\",\"counts\":\"本次条件共匹配6个对象，本页返回6个；分页位置与后续页以objects.offset/hasMore为准。\",\"effect\":\"本次只读取已有对象，没有创建或修改标绘。\"}}",
+      "toolName": "annotation_read",
+      "toolCallId": "call_02_ekmzy6tijwjjcy4uea2jbfec",
+      "isError": false
+    },
+    {
+      "id": "8dd6b2e4",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "tool",
+      "text": "{\"format\":\"spatial.model-result.v3\",\"data\":{\"schemaVersion\":2,\"resultRef\":\"spatial:91da1b41-4d8a-49c7-997c-c1c589c90843:call_00_tqhqhvdvljyjrtz0vn5crqli\",\"requestId\":\"91da1b41-4d8a-49c7-997c-c1c589c90843\",\"toolCallId\":\"call_00_tqhqhvdvljyjrtz0vn5crqli\",\"operation\":\"classify_points\",\"parameters\":{\"operation\":\"classify_points\",\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-p01\",\"g05-d-p02\",\"g05-d-p03\",\"g05-d-p04\"]},\"target\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-region\"]}},\"createdAt\":\"2026-10-31T04:24:51.751Z\",\"scope\":[{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-p01\",\"g05-d-p02\",\"g05-d-p03\",\"g05-d-p04\"]},{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-region\"]}],\"completeness\":{\"status\":\"complete\",\"candidateCount\":4},\"items\":[{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p01\\\"]\",\"name\":\"资源甲\",\"properties\":{\"name\":\"资源甲\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectId\":\"g05-d-p01\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p02\\\"]\",\"name\":\"资源乙\",\"properties\":{\"name\":\"资源乙\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectId\":\"g05-d-p02\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p03\\\"]\",\"name\":\"松浦丙\",\"properties\":{\"name\":\"松浦丙\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectId\":\"g05-d-p03\"},\"geometryType\":\"Point\"},{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p04\\\"]\",\"name\":\"松浦丁\",\"properties\":{\"name\":\"松浦丁\",\"kind\":\"point\",\"layerId\":\"resources\"},\"annotation\":{\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectId\":\"g05-d-p04\"},\"geometryType\":\"Point\"}],\"referenceItems\":[{\"id\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-region\\\"]\",\"name\":\"松浦港区\",\"properties\":{\"name\":\"松浦港区\",\"kind\":\"polygon\",\"layerId\":\"reference\"},\"annotation\":{\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectId\":\"g05-d-region\"},\"geometryType\":\"Polygon\"}],\"method\":\"Turf 7.2.0 booleanPointInPolygon; WGS84 planar topology; closed coverage vs strict interior\",\"limitations\":[\"按经纬度线段判断单个 Polygon（含孔）；外环和内环边界均为 boundary，孔内部为 exterior。\",\"不增加隐含距离容差；边界附近不等于位于边界，不声称测绘级精度。\"],\"provenance\":[{\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-p01\",\"g05-d-p02\",\"g05-d-p03\",\"g05-d-p04\"]},\"queriedAt\":\"2026-10-31T04:24:51.748Z\",\"asOf\":\"2026-10-31T04:24:45.831Z\",\"hash\":\"02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82\"},{\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-region\"]},\"queriedAt\":\"2026-10-31T04:24:51.751Z\",\"asOf\":\"2026-10-31T04:24:45.831Z\",\"hash\":\"02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82\"}],\"classifications\":[{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p01\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p02\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p03\\\"]\",\"position\":\"exterior\"},{\"itemId\":\"[\\\"annotation\\\",{\\\"setId\\\":\\\"28bcbf7e-c275-4459-9d8f-79ce2a588236\\\",\\\"revision\\\":1},\\\"g05-d-p04\\\"]\",\"position\":\"exterior\"}],\"values\":{\"total\":4,\"interior\":2,\"boundary\":0,\"exterior\":2}},\"meaning\":{\"scope\":\"范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。\",\"counts\":\"输入4个点：内部2、边界0、外部2；items包含全部候选，不能把items长度当范围命中数。\",\"effect\":\"本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。\"}}",
+      "toolName": "spatial_analyze",
+      "toolCallId": "call_00_tqhqhvdvljyjrtz0vn5crqli",
+      "isError": false
+    },
+    {
+      "id": "088fa822",
+      "requestId": "91da1b41-4d8a-49c7-997c-c1c589c90843",
+      "role": "assistant",
+      "text": "以本会话草稿（revision 1）reference 层的“松浦港区”多边形为边界，我对 resources 层的 4 个点对象做了点分类（含边界判定）：\n\n**范围内资源点：2 个**\n- 资源甲（完全位于区域内）\n- 资源乙（完全位于区域内）\n\n**范围外：2 个**\n- 松浦丙\n- 松浦丁\n\n**边界上：0 个**\n\n核对口径：计算输入为草稿 resources 层全部 4 个点（该层另有 1 条“联络线”，是线对象，未参与点分类）；分类计数为内部 2、边界 0、外部 2，合计 4。方法为经纬度坐标下对单个 Polygon 做点在面内判断，不含距离容差，因此结果不区分“贴近边界”和“明确出界”。\n\n说明：本次只做只读分析，生成了固定分析结果，未修改草稿。以上按“本会话草稿中的资源点对象”理解；如果你指的是态势来源系统里登记的资源对象，那是另一组数据，需要另行查询核对，两者不能直接相加或按同名去重。"
+    }
+  ],
+  "toolCalls": [
+    {
+      "id": "call_00_dx8aq3jsz2tnumhw7dao1vhr",
+      "type": "function",
+      "function": {
+        "name": "skill_read",
+        "arguments": "{\"id\":\"map-annotations\"}"
+      }
+    },
+    {
+      "id": "call_01_8st80cl8tbzup8q490inhzoo",
+      "type": "function",
+      "function": {
+        "name": "skill_read",
+        "arguments": "{\"id\":\"spatial-analysis\"}"
+      }
+    },
+    {
+      "id": "call_02_ekmzy6tijwjjcy4uea2jbfec",
+      "type": "function",
+      "function": {
+        "name": "annotation_read",
+        "arguments": "{\"mode\":\"draft\"}"
+      }
+    },
+    {
+      "id": "call_00_tqhqhvdvljyjrtz0vn5crqli",
+      "type": "function",
+      "function": {
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\":\"classify_points\",\"input\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-p01\",\"g05-d-p02\",\"g05-d-p03\",\"g05-d-p04\"]},\"target\":{\"kind\":\"annotation\",\"ref\":{\"setId\":\"28bcbf7e-c275-4459-9d8f-79ce2a588236\",\"revision\":1},\"objectIds\":[\"g05-d-region\"]}}"
+      }
+    }
+  ],
+  "interactions": [],
+  "scopeAfterActualReplies": {
+    "known": {
+      "reference": "draft"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "mapBefore": {
+    "binding": {
+      "sessionId": "01a19033-f1e7-7210-ba08-a4c19dad5acf",
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "workspaceId": "5ce2118f-ef2e-4625-820c-816e328be7a7",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "28bcbf7e-c275-4459-9d8f-79ce2a588236",
+        "ownerSessionId": "01a19033-f1e7-7210-ba08-a4c19dad5acf",
+        "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+        "workspaceId": "5ce2118f-ef2e-4625-820c-816e328be7a7",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:24:45.831Z",
+        "updatedAt": "2026-10-31T04:24:45.831Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "28bcbf7e-c275-4459-9d8f-79ce2a588236",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+      "createdAt": "2026-10-31T04:24:45.831Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g05-d-region",
+                "kind": "polygon",
+                "name": "松浦港区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        117.23,
+                        31.85
+                      ],
+                      [
+                        117.2236,
+                        31.85
+                      ],
+                      [
+                        117.2236,
+                        31.8436
+                      ],
+                      [
+                        117.23,
+                        31.8436
+                      ],
+                      [
+                        117.23,
+                        31.85
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g05-d-p01",
+                "kind": "point",
+                "name": "资源甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.84552
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p02",
+                "kind": "point",
+                "name": "资源乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22552,
+                    31.84488
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p03",
+                "kind": "point",
+                "name": "松浦丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.84232
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p04",
+                "kind": "point",
+                "name": "松浦丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.8388
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-line01",
+                "kind": "line",
+                "name": "联络线",
+                "geometry": {
+                  "type": "LineString",
+                  "coordinates": [
+                    [
+                      117.22792,
+                      31.84632
+                    ],
+                    [
+                      117.22744,
+                      31.84472
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "mapAfter": {
+    "binding": {
+      "sessionId": "01a19033-f1e7-7210-ba08-a4c19dad5acf",
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "workspaceId": "5ce2118f-ef2e-4625-820c-816e328be7a7",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "28bcbf7e-c275-4459-9d8f-79ce2a588236",
+        "ownerSessionId": "01a19033-f1e7-7210-ba08-a4c19dad5acf",
+        "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+        "workspaceId": "5ce2118f-ef2e-4625-820c-816e328be7a7",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:24:45.831Z",
+        "updatedAt": "2026-10-31T04:24:45.831Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "28bcbf7e-c275-4459-9d8f-79ce2a588236",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "02b03ee8791e89f8c8e617c7bedec0139482fa09a4f196fb52ee035cd12b9e82",
+      "createdAt": "2026-10-31T04:24:45.831Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g05-d-region",
+                "kind": "polygon",
+                "name": "松浦港区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        117.23,
+                        31.85
+                      ],
+                      [
+                        117.2236,
+                        31.85
+                      ],
+                      [
+                        117.2236,
+                        31.8436
+                      ],
+                      [
+                        117.23,
+                        31.8436
+                      ],
+                      [
+                        117.23,
+                        31.85
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g05-d-p01",
+                "kind": "point",
+                "name": "资源甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.84552
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p02",
+                "kind": "point",
+                "name": "资源乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22552,
+                    31.84488
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p03",
+                "kind": "point",
+                "name": "松浦丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.84232
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-p04",
+                "kind": "point",
+                "name": "松浦丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    117.22872,
+                    31.8388
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g05-d-line01",
+                "kind": "line",
+                "name": "联络线",
+                "geometry": {
+                  "type": "LineString",
+                  "coordinates": [
+                    [
+                      117.22792,
+                      31.84632
+                    ],
+                    [
+                      117.22744,
+                      31.84472
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "34568bef-fab5-42d4-a74e-3d0c0ba88437",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "sourceBefore": {
+    "instanceId": "map-447e5a86",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g05-s-region"
+        },
+        "name": "松浦港区",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                117.23,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8468
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g05-s-p04"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g05-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p01"
+        },
+        "name": "资源甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84856
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p02"
+        },
+        "name": "资源乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22536,
+            31.84792
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p03"
+        },
+        "name": "杉浦丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22696,
+            31.84744
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p04"
+        },
+        "name": "杉浦丁",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84536
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p05"
+        },
+        "name": "杉浦戊",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84216
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p06"
+        },
+        "name": "杉浦己",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.83864
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  },
+  "sourceAfter": {
+    "instanceId": "map-447e5a86",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g05-s-region"
+        },
+        "name": "松浦港区",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                117.23,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8468
+              ],
+              [
+                117.2236,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8404
+              ],
+              [
+                117.23,
+                31.8468
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g05-s-p04"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g05-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p01"
+        },
+        "name": "资源甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84856
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p02"
+        },
+        "name": "资源乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22536,
+            31.84792
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p03"
+        },
+        "name": "杉浦丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22696,
+            31.84744
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p04"
+        },
+        "name": "杉浦丁",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84536
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p05"
+        },
+        "name": "杉浦戊",
+        "revision": 1,
+        "areaIds": [
+          "g05-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.84216
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g05-s-p06"
+        },
+        "name": "杉浦己",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            117.22856,
+            31.83864
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  },
+  "continuationDecisions": [
+    {
+      "checkpointHash": "8ec6cfd0ae0752360f2a853b9d869278a2afaca474f58f7f65d143c4e726b197",
+      "reviewer": "Codex root",
+      "reason": "提供草稿局部结果后将来源系统留作另行查询；这不是等待必要选择的真实追问，不补答救回未完成范围。",
+      "action": "finish"
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "segments": {
+    "batch-20261026": [
+      "D01-1-A",
+      "D01-1-B",
+      "D01-1-C",
+      "D02-1-B",
+      "D02-1-C",
+      "D02-1-A",
+      "D03-1-C",
+      "D03-1-A"
+    ],
+    "closeout-20261026": [
+      "D03-1-B",
+      "D04-1-A",
+      "D04-1-B",
+      "D04-1-C",
+      "D05-1-B",
+      "D05-1-C",
+      "D05-1-A",
+      "D06-1-C",
+      "D06-1-A",
+      "D06-1-B",
+      "D07-1-A"
+    ],
+    "closeout-second-20261026": [
+      "D07-1-B",
+      "D07-1-C",
+      "D08-1-B",
+      "D08-1-C",
+      "D08-1-A",
+      "D09-1-C",
+      "D09-1-A",
+      "D09-1-B",
+      "D10-1-A",
+      "D10-1-B",
+      "D10-1-C",
+      "D11-1-B",
+      "D11-1-C",
+      "D11-1-A",
+      "D12-1-C"
+    ]
+  },
+  "byGroup": {
+    "A": {
+      "trialsStarted": 11,
+      "requests": 54,
+      "input": 1004292,
+      "outputIncludingReasoning": 9907,
+      "afpEstimate": 126.774875,
+      "spatialSkillCalled": 4,
+      "spatialSkillBodyObserved": 4,
+      "preloadedTrials": 0,
+      "loading": [
+        {
+          "id": "D01-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D02-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D03-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D04-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D05-1-A",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D06-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D07-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D08-1-A",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D09-1-A",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D10-1-A",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D11-1-A",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        }
+      ]
+    },
+    "B": {
+      "trialsStarted": 11,
+      "requests": 48,
+      "input": 918568,
+      "outputIncludingReasoning": 15631,
+      "afpEstimate": 116.774875,
+      "spatialSkillCalled": 7,
+      "spatialSkillBodyObserved": 7,
+      "preloadedTrials": 0,
+      "loading": [
+        {
+          "id": "D01-1-B",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D02-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D03-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D04-1-B",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D05-1-B",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D06-1-B",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D07-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D08-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D09-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D10-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D11-1-B",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        }
+      ]
+    },
+    "C": {
+      "trialsStarted": 12,
+      "requests": 57,
+      "input": 1109908,
+      "outputIncludingReasoning": 35513,
+      "afpEstimate": 629.98155,
+      "spatialSkillCalled": 3,
+      "spatialSkillBodyObserved": 3,
+      "preloadedTrials": 0,
+      "loading": [
+        {
+          "id": "D01-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D02-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D03-1-C",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D04-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D05-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D06-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D07-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D08-1-C",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        },
+        {
+          "id": "D09-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D10-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D11-1-C",
+          "skillReadCalled": false,
+          "bodyObserved": false,
+          "preloaded": false
+        },
+        {
+          "id": "D12-1-C",
+          "skillReadCalled": true,
+          "bodyObserved": true,
+          "preloaded": false
+        }
+      ]
+    }
+  },
+  "totalRequests": 159,
+  "modelCallsAfterD12": 0,
+  "allUsageKnown": true,
+  "latestLedger": ".local/spatial-r14/closeout-second-20261026/ledger.json"
+}

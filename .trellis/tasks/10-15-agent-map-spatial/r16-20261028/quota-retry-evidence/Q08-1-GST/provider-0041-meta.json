@@ -1,0 +1,27 @@
+{
+  "id": 41,
+  "entry": "Q08-1-GST",
+  "group": "GST",
+  "turn": 1,
+  "at": "2026-10-28T13:35:03.322Z",
+  "completed": true,
+  "payloadHash": "22910e9802fa2b9451f8946125ffedd8730b77b1b01b6424f8ac13a4dbc06a26",
+  "wirePayloadHash": "3c6a0b2af568f6d3c3c2185ba1493a7d365e076621c3e500bbd194a1e1f123cd",
+  "tools": [],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 1516,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 105,
+  "reasoningTokens": 50,
+  "observedThinking": true,
+  "finishReason": "stop",
+  "usage": {
+    "prompt_tokens": 25060,
+    "completion_tokens": 150
+  },
+  "responseSha256": "dab3f3fcca3359a85ee0a8031704fa74dcb4af804a0e18233eb18e9477ddbe5a"
+}

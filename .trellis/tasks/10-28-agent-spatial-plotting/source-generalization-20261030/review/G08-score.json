@@ -1,0 +1,67 @@
+{
+  "caseId": "G08",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G08/review.json",
+  "sourceSha256": "413b51e9120815a0f2651ea34b4896d705a5c1efc56afe4570cd9925d3b2d2fe",
+  "requiredPairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {},
+    "answered": [],
+    "redundant": 0
+  },
+  "process_facts_pass": true,
+  "no_business_effects_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 3,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "main_pass": false,
+  "final_facts_pass": true,
+  "strict_pass": false,
+  "failureTags": [
+    "CANDIDATE_SOURCE",
+    "REFERENCE_SOURCE"
+  ],
+  "completedPairs": [
+    "draft->draft"
+  ],
+  "missingPairs": [
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "evidence": [
+    {
+      "quote": "“长汀仓区”范围内的资源点共 3 个",
+      "basis": "D→D分类为甲乙丙3个内部点，计算与该口径名单正确；两项来源未知，未澄清或覆盖另3组合。"
+    },
+    {
+      "quote": "其信息性质均标为“拟定方案”（plan）",
+      "basis": "message4 annotation_read显式请求informationRole，5个实际返回项均为plan，非仅凭图层名推断。"
+    },
+    {
+      "quote": "并不代表已登记的现实可用资源",
+      "basis": "正确保留草稿与现实可用性的区别；没有宣称现实登记状态已经查明。"
+    }
+  ],
+  "notes": [
+    "空间Skill实际读取，但最终仍自选两项均草稿；无来源查询。",
+    "公开过程均是随后实际执行的读取/计算计划，未发现额外事实错误。"
+  ]
+}

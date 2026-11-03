@@ -1,0 +1,366 @@
+{
+  "planned": 32,
+  "completed": 32,
+  "checkedRequests": 146,
+  "compactions": 0,
+  "clarifications": 1,
+  "pairedInitialRequests": [
+    {
+      "caseId": "G01",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G07",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G04",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G05",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G02",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G08",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G03",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G06",
+      "repeat": 1,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G01",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G07",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G04",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G05",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G02",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G08",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G03",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    },
+    {
+      "caseId": "G06",
+      "repeat": 2,
+      "equalAfterDeclaredNormalization": true
+    }
+  ],
+  "freezeHash": "1ab60d390fdc3f7794d66c99567ec088efa54c54530237708ead7a4c2dc1a3dd",
+  "allRequestsHttp200": true,
+  "responseModel": "deepseek-v4-1-flash-261017",
+  "totals": {
+    "requests": 146,
+    "input": 3309631,
+    "output": 71121,
+    "unknown": 0
+  },
+  "noRetryEvidence": true,
+  "allStatesUnchanged": true,
+  "firstFourGatePassed": true,
+  "slots": [
+    {
+      "slotId": "G01-R1-A",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G01-R1-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G07-R1-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G07-R1-A",
+      "requests": 6,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G04-R1-A",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G04-R1-B",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G05-R1-B",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G05-R1-A",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G02-R1-A",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G02-R1-B",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G08-R1-B",
+      "requests": 9,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G08-R1-A",
+      "requests": 6,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G03-R1-A",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G03-R1-B",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G06-R1-B",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G06-R1-A",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G01-R2-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G01-R2-A",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G07-R2-A",
+      "requests": 10,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 1
+    },
+    {
+      "slotId": "G07-R2-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G04-R2-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G04-R2-A",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G05-R2-A",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G05-R2-B",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G02-R2-B",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G02-R2-A",
+      "requests": 4,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G08-R2-A",
+      "requests": 5,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G08-R2-B",
+      "requests": 7,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G03-R2-B",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G03-R2-A",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G06-R2-A",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    },
+    {
+      "slotId": "G06-R2-B",
+      "requests": 3,
+      "wireInvariant": true,
+      "nativeProvenanceMatched": true,
+      "businessStateUnchanged": true,
+      "clarificationReplies": 0
+    }
+  ],
+  "exportScriptSha256": "8e7ef3568480d75e1c9bff1ac6348cc9110c8064e3a340b990a1f887d42b44e4",
+  "notSemanticScoring": true,
+  "finalFreezeHash": "1ab60d390fdc3f7794d66c99567ec088efa54c54530237708ead7a4c2dc1a3dd",
+  "finalFreezeMatchesInitial": true,
+  "scheduleExactMatch": true,
+  "evidenceFileCount": 1210,
+  "runtimeArchiveExclusion": "Runtime archives excluded from raw manifest; frozen source/runtime integrity checks retained in protocol"
+}

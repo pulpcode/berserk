@@ -1,0 +1,33 @@
+{
+  "id": 15,
+  "entry": "Q08-1-G0",
+  "group": "G0",
+  "turn": 1,
+  "at": "2026-10-28T13:33:29.006Z",
+  "completed": true,
+  "payloadHash": "7bded716b7a524095dd277752384aa2d7a34688005d28f9c035df15cc185ef5e",
+  "wirePayloadHash": "de7906da480eee6f32fb71801c678bd7761c6b9ad37e0d21bc8424a3752edd68",
+  "tools": [
+    {
+      "id": "call_00_nwlb9v3bgynhw53sj9vvtf6l",
+      "name": "annotation_from_analysis",
+      "arguments": "{\"resultRef\": \"spatial:b6993fa7-1b68-46de-b60a-84997aa1f163:call_00_ddhqtb70lhuedj94js5c4vr6\", \"layerId\": \"derived\", \"objectId\": \"inner-ring\", \"name\": \"内圈\"}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 1032,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 0,
+  "reasoningTokens": 0,
+  "observedThinking": false,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 21784,
+    "completion_tokens": 136
+  },
+  "responseSha256": "910df1ffe40e86bc482a504ffdf832398d6f8582576e3981dbabb79ae4b1d686"
+}

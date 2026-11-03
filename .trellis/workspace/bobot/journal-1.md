@@ -1276,6 +1276,20 @@
 ### Main Changes
 
 - 复用Pi和既有空间服务，不新建执行引擎；精确记录错误反馈与发布规则复用
+## Session 42: 完成单地图专业标绘与消防符号实现
+
+**Date**: 2026-10-25
+**Task**: 完成单地图专业标绘与消防符号实现
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+独立 worktree 先提交方案与22项样张，再实现按需标绘工具、受控符号及跨层保存；174项单元服务回归、25项浏览器用例和typecheck/lint/build通过。已归档当前任务，未合并或推送。
+
+### Main Changes
+
+- 单地图开合不写入，暂停恢复未完成绘制，保留表单与合法预览
+- 20个标准符号与2个应用扩展，方向尺寸及信息性质贯通网页和Pi
 
 ### Git Commits
 
@@ -1288,6 +1302,12 @@
 
 - [OK] v1六次：67/72批次发布、242/267任务轮覆盖；公开空间oracle坐标勘误并保留全部失败
 - [OK] v2：1196/1196；单独空间前三批通过链路，R3 insufficient_quota，未计完整成功
+| `0468d98` | (see git log) |
+| `b5cdf15` | (see git log) |
+
+### Testing
+
+- [OK] 174项unit/service、25项浏览器用例通过；typecheck、lint、build、diff-check通过
 
 ### Status
 
@@ -1307,6 +1327,161 @@
 ### Summary
 
 复用已有方舟Agent Plan配置，在本机隔离环境完成六次真实模型回归；259请求全走方舟，72批次发布、267任务轮覆盖。文本核心97/108、通知30/33；空间业务159/159、完整依据146/159、必须任务提醒33/33。保留全部语义错误及跨平台历史对照限制，未改产品代码、未部署生产、未自动提交。
+- 用户审阅独立分支及验收截图，后续按授权整合主线；真实GPS/AIS仍为后续范围
+
+
+## Session 43: 标绘交互优化与原工作树试用服务更新
+
+**Date**: 2026-10-25
+**Task**: 标绘交互优化与原工作树试用服务更新
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+完成入口提示、选标号直接放置、紧凑属性与保存视角保持；复核修复刷新失败后的未保存导航保护。原4324预览服务已重启并保留原试用数据。
+
+### Main Changes
+
+- 工具目录直接进入落点；属性目录仅更换当前对象标号；固定保存区并折叠高级字段。
+- 全局、任务、会话显示上下文提示；新增和编辑保存均保持地图相机。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `220d1c9` | (see git log) |
+
+### Testing
+
+- [OK] typecheck、lint、build通过；28项唯一浏览器用例及13项单元测试通过；独立trellis-check无未解决发现。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户在原4324链接试用，账号及试用数据不变。
+
+
+## Session 44: 专业标号鼠标旋转与试用服务更新
+
+**Date**: 2026-10-25
+**Task**: 专业标号鼠标旋转与试用服务更新
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+实现独立旋转手柄，与角度数字输入共用现有表单；正确匹配地图旋转倾斜下的图标方向，保持坐标和相机，保留显式保存。4324服务已重启并打开未保存示例供用户试用。
+
+### Main Changes
+
+- 增加旋转手柄、真北角度提示和指针捕获清理；固定直立、隐藏、待回执与几何编辑均不提供旋转。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `cc23c24` | (see git log) |
+
+### Testing
+
+- [OK] 完整30项E2E、5项数学/素材单测、typecheck、lint、build与独立复核通过。
+- [OK] 实际影像底图将消防车90度拖至45度，输入120度反向同步；原数据保持r1。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户在原4324链接试用鼠标旋转，图上已留一个未保存示例。
+
+
+## Session 45: 简化标绘对象编辑与试用验证
+
+**Date**: 2026-10-25
+**Task**: 简化标绘对象编辑与试用验证
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+对象编辑收拢图标更换、名称、信息性质与方向，低频配置统一进入更多属性；按几何显示适用样式并保留原值。修复目录搜索回车误保存与选择后失焦。类型、lint、构建通过，31个相关E2E唯一用例均通过。原4324服务已更新，新页保留未保存45度示例，原试用页和数据保留。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `5866c70` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+
+## Session 46: 对象编辑浮动面板与独立滚动验证
+
+**Date**: 2026-10-25
+**Task**: 对象编辑浮动面板与独立滚动验证
+**Branch**: `codex/frontend-plotting`
+
+### Summary
+
+将对象编辑改为按内容高度收缩的右上浮动卡片，释放固定侧栏让地图全幅显示。修复fieldset匿名盒导致焦点滚动带走保存按钮，采用独立div滚动与form裁切。类型、lint、构建通过；31个相关E2E唯一用例均通过，含外露地图真实拖动/滚轮、宽窄矮窗口及footer稳定性。4324原服务已更新，原未保存页保留，tab8提供新版45度示例。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `881ce43` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+
+## Session 47: Agent与标绘整合及并发保护验收
+
+**Date**: 2026-10-26
+**Task**: Agent与标绘整合及并发保护验收
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+独立组合固定前端和Agent基线，完成字段保留、明确冲突合并和未保存输入保护；216项单元/Pi、43项浏览器与11项离线驱动用例均有通过证据。真实模型调用为0，保留P4待执行，未归档整个任务。
+
+### Main Changes
+
+- 补齐22项标号工具说明，人工与Agent共用既有API及CAS机制
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `4431d4d` | (see git log) |
+
+### Testing
+
+- [OK] 类型检查、Lint和构建通过，刷新首点丢失真实复现后修复并回归
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅工程结果，另行安排真实30槽位测评及后续主线合入或试用部署
+
+
+## Session 48: 完成Agent标绘30槽真实测评并记录未通过项
+
+**Date**: 2026-10-27
+**Task**: 完成Agent标绘30槽真实测评并记录未通过项
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+用户批准30槽真实模型测评；固定8c58af1执行127请求，输入2498870/输出21243 tokens。独立AI证据复核核心27/30、严格22/30，新15/20旧7/10，关键效果错误0；车型消歧、plan遗漏、过滤作用域和额外解释问题待修复。原始3个waiting_user为结束语问题，保留未改；初次沙箱0请求启动失败保留。产品未变，未合并或部署，任务继续进行。
 
 ### Git Commits
 
@@ -1315,6 +1490,27 @@
 ### Testing
 
 - [OK] 六次原样本live运行及独立语义复核完成；源文件/输入/审计/原始归档哈希核对通过；请求守卫拒绝错误主机路径模型与重定向；git diff --check通过。
+### Status
+
+[OK] **Completed**
+
+
+## Session 49: 完成第五版标绘提示与测评器修复
+
+**Date**: 2026-10-27
+**Task**: 完成第五版标绘提示与测评器修复
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+按用户授权先提交方案及历史测评，再完成目标选择、逐项完成和依据核对提示；独立测评器v2保留旧证据，修复结束语三态及最终计数。产品260项和测评器15项唯一离线用例最终通过，类型/Lint/构建及独立复核通过。保留失败与修复记录，新真实模型请求0；原严格22/30不变，尚未合并或部署。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c6b5dc8` | (see git log) |
+| `c6f7ffd` | (see git log) |
 
 ### Status
 
@@ -1323,3 +1519,104 @@
 ### Next Steps
 
 - 保持review；另行审阅事实保持、空间依据、历史复述与提醒一致性修复方向，不将本次跨平台差异归因代码。
+- 审阅工程结果，另行冻结并授权真实模型复测；整合任务保持进行中。
+
+
+## Session 50: 完成标绘修复后真实模型复测
+
+**Date**: 2026-10-27
+**Task**: 完成标绘修复后真实模型复测
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+原15题各2次真实执行与独立复核完成：127请求，核心28/30、严格23/30；冻结和计数一致，仍未通过整合门槛。
+
+### Main Changes
+
+- 新增live-v2报告、独立30槽评分与证据审计；保留历史和原始协议状态。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c6f7ffd` | (see git log) |
+| `359c3d6` | (see git log) |
+
+### Testing
+
+- [OK] 127请求全部HTTP200；用量输入2587137、输出21114，未知0；冻结复算一致，30槽计数快照一致。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 审阅C02消歧、额外解释越界与终态误报；不自动扩跑或合并部署。
+
+
+## Session 51: 重复错误测评器修复与Skill加载诊断准备
+
+**Date**: 2026-10-28
+**Task**: 重复错误测评器修复与Skill加载诊断准备
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+提交收窄方案后修复误代答和计数，完成独立24槽A/B入口及离线自动化验证；真实模型未调用，产品提示保持基线。
+
+### Main Changes
+
+- 新增evaluation-v3和loading-diagnostic-live；候选确认暂缓
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `efa4a43` | (see git log) |
+
+### Testing
+
+- [OK] v3初轮18项通过，最终受影响10项通过；加载准备2项；live入口完整6项及最终评分补测1项通过；TypeScript和ESLint通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 核对模型和额度，按冻结24槽协议执行真实加载对照，再据证据选择产品最小修改
+
+
+## Session 52: 完成24槽真实Skill加载对照
+
+**Date**: 2026-10-28
+**Task**: 完成24槽真实Skill加载对照
+**Branch**: `codex/agent-plotting-integration`
+
+### Summary
+
+按用户要求跳过套餐额度核对，完成冻结24槽真实对照：核心20/24、严格17/24，A8/12、B9/12；含糊选型与范围误述未改善，不采用加载改动。
+
+### Main Changes
+
+- 产品和Skill正文保持基线，原始证据及逐槽审阅落盘
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `590c5a0` | (see git log) |
+
+### Testing
+
+- [OK] 64真实请求，输入1297363/输出10190/未知0；608证据哈希及冻结通过；24槽主审与独立评分一致；授权豁免测试、TypeScript、ESLint通过
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 分开设计选型依据和结果范围解释的最小对照，当前不追加调用或实施产品候选

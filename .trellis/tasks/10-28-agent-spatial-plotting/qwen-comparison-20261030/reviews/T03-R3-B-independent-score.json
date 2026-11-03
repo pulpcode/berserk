@@ -1,0 +1,16 @@
+{
+  "id": "T03-R3-B",
+  "reviewer": "Codex trellis-check independent agent review",
+  "mainRequirement": "fail",
+  "processFacts": "pass",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "strict": "fail",
+  "reason": "候选始终为草稿资源图层5点，只把参照面从草稿换为来源港区；未追问来源，也未完成来源资源候选的1点统计。两次4点计算本身正确，不是来源侧资源数量为4。",
+  "quotes": [
+    "来源区域“港区”自身属性里登记了 2 个资源对象和 1 条道路，那是来源侧成员，与上面 4 个草稿点不是同一集合，本次未合并统计。"
+  ],
+  "evidence": [
+    ".local/qwen-comparison-20261030/comparison/T03-R3-B/review.json"
+  ]
+}

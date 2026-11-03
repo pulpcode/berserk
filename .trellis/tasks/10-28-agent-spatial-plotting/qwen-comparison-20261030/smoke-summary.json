@@ -1,0 +1,135 @@
+{
+  "results": [
+    {
+      "model": "flash",
+      "requestedModel": "deepseek-v4.1-flash",
+      "status": "passed",
+      "attempts": [
+        {
+          "turn": 1,
+          "status": "settled",
+          "usage": {
+            "completion_tokens": 41,
+            "prompt_tokens": 333,
+            "total_tokens": 374,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "elapsedMs": 810,
+          "httpStatus": 200,
+          "actualModels": [
+            "deepseek-v4-1-flash-261017"
+          ],
+          "reasoningCharacters": 0,
+          "reasoningTokens": 0,
+          "finishReasons": [
+            "tool_calls"
+          ],
+          "responseHash": "782aefbebc8aeaa388bcee8e36ca9489438233ff169bd9b286bf941124895cb9"
+        },
+        {
+          "turn": 2,
+          "status": "settled",
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 401,
+            "total_tokens": 424,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "elapsedMs": 808,
+          "httpStatus": 200,
+          "actualModels": [
+            "deepseek-v4-1-flash-261017"
+          ],
+          "reasoningCharacters": 0,
+          "reasoningTokens": 0,
+          "finishReasons": [
+            "stop"
+          ],
+          "responseHash": "3ed400fa932b51237f717ad3b30d1afd4a482dc378f6c3a881220675ab3dc477"
+        }
+      ],
+      "toolExecuted": true,
+      "reasoningReplay": "no_nonempty_reasoning_returned",
+      "answer": "查询结果：键 `smoke-7` 的值是 **`violet-42`**。"
+    },
+    {
+      "model": "qwen",
+      "requestedModel": "qwen3.8-max-0902",
+      "status": "passed",
+      "attempts": [
+        {
+          "turn": 1,
+          "status": "settled",
+          "usage": {
+            "prompt_tokens": 350,
+            "total_tokens": 400,
+            "completion_tokens": 50,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 350
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 20,
+              "text_tokens": 50
+            }
+          },
+          "elapsedMs": 2762,
+          "httpStatus": 200,
+          "actualModels": [
+            "qwen3.8-max-0902"
+          ],
+          "reasoningCharacters": 93,
+          "reasoningTokens": 20,
+          "finishReasons": [
+            "tool_calls"
+          ],
+          "responseHash": "761bb2d7abf923135286e3a6a487555293fd583deca3ab4786890a8dbbcad4be"
+        },
+        {
+          "turn": 2,
+          "status": "settled",
+          "usage": {
+            "prompt_tokens": 432,
+            "total_tokens": 499,
+            "completion_tokens": 67,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "text_tokens": 432
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 11,
+              "text_tokens": 67
+            }
+          },
+          "elapsedMs": 3082,
+          "httpStatus": 200,
+          "actualModels": [
+            "qwen3.8-max-0902"
+          ],
+          "reasoningCharacters": 37,
+          "reasoningTokens": 11,
+          "finishReasons": [
+            "stop"
+          ],
+          "responseHash": "a5203c4f42a7e934cb15bb73aa283697beab9a4deb54fa2b9b5bd7846ef47c05"
+        }
+      ],
+      "toolExecuted": true,
+      "reasoningReplay": "exact_original_field",
+      "answer": "工具实际返回的结果如下：\n\n- **键（key）**：`smoke-7`\n- **值（value）**：`violet-42`\n\n即 `smoke-7` 对应的值为 **violet-42**。"
+    }
+  ],
+  "maxRequests": 4,
+  "businessEvaluation": false,
+  "scope": "Pi public completion API with task-only tool execution; not full product AgentSession"
+}

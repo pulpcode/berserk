@@ -1,0 +1,19 @@
+{
+  "mainRequirement": "pass",
+  "processFacts": "fail",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "id": "T01-R2-G1",
+  "strict": "fail",
+  "reason": "主任务成功，AskUser选项将水罐描述为最常用通用消防车，目录未提供频率比较依据；最终保存与陈述正确。",
+  "quotes": [
+    "标准符号 XF/T 3013—2020 6.2.1，最常用的通用消防车标号"
+  ],
+  "reviewer": "Codex independent trellis-check",
+  "unnecessaryClarification": false,
+  "evidence": [
+    "T01-R2-G1/gate/1-checkpoint.json",
+    "T01-R2-G1/interaction-a5879ad4-2bec-46cd-a282-1a441e51682f.json"
+  ]
+}

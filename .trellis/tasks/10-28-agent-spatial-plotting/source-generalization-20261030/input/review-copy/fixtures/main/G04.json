@@ -1,0 +1,343 @@
+{
+  "schema_version": "berserk-source-selection-fixture/1",
+  "case_id": "G04",
+  "logical_source_system_id": "fixture-source-g04",
+  "business_time": "2026-10-30T09:00:00+08:00",
+  "draftLayers": [
+    {
+      "layerId": "reference",
+      "name": "参照对象",
+      "order": 0,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g04-d-region",
+          "name": "临溪集结区",
+          "kind": "polygon",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  120.18,
+                  30.29
+                ],
+                [
+                  120.1844,
+                  30.29
+                ],
+                [
+                  120.1844,
+                  30.2944
+                ],
+                [
+                  120.18,
+                  30.2944
+                ],
+                [
+                  120.18,
+                  30.29
+                ]
+              ]
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    },
+    {
+      "layerId": "resources",
+      "name": "资源点",
+      "order": 1,
+      "defaultVisible": true,
+      "features": [
+        {
+          "objectId": "g04-d-p01",
+          "name": "临溪甲",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18088,
+              30.29088
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g04-d-p02",
+          "name": "临溪乙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18308,
+              30.29132
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g04-d-p03",
+          "name": "临溪丙",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18198,
+              30.29165
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g04-d-p04",
+          "name": "临溪丁",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18363,
+              30.29077
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g04-d-p05",
+          "name": "临溪戊",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18088,
+              30.29308
+            ]
+          },
+          "informationRole": "plan"
+        },
+        {
+          "objectId": "g04-d-p06",
+          "name": "临溪己",
+          "kind": "point",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              120.18088,
+              30.2977
+            ]
+          },
+          "informationRole": "plan"
+        }
+      ]
+    }
+  ],
+  "sourceScene": {
+    "objects": [
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "area",
+          "objectId": "g04-s-region"
+        },
+        "name": "临溪集结区",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                120.18,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2922
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "fixture-source-g04",
+              "objectType": "resource",
+              "objectId": "g04-s-p04"
+            },
+            {
+              "systemId": "fixture-source-g04",
+              "objectType": "resource",
+              "objectId": "g04-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "resource",
+          "objectId": "g04-s-p01"
+        },
+        "name": "云杉甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29099
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "resource",
+          "objectId": "g04-s-p02"
+        },
+        "name": "云杉乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29319
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "resource",
+          "objectId": "g04-s-p03"
+        },
+        "name": "云杉丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29539
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "resource",
+          "objectId": "g04-s-p04"
+        },
+        "name": "云杉丁",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18319,
+            30.29583
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "resource",
+          "objectId": "g04-s-p05"
+        },
+        "name": "云杉戊",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29781
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "fixture-source-g04",
+          "objectType": "road",
+          "objectId": "g04-s-road01"
+        },
+        "name": "联络路",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              120.18143,
+              30.29253
+            ],
+            [
+              120.18176,
+              30.29363
+            ]
+          ]
+        },
+        "properties": {
+          "passability": "open"
+        }
+      }
+    ],
+    "reports": [],
+    "asOf": "2026-10-30T09:00:00+08:00"
+  }
+}

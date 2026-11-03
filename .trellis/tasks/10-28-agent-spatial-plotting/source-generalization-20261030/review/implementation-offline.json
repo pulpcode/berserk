@@ -1,0 +1,53 @@
+{
+  "status": "implementation_offline_passed_pending_independent_review",
+  "paid_model_requests": 0,
+  "product_revision": "925314f995f1e05f136818bcc18a6bd99c7e9614",
+  "product_files_changed": false,
+  "tests": [
+    {
+      "name": "independent axes and exact request budget",
+      "passed": true
+    },
+    {
+      "name": "eight native HTTP/Pi fixtures with all geometry combinations and both clarification paths",
+      "passed": true,
+      "cases": 8,
+      "geometry_combinations": 32,
+      "simulated_requests": 58,
+      "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/source-generalization-TU1VqQ/batch"
+    },
+    {
+      "name": "unknown AskUser cancellation and ordinary incomplete result continue to following isolated task",
+      "passed": true,
+      "simulated_requests": 3,
+      "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/source-generalization-wdbHXn/batch"
+    },
+    {
+      "name": "native on-demand skill body absent initially and delivered after skill_read",
+      "passed": true,
+      "simulated_requests": 2,
+      "evidence": "/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/source-generalization-1EbKtJ/batch"
+    }
+  ],
+  "typecheck": "passed",
+  "lint": "ordinary CLI skips outside-base paths; independent scoped check pending",
+  "offline_development_failures_preserved": [
+    "generated runtime missing closing brace fixed",
+    "sandbox local listener denied; rerun with local-service escalation",
+    "simulation management requires intel and situation registration; retained empty intel catalogue",
+    "test assumed only one native user envelope; actual host map-context user envelope preserved",
+    "test read source objects field; actual query uses items",
+    "constructed provider repeated tool_call_id after shifted step; made unique",
+    "test assumed skill_read data envelope; actual direct body/hash checked"
+  ],
+  "limits": {
+    "requests": 96,
+    "input": 3000000,
+    "output": 300000
+  },
+  "notes": [
+    "Offline synthetic calls are not real model performance.",
+    "No reserve content read.",
+    "Real model execution remains root responsibility after independent gate."
+  ]
+}

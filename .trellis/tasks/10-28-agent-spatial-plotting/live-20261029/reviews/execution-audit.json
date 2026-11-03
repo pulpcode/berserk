@@ -1,0 +1,1007 @@
+{
+  "freezeHash": "64ba973b357a7392c7ac49f0cac417b476e387a7e551b84e7b175fffdb1b7d4d",
+  "productRevisions": {
+    "A": "ba3fc697e4866aa616ed9f4e2fef5f96d4ab8013",
+    "B": "74986e0f1b4ac3a2fb62434673b3da4c5334ff14"
+  },
+  "sourceUnchanged": true,
+  "planned": 24,
+  "recorded": 24,
+  "unexecuted": 0,
+  "automaticRetries": 0,
+  "additionalTrials": 0,
+  "originalTurns": 30,
+  "plainClarificationTurns": 0,
+  "structuredAnswers": 2,
+  "totals": {
+    "requests": 100,
+    "input": 2152015,
+    "output": 27930,
+    "unknown": 0
+  },
+  "models": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "requestedThinking": "enabled/high",
+  "responsesWithObservedThinking": 86,
+  "allHttp200": true,
+  "allUsageKnown": true,
+  "groups": {
+    "A": {
+      "tasks": 12,
+      "mainPass": 11,
+      "strictPass": 10,
+      "requests": 54,
+      "input": 1161427,
+      "output": 15571,
+      "skills": {
+        "map-annotations": 2,
+        "spatial-analysis": 5
+      },
+      "anyMapSkill": 7
+    },
+    "B": {
+      "tasks": 12,
+      "mainPass": 10,
+      "strictPass": 9,
+      "requests": 46,
+      "input": 990588,
+      "output": 12359,
+      "skills": {
+        "map-annotations": 2,
+        "spatial-analysis": 7
+      },
+      "anyMapSkill": 8
+    }
+  },
+  "slots": [
+    {
+      "id": "S04-A",
+      "group": "A",
+      "originalTurns": 3,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 9,
+      "input": 206203,
+      "output": 2220,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 3
+        }
+      },
+      "score": {
+        "id": "S04-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "三个原题轮均执行；700/1200分别预览，保存仅用原700固定几何，旧对象保留，说明与实际相符。",
+        "evidence": [
+          "S04-A/gate/1-checkpoint.json",
+          "S04-A/gate/2-checkpoint.json",
+          "S04-A/gate/3-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S04-B",
+      "group": "B",
+      "originalTurns": 3,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 8,
+      "input": 188458,
+      "output": 2330,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 11
+        }
+      },
+      "score": {
+        "id": "S04-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "三轮全部完成；1200与700独立，仅保存原700几何，新旧对象和最终总数一致。",
+        "evidence": [
+          "S04-B/gate/1-checkpoint.json",
+          "S04-B/gate/2-checkpoint.json",
+          "S04-B/gate/3-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P02-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56687,
+      "output": 537,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P02-B",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "fail",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "冻结业务口径要求写入前澄清车型；模型未澄清，保存无专业symbolId的普通点代替。它没有猜水罐车，明确说明普通点，故不判解释失真。坐标/名称/plan/旧对象及不发布采用均正确。",
+        "quotes": [
+          "你只要求“消防车”，未指定车型，因此我没有设置专业符号，只保留了普通点标号"
+        ],
+        "evidence": [
+          "P02-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P02-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 1,
+      "requests": 4,
+      "input": 85467,
+      "output": 1403,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 22
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P02-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "读取完整草稿及map-annotations后，写前AskUser车型澄清，收到冻结水罐消防车答复后保存正确符号/坐标/plan；旧对象与发布采用状态不变。",
+        "evidence": [
+          "P02-A/gate/1-checkpoint.json",
+          "P02-A/interaction-6c75f9ce-bd92-4f34-ad3c-7573c799d43c.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S01-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 57024,
+      "output": 1191,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "S01-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "500米origin缓冲完成，明确输入1点、全层4对象并列其他对象未参与；只读状态与方法说明符合实际，无必需追问。末尾扩展操作仅建议。",
+        "evidence": [
+          "S01-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S01-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 84982,
+      "output": 1158,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 29
+        }
+      },
+      "score": {
+        "id": "S01-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "最初误把reference作图层名称报错，随后读取实际图层ID并正确完成500米origin缓冲；最终明确全层4点、输入1点，未写入。错误调用已恢复，不按路径惩罚。",
+        "evidence": [
+          "S01-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S02-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 62860,
+      "output": 997,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 33
+        }
+      },
+      "score": {
+        "id": "S02-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "fail",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "主任务四点名单/总数和500米预览正确；最终把不存在的returnItems作为返回字段，实际为data.items。属于明确技术字段误述，含义基本正确但不能由主任务正确抵消。",
+        "quotes": [
+          "`returnItems` 展示的是原对象“基点”，面几何存放在这次固定结果中。"
+        ],
+        "evidence": [
+          "S02-B/gate/1-checkpoint.json"
+        ],
+        "adjudication": {
+          "initialReviewerSuggestion": "clarity/pass because intended items meaning clear",
+          "finalDecision": "root reviewed exact backticked nonexistent-field assertion: finalFacts fail",
+          "principle": "不虚构技术细节；此处字段断言明确，不是全文可消歧的普通措辞"
+        },
+        "severity": "minor_explanation_error"
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S02-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 82036,
+      "output": 1257,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 37
+        }
+      },
+      "score": {
+        "id": "S02-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "完整读取reference四点并列名单/总数，origin500米缓冲正确，固定结果与只读状态说明有依据；无需要用户补充的信息。",
+        "evidence": [
+          "S02-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S03-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 57410,
+      "output": 715,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "S03-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "实际读取三个候选与参照，nearest返回最近甲乙及100.08/200.15米；全文区分候选3与输出2，只读状态与实际一致。",
+        "evidence": [
+          "S03-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S03-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 63524,
+      "output": 742,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 43
+        }
+      },
+      "score": {
+        "id": "S03-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "三个候选均读取并参与nearest，甲乙距离正确；第三点约300米标明坐标等距推算，已读坐标支持该近似，不是无据声称工具返回；无写入。",
+        "evidence": [
+          "S03-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S05-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 63582,
+      "output": 919,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 46
+        }
+      },
+      "score": {
+        "id": "S05-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "范围、命中甲乙2个、候选3个及未命中丙均有完整工具依据，contains包含边界符合工具契约。末句草稿点数3指候选全集，全文已区分命中2，不机械判矛盾；表达可更清晰。",
+        "evidence": [
+          "S05-B/gate/1-checkpoint.json"
+        ],
+        "clarity": [
+          "末句“依据这些草稿点，点数是3”应注明这是候选总数；前文命中2已清晰，不计事实错误。"
+        ]
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S05-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 63111,
+      "output": 873,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 49
+        }
+      },
+      "score": {
+        "id": "S05-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "区域筛选命中甲乙2个、全部候选3个、未命中丙与工具一致；只读及边界说明有依据。点数容量等属性一句措辞不佳，但主语为业务属性，前文数量明确，不当作否认已统计对象数。",
+        "evidence": [
+          "S05-A/gate/1-checkpoint.json"
+        ],
+        "clarity": [
+          "“点数、容量等属性未在本次查询范围”应直说没有核实业务数量/容量属性，避免与对象计数混淆。"
+        ]
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S06-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 83684,
+      "output": 1151,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 53
+        }
+      },
+      "score": {
+        "id": "S06-A",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "本会话存在草稿与来源两种港区资源口径，模型直接采用草稿而未澄清或分别给出完整条件答案。所报草稿4内1外及只读效果正确；问题是数据来源选择未明确，不是几何计算错误。",
+        "evidence": [
+          "S06-A/gate/1-checkpoint.json"
+        ]
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "S06-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 64807,
+      "output": 1192,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 56
+        }
+      },
+      "score": {
+        "id": "S06-B",
+        "mainRequirement": "fail",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "本会话存在草稿与来源两种港区资源口径，模型直接采用草稿而未澄清或分别给出完整条件答案。所报草稿4内1外及只读效果正确；问题是数据来源选择未明确，不是几何计算错误。",
+        "evidence": [
+          "S06-B/gate/1-checkpoint.json"
+        ]
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P01-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56720,
+      "output": 533,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P01-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐车型按目录symbolId保存，名称/坐标/图层/plan正确，原对象保留，r1到r2且未发布采用；最终说明与实际一致。",
+        "evidence": [
+          "P01-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P01-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56641,
+      "output": 516,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P01-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "明确水罐车型按目录符号保存，名称坐标图层plan符合题意，旧对象保留，未发布采用，最终叙述均有动作回执和状态依据。",
+        "evidence": [
+          "P01-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P03-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 3,
+      "input": 56858,
+      "output": 654,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P03-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "已读完整style后只改heading45到90，symbol/iconSize/label/color、名称坐标备注业务属性plan均保留；过程是计划而非提前宣告完成，最终与回执状态一致。",
+        "evidence": [
+          "P03-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P03-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 76357,
+      "output": 665,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P03-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "heading改为90并完整保留其他字段，回执及草稿状态正确；末句当前可用范围可理解为本次授权范围（题干明确不发布采用），不是明确断言不存在发布工具，记表达需更精确而不硬判技术能力错误。",
+        "evidence": [
+          "P03-B/gate/1-checkpoint.json"
+        ],
+        "clarity": [
+          "“该操作也不在当前可用范围内”应改为本次未获发布/采用授权，避免与工具能力混淆。"
+        ],
+        "adjudication": {
+          "reviewerSuggestion": "pass+clarity",
+          "rootDecision": "同意；全文可指本次授权范围，不能按模糊措辞判明确技术能力错误。"
+        }
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P04-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 4,
+      "input": 84804,
+      "output": 635,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 72
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P04-B",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "模型第二次读取已是并发更新后的r2，再改heading保存r3，人工补充备注及所有其他属性保留；无实际CAS错误，属于主动重读避开冲突，不宣称已验证错误后恢复。",
+        "evidence": [
+          "P04-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": true,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P04-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 5,
+      "input": 102038,
+      "output": 1087,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 78
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P04-A",
+        "mainRequirement": "pass",
+        "processFacts": "pass",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "实际首次apply返回ANNOTATION_CONFLICT未提交，读取Skill与r2后保留人工新增备注并改heading到90，r3成功；其他样式业务属性几何plan保留，过程及最终解释均真实。",
+        "evidence": [
+          "P04-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": true,
+      "actualConflictErrors": 1
+    },
+    {
+      "id": "P05-A",
+      "group": "A",
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 1,
+      "requests": 12,
+      "input": 292540,
+      "output": 3913,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 81
+        }
+      },
+      "score": {
+        "id": "P05-A",
+        "mainRequirement": "pass",
+        "processFacts": "fail",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "fail",
+        "reason": "预览700米及固定结果保存/plan/备注/浏览器编辑均完成。但首轮AskUser把objectNames:[origin]的零命中错误扩大为全草稿没有reference层与origin，属公开过程事实错误；之后重读恢复不能抹去。最终关于前后空结果的表述不清，未明确指出筛选条件差异。",
+        "quotes": [
+          "图层0个、对象0个，没有reference层，也没有ID为origin的对象"
+        ],
+        "evidence": [
+          "P05-A/gate/1-checkpoint.json",
+          "P05-A/gate/2-checkpoint.json",
+          "P05-A/browser-review.json"
+        ],
+        "browser": "pass",
+        "clarity": [
+          "首轮最终回答将不同查询范围描述为同版本先空后有，须说明查询条件差异"
+        ]
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P05-B",
+      "group": "B",
+      "originalTurns": 2,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 7,
+      "input": 169390,
+      "output": 2098,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 96
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": true,
+          "firstBodyRequest": 93
+        }
+      },
+      "score": {
+        "id": "P05-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "固定700米结果保存为同一新对象并补plan/待核实成功，无重算；其他对象保留，未发布采用，两轮公开说明有依据，同对象真实浏览器核验通过。",
+        "evidence": [
+          "P05-B/gate/2-checkpoint.json",
+          "P05-B/browser-review.json"
+        ],
+        "clarity": [],
+        "browser": "pass"
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P06-B",
+      "group": "B",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 1,
+      "input": 18417,
+      "output": 553,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P06-B",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "系统目录三符号归属、编号、别名及朝向能力正确；消防艇补充亦有目录依据。非标准明确指当前目录的冲锋舟扩展条目，不推断外部标准全文；无地图读取或修改。",
+        "evidence": [
+          "P06-B/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    },
+    {
+      "id": "P06-A",
+      "group": "A",
+      "originalTurns": 1,
+      "plainClarificationTurns": 0,
+      "structuredAnswers": 0,
+      "requests": 1,
+      "input": 18415,
+      "output": 591,
+      "skills": {
+        "map-annotations": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        },
+        "spatial-analysis": {
+          "catalogueSeen": true,
+          "bodySeen": false,
+          "firstBodyRequest": null
+        }
+      },
+      "score": {
+        "id": "P06-A",
+        "mainRequirement": "pass",
+        "processFacts": "na",
+        "finalFacts": "pass",
+        "effects": "pass",
+        "boundaries": "pass",
+        "strict": "pass",
+        "reason": "当前目录三项分类/编号/别名/方向正确；无对应标准条款编号在全文仅为目录扩展条目属性，不解释为外部标准全文排除。额外救援舰船目录条目真实，无地图改动。",
+        "evidence": [
+          "P06-A/gate/1-checkpoint.json"
+        ],
+        "clarity": []
+      },
+      "conflictInjected": false,
+      "actualConflictErrors": 0
+    }
+  ],
+  "semanticReview": "独立Agent证据复核，非人工金标或盲评",
+  "rawEvidence": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/agent-spatial-plotting-20261029/live"
+}

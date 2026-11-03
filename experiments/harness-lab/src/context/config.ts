@@ -1,10 +1,11 @@
+import { decodeResourceCapability, type ResourceSourceCapability } from '../contracts/task-resources.js';
 import { isBasemapView, type BasemapSourceMetadata, type MapConfig, type RoadBasemap } from '../contracts/map.js';
 import { isAbsolute } from 'node:path';
 import { readControlled } from '../resources/files.js';
 
 export interface ContextSystemConfig {
   id: string; name: string; adapter: 'mock-information-http' | 'mock-situation-http';
-  baseUrl: string; tokenEnv: string; areas?: Array<{id: string; name: string}>;
+  baseUrl: string; tokenEnv: string; resourceCapability?: ResourceSourceCapability; areas?: Array<{id: string; name: string}>;
 }
 export interface ContextScopeConfig { id: string; name: string; systemIds: string[]; seatIds: string[] }
 export interface SimulationConfig { enabled: boolean; baseUrl: string; tokenEnv: string; sources: Array<{systemId: string; sourceId: string}> }
@@ -48,13 +49,15 @@ export function parseContextConfig(value: unknown): ContextConfig {
   const raw = object(value, ['systems', 'scopes', 'simulation', 'map']);
   if (!Array.isArray(raw.systems) || !Array.isArray(raw.scopes) || raw.systems.length > 100 || raw.scopes.length > 100) throw fail();
   const systems = raw.systems.map(value => {
-    const s = object(value, ['id', 'name', 'adapter', 'baseUrl', 'tokenEnv', 'areas']);
+    const s = object(value, ['id', 'name', 'adapter', 'baseUrl', 'tokenEnv', 'areas', 'resourceCapability']);
     if (s.adapter !== 'mock-information-http' && s.adapter !== 'mock-situation-http') throw fail();
     const baseUrl = text(s.baseUrl, 2048), url = new URL(baseUrl);
     if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash) throw fail();
     const tokenEnv = text(s.tokenEnv, 100); if (!/^[A-Z][A-Z0-9_]{0,99}$/.test(tokenEnv)) throw fail();
     const areas = s.areas === undefined ? undefined : (() => { if (!Array.isArray(s.areas) || s.areas.length > 100) throw fail(); return s.areas.map(value => { const a = object(value, ['id', 'name']); return {id: id(a.id), name: text(a.name, 200)}; }); })();
-    return {...(areas ? {areas} : {}), id: id(s.id), name: text(s.name, 200), adapter: s.adapter, baseUrl: url.href.replace(/\/$/, ''), tokenEnv} satisfies ContextSystemConfig;
+    const resourceCapability = s.resourceCapability === undefined ? undefined : decodeResourceCapability(s.resourceCapability);
+    if (resourceCapability && (s.adapter !== 'mock-situation-http' || resourceCapability.systemId !== s.id)) throw fail();
+    return {...(resourceCapability ? {resourceCapability} : {}), ...(areas ? {areas} : {}), id: id(s.id), name: text(s.name, 200), adapter: s.adapter, baseUrl: url.href.replace(/\/$/, ''), tokenEnv} satisfies ContextSystemConfig;
   });
   const scopes = raw.scopes.map(value => {
     const s = object(value, ['id', 'name', 'systemIds', 'seatIds']);

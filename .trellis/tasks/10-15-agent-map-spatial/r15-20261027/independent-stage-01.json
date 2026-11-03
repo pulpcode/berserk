@@ -1,0 +1,194 @@
+{
+  "rows": [
+    {
+      "blindId": "31ce1825-cbef-4b68-8807-051debace3b4",
+      "mainRequirement": "fail",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "已按本会话草稿（修订 1）对港区做了点位分类",
+        "也未核查态势来源系统里的其他港区资源点。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-01/31ce1825-cbef-4b68-8807-051debace3b4/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P01"
+      ],
+      "reason": "本题未明确来源；没有请求并处理选择，也没有完整给出来源系统的条件答案，仅选草稿。草稿4内/0边界/1外与完整5点分类一致，名单准确，因此主任务失败但最终事实通过。全部实际工具为读取/分析，前后状态相同。",
+      "clarity": "明确限定草稿使数字本身不失真，但不能抵消来源选择未完成。",
+      "failureCategory": "source_selection_unresolved"
+    },
+    {
+      "blindId": "3f82e42f-2947-4c5e-b98b-57ad8a205d2b",
+      "mainRequirement": "pass",
+      "processFacts": "pass",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "这个“港区”在两个来源中同名，结果也不同，我分别报告",
+        "港区多边形内共有 4 个资源点"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-01/3f82e42f-2947-4c5e-b98b-57ad8a205d2b/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P01"
+      ],
+      "reason": "先完整报告草稿4与来源几何1，来源登记2也有memberRefs依据且与几何口径分开。其后固定用户回复选择草稿，最终给出4点及名单。前一回答的数量、成员、来源属性均已在当时wire中，未以之后证据追认。前后状态相同，无写入。",
+      "clarity": "首答“图层参照对象或资源图层”不够清楚，末答已分清参照面与候选层；不构成已证实错误。两套完整答案后的可选聚焦不判失败。"
+    },
+    {
+      "blindId": "55173f0f-7805-45a9-89cc-01a53526b634",
+      "mainRequirement": "fail",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "本会话草稿（`setId 4b33ede6…`，修订 1）的港区范围内共有 **4 个资源点**",
+        "也没有查询其他来源系统的同区域资源。"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-01/55173f0f-7805-45a9-89cc-01a53526b634/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P01"
+      ],
+      "reason": "仅给草稿4点，既未取得用户选择，也未给另一套完整条件结果；违反P01来源口径。已读全草稿与完整点分类，所报名单、4/0/1数量及只读事实正确。状态未变。",
+      "clarity": "来源限定写得清楚，但这是模型自行限定；不能将正确计算当作来源消歧完成。",
+      "failureCategory": "source_selection_unresolved"
+    },
+    {
+      "blindId": "5ae76959-7a5c-4e52-a169-0fcfa1c67cdd",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "面内 4 个、边界 0 个、面外 1 个",
+        "几何落在港区面内",
+        "结果为内部 1 个、外部 1 个"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-01/5ae76959-7a5c-4e52-a169-0fcfa1c67cdd/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P01"
+      ],
+      "reason": "完整给出草稿4点和来源几何1点，符合允许的条件答案；额外区域归属2有实际区域memberRefs及areaIds依据，并没有冒充几何命中。草稿/来源外部点同坐标有两次公开读取支持，不做身份合并。无写入且状态相同。",
+      "clarity": "“按你指定”及“需要你确定”可更简洁，但两套所需结果已经给全，末尾询问不使已完成答案失败。"
+    },
+    {
+      "blindId": "27e9e7de-8181-414f-989b-3dc8277edefa",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "fail",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "fail",
+      "quotes": [
+        "与草稿巡查区几何相近但不等同"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-02/27e9e7de-8181-414f-989b-3dc8277edefa/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-02/27e9e7de-8181-414f-989b-3dc8277edefa/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-02/27e9e7de-8181-414f-989b-3dc8277edefa/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P03"
+      ],
+      "reason": "指定patrol-area读取正确，来源3个车辆经contains筛选得到巡查车甲/乙共2点，主任务与真实状态通过。额外几何差异断言错误：末次wire request5的annotation_read和无过滤situation_query已分别给出巡查区与西区的完全相同Polygon坐标 [[114,22.5],[114.02,22.5],[114.02,22.52],[114,22.52],[114,22.5]]。两个对象身份不同不能证明几何不等同。状态未变，未见越权。",
+      "clarity": "这里“几何相近但不等同”直接修饰几何，不能用对象身份确实不同来支持。若只要区分身份，应说是不同来源对象，但本题几何相同。",
+      "failureCategory": "unsupported_geometry_difference"
+    },
+    {
+      "blindId": "3efbe5bb-5b38-44cb-912a-4eeb373fdaa6",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "命中对象个数：2 个（筛选前候选 3 个）",
+        "按对象属性 `availableCount` 求和：2 辆"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-02/3efbe5bb-5b38-44cb-912a-4eeb373fdaa6/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-02/3efbe5bb-5b38-44cb-912a-4eeb373fdaa6/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-02/3efbe5bb-5b38-44cb-912a-4eeb373fdaa6/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P03"
+      ],
+      "reason": "按指定草稿固定ID过滤来源3个车辆，完整返回巡查车甲/乙2点；名单、坐标、外围车经度、边界规则、快照和属性求和均有最终回答之前的wire证据。首次“车辆”名称搜索为空后查询完整集合正常纠正，不构成失败。只读且状态相同。",
+      "clarity": "标题“命中2辆”由下文对象数与属性数量分开解释，完整语境成立，不机械扣分。"
+    },
+    {
+      "blindId": "6899421e-966d-442d-b335-d6ea73b84a6b",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "结果：范围内车辆 2 个（含边界）"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-02/6899421e-966d-442d-b335-d6ea73b84a6b/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-02/6899421e-966d-442d-b335-d6ea73b84a6b/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-02/6899421e-966d-442d-b335-d6ea73b84a6b/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P03"
+      ],
+      "reason": "按patrol-area筛选3个来源车辆得到2点，名单、记录可用数、外部车位置和东西方向均由可见读取/结果支持。首次空名称搜索后按完整来源核对属于正常恢复。所有状态保持不变。",
+      "clarity": "“结果仅用于本次答复”结合随后未新增标绘，是用途说明，没有声称结果不可留存或内部仅在内存，不判存储事实错误。"
+    },
+    {
+      "blindId": "963a58fe-6faa-45bc-9421-89b8aa8b1360",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "范围内共有 2 个车辆对象"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-02/963a58fe-6faa-45bc-9421-89b8aa8b1360/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-02/963a58fe-6faa-45bc-9421-89b8aa8b1360/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-02/963a58fe-6faa-45bc-9421-89b8aa8b1360/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P03"
+      ],
+      "reason": "真实指定草稿ID未替换，来源三车筛选命中甲乙；数量、属性、时间、外部车、含边界和只读均有可见工具及状态支持。关键词搜索后纠正不扣分；未触发名称/ID提示，不能据此证明提示的效果。",
+      "clarity": "“先按全身份查询后逐一比对”较笼统，但spatial_analyze确实以三组完整source引用解析并筛选；没有明确否认先前名称检索，不按最坏解释扣分。"
+    },
+    {
+      "blindId": "d0b21607-6e27-4560-b33a-574505c77082",
+      "mainRequirement": "pass",
+      "processFacts": "na",
+      "finalFacts": "pass",
+      "effects": "pass",
+      "boundaries": "pass",
+      "strict": "pass",
+      "quotes": [
+        "当前会话草稿中没有“巡查区”。",
+        "图层数为 0，对象总数为 0"
+      ],
+      "evidence": [
+        ".local/spatial-r15/blind-stage-02/d0b21607-6e27-4560-b33a-574505c77082/judge-input.json#visibleTranscript",
+        ".local/spatial-r15/blind-stage-02/d0b21607-6e27-4560-b33a-574505c77082/model-visible-evidence.json#observedMessages",
+        ".local/spatial-r15/blind-stage-02/d0b21607-6e27-4560-b33a-574505c77082/judge-input.json#stateEvidence",
+        ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/case-specs.json#P04"
+      ],
+      "reason": "无对象/图层条件的完整draft读取，query为空且objects.total=0、hasMore=false、layers为空，足以确认没有巡查区；答复清楚完成任务。没有创建或改用来源，前后状态相同。completion的incomplete/unnecessary_confirmation不决定语义，末尾仅邀请未来另行授权，未把当前答案挂起。",
+      "clarity": "建议删去与本次“不改用来源”无关的未来邀请，但不因此扣当前完成分。应列执行器完成标签与人工语义判定不一致。"
+    }
+  ]
+}

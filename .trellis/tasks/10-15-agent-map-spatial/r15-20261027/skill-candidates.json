@@ -1,0 +1,24 @@
+{
+  "baselineCommit": "6a631a42b99b01de334cd2017c07bf0d9d58a560",
+  "mode": "native-on-demand",
+  "skills": [
+    {
+      "name": "map-annotations",
+      "baselinePath": "experiments/harness-lab/fixtures/skills/map-annotations/SKILL.md",
+      "candidatePath": ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/candidate-skills/map-annotations/SKILL.md",
+      "baselineSha256": "bdfcb0979100f5f32a2147c7c91979e0d6bf08134f6ba4db73803fbcde212f70",
+      "candidateSha256": "c4e0dd9412ffc247c1b43f049fb78527bc27a28b4bff9bcff63fa4bfa6911da2",
+      "baselineBytes": 7517,
+      "candidateBytes": 9045
+    },
+    {
+      "name": "spatial-analysis",
+      "baselinePath": "experiments/harness-lab/fixtures/skills/spatial-analysis/SKILL.md",
+      "candidatePath": ".trellis/tasks/10-15-agent-map-spatial/r15-20261027/candidate-skills/spatial-analysis/SKILL.md",
+      "baselineSha256": "bca14ca50603ff0481100b212cd24a1614db45b65fa0d15b54e50139cd68ad58",
+      "candidateSha256": "ded2bc71274afdb9a5183ae29daf88e3a7f805f752ebb8e51c9e00cad328c8a0",
+      "baselineBytes": 11601,
+      "candidateBytes": 12803
+    }
+  ]
+}

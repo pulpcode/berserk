@@ -1,3 +1,4 @@
+import type { TaskResource, ResourceAssociation } from './task-resources.js';
 import type { ContextRef, ContextTimeRange, SituationGeometry } from './context.js';
 
 /** Immutable version selectors. No implicit latest lookup is accepted. */
@@ -6,11 +7,15 @@ export type AnnotationSelection = AnnotationRef & { layerIds?: string[]; objectI
 export interface AnnotationStyle {
   color?: string; fillColor?: string; opacity?: number; size?: number; width?: number;
   lineStyle?: 'solid' | 'dashed' | 'dotted'; symbol?: 'circle' | 'square' | 'triangle'; label?: string;
+  symbolId?: string; iconSize?: number; heading?: number; lineEnd?: 'none' | 'arrow';
 }
 export interface AnnotationFeature {
   objectId: string; kind: 'point' | 'line' | 'polygon' | 'text'; name: string;
   geometry: SituationGeometry; note?: string; attributes?: Record<string, string | number | boolean | null>;
   style?: AnnotationStyle;
+  resource?: TaskResource;
+  resourceAssociation?: ResourceAssociation;
+  informationRole?: 'observation' | 'assessment' | 'plan';
   sourceRefs?: Array<ContextRef & { revision?: number; queriedAt?: string }>;
   originFeatureRef?: { ref: AnnotationRef; objectId: string };
 }
@@ -47,7 +52,7 @@ export type AnnotationOperation =
   | { op: 'update_layer'; layerId: string; changes: Partial<Pick<AnnotationLayer, 'name' | 'order' | 'defaultVisible'>> }
   | { op: 'delete_layer'; layerId: string }
   | { op: 'add_object'; layerId: string; feature: AnnotationFeature }
-  | { op: 'update_object'; objectId: string; changes: Partial<Omit<AnnotationFeature, 'objectId' | 'originFeatureRef'>>; layerId?: string }
+  | { op: 'update_object'; objectId: string; changes: Partial<Omit<AnnotationFeature, 'objectId' | 'originFeatureRef' | 'resourceAssociation'>>; layerId?: string }
   | { op: 'delete_object'; objectId: string }
   | { op: 'copy_object'; source: AnnotationRef; objectId: string; newObjectId: string; layerId: string };
 export type AnnotationAction =
@@ -86,11 +91,13 @@ export interface AnnotationReceipt {
   afterRef?: {setId:string; revision:number};
   objectIds?: string[];
 }
-export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef';
+export type AnnotationReadField = 'geometry' | 'note' | 'attributes' | 'style' | 'sourceRefs' | 'originFeatureRef' | 'informationRole' | 'resource' | 'resourceAssociation';
 export interface AnnotationReadInput {
   ref: AnnotationRef; layerIds?: string[]; layerNames?: string[]; objectIds?: string[]; objectNames?: string[]; fields?: AnnotationReadField[]; offset?: number; limit?: number;
 }
 export interface AnnotationReadResult {
+  /** Exact IDs in the same authorized snapshot/layer scope; never name-query matches. */
+  nameLookupHints?: Array<{objectId:string; name:string; layerId:string}>;
   ref: AnnotationRef; title: string; hash: string; createdAt: string;
   layers: Array<Omit<AnnotationLayer, 'features'>>;
   objects: AnnotationPage<Pick<AnnotationFeature, 'objectId' | 'kind' | 'name'> & Partial<AnnotationFeature> & { layerId: string }>;

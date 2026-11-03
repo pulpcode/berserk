@@ -1,0 +1,114 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V15",
+  "caseId": "G08",
+  "scope_pass": false,
+  "geometry_and_members_pass": false,
+  "actual_reported_pairs_correct": true,
+  "main_pass": false,
+  "process_facts_pass": true,
+  "final_facts_pass": true,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft",
+    "source->source"
+  ],
+  "reported_pairs": [
+    "source->source"
+  ],
+  "missing_pairs": [
+    "draft->draft",
+    "draft->source",
+    "source->draft"
+  ],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "source",
+  "final_reference_source": "source",
+  "default_draft_end": false,
+  "default_source_end": true,
+  "default_source_boundary": true,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [],
+  "recovery": {
+    "tool_issue": "名称被当objectId返回unknownRefs、非法objectType参数校验失败",
+    "recovered_with": "query长汀及全量查询后正确取得5资源并分类",
+    "public_fact_correction": false
+  },
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "f9966335"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "4bdf26baaf0e3828907ff583b502a6e1b524c46f50782800a1f3e680b3466d37",
+    "draft_hash_after": "4bdf26baaf0e3828907ff583b502a6e1b524c46f50782800a1f3e680b3466d37",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "473419bf-6bab-416e-abfb-c2ae8696acd2",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "473419bf-6bab-416e-abfb-c2ae8696acd2",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "unresolved_candidate_source",
+    "unresolved_reference_source",
+    "missing_conditional_pairs",
+    "default_source_end"
+  ],
+  "evidence": [
+    {
+      "message_id": "d3081a05",
+      "quote": "长汀仓区内没有资源点，共 0 个。",
+      "basis": "call_00_2kd7hcnuxepox1x2ndajjdmx 对完整5来源点计算source->source得到全部exterior。用户未限定候选和参照来源，只报告该组合，缺draft->draft3、draft->source1、source->draft2；几何冻结指标要求全部有效组合，因此main失败。",
+      "category": "scope_and_missing_pairs"
+    }
+  ],
+  "observations": [
+    "无实际用户回复，来源及边界均未确定，只报告来源->来源，不能以本会话自动限定来源。",
+    "全量来源查询已读完整5资源，所有被报告坐标、数量、属性、时间、版本和分类均有支持；不由主任务失败倒推事实错。",
+    "无业务写入，分析固定结果不算业务写入。",
+    "精确判定在全文是拓扑分类语义，后文明确无距离容差，不视为宣称测绘精度；北侧甲乙与南侧丙丁戊直接由已读坐标验证。"
+  ],
+  "optional_boundary_offer": false
+}

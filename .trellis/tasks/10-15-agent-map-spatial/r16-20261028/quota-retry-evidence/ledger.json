@@ -1,0 +1,692 @@
+{
+  "freezeHash": "8e113cae33e7a9a21f66f39c9c4e7f951466feab3c36aa035228343b8453cd2e",
+  "account": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-10-28T13:10:23.216794+00:00",
+    "sourceEvidence": "User explicitly confirmed quota reset and authorized retry/continuation. Original provider AccountQuotaExceeded response reset time2026-10-28 19:30:46+08:00 has passed. CUA page currently requires login, so current numeric balances and overage state could not be reverified. remainingAfp zeroes denote conservative known lower bounds, NOT observed zero balance; balances unknown. Previous overage disabled observation retained in old records; no account setting was changed. No artificial monetary admission gate by explicit user authorization.",
+    "observedOverageEnabled": null,
+    "remainingAfp": {
+      "fiveHour": 0,
+      "week": 0,
+      "month": 0
+    },
+    "remainingAfpObservation": "unknown_lower_bounds_only",
+    "externalUseReserveAfp": 0,
+    "sharedUsePolicy": "observed_shared_usage"
+  },
+  "requests": [
+    {
+      "id": 1,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 61461,
+      "outputReserve": 32768,
+      "afpReserve": 11.778625,
+      "usage": {
+        "input": 16385,
+        "output": 401
+      },
+      "afp": 2.09825
+    },
+    {
+      "id": 2,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 87141,
+      "outputReserve": 32768,
+      "afpReserve": 14.988625,
+      "usage": {
+        "input": 22009,
+        "output": 276
+      },
+      "afp": 2.785625
+    },
+    {
+      "id": 3,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 90084,
+      "outputReserve": 32768,
+      "afpReserve": 15.3565,
+      "usage": {
+        "input": 22913,
+        "output": 357
+      },
+      "afp": 2.90875
+    },
+    {
+      "id": 4,
+      "trialId": "Q07-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 93041,
+      "outputReserve": 32768,
+      "afpReserve": 15.726125,
+      "usage": {
+        "input": 23583,
+        "output": 801
+      },
+      "afp": 3.048
+    },
+    {
+      "id": 5,
+      "trialId": "Q07-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 61349,
+      "outputReserve": 32768,
+      "afpReserve": 11.764625,
+      "usage": {
+        "input": 16370,
+        "output": 249
+      },
+      "afp": 2.077375
+    },
+    {
+      "id": 6,
+      "trialId": "Q07-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 75719,
+      "outputReserve": 32768,
+      "afpReserve": 13.560875,
+      "usage": {
+        "input": 19544,
+        "output": 166
+      },
+      "afp": 2.46375
+    },
+    {
+      "id": 7,
+      "trialId": "Q07-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 78655,
+      "outputReserve": 32768,
+      "afpReserve": 13.927875,
+      "usage": {
+        "input": 20425,
+        "output": 253
+      },
+      "afp": 2.58475
+    },
+    {
+      "id": 8,
+      "trialId": "Q07-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 81199,
+      "outputReserve": 32768,
+      "afpReserve": 14.245875,
+      "usage": {
+        "input": 20992,
+        "output": 939
+      },
+      "afp": 2.741375
+    },
+    {
+      "id": 9,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 61349,
+      "outputReserve": 32768,
+      "afpReserve": 11.764625,
+      "usage": {
+        "input": 16370,
+        "output": 196
+      },
+      "afp": 2.07075
+    },
+    {
+      "id": 10,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 62317,
+      "outputReserve": 32768,
+      "afpReserve": 11.885625,
+      "usage": {
+        "input": 16617,
+        "output": 101
+      },
+      "afp": 2.08975
+    },
+    {
+      "id": 11,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 63534,
+      "outputReserve": 32768,
+      "afpReserve": 12.03775,
+      "usage": {
+        "input": 16922,
+        "output": 212
+      },
+      "afp": 2.14175
+    },
+    {
+      "id": 12,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 76809,
+      "outputReserve": 32768,
+      "afpReserve": 13.697125,
+      "usage": {
+        "input": 19836,
+        "output": 134
+      },
+      "afp": 2.49625
+    },
+    {
+      "id": 13,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 79117,
+      "outputReserve": 32768,
+      "afpReserve": 13.985625,
+      "usage": {
+        "input": 20606,
+        "output": 432
+      },
+      "afp": 2.62975
+    },
+    {
+      "id": 14,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 82508,
+      "outputReserve": 32768,
+      "afpReserve": 14.4095,
+      "usage": {
+        "input": 21371,
+        "output": 209
+      },
+      "afp": 2.6975
+    },
+    {
+      "id": 15,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 84238,
+      "outputReserve": 32768,
+      "afpReserve": 14.62575,
+      "usage": {
+        "input": 21784,
+        "output": 136
+      },
+      "afp": 2.74
+    },
+    {
+      "id": 16,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 85956,
+      "outputReserve": 32768,
+      "afpReserve": 14.8405,
+      "usage": {
+        "input": 22479,
+        "output": 258
+      },
+      "afp": 2.842125
+    },
+    {
+      "id": 17,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 88532,
+      "outputReserve": 32768,
+      "afpReserve": 15.1625,
+      "usage": {
+        "input": 23068,
+        "output": 371
+      },
+      "afp": 2.929875
+    },
+    {
+      "id": 18,
+      "trialId": "Q08-1-G0",
+      "group": "G0",
+      "status": "finished",
+      "inputReserve": 92513,
+      "outputReserve": 32768,
+      "afpReserve": 15.660125,
+      "usage": {
+        "input": 24279,
+        "output": 350
+      },
+      "afp": 3.078625
+    },
+    {
+      "id": 19,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 61461,
+      "outputReserve": 32768,
+      "afpReserve": 11.778625,
+      "usage": {
+        "input": 16395,
+        "output": 199
+      },
+      "afp": 2.07425
+    },
+    {
+      "id": 20,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 76712,
+      "outputReserve": 32768,
+      "afpReserve": 13.685,
+      "usage": {
+        "input": 19787,
+        "output": 262
+      },
+      "afp": 2.506125
+    },
+    {
+      "id": 21,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 79623,
+      "outputReserve": 32768,
+      "afpReserve": 14.048875,
+      "usage": {
+        "input": 20677,
+        "output": 406
+      },
+      "afp": 2.635375
+    },
+    {
+      "id": 22,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 83034,
+      "outputReserve": 32768,
+      "afpReserve": 14.47525,
+      "usage": {
+        "input": 21413,
+        "output": 332
+      },
+      "afp": 2.718125
+    },
+    {
+      "id": 23,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 85386,
+      "outputReserve": 32768,
+      "afpReserve": 14.76925,
+      "usage": {
+        "input": 21946,
+        "output": 185
+      },
+      "afp": 2.766375
+    },
+    {
+      "id": 24,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 87290,
+      "outputReserve": 32768,
+      "afpReserve": 15.00725,
+      "usage": {
+        "input": 22689,
+        "output": 160
+      },
+      "afp": 2.856125
+    },
+    {
+      "id": 25,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 89410,
+      "outputReserve": 32768,
+      "afpReserve": 15.27225,
+      "usage": {
+        "input": 23177,
+        "output": 286
+      },
+      "afp": 2.932875
+    },
+    {
+      "id": 26,
+      "trialId": "Q08-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 92373,
+      "outputReserve": 32768,
+      "afpReserve": 15.642625,
+      "usage": {
+        "input": 24090,
+        "output": 680
+      },
+      "afp": 3.09625
+    },
+    {
+      "id": 27,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 61349,
+      "outputReserve": 32768,
+      "afpReserve": 11.764625,
+      "usage": {
+        "input": 16372,
+        "output": 170
+      },
+      "afp": 2.06775
+    },
+    {
+      "id": 28,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 75660,
+      "outputReserve": 32768,
+      "afpReserve": 13.5535,
+      "usage": {
+        "input": 19549,
+        "output": 257
+      },
+      "afp": 2.47575
+    },
+    {
+      "id": 29,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 78961,
+      "outputReserve": 32768,
+      "afpReserve": 13.966125,
+      "usage": {
+        "input": 20533,
+        "output": 412
+      },
+      "afp": 2.618125
+    },
+    {
+      "id": 30,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 82066,
+      "outputReserve": 32768,
+      "afpReserve": 14.35425,
+      "usage": {
+        "input": 21274,
+        "output": 274
+      },
+      "afp": 2.6935
+    },
+    {
+      "id": 31,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 84422,
+      "outputReserve": 32768,
+      "afpReserve": 14.64875,
+      "usage": {
+        "input": 21819,
+        "output": 164
+      },
+      "afp": 2.747875
+    },
+    {
+      "id": 32,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 86397,
+      "outputReserve": 32768,
+      "afpReserve": 14.895625,
+      "usage": {
+        "input": 22573,
+        "output": 183
+      },
+      "afp": 2.8445
+    },
+    {
+      "id": 33,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 88456,
+      "outputReserve": 32768,
+      "afpReserve": 15.153,
+      "usage": {
+        "input": 23083,
+        "output": 452
+      },
+      "afp": 2.941875
+    },
+    {
+      "id": 34,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 91608,
+      "outputReserve": 32768,
+      "afpReserve": 15.547,
+      "usage": {
+        "input": 23835,
+        "output": 132
+      },
+      "afp": 2.995875
+    },
+    {
+      "id": 35,
+      "trialId": "Q08-1-GT",
+      "group": "GT",
+      "status": "finished",
+      "inputReserve": 94371,
+      "outputReserve": 32768,
+      "afpReserve": 15.892375,
+      "usage": {
+        "input": 24682,
+        "output": 357
+      },
+      "afp": 3.129875
+    },
+    {
+      "id": 36,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 61461,
+      "outputReserve": 32768,
+      "afpReserve": 11.778625,
+      "usage": {
+        "input": 16409,
+        "output": 402
+      },
+      "afp": 2.101375
+    },
+    {
+      "id": 37,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 87569,
+      "outputReserve": 32768,
+      "afpReserve": 15.042125,
+      "usage": {
+        "input": 22152,
+        "output": 245
+      },
+      "afp": 2.799625
+    },
+    {
+      "id": 38,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 90704,
+      "outputReserve": 32768,
+      "afpReserve": 15.434,
+      "usage": {
+        "input": 23112,
+        "output": 201
+      },
+      "afp": 2.914125
+    },
+    {
+      "id": 39,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 93069,
+      "outputReserve": 32768,
+      "afpReserve": 15.729625,
+      "usage": {
+        "input": 23649,
+        "output": 300
+      },
+      "afp": 2.993625
+    },
+    {
+      "id": 40,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 95455,
+      "outputReserve": 32768,
+      "afpReserve": 16.027875,
+      "usage": {
+        "input": 24225,
+        "output": 214
+      },
+      "afp": 3.054875
+    },
+    {
+      "id": 41,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 97665,
+      "outputReserve": 32768,
+      "afpReserve": 16.304125,
+      "usage": {
+        "input": 25060,
+        "output": 150
+      },
+      "afp": 3.15125
+    },
+    {
+      "id": 42,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 99786,
+      "outputReserve": 32768,
+      "afpReserve": 16.56925,
+      "usage": {
+        "input": 25544,
+        "output": 540
+      },
+      "afp": 3.2605
+    },
+    {
+      "id": 43,
+      "trialId": "Q08-1-GST",
+      "group": "GST",
+      "status": "finished",
+      "inputReserve": 104230,
+      "outputReserve": 32768,
+      "afpReserve": 17.12475,
+      "usage": {
+        "input": 26809,
+        "output": 225
+      },
+      "afp": 3.37925
+    },
+    {
+      "id": 44,
+      "trialId": "Q20-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 61464,
+      "outputReserve": 32768,
+      "afpReserve": 11.779,
+      "usage": {
+        "input": 16394,
+        "output": 349
+      },
+      "afp": 2.092875
+    },
+    {
+      "id": 45,
+      "trialId": "Q20-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 77413,
+      "outputReserve": 32768,
+      "afpReserve": 13.772625,
+      "usage": {
+        "input": 19938,
+        "output": 329
+      },
+      "afp": 2.533375
+    },
+    {
+      "id": 46,
+      "trialId": "Q20-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 79774,
+      "outputReserve": 32768,
+      "afpReserve": 14.06775,
+      "usage": {
+        "input": 20498,
+        "output": 404
+      },
+      "afp": 2.61275
+    },
+    {
+      "id": 47,
+      "trialId": "Q20-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 81499,
+      "outputReserve": 32768,
+      "afpReserve": 14.283375,
+      "usage": {
+        "input": 20944,
+        "output": 160
+      },
+      "afp": 2.638
+    },
+    {
+      "id": 48,
+      "trialId": "Q20-1-GS",
+      "group": "GS",
+      "status": "finished",
+      "inputReserve": 83872,
+      "outputReserve": 32768,
+      "afpReserve": 14.58,
+      "usage": {
+        "input": 21731,
+        "output": 402
+      },
+      "afp": 2.766625
+    }
+  ],
+  "halted": "waiting_user_unmapped_plain_question"
+}

@@ -1,0 +1,15 @@
+(node:74750) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"controlledEvidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-Zt5i6Z/batch","slots":4,"syntheticProviderCalls":16,"realProviderRequests":0}
+✔ controlled native HTTP/Pi runs preserve fields and handle a real service CAS conflict (14081.507428ms)
+✔ single-field write guard counts actual new revisions, not CAS failures, replay or receipt lookup (0.652033ms)
+{"duplicateWriteEvidence":"/var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/plotting-integration-eval-k2Snw0/batch","syntheticProviderCalls":4,"realProviderRequests":0}
+✔ native duplicate same-value write stops the batch with the next slot unexecuted (3715.007832ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22062.051132

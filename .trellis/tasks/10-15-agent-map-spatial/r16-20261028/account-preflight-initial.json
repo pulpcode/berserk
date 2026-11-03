@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-28T08:57:18.254212+00:00",
+  "sourceEvidence": "CUA authenticated Agent Plan Medium subscription page; five-hour used2054.759/10000, week9865.305/35000; month used11.32% rounded, use conservative remaining88000; model config selected Flash updated1017; overage button reads 开启超额后付费. No settings changed.",
+  "observedOverageEnabled": false,
+  "remainingAfp": {
+    "fiveHour": 7945.241,
+    "week": 25134.695,
+    "month": 88000
+  },
+  "externalUseReserveAfp": 1000,
+  "sharedUsePolicy": "reserved_other_usage"
+}

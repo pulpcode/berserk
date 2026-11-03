@@ -1,0 +1,42 @@
+
+> @berserk/harness-lab@0.1.0 test
+> vitest run --reporter=dot tests/task-resource-query.test.ts tests/task-resource-spatial.test.ts tests/pi/task-resource-results.test.ts
+
+
+ RUN  v4.1.11 /Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/experiments/harness-lab
+
+(node:54086) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:54085) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+·····························································x····
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/task-resource-query.test.ts > D06 comparable quantities respect valid coverage without hiding separate facts
+AssertionError: expected [ null ] to deeply equal [ 3 ]
+
+- Expected
++ Received
+
+  [
+-   3,
++   null,
+  ]
+
+ ❯ tests/task-resource-query.test.ts:216:71
+    214|  if(mode==='expired')f.sources![0].resourceData!.resource.quantity!.va…
+    215|  const s=await setup(f),result=await s.run();
+    216|  if(mode==='valid'){expect(result.summary.quantities.map(q=>q.value)).…
+       |                                                                       ^
+    217|  else if(mode==='missing'){expect(result.summary.quantities.every(q=>q…
+    218|  else {expect(result.summary.quantities).toContainEqual(expect.objectC…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 65 passed (66)
+   Start at  22:10:30
+   Duration  12.80s (transform 769ms, setup 0ms, import 3.46s, tests 18.72s, environment 0ms)
+

@@ -1,0 +1,38 @@
+{
+  "id": 17,
+  "entry": "Q08-1-G0",
+  "group": "G0",
+  "turn": 2,
+  "at": "2026-10-28T13:33:35.023Z",
+  "completed": true,
+  "payloadHash": "28f74a248ab393806abfaca8da16b25571301b5d111b1c9005e562bcbef74379",
+  "wirePayloadHash": "d8752137ec7109d21f97a1ee6d0bceaa7e36965bb299b3456dd221bc0d1a843f",
+  "tools": [
+    {
+      "id": "call_00_fgyztz8t3e47uhbjwpmnfjcx",
+      "name": "spatial_analyze",
+      "arguments": "{\"input\": {\"kind\": \"annotation\", \"layerIds\": [\"reference\"], \"objectIds\": [\"origin\"], \"ref\": {\"revision\": 2, \"setId\": \"b812bd0e-0f50-4e76-9298-90bbfec9c03b\"}}, \"operation\": \"buffer\", \"distanceM\": 1200}"
+    },
+    {
+      "id": "call_01_crqvy5zmqceqyy636jkkn9aq",
+      "name": "annotation_read",
+      "arguments": "{\"mode\": \"draft\", \"layerIds\": [\"derived\"], \"fields\": [\"sourceRefs\"]}"
+    }
+  ],
+  "requestedThinking": "enabled",
+  "requestedEffort": "high",
+  "status": 200,
+  "elapsedMs": 1999,
+  "actualModels": [
+    "deepseek-v4-1-flash-261017"
+  ],
+  "reasoningCharacters": 681,
+  "reasoningTokens": 167,
+  "observedThinking": true,
+  "finishReason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 23068,
+    "completion_tokens": 371
+  },
+  "responseSha256": "c45c3240456dc95f4bed6b9d93039c317b94c785006d588244383f664db28ff4"
+}

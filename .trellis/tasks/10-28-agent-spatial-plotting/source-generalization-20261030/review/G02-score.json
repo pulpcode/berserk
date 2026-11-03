@@ -1,0 +1,62 @@
+{
+  "caseId": "G02",
+  "reviewer": "Codex trellis-check independent Agent",
+  "source": ".local/source-generalization-20261030/main/G02/review.json",
+  "sourceSha256": "9777019864292edfa377ac4d8aa904e00555ade7e7cdccd13c28fb6da69c7269",
+  "requiredPairs": [
+    "source->draft"
+  ],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "source",
+      "reference": "draft"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "process_facts_pass": true,
+  "no_business_effects_pass": true,
+  "mapStateDeepEqual": true,
+  "sourceStateDeepEqual": true,
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "messageIndex": 2,
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "clarificationTurns": 0,
+  "redundantClarification": 0,
+  "computedPairCorrect": true,
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "main_pass": true,
+  "final_facts_pass": false,
+  "strict_pass": false,
+  "failureTags": [
+    "UNSUPPORTED_STATEMENT"
+  ],
+  "completedPairs": [
+    "source->draft"
+  ],
+  "missingPairs": [],
+  "evidence": [
+    {
+      "quote": "范围内的资源点名单为空，总数 0。",
+      "basis": "全部5来源点对草稿g02-d-region分类均exterior，完整空结果正确，未换成非零范围。"
+    },
+    {
+      "quote": "5 个资源点的纬度都在 31.2367–31.2404 之间，恰好落在来源区域覆盖、而草稿边界未覆盖的那一段。",
+      "basis": "实际来源面纬度上限31.2384，p04=31.23994、p05=31.24036，均超过北界；5点并非都在来源面覆盖区。真实查询几何足以否定这句，不能用主答案0正确抵消。"
+    },
+    {
+      "quote": "按 source 区域成员关系，p01–p03 被列为该区域成员",
+      "basis": "成员关系陈述本身正确，但没有纠正前句把5点均置于来源覆盖区的错误。"
+    }
+  ],
+  "notes": [
+    "附加纬度差0.0028度、约310米明确是粗算，按已读坐标可支持，不是本题确定错误所在。",
+    "错误发生于无关的来源边界解释；本次要求的草稿边界计算和名单均正确。"
+  ]
+}

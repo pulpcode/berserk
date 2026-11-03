@@ -84,3 +84,76 @@
 
 .annotation-workspace .situation-view.unified-map .situation-detail,
 .annotation-workspace .situation-view.unified-map .situation-source-error { top:var(--annotation-panel-top); max-height:calc(100% - var(--annotation-panel-top) - 52px); }
+
+/* One retained map; the plotting dock takes real desktop space when expanded. */
+.annotation-heading-actions>.annotation-tools-toggle { display:flex; align-items:center; gap:5px; }
+.annotation-main.tools-open { display:grid; grid-template-columns:minmax(0,1fr) 340px; }
+.annotation-main.tools-open>.situation-view { grid-column:1; grid-row:1; min-width:0; }
+.annotation-tools-dock { grid-column:2; grid-row:1; min-height:0; overflow:auto; padding:76px 12px 16px; background:var(--surface,#fff); border-left:1px solid var(--line); }
+.annotation-tools-dock[hidden],.annotation-editor-panel[hidden] { display:none; }
+.annotation-tools-dock .annotation-editor-toolbar { position:relative; inset:auto; max-width:none; width:100%; margin:8px 0 28px; box-shadow:none; }
+.annotation-tools-dock .annotation-draw-hint { position:static; flex-basis:100%; }
+.annotation-tools-dock .annotation-editor-panel { position:static; width:100%; max-height:none; padding:0; border:0; box-shadow:none; }
+.annotation-tools-dock .annotation-toolbar-target { width:100%; max-width:none; border:0; flex-basis:100%; padding:4px; }
+.annotation-tools-dock .annotation-toolbar-target>span { max-width:none; }
+.annotation-symbol-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; max-height:330px; overflow:auto; padding:2px; }
+.annotation-symbol-grid>button { display:grid; justify-items:center; gap:3px; padding:8px; min-width:0; }
+.annotation-symbol-grid>button[aria-pressed=true] { border-color:var(--accent); background:var(--accent-soft,#edf3ef); }
+.annotation-symbol-grid img { object-fit:contain; }
+.annotation-symbol-grid span { line-height:1.4; }
+.annotation-symbol-grid small { font-size:11px; color:var(--muted); }
+.annotation-line-arrow { width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:16px solid; pointer-events:none; filter:drop-shadow(0 0 1px white); }
+.annotation-main.tools-open>.annotation-detail,.annotation-main.tools-open>.annotation-overlap { right:352px; }
+@container annotation-workspace (max-width:850px) {
+  .annotation-main.tools-open { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(240px,1fr) minmax(0,44%); }
+  .annotation-tools-dock { grid-column:1; grid-row:2; padding:12px; border-left:0; border-top:1px solid var(--line); }
+  .annotation-main.tools-open>.annotation-detail,.annotation-main.tools-open>.annotation-overlap { right:12px; max-height:calc(56% - var(--annotation-panel-top)); }
+  .annotation-symbol-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+/* Label size must never shift a saved point away from its geographic anchor. */
+.annotation-marker { width:1px; height:1px; }
+.annotation-marker>.annotation-symbol { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+.annotation-marker>.annotation-label { position:absolute; left:50%; transform:translateX(-50%); }
+
+/* Object editing floats over the retained full-size map; only its card catches pointers. */
+.annotation-main.object-editor-open { display:block; }
+.annotation-tools-dock.has-object-editor { position:absolute; top:var(--annotation-panel-top); right:12px; z-index:7; display:flex; flex-direction:column; width:min(340px,calc(100% - 24px)); max-height:calc(100% - var(--annotation-panel-top) - 116px); overflow:hidden; padding:12px; border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 28px #182e2426; }
+.annotation-tools-dock.has-object-editor>.annotation-panel-heading,
+.annotation-tools-dock .annotation-editor-toolbar[hidden] { display:none; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel { display:flex; flex-direction:column; flex:0 1 auto; min-height:0; overflow:hidden; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel[hidden] { display:none; }
+.annotation-tools-dock.has-object-editor .annotation-editor-panel>.annotation-panel-heading { flex:none; }
+.annotation-feature-form { display:flex; flex-direction:column; flex:0 1 auto; min-height:0; overflow:clip; }
+/* A regular block owns scrolling; fieldset anonymous boxes do not reliably scroll in flex. */
+.annotation-feature-fields { flex:0 1 auto; min-height:0; overflow:auto; overscroll-behavior:contain; padding:0 4px 8px; }
+.annotation-feature-footer { flex:none; border-top:1px solid var(--line) !important; padding:6px 4px 0 !important; background:var(--surface,#fff); }
+.annotation-feature-footer .annotation-actions { margin:4px 0; }
+.annotation-feature-footer .annotation-actions button:first-child { color:var(--surface,#fff); background:var(--accent); border-color:var(--accent); }
+.annotation-feature-footer [role=alert] { margin:4px 0; max-height:60px; overflow:auto; font-size:12px; color:var(--danger,#a43c32); }
+.annotation-current-symbol { display:flex; align-items:center; gap:10px; padding:4px 0 8px; font-size:13px; }
+.annotation-current-symbol>div { flex:1; min-width:0; }
+.annotation-current-symbol>img,.annotation-current-symbol>.annotation-symbol,.annotation-current-symbol>button { flex:none; }
+.annotation-primary-fields.has-heading { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; }
+.annotation-direction-hint { margin:0 0 8px; color:var(--muted); font-size:11px; line-height:1.5; }
+.annotation-more-properties { margin-top:8px; border-top:1px solid var(--line); }
+.annotation-symbol-replacement { padding:8px; margin-bottom:8px; border:1px solid var(--line); border-radius:8px; }
+.annotation-symbol-replacement[hidden] { display:none; }
+.annotation-current-symbol small { display:block; margin-top:3px; color:var(--muted); font-size:11px; }
+
+/* Rotation lives above business layers but only its handle captures the pointer. */
+.annotation-rotation { position:absolute; top:0; left:0; width:0; height:0; z-index:3; pointer-events:none; }
+.annotation-rotation[hidden] { display:none; }
+.annotation-rotation-line { position:absolute; bottom:0; left:-1px; width:2px; background:var(--accent,#416858); box-shadow:0 0 0 1px white; transform-origin:bottom center; }
+.annotation-rotation .annotation-rotation-handle { position:absolute; display:grid; place-items:center; width:30px; height:30px; min-height:0; padding:0; border:2px solid white; border-radius:50%; background:var(--accent,#416858); color:white; box-shadow:0 1px 6px #102c3266; transform:translate(-50%,-50%); pointer-events:auto; cursor:grab; touch-action:none; }
+.annotation-rotation .annotation-rotation-handle:is(:hover,:focus-visible,:active) { background:#244b3f; outline:2px solid white; }
+.annotation-rotation.is-rotating .annotation-rotation-handle { cursor:grabbing; }
+.annotation-rotation-angle { position:absolute; transform:translate(-50%,calc(-100% - 19px)); white-space:nowrap; padding:3px 5px; border:1px solid var(--line); border-radius:4px; background:var(--surface,#fff); color:var(--ink,#152f27); font-size:11px; line-height:1.4; box-shadow:0 1px 4px #102c3226; }
+
+.annotation-edit-notice { font-size:12px; line-height:1.5; margin:0 0 10px; padding:8px; background:var(--accent-soft,#edf3ef); border-radius:6px; }
+.annotation-edit-comparison { border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:10px; font-size:12px; }
+.annotation-edit-comparison h4,.annotation-edit-comparison p { margin:0 0 8px; }
+.annotation-edit-difference { padding:8px 0; border-top:1px solid var(--line); }
+.annotation-edit-difference dl { margin:6px 0; display:grid; grid-template-columns:76px minmax(0,1fr); gap:4px 8px; }
+.annotation-edit-difference dt { color:var(--muted); }
+.annotation-edit-difference dd { margin:0; overflow-wrap:anywhere; white-space:pre-wrap; max-height:100px; overflow:auto; }

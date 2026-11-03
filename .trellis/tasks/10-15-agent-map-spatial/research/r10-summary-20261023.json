@@ -1,0 +1,513 @@
+{
+  "groups": {
+    "B": {
+      "planned": 24,
+      "reviewed": 24,
+      "notReviewed": 0,
+      "corePass": 23,
+      "processFail": 0,
+      "finalFail": 4,
+      "strictPass": 20,
+      "strictFail": 4,
+      "pending": 0,
+      "incomplete": 0,
+      "strictRate": 0.8333333333333334
+    }
+  },
+  "categories": {
+    "对象与范围": {
+      "planned": 4,
+      "corePass": 3,
+      "strictPass": 2,
+      "processFail": 0,
+      "finalFail": 2,
+      "anySkillRead": 2
+    },
+    "基础测量": {
+      "planned": 4,
+      "corePass": 4,
+      "strictPass": 4,
+      "processFail": 0,
+      "finalFail": 0,
+      "anySkillRead": 2
+    },
+    "关系与组合": {
+      "planned": 4,
+      "corePass": 4,
+      "strictPass": 3,
+      "processFail": 0,
+      "finalFail": 1,
+      "anySkillRead": 3
+    },
+    "数据完整性": {
+      "planned": 4,
+      "corePass": 4,
+      "strictPass": 3,
+      "processFail": 0,
+      "finalFail": 1,
+      "anySkillRead": 0
+    },
+    "版本与复用": {
+      "planned": 4,
+      "corePass": 4,
+      "strictPass": 4,
+      "processFail": 0,
+      "finalFail": 0,
+      "anySkillRead": 4
+    },
+    "保存与状态": {
+      "planned": 4,
+      "corePass": 4,
+      "strictPass": 4,
+      "processFail": 0,
+      "finalFail": 0,
+      "anySkillRead": 2
+    }
+  },
+  "rows": [
+    {
+      "entryId": "T01-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "fail",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "fail",
+      "caseId": "T01",
+      "category": "对象与范围",
+      "skillReads": []
+    },
+    {
+      "entryId": "T02-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T02",
+      "category": "对象与范围",
+      "skillReads": [
+        {
+          "messageIndex": 4,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T03-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "fail",
+      "process": "pass",
+      "final": "fail",
+      "effects": "pass",
+      "boundary": "fail",
+      "strict": "fail",
+      "caseId": "T03",
+      "category": "对象与范围",
+      "skillReads": []
+    },
+    {
+      "entryId": "T04-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T04",
+      "category": "对象与范围",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T05-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T05",
+      "category": "基础测量",
+      "skillReads": []
+    },
+    {
+      "entryId": "T06-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T06",
+      "category": "基础测量",
+      "skillReads": []
+    },
+    {
+      "entryId": "T07-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T07",
+      "category": "基础测量",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T08-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T08",
+      "category": "基础测量",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T09-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T09",
+      "category": "关系与组合",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T10-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T10",
+      "category": "关系与组合",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T11-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "fail",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "fail",
+      "caseId": "T11",
+      "category": "关系与组合",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T12-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T12",
+      "category": "关系与组合",
+      "skillReads": []
+    },
+    {
+      "entryId": "T13-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "fail",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "fail",
+      "caseId": "T13",
+      "category": "数据完整性",
+      "skillReads": []
+    },
+    {
+      "entryId": "T14-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T14",
+      "category": "数据完整性",
+      "skillReads": []
+    },
+    {
+      "entryId": "T15-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T15",
+      "category": "数据完整性",
+      "skillReads": []
+    },
+    {
+      "entryId": "T16-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T16",
+      "category": "数据完整性",
+      "skillReads": []
+    },
+    {
+      "entryId": "T17-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T17",
+      "category": "版本与复用",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T18-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T18",
+      "category": "版本与复用",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T19-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T19",
+      "category": "版本与复用",
+      "skillReads": [
+        {
+          "messageIndex": 2,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T20-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T20",
+      "category": "版本与复用",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T21-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T21",
+      "category": "保存与状态",
+      "skillReads": [
+        {
+          "messageIndex": 4,
+          "skill": "spatial-analysis",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T22-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T22",
+      "category": "保存与状态",
+      "skillReads": [
+        {
+          "messageIndex": 3,
+          "skill": "spatial-analysis",
+          "success": true
+        },
+        {
+          "messageIndex": 11,
+          "skill": "map-annotations",
+          "success": true
+        }
+      ]
+    },
+    {
+      "entryId": "T23-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T23",
+      "category": "保存与状态",
+      "skillReads": []
+    },
+    {
+      "entryId": "T24-B",
+      "group": "B",
+      "technical": "complete",
+      "core": "pass",
+      "process": "pass",
+      "final": "pass",
+      "effects": "pass",
+      "boundary": "pass",
+      "strict": "pass",
+      "caseId": "T24",
+      "category": "保存与状态",
+      "skillReads": []
+    }
+  ],
+  "totals": {
+    "requests": 115,
+    "input": 2139010,
+    "output": 19251,
+    "unknownUsage": 0,
+    "tools": 94
+  },
+  "skillReadTasks": 13,
+  "skillReadCalls": 14,
+  "semanticFailures": [
+    "T01",
+    "T03",
+    "T11",
+    "T13"
+  ],
+  "primaryTaskFailures": [
+    "T03"
+  ],
+  "actualFullPagingCoverage": false,
+  "readonlyStateUnchanged": 20,
+  "exactSaves": 3,
+  "correctSpecifiedPublication": 1,
+  "formalAcceptancePassed": false,
+  "automaticRetries": 0,
+  "additionalTests": 0
+}

@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AgentSession, SessionManager } from '@earendil-works/pi-coding-agent';
 import { PiLab } from '../../src/pi/lab.js';
 import { createApp } from '../../src/server/app.js';
-import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
+import { COMPOSER_INPUT, COMPOSER_INPUT_V3, COMPOSER_INPUT_V4, COMPOSER_INPUT_V5, COMPOSER_INPUT_V6, composerInputText, composerInputType, recordedComposerText, decodeComposerInput, composerHistory, type ComposerInputRecord } from '../../src/pi/composer-input.js';
 import legacyInputs from './fixtures/composer-input-legacy.json';
 import v3Inputs from './fixtures/composer-input-v3.json';
 import v4Inputs from './fixtures/composer-input-v4.json';
@@ -256,10 +256,10 @@ describe('map input v5 and fixed legacy evidence', () => {
       expect(composerHistory(entries,record.workspaceId,record.sessionId).has(record.requestId)).toBe(true);
     }
   });
-  it('routes all new map selections to v5 while leaving method-only and role-only inputs on v1', () => {
+  it('routes explicit annotation selections to v6, other map selections to v5 and methods/roles to v1', () => {
     for(const selection of [{context:source.context},{annotationRefs:annotation.annotationRefs},{annotationContext:{sessionId:source.sessionId,draft:null,baseRef:null,writable:true}}, {...source,...method,annotationRefs:annotation.annotationRefs}]) {
-      expect(composerInputType(selection)).toBe(COMPOSER_INPUT_V5);
-      const text=recordedComposerText(selection);
+      expect(composerInputType(selection)).toBe('annotationRefs' in selection ? COMPOSER_INPUT_V6 : COMPOSER_INPUT_V5);
+      const text=recordedComposerText({...selection,requestId:source.requestId});
       expect(text).not.toContain('(href)');expect(text).toContain('地图入口由界面');
       expect(decodeComposerInput({...source,context:undefined,...selection},source.workspaceId,source.sessionId,COMPOSER_INPUT_V5)).toMatchObject(selection);
     }
@@ -267,7 +267,7 @@ describe('map input v5 and fixed legacy evidence', () => {
     expect(composerInputType({agent:method.agent})).toBe(COMPOSER_INPUT);
     expect(()=>decodeComposerInput(method,method.workspaceId,method.sessionId,COMPOSER_INPUT_V4)).toThrow();
   });
-  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4,COMPOSER_INPUT_V5])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
+  it.each([COMPOSER_INPUT_V3,COMPOSER_INPUT_V4,COMPOSER_INPUT_V5,COMPOSER_INPUT_V6])('preserves identity, body, request ordering, size and readonly checks for %s', type => {
     const record={...source,annotationRefs:annotation.annotationRefs,skill:method.skill};
     const text=recordedComposerText(record,type),entries=native(record,type,text);
     expect(validateHistoryEvidence(entries,record.workspaceId,record.sessionId)?.status).toBe('interrupted');
@@ -276,7 +276,7 @@ describe('map input v5 and fixed legacy evidence', () => {
       {...record,permissions:['write']},{...record,annotationRefs:[{...annotation.annotationRefs![0],geometry:{}}]},
     ];
     for(const bad of corruptions)expect(()=>decodeComposerInput(bad,record.workspaceId,record.sessionId,type)).toThrow();
-    for(const type of ['berserk.composer-input.v6','berserk.composer-input.v4-extra']) {
+    for(const type of ['berserk.composer-input.v7','berserk.composer-input.v4-extra']) {
       expect(()=>decodeComposerInput(record,record.workspaceId,record.sessionId,type)).toThrow();
       expect(()=>recordedComposerText(record,type)).toThrow();
       expect(()=>composerHistory(native(record,type,text),record.workspaceId,record.sessionId)).toThrow();

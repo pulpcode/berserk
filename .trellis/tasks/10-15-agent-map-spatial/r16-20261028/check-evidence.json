@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-28T09:18:05.351566+00:00",
+  "reviewer": "independent trellis-check",
+  "protectedFiles": 1268,
+  "protectedChanged": [],
+  "externalModelCalls": 0,
+  "files": {
+    "budget.ts": "46be8f553d12e737c6f63ea5791bce305c62e7be5f975908428207d2199014b5",
+    "cases-http.test.ts": "ce973ff3fa00fbe8f782c112355bb01d8ff63bfc361e5810ed9208bf163204c7",
+    "cases.test.ts": "c3e12c592043b88f6548c6d4f363f7f032607fe8e96f8ad25bc746b3118efc57",
+    "cases.ts": "420f016473ecca147aa5e654a3027d33725501e1c253b75d045f0fa7dc1613b1",
+    "data.ts": "5e55c9140e55acfa4701769314582c7201cb36e67908e72842e28f6a86679a60",
+    "live.test.ts": "9ee53daa59695ea9fc2b98f52afa97c2a458c02601a3519b3cda1bdc25a8a35e",
+    "live.ts": "da31d8b016cb125d087802fa01c0545a8ce37af52e6fca8c087ace30469e78ef",
+    "provider-budget.test.ts": "ab15be8c6a73dbe5a9bc096fcb44dd7cd02fe186650c3159a84b007ae07f61fc",
+    "provider.ts": "8af1965b7259cb09bb673cdc1bb2be40bd56166f937676ab407121d2b907f006",
+    "review-tools.test.ts": "036c262c1b0e9451a76e55957426afc5aaee07213bd6b25a11f29ceaea78cd5c",
+    "review-tools.ts": "f643f1b5ec542b99c674fd34bf6a05911136a9accfc8284de94222db3e01ad64",
+    "runtime.ts": "a7b6873105c8cd254e4ed84222d096a5d69394acd69085bb18abe1637f1028a8"
+  },
+  "verification": {
+    "casesAndReviewTests": {
+      "passed": 16,
+      "failed": 0
+    },
+    "providerBudgetFinal": {
+      "passed": 7,
+      "failed": 0
+    },
+    "lint": "passed",
+    "typecheck": "passed",
+    "nativeInitialOwnerLog": {
+      "passed": 14,
+      "failed": 0,
+      "finalBudgetAmendmentAppliedAfterThisRun": true
+    },
+    "nativeAmendmentOwnerLog": {
+      "passed": 2,
+      "failed": 0
+    },
+    "fixtureHttpOwnerReport": {
+      "cases": 24,
+      "groupsPerCase": 4,
+      "nodeTests": 25,
+      "passed": 25
+    }
+  }
+}

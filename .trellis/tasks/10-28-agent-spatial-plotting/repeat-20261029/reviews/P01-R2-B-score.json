@@ -1,0 +1,14 @@
+{
+  "id": "P01-R2-B",
+  "mainRequirement": "pass",
+  "processFacts": "na",
+  "finalFacts": "pass",
+  "effects": "pass",
+  "boundaries": "pass",
+  "strict": "pass",
+  "reason": "明确车型符号及名称坐标plan正确写入，旧对象保留，未发布采用，最终简明说明与工具状态一致。",
+  "evidence": [
+    "P01-R2-B/gate/1-checkpoint.json"
+  ],
+  "clarity": []
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "berserk-source-selection-cases/1",
+  "suite": "main",
+  "run_order": [
+    "G01",
+    "G07",
+    "G04",
+    "G05",
+    "G02",
+    "G08",
+    "G03",
+    "G06"
+  ],
+  "cases": [
+    {
+      "id": "G01",
+      "fixture": "fixtures/main/G01.json",
+      "prompt": "只用当前会话草稿 resources 层的全部点作候选，范围用来源系统登记的“桐港区”面。哪些候选点在范围内？列名称和总数，只分析，不保存、不发布、不采用。"
+    },
+    {
+      "id": "G07",
+      "fixture": "fixtures/main/G07.json",
+      "prompt": "帮我查一下，本会话的溪湾物资区内有哪些资源点？给出名单和数量，先只分析。"
+    },
+    {
+      "id": "G04",
+      "fixture": "fixtures/main/G04.json",
+      "prompt": "候选只取来源系统登记的全部资源点。临溪集结区内有哪些资源点？给出名单、数量，只分析，不保存。"
+    },
+    {
+      "id": "G05",
+      "fixture": "fixtures/main/G05.json",
+      "prompt": "边界固定用当前会话草稿 reference 层的“松浦港区”。本会话有哪些资源点位于这个范围内？列名称和数量，只分析。"
+    },
+    {
+      "id": "G02",
+      "fixture": "fixtures/main/G02.json",
+      "prompt": "统计来源系统登记的全部资源点，边界以当前会话草稿 reference 层的“白鹭作业区”为准。列出范围内的资源点名称和总数；只分析，不改地图。"
+    },
+    {
+      "id": "G08",
+      "fixture": "fixtures/main/G08.json",
+      "prompt": "我想知道本会话长汀仓区里有哪些资源点、共几个。只分析，不保存、不发布、不采用。"
+    },
+    {
+      "id": "G03",
+      "fixture": "fixtures/main/G03.json",
+      "prompt": "候选固定为当前会话草稿 resources 层里的全部点。青岚仓区内有哪些，合计几个？请列出名称，只分析，不改地图。"
+    },
+    {
+      "id": "G06",
+      "fixture": "fixtures/main/G06.json",
+      "prompt": "以来源系统登记的“云桥作业区”面为边界，看看当前会话有哪些资源点在里面，列名单和总数。重名点请区分，只分析，不写入。"
+    }
+  ]
+}

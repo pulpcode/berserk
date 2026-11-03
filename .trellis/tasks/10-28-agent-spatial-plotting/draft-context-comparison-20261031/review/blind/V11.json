@@ -1,0 +1,905 @@
+{
+  "reviewId": "V11",
+  "caseId": "G04",
+  "messages": [
+    {
+      "id": "6f5676ac",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "user",
+      "text": "候选只取来源系统登记的全部资源点。临溪集结区内有哪些资源点？给出名单、数量，只分析，不保存。",
+      "selections": {
+        "annotationContext": {
+          "sessionId": "01a1903b-b9f0-7210-ba08-a4ddbf9ff440",
+          "draft": {
+            "setId": "debde5d6-a8d3-4152-a1c0-94292bda2741",
+            "revision": 1
+          },
+          "baseRef": null,
+          "writable": true
+        }
+      }
+    },
+    {
+      "id": "f8505e90",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "assistant",
+      "text": "我先查一下任务关注范围和来源系统里的对象。"
+    },
+    {
+      "id": "59f5c37f",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"systemId\":\"axon\",\"query\":{\"taskId\":\"618bf89e-5a6c-4756-8744-10fa8e05c334\"},\"queriedAt\":\"2026-10-31T04:33:18.857Z\",\"data\":{\"item\":{\"id\":\"618bf89e-5a6c-4756-8744-10fa8e05c334\",\"title\":\"【地图验证 map-8382127b】空间资料核对任务\",\"goal\":\"空间资料核对合成测试。\",\"visibility\":\"public\",\"state\":\"active\",\"revision\":1,\"createdAt\":\"2026-10-31T04:33:14.534Z\",\"updatedAt\":\"2026-10-31T04:33:14.534Z\"}}}",
+      "toolName": "task_read",
+      "toolCallId": "call_00_barcngetv1w07lfr3aivq0lr",
+      "isError": false
+    },
+    {
+      "id": "81c854c2",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":50,\"query\":\"临溪集结区\",\"mode\":\"current\"},\"queriedAt\":\"2026-10-31T04:33:18.876Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"items\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"},\"name\":\"临溪集结区\",\"revision\":1,\"areaIds\":[\"g04-s-region\"],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[120.18,30.2922],[120.1844,30.2922],[120.1844,30.2966],[120.18,30.2966],[120.18,30.2922]]]},\"properties\":{\"memberRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]}}],\"limit\":50,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63414f2-d61c-4dc2-ad3d-a8663cd214f8-seq-100\"},\"mapReferences\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=area&objectId=g04-s-region&revision=1\"}]}",
+      "toolName": "situation_query",
+      "toolCallId": "call_01_gmhal6nqwfotq27xeq04w8nw",
+      "isError": false
+    },
+    {
+      "id": "7a5be8ee",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":100,\"query\":\"资源\",\"mode\":\"current\"},\"queriedAt\":\"2026-10-31T04:33:18.879Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"items\":[],\"limit\":100,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63414f2-d61c-4dc2-ad3d-a8663cd214f8-seq-100\"},\"mapReferences\":[]}",
+      "toolName": "situation_query",
+      "toolCallId": "call_02_mnmegrfrotz1815zda3cd3h5",
+      "isError": false
+    },
+    {
+      "id": "e342d5cb",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":100,\"mode\":\"current\"},\"queriedAt\":\"2026-10-31T04:33:21.011Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"items\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"},\"name\":\"临溪集结区\",\"revision\":1,\"areaIds\":[\"g04-s-region\"],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[120.18,30.2922],[120.1844,30.2922],[120.1844,30.2966],[120.18,30.2966],[120.18,30.2922]]]},\"properties\":{\"memberRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},\"name\":\"云杉甲\",\"revision\":1,\"areaIds\":[],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[120.18099,30.29099]},\"properties\":{\"availableCount\":2,\"unit\":\"辆\"}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},\"name\":\"云杉乙\",\"revision\":1,\"areaIds\":[],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[120.18099,30.29319]},\"properties\":{\"availableCount\":5,\"unit\":\"辆\"}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},\"name\":\"云杉丙\",\"revision\":1,\"areaIds\":[],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[120.18099,30.29539]},\"properties\":{\"availableCount\":1,\"unit\":\"辆\"}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},\"name\":\"云杉丁\",\"revision\":1,\"areaIds\":[\"g04-s-region\"],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[120.18319,30.29583]},\"properties\":{\"availableCount\":3,\"unit\":\"辆\"}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"},\"name\":\"云杉戊\",\"revision\":1,\"areaIds\":[\"g04-s-region\"],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"Point\",\"coordinates\":[120.18099,30.29781]},\"properties\":{\"availableCount\":4,\"unit\":\"辆\"}},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"g04-s-road01\"},\"name\":\"联络路\",\"revision\":1,\"areaIds\":[],\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null,\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[120.18143,30.29253],[120.18176,30.29363]]},\"properties\":{\"passability\":\"open\"}}],\"limit\":100,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63414f2-d61c-4dc2-ad3d-a8663cd214f8-seq-100\"},\"mapReferences\":[{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=area&objectId=g04-s-region&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=g04-s-p01&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=g04-s-p02&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=g04-s-p03&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=g04-s-p04&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=resource&objectId=g04-s-p05&revision=1\"},{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"road\",\"objectId\":\"g04-s-road01\"},\"revision\":1,\"href\":\"/situation?systemId=situation&objectType=road&objectId=g04-s-road01&revision=1\"}]}",
+      "toolName": "situation_query",
+      "toolCallId": "call_00_0fo4qm7ckok5f1r33ch0drpz",
+      "isError": false
+    },
+    {
+      "id": "056b6603",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"systemId\":\"situation\",\"query\":{\"systemId\":\"situation\",\"limit\":100,\"query\":\"resource\",\"mode\":\"current\"},\"queriedAt\":\"2026-10-31T04:33:21.028Z\",\"data\":{\"systemId\":\"situation\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"items\":[],\"limit\":100,\"nextCursor\":null,\"hasMore\":false,\"timeUnknownCount\":0,\"unknownRefs\":[],\"changeCursor\":\"situation-d63414f2-d61c-4dc2-ad3d-a8663cd214f8-seq-100\"},\"mapReferences\":[]}",
+      "toolName": "situation_query",
+      "toolCallId": "call_01_81on55wabhc0e2hyddtw5070",
+      "isError": false
+    },
+    {
+      "id": "0a4963bb",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "tool",
+      "text": "{\"format\":\"spatial.model-result.v3\",\"data\":{\"schemaVersion\":2,\"resultRef\":\"spatial:decaa0af-8870-49ae-940e-f9560b00b54f:call_00_n6bp291qs8125n1k3qupi9qu\",\"requestId\":\"decaa0af-8870-49ae-940e-f9560b00b54f\",\"toolCallId\":\"call_00_n6bp291qs8125n1k3qupi9qu\",\"operation\":\"classify_points\",\"parameters\":{\"operation\":\"classify_points\",\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]},\"target\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"}]}},\"createdAt\":\"2026-10-31T04:33:24.495Z\",\"scope\":[{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]},{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"}]}],\"completeness\":{\"status\":\"complete\",\"candidateCount\":5},\"items\":[{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p01\\\"]\",\"name\":\"云杉甲\",\"properties\":{\"availableCount\":2,\"unit\":\"辆\",\"name\":\"云杉甲\",\"objectType\":\"resource\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p02\\\"]\",\"name\":\"云杉乙\",\"properties\":{\"availableCount\":5,\"unit\":\"辆\",\"name\":\"云杉乙\",\"objectType\":\"resource\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p03\\\"]\",\"name\":\"云杉丙\",\"properties\":{\"availableCount\":1,\"unit\":\"辆\",\"name\":\"云杉丙\",\"objectType\":\"resource\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p04\\\"]\",\"name\":\"云杉丁\",\"properties\":{\"availableCount\":3,\"unit\":\"辆\",\"name\":\"云杉丁\",\"objectType\":\"resource\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Point\"},{\"id\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p05\\\"]\",\"name\":\"云杉戊\",\"properties\":{\"availableCount\":4,\"unit\":\"辆\",\"name\":\"云杉戊\",\"objectType\":\"resource\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Point\"}],\"referenceItems\":[{\"id\":\"[\\\"situation\\\",\\\"area\\\",\\\"g04-s-region\\\"]\",\"name\":\"临溪集结区\",\"properties\":{\"memberRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}],\"name\":\"临溪集结区\",\"objectType\":\"area\"},\"source\":{\"ref\":{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"},\"revision\":1,\"queriedAt\":\"2026-10-31T04:33:24.494Z\",\"effectiveAt\":\"2026-10-30T09:00:00+08:00\",\"validTime\":null},\"geometryType\":\"Polygon\"}],\"method\":\"Turf 7.2.0 booleanPointInPolygon; WGS84 planar topology; closed coverage vs strict interior\",\"limitations\":[\"按经纬度线段判断单个 Polygon（含孔）；外环和内环边界均为 boundary，孔内部为 exterior。\",\"不增加隐含距离容差；边界附近不等于位于边界，不声称测绘级精度。\"],\"provenance\":[{\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]},\"queriedAt\":\"2026-10-31T04:33:24.489Z\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"sourceRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\",\"revision\":1},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\",\"revision\":1},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\",\"revision\":1},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\",\"revision\":1},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\",\"revision\":1}]},{\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"}]},\"queriedAt\":\"2026-10-31T04:33:24.494Z\",\"asOf\":\"2026-10-30T09:00:00+08:00\",\"sourceRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\",\"revision\":1}]}],\"classifications\":[{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p01\\\"]\",\"position\":\"exterior\"},{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p02\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p03\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p04\\\"]\",\"position\":\"interior\"},{\"itemId\":\"[\\\"situation\\\",\\\"resource\\\",\\\"g04-s-p05\\\"]\",\"position\":\"exterior\"}],\"values\":{\"total\":5,\"interior\":3,\"boundary\":0,\"exterior\":2}},\"meaning\":{\"scope\":\"范围以parameters.input及参照对象target或spatial.target（如有）为准；局部输入数不代表整个图层或整个来源的对象总数，referenceItems仅是参照对象。\",\"counts\":\"输入5个点：内部3、边界0、外部2；items包含全部候选，不能把items长度当范围命中数。\",\"effect\":\"本次只读计算已形成固定分析结果resultRef，没有写入草稿；其他保存动作须查看相应回执。\"}}",
+      "toolName": "spatial_analyze",
+      "toolCallId": "call_00_n6bp291qs8125n1k3qupi9qu",
+      "isError": false
+    },
+    {
+      "id": "f725d98a",
+      "requestId": "decaa0af-8870-49ae-940e-f9560b00b54f",
+      "role": "assistant",
+      "text": "## 分析结果（只读，未保存）\n\n**来源与范围**：候选集合是来源系统 situation 中登记的全部资源点。查询时 `asOf` 为 2026-10-30T09:00:00+08:00；筛选对象是区域对象「临溪集结区」（g04-s-region，revision 1）的面几何。本次沿用固定分析结果 resultRef，没有写入任何草稿或标注。\n\n### 临溪集结区内的资源点（按几何包含判定）\n\n| 序号 | 名称 | 对象 ID | 可用数量 |\n|---|---|---|---|\n| 1 | 云杉乙 | g04-s-p02 | 5 辆 |\n| 2 | 云杉丙 | g04-s-p03 | 1 辆 |\n| 3 | 云杉丁 | g04-s-p04 | 3 辆 |\n\n**数量：3 个资源点**，可用数量合计 9 辆。\n\n### 判定外与全部候选对照\n\n全部登记的 5 个资源点判定分布为：内部 3 个、边界 0 个、外部 2 个。在区域外的两个资源点是：\n- 云杉甲（g04-s-p01）：位于区域南侧外，可用 2 辆\n- 云杉戊（g04-s-p05）：位于区域北侧外，可用 4 辆\n\n### 需要提请注意的数据不一致\n\n1. 区域对象自带的 `memberRefs` 只登记了云杉丁、云杉戊两个资源点；按面几何判断，云杉戊实际在区域外，而云杉乙、云杉丙在区域内却未列入成员表。因此，成员登记信息与几何判定结果不一致。\n2. 云杉戊自身 `areaIds` 标注为包含 g04-s-region，但其点坐标（纬度 30.29781）位于该多边形纬度上限 30.2966 以北，几何上属外部；这属于归属标注与几何位置的矛盾，建议以来源业务方确认为准。\n\n如果需要的是“按成员登记口径”，名单应为云杉丁、云杉戊（2 个）；如果需要的是“按几何口径”，则是上表 3 个。本次按您的要求采用了几何包含口径。\n\n### 方法与局限\n\n本次按经纬度对单个 Polygon 做平面拓扑判断（Turf 7.2.0 booleanPointInPolygon），未加距离容差；判定结果不构成测绘级精度结论，边界附近情形需以更精确数据复核。本次未涉及保存或发布操作。"
+    }
+  ],
+  "toolCalls": [
+    {
+      "id": "call_00_barcngetv1w07lfr3aivq0lr",
+      "type": "function",
+      "function": {
+        "name": "task_read",
+        "arguments": "{\"taskId\":\"618bf89e-5a6c-4756-8744-10fa8e05c334\"}"
+      }
+    },
+    {
+      "id": "call_01_gmhal6nqwfotq27xeq04w8nw",
+      "type": "function",
+      "function": {
+        "name": "situation_query",
+        "arguments": "{\"systemId\":\"situation\",\"mode\":\"current\",\"query\":\"临溪集结区\",\"limit\":50}"
+      }
+    },
+    {
+      "id": "call_02_mnmegrfrotz1815zda3cd3h5",
+      "type": "function",
+      "function": {
+        "name": "situation_query",
+        "arguments": "{\"systemId\":\"situation\",\"mode\":\"current\",\"query\":\"资源\",\"limit\":100}"
+      }
+    },
+    {
+      "id": "call_00_0fo4qm7ckok5f1r33ch0drpz",
+      "type": "function",
+      "function": {
+        "name": "situation_query",
+        "arguments": "{\"systemId\":\"situation\",\"mode\":\"current\",\"limit\":100}"
+      }
+    },
+    {
+      "id": "call_01_81on55wabhc0e2hyddtw5070",
+      "type": "function",
+      "function": {
+        "name": "situation_query",
+        "arguments": "{\"systemId\":\"situation\",\"mode\":\"current\",\"query\":\"resource\",\"limit\":100}"
+      }
+    },
+    {
+      "id": "call_00_n6bp291qs8125n1k3qupi9qu",
+      "type": "function",
+      "function": {
+        "name": "spatial_analyze",
+        "arguments": "{\"operation\":\"classify_points\",\"input\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p01\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p02\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p03\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p04\"},{\"systemId\":\"situation\",\"objectType\":\"resource\",\"objectId\":\"g04-s-p05\"}]},\"target\":{\"kind\":\"source\",\"systemId\":\"situation\",\"objectRefs\":[{\"systemId\":\"situation\",\"objectType\":\"area\",\"objectId\":\"g04-s-region\"}]}}"
+      }
+    }
+  ],
+  "interactions": [],
+  "scopeAfterActualReplies": {
+    "known": {
+      "candidate": "source"
+    },
+    "answered": [],
+    "redundant": 0
+  },
+  "mapBefore": {
+    "binding": {
+      "sessionId": "01a1903b-b9f0-7210-ba08-a4ddbf9ff440",
+      "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+      "workspaceId": "7e25d866-50df-47f8-bfdf-2f492782cbe9",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "debde5d6-a8d3-4152-a1c0-94292bda2741",
+        "ownerSessionId": "01a1903b-b9f0-7210-ba08-a4ddbf9ff440",
+        "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+        "workspaceId": "7e25d866-50df-47f8-bfdf-2f492782cbe9",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:33:15.793Z",
+        "updatedAt": "2026-10-31T04:33:15.793Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "debde5d6-a8d3-4152-a1c0-94292bda2741",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+      "createdAt": "2026-10-31T04:33:15.793Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g04-d-region",
+                "kind": "polygon",
+                "name": "临溪集结区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        120.18,
+                        30.29
+                      ],
+                      [
+                        120.1844,
+                        30.29
+                      ],
+                      [
+                        120.1844,
+                        30.2944
+                      ],
+                      [
+                        120.18,
+                        30.2944
+                      ],
+                      [
+                        120.18,
+                        30.29
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g04-d-p01",
+                "kind": "point",
+                "name": "临溪甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.29088
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p02",
+                "kind": "point",
+                "name": "临溪乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18308,
+                    30.29132
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p03",
+                "kind": "point",
+                "name": "临溪丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18198,
+                    30.29165
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p04",
+                "kind": "point",
+                "name": "临溪丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18363,
+                    30.29077
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p05",
+                "kind": "point",
+                "name": "临溪戊",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.29308
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p06",
+                "kind": "point",
+                "name": "临溪己",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.2977
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "mapAfter": {
+    "binding": {
+      "sessionId": "01a1903b-b9f0-7210-ba08-a4ddbf9ff440",
+      "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+      "workspaceId": "7e25d866-50df-47f8-bfdf-2f492782cbe9",
+      "bindingRevision": 1,
+      "baseRef": null,
+      "draft": {
+        "setId": "debde5d6-a8d3-4152-a1c0-94292bda2741",
+        "ownerSessionId": "01a1903b-b9f0-7210-ba08-a4ddbf9ff440",
+        "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+        "workspaceId": "7e25d866-50df-47f8-bfdf-2f492782cbe9",
+        "headRevision": 1,
+        "title": "空间资料",
+        "hash": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+        "baseRef": null,
+        "createdAt": "2026-10-31T04:33:15.793Z",
+        "updatedAt": "2026-10-31T04:33:15.793Z"
+      },
+      "writable": true
+    },
+    "version": {
+      "ref": {
+        "setId": "debde5d6-a8d3-4152-a1c0-94292bda2741",
+        "revision": 1
+      },
+      "title": "空间资料",
+      "hash": "0199aa1209165911d6984010bb68ab54db1dcdba601b9f1e89067cce0136975a",
+      "createdAt": "2026-10-31T04:33:15.793Z",
+      "document": {
+        "schemaVersion": 1,
+        "title": "空间资料",
+        "layers": [
+          {
+            "layerId": "reference",
+            "name": "参照对象",
+            "order": 0,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g04-d-region",
+                "kind": "polygon",
+                "name": "临溪集结区",
+                "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [
+                    [
+                      [
+                        120.18,
+                        30.29
+                      ],
+                      [
+                        120.1844,
+                        30.29
+                      ],
+                      [
+                        120.1844,
+                        30.2944
+                      ],
+                      [
+                        120.18,
+                        30.2944
+                      ],
+                      [
+                        120.18,
+                        30.29
+                      ]
+                    ]
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          },
+          {
+            "layerId": "resources",
+            "name": "资源点",
+            "order": 1,
+            "defaultVisible": true,
+            "features": [
+              {
+                "objectId": "g04-d-p01",
+                "kind": "point",
+                "name": "临溪甲",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.29088
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p02",
+                "kind": "point",
+                "name": "临溪乙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18308,
+                    30.29132
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p03",
+                "kind": "point",
+                "name": "临溪丙",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18198,
+                    30.29165
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p04",
+                "kind": "point",
+                "name": "临溪丁",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18363,
+                    30.29077
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p05",
+                "kind": "point",
+                "name": "临溪戊",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.29308
+                  ]
+                },
+                "informationRole": "plan"
+              },
+              {
+                "objectId": "g04-d-p06",
+                "kind": "point",
+                "name": "临溪己",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    120.18088,
+                    30.2977
+                  ]
+                },
+                "informationRole": "plan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "publications": [],
+    "current": {
+      "taskId": "618bf89e-5a6c-4756-8744-10fa8e05c334",
+      "sequence": 0,
+      "publication": null
+    }
+  },
+  "sourceBefore": {
+    "instanceId": "map-8382127b",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g04-s-region"
+        },
+        "name": "临溪集结区",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                120.18,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2922
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g04-s-p04"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g04-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p01"
+        },
+        "name": "云杉甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29099
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p02"
+        },
+        "name": "云杉乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29319
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p03"
+        },
+        "name": "云杉丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29539
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p04"
+        },
+        "name": "云杉丁",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18319,
+            30.29583
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p05"
+        },
+        "name": "云杉戊",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29781
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "g04-s-road01"
+        },
+        "name": "联络路",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              120.18143,
+              30.29253
+            ],
+            [
+              120.18176,
+              30.29363
+            ]
+          ]
+        },
+        "properties": {
+          "passability": "open"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  },
+  "sourceAfter": {
+    "instanceId": "map-8382127b",
+    "objects": [
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "area",
+          "objectId": "g04-s-region"
+        },
+        "name": "临溪集结区",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                120.18,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2922
+              ],
+              [
+                120.1844,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2966
+              ],
+              [
+                120.18,
+                30.2922
+              ]
+            ]
+          ]
+        },
+        "properties": {
+          "memberRefs": [
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g04-s-p04"
+            },
+            {
+              "systemId": "situation",
+              "objectType": "resource",
+              "objectId": "g04-s-p05"
+            }
+          ]
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p01"
+        },
+        "name": "云杉甲",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29099
+          ]
+        },
+        "properties": {
+          "availableCount": 2,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p02"
+        },
+        "name": "云杉乙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29319
+          ]
+        },
+        "properties": {
+          "availableCount": 5,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p03"
+        },
+        "name": "云杉丙",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29539
+          ]
+        },
+        "properties": {
+          "availableCount": 1,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p04"
+        },
+        "name": "云杉丁",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18319,
+            30.29583
+          ]
+        },
+        "properties": {
+          "availableCount": 3,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "resource",
+          "objectId": "g04-s-p05"
+        },
+        "name": "云杉戊",
+        "revision": 1,
+        "areaIds": [
+          "g04-s-region"
+        ],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            120.18099,
+            30.29781
+          ]
+        },
+        "properties": {
+          "availableCount": 4,
+          "unit": "辆"
+        }
+      },
+      {
+        "ref": {
+          "systemId": "situation",
+          "objectType": "road",
+          "objectId": "g04-s-road01"
+        },
+        "name": "联络路",
+        "revision": 1,
+        "areaIds": [],
+        "effectiveAt": "2026-10-30T09:00:00+08:00",
+        "validTime": null,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              120.18143,
+              30.29253
+            ],
+            [
+              120.18176,
+              30.29363
+            ]
+          ]
+        },
+        "properties": {
+          "passability": "open"
+        }
+      }
+    ],
+    "reports": [],
+    "actions": []
+  }
+}

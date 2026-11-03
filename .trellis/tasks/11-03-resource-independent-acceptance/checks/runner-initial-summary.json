@@ -1,0 +1,17 @@
+{
+  "kind": "stdout_summary",
+  "source": "runtime.test.ts full successful run before added coverage tests; tool execution session 35411",
+  "tests": 6,
+  "passed": 6,
+  "failed": 0,
+  "durationMs": 82609.456711,
+  "coverage": [
+    "approved 20-slot schedule",
+    "12 fixtures actual HTTP paging/coverage/clock/controlled imports",
+    "P02 native empty selection/query/read unchanged high payload",
+    "P04 fixed history after source revision update",
+    "ordinary clarification quote/evidenceId guard and continuation",
+    "structured question through reviewedContinuation and actual interaction API"
+  ],
+  "liveModelCalls": 0
+}

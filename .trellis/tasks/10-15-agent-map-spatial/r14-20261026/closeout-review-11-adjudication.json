@@ -1,0 +1,29 @@
+{
+  "mode": "primary plus independent blind review, root re-read public evidence",
+  "main": {
+    "pass": 14,
+    "fail": 1
+  },
+  "strict": {
+    "pass": 11,
+    "fail": 3,
+    "pending": 1
+  },
+  "disagreements": [
+    {
+      "id": "42a0e03e-4708-4863-88aa-c677bd5d7845",
+      "primary": "fail",
+      "independent": "pass",
+      "final": "fail",
+      "basis": "Full opaque identifier misquoted; exact service.ts generated identifier, not an abbreviated display."
+    },
+    {
+      "id": "699d0fc5-ae36-43c2-9fb3-f34c3c3a9200",
+      "primary": "pass",
+      "independent": "fail",
+      "final": "pending",
+      "basis": "Stale 500m under current1500m method versus reference to still-existing500m result; scope ambiguous."
+    }
+  ],
+  "originalReviewsPreserved": true
+}

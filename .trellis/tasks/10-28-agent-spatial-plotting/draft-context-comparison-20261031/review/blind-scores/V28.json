@@ -1,0 +1,127 @@
+{
+  "schema_version": "independent-semantic-score/1",
+  "reviewer": "独立模型语义评分者；非独立人类标注者",
+  "blinding": "有限盲化：只看 V 编号公开轨迹及指定 G 主测 fixture/oracle，未读取分组映射、schedule、旧成绩或 H 题；轨迹和工具路径仍可能提示条件，不能称人工双盲。",
+  "dimension_definition": "沿用冻结契约：geometry_and_members_pass 检查有效要求涉及的全部组合名单数量；未报告要求组合为 false。actual_reported_pairs_correct 另记已报告组合是否正确。scope_pass 独立检查范围选择，main=scope&&geometry。字段纠正保持冻结定义，不是调宽或调严。",
+  "reviewId": "V28",
+  "caseId": "G03",
+  "scope_pass": true,
+  "geometry_and_members_pass": true,
+  "actual_reported_pairs_correct": true,
+  "main_pass": true,
+  "process_facts_pass": true,
+  "final_facts_pass": false,
+  "no_business_effects_pass": true,
+  "strict_pass": false,
+  "actual_user_reply_count": 0,
+  "effective_required_pairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "reported_pairs": [
+    "draft->draft",
+    "draft->source"
+  ],
+  "missing_pairs": [],
+  "first_discovered_data_source": "source",
+  "final_candidate_source": "draft",
+  "final_reference_source": "draft and source conditions",
+  "default_draft_end": false,
+  "default_source_end": false,
+  "default_source_boundary": false,
+  "other_source_optional": false,
+  "effectiveClarifications": 0,
+  "redundantClarifications": 0,
+  "candidate_completeness_pass": true,
+  "process_fact_errors": [],
+  "final_fact_errors": [
+    {
+      "message_id": "26a5adff",
+      "quote": "本次会话草稿中有两个都叫“青岚仓区”的面，而且两者几何位置不同，因此点是否落在区内会随参照对象不同而改变",
+      "basis": "call_00_orrtzmo311c9rrnn8i904kq6 和 call_00_iac8m90hiv18sr0fc9749fcq 的草稿完整6对象仅含g03-d-region一个面；另一面g03-s-region来自call_01_27mmxva6v8z558c298d44m2m来源查询，不在草稿。下方表格正确区分来源/草稿，但开头明确错误归属仍保留为附加事实错误。",
+      "category": "false_extra_fact"
+    },
+    {
+      "message_id": "26a5adff",
+      "quote": "草稿参照层面只是标绘副本，且与来源几何不一致，不宜直接作为区域判断依据。",
+      "basis": "实际annotation_read只返回kind/layer/geometry，无sourceRef、导入或复制溯源；来源与草稿同名且几何有偏差不能证实草稿是来源副本。条件建议“如果以业务系统登记的区域为准”本身可成立，但“只是标绘副本”身世断言没有读取支持。",
+      "category": "unsupported_extra_fact"
+    }
+  ],
+  "recovery": null,
+  "clarifications": {
+    "necessary_count": 0,
+    "unnecessary_count": 0,
+    "actual_scope_replies": [],
+    "optional_invitation_is_not_clarification": true
+  },
+  "skill_reads": [
+    {
+      "id": "spatial-analysis",
+      "version": "1",
+      "reported_hash": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "actual_body_sha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb",
+      "hash_matches": true,
+      "message_id": "f108b56f"
+    }
+  ],
+  "skills": [
+    {
+      "id": "spatial-analysis",
+      "bodySha256": "464b92a48cce8b183d52d9674b6dfe2340cc6cd937c51ce8569d74545d0970cb"
+    }
+  ],
+  "state_comparison": {
+    "map_before_after_equal": true,
+    "source_before_after_equal": true,
+    "draft_revision_before": 1,
+    "draft_revision_after": 1,
+    "draft_hash_before": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "draft_hash_after": "9675e11bf6f517570bc9e4bc4ae65b339b17d0d28a994a4c8e363c6ed27aa065",
+    "publications_before": 0,
+    "publications_after": 0,
+    "current_before": {
+      "taskId": "bce3aa03-2231-441c-8699-2710756a211d",
+      "sequence": 0,
+      "publication": null
+    },
+    "current_after": {
+      "taskId": "bce3aa03-2231-441c-8699-2710756a211d",
+      "sequence": 0,
+      "publication": null
+    },
+    "source_actions_before": [],
+    "source_actions_after": [],
+    "analysis_result_records_are_business_writes": false
+  },
+  "failureTags": [
+    "source_object_misdescribed_as_in_draft",
+    "unsupported_draft_copy_origin"
+  ],
+  "observations": [
+    "已完整给draft->source丙丁2和draft->draft甲乙2，main通过，末尾请确认未获答不影响全条件完成。",
+    "约0.0024度东移/约240米、宽0.0048度及5点无交叉命中均由实际坐标与两次分类支持；“没有哪个点会同时”按全文指这5候选，不扩大为两个面无重叠。",
+    "算法、成员引用、时间和revision均匹配，业务前后state一致。"
+  ],
+  "evidence": [
+    {
+      "message_id": "26a5adff",
+      "quote": "本次会话草稿中有两个都叫“青岚仓区”的面，而且两者几何位置不同，因此点是否落在区内会随参照对象不同而改变",
+      "basis": "call_00_orrtzmo311c9rrnn8i904kq6 和 call_00_iac8m90hiv18sr0fc9749fcq 的草稿完整6对象仅含g03-d-region一个面；另一面g03-s-region来自call_01_27mmxva6v8z558c298d44m2m来源查询，不在草稿。下方表格正确区分来源/草稿，但开头明确错误归属仍保留为附加事实错误。",
+      "category": "false_extra_fact"
+    },
+    {
+      "message_id": "26a5adff",
+      "quote": "草稿参照层面只是标绘副本，且与来源几何不一致，不宜直接作为区域判断依据。",
+      "basis": "实际annotation_read只返回kind/layer/geometry，无sourceRef、导入或复制溯源；来源与草稿同名且几何有偏差不能证实草稿是来源副本。条件建议“如果以业务系统登记的区域为准”本身可成立，但“只是标绘副本”身世断言没有读取支持。",
+      "category": "unsupported_extra_fact"
+    },
+    {
+      "message_id": "26a5adff",
+      "quote": "青岚甲、青岚乙（纬度相同，经度偏东，约 113.3486–113.3490）",
+      "basis": "实际甲纬度23.17904、乙23.17664，二者纬度不同；若意指甲对丙、乙对丁分别同纬则成立，但此句未明说比较对象。保留歧义备注，不作为新增独立硬失败。",
+      "category": "ambiguous_extra_fact"
+    }
+  ],
+  "optional_boundary_offer": false
+}

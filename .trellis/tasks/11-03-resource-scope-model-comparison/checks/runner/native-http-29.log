@@ -1,0 +1,40 @@
+(node:62293) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ real HTTP/Pi frozen slot P01-A-1 (20781.202238ms)
+✔ real HTTP/Pi frozen slot P01-B-1 (1009.123022ms)
+✔ real HTTP/Pi frozen slot P02-A-1 (974.196072ms)
+✔ real HTTP/Pi frozen slot P02-B-1 (981.277478ms)
+✔ real HTTP/Pi frozen slot D01-A-1 (1179.60832ms)
+✔ real HTTP/Pi frozen slot D01-B-1 (1045.784774ms)
+✔ real HTTP/Pi frozen slot D02-A-1 (985.522882ms)
+✔ real HTTP/Pi frozen slot D02-B-1 (980.442746ms)
+✔ real HTTP/Pi frozen slot D03-A-1 (1083.299282ms)
+✔ real HTTP/Pi frozen slot D03-B-1 (996.207913ms)
+✔ real HTTP/Pi frozen slot D04-A-1 (1050.704056ms)
+✔ real HTTP/Pi frozen slot D04-B-1 (1027.891849ms)
+✔ real HTTP/Pi frozen slot D05-A-1 (1108.03163ms)
+✔ real HTTP/Pi frozen slot D05-B-1 (1074.038312ms)
+✔ real HTTP/Pi frozen slot D06-A-1 (1024.760963ms)
+✔ real HTTP/Pi frozen slot D06-B-1 (1045.801016ms)
+✔ real HTTP/Pi frozen slot D06-B-2 (1055.123422ms)
+✔ real HTTP/Pi frozen slot D06-A-2 (1022.620138ms)
+✔ real HTTP/Pi frozen slot D05-B-2 (1026.525305ms)
+✔ real HTTP/Pi frozen slot D05-A-2 (1051.843688ms)
+✔ real HTTP/Pi frozen slot D04-B-2 (1031.886552ms)
+✔ real HTTP/Pi frozen slot D04-A-2 (1125.168867ms)
+✔ real HTTP/Pi frozen slot D03-B-2 (1029.951895ms)
+✔ real HTTP/Pi frozen slot D03-A-2 (1007.515597ms)
+✔ real HTTP/Pi frozen slot D02-B-2 (1014.596477ms)
+✔ real HTTP/Pi frozen slot D02-A-2 (1023.487519ms)
+✔ real HTTP/Pi frozen slot D01-B-2 (1022.839729ms)
+✔ real HTTP/Pi frozen slot D01-A-2 (1051.256842ms)
+Retained deterministic evidence: /var/folders/td/741qp46d52b2b8_2zdzj7ps40000gn/T/scope-native-offline-Eb07cj
+✔ native two-question ask_user answered once through actual API (1005.380271ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 50508.6524

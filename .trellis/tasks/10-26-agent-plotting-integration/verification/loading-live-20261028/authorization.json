@@ -1,0 +1,212 @@
+{
+  "approvedByUser": true,
+  "freezeHash": "db590994c73e1a667f288f7c720fa35230857483f75683995330f486e23ada6f",
+  "limits": {
+    "requests": 120,
+    "input": 4000000,
+    "output": 200000
+  },
+  "scope": {
+    "id": "plotting-loading-diagnostic-v1",
+    "slots": 24,
+    "cases": [
+      {
+        "id": "T1",
+        "fixture": "C02",
+        "prompt": "在本会话草稿部署图层(layerId=deployment)的[114,22.5]放置一个消防车图标，作为方案保存，不发布、不采用。",
+        "read": "all",
+        "kind": "ambiguous-type"
+      },
+      {
+        "id": "T2",
+        "fixture": "C02",
+        "prompt": "在本会话草稿部署图层(layerId=deployment)的[114,22.5]放置一个水罐消防车图标，作为方案保存，不发布、不采用。",
+        "read": "all",
+        "kind": "explicit-type"
+      },
+      {
+        "id": "R1",
+        "fixture": "C10",
+        "prompt": "以本会话草稿的基点(objectId=origin)生成500米范围并预览，先不保存。",
+        "read": "origin",
+        "kind": "filtered-scope"
+      },
+      {
+        "id": "R2",
+        "fixture": "C10",
+        "prompt": "读取本会话完整草稿，报告全部标绘对象的总数和名称，只查询不修改。",
+        "read": "all",
+        "kind": "complete-scope"
+      },
+      {
+        "id": "S1",
+        "fixture": "C01",
+        "prompt": "在本会话草稿的部署图层(layerId=deployment)，分别在[114,22.5]放置救护车、[114.001,22.5]放置冲锋舟、[114.002,22.5]放置消防艇；均为方案。保存这三个标绘对象，不发布、不采用。",
+        "read": "all",
+        "kind": "catalog-extra-claims"
+      },
+      {
+        "id": "S2",
+        "fixture": "C01",
+        "prompt": "说明当前系统图标目录中救护车、冲锋舟、消防艇各自属于标准符号还是应用扩展，只查询不修改。",
+        "read": "all",
+        "kind": "catalog-explicit-scope"
+      }
+    ],
+    "schedule": [
+      {
+        "id": "T1-A-1",
+        "caseId": "T1",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "T1-B-1",
+        "caseId": "T1",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "T1-B-2",
+        "caseId": "T1",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "T1-A-2",
+        "caseId": "T1",
+        "group": "A",
+        "round": 2
+      },
+      {
+        "id": "T2-A-1",
+        "caseId": "T2",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "T2-B-1",
+        "caseId": "T2",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "T2-B-2",
+        "caseId": "T2",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "T2-A-2",
+        "caseId": "T2",
+        "group": "A",
+        "round": 2
+      },
+      {
+        "id": "R1-A-1",
+        "caseId": "R1",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "R1-B-1",
+        "caseId": "R1",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "R1-B-2",
+        "caseId": "R1",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "R1-A-2",
+        "caseId": "R1",
+        "group": "A",
+        "round": 2
+      },
+      {
+        "id": "R2-A-1",
+        "caseId": "R2",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "R2-B-1",
+        "caseId": "R2",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "R2-B-2",
+        "caseId": "R2",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "R2-A-2",
+        "caseId": "R2",
+        "group": "A",
+        "round": 2
+      },
+      {
+        "id": "S1-A-1",
+        "caseId": "S1",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "S1-B-1",
+        "caseId": "S1",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "S1-B-2",
+        "caseId": "S1",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "S1-A-2",
+        "caseId": "S1",
+        "group": "A",
+        "round": 2
+      },
+      {
+        "id": "S2-A-1",
+        "caseId": "S2",
+        "group": "A",
+        "round": 1
+      },
+      {
+        "id": "S2-B-1",
+        "caseId": "S2",
+        "group": "B",
+        "round": 1
+      },
+      {
+        "id": "S2-B-2",
+        "caseId": "S2",
+        "group": "B",
+        "round": 2
+      },
+      {
+        "id": "S2-A-2",
+        "caseId": "S2",
+        "group": "A",
+        "round": 2
+      }
+    ],
+    "loading": {
+      "A": "native_on_demand",
+      "B": "native_explicit_map_annotations_each_message"
+    },
+    "automaticRetries": false
+  },
+  "providerAllowanceVerified": false,
+  "providerAllowanceCheckWaivedByUser": true,
+  "billingNote": "2026-10-28 用户先批准24槽真实测试，后明确要求“不核对额度，直接进行测试”。当前套餐余额与超额后付费状态未核实。保持既有火山Agent Plan端点及Flash型号，不切换服务；执行120请求/400万输入/20万输出硬上限及原停止条件。",
+  "approvedOn": "2026-10-28"
+}

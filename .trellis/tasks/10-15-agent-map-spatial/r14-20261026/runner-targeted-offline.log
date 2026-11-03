@@ -1,0 +1,22 @@
+(node:96793) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"entry":"D06-1-C","status":"recorded","completed":1,"planned":3,"usage":{"requests":3,"input":300,"output":30,"afp":0.1815,"unknown":0}}
+{"entry":"D06-1-A","status":"recorded","completed":2,"planned":3,"usage":{"requests":6,"input":600,"output":60,"afp":0.22275000000000003,"unknown":0}}
+{"entry":"D06-1-B","status":"recorded","completed":3,"planned":3,"usage":{"requests":9,"input":900,"output":90,"afp":0.264,"unknown":0}}
+✔ D06 ordinary/API questions receive only the frozen choice and continue native tools (13795.723135ms)
+✔ execution gate rejects blocked, unreviewed or drifted code before live claim (5.424027ms)
+{"entry":"D06-1-C","status":"incomplete","stop":"unnecessary_confirmation","completed":1,"planned":3,"usage":{"requests":2,"input":200,"output":20,"afp":0.121,"unknown":0}}
+{"entry":"D06-1-A","status":"incomplete","stop":"unnecessary_repeated_clarification","completed":2,"planned":3,"usage":{"requests":4,"input":400,"output":40,"afp":0.14850000000000002,"unknown":0}}
+{"entry":"D06-1-B","status":"incomplete","stop":"unnecessary_confirmation","completed":3,"planned":3,"usage":{"requests":6,"input":600,"output":60,"afp":0.17600000000000005,"unknown":0}}
+✔ repeated D06 question is not answered twice and does not stop unrelated scheduled tasks (12554.772411ms)
+(node:96794) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ AFP counts thinking once as output, Pro coefficient and account reserves are independent (10.083448ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 29058.212893

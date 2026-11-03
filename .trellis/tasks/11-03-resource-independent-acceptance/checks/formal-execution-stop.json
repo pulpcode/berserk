@@ -1,0 +1,226 @@
+{
+  "batch": "/Users/lau/.codex/worktrees/agent-spatial-plotting/berserk/.local/resource-independent-acceptance/20261103-live-01",
+  "ledgerSha256": "aa080ada79703da2abceb89087d12393b8faf694b6fcfa04d9e74a851e59ff54",
+  "halted": "integrity_or_protocol_assertion",
+  "responseModel": "deepseek-v4-1-flash-261017",
+  "providerRequests": 48,
+  "input": 1624623,
+  "output": 35216,
+  "unknownProviderUsageAttemptIds": [],
+  "pendingProviderAttemptIds": [],
+  "unstartedSlots": [
+    "N08-1",
+    "N08-2",
+    "N07-2",
+    "N06-2",
+    "N05-2",
+    "N04-2",
+    "N03-2",
+    "N02-2",
+    "N01-2"
+  ],
+  "slots": [
+    {
+      "id": "P01-1",
+      "caseId": "P01",
+      "repeat": 1,
+      "phase": "public",
+      "status": "trajectory_recorded",
+      "providerAttempts": 3,
+      "input": 89999,
+      "output": 1586
+    },
+    {
+      "id": "P02-1",
+      "caseId": "P02",
+      "repeat": 1,
+      "phase": "public",
+      "status": "trajectory_recorded",
+      "providerAttempts": 4,
+      "input": 120247,
+      "output": 2201
+    },
+    {
+      "id": "P03-1",
+      "caseId": "P03",
+      "repeat": 1,
+      "phase": "public",
+      "status": "trajectory_recorded",
+      "providerAttempts": 12,
+      "input": 366121,
+      "output": 4363
+    },
+    {
+      "id": "P04-1",
+      "caseId": "P04",
+      "repeat": 1,
+      "phase": "public",
+      "status": "trajectory_recorded",
+      "providerAttempts": 6,
+      "input": 214868,
+      "output": 3898
+    },
+    {
+      "id": "N01-1",
+      "caseId": "N01",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "trajectory_recorded",
+      "providerAttempts": 8,
+      "input": 296091,
+      "output": 6533
+    },
+    {
+      "id": "N02-1",
+      "caseId": "N02",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "trajectory_recorded",
+      "providerAttempts": 4,
+      "input": 123326,
+      "output": 3301
+    },
+    {
+      "id": "N03-1",
+      "caseId": "N03",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "trajectory_recorded",
+      "providerAttempts": 2,
+      "input": 63889,
+      "output": 2004
+    },
+    {
+      "id": "N04-1",
+      "caseId": "N04",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "trajectory_recorded",
+      "providerAttempts": 2,
+      "input": 72509,
+      "output": 3416
+    },
+    {
+      "id": "N05-1",
+      "caseId": "N05",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "trajectory_recorded",
+      "providerAttempts": 4,
+      "input": 169094,
+      "output": 5560
+    },
+    {
+      "id": "N06-1",
+      "caseId": "N06",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "incomplete",
+      "providerAttempts": 3,
+      "input": 108479,
+      "output": 2354
+    },
+    {
+      "id": "N07-1",
+      "caseId": "N07",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "batch_halted",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N08-1",
+      "caseId": "N08",
+      "repeat": 1,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N08-2",
+      "caseId": "N08",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N07-2",
+      "caseId": "N07",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N06-2",
+      "caseId": "N06",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N05-2",
+      "caseId": "N05",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N04-2",
+      "caseId": "N04",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N03-2",
+      "caseId": "N03",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N02-2",
+      "caseId": "N02",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    },
+    {
+      "id": "N01-2",
+      "caseId": "N01",
+      "repeat": 2,
+      "phase": "formal",
+      "status": "not_started",
+      "providerAttempts": 0,
+      "input": 0,
+      "output": 0
+    }
+  ],
+  "n07NativeLifecycle": "Native modelAttempts=1/unknownUsageAttempts=1 is a host request cancelled before provider ledger admission. N07 providerAttempts=0, no provider wire artifacts; do not treat host lifecycle count as paid HTTP usage.",
+  "scope": "Original 4+16 plan and denominator remain; no retry, extra slot, ledger reset, frozen source change or resume performed."
+}

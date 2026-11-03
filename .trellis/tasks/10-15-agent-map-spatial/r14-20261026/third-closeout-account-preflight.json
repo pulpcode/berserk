@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-27T01:57:55.858678+00:00",
+  "sourceEvidence": "Read-only logged-in Agent Plan Medium console via CUA on 2026-10-27 Asia/Singapore: five-hour used 0/10000; week 994.402/35000; month 2451.158/100000. No subscription/billing setting changes. Fresh window observation does not replenish approved cumulative budget.",
+  "observedOverageEnabled": null,
+  "remainingAfp": {
+    "fiveHour": 10000,
+    "week": 34005.598,
+    "month": 97548.842
+  },
+  "externalUseReserveAfp": 1000,
+  "sharedUsePolicy": "reserved_other_usage"
+}
