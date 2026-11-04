@@ -1,0 +1,5 @@
+{"file":".trellis/spec/backend/situation-map.md","reason":"场景来源查询、模拟控制、持久实例与共用地图的现有边界"}
+{"file":".trellis/spec/backend/task-resources.md","reason":"单体资源身份、可用性、位置含义和依据时间的复用契约"}
+{"file":".trellis/spec/backend/continuous-analysis.md","reason":"后台只读范围、原生续接、任务触发与发布版本校验"}
+{"file":".trellis/spec/backend/task-handoff.md","reason":"区分工作交接与正式方案批准/模拟执行，复用回执和确认原则"}
+{"file":".trellis/tasks/11-03-scenario-demo/research/basis.md","reason":"本轮基线及实际能力缺口；后续子任务还须按所属阶段精简上下文"}
