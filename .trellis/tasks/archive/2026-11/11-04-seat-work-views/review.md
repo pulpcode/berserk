@@ -16,4 +16,4 @@
 - [需求](prd.md)、[设计](design.md)、[实施计划](implement.md)。
 - [现状证据](research/evidence.md)、[原型验证](research/validation.md)、[历史备选](alternatives.md)。
 
-UI 基线为 main 的 `395e648`。本次先提交方案，代码完成后更新本地预览并等待验收；代码不自动提交／push／上线。
+UI 基线为 main 的 `395e648`。当前实现与滚轮修复已验证并获用户提交确认，代码提交为 `59f35fe`，任务已归档；未 push／上线。
