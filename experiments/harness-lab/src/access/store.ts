@@ -95,7 +95,7 @@ export class AccessStore {
     return row?.enabled && hash.length === key.length && timingSafeEqual(hash, key) ? this.identity(String(row.id)) : undefined;
   }
   async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean;viewWorkOverview?:boolean;controlScenarios?:boolean}) {
-    if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !/^[a-zA-Z0-9_-]{1,64}$/.test(input.seatId) || !input.displayName.trim() || !input.seatName.trim() || input.password.length < 12 || input.password.length > 256) throw new Error('账号、席位或密码无效；密码须为 12～256 个字符。');
+    if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !/^[a-zA-Z0-9_-]{1,64}$/.test(input.seatId) || !input.displayName.trim() || !input.seatName.trim() || input.password.length < 10 || input.password.length > 256) throw new Error('账号、席位或密码无效；密码须为 10～256 个字符。');
     const previous = this.db.prepare('SELECT id,seat_id FROM accounts WHERE username=?').get(input.username);
     if (previous && previous.seat_id !== input.seatId) throw new Error('本期不支持账号换岗。');
     if (input.controlScenarios !== undefined && typeof input.controlScenarios !== 'boolean') throw new Error('场景控制权限须为明确的布尔值。');

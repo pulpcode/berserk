@@ -36,6 +36,18 @@ async function login(app:FastifyInstance,name:string) {
 }
 const input=(visibility:'public'|'private'='public')=>({title:'联合任务',goal:'汇总资料形成计划',visibility,clientActionId:randomUUID()});
 describe('authenticated task scopes',()=>{
+  it('accepts a ten-character password and rejects values outside the supported range', async () => {
+    const dir=await mkdtemp(join(tmpdir(),'axon-password-'));cleanups.push(()=>rm(dir,{recursive:true,force:true}));
+    const db=await openDatabase(dir);const store=new AccessStore(db);
+    try {
+      const account={username:'boundary',displayName:'Boundary',seatId:'boundary',seatName:'Boundary',password:'test-pass!',createPublicTask:false,manageModelSettings:false};
+      for(const password of ['x'.repeat(9),'x'.repeat(257)])await expect(store.saveAccount({...account,password})).rejects.toThrow('10～256');
+      await store.saveAccount(account);
+      expect((await store.authenticate(account.username,account.password))?.seatId).toBe(account.seatId);
+      expect(await store.authenticate(account.username,'wrong-pass')).toBeUndefined();
+    } finally { db.close(); }
+  });
+
   it('publishes only enabled seat labels and authenticates the selected seat with its own password', async () => {
     const {app,lab}=await setup();
     await lab.access!.saveAccount({username:'different-login',displayName:'隐藏账号名称',seatId:'seat-d',seatName:'演示席',password:'different-password-123',createPublicTask:false,manageModelSettings:false});
