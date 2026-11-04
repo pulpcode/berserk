@@ -45,6 +45,7 @@ function Status({ session, unread = false, id }: { session: SessionActivity; unr
 
 interface NavigationProps {
   taskMode?: boolean;
+  readOnly?: boolean;
   taskMeta?: Record<string,{visibility:'public'|'private';state:'active'|'archived'}>;
   createTask?: (visibility:'public'|'private') => void;
   createWorkspace?: () => void;
@@ -64,7 +65,7 @@ interface NavigationProps {
   showActivity?: () => void;
 }
 
-export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspace,publicAllowed,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession }: NavigationProps) {
+export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTask,createWorkspace,publicAllowed,informationTaskId,workspaces, activities, unread, workspaceId, selected, activityView, loading, creating, createSession, enterWorkspace, selectSession }: NavigationProps) {
   const { domId } = useApi();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
@@ -80,7 +81,7 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspa
           <button className="catalog-toggle" aria-label={`${folded?'展开':'折叠'}${label}`} aria-expanded={!folded} aria-controls={domId(`catalog-${group}`)} onClick={()=>setCatalogCollapsed(previous=>({...previous,[group]:!previous[group]}))}>
             <span>{label}</span><ChevronDown size={14} aria-hidden="true"/>
           </button>
-          {(group!=='public' || publicAllowed) && <button className="icon-button catalog-create" aria-label={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} title={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} onClick={()=>group==='legacy'?createWorkspace?.():createTask?.(group)}>
+          {!readOnly && (group!=='public' || publicAllowed) && <button className="icon-button catalog-create" aria-label={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} title={group==='public'?'新建工作任务':group==='private'?'新建个人空间':'新建项目'} onClick={()=>group==='legacy'?createWorkspace?.():createTask?.(group)}>
             <Plus className="catalog-plus" size={16} aria-hidden="true"/>{group==='public'?<BriefcaseBusiness className="catalog-rail-icon" size={20} aria-hidden="true"/>:<FolderPlus className="catalog-rail-icon" size={20} aria-hidden="true"/>}
           </button>}
         </div>
@@ -95,10 +96,10 @@ export function WorkspaceNavigation({ taskMode,taskMeta,createTask,createWorkspa
             <button className="workspace-entry" aria-label={`进入项目：${workspace.name}`} aria-current={(taskMode ? informationTaskId === workspace.taskSpaceId : !activityView && workspaceId === workspace.id) ? 'page' : undefined} title={workspace.name} onClick={() => enterWorkspace(workspace.id)}><WorkspaceIcon className="workspace-rail-icon" size={20} aria-hidden="true" /><span>{workspace.name}</span></button>
             {activeCount > 0 && <span className="group-count running" aria-label={`${activeCount} 个处理中`} title={`${activeCount} 个处理中`}>{activeCount}</span>}
             {attentionCount > 0 && <span className="group-count attention" aria-label={`${attentionCount} 个需关注`} title={`${attentionCount} 个需关注`}>{attentionCount}</span>}
-            <button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>
+            {!readOnly&&<button className="project-new-chat" aria-label={`在项目 ${workspace.name} 中新建对话`} title="新建对话" disabled={creating || loading || taskMeta?.[workspace.id]?.state==='archived'} onClick={() => createSession(workspace.id)}><Plus size={16} aria-hidden="true" /></button>}
           </div>
           <div id={`workspace-sessions-${workspace.id}`} hidden={collapsed[workspace.id]} className="group-sessions">
-            {sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
+            {readOnly?<p className="sidebar-empty">任务说明 · 只读核对</p>:sessions.length ? sessions.map(session => <button key={session.id} className={`session-item${!activityView && selected === session.id ? ' selected' : ''}`} aria-label={session.title} aria-describedby={activityStatus(session) || unread[session.id] ? `session-status-${session.id}` : undefined} aria-current={!activityView && selected === session.id ? 'page' : undefined} onClick={() => selectSession(session.id)}>
               <span className="session-copy"><span className="session-title-row"><span className="session-title" title={session.title}>{session.title}</span><Status session={session} unread={unread[session.id]} id={`session-status-${session.id}`} /></span></span>
             </button>) : <p className="sidebar-empty">还没有对话</p>}
           </div>

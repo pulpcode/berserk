@@ -35,15 +35,15 @@ export class ContinuousService {
   assertStream(stream:ContinuousStream){
     const {host}=this;host.assertContext(undefined,stream.profile.contextScope);
     const profile=host.config.profiles.find(p=>p.id===stream.profileId);if(!profile||stream.profile.skillIds.some(id=>!profile.skillIds.includes(id))||stream.profile.tools.some(t=>!['task_search','task_read','analysis_current_read','information_record_analysis_update','analysis_calculate','analysis_evidence_read','analysis_task_candidates'].includes(t)&&!profile.tools.includes(t)))throw missing();
-    for(const sourceId of stream.sourceIds){const source=host.source(sourceId);if(!source.allowedProfileIds.includes(stream.profileId))throw missing();for(const seatId of stream.recipientSeatIds){if(!source.allowedRecipientSeatIds.includes(seatId)||!host.lab.access!.identityForSeat(seatId))throw missing();host.assertContext(seatId,stream.profile.contextScope);}}
+    for(const sourceId of stream.sourceIds){const source=host.source(sourceId);if(!source.allowedProfileIds.includes(stream.profileId))throw missing();for(const seatId of stream.recipientSeatIds){host.lab.access!.assertCanCollaborate(seatId);if(!source.allowedRecipientSeatIds.includes(seatId)||!host.lab.access!.identityForSeat(seatId))throw missing();host.assertContext(seatId,stream.profile.contextScope);}}
   }
   canRead(actor:Identity,stream:ContinuousStream){
     try {const current=this.host.lab.access!.identity(actor.userId);if(!current||current.seatId!==actor.seatId||stream.sourceIds.some(id=>!this.host.config.sources.some(s=>s.sourceId===id)))return false;this.host.assertContext(actor.seatId,stream.profile.contextScope);
-      const recipient=stream.recipientSeatIds.includes(actor.seatId)&&stream.sourceIds.every(id=>this.host.source(id).allowedRecipientSeatIds.includes(actor.seatId));
+      const recipient=this.host.lab.access!.canCollaborate(actor.seatId)&&stream.recipientSeatIds.includes(actor.seatId)&&stream.sourceIds.every(id=>this.host.source(id).allowedRecipientSeatIds.includes(actor.seatId));
       return recipient||stream.sourceIds.every(id=>!!this.host.store.effectivePermission(current,id));
     }catch{return false;}
   }
-  access(actor:Identity){return {enabled:true,canRead:this.store.streams().some(s=>this.canRead(actor,s)),canManage:this.host.config.sources.some(s=>this.host.store.effectivePermission(actor,s.sourceId)==='manage')};}
+  access(actor:Identity){return {enabled:true,canRead:this.store.streams().some(s=>this.canRead(actor,s)),canManage:this.host.lab.access!.canCollaborate(actor.seatId)&&this.host.config.sources.some(s=>this.host.store.effectivePermission(actor,s.sourceId)==='manage')};}
   publicStream(stream:ContinuousStream):ContinuousStream{return {...stream,profile:{...stream.profile,instructions:'',resources:[],skills:undefined,agents:undefined}};}
   streams(actor:Identity){return {items:this.store.streams().filter(s=>{try{this.manage(actor,s);return true;}catch{return false;}}).map(s=>this.publicStream(s))};}
   async configure(actor:Identity,input:ContinuousStreamInput,options:{id?:string;revision?:number;clientActionId?:string}){
@@ -247,7 +247,7 @@ export class ContinuousService {
   async openFile(actor:Identity,jobId:string,fileId:string){const detail=await this.detail(actor,jobId),file=detail.inputs?.flatMap(i=>i.event?.files??[]).find(f=>f.id===fileId);if(!file)throw missing();const content=await this.host.files.copies.open({fileId:file.id,name:file.name,size:file.size,hash:file.hash,createdAt:''});try{const job=this.host.store.getJob(jobId);if(job.kind!=='continuous_analysis'||!this.canRead(actor,this.store.stream(job.streamEpochId)))throw missing();return content;}catch(error){content.stream.destroy();throw error;}}
   async analysisOptions(actor:Identity,jobId:string,taskId:string){await this.detail(actor,jobId);return this.host.taskOptions(actor,taskId);}
   async findAnalysis(actor:Identity,jobId:string,clientActionId:string){await this.detail(actor,jobId);const action=this.host.store.findAction(actor.userId,clientActionId);if(!action||action.continuousJobId!==jobId||action.seatId!==actor.seatId)return null;this.host.lab.access!.get(action.taskSpaceId!,actor.seatId);return action;}
-  async analyse(actor:Identity,jobId:string,input:BackgroundAnalysisInput):Promise<BackgroundAction>{return this.preparations.run(async()=>{
+  async analyse(actor:Identity,jobId:string,input:BackgroundAnalysisInput):Promise<BackgroundAction>{this.host.lab.access!.assertCanCollaborate(actor.seatId);return this.preparations.run(async()=>{
     const detail=await this.detail(actor,jobId),task=this.host.lab.access!.get(input.taskSpaceId,actor.seatId,true);
     if(input.mode!=='conversation'||!input.goal?.trim()||input.goal.length>16000||input.fileIds?.length||(input.skillIds?.length??0)>1||(input.agentIds?.length??0)>1)throw invalid('请选择私有对话接续，填写目标；持续结果不含可导入输出文件。');
     const digest=createHash('sha256').update(JSON.stringify([jobId,input])).digest('hex');let action=this.host.store.findAction(actor.userId,input.clientActionId);
@@ -257,10 +257,10 @@ export class ContinuousService {
     if(input.agentIds?.[0]){const agents=await this.host.lab.agents(workspace.id,actor.seatId),agent=agents.find(a=>a.name===input.agentIds![0]);if(!agent)throw invalid('Agent 不存在。');selection.agent={name:agent.name,hash:agent.hash};}
     const draft=`${input.goal.trim()}\n\n固定研判引用：${detail.streamName}\njobId=${jobId} requestId=${detail.resultRef!.requestId} finalMessageId=${detail.resultRef!.finalMessageId}\n输入截止：${detail.batch.inputCutoff}。这是先前模型判断，讨论中的假设不会自动成为共享事实。${input.includeResult?`\n\n${detail.text}`:''}`;
     if(draft.length>16000)throw invalid('研判较长，请取消直接带入结果。');
-    await this.detail(actor,jobId);this.host.lab.access!.get(task.id,actor.seatId,true);
+    await this.detail(actor,jobId);this.host.lab.access!.assertCanCollaborate(actor.seatId);this.host.lab.access!.get(task.id,actor.seatId,true);
     action??=this.host.store.beginAction({userId:actor.userId,seatId:actor.seatId,clientActionId:input.clientActionId,kind:'analysis',inputHash:digest,continuousJobId:jobId,taskSpaceId:task.id,workspaceId:workspace.id,sessionId:randomUUID(),analysis:input,draft,selection,fileRefs:[]});
     await this.host.lab.createSession(workspace.id,actor.seatId,undefined,action.sessionId);
-    await this.detail(actor,jobId);return this.host.store.updateAction(action.id,action.revision,{status:'completed'});
+    await this.detail(actor,jobId);this.host.lab.access!.assertCanCollaborate(actor.seatId);return this.host.store.updateAction(action.id,action.revision,{status:'completed'});
   });}
   async deliver(id:string){const delivery=this.host.store.getDelivery(id),job=this.host.store.getJob(delivery.jobId);if(job.kind!=='continuous_analysis')throw missing();try{const stream=this.store.stream(job.streamEpochId);this.assertStream(stream);if(this.store.publication(job.id).status!=='published'||!this.canRead(this.host.lab.access!.identityForSeat(delivery.recipientSeatId)!,stream))throw missing();const snapshot=await this.executor.read(job,this.store.stream(job.streamEpochId!).profile),update=this.store.publication(job.id).update;if(!snapshot||!update||!this.verified(job,snapshot,update))throw missing();this.assertPublishedSnapshot(job,snapshot);this.assertStream(this.store.stream(job.streamEpochId));this.host.store.updateDelivery(id,delivery.revision,'delivered');}catch{this.host.store.updateDelivery(id,delivery.revision,'failed',{code:'CONTINUOUS_DELIVERY_FAILED',message:'通知暂未完成，请核对权限后重试。'});}}
 }

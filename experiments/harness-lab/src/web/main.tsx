@@ -54,7 +54,7 @@ function informationTaskFromLocation() {
   try { return decodeURIComponent(match[1]!); } catch { return ''; }
 }
 
-function routeView(formal: boolean): 'chat' | 'work' | 'information' | 'task_information' | 'situation' | 'simulation' | 'scenario_director' {
+function routeView(formal: boolean, canCollaborate=true): 'chat' | 'work' | 'information' | 'task_information' | 'situation' | 'simulation' | 'scenario_director' {
     if (location.pathname === '/inbox') { const query = new URLSearchParams(location.search); query.set('kind', 'information'); history.replaceState(null, '', `/work?${query}`); }
     if (location.pathname === '/information') history.replaceState(null, '', `/overview${location.search}`);
     if (informationTaskFromLocation()) return 'task_information';
@@ -63,12 +63,13 @@ function routeView(formal: boolean): 'chat' | 'work' | 'information' | 'task_inf
     if (location.pathname === '/scenario-director') return 'scenario_director';
     if (location.pathname === '/overview') return 'information';
     if (location.pathname === '/work') return 'work';
-    return formal && !new URLSearchParams(location.search).has('session') ? 'work' : 'chat';
+    return formal && !new URLSearchParams(location.search).has('session') ? canCollaborate?'work':'scenario_director' : 'chat';
   }
 
 function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, logoutError }: SeatView) {
   const { api, domId } = useApi();
-  const chat = useChat();
+  const canCollaborate=identity?.canCollaborate!==false;
+  const chat = useChat(canCollaborate);
   const noteNavigation = chat.noteNavigation;
   const navigationRequest = useRef(0);
   const consumedSessionLink = useRef('');
@@ -81,7 +82,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const taskMeta=identity ? Object.fromEntries(navigationWorkspaces.map(w=>[w.id,{visibility:taskFor(w.id)!.visibility,state:taskFor(w.id)!.state}])) : undefined;
   const refreshModelInfo = chat.refreshInfo;
   useEffect(() => { if (seatActive) void refreshModelInfo().catch(() => {}); }, [seatActive, refreshModelInfo]);
-  const [view, setView] = useState(() => routeView(!!identity));
+  const [view, setView] = useState(() => routeView(!!identity,canCollaborate));
   const [informationTaskId,setInformationTaskId]=useState(informationTaskFromLocation);
   const informationTask = directory.tasks.find(task => task.id === informationTaskId);
   const [informationEntry,setInformationEntry]=useState(0);
@@ -93,9 +94,9 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const continuous = useInformationQuery<ContinuousAccess>('/api/continuous/access', seatActive && !!identity, 10000);
   const information = useInformationQuery<InformationCapabilities>('/api/information/access', seatActive && !!identity, 10000);
   useEffect(() => {
-    const pop = (event:PopStateEvent) => { if(!window.dispatchEvent(new Event('axon:before-route-pop',{cancelable:true}))){event.stopImmediatePropagation();return;} consumedSessionLink.current = ''; setRouteRevision(value => value + 1); navigationRequest.current++; noteNavigation(); const id=informationTaskFromLocation();setInformationTaskId(id);setView(id ? 'task_information' : routeView(!!identity)); };
+    const pop = (event:PopStateEvent) => { if(!window.dispatchEvent(new Event('axon:before-route-pop',{cancelable:true}))){event.stopImmediatePropagation();return;} consumedSessionLink.current = ''; setRouteRevision(value => value + 1); navigationRequest.current++; noteNavigation(); const id=informationTaskFromLocation();setInformationTaskId(id);setView(id ? 'task_information' : routeView(!!identity,canCollaborate)); };
     window.addEventListener('popstate', pop); return () => window.removeEventListener('popstate', pop);
-  }, [noteNavigation, identity]);
+  }, [noteNavigation, identity,canCollaborate]);
   const { loading: chatLoading, selected: chatSelected, activities: chatActivities, select: chooseChat } = chat;
   useEffect(() => {
     if (view !== 'chat' || chatLoading) return;
@@ -112,7 +113,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const [draggingFiles, setDraggingFiles] = useState(false);
   const attachmentInput = useRef<HTMLInputElement>(null);
   const fileLimits = chat.info?.files;
-  const composerReady = !chat.loading && Boolean(chat.workspaceId) && currentTask?.state!=='archived';
+  const composerReady = canCollaborate && !chat.loading && Boolean(chat.workspaceId) && currentTask?.state!=='archived';
   const attachmentItems = chat.attachments.all[chat.draftKey] || [];
   const blockedAttachments = attachmentItems.some(item => item.status !== 'ready');
   const uploadFiles = (files: File[]) => { if (composerReady && fileLimits?.enabled && chat.workspaceId) chat.attachments.add(chat.resolveDraftOwner(), chat.workspaceId, files, fileLimits); };
@@ -130,14 +131,14 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const workspaceCreatingRef = useRef(false);
   const currentResources = resources[chat.workspaceId];
   useEffect(() => {
-    if (!chat.workspaceId) return;
+    if (!canCollaborate || !chat.workspaceId) return;
     let current = true;
     const id = chat.workspaceId;
     api<WorkspaceResources>(`/api/workspaces/${encodeURIComponent(id)}/resources`).then(result => {
       if (current) { setResources(previous => ({ ...previous, [id]: result })); setResourceErrors(previous => ({ ...previous, [id]: '' })); }
     }).catch((error: unknown) => { if (current) setResourceErrors(previous => ({ ...previous, [id]: error instanceof Error ? error.message : '项目资料读取失败。' })); });
     return () => { current = false; };
-  }, [api, chat.workspaceId, resourceReload]);
+  }, [api, canCollaborate,chat.workspaceId, resourceReload]);
   async function createWorkspace() {
     if (workspaceCreatingRef.current || !workspaceName.trim()) return;
     workspaceCreatingRef.current = true; setWorkspaceCreating(true); setWorkspaceError('');
@@ -283,7 +284,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   }
   function showWork(id?: string, assignWorkspaceId?: string) {
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('work'); setSidebarOpen(false);
-    workControl.current?.open(id, assignWorkspaceId);
+    if(canCollaborate)workControl.current?.open(id, assignWorkspaceId);
   }
   async function stopBackground() {
     if (!backgroundJob || backgroundStopping) return;
@@ -294,7 +295,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   }
   function showInformation() {
     if (view === 'information') return;
-    navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('information'); setSidebarOpen(false); history.pushState(null, '', `/overview?tab=${identity?.viewWorkOverview ? 'work' : continuous.data?.canRead ? 'assessments' : 'events'}`); window.dispatchEvent(new PopStateEvent('popstate'));
+    navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('information'); setSidebarOpen(false); history.pushState(null, '', `/overview?tab=${!canCollaborate?'events':identity?.viewWorkOverview ? 'work' : continuous.data?.canRead ? 'assessments' : 'events'}`); window.dispatchEvent(new PopStateEvent('popstate'));
   }
   function showScenarioDirector() {
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setView('scenario_director'); setSidebarOpen(false);
@@ -306,6 +307,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     history.pushState(null, '', '/work');
   }
   function showTaskInformation(taskId: string, tab = 'information') {
+    directory.refresh();
     navigationRequest.current++; chat.noteNavigation(); rememberPosition(); setInformationTaskId(taskId); setInformationEntry(value=>value+1); setView('task_information'); setSidebarOpen(false);
     history.pushState(null, '', `/tasks/${encodeURIComponent(taskId)}/information?tab=${tab}`);
     requestAnimationFrame(()=>document.getElementById(domId('task-information'))?.focus());
@@ -314,6 +316,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const [startingTask, setStartingTask] = useState('');
   const [taskStartErrors, setTaskStartErrors] = useState<Record<string, string>>({});
   async function startTaskConversation(taskId: string) {
+    if(!canCollaborate)return;
     const task = directory.tasks.find(item => item.id === taskId);
     const key = `task-home:${taskId}`;
     if (taskStarting.current || chat.creating || !task || task.state === 'archived' || !chat.drafts[key]?.trim()) return;
@@ -334,6 +337,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     } finally { taskStarting.current = false; setStartingTask(''); }
   }
   async function openInformationSession(id: string) {
+    if(!canCollaborate){setCreationError('当前席位不能进入业务会话。');return;}
     const captured = ++navigationRequest.current;
     const originUrl = location.pathname + location.search;
     setInformationNavigationError(undefined);
@@ -347,7 +351,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     }
   }
   async function preparedAnalysis(action: BackgroundAction, originCurrent: () => boolean, sendNow = false): Promise<boolean> {
-    if (!action.sessionId || !action.workspaceId || action.status !== 'completed') return false;
+    if (!canCollaborate || !action.sessionId || !action.workspaceId || action.status !== 'completed') return false;
     const captured = navigationRequest.current;
     const current = () => captured === navigationRequest.current && originCurrent();
     const session = await api<SessionSnapshot>(`/api/sessions/${encodeURIComponent(action.sessionId)}`);
@@ -379,8 +383,9 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     if (sendNow && freshDraft) void chat.send(session.id);
     return freshDraft;
   }
-  function newChat() { rememberPosition(); setNewSessionOpen(true); }
+  function newChat() { if(!canCollaborate)return; rememberPosition(); setNewSessionOpen(true); }
   async function createChat(workspaceId: string) {
+    if(!canCollaborate)return null;
     if (location.pathname + location.search !== '/') history.pushState(null, '', '/');
     const navigation = ++navigationRequest.current;
     rememberPosition(); setView('chat'); setSidebarOpen(false); setCreationError('');
@@ -401,6 +406,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
 
   function showMapPage(href = '/situation') { navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'',href);setView('situation');setRouteRevision(value=>value+1);setSidebarOpen(false); }
   function referenceMapObject(item: SituationObject) {
+    if(!canCollaborate)return;
     if(view==='chat' && busy){setCreationError('正在执行时只能排队文本，请等待回复完成后引用地图对象。');return;}
     if(view === 'chat' && chat.workspaceId){const owner=chat.resolveDraftOwner();const old=chat.composerSelections.current(owner).contextRefs || [];if(old.length>=20 && !old.some(ref=>refKey(ref)===refKey(item.ref))){setCreationError('每次最多引用 20 个地图对象。');return;}chat.composerSelections.setContextRefs(owner,[...old,item.ref]);textarea.current?.focus();}
     else {setMapObject(item);setMapWorkspace(view==='task_information'?navigationWorkspaces.find(w=>w.taskSpaceId===informationTaskId)?.id || '':'');}
@@ -428,20 +434,20 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const annotationMapTaskId=view==='situation'?new URLSearchParams(location.search).get('taskId') || '':'';
   let annotationInitial:AnnotationSelection | undefined;try{const value=JSON.parse(new URLSearchParams(location.search).get('annotationRef') || 'null');if(isAnnotationSelection(value))annotationInitial=value;}catch{/* Invalid URL references confer no authority. */}
   const annotationMapSessionId=view==='situation'?new URLSearchParams(location.search).get('sessionId') || undefined:undefined;
-  return <SituationProvider annotations={annotationTaskId?{taskId:annotationTaskId,taskTitle:annotationTask?.title,openTask:()=>showTaskInformation(annotationTaskId),sessionId:view==='chat'?chat.selected || undefined:undefined,taskContext:annotationTask?.context,archived:annotationTask?.state==='archived',refreshKey:snapshot?.updatedAt,reference:referenceAnnotation,derive:deriveAnnotations,openSession:selectSession}:undefined} navigationKey={`${seatActive}:${view}:${chat.selected}:${informationTaskId}:${routeRevision}`} reference={referenceMapObject}><div className={`app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-    <a className="skip-link" href={`#${domId(view === 'chat' ? 'conversation' : view === 'work' ? 'workbench' : view === 'information' ? 'information-center' : view === 'scenario_director' ? 'scenario-director' : 'task-information')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : view === 'information' ? '跳至工作总览' : view === 'task_information' ? '跳至任务详情' : view === 'scenario_director' ? '跳至场景导演台' : '跳至相关信息'}</a>
+  return <SituationProvider readOnly={!canCollaborate} annotations={canCollaborate&&annotationTaskId?{taskId:annotationTaskId,taskTitle:annotationTask?.title,openTask:()=>showTaskInformation(annotationTaskId),sessionId:view==='chat'?chat.selected || undefined:undefined,taskContext:annotationTask?.context,archived:annotationTask?.state==='archived',refreshKey:snapshot?.updatedAt,reference:referenceAnnotation,derive:deriveAnnotations,openSession:selectSession}:undefined} navigationKey={`${seatActive}:${view}:${chat.selected}:${informationTaskId}:${routeRevision}`} reference={referenceMapObject}><div className={`app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+    <a className="skip-link" href={`#${domId(!canCollaborate&&['work','chat','simulation'].includes(view)?'business-forbidden':view === 'chat' ? 'conversation' : view === 'work' ? 'workbench' : view === 'information' ? 'information-center' : view === 'scenario_director' ? 'scenario-director' : 'task-information')}`}>{view === 'chat' ? '跳至对话' : view === 'work' ? '跳至工作待办' : view === 'information' ? '跳至工作总览' : view === 'task_information' ? '跳至任务详情' : view === 'scenario_director' ? '跳至场景导演台' : '跳至相关信息'}</a>
     {sidebarOpen && <button className="sidebar-scrim" aria-label="关闭会话列表" onClick={closeSidebar} tabIndex={-1} />}
     <aside id={domId('sidebar')} ref={sidebar} className={`sidebar${sidebarOpen ? ' open' : ''}`} aria-label="会话与资料">
       <div className="sidebar-brand"><BrandMark /><img className="brand-wordmark" src="/brand/axon-wordmark.svg" width="81" height="27" alt="Axon" /><button className="icon-button sidebar-toggle" onClick={() => setSidebarCollapsed(value => !value)} aria-label={sidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'} title={sidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'} aria-expanded={!sidebarCollapsed} aria-controls={domId('sidebar')}>{sidebarCollapsed ? <><BrandMark /><PanelLeftOpen size={20} aria-hidden="true" /></> : <PanelLeftClose size={20} aria-hidden="true" />}</button><button ref={closeButton} className="icon-button mobile-only" onClick={closeSidebar} aria-label="关闭会话列表"><X size={20} /></button></div>
       {!identity && seats.length > 0 && <label className="test-seat-selector">测试席位<select aria-label="测试席位" value={seatId} onChange={event => { chat.noteNavigation(); switchSeat(event.target.value); }}>{seats.map(seat => <option key={seat.id} value={seat.id}>{seat.name}</option>)}</select></label>}
-      <div className="navigation-actions">
+      {canCollaborate&&<div className="navigation-actions">
         <button className="new-chat" title="新建对话" aria-label="新建对话" aria-haspopup="dialog" onClick={() => void newChat()} disabled={chat.creating || chat.loading || !navigationWorkspaces.length}><SquarePen size={20} strokeWidth={1.75} aria-hidden="true" /><span>新建对话</span></button>
-      </div>
-      {seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} aria-label="工作待办" title="工作待办" onClick={() => showWork()}><FileText size={17} aria-hidden="true" /><span>工作待办</span></button>}
-      {(identity?.viewWorkOverview || information.data?.sources.length || continuous.data?.canRead) ? <button className="work-inbox-trigger" aria-pressed={view === 'information'} aria-label="工作总览" title="工作总览" onClick={showInformation}><Workflow size={17} aria-hidden="true" /><span>工作总览</span></button> : null}
+      </div>}
+      {canCollaborate&&seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} aria-label="工作待办" title="工作待办" onClick={() => showWork()}><FileText size={17} aria-hidden="true" /><span>工作待办</span></button>}
+      {(identity?.viewWorkOverview || information.data?.sources.length || continuous.data?.canRead) ? <button className="work-inbox-trigger" aria-pressed={view === 'information'} aria-label={canCollaborate?"工作总览":"来源记录"} title={canCollaborate?"工作总览":"来源记录"} onClick={showInformation}><Workflow size={17} aria-hidden="true" /><span>{canCollaborate?"工作总览":"来源记录"}</span></button> : null}
       {mapCatalog.data?.systems.some(system=>system.capabilities.includes('situation_current')) && <button className="work-inbox-trigger" aria-pressed={view==='situation'} onClick={()=>showMapPage()} title="态势地图"><MapIcon size={17} aria-hidden="true"/><span>态势地图</span></button>}
       {identity && mapConfig.data?.scenarioControlEnabled && <button className="work-inbox-trigger" aria-pressed={view==='scenario_director'} onClick={showScenarioDirector} title="场景导演台"><Clapperboard size={17} aria-hidden="true"/><span>场景导演台</span></button>}
-      <WorkspaceNavigation taskMode={!!identity} createWorkspace={() => { rememberPosition(); setWorkspaceForm(true); setWorkspaceError(''); }} taskMeta={taskMeta} publicAllowed={identity?.createPublicTask} createTask={visibility=>setTaskPanel({visibility})} informationTaskId={view==='task_information'?informationTaskId:undefined} workspaces={navigationWorkspaces} activities={chat.activities} unread={chat.unread} workspaceId={chat.workspaceId} selected={chat.selected} activityView={view !== 'chat'} loading={chat.loading} creating={chat.creating} createSession={id => { void createChat(id); }} enterWorkspace={enterWorkspace} selectSession={selectSession} />
+      <WorkspaceNavigation readOnly={!canCollaborate} taskMode={!!identity} createWorkspace={() => { rememberPosition(); setWorkspaceForm(true); setWorkspaceError(''); }} taskMeta={taskMeta} publicAllowed={identity?.createPublicTask} createTask={visibility=>setTaskPanel({visibility})} informationTaskId={view==='task_information'?informationTaskId:undefined} workspaces={navigationWorkspaces} activities={chat.activities} unread={chat.unread} workspaceId={chat.workspaceId} selected={chat.selected} activityView={view !== 'chat'} loading={chat.loading} creating={chat.creating} createSession={id => { void createChat(id); }} enterWorkspace={enterWorkspace} selectSession={selectSession} />
       <div className="sidebar-footer"><button className="settings-trigger" title="设置" aria-label="设置" onClick={() => setSettingsOpen(true)} aria-haspopup="dialog" aria-expanded={settingsOpen}><Settings size={18} aria-hidden="true" /><span>设置</span></button></div>
     </aside>
 
@@ -449,26 +455,27 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       {(directory.error || chat.activityError) && <DirectoryStatus connectionError={directory.connectionError || chat.activityConnectionError} taskError={Boolean(directory.error)} activityError={Boolean(chat.activityError)} retry={() => { directory.refresh(); return chat.refreshActivity().catch(() => {}); }} />}
     <main hidden={view === 'information'} className="workspace" inert={sidebarOpen || undefined}>
       <header className={`workspace-header${view === 'work' ? ' workbench-context-header' : ''}`}>
-        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button>{view !== 'work' && <span>{view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : view === 'scenario_director' ? '场景导演台' : snapshot?.title || '新对话'}</span>}</div>
+        <div className="header-title"><button ref={menuButton} className="icon-button mobile-only" onClick={() => setSidebarOpen(true)} aria-label="打开会话列表" aria-expanded={sidebarOpen}><Menu size={20} /></button>{view !== 'work' && <span>{view === 'task_information' ? '任务详情' : view === 'situation' ? '态势地图' : view === 'simulation' ? '模拟验证' : view === 'scenario_director' ? '场景导演台' : !canCollaborate ? '访问受限' : snapshot?.title || '新对话'}</span>}</div>
         {view === 'situation' && <div className="map-titlebar-slot" ref={setMapToolbarTarget}/>}
         <span className="workspace-name" title={view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title : undefined}>{view === 'chat' ? chat.workspace?.name : view === 'task_information' ? informationTask?.title || '相关任务' : '所有项目'}</span>
-        <div className="workspace-tools" role="group" aria-label="项目工具">
+        {canCollaborate&&<div className="workspace-tools" role="group" aria-label="项目工具">
           {view === 'chat' && <OpenSituationMap disabled={!chat.workspaceId || chat.loading}/>}
-          {seats.length > 0 && view === 'chat' && (!identity || currentTask?.visibility==='public') && <button className="icon-button workspace-tool" aria-label="分派工作" title="分派工作" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}><Workflow size={20} strokeWidth={1.75} aria-hidden="true" /></button>}
+          {canCollaborate&&seats.length > 0 && view === 'chat' && (!identity || currentTask?.visibility==='public') && <button className="icon-button workspace-tool" aria-label="分派工作" title="分派工作" disabled={!composerReady} onClick={() => showWork(undefined, chat.workspaceId)}><Workflow size={20} strokeWidth={1.75} aria-hidden="true" /></button>}
           {fileLimits?.enabled && view === 'chat' && <button className="icon-button workspace-tool" aria-label="项目文件" title="项目文件" onClick={() => setFilesOpen(true)} disabled={!chat.workspaceId} aria-haspopup="dialog" aria-expanded={filesOpen}><FolderOpen size={20} strokeWidth={1.75} aria-hidden="true" /></button>}
           {view === 'chat' && <button className="icon-button workspace-tool" aria-label="项目资料" title="项目资料" onClick={() => setResourceOpen(true)} disabled={!chat.workspaceId} aria-haspopup="dialog" aria-expanded={resourceOpen}><BookOpen size={20} strokeWidth={1.75} aria-hidden="true" /></button>}
-        </div>
+        </div>}
       </header>
 
       <SituationWorkspace active={view!=='information'}>
+      {!canCollaborate&&['work','chat','simulation'].includes(view)&&<section id={domId('business-forbidden')} className="information-empty" tabIndex={-1}><CircleAlert size={26} aria-hidden="true"/><h1>无权进入业务办理页面</h1><p>当前席位仅支持场景控制与只读核对，不能分派、接收或办理业务工作。</p><button onClick={showScenarioDirector}>返回场景导演台</button></section>}
       {identity && currentTask && view === 'chat' && <button className="task-detail-link" onClick={()=>showTaskInformation(currentTask.id, 'description')}>{currentTask.visibility==='public'?'查看任务说明':'查看空间说明'}{currentTask.state==='archived'?' · 已归档':''}</button>}
       {creationError && <div className="notice error-notice activity-error" role="alert"><CircleAlert size={16} aria-hidden="true" /><span>{creationError}</span><button onClick={() => setCreationError('')}>关闭提示</button></div>}
-      {seats.length > 0 && <Workbench capabilities={information.data} activityWorkspaces={chat.workspaces} identity={identity} tasks={directory.tasks} information={{ savedTask: directory.saved, openTask: showTaskInformation, tasks: directory.tasks, workspaces: chat.workspaces, seats, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} visible={seatActive && view === 'work'} control={workControl} seatId={seatId!} seats={seats} workspaces={identity ? chat.workspaces.filter(w=>directory.tasks.some(t=>t.id===w.taskSpaceId && t.visibility==='public' && t.state==='active')) : chat.workspaces} activities={chat.activities} maxFiles={fileLimits?.maxAttachments || 20} createSession={chat.create} openSession={selectSession} refreshActivity={chat.refreshActivity} adoptSession={chat.adopt} />}
-      {identity && informationTaskId && <TaskInformation key={`${informationTaskId}:${informationEntry}`} taskId={informationTaskId} home={<TaskHome assessment={continuous.data?.canRead && informationTask?.visibility === 'public' ? <TaskAssessments taskId={informationTaskId} taskRevision={informationTask.revision} visible={seatActive && view === 'task_information'} discussion={{ tasks: directory.tasks, workspaces: chat.workspaces, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} /> : undefined} key={informationTaskId} taskId={informationTaskId} task={informationTask} identity={identity} edit={()=>{if(informationTask)setTaskPanel({task:informationTask,visibility:informationTask.visibility});}} draft={chat.drafts[`task-home:${informationTaskId}`] || ''} setDraft={text=>chat.setScopedDraft(`task-home:${informationTaskId}`,text)} models={chat.models} modelId={chat.draftModels[`task-home:${informationTaskId}`] || chat.models?.defaultModelId || 'default'} chooseModel={id=>void chat.chooseModel(id,`task-home:${informationTaskId}`)} modelsError={chat.modelsError} refreshModels={()=>void chat.refreshModels().catch(()=>{})} busy={Boolean(startingTask) || chat.creating} error={taskStartErrors[informationTaskId] || ''} start={()=>void startTaskConversation(informationTaskId)} />} visible={seatActive && view === 'task_information'} identity={identity} tasks={directory.tasks} workspaces={chat.workspaces} seats={seats} prepared={preparedAnalysis} openSession={id=>void openInformationSession(id)} savedTask={directory.saved} openTask={showTaskInformation} />}
-      {seatActive && view === 'situation' && <Suspense fallback={<p role="status">正在加载态势地图…</p>}>{annotationMapTaskId?<AnnotationWorkspace key={`${annotationMapTaskId}:${annotationMapSessionId || ''}`} initial={annotationInitial} taskId={annotationMapTaskId} taskTitle={directory.tasks.find(task=>task.id===annotationMapTaskId)?.title} openTask={()=>showTaskInformation(annotationMapTaskId)} sessionId={annotationMapSessionId} taskContext={directory.tasks.find(task=>task.id===annotationMapTaskId)?.context} archived={directory.tasks.find(task=>task.id===annotationMapTaskId)?.state==='archived'} reference={referenceAnnotation} sourceReference={referenceMapObject} derive={deriveAnnotations} openSession={selectSession}/>:<><div className="map-entry-context" aria-label="全局态势入口"><div><strong>全局态势 · 只读</strong><p>请选择任务，再进入该任务的会话进行标绘。</p></div><label>进入任务<select value="" onChange={event=>{if(event.target.value)showTaskInformation(event.target.value);}}><option value="">选择任务</option>{directory.tasks.map(task=><option key={task.id} value={task.id}>{task.title}</option>)}</select></label>{!directory.tasks.length&&<span>暂无可访问任务，可从侧栏创建工作任务或个人空间。</span>}</div><SituationView toolbarTarget={mapToolbarTarget} key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/></>}</Suspense>}
-      {seatActive && view === 'simulation' && <Suspense fallback={<p role="status">正在读取模拟控制…</p>}><Simulation/></Suspense>}
-      {seatActive && view === 'scenario_director' && <Suspense fallback={<p role="status">正在加载场景导演台…</p>}><ScenarioDirector identity={identity} allowed={Boolean(identity && mapConfig.data?.scenarioControlEnabled)} checking={!mapConfig.data && !mapConfig.error} permissionError={mapConfig.error} retryPermission={mapConfig.refresh} returnToWork={returnToWork} openTask={showTaskInformation}/></Suspense>}
-      {view !== 'chat' ? null : <>
+      {canCollaborate&&seats.length > 0 && <Workbench capabilities={information.data} activityWorkspaces={chat.workspaces} identity={identity} tasks={directory.tasks} information={{ savedTask: directory.saved, openTask: showTaskInformation, tasks: directory.tasks, workspaces: chat.workspaces, seats, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} visible={seatActive && view === 'work'} control={workControl} seatId={seatId!} seats={seats} workspaces={identity ? chat.workspaces.filter(w=>directory.tasks.some(t=>t.id===w.taskSpaceId && t.visibility==='public' && t.state==='active')) : chat.workspaces} activities={chat.activities} maxFiles={fileLimits?.maxAttachments || 20} createSession={chat.create} openSession={selectSession} refreshActivity={chat.refreshActivity} adoptSession={chat.adopt} />}
+      {identity && informationTaskId && <TaskInformation key={`${informationTaskId}:${informationEntry}`} taskId={informationTaskId} home={<TaskHome assessment={canCollaborate&&continuous.data?.canRead && informationTask?.visibility === 'public' ? <TaskAssessments taskId={informationTaskId} taskRevision={informationTask.revision} visible={seatActive && view === 'task_information'} discussion={{ tasks: directory.tasks, workspaces: chat.workspaces, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} /> : undefined} key={informationTaskId} taskId={informationTaskId} task={informationTask} identity={identity} edit={()=>{if(informationTask)setTaskPanel({task:informationTask,visibility:informationTask.visibility});}} draft={chat.drafts[`task-home:${informationTaskId}`] || ''} setDraft={text=>chat.setScopedDraft(`task-home:${informationTaskId}`,text)} models={chat.models} modelId={chat.draftModels[`task-home:${informationTaskId}`] || chat.models?.defaultModelId || 'default'} chooseModel={id=>void chat.chooseModel(id,`task-home:${informationTaskId}`)} modelsError={chat.modelsError} refreshModels={()=>void chat.refreshModels().catch(()=>{})} busy={Boolean(startingTask) || chat.creating} error={taskStartErrors[informationTaskId] || ''} start={()=>void startTaskConversation(informationTaskId)} />} visible={seatActive && view === 'task_information'} identity={identity} tasks={directory.tasks} workspaces={chat.workspaces} seats={seats} prepared={preparedAnalysis} openSession={id=>void openInformationSession(id)} savedTask={directory.saved} openTask={showTaskInformation} />}
+      {seatActive && view === 'situation' && <Suspense fallback={<p role="status">正在加载态势地图…</p>}>{canCollaborate&&annotationMapTaskId?<AnnotationWorkspace key={`${annotationMapTaskId}:${annotationMapSessionId || ''}`} initial={annotationInitial} taskId={annotationMapTaskId} taskTitle={directory.tasks.find(task=>task.id===annotationMapTaskId)?.title} openTask={()=>showTaskInformation(annotationMapTaskId)} sessionId={annotationMapSessionId} taskContext={directory.tasks.find(task=>task.id===annotationMapTaskId)?.context} archived={directory.tasks.find(task=>task.id===annotationMapTaskId)?.state==='archived'} reference={referenceAnnotation} sourceReference={referenceMapObject} derive={deriveAnnotations} openSession={selectSession}/>:<><div className="map-entry-context" aria-label="全局态势入口"><div><strong>全局态势 · 只读</strong><p>{canCollaborate?'请选择任务，再进入该任务的会话进行标绘。':'只读核对来源态势；场景投放请使用导演台。'}</p></div><label>进入任务<select value="" onChange={event=>{if(event.target.value)showTaskInformation(event.target.value);}}><option value="">选择任务</option>{directory.tasks.map(task=><option key={task.id} value={task.id}>{task.title}</option>)}</select></label>{!directory.tasks.length&&<span>{canCollaborate?"暂无可访问任务，可从侧栏创建工作任务或个人空间。":"暂无可访问任务，请从导演台准备本轮任务。"}</span>}</div><SituationView readOnly={!canCollaborate} toolbarTarget={mapToolbarTarget} key={`${routeRevision}:${location.search}`} initial={parseMapHref(location.pathname+location.search)} reference={referenceMapObject}/></>}</Suspense>}
+      {canCollaborate&&seatActive && view === 'simulation' && <Suspense fallback={<p role="status">正在读取模拟控制…</p>}><Simulation/></Suspense>}
+      {seatActive && view === 'scenario_director' && <Suspense fallback={<p role="status">正在加载场景导演台…</p>}><ScenarioDirector identity={identity} allowed={Boolean(identity && mapConfig.data?.scenarioControlEnabled)} checking={!mapConfig.data && !mapConfig.error} permissionError={mapConfig.error} retryPermission={mapConfig.refresh} returnToWork={returnToWork} openTask={id=>showTaskInformation(id,'description')}/></Suspense>}
+      {view !== 'chat'||!canCollaborate ? null : <>
       {snapshot?.workItemId && seats.length > 0 && <LinkedWork key={snapshot.workItemId} id={snapshot.workItemId} open={() => showWork(snapshot.workItemId)} />}
       <div id={domId('conversation')} className="conversation-scroll" ref={scroll} tabIndex={0} aria-label="对话内容" onScroll={() => {
         const element = scroll.current;
@@ -537,10 +544,10 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
     </div>
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}
     {newSessionOpen && <NewSession workspaces={navigationWorkspaces.filter(w=>taskMeta?.[w.id]?.state!=='archived')} workspaceId={chat.workspaceId} create={createChat} close={() => setNewSessionOpen(false)} />}
-    {settingsOpen && <SettingsPanel simulation={mapConfig.data?.simulationEnabled ? ()=>{setSettingsOpen(false);navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'','/simulation');setView('simulation');} : undefined} identity={identity} logout={logout} logoutError={logoutError} close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
+    {settingsOpen && <SettingsPanel simulation={canCollaborate&&mapConfig.data?.simulationEnabled ? ()=>{setSettingsOpen(false);navigationRequest.current++;chat.noteNavigation();rememberPosition();history.pushState(null,'','/simulation');setView('simulation');} : undefined} identity={identity} logout={logout} logoutError={logoutError} close={() => setSettingsOpen(false)} saved={chat.refreshInfo} />}
     {resourceOpen && <Resources key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} resources={currentResources} resourceError={resourceErrors[chat.workspaceId]} reloadResources={() => setResourceReload(value => value + 1)} instructions={instructions} close={() => setResourceOpen(false)} />}
     {compactionDetail && <CompactionPanel key={`${compactionDetail.sessionId}:${compactionDetail.entryId}`} {...compactionDetail} close={() => setCompactionDetail(undefined)} />}
-    {taskPanel && identity && <TaskPanel key={taskPanel.task?.id || taskPanel.visibility} identity={identity} showInformation={showTaskInformation} {...taskPanel} close={()=>setTaskPanel(undefined)} saved={task=>{directory.saved(task);void chat.refreshActivity();}}/>}
+    {canCollaborate&&taskPanel && identity && <TaskPanel key={taskPanel.task?.id || taskPanel.visibility} identity={identity} showInformation={showTaskInformation} {...taskPanel} close={()=>setTaskPanel(undefined)} saved={task=>{directory.saved(task);void chat.refreshActivity();}}/>}
     {workspaceForm && <Panel title="新建项目" close={() => setWorkspaceForm(false)}><form className="workspace-form" onSubmit={event => { event.preventDefault(); void createWorkspace(); }}><label htmlFor="workspace-name">项目名称</label><input id="workspace-name" value={workspaceName} maxLength={60} required onChange={event => setWorkspaceName(event.target.value)} placeholder="例如：方案讨论" /><p className="resource-help">每个项目拥有独立的指令、资料和会话。</p>{workspaceError && <p className="resource-error" role="alert">{workspaceError}</p>}<button className="primary-action" disabled={workspaceCreating || !workspaceName.trim()} type="submit">{workspaceCreating ? '创建中…' : '创建项目'}</button></form></Panel>}
     {mapObject && <Panel title="引用并提问" close={()=>setMapObject(undefined)}><p>{mapObject.name} · 发送问题时读取最新状态</p><label>会话保存位置<select value={mapWorkspace} onChange={event=>setMapWorkspace(event.target.value)}><option value="">选择工作任务或个人空间</option>{navigationWorkspaces.map(workspace=><option key={workspace.id} value={workspace.id}>{workspace.name}</option>)}</select></label><button className="primary-action" disabled={!mapWorkspace || chat.creating} onClick={()=>void prepareMapConversation()}>创建对话草稿</button></Panel>}
   </div></SituationProvider>;

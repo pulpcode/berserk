@@ -36,6 +36,8 @@ Work-handoff list status badges use the existing per-seat `WorkbenchItem.bucket`
 
 When the workbench type filter is `work`, omit the repeated work-handoff type text inside each handoff row while retaining its status badge. Restore the type text for the all-types filter.
 
+Director isolation: workbench items and business work overview require current `AccessStore.assertCanCollaborate` before projecting counts or entering section-level error handling. A forbidden director must not be converted into a partially failed but successful business inbox response. The web director hides the work route/assignment controls and uses read-only task/map/source verification entries; business candidates come from the filtered authenticated seat directory.
+
 ## 4. Validation & Error Matrix
 
 | Condition | Result |

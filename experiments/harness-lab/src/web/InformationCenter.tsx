@@ -31,11 +31,12 @@ function locationUrl(route: Location) {
 }
 export function InformationCenter({ continuous, discussion, visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, openMenu, seats }: { continuous?: ContinuousAccess; discussion: ContinuousDiscussion; seats: Array<{id: string; name: string}>; openWork: (id: string) => void; openMenu: () => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
   const { api, domId } = useApi();
+  const readOnly=identity?.canCollaborate===false;
   const [route, setRoute] = useState(() => initialLocation(!!identity?.viewWorkOverview));
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [busy, setBusy] = useState(false); const [refreshKey, setRefreshKey] = useState(0);
   const lock = useRef(false); const actionIds = useRef(new Map<string, string>()); const [focusTransfers] = useState<ChatFocusTransfer>(() => new Map());
   const allowed = Boolean(capabilities?.sources.length);
-  if (capabilities && !allowed && continuous?.canRead && ['events', 'jobs', 'rules'].includes(route.tab)) setRoute({ ...route, tab: 'assessments', id: '' });
+  if (!readOnly && capabilities && !allowed && continuous?.canRead && ['events', 'jobs', 'rules'].includes(route.tab)) setRoute({ ...route, tab: 'assessments', id: '' });
   const query = new URLSearchParams({ offset: String(route.offset), limit: '25', ...(route.sourceId ? { sourceId: route.sourceId } : {}), ...(route.status ? { status: route.status } : {}), ...(route.search ? { search: route.search } : {}) });
   const events = useInformationQuery<BackgroundPage<BackgroundEventSummary>>(`/api/information/events?${query}`, visible && allowed && route.tab === 'events');
   const jobs = useInformationQuery<BackgroundPage<InformationJobSummary>>(`/api/information/jobs?${query}`, visible && allowed && route.tab === 'jobs' && route.view === 'list');
@@ -51,14 +52,14 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
     window.addEventListener('popstate', pop); return () => window.removeEventListener('popstate', pop);
   }, [identity?.viewWorkOverview]);
   async function mutate(path: string, body: object, method: 'POST' | 'PUT' = 'POST', dedup = false) {
-    if (lock.current) return;
+    if (readOnly || lock.current) return;
     lock.current = true; setBusy(true); setError(''); setNotice('');
     const clientActionId = actionIds.current.get(path) || randomUUID(); if (dedup) actionIds.current.set(path, clientActionId);
     try { await api(path, dedup ? { ...body, clientActionId } : body, method); actionIds.current.delete(path); setNotice('操作已完成，已刷新当前记录。'); refresh(); }
     catch (reason) { setError(`${informationError(reason)} 请核对当前状态后重试。`); refresh(); }
     finally { lock.current = false; setBusy(false); }
   }
-  const canManage = (sourceId: string) => capabilities?.sources.some(source => source.sourceId === sourceId && source.permission === 'manage');
+  const canManage = (sourceId: string) => !readOnly && capabilities?.sources.some(source => source.sourceId === sourceId && source.permission === 'manage');
   const sourceName = (sourceId: string) => capabilities?.sources.find(source => source.sourceId === sourceId)?.name || sourceId;
   const seatName = (seatId: string) => capabilities?.seats.find(seat => seat.id === seatId)?.name || seatId;
   const source = capabilities?.sources.find(source => source.sourceId === route.sourceId);
@@ -76,15 +77,15 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
   }
   const feedback = <>{error && <p className="resource-error" role="alert">{error}</p>}{navigationError?.url === location.pathname + location.search && <p className="resource-error" role="alert">{navigationError.message}<button onClick={clearNavigationError}>关闭提示</button></p>}{notice && <p className="resource-success" role="status">{notice}</p>}</>;
   return <section id={domId('information-center')} tabIndex={-1} className="information-center" hidden={!visible} aria-label="工作总览">
-    <header className="information-center-header" inert={detailOpen || undefined}><div><button className="icon-button mobile-only" aria-label="打开会话列表" onClick={openMenu}><Menu size={20} /></button><Workflow size={22} aria-hidden="true" /><h1>工作总览</h1></div></header>
+    <header className="information-center-header" inert={detailOpen || undefined}><div><button className="icon-button mobile-only" aria-label="打开会话列表" onClick={openMenu}><Menu size={20} /></button><Workflow size={22} aria-hidden="true" /><h1>{readOnly?'来源记录':'工作总览'}</h1></div></header>
     {!allowed && !continuous?.canRead && !identity?.viewWorkOverview && !capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed && !continuous?.canRead && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
       <nav className="information-tabs" aria-label="工作总览栏目" inert={detailOpen || undefined}>
-        {continuous?.canRead && <button aria-current={route.tab === 'assessments' ? 'page' : undefined} onClick={() => navigate({ tab: 'assessments', id: '', offset: 0 })}>研判记录</button>}
-        {identity?.viewWorkOverview && <button aria-current={route.tab === 'work' ? 'page' : undefined} onClick={() => navigate({ tab: 'work', id: '', offset: 0, status: '' })}>席位工作</button>}
-        {allowed && ([['events', '信息流转'], ['jobs', '处理运行'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}
-        {capabilities?.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>补充投递审批</button>}
+        {!readOnly&&continuous?.canRead && <button aria-current={route.tab === 'assessments' ? 'page' : undefined} onClick={() => navigate({ tab: 'assessments', id: '', offset: 0 })}>研判记录</button>}
+        {!readOnly&&identity?.viewWorkOverview && <button aria-current={route.tab === 'work' ? 'page' : undefined} onClick={() => navigate({ tab: 'work', id: '', offset: 0, status: '' })}>席位工作</button>}
+        {allowed && ([['events', '信息流转'], ['jobs', '处理运行'], ['rules', '处理与投递规则']] as const).filter(([id])=>!readOnly||id!=='rules').map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}
+        {!readOnly&&capabilities?.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>补充投递审批</button>}
       </nav>
-      {route.tab === 'assessments' ? continuous?.canRead ? <ContinuousRecords visible={visible} discussion={discussion} selectedId={route.id} select={id => navigate({ id })} /> : <p>当前没有研判读取权限。</p> : route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
+      {readOnly&&!['events','jobs'].includes(route.tab)?<p className="information-empty">当前席位仅可只读核对来源接收与处理记录。</p>:route.tab === 'assessments' ? continuous?.canRead ? <ContinuousRecords visible={visible} discussion={discussion} selectedId={route.id} select={id => navigate({ id })} /> : <p>当前没有研判读取权限。</p> : route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
       <div className="information-center-body" hidden={route.tab === 'reviews'} inert={detailOpen || undefined}>
         {capabilities.queue.blockedReason && <p className="information-queue-notice" role="status">{capabilities.queue.blockedReason}</p>}
         {route.tab !== 'rules' && route.tab !== 'reviews' && <>
@@ -95,7 +96,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
             {route.tab === 'jobs' && <div className="information-view-toggle" role="group" aria-label="作业展示方式"><button aria-pressed={route.view === 'board'} onClick={() => navigate({ view: 'board', status: '', id: '' })}><Columns3 size={16} aria-hidden="true" />看板</button><button aria-pressed={route.view === 'list'} onClick={() => navigate({ view: 'list', id: '' })}><List size={16} aria-hidden="true" />列表</button></div>}
             <button onClick={refresh}><RefreshCw size={16} aria-hidden="true" />刷新记录</button>
           </div>
-          <div className="information-controls">{source ? <><span>{source.name} · {source.accepting ? '接收中' : '已停止接收'} · {source.permission === 'manage' ? '可管理' : '只读'}</span>{source.permission === 'manage' && <button disabled={busy} onClick={() => void mutate(`/api/information/sources/${encodeURIComponent(source.sourceId)}`, { accepting: !source.accepting, revision: source.revision }, 'PUT')}>{source.accepting ? '停止此来源接收' : '恢复此来源接收'}</button>}</> : <span>其他席位的分析仅显示办理状态。</span>}{capabilities.canManageQueue && <button disabled={busy} onClick={() => void mutate('/api/information/queue', { enabled: !capabilities.queue.enabled, revision: capabilities.queue.revision }, 'PUT')}>{capabilities.queue.enabled ? '暂停领取后台作业' : '恢复领取后台作业'}</button>}</div>
+          <div className="information-controls">{source ? <><span>{source.name} · {source.accepting ? '接收中' : '已停止接收'} · {source.permission === 'manage' ? '可管理' : '只读'}</span>{!readOnly&&source.permission === 'manage' && <button disabled={busy} onClick={() => void mutate(`/api/information/sources/${encodeURIComponent(source.sourceId)}`, { accepting: !source.accepting, revision: source.revision }, 'PUT')}>{source.accepting ? '停止此来源接收' : '恢复此来源接收'}</button>}</> : <span>其他席位的分析仅显示办理状态。</span>}{!readOnly&&capabilities.canManageQueue && <button disabled={busy} onClick={() => void mutate('/api/information/queue', { enabled: !capabilities.queue.enabled, revision: capabilities.queue.revision }, 'PUT')}>{capabilities.queue.enabled ? '暂停领取后台作业' : '恢复领取后台作业'}</button>}</div>
           {listError && <p className="resource-error" role="alert">{listError}</p>}{!route.id && feedback}
           {route.tab === 'jobs' && route.view === 'board' ? <div className="information-board" aria-label="后台作业看板">{jobColumns.map(column => <InformationJobColumn key={column.id} column={column} query={query.toString()} offset={route[column.id]} visible={visible && allowed} refreshKey={refreshKey} selectedId={route.id} sourceName={sourceName} seatName={seatName} select={id => navigate({ id })} page={offset => navigate({ [column.id]: offset, id: '' })} />)}</div> : <div className="information-record-list">
             <div className="information-table-scroll"><table className="information-table"><thead><tr><th scope="col">{route.tab === 'events' ? '信息' : '作业'}</th><th scope="col">来源</th><th scope="col">时间</th><th scope="col">{route.tab === 'events' ? '最近一次执行' : '执行状态'}</th><th scope="col">{route.tab === 'events' ? '该次投递' : '类型／本次投递'}</th></tr></thead><tbody>
@@ -108,9 +109,9 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
             <InformationPagination page={route.tab === 'events' ? events.data : jobs.data} change={offset => navigate({ offset, id: '' })} />
           </div>}
         </>}
-        <InformationRules visible={visible && route.tab === 'rules'} capabilities={capabilities} tasks={tasks} selectedId={route.tab === 'rules' ? route.id : ''} select={id => navigate({ id })} />
+        {!readOnly&&<InformationRules visible={visible && route.tab === 'rules'} capabilities={capabilities} tasks={tasks} selectedId={route.tab === 'rules' ? route.id : ''} select={id => navigate({ id })} />}
       </div>
-      <DeliveryReviews visible={visible && route.tab === 'reviews'} selectedId={route.tab === 'reviews' ? route.id : ''} status={route.tab === 'reviews' ? route.status : 'pending'} offset={route.offset} capabilities={capabilities} select={id => navigate({id})} filter={status => navigate({status,id:'',offset:0})} page={offset => navigate({offset,id:''})} changed={refreshAccess} />
+      {!readOnly&&<DeliveryReviews visible={visible && route.tab === 'reviews'} selectedId={route.tab === 'reviews' ? route.id : ''} status={route.tab === 'reviews' ? route.status : 'pending'} offset={route.offset} capabilities={capabilities} select={id => navigate({id})} filter={status => navigate({status,id:'',offset:0})} page={offset => navigate({offset,id:''})} changed={refreshAccess} />}
       {visible && route.id && route.tab !== 'rules' && route.tab !== 'reviews' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
         {feedback}{detailError && <p className="resource-error" role="alert">{detailError}<button onClick={refresh}>重新读取详情</button></p>}
         {route.tab === 'events' ? !shownEvent ? !detailError && <p role="status">正在读取信息…</p> : <>
@@ -124,24 +125,24 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
             {shownEvent.results.find(result => result.jobId === item.id) && <details><summary>处理结果</summary><InformationText>{shownEvent.results.find(result => result.jobId === item.id)!.text}</InformationText></details>}
             {deliveries(shownEvent.deliveries.filter(delivery => delivery.jobId === item.id), shownEvent.sourceId)}
           </div>)}</section>
-          <AnalysisHistory items={shownEvent.analyses} seats={capabilities.seats} openSession={openSession} />
+          <AnalysisHistory items={shownEvent.analyses} seats={capabilities.seats} openSession={readOnly?undefined:openSession} />
           </>}
         </> : !shownJob ? !detailError && <p role="status">正在读取作业…</p> : <>
           <header><h2>{jobTitle(shownJob, seatName)}</h2><JobStatus status={shownJob.status} /><p>{sourceName(shownJob.sourceId)} · {shownJob.kind === 'preprocess' ? '自动预处理' : '席位后台分析'}{shownJob.seatId ? ` · ${seatName(shownJob.seatId)}` : ''}</p></header>
           <dl className="information-metadata"><dt>排队时间</dt><dd>{informationTime(shownJob.createdAt)}</dd><dt>开始时间</dt><dd>{informationTime(shownJob.startedAt)}</dd><dt>结束时间</dt><dd>{informationTime(shownJob.endedAt)}</dd>{shownJob.status === 'running' && shownJob.phase && <><dt>当前阶段</dt><dd>{jobPhases[shownJob.phase]}</dd></>}</dl>
           {shownJob.contentRestricted ? <p className="resource-help">无该资料范围访问权限，仅可查看处理状态。</p> : <>
           <div className="information-actions">
-            {(shownJob.kind === 'preprocess' ? canManage(shownJob.sourceId) : shownJob.sessionId) && ['queued', 'running'].includes(shownJob.status) && <button disabled={busy} onClick={() => void mutate(`/api/${shownJob.kind === 'preprocess' ? 'information' : 'background'}/jobs/${encodeURIComponent(shownJob.id)}/cancel`, { revision: shownJob.revision })}>取消{shownJob.kind === 'preprocess' ? '预处理' : '后台分析'}</button>}
+            {!readOnly&&(shownJob.kind === 'preprocess' ? canManage(shownJob.sourceId) : shownJob.sessionId) && ['queued', 'running'].includes(shownJob.status) && <button disabled={busy} onClick={() => void mutate(`/api/${shownJob.kind === 'preprocess' ? 'information' : 'background'}/jobs/${encodeURIComponent(shownJob.id)}/cancel`, { revision: shownJob.revision })}>取消{shownJob.kind === 'preprocess' ? '预处理' : '后台分析'}</button>}
             {shownJob.kind === 'preprocess' && canManage(shownJob.sourceId) && !['queued', 'running'].includes(shownJob.status) && <button disabled={busy} onClick={() => { if (window.confirm('沿用原输入和规则快照，启动新的预处理作业；已有记录保留。是否继续？')) void mutate(`/api/information/jobs/${encodeURIComponent(shownJob.id)}/reprocess`, {}, 'POST', true); }}>重新预处理</button>}
-            {shownJob.sessionId && shownJob.kind === 'seat_analysis' && <button onClick={() => openSession(shownJob.sessionId!)}>进入关联对话</button>}
+            {!readOnly&&shownJob.sessionId && shownJob.kind === 'seat_analysis' && <button onClick={() => openSession(shownJob.sessionId!)}>进入关联对话</button>}
             {shownJob.retryOfJobId && <button onClick={() => navigate({ id: shownJob.retryOfJobId! })}>查看上次执行</button>}
           </div>
           {shownJob.input && <section><h3>原始输入与附件</h3><InformationText>{shownJob.input.text}</InformationText><InformationFiles files={shownJob.input.files} base={`/api/information/events/${encodeURIComponent(shownJob.eventId)}/files`} /><button onClick={() => navigate({ tab: 'events', id: shownJob.eventId, status: '', offset: 0 })}>查看来源信息</button></section>}
           {shownJob.error && <section><h3>执行错误</h3><p className="resource-error">{shownJob.error.message}</p></section>}
           {shownJob.text !== undefined && <section><h3>处理结果</h3>{shownJob.profileName && <p className="resource-help">处理方案：{shownJob.profileName}</p>}<InformationText evidence={shownJob.snapshot?.messages}>{shownJob.text || '尚无最终答复。'}</InformationText>{shownJob.files && (shownJob.kind === 'preprocess' || shownJob.snapshot) && <InformationFiles files={shownJob.files} base={shownJob.kind === 'preprocess' ? `/api/information/events/${encodeURIComponent(shownJob.eventId)}/files` : `/api/workspaces/${encodeURIComponent(shownJob.snapshot!.workspaceId)}/downloads`} />}</section>}
           <ContextEvidence messages={shownJob.snapshot?.messages}/>
-          {identity && shownJob.kind==='preprocess' && shownJob.status==='succeeded' && <TaskAssociations key={`links:${shownJob.id}`} eventId={shownJob.eventId} jobId={shownJob.id} visible={visible} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={refresh} />}
-          {shownJob.kind === 'preprocess' && <DeliveryReviewStatus job={shownJob} open={id => navigate({tab:'reviews',id,status:'',offset:0})} />}
+          {!readOnly&&identity && shownJob.kind==='preprocess' && shownJob.status==='succeeded' && <TaskAssociations key={`links:${shownJob.id}`} eventId={shownJob.eventId} jobId={shownJob.id} visible={visible} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={refresh} />}
+          {!readOnly&&shownJob.kind === 'preprocess' && <DeliveryReviewStatus job={shownJob} open={id => navigate({tab:'reviews',id,status:'',offset:0})} />}
           {shownJob.kind === 'preprocess' && <section><h3>本次投递</h3>{deliveries(shownJob.deliveries || [], shownJob.sourceId)}</section>}
           {shownJob.snapshot && <details className="information-original"><summary>查看执行过程</summary>
             {shownJob.snapshot.commandPolicies?.map((record, index) => <div className="information-command-policy" key={`${record.requestId}:${record.toolCallId}:${index}`}>

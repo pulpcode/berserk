@@ -1,0 +1,153 @@
+import { randomUUID } from 'node:crypto';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, expect, it, vi } from 'vitest';
+import { openDatabase } from '../src/access/database.js';
+import { AccessStore } from '../src/access/store.js';
+import { ContextService } from '../src/context/service.js';
+import type { AuthSession } from '../src/contracts/access.js';
+import type { WorkPrepareInput } from '../src/contracts/collaboration.js';
+import { PiLab } from '../src/pi/lab.js';
+import { createApp } from '../src/server/app.js';
+import { fakeRuntime, testConfig } from './pi/fake-runtime.js';
+
+const cleanup: Array<() => Promise<unknown>> = [];
+afterEach(async () => { for (const fn of cleanup.splice(0).reverse()) await fn(); });
+async function setup(reply: Parameters<typeof fakeRuntime>[1] = () => ({ text: '普通业务席请求已结束。' })) {
+  const dir = await mkdtemp(join(tmpdir(), 'director-business-'));
+  cleanup.push(() => rm(dir, { recursive: true, force: true }));
+  const db = await openDatabase(dir), access = new AccessStore(db);
+  for (const seatId of ['a', 'b', 'director']) await access.saveAccount({ username: seatId, displayName: seatId, seatId, seatName: seatId, password: 'test-password-123', createPublicTask: true, manageModelSettings: false, viewWorkOverview: true });
+  db.close();
+  const config = testConfig(dir, { seatId: 'a', auth: { secret: 'director-business-test-secret-32-characters', sessionMs: 3600000 } });
+  const fake = await fakeRuntime(config, reply);
+  const lab = await PiLab.create(config, fake.runtime);
+  const actor = (seatId: string) => lab.access!.identityForSeat(seatId)!;
+  const task = lab.access!.create(actor('director'), { title: '导演准备的公共任务', goal: '核对业务协作隔离', visibility: 'public', clientActionId: randomUUID() });
+  const spaces = Object.fromEntries(await Promise.all(['a', 'b', 'director'].map(async seatId => [seatId, await lab.workspaces.ensureWorkspace(task.id, seatId, task.title)] as const)));
+  // Legacy workspaces may predate designation of the director seat.
+  lab.context = new ContextService({ systems: [{ id: 'intel', name: '只读来源', adapter: 'mock-information-http', baseUrl: 'http://127.0.0.1:1/intel', tokenEnv: 'QUERY' }], scopes: [], simulation: { enabled: false, baseUrl: 'http://127.0.0.1:1', tokenEnv: 'CONTROL', directorSeatId: 'director', sources: [{ systemId: 'intel', sourceId: 'intel-source' }] } }, { QUERY: 'synthetic-query', CONTROL: 'synthetic-control' });
+  const app = await createApp(lab); cleanup.push(() => app.close());
+  const input = (from: string, to: string, inputPaths: string[] = []): WorkPrepareInput => ({ kind: 'assign', taskSpaceId: task.id, payload: { workspaceId: spaces[from].id, assigneeSeatId: to, title: '资源核对', goal: '提供核对结果', inputPaths } });
+  const prepare = (seatId: string, action: WorkPrepareInput) => lab.collaboration!.prepare({ seatId }, action, { source: 'page', clientActionId: randomUUID() });
+  const directorize = (seatId: string, value = true) => lab.access!.db.prepare('UPDATE seats SET control_scenarios=? WHERE id=?').run(Number(value), seatId);
+  return { dir, lab, app, fake, config, actor, task, spaces, input, prepare, directorize };
+}
+
+it('keeps the director login choice and task preparation but denies business APIs and filters authenticated recipients', async () => {
+  const s = await setup();
+  const boot = await s.app.inject('/api/auth/session'), initial = boot.json<AuthSession>();
+  expect(initial.loginSeats?.map(seat => seat.id)).toContain('director');
+  const login = await s.app.inject({ method: 'POST', url: '/api/auth/login', headers: { cookie: boot.cookies.map(c => `${c.name}=${c.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': initial.csrf! }, payload: { username: 'director', password: 'test-password-123' } });
+  expect(login.statusCode, login.body).toBe(200);
+  const auth = login.json<AuthSession>();
+  expect(auth.identity).toMatchObject({ seatId: 'director', controlScenarios: false, canCollaborate: false });
+  expect(auth.seats?.map(seat => seat.id).sort()).toEqual(['a', 'b']);
+  const headers = { cookie: login.cookies.map(c => `${c.name}=${c.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': auth.csrf!, 'x-axon-view': auth.viewId! };
+  expect((await s.app.inject({ url: '/api/workbench/items', headers })).statusCode).toBe(403);
+  expect((await s.app.inject({ url: '/api/work-overview/items', headers })).statusCode).toBe(403);
+  expect((await s.app.inject({ method: 'POST', url: '/api/sessions', headers, payload: { workspaceId: s.spaces.director.id } })).statusCode).toBe(403);
+  await expect(s.lab.workspaces.create('新的业务工作区', s.task.id, 'director')).rejects.toMatchObject({ statusCode: 403 });
+  expect(() => s.lab.access!.acquire(s.task.id, 'director')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(s.lab.access!.update(s.actor('director'), s.task.id, s.task.revision, { state: 'archived' }).state).toBe('archived');
+  expect(s.fake.calls).toHaveLength(0);
+});
+
+it('rejects direct collaboration, changed actors/recipients, old pending actions, work binding and fixed-file import', async () => {
+  const s = await setup(), service = s.lab.collaboration!;
+  await expect(s.prepare('director', s.input('director', 'a'))).rejects.toMatchObject({ statusCode: 403 });
+  await expect(s.prepare('a', s.input('a', 'director'))).rejects.toMatchObject({ statusCode: 403 });
+  await writeFile(join(s.lab.workspaces.filesDirectory(s.spaces.a.id, 'a'), '输入.txt'), '固定业务输入');
+  const existing = await s.prepare('a', s.input('a', 'b', ['输入.txt']));
+  const work = await service.commitPage({ seatId: 'a' }, existing.operationId);
+  const detail = service.read({ seatId: 'b' }, work.workItemId);
+  const session = await s.lab.createSession(s.spaces.b.id, 'b');
+  await s.lab.bindWorkItem(session.id, detail.id, 'b');
+  const byActor = await s.prepare('b', s.input('b', 'a'));
+  const toRecipient = await s.prepare('a', s.input('a', 'b'));
+  const claim = await s.prepare('b', { kind: 'claim', workItemId: detail.id, expectedRevision: detail.revision, payload: {} });
+  const opposite = await s.prepare('b', s.input('b', 'a'));
+  const oppositeWork = await service.commitPage({ seatId: 'b' }, opposite.operationId);
+  const otherParticipantClaim = await s.prepare('a', { kind: 'claim', workItemId: oppositeWork.workItemId, expectedRevision: oppositeWork.revision, payload: {} });
+  const agentSession = await s.lab.createSession(s.spaces.a.id, 'a'), requestId = randomUUID();
+  service.beginRequest(agentSession.id, requestId);
+  const agentAction = await service.prepare({ seatId: 'a' }, s.input('a', 'b'), { source: 'agent', sessionId: agentSession.id, requestId, toolCallId: 'native-action' });
+  const grant = { sessionId: agentSession.id, requestId, toolCallId: 'native-action', interactionId: randomUUID() };
+  service.authorizeAgent({ seatId: 'a' }, agentAction.operationId, grant);
+  s.directorize('b');
+  await expect(service.commitPage({ seatId: 'b' }, byActor.operationId)).rejects.toMatchObject({ statusCode: 403 });
+  await expect(service.commitPage({ seatId: 'a' }, toRecipient.operationId)).rejects.toMatchObject({ statusCode: 403 });
+  await expect(service.commitPage({ seatId: 'b' }, claim.operationId)).rejects.toMatchObject({ statusCode: 403 });
+  await expect(service.commitPage({ seatId: 'a' }, otherParticipantClaim.operationId)).rejects.toMatchObject({ statusCode: 403 });
+  await expect(service.commitAgent({ seatId: 'a' }, agentAction.operationId, grant)).rejects.toMatchObject({ statusCode: 403 });
+  service.endRequest(agentSession.id, requestId);
+  await expect(s.lab.bindWorkItem(session.id, detail.id, 'b')).rejects.toMatchObject({ statusCode: 403 });
+  await expect(service.importFile({ seatId: 'b' }, detail.inputFiles[0].fileId, s.spaces.b.id)).rejects.toMatchObject({ statusCode: 403 });
+  expect(() => s.lab.start(session.id, '继续办理旧工作', {}, 'b')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(() => s.lab.get(session.id, 'b')).not.toThrow();
+  expect(s.lab.access!.allSeatIds().sort()).toEqual(['a', 'b', 'director']);
+  expect(s.lab.access!.seats().map(seat => seat.id).sort()).toEqual(['a', 'b', 'director']);
+  const stored = s.lab.access!.db.prepare('SELECT data FROM works WHERE id=?').get(detail.id)!;
+  expect(JSON.parse(String(stored.data))).toMatchObject({ state: 'assigned', revision: 1 });
+  expect(s.fake.calls).toHaveLength(0);
+  const beforeRestart = s.lab.get(session.id, 'b').messages;
+  const nativeFiles = (await readdir(join(s.dir, 'sessions'))).filter(name => name.endsWith('.jsonl'));
+  const beforeBytes = await Promise.all(nativeFiles.map(name => readFile(join(s.dir, 'sessions', name))));
+  await s.app.close();
+  const runtime = await fakeRuntime(s.config, () => ({ text: '不应调用模型' }));
+  const reopened = await PiLab.create(s.config, runtime.runtime); cleanup.push(() => reopened.close());
+  reopened.context = s.lab.context;
+  expect(reopened.get(session.id, 'b').messages).toEqual(beforeRestart);
+  expect(reopened.access!.allSeatIds().sort()).toEqual(['a', 'b', 'director']);
+  expect(() => reopened.start(session.id, '旧会话继续办理', {}, 'b')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(await Promise.all(nativeFiles.map(name => readFile(join(s.dir, 'sessions', name))))).toEqual(beforeBytes);
+  expect(reopened.access!.db.prepare('SELECT data FROM works WHERE id=?').get(detail.id)).toEqual(stored);
+  expect(runtime.calls).toHaveLength(0);
+});
+
+it('filters actual Agent assignment context and denies new sessions or continuation after a capability change', async () => {
+  const s = await setup(); s.directorize('b');
+  const session = await s.lab.createSession(s.spaces.a.id, 'a');
+  const annotationActor = s.lab.annotations!.actorForSeat('a');
+  const draft = s.lab.annotations!.action(annotationActor, session.id, { action: 'create_draft', clientActionId: randomUUID(), baseRef: null, operations: [{op:'add_layer',layer:{layerId:'resources',name:'资源',order:0,defaultVisible:true,features:[]}}] });
+  if (!draft.ref || !('revision' in draft.ref)) throw Error('Missing fixed draft revision');
+  await s.lab.start(session.id, '列出可分派席位', {}, 'a').run(() => {});
+  const directoryLine = s.fake.calls[0].context.systemPrompt!.split('\n').find(line => line.includes('id 为分派参数'))!;
+  expect(directoryLine).toContain('"id":"a"');
+  expect(directoryLine).not.toContain('"id":"b"');
+  expect(directoryLine).not.toContain('"id":"director"');
+  const pending = s.lab.start(session.id, '取得 runner 后资格改变', {}, 'a');
+  s.directorize('a');
+  await pending.run(() => {});
+  expect(s.lab.get(session.id, 'a').lastResult?.status).toBe('failed');
+  await expect(s.lab.createSession(s.spaces.a.id, 'a')).rejects.toMatchObject({ statusCode: 403 });
+  expect(() => s.lab.start(session.id, '继续执行', {}, 'a')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(s.lab.get(session.id, 'a').messages.length).toBeGreaterThan(0);
+  expect(() => s.lab.annotations!.action(annotationActor, session.id, { action: 'apply', clientActionId: randomUUID(), expectedRevision: draft.ref && 'revision' in draft.ref ? draft.ref.revision : 0, operations: [{op:'rename_set',title:'导演不得编辑'}] })).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(s.lab.annotations!.binding(annotationActor, session.id).draft?.headRevision).toBe(draft.ref.revision);
+  expect(s.fake.calls).toHaveLength(1);
+});
+
+it('rejects old pending interaction/queued input after designation and stops before the next provider request', async () => {
+  const s = await setup((_context, index) => index === 0 ? { tools: [{ name: 'ask_user', arguments: { questions: [{ id: 'format', prompt: '输出格式？', options: [{ id: 'md', label: 'Markdown' }, { id: 'txt', label: '文本' }] }] } }] } : { text: '不应继续请求' });
+  const session = await s.lab.createSession(s.spaces.a.id, 'a'), request = s.lab.start(session.id, '需要确认格式', {}, 'a');
+  const done = request.run(() => {});
+  await vi.waitFor(() => expect(s.lab.get(session.id, 'a').active?.phase).toBe('waiting_answer'));
+  const item = s.lab.get(session.id, 'a').interactions!.find(interaction => interaction.status === 'pending')!;
+  s.directorize('a');
+  expect(() => s.lab.submitInput(session.id, { submissionId: randomUUID(), expectedRequestId: request.requestId, text: '追加办理', mode: 'followUp' }, 'a')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(() => s.lab.actOnInput(session.id, randomUUID(), { actionId: randomUUID(), expectedRequestId: request.requestId, pendingRevision: 1, action: 'steer' }, 'a')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(() => s.lab.respondInteraction(session.id, item.interactionId, { requestId: item.requestId, kind: 'question', action: 'answer', answers: [{ questionId: 'format', optionIds: ['md'] }] }, 'a')).toThrow(expect.objectContaining({ statusCode: 403 }));
+  expect(s.lab.get(session.id, 'a').interactions!.find(interaction => interaction.interactionId === item.interactionId)?.status).toBe('pending');
+  s.lab.cancel(session.id, request.requestId, 'a'); await done;
+  expect(s.fake.calls).toHaveLength(1);
+});
+
+it('rechecks eligibility for the provider continuation after a completed tool call', async () => {
+  const s = await setup((_context, index) => index === 0 ? { tools: [{ name: 'source_list', arguments: {} }] } : { text: '不应继续请求' });
+  const session = await s.lab.createSession(s.spaces.a.id, 'a');
+  await s.lab.start(session.id, '查询后资格变化', {}, 'a').run(event => { if (event.type === 'tool.completed') s.directorize('a'); });
+  expect(s.fake.calls).toHaveLength(1);
+  expect(s.lab.get(session.id, 'a').lastResult?.status).toBe('failed');
+});

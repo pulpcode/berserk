@@ -69,6 +69,45 @@ async function setup(reply: (index:number) => Reply = index => index === 0 ? {to
 }
 
 describe('supplementary delivery through native Pi and authenticated routes',() => {
+  it('filters a newly designated director from queued provider candidates without rewriting frozen evidence or ordinary disabled seats',async()=>{
+    const context=await setup(()=>({text:'按现有固定接收范围完成分析。'}));
+    const userId=context.overall.auth.identity!.userId;
+    const paused=context.store.setControl('queue',context.store.getControl('queue',true).revision,false,userId);
+    const rule=await context.overall.call('/api/information/rules',context.ruleInput);expect(rule.statusCode,rule.body).toBe(200);
+    const response=await context.app.inject({method:'POST',url:'/api/integrations/intel/events',headers:{authorization:'Bearer test-token-at-least-24-characters'},payload:{sourceMessageId:randomUUID(),title:'排队后的候选变更',text:'请核对来源信息。'}});
+    expect(response.statusCode,response.body).toBe(202);
+    const jobId=context.store.getEvent(response.json<{eventId:string}>().eventId).initialJobId!;
+    const frozen=JSON.stringify(context.store.getJob(jobId).ruleSnapshot);
+    expect(context.store.getJob(jobId).status).toBe('queued');expect(context.fake.calls).toHaveLength(0);
+    context.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('planning');
+    context.lab.access!.disable('situation');
+    context.store.setControl('queue',paused.revision,true,userId);
+    await vi.waitFor(()=>expect(context.store.getJob(jobId).status).toBe('succeeded'),{timeout:10000});
+    expect(context.fake.calls).toHaveLength(1);
+    const text=context.fake.calls[0].context.messages.filter(message=>message.role==='user').map(message=>typeof message.content==='string'?message.content:message.content.filter(block=>block.type==='text').map(block=>block.text).join('\n')).join('\n');
+    const candidates=text.split('\n').find(line=>line.includes('候选席位及职责'))!;
+    expect(candidates).toBeDefined();expect(candidates).not.toContain('"id":"planning"');expect(candidates).toContain('"id":"situation"');
+    expect(JSON.stringify(context.store.getJob(jobId).ruleSnapshot)).toBe(frozen);
+  });
+
+  it('removes a newly designated director from current candidates without rewriting suggestions or hiding ordinary disabled seats',async()=>{
+    const context=await setup(),{job}=await context.run(),review=context.store.reviewForJob(job.id)!;
+    const originalSnapshot=JSON.stringify(job.ruleSnapshot),originalSuggestion=JSON.stringify(job.recipientSuggestion);
+    context.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('planning');
+    context.lab.access!.disable('situation');
+    const response=await context.overall.call(`/api/information/delivery-reviews/${review.id}`);
+    expect(response.statusCode,response.body).toBe(200);
+    const detail=response.json<DeliveryReviewDetail>();
+    expect(detail.candidates).toEqual([expect.objectContaining({id:'situation',available:false})]);
+    expect(detail.suggestion.recipients).toEqual(suggestion.recipients);
+    const denied=await context.overall.call(`/api/information/delivery-reviews/${review.id}/decision`,{clientActionId:randomUUID(),revision:review.revision,decision:'approve',recipients:suggestion.recipients});
+    expect(denied.statusCode,denied.body).toBe(403);
+    expect(context.store.getDeliveryReview(review.id).status).toBe('pending');
+    expect(context.store.listDeliveries(job.id)).toHaveLength(1);
+    expect(JSON.stringify(context.store.getJob(job.id).ruleSnapshot)).toBe(originalSnapshot);
+    expect(JSON.stringify(context.store.getJob(job.id).recipientSuggestion)).toBe(originalSuggestion);
+  });
+
   it('delivers fixed result before review, then approves adjusted candidates exactly once without another model call',async () => {
     const context=await setup();const {job}=await context.run();
     const review=context.store.reviewForJob(job.id)!;expect(review.status).toBe('pending');

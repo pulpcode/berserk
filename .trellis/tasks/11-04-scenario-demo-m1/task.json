@@ -23,8 +23,9 @@
   "relatedFiles": [
     ".trellis/tasks/11-03-scenario-demo/milestone-1-design.md",
     ".trellis/tasks/11-04-scenario-demo-m1/research/implementation-validation.md",
-    "experiments/harness-lab/scripts/mock-context/scenarios/README.md"
+    "experiments/harness-lab/scripts/mock-context/scenarios/README.md",
+    ".trellis/tasks/11-04-scenario-demo-m1/research/director-business-isolation.md"
   ],
-  "notes": "P0—P2代码已完成，最终全量129文件/1489测试通过；typecheck、lint、build、11项导演/访问桌面、3项地图桌面通过。真实构建+HTTP+SQLite+Chrome全链及在线底图初始视图通过，模型调用0次。验收矩阵见research/implementation-validation.md。保留in_progress供用户检查，未归档、推送、合并、部署或执行P3—P6。",
+  "notes": "P0—P2原始实现79d0e27；本轮按用户追加要求完成导演与业务协作隔离。最终130文件/1500测试、10项相关桌面、typecheck/lint/build均通过；保留场景控场/原生任务准备/重演和只读核对，旧历史不删除。补充验收见research/director-business-isolation.md。保持in_progress供用户检查，未推送、合并、部署或执行P3—P6。",
   "meta": {}
 }

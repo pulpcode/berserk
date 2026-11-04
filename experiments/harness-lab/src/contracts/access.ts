@@ -7,6 +7,8 @@ export interface Identity {
   viewWorkOverview?: boolean;
   /** Independent, explicitly provisioned scenario control capability; absence is denied. */
   controlScenarios?: boolean;
+  /** Server-computed current business participation; absent only in legacy fixtures. */
+  canCollaborate?: boolean;
 }
 export interface AuthSession {
   mode: 'login' | 'test'; csrf?: string; viewId?: string; identity?: Identity;

@@ -18,6 +18,8 @@ Without both enabled simulation and an explicit director-seat configuration, the
 
 The director uses the existing login and Cookie session, with a dedicated page `/scenario-director`; register its HTML fallback in the built static server as well as the client router, so direct visits and reloads work outside Vite. Business accounts have no entry and direct access is denied. A name, guessed URL, source `manage`, task/model privileges or old `simulationEnabled` never grants scene authority. The host re-reads the current identity on operations, validates the configured seat and independent capability, and injects actor IDs; browser-supplied actors are rejected. Reads of definitions, future steps and director records require the same authority as writes. Source viewing and public task management remain separate grants.
 
+Director/business isolation (user decision, 2026-11-04): the director only controls the scene, prepares native task metadata and starts new runs. `Identity.canCollaborate` is computed by the server; the configured director seat and any seat granted `controlScenarios` are excluded from business participation even if they retain public-task management. A configured director remains excluded after its scene-control grant is revoked. Login choices retain the director, while business recipient choices and the Agent assignment directory exclude it. Public task/map/source-receipt verification remains read-only. No work assignment, reception, claim, submission, review, business conversation execution or handoff import is authorized by scene or task-metadata privileges. UI hiding is supplementary: the actual services check the current actor and recipient, including commit-time eligibility changes. Retain historical seat IDs and native bytes for startup/history validation; do not treat old director participation as corrupt state or replay it as current authority.
+
 One browser profile shares its login across tabs. Parallel director/business demonstrations use separate profiles/sessions. Existing CSRF and identity-view guards remain active. The director does not gain business approval authority or control tools for its Agent.
 
 The scene clock is `{instanceId,businessNow,revision}`. `businessNow` advances only when a predefined step is applied. Clock, facts, notices and operation receipt commit together. Pause/resume does not tick time; restart does not catch up real elapsed time. New runs use fresh IDs and freeze old ones. Facts preserve observed/effective/expiry times, including delayed old observations.
@@ -36,6 +38,7 @@ Before changing source definitions, reconcile pending activations. If a definiti
 | --- | --- |
 | Not authenticated | Existing login; API 401 |
 | Business seat, absent independent grant, wrong configured seat | 403, no scene definitions/future records |
+| Director attempts business participation, or another seat targets the director | Deny at the business service and HTTP/Agent boundary before side effects; preserve scene/task-preparation access |
 | Missing task-management capability at initialize/archive | 403; scene authority never fabricates this grant |
 | Stale scene revision, paused/frozen run, unreconciled activation | 409; retain original operation ID and recovery path |
 | Missing/untrusted/mixed clock | `CONTEXT_TIME_BASIS_CONFLICT` or `RESOURCE_TIME_BASIS_CONFLICT`; no wall-clock fallback or successful total |
@@ -56,7 +59,7 @@ Bad: treat a successful Agent run as vehicle arrival, grant overall seat directo
 
 Run `mock-scenarios`, `scenario-resource-clock`, `scenario-director-api`, `director-access`, affected access/schema/background tests, resource query/native result/spatial regressions, typecheck, lint/boundaries and build. The real local HTTP tests must cover53 objects/24 vehicles,12 steps/13 notices, durable atomic failure, replay, clock conflicts, independent seat denial, task/activation recovery and legacy bypass rejection.
 
-Desktop `scenario-director.spec.ts` checks explicit controls, no writes/model calls on load, forbidden business users and lost-result recovery. Source-map tests check typed layers and last-known positions without inventing real data. These deterministic checks do not prove live-model reasoning, real routing or production readiness.
+Director isolation regressions must cover current eligibility, filtered page/model directories, direct service/HTTP rejection, actor/recipient changes after preparation, old work/native history reopening, business-seat normal flow, and preserved task initialization/activation/replay. Desktop `scenario-director.spec.ts` checks explicit controls, no writes/model calls on load, forbidden business users and lost-result recovery. Source-map tests check typed layers and last-known positions without inventing real data. These deterministic checks do not prove live-model reasoning, real routing or production readiness.
 
 ## 7. Wrong vs Correct
 

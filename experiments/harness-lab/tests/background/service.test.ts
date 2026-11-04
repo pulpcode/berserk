@@ -6,6 +6,7 @@ import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { openDatabase } from '../../src/access/database.js';
 import { AccessStore } from '../../src/access/store.js';
+import { HandoffFiles } from '../../src/collaboration/files.js';
 import { ModelSettingsStore } from '../../src/server/model-settings.js';
 import * as backgroundRuntime from '../../src/pi/background-runner.js';
 import { BackgroundStore } from '../../src/background/store.js';
@@ -84,6 +85,48 @@ async function task(client: Client, title = '个人分析任务') {
 }
 
 describe('information intake and native background service', () => {
+  it('rechecks business eligibility after import verification before publishing background attachments', async () => {
+    const context = await setup(), a = await login(context.app, 'a'), b = await login(context.app, 'b');
+    const uploadId = await upload(context), old = await delivered(context, a, message(randomUUID(), [uploadId]));
+    const target = await task(b), delivery = old.deliveries.find(item => item.recipientSeatId === 'b')!;
+    const file = old.event.files[0], clientActionId = randomUUID();
+    let importing = false;
+    const originalImport = HandoffFiles.prototype.import, originalVerify = HandoffFiles.prototype.assertValid;
+    vi.spyOn(HandoffFiles.prototype, 'import').mockImplementation(async function (this: HandoffFiles, ...args) { importing = true; return originalImport.apply(this, args); });
+    vi.spyOn(HandoffFiles.prototype, 'assertValid').mockImplementation(async function (this: HandoffFiles, record) {
+      await originalVerify.call(this, record);
+      if (importing && record.fileId === file.id) context.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('b');
+    });
+    const response = await b.call(`/api/inbox/${delivery.id}/analyses`, { clientActionId, taskSpaceId: target.id, goal: '读取固定附件', mode: 'conversation', includeResult: false, fileIds: [file.id] });
+    expect(response.statusCode, response.body).toBe(403);
+    const action = context.store.findAction(b.auth.identity!.userId, clientActionId)!;
+    expect(importing).toBe(true);
+    expect(action.imports).toEqual([expect.objectContaining({ completed: false })]);
+    await expect(readFile(join(context.lab.files.filesDirectory(action.workspaceId!, 'b'), action.imports![0].path))).rejects.toMatchObject({ code: 'ENOENT' });
+    expect(context.lab.list(action.workspaceId!, 'b')).toHaveLength(0);
+  });
+
+  it('keeps director source receipts read-only and rejects fixed/supplementary receiving or old inbox handling', async () => {
+    const context = await setup(), a = await login(context.app, 'a'), b = await login(context.app, 'b');
+    const old = await delivered(context, a);
+    context.store.grant('seat', 'b', 'special', 'manage');
+    context.store.grant('seat', 'b', 'other', 'manage');
+    context.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('b');
+    const capabilities = (await b.call('/api/information/access')).json();
+    expect(capabilities).toMatchObject({ canManageQueue: false, canReviewDeliveries: false });
+    expect(capabilities.sources.every((source: {permission:string}) => source.permission === 'view')).toBe(true);
+    expect(capabilities.seats.map((seat: {id:string}) => seat.id)).toEqual(['a']);
+    expect((await b.call('/api/information/events')).statusCode).toBe(200);
+    expect((await b.call('/api/inbox')).statusCode).toBe(403);
+    const delivery = old.deliveries.find(item => item.recipientSeatId === 'b')!;
+    expect((await b.call(`/api/inbox/${delivery.id}/handling`, { state: 'completed', revision: 1, clientActionId: randomUUID() }, 'PUT')).statusCode).toBe(403);
+    const changedRule = await a.call('/api/information/rules', { clientActionId: randomUUID(), name: '不得投递给导演', sourceId: 'other', profileId: 'material', recipientSeatIds: ['b'], enabled: true });
+    expect(changedRule.statusCode).toBe(403);
+    expect((await context.source('events', message())).statusCode).toBe(403);
+    expect(context.store.getDelivery(delivery.id).status).toBe('delivered');
+    expect(context.store.handling(delivery.id).state).toBe('pending');
+  });
+
   it('keeps background disabled with the annotation-enabled auth schema when background configuration is absent', async () => {
     const context = await setup({absent: true}); const a = await login(context.app, 'a');
     expect(context.lab.access!.db.prepare('PRAGMA user_version').get()?.user_version).toBe(15);

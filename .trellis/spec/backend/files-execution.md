@@ -28,11 +28,14 @@ Bash output is archived under executions/<requestId> and mapped to /logs before 
 - `LAB_SEAT_ID=test-seat`, `LAB_MAX_FILE_BYTES=104857600`, `LAB_MAX_ATTACHMENTS=20`; `LAB_EXECUTION_ENABLED=true`, `LAB_EXECUTION_IMAGE=berserk-file-runtime:w01-5`, CPU/memory/PID defaults `2/1024/128`. UID/GID must be nonroot and have access to the mounted directory.
 - SSH-forwarded browser and server use the same configured port so the existing Origin check remains valid. Do not loosen Origin validation to accommodate a forwarding mismatch.
 
+Director isolation uses the existing workspace write-admission path: `WorkspaceStore.acquireWrite` delegates to `AccessStore.acquire`, which checks current business eligibility. Director-owned historical files/native records remain retained and authorized reads remain separate, but upload/content commit, resource instruction edits, new workspace/session bindings and business execution cannot use an old owner binding to bypass the director policy. `HandoffFiles.import` accepts an optional authorization callback checked after asynchronous verification and before the anchored copy; background conversation preparation uses the same boundary. Native metadata task initialization/archival does not use workspace-write admission.
+
 ## Validation and errors
 
 | Condition | Result |
 | --- | --- |
 | Absolute/traversal/invalid path | INVALID_INPUT; no file operation |
+| Director attempts workspace/business material write | FORBIDDEN before side effects; preserve task preparation and authorized readonly verification |
 | Missing/foreign scoped upload | UPLOAD_NOT_FOUND or scope rejection before abort signalling |
 | Declared or measured file size too large | FILE_TOO_LARGE / HTTP 413 |
 | Incomplete transfer | UPLOAD_INCOMPLETE; no visible published file |

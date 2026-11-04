@@ -82,6 +82,17 @@ async function setup(options:{inputText?:string;executionUnavailable?:boolean;ti
 }
 
 describe('continuous queue, native evidence and atomic publication',()=>{
+  it('rejects a newly designated director as a continuous recipient and cannot handle an old delivered notification',async()=>{
+    const s=await setup();s.setMode('significant');await s.accept();await s.settled(1);
+    await vi.waitFor(()=>expect(s.host.store.listDeliveries().some(d=>d.recipientSeatId==='b'&&d.status==='delivered')).toBe(true));
+    const delivery=s.host.store.listDeliveries().find(d=>d.recipientSeatId==='b')!;
+    s.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('b');
+    expect(()=>s.host.continuous.assertStream(s.stream)).toThrow(expect.objectContaining({statusCode:403}));
+    await expect(s.host.continuous.configure(s.actors.a,{name:'不得接收',sourceIds:['one','two'],profileId:'profile',recipientSeatIds:['b'],enabled:true},{clientActionId:randomUUID()})).rejects.toMatchObject({statusCode:403});
+    expect(()=>s.host.handleInbox(s.actors.b,delivery.id,{state:'completed',revision:1,clientActionId:randomUUID()})).toThrow(expect.objectContaining({statusCode:403}));
+    expect(s.host.store.handling(delivery.id).state).toBe('pending');
+  });
+
   it('pages long source originals and restores the same historical source in the next round',async()=>{
     const s=await setup({inputText:'x'.repeat(5000)+'尾部车辆正常'});s.setMode('evidence');
     await s.accept();const first=await s.settled(1);

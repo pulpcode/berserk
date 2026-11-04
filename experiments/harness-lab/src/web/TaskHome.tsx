@@ -21,7 +21,8 @@ export function TaskHome({ taskId, task, identity, edit, assessment, draft, setD
   const ready = Boolean(task && task.state === 'active' && model?.configured && model.contextReady && !modelsError);
   const longDescription = Boolean(task && (task.goal.length > 180 || task.goal.split('\n').length > 4 || task.context));
   const preview = task?.goal.split('\n').slice(0, 4).join('\n').slice(0, 180);
-  const editable = task && (task.visibility === 'public' ? identity.createPublicTask : task.ownerSeatId === identity.seatId);
+  const canCollaborate=identity.canCollaborate!==false;
+  const editable = canCollaborate && task && (task.visibility === 'public' ? identity.createPublicTask : task.ownerSeatId === identity.seatId);
   function toggle() {
     const next = !collapsed; setCollapsed(next);
     try { sessionStorage.setItem(preference, next ? 'collapsed' : 'expanded'); } catch { /* Keep the disclosure usable without storage. */ }
@@ -34,7 +35,7 @@ export function TaskHome({ taskId, task, identity, edit, assessment, draft, setD
       </div>
     </section>
     {assessment}
-    <form className="task-home-composer" onSubmit={event => { event.preventDefault(); if (ready && !busy && draft.trim()) start(); }} aria-busy={busy}>
+    {canCollaborate?<form className="task-home-composer" onSubmit={event => { event.preventDefault(); if (ready && !busy && draft.trim()) start(); }} aria-busy={busy}>
       <h2>新建对话</h2><p>围绕{task?.visibility === 'private' ? '这个空间' : '这个任务'}，你想先处理什么？</p>
       <label htmlFor={domId(`task-question-${taskId}`)}>问题或工作要求</label>
       <textarea id={domId(`task-question-${taskId}`)} rows={4} placeholder="例如：梳理当前进展，列出下一步需要解决的问题…" value={draft} disabled={busy || !task || task.state === 'archived'} onChange={event => setDraft(event.target.value)} />
@@ -42,6 +43,6 @@ export function TaskHome({ taskId, task, identity, edit, assessment, draft, setD
       {task?.state === 'archived' ? <p className="resource-help">此任务已归档，可以查看说明和历史对话；重新打开后可继续开展工作。</p> : !models ? <p role="status">正在读取可用模型…</p> : !model?.configured || !model.contextReady ? <p className="resource-help">请选择已配置且参数完整的模型后开始对话。</p> : null}
       {modelsError && <p className="resource-error" role="alert">{modelsError}<button type="button" onClick={refreshModels}>重新读取模型</button></p>}
       {error && <p className="resource-error" role="alert">{error}</p>}
-    </form>
+    </form>:<p className="resource-help">只读核对任务说明；业务办理由业务席位完成。</p>}
   </div>;
 }

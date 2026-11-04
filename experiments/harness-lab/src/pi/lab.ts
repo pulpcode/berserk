@@ -221,6 +221,7 @@ export class PiLab {
       lab.runtimes.set(profile.id, await configuredRuntime({ ...config, ...settings.config(profile.id) }));
     }
     lab.access = access;
+    if (access) access.scenarioDirectorSeatId = () => lab.context?.config.simulation?.directorSeatId;
     await lab.files.initialize();
     if (config.testSeats || access) lab.collaboration = await CollaborationService.open(workspaces, {
       seatIds: access?.allSeatIds() ?? config.testSeats!.map(seat => seat.id), maxFileBytes: config.fileLimits?.maxFileBytes,
@@ -344,6 +345,7 @@ export class PiLab {
   }
 
   async createSession(workspaceId?: string, seatId = this.config.seatId ?? 'test-seat', workItemId?: string, sessionId?: string, modelId?: string): Promise<SessionSnapshot> {
+    this.access?.assertCanCollaborate(seatId);
     if (modelId !== undefined) { if (this.settingsUpdating) throw settingsBusy(); this.requestModel(modelId); }
     if (sessionId && !UUID.test(sessionId)) throw new RequestError('INVALID_INPUT', '会话标识无效。');
     if (sessionId && this.records.has(sessionId)) {
@@ -376,6 +378,7 @@ export class PiLab {
       this.requestModel(modelId);
       manager.appendCustomEntry(MODEL_SELECTION, { schemaVersion: 1, workspaceId, sessionId: id, modelId });
     }
+    this.access?.assertCanCollaborate(seatId);
     await this.workspaces.bind(id, workspaceId, seatId);
     const record: RecordState = { manager, workspaceId, seatId, result: null };
     this.watchPersistence(record);
@@ -487,6 +490,7 @@ export class PiLab {
   }
 
   async bindWorkItem(id: string, workItemId: string, seatId = this.config.seatId ?? 'test-seat'): Promise<SessionSnapshot> {
+    this.access?.assertCanCollaborate(seatId);
     const record = this.record(id, seatId);
     this.access?.get(this.workspaces.get(record.workspaceId,seatId).taskSpaceId,seatId,true);
     if (record.active) throw new RequestError('SESSION_BUSY', '请在当前回复结束后关联工作。', 409);
@@ -540,7 +544,7 @@ export class PiLab {
         title: title.slice(0, 40) || '新会话', updatedAt: record.manager.getLeafEntry()?.timestamp || record.manager.getHeader()!.timestamp } };
     }
     // Return a new object so callers cannot mutate the cached projection.
-    const workItemId = !record.service && this.workspaces.binding(record.manager.getSessionId(), record.seatId)
+    const workItemId = !record.service && (!this.access || this.access.canCollaborate(record.seatId)) && this.workspaces.binding(record.manager.getSessionId(), record.seatId)
       ? this.collaboration?.workIdForSession({ seatId: record.seatId }, record.manager.getSessionId()) : undefined;
     return { ...record.summary!.value, ...(workItemId ? { workItemId } : {}) };
   }
@@ -574,6 +578,7 @@ export class PiLab {
 
   submitInput(id: string, input: InputSubmission, seatId?: string, userId?: string): InputResult {
     const record = this.record(id, seatId);
+    this.access?.assertCanCollaborate(record.seatId);
     if (userId && record.active?.annotationActor && userId !== record.active.annotationActor.userId) throw new RequestError('IDENTITY_CHANGED', '当前请求属于原操作账号，请等待结束后发送。', 409);
     if (!record.intake) throw new RequestError('INPUT_UNAVAILABLE', '当前会话尚未准备好接收追加消息。', 409);
     return record.intake.submit(input);
@@ -586,6 +591,7 @@ export class PiLab {
 
   actOnInput(id: string, submissionId: string, action: InputAction, seatId?: string): InputResult {
     const record = this.record(id, seatId);
+    this.access?.assertCanCollaborate(record.seatId);
     if (!record.intake) throw new RequestError('INPUT_CONFLICT', '消息接收记录不可用，请核对对话。', 409);
     return record.intake.act(submissionId, action);
   }
@@ -799,7 +805,7 @@ ${JSON.stringify(snapshot.instructions.map(({ fileId, hash, content }) => ({ fil
       ? '\n可用 task_information_list 查询获准任务的关联信息，按需用 task_information_read 读取指定版本的原文或分析；省略 taskId 时使用当前任务。' : '';
     const workContext = !role && !active.background && this.collaboration ? `
 当前席位：${record.seatId}。当前工作区：${record.workspaceId}。当前项目：${this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId}。
-当前启用席位（id 为分派参数，name 为显示名称）：${JSON.stringify(this.access?.seats() ?? this.config.testSeats ?? [])}。业务操作使用 work_item_action，该调用内部核对内容、等待网页确认并执行，成功回执表示操作已完成；ask_user 仅澄清对象，不授权提交。资料文件使用 handoff_import_file 导入当前目录后按需读取。不要仅凭聊天回复宣称已分派或上报，须以工具回执为准。
+当前可参与业务的席位（id 为分派参数，name 为显示名称）：${JSON.stringify(this.access?.businessSeats() ?? this.config.testSeats ?? [])}。业务操作使用 work_item_action，该调用内部核对内容、等待网页确认并执行，成功回执表示操作已完成；ask_user 仅澄清对象，不授权提交。资料文件使用 handoff_import_file 导入当前目录后按需读取。不要仅凭聊天回复宣称已分派或上报，须以工具回执为准。
 ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_item_read 查询最新状态）：${JSON.stringify({ id: work.id, title: work.title, goal: work.goal, state: work.state, revision: work.revision, creatorSeatId: work.creatorSeatId, assigneeSeatId: work.assigneeSeatId, inputFiles: work.inputFiles, latestSubmissionId: work.latestSubmissionId, latestReview: work.submissions.at(-1)?.review })}` : '本会话尚未关联分派工作；如用户指的是已有工作，先查询，存在多个可能对象时询问。'}` : '';
     const loader = new DefaultResourceLoader({
       cwd: '/workspace', agentDir: this.agentDir, settingsManager,
@@ -909,6 +915,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       const stopped = () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted;
       if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
       try {
+        if (!record.service) this.access?.assertCanCollaborate(record.seatId);
         // Pi's original hook may transform validated arguments; authorize its final values.
         const original = await originalBefore?.(context, signal);
         if (original?.block) {
@@ -916,6 +923,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           return original;
         }
         if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
+        if (!record.service) this.access?.assertCanCollaborate(record.seatId);
         const { toolCall } = context;
         if (toolCall.name !== 'bash' && toolCall.name !== 'confirmation_demo' && toolCall.name !== 'work_item_action') return original;
         const parameters = structuredClone(context.args) as Record<string, unknown>;
@@ -1002,12 +1010,13 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     };
     session.agent.streamFunction = (selected, context, options) => {
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
+      if (!record.service) this.access?.assertCanCollaborate(record.seatId);
       if (!active.background && active.annotationActor) this.authorizeResultHistory(record, active.annotationActor);
       const purpose = active.compacting ? 'compaction' : 'reply';
       if (purpose === 'reply') annotationState?.beginInference();
       setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating');
       return controlledStream(runtime, config, selected, context, options, purpose, requestReminder, active.controller.signal, active.usage,
-        this.modelPermits ? { permits: this.modelPermits, waiting: () => setPhase(record, active, 'preparing'), started: () => setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating') } : undefined);
+        this.modelPermits ? { permits: this.modelPermits, waiting: () => setPhase(record, active, 'preparing'), started: () => { if (!record.service) this.access?.assertCanCollaborate(record.seatId); setPhase(record, active, purpose === 'compaction' ? 'compacting' : 'generating'); } } : undefined);
     };
     return session;
   }
@@ -1069,6 +1078,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     signal: AbortSignal | undefined, update: (child: SubagentSummary) => void) {
     const check = () => {
       owner.controller.signal.throwIfAborted(); signal?.throwIfAborted();
+      if (!parent.service) this.access?.assertCanCollaborate(parent.seatId);
       if (parent.active !== owner || owner.reason) throw new Error('当前请求已停止。');
     };
     check();
@@ -1153,6 +1163,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
   start(id: string, text: string, input: ComposerSelection & { uploadIds?: string[]; fileRefs?: { path: string }[] } = {}, seatId?: string, internal?: BackgroundRequestOptions, actorUserId?: string): { requestId: string; run: (listener: Listener) => Promise<void> } {
     if (this.settingsUpdating) throw settingsBusy();
     const record = this.record(id, seatId);
+    this.access?.assertCanCollaborate(record.seatId);
     if (record.active) throw new RequestError('SESSION_BUSY', '当前会话正在回复，请结束或停止后再发送。', 409);
     if (this.backgroundHooks?.isSessionReserved(id, internal?.jobId)) throw new RequestError('SESSION_BUSY', '当前会话正在排队，请结束或停止后再发送。', 409);
     if (internal && (!UUID.test(internal.jobId) || !UUID.test(internal.requestId))) throw stateError();
@@ -1199,6 +1210,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     active.onFile = file => emit({ ...base, type: 'files.output', file });
     active.onInteraction = interaction => emit({ ...base, type: 'interaction.updated', interaction: structuredClone(interaction) });
     try {
+      if (!record.service) this.access?.assertCanCollaborate(record.seatId);
       const snapshot = child?.snapshot ?? active.service?.resources ?? await this.resources.snapshot(record.workspaceId, active.controller.signal, record.seatId);
       if (!child) {
         active.files = active.service?.files ?? await this.files.resolveInputs(record.workspaceId, active.input ?? {}, record.seatId);
@@ -1228,6 +1240,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (Buffer.byteLength(JSON.stringify({context: active.selections?.context, annotationRefs: active.selections?.annotationRefs})) > 256 * 1024) throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', '引用资料合计超过 256 KiB，请减少选择后发送。', 413);
       }
       active.controller.signal.throwIfAborted();
+      if (!record.service) this.access?.assertCanCollaborate(record.seatId);
       record.manager.appendCustomEntry(RESOURCE_ENTRY, requestRecord(active.id, snapshot, Boolean(child) || Boolean(active.background)));
       emit({ ...base, type: 'resources.loaded', resources: resourceInfo(active.background ? { ...snapshot, instructions: snapshot.instructions.map(file => ({ ...file, editable: false })) } : snapshot) });
       const session = await this.openSession(record, snapshot, active, change => {
@@ -1306,6 +1319,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           () => emit({...base, type: 'input.queue', queue: record.intake!.state()}),
           receipt => { emit({...base, type: 'input.consumed', submissionId: receipt.submissionId, text: receipt.text}); });
         }
+        if (!record.service) this.access?.assertCanCollaborate(record.seatId);
         await session.prompt(text, { expandPromptTemplates: false });
         const last = session.messages.at(-1);
         if (last?.role === 'assistant') {
@@ -1405,6 +1419,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
 
   respondInteraction(id: string, interactionId: string, input: unknown, seatId?: string): Interaction {
     const record = this.record(id, seatId);
+    this.access?.assertCanCollaborate(record.seatId);
     const item = interactionHistory(record.manager.getBranch(), record.workspaceId, id, record.active?.id, record.seatId).find(item => item.interactionId === interactionId);
     if (!item) throw new RequestError('INTERACTION_NOT_FOUND', '交互不存在。', 404);
     const response = decodeResponse(input, item);

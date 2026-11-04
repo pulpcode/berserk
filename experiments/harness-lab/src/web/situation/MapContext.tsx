@@ -21,7 +21,7 @@ const MapContext=createContext<{
   layout:WorkspaceLayout; chooseLayout:(layout:WorkspaceLayout)=>void; panel?:ReactNode;
 }>({openAnalysis:()=>{},open:()=>{},reference:()=>{},openAnnotations:()=>{},annotationReference:()=>{},derive:async()=>{},openSession:()=>{},layout:'conversation',chooseLayout:()=>{}});
 export const useSituationMap=()=>useContext(MapContext);
-export function SituationProvider({children,reference,navigationKey,annotations}:{children:ReactNode;reference:(item:SituationObject)=>void;navigationKey:string;annotations?:{taskId:string;taskTitle?:string;openTask?:()=>void;sessionId?:string;taskContext?:TaskContext;archived?:boolean;refreshKey?:string;reference:(ref:AnnotationSelection)=>void;derive:(taskId:string,ref:AnnotationRef)=>Promise<void>;openSession:(id:string)=>void}}) {
+export function SituationProvider({children,reference,navigationKey,annotations,readOnly=false}:{readOnly?:boolean;children:ReactNode;reference:(item:SituationObject)=>void;navigationKey:string;annotations?:{taskId:string;taskTitle?:string;openTask?:()=>void;sessionId?:string;taskContext?:TaskContext;archived?:boolean;refreshKey?:string;reference:(ref:AnnotationSelection)=>void;derive:(taskId:string,ref:AnnotationRef)=>Promise<void>;openSession:(id:string)=>void}}) {
   const [selection,setSelection]=useState<MapSelection>();
   const trigger=useRef<HTMLElement|null>(null);
   const current=selection?.navigationKey===navigationKey?selection:undefined;
@@ -57,7 +57,7 @@ export function SituationProvider({children,reference,navigationKey,annotations}
   const openAnalysis=(result:SpatialResult)=>reveal({analysis:{result,visible:true,focusRequest:(current?.analysis?.focusRequest || 0)+1}});
   const panel=current?<Suspense fallback={<p role="status">正在打开地图…</p>}>{annotations
     ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} analysis={analysis} workspaceControls={workspaceControls} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
-    : <SituationView key={navigationKey} analysis={analysis} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
+    : <SituationView readOnly={readOnly} key={navigationKey} analysis={analysis} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
   return <MapContext.Provider value={{openAnalysis,open:item=>reveal({source:item}),reference:sourceReference,openAnnotations:item=>reveal({annotation:item}),annotationReference,derive:annotations?.derive || (async()=>{}),openSession:annotations?.openSession || (()=>{}),layout,chooseLayout,panel}}>{children}</MapContext.Provider>;
 }
 

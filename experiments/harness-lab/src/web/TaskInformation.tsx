@@ -6,6 +6,7 @@ import type { TaskInformationDetail, TaskInformationPage } from '../contracts/ta
 import type { Workspace } from '../contracts/index';
 import { useSituationMap } from './situation/MapContext';
 const AnnotationWorkspace=lazy(()=>import('./annotations/AnnotationWorkspace'));
+const SituationView=lazy(()=>import('./situation/SituationView'));
 import { useApi } from './api';
 import { ContextEvidence } from './ContextEvidence';
 import { InformationContinuation } from './InformationContinuation';
@@ -19,7 +20,7 @@ function readTab() {
 }
 function readSelection() { const params = new URLSearchParams(location.search); return { eventId: params.get('eventId') || '', jobId: params.get('jobId') || '' }; }
 export function TaskInformation({ taskId, visible, identity, tasks, workspaces, seats, prepared, openSession, savedTask, openTask, home }: { home: ReactNode; taskId: string; visible: boolean; identity: Identity; tasks: TaskSpace[]; workspaces: Workspace[]; seats: Array<{id:string;name:string}>; prepared: (action: BackgroundAction, current: () => boolean, sendNow?: boolean) => Promise<boolean>; openSession: (id: string) => void; savedTask: (task: TaskSpace) => void; openTask: (id: string) => void }) {
-  const { domId } = useApi(); const map=useSituationMap();
+  const { domId } = useApi(); const map=useSituationMap(); const readOnly=identity.canCollaborate===false;
   const [selection, setSelection] = useState(readSelection); const [search, setSearch] = useState(''); const [sourceId, setSourceId] = useState(''); const [offset, setOffset] = useState(0);
   const [tab, setTab] = useState(readTab);
   function changeTab(next: string) {
@@ -48,7 +49,7 @@ export function TaskInformation({ taskId, visible, identity, tasks, workspaces, 
   return <section id={domId('task-information')} className="information-inbox task-information" hidden={!visible} tabIndex={-1} aria-label="任务详情">
     <header className="information-heading"><div><h1>{task?.title || '任务'}</h1><p className="task-home-meta">{task?.visibility === 'private' ? '个人空间' : '工作任务'}<span>{task?.state === 'archived' ? '已归档' : '进行中'}</span></p></div>{tab === 'information' && <button onClick={() => { list.refresh(); detail.refresh(); }}><RefreshCw size={16} aria-hidden="true" />刷新相关信息</button>}</header>
     <nav className="task-page-tabs" aria-label="任务详情页签">{([['description',task?.visibility === 'private' ? '空间说明' : '任务说明'],['information','相关信息'],['situation','态势']] as const).map(([id,label]) => <button key={id} aria-current={tab === id ? 'page' : undefined} onClick={()=>changeTab(id)}>{label}</button>)}</nav>
-    {visible && tab === 'situation' && <Suspense fallback={<p role="status">正在加载态势…</p>}><AnnotationWorkspace key={taskId} taskId={taskId} taskTitle={task?.title} openTask={()=>changeTab('description')} taskContext={task?.context} archived={task?.state==='archived'} reference={map.annotationReference} sourceReference={map.reference} openSession={openSession} derive={map.derive}/></Suspense>}
+    {visible && tab === 'situation' && <Suspense fallback={<p role="status">正在加载态势…</p>}><>{readOnly?<SituationView readOnly taskMode taskContext={task?.context} reference={()=>{}}/>:<AnnotationWorkspace key={taskId} taskId={taskId} taskTitle={task?.title} openTask={()=>changeTab('description')} taskContext={task?.context} archived={task?.state==='archived'} reference={map.annotationReference} sourceReference={map.reference} openSession={openSession} derive={map.derive}/>}</></Suspense>}
     <div hidden={tab !== 'description'}>{home}</div>
     <div hidden={tab !== 'information'}>
     <div className="information-toolbar"><label>搜索信息<input type="search" placeholder="标题或关联理由" value={search} onChange={event => { setSearch(event.target.value); setOffset(0); }} /></label><label>来源<select value={sourceId} onChange={event => { setSourceId(event.target.value); setOffset(0); }}><option value="">全部来源</option>{[...sourceChoices].map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label></div>
@@ -61,9 +62,9 @@ export function TaskInformation({ taskId, visible, identity, tasks, workspaces, 
           <header><h2>{value.title}</h2><p>{value.sourceName || value.sourceId} · 分析于 {informationTime(value.analysisAt)}</p><p>{value.reason}</p>{value.taskChanged && <p className="resource-help">任务说明已更新，关联依据为旧版本。</p>}</header>
           <section><h3>处理结果</h3><InformationText evidence={value.queryMessages}>{value.resultText || '此次处理没有文字答复。'}</InformationText><InformationFiles files={value.resultFiles} base={`${detailBase}/files`} query={new URLSearchParams({ jobId: value.jobId }).toString()} /><ContextEvidence messages={value.queryMessages} /></section>
           <details className="information-original"><summary>查看原文与附件</summary><InformationText>{value.text}</InformationText><InformationFiles files={value.event.files} base={`${detailBase}/files`} query={new URLSearchParams({ jobId: value.jobId }).toString()} /></details>
-          <TaskAssociations key={`links:${value.eventId}:${value.jobId}`} eventId={value.eventId} jobId={value.jobId} visible={visible && tab === 'information'} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={() => { list.refresh(); detail.refresh(); }} />
-          <InformationContinuation key={`${taskId}:${value.eventId}:${value.jobId}`} scope={`task:${taskId}:${value.eventId}:${value.jobId}`} visible={visible && tab === 'information'} base={detailBase} jobId={value.jobId} fixedTaskId={taskId} tasks={tasks} workspaces={workspaces} files={value.event.files} resultFiles={value.resultFiles} prepared={prepared} openSession={openSession} changed={() => { list.refresh(); detail.refresh(); }} />
-          {value.analyses && <AnalysisHistory items={value.analyses} seats={seats} openSession={openSession} />}
+          {!readOnly&&<TaskAssociations key={`links:${value.eventId}:${value.jobId}`} eventId={value.eventId} jobId={value.jobId} visible={visible && tab === 'information'} identity={identity} tasks={tasks} savedTask={savedTask} openTask={openTask} changed={() => { list.refresh(); detail.refresh(); }} />}
+          {!readOnly&&<InformationContinuation key={`${taskId}:${value.eventId}:${value.jobId}`} scope={`task:${taskId}:${value.eventId}:${value.jobId}`} visible={visible && tab === 'information'} base={detailBase} jobId={value.jobId} fixedTaskId={taskId} tasks={tasks} workspaces={workspaces} files={value.event.files} resultFiles={value.resultFiles} prepared={prepared} openSession={openSession} changed={() => { list.refresh(); detail.refresh(); }} />}
+          {value.analyses && <AnalysisHistory items={value.analyses} seats={seats} openSession={readOnly?undefined:openSession} />}
         </>}
       </>}</div>
     </div>

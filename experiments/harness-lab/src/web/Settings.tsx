@@ -7,7 +7,7 @@ import { Panel } from './Resources';
 export function SettingsPanel({ identity, logout, logoutError, close, saved, simulation }: {
   simulation?: () => void; identity?: Identity; logout?: () => void; logoutError?: string; close: () => void; saved: () => Promise<void>;
 }) {
-  const modelAllowed = !identity || identity.manageModelSettings;
+  const modelAllowed = !identity || (identity.canCollaborate!==false && identity.manageModelSettings);
   const [section, setSection] = useState<'model' | 'account'>(modelAllowed ? 'model' : 'account');
   return <Panel title="设置" className="settings-panel" close={close}>
     <div className="settings-layout">

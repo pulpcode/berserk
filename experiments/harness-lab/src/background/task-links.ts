@@ -109,7 +109,7 @@ export class TaskLinkService {
     if (!this.readable(actor, event, job)) throw missing();
     return {actor, event, job};
   }
-  private manageable(actor: Identity, task: TaskSpace) { return task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId; }
+  private manageable(actor: Identity, task: TaskSpace) { return this.access.canCollaborate(actor.seatId) && (task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId); }
   private overrides(eventId?: string, taskId?: string) {
     const where = [eventId ? 'event_id=?' : '', taskId ? 'task_id=?' : ''].filter(Boolean);
     return this.store.db.prepare(`SELECT * FROM information_task_overrides${where.length ? ` WHERE ${where.join(' AND ')}` : ''}`).all(...[eventId, taskId].filter((value): value is string => value !== undefined)).map(decodeOverride);
@@ -227,9 +227,10 @@ export class TaskLinkService {
     const assessment = job.taskAssessment ? {...job.taskAssessment, items: job.taskAssessment.items.filter(item => tasks.some(task => task.id === item.taskSpaceId))} : undefined;
     const revisions = Object.fromEntries(tasks.filter(task => this.manageable(actor, task) && decisions.has(task.id))
       .map(task => [task.id, decisions.get(task.id)!.revision]));
-    return {eventId, jobId, assessment, creation: job.taskSuggestionCreation, links, revisions, canCreateTask: !!job.taskAssessment?.newTaskSuggestion && actor.createPublicTask && !job.taskSuggestionCreation};
+    return {eventId, jobId, assessment, creation: job.taskSuggestionCreation, links, revisions, canCreateTask: this.access.canCollaborate(actor.seatId) && !!job.taskAssessment?.newTaskSuggestion && actor.createPublicTask && !job.taskSuggestionCreation};
   }
   update(actor: Identity, eventId: string, taskId: string, input: TaskLinkUpdateInput): TaskInformationOverride {
+    this.access.assertCanCollaborate(actor.seatId);
     return this.store.transaction(() => {
       const authorized = this.authorize(actor, eventId, input.jobId); actor = authorized.actor;
       const task = this.access.get(taskId, actor.seatId, true);
@@ -244,6 +245,7 @@ export class TaskLinkService {
     });
   }
   createFromSuggestion(actor: Identity, eventId: string, input: TaskSuggestionCreateInput): TaskSuggestionCreateResult {
+    this.access.assertCanCollaborate(actor.seatId);
     return this.store.transaction(() => {
       const {actor: current, job} = this.authorize(actor, eventId, input.jobId); actor = current;
       if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);

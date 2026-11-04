@@ -19,6 +19,7 @@ export class WorkbenchService {
   private current(actor:Identity) {
     const identity = this.access.identity(actor.userId);
     if (!identity || identity.seatId !== actor.seatId) throw new RequestError('AUTH_REQUIRED','请重新登录。',401);
+    this.access.assertCanCollaborate(identity.seatId);
     return identity;
   }
   items(identity:Identity, filter:WorkbenchFilter = {}): WorkbenchPage {

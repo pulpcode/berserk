@@ -63,8 +63,9 @@ export class HandoffFiles {
     const file = await this.verify(record);
     return { stream: file.createReadStream({start: 0}), name: record.name, size: record.size, contentType: 'application/octet-stream' };
   }
-  async import(record: HandoffFile, root: string, path: string, signal?: AbortSignal) {
+  async import(record: HandoffFile, root: string, path: string, signal?: AbortSignal, authorize?: () => void) {
     await this.assertValid(record); await checkDirectory(root);
+    authorize?.();
     return this.helper<{size: number; hash: string}>(importHelper, { root, path, sourceRoot: this.directory(record.fileId), expectedHash: record.hash }, signal, true);
   }
 }

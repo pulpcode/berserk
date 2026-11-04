@@ -40,6 +40,8 @@ export MOCK_SITUATION_SOURCE_TOKEN="$(openssl rand -hex 32)"
 npm run access:admin -- account --data-dir /tmp/axon-scenario-demo --username director --name 场景导演 --seat seat-director --seat-name 导演席 --control-scenarios --manage-tasks --service-stopped
 ```
 
+导演席与业务协作隔离：公共任务管理能力仅用于准备/归档演示任务，不使导演成为业务参与者。导演没有分派、签收、提交、验收或办理对话入口，服务端也拒绝直接调用；业务接收名单与Agent分派目录排除导演，登录页仍可选择导演。任务说明、地图和已授权来源回执可只读核对。
+
 四个业务账号使用既有开通方式，席位分别是seat-overall、seat-intelligence、seat-planning、seat-situation；它们不授予controlScenarios。导演需要核对入站回执时，在同样停服条件下对两来源分别授予`view`（读取）权限，不需要通用来源manage：
 
 ```sh

@@ -85,6 +85,25 @@ test('overall may decline supplementary delivery without affecting the fixed rec
   }finally{await env.close();}
 });
 
+test('review refresh removes a director from old selections while ordinary unavailable candidates remain cancellable',async({page})=>{
+  const env=await setup();await env.attach(page);const decisions:Array<{recipients?:Array<{seatId:string}>}>=[];
+  page.on('request',request=>{if(request.method()==='POST'&&new URL(request.url()).pathname.endsWith('/decision'))decisions.push(request.postDataJSON());});
+  try{
+    await login(page,'overall');await rule(page);const review=await env.receive();const calls=env.fake.calls.length;const panel=await openReview(page,review.id);
+    await expect(panel.getByLabel('筹划席',{exact:true})).toBeChecked();await expect(panel.getByLabel('态势席',{exact:true})).toBeChecked();
+    // Retain the old selection after an uncommitted request, then explicitly
+    // read the current candidate projection after these eligibility changes.
+    env.reject();await panel.getByRole('button',{name:'批准补充投递',exact:true}).click();await expect(panel.getByRole('alert')).toContainText('编辑保留');
+    env.lab.access!.db.prepare('UPDATE seats SET control_scenarios=1 WHERE id=?').run('seat-planning');env.lab.access!.disable('situation');await panel.getByRole('button',{name:'核对最新决定',exact:true}).click();
+    await expect(panel.getByLabel('筹划席',{exact:true})).toHaveCount(0);await expect(panel.locator('.delivery-suggestions')).toContainText('方案安排受到道路封闭影响');
+    const unavailable=panel.getByLabel('态势席',{exact:true});await expect(unavailable).toBeChecked();await expect(unavailable).toBeEnabled();await expect(panel.getByRole('button',{name:'批准补充投递',exact:true})).toBeDisabled();await unavailable.uncheck();
+    await env.lab.access!.saveAccount({username:'situation',displayName:'态势席',seatId:'seat-situation',seatName:'态势席',password:'test-password-123',createPublicTask:false,manageModelSettings:false});
+    await panel.getByRole('button',{name:'核对最新决定',exact:true}).click();await expect(unavailable).toBeEnabled();await expect(unavailable).not.toBeChecked();await unavailable.check();await expect(panel.getByRole('button',{name:'批准补充投递',exact:true})).toBeEnabled();
+    await page.reload();await expect(panel.getByLabel('筹划席',{exact:true})).toHaveCount(0);await expect(panel.getByLabel('态势席',{exact:true})).toBeChecked();
+    await panel.getByRole('button',{name:'批准补充投递',exact:true}).click();await expect(panel.getByRole('region',{name:'最新审批决定'})).toContainText('已批准');expect(decisions.at(-1)?.recipients?.map(item=>item.seatId)).toEqual(['seat-situation']);expect(env.fake.calls).toHaveLength(calls);
+  }finally{await env.close();}
+});
+
 
 test('supplementary review is one actionable item shared by workbench and overview', async ({ page }) => {
   const env = await setup(); await env.attach(page);

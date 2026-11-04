@@ -41,7 +41,7 @@ export async function registerAuth(app: FastifyInstance, access: AccessStore, co
     if(entry.count>8) throw new RequestError('LOGIN_LIMIT','尝试次数较多，请一分钟后重试。',429);
   };
   const result = (request: FastifyRequest): AuthSession => ({mode:'login',csrf:request.session.csrf,viewId:request.session.viewId,
-    ...(request.identity ? {identity:request.identity,seats:access.seats()} : {loginSeats:access.seats().map(({id,name})=>({id,name}))})});
+    ...(request.identity ? {identity:request.identity,seats:access.businessSeats()} : {loginSeats:access.seats().map(({id,name})=>({id,name}))})});
   app.addHook('onRequest', async request => {
     const path=request.url.split('?')[0];
     if(!path.startsWith('/api/')) return;

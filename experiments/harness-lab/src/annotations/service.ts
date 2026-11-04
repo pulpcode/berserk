@@ -54,6 +54,7 @@ export class AnnotationService {
   }
   private task(actor: AnnotationActor,taskId: string,write=false) {
     this.identity(actor);
+    if (write) this.access?.assertCanCollaborate(actor.seatId);
     if(this.access) return this.access.get(taskId,actor.seatId,write);
     if(!this.workspaces.listAll().some(w=>w.taskSpaceId===taskId && w.seatId===actor.seatId)) throw missing();
     return undefined;

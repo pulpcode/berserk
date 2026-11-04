@@ -55,7 +55,7 @@ function mergeInteraction(previous: Interaction | undefined, incoming: Interacti
   return incoming;
 }
 
-export function useChat() {
+export function useChat(enabled = true) {
   const { api, sendMessage, storageKey } = useApi();
   const DRAFT_KEY = storageKey('berserk.drafts');
   const DRAFT_VERSION_KEY = storageKey('berserk.draft-versions');
@@ -99,7 +99,7 @@ export function useChat() {
   const [pending, setPending] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [readErrors, setReadErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [creating, setCreating] = useState(false);
   const creatingRef = useRef<string | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -257,6 +257,7 @@ export function useChat() {
   }, [api, applyInteraction, interactionSubmissions]);
 
   const refreshActivity = useCallback((): Promise<void> => {
+    if (!enabled) return Promise.resolve();
     if (activityRequest.current) return activityRequest.current;
     const before = { ...revisions.current };
     const request = (async () => {
@@ -308,15 +309,16 @@ export function useChat() {
     activityRequest.current = request;
     void request.finally(() => { if (activityRequest.current === request) activityRequest.current = null; }).catch(() => {});
     return request;
-  }, [api, selectForWorkspace, selectWorkspace]);
+  }, [api, enabled, selectForWorkspace, selectWorkspace]);
   const refreshModels = useCallback((): Promise<void> => {
+    if (!enabled) return Promise.resolve();
     if (modelListRequest.current) return modelListRequest.current;
     const request = api<ModelChoices>('/api/models').then(result => { setModels(result); setModelsError(''); })
       .catch((error: unknown) => { setModelsError(`可用模型读取失败。${reason(error)}`); throw error; });
     modelListRequest.current = request;
     void request.finally(() => { if (modelListRequest.current === request) modelListRequest.current = null; }).catch(() => {});
     return request;
-  }, [api]);
+  }, [api, enabled]);
   const chooseModel = useCallback(async (modelId: string, owner = draftKey) => {
     const target = movedDrafts.current.get(owner) || owner;
     const model = models?.models.find(item => item.id === modelId);
@@ -346,6 +348,7 @@ export function useChat() {
     }
   }, [MODEL_DRAFT_KEY, api, draftKey, models, put, refreshModels]);
   const bootstrap = useCallback(async () => {
+    if (!enabled) return;
     setLoading(true);
     try {
       const [app] = await Promise.all([api<AppInfo>('/api/info'), refreshActivity()]);
@@ -353,28 +356,30 @@ export function useChat() {
       setErrors(previous => ({ ...previous, '': '' }));
     } catch (error) { setErrors(previous => ({ ...previous, '': reason(error) })); }
     finally { setLoading(false); }
-  }, [api, refreshActivity]);
+  }, [api, enabled, refreshActivity]);
   const refreshInfo = useCallback(async () => {
     await Promise.all([api<AppInfo>('/api/info').then(setInfo), refreshModels()]);
   }, [api, refreshModels]);
   useEffect(() => {
+    if (!enabled) return;
     const update = () => { void refreshModels().catch(() => {}); };
     update(); window.addEventListener('focus', update);
     return () => window.removeEventListener('focus', update);
-  }, [refreshModels]);
+  }, [enabled, refreshModels]);
   useEffect(() => { void bootstrap(); }, [bootstrap]);
   useEffect(() => {
+    if (!enabled) return;
     const update = () => { void refreshActivity().catch(() => {}); };
     const interval = window.setInterval(update, 1800);
     window.addEventListener('focus', update);
     return () => { window.clearInterval(interval); window.removeEventListener('focus', update); };
-  }, [refreshActivity]);
+  }, [enabled, refreshActivity]);
   useEffect(() => {
-    if (!selected) return;
+    if (!enabled || !selected) return;
     void refresh(selected);
     const interval = window.setInterval(() => { void refresh(selected); }, 1800);
     return () => window.clearInterval(interval);
-  }, [selected, refresh]);
+  }, [enabled, selected, refresh]);
 
   const createWorkspace = useCallback(async (name: string) => {
     const workspace = await api<Workspace>('/api/workspaces', { name });

@@ -54,6 +54,20 @@ async function setup() {
 const relations = (...tasks: TaskSpace[]): TaskAssessmentInput => ({relations: tasks.map(task => ({taskId: task.id, reason: `与 ${task.title} 相关`}))});
 
 describe('task assessment storage and effective relationships', () => {
+  it('retains director read-only source verification but forbids business relinking and suggestion adoption', async () => {
+    const s = await setup(), task = s.task(), {event, job} = s.running();
+    s.record(job, {relations: [{taskId: task.id, reason: '来源对应任务'}]}, [task]); s.finish(job);
+    const suggestion = s.running(); s.record(suggestion.job, {relations: [], newTaskSuggestion: draft}); s.finish(suggestion.job);
+    s.access.scenarioDirectorSeatId = () => s.a.seatId;
+    const before = s.access.list(s.a.seatId);
+    expect(s.links.links(s.a, event.id, job.id)).toMatchObject({canCreateTask: false, links: [expect.objectContaining({canManage: false})]});
+    expect(() => s.links.update(s.a, event.id, task.id, {mode: 'include', revision: 0, jobId: job.id, reason: '导演不得改归口'})).toThrow(expect.objectContaining({statusCode: 403}));
+    expect(() => s.links.createFromSuggestion(s.a, suggestion.event.id, {...draft, jobId: suggestion.job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({statusCode: 403}));
+    expect(s.access.list(s.a.seatId)).toEqual(before);
+    expect(s.store.getJob(job.id).taskSuggestionCreation).toBeUndefined();
+    expect(s.db.prepare('SELECT * FROM information_task_overrides').all()).toEqual([]);
+  });
+
   it('records one complete multi-task assessment, validates observed versions and never publishes unfinished results', async () => {
     const s = await setup(), a = s.task('补给'), b = s.task('转移'), foreign = s.task('个人', 'private');
     const {event, job} = s.running();

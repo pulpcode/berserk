@@ -28,6 +28,8 @@ function decodeTask(row: {id: unknown;data:unknown}): TaskSpace {
 /** Owns task/account metadata; never copies or interprets Pi messages. */
 export class AccessStore {
   private busy = new Map<string, number>();
+  /** The host supplies its current configuration; this is not a persisted role. */
+  scenarioDirectorSeatId?: () => string | undefined;
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
     if([2,3,4,5,6,7,8,9,10,11,12].includes(baseSchemaVersion(version))) {
@@ -60,6 +62,14 @@ export class AccessStore {
   seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }
   allSeatIds() { return this.db.prepare('SELECT id FROM seats').all().map(row=>String(row.id)); }
   seats() { return this.db.prepare('SELECT s.id,s.name,s.responsibility,s.responsibility_revision responsibilityRevision FROM seats s JOIN accounts a ON a.seat_id=s.id WHERE a.enabled=1').all() as unknown as Array<{id:string;name:string;responsibility:string;responsibilityRevision:number}>; }
+  businessSeats() { return this.seats().filter(seat => this.canCollaborate(seat.id)); }
+  isScenarioDirectorSeat(seatId: string) {
+    return seatId === this.scenarioDirectorSeatId?.() || !!this.db.prepare('SELECT control_scenarios FROM seats WHERE id=?').get(seatId)?.control_scenarios;
+  }
+  canCollaborate(seatId: string) { return this.identityForSeat(seatId)?.canCollaborate === true; }
+  assertCanCollaborate(seatId: string) {
+    if (!this.canCollaborate(seatId)) throw new RequestError('FORBIDDEN', '当前席位不能参与业务分派、接收或办理。', 403);
+  }
   updateSeat(seatId: string, input: {name?: string; responsibility: string}) {
     const responsibility = input.responsibility.trim();
     if (!responsibility || responsibility.length > 1000 || (input.name !== undefined && (!input.name.trim() || input.name.trim().length > 100))) throw new Error('请填写席位职责（1～1,000 字符）和有效名称（最多100字符）。');
@@ -72,7 +82,7 @@ export class AccessStore {
   }
   identity(id: string): Identity | undefined {
     const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings,s.view_work_overview viewWorkOverview,s.control_scenarios controlScenarios FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
-    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview, controlScenarios: !!row.controlScenarios } as unknown as Identity : undefined;
+    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview, controlScenarios: !!row.controlScenarios, canCollaborate: !this.isScenarioDirectorSeat(String(row.seatId)) } as unknown as Identity : undefined;
   }
   identityForSeat(seatId: string): Identity | undefined {
     const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);
@@ -177,6 +187,7 @@ export class AccessStore {
   }
   /** Synchronous admission, held only for the actual write/request lifetime. No execution queue. */
   acquire(id: string, seatId: string): () => void {
+    this.assertCanCollaborate(seatId);
     this.get(id,seatId,true); this.busy.set(id,(this.busy.get(id)||0)+1); let done=false;
     return () => { if (!done) { done=true; const count=(this.busy.get(id)||1)-1; if(count) this.busy.set(id,count); else this.busy.delete(id); } };
   }

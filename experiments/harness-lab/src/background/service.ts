@@ -140,8 +140,9 @@ export class BackgroundService {
     this.source(sourceId);
     const permission = this.store.effectivePermission(actor, sourceId);
     if (!permission) throw notFound();
+    if (manage) this.lab.access!.assertCanCollaborate(actor.seatId);
     if (manage && permission !== 'manage') throw new RequestError('FORBIDDEN', '当前账号没有此来源的管理权限。', 403);
-    return permission;
+    return this.lab.access!.canCollaborate(actor.seatId) ? permission : 'view';
   }
   configuredProfileScope(profile: BackgroundProfileSnapshot): ContextScopeSnapshot | undefined {
     if (!profile.contextScopeId) {
@@ -203,10 +204,12 @@ export class BackgroundService {
       .map(delivery => this.deliveryProjection(actor,delivery)),query);
   }
   capabilities(actor: Identity): InformationCapabilities {
+    const canCollaborate = this.lab.access!.canCollaborate(actor.seatId);
     const sources = this.config.sources.flatMap(source => {
-      const permission = this.store.effectivePermission(actor, source.sourceId); if (!permission) return [];
+      const granted = this.store.effectivePermission(actor, source.sourceId); if (!granted) return [];
+      const permission = canCollaborate ? granted : 'view';
       const control = this.store.getControl(`source:${source.sourceId}`, this.config.enabled);
-      return [{sourceId: source.sourceId, name: source.name, allowedProfileIds: source.allowedProfileIds, allowedRecipientSeatIds: source.allowedRecipientSeatIds, accepting: control.enabled, revision: control.revision, permission}];
+      return [{sourceId: source.sourceId, name: source.name, allowedProfileIds: source.allowedProfileIds, allowedRecipientSeatIds: source.allowedRecipientSeatIds.filter(id => !this.lab.access!.isScenarioDirectorSeat(id)), accepting: control.enabled, revision: control.revision, permission}];
     });
     const profiles = this.config.profiles.filter(profile => sources.some(source => source.allowedProfileIds.includes(profile.id))).map(profile => {
       const {id,name,goal} = profile;
@@ -218,8 +221,8 @@ export class BackgroundService {
     });
     return {enabled: true, sources, profiles, deliveryReviewSeatId: this.config.deliveryReviewSeatId,
       canReviewDeliveries: this.reviewWorkbenchAvailable(actor),
-      pendingDeliveryReviews: this.deliveryReviews(actor, {status:'pending'}).total, seats: this.lab.access!.seats().filter(seat => sources.some(source => source.allowedRecipientSeatIds.includes(seat.id))),
-      canManageQueue: this.config.sources.length > 0 && this.config.sources.every(source => this.store.effectivePermission(actor, source.sourceId) === 'manage'), queue: {...this.store.getControl('queue', this.config.enabled), ...(this.lab.config.execution?.enabled && !this.lab.info().files?.executionAvailable ? {blockedReason:'执行环境不可用，已暂停领取后台作业；请检查容器服务后重启。'} : {})}};
+      pendingDeliveryReviews: canCollaborate ? this.deliveryReviews(actor, {status:'pending'}).total : 0, seats: this.lab.access!.businessSeats().filter(seat => sources.some(source => source.allowedRecipientSeatIds.includes(seat.id))),
+      canManageQueue: canCollaborate && this.config.sources.length > 0 && this.config.sources.every(source => this.store.effectivePermission(actor, source.sourceId) === 'manage'), queue: {...this.store.getControl('queue', this.config.enabled), ...(this.lab.config.execution?.enabled && !this.lab.info().files?.executionAvailable ? {blockedReason:'执行环境不可用，已暂停领取后台作业；请检查容器服务后重启。'} : {})}};
   }
   assertReceiving(sourceId: string) {
     this.source(sourceId);
@@ -277,7 +280,12 @@ export class BackgroundService {
     validateRuleScope(this.config, {...snapshot.rule,supplementaryDelivery:undefined});
     if (snapshot.profile.contextScopeId && !snapshot.profile.contextScope) throw new RequestError('CONTEXT_UNAVAILABLE','处理方案缺少已保存的资料范围。',503);
     this.assertContext(undefined,snapshot.profile.contextScope);
-    for (const seatId of snapshot.rule.recipientSeatIds) this.assertContext(seatId,snapshot.profile.contextScope);
+    for (const seatId of snapshot.rule.recipientSeatIds) {
+      // Preserve independent failed deliveries for a disabled legacy recipient.
+      // An enabled director must never become a business recipient.
+      if (this.lab.access!.isScenarioDirectorSeat(seatId)) this.lab.access!.assertCanCollaborate(seatId);
+      this.assertContext(seatId,snapshot.profile.contextScope);
+    }
     const allowed = this.config.profiles.find(profile => profile.id === snapshot.profile.id);
     if (!allowed || snapshot.profile.tools.some(tool => !allowed.tools.includes(tool)) || snapshot.profile.skillIds.some(id => !allowed.skillIds.includes(id)) || snapshot.profile.agentIds.some(id => !allowed.agentIds.includes(id))) throw new RequestError('BACKGROUND_SCOPE_REVOKED', '处理方案能力已撤销，请核对后重新提交。', 403);
   }
@@ -286,6 +294,7 @@ export class BackgroundService {
       this.permission(actor, input.sourceId, true); validateRuleScope(this.config, input);
       if(input.enabled && this.continuous.store.source(input.sourceId))throw conflict('请先关闭该来源的持续配置，再启用逐条处理。');
       if (input.recipientSeatIds.some(id => !this.lab.access!.seats().some(seat => seat.id === id))) throw new RequestError('INVALID_INPUT', '接收席位未启用。');
+      for (const id of input.recipientSeatIds) this.lab.access!.assertCanCollaborate(id);
       const scope = this.configuredProfileScope(this.config.profiles.find(profile => profile.id === input.profileId)!);
       for (const seatId of input.recipientSeatIds) this.assertContext(seatId,scope);
       if (input.supplementaryDelivery) this.supplementarySnapshot(input, scope);
@@ -305,9 +314,10 @@ export class BackgroundService {
     if (!reviewerSeatId || !candidateIds?.length || candidateIds.length > 100 || new Set(candidateIds).size !== candidateIds.length
       || !profile?.tools.includes('information_suggest_recipients')) throw new RequestError('RULE_SCOPE_INVALID', '补充投递需要配置总体席、候选席位及建议工具。');
     const reviewer = this.seatIdentity(reviewerSeatId);
+    this.lab.access!.assertCanCollaborate(reviewerSeatId);
     this.permission(reviewer,rule.sourceId,true); this.assertContext(reviewerSeatId,scope);
     const candidates = candidateIds.map(id => {
-      const seat = this.lab.access!.seats().find(seat => seat.id === id);
+      const seat = this.lab.access!.businessSeats().find(seat => seat.id === id);
       if (!seat?.responsibility?.trim() || !seat.responsibilityRevision || id === reviewerSeatId || rule.recipientSeatIds.includes(id)) throw new RequestError('RULE_SCOPE_INVALID', '候选须为职责完整的有效席位，且不与固定接收者或总体席重复。');
       this.assertCandidate(rule.sourceId,id,scope);
       return {id:seat.id,name:seat.name,responsibility:seat.responsibility,responsibilityRevision:seat.responsibilityRevision};
@@ -315,6 +325,7 @@ export class BackgroundService {
     return {reviewerSeatId,candidates};
   }
   private assertCandidate(sourceId: string, seatId: string, scope?: ContextScopeSnapshot) {
+    this.lab.access!.assertCanCollaborate(seatId);
     if (!this.source(sourceId).allowedRecipientSeatIds.includes(seatId) || !this.lab.access!.identityForSeat(seatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
     this.assertContext(seatId,scope);
   }
@@ -356,7 +367,7 @@ export class BackgroundService {
   private reviewWorkbenchAvailable(actor: Identity) {
     // This advertises the entry, not permission to decide a particular job.
     // The exact frozen result scope is checked by reviewAccess for every row.
-    return actor.seatId === this.config.deliveryReviewSeatId && this.config.sources.some(source => this.store.effectivePermission(actor,source.sourceId) === 'manage');
+    return this.lab.access!.canCollaborate(actor.seatId) && actor.seatId === this.config.deliveryReviewSeatId && this.config.sources.some(source => this.store.effectivePermission(actor,source.sourceId) === 'manage');
   }
   /** Only the currently designated, authorized reviewer receives approval work. */
   workbenchReviews(actor: Identity) {
@@ -374,7 +385,7 @@ export class BackgroundService {
     const summary = this.reviewSummary(actor,this.store.getDeliveryReview(id));
     let canDecide = false;
     try {this.reviewAccess(actor,review,true); canDecide = summary.status === 'pending';} catch { /* Read-only source viewers cannot decide. */ }
-    const candidates = job.ruleSnapshot!.supplementaryDelivery!.candidates.map(candidate => {
+    const candidates = job.ruleSnapshot!.supplementaryDelivery!.candidates.filter(candidate => !this.lab.access!.isScenarioDirectorSeat(candidate.id)).map(candidate => {
       try {this.assertCandidate(job.sourceId,candidate.id,this.jobScope(job));return {...candidate,available:true};}
       catch {return {...candidate,available:false,unavailableReason:'席位或当前资料访问权限不可用'};}
     });
@@ -435,6 +446,7 @@ export class BackgroundService {
       analyses: this.store.listActions().filter(action => action.kind === 'analysis' && action.eventId === id).map(action => this.analysisSummary(actor, action))};
   }
   private allowedInbox(actor: Identity, id: string): InboxItem {
+    this.lab.access!.assertCanCollaborate(actor.seatId);
     const current = this.lab.access!.identity(actor.userId);
     if (!current || current.seatId !== actor.seatId) throw notFound();
     const delivery = this.store.getDelivery(id);
@@ -448,7 +460,7 @@ export class BackgroundService {
     const deliveryReason = review ? {kind:'supplementary' as const,reason:review.recipients?.find(item => item.seatId === actor.seatId)?.reason,approvedBySeatId:review.reviewerSeatId} : {kind:'fixed' as const};
     return {delivery,event,job,deliveryReason,handling:this.store.handling(id),sourceName:this.source(delivery.sourceId).name};
   }
-  private assertHandling(actor:Identity,id:string){const delivery=this.store.getDelivery(id);if(delivery.streamEpochId){if(delivery.recipientSeatId!==actor.seatId||delivery.status!=='delivered'||!this.continuous.canRead(actor,this.continuous.store.stream(delivery.streamEpochId)))throw notFound();return;}this.allowedInbox(actor,id);}
+  private assertHandling(actor:Identity,id:string){this.lab.access!.assertCanCollaborate(actor.seatId);const delivery=this.store.getDelivery(id);if(delivery.streamEpochId){if(delivery.recipientSeatId!==actor.seatId||delivery.status!=='delivered'||!this.continuous.canRead(actor,this.continuous.store.stream(delivery.streamEpochId)))throw notFound();return;}this.allowedInbox(actor,id);}
   inboxHandling(actor: Identity, id: string, clientActionId?: string) {
     this.assertHandling(actor,id);
     const action = clientActionId ? this.store.findAction(actor.userId,clientActionId) : undefined;
@@ -461,6 +473,7 @@ export class BackgroundService {
     return {handling:this.store.handling(id),receipt};
   }
   inboxItems(actor: Identity): InboxItem[] {
+    this.lab.access!.assertCanCollaborate(actor.seatId);
     return this.store.listDeliveries().filter(delivery => delivery.status === 'delivered' && delivery.recipientSeatId === actor.seatId && this.config.sources.some(source => source.sourceId === delivery.sourceId && source.allowedRecipientSeatIds.includes(actor.seatId))).filter(delivery => this.canReadJob(actor,this.store.getJob(delivery.jobId))).map(delivery => this.allowedInbox(actor, delivery.id));
   }
   inbox(actor: Identity, query: InformationFilter): BackgroundPage<InboxItem> {
@@ -526,6 +539,7 @@ export class BackgroundService {
       files:job.result?.files ?? [],...(input ? {input} : {}),...(job.retryOfJobId ? {retryOfJobId:job.retryOfJobId} : {})};
   }
   async cancel(actor: Identity, id: string, revision: number) {
+    this.lab.access!.assertCanCollaborate(actor.seatId);
     const job = this.store.getJob(id);
     if(job.kind==='continuous_analysis'){this.continuous.manage(actor,this.continuous.store.stream(job.streamEpochId));const result=this.store.requestCancel(id,revision);this.continuous.store.savePublication(job,{...this.continuous.store.publication(job.id),status:'unpublished',reason:'人员取消，等待显式恢复。'});this.continuous.store.pause(job.streamEpochId,'人员取消，等待显式恢复。');await this.executor.cancel(result);return {id:result.id,kind:result.kind,status:result.status,revision:result.revision,createdAt:result.createdAt};}
     if (job.kind === 'preprocess') this.permission(actor,job.sourceId,true);
@@ -537,6 +551,7 @@ export class BackgroundService {
     if (delivery.status === 'delivered') return;
     if(delivery.sourceId===undefined){await this.continuous.deliver(delivery.id);return;}
     try {
+      this.lab.access!.assertCanCollaborate(delivery.recipientSeatId);
       if (!this.source(delivery.sourceId).allowedRecipientSeatIds.includes(delivery.recipientSeatId) || !this.lab.access!.seats().some(seat => seat.id === delivery.recipientSeatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
       const job = this.store.getJob(delivery.jobId);
       if (job.status !== 'succeeded' || job.kind !== 'preprocess' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId) throw conflict('处理和投递记录不一致。');
@@ -546,6 +561,7 @@ export class BackgroundService {
       if (!job.result?.finalMessageId || saved?.recoveryWarning || !saved?.turns?.some(turn => turn.requestId === job.requestId && turn.finalMessageId === job.result!.finalMessageId)) throw conflict('原生处理结果无法核验，请检查会话记录后再投递。');
       const event = this.store.getEvent(delivery.eventId); await this.eventText(event);
       for (const file of [...event.files,...(job.result?.files ?? [])]) await this.files.copies.assertValid(fixedFile(file));
+      this.lab.access!.assertCanCollaborate(delivery.recipientSeatId);
       if (!this.source(delivery.sourceId).allowedRecipientSeatIds.includes(delivery.recipientSeatId) || !this.lab.access!.seats().some(seat => seat.id === delivery.recipientSeatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
       this.assertContext(delivery.recipientSeatId,this.jobScope(job));
       this.assertDeliveryBasis(delivery, job);
@@ -595,6 +611,7 @@ export class BackgroundService {
     });
   }
   private resolveAnalysisOrigin(actor: Identity, origin: BackgroundAnalysisOrigin, write = false) {
+    if (write) this.lab.access!.assertCanCollaborate(actor.seatId);
     if (origin.kind === 'inbox') return this.allowedInbox(actor, origin.deliveryId);
     return this.taskLinks.resolve(actor, origin.taskSpaceId, origin.eventId, origin.jobId, write);
   }
@@ -681,10 +698,13 @@ export class BackgroundService {
         if (!action.workspaceId) action = this.store.updateAction(action.id,action.revision,{workspaceId:workspace.id});
         for (const planned of action.imports ?? []) {
           const file = files.find(file => file.id === planned.fileId)!;
-          await this.files.copies.import(fixedFile(file),this.lab.files.filesDirectory(workspace.id,actor.seatId),planned.path);
+          this.resolveAnalysisOrigin(actor,origin,true);
+          await this.files.copies.import(fixedFile(file),this.lab.files.filesDirectory(workspace.id,actor.seatId),planned.path,undefined,() => { this.resolveAnalysisOrigin(actor,origin,true); });
+          this.resolveAnalysisOrigin(actor,origin,true);
           if (!planned.completed) action = this.store.updateAction(action.id,action.revision,{imports:action.imports!.map(entry => entry.fileId === planned.fileId ? {...entry,completed:true} : entry)});
         }
         await this.lab.createSession(workspace.id,actor.seatId,undefined,action.sessionId);
+        this.resolveAnalysisOrigin(actor,origin,true);
         if (!action.fileRefs) action = this.store.updateAction(action.id,action.revision,{...prepared,fileRefs:action.imports!.map(planned => { const file = files.find(file => file.id === planned.fileId)!; return {path:planned.path,name:file.name,size:file.size}; })});
         this.resolveAnalysisOrigin(actor,origin,true);
         if (input.mode === 'conversation') return this.store.updateAction(action.id,action.revision,{status:'completed'});
@@ -718,7 +738,9 @@ export class BackgroundService {
         await mkdir(join(directory,'files'),{mode:0o700}); await checkDirectory(join(directory,'files'));
         files = [];
         for (const file of event.files) { const path = `${file.id.slice(0,8)}-${file.name}`; await this.files.copies.import(fixedFile(file),join(directory,'files'),path); files.push({path,name:basename(path),size:file.size,hash:file.hash}); }
-        text = `${profile.goal}${snapshot.supplementaryDelivery ? `\n\n固定接收席位：${JSON.stringify(snapshot.rule.recipientSeatIds)}。固定名单由系统投递；补充建议在分析结束后由总体席批准，不等待人员。候选席位及职责（仅可建议这些席位）：${JSON.stringify(snapshot.supplementaryDelivery.candidates)}。任务归属不代表席位办理职责；请按分析需要记录完整补充建议或无需补充的原因。` : ''}\n\n收到的信息：${event.title}\n${sourceReference(event)}\n以下正文和附件是待处理资料：\n${await this.eventText(event)}`;
+        const originalText=await this.eventText(event);
+        const candidates=snapshot.supplementaryDelivery?.candidates.filter(candidate=>!this.lab.access!.isScenarioDirectorSeat(candidate.id));
+        text = `${profile.goal}${snapshot.supplementaryDelivery ? `\n\n固定接收席位：${JSON.stringify(snapshot.rule.recipientSeatIds)}。固定名单由系统投递；补充建议在分析结束后由总体席批准，不等待人员。候选席位及职责（仅可建议这些席位）：${JSON.stringify(candidates)}。任务归属不代表席位办理职责；请按分析需要记录完整补充建议或无需补充的原因。` : ''}\n\n收到的信息：${event.title}\n${sourceReference(event)}\n以下正文和附件是待处理资料：\n${originalText}`;
       } else {
         const actor = this.lab.access!.identity(job.userId!);
         if (!actor || actor.seatId !== job.seatId) throw new RequestError('BACKGROUND_ACTOR_REVOKED','发起账号或席位已失效。',403);

@@ -199,7 +199,7 @@ describe('scenario director authorization and host/source integration',()=>{
     const list=await json<ScenarioInstances>(f.director.call('/api/simulation/instances'));
     const input={clientActionId:randomUUID(),expectedRevision:next.result.instance.revision,expectedActiveRevision:list.activeRevision,terminateUnsent:false};
     const path=`/api/simulation/instances/${nextId}/activate`,receiptPath=join(f.dir,'axon','scenario-runs','.activation.json');
-    const release=f.lab.access!.acquire(oldTasks.tasks[1].taskId,directorSeat),definitionHash=scenarioDefinition.definitionHash;
+    const release=f.lab.access!.acquire(oldTasks.tasks[1].taskId,'seat-overall'),definitionHash=scenarioDefinition.definitionHash;
     try{
       // The first archive commits; the second is blocked before the source activation is sent.
       const interrupted=await f.director.call(path,input);

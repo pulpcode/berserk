@@ -124,11 +124,12 @@ export class WorkspaceStore {
     const workspace = this.get(id, seatId);
     return this.access?.acquire(workspace.taskSpaceId, seatId) ?? (() => {});
   }
-  private async commit(next: WorkspaceIndex) {
+  private async commit(next: WorkspaceIndex, authorize?: () => void) {
     // Revalidate disk before overwriting so corruption is never silently healed by a live process.
     const disk = await readControlled(join(this.dataDir, 'workspace-index.json'), 2 * 1024 * 1024);
     try { validateIndex(parseJsonStrict(disk!)); } catch { throw stateError(); }
     if (disk !== JSON.stringify(this.index, null, 2)) throw stateError();
+    authorize?.();
     await atomicWrite(join(this.dataDir, 'workspace-index.json'), JSON.stringify(next, null, 2));
     this.index = next;
   }
@@ -136,6 +137,7 @@ export class WorkspaceStore {
     return this.lock.run(() => this.createUnlocked(name, taskSpaceId, seatId));
   }
   private async createUnlocked(name: string, taskSpaceId: string | undefined, seatId: string): Promise<Workspace> {
+    this.access?.assertCanCollaborate(seatId);
     if (this.access) { if (!taskSpaceId) throw new RequestError('TASK_REQUIRED', '请先创建任务。', 400); this.access.get(taskSpaceId, seatId, true); }
     name = name.trim();
     if (!name || name.length > 60 || !/^[a-zA-Z0-9_-]{1,64}$/.test(seatId)) throw new RequestError('INVALID_INPUT', '工作区名称或席位无效。');
@@ -148,9 +150,10 @@ export class WorkspaceStore {
   }
   async bind(sessionId: string, workspaceId: string, seatId = this.seatId) {
     return this.lock.run(async () => {
+      this.access?.assertCanCollaborate(seatId);
       this.get(workspaceId, seatId);
       if (!UUID.test(sessionId) || this.index.sessionBindings[sessionId]) throw stateError();
-      await this.commit({ ...this.index, sessionBindings: { ...this.index.sessionBindings, [sessionId]: workspaceId } });
+      await this.commit({ ...this.index, sessionBindings: { ...this.index.sessionBindings, [sessionId]: workspaceId } }, () => this.access?.assertCanCollaborate(seatId));
     });
   }
 }

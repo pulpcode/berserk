@@ -52,7 +52,10 @@ export class CollaborationService {
     return this.db.prepare("SELECT id FROM works WHERE json_extract(data,'$.taskSpaceId')=? AND json_extract(data,'$.state')!='completed' LIMIT 1").get(id) !== undefined
       || this.db.prepare("SELECT data FROM actions WHERE json_extract(data,'$.action.taskSpaceId')=? AND json_extract(data,'$.action.status')='prepared'").all(id).some(row=>this.live(parse<StoredAction>(row)));
   }
-  private actor(actor: ActorContext) { if (!this.options.seatIds.includes(actor.seatId)) throw notFound(); }
+  private actor(actor: ActorContext) {
+    if (!this.options.seatIds.includes(actor.seatId)) throw notFound();
+    this.workspaces.access?.assertCanCollaborate(actor.seatId);
+  }
   private validateStored() {
     // Metadata is private, but damaged records must never become a fresh/partly empty inbox.
     const works = new Map<string, WorkItem>(); const actions = new Map<string, StoredAction>(); const files = new Map<string, StoredFile>();
@@ -132,6 +135,7 @@ export class CollaborationService {
     this.actor(actor); return this.db.prepare('SELECT data FROM works ORDER BY rowid DESC').all().map(row => parse<WorkItem>(row)).filter(work => work.creatorSeatId === actor.seatId || work.assigneeSeatId === actor.seatId);
   }
   overview(actor: Identity): WorkOverviewItem[] {
+    this.actor(actor);
     const access = this.workspaces.access;
     // Re-read current capabilities, including for direct service callers.
     const current = access?.identity(actor.userId);
@@ -163,6 +167,7 @@ export class CollaborationService {
   workForSession(actor: ActorContext, sessionId: string): WorkDetail | undefined { const id = this.workIdForSession(actor, sessionId); return id ? this.read(actor, id) : undefined; }
   bindSession(actor: ActorContext, sessionId: string, workItemId: string) {
     const work = this.work(actor, workItemId); const workspaceId = this.workspaces.binding(sessionId, actor.seatId); if (!workspaceId) throw notFound();
+    this.assertParticipants(work);
     if (this.requests.has(sessionId)) throw conflict('会话正在处理，请结束后再关联工作。');
     const workspace = this.workspaces.get(workspaceId, actor.seatId); this.workspaces.access?.get(workspace.taskSpaceId,actor.seatId,true); if (workspace.taskSpaceId !== work.taskSpaceId) throw notFound();
     const previous = this.workIdForSession(actor, sessionId); if (previous && previous !== workItemId) throw conflict('会话已关联另一项工作。');
@@ -181,6 +186,7 @@ export class CollaborationService {
     if (input.kind === 'assign') {
       const task = this.workspaces.access?.get(input.taskSpaceId,actor.seatId,true);
       if (task && !this.workspaces.access!.seats().some(seat=>seat.id===input.payload.assigneeSeatId)) throw new RequestError('INVALID_INPUT','接收席位当前不可用。');
+      this.workspaces.access?.assertCanCollaborate(input.payload.assigneeSeatId);
       if (task && task.visibility !== 'public') throw new RequestError('PRIVATE_TASK','跨席位分派须在公共任务中进行。',403);
       const workspace = this.workspaces.get(input.payload.workspaceId, actor.seatId);
       if (workspace.taskSpaceId !== input.taskSpaceId || !this.options.seatIds.includes(input.payload.assigneeSeatId) || input.payload.assigneeSeatId === actor.seatId) throw new RequestError('INVALID_INPUT', '请选择本项目及另一接收席位。');
@@ -188,6 +194,7 @@ export class CollaborationService {
       for (const path of input.payload.inputPaths ?? []) filePath(path); return undefined;
     }
     const work = this.work(actor, input.workItemId);
+    this.assertParticipants(work);
     this.workspaces.access?.get(work.taskSpaceId,actor.seatId,true);
     if (input.expectedRevision !== work.revision) throw conflict();
     if (input.kind === 'claim' && (work.assigneeSeatId !== actor.seatId || work.state !== 'assigned')) throw conflict();
@@ -201,6 +208,9 @@ export class CollaborationService {
       if (input.payload.decision === 'return' && !input.payload.reason?.trim()) throw new RequestError('INVALID_INPUT', '退回时请填写意见。');
     }
     return work;
+  }
+  private assertParticipants(work: WorkItem) {
+    for (const seatId of [work.creatorSeatId, work.assigneeSeatId]) this.workspaces.access?.assertCanCollaborate(seatId);
   }
   async prepare(actor: ActorContext, input: WorkPrepareInput, origin: PreparationOrigin, signal?: AbortSignal): Promise<WorkAction> {
     const release=this.workspaces.access?.acquire(input.kind === 'assign' ? input.taskSpaceId : this.work(actor,input.workItemId).taskSpaceId,actor.seatId);
@@ -279,6 +289,7 @@ export class CollaborationService {
     let stored = this.storedAction(actor, id);
     if (stored.action.receipt) return stored.action.receipt;
     this.checkPrepared(stored); signal?.throwIfAborted();
+    this.validateInput(actor, stored.input);
     for (const file of stored.action.files) await this.files.assertValid(file);
     if (stored.input.kind === 'assign') {
       const workspace = this.workspaces.get(stored.input.payload.workspaceId, actor.seatId);
@@ -332,14 +343,18 @@ export class CollaborationService {
   }
   async openFile(actor: ActorContext, id: string) { return this.files.open(this.authorizedFile(actor,id)); }
   async importFile(actor: ActorContext, id: string, workspaceId: string, path?: string, signal?: AbortSignal): Promise<HandoffImportResult> {
+    this.actor(actor);
     const release=this.workspaces.access?.acquire(this.workspaces.get(workspaceId,actor.seatId).taskSpaceId,actor.seatId);
     try {return await this.importFileInternal(actor,id,workspaceId,path,signal);} finally {release?.();}
   }
   private async importFileInternal(actor: ActorContext, id: string, workspaceId: string, path?: string, signal?: AbortSignal): Promise<HandoffImportResult> {
     const file = this.authorizedFile(actor,id); const workspace = this.workspaces.get(workspaceId,actor.seatId);
     if (!file.workItemId || workspace.taskSpaceId !== file.taskSpaceId) throw notFound();
+    const authorize = () => { this.authorizedFile(actor,id); this.assertParticipants(this.work(actor,file.workItemId!)); };
+    authorize();
     const target = filePath(path ?? `收到资料/${file.workItemId}/${file.fileId}/${file.name}`);
-    const info = await this.files.import(file,this.workspaces.filesDirectory(workspace.id,actor.seatId),target,signal);
+    const info = await this.files.import(file,this.workspaces.filesDirectory(workspace.id,actor.seatId),target,signal,authorize);
+    authorize();
     return {fileId:id,workspaceId,path:target,name:basename(target),...info};
   }
 }

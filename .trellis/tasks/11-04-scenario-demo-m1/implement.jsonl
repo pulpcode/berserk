@@ -4,3 +4,6 @@
 {"file": ".trellis/spec/backend/task-resource-query.md", "reason": "第一里程碑实现与兼容验证依据"}
 {"file": ".trellis/spec/backend/context-analysis.md", "reason": "第一里程碑实现与兼容验证依据"}
 {"file": ".trellis/tasks/11-03-scenario-demo/research/m1-design-basis.md", "reason": "第一里程碑实现与兼容验证依据"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "导演隔离：协作准备/提交、交接文件与会话绑定服务边界"}
+{"file": ".trellis/spec/backend/workbench.md", "reason": "导演隔离：业务工作台与参与者资格、只读来源核对"}
+{"file": ".trellis/tasks/11-04-scenario-demo-m1/research/director-business-isolation.md", "reason": "用户新增授权的前后端隔离范围与验收标准"}

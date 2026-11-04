@@ -43,7 +43,11 @@ export function DeliveryReviews({ visible, selectedId, status, offset, capabilit
 
 function DeliveryReviewForm({ value, seatName, refresh }: { value: DeliveryReviewDetail; seatName: (id: string) => string; refresh: () => void }) {
   const { api } = useApi();
-  const [selected, setSelected] = useState(() => value.suggestion.recipients.map(item => item.seatId));
+  const [draftSelected, setSelected] = useState(() => value.suggestion.recipients.map(item => item.seatId));
+  // Removed candidates cannot survive as hidden selections. Unavailable current
+  // candidates stay selected so the reviewer can explicitly cancel them.
+  const selected = draftSelected.filter(id => value.candidates.some(candidate => candidate.id === id));
+  if (selected.length !== draftSelected.length) setSelected(selected);
   const [reasons, setReasons] = useState<Record<string, string>>(() => Object.fromEntries(value.suggestion.recipients.map(item => [item.seatId, item.reason])));
   const [declineReason, setDeclineReason] = useState('');
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [notice, setNotice] = useState('');
