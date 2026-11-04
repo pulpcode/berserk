@@ -28,6 +28,10 @@ Formal default navigation is `/work`; old `/inbox` and `/information` links norm
 
 The desktop workbench has one page heading and no repeated context title or introductory paragraph. Its status filters and type/task/search fields share a left edge. Type/task/search labels sit to the left of their controls and align vertically at the center; wrap complete field groups when desktop space narrows. Keep the empty detail pane as a selection prompt, without a nested bordered card or assignment form.
 
+Workbench and work overview page headers share the `work-page-header` layout and 24px title style. The overview heading has no extra sidebar menu or leading icon. Omit introductory descriptions from work-summary and assessment-record lists; retain authorization, errors and operational guidance in business details.
+
+All overview filter toolbars keep labels beside their input/select controls, with centered alignment, an 8px field gap and 24px between groups. Wrap whole groups when desktop space narrows; do not apply filter density to detail/edit forms.
+
 Assignment starts from the workbench header. `WorkInboxHandle.assign(trigger)` opens the existing assignment Panel, which selects the project before showing the workspace-keyed draft and file picker. Opening, changing projects or cancelling must not prepare/commit work or call a model. Preserve separate drafts per workspace, the current type filter and the existing explicit preparation/confirmation steps; closing returns focus to the triggering button. No available project yields an explicit explanation rather than an inert disabled action in the detail pane.
 
 Work-handoff list status badges use the existing per-seat `WorkbenchItem.bucket`: `actionable` is amber (including creator-side acceptance), `following` is blue, and completed/history states are neutral. Keep type text separate and neutral, retain explicit status labels, and leave the selected-row accent independent. Never infer the badge color from creator/assignee direction alone. Narrow desktop list panes may wrap the status group without squeezing the title to one-character lines.

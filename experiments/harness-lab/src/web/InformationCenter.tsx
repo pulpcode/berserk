@@ -1,6 +1,6 @@
 import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Columns3, List, Menu, RefreshCw, Workflow } from 'lucide-react';
+import { ArrowRight, Columns3, List, RefreshCw } from 'lucide-react';
 import type { Identity, TaskSpace } from '../contracts/access';
 import type { BackgroundDelivery, BackgroundEventDetail, BackgroundEventSummary, BackgroundPage, InformationCapabilities, InformationJobDetail, InformationJobSummary } from '../contracts/background';
 import { TaskAssociations } from './TaskAssociations';
@@ -29,7 +29,7 @@ function locationUrl(route: Location) {
   const params = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value !== 0).map(([key, value]) => [key, String(value)]));
   return `/overview?${params}`;
 }
-export function InformationCenter({ continuous, discussion, visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, openMenu, seats }: { continuous?: ContinuousAccess; discussion: ContinuousDiscussion; seats: Array<{id: string; name: string}>; openWork: (id: string) => void; openMenu: () => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
+export function InformationCenter({ continuous, discussion, visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, seats }: { continuous?: ContinuousAccess; discussion: ContinuousDiscussion; seats: Array<{id: string; name: string}>; openWork: (id: string) => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
   const { api, domId } = useApi();
   const [route, setRoute] = useState(() => initialLocation(!!identity?.viewWorkOverview));
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [busy, setBusy] = useState(false); const [refreshKey, setRefreshKey] = useState(0);
@@ -76,7 +76,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
   }
   const feedback = <>{error && <p className="resource-error" role="alert">{error}</p>}{navigationError?.url === location.pathname + location.search && <p className="resource-error" role="alert">{navigationError.message}<button onClick={clearNavigationError}>关闭提示</button></p>}{notice && <p className="resource-success" role="status">{notice}</p>}</>;
   return <section id={domId('information-center')} tabIndex={-1} className="information-center" hidden={!visible} aria-label="工作总览">
-    <header className="information-center-header" inert={detailOpen || undefined}><div><button className="icon-button mobile-only" aria-label="打开会话列表" onClick={openMenu}><Menu size={20} /></button><Workflow size={22} aria-hidden="true" /><h1>工作总览</h1></div></header>
+    <header className="information-center-header work-page-header" inert={detailOpen || undefined}><h1>工作总览</h1></header>
     {!allowed && !continuous?.canRead && !identity?.viewWorkOverview && !capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed && !continuous?.canRead && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
       <nav className="information-tabs" aria-label="工作总览栏目" inert={detailOpen || undefined}>
         {continuous?.canRead && <button aria-current={route.tab === 'assessments' ? 'page' : undefined} onClick={() => navigate({ tab: 'assessments', id: '', offset: 0 })}>研判记录</button>}
