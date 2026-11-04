@@ -7,6 +7,7 @@ import { TaskAssociations } from './TaskAssociations';
 import { useApi } from './api';
 import { DeliveryReviews, DeliveryReviewStatus } from './DeliveryReviews';
 import { WorkOverview } from './WorkOverview';
+import { parseWorkOverviewView, type WorkOverviewView } from './work-overview-layout';
 import { ContinuousRecords, type ContinuousDiscussion } from './ContinuousAssessments';
 import type { ContinuousAccess } from '../contracts/continuous';
 import { InformationRules } from './InformationRules';
@@ -17,16 +18,16 @@ import { AnalysisHistory, deliveryLabels, InformationFiles, InformationPaginatio
 import { InformationDrawer, InformationJobColumn, JobDeliverySummary, JobStatus, jobColumns, jobPhases, jobTitle } from './InformationJobs';
 
 type Tab = 'assessments' | 'work' | 'reviews' | 'events' | 'jobs' | 'rules';
-type Location = { taskId: string; seatId: string; tab: Tab; id: string; sourceId: string; status: string; search: string; offset: number; view: 'board' | 'list'; queued: number; running: number; succeeded: number; stopped: number };
+type Location = { taskId: string; seatId: string; tab: Tab; id: string; sourceId: string; status: string; search: string; offset: number; view: 'board' | 'list'; workView: WorkOverviewView; queued: number; running: number; succeeded: number; stopped: number };
 const firstPages = { offset: 0, queued: 0, running: 0, succeeded: 0, stopped: 0 };
 function initialLocation(work = false): Location {
   const params = new URLSearchParams(location.pathname === '/overview' ? location.search : '');
   const tab = params.get('tab');
   const offset = (key: string) => Math.max(0, Math.floor(Number(params.get(key)) || 0));
-  return { taskId: params.get('taskId') || '', seatId: params.get('seatId') || '', tab: tab === 'assessments' || tab === 'work' || tab === 'reviews' || tab === 'events' || tab === 'rules' || tab === 'jobs' ? tab : params.has('id') ? 'events' : work ? 'work' : 'events', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
+  return { taskId: params.get('taskId') || '', seatId: params.get('seatId') || '', tab: tab === 'assessments' || tab === 'work' || tab === 'reviews' || tab === 'events' || tab === 'rules' || tab === 'jobs' ? tab : params.has('id') ? 'events' : work ? 'work' : 'events', id: params.get('id') || '', sourceId: params.get('sourceId') || '', status: params.get('status') || '', search: params.get('search') || '', offset: offset('offset'), view: params.get('view') === 'list' || params.get('status') ? 'list' : 'board', workView: parseWorkOverviewView(params.get('workView')), queued: offset('queued'), running: offset('running'), succeeded: offset('succeeded'), stopped: offset('stopped') };
 }
 function locationUrl(route: Location) {
-  const params = new URLSearchParams(Object.entries(route).filter(([, value]) => value !== '' && value !== 0).map(([key, value]) => [key, String(value)]));
+  const params = new URLSearchParams(Object.entries(route).filter(([key, value]) => value !== '' && value !== 0 && !(key === 'workView' && value === 'list')).map(([key, value]) => [key, String(value)]));
   return `/overview?${params}`;
 }
 export function InformationCenter({ continuous, discussion, visible, capabilities, refreshAccess, tasks, identity, savedTask, openTask, openSession, navigationError, clearNavigationError, openWork, seats }: { continuous?: ContinuousAccess; discussion: ContinuousDiscussion; seats: Array<{id: string; name: string}>; openWork: (id: string) => void; visible: boolean; capabilities?: InformationCapabilities; refreshAccess: () => void; tasks: TaskSpace[]; identity?: Identity; savedTask: (task: TaskSpace) => void; openTask: (taskId: string) => void; openSession: (id: string) => void; navigationError?: { url: string; message: string }; clearNavigationError: () => void }) {
@@ -84,7 +85,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
         {allowed && ([['events', '信息流转'], ['jobs', '处理运行'], ['rules', '处理与投递规则']] as const).map(([id, label]) => <button key={id} aria-current={route.tab === id ? 'page' : undefined} onClick={() => navigate({ tab: id, id: '', offset: 0, status: '' })}>{label}</button>)}
         {capabilities?.canReviewDeliveries && <button aria-current={route.tab === 'reviews' ? 'page' : undefined} onClick={() => navigate({tab:'reviews',id:'',offset:0,status:'pending'})}>补充投递审批</button>}
       </nav>
-      {route.tab === 'assessments' ? continuous?.canRead ? <ContinuousRecords visible={visible} discussion={discussion} selectedId={route.id} select={id => navigate({ id })} /> : <p>当前没有研判读取权限。</p> : route.tab === 'work' ? <WorkOverview visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
+      {route.tab === 'assessments' ? continuous?.canRead ? <ContinuousRecords visible={visible} discussion={discussion} selectedId={route.id} select={id => navigate({ id })} /> : <p>当前没有研判读取权限。</p> : route.tab === 'work' ? <WorkOverview key={`${identity?.userId}:${identity?.seatId}:${!!identity?.viewWorkOverview}`} visible={visible} allowed={!!identity?.viewWorkOverview} route={route} navigate={navigate} tasks={tasks} seats={seats} openWork={openWork} />  : !allowed || !capabilities ? <p className="information-empty">当前席位没有信息来源查看权限。</p> : <>
       <div className="information-center-body" hidden={route.tab === 'reviews'} inert={detailOpen || undefined}>
         {capabilities.queue.blockedReason && <p className="information-queue-notice" role="status">{capabilities.queue.blockedReason}</p>}
         {route.tab !== 'rules' && route.tab !== 'reviews' && <>

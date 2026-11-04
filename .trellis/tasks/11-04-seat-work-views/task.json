@@ -2,8 +2,8 @@
   "id": "seat-work-views",
   "name": "seat-work-views",
   "title": "席位工作列表与流转图双视图方案",
-  "description": "已批准列表／席位泳道双视图；先提交方案，实施后本地预览待验收，不push或上线。",
-  "status": "planning",
+  "description": "列表／席位泳道及滚轮修复已完成并获用户提交确认；仅本地main提交，不push或上线。",
+  "status": "in_progress",
   "dev_type": "frontend",
   "scope": "work-overview",
   "package": null,
@@ -31,17 +31,43 @@
     ".trellis/tasks/11-04-seat-work-views/alternatives.md",
     ".trellis/tasks/11-04-seat-work-views/prototype/view-options.html",
     ".trellis/tasks/11-04-seat-work-views/prototype/swimlane.html",
-    ".trellis/tasks/11-04-seat-work-views/research/screenshots/swimlane.jpg"
+    ".trellis/tasks/11-04-seat-work-views/research/screenshots/swimlane.jpg",
+    ".trellis/tasks/11-04-seat-work-views/research/implementation-20261104.md",
+    ".trellis/tasks/11-04-seat-work-views/research/screenshots/implemented-swimlane.jpg",
+    ".trellis/tasks/11-04-seat-work-views/research/wheel-pan-fix-20261104.md",
+    ".trellis/tasks/11-04-seat-work-views/research/screenshots/wheel-pan-fixed.jpg"
   ],
   "notes": "",
   "meta": {
-    "designStatus": "approved",
+    "designStatus": "accepted",
     "implementationApproved": true,
-    "implementationStarted": false,
+    "implementationStarted": true,
     "uiBaselineCommit": "395e648",
     "planningOnly": false,
     "approvedAt": "2026-11-04",
     "approvalMessage": "好的，提交当前方案，然后开始实施",
-    "selectedPresentation": "swimlane"
+    "selectedPresentation": "swimlane",
+    "planCommit": "a92dd7f",
+    "uiReviewPending": false,
+    "implementationChecks": {
+      "typecheck": "passed",
+      "lint": "passed",
+      "build": "passed",
+      "unitFiles": 125,
+      "unitTests": 1455,
+      "workbenchBrowserTests": 12,
+      "finalStickyHeaderRegression": "passed",
+      "localPreview": "http://127.0.0.1:4316/overview?tab=work&workView=flow"
+    },
+    "wheelGestureFix": {
+      "status": "verified_local",
+      "plainWheel": "pan",
+      "modifierWheel": "Ctrl/Meta zoom",
+      "targetedBrowserRegression": "passed",
+      "typecheck": "passed",
+      "affectedLint": "passed",
+      "build": "passed"
+    },
+    "commitApproval": "2026-11-04 用户要求提交修改"
   }
 }

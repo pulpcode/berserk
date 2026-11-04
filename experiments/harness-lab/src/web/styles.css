@@ -1197,3 +1197,37 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .continuous-rules .information-form > fieldset { display: grid; gap: 16px; border: 0; padding: 0; min-width: 0; }
 .continuous-rules .information-form label { min-width: 0; }
 .continuous-rules .information-form select { max-width: 100%; }
+
+/* Seat work has its own presentation controls; other overview tabs retain their toolbar. */
+.work-overview-actions { display: flex; align-items: center; gap: 10px; }
+.work-overview-actions > .icon-button, .work-swimlane-controls > .icon-button { width: 32px; height: 32px; min-height: 32px; padding: 0; }
+.work-overview-actions .information-view-toggle button { padding: 7px 12px; }
+.work-swimlane { position: relative; height: clamp(420px, 64vh, 640px); overflow: hidden; isolation: isolate; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); user-select: none; touch-action: none; }
+.work-swimlane:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.work-swimlane-controls { position: absolute; top: 12px; right: 12px; z-index: 5; display: flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 2px 8px #203b2c12; }
+.work-swimlane-controls > .icon-button { border: 0; }
+.work-swimlane-scene { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+.work-swimlane-lane { position: absolute; left: 0; border-bottom: 1px solid var(--line); background: var(--surface); }
+.work-swimlane-lane:nth-child(even) { background: color-mix(in srgb, var(--accent) 3%, var(--surface)); }
+.work-swimlane-seat { position: absolute; inset: 0 auto 0 0; z-index: 3; display: flex; align-items: center; gap: 10px; padding: 18px; border-right: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 5%, var(--surface)); color: var(--accent); font-size: 14px; font-weight: 600; }
+.work-swimlane-seat > svg { flex-shrink: 0; }
+.work-swimlane-seat > span { min-width: 0; overflow-wrap: anywhere; }
+.work-swimlane-seat-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; line-height: 20px; }
+.work-swimlane-seat small { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; color: var(--muted); font-size: 10px; line-height: 14px; font-weight: 400; margin-top: 5px; }
+.work-swimlane-scene > svg { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+.work-swimlane-scene > svg marker path { fill: #6f8d7a; }
+.work-swimlane-line { fill: none; stroke: #7b9384; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.information-center .work-swimlane-origin { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 34px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 11px; line-height: 18px; z-index: 1; }
+.work-swimlane-dot { width: 14px; height: 14px; border: 1.6px solid #789785; border-radius: 50%; background: var(--surface); }
+.work-swimlane-dot::after { content: ''; display: block; width: 4px; height: 4px; margin: 3.4px; border-radius: 50%; background: #789785; }
+.information-center .work-swimlane-work { position: absolute; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; padding: 12px 14px; z-index: 2; text-align: left; border: 1px solid #b8cdbf; border-radius: 9px; background: var(--surface); color: var(--text); box-shadow: 0 2px 5px #203b2c06; }
+.information-center .work-swimlane-work:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 3%, var(--surface)); }
+.work-swimlane-work strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; flex-shrink: 0; font-size: 14px; font-weight: 600; line-height: 19px; overflow-wrap: anywhere; }
+.work-swimlane-work small { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; line-height: 15px; }
+.work-swimlane-status { display: inline-flex; align-items: center; gap: 5px; padding: 2px 6px; border-radius: 4px; font-size: 11px; line-height: 16px; white-space: nowrap; }
+.work-swimlane-status::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+.work-swimlane-status.state-assigned { color: #8b6826; background: #fbf4e6; }
+.work-swimlane-status.state-working { color: #426f8a; background: #eaf2f8; }
+.work-swimlane-status.state-submitted { color: #745c95; background: #f0edf8; }
+.work-swimlane-status.state-returned { color: #916044; background: #f9eee9; }
+.work-swimlane-status.state-completed { color: #4f7459; background: #eaf3ed; }
