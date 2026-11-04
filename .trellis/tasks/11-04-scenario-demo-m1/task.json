@@ -15,7 +15,7 @@
   "branch": "codex/scenario-demo",
   "base_branch": "main",
   "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
-  "commit": "1d6510b",
+  "commit": "68dded36207498f66f63cf7c1b7db4997c344e88",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -24,8 +24,9 @@
     ".trellis/tasks/11-03-scenario-demo/milestone-1-design.md",
     ".trellis/tasks/11-04-scenario-demo-m1/research/implementation-validation.md",
     "experiments/harness-lab/scripts/mock-context/scenarios/README.md",
-    ".trellis/tasks/11-04-scenario-demo-m1/research/director-business-isolation.md"
+    ".trellis/tasks/11-04-scenario-demo-m1/research/director-business-isolation.md",
+    ".trellis/tasks/11-04-scenario-demo-m1/research/main-merge-deployment-20261104.md"
   ],
-  "notes": "P0—P2原始实现79d0e27；本轮按用户追加要求完成导演与业务协作隔离。最终130文件/1500测试、10项相关桌面、typecheck/lint/build均通过；保留场景控场/原生任务准备/重演和只读核对，旧历史不删除。补充验收见research/director-business-isolation.md。保持in_progress供用户检查，未推送、合并、部署或执行P3—P6。",
+  "notes": "P0—P2基线79d0e27、导演业务隔离1d6510b。2026-11-04按用户追加授权将main@0a8d73e合并为68dded3并上线，未推送；完整131文件/1504项、14项桌面、typecheck/lint/build及公网核验通过。独立副本迁移，保留旧四席/任务/原生历史及完整旧数据回退；新增导演和三任务，当前09:10未投放。旧即时引用时钟409兼容边界见发布记录。保持in_progress待用户测试；P3—P6未实施。",
   "meta": {}
 }

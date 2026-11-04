@@ -110,3 +110,37 @@
 ### Next Steps
 
 - 保留M1任务供用户审阅；未推送、合并或部署，P3—P6和一键重置交互不在本轮。
+
+
+## Session 4: 合并main并发布场景导演台待测
+
+**Date**: 2026-11-04
+**Task**: 合并main并发布场景导演台待测
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+按用户授权合并main并发布68dded3；完整1504项与14项桌面回归通过，公网五席及双视图验收完成；独立数据副本保留旧账号任务历史，场景09:10未投放，待用户测试。
+
+### Main Changes
+
+- main工作列表及泳道图与导演业务隔离兼容合并；未推送。
+- 保留旧发布和schema12原数据，以副本升级到schema18，配置独立导演及场景来源；记录旧即时引用时钟409边界和回退方法。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `68dded3` | (see git log) |
+
+### Testing
+
+- [OK] 131文件/1504项Vitest，14项桌面及typecheck/lint/build通过；Linux副本预检和公网真实登录/权限/来源/双视图通过，模型调用0次。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户测试线上导演台；保留活动任务，按反馈处理，不启动P3—P6。

@@ -1,0 +1,3 @@
+(node:3086670) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"preflight":true,"schema":{"user_version":18},"oldTaskCount":4,"oldWorkspaceCount":4,"preparedTasks":3,"sceneObjects":53,"businessNow":"2026-11-03T09:10:00+08:00","modelCalls":0,"nativeHistories":9}

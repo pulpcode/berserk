@@ -32,6 +32,6 @@
     ".trellis/tasks/11-03-scenario-demo/milestone-1-design.md",
     ".trellis/tasks/11-03-scenario-demo/research/m1-design-basis.md"
   ],
-  "notes": "2026-11-04用户明确要求“提交方案git，开始实施”；获批M1 v0.5以e4054a5提交。P0—P2实施及验收记录在子任务11-04-scenario-demo-m1。专用导演席、独立场景控制权限、四业务席禁入按批准方案落实；未创建正式账号或改现有运行数据。P3—P6尚未实施。SIM-DOMAIN-001仓库issue保留，尚未同步远程。",
+  "notes": "2026-11-04用户授权提交方案并实施，获批M1 v0.5为e4054a5；P0—P2及导演协作隔离已落地。随后明确要求合并main并上线待测：68dded3已部署，原数据保留、专用导演已开通、三任务准备，初始09:10未投放事件；详细验证及兼容边界见子任务发布记录。父子任务保留待用户测试，P3—P6未实施。SIM-DOMAIN-001仓库issue保留，尚未同步远程。",
   "meta": {}
 }

@@ -4,6 +4,8 @@
 
 执行记录：用户于2026-11-04要求“提交方案git，开始实施”，v0.5设计基线已提交e4054a5。随后用户明确要求导演与业务协作隔离，v0.6仅补充该要求；正文其他部分保留审阅时的提案时态；当前完成情况、验证与限制以[实施验收记录](../11-04-scenario-demo-m1/research/implementation-validation.md)为准。
 
+2026-11-04后续状态：用户明确授权合并main并上线待测；已部署`68dded3`，当前09:10、三任务已准备、未投放事件。版本、数据保留、兼容边界和回退见[发布记录](../11-04-scenario-demo-m1/research/main-merge-deployment-20261104.md)。以下设计基线中的“不部署”仅对应当时审阅范围。
+
 关联：prd.md、story.md、world.md、design.md、implement.md。代码依据为main@278d82f；当前分支codex/scenario-demo。本文中的新接口、字段、页面行为和存储结构均为设计提案，现有能力另行注明。
 
 ## 先读这一页

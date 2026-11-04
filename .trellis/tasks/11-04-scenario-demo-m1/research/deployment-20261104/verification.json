@@ -1,0 +1,75 @@
+{
+  "mode": "released",
+  "commit": "68dded36207498f66f63cf7c1b7db4997c344e88",
+  "seats": [
+    {
+      "seat": "seat-director",
+      "activeSessions": 0,
+      "conversations": 0,
+      "directorIsolation": true
+    },
+    {
+      "seat": "seat-overall",
+      "activeSessions": 0,
+      "conversations": 5,
+      "sourceObjects": 53
+    },
+    {
+      "seat": "seat-intelligence",
+      "activeSessions": 0,
+      "conversations": 2,
+      "sourceObjects": 53
+    },
+    {
+      "seat": "seat-planning",
+      "activeSessions": 0,
+      "conversations": 0,
+      "sourceObjects": 53
+    },
+    {
+      "seat": "seat-situation",
+      "activeSessions": 0,
+      "conversations": 1,
+      "sourceObjects": 53
+    }
+  ],
+  "active": 0,
+  "instanceId": "run-92f0bb86-63c1-4c39-89c7-91764fb5d625",
+  "businessNow": "2026-11-03T09:10:00+08:00",
+  "preparedTasks": [
+    {
+      "code": "T01",
+      "taskId": "bdd4b907-3339-40b0-9bfc-40224a2ed9e3"
+    },
+    {
+      "code": "T02",
+      "taskId": "445a99d4-b911-43de-9449-38bc2c80fa91"
+    },
+    {
+      "code": "T03",
+      "taskId": "516306c4-bf7c-43e3-8d72-d081e4fc98a1"
+    }
+  ],
+  "legacyFreshQuery": {
+    "status": 409,
+    "code": "CONTEXT_TIME_BASIS_CONFLICT"
+  },
+  "taskCount": 7,
+  "assets": [
+    {
+      "path": "brand/axon-app-icon.svg",
+      "mime": "image/svg+xml",
+      "sha256": "2f4c6cf11781919a97a66ff94552b59dc6d867cb94333af5a4d2098132e3f3dd"
+    },
+    {
+      "path": "brand/axon-wordmark.svg",
+      "mime": "image/svg+xml",
+      "sha256": "0daebb73e677c43bab0abc732a4994193fb719c270807d6bd4aa93acc09a5ccf"
+    },
+    {
+      "path": "favicon.ico",
+      "mime": "image/vnd.microsoft.icon",
+      "sha256": "70cfed088307c6feb4b1a0fb83cd82814752200dc98882880ed41e6341b309af"
+    }
+  ]
+}

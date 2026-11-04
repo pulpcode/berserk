@@ -1,0 +1,19 @@
+{
+  "released": true,
+  "commit": "68dded36207498f66f63cf7c1b7db4997c344e88",
+  "pid": 3087206,
+  "sourcePid": 3087230,
+  "port": 4315,
+  "sourcePort": 38371,
+  "originalAccountsPreserved": 4,
+  "oldTasksPreserved": 4,
+  "newScenarioTasks": 3,
+  "oldNativeHistoriesPreserved": 9,
+  "eventsAndJobsAdded": 0,
+  "originalRulesPreserved": 2,
+  "newRules": 0,
+  "backup": "/home/ubuntu/axon-scenario-release-68dded362074/backup/original-data",
+  "oldDataPreserved": "/home/ubuntu/axon-map-release-e073df6/data/axon-map-TYWa1o",
+  "newData": "/home/ubuntu/axon-scenario-release-68dded362074/data",
+  "legacyClockBoundaryRecorded": true
+}

@@ -1,0 +1,22 @@
+{
+  "health": {
+    "ok": true
+  },
+  "events": 0,
+  "jobs": 0,
+  "tasks": 7,
+  "accounts": 5,
+  "listeners": [
+    "LISTEN 0      511          0.0.0.0:4315       0.0.0.0:*    users:((\"MainThread\",pid=3087206,fd=22))",
+    "LISTEN 0      511        127.0.0.1:38371      0.0.0.0:*    users:((\"MainThread\",pid=3087230,fd=35))"
+  ],
+  "sourceSnapshot": [
+    {
+      "instanceId": "run-92f0bb86-63c1-4c39-89c7-91764fb5d625",
+      "businessNow": "2026-11-03T09:10:00+08:00",
+      "stepIndex": 0,
+      "status": "active",
+      "revision": 2
+    }
+  ]
+}

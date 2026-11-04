@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 3
+- **Total Sessions**: 4
 - **Last Active**: 2026-11-04
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~112 | Active |
+| `journal-1.md` | ~146 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 4 | 2026-11-04 | 合并main并发布场景导演台待测 | `68dded3` | `codex/scenario-demo` |
 | 3 | 2026-11-04 | 隔离导演席与业务协作 | `1d6510b` | `codex/scenario-demo` |
 | 2 | 2026-11-04 | 完成临港火情P0—P2工程实现 | `e4054a5`, `79d0e27` | `codex/scenario-demo` |
 | 1 | 2026-11-02 | 第一批任务资源契约实现与离线验收 | `2a5fd9f` | `codex/agent-spatial-plotting` |
