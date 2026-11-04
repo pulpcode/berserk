@@ -4,15 +4,16 @@ import type { ContextService } from './service.js';
 import type { ContextRef } from '../contracts/context.js';
 import { resourceRequestValid } from '../contracts/resource-results.js';
 import type { ResourceQuery, ResourceResult, ResourceRecord, ResourceItem, ResourceSourceSelection, ResourceRequest } from '../contracts/resource-results.js';
-import { resourceEvidence } from '../contracts/task-resources.js';
+import { resourceEvidence, resourceFactActive as active } from '../contracts/task-resources.js';
 import type { SpatialResult } from '../contracts/spatial.js';
 import { RequestError } from '../contracts/errors.js';
+import type { ContextData } from '../contracts/context.js';
+import type { ScenarioClock } from '../contracts/scenarios.js';
 
 export interface ResourceScope {actor:AnnotationActor;taskId:string;sessionId:string;signal:AbortSignal;check:()=>void;resolveMessage:(entryId:string)=>{text:string;resourceRefs:ContextRef[]};listMessages?:()=>Array<{entryId:string;text:string;resourceRefs:ContextRef[]}>}
 const key=(ref:ContextRef)=>JSON.stringify([ref.systemId,ref.objectType,ref.objectId]);
 const entity=(r:ResourceRecord)=>r.association?JSON.stringify([r.association.source.systemId,r.association.entityId]):r.source?.data?.entityId?JSON.stringify([r.source.ref.systemId,r.source.data.entityId]):undefined;
 const fail=(code:string,message:string)=>new RequestError(`RESOURCE_${code}`,message);
-const active=(fact:{effectiveAt?:string;validUntil?:string;conditions?:string[]}|undefined,at:string)=>!!fact&&(!fact.effectiveAt||Date.parse(fact.effectiveAt)<=Date.parse(at))&&(!fact.validUntil||Date.parse(fact.validUntil)>Date.parse(at))&&!fact.conditions?.length;
 export function organizeResources(records:ResourceRecord[],taskId:string,at:string):ResourceItem[] {
  const groups=new Map<string,ResourceRecord[]>();
  for(const r of records){const id=entity(r)??r.id;groups.set(id,[...groups.get(id)??[],r]);}
@@ -42,6 +43,7 @@ export class TaskResourceService {
   scope.signal.throwIfAborted();scope.check();const binding=this.annotations.binding(scope.actor,scope.sessionId);
   if(binding.taskId!==scope.taskId||result.owner.taskId!==scope.taskId||result.owner.sessionId!==scope.sessionId||result.owner.userId!==scope.actor.userId||result.owner.seatId!==scope.actor.seatId)throw fail('FORBIDDEN','当前身份或会话无法读取资源结果。');
   const systems=new Set(this.context?.catalog(scope.actor.seatId).systems.map(s=>s.id)??[]);
+  if(result.schemaVersion===4&&result.dependencies.systemIds.some(id=>this.context?.config.systems.find(s=>s.id===id)?.scenarioClock!==true))throw fail('FORBIDDEN','场景时间来源授权已变化，不能采用旧查询。');
   if(result.dependencies.systemIds.some(id=>!systems.has(id)))throw fail('FORBIDDEN','当前身份无法读取结果依赖来源。');
   for(const ref of result.dependencies.annotations)this.annotations.version(scope.actor,scope.taskId,ref);
  }
@@ -53,6 +55,13 @@ export class TaskResourceService {
   const task=this.annotations.access?.get(scope.taskId,scope.actor.seatId),refs=task?.context?.businessRefs??[];
   const result:ResourceResult={schemaVersion:3,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),owner:{...scope.actor,taskId:scope.taskId,sessionId:scope.sessionId},parameters:structuredClone(request),statisticsScope:{at:'',relation:request.purpose==='task'?'related':'all',availability:'all'},records:[],items:[],coverage:[],relationshipCoverage:{status:'partial',reason:'仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。'},dependencies:{systemIds:[],annotations:[]},messages:[],exclusions:[],summary:{recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null,quantities:[],limitations:[]}};
   result.statisticsScope.at=result.createdAt;
+  let clock:ScenarioClock|undefined,realSource=false;
+  const observeClock=(data:ContextData)=>{
+   const next=data.snapshotClock;
+   if(!next){if(clock)throw fail('TIME_BASIS_CONFLICT','不能合并真实时间与场景时间的资源。');realSource=true;return;}
+   if(realSource||clock&&(clock.instanceId!==next.instanceId||clock.businessNow!==next.businessNow||clock.revision!==next.revision))throw fail('TIME_BASIS_CONFLICT','场景实例、业务时间或修订发生变化，请重新查询。');
+   clock??=structuredClone(next);result.schemaVersion=4;result.timeBasis='scenario';result.snapshotClock=clock;result.statisticsScope.at=clock.businessNow;
+  };
   let rawCount=0,pages=0;const sourceSnapshots=new Map<string,string>(),invalidSources=new Set<string>();
   const add=(record:ResourceRecord,count=true)=>{if(count&&++rawCount>500)throw fail('LIMIT','资源读取超过500条，未截断为完整清单。');if(result.records.some(r=>r.id===record.id))return;
    if(record.resource.meaning!=='actual_resource'){result.exclusions.push({id:record.id,reason:record.resource.meaning==='unspecified'?'未注明资源含义。':'不是实际资源声明。'});return;}
@@ -62,10 +71,11 @@ export class TaskResourceService {
   if(defaultTask&&this.context)for(const ref of refs.filter(r=>r.objectType!=='resource')){
    result.dependencies.systemIds.push(ref.systemId);
    try{const response=await this.context.query(ref.objectType==='report'?'information_read':'situation_query',ref.objectType==='report'?{systemId:ref.systemId,reportId:ref.objectId}:{systemId:ref.systemId,mode:'current',objectRefs:[ref],limit:1},{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+    observeClock(response.data);
     const linked='item' in response.data?response.data.item.objectRefs:'changeCursor' in response.data?response.data.items.flatMap(o=>'memberRefs' in o.properties?o.properties.memberRefs:[]):[];
     for(const linkedRef of linked.filter(r=>r.objectType==='resource')){derivedRefs.push(linkedRef);derivedBasis.set(key(linkedRef),`平台任务引用 ${key(ref)} 的结构化资源关联`);}
     result.coverage.push({source:key(ref),status:'complete',asOf:response.data.asOf});
-   }catch(error){scope.signal.throwIfAborted();scope.check();if(error instanceof RequestError&&/FORBIDDEN|AUTH/.test(error.code))throw error;result.coverage.push({source:key(ref),status:'unavailable',reason:error instanceof Error?error.message:'关联资料读取失败。'});}
+   }catch(error){scope.signal.throwIfAborted();scope.check();if(error instanceof RequestError&&/FORBIDDEN|AUTH|TIME_BASIS/.test(error.code))throw error;if(error instanceof RequestError&&this.context.config.systems.find(s=>s.id===ref.systemId)?.scenarioClock&&/INVALID_RESPONSE|CURSOR_STALE|INVALID_CURSOR|SCENARIO_CLOCK/.test(error.code))throw fail('TIME_BASIS_CONFLICT','场景关联资料的快照或时间数据无效，请重新查询完整同一时点。');result.coverage.push({source:key(ref),status:'unavailable',reason:error instanceof Error?error.message:'关联资料读取失败。'});}
   }
   const sourceSelections:Array<ResourceSourceSelection & {optionalTask?:boolean}>=structuredClone(request.sources??[]);
   if(defaultTask){
@@ -90,11 +100,11 @@ export class TaskResourceService {
     if(++pages>50)throw fail('LIMIT','资源分页超过50页。');
     const {optionalTask,...basic}=selection;
     const response=optionalTask?await this.context.queryTaskResources({systemId:selection.systemId,taskId:scope.taskId,...(cursor?{cursor}:{})},{kind:'seat',seatId:scope.actor.seatId},scope.signal):await this.context.query('situation_query',{...basic,mode:'current',...(selection.objectRefs?{}:{objectTypes:['resource']}),limit:100,...(cursor?{cursor}:{})},{kind:'seat',seatId:scope.actor.seatId},scope.signal);
-    if(!('changeCursor' in response.data))throw fail('INCOMPLETE','来源未返回当前对象快照。');const data=response.data;
+    if(!('changeCursor' in response.data))throw fail('INCOMPLETE','来源未返回当前对象快照。');const data=response.data;observeClock(data);
     declaredCoverage=data.resourceCoverage;const stamp=JSON.stringify([data.asOf,data.changeCursor,data.resourceCoverage??null]);if(snapshot&&snapshot!==stamp||data.unknownRefs.length)throw fail('INCOMPLETE','来源分页变化或精确对象缺失。');snapshot=stamp;const previousStamp=sourceSnapshots.get(selection.systemId);if(previousStamp&&previousStamp!==stamp)throw fail('INCOMPLETE','同一来源的多段读取快照发生变化。');sourceSnapshots.set(selection.systemId,stamp);
     for(const o of data.items){if(++rawCount>500)throw fail('LIMIT','资源原始记录读取超过500条。');if(o.ref.objectType!=='resource')throw fail('INCOMPLETE','来源未遵守资源类型筛选。');const id=key(o.ref);const resource=o.resourceData?.resource??('availableCount' in o.properties?{meaning:'actual_resource' as const,category:'vehicle' as const,granularity:'aggregate' as const,quantity:{value:o.properties.availableCount,unit:'辆' as const,meaning:'available' as const,scope:key(o.ref),evidence:[{kind:'source' as const,ref:o.ref,revision:o.revision}],...(o.effectiveAt?{effectiveAt:o.effectiveAt}:{}),...(o.validTime?.to?{validUntil:o.validTime.to}:{})}}:{meaning:'unspecified' as const});
      const cap=this.context.config.systems.find(s=>s.id===o.ref.systemId)?.resourceCapability;
-     const row:ResourceRecord={id,name:o.name,resource,...(o.geometry?{geometry:o.geometry}:{}),source:{ref:o.ref,revision:o.revision,asOf:data.asOf,queriedAt:response.queriedAt,...(o.resourceData?{data:o.resourceData}:{})},relationBasis:[...(refs.some(r=>key(r)===id)?['平台任务业务引用']:[]),...(derivedBasis.has(id)?[derivedBasis.get(id)!]:[]),...(cap?.taskIdMapping==='identity'?['来源任务映射已核实']:[]),...(cap?.supportRule?.id==='explicit-task-relation'?['来源支援规则已核实']:[])]};
+     const row:ResourceRecord={id,name:o.name,resource,...(o.geometry?{geometry:o.geometry}:{}),source:{ref:o.ref,revision:o.revision,asOf:data.asOf,queriedAt:response.queriedAt,...(data.snapshotClock?{snapshotClock:structuredClone(data.snapshotClock)}:{}),...(o.resourceData?{data:o.resourceData}:{})},relationBasis:[...(refs.some(r=>key(r)===id)?['平台任务业务引用']:[]),...(derivedBasis.has(id)?[derivedBasis.get(id)!]:[]),...(cap?.taskIdMapping==='identity'?['来源任务映射已核实']:[]),...(cap?.supportRule?.id==='explicit-task-relation'?['来源支援规则已核实']:[])]};
      const old=collected.find(r=>r.id===id)??result.records.find(r=>r.id===id);if(old){const stable=(r:ResourceRecord)=>JSON.stringify({...r,source:{...r.source,queriedAt:null}});if(stable(old)!==stable(row))throw fail('INCOMPLETE','重复对象在分页中变化。');}if(!collected.some(r=>r.id===id))collected.push(row);
 
     }
@@ -102,13 +112,15 @@ export class TaskResourceService {
    }while(cursor);
    if(selection.objectRefs?.some(ref=>!collected.some(r=>r.id===key(ref))))throw fail('INCOMPLETE','指定对象未完整返回。');
    collected.forEach(r=>add(r,false));result.coverage.push({source:selection.systemId,status:declaredCoverage?.status??'complete',...(declaredCoverage?.reason?{reason:declaredCoverage.reason}:{}),asOf:collected[0]?.source?.asOf??JSON.parse(snapshot!)[0]});
-   }catch(error){scope.signal.throwIfAborted();scope.check();if(error instanceof RequestError&&(/FORBIDDEN|AUTH|LIMIT/.test(error.code)))throw error;if(error instanceof RequestError&&error.code==='RESOURCE_INCOMPLETE'){invalidSources.add(selection.systemId);result.records=result.records.filter(r=>r.source?.ref.systemId!==selection.systemId);for(const coverage of result.coverage.filter(c=>c.source===selection.systemId)){coverage.status='unavailable';coverage.reason='同一来源快照不一致，已撤去其本次全部记录。';}}(selection.optionalTask?(result.relationshipCoverage.sources??=[]):result.coverage).push({source:selection.systemId,status:'unavailable',reason:error instanceof Error?error.message:'来源读取失败。'});}
+   }catch(error){scope.signal.throwIfAborted();scope.check();if(error instanceof RequestError&&(/FORBIDDEN|AUTH|LIMIT|TIME_BASIS/.test(error.code)))throw error;if(error instanceof RequestError&&this.context.config.systems.find(s=>s.id===selection.systemId)?.scenarioClock&&/INVALID_RESPONSE|CURSOR_STALE|INVALID_CURSOR|SCENARIO_CLOCK/.test(error.code))throw fail('TIME_BASIS_CONFLICT','场景快照或时间数据无效，请重新查询完整同一时点。');if(error instanceof RequestError&&error.code==='RESOURCE_INCOMPLETE'){invalidSources.add(selection.systemId);result.records=result.records.filter(r=>r.source?.ref.systemId!==selection.systemId);for(const coverage of result.coverage.filter(c=>c.source===selection.systemId)){coverage.status='unavailable';coverage.reason='同一来源快照不一致，已撤去其本次全部记录。';}}(selection.optionalTask?(result.relationshipCoverage.sources??=[]):result.coverage).push({source:selection.systemId,status:'unavailable',reason:error instanceof Error?error.message:'来源读取失败。'});}
   }
+  if(!clock&&result.dependencies.systemIds.some(id=>this.context?.config.systems.find(s=>s.id===id)?.scenarioClock))throw fail('TIME_BASIS_CONFLICT','未读取到有效场景时点，不能回退真实时间统计。');
   const selections=structuredClone(request.annotations??[]);
   if(defaultTask){
    const ref=binding.draft?{setId:binding.draft.setId,revision:binding.draft.headRevision}:binding.baseRef;
    if(ref)selections.push({ref});const current=this.annotations.current(scope.actor,scope.taskId);if(current.publication)selections.push({ref:{publicationId:current.publication.publicationId}});
   }
+  if(clock&&selections.length)throw fail('TIME_BASIS_CONFLICT','场景资源不能与未声明场景时间的标绘混合统计。');
   for(const selection of selections){
    const version=this.annotations.version(scope.actor,scope.taskId,selection.ref);result.dependencies.annotations.push(selection.ref);
    const layers=version.document.layers.filter(l=>!selection.layerIds||selection.layerIds.includes(l.layerId));
@@ -125,10 +137,10 @@ export class TaskResourceService {
   for(const message of request.messages??[]){const actual=scope.resolveMessage(message.entryId);if(!actual.text.includes(message.quote)||!actual.resourceRefs.some(r=>key(r)===key(message.resourceRef)))throw fail('MESSAGE_INVALID','用户消息或其明确资源引用不能核实。');result.messages.push({...message,interpretation:'unverified_user_report'});result.dependencies.systemIds.push(message.resourceRef.systemId);}
   for(const record of result.records)for(const e of resourceEvidence(record.resource)){if(e.kind==='source')result.dependencies.systemIds.push(e.ref.systemId);else if(e.kind==='annotation')result.dependencies.annotations.push(e.ref);}
   result.dependencies.systemIds=[...new Set(result.dependencies.systemIds)];result.dependencies.annotations=[...new Map(result.dependencies.annotations.map(ref=>[JSON.stringify(ref),ref])).values()];
-  result.items=organizeResources(result.records,scope.taskId,result.createdAt);
+  result.items=organizeResources(result.records,scope.taskId,result.statisticsScope.at);
   for(const report of result.messages)for(const item of result.items)if(item.recordIds.some(id=>{const record=result.records.find(r=>r.id===id);return record?.source&&key(record.source.ref)===key(report.resourceRef)||record?.association&&key(record.association.source)===key(report.resourceRef);})){item.availability='unknown';item.limitations.push('存在需核实的用户报告，原文保留；未将模型解释认证为来源事实。');}
   const selected=resourceStatisticsItems(result);
-  result.summary=summarizeResources(result.records,selected,result.createdAt);
+  result.summary=summarizeResources(result.records,selected,result.statisticsScope.at);
   if(request.purpose==='task')result.summary.limitations.push('仅统计有关系依据的已知部分，关系未确认项保留在清单；不能表示完整任务分配量。');
   if(resourceEntityCountUnknown(result,selected))result.summary.entityCount=null;
   if(!selected.length)result.summary.limitations.push(request.purpose==='task'?'没有读到明确关联资源，不证明任务现实中没有资源或已分配数量为零。':'本次明确范围内没有可分类资源；请同时核对未分类记录和来源覆盖。');
@@ -151,7 +163,7 @@ export class TaskResourceService {
   if(availability!=='all')items=items.filter(i=>i.availability===availability);
   if(relation!=='all')items=items.filter(i=>relation==='related'?i.relation!=='unconfirmed':i.relation===relation);
   const ids=new Set(items.flatMap(i=>i.recordIds));
-  const result:ResourceResult={...structuredClone(parent),schemaVersion:3,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),parameters:structuredClone(request),statisticsScope:{at:parent.statisticsScope.at,relation,availability},parentResultRef:parent.resultRef,...(spatial?{spatialResultRef:spatial.resultRef,spatialCoverage:structuredClone(spatial.completeness)}:{}),records:parent.records.filter(r=>ids.has(r.id)),items:structuredClone(items),summary:summarizeResources(parent.records,items,parent.statisticsScope.at)};
+  const result:ResourceResult={...structuredClone(parent),schemaVersion:parent.schemaVersion===4?4:3,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),parameters:structuredClone(request),statisticsScope:{at:parent.statisticsScope.at,relation,availability},parentResultRef:parent.resultRef,...(spatial?{spatialResultRef:spatial.resultRef,spatialCoverage:structuredClone(spatial.completeness)}:{}),records:parent.records.filter(r=>ids.has(r.id)),items:structuredClone(items),summary:summarizeResources(parent.records,items,parent.statisticsScope.at)};
   delete result.delivery;
   if(!spatial)delete result.spatialResultRef;
   if(spatial)for(const p of spatial.provenance){if(p.input.kind==='source')result.dependencies.systemIds.push(p.input.systemId);if(p.input.kind==='annotation')result.dependencies.annotations.push(p.input.ref);if(p.resourceContext){result.dependencies.systemIds.push(...p.resourceContext.dependencies.systemIds);result.dependencies.annotations.push(...p.resourceContext.dependencies.annotations);}}

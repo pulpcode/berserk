@@ -24,6 +24,7 @@ const basis = {
 export const RESOURCE_CATEGORIES = ['vehicle','fire_engine','vessel','rescue_boat','facility','hydrant','unknown'] as const;
 export const RESOURCE_RELATIONS = ['assigned','potential_support','related','unconfirmed'] as const;
 export const resourceSchema = Type.Object({
+  vehicle:Type.Optional(Type.Object({type:choices(['water_tanker','foam','ladder','rescue','communications','logistics']),homeStationRef:sourceRef},strict)),
   meaning:choices(['actual_resource','planned_location','annotation','unspecified']),
   category:Type.Optional(choices([...RESOURCE_CATEGORIES])), granularity:Type.Optional(choices(['individual','aggregate','unknown'])),
   quantity:Type.Optional(Type.Object({value:count,unit:choices(['辆','艘','处','个','条','unknown']),meaning:choices(['entities','available','records']),scope:text,...basis},strict)),
@@ -43,6 +44,9 @@ export const sourceResourceSchema = Type.Object({
   coverage:Type.Optional(Type.Object({scope:text,memberEntityIds:Type.Optional(Type.Array(text,{maxItems:500,uniqueItems:true})),complete:Type.Boolean()},strict)),
 },strict);
 export type SourceResource = Static<typeof sourceResourceSchema>;
+
+/** Use the caller's explicit fact time; this pure check never consults the wall clock. */
+export const resourceFactActive = (fact:{effectiveAt?:string;validUntil?:string;conditions?:string[]}|undefined,at:string) => !!fact&&(!fact.effectiveAt||Date.parse(fact.effectiveAt)<=Date.parse(at))&&(!fact.validUntil||Date.parse(fact.validUntil)>Date.parse(at))&&!fact.conditions?.length;
 
 const invalid = () => new RequestError('INVALID_INPUT','资源字段、事实依据或数量无效。');
 /** Reject prototype-bearing input before schema checks, including inherited required keys. */
@@ -65,6 +69,7 @@ function dates(value:unknown):void {
 export function decodeTaskResource(value:unknown):TaskResource {
   plain(value);if(!Check(resourceSchema,value)) throw invalid();dates(value);
   const q=value.quantity;
+  if(value.vehicle && (value.granularity!=='individual' || !['vehicle','fire_engine'].includes(value.category??'') || value.vehicle.homeStationRef.objectType!=='resource')) throw invalid();
   if(q && q.meaning!=='records') {
     const units:Partial<Record<NonNullable<TaskResource['category']>,string>>={vehicle:'辆',fire_engine:'辆',vessel:'艘',rescue_boat:'艘',facility:'处',hydrant:'个'};
     if(value.category && units[value.category] && q.unit!==units[value.category]) throw invalid();

@@ -1,5 +1,5 @@
 import { checkAnnotationTables } from '../annotations/store.js';
-import { upgradeSeatColumns } from './schema.js';
+import { baseSchemaVersion, scenarioSchemaVersion, upgradeSeatColumns } from './schema.js';
 import { enqueueContinuousTaskChange } from '../background/continuous-store.js';
 import { BackgroundStore } from '../background/store.js';
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from 'node:crypto';
@@ -30,7 +30,7 @@ export class AccessStore {
   private busy = new Map<string, number>();
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
-    if([2,3,4,5,6,7,8,9,10,11,12].includes(version)) {
+    if([2,3,4,5,6,7,8,9,10,11,12].includes(baseSchemaVersion(version))) {
       const tables=new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row=>String(row.name)));
       if(['seats','accounts','auth_sessions','task_spaces','task_actions'].some(name=>!tables.has(name)))throw stateError();
       this.upgradeOverview(version);
@@ -48,12 +48,13 @@ export class AccessStore {
     this.upgradeOverview(2);
   }
   private upgradeOverview(version: number) {
-    if ([9,10,12].includes(version)) checkAnnotationTables(this.db);
+    const base = baseSchemaVersion(version);
+    if ([9,10,12].includes(base)) checkAnnotationTables(this.db);
     const hasBackground = !!this.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name GLOB 'background_*'").get();
-    if (hasBackground || [3,4,6,8,10,11,12].includes(version)) { new BackgroundStore(this.db); return; }
-    if (![2,5,7,9].includes(version)) throw stateError();
+    if (hasBackground || [3,4,6,8,10,11,12].includes(base)) { new BackgroundStore(this.db); return; }
+    if (![2,5,7,9].includes(base)) throw stateError();
     this.db.exec('BEGIN IMMEDIATE');
-    try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${version === 9 ? 9 : 7}; COMMIT`); }
+    try { upgradeSeatColumns(this.db,version,false); this.db.exec(`PRAGMA user_version=${scenarioSchemaVersion(base === 9 ? 9 : 7)}; COMMIT`); }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
   seatName(id: string): string { return String(this.db.prepare('SELECT name FROM seats WHERE id=?').get(id)?.name ?? id); }
@@ -70,8 +71,8 @@ export class AccessStore {
     return {id:seatId,name,responsibility,responsibilityRevision:revision};
   }
   identity(id: string): Identity | undefined {
-    const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings,s.view_work_overview viewWorkOverview FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
-    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview } as unknown as Identity : undefined;
+    const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings,s.view_work_overview viewWorkOverview,s.control_scenarios controlScenarios FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
+    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview, controlScenarios: !!row.controlScenarios } as unknown as Identity : undefined;
   }
   identityForSeat(seatId: string): Identity | undefined {
     const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);
@@ -83,15 +84,17 @@ export class AccessStore {
     const hash = row ? Buffer.from(String(row.password_hash), 'hex') : Buffer.alloc(64);
     return row?.enabled && hash.length === key.length && timingSafeEqual(hash, key) ? this.identity(String(row.id)) : undefined;
   }
-  async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean;viewWorkOverview?:boolean}) {
+  async saveAccount(input: {username:string;displayName:string;seatId:string;seatName:string;password:string;createPublicTask:boolean;manageModelSettings:boolean;viewWorkOverview?:boolean;controlScenarios?:boolean}) {
     if (!/^[a-zA-Z0-9_.-]{1,64}$/.test(input.username) || !/^[a-zA-Z0-9_-]{1,64}$/.test(input.seatId) || !input.displayName.trim() || !input.seatName.trim() || input.password.length < 12 || input.password.length > 256) throw new Error('账号、席位或密码无效；密码须为 12～256 个字符。');
     const previous = this.db.prepare('SELECT id,seat_id FROM accounts WHERE username=?').get(input.username);
     if (previous && previous.seat_id !== input.seatId) throw new Error('本期不支持账号换岗。');
+    if (input.controlScenarios !== undefined && typeof input.controlScenarios !== 'boolean') throw new Error('场景控制权限须为明确的布尔值。');
     const salt = randomBytes(32).toString('hex'); const hash = (await derivePassword(input.password, salt)).toString('hex');
     const id = previous ? String(previous.id) : randomUUID();
     this.db.exec('BEGIN IMMEDIATE');
     try {
-      this.db.prepare('INSERT INTO seats(id,name,create_public,manage_model,view_work_overview) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model,view_work_overview=excluded.view_work_overview,responsibility_revision=seats.responsibility_revision+CASE WHEN seats.name<>excluded.name THEN 1 ELSE 0 END').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings),Number(input.viewWorkOverview ?? false));
+      const controlScenarios = input.controlScenarios ?? Boolean(this.db.prepare('SELECT control_scenarios FROM seats WHERE id=?').get(input.seatId)?.control_scenarios);
+      this.db.prepare('INSERT INTO seats(id,name,create_public,manage_model,view_work_overview,control_scenarios) VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,create_public=excluded.create_public,manage_model=excluded.manage_model,view_work_overview=excluded.view_work_overview,control_scenarios=excluded.control_scenarios,responsibility_revision=seats.responsibility_revision+CASE WHEN seats.name<>excluded.name THEN 1 ELSE 0 END').run(input.seatId,input.seatName,Number(input.createPublicTask),Number(input.manageModelSettings),Number(input.viewWorkOverview ?? false),Number(controlScenarios));
       this.db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1) ON CONFLICT(id) DO UPDATE SET display_name=excluded.display_name,salt=excluded.salt,password_hash=excluded.password_hash,enabled=1').run(id,input.username,input.displayName,input.seatId,salt,hash);
       this.db.prepare('DELETE FROM auth_sessions WHERE user_id=?').run(id); this.db.exec('COMMIT');
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }

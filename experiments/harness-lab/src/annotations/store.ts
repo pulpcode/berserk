@@ -1,5 +1,6 @@
 import type { DatabaseSync } from 'node:sqlite';
 import { stateError } from '../resources/files.js';
+import { baseSchemaVersion, preserveScenarioSchema } from '../access/schema.js';
 
 export const annotationTables = ['annotation_session_bindings','annotation_sets','annotation_revisions','annotation_publications','task_annotation_selections','annotation_actions'];
 export function checkAnnotationTables(db: DatabaseSync) {
@@ -10,7 +11,7 @@ export function checkAnnotationTables(db: DatabaseSync) {
 /** Host-only metadata. Native conversation history is never stored here. */
 export class AnnotationStore {
   constructor(readonly db: DatabaseSync) {
-    const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
+    const storedVersion=Number(db.prepare('PRAGMA user_version').get()?.user_version), version=baseSchemaVersion(storedVersion);
     const existing=db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND (name LIKE 'annotation_%' OR name='task_annotation_selections')").all();
     if(existing.length || [9,10,12].includes(version)) {checkAnnotationTables(db); if(![1,9,10,12].includes(version)) throw stateError(); return;}
     if(![1,7,8,11].includes(version)) throw stateError();
@@ -23,7 +24,7 @@ export class AnnotationStore {
         CREATE TABLE annotation_actions(user_id TEXT NOT NULL, action_id TEXT NOT NULL, task_id TEXT NOT NULL, session_id TEXT, digest TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(user_id,action_id));
         CREATE INDEX annotation_sets_task_seat ON annotation_sets(task_id,owner_seat_id);
         CREATE INDEX annotation_publications_task ON annotation_publications(task_id);`);
-      if(version!==1) db.exec(`PRAGMA user_version=${version===11 ? 12 : version===8 ? 10 : 9}`);
+      if(version!==1) db.exec(`PRAGMA user_version=${preserveScenarioSchema(version===11 ? 12 : version===8 ? 10 : 9, storedVersion)}`);
     });
   }
   transaction<T>(operation: ()=>T): T {

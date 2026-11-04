@@ -10,11 +10,13 @@ import { BUSINESS_ANCHOR } from './basemap-style';
 import { activeBasemapKinds, createBasemapRuntime, type BasemapStatus } from './basemap-runtime';
 import { createAnalysisRuntime, analysisLayerIds, analysisGeometries, geometryPositions, type AnalysisMapState } from './analysis-runtime';
 import { createAnnotationRuntime, type AnnotationMapState } from '../annotations/map-runtime';
+import { createSourceLabels } from './source-labels';
+import { positionNote, sourceCategory } from './map-data';
 function rememberedView(key: string, fallback: BasemapView): BasemapView {
   try {const value=localStorage.getItem(key);return isBasemapView(value)?value:fallback;} catch {return fallback;}
 }
 setWorkerUrl(workerUrl);
-export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, selected, config, select, annotations, unavailable, focusRequest, deferFocus }: { analysis?:AnalysisMapState; analysisPanel?: HTMLElement | null; analysisPanelOpen?: boolean; closeAnalysisPanel?: () => void; deferFocus?:boolean; focusRequest?: number | string; unavailable?: () => void; annotations?: AnnotationMapState; objects: SituationObject[]; selected?: string; config: MapConfig; select: (key: string) => void }) {
+export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, config, select, annotations, unavailable, focusRequest, deferFocus }: { analysis?:AnalysisMapState; analysisPanel?: HTMLElement | null; analysisPanelOpen?: boolean; closeAnalysisPanel?: () => void; deferFocus?:boolean; focusRequest?: number | string; unavailable?: () => void; annotations?: AnnotationMapState; objects: SituationObject[]; sourceTimes:Record<string,string>; selected?: string; config: MapConfig; select: (key: string) => void }) {
   const {storageKey}=useApi(), preferenceKey=storageKey('berserk.basemap-view','user-preference');
   const basemapConfig=useMemo(()=>normalizeMapConfig(config),[config]);
   const [preference,setPreference]=useState(()=>({key:preferenceKey,view:rememberedView(preferenceKey,basemapConfig.defaultView)}));
@@ -24,7 +26,7 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
   const basemap=useRef<ReturnType<typeof createBasemapRuntime> | undefined>(undefined);
   const chooseView=(view:BasemapView)=>{setPreference({key:preferenceKey,view});try{localStorage.setItem(preferenceKey,view);}catch{/* Retain the choice in memory when storage is unavailable. */}};
   const container = useRef<HTMLDivElement>(null); const map = useRef<Map | undefined>(undefined);
-  const latest = useRef({ analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view }); useLayoutEffect(()=>{latest.current = { analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view };},[analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view]);
+  const latest = useRef({ analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view }); useLayoutEffect(()=>{latest.current = { analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view };},[analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view]);
   const updater=useRef<()=>void>(()=>{}); const fitted=useRef('');
   const [error, setError] = useState('');
   useEffect(() => {
@@ -42,13 +44,15 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
     let dismissedAnalysisPanelFocus="";
     let analysisSelection: string | undefined;
     const annotationRuntime=createAnnotationRuntime(instance,()=>latest.current.annotations);
+    const sourceLabels=createSourceLabels(instance,key=>{if(latest.current.annotations?.edit&&!latest.current.annotations.edit.paused)return;latest.current.annotations?.pick([]);latest.current.select(key);});
     const basemapRuntime=createBasemapRuntime(instance,setStatus);basemap.current=basemapRuntime;
     instance.addControl(new NavigationControl(), 'bottom-left');
     const update = () => {
       annotationRuntime.update();
       analysisRuntime.update();
-      const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
+      const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, typed:['vehicle','facility','hydrant'].includes(sourceCategory(item)), positionUnconfirmed:Boolean(positionNote(item,latest.current.sourceTimes[item.ref.systemId])), passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
       (instance.getSource('business:objects') as GeoJSONSource | undefined)?.setData({ type:'FeatureCollection', features });
+      sourceLabels.update(latest.current.objects,latest.current.selected,latest.current.sourceTimes,!latest.current.annotations?.edit || latest.current.annotations.edit.paused);
       const analysis=latest.current.analysis;
       const nextAnalysisFocus=analysis?JSON.stringify([analysis.result.resultRef,analysis.focusRequest]):'';
       if(analysis && nextAnalysisFocus!==analysisFocus){
@@ -90,12 +94,13 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       instance.addLayer({id:'business:road-halo',type:'line',source:'business:objects',filter:['==',['geometry-type'],'LineString'],paint:{'line-color':'#ffffff','line-width':['case',['get','selected'],11,8]}});
       instance.addLayer({ id:'business:roads', type:'line', source:'business:objects', filter:['==',['geometry-type'],'LineString'], paint:{ 'line-width':['case',['get','selected'],8,5], 'line-color':['match',['get','passability'],'open','#376e5d','restricted','#a26913','closed','#b34d48','#687582'] } });
       instance.addLayer({ id:'business:restricted-roads', type:'line', source:'business:objects', filter:['all',['==',['geometry-type'],'LineString'],['!=',['get','passability'],'open']], paint:{ 'line-width':2,'line-color':'#ffffff','line-dasharray':[2,3] } });
-      instance.addLayer({ id:'business:resources', type:'circle', source:'business:objects', filter:['==',['geometry-type'],'Point'], paint:{ 'circle-radius':['case',['get','selected'],11,7], 'circle-color':'#416858','circle-stroke-color':'white','circle-stroke-width':2 } });
+      instance.addLayer({ id:'business:resources', type:'circle', source:'business:objects', filter:['==',['geometry-type'],'Point'], paint:{ 'circle-radius':['case',['get','selected'],11,7], 'circle-color':['case',['get','positionUnconfirmed'],'#a26913',['get','typed'],'#53687a','#416858'],'circle-stroke-color':'white','circle-stroke-width':2 } });
       basemapRuntime.update(latest.current.basemapConfig,latest.current.view);
       annotationRuntime.restore();
       update();
     });
     instance.on('load',update);
+    instance.on('zoomend',()=>sourceLabels.update(latest.current.objects,latest.current.selected,latest.current.sourceTimes,!latest.current.annotations?.edit || latest.current.annotations.edit.paused));
     instance.on('click', event => {
       if(latest.current.annotations?.edit && !latest.current.annotations.edit.paused)return;
       const hits=instance.queryRenderedFeatures(event.point);
@@ -109,10 +114,10 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       latest.current.select(feature?.properties?.key?String(feature.properties.key):'');
     });
     const resize = new ResizeObserver(() => instance.resize()); resize.observe(container.current);
-    return () => { updater.current=()=>{}; resize.disconnect(); analysisRuntime.destroy(); annotationRuntime.destroy(); basemapRuntime.destroy(); basemap.current=undefined; instance.remove(); map.current=undefined; };
+    return () => { updater.current=()=>{}; resize.disconnect(); sourceLabels.destroy(); analysisRuntime.destroy(); annotationRuntime.destroy(); basemapRuntime.destroy(); basemap.current=undefined; instance.remove(); map.current=undefined; };
   }, []);
   useEffect(()=>{basemap.current?.update(basemapConfig,view);},[basemapConfig,view]);
-  useEffect(()=>{updater.current();},[analysis,analysisPanel,analysisPanelOpen,closeAnalysisPanel,objects,selected,annotations,focusRequest,deferFocus]);
+  useEffect(()=>{updater.current();},[analysis,analysisPanel,analysisPanelOpen,closeAnalysisPanel,objects,sourceTimes,selected,annotations,focusRequest,deferFocus]);
   return <div className="situation-canvas-wrap"><div ref={container} className="situation-canvas" aria-label="态势地图画布"/>
     <div className="situation-basemap-switch" role="group" aria-label="底图视图">{basemapViews.map(option=><button key={option.id} type="button" aria-pressed={view===option.id} onClick={()=>chooseView(option.id)}>{option.label}</button>)}</div>
     <div className="situation-attribution" aria-label="底图署名">{activeBasemapKinds(view).flatMap(kind=>basemapConfig[kind].attributions).map((item,index)=><a key={`${index}:${item.url}`} href={item.url} target="_blank" rel="noreferrer">{item.text}</a>)}</div>

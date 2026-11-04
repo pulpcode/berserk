@@ -63,7 +63,7 @@ describe('central seat responsibilities', () => {
     expect(db.prepare('SELECT * FROM accounts ORDER BY id').all()).toEqual(accounts);
     expect(db.prepare('SELECT * FROM auth_sessions').all()).toEqual(sessions);
     // The background store owns the remaining v5 tables and advances the shared schema version.
-    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version === 2 ? 7 : 11);
+    expect(db.prepare('PRAGMA user_version').get()?.user_version).toBe(version === 2 ? 13 : 17);
     expect(new AccessStore(db).seats()).toEqual(store.seats());
   });
 

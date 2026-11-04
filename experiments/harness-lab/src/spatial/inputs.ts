@@ -42,7 +42,7 @@ export class SpatialInputs {
       if(input.itemIds?.some(id=>!result.items.some(i=>i.id===id)))throw spatialError('OBJECT_NOT_FOUND','资源结果不含所选对象。');
       for(const item of result.items.filter(i=>!input.itemIds||input.itemIds.includes(i.id))){if(!item.geometry)unclassified.push({id:item.id,reason:item.positionReason??'位置未确认。'});else items.push({id:item.id,name:item.name,geometry:structuredClone(item.geometry),properties:{category:item.category,relation:item.relation,availability:item.availability}});}
       resourceInput={resultRef:result.resultRef,itemIds:[...items.map(i=>i.id),...unclassified.map(i=>i.id)]};
-      provenance=[{input:structuredClone(input),queriedAt:result.createdAt,asOf:result.createdAt,resourceContext:{owner:structuredClone(result.owner),dependencies:structuredClone(result.dependencies),coverage:structuredClone(result.coverage),relationshipCoverage:structuredClone(result.relationshipCoverage)}}];
+      provenance=[{input:structuredClone(input),queriedAt:result.createdAt,asOf:result.schemaVersion===4?result.statisticsScope.at:result.createdAt,resourceContext:{...(result.schemaVersion===4?{statisticsScope:structuredClone(result.statisticsScope),timeBasis:result.timeBasis,snapshotClock:structuredClone(result.snapshotClock)}:{}),owner:structuredClone(result.owner),dependencies:structuredClone(result.dependencies),coverage:structuredClone(result.coverage),relationshipCoverage:structuredClone(result.relationshipCoverage)}}];
     }else if(input.kind==='result') {
       const result=scope.resolveResult(input.resultRef);this.authorize(result,scope);
       provenance=structuredClone(result.provenance);resourceInput=structuredClone(result.resourceInput);unclassified=structuredClone(result.completeness.unclassified??[]);

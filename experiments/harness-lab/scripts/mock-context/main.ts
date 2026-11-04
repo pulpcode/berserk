@@ -26,7 +26,9 @@ if(notificationConfig) {
 }
 const dataDir=process.env.MOCK_CONTEXT_DATA_DIR;
 if(dataDir&&!isAbsolute(dataDir))throw new Error('MOCK_CONTEXT_DATA_DIR must be absolute');
-const mock = createMockContextServer({token,controlToken:process.env.MOCK_CONTEXT_CONTROL_TOKEN,databasePath:dataDir?join(dataDir,'simulation.sqlite'):undefined,instanceId:process.env.MOCK_CONTEXT_INSTANCE_ID,day:process.env.MOCK_CONTEXT_DAY,targets});
+const scenariosEnabled=process.env.MOCK_CONTEXT_SCENARIOS_ENABLED;
+if(scenariosEnabled!==undefined&&!['true','false'].includes(scenariosEnabled))throw new Error('MOCK_CONTEXT_SCENARIOS_ENABLED 必须为true或false');
+const mock = createMockContextServer({token,controlToken:process.env.MOCK_CONTEXT_CONTROL_TOKEN,scenariosEnabled:scenariosEnabled==='true',databasePath:dataDir?join(dataDir,'simulation.sqlite'):undefined,instanceId:process.env.MOCK_CONTEXT_INSTANCE_ID,day:process.env.MOCK_CONTEXT_DAY,targets});
 const port = Number(process.env.MOCK_CONTEXT_PORT ?? 4401);
 if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('MOCK_CONTEXT_PORT 无效。');
 const url = await mock.listen(port);

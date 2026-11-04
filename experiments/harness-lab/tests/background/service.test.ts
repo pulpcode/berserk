@@ -86,7 +86,7 @@ async function task(client: Client, title = '个人分析任务') {
 describe('information intake and native background service', () => {
   it('keeps background disabled with the annotation-enabled auth schema when background configuration is absent', async () => {
     const context = await setup({absent: true}); const a = await login(context.app, 'a');
-    expect(context.lab.access!.db.prepare('PRAGMA user_version').get()?.user_version).toBe(9);
+    expect(context.lab.access!.db.prepare('PRAGMA user_version').get()?.user_version).toBe(15);
     expect((await a.call('/api/information/access')).json().enabled).toBe(false);
     expect((await a.call('/api/inbox')).json().items).toEqual([]);
     expect((await context.source('events', message())).statusCode).not.toBe(202);

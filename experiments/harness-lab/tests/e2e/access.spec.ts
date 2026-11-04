@@ -84,6 +84,20 @@ test('same-browser logout and identity change clear private drafts in both tabs'
   } finally {await env.close();await other.close();}
 });
 
+test('login reads the current CSRF token after another tab replaces the anonymous cookie',async({page,context})=>{
+  const env=await setup();await env.attach(page);const other=await context.newPage();await env.attach(other);let loginPosts=0;
+  page.on('request',request=>{if(request.method()==='POST'&&new URL(request.url()).pathname==='/api/auth/login')loginPosts++;});
+  try{
+    await page.goto('/');await expect(page.getByLabel('席位',{exact:true})).toBeEnabled();await other.goto('/');await expect(other.getByLabel('席位',{exact:true})).toBeEnabled();
+    // A late anonymous-session response can replace the shared cookie before
+    // the original form hears a broadcast. Reproduce that replacement directly.
+    const replaced=await other.evaluate(async()=>{const before=await (await fetch('/api/auth/session')).json();const response=await fetch('/api/auth/logout',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':before.csrf},body:'{}'});const after=await response.json();return response.ok&&before.csrf!==after.csrf;});
+    expect(replaced).toBe(true);
+    await page.getByLabel('席位',{exact:true}).selectOption('b');await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();
+    await expectAccount(page,'b');await expect(page.getByRole('button',{name:'登录',exact:true})).toHaveCount(0);expect(loginPosts).toBe(1);
+  }finally{await env.close();await other.close();}
+});
+
 
 test('catalog managers maintain all work tasks while every seat owns its personal spaces', async ({ page, browser }) => {
   const env = await setup(true);

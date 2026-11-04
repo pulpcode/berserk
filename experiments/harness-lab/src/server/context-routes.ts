@@ -7,6 +7,7 @@ import { readContextJson } from '../context/http.js';
 import { contextRecord, contextRef } from '../context/validation.js';
 import { identityOf } from './auth.js';
 import type { apiScope } from './seat-scope.js';
+import { scenarioRoutes } from './scenario-routes.js';
 
 async function readWithSignal<T>(request: FastifyRequest, reply: FastifyReply, work: (signal: AbortSignal) => Promise<T>): Promise<T> {
   const controller = new AbortController(), abort = () => controller.abort();
@@ -27,9 +28,10 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
     }
     return config;
   };
+  const scenarios=await scenarioRoutes(app,lab,scope,background,env);
   app.get(`${scope.base}/context/map-config`,{schema:{querystring:empty}},request => {
     let simulationEnabled = false; try {simulation(request);simulationEnabled=true;} catch { /* Optional control capability. */ }
-    return {...normalizeMapConfig(lab.context?.config.map ?? defaultMapConfig),simulationEnabled};
+    return {...normalizeMapConfig(lab.context?.config.map ?? defaultMapConfig),simulationEnabled,scenarioControlEnabled:scenarios?.allowed(request)??false,...(lab.context?.config.simulation?.directorSeatId?{directorSeatId:lab.context.config.simulation.directorSeatId}:{})};
   });
   for (const [path,tool] of [['situation','situation_query'],['reports/search','information_search']] as const) {
     app.post(`${scope.base}/context/${path}`,{schema:{querystring:empty}},async (request,reply) => readWithSignal(request,reply,signal=>context().query(tool, request.body,{kind:'seat',seatId:scope.seat(request)},signal)));
@@ -48,6 +50,12 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
   });
   app.post(`${scope.base}/simulation/report-updates`,{schema:{querystring:empty}},request => forward(request,'report-updates',contextRecord(request.body,['clientActionId','reportId','expectedRevision','report'],['clientActionId','reportId','expectedRevision','report'])));
   const actionParams=scope.params({id:{type:'string',format:'uuid'}});
-  app.get<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id`,{schema:{params:actionParams,querystring:empty}},request=>forward(request,`actions/${request.params.id}`));
-  app.post<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id/send`,{schema:{params:actionParams,querystring:empty,body:empty},preValidation:async request=>{request.body??={};}},request=>forward(request,`actions/${request.params.id}/send`,{}));
+  const action=async(request:FastifyRequest,id:string,send=false)=>{
+    if(scenarios?.allowed(request)){
+      try{return await scenarios.action(request,id,send);}catch(error){if(!(error instanceof RequestError&&error.code==='CONTEXT_NOT_FOUND'))throw error;}
+    }
+    return forward(request,`actions/${id}${send?'/send':''}`,send?{}:undefined);
+  };
+  app.get<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id`,{schema:{params:actionParams,querystring:empty}},request=>action(request,request.params.id));
+  app.post<{Params:{id:string}}>(`${scope.base}/simulation/actions/:id/send`,{schema:{params:actionParams,querystring:empty,body:empty},preValidation:async request=>{request.body??={};}},request=>action(request,request.params.id,true));
 }

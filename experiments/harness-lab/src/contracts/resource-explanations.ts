@@ -87,10 +87,10 @@ export function resourceRecordTimes(result: ResourceResult, row: ResourceRecord)
 const legacyIdentityWarning = '没有可靠实体关联，是否重复未确认。';
 const legacySummaryWarning = '存在实体身份未确认记录；记录数不能作为确定实体总数。';
 export function resourceItemLimitations(result: ResourceResult, item: ResourceItem): string[] {
-  if (result.schemaVersion !== 3) return item.limitations;
+  if (result.schemaVersion < 3) return item.limitations;
   return item.limitations.filter(text => text !== legacyIdentityWarning);
 }
 export function resourceSummaryLimitations(result: ResourceResult): string[] {
-  if (result.schemaVersion !== 3) return result.summary.limitations;
+  if (result.schemaVersion < 3) return result.summary.limitations;
   return result.summary.limitations.map(text => text === legacySummaryWarning ? '清单含汇总或未确认单体身份的条目，条目数不等于实体总数；成员覆盖和业务数量见各记录及分组统计。' : text);
 }

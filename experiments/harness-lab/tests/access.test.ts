@@ -42,7 +42,7 @@ describe('authenticated task scopes',()=>{
     lab.access!.disable('c');
     const boot=await app.inject('/api/auth/session');
     expect(boot.json<AuthSession>().loginSeats).toEqual([{id:'a',name:'席位 a'},{id:'b',name:'席位 b'},{id:'seat-d',name:'演示席'}]);
-    for(const hidden of ['different-login','隐藏账号名称','responsibility','manageModelSettings','password_hash','salt']) expect(boot.body).not.toContain(hidden);
+    for(const hidden of ['different-login','隐藏账号名称','responsibility','manageModelSettings','controlScenarios','password_hash','salt']) expect(boot.body).not.toContain(hidden);
     const headers={cookie:boot.cookies.map(c=>`${c.name}=${c.value}`).join('; '),origin:'http://localhost:4310','x-csrf-token':boot.json<AuthSession>().csrf!};
     const attempt=(payload:object)=>app.inject({url:'/api/auth/login',method:'POST',headers,payload});
     for(const payload of [{seatId:'missing',password:'test-password-123'},{seatId:'c',password:'test-password-123'},{seatId:'seat-d',password:'test-password-123'}]) {
@@ -54,6 +54,17 @@ describe('authenticated task scopes',()=>{
     expect(logged.json<AuthSession>().identity).toMatchObject({username:'different-login',seatId:'seat-d',seatName:'演示席',manageModelSettings:false});
     expect(logged.json<AuthSession>().loginSeats).toBeUndefined();
     expect(logged.cookies[0].value).not.toBe(boot.cookies[0].value);
+  });
+  it('returns only an explicitly granted scenario capability and rechecks it on the current authenticated identity', async () => {
+    const {app,lab}=await setup();
+    await lab.access!.saveAccount({username:'director',displayName:'导演操作员',seatId:'seat-director',seatName:'导演席',password:'test-password-123',createPublicTask:false,manageModelSettings:false,controlScenarios:true});
+    const overall=await login(app,'a'),director=await login(app,'director');
+    expect(overall.auth.identity).toMatchObject({createPublicTask:true,manageModelSettings:true,controlScenarios:false});
+    expect(director.auth.identity).toMatchObject({seatId:'seat-director',controlScenarios:true,createPublicTask:false,manageModelSettings:false});
+    lab.access!.db.prepare('UPDATE seats SET control_scenarios=0 WHERE id=?').run('seat-director');
+    expect((await director.call('/api/auth/session')).json<AuthSession>().identity?.controlScenarios).toBe(false);
+    lab.access!.disable('director');
+    expect((await director.call('/api/tasks')).statusCode).toBe(401);
   });
   it('allows explicit HTTP access without weakening login, CSRF or origin checks', async () => {
     const origin='http://192.0.2.10:4310',host='192.0.2.10:4310';

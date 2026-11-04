@@ -1,4 +1,5 @@
 import type { SourceResource, TaskResource, RESOURCE_RELATIONS } from './task-resources.js';
+import type { ScenarioClock } from './scenarios.js';
 /** Capability-validation contracts; these are not a universal domain data model. */
 export interface ContextRef { systemId: string; objectType: string; objectId: string }
 export interface ContextScopeSnapshot { scopeId: string; systemIds: string[] }
@@ -24,6 +25,7 @@ export interface SituationQueryParams extends ContextFilters {
 export type ContextQueryParams = InformationSearchParams | InformationReadParams | SituationQueryParams;
 export interface ContextTimeRange { from: string | null; to: string | null }
 export interface ContextPage<T> {
+  snapshotClock?: ScenarioClock;
   systemId: string; asOf: string; items: T[]; limit: number;
   nextCursor: string | null; hasMore: boolean; timeUnknownCount: number;
 }
@@ -33,7 +35,7 @@ export interface InformationReportIndex {
   observedAt: string | null; publishedAt: string | null; validTime: ContextTimeRange | null;
 }
 export interface InformationReport extends InformationReportIndex { content: string }
-export interface InformationDetail { systemId: string; asOf: string; item: InformationReport }
+export interface InformationDetail { systemId: string; asOf: string; item: InformationReport; snapshotClock?: ScenarioClock }
 export type Position = [number, number];
 export type SituationGeometry = {type: 'Point'; coordinates: Position} | {type: 'LineString'; coordinates: Position[]} | {type: 'Polygon'; coordinates: Position[][]};
 export interface RoadProperties {passability: 'open' | 'restricted' | 'closed' | 'unknown'; restrictionNote?: string}

@@ -3,11 +3,12 @@ import type { ContinuousStream, ContinuousInput, ContinuousBatch, AnalysisUpdate
 import type { BackgroundJob } from '../contracts/background.js';
 import { UUID } from '../workspaces/store.js';
 import { stateError, parseJsonStrict } from '../resources/files.js';
+import { baseSchemaVersion, preserveScenarioSchema } from '../access/schema.js';
 
 export const continuousTables = ['continuous_streams','continuous_inputs','continuous_batches','continuous_current','continuous_publications','continuous_actions'];
 /** Existing queue and delivery rows retain their IDs and all foreign-key relations. */
 export function migrateContinuous(db: DatabaseSync) {
-  const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
+  const storedVersion = Number(db.prepare('PRAGMA user_version').get()?.user_version), version = baseSchemaVersion(storedVersion);
   if (version >= 11) {
     const tables = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
     if (continuousTables.some(table => !tables.has(table)) || db.prepare('PRAGMA foreign_key_check').all().length) throw stateError();
@@ -36,7 +37,7 @@ export function migrateContinuous(db: DatabaseSync) {
       DROP TABLE background_deliveries;
       ALTER TABLE background_deliveries_next RENAME TO background_deliveries;
       CREATE INDEX background_deliveries_inbox ON background_deliveries(seat_id,status,created_at);
-      PRAGMA user_version=${version === 10 ? 12 : 11};
+      PRAGMA user_version=${preserveScenarioSchema(version === 10 ? 12 : 11, storedVersion)};
     `);
     if (db.prepare('PRAGMA foreign_key_check').all().length) throw stateError();
     db.exec('COMMIT');

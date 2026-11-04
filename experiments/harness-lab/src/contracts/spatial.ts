@@ -1,4 +1,5 @@
 import type { ResourceResult } from './resource-results.js';
+import { isScenarioClock } from './scenarios.js';
 import type { AnnotationRef } from './annotations.js';
 import type { ContextRef, ContextTimeRange, Position, SituationGeometry } from './context.js';
 
@@ -24,7 +25,7 @@ export interface SpatialItem {
   source?:{ref:ContextRef; revision:number; queriedAt:string; effectiveAt?:string|null; validTime?:ContextTimeRange|null};
   annotation?:{ref:AnnotationRef; objectId:string}; distanceM?:number;
 }
-export interface SpatialProvenance {input:SpatialInput; queriedAt:string; asOf:string; hash?:string; sourceRefs?:Array<ContextRef & {revision:number}>; resourceContext?:Pick<ResourceResult,'owner'|'dependencies'|'coverage'|'relationshipCoverage'>}
+export interface SpatialProvenance {input:SpatialInput; queriedAt:string; asOf:string; hash?:string; sourceRefs?:Array<ContextRef & {revision:number}>; resourceContext?:Pick<ResourceResult,'owner'|'dependencies'|'coverage'|'relationshipCoverage'> & Partial<Pick<ResourceResult,'statisticsScope'|'timeBasis'|'snapshotClock'>>}
 export type SpatialPointPosition = 'interior' | 'boundary' | 'exterior';
 export interface SpatialPointClassification {itemId:string; position:SpatialPointPosition}
 export interface SpatialClassificationCounts {total:number; interior:number; boundary:number; exterior:number}
@@ -132,7 +133,8 @@ function classificationValid(result:SpatialResult):boolean {
 }
 
 function resourceContextValid(v:unknown):boolean {
- if(!object(v)||!keys(v,['owner','dependencies','coverage','relationshipCoverage'])||!object(v.owner)||!keys(v.owner,['userId','seatId','taskId','sessionId'])||!Object.values(v.owner).every(x=>str(x,128))||!['userId','seatId','taskId','sessionId'].every(k=>str((v.owner as Record<string,unknown>)[k],128)))return false;
+ if(!object(v)||!keys(v,['owner','dependencies','coverage','relationshipCoverage','statisticsScope','timeBasis','snapshotClock'])||!object(v.owner)||!keys(v.owner,['userId','seatId','taskId','sessionId'])||!Object.values(v.owner).every(x=>str(x,128))||!['userId','seatId','taskId','sessionId'].every(k=>str((v.owner as Record<string,unknown>)[k],128)))return false;
+ if(v.snapshotClock!==undefined||v.timeBasis!==undefined||v.statisticsScope!==undefined){if(!isScenarioClock(v.snapshotClock)||v.timeBasis!=='scenario'||!object(v.statisticsScope)||!keys(v.statisticsScope,['at','relation','availability'])||v.statisticsScope.at!==v.snapshotClock.businessNow)return false;}
  if(!object(v.dependencies)||!keys(v.dependencies,['systemIds','annotations'])||!Array.isArray(v.dependencies.systemIds)||!v.dependencies.systemIds.every(sourceText)||!Array.isArray(v.dependencies.annotations)||!v.dependencies.annotations.every(fixedRef))return false;
  return Array.isArray(v.coverage)&&v.coverage.length<=100&&v.coverage.every(c=>object(c)&&keys(c,['source','status','reason','asOf'])&&str(c.source)&&['complete','partial','unavailable','unsupported'].includes(String(c.status))&&(c.reason===undefined||str(c.reason))&&(c.asOf===undefined||time(c.asOf)))&&object(v.relationshipCoverage)&&keys(v.relationshipCoverage,['status','reason','sources'])&&['complete','partial'].includes(String(v.relationshipCoverage.status))&&str(v.relationshipCoverage.reason)&&(v.relationshipCoverage.sources===undefined||Array.isArray(v.relationshipCoverage.sources)&&v.relationshipCoverage.sources.every(c=>object(c)&&keys(c,['source','status','reason','asOf'])&&str(c.source)&&['complete','partial','unavailable','unsupported'].includes(String(c.status))&&(c.reason===undefined||str(c.reason))&&(c.asOf===undefined||time(c.asOf))));
 }

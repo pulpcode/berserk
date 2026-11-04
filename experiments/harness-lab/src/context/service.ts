@@ -67,6 +67,9 @@ export class ContextService {
     const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, this.httpOptions);
     signal?.throwIfAborted();
     const data = decodeContextResponse(tool, params, raw);
+    if (system.scenarioClock === true && !data.snapshotClock || system.scenarioClock !== true && data.snapshotClock) {
+      throw new RequestError('CONTEXT_TIME_BASIS_CONFLICT', '来源场景时间缺失或未获配置授权，不能使用真实时间代替。', 409);
+    }
     return {systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data, mapReferences: mapReferences(data)};
   }
 }

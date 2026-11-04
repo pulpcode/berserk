@@ -11,6 +11,7 @@ if(!args.includes('--service-stopped'))throw new Error('请先停止服务，并
 const raw=value('--data-dir');if(!raw || !isAbsolute(raw) || resolve(raw)==='/')throw new Error('需要 --data-dir 指定独立的绝对数据目录。');
 const dataDir=resolve(raw);
 const command=args[0];
+if(args.includes('--control-scenarios') && args.includes('--no-control-scenarios'))throw new Error('场景控制权限的授予与撤销参数不能同时使用。');
 if(command==='reset') {
   const rawBackup=value('--backup-dir');if(!rawBackup || !isAbsolute(rawBackup))throw new Error('需要独立的绝对 --backup-dir。');
   const backup=resolve(rawBackup);
@@ -29,7 +30,7 @@ if(command==='reset') {
     if(command==='account') {
       const username=value('--username'),seatId=value('--seat');if(!username || !seatId)throw new Error('需要 --username 与 --seat。密码仅从终端隐蔽输入。');
       const password=await hiddenPassword('密码（至少12个字符）：');const repeated=await hiddenPassword('再次输入密码：');if(password!==repeated)throw new Error('两次密码不一致，未保存。');
-      await store.saveAccount({username,seatId,displayName:value('--name')||username,seatName:value('--seat-name')||seatId,password,createPublicTask:args.includes('--manage-tasks') || args.includes('--create-public'),manageModelSettings:args.includes('--manage-model'),viewWorkOverview:args.includes('--view-work-overview')});
+      await store.saveAccount({username,seatId,displayName:value('--name')||username,seatName:value('--seat-name')||seatId,password,createPublicTask:args.includes('--manage-tasks') || args.includes('--create-public'),manageModelSettings:args.includes('--manage-model'),viewWorkOverview:args.includes('--view-work-overview'),...(args.includes('--control-scenarios') ? {controlScenarios:true} : args.includes('--no-control-scenarios') ? {controlScenarios:false} : {})});
       const envPath=resolve('.env.auth.local');
       if(!await lstat(envPath).catch(()=>null))await writeFile(envPath,`LAB_AUTH_MODE=login\nLAB_SESSION_SECRET=${randomBytes(48).toString('base64url')}\nLAB_DATA_DIR=${dataDir}\n`,{flag:'wx',mode:0o600});
       console.info('账号已保存，旧登录已失效。签名配置位于被 Git 忽略的 .env.auth.local；密码未写入配置文件。');

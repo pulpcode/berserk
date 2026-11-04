@@ -9,6 +9,7 @@ import { simulationPersistence } from './persistence.js';
 import { createControlApi, type NotificationTarget, type StoredAction } from './control-api.js';
 import { mapFixtures } from './map-fixtures.js';
 import { at, objects, reports, recoveryReport, updatedReport, unknownReport, vehicleRef } from './fixtures.js';
+import { createScenarioEngine } from './scenarios/index.js';
 
 export type MockStage = 'intel' | 'situation' | 'unknown' | 'contract' | 'recovery';
 export type MockEventName = 'E1' | 'E2' | 'E3' | 'E4';
@@ -27,8 +28,9 @@ function byTime<T>(items: T[], time: (item: T) => string | null, from?: string, 
 }
 
 /** Independent HTTP source. Control methods exist only in this process/test driver. */
-export function createMockContextServer(options: {token: string; controlToken?: string; databasePath?: string; instanceId?: string; day?: string; targets?: NotificationTarget[]; situationObjects?: SituationObject[]; resourceCapability?: ResourceSourceCapability; resourceCoverage?: SituationResourceCoverage}) {
+export function createMockContextServer(options: {token: string; controlToken?: string; scenariosEnabled?:boolean; databasePath?: string; instanceId?: string; day?: string; targets?: NotificationTarget[]; situationObjects?: SituationObject[]; resourceCapability?: ResourceSourceCapability; resourceCoverage?: SituationResourceCoverage}) {
   if (!options.token.trim()) throw new Error('MOCK_CONTEXT_API_TOKEN is required');
+  if(options.scenariosEnabled&&!options.controlToken)throw new Error('场景引擎需要独立控制令牌');
   const resourceCapability=options.resourceCapability===undefined?undefined:decodeResourceCapability(options.resourceCapability);
   const resourceCoverage=options.resourceCoverage===undefined?undefined:situationResourceCoverage(options.resourceCoverage);
   if(resourceCapability && resourceCapability.systemId!=='situation') throw new Error('Mock resource capability belongs to situation');
@@ -57,6 +59,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
   };
   save();
   if(options.controlToken && options.controlToken===options.token)throw new Error('Control token must differ from query token');
+  const scenarios=options.scenariosEnabled?createScenarioEngine({databasePath:options.databasePath,targets:options.targets??[]}):undefined;
   const unavailable = new Set<string>();
   const requests: Array<{method: string; path: string; status: number}> = [];
   const cursors = new Map<string, {epoch: string; generation: number; key: string; offset: number}>();
@@ -201,9 +204,11 @@ export function createMockContextServer(options: {token: string; controlToken?: 
       if(isControl&&!options.controlToken)throw fail('NOT_FOUND','控制未启用。',404);
       const supplied = Buffer.from(req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : ''), expected = Buffer.from(isControl ? options.controlToken! : options.token);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) throw fail('UNAUTHORIZED', '查询凭证无效。', 401);
-      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);} else {
+      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(scenarios?.handlesControl(url.pathname))body=await scenarios.control(req,url);else {if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);}} else {
         if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
-        body = query(new URL(path, 'http://127.0.0.1'));
+        const url=new URL(path,'http://127.0.0.1'),systemId=url.pathname.startsWith('/intel/')?'intel':url.pathname.startsWith('/situation/')?'situation':undefined;
+        if(systemId&&unavailable.has(systemId))throw fail('UNAVAILABLE','来源暂不可用。',503);
+        body = scenarios?.query(url) ?? query(url);
       }
     } catch (error) {
       status = error instanceof RequestError ? error.statusCode : 400;
@@ -220,6 +225,6 @@ export function createMockContextServer(options: {token: string; controlToken?: 
       await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, host, () => {server.removeListener('error', reject); resolve(); }); });
       return `http://${host}:${(server.address() as AddressInfo).port}`;
     },
-    async close() { if (server.listening) await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); persistence.close(); },
+    async close() { if (server.listening) await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); persistence.close();scenarios?.close(); },
   };
 }

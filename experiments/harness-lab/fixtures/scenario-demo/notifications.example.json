@@ -1,0 +1,4 @@
+[
+  {"systemId":"intel","sourceId":"mock-intel-source","url":"http://127.0.0.1:4310","tokenEnv":"MOCK_INTEL_SOURCE_TOKEN"},
+  {"systemId":"situation","sourceId":"mock-situation-source","url":"http://127.0.0.1:4310","tokenEnv":"MOCK_SITUATION_SOURCE_TOKEN"}
+]

@@ -5,6 +5,8 @@ export interface Identity {
   manageModelSettings: boolean;
   /** Explicit read-only public work summaries; no file or mutation authority. */
   viewWorkOverview?: boolean;
+  /** Independent, explicitly provisioned scenario control capability; absence is denied. */
+  controlScenarios?: boolean;
 }
 export interface AuthSession {
   mode: 'login' | 'test'; csrf?: string; viewId?: string; identity?: Identity;

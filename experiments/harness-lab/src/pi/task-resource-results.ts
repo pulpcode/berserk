@@ -38,7 +38,7 @@ export function resolveResourceResult(entries: SessionEntry[], ref: string, ance
   if (!found) throw new RequestError('RESOURCE_RESULT_NOT_FOUND', '本会话没有可验证的该资源结果；不能采用复制或改写的结果。', 404);
   if(found.parameters.operation==='summarize'){
     const parent=resolveResourceResult(entries,found.parameters.resultRef,path);
-    if(found.statisticsScope.at!==parent.statisticsScope.at||found.statisticsScope.relation!==(found.parameters.relation??parent.statisticsScope.relation))throw new RequestError('RESOURCE_RESULT_INVALID','资源统计的固定时间或关系范围与原结果不一致。',409);
+    if((found.schemaVersion===4)!==(parent.schemaVersion===4)||JSON.stringify(found.snapshotClock)!==JSON.stringify(parent.snapshotClock)||found.timeBasis!==parent.timeBasis||found.statisticsScope.at!==parent.statisticsScope.at||found.statisticsScope.relation!==(found.parameters.relation??parent.statisticsScope.relation))throw new RequestError('RESOURCE_RESULT_INVALID','资源统计的固定时间或关系范围与原结果不一致。',409);
     let expected=parent.items;
     if(found.parameters.spatialResultRef){
       const spatial=resolveSpatialResult(entries,found.parameters.spatialResultRef);

@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { RequestError } from '../contracts/errors.js';
 import { atomicWrite, checkDirectory, readControlled, stateError } from '../resources/files.js';
+import { baseSchemaVersion } from './schema.js';
 
 export async function openDatabase(dataDir: string): Promise<DatabaseSync> {
     const directory = join(dataDir, 'collaboration'); await mkdir(directory, {recursive: true, mode: 0o700}); await checkDirectory(directory);
@@ -23,7 +24,7 @@ export async function openDatabase(dataDir: string): Promise<DatabaseSync> {
           PRAGMA user_version=1; COMMIT;`);
         await chmod(dbPath, 0o600); await atomicWrite(markerPath, 'collaboration-v1\n');
       }
-      if (![1,2,3,4,5,6,7,8,9,10,11,12].includes(Number(db.prepare('PRAGMA user_version').get()?.user_version)) || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
+      if (![1,2,3,4,5,6,7,8,9,10,11,12].includes(baseSchemaVersion(Number(db.prepare('PRAGMA user_version').get()?.user_version))) || db.prepare('PRAGMA quick_check').get()?.quick_check !== 'ok') throw stateError();
       return db;
     } catch (error) { db.close(); throw error instanceof RequestError ? error : stateError(); }
 }

@@ -9,8 +9,8 @@ export interface BasemapSourceMetadata {
 }
 export interface ImageryBasemap extends BasemapSourceMetadata { tiles: string[]; tileSize: 256 | 512 }
 export interface RoadBasemap extends BasemapSourceMetadata { url?: string; tiles?: string[]; glyphs: string }
-export interface BasemapConfig { defaultView: BasemapView; imagery: ImageryBasemap; roads: RoadBasemap; simulationEnabled?: boolean }
-export interface LegacyMapConfig { providerId: string; tiles: string[]; tileSize: number; attributionText: string; attributionUrl: string; simulationEnabled?: boolean }
+export interface BasemapConfig { defaultView: BasemapView; imagery: ImageryBasemap; roads: RoadBasemap; simulationEnabled?: boolean; scenarioControlEnabled?: boolean; directorSeatId?: string }
+export interface LegacyMapConfig { providerId: string; tiles: string[]; tileSize: number; attributionText: string; attributionUrl: string; simulationEnabled?: boolean; scenarioControlEnabled?: boolean; directorSeatId?: string }
 export type MapConfig = BasemapConfig | LegacyMapConfig;
 export const basemapViews: ReadonlyArray<{id: BasemapView; label: string}> = [{id:'imagery',label:'影像'},{id:'road',label:'路网'},{id:'hybrid',label:'混合'}];
 export const isBasemapView = (value: unknown): value is BasemapView => value === 'imagery' || value === 'road' || value === 'hybrid';
@@ -23,5 +23,5 @@ export const defaultMapConfig: BasemapConfig = {
 /** Old deployments and saved API fixtures remain usable without rewriting their config. */
 export function normalizeMapConfig(config: MapConfig): BasemapConfig {
   if ('imagery' in config) return config;
-  return {...defaultMapConfig,imagery:{...defaultMapConfig.imagery,providerId:config.providerId,name:config.providerId,tiles:config.tiles,tileSize:config.tileSize as 256 | 512,attributions:[{text:config.attributionText,url:config.attributionUrl}]},simulationEnabled:config.simulationEnabled};
+  return {...defaultMapConfig,imagery:{...defaultMapConfig.imagery,providerId:config.providerId,name:config.providerId,tiles:config.tiles,tileSize:config.tileSize as 256 | 512,attributions:[{text:config.attributionText,url:config.attributionUrl}]},simulationEnabled:config.simulationEnabled,...(config.scenarioControlEnabled===undefined?{}:{scenarioControlEnabled:config.scenarioControlEnabled}),...(config.directorSeatId?{directorSeatId:config.directorSeatId}:{})};
 }

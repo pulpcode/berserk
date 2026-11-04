@@ -12,18 +12,24 @@ import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 import type { SituationCurrent } from '../../src/contracts/context';
 import type { SimulationAction } from '../../src/contracts/simulation';
+import type { ScenarioMutationResult } from '../../src/contracts/scenarios';
 import { mapHref } from '../../src/web/situation/evidence';
 import { basemapFixture, captureMap, localVectorTiles, mapSnapshot } from './basemap-fixtures';
 
-async function setup(page:Page,simulation=false,missingGeometry=false,basemap?: (origin:string)=>unknown){
+async function setup(page:Page,simulation=false,missingGeometry=false,basemap?: (origin:string)=>unknown,scenario=false){
  const dir=await mkdtemp(join(tmpdir(),'axon-map-web-'));
- const source=createMockContextServer({token:'map-query-token',controlToken:'map-control-token',databasePath:join(dir,'source.sqlite'),instanceId:'ui',day:'2026-10-11'});const base=await source.listen();
+ const source=createMockContextServer({token:'map-query-token',controlToken:'map-control-token',scenariosEnabled:scenario,databasePath:join(dir,'source.sqlite'),instanceId:'ui',day:'2026-10-11'});const base=await source.listen();
+ if(scenario){
+  const control=async(path:string,body:Record<string,unknown>)=>{const response=await fetch(`${base}/control/${path}`,{method:'POST',headers:{Authorization:'Bearer map-control-token','Content-Type':'application/json'},body:JSON.stringify({...body,actor:{userId:'map-ui-test-driver',seatId:'test-director'}})});expect(response.ok).toBe(true);return response.json() as Promise<ScenarioMutationResult>;};
+  const created=await control('instances',{definitionId:'harbor-fire',version:'1',mode:'main_story',clientActionId:randomUUID()});
+  await control(`instances/${created.instance.instanceId}/activate`,{expectedRevision:created.instance.revision,expectedActiveRevision:0,clientActionId:randomUUID()});
+ }
  const db=await openDatabase(dir);const access=new AccessStore(db);const userId=await access.saveAccount({username:'a',displayName:'地图验证',seatId:'a',seatName:'总体席',password:'test-password-123',createPublicTask:true,manageModelSettings:true});const actor=access.identity(userId)!;
  const road={systemId:'situation',objectType:'road',objectId:'ui-road-west-01'};
  const task=access.create(actor,{title:'地图验证任务',goal:'比较两区道路资料',visibility:'public',clientActionId:randomUUID(),context:{businessRefs:[road],focus:{areaIds:['ui-zone-east']}}});db.close();
  const config=testConfig(dir,{seatId:'a',auth:{secret:'map-browser-secret-at-least-thirty-two-characters',sessionMs:28800000}});
  const fake=await fakeRuntime(config,()=>({text:`[西区通道](${mapHref(road,1)})可供进一步分析。[无依据道路](${mapHref({...road,objectId:'missing'},1)})`}));
- const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab,false,undefined,{config:{systems:[{id:'situation',name:'模拟态势',adapter:'mock-situation-http',baseUrl:`${base}/situation`,tokenEnv:'QUERY',areas:[{id:'ui-zone-west',name:'西区'},{id:'ui-zone-east',name:'东区'}]}],scopes:[{id:'demo',name:'测试范围',systemIds:['situation'],seatIds:['a']}]},env:{QUERY:'map-query-token'}});
+ const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab,false,undefined,{config:{systems:[{id:'situation',name:'模拟态势',adapter:'mock-situation-http',baseUrl:`${base}/situation`,tokenEnv:'QUERY',...(scenario?{scenarioClock:true}:{}),areas:[{id:'ui-zone-west',name:'西区'},{id:'ui-zone-east',name:'东区'}]}],scopes:[{id:'demo',name:'测试范围',systemIds:['situation'],seatIds:['a']}]},env:{QUERY:'map-query-token'}});
  const queries:Record<string,unknown>[]=[];let tiles=0;let failSource=false;let publicTiles=0;
  await page.route('https://tile.openstreetmap.org/**',route=>{publicTiles++;return route.abort();});
  await page.route('**/test-tiles/**',route=>{tiles++;return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAADIElEQVR4nO3UMQ0AIBDAwPevlZCgAGQw9IbbO3XW2Rdomt8BwD8GAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEGAGEPFcg416T4n38AAAAASUVORK5CYII=','base64')});});
@@ -55,6 +61,25 @@ test('global and task maps query union, keep stale source data, use only fixture
   expect(env.queries.some(query=>Array.isArray(query.objectRefs)&&!query.areaIds)).toBe(true);expect(env.queries.some(query=>Array.isArray(query.areaIds)&&!query.objectRefs)).toBe(true);
   env.offline();await openFilters(page);await page.getByRole('button',{name:'刷新态势',exact:true}).click();await expect(page.locator('.source-query-error:visible')).toContainText('模拟来源离线');await openContents(page);await expect(sourceObjects(page)).toHaveCount(4);
   await page.screenshot({path:test.info().outputPath('task-map-desktop.png')});expect(env.fake.calls).toHaveLength(0);
+ }finally{await env.close();}
+});
+test('scene map reads 53 real source objects, separates vehicles and preserves old position and business clock',async({page})=>{
+ await captureMap(page);await localVectorTiles(page);const env=await setup(page,false,false,basemapFixture,true);
+ try{
+  await page.getByRole('button',{name:'态势地图',exact:true}).click();await openContents(page);await expandSource(page);
+  const tree=page.getByRole('region',{name:'来源态势',exact:true});await expect(sourceObjects(page)).toHaveCount(53);
+  await expect(tree.locator('.source-scope-summary')).toContainText('场景时间 2026-11-03T09:10:00+08:00');
+  for(const [name,count] of [['车辆',24],['站点与地点',9],['水源',8]] as const){const group=tree.locator('.annotation-tree-layer').filter({has:page.getByRole('button',{name:`展开${name}`,exact:true})});await expect(group).toContainText(`${count} 个对象`);}
+  await expect(tree.getByRole('button',{name:'展开资源池',exact:true})).toHaveCount(0);
+  await expect(page.locator('.situation-scene-label')).toContainText('合成业务覆盖层');
+  await pickSource(page,'车辆',/V24 泡沫车/);
+  const detail=page.locator('.situation-detail');await expect(detail.getByRole('heading',{name:'V24 泡沫车',exact:true})).toBeVisible();
+  await expect(detail).toContainText('归属站：新区消防站');await expect(detail).toContainText('最后记录08:50，当前位置待确认');await expect(detail).toContainText('来源声明：状态待确认');
+  await detail.locator('.situation-object-info > summary').click();await expect(detail).toContainText('场景判断时点');await expect(detail).toContainText('2026-11-03T08:50:00+08:00');await expect(detail).toContainText('可用状态依据');
+  await expect(page.locator('.source-point-label').filter({has:page.getByRole('button',{name:'V24 泡沫车',exact:true})})).toContainText('最后记录08:50，当前位置待确认');
+  const canvas=await page.locator('.maplibregl-canvas').elementHandle();await page.screenshot({path:test.info().outputPath('scene-map-v24-desktop.png')});
+  await page.getByRole('group',{name:'底图视图'}).getByRole('button',{name:'混合',exact:true}).click();expect(await page.locator('.maplibregl-canvas').evaluate((element,old)=>element===old,canvas)).toBe(true);
+  expect(env.fake.calls).toHaveLength(0);expect(env.publicTiles()).toBe(0);
  }finally{await env.close();}
 });
 test('object draft loads native context on explicit send; verified answer opens nonmodal map and draft survives reload',async({page})=>{

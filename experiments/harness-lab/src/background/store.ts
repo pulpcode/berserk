@@ -1,6 +1,6 @@
 import { migrateContinuous } from './continuous-schema.js';
 import { checkAnnotationTables } from '../annotations/store.js';
-import { upgradeSeatColumns } from '../access/schema.js';
+import { baseSchemaVersion, scenarioSchemaVersion, upgradeSeatColumns } from '../access/schema.js';
 import { createHash, randomUUID } from 'node:crypto';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import type { Identity } from '../contracts/access.js';
@@ -118,7 +118,7 @@ function normalizeRule(input: InformationRuleInput): InformationRuleInput {
 /** Queue/rules/delivery metadata only. The owning service performs current authorization and file checks. */
 export class BackgroundStore {
   constructor(readonly db: DatabaseSync) {
-    const version = Number(db.prepare('PRAGMA user_version').get()?.user_version);
+    const storedVersion = Number(db.prepare('PRAGMA user_version').get()?.user_version), version = baseSchemaVersion(storedVersion);
     if ([9,10,12].includes(version)) checkAnnotationTables(db);
     const actual = new Set(db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(row => String(row.name)));
     const anyBackground = [...actual].some(name => name.startsWith('background_'));
@@ -132,7 +132,7 @@ export class BackgroundStore {
       if (actual.has('inbox_handling')) this.validateHandling();
     }
     this.transaction(() => {
-      upgradeSeatColumns(db,version,!fresh);
+      upgradeSeatColumns(db,storedVersion,!fresh);
       if (fresh) db.exec(`
         CREATE TABLE background_events(id TEXT PRIMARY KEY, source_id TEXT NOT NULL, message_id TEXT NOT NULL, payload_hash TEXT NOT NULL, received_at TEXT NOT NULL, initial_job_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)), UNIQUE(source_id,message_id));
         CREATE TABLE background_jobs(id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES background_events(id), source_id TEXT NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('preprocess','seat_analysis')), status TEXT NOT NULL CHECK(status IN ('queued','running','succeeded','failed','cancelled','interrupted')), created_at TEXT NOT NULL, session_id TEXT, seat_id TEXT, task_id TEXT, data TEXT NOT NULL CHECK(json_valid(data)));
@@ -161,7 +161,7 @@ export class BackgroundStore {
       if (!actual.has('inbox_handling')) db.exec(`CREATE TABLE inbox_handling(delivery_id TEXT PRIMARY KEY REFERENCES background_deliveries(id), state TEXT NOT NULL CHECK(state IN ('pending','completed','legacy')), revision INTEGER NOT NULL CHECK(revision>0), updated_at TEXT NOT NULL, updated_by_user_id TEXT REFERENCES accounts(id));
         INSERT INTO inbox_handling SELECT id,'legacy',1,json_extract(data,'$.updatedAt'),NULL FROM background_deliveries WHERE status='delivered';`);
       this.validateIntegrity(true,true); this.validateHandling();
-      db.exec(`PRAGMA user_version=${version >= 11 ? version : version >= 9 ? 10 : 8}`);
+      db.exec(`PRAGMA user_version=${scenarioSchemaVersion(version >= 11 ? version : version >= 9 ? 10 : 8)}`);
     });
     migrateContinuous(db);
   }

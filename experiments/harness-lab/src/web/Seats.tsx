@@ -63,10 +63,16 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
   async function login() {
     if(!state?.csrf || busy || !state.loginSeats?.some(seat=>seat.id===seatId))return;setBusy(true);setError('');
     try {
-      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':state.csrf},body:JSON.stringify({seatId,password})});
+      // Another tab can replace the anonymous cookie while this form is open.
+      // Read the CSRF token paired with the current cookie for this explicit submit.
+      const current=await api<AuthSession>('/api/auth/session');
+      if(!current.csrf)throw new Error('无法读取登录凭证，请重试。');
+      const response=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':current.csrf},body:JSON.stringify({seatId,password})});
       const body=await response.json(); if(!response.ok)throw new Error(body.error?.message || '登录未完成。');
-      clearPrivateState();setPassword('');setState(body as AuthSession);channel?.postMessage('changed');
-      history.replaceState(null,'','/');
+      const signedIn=body as AuthSession;
+      const directorPath=location.pathname==='/scenario-director' || signedIn.identity?.controlScenarios===true;
+      clearPrivateState();setPassword('');setState(signedIn);channel?.postMessage('changed');
+      history.replaceState(null,'',directorPath?'/scenario-director':'/');
     } catch(error){setError(error instanceof Error ? error.message : '连接失败，请重试。');} finally{setBusy(false);}
   }
   async function logout() {

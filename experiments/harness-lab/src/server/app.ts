@@ -26,6 +26,7 @@ import type { ComposerSelection, ModelSettingsUpdate } from '../contracts/index.
 import { fileRoutes } from './file-routes.js';
 import { apiScope } from './seat-scope.js';
 import { collaborationRoutes } from './collaboration-routes.js';
+import { baseSchemaVersion } from '../access/schema.js';
 
 export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?: {config: BackgroundConfig; executor?: BackgroundExecutor; env?: NodeJS.ProcessEnv}, contextOptions?: {config: ContextConfig; env?: NodeJS.ProcessEnv}) {
   if (!lab.context) {
@@ -36,7 +37,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   }
   if (lab.annotations) lab.annotations.context = lab.context;
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
-  if (!backgroundConfig && lab.access && [3,4,5,6,8,10,11,12].includes(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version))) {
+  if (!backgroundConfig && lab.access && [3,4,5,6,8,10,11,12].includes(baseSchemaVersion(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version)))) {
     const existing = new BackgroundStore(lab.access.db);
     if (Number(lab.access.db.prepare('SELECT count(*) n FROM continuous_inputs WHERE consumed=0').get()?.n) > 0 || existing.listJobs().some(job => job.status === 'queued' || job.status === 'running') || existing.listActions({status:'preparing'}).some(action => action.kind === 'analysis')) {
       throw new RequestError('BACKGROUND_CONFIGURATION_REQUIRED','数据目录仍有未完成后台作业或分析准备，请恢复 LAB_BACKGROUND_CONFIG 后启动；不会忽略已有会话预留。',409);
@@ -84,7 +85,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));
-    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
+    for (const path of ['/information','/inbox','/work','/overview','/situation','/simulation','/scenario-director']) app.get(path,(_request,reply)=>reply.sendFile('index.html'));
     app.get('/tasks/:taskId/information',(_request,reply)=>reply.sendFile('index.html'));
   }
   return app;

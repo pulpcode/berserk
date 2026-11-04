@@ -1,0 +1,30 @@
+{
+  "id": "scenario-demo-m1",
+  "name": "scenario-demo-m1",
+  "title": "临港火情演示第一里程碑实施（P0—P2）",
+  "description": "按已批准方案实现P0—P2：场景数据、虚拟时间、专用导演席和独立导演台。",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-04",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "main",
+  "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    ".trellis/tasks/11-03-scenario-demo/milestone-1-design.md",
+    ".trellis/tasks/11-04-scenario-demo-m1/research/implementation-validation.md",
+    "experiments/harness-lab/scripts/mock-context/scenarios/README.md"
+  ],
+  "notes": "P0—P2代码已完成，最终全量129文件/1489测试通过；typecheck、lint、build、11项导演/访问桌面、3项地图桌面通过。真实构建+HTTP+SQLite+Chrome全链及在线底图初始视图通过，模型调用0次。验收矩阵见research/implementation-validation.md。保留in_progress供用户检查，未归档、推送、合并、部署或执行P3—P6。",
+  "meta": {}
+}

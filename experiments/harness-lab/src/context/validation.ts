@@ -1,5 +1,6 @@
 import { decodeSourceResource, resourceEvidence, RESOURCE_CATEGORIES, RESOURCE_RELATIONS } from '../contracts/task-resources.js';
 import { RequestError } from '../contracts/errors.js';
+import { isScenarioClock } from '../contracts/scenarios.js';
 import type { ContextData, ContextQueryParams, ContextRef, ContextTool, SituationObject, SituationResourceCoverage } from '../contracts/context.js';
 
 const invalid = () => new RequestError('CONTEXT_INVALID_ARGUMENT', '查询参数无效，请核对字段、标识、时间或分页条件。');
@@ -139,7 +140,8 @@ export function decodeContextResponse(tool: ContextTool, params: ContextQueryPar
     const changes = tool === 'situation_query' && !current;
     const keys = ['systemId', 'asOf', ...(detail ? ['item'] : ['items', 'limit', 'nextCursor', 'hasMore', 'timeUnknownCount']),
       ...(current ? ['unknownRefs', 'changeCursor'] : changes ? ['unknownRefs', 'nextAfter'] : [])];
-    const r = contextRecord(value, [...keys, ...(current ? ['resourceCoverage'] : [])], keys);
+    const r = contextRecord(value, [...keys, 'snapshotClock', ...(current ? ['resourceCoverage'] : [])], keys);
+    if (r.snapshotClock !== undefined && (!isScenarioClock(r.snapshotClock) || r.snapshotClock.businessNow !== r.asOf)) throw invalid();
     if (current && r.resourceCoverage !== undefined) situationResourceCoverage(r.resourceCoverage);
     if (r.systemId !== params.systemId) throw invalid(); contextTimestamp(r.asOf);
     if (detail) {

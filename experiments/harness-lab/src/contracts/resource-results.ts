@@ -3,6 +3,7 @@ import { summarizeResources, resourceStatisticsItems, resourceEntityCountUnknown
 import { summarizeResourcesV1 } from './resource-summary-v1.js';
 import { Type, type Static } from 'typebox';
 import { Check } from 'typebox/value';
+import { isScenarioClock, type ScenarioClock } from './scenarios.js';
 import { resourceSchema, decodeTaskResource, sourceResourceSchema, decodeSourceResource, resourceAssociationSchema, decodeResourceAssociation, resourceEvidence } from './task-resources.js';
 import { spatialGeometryValid, type SpatialGeometry } from './spatial.js';
 
@@ -27,7 +28,7 @@ export type ResourceSourceSelection=Static<typeof resourceSourceSelectionSchema>
 export type ResourceRelation='assigned'|'potential_support'|'related'|'unconfirmed';
 export interface ResourceRecord {
  id:string;name:string;resource:Static<typeof resourceSchema>;geometry?:SpatialGeometry;
- source?:{ref:Static<typeof ref>;revision:number;asOf:string;queriedAt:string;data?:Static<typeof sourceResourceSchema>};
+ source?:{ref:Static<typeof ref>;revision:number;asOf:string;queriedAt:string;snapshotClock?:ScenarioClock;data?:Static<typeof sourceResourceSchema>};
  annotation?:{ref:Static<typeof fixed>;objectId:string;hash:string};association?:Static<typeof resourceAssociationSchema>;
  relationBasis:string[];
 }
@@ -39,7 +40,7 @@ export interface ResourceItem {
 export interface ResourceCoverageItem {source:string;status:'complete'|'partial'|'unavailable'|'unsupported';reason?:string;asOf?:string}
 export interface ResourceSummary {recordCount:number;itemCount:number;knownEntityCount:number;entityCount:number|null;quantities:Array<{category:string;unit:string;meaning:string;scope:string;value:number|null;knownValue:number;unknownCount:number;recordIds:string[];limitations:string[]}>;limitations:string[]}
 export interface ResourceResult {
- schemaVersion:1|2|3;resultRef:string;requestId:string;toolCallId:string;createdAt:string;
+ schemaVersion:1|2|3|4;timeBasis?:'scenario';snapshotClock?:ScenarioClock;resultRef:string;requestId:string;toolCallId:string;createdAt:string;
  statisticsScope:{at:string;relation:'all'|ResourceRelation;availability:'all'|ResourceItem['availability']};
  owner:{userId:string;seatId:string;taskId:string;sessionId:string};parameters:Exclude<ResourceRequest,{operation:'read'}>;
  delivery?:{requestId:string;toolCallId:string};records:ResourceRecord[];items:ResourceItem[];
@@ -53,10 +54,11 @@ export interface ResourceResult {
 }
 const geometry=Type.Unsafe<SpatialGeometry>({});
 const strings=Type.Array(text,{maxItems:500});
-const recordSchema=Type.Object({id:text,name:text,resource:resourceSchema,geometry:Type.Optional(geometry),source:Type.Optional(Type.Object({ref,revision:Type.Integer({minimum:1}),asOf:text,queriedAt:text,data:Type.Optional(sourceResourceSchema)},strict)),annotation:Type.Optional(Type.Object({ref:fixed,objectId:id,hash:text},strict)),association:Type.Optional(resourceAssociationSchema),relationBasis:strings},strict);
+const clockSchema=Type.Object({instanceId:id,businessNow:text,revision:Type.Integer({minimum:1})},strict);
+const recordSchema=Type.Object({id:text,name:text,resource:resourceSchema,geometry:Type.Optional(geometry),source:Type.Optional(Type.Object({ref,revision:Type.Integer({minimum:1}),asOf:text,queriedAt:text,snapshotClock:Type.Optional(clockSchema),data:Type.Optional(sourceResourceSchema)},strict)),annotation:Type.Optional(Type.Object({ref:fixed,objectId:id,hash:text},strict)),association:Type.Optional(resourceAssociationSchema),relationBasis:strings},strict);
 const itemSchema=Type.Object({id:text,name:text,recordIds:strings,entityKey:Type.Optional(text),category:text,relation:Type.Union(['assigned','potential_support','related','unconfirmed'].map(v=>Type.Literal(v))),relationBasis:strings,availability:Type.Union(['available','unavailable','unknown','conflict'].map(v=>Type.Literal(v))),geometry:Type.Optional(geometry),positionReason:Type.Optional(text),limitations:strings},strict);
 const summarySchema=Type.Object({recordCount:integer,itemCount:integer,knownEntityCount:integer,entityCount:Type.Union([integer,Type.Null()]),quantities:Type.Array(Type.Object({category:text,unit:text,meaning:text,scope:text,value:Type.Union([integer,Type.Null()]),knownValue:integer,unknownCount:integer,recordIds:strings,limitations:strings},strict),{maxItems:500}),limitations:strings},strict);
-const resultSchema=Type.Object({schemaVersion:Type.Union([Type.Literal(1),Type.Literal(2),Type.Literal(3)]),resultRef:text,requestId:id,toolCallId:text,createdAt:text,owner:Type.Object({userId:id,seatId:id,taskId:id,sessionId:id},strict),statisticsScope:Type.Object({at:text,relation:choices(['all','related','assigned','potential_support','unconfirmed']),availability:choices(['all','available','unavailable','unknown','conflict'])},strict),parameters:Type.Union([resourceQuerySchema,resourceRequestSchema.anyOf![2]]),delivery:Type.Optional(Type.Object({requestId:id,toolCallId:text},strict)),records:Type.Array(recordSchema,{maxItems:500}),items:Type.Array(itemSchema,{maxItems:500}),coverage:Type.Array(Type.Object({source:text,status:Type.Union(['complete','partial','unavailable','unsupported'].map(v=>Type.Literal(v))),reason:Type.Optional(text),asOf:Type.Optional(text)},strict),{maxItems:100}),relationshipCoverage:Type.Object({status:Type.Union([Type.Literal('partial'),Type.Literal('complete')]),reason:text,sources:Type.Optional(Type.Array(Type.Object({source:text,status:choices(['complete','partial','unavailable','unsupported']),reason:Type.Optional(text),asOf:Type.Optional(text)},strict),{maxItems:100}))},strict),dependencies:Type.Object({systemIds:strings,annotations:Type.Array(fixed,{maxItems:100})},strict),messages:Type.Array(Type.Object({entryId:id,resourceRef:ref,quote:Type.String({minLength:1,maxLength:4000}),interpretation:Type.Literal('unverified_user_report')},strict),{maxItems:20}),exclusions:Type.Array(Type.Object({id:text,reason:text},strict),{maxItems:500}),summary:summarySchema,messageCandidates:Type.Optional(Type.Array(Type.Object({entryId:id,text:Type.String({minLength:1,maxLength:4000}),resourceRefs:Type.Array(ref,{minItems:1,maxItems:100})},strict),{maxItems:20})),spatialCoverage:Type.Optional(Type.Object({status:choices(['complete','partial']),candidateCount:integer,totalCandidateCount:Type.Optional(integer),unclassified:Type.Optional(Type.Array(Type.Object({id:text,reason:text},strict),{maxItems:500}))},strict)),parentResultRef:Type.Optional(text),spatialResultRef:Type.Optional(text)},strict);
+const resultSchema=Type.Object({schemaVersion:Type.Union([Type.Literal(1),Type.Literal(2),Type.Literal(3),Type.Literal(4)]),timeBasis:Type.Optional(Type.Literal('scenario')),snapshotClock:Type.Optional(clockSchema),resultRef:text,requestId:id,toolCallId:text,createdAt:text,owner:Type.Object({userId:id,seatId:id,taskId:id,sessionId:id},strict),statisticsScope:Type.Object({at:text,relation:choices(['all','related','assigned','potential_support','unconfirmed']),availability:choices(['all','available','unavailable','unknown','conflict'])},strict),parameters:Type.Union([resourceQuerySchema,resourceRequestSchema.anyOf![2]]),delivery:Type.Optional(Type.Object({requestId:id,toolCallId:text},strict)),records:Type.Array(recordSchema,{maxItems:500}),items:Type.Array(itemSchema,{maxItems:500}),coverage:Type.Array(Type.Object({source:text,status:Type.Union(['complete','partial','unavailable','unsupported'].map(v=>Type.Literal(v))),reason:Type.Optional(text),asOf:Type.Optional(text)},strict),{maxItems:100}),relationshipCoverage:Type.Object({status:Type.Union([Type.Literal('partial'),Type.Literal('complete')]),reason:text,sources:Type.Optional(Type.Array(Type.Object({source:text,status:choices(['complete','partial','unavailable','unsupported']),reason:Type.Optional(text),asOf:Type.Optional(text)},strict),{maxItems:100}))},strict),dependencies:Type.Object({systemIds:strings,annotations:Type.Array(fixed,{maxItems:100})},strict),messages:Type.Array(Type.Object({entryId:id,resourceRef:ref,quote:Type.String({minLength:1,maxLength:4000}),interpretation:Type.Literal('unverified_user_report')},strict),{maxItems:20}),exclusions:Type.Array(Type.Object({id:text,reason:text},strict),{maxItems:500}),summary:summarySchema,messageCandidates:Type.Optional(Type.Array(Type.Object({entryId:id,text:Type.String({minLength:1,maxLength:4000}),resourceRefs:Type.Array(ref,{minItems:1,maxItems:100})},strict),{maxItems:20})),spatialCoverage:Type.Optional(Type.Object({status:choices(['complete','partial']),candidateCount:integer,totalCandidateCount:Type.Optional(integer),unclassified:Type.Optional(Type.Array(Type.Object({id:text,reason:text},strict),{maxItems:500}))},strict)),parentResultRef:Type.Optional(text),spatialResultRef:Type.Optional(text)},strict);
 export function resourceRequestValid(value:unknown):value is ResourceRequest {return Check(resourceRequestSchema,value);}
 export function resourceResultValid(value:unknown):value is ResourceResult {
  try {
@@ -74,7 +76,12 @@ export function resourceResultValid(value:unknown):value is ResourceResult {
    if(systems.some(id=>!r.dependencies.systemIds.includes(id))||refs.some(ref=>!r.dependencies.annotations.some(a=>JSON.stringify(a)===JSON.stringify(ref))))return false;
   }
   if(!Number.isFinite(Date.parse(r.statisticsScope.at)))return false;
-  if(r.parameters.operation==='query'&&(r.statisticsScope.at!==r.createdAt||r.statisticsScope.relation!==(r.parameters.purpose==='task'?'related':'all')||r.statisticsScope.availability!=='all'))return false;
+  if(r.schemaVersion===4){
+   const c=r.snapshotClock;
+   if(r.timeBasis!=='scenario'||!isScenarioClock(c)||r.statisticsScope.at!==c.businessNow||r.dependencies.annotations.length)return false;
+   if(r.records.some(row=>!row.source?.snapshotClock||row.source.snapshotClock.instanceId!==c.instanceId||row.source.snapshotClock.businessNow!==c.businessNow||row.source.snapshotClock.revision!==c.revision))return false;
+  }else if(r.timeBasis!==undefined||r.snapshotClock!==undefined||r.records.some(row=>row.source?.snapshotClock!==undefined))return false;
+  if(r.parameters.operation==='query'&&((r.schemaVersion!==4&&r.statisticsScope.at!==r.createdAt)||r.statisticsScope.relation!==(r.parameters.purpose==='task'?'related':'all')||r.statisticsScope.availability!=='all'))return false;
   if(r.parameters.operation==='summarize'&&(r.parameters.relation!==undefined&&r.statisticsScope.relation!==r.parameters.relation||r.statisticsScope.availability!==(r.parameters.availability??'all')))return false;
   const selected=resourceStatisticsItems(r);
   if(r.spatialCoverage&&(r.spatialCoverage.totalCandidateCount===undefined||!r.spatialCoverage.unclassified||r.spatialCoverage.totalCandidateCount!==r.spatialCoverage.candidateCount+r.spatialCoverage.unclassified.length||r.spatialCoverage.status!==(r.spatialCoverage.unclassified.length?'partial':'complete')))return false;
@@ -90,13 +97,13 @@ export function resourceResultValid(value:unknown):value is ResourceResult {
 export function projectResourceResult(result:ResourceResult,offset=0,limit=100) {
  const items=result.items.slice(offset,offset+limit),ids=new Set(items.flatMap(i=>i.recordIds));
  const projected = {...result,records:result.records.filter(r=>ids.has(r.id)).map(({geometry,...row})=>({...row,...(geometry?{geometryType:geometry.type}:{})})),items:items.map(({geometry,...item})=>({...item,...(geometry?{geometryType:geometry.type}:{})})),page:{offset,limit,total:result.items.length,hasMore:offset+limit<result.items.length}};
- if(result.schemaVersion!==3)return projected;
+ if(result.schemaVersion<3)return projected;
  const overlapIndex=resourceOverlapIndex(result);
  return {...projected,
   summary:{...result.summary,limitations:resourceSummaryLimitations(result)},
   records:projected.records.map(row=>({...row,timeMeaning:resourceRecordTimes(result,row)})),
   items:projected.items.map(item=>({...item,limitations:resourceItemLimitations(result,item),explanation:resourceItemExplanation(result,item,overlapIndex)})),
-  resultMeaning:{createdAt:'本条固定结果的生成时间；读取不代表重新查询',statisticsAt:result.statisticsScope.at,statisticsAtMeaning:'沿用的原始查询判断时点，不是来源快照或事实生效时间',candidateItemCount:result.items.length,statisticsItemCount:result.summary.itemCount,statisticsRecordCount:result.summary.recordCount,filters:result.statisticsScope,quantityScope:'每个数量组只适用于该组category、unit、meaning、scope和recordIds；同单位不表示同一筛选集合，不能用第一组范围概括全表'},
+  resultMeaning:{createdAt:'本条固定结果的生成时间；读取不代表重新查询',statisticsAt:result.statisticsScope.at,statisticsAtMeaning:result.schemaVersion===4?'本次固定的场景业务判断时点；createdAt/queriedAt为真实处理时间，不能替代场景现在':'沿用的原始查询判断时点，不是来源快照或事实生效时间',candidateItemCount:result.items.length,statisticsItemCount:result.summary.itemCount,statisticsRecordCount:result.summary.recordCount,filters:result.statisticsScope,quantityScope:'每个数量组只适用于该组category、unit、meaning、scope和recordIds；同单位不表示同一筛选集合，不能用第一组范围概括全表'},
  };
 }
 export function extractResourceResult(details:unknown,toolName:string,isError?:boolean,content?:string):ResourceResult|null|undefined {

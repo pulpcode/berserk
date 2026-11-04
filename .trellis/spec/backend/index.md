@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Scenario Director and Business Clock](./scenario-director.md) for dedicated director authorization, scene instances, manual time, resource v4 and replay recovery.
+
 Read [Continuous Background Analysis](./continuous-analysis.md) for stream epochs, native continuation, task revision inputs, composite authorization, exact published evidence and recovery.
 
 Read [Task Resource Semantics](./task-resources.md) for optional resource declarations, controlled entity association, source compatibility and publication privacy. Read [Task Resource Queries](./task-resource-query.md) for batch 2 read-only discovery, independent task relationships, native results and spatial/statistical use. Read [Task Resource Experience](./task-resource-experience.md) for explicit references, resource editing, result cards and batch 3 Skills; [Model Thinking](./model-thinking.md) covers shared effective runtime configuration. Live-model evaluations remain separate.

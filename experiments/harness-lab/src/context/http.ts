@@ -2,6 +2,12 @@ import { RequestError } from '../contracts/errors.js';
 
 export interface ContextHttpOptions { timeoutMs?: number; maxBytes?: number; fetch?: typeof fetch; method?: 'GET' | 'POST'; body?: unknown }
 const sourceErrors: Record<string, {message: string; status: number}> = {
+  SCENARIO_CONFLICT: {message: '场景状态不允许本次操作，请刷新预览并核对通知。', status: 409},
+  SCENARIO_CLOCK_CONFLICT: {message: '场景实例或时间口径不一致，请重新选择同一轮次。', status: 409},
+  SCENARIO_FROZEN: {message: '旧轮已经冻结，请创建或选择新轮。', status: 409},
+  SCENARIO_DEFINITION_CHANGED: {message: '场景定义已变化，旧轮保持只读。', status: 409},
+  SCENARIO_LIMIT: {message: '本轮操作已达上限，请核对后创建新轮。', status: 409},
+  SCENARIO_SNAPSHOT_INVALID: {message: '场景快照无效，请核对备份，未自动覆盖。', status: 502},
   ACTION_CONFLICT: {message: '操作编号已用于不同内容，请核对原操作。', status: 409},
   CONFLICT: {message: '模拟资料已变化或操作编号冲突，请刷新核对。', status: 409},
   REVISION_CONFLICT: {message: '模拟资料版本已变化，请刷新核对。', status: 409},

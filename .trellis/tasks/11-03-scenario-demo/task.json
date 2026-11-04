@@ -3,7 +3,7 @@
   "name": "scenario-demo",
   "title": "虚拟场景演示：临港仓储火情建设规划",
   "description": "从main独立worktree开展，拟定简洁故事与丰富背景数据；记录后续管理域拆分issue，并形成分阶段建设计划供用户审阅。",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -18,7 +18,9 @@
   "commit": null,
   "pr_url": null,
   "subtasks": [],
-  "children": [],
+  "children": [
+    "11-04-scenario-demo-m1"
+  ],
   "parent": null,
   "relatedFiles": [
     ".trellis/tasks/11-03-scenario-demo/story.md",
@@ -30,6 +32,6 @@
     ".trellis/tasks/11-03-scenario-demo/milestone-1-design.md",
     ".trellis/tasks/11-03-scenario-demo/research/m1-design-basis.md"
   ],
-  "notes": "2026-11-04用户确认专用导演席、独立场景控制权限及四业务席禁入；M1方案v0.5补齐共用登录、独立页面/条件入口、前后端授权、旧接口隔离和验收，同步需求/总体设计/计划。仍待审阅且先不实施，保持planning，未创建账号或改运行权限。既有故事/世界草案、SIM-DOMAIN-001仓库issue保留；GitHub不可用，issue未同步远程。",
+  "notes": "2026-11-04用户明确要求“提交方案git，开始实施”；获批M1 v0.5以e4054a5提交。P0—P2实施及验收记录在子任务11-04-scenario-demo-m1。专用导演席、独立场景控制权限、四业务席禁入按批准方案落实；未创建正式账号或改现有运行数据。P3—P6尚未实施。SIM-DOMAIN-001仓库issue保留，尚未同步远程。",
   "meta": {}
 }

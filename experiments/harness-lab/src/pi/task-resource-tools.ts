@@ -13,7 +13,7 @@ export function taskResourceTools(annotations: AnnotationService, context: Conte
   const service = new TaskResourceService(annotations, context);
   return [defineTool({
     name: 'task_resource_query', label: '查询任务资源',
-    description: '只读资源查询、固定结果读取和数量统计。query purpose:data 按明确 sources/annotations 范围读取；purpose:task 在未指定范围时按平台任务引用、当前草稿/基线、采用版及有据支援取数，不扫描全部授权来源。数据命中、任务相关、已分配、可用是不同事实；来源无需支持任务查询。关系未知不阻断明确数据范围的普通统计。保留未知、故障、缺位置、冲突和覆盖缺口，不将未知说成0。查询结果messageCandidates列出本次资源对应的用户原文和entryId供核对。messages仅接收本分支真实用户消息定位、其明确资源引用与原文，引用核实不认证模型理解。read使用本会话resultRef，offset/limit仅展示固定结果分页，不重新查询。summarize用完整固定结果，relation可选择关系，availability可选择可用/不可用/未知/冲突，实际统计条件和固定事实时间由statisticsScope回显；位置统计传来自该资源结果的spatialResultRef与position，不混另一查询；资源数量分单位/含义，不能合计时返回原因。新查询/统计生成新resultRef；不保存或发布标绘。',
+    description: '只读资源查询、固定结果读取和数量统计。query purpose:data 按明确 sources/annotations 范围读取；purpose:task 在未指定范围时按平台任务引用、当前草稿/基线、采用版及有据支援取数，不扫描全部授权来源。数据命中、任务相关、已分配、可用是不同事实；来源无需支持任务查询。关系未知不阻断明确数据范围的普通统计。保留未知、故障、缺位置、冲突和覆盖缺口，不将未知说成0。查询结果messageCandidates列出本次资源对应的用户原文和entryId供核对。messages仅接收本分支真实用户消息定位、其明确资源引用与原文，引用核实不认证模型理解。read使用本会话resultRef，offset/limit仅展示固定结果分页，不重新查询。summarize用完整固定结果，relation可选择关系，availability可选择可用/不可用/未知/冲突，实际统计条件和固定事实时间由statisticsScope回显；场景v4使用snapshotClock.businessNow判断有效期，createdAt/queriedAt仍是真实处理时间，不能据此推进剧情；位置统计传来自该资源结果的spatialResultRef与position，不混另一查询；资源数量分单位/含义，不能合计时返回原因。新查询/统计生成新resultRef；不保存或发布标绘。',
     parameters: resourceRequestSchema, executionMode: 'sequential',
     execute: async (callId, params, signal) => {
       const active = { ...scope, signal: signal ? AbortSignal.any([scope.signal, signal]) : scope.signal,
