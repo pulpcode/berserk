@@ -56,3 +56,9 @@
 如需回退，先停止新版本写入并保全新目录及用户测试数据；核对新服务身份后正常终止父进程，确认父/子进程退出且4315、38371均释放，再启动旧目录`/home/ubuntu/axon-map-release-e073df6/start.sh`。旧启动器仍指向原始schema12数据。随后检查健康、四席登录、旧任务与来源；需要保留切换后的业务成果时先单独处理，不把测试期间新增数据自动覆盖到旧库。
 
 **旧代码只能打开未迁移的原数据或完整旧备份，不能打开schema18的新副本。** 原发布目录、原数据和停服备份均保留；此处仅记录回退方法，没有执行回退。
+
+## 追加：统一五席密码
+
+用户随后明确要求统一五席密码，并授权调整密码规则。已将最小长度从12改为10，保留256上限、scrypt参数及权限机制；源码提交`6bbd22f43b77dcf063d39dc636bc6e5cfbf529c8`。本次线上以68dded3发布为基础，仅更新`src/access/store.ts`及`scripts/access-admin.ts`，`release.json.passwordPolicyCommit`记录补丁版本，无前端变更。
+
+相关25项测试、typecheck和lint通过；停止服务并用SQLite一致性备份后，调用AccessStore保存五个既有账号，逐席验证登录成功、导演隔离和席位权限保持。旧登录会话均已撤销；服务健康正常。本机导演私有凭据同步，具体密码不写入仓库。改密前备份为`/home/ubuntu/axon-scenario-release-68dded362074/backup/password-change-20261104-233031`；仅用于必要的完整回退，不作为当前凭据。脱敏证据见[password-change-20261104.json](password-change-20261104.json)。

@@ -144,3 +144,24 @@
 ### Next Steps
 
 - 用户测试线上导演台；保留活动任务，按反馈处理，不启动P3—P6。
+
+
+## Session 5: 调整密码规则并统一线上五席密码
+
+**Date**: 2026-11-04
+**Task**: 调整密码规则并统一线上五席密码
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+按用户授权将最小密码长度调整为10位并统一线上五席密码；25项测试和typecheck/lint通过，停服备份后改密，五席登录及导演隔离验证通过，旧会话已撤销。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6bbd22f` | (see git log) |
+
+### Status
+
+[OK] **Completed**
