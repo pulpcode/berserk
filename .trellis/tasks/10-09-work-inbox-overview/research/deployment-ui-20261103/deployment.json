@@ -1,0 +1,20 @@
+{
+  "commit": "278d82fb8b21dd7dbfadbc9430173cb321e6acc3",
+  "backup": "/home/ubuntu/axon-map-release-e073df6/backup/ui-278d82f-20261103T144307Z",
+  "pid": 2732860,
+  "processRestarted": false,
+  "changedSourceFiles": [
+    "src/web/WorkInbox.tsx",
+    "src/web/Workbench.tsx",
+    "src/web/main.tsx",
+    "src/web/styles.css",
+    "tests/e2e/workbench.spec.ts"
+  ],
+  "sourceFiles": 493,
+  "frontendFiles": 176,
+  "deployedAt": "2026-11-03T14:43:07.438238+00:00",
+  "health": {
+    "ok": true
+  },
+  "entrySha256": "2740d1edf27967b2c1ad71bbd92a734058c6df66bfea24c1307fef0649dfb180"
+}

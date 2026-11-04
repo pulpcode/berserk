@@ -292,3 +292,221 @@ test('formal root workbench remains in browser history when entering an existing
     expect(env.fake.calls).toHaveLength(0);
   } finally { await env.close(); }
 });
+
+const overviewItems = (count: number, task: { id: string; title: string }) => Array.from({ length: count }, (_, index) => ({
+  id: `work-${String(index).padStart(3, '0')}`, title: `道路核实工作 ${index + 1}`, taskSpaceId: task.id, taskTitle: task.title,
+  creatorSeatId: index % 2 ? 'b' : 'a', creatorSeatName: index % 2 ? '席位 B' : '席位 A', assigneeSeatId: index % 2 ? 'a' : 'b', assigneeSeatName: index % 2 ? '席位 A' : '席位 B',
+  state: ['assigned', 'working', 'submitted', 'returned', 'completed'][index % 5], createdAt: '2026-11-04T00:00:00Z', updatedAt: '2026-11-04T00:00:00Z', submissionCount: 0, participant: false,
+}));
+
+test('seat swimlane reads beyond the list page and preserves camera, filters, focus and history', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    const items = overviewItems(30, env.task); for (const item of items) { item.creatorSeatName = '同名的跨部门道路交通与应急资源综合保障协调席位'; item.assigneeSeatName = item.creatorSeatName; } items[0].title = '需要进一步核对的道路通行与应急保障安排'; const reads: string[] = []; const writes: string[] = [];
+    await page.route('**/api/work-overview/items**', route => {
+      const request = route.request(), url = new URL(request.url()); reads.push(url.search);
+      if (request.method() !== 'GET') writes.push(request.method());
+      if (!url.pathname.endsWith('/items')) return route.fulfill({ json: items.find(item => url.pathname.endsWith(`/${item.id}`)) });
+      const filtered = items.filter(item => !url.searchParams.get('status') || item.state === url.searchParams.get('status'));
+      const offset = Number(url.searchParams.get('offset') || 0), limit = Number(url.searchParams.get('limit') || 25);
+      return route.fulfill({ json: { items: filtered.slice(offset, offset + limit), total: filtered.length, offset, limit } });
+    });
+    await login(page); await page.getByRole('button', { name: '工作总览', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(25);
+    await page.getByRole('button', { name: '下一页', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(5);
+    await page.getByRole('button', { name: '泳道图', exact: true }).click();
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(30);
+    const laneLabelsFit = await page.locator('.work-swimlane-seat').evaluateAll(elements => elements.every(element => {
+      const row = element.getBoundingClientRect();
+      return [...element.querySelectorAll('span, small')].every(text => { const bounds = text.getBoundingClientRect(); return bounds.top >= row.top && bounds.bottom <= row.bottom; });
+    }));
+    expect(laneLabelsFit).toBe(true);
+    expect(reads.some(query => new URLSearchParams(query).get('limit') === '200' && new URLSearchParams(query).get('offset') === '0')).toBe(true);
+    expect(new URL(page.url()).searchParams.get('offset')).toBe('25');
+    expect(new URL(page.url()).searchParams.get('view')).toBe('board');
+    const canvas = page.getByRole('region', { name: '席位工作泳道图', exact: true }), scene = page.locator('.work-swimlane-scene');
+    const label = page.locator('.work-swimlane-seat').first(), lane = page.locator('.work-swimlane-lane').first();
+    const labelBefore = await label.boundingBox(), nodeBefore = await page.locator('.work-swimlane-work').first().boundingBox();
+    await canvas.focus(); await canvas.press('ArrowRight');
+    const labelAfterPan = await label.boundingBox(), nodeAfterPan = await page.locator('.work-swimlane-work').first().boundingBox(), canvasBounds = await canvas.boundingBox();
+    expect(Math.abs(labelAfterPan!.x - labelBefore!.x)).toBeLessThan(1);
+    expect(Math.abs(labelAfterPan!.x - canvasBounds!.x)).toBeLessThan(2);
+    expect(nodeAfterPan!.x).toBeLessThan(nodeBefore!.x - 70);
+    await canvas.press('ArrowDown');
+    const labelAfterVertical = await label.boundingBox(), laneAfterVertical = await lane.boundingBox();
+    expect(labelAfterVertical!.y).toBeLessThan(labelAfterPan!.y - 70);
+    expect(Math.abs(labelAfterVertical!.y - laneAfterVertical!.y)).toBeLessThan(1);
+    const last = page.locator('.work-swimlane-work').last();
+    await last.focus();
+    const revealed = await last.boundingBox(), anchoredLabel = await label.boundingBox();
+    expect(revealed!.x).toBeGreaterThan(anchoredLabel!.x + anchoredLabel!.width + 8);
+    expect(revealed!.x + revealed!.width).toBeLessThan(canvasBounds!.x + canvasBounds!.width - 8);
+    await page.getByRole('button', { name: '放大泳道图', exact: true }).click();
+    const first = page.locator('.work-swimlane-work').first();
+    await first.focus(); const position = await scene.getAttribute('style');
+    const cardLayout = await first.evaluate(element => {
+      const card = element.getBoundingClientRect(), title = element.querySelector('strong')!.getBoundingClientRect(), task = element.querySelector('small')!.getBoundingClientRect(), status = element.querySelector('.work-swimlane-status')!.getBoundingClientRect();
+      return { ordered: title.bottom <= task.top && task.bottom <= status.top, inside: title.top >= card.top && status.bottom <= card.bottom, leftAligned: Math.abs(title.left - task.left) < 1 && Math.abs(task.left - status.left) < 1 };
+    });
+    expect(cardLayout).toEqual({ ordered: true, inside: true, leftAligned: true });
+    await canvas.focus(); await canvas.press('Control+ArrowRight');
+    await expect(scene).toHaveAttribute('style', position!);
+    await first.focus();
+    await first.press('Enter');
+    await expect(page.getByRole('heading', { name: items[0].title, exact: true })).toBeVisible();
+    await expect(canvas).toBeHidden();
+    await expect(page.getByRole('button', { name: '进入工作详情' })).toHaveCount(0);
+    await page.getByRole('button', { name: '返回泳道图', exact: true }).click();
+    await expect(canvas).toBeVisible(); await expect(first).toBeFocused();
+    await expect(scene).toHaveAttribute('style', position!);
+    const refreshDone = page.waitForResponse(response => response.url().includes('/api/work-overview/items?') && response.status() === 200);
+    await page.getByRole('button', { name: '刷新工作', exact: true }).click(); await refreshDone;
+    await expect(scene).toHaveAttribute('style', position!);
+    const readCamera = () => scene.evaluate(element => {
+      const matrix = new DOMMatrix(getComputedStyle(element).transform);
+      return { x: matrix.e, y: matrix.f, scale: matrix.a };
+    });
+    const bounds = await canvas.boundingBox(), screenPoint = { x: Math.round(bounds!.x + bounds!.width - 150), y: Math.round(bounds!.y + bounds!.height / 2) };
+    const point = { x: screenPoint.x - bounds!.x, y: screenPoint.y - bounds!.y };
+    await page.mouse.move(screenPoint.x, screenPoint.y);
+    const beforePan = await readCamera();
+    await page.mouse.wheel(0, 80);
+    await expect.poll(async () => (await readCamera()).y).toBeCloseTo(beforePan.y - 80, 3);
+    expect((await readCamera()).scale).toBeCloseTo(beforePan.scale, 5);
+    const beforeZoom = await readCamera();
+    await page.keyboard.down('Control');
+    try {
+      await page.mouse.wheel(0, -80);
+      await expect.poll(async () => (await readCamera()).scale).toBeGreaterThan(beforeZoom.scale);
+    } finally { await page.keyboard.up('Control'); }
+    const afterZoom = await readCamera();
+    expect((point.x - afterZoom.x) / afterZoom.scale).toBeCloseTo((point.x - beforeZoom.x) / beforeZoom.scale, 2);
+    expect((point.y - afterZoom.y) / afterZoom.scale).toBeCloseTo((point.y - beforeZoom.y) / beforeZoom.scale, 2);
+    await page.mouse.wheel(0, 120);
+    await expect.poll(async () => (await readCamera()).y).toBeCloseTo(afterZoom.y - 120, 3);
+    const afterZoomPan = await readCamera();
+    expect(afterZoomPan.scale).toBeCloseTo(afterZoom.scale, 5);
+    await page.mouse.wheel(70, 0);
+    await expect.poll(async () => (await readCamera()).x).toBeCloseTo(afterZoomPan.x - 70, 3);
+    const beforeShiftPan = await readCamera();
+    await page.keyboard.down('Shift');
+    try {
+      await page.mouse.wheel(0, 60);
+      await expect.poll(async () => (await readCamera()).x).toBeCloseTo(beforeShiftPan.x - 60, 3);
+    } finally { await page.keyboard.up('Shift'); }
+    expect((await readCamera()).y).toBeCloseTo(beforeShiftPan.y, 3);
+    expect((await readCamera()).scale).toBeCloseTo(afterZoom.scale, 5);
+    // Native/default handling stays available outside the canvas and over its floating controls.
+    const beforeNative = await readCamera();
+    const unconsumed = await page.evaluate(() => {
+      const controls = document.querySelector('.work-swimlane-controls')!, toolbar = document.querySelector('.work-overview-toolbar')!, graph = document.querySelector('.work-swimlane')!;
+      return [controls, toolbar, graph, graph, graph].map((element, index) => {
+        const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: index > 2 ? 0 : 80, ctrlKey: index < 2 || index === 4, altKey: index === 2 });
+        element.dispatchEvent(event); return !event.defaultPrevented;
+      });
+    });
+    expect(unconsumed).toEqual([true, true, true, true, true]);
+    expect(await readCamera()).toEqual(beforeNative);
+    const metaConsumed = await canvas.evaluate((element, pointer) => {
+      const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: -40, metaKey: true, clientX: pointer.x, clientY: pointer.y });
+      element.dispatchEvent(event); return event.defaultPrevented;
+    }, screenPoint);
+    expect(metaConsumed).toBe(true);
+    await expect.poll(async () => (await readCamera()).scale).toBeGreaterThan(beforeNative.scale);
+    await page.getByRole('combobox', { name: '工作状态', exact: true }).selectOption('submitted');
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(6);
+    await page.getByRole('button', { name: '列表', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(6);
+    await expect(page.getByRole('combobox', { name: '工作状态', exact: true })).toHaveValue('submitted');
+    await page.goBack(); await expect(canvas).toBeVisible();
+    await expect(page.getByRole('button', { name: '泳道图', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await page.goForward(); await expect(page.getByRole('button', { name: '列表', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await page.reload(); await expect(page.locator('.work-overview tbody tr')).toHaveCount(6);
+    await page.goto('/overview?tab=work&view=board&workView=unknown');
+    await expect(page.getByRole('button', { name: '列表', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    expect(writes).toEqual([]); expect(env.fake.calls).toHaveLength(0);
+  } finally { await env.close(); }
+});
+
+test('swimlane refuses partial or over-limit diagrams and keeps same-scope results after ordinary failures', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    const items = overviewItems(201, env.task); let mode = 'valid';
+    await page.route('**/api/work-overview/items**', route => {
+      const url = new URL(route.request().url()), limit = Number(url.searchParams.get('limit') || 25);
+      if (mode === 'failed') return route.fulfill({ status: 503, json: { error: { message: '读取暂时失败', code: 'UNAVAILABLE' } } });
+      const data = mode === 'duplicate' ? [items[0], items[0], items[2]] : mode === 'missing' ? items.slice(0, 2) : mode === 'overflow' ? items.slice(0, limit) : items.slice(0, 3);
+      return route.fulfill({ json: { items: data, total: mode === 'overflow' ? 201 : 3, offset: 0, limit } });
+    });
+    await login(page); await page.goto('/overview?tab=work&workView=flow');
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(3);
+    mode = 'failed'; await page.getByRole('button', { name: '刷新工作', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('刷新失败，当前显示上次结果。');
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(3);
+    for (const broken of ['duplicate', 'missing']) {
+      mode = broken; await page.getByRole('button', { name: '刷新工作', exact: true }).click();
+      await expect(page.getByRole('alert')).toContainText('工作数据不完整');
+      await expect(page.locator('.work-swimlane-work')).toHaveCount(0);
+    }
+    mode = 'overflow'; await page.getByRole('button', { name: '刷新工作', exact: true }).click();
+    await expect(page.getByText('工作较多，请缩小筛选范围，或切换列表查看全部。')).toBeVisible();
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(0);
+    await page.getByRole('button', { name: '切换列表', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(25);
+    await expect(page.getByRole('button', { name: '下一页', exact: true })).toBeVisible();
+  } finally { await env.close(); }
+});
+
+for (const rejection of [403, 404]) test(`summary ${rejection} discards cached diagram and list before returning`, async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    const items = overviewItems(3, env.task); let denied = false;
+    await page.route('**/api/work-overview/items**', route => {
+      const url = new URL(route.request().url());
+      if (denied) {
+        const listFailure = rejection === 403 && url.pathname.endsWith('/items');
+        return route.fulfill({ status: listFailure ? 503 : rejection, json: { error: { code: 'REJECTED', message: listFailure ? '摘要列表暂时读取失败' : '此工作已不可读取' } } });
+      }
+      return route.fulfill({ json: url.pathname.endsWith('/items') ? { items, total: 3, offset: 0, limit: Number(url.searchParams.get('limit') || 25) } : items[0] });
+    });
+    await login(page); await page.getByRole('button', { name: '工作总览', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(3);
+    await page.getByRole('button', { name: '泳道图', exact: true }).click();
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(3);
+    await page.locator('.work-swimlane-work').first().click();
+    await expect(page.getByRole('heading', { name: items[0].title, exact: true })).toBeVisible();
+    denied = true; await page.getByRole('button', { name: '刷新工作', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('此工作已不可读取');
+    await expect(page.getByRole('heading', { name: items[0].title, exact: true })).toHaveCount(0);
+    await page.getByRole('button', { name: '返回泳道图', exact: true }).click();
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(0);
+    await page.getByRole('button', { name: '列表', exact: true }).click();
+    await expect(page.locator('.work-overview tbody tr')).toHaveCount(0);
+  } finally { await env.close(); }
+});
+
+test('late swimlane reads cannot replace a newer filter result', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  let release: (() => void) | undefined;
+  try {
+    const items = overviewItems(2, env.task); let started = false;
+    await page.route('**/api/work-overview/items**', async route => {
+      const url = new URL(route.request().url()), search = url.searchParams.get('search');
+      if (search === '旧') { started = true; await new Promise<void>(resolve => { release = resolve; }); }
+      const chosen = search === '新' ? [items[1]] : search === '旧' ? [items[0]] : items;
+      await route.fulfill({ json: { items: chosen, total: chosen.length, offset: 0, limit: 200 } });
+    });
+    await login(page); await page.goto('/overview?tab=work&workView=flow');
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(2);
+    await page.getByRole('searchbox', { name: '搜索工作', exact: true }).fill('旧');
+    await expect.poll(() => started).toBe(true);
+    await page.getByRole('searchbox', { name: '搜索工作', exact: true }).fill('新');
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(1);
+    await expect(page.locator('.work-swimlane-work')).toHaveAttribute('data-work-id', items[1].id);
+    const oldDone = page.waitForResponse(response => new URL(response.url()).searchParams.get('search') === '旧');
+    release!(); release = undefined; await oldDone;
+    await expect(page.locator('.work-swimlane-work')).toHaveCount(1);
+    await expect(page.locator('.work-swimlane-work')).toHaveAttribute('data-work-id', items[1].id);
+  } finally { release?.(); await env.close(); }
+});

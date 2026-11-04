@@ -1,0 +1,33 @@
+{
+  "frontendResourcesMatched": 17,
+  "seats": {
+    "seat-overall": {
+      "login": "ok",
+      "allItems": 1,
+      "handoffItems": 1,
+      "workTypeFilter": "ok"
+    },
+    "seat-intelligence": {
+      "login": "ok",
+      "allItems": 0,
+      "handoffItems": 0,
+      "workTypeFilter": "ok"
+    },
+    "seat-planning": {
+      "login": "ok",
+      "allItems": 0,
+      "handoffItems": 0,
+      "workTypeFilter": "ok"
+    },
+    "seat-situation": {
+      "login": "ok",
+      "allItems": 1,
+      "handoffItems": 1,
+      "workTypeFilter": "ok"
+    }
+  },
+  "health": {
+    "ok": true
+  },
+  "listener": "State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess\nLISTEN 0      511          0.0.0.0:4315      0.0.0.0:*    users:((\"MainThread\",pid=2732860,fd=22))"
+}

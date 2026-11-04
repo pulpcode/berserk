@@ -1,7 +1,7 @@
 import { MapReferenceChips } from './MapReferenceChips';
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, Clapperboard, FileText, FolderOpen, Map as MapIcon, Workflow, Menu, PanelLeftClose, PanelLeftOpen, MessageSquare, Plus, Settings, Square, SquarePen, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, Clapperboard, FolderOpen, ListTodo, Map as MapIcon, Workflow, Menu, PanelLeftClose, PanelLeftOpen, MessageSquare, Plus, Settings, Square, SquarePen, X } from 'lucide-react';
 import type { WorkspaceResources } from '../contracts/index';
 import { InputQueue, QueueSend } from './InputQueue';
 import { useChat } from './useChat';
@@ -443,7 +443,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       {canCollaborate&&<div className="navigation-actions">
         <button className="new-chat" title="新建对话" aria-label="新建对话" aria-haspopup="dialog" onClick={() => void newChat()} disabled={chat.creating || chat.loading || !navigationWorkspaces.length}><SquarePen size={20} strokeWidth={1.75} aria-hidden="true" /><span>新建对话</span></button>
       </div>}
-      {canCollaborate&&seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} aria-label="工作待办" title="工作待办" onClick={() => showWork()}><FileText size={17} aria-hidden="true" /><span>工作待办</span></button>}
+      {canCollaborate&&seats.length > 0 && <button className="work-inbox-trigger" aria-pressed={view === 'work'} aria-label="工作待办" title="工作待办" onClick={() => showWork()}><ListTodo size={17} aria-hidden="true" /><span>工作待办</span></button>}
       {(identity?.viewWorkOverview || information.data?.sources.length || continuous.data?.canRead) ? <button className="work-inbox-trigger" aria-pressed={view === 'information'} aria-label={canCollaborate?"工作总览":"来源记录"} title={canCollaborate?"工作总览":"来源记录"} onClick={showInformation}><Workflow size={17} aria-hidden="true" /><span>{canCollaborate?"工作总览":"来源记录"}</span></button> : null}
       {mapCatalog.data?.systems.some(system=>system.capabilities.includes('situation_current')) && <button className="work-inbox-trigger" aria-pressed={view==='situation'} onClick={()=>showMapPage()} title="态势地图"><MapIcon size={17} aria-hidden="true"/><span>态势地图</span></button>}
       {identity && mapConfig.data?.scenarioControlEnabled && <button className="work-inbox-trigger" aria-pressed={view==='scenario_director'} onClick={showScenarioDirector} title="场景导演台"><Clapperboard size={17} aria-hidden="true"/><span>场景导演台</span></button>}
@@ -539,7 +539,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
       </SituationWorkspace>
     </main>
     <SituationWorkspace active={view==='information'}>
-    <InformationCenter continuous={continuous.data} discussion={{ tasks: directory.tasks, workspaces: chat.workspaces, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} seats={seats} identity={identity} savedTask={directory.saved} openTask={showTaskInformation} visible={seatActive && view === 'information'} capabilities={information.data} refreshAccess={information.refresh} tasks={directory.tasks} openSession={id => void openInformationSession(id)} navigationError={informationNavigationError} clearNavigationError={() => setInformationNavigationError(undefined)} openWork={showWork} openMenu={() => setSidebarOpen(true)} />
+    <InformationCenter continuous={continuous.data} discussion={{ tasks: directory.tasks, workspaces: chat.workspaces, prepared: preparedAnalysis, openSession: id => void openInformationSession(id) }} seats={seats} identity={identity} savedTask={directory.saved} openTask={showTaskInformation} visible={seatActive && view === 'information'} capabilities={information.data} refreshAccess={information.refresh} tasks={directory.tasks} openSession={id => void openInformationSession(id)} navigationError={informationNavigationError} clearNavigationError={() => setInformationNavigationError(undefined)} openWork={showWork} />
     </SituationWorkspace>
     </div>
     {filesOpen && <FilesPanel key={chat.workspaceId} workspaceId={chat.workspaceId} name={chat.workspace?.name || '项目'} close={() => setFilesOpen(false)} upload={uploadFiles} executionAvailable={Boolean(fileLimits?.executionAvailable)} attachments={attachmentList} refreshKey={attachmentItems.filter(item => item.status === 'ready').map(item => item.id).join(',')} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 20)} />}

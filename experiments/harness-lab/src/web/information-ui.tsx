@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Download, FileText } from 'lucide-react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -22,15 +22,17 @@ export function useInformationQuery<T>(path: string | undefined, visible: boolea
   const [result, setResult] = useState<{ path: string; data: T }>();
   const [failure, setFailure] = useState<{ path: string; message: string; denied: boolean }>();
   const [revision, setRevision] = useState(0);
+  const discarded = useRef(0);
+  const discard = useCallback(() => { discarded.current++; setResult(undefined); }, []);
   const refresh = useCallback(() => setRevision(value => value + 1), []);
   useEffect(() => {
     if (!path || !visible) return;
     let current = true; let pending = false;
     const load = async () => {
       if (pending || document.visibilityState === 'hidden') return;
-      pending = true;
-      try { const data = await api<T>(path); if (current) { setResult({ path, data }); setFailure(undefined); } }
-      catch (reason) { if (current) { if (reason instanceof ApiFailure && [401, 403, 404].includes(reason.status)) setResult(undefined); setFailure({ path, message: informationError(reason), denied: reason instanceof ApiFailure && [401, 403, 404].includes(reason.status) }); } }
+      pending = true; const generation = discarded.current;
+      try { const data = await api<T>(path); if (current && generation === discarded.current) { setResult({ path, data }); setFailure(undefined); } }
+      catch (reason) { if (current && generation === discarded.current) { if (reason instanceof ApiFailure && [401, 403, 404].includes(reason.status)) setResult(undefined); setFailure({ path, message: informationError(reason), denied: reason instanceof ApiFailure && [401, 403, 404].includes(reason.status) }); } }
       finally { pending = false; }
     };
     void load();
@@ -39,7 +41,7 @@ export function useInformationQuery<T>(path: string | undefined, visible: boolea
     window.addEventListener('focus', focus); document.addEventListener('visibilitychange', focus);
     return () => { current = false; clearInterval(timer); window.removeEventListener('focus', focus); document.removeEventListener('visibilitychange', focus); };
   }, [api, path, visible, interval, revision]);
-  return { data: result && result.path === path ? result.data : undefined, error: failure && failure.path === path ? failure.message : '', denied: failure?.path === path && failure?.denied, refresh };
+  return { data: result && result.path === path ? result.data : undefined, error: failure && failure.path === path ? failure.message : '', denied: failure?.path === path && failure?.denied, refresh, discard };
 }
 export function InformationText({ children, evidence = [] }: { children: string; evidence?: PublicMessage[] }) {
   return <div className="information-text"><Markdown remarkPlugins={[remarkGfm]} components={{
