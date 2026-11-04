@@ -75,3 +75,38 @@
 ### Next Steps
 
 - 保留M1子任务in_progress供用户检查；P3—P6另行推进，未推送、合并或部署。
+
+
+## Session 3: 隔离导演席与业务协作
+
+**Date**: 2026-11-04
+**Task**: 隔离导演席与业务协作
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+按用户审阅反馈完成导演专职控场：保留任务准备/重演和只读核对，前后端及Agent/后台路径禁止业务参与。
+
+### Main Changes
+
+- 服务器统一计算canCollaborate；登录保留导演，当前业务与模型候选目录排除导演。
+- 封堵旧准备单、会话继续/人工交互、交接与工作区/标绘/信息归口写入旁路；保留原生历史及普通停用席位语义。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1d6510b` | (see git log) |
+
+### Testing
+
+- [OK] 冻结后全量130文件/1500项通过，最终typecheck、lint/边界、build通过。
+- [OK] 10项相关桌面通过，包含真实HTTP/SQLite控场重演、同浏览器换身份、两席完整交接及旧候选过滤；未使用付费模型。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 保留M1任务供用户审阅；未推送、合并或部署，P3—P6和一键重置交互不在本轮。
