@@ -255,8 +255,26 @@ test('replay prepares and activates a fresh run while history opens old runs wit
     // The created timestamp is human-readable; instance IDs are disclosed under technical data.
     await expect(history.getByText('run-1',{exact:true})).not.toBeVisible();
     const old=history.getByRole('button').filter({hasText:'已结束'});
-    await old.click();await expect(controls).toContainText('历史演示');
-    expect(env.counts.create).toBe(2);expect(env.counts.apply).toBe(1);
+    await old.click();
+    const preview=history.getByRole('region',{name:'演示详情',exact:true});
+    await expect(preview).toContainText('09:12');
+    for(const name of ['投放事件','继续准备','重新演示','开始演示','启用本轮','锁定轮次']) {
+      await expect(preview.getByRole('button',{name,exact:true})).toHaveCount(0);
+    }
+    await expect(controls).toContainText('09:10');
+    await preview.getByRole('button',{name:'操作记录',exact:true}).click();
+    await expect(preview.getByRole('table')).toContainText('应用事件');
+    await page.keyboard.press('Escape');
+    await expect(history).toHaveCount(0);
+    await controls.getByRole('button',{name:'投放事件',exact:true}).click();
+    await expect(controls).toContainText('道路状态确认');
+    const saved=await page.evaluate(async()=> {
+      const list=await (await fetch('/api/simulation/instances')).json();
+      const first=await(await fetch('/api/simulation/instances/run-1')).json();
+      return {active:list.activeInstanceId,oldStep:first.instance.stepIndex,oldState:first.instance.status};
+    });
+    expect(saved).toEqual({active:'run-2',oldStep:1,oldState:'frozen'});
+    expect(env.counts.create).toBe(2);expect(env.counts.apply).toBe(2);
     expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });
@@ -274,7 +292,11 @@ for(const stage of ['create','initialize','activate'] as const) {
       await expect(resume).toBeEnabled();
       expect(env.counts.create).toBe(1);
       const original=env.activationRequests[0];
-      await page.reload();await expect(resume).toBeEnabled();
+      await page.reload();
+      await page.locator('details[aria-label="待完成准备"] > summary').click();
+      await page.getByRole('button',{name:'查看准备',exact:true}).click();
+      await expect(page.getByRole('dialog',{name:'恢复演示准备',exact:true})).toBeVisible();
+      await expect(resume).toBeEnabled();
       expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(0);
       await resume.click();
       await expect(page.getByRole('region',{name:'事件投放'}).getByRole('button',{name:'投放事件',exact:true})).toBeEnabled();
@@ -366,9 +388,67 @@ test('hover expands an event in the list, moving between rows stays stable, and 
     await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
     await expect(details).toHaveCount(0);
     await expect(page.getByText('操作记录与来源资料',{exact:true})).toHaveCount(0);
-    await page.getByRole('button',{name:'演示记录',exact:true}).click();const records=page.getByRole('dialog',{name:'演示记录',exact:true});await expect(records).toBeVisible();await records.getByRole('button',{name:'操作记录',exact:true}).click();await expect(records.getByRole('table')).toContainText('创建本轮');
+    await page.getByRole('button',{name:'演示记录',exact:true}).click();const records=page.getByRole('dialog',{name:'演示记录',exact:true});await expect(records).toBeVisible();await records.getByRole('button').filter({hasText:'当前演示'}).click();await records.getByRole('button',{name:'操作记录',exact:true}).click();await expect(records.getByRole('table')).toContainText('创建本轮');
     await records.getByRole('button',{name:'数据概况',exact:true}).click();await expect(records.getByText('来源对象',{exact:true})).toBeVisible();await expect(records.getByText('run-1',{exact:true})).not.toBeVisible();await records.getByText('实例信息',{exact:true}).click();await expect(records.getByText('run-1',{exact:true})).toBeVisible();
     await page.keyboard.press('Escape');await expect(records).toHaveCount(0);await expect(page.getByRole('button',{name:'演示记录',exact:true})).toBeFocused();
+    expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);expect(env.calls).toHaveLength(0);
+  }finally{await env.close();}
+});
+
+
+test('prepared history and a history URL stay read-only while live control remains on the active run',async({page})=>{
+  const env=await setup();await env.attach(page);
+  try {
+    const controls=await startRun(page);
+    await page.evaluate(async()=> {
+      const auth=await(await fetch('/api/auth/session')).json();
+      const response=await fetch('/api/simulation/instances',{method:'POST',headers:{
+        'Content-Type':'application/json','x-csrf-token':auth.csrf,'x-axon-view':auth.viewId,
+      },body:JSON.stringify({definitionId:'ui-fire',version:'1',mode:'main_story',clientActionId:crypto.randomUUID()})});
+      if(!response.ok)throw Error('prepare fixture failed');
+    });
+    await page.goto('/scenario-director?instance=run-2');
+    const history=page.getByRole('dialog',{name:'演示记录',exact:true});
+    const preview=history.getByRole('region',{name:'演示详情',exact:true});
+    await expect(preview).toContainText('准备中');
+    await expect(preview.getByRole('button',{name:'继续准备',exact:true})).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await expect(controls.getByRole('button',{name:'投放事件',exact:true})).toBeEnabled();
+    expect(env.counts.create).toBe(2);expect(env.counts.initialize).toBe(1);
+    await page.locator('details[aria-label="待完成准备"] > summary').click();
+    await page.getByRole('button',{name:'继续准备',exact:true}).click();
+    const recovery=page.getByRole('dialog',{name:'恢复演示准备',exact:true});
+    await expect(recovery).toContainText('临港仓储火情');
+    await expect(recovery).toContainText('当前演示');
+    await page.keyboard.press('Escape');
+    await controls.getByRole('button',{name:'投放事件',exact:true}).click();
+    await expect(controls).toContainText('道路状态确认');
+    expect(env.counts.apply).toBe(1);
+    const active=await page.evaluate(async()=> (await(await fetch('/api/simulation/instances')).json()).activeInstanceId);
+    expect(active).toBe('run-1');expect(env.calls).toHaveLength(0);
+  }finally{await env.close();}
+});
+
+test('an old scene definition remains readable but cannot deliver or unlock; a fresh replay stays available',async({page})=>{
+  const env=await setup();await env.attach(page);
+  try {
+    await startRun(page);
+    await page.route('**/api/simulation/scenarios',route=>route.fulfill({json:{items:[{...definition,version:'2',definitionHash:'new-geography'}]}}));
+    await page.reload();
+    await expect(page.getByRole('alert')).toContainText('场景定义已更新');
+    await expect(page.getByRole('region',{name:'事件投放'}).getByRole('button',{name:'投放事件',exact:true})).toBeDisabled();
+    await page.getByRole('button',{name:'演示设置',exact:true}).click();
+    const settings=page.getByRole('dialog',{name:'演示设置',exact:true});
+    await settings.getByText('轮次管理',{exact:true}).click();
+    await expect(settings.getByRole('button',{name:'锁定轮次',exact:true})).toBeDisabled();
+    await page.keyboard.press('Escape');
+    await page.getByRole('button',{name:'演示记录',exact:true}).click();
+    const records=page.getByRole('dialog',{name:'演示记录',exact:true});
+    await records.getByRole('button').filter({hasText:'当前演示'}).click();
+    await expect(records.getByRole('region',{name:'演示详情'})).toContainText('收到仓储火情');
+    await page.keyboard.press('Escape');
+    await page.getByRole('button',{name:'重新演示',exact:true}).click();
+    await expect(page.getByRole('dialog',{name:'重新演示',exact:true}).getByRole('button',{name:'开始演示',exact:true})).toBeEnabled();
     expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });

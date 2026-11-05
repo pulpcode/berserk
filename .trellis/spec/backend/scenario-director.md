@@ -40,6 +40,12 @@ Step/task annotations are director author metadata, not source-declared task imp
 
 ## 4. Validation & Error Matrix
 
+Director history/control boundary (2026-11-05): the main workspace takes its control target only from the non-paginated `GET /api/simulation/instances` response's `activeInstanceId`. Record selection, list cursors, prepared drafts and legacy `?instance=` links never appoint that target. The legacy URL only opens a read-only detail inside “演示记录”. `DirectorRecords` independently reads the selected snapshot and exposes event descriptions, saved notifications, receipt links, operations and data; it receives no mutation callback. Closing it leaves the live control target unchanged. Identify each run by scene name, local creation time, mode and status; disclose IDs under technical data.
+
+Prepared instances and replay checkpoints use a separate “待完成准备” disclosure and “恢复演示准备” confirmation. Show the preparation target and the original run it will end before explicit continuation. Retain immutable request IDs, receipt reads and existing activation guards. Hide this disclosure when no preparation exists and the run list has no older page; keep pagination when older prepared records may exist. Legacy pending operations retain a separate readback section whose target is derived from its request path, independently of replay drafts. An old create request has no known target until its receipt supplies one.
+
+If the published definition version or hash differs from the active snapshot, keep the snapshot readable and disable delivery and run-lock mutations; offer a fresh replay. Do not automatically tick, send, resume, activate or discard uncertain requests. This interim read-only history does not implement full run isolation or historical-run resumption; those remain a separate future scope. Before deployment of changed source definitions, settle pending receipts and pause the compatible old run before upgrading, preserving its saved geometry.
+
 | Condition | Behavior |
 | --- | --- |
 | Not authenticated | Existing login; API 401 |
@@ -52,6 +58,8 @@ Step/task annotations are director author metadata, not source-declared task imp
 | Lost create/apply/activate response | Read original operation; retry original immutable request if absent |
 | Exact activation has a persisted pending receipt and then fails | `SCENARIO_ACTIVATION_PENDING` (409), preserve original request; no automatic rollback; authentication/authorization 401/403 remain unchanged |
 | Legacy endpoint with new scene IDs | Not found/rejected; no implicit scene routing for business managers |
+| Select a historical/prepared record or open `?instance=` | Read-only detail; active main control target unchanged |
+| Published definition version/hash differs from active snapshot | UI blocks delivery/locking; history and fresh replay remain available |
 
 ## 5. Good / Base / Bad Cases
 
@@ -68,6 +76,8 @@ Run `mock-scenarios`, `scenario-resource-clock`, `scenario-director-api`, `direc
 Director isolation regressions must cover current eligibility, filtered page/model directories, direct service/HTTP rejection, actor/recipient changes after preparation, old work/native history reopening, business-seat normal flow, and preserved task initialization/activation/replay. Desktop `scenario-director.spec.ts` checks explicit controls, no writes/model calls on load, forbidden business users and lost-result recovery. Source-map tests check typed layers and last-known positions without inventing real data. These deterministic checks do not prove live-model reasoning, real routing or production readiness.
 
 ## 7. Wrong vs Correct
+
+History regressions must prove that viewing old A while current B exists does not mutate A or change the next delivery target, that a prepared-history URL opens no control action, that explicit preparation continuation survives reload with the same request, and that definition changes leave old records readable while disabling writes. Assertions include active instance, both step indexes, create/apply/send counts and zero model calls.
 
 Wrong: add a time tool or a page clock while resource calculations continue using `Date.now()`; copy scene answers into task instructions; return all future fixture data through ordinary source reads.
 
