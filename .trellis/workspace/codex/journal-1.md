@@ -281,3 +281,37 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 11: 多轮演示隔离与重新演示收束
+
+**Date**: 2026-11-05
+**Task**: 多轮演示隔离与重新演示收束
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+提交并实施已确认的多轮演示隔离范围，保留SIM-TASK-002待定。
+
+### Main Changes
+
+- 受信任归属核验、原生上下文与连续分析分区、切换门禁及未完成工作只读。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `214f831` | (see git log) |
+| `e3a5cb8` | (see git log) |
+
+### Testing
+
+- [OK] 完整Vitest 135文件1525项、浏览器61项、TypeCheck、Lint及构建通过；未调用付费模型。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- SIM-TASK-002/A13待产品决定；线上尚未更新，后续须配套部署来源与宿主并先备份。

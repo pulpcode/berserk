@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 10
+- **Total Sessions**: 11
 - **Last Active**: 2026-11-05
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~283 | Active |
+| `journal-1.md` | ~317 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 11 | 2026-11-05 | 多轮演示隔离与重新演示收束 | `214f831`, `e3a5cb8` | `codex/scenario-demo` |
 | 10 | 2026-11-05 | 精简记录返回入口与技术信息文案 | `8cf300c` | `codex/scenario-demo` |
 | 9 | 2026-11-05 | 导演台历史只读调整与场景v2合并上线 | `9636302`, `94689bc`, `67adec9`, `658a670` | `codex/scenario-demo` |
 | 8 | 2026-11-05 | 导演台文案和控件统一 | `3beb8db` | `codex/scenario-demo` |
