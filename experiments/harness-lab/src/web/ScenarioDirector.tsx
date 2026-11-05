@@ -1,14 +1,14 @@
 import { useDirectorDelivery } from './useDirectorDelivery';
 import { LoadingIndicator } from './LoadingIndicator';
 import { useRef, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, Clock3, Pin, MoreHorizontal, History, ArrowUpRight, Map as MapIcon, Plus, RefreshCw, Send } from 'lucide-react';
+import { ArrowRight, Check, CircleAlert, Clock3, ChevronDown, History, ArrowUpRight, Map as MapIcon, Plus, RefreshCw, Send } from 'lucide-react';
 import type { Identity } from '../contracts/access';
 import type { ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioStepSummary, ScenarioTaskInitialization } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
 import { useInformationQuery } from './information-ui';
 import { randomUUID } from './random-uuid';
 import { Panel } from './Resources';
-import { DirectorPopover, useDirectorPopover } from './DirectorPopover';
+import { useDirectorEvents } from './DirectorPopover';
 import './scenario-director.css';
 
 const modes: Record<ScenarioMode, string> = {main_story: '主故事 · 至方案选择', source_replay: '全部来源事件'};
@@ -71,7 +71,8 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const instances = useInformationQuery<ScenarioInstances>(`/api/simulation/instances${instanceCursor ? `?cursor=${encodeURIComponent(instanceCursor)}` : ''}`, !denied, 10000);
   const instanceId = selection || instances.data?.activeInstanceId || instances.data?.items[0]?.instanceId || '';
   const base = `/api/simulation/instances/${encodeURIComponent(instanceId)}`;
-  const eventPopover = useDirectorPopover(instanceId);
+  const eventList = useRef<HTMLOListElement>(null);
+  const eventDetails = useDirectorEvents(instanceId, eventList);
   const detail = useInformationQuery<ScenarioInstanceDetail>(instanceId ? base : undefined, !denied, 5000);
   const taskState = useInformationQuery<ScenarioTaskInitialization>(instanceId ? `${base}/initialize` : undefined, !denied, 10000);
   const instance = detail.data?.instance;
@@ -92,7 +93,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     try { if (request) sessionStorage.setItem(pendingKey, JSON.stringify(request)); else sessionStorage.removeItem(pendingKey); } catch { /* Recovery remains available while this page stays open. */ }
   }
   function selectInstance(id: string) {
-    setSelection(id); eventPopover.close(); setRecords(undefined); setNotice(''); setError('');
+    setSelection(id); eventDetails.close(); setRecords(undefined); setNotice(''); setError('');
     history.replaceState(null, '', `/scenario-director${id ? `?instance=${encodeURIComponent(id)}` : ''}`);
   }
   function refresh() { definitions.refresh(); instances.refresh(); detail.refresh(); taskState.refresh(); }
@@ -170,7 +171,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
 
   if (denied || definitions.denied || instances.denied) return <Denied back={back} message="当前账号已无法读取导演台资料。请核对导演授权与场景配置后重新进入。"/>;
   return <>
-    <header className="director-heading"><h1>场景导演台</h1><div className="director-buttons"><button disabled={!instance} onClick={()=>{eventPopover.close();setRecords('history');}} title="记录与数据" aria-label="记录与数据"><History size={16} aria-hidden="true"/>记录</button><a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a><button onClick={refresh} disabled={Boolean(busy)}><RefreshCw size={16} aria-hidden="true"/>刷新</button></div></header>
+    <header className="director-heading"><h1>场景导演台</h1><div className="director-buttons"><button disabled={!instance} onClick={()=>{eventDetails.close();setRecords('history');}} title="记录与数据" aria-label="记录与数据"><History size={16} aria-hidden="true"/>记录</button><a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a><button onClick={refresh} disabled={Boolean(busy)}><RefreshCw size={16} aria-hidden="true"/>刷新</button></div></header>
     {fetchError && <div className="director-feedback is-error" role="alert"><CircleAlert size={18} aria-hidden="true"/><div>{fetchError}<p>资料更新失败，操作已暂停。</p></div><button onClick={refresh}>重新读取</button></div>}
     {notice && <p className="director-feedback" role="status"><Check size={17} aria-hidden="true"/>{notice}</p>}
     {error && <p className="director-feedback is-error" role="alert"><CircleAlert size={17} aria-hidden="true"/>{error}</p>}
@@ -223,20 +224,20 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
             </div>
           </section>
           {taskState.error && <p className="director-warning" role="alert">{taskState.error}<button disabled={Boolean(busy)} onClick={taskState.refresh}>重新读取任务</button></p>}
-          <section className="director-card director-events" aria-label="事件与通知"><div className="director-section-heading"><h2>事件顺序</h2></div><ol className="director-steps">{steps.map((step,index)=>{
+          <section className="director-card director-events" aria-label="事件与通知"><div className="director-section-heading"><h2>事件顺序</h2></div><ol ref={eventList} className="director-steps">{steps.map((step,index)=>{
             const actions=detail.data?.actions.filter(action=>action.stepId===step.id) || [];
             const applied=index<instance.stepIndex,confirmed=actions.length>0&&actions.every(action=>action.sendState==='accepted');
             const isNext=step.id===delivery.step?.id && instance.status==='active';
-            const selected=eventPopover.selection?.id===step.id?eventPopover.selection:undefined;
+            const selected=eventDetails.selection?.id===step.id?eventDetails.selection:undefined;
             const pinned=selected?.pinned===true;
             const status = confirmed ? '已接收' : applied ? '待接收' : isNext ? '下一事件' : '待发生';
             const tasks=(step.taskCodes || []).flatMap(code=>{
               const initialized=taskState.data?.tasks.find(task=>task.code===code),definition=detail.data?.taskDefinitions?.find(task=>task.code===code);
               return initialized||definition?[{code,title:initialized?.title || definition!.title,taskId:initialized?.taskId}]:[];
             });
-            return <li key={step.id} className={`${applied?'is-applied':''} ${pinned?'is-pinned':''}`} aria-current={isNext?'step':undefined}>
-              <button className="director-step-toggle" aria-haspopup="dialog" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onPointerEnter={event=>eventPopover.enter(step.id,event.currentTarget)} onPointerLeave={eventPopover.leave} onClick={event=>eventPopover.pin(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{status}</span>{pinned?<Pin size={14} aria-hidden="true"/>:<MoreHorizontal size={14} aria-hidden="true"/>}</button>
-              {selected && <DirectorPopover selection={selected} id={domId(`director-step-${step.id}`)} title={step.title} time={step.businessTime.slice(11,16)} status={status} keep={eventPopover.keep} leave={eventPopover.leave} pin={()=>eventPopover.pin(step.id,selected.anchor)} close={eventPopover.close}><div className="director-step-body"><p>{step.description}</p>
+            return <li key={step.id} className={`${applied?'is-applied':''} ${selected?'is-expanded':''}`} onPointerMove={event=>{const anchor=event.currentTarget.querySelector<HTMLButtonElement>('.director-step-toggle');if(anchor)eventDetails.move(step.id,anchor,event);}} aria-current={isNext?'step':undefined}>
+              <button className="director-step-toggle" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onClick={event=>eventDetails.toggle(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{status}</span><ChevronDown size={14} aria-hidden="true"/></button>
+              {selected && <div className="director-step-body" id={domId(`director-step-${step.id}`)} role="region" aria-label={step.title} data-pinned={pinned}><p>{step.description}</p>
                 {tasks.length>0 && <div className="director-event-tasks"><span>场景任务</span>{tasks.map(task=>task.taskId?<button key={task.code} onClick={()=>openTask(task.taskId!)}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>:<span className="director-task-name" key={task.code}>{task.title}</span>)}</div>}
                 {actions.length ? <ul className="director-notifications" aria-label="事件通知">
                   {actions.map(action => <li key={action.id}>
@@ -246,7 +247,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
                     {action.receipt && <a href={`/overview?tab=events&id=${encodeURIComponent(action.receipt.eventId)}`} target="_blank" rel="noreferrer">接收记录 <ArrowUpRight size={13}/></a>}
                   </li>)}
                 </ul> : <span className="director-scope">{step.messageCount} 条通知</span>}
-              </div></DirectorPopover>}
+              </div>}
             </li>;
           })}</ol></section>
 

@@ -147,7 +147,7 @@ test('the primary control delivers only the displayed event; hovering other even
     await expect(controls).toContainText('09:12');
     await expect(controls).toContainText('收到仓储火情');
     await page.locator('.director-step-toggle').nth(1).hover();
-    await expect(page.getByRole('dialog',{name:'道路状态确认'})).toContainText('交通救援');
+    await expect(page.getByRole('region',{name:'道路状态确认',exact:true})).toContainText('交通救援');
     await expect(controls).toContainText('收到仓储火情');
     expect(env.counts.apply).toBe(0); expect(env.counts.send).toBe(0);
     await page.getByText('轮次管理',{exact:true}).click();await page.getByRole('button',{name:'锁定轮次',exact:true}).click();
@@ -258,27 +258,47 @@ test('a definitive activation conflict clears the request and permits refreshed 
   }finally{await env.close();}
 });
 
-test('hover previews stay read-only, clicks pin without moving rows, and records are on demand',async({page})=>{
+test('hover expands an event in the list, moving between rows stays stable, and keyboard can keep details open',async({page})=>{
   const env=await setup();await env.attach(page);
-  try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();
-    const first=page.locator('.director-step-toggle').first(),second=page.locator('.director-step-toggle').nth(1),popup=page.locator('.director-event-popover');
-    await expect(first).toBeVisible();await expect(popup).toHaveCount(0);const before=(await second.boundingBox())!;
-    await first.hover({position:{x:12,y:12}});await expect(popup).toHaveAttribute('data-pinned','false');
-    await expect(popup).toContainText('仓储火情支援');await expect(popup.getByRole('button',{name:'创建演示任务',exact:true})).toHaveCount(0);
-    const after=(await second.boundingBox())!;expect(after.y).toBe(before.y);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
-    await popup.hover();await page.waitForTimeout(220);await expect(popup).toBeVisible();
-    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();await expect(popup).toHaveCount(0);
-    await first.click({position:{x:12,y:12}});await expect(popup).toHaveAttribute('data-pinned','true');await expect(popup.getByRole('button',{name:'创建演示任务',exact:true})).toHaveCount(0);
-    await second.hover({position:{x:12,y:12}});await page.waitForTimeout(300);await expect(popup.getByRole('heading',{name:'收到仓储火情',exact:true})).toBeVisible();
-    await second.click({position:{x:12,y:12}});await expect(popup.getByRole('heading',{name:'道路状态确认',exact:true})).toBeVisible();
-    await page.keyboard.press('Escape');await expect(popup).toHaveCount(0);await expect(second).toBeFocused();await page.waitForTimeout(300);await expect(popup).toHaveCount(0);
-    await first.focus();await page.keyboard.press('Enter');await expect(popup).toHaveAttribute('data-pinned','true');
-    await first.click({position:{x:12,y:12}});await expect(popup).toHaveCount(0);
-    await first.click({position:{x:12,y:12}});await page.getByRole('heading',{name:'场景导演台',exact:true}).click();await expect(popup).toHaveCount(0);
-    await page.setViewportSize({width:1080,height:850});await first.click({position:{x:12,y:12}});let bounds=(await popup.boundingBox())!;expect(bounds.x).toBeGreaterThanOrEqual(0);expect(bounds.x+bounds.width).toBeLessThanOrEqual(1080);expect(bounds.y+bounds.height).toBeLessThanOrEqual(850);
-    await page.locator('.scenario-director').evaluate(el=>el.scrollTop=60);bounds=(await popup.boundingBox())!;expect(bounds.y).toBeGreaterThanOrEqual(0);expect(bounds.y+bounds.height).toBeLessThanOrEqual(850);
-    await page.getByRole('button',{name:'关闭事件详情',exact:true}).click();
+  try {
+    await login(page,directorSeat);
+    await page.getByRole('button',{name:'创建新轮',exact:true}).click();
+    const rows=page.locator('.director-steps > li');
+    const first=rows.nth(0).locator('.director-step-toggle');
+    const second=rows.nth(1).locator('.director-step-toggle');
+    const details=page.locator('.director-step-body');
+    const before=(await second.boundingBox())!;
+    await first.hover({position:{x:12,y:12}});
+    await expect(rows.nth(0).getByRole('region',{name:'收到仓储火情',exact:true})).toBeVisible();
+    expect((await second.boundingBox())!.y).toBeGreaterThan(before.y);
+    await expect(page.locator('.director-event-popover')).toHaveCount(0);
+    await details.hover();
+    await page.waitForTimeout(400);
+    await expect(first).toHaveAttribute('aria-expanded','true');
+    await second.hover({position:{x:12,y:12}});
+    await expect(second).toHaveAttribute('aria-expanded','true');
+    await page.waitForTimeout(600);
+    await expect(second).toHaveAttribute('aria-expanded','true');
+    await expect(details).toContainText('交通救援');
+    await expect(details).toHaveCount(1);
+    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await expect(details).toHaveCount(0);
+    await first.focus();
+    await page.keyboard.press('Enter');
+    await expect(first).toHaveAttribute('aria-expanded','true');
+    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await expect(details).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(details).toHaveCount(0);
+    await expect(first).toBeFocused();
+    await page.setViewportSize({width:1080,height:850});
+    await second.hover({position:{x:12,y:12}});
+    await expect(details).toBeVisible();
+    const bounds=(await details.boundingBox())!;
+    expect(bounds.x+bounds.width).toBeLessThanOrEqual(1080);
+    expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
+    await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();
+    await expect(details).toHaveCount(0);
     await expect(page.getByText('操作记录与来源资料',{exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:'记录与数据',exact:true}).click();const records=page.getByRole('dialog',{name:'记录与数据',exact:true});await expect(records).toBeVisible();await expect(records.getByRole('table')).toContainText('创建本轮');
     await records.getByRole('button',{name:'数据概况',exact:true}).click();await expect(records.getByText('来源对象',{exact:true})).toBeVisible();await expect(records.getByText('run-1',{exact:true})).not.toBeVisible();await records.getByText('实例信息',{exact:true}).click();await expect(records.getByText('run-1',{exact:true})).toBeVisible();

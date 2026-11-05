@@ -75,12 +75,9 @@
 @media (max-width: 1200px) { .scenario-director { padding: 22px; } .director-layout { grid-template-columns: 210px minmax(0, 1fr); gap: 16px; } .director-step-body { padding-left: 0; } }
 @media (max-width: 950px) { .director-layout { grid-template-columns: minmax(0, 1fr); } .director-sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .director-heading { flex-wrap: wrap; } }
 
-.director-steps .is-pinned .director-step-toggle { color: var(--accent); }
-.director-event-popover { position: fixed; z-index: 120; width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; background: var(--surface); color: var(--text); box-shadow: 0 8px 30px #17231a24; }
-.director-popover-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
-.director-popover-heading h2 { margin: 4px 0 0; font-size: 15px; line-height: 1.6; }
-.director-popover-heading .director-buttons { flex-wrap: nowrap; gap: 3px; }
-.director-popover-heading .icon-button { width: 28px; height: 28px; min-height: 28px; padding: 5px; }
+.director-steps .is-expanded .director-step-toggle { color: var(--accent); }
+.director-steps .is-expanded .director-step-toggle > svg { transform: rotate(180deg); }
+.director-steps .director-step-body { padding: 0 24px 18px 78px; }
 .director-event-tasks .director-task-name { color: var(--text); font-size: 12px; }
 .resource-panel.director-records-panel { width: min(680px, calc(100vw - 40px)); }
 .director-record-tabs { display: flex; gap: 24px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
