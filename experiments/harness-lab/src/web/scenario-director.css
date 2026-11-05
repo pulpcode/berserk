@@ -4,6 +4,11 @@
 .director-buttons { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .director-buttons button, .director-buttons a, .director-card > button, .director-start > button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
 .director-buttons a { color: var(--accent); font-size: 13px; line-height: 1.5; padding: 8px 0; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.director-heading .director-buttons > :is(button, a) { min-height: var(--control-height); padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--control-radius); background: var(--surface); color: var(--text); font-size: var(--control-font-size); font-weight: 500; line-height: 1.4; text-decoration: none; white-space: nowrap; transition: background-color 150ms, border-color 150ms, color 150ms; }
+.director-heading .director-buttons > :is(button, a):hover:not(:disabled) { background: var(--control-hover); border-color: var(--control-border-hover); }
+.director-heading .director-buttons > :is(button, a):active:not(:disabled) { background: var(--control-pressed); }
+.director-heading :is(button, a):focus-visible, .director-records-panel :is(button, summary):focus-visible { outline: 2px solid var(--control-focus); outline-offset: 2px; }
+.director-heading :is(button, a):focus:not(:focus-visible), .director-records-panel :is(button, summary):focus:not(:focus-visible) { outline: none; }
 .director-layout { display: grid; grid-template-columns: 235px minmax(0, 1fr); gap: 22px; align-items: start; }
 .director-sidebar, .director-workspace { display: grid; min-width: 0; gap: 18px; }
 .director-card { border: 1px solid var(--line); border-radius: 12px; padding: 20px; min-width: 0; }
@@ -89,9 +94,10 @@
 .director-popover-heading .icon-button { width: 28px; height: 28px; min-height: 28px; padding: 5px; }
 .director-event-tasks .director-task-name { color: var(--text); font-size: 12px; }
 .resource-panel.director-records-panel { width: min(680px, calc(100vw - 40px)); }
-.director-record-tabs { display: flex; gap: 4px; margin-bottom: 18px; }
-.director-record-tabs button { border-color: transparent; background: transparent; }
-.director-record-tabs button[aria-pressed="true"] { color: var(--accent); background: var(--accent-soft); }
+.director-record-tabs { display: flex; gap: 24px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.director-record-tabs button { padding: 10px 2px; border: 0; border-radius: 0; background: transparent; color: var(--muted); font-weight: 500; }
+.director-record-tabs button:hover:not(:disabled), .director-record-tabs button:active:not(:disabled) { background: transparent; color: var(--accent); }
+.director-record-tabs button[aria-pressed="true"] { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 .director-record-zone { text-align: right; margin: 0 0 8px; }
 .director-history { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
 .director-history th { font-weight: 500; color: var(--muted); }
