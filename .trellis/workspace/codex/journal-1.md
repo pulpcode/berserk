@@ -215,3 +215,24 @@
 ### Next Steps
 
 - 用户检查线上悬停、固定及记录面板效果；不推进场景。
+
+
+## Session 8: 导演台文案和控件统一
+
+**Date**: 2026-11-05
+**Task**: 导演台文案和控件统一
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+统一场景任务/操作记录文案、顶部三项次要按钮和记录分类下划线样式。类型、lint、构建、既有桌面回归与公网Chrome视觉验证通过；仅发布前端，保留场景revision4和全部数据。继续待用户检查，不归档活动实施任务。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3beb8db` | (see git log) |
+
+### Status
+
+[OK] **Completed**

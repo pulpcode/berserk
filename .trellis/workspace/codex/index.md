@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 7
+- **Total Sessions**: 8
 - **Last Active**: 2026-11-05
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~217 | Active |
+| `journal-1.md` | ~238 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 8 | 2026-11-05 | 导演台文案和控件统一 | `3beb8db` | `codex/scenario-demo` |
 | 7 | 2026-11-05 | 完成导演台悬停固定与记录面板上线 | `37d158d` | `codex/scenario-demo` |
 | 6 | 2026-11-05 | 精简导演台并将任务通知融入事件 | `898688f` | `codex/scenario-demo` |
 | 5 | 2026-11-04 | 调整密码规则并统一线上五席密码 | `6bbd22f` | `codex/scenario-demo` |
