@@ -14,7 +14,7 @@ import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 
 const directorSeat = 'seat-director';
 const businessSeats = ['seat-overall', 'seat-intelligence', 'seat-planning', 'seat-situation'];
-const definition: ScenarioDefinitionSummary = {id:'ui-fire',version:'1',name:'临港仓储火情',description:'导演台桌面流程验证资料',definitionHash:'ui-fixture',businessDay:'2026-11-03',initialBusinessNow:'2026-11-03T09:10:00+08:00',modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:2,messages:2},geography:{label:'合成业务覆盖层',attribution:'UI流程测试资料',bounds:[121,30,122,31],synthetic:true}};
+const definition: ScenarioDefinitionSummary = {id:'ui-fire',version:'1',name:'临港仓储火情',description:'导演台桌面流程验证资料',definitionHash:'ui-fixture',businessDay:'2026-11-03',initialBusinessNow:'2026-11-03T09:10:00+08:00',modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:2,messages:3},geography:{label:'合成业务覆盖层',attribution:'UI流程测试资料',bounds:[121,30,122,31],synthetic:true}};
 
 /** Real authentication/SQLite/client behavior; source DTOs here are deterministic UI fixtures. */
 async function setup() {
@@ -31,6 +31,14 @@ async function setup() {
   const pages:Page[]=[];
   let activeId:string|null=null,activeRevision=0,loseCreateResponse=false;
   let rejectActivation:string|undefined;
+  let loseApplyResponse = false;
+  let interruptMessage = '';
+  const sendIds: string[] = [], receiptReads: string[] = [];
+  const messages = (runId: string, step: ScenarioInstanceDetail['steps'][number]) =>
+    Array.from({length: step.messageCount}, (_, index) => ({
+      sourceMessageId: `${runId}-${step.id}-${index + 1}`, title: step.title,
+      text: `冻结的来源通知正文 ${index + 1}`, subjectId: 'warehouse', occurredAt: step.businessTime,
+    }));
   const clock = (minute:number)=>`2026-11-03T09:${String(minute).padStart(2,'0')}:00+08:00`;
   const operation=(id:string,kind:ScenarioOperation['kind'],detail:ScenarioInstanceDetail,actor:{userId:string;seatId:string},actions:ScenarioAction[]=[]):ScenarioMutationResult=>{
     const op:ScenarioOperation={id,kind,instanceId:detail.instance.instanceId,revision:detail.instance.revision,businessNow:detail.instance.businessNow,createdAt:'2026-11-04T06:00:00Z',actor,actionIds:actions.map(a=>a.id)};
@@ -57,7 +65,7 @@ async function setup() {
           const id=String(body.clientActionId),previous=ledger.get(id);
           if(previous){await respond(previous);return;}
           const instanceId=`run-${details.size+1}`;
-          const detail:ScenarioInstanceDetail={instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:body.mode==='source_replay'?'source_replay':'main_story',status:'prepared',paused:false,stepIndex:0,stepCount:2,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[{id:'E01',title:'收到仓储火情',description:'新增火情来报，保留背景业务。',businessTime:clock(12),messageCount:1,taskCodes:['T01']},{id:'E02',title:'道路状态确认',description:'更新道路事实。',businessTime:clock(16),messageCount:1,taskCodes:['T02']}],taskDefinitions:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',title:['仓储火情支援','交通救援','训练任务'][index],goal:'预设任务说明',businessRefs:[],areaIds:[]})),objects:[],reports:[],actions:[],operations:[]};
+          const detail:ScenarioInstanceDetail={instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:body.mode==='source_replay'?'source_replay':'main_story',status:'prepared',paused:false,stepIndex:0,stepCount:2,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[{id:'E01',title:'收到仓储火情',description:'新增火情来报，保留背景业务。',businessTime:clock(12),messageCount:1,taskCodes:['T01']},{id:'E02',title:'道路状态确认',description:'更新道路事实。',businessTime:clock(16),messageCount:2,taskCodes:['T02']}],taskDefinitions:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',title:['仓储火情支援','交通救援','训练任务'][index],goal:'预设任务说明',businessRefs:[],areaIds:[]})),objects:[],reports:[],actions:[],operations:[]};
           details.set(instanceId,detail);
           const result=operation(id,'create',detail,identity!);
           if(loseCreateResponse){loseCreateResponse=false;await route.abort('failed');return;}
@@ -66,7 +74,13 @@ async function setup() {
         if(url.pathname.startsWith('/api/simulation/operations/')){counts.operationReads++;const result=ledger.get(url.pathname.split('/').at(-1)!);await respond(result||{error:{code:'NOT_FOUND',message:'未找到操作回执'}},result?200:404);return;}
         if(url.pathname.startsWith('/api/simulation/actions/')){
           const id=url.pathname.split('/')[4],action=[...details.values()].flatMap(d=>d.actions).find(a=>a.id===id)!;
-          if(url.pathname.endsWith('/send')){counts.send++;action.sendState='accepted';action.receipt={eventId:randomUUID(),sourceMessageId:action.notification.sourceMessageId,receivedAt:'2026-11-04T06:00:00Z',status:'accepted'};}
+          if(url.pathname.endsWith('/send')){
+            counts.send++; sendIds.push(id);
+            if(action.notification.sourceMessageId === interruptMessage) {
+              interruptMessage = ''; action.sendState = 'unconfirmed';
+              await route.abort('failed'); return;
+            }
+            action.sendState='accepted';action.receipt={eventId:randomUUID(),sourceMessageId:action.notification.sourceMessageId,receivedAt:'2026-11-04T06:00:00Z',status:'accepted'};} else receiptReads.push(id);
           await respond(action);return;
         }
         const segments=url.pathname.split('/'),id=segments[4],detail=details.get(id);
@@ -78,7 +92,7 @@ async function setup() {
         if(req.method()==='GET'){await respond(detail);return;}
         if(segments[5]==='preview'){
           const step=detail.steps[detail.instance.stepIndex]||null;
-          await respond({instance:detail.instance,step,changes:step?['新增一份来源报告']:[],notifications:[],canApply:!!step&&!detail.instance.paused,reason:detail.instance.paused?'本轮已暂停，请继续后再应用。':undefined});return;
+          await respond({instance:detail.instance,step,changes:step?['新增一份来源报告']:[],notifications:step ? messages(id,step) : [],canApply:!!step&&!detail.instance.paused,reason:detail.instance.paused?'本轮已暂停，请继续后再应用。':undefined});return;
         }
         const operationId=String(body.clientActionId),previous=ledger.get(operationId);
         if(previous){await respond(previous);return;}
@@ -86,13 +100,23 @@ async function setup() {
           activationRequests.push({...body});
           if(rejectActivation){const code=rejectActivation;rejectActivation=undefined;await respond({error:{code,message:code==='SCENARIO_ACTIVATION_PENDING'?`本轮激活尚待恢复，请核对并重试原操作 ${operationId}`:'场景已变化，请刷新后重新操作。'}},409);return;}
         }
+        if(segments[5]==='steps' && (segments[6]!==detail.steps[detail.instance.stepIndex]?.id || body.expectedRevision!==detail.instance.revision)){
+          await respond({error:{code:'REVISION_CONFLICT',message:'事件顺序或修订不匹配。'}},409);
+          return;
+        }
         detail.instance.revision++;
         if(segments[5]==='activate'){activeId=id;activeRevision++;detail.instance.status='active';await respond(operation(operationId,'activate',detail,identity!));return;}
         if(segments[5]==='control'){const paused=body.action==='pause';detail.instance.paused=paused;await respond(operation(operationId,paused?'pause':'resume',detail,identity!));return;}
         if(segments[5]==='steps'){
           counts.apply++;const step=detail.steps[detail.instance.stepIndex++];detail.instance.businessNow=step.businessTime;
-          const action:ScenarioAction={id:randomUUID(),instanceId:id,stepId:step.id,actor:identity!,systemId:'intel',createdAt:'2026-11-04T06:00:00Z',revision:detail.instance.revision,sendState:'unsent',notification:{sourceMessageId:`${id}-${step.id}`,title:step.title,text:'冻结的来源通知正文',subjectId:'warehouse',occurredAt:step.businessTime}};
-          detail.actions.push(action);await respond(operation(operationId,'step',detail,identity!,[action]));return;
+          const actions: ScenarioAction[] = messages(id,step).map(notification => ({
+            id: randomUUID(), instanceId: id, stepId: step.id, actor: identity!, systemId: 'intel',
+            createdAt: '2026-11-04T06:00:00Z', revision: detail.instance.revision, sendState: 'unsent', notification,
+          }));
+          detail.actions.push(...actions);
+          const result = operation(operationId,'step',detail,identity!,actions);
+          if(loseApplyResponse){loseApplyResponse=false;await route.abort('failed');return;}
+          await respond(result);return;
         }
         await respond({error:{code:'NOT_FOUND',message:'未注册测试路由'}},404);return;
       }
@@ -100,27 +124,90 @@ async function setup() {
       await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
     });
   }
-  return {attach,counts,activationRequests,rejectNextActivation:(code:string)=>{rejectActivation=code;},loseNextCreate:()=>{loseCreateResponse=true;},calls:fake.calls,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
+  return {attach,counts,sendIds,receiptReads,loseNextApply:()=>{loseApplyResponse=true;},interruptSend:(messageId:string)=>{interruptMessage=messageId;},activationRequests,rejectNextActivation:(code:string)=>{rejectActivation=code;},loseNextCreate:()=>{loseCreateResponse=true;},calls:fake.calls,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
 }
 
 async function login(page:Page,seat:string) {
   await page.goto('/');await page.getByLabel('席位',{exact:true}).selectOption(seat);await page.getByLabel('密码',{exact:true}).fill('test-password-123');await page.getByRole('button',{name:'登录',exact:true}).click();await expect(page.getByRole('button',{name:'登录',exact:true})).toHaveCount(0);
 }
 
-test('director has its own page and controls only explicit events and notifications',async({page})=>{
+async function startRun(page: Page) {
+  await login(page,directorSeat);
+  for (const name of ['创建新轮','创建演示任务','启用本轮']) {
+    await page.getByRole('button',{name,exact:true}).click();
+  }
+  return page.getByRole('region',{name:'事件投放'});
+}
+
+test('the primary control delivers only the displayed event; hovering other events does not change its target',async({page})=>{
+  const env = await setup(); await env.attach(page);
+  try {
+    const controls = await startRun(page);
+    const next = controls.getByRole('button',{name:'投放下一步',exact:true});
+    await expect(controls).toContainText('09:12');
+    await expect(controls).toContainText('收到仓储火情');
+    await page.locator('.director-step-toggle').nth(1).hover();
+    await expect(page.getByRole('dialog',{name:'道路状态确认'})).toContainText('交通救援');
+    await expect(controls).toContainText('收到仓储火情');
+    expect(env.counts.apply).toBe(0); expect(env.counts.send).toBe(0);
+    await page.getByRole('button',{name:'暂停投放',exact:true}).click();
+    await expect(next).not.toBeEnabled();
+    await page.getByRole('button',{name:'继续投放',exact:true}).click();
+    await next.dblclick();
+    await expect(controls).toContainText('道路状态确认');
+    await expect(page.locator('.director-step-toggle').first()).toContainText('已接收');
+    expect(env.counts.apply).toBe(1); expect(env.counts.send).toBe(1);
+    await page.reload();
+    await expect(controls).toContainText('09:16');
+    await next.click();
+    await expect(page.locator('.director-step-toggle').nth(1)).toContainText('已接收');
+    expect(env.counts.apply).toBe(2); expect(env.counts.send).toBe(3);
+    expect(new Set(env.sendIds).size).toBe(3);
+    await expect(controls).toContainText('待方案选择');
+    await expect(next).toHaveCount(0);
+    expect(env.calls).toHaveLength(0);
+    await page.setViewportSize({width:1080,height:850});
+    expect(await controls.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);
+  } finally {await env.close();}
+});
+
+test('partial final delivery survives reload, checks receipt and retries only the unresolved notification',async({page})=>{
   const env=await setup();await env.attach(page);
   try {
-    await login(page,directorSeat);await expect(page).toHaveURL(/\/scenario-director$/);await expect(page.getByRole('heading',{name:'场景导演台',exact:true})).toBeVisible();
-    await expect(page.getByRole('button',{name:'场景导演台',exact:true})).toBeVisible();expect(env.counts.create).toBe(0);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
-    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await expect(page.getByLabel('本轮场景时间')).toContainText('09:10');await expect(page.getByRole('heading',{name:'本轮任务',exact:true})).toHaveCount(0);await expect(page.locator('.director-event-tasks')).toContainText('仓储火情支援');
-    await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await expect(page.getByRole('button',{name:'启用本轮',exact:true})).toBeEnabled();await page.getByRole('button',{name:'启用本轮',exact:true}).click();
-    await page.getByRole('button',{name:'预览变化',exact:true}).click();await expect(page.locator('.director-step-toggle').filter({hasText:'收到仓储火情'})).toBeVisible();expect(env.counts.apply).toBe(0);
-    await page.getByRole('button',{name:'应用本步事实',exact:true}).click();await expect(page.getByLabel('本轮场景时间')).toContainText('09:12');expect(env.counts.apply).toBe(1);expect(env.counts.send).toBe(0);
-    await page.getByRole('button',{name:'暂停投放',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await expect(page.getByRole('button',{name:'发送通知',exact:true})).toBeDisabled();
-    await page.getByRole('button',{name:'继续投放',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await page.getByRole('button',{name:'发送通知',exact:true}).click();await expect(page.locator('.director-step-toggle').first()).toContainText('已接收');await expect(page.getByLabel('通知投放与核对')).toContainText('接收已确认');expect(env.counts.send).toBe(1);
-    await page.reload();await expect(page.getByLabel('本轮场景时间')).toContainText('09:12');expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(1);expect(env.counts.send).toBe(1);expect(env.calls).toHaveLength(0);
-    await expect(page.locator('.director-event-popover')).toHaveCount(0);await page.locator('.director-step-toggle').nth(1).click({position:{x:12,y:12}});await expect(page.locator('.director-event-tasks')).toContainText('交通救援');await expect(page.locator('.director-start')).toHaveCount(0);await page.screenshot({path:join(tmpdir(),'axon-scenario-director-desktop.png'),fullPage:true});
-    await page.setViewportSize({width:1080,height:850});const bounds=await page.locator('.scenario-director').boundingBox();expect(bounds!.x+bounds!.width).toBeLessThanOrEqual(1080);
+    const controls=await startRun(page);
+    const next=controls.getByRole('button',{name:'投放下一步',exact:true});
+    await next.click();
+    await expect(controls).toContainText('道路状态确认');
+    env.interruptSend('run-1-E02-2');
+    await next.click();
+    const check=controls.getByRole('button',{name:'核对接收回执',exact:true});
+    await expect(check).toBeEnabled();
+    expect(env.counts.apply).toBe(2);expect(env.sendIds).toHaveLength(3);
+    await page.reload();await expect(check).toBeEnabled();
+    expect(env.sendIds).toHaveLength(3);
+    await check.click();
+    await controls.getByRole('button',{name:'继续投放本步',exact:true}).click();
+    await expect(page.locator('.director-step-toggle').nth(1)).toContainText('已接收');
+    expect(env.receiptReads).toContain(env.sendIds[2]);
+    expect(env.sendIds).toHaveLength(4);expect(env.sendIds[3]).toBe(env.sendIds[2]);
+    expect(env.counts.apply).toBe(2);
+  } finally {await env.close();}
+});
+
+test('a lost apply response is reconciled before explicitly continuing its notifications',async({page})=>{
+  const env=await setup();await env.attach(page);
+  try {
+    const controls=await startRun(page);
+    env.loseNextApply();
+    await controls.getByRole('button',{name:'投放下一步',exact:true}).click();
+    await expect(page.getByRole('button',{name:'核对操作结果'})).toBeEnabled();
+    await page.reload();
+    await page.getByRole('button',{name:'核对操作结果'}).click();
+    const resume=controls.getByRole('button',{name:'继续投放本步',exact:true});
+    await expect(resume).toBeEnabled();
+    expect(env.counts.send).toBe(0);
+    await resume.click();await expect(controls).toContainText('道路状态确认');
+    expect(env.counts.apply).toBe(1); expect(env.counts.send).toBe(1);
   } finally {await env.close();}
 });
 
@@ -151,8 +238,8 @@ test('lost create response survives reload and is reconciled without another POS
 test('partly completed activation survives reload and retries only the original request after checking its receipt',async({page})=>{
   const env=await setup();await env.attach(page);
   try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await page.getByRole('button',{name:'启用本轮',exact:true}).click();await page.getByRole('button',{name:'暂停投放',exact:true}).click();
-    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('SCENARIO_ACTIVATION_PENDING');
+    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await page.getByRole('button',{name:'启用本轮',exact:true}).click();await page.getByRole('button',{name:'暂停投放',exact:true}).click();
+    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('SCENARIO_ACTIVATION_PENDING');
     page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'启用本轮',exact:true}).click();
     const pending=page.getByRole('region',{name:'待核对操作'});await expect(pending).toBeVisible();await expect(page.getByRole('button',{name:'创建新轮',exact:true})).toBeDisabled();expect(env.activationRequests).toHaveLength(2);
     const original={...env.activationRequests[1]!};await page.reload();await expect(pending).toBeVisible();expect(env.activationRequests).toHaveLength(2);await expect(page.getByRole('button',{name:'重试原请求',exact:true})).toHaveCount(0);
@@ -165,7 +252,7 @@ test('partly completed activation survives reload and retries only the original 
 test('a definitive activation conflict clears the request and permits refreshed inputs',async({page})=>{
   const env=await setup();await env.attach(page);
   try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.locator('.director-step-toggle').first().click({position:{x:12,y:12}});await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('REVISION_CONFLICT');await page.getByRole('button',{name:'启用本轮',exact:true}).click();
+    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('REVISION_CONFLICT');await page.getByRole('button',{name:'启用本轮',exact:true}).click();
     await expect(page.getByRole('alert')).toContainText('场景已变化');await expect(page.getByRole('region',{name:'待核对操作'})).toHaveCount(0);await expect(page.getByRole('button',{name:'启用本轮',exact:true})).toBeEnabled();
     const previous=env.activationRequests[0]!.clientActionId;await page.getByRole('button',{name:'启用本轮',exact:true}).click();await expect(page.getByRole('button',{name:'暂停投放',exact:true})).toBeVisible();expect(env.activationRequests[1]!.clientActionId).not.toBe(previous);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
@@ -182,7 +269,7 @@ test('hover previews stay read-only, clicks pin without moving rows, and records
     const after=(await second.boundingBox())!;expect(after.y).toBe(before.y);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
     await popup.hover();await page.waitForTimeout(220);await expect(popup).toBeVisible();
     await page.getByRole('heading',{name:'场景导演台',exact:true}).hover();await expect(popup).toHaveCount(0);
-    await first.click({position:{x:12,y:12}});await expect(popup).toHaveAttribute('data-pinned','true');await expect(popup.getByRole('button',{name:'创建演示任务',exact:true})).toBeEnabled();
+    await first.click({position:{x:12,y:12}});await expect(popup).toHaveAttribute('data-pinned','true');await expect(popup.getByRole('button',{name:'创建演示任务',exact:true})).toHaveCount(0);
     await second.hover({position:{x:12,y:12}});await page.waitForTimeout(300);await expect(popup.getByRole('heading',{name:'收到仓储火情',exact:true})).toBeVisible();
     await second.click({position:{x:12,y:12}});await expect(popup.getByRole('heading',{name:'道路状态确认',exact:true})).toBeVisible();
     await page.keyboard.press('Escape');await expect(popup).toHaveCount(0);await expect(second).toBeFocused();await page.waitForTimeout(300);await expect(popup).toHaveCount(0);
