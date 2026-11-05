@@ -189,7 +189,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   }
 
   const modeFields = <>
-    {definitions.data && definitions.data.items.length > 1 && <label>剧本<select value={definition?.id || ''} disabled={blocked || Boolean(preparingId)} onChange={event => setDefinitionId(event.target.value)}>
+    {definitions.data && <label>场景<select value={definition?.id || ''} disabled={blocked || Boolean(preparingId)} onChange={event => setDefinitionId(event.target.value)}>
       {definitions.data.items.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
     </select></label>}
     <label>演示模式<select value={mode} disabled={blocked || Boolean(preparingId)} onChange={event => setMode(event.target.value as ScenarioMode)}>
@@ -314,13 +314,18 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     </Panel>}
     {panel === 'restart' && <Panel title="重新演示" className="director-settings-panel" close={() => {if (!replay.busy) setPanel(undefined);}}>
       <div className="director-settings-form">
-        <strong>{definition?.name}</strong>{modeFields}
-        {activeId && <p>当前演示将结束，演示任务归档，历史记录保留。</p>}
+        {modeFields}
+        {activeId && <p className="director-replay-note">当前演示将结束，任务归档，历史记录保留。</p>}
         {unsent > 0 && <label className="director-replay-consent"><input type="checkbox" checked={terminateUnsent} disabled={Boolean(replay.busy || replay.draft)} onChange={event => setTerminateUnsent(event.target.checked)}/>放弃当前演示未发送的 {unsent} 条通知</label>}
         {unconfirmed && <p className="director-warning">当前演示有接收未确认的通知，请先核对接收回执。</p>}
         {activeDetail.error && <p className="director-warning">{activeDetail.error}</p>}
         {error && <p className="director-warning" role="alert">{error}</p>}
-        {replay.draft && !replay.busy ? <button onClick={() => {setError(''); replay.resume();}}>核对并继续</button> : <button className="primary-action" disabled={restartBlocked} onClick={() => {if (definition) {setError(''); void replay.start(definition, mode, terminateUnsent, preparingId);}}}>{replay.busy || '开始演示'}</button>}
+        <div className="director-dialog-actions">
+          <button disabled={Boolean(replay.busy)} onClick={() => setPanel(undefined)}>{replay.draft ? '稍后处理' : '取消'}</button>
+          {replay.draft && !replay.busy
+            ? <button className="primary-action" onClick={() => {setError(''); replay.resume();}}>核对并继续</button>
+            : <button className="primary-action" disabled={restartBlocked} onClick={() => {if (definition) {setError(''); void replay.start(definition, mode, terminateUnsent, preparingId);}}}>{replay.busy || '开始演示'}</button>}
+        </div>
       </div>
     </Panel>}
     {(busy || replay.busy) && <p className="director-working" role="status">{replay.busy || `正在${busy}…`}</p>}

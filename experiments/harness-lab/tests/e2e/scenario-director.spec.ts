@@ -137,6 +137,7 @@ async function login(page:Page,seat:string) {
 async function restart(page: Page, mode?: 'main_story' | 'source_replay') {
   await page.getByRole('button',{name:'重新演示',exact:true}).click();
   const dialog=page.getByRole('dialog',{name:'重新演示',exact:true});
+  await expect(dialog.getByRole('combobox',{name:'场景',exact:true})).toBeEnabled();
   if(mode)await dialog.getByRole('combobox',{name:'演示模式',exact:true}).selectOption(mode);
   await dialog.getByRole('button',{name:'开始演示',exact:true}).click();
 }
