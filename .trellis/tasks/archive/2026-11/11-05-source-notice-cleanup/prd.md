@@ -1,6 +1,6 @@
 # 双系统来源命名与业务来报清理
 
-用户已在收敛方案后明确“开始实施”。权威范围：../11-03-scenario-demo/external-systems-design.md v0.2。
+用户已在收敛方案后明确“开始实施”。权威范围：../../../11-03-scenario-demo/external-systems-design.md v0.2。
 
 保留 intel/situation、sourceId、权限、工具/Skills、事件来源分配和轮次隔离。统一示例来源名称为特情系统/态势系统；新报告和通知去除控场说明和作者任务编号，保留事实、合法引用、时间和修订。七类系统设计移入SIM-DOMAIN-001。只修改新版本，旧证据与原生历史不追改；不操作线上数据或开启模型规则。
 
