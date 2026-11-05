@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 5
-- **Last Active**: 2026-11-04
+- **Total Sessions**: 6
+- **Last Active**: 2026-11-05
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~167 | Active |
+| `journal-1.md` | ~192 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 6 | 2026-11-05 | 精简导演台并将任务通知融入事件 | `898688f` | `codex/scenario-demo` |
 | 5 | 2026-11-04 | 调整密码规则并统一线上五席密码 | `6bbd22f` | `codex/scenario-demo` |
 | 4 | 2026-11-04 | 合并main并发布场景导演台待测 | `68dded3` | `codex/scenario-demo` |
 | 3 | 2026-11-04 | 隔离导演席与业务协作 | `1d6510b` | `codex/scenario-demo` |
