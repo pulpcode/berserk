@@ -1,7 +1,8 @@
+import { useDirectorReplay } from './useDirectorReplay';
 import { useDirectorDelivery } from './useDirectorDelivery';
 import { LoadingIndicator } from './LoadingIndicator';
 import { useRef, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, Clock3, ChevronDown, History, ArrowUpRight, Map as MapIcon, Plus, RefreshCw, Send } from 'lucide-react';
+import { ArrowRight, Check, CircleAlert, Clock3, ChevronDown, History, ArrowUpRight, Map as MapIcon, RotateCcw, Settings2, RefreshCw, Send } from 'lucide-react';
 import type { Identity } from '../contracts/access';
 import type { ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioStepSummary, ScenarioTaskInitialization } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
@@ -11,8 +12,8 @@ import { Panel } from './Resources';
 import { useDirectorEvents } from './DirectorPopover';
 import './scenario-director.css';
 
-const modes: Record<ScenarioMode, string> = {main_story: '主故事 · 至方案选择', source_replay: '全部来源事件'};
-const instanceStates = {prepared: '准备中', active: '活动轮次', frozen: '已冻结'};
+const modes: Record<ScenarioMode, string> = {main_story: '主线演示（5 个事件）', source_replay: '完整事件演示（12 个事件）'};
+const instanceStates = {prepared: '准备中', active: '当前演示', frozen: '已结束'};
 const notificationStates = {unsent: '尚未发送', unconfirmed: '接收未确认', accepted: '接收已确认'};
 const operationNames = {create: '创建本轮', activate: '激活本轮', step: '应用事件', pause: '暂停', resume: '继续'};
 const realTimestamp = (value: string) => new Date(value).toLocaleString('zh-CN', {hour12: false});
@@ -63,9 +64,11 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const [selection, setSelection] = useState(() => pending?.instanceId || new URLSearchParams(location.search).get('instance') || '');
   const [definitionId, setDefinitionId] = useState('');
   const [instancePages, setInstancePages] = useState<string[]>([]);
-  const [mode, setMode] = useState<ScenarioMode>('main_story');
+  const [modeOverride, setMode] = useState<ScenarioMode>();
   const [terminateUnsent, setTerminateUnsent] = useState(false);
-  const [records, setRecords] = useState<'history' | 'overview'>();
+  const [records, setRecords] = useState<'runs' | 'history' | 'overview'>();
+  const [panel, setPanel] = useState<'restart' | 'settings'>();
+  const [preparingId, setPreparingId] = useState<string>();
   const definitions = useInformationQuery<ScenarioDefinitions>('/api/simulation/scenarios', !denied, 60000);
   const instanceCursor = instancePages.at(-1);
   const instances = useInformationQuery<ScenarioInstances>(`/api/simulation/instances${instanceCursor ? `?cursor=${encodeURIComponent(instanceCursor)}` : ''}`, !denied, 10000);
@@ -76,11 +79,25 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const detail = useInformationQuery<ScenarioInstanceDetail>(instanceId ? base : undefined, !denied, 5000);
   const taskState = useInformationQuery<ScenarioTaskInitialization>(instanceId ? `${base}/initialize` : undefined, !denied, 10000);
   const instance = detail.data?.instance;
-  const definition = definitions.data?.items.find(item => item.id === definitionId) || definitions.data?.items[0];
-  const recentInstances = instances.data?.items || [];
-  const choices = instance && !recentInstances.some(item => item.instanceId === instance.instanceId) ? [instance, ...recentInstances] : recentInstances;
+  const mode = modeOverride || instance?.mode || 'main_story';
+  const definition = definitions.data?.items.find(item => item.id === (definitionId || instance?.definitionId)) || definitions.data?.items[0];
+  const choices = instances.data?.items || [];
   const fetchError = definitions.error || instances.error || detail.error;
-  const blocked = Boolean(busy || pending || fetchError);
+  const replay = useDirectorReplay({
+    disabled: Boolean(busy || pending || fetchError),
+    completed: id => { setInstancePages([]); setPanel(undefined); setPreparingId(undefined); selectInstance(id); setNotice('演示已就绪。'); },
+    changed: refresh,
+    failure,
+  });
+  const blocked = Boolean(busy || pending || fetchError || replay.busy || replay.draft);
+  const activeId = instances.data?.activeInstanceId;
+  const activeDetail = useInformationQuery<ScenarioInstanceDetail>(
+    panel === 'restart' && activeId ? `/api/simulation/instances/${encodeURIComponent(activeId)}` : undefined, !denied, 5000,
+  );
+  const unsent = activeDetail.data?.actions.filter(action => action.sendState === 'unsent').length || 0;
+  const unconfirmed = activeDetail.data?.actions.some(action => action.sendState === 'unconfirmed');
+  const restartBlocked = blocked || !identity.createPublicTask || !definition || !instances.data
+    || Boolean(activeId && !activeDetail.data) || Boolean(activeDetail.error || unconfirmed || (unsent && !terminateUnsent));
   const steps = instance?.mode==='main_story' ? detail.data?.steps.slice(0,5) || [] : detail.data?.steps || [];
   const delivery = useDirectorDelivery({
     detail: detail.data, steps, blocked, apply: applyStep, working: setBusy, notice: setNotice, failure,
@@ -93,7 +110,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     try { if (request) sessionStorage.setItem(pendingKey, JSON.stringify(request)); else sessionStorage.removeItem(pendingKey); } catch { /* Recovery remains available while this page stays open. */ }
   }
   function selectInstance(id: string) {
-    setSelection(id); eventDetails.close(); setRecords(undefined); setNotice(''); setError('');
+    setSelection(id); setMode(undefined); setDefinitionId(''); eventDetails.close(); setRecords(undefined); setNotice(''); setError('');
     history.replaceState(null, '', `/scenario-director${id ? `?instance=${encodeURIComponent(id)}` : ''}`);
   }
   function refresh() { definitions.refresh(); instances.refresh(); detail.refresh(); taskState.refresh(); }
@@ -162,40 +179,57 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
       body: {clientActionId: id, expectedRevision: instance.revision},
     }, true);
   }
-  function activate() {
-    if (!instance || !instances.data) return;
-    if (instances.data.activeInstanceId && instances.data.activeInstanceId !== instanceId
-      && !window.confirm('激活本轮将冻结旧轮来源，并归档旧轮演示任务；历史记录会保留。确认切换？')) return;
-    mutate('启用本轮', `${base}/activate`, {expectedRevision: instance.revision, expectedActiveRevision: instances.data.activeRevision, terminateUnsent});
+  function openRestart(existingId?: string) {
+    eventDetails.close();
+    setRecords(undefined);
+    setTerminateUnsent(false);
+    setPreparingId(existingId);
+    if (existingId && instance) { setDefinitionId(instance.definitionId); setMode(instance.mode); }
+    setPanel('restart');
   }
+
+  const modeFields = <>
+    {definitions.data && definitions.data.items.length > 1 && <label>剧本<select value={definition?.id || ''} disabled={blocked || Boolean(preparingId)} onChange={event => setDefinitionId(event.target.value)}>
+      {definitions.data.items.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+    </select></label>}
+    <label>演示模式<select value={mode} disabled={blocked || Boolean(preparingId)} onChange={event => setMode(event.target.value as ScenarioMode)}>
+      <option value="main_story">{modes.main_story}</option><option value="source_replay">{modes.source_replay}</option>
+    </select></label>
+  </>;
 
   if (denied || definitions.denied || instances.denied) return <Denied back={back} message="当前账号已无法读取导演台资料。请核对导演授权与场景配置后重新进入。"/>;
   return <>
-    <header className="director-heading"><h1>场景导演台</h1><div className="director-buttons"><button disabled={!instance} onClick={()=>{eventDetails.close();setRecords('history');}} title="记录与数据" aria-label="记录与数据"><History size={16} aria-hidden="true"/>记录</button><a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a><button onClick={refresh} disabled={Boolean(busy)}><RefreshCw size={16} aria-hidden="true"/>刷新</button></div></header>
+    <header className="director-heading">
+      <div><h1>场景导演台</h1><p className="director-scene-meta">{instance?.name || definition?.name || '场景'}<span>{modes[instance?.mode || mode]}</span></p></div>
+      <div className="director-buttons">
+        <button disabled={blocked || !definition || !identity.createPublicTask} onClick={() => openRestart()}><RotateCcw size={16} aria-hidden="true"/>重新演示</button>
+        <button disabled={Boolean(busy || replay.busy)} onClick={() => { eventDetails.close(); setPanel(undefined); setRecords('runs'); }}><History size={16} aria-hidden="true"/>演示记录</button>
+        <a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a>
+        <button aria-label="演示设置" title="演示设置" disabled={Boolean(busy || replay.busy)} onClick={() => {eventDetails.close(); setRecords(undefined); setPanel('settings');}}><Settings2 size={16} aria-hidden="true"/></button>
+        <button aria-label="刷新" title="刷新" onClick={refresh} disabled={Boolean(busy || replay.busy)}><RefreshCw size={16} aria-hidden="true"/></button>
+      </div>
+    </header>
     {fetchError && <div className="director-feedback is-error" role="alert"><CircleAlert size={18} aria-hidden="true"/><div>{fetchError}<p>资料更新失败，操作已暂停。</p></div><button onClick={refresh}>重新读取</button></div>}
     {notice && <p className="director-feedback" role="status"><Check size={17} aria-hidden="true"/>{notice}</p>}
-    {error && <p className="director-feedback is-error" role="alert"><CircleAlert size={17} aria-hidden="true"/>{error}</p>}
+    {error && panel !== 'restart' && <p className="director-feedback is-error" role="alert"><CircleAlert size={17} aria-hidden="true"/>{error}</p>}
     {pending && !busy && <section className="director-pending" aria-label="待核对操作"><strong>{pending.label} · 结果待核对</strong><p>刷新不会重新执行，请先核对回执。</p><div className="director-buttons"><button onClick={()=>void reconcile()} disabled={Boolean(busy)}>核对操作结果</button>{reviewed && <button onClick={()=>void execute(pending)} disabled={Boolean(busy)}>重试原请求</button>}</div></section>}
+    {replay.draft && !replay.busy && panel !== 'restart' && <section className="director-pending" aria-label="待完成演示准备">
+      <strong>演示准备中断</strong><p>核对已完成操作后继续准备。</p><div className="director-buttons">
+        <button disabled={Boolean(busy || pending || fetchError)} onClick={() => {setError(''); replay.resume();}}>核对并继续</button>
+        {replay.canCancel && <button onClick={replay.cancel}>取消准备</button>}
+      </div>
+    </section>}
     <div className="director-layout">
-      <aside className="director-sidebar">
-        <section className="director-card"><h2>场景</h2><label htmlFor={domId('director-definition')}>剧本<select id={domId('director-definition')} value={definition?.id || ''} disabled={blocked} onChange={event=>setDefinitionId(event.target.value)}>{definitions.data?.items.map(item=><option key={item.id} value={item.id}>{item.name} · {item.version}</option>)}</select></label><label htmlFor={domId('director-mode')}>投放范围<select id={domId('director-mode')} value={mode} disabled={blocked} onChange={event=>setMode(event.target.value as ScenarioMode)}><option value="main_story">{modes.main_story}</option><option value="source_replay">{modes.source_replay}</option></select></label>
-          {definition && <><p className="director-scope">{definition.counts.vehicles}辆车 · {definition.counts.objects}个背景对象</p><button className={!instance ? 'primary-action' : undefined} disabled={blocked} onClick={()=>mutate('创建新轮', '/api/simulation/instances', {definitionId: definition.id, version: definition.version, mode})}><Plus size={16} aria-hidden="true"/>创建新轮</button><details><summary>场景说明</summary><p>{definition.description}</p><p>{definition.geography.label}</p><small>{definition.geography.attribution}</small></details></>}
-          {definitions.data?.items.length === 0 && <p>暂无可用场景。</p>}
-        </section>
-        <section className="director-card"><h2>轮次</h2><label htmlFor={domId('director-instance')}>场景实例<select id={domId('director-instance')} value={instanceId} disabled={Boolean(busy || pending) || !choices.length} onChange={event=>selectInstance(event.target.value)}>{instances.data && !choices.length && <option value="">尚未创建</option>}{choices.map(item=><option key={item.instanceId} value={item.instanceId}>{item.instanceId} · {instanceStates[item.status]}</option>)}</select></label>{(instancePages.length > 0 || instances.data?.hasMore) && <div className="director-buttons"><button disabled={blocked || !instancePages.length} onClick={()=>{setSelection(instanceId);setInstancePages(pages=>pages.slice(0,-1));}}>较新轮次</button><button disabled={blocked || !instances.data?.nextCursor} onClick={()=>{const cursor=instances.data?.nextCursor;if(cursor){setSelection(instanceId);setInstancePages(pages=>[...pages,cursor]);}}}>更早轮次</button></div>}{instance && <span className="director-scope">{modes[instance.mode]}</span>}{instance?.status === 'active' && <details><summary>轮次管理</summary><button disabled={blocked || delivery.syncing} onClick={() => mutate(instance.paused ? '解除锁定' : '锁定轮次', `${base}/control`, {
-            action: instance.paused ? 'resume' : 'pause', expectedRevision: instance.revision,
-          })}>{instance.paused ? '解除锁定' : '锁定轮次'}</button></details>}</section>
-      </aside>
       <div className="director-workspace">
         {!instance ? !fetchError && <div className="director-card director-empty">
           {instanceId || !instances.data ? <LoadingIndicator label="正在读取演示轮次…" /> :
-            <><Clock3 size={26} aria-hidden="true"/><h2>尚无演示轮次</h2><p>选择场景，创建新轮。</p></>}
+            <><Clock3 size={26} aria-hidden="true"/><h2>尚无演示记录</h2><button disabled={blocked || !definition} onClick={() => openRestart()}>开始演示</button></>}
         </div> : <>
           <section className="director-card director-delivery" aria-label="事件投放">
             <div className="director-delivery-main">
               <div>
-                <span className="director-scope">{instance.status === 'prepared' ? '演示准备' : instance.status === 'frozen' ? '历史轮次' : stopped ? '投放结束' : delivery.waiting ? '待完成投放' : '下一步'}</span>
-                <h2>{instance.status === 'frozen' ? '本轮已冻结' : stopped ? (instance.mode === 'main_story' ? '待方案选择' : '来源回放完成') : delivery.step && <>
+                <span className="director-scope">{instance.status === 'prepared' ? '演示准备' : instance.status === 'frozen' ? '历史演示' : stopped ? '投放结束' : delivery.waiting ? '待完成投放' : '下一步'}</span>
+                <h2>{instance.status === 'frozen' ? '已结束' : stopped ? (instance.mode === 'main_story' ? '待方案选择' : '来源回放完成') : delivery.step && <>
                   <time dateTime={delivery.step.businessTime}>{delivery.step.businessTime.slice(11,16)}</time>{delivery.step.title}
                 </>}</h2>
                 {instance.status !== 'frozen' && !stopped && delivery.step && <small>{delivery.waiting
@@ -209,18 +243,13 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
                     <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : '投放事件'}
                   </button>}
                 </>}
-                {instance.status === 'prepared' && (!identity.createPublicTask ? <span className="director-warning">缺少任务管理权限。</span> :
-                  taskState.data && (taskState.data.initialized
-                    ? <button className="primary-action" disabled={blocked || !instances.data} onClick={activate}>启用本轮<ArrowRight size={14}/></button>
-                    : <button className="primary-action" disabled={blocked} onClick={()=>mutate('创建演示任务', `${base}/initialize`, {}, 'initialize')}>创建演示任务<ArrowRight size={14}/></button>))}
+                {instance.status === 'prepared' && <button className="primary-action" disabled={blocked || !identity.createPublicTask} onClick={() => openRestart(instanceId)}>继续准备<ArrowRight size={14} aria-hidden="true"/></button>}
               </div>
             </div>
-            {instance.status === 'prepared' && taskState.data?.initialized && instances.data?.activeInstanceId && instances.data.activeInstanceId !== instanceId &&
-              <label className="director-replay-confirm"><input type="checkbox" checked={terminateUnsent} disabled={blocked} onChange={event=>setTerminateUnsent(event.target.checked)}/>终止旧轮未发送通知</label>}
             <div className="director-delivery-meta" role="group" aria-label="本轮场景时间">
               <span>场景时间 <time dateTime={instance.businessNow} title={instance.businessNow}>{instance.businessNow.slice(11,16)}</time></span>
               <span>{Math.min(instance.stepIndex,steps.length)} / {steps.length} 事件已应用</span>
-              {instance.paused && <span>投放已锁定</span>}
+              {instance.status === 'active' && instance.paused && <span>投放已锁定</span>}
             </div>
           </section>
           {taskState.error && <p className="director-warning" role="alert">{taskState.error}<button disabled={Boolean(busy)} onClick={taskState.refresh}>重新读取任务</button></p>}
@@ -254,10 +283,46 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
         </>}
       </div>
     </div>
-    {instance && detail.data && records && <Panel title="记录与数据" className="director-records-panel" close={()=>setRecords(undefined)}>
-      <div className="director-record-tabs" aria-label="记录分类"><button aria-pressed={records==='history'} onClick={()=>setRecords('history')}>操作记录</button><button aria-pressed={records==='overview'} onClick={()=>setRecords('overview')}>数据概况</button></div>
+    {records && <Panel title="演示记录" className="director-records-panel" close={() => setRecords(undefined)}>
+      <div className="director-record-tabs" aria-label="记录分类">
+        <button aria-pressed={records === 'runs'} onClick={() => setRecords('runs')}>演示记录</button>
+        <button disabled={!instance || !detail.data} aria-pressed={records === 'history'} onClick={() => setRecords('history')}>操作记录</button>
+        <button disabled={!instance || !detail.data} aria-pressed={records === 'overview'} onClick={() => setRecords('overview')}>数据概况</button>
+      </div>
+      {records === 'runs' && <section aria-label="历次演示">
+        {!instances.data && !instances.error && <LoadingIndicator label="正在读取演示记录…"/>}
+        {choices.length ? <ul className="director-run-list">{choices.map(item => <li key={item.instanceId}>
+          <button disabled={Boolean(busy || replay.busy)} aria-current={item.instanceId === instanceId ? 'true' : undefined} onClick={() => selectInstance(item.instanceId)}>
+            <span><strong>{item.name}</strong><small>{modes[item.mode]} · <time dateTime={item.createdAt}>{realTimestamp(item.createdAt)}</time></small></span>
+            <span className="director-status">{item.status === 'active' && item.paused ? '已锁定' : instanceStates[item.status]}</span>
+          </button>
+        </li>)}</ul> : instances.data && <p className="director-scope">暂无演示记录</p>}
+        {(instancePages.length > 0 || instances.data?.hasMore) && <div className="director-buttons director-record-pagination">
+          <button disabled={!instancePages.length} onClick={() => setInstancePages(pages => pages.slice(0, -1))}>较新记录</button>
+          <button disabled={!instances.data?.nextCursor} onClick={() => { const cursor = instances.data?.nextCursor; if (cursor) setInstancePages(pages => [...pages, cursor]); }}>更早记录</button>
+        </div>}
+      </section>}
+      {instance && detail.data && records !== 'runs' && <>
       {records==='history' ? <section aria-label="操作记录"><p className="director-scope director-record-zone">{detail.data.operations.length>=20?'最近20条 · ':''}实际时间 · {Intl.DateTimeFormat().resolvedOptions().timeZone}</p>{detail.data.operations.length ? <table className="director-history"><thead><tr><th>操作</th><th>场景时间</th><th>实际时间</th><th>席位</th></tr></thead><tbody>{detail.data.operations.map(operation=><tr key={operation.id}><td>{operationNames[operation.kind]}</td><td><time dateTime={operation.businessNow}>{operation.businessNow.slice(11,16)}</time></td><td><time dateTime={operation.createdAt} title={operation.createdAt}>{realTimestamp(operation.createdAt)}</time></td><td>{operation.actor.seatId===identity.seatId?identity.seatName:operation.actor.seatId}</td></tr>)}</tbody></table>:<p className="director-scope">暂无操作</p>}</section> : <section aria-label="数据概况"><dl className="director-data-summary"><div><dt>来源对象</dt><dd>{detail.data.objects.length}</dd></div><div><dt>报告</dt><dd>{detail.data.reports.length}</dd></div></dl><details className="director-instance-info"><summary>实例信息</summary><dl><dt>编号</dt><dd>{instance.instanceId}</dd><dt>修订</dt><dd>{instance.revision}</dd><dt>创建时间 · 本机时区</dt><dd><time dateTime={instance.createdAt} title={instance.createdAt}>{realTimestamp(instance.createdAt)}</time></dd></dl></details><details className="director-instance-info"><summary>对象清单</summary><ul className="director-object-list">{detail.data.objects.map(object=><li key={`${object.ref.systemId}:${object.ref.objectType}:${object.ref.objectId}`}>{object.name}</li>)}</ul></details></section>}
+      </>}
     </Panel>}
-    {busy && <p className="director-working" role="status">正在{busy}…</p>}
+    {panel === 'settings' && <Panel title="演示设置" className="director-settings-panel" close={() => setPanel(undefined)}>
+      <div className="director-settings-form">{modeFields}<p className="director-scope">设置用于下一次演示。</p>
+        {definition && <><p className="director-scope">{definition.counts.vehicles} 辆车 · {definition.counts.objects} 个背景对象</p><details><summary>场景说明</summary><p>{definition.description}</p><small>{definition.geography.label} · {definition.geography.attribution}</small></details></>}
+        {instance?.status === 'active' && <details><summary>轮次管理</summary><button disabled={blocked || delivery.syncing} onClick={() => mutate(instance.paused ? '解除锁定' : '锁定轮次', `${base}/control`, {action: instance.paused ? 'resume' : 'pause', expectedRevision: instance.revision})}>{instance.paused ? '解除锁定' : '锁定轮次'}</button></details>}
+      </div>
+    </Panel>}
+    {panel === 'restart' && <Panel title="重新演示" className="director-settings-panel" close={() => {if (!replay.busy) setPanel(undefined);}}>
+      <div className="director-settings-form">
+        <strong>{definition?.name}</strong>{modeFields}
+        {activeId && <p>当前演示将结束，演示任务归档，历史记录保留。</p>}
+        {unsent > 0 && <label className="director-replay-consent"><input type="checkbox" checked={terminateUnsent} disabled={Boolean(replay.busy || replay.draft)} onChange={event => setTerminateUnsent(event.target.checked)}/>放弃当前演示未发送的 {unsent} 条通知</label>}
+        {unconfirmed && <p className="director-warning">当前演示有接收未确认的通知，请先核对接收回执。</p>}
+        {activeDetail.error && <p className="director-warning">{activeDetail.error}</p>}
+        {error && <p className="director-warning" role="alert">{error}</p>}
+        {replay.draft && !replay.busy ? <button onClick={() => {setError(''); replay.resume();}}>核对并继续</button> : <button className="primary-action" disabled={restartBlocked} onClick={() => {if (definition) {setError(''); void replay.start(definition, mode, terminateUnsent, preparingId);}}}>{replay.busy || '开始演示'}</button>}
+      </div>
+    </Panel>}
+    {(busy || replay.busy) && <p className="director-working" role="status">{replay.busy || `正在${busy}…`}</p>}
   </>;
 }
