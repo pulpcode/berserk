@@ -1,17 +1,19 @@
 import { useRef, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, Clock3, ChevronDown, ArrowUpRight, Map as MapIcon, Pause, Play, Plus, RefreshCw, Send } from 'lucide-react';
+import { ArrowRight, Check, CircleAlert, Clock3, Pin, MoreHorizontal, History, ArrowUpRight, Map as MapIcon, Pause, Play, Plus, RefreshCw, Send } from 'lucide-react';
 import type { Identity } from '../contracts/access';
 import type { ScenarioAction, ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioPreview, ScenarioTaskInitialization } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
 import { useInformationQuery } from './information-ui';
 import { randomUUID } from './random-uuid';
+import { Panel } from './Resources';
+import { DirectorPopover, useDirectorPopover } from './DirectorPopover';
 import './scenario-director.css';
 
 const modes: Record<ScenarioMode, string> = {main_story: '主故事 · 至方案选择', source_replay: '全部来源事件'};
 const instanceStates = {prepared: '准备中', active: '活动轮次', frozen: '已冻结'};
 const notificationStates = {unsent: '尚未发送', unconfirmed: '接收未确认', accepted: '接收已确认'};
 const operationNames = {create: '创建本轮', activate: '激活本轮', step: '应用事件', pause: '暂停', resume: '继续'};
-const timestamp = (value: string) => value.replace('T', ' ');
+const realTimestamp = (value: string) => new Date(value).toLocaleString('zh-CN', {hour12: false});
 type PendingRequest = {id: string; label: string; path: string; kind: 'scenario' | 'initialize'; instanceId?: string; body: Record<string, string | number | boolean>};
 
 /** A login-scoped pending request is a recoverable draft, never an automatic replay. */
@@ -62,12 +64,13 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const [mode, setMode] = useState<ScenarioMode>('main_story');
   const [terminateUnsent, setTerminateUnsent] = useState(false);
   const [preview, setPreview] = useState<ScenarioPreview>();
-  const [expanded, setExpanded] = useState<{instanceId: string; stepId: string}>();
+  const [records, setRecords] = useState<'history' | 'overview'>();
   const definitions = useInformationQuery<ScenarioDefinitions>('/api/simulation/scenarios', !denied, 60000);
   const instanceCursor = instancePages.at(-1);
   const instances = useInformationQuery<ScenarioInstances>(`/api/simulation/instances${instanceCursor ? `?cursor=${encodeURIComponent(instanceCursor)}` : ''}`, !denied, 10000);
   const instanceId = selection || instances.data?.activeInstanceId || instances.data?.items[0]?.instanceId || '';
   const base = `/api/simulation/instances/${encodeURIComponent(instanceId)}`;
+  const eventPopover = useDirectorPopover(instanceId);
   const detail = useInformationQuery<ScenarioInstanceDetail>(instanceId ? base : undefined, !denied, 5000);
   const taskState = useInformationQuery<ScenarioTaskInitialization>(instanceId ? `${base}/initialize` : undefined, !denied, 10000);
   const instance = detail.data?.instance;
@@ -79,15 +82,14 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const currentPreview = preview?.instance.instanceId === instanceId && preview.instance.revision === instance?.revision ? preview : undefined;
   const steps = instance?.mode==='main_story' ? detail.data?.steps.slice(0,5) || [] : detail.data?.steps || [];
   const stopped = Boolean(instance && instance.stepIndex >= steps.length && steps.length);
-  const pendingStep = detail.data?.actions.find(action=>action.sendState!=='accepted')?.stepId;
-  const expandedStepId = expanded?.instanceId===instanceId ? expanded.stepId : pendingStep || steps[Math.min(instance?.stepIndex || 0,steps.length-1)]?.id;
+
 
   function remember(request?: PendingRequest) {
     pendingRef.current = request; setPending(request); setReviewed(false);
     try { if (request) sessionStorage.setItem(pendingKey, JSON.stringify(request)); else sessionStorage.removeItem(pendingKey); } catch { /* Recovery remains available while this page stays open. */ }
   }
   function selectInstance(id: string) {
-    setSelection(id); setExpanded(undefined); setPreview(undefined); setNotice(''); setError('');
+    setSelection(id); eventPopover.close(); setRecords(undefined); setPreview(undefined); setNotice(''); setError('');
     history.replaceState(null, '', `/scenario-director${id ? `?instance=${encodeURIComponent(id)}` : ''}`);
   }
   function refresh() { definitions.refresh(); instances.refresh(); detail.refresh(); taskState.refresh(); }
@@ -96,7 +98,8 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     setError(reason instanceof Error ? reason.message : '操作未完成，请先核对服务器状态。');
   }
   function accepted(result: ScenarioMutationResult, label: string) {
-    selectInstance(result.instance.instanceId); setNotice(`${label}已确认。${result.actions.length ? `已保存${result.actions.length}条待发通知，请分别发送。` : ''}`);
+    if (result.instance.instanceId !== instanceId) selectInstance(result.instance.instanceId);
+    setPreview(undefined); setNotice(`${label}已确认。`);
     if (result.operation.kind === 'create') setInstancePages([]);
     remember(); refresh();
   }
@@ -148,7 +151,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
 
   if (denied || definitions.denied || instances.denied) return <Denied back={back} message="当前账号已无法读取导演台资料。请核对导演授权与场景配置后重新进入。"/>;
   return <>
-    <header className="director-heading"><h1>场景导演台</h1><div className="director-buttons"><a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a><button onClick={refresh} disabled={Boolean(busy)}><RefreshCw size={15} aria-hidden="true"/>刷新</button></div></header>
+    <header className="director-heading"><h1>场景导演台</h1><div className="director-buttons"><button disabled={!instance} onClick={()=>{eventPopover.close();setRecords('history');}} title="记录与数据" aria-label="记录与数据"><History size={15} aria-hidden="true"/>记录</button><a href="/situation" target="_blank" rel="noreferrer"><MapIcon size={16} aria-hidden="true"/>态势地图</a><button onClick={refresh} disabled={Boolean(busy)}><RefreshCw size={15} aria-hidden="true"/>刷新</button></div></header>
     {fetchError && <div className="director-feedback is-error" role="alert"><CircleAlert size={18} aria-hidden="true"/><div>{fetchError}<p>资料更新失败，操作已暂停。</p></div><button onClick={refresh}>重新读取</button></div>}
     {notice && <p className="director-feedback" role="status"><Check size={17} aria-hidden="true"/>{notice}</p>}
     {error && <p className="director-feedback is-error" role="alert"><CircleAlert size={17} aria-hidden="true"/>{error}</p>}
@@ -169,40 +172,46 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
             const actions=detail.data?.actions.filter(action=>action.stepId===step.id) || [];
             const applied=index<instance.stepIndex,confirmed=actions.length>0&&actions.every(action=>action.sendState==='accepted');
             const isNext=index===instance.stepIndex&&!stopped;
-            const opened=step.id===expandedStepId;
+            const selected=eventPopover.selection?.id===step.id?eventPopover.selection:undefined;
+            const pinned=selected?.pinned===true;
             const stepPreview=isNext&&currentPreview?.step?.id===step.id?currentPreview:undefined;
             const tasks=(step.taskCodes || []).flatMap(code=>{
               const initialized=taskState.data?.tasks.find(task=>task.code===code),definition=detail.data?.taskDefinitions?.find(task=>task.code===code);
               return initialized||definition?[{code,title:initialized?.title || definition!.title,taskId:initialized?.taskId}]:[];
             });
-            return <li key={step.id} className={`${applied?'is-applied':''} ${opened?'is-open':''}`} aria-current={isNext?'step':undefined}>
-              <button className="director-step-toggle" aria-expanded={opened} aria-controls={domId(`director-step-${step.id}`)} onClick={()=>setExpanded({instanceId,stepId:opened?'':step.id})}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{confirmed?'已接收':applied?'待核对':isNext?'下一事件':'待发生'}</span><ChevronDown size={14} aria-hidden="true"/></button>
-              {opened && <div id={domId(`director-step-${step.id}`)} className="director-step-body"><p>{step.description}</p>
-                {tasks.length>0 && <div className="director-event-tasks"><span>剧本任务</span>{tasks.map(task=><button key={task.code} disabled={!task.taskId} onClick={()=>{if(task.taskId)openTask(task.taskId);}}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>)}</div>}
-                {instance.status==='prepared' && index===0 && <div className="director-start">
+            return <li key={step.id} className={`${applied?'is-applied':''} ${pinned?'is-pinned':''}`} aria-current={isNext?'step':undefined}>
+              <button className="director-step-toggle" aria-haspopup="dialog" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onPointerEnter={event=>eventPopover.enter(step.id,event.currentTarget)} onPointerLeave={eventPopover.leave} onClick={event=>eventPopover.pin(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{confirmed?'已接收':applied?'待核对':isNext?'下一事件':'待发生'}</span>{pinned?<Pin size={14} aria-hidden="true"/>:<MoreHorizontal size={14} aria-hidden="true"/>}</button>
+              {selected && <DirectorPopover selection={selected} id={domId(`director-step-${step.id}`)} title={step.title} time={step.businessTime.slice(11,16)} status={confirmed?'已接收':applied?'待核对':isNext?'下一事件':'待发生'} keep={eventPopover.keep} leave={eventPopover.leave} pin={()=>eventPopover.pin(step.id,selected.anchor)} close={eventPopover.close}><div className="director-step-body"><p>{step.description}</p>
+                {tasks.length>0 && <div className="director-event-tasks"><span>剧本任务</span>{tasks.map(task=>pinned?<button key={task.code} disabled={!task.taskId} onClick={()=>{if(task.taskId)openTask(task.taskId);}}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>:<span className="director-task-name" key={task.code}>{task.title}</span>)}</div>}
+                {pinned && instance.status==='prepared' && index===0 && <div className="director-start">
                   {!identity.createPublicTask ? <p className="director-warning">缺少任务管理权限。</p> : taskState.data && <>
                     {instances.data?.activeInstanceId && instances.data.activeInstanceId!==instanceId && <><p className="director-scope">启用后将冻结旧轮并归档其任务。</p><label><input type="checkbox" checked={terminateUnsent} disabled={blocked} onChange={event=>setTerminateUnsent(event.target.checked)}/>终止旧轮未发送通知</label></>}
                     {!taskState.data.initialized ? <button className="primary-action" disabled={blocked} onClick={()=>mutate('创建演示任务', `${base}/initialize`, {}, 'initialize')}>创建演示任务<ArrowRight size={14} aria-hidden="true"/></button> : <button className="primary-action" disabled={blocked || !instances.data} onClick={activate}>启用本轮<ArrowRight size={14} aria-hidden="true"/></button>}
                   </>}
                 </div>}
-                {isNext && instance.status==='active' && <>
+                {pinned && isNext && instance.status==='active' && <>
                   {stepPreview && <details className="director-changes"><summary>变更明细 · {stepPreview.changes.length}项</summary><ul>{stepPreview.changes.map((change,i)=><li key={i}>{change}</li>)}</ul></details>}
                   {stepPreview?.reason && <p className="director-warning">{stepPreview.reason}</p>}
-                  <div className="director-buttons director-event-actions">{stepPreview && <button className="primary-action" disabled={blocked || !stepPreview.canApply || instance.paused} onClick={()=>mutate('应用事件', `${base}/steps/${encodeURIComponent(step.id)}`, {expectedRevision: instance.revision})}>应用本步事实<ArrowRight size={14} aria-hidden="true"/></button>}<button className={!stepPreview?'primary-action':undefined} disabled={blocked || instance.paused} onClick={()=>void loadPreview()}>{stepPreview?'刷新预览':'预览变化'}</button><span className="director-scope">{step.messageCount}条通知 · 需单独发送</span></div>
+                  <div className="director-buttons director-event-actions">{stepPreview && <button className="primary-action" disabled={blocked || !stepPreview.canApply || instance.paused} onClick={()=>mutate('应用事件', `${base}/steps/${encodeURIComponent(step.id)}`, {expectedRevision: instance.revision})}>应用本步事实<ArrowRight size={14} aria-hidden="true"/></button>}<button className={!stepPreview?'primary-action':undefined} disabled={blocked || instance.paused} onClick={()=>void loadPreview()}>{stepPreview?'刷新预览':'预览变化'}</button><span className="director-scope">{step.messageCount}条通知</span></div>
                 </>}
-                {actions.length>0 && <ul className="director-notifications" aria-label="通知投放与核对">{actions.map(action=><NotificationRow key={action.id} action={action} sendAllowed={instance.status==='active'&&!instance.paused&&!blocked} refresh={refresh} onDenied={()=>setDenied(true)}/>)}</ul>}
-              </div>}
+                {!pinned && <span className="director-scope">{step.messageCount}条通知{actions.length>0?` · ${confirmed?'已接收':'待核对'}`:''}</span>}
+                {pinned && actions.length>0 && <ul className="director-notifications" aria-label="通知投放与核对">{actions.map(action=><NotificationRow key={action.id} action={action} showTitle={actions.length>1 || action.notification.title!==step.title} sendAllowed={instance.status==='active'&&!instance.paused&&!blocked} refresh={refresh} onDenied={()=>setDenied(true)}/>)}</ul>}
+              </div></DirectorPopover>}
             </li>;
           })}</ol>{stopped && <p className="director-stop"><Pause size={14} aria-hidden="true"/>{instance.mode==='main_story'?'待方案选择 · 主故事停止点':'来源回放完成 · 不代表业务任务完成'}</p>}</section>
-          <details className="director-card director-records"><summary>操作记录与来源资料</summary><p className="director-scope">实例 {instance.instanceId} · 修订 {instance.revision}<br/>来源对象 {detail.data?.objects.length || 0}项 · 报告 {detail.data?.reports.length || 0}份<br/>创建于真实时间 {timestamp(instance.createdAt)}</p><ol>{detail.data?.operations.map(operation=><li key={operation.id}><strong>{operationNames[operation.kind]}</strong><span>场景 {timestamp(operation.businessNow)}</span><small>实际操作 {timestamp(operation.createdAt)} · {operation.actor.seatId}</small></li>)}</ol><details><summary>来源对象清单</summary><ul className="director-object-list">{detail.data?.objects.map(object=><li key={`${object.ref.systemId}:${object.ref.objectType}:${object.ref.objectId}`}>{object.name}</li>)}</ul></details></details>
+
         </>}
       </div>
     </div>
+    {instance && detail.data && records && <Panel title="记录与数据" className="director-records-panel" close={()=>setRecords(undefined)}>
+      <div className="director-record-tabs" aria-label="记录分类"><button aria-pressed={records==='history'} onClick={()=>setRecords('history')}>操作履历</button><button aria-pressed={records==='overview'} onClick={()=>setRecords('overview')}>数据概况</button></div>
+      {records==='history' ? <section aria-label="操作履历"><p className="director-scope director-record-zone">{detail.data.operations.length>=20?'最近20条 · ':''}实际时间 · {Intl.DateTimeFormat().resolvedOptions().timeZone}</p>{detail.data.operations.length ? <table className="director-history"><thead><tr><th>操作</th><th>场景时间</th><th>实际时间</th><th>席位</th></tr></thead><tbody>{detail.data.operations.map(operation=><tr key={operation.id}><td>{operationNames[operation.kind]}</td><td><time dateTime={operation.businessNow}>{operation.businessNow.slice(11,16)}</time></td><td><time dateTime={operation.createdAt} title={operation.createdAt}>{realTimestamp(operation.createdAt)}</time></td><td>{operation.actor.seatId===identity.seatId?identity.seatName:operation.actor.seatId}</td></tr>)}</tbody></table>:<p className="director-scope">暂无操作</p>}</section> : <section aria-label="数据概况"><dl className="director-data-summary"><div><dt>来源对象</dt><dd>{detail.data.objects.length}</dd></div><div><dt>报告</dt><dd>{detail.data.reports.length}</dd></div></dl><details className="director-instance-info"><summary>实例信息</summary><dl><dt>编号</dt><dd>{instance.instanceId}</dd><dt>修订</dt><dd>{instance.revision}</dd><dt>创建时间 · 本机时区</dt><dd><time dateTime={instance.createdAt} title={instance.createdAt}>{realTimestamp(instance.createdAt)}</time></dd></dl></details><details className="director-instance-info"><summary>对象清单</summary><ul className="director-object-list">{detail.data.objects.map(object=><li key={`${object.ref.systemId}:${object.ref.objectType}:${object.ref.objectId}`}>{object.name}</li>)}</ul></details></section>}
+    </Panel>}
     {busy && <p className="director-working" role="status">正在{busy}…</p>}
   </>;
 }
 
-function NotificationRow({action, sendAllowed, refresh, onDenied}: {action: ScenarioAction; sendAllowed: boolean; refresh: () => void; onDenied: () => void}) {
+function NotificationRow({action, showTitle, sendAllowed, refresh, onDenied}: {action: ScenarioAction; showTitle: boolean; sendAllowed: boolean; refresh: () => void; onDenied: () => void}) {
   const {api} = useApi();
   const [busy, setBusy] = useState(false);
   const [uncertain, setUncertain] = useState(false);
@@ -219,5 +228,5 @@ function NotificationRow({action, sendAllowed, refresh, onDenied}: {action: Scen
       setError(reason instanceof Error ? reason.message : '尚未确认发送结果，请核对原通知。'); if(send)setUncertain(true);
     } finally { setBusy(false); }
   }
-  return <li><div className="director-notification-heading"><strong>{action.notification.title}</strong><span className={`director-status ${action.sendState==='accepted'?'is-confirmed':''}`}>{notificationStates[action.sendState]}</span></div><p className="director-scope">发生于场景 {timestamp(action.notification.occurredAt)} · 实际保存 {timestamp(action.createdAt)}</p><details><summary>通知内容</summary><p>{action.notification.text}</p></details><div className="director-buttons">{action.receipt ? <a href={`/overview?tab=events&id=${encodeURIComponent(action.receipt.eventId)}`} target="_blank" rel="noreferrer">接收记录<ArrowRight size={14} aria-hidden="true"/></a> : <><button disabled={busy} onClick={()=>void run(false)}>核对接收回执</button><button disabled={busy || !sendAllowed || mustQuery} onClick={()=>void run(true)}><Send size={14} aria-hidden="true"/>{action.sendState==='unsent'?'发送通知':'重送同一通知'}</button></>}</div>{error && <p className="director-warning" role="status">{error}</p>}</li>;
+  return <li><div className="director-notification-heading">{showTitle && <strong>{action.notification.title}</strong>}<span className={`director-status ${action.sendState==='accepted'?'is-confirmed':''}`}>{notificationStates[action.sendState]}</span></div><details><summary>通知内容</summary><p>{action.notification.text}</p><p className="director-scope">观测 {action.notification.occurredAt} · 实际保存 {realTimestamp(action.createdAt)}</p></details><div className="director-buttons">{action.receipt ? <a href={`/overview?tab=events&id=${encodeURIComponent(action.receipt.eventId)}`} target="_blank" rel="noreferrer">接收记录<ArrowRight size={14} aria-hidden="true"/></a> : <><button disabled={busy} onClick={()=>void run(false)}>核对接收回执</button><button disabled={busy || !sendAllowed || mustQuery} onClick={()=>void run(true)}><Send size={14} aria-hidden="true"/>{action.sendState==='unsent'?'发送通知':'重送同一通知'}</button></>}</div>{error && <p className="director-warning" role="status">{error}</p>}</li>;
 }

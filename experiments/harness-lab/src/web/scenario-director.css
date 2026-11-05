@@ -40,10 +40,6 @@
 .director-notification-heading > strong { font-size: 13px; line-height: 1.7; }
 .director-notifications details { margin: 8px 0 10px; }
 .director-notifications details p { white-space: pre-wrap; max-height: 260px; overflow: auto; }
-.director-records > summary { font-size: 13px; color: var(--text); }
-.director-records ol { margin: 14px 0 0; padding-left: 20px; font-size: 12px; }
-.director-records ol li { padding: 7px 0; }
-.director-records ol span, .director-records ol small { display: block; margin-top: 3px; }
 .director-object-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 5px 18px; font-size: 12px; padding-left: 18px; line-height: 1.8; }
 .director-empty { padding: 34px 20px; text-align: center; color: var(--muted); }
 .director-empty h1, .director-empty h2 { color: var(--text); }
@@ -66,11 +62,10 @@
 .director-step-toggle strong { font-size: 13px; font-weight: 550; line-height: 1.6; overflow-wrap: anywhere; }
 .director-step-toggle time, .director-step-status { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .director-step-toggle > svg { color: var(--muted); transition: transform .15s ease; }
-.director-steps .is-open .director-step-toggle > svg { transform: rotate(180deg); }
 .director-step-number { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; font-size: 11px; background: var(--faint); color: var(--muted); }
 .director-steps li[aria-current="step"] .director-step-number { background: var(--accent); color: var(--surface); }
 .director-steps .is-applied .director-step-number { color: var(--accent); background: var(--accent-soft); }
-.director-step-body { padding: 0 0 20px 98px; }
+.director-step-body { padding: 0; }
 .director-step-body > p:first-child { margin: 0 0 12px; color: var(--muted); }
 .director-event-tasks { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; margin: 12px 0 18px; }
 .director-event-tasks > span { font-size: 11px; color: var(--muted); }
@@ -85,3 +80,28 @@
 @media (prefers-reduced-motion: reduce) { .director-step-toggle > svg { transition: none; } }
 @media (max-width: 1200px) { .scenario-director { padding: 22px; } .director-layout { grid-template-columns: 210px minmax(0, 1fr); gap: 16px; } .director-step-body { padding-left: 0; } }
 @media (max-width: 950px) { .director-layout { grid-template-columns: minmax(0, 1fr); } .director-sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .director-heading { flex-wrap: wrap; } }
+
+.director-steps .is-pinned .director-step-toggle { color: var(--accent); }
+.director-event-popover { position: fixed; z-index: 120; width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow: auto; background: var(--surface); color: var(--text); box-shadow: 0 8px 30px #17231a24; }
+.director-popover-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+.director-popover-heading h2 { margin: 4px 0 0; font-size: 15px; line-height: 1.6; }
+.director-popover-heading .director-buttons { flex-wrap: nowrap; gap: 3px; }
+.director-popover-heading .icon-button { width: 28px; height: 28px; min-height: 28px; padding: 5px; }
+.director-event-tasks .director-task-name { color: var(--text); font-size: 12px; }
+.resource-panel.director-records-panel { width: min(680px, calc(100vw - 40px)); }
+.director-record-tabs { display: flex; gap: 4px; margin-bottom: 18px; }
+.director-record-tabs button { border-color: transparent; background: transparent; }
+.director-record-tabs button[aria-pressed="true"] { color: var(--accent); background: var(--accent-soft); }
+.director-record-zone { text-align: right; margin: 0 0 8px; }
+.director-history { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.director-history th { font-weight: 500; color: var(--muted); }
+.director-history td, .director-history th { padding: 12px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.director-history time { font-variant-numeric: tabular-nums; }
+.director-data-summary { display: flex; gap: 60px; margin: 0 0 22px; }
+.director-data-summary dt { color: var(--muted); font-size: 12px; }
+.director-data-summary dd { margin: 3px 0 0; font-size: 26px; font-weight: 550; font-variant-numeric: tabular-nums; }
+.director-instance-info { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.director-instance-info summary { color: var(--muted); font-size: 12px; cursor: pointer; }
+.director-instance-info dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 18px; font-size: 12px; }
+.director-instance-info dt { color: var(--muted); }
+.director-instance-info dd { margin: 0; overflow-wrap: anywhere; }
