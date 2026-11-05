@@ -1,0 +1,10 @@
+{"file": ".trellis/tasks/11-03-scenario-demo/run-isolation-design.md", "reason": "已批准 v0.4 与 A13 排除项"}
+{"file": ".trellis/tasks/11-03-scenario-demo/issues.md", "reason": "SIM-TASK-002 不得实现"}
+{"file": ".trellis/spec/backend/scenario-director.md", "reason": "导演边界与来源时钟"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "作业取消与原生恢复"}
+{"file": ".trellis/spec/backend/continuous-analysis.md", "reason": "连续分析与 epoch"}
+{"file": ".trellis/spec/backend/task-access.md", "reason": "任务权限与归档"}
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "来源工具授权"}
+{"file": ".trellis/spec/backend/task-information.md", "reason": "消息任务关联"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "跨层审查"}
+{"file": ".trellis/spec/backend/scenario-run-isolation.md", "reason": "本期实际跨层隔离契约与明确延期边界"}

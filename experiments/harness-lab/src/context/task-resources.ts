@@ -43,6 +43,8 @@ export class TaskResourceService {
   scope.signal.throwIfAborted();scope.check();const binding=this.annotations.binding(scope.actor,scope.sessionId);
   if(binding.taskId!==scope.taskId||result.owner.taskId!==scope.taskId||result.owner.sessionId!==scope.sessionId||result.owner.userId!==scope.actor.userId||result.owner.seatId!==scope.actor.seatId)throw fail('FORBIDDEN','当前身份或会话无法读取资源结果。');
   const systems=new Set(this.context?.catalog(scope.actor.seatId).systems.map(s=>s.id)??[]);
+  const owner=this.annotations.access?.get(scope.taskId,scope.actor.seatId).scenarioInstanceId;
+  if(owner&&result.schemaVersion===4&&result.snapshotClock?.instanceId!==owner)throw fail('FORBIDDEN','资源结果不属于当前任务资料范围。');
   if(result.schemaVersion===4&&result.dependencies.systemIds.some(id=>this.context?.config.systems.find(s=>s.id===id)?.scenarioClock!==true))throw fail('FORBIDDEN','场景时间来源授权已变化，不能采用旧查询。');
   if(result.dependencies.systemIds.some(id=>!systems.has(id)))throw fail('FORBIDDEN','当前身份无法读取结果依赖来源。');
   for(const ref of result.dependencies.annotations)this.annotations.version(scope.actor,scope.taskId,ref);
@@ -53,6 +55,7 @@ export class TaskResourceService {
   if(binding.taskId!==scope.taskId)throw fail('FORBIDDEN','任务与当前会话不一致。');
   if(request.purpose==='data'&&!request.sources?.length&&!request.annotations?.length)throw fail('SCOPE_REQUIRED','明确数据查询需要来源范围或固定标绘引用。');
   const task=this.annotations.access?.get(scope.taskId,scope.actor.seatId),refs=task?.context?.businessRefs??[];
+  const principal={kind:'seat' as const,seatId:scope.actor.seatId,scenarioInstanceId:task?.scenarioInstanceId};
   const result:ResourceResult={schemaVersion:3,resultRef:`resource:${requestId}:${encodeURIComponent(toolCallId)}`,requestId,toolCallId,createdAt:new Date().toISOString(),owner:{...scope.actor,taskId:scope.taskId,sessionId:scope.sessionId},parameters:structuredClone(request),statisticsScope:{at:'',relation:request.purpose==='task'?'related':'all',availability:'all'},records:[],items:[],coverage:[],relationshipCoverage:{status:'partial',reason:'仅按实际关联证据判断；已有平台引用不保证任务关联或分配名单完整。'},dependencies:{systemIds:[],annotations:[]},messages:[],exclusions:[],summary:{recordCount:0,itemCount:0,knownEntityCount:0,entityCount:null,quantities:[],limitations:[]}};
   result.statisticsScope.at=result.createdAt;
   let clock:ScenarioClock|undefined,realSource=false;
@@ -70,7 +73,7 @@ export class TaskResourceService {
   const defaultTask=request.purpose==='task'&&request.sources===undefined&&request.annotations===undefined;
   if(defaultTask&&this.context)for(const ref of refs.filter(r=>r.objectType!=='resource')){
    result.dependencies.systemIds.push(ref.systemId);
-   try{const response=await this.context.query(ref.objectType==='report'?'information_read':'situation_query',ref.objectType==='report'?{systemId:ref.systemId,reportId:ref.objectId}:{systemId:ref.systemId,mode:'current',objectRefs:[ref],limit:1},{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+   try{const response=await this.context.query(ref.objectType==='report'?'information_read':'situation_query',ref.objectType==='report'?{systemId:ref.systemId,reportId:ref.objectId}:{systemId:ref.systemId,mode:'current',objectRefs:[ref],limit:1},principal,scope.signal);
     observeClock(response.data);
     const linked='item' in response.data?response.data.item.objectRefs:'changeCursor' in response.data?response.data.items.flatMap(o=>'memberRefs' in o.properties?o.properties.memberRefs:[]):[];
     for(const linkedRef of linked.filter(r=>r.objectType==='resource')){derivedRefs.push(linkedRef);derivedBasis.set(key(linkedRef),`平台任务引用 ${key(ref)} 的结构化资源关联`);}
@@ -99,7 +102,7 @@ export class TaskResourceService {
    try{do{
     if(++pages>50)throw fail('LIMIT','资源分页超过50页。');
     const {optionalTask,...basic}=selection;
-    const response=optionalTask?await this.context.queryTaskResources({systemId:selection.systemId,taskId:scope.taskId,...(cursor?{cursor}:{})},{kind:'seat',seatId:scope.actor.seatId},scope.signal):await this.context.query('situation_query',{...basic,mode:'current',...(selection.objectRefs?{}:{objectTypes:['resource']}),limit:100,...(cursor?{cursor}:{})},{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+    const response=optionalTask?await this.context.queryTaskResources({systemId:selection.systemId,taskId:scope.taskId,...(cursor?{cursor}:{})},principal,scope.signal):await this.context.query('situation_query',{...basic,mode:'current',...(selection.objectRefs?{}:{objectTypes:['resource']}),limit:100,...(cursor?{cursor}:{})},principal,scope.signal);
     if(!('changeCursor' in response.data))throw fail('INCOMPLETE','来源未返回当前对象快照。');const data=response.data;observeClock(data);
     declaredCoverage=data.resourceCoverage;const stamp=JSON.stringify([data.asOf,data.changeCursor,data.resourceCoverage??null]);if(snapshot&&snapshot!==stamp||data.unknownRefs.length)throw fail('INCOMPLETE','来源分页变化或精确对象缺失。');snapshot=stamp;const previousStamp=sourceSnapshots.get(selection.systemId);if(previousStamp&&previousStamp!==stamp)throw fail('INCOMPLETE','同一来源的多段读取快照发生变化。');sourceSnapshots.set(selection.systemId,stamp);
     for(const o of data.items){if(++rawCount>500)throw fail('LIMIT','资源原始记录读取超过500条。');if(o.ref.objectType!=='resource')throw fail('INCOMPLETE','来源未遵守资源类型筛选。');const id=key(o.ref);const resource=o.resourceData?.resource??('availableCount' in o.properties?{meaning:'actual_resource' as const,category:'vehicle' as const,granularity:'aggregate' as const,quantity:{value:o.properties.availableCount,unit:'辆' as const,meaning:'available' as const,scope:key(o.ref),evidence:[{kind:'source' as const,ref:o.ref,revision:o.revision}],...(o.effectiveAt?{effectiveAt:o.effectiveAt}:{}),...(o.validTime?.to?{validUntil:o.validTime.to}:{})}}:{meaning:'unspecified' as const});

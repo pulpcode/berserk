@@ -19,7 +19,7 @@ const active = new Set(['queued', 'running']);
 const indexes = ['background_jobs_queue', 'background_jobs_reserved_session', 'background_deliveries_inbox', 'information_rules_enabled_source'];
 const tables = ['background_events', 'background_jobs', 'background_deliveries', 'information_rules', 'information_grants', 'background_actions', 'background_controls'];
 export const backgroundHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string; searchContentEventIds?: string[]};
+export type BackgroundListFilter = {sourceId?: string; sourceIds?: string[]; eventId?: string; jobId?: string; status?: string; statuses?: BackgroundJobStatus[]; seatId?: string; offset?: number; limit?: number; search?: string; searchContentEventIds?: string[]; visibleJobIds?: string[]};
 export type NewBackgroundAction = Omit<BackgroundAction, 'id' | 'status' | 'revision' | 'createdAt' | 'updatedAt'> & {id?: string};
 const seatIdValid = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{1,64}$/.test(value);
 const reasonValid = (value: unknown): value is string => typeof value === 'string' && !!value.trim() && value.length <= 1500;
@@ -62,6 +62,8 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     if (!value || typeof value !== 'object' || value.id !== row.id || !Number.isSafeInteger(value.revision) || value.revision < 1) throw stateError();
     // Queries and permissions use SQL columns; JSON must describe the same record.
     const data = value as Record<string, unknown>;
+    if (data.auditOnly!==undefined && data.auditOnly!==true)throw stateError();
+    if (data.scenarioInstanceId !== undefined && (typeof data.scenarioInstanceId !== 'string' || !/^run-[0-9a-f-]{36}$/i.test(data.scenarioInstanceId))) throw stateError();
     if (data.taskAssessment !== undefined && (data.kind !== 'preprocess' || !validTaskAssessment(data.taskAssessment))) throw stateError();
     if (data.recipientSuggestion !== undefined && (data.kind !== 'preprocess' || !validSuggestion(data.recipientSuggestion))) throw stateError();
     if (data.recipientSuggestionError !== undefined && (typeof data.recipientSuggestionError !== 'string' || !data.recipientSuggestionError)) throw stateError();
@@ -214,11 +216,11 @@ export class BackgroundStore {
       if (!Array.isArray(event.files)) throw stateError();
       if (event.initialJobId) {
         const initial = jobs.get(event.initialJobId);
-        if (!initial || initial.kind !== 'preprocess' || initial.eventId !== event.id || initial.sourceId !== event.sourceId) throw stateError();
+        if (!initial || initial.kind !== 'preprocess' || initial.eventId !== event.id || initial.sourceId !== event.sourceId || initial.scenarioInstanceId !== event.scenarioInstanceId) throw stateError();
       }
     }
     for (const job of jobs.values()) {
-      if ((job.kind !== 'continuous_analysis' && events.get(job.eventId)?.sourceId !== job.sourceId) || !job.requestId) throw stateError();
+      if ((job.kind !== 'continuous_analysis' && (events.get(job.eventId)?.sourceId !== job.sourceId || events.get(job.eventId)?.scenarioInstanceId !== job.scenarioInstanceId)) || !job.requestId) throw stateError();
       if (job.kind === 'preprocess' && (!job.ruleSnapshot || job.ruleSnapshot.rule.sourceId !== job.sourceId || job.ruleSnapshot.rule.profileId !== job.ruleSnapshot.profile.id)) throw stateError();
       if (job.ruleSnapshot && !validCandidateSnapshot(job.ruleSnapshot)) throw stateError();
       if (job.recipientSuggestion) assertCandidateRecipients(job, job.recipientSuggestion.recipients);
@@ -280,16 +282,16 @@ export class BackgroundStore {
     const row = this.db.prepare('SELECT * FROM background_events WHERE source_id=? AND message_id=?').get(sourceId, sourceMessageId);
     return row ? decode<BackgroundEvent>(row) : undefined;
   }
-  backlogSize() { return Number(this.db.prepare("SELECT (SELECT count(*) FROM background_events WHERE initial_job_id IS NULL AND json_extract(data,'$.continuousEpochId') IS NULL)+(SELECT count(*) FROM background_jobs WHERE status='queued' AND kind!='continuous_analysis') AS n").get()?.n) + (this.db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_inputs'").get() ? Number(this.db.prepare('SELECT count(*) n FROM continuous_inputs WHERE consumed=0').get()?.n) : 0); }
+  backlogSize() { return Number(this.db.prepare("SELECT (SELECT count(*) FROM background_events WHERE initial_job_id IS NULL AND json_extract(data,'$.continuousEpochId') IS NULL AND json_extract(data,'$.auditOnly') IS NOT 1)+(SELECT count(*) FROM background_jobs WHERE status='queued' AND kind!='continuous_analysis') AS n").get()?.n) + (this.db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_inputs'").get() ? Number(this.db.prepare("SELECT count(*) n FROM continuous_inputs i JOIN continuous_streams s ON s.epoch_id=i.epoch_id WHERE i.consumed=0 AND json_extract(s.data,'$.scenarioEnded') IS NOT 1 AND json_extract(s.data,'$.legacyScenarioHistory') IS NOT 1 AND json_extract(s.data,'$.scenarioTemplate') IS NOT 1").get()?.n) : 0); }
 
   /** The snapshot was prepared on disk first. Recheck rule revision inside this synchronous transaction. */
   acceptEvent(event: BackgroundEvent, options: {initialJob?: BackgroundJob; capacity: number; expectedRule?: Pick<InformationRule, 'id' | 'revision'> | null}): BackgroundEvent {
     return this.transaction(() => {
       const previous = this.findEvent(event.sourceId, event.sourceMessageId);
-      if (previous) { if (previous.payloadHash !== event.payloadHash) throw conflict('该来源消息标识已用于不同内容。'); return previous; }
-      if (this.backlogSize() >= options.capacity) throw busy();
-      this.assertRuleCurrent(event.sourceId, options.expectedRule);
-      if (options.initialJob && (options.initialJob.eventId !== event.id || options.initialJob.kind !== 'preprocess' || options.initialJob.sourceId !== event.sourceId)) throw conflict('初始处理与接收记录不一致。');
+      if (previous) { if (previous.payloadHash !== event.payloadHash || previous.scenarioInstanceId !== event.scenarioInstanceId) throw conflict('该来源消息标识已用于不同内容。'); return previous; }
+      if (!event.auditOnly && this.backlogSize() >= options.capacity) throw busy();
+      if(!event.auditOnly)this.assertRuleCurrent(event.sourceId, options.expectedRule);
+      if (options.initialJob && (options.initialJob.eventId !== event.id || options.initialJob.kind !== 'preprocess' || options.initialJob.sourceId !== event.sourceId || options.initialJob.scenarioInstanceId !== event.scenarioInstanceId)) throw conflict('初始处理与接收记录不一致。');
       const next = {...event, initialJobId: options.initialJob?.id};
       this.db.prepare('INSERT INTO background_events VALUES(?,?,?,?,?,?,?)').run(next.id, next.sourceId, next.sourceMessageId, next.payloadHash, next.receivedAt, next.initialJobId ?? null, JSON.stringify(next));
       if (options.initialJob) this.insertJob(options.initialJob);
@@ -357,20 +359,20 @@ export class BackgroundStore {
     const job = this.getJob(id); if (job.status !== 'running' || job.phase === phase) return job;
     return this.saveJob({...job, phase, revision: job.revision + 1});
   }
-  requestCancel(id: string, revision: number) {
+  requestCancel(id: string, revision: number, reason?:{code:string;message:string}) {
     return this.transaction(() => {
       const job = this.getJob(id);
       if (job.cancelRequestedAt) return job;
       if (job.revision !== revision || !active.has(job.status)) throw conflict();
       const time = now();
-      return this.saveJob({...job, cancelRequestedAt: time, ...(job.status === 'queued' ? {status: 'cancelled' as const, endedAt: time, phase: undefined} : {}), revision: job.revision + 1});
+      return this.saveJob({...job, cancelRequestedAt: time, ...(job.status === 'queued' ? {status: 'cancelled' as const, endedAt: time, phase: undefined,...(reason?{error:reason}:{})} : {}), revision: job.revision + 1});
     });
   }
   finishJob(id: string, revision: number, result: Pick<BackgroundJob, 'status' | 'result' | 'usage' | 'error'>, options: {recipientSuggestionVerified?: boolean; recipientSuggestionError?: string} = {}): BackgroundJob {
     return this.transaction(() => {
       const job = this.getJob(id);
       if (job.revision !== revision || !active.has(job.status) || active.has(result.status) || (job.status === 'queued' && result.status === 'succeeded')) throw conflict();
-      const status = job.cancelRequestedAt ? 'cancelled' : result.status;
+      const status = job.cancelRequestedAt && !(job.scenarioInstanceId && result.status==='succeeded') ? 'cancelled' : result.status;
       if (status === 'succeeded' && (!result.result || result.result.sessionId !== job.sessionId || result.result.requestId !== job.requestId)) throw conflict('结果与本次执行不一致。');
       const suggestionError = job.recipientSuggestion && !options.recipientSuggestionVerified ? options.recipientSuggestionError ?? '未核实到本次分析的成功建议工具结果，未提交补充投递审批。' : undefined;
       const next = this.saveJob({...job, ...result, status, phase: undefined, recipientSuggestionError: suggestionError, endedAt: now(), revision: job.revision + 1});
@@ -597,6 +599,7 @@ export class BackgroundStore {
       else { clauses.push('EXISTS(SELECT 1 FROM background_jobs j WHERE j.event_id=background_events.id AND j.status=?)'); values.push(filter.status); }
     }
     if (filter.seatId && table !== 'background_events') { clauses.push('seat_id=?'); values.push(filter.seatId); }
+    if (filter.visibleJobIds) { clauses.push('id IN (SELECT value FROM json_each(?))'); values.push(JSON.stringify(filter.visibleJobIds)); }
     if (filter.search) {
       if (table === 'background_jobs') {
         // Only searchable public source metadata, never a seat's goal, task or native history.

@@ -29,14 +29,28 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
     return config;
   };
   const scenarios=await scenarioRoutes(app,lab,scope,background,env);
+  const queryScope={...empty,properties:{taskId:{type:'string',format:'uuid'}}};
+  const queryPrincipal=(request:FastifyRequest)=>{
+    const seatId=scope.seat(request),taskId=(request.query as {taskId?:string}).taskId;
+    if(!taskId)return {kind:'seat' as const,seatId};
+    if(!lab.access)throw new RequestError('TASK_NOT_FOUND','任务不存在或无权查看。',404);
+    const task=lab.access.get(taskId,seatId);
+    return {kind:'seat' as const,seatId,scenarioInstanceId:task.scenarioInstanceId};
+  };
+  const readQuery=(request:FastifyRequest,signal:AbortSignal,tool:'situation_query'|'information_search'|'information_read',input:unknown)=>{
+    const principal=queryPrincipal(request);
+    // Global current browsing creates no association. An explicit parent must have its own proven scope.
+    const readOnly=!(request.query as {taskId?:string}).taskId || principal.scenarioInstanceId!==undefined;
+    return context().query(tool,input,principal,signal,readOnly);
+  };
   app.get(`${scope.base}/context/map-config`,{schema:{querystring:empty}},request => {
     let simulationEnabled = false; try {simulation(request);simulationEnabled=true;} catch { /* Optional control capability. */ }
     return {...normalizeMapConfig(lab.context?.config.map ?? defaultMapConfig),simulationEnabled,scenarioControlEnabled:scenarios?.allowed(request)??false,...(lab.context?.config.simulation?.directorSeatId?{directorSeatId:lab.context.config.simulation.directorSeatId}:{})};
   });
   for (const [path,tool] of [['situation','situation_query'],['reports/search','information_search']] as const) {
-    app.post(`${scope.base}/context/${path}`,{schema:{querystring:empty}},async (request,reply) => readWithSignal(request,reply,signal=>context().query(tool, request.body,{kind:'seat',seatId:scope.seat(request)},signal)));
+    app.post(`${scope.base}/context/${path}`,{schema:{querystring:queryScope}},async (request,reply) => readWithSignal(request,reply,signal=>readQuery(request,signal,tool,request.body)));
   }
-  app.get<{Params:{systemId:string;reportId:string};Querystring:{revision?:string}}>(`${scope.base}/context/reports/:systemId/:reportId`,{schema:{querystring:{...empty,properties:{revision:{type:'string',pattern:'^[1-9][0-9]*$'}}}}},(request,reply) => readWithSignal(request,reply,signal=>context().query('information_read',{systemId:request.params.systemId,reportId:request.params.reportId,...(request.query.revision ? {revision:Number(request.query.revision)} : {})},{kind:'seat',seatId:scope.seat(request)},signal)));
+  app.get<{Params:{systemId:string;reportId:string};Querystring:{revision?:string;taskId?:string}}>(`${scope.base}/context/reports/:systemId/:reportId`,{schema:{querystring:{...empty,properties:{...queryScope.properties,revision:{type:'string',pattern:'^[1-9][0-9]*$'}}}}},(request,reply) => readWithSignal(request,reply,signal=>readQuery(request,signal,'information_read',{systemId:request.params.systemId,reportId:request.params.reportId,...(request.query.revision ? {revision:Number(request.query.revision)} : {})})));
   const forward = async (request: FastifyRequest, path: string, body?: unknown) => {
     const config = simulation(request);
     const token = env[config.tokenEnv]; if (!token) throw new RequestError('SIMULATION_UNAVAILABLE','模拟控制凭证未配置。',503);

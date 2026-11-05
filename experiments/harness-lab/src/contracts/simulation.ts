@@ -1,5 +1,5 @@
 import type { ContextRef, ContextTimeRange, InformationReport, RoadProperties, SituationObject } from './context.js';
-export interface SimulationNotification {sourceMessageId: string; title: string; text: string; subjectId: string; occurredAt: string}
+export interface SimulationNotification {sourceMessageId: string; title: string; text: string; subjectId: string; occurredAt: string; scenarioInstanceId?: string}
 export interface SimulationReceipt {eventId: string; sourceMessageId: string; receivedAt: string; status: 'accepted'}
 export interface SimulationAction {
   id: string; systemId: string; createdAt: string; revision: number;

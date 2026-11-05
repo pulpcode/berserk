@@ -1,0 +1,29 @@
+{
+  "id": "scenario-run-isolation",
+  "name": "scenario-run-isolation",
+  "title": "多轮演示隔离与重新演示实施",
+  "description": "已核验来源及父任务路径的多轮隔离、重演收束与历史只读；SIM-TASK-002/A13不在本期实现。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "harness-lab",
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-05",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    "experiments/harness-lab/src/scenario/scope.ts",
+    ".trellis/tasks/11-03-scenario-demo/run-isolation-design.md"
+  ],
+  "notes": "",
+  "meta": {}
+}

@@ -61,6 +61,9 @@ export interface DeliveryReviewDetail extends DeliveryReviewSummary {
   canDecide: boolean; jobDetail: InformationJobDetail;
 }
 export interface BackgroundEvent {
+  /** Verified host metadata, never inferred from business text. */
+  scenarioInstanceId?: string;
+  auditOnly?: true;
   id: string; sourceId: string; sourceMessageId: string; title: string;
   systemId?: string;
   subjectId?: string; occurredAt?: string; receivedAt: string;
@@ -71,6 +74,7 @@ export interface BackgroundResultRef {
   sessionId: string; requestId: string; finalMessageId?: string; files: BackgroundFile[];
 }
 export interface BackgroundJobBase {
+  scenarioInstanceId?: string;
   id: string;
   status: BackgroundJobStatus; phase?: BackgroundPhase; revision: number;
   createdAt: string; startedAt?: string; endedAt?: string; cancelRequestedAt?: string;

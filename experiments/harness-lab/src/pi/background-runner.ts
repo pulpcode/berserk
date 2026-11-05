@@ -74,7 +74,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id), roles: continuous ? [] : input.profile.agents!, tools,
           ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, calculateAnalysis: input.calculateAnalysis, readAssessmentSource: input.readAssessmentSource, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
-          ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope}} : {}),
+          ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope, scenarioInstanceId:job.scenarioInstanceId}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);
         if (cancelled) prepared.cancel();
@@ -82,7 +82,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         const current = prepared.snapshot();
         return current.lastResult?.status === 'succeeded' ? verifiedResult(await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId, directory: input.directory,
           ...(continuous ? {streamEpochId: continuous.stream.epochId, requestId: job.requestId} : {}),
-          ...(input.profile.contextScope ? {contextPrincipal:{kind:'service',profileId:input.profile.id,jobId:job.id,scope:input.profile.contextScope}} : {}) })) : { snapshot: current };
+          ...(input.profile.contextScope ? {contextPrincipal:{kind:'service',profileId:input.profile.id,jobId:job.id,scope:input.profile.contextScope,scenarioInstanceId:job.scenarioInstanceId}} : {}) })) : { snapshot: current };
       }
       finally { running.delete(job.id); }
     },
@@ -92,7 +92,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
       try {
         return job.kind === 'seat_analysis' ? lab.get(job.sessionId, job.seatId)
           : await lab.readPreprocess({ jobId: job.id, sessionId: job.sessionId,
-            ...(captured?.contextScope ? {contextPrincipal:{kind:'service',profileId:captured.id,jobId:job.id,scope:captured.contextScope}} : {}),
+            ...(captured?.contextScope ? {contextPrincipal:{kind:'service',profileId:captured.id,jobId:job.id,scope:captured.contextScope,scenarioInstanceId:job.scenarioInstanceId}} : {}),
             ...(job.kind === 'continuous_analysis' ? {streamEpochId: job.streamEpochId, requestId: job.requestId,
               directory: join(lab.config.dataDir, 'background', 'streams', job.streamEpochId, job.sessionId)}
               : {directory: join(lab.config.dataDir, 'background', 'jobs', job.id)}) });

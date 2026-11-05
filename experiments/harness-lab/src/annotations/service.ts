@@ -426,7 +426,7 @@ export class AnnotationService {
     for(const [itemIndex,{item,existing,sameSource}] of targets.entries()) {
       try {
         signal?.throwIfAborted(); check?.(); this.session(actor,sessionId,true); this.allowedSystems(actor,normalized.items.map(item=>item.sourceRef.systemId));
-        const result=await this.context.query('situation_query',{systemId:item.sourceRef.systemId,mode:'current',objectRefs:[item.sourceRef]}, {kind:'seat',seatId:actor.seatId},signal);
+        const result=await this.context.query('situation_query',{systemId:item.sourceRef.systemId,mode:'current',objectRefs:[item.sourceRef]}, {kind:'seat',seatId:actor.seatId,scenarioInstanceId:this.access?.get(taskId,actor.seatId).scenarioInstanceId},signal);
         signal?.throwIfAborted(); check?.(); this.session(actor,sessionId,true); this.allowedSystems(actor,normalized.items.map(item=>item.sourceRef.systemId));
         if(!('changeCursor' in result.data)) throw new RequestError('CONTEXT_INVALID_RESPONSE','来源未返回当前态势对象。',502);
         const matches=result.data.items.filter(source=>sameSource(source.ref));

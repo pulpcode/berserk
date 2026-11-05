@@ -17,7 +17,7 @@ export function TaskPanel({identity,task,visibility,suggestion,showInformation,c
   const [error,setError]=useState(''); const [busy,setBusy]=useState(false); const pending=useRef(false);
   const [latest,setLatest]=useState<TaskSpace>(); const [actionId]=useState(()=>randomUUID());
   const isPublic=(base?.visibility || visibility)==='public';
-  const canManage=isPublic ? identity.createPublicTask : !base || base.ownerSeatId===identity.seatId;
+  const canManage=!base?.readOnly && (isPublic ? identity.createPublicTask : !base || base.ownerSeatId===identity.seatId);
   const kind=isPublic?'任务':'空间';
   async function run(action?:'archive'|'reopen') {
     if(!canManage || pending.current || needsQuery)return;
@@ -41,7 +41,7 @@ export function TaskPanel({identity,task,visibility,suggestion,showInformation,c
   }
   return <Panel title={suggestion?'创建公共任务并关联':base?`${kind}说明`:isPublic?'新建工作任务':'新建个人空间'} close={close}>
     <form className="workspace-form" onSubmit={e=>{e.preventDefault();void run();}}>
-      <p className="resource-help">{isPublic?'所有席位可使用工作任务；任务说明由获授权席位统一管理，文件与对话各自独立。':'仅本席位可查看和管理，用于自己的资料、指令与对话。'}{base?.state==='archived'?` 此${kind}已归档，历史仍可查看。`:''}</p>
+      <p className="resource-help">{isPublic?'所有席位可使用工作任务；任务说明由获授权席位统一管理，文件与对话各自独立。':'仅本席位可查看和管理，用于自己的资料、指令与对话。'}{base?.readOnly?` 此${kind}只读，历史仍可查看。`:base?.state==='archived'?` 此${kind}已归档，历史仍可查看。`:''}</p>
       <label htmlFor="task-title">{kind}名称</label><input id="task-title" value={title} disabled={!canManage || busy} onChange={e=>setTitle(e.target.value)} maxLength={60} required/>
       <label htmlFor="task-goal">目标与说明</label><textarea id="task-goal" value={goal} disabled={!canManage || busy} onChange={e=>setGoal(e.target.value)} maxLength={8000} rows={6} required={isPublic}/>
       <>{suggestion && <><label htmlFor="task-association-reason">关联理由</label><textarea id="task-association-reason" value={reason} disabled={busy} onChange={event=>setReason(event.target.value)} maxLength={1500} rows={3} required/><p className="resource-help">请确认名称与目标适合公开。原信息、分析正文与附件保留原有访问权限；已启用的持续分析配置会按获准资料范围核对新任务。</p></>}</>
@@ -57,12 +57,12 @@ export function TaskPanel({identity,task,visibility,suggestion,showInformation,c
   </Panel>;
 }
 
-export function useTasks(enabled:boolean) {
+export function useTasks(enabled:boolean, focusedTaskId?:string) {
   const {api}=useApi(); const [tasks,setTasks]=useState<TaskSpace[]>([]); const [error,setError]=useState(''); const [revision,setRevision]=useState(0); const [connectionError,setConnectionError]=useState(false);
   useEffect(()=>{
     if(!enabled)return; let current=true; let pending=false;
-    const load=async()=>{if(pending)return;pending=true;try{const result=await api<TaskSpace[]>('/api/tasks');if(current){setTasks(result);setError('');setConnectionError(false);}}catch(reason){if(current){setError(reason instanceof Error?reason.message:'任务目录读取失败。');setConnectionError(isConnectionFailure(reason));}}finally{pending=false;}};
+    const load=async()=>{if(pending)return;pending=true;try{const result=await api<TaskSpace[]>('/api/tasks');if(focusedTaskId&&!result.some(task=>task.id===focusedTaskId)){try{result.push(await api<TaskSpace>(`/api/tasks/${encodeURIComponent(focusedTaskId)}`));}catch{/* A removed or unauthorized task does not invalidate the directory. */}}if(current){setTasks(result);setError('');setConnectionError(false);}}catch(reason){if(current){setError(reason instanceof Error?reason.message:'任务目录读取失败。');setConnectionError(isConnectionFailure(reason));}}finally{pending=false;}};
     void load();const timer=setInterval(()=>void load(),5000); return()=>{current=false;clearInterval(timer);};
-  },[api,enabled,revision]);
+  },[api,enabled,revision,focusedTaskId]);
   return {tasks,error,connectionError,refresh:()=>setRevision(x=>x+1),saved:(task:TaskSpace)=>{setTasks(old=>[task,...old.filter(item=>item.id!==task.id)]);setRevision(x=>x+1);}};
 }

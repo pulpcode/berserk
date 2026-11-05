@@ -29,7 +29,7 @@ async function ingress() {
 }
 async function setup(databasePath?:string) {
   const receiver=await ingress(),mock=createMockContextServer({token,controlToken,scenariosEnabled:true,databasePath,targets:receiver.targets}),url=await mock.listen();let closed=false;const close=async()=>{if(!closed){closed=true;await mock.close();}};cleanup.push(close);
-  async function request<T>(path:string,method='GET',body?:unknown,credential=path.startsWith('/control/')?controlToken:token){const response=await fetch(`${url}${path}`,{method,headers:{Authorization:`Bearer ${credential}`,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})});return {status:response.status,body:await response.json() as T};}
+  async function request<T>(path:string,method='GET',body?:unknown,credential=path.startsWith('/control/')?controlToken:token,headers:Record<string,string>={}){const response=await fetch(`${url}${path}`,{method,headers:{Authorization:`Bearer ${credential}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});return {status:response.status,body:await response.json() as T};}
   async function create(mode:ScenarioMode='source_replay',clientActionId=randomUUID()){return request<ScenarioMutationResult>('/control/instances','POST',{definitionId:scenarioDefinition.id,version:scenarioDefinition.version,mode,clientActionId,actor});}
   async function activate(instance:ScenarioMutationResult['instance'],activeRevision=0,terminateUnsent=false){return request<ScenarioMutationResult>(`/control/instances/${instance.instanceId}/activate`,'POST',{clientActionId:randomUUID(),expectedRevision:instance.revision,expectedActiveRevision:activeRevision,terminateUnsent,actor});}
   async function apply(instance:ScenarioMutationResult['instance'],stepId:string,clientActionId=randomUUID()){return request<ScenarioMutationResult>(`/control/instances/${instance.instanceId}/steps/${stepId}`,'POST',{clientActionId,expectedRevision:instance.revision,actor});}
@@ -108,7 +108,7 @@ describe('scenario HTTP facts, controls and replay',()=>{
     expect((await scene.request(`/control/actions/${applied.body.actions[0].id}`)).status).toBe(404);expect((await scene.request(`/control/actions/${applied.body.actions[0].id}/send`,'POST',{})).status).toBe(404);
     const paused=await scene.request<ScenarioMutationResult>(`/control/instances/${created.body.instance.instanceId}/control`,'POST',{action:'pause',clientActionId:randomUUID(),expectedRevision:applied.body.instance.revision,actor});expect(paused.status).toBe(200);expect((await scene.send(applied.body.actions[0])).status).toBe(409);expect(scene.receiver.notifications).toHaveLength(0);
     const resumed=await scene.request<ScenarioMutationResult>(`/control/instances/${created.body.instance.instanceId}/control`,'POST',{action:'resume',clientActionId:randomUUID(),expectedRevision:paused.body.instance.revision,actor});expect(resumed.body.instance.businessNow).toBe(applied.body.instance.businessNow);
-    scene.receiver.setLoseAck(true);const sent=await scene.send(applied.body.actions[0]);expect(sent.body).toMatchObject({sendState:'accepted',deliveryActor:actor});expect(scene.receiver.notifications).toHaveLength(1);expect((await scene.send(sent.body)).body.receipt).toEqual(sent.body.receipt);expect(scene.receiver.notifications).toHaveLength(1);
+    scene.receiver.setLoseAck(true);const sent=await scene.send(applied.body.actions[0]);expect(sent.body).toMatchObject({sendState:'accepted',deliveryActor:actor});expect(scene.receiver.notifications).toHaveLength(1);expect(scene.receiver.notifications[0].scenarioInstanceId).toBe(created.body.instance.instanceId);expect((await scene.send(sent.body)).body.receipt).toEqual(sent.body.receipt);expect(scene.receiver.notifications).toHaveLength(1);
     expect((await scene.request<ScenarioMutationResult>(`/control/operations/${op}`)).body.actions[0].sendState).toBe('accepted');
   });
   it('replays all twelve steps with thirteen independent receipts while a late report never restores the road or moves vehicles',async()=>{
@@ -135,6 +135,44 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const oldRef={systemId:'situation',objectType:'resource',objectId:`${instance.instanceId}-V01`},newRef={...oldRef,objectId:`${second.body.instance.instanceId}-V01`};const old=await scene.request<SituationCurrent>(`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([oldRef]))}`);expect(old.status).toBe(200);expect(old.body.items[0].ref).toEqual(oldRef);
     expect((await scene.request(`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([oldRef,newRef]))}`)).status).toBe(409);expect((await scene.request(`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([oldRef,{...oldRef,objectId:'vehicles-west-01'}]))}`)).status).toBe(409);
     expect((await scene.request<ScenarioInstanceDetail>(`/control/instances/${instance.instanceId}`)).body.instance.status).toBe('frozen');expect((await scene.apply(instance,'E01')).status).toBe(409);
+  });
+  it('pins host reads to their original instance and rejects foreign selectors without a global fallback',async()=>{
+    const scene=await setup(),first=await scene.create(),a=(await scene.activate(first.body.instance)).body.instance;
+    const applied=await scene.apply(a,'E01');for(const action of applied.body.actions)await scene.send(action);
+    await scene.request(`/control/instances/${a.instanceId}/control`,'POST',{action:'pause',clientActionId:randomUUID(),expectedRevision:applied.body.instance.revision,actor});
+    const second=await scene.create(),b=(await scene.activate(second.body.instance,1)).body.instance;
+    const pinned=<T>(path:string,id=a.instanceId)=>scene.request<T>(path,'GET',undefined,token,{'x-axon-scenario-instance':id});
+    const old=await pinned<SituationCurrent>('/situation/objects?limit=1');expect(old.status).toBe(200);expect(old.body.snapshotClock?.instanceId).toBe(a.instanceId);expect(old.body.items[0].ref.objectId.startsWith(a.instanceId)).toBe(true);
+    const next=await scene.apply(b,'E01');for(const action of next.body.actions)await scene.send(action);
+    const continued=await pinned<SituationCurrent>(`/situation/objects?limit=1&cursor=${old.body.nextCursor}`);expect(continued.status).toBe(200);expect(continued.body.snapshotClock).toEqual(old.body.snapshotClock);
+    const fresh=await pinned<SituationCurrent>('/situation/objects?limit=1',b.instanceId);
+    const crossPaths=[`/situation/objects?cursor=${fresh.body.nextCursor}`,`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([{systemId:'situation',objectType:'resource',objectId:`${b.instanceId}-V01`}]))}`,`/situation/objects?areaIds=${encodeURIComponent(JSON.stringify([`${b.instanceId}-A01`]))}`,`/intel/reports/${b.instanceId}-report-E01-a`,`/intel/reports?subjectId=${b.instanceId}-report-E01-a`,`/situation/changes?after=scene:${b.instanceId}:0`,`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([{systemId:'situation',objectType:'resource',objectId:'vehicles-west-01'}]))}`];
+    for(const path of crossPaths)expect((await pinned(path)).status,path).toBe(409);
+    expect((await pinned('/situation/objects?cursor=unknown')).status).toBe(400);
+    expect((await pinned('/situation/objects',`run-${randomUUID()}`)).status).toBe(404);
+    expect((await pinned('/situation/objects','invalid')).status).toBe(409);
+    const duplicateHeaders=new Headers({Authorization:`Bearer ${token}`});duplicateHeaders.append('x-axon-scenario-instance',a.instanceId);duplicateHeaders.append('x-axon-scenario-instance',b.instanceId);
+    expect((await fetch(`${scene.url}/situation/objects`,{headers:duplicateHeaders})).status).toBe(409);
+    expect((await pinned('/situation/objects?taskId=foreign-task')).status).toBe(400);
+    const missingRef={systemId:'situation',objectType:'resource',objectId:`${a.instanceId}-missing`},missing=await pinned<SituationCurrent>(`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([missingRef]))}`);expect(missing.status).toBe(200);expect(missing.body.items).toEqual([]);expect(missing.body.unknownRefs).toEqual([missingRef]);expect(missing.body.snapshotClock?.instanceId).toBe(a.instanceId);
+    const report=await pinned<InformationDetail>(`/intel/reports/${a.instanceId}-report-E01-a`);expect(report.body.snapshotClock?.instanceId).toBe(a.instanceId);
+    const legacy=await scene.request<SituationCurrent>(`/situation/objects?objectRefs=${encodeURIComponent(JSON.stringify([{systemId:'situation',objectType:'resource',objectId:'vehicles-west-01'}]))}`);expect(legacy.status).toBe(200);expect(legacy.body.items[0].ref.objectId).toBe('vehicles-west-01');expect(legacy.body.snapshotClock).toBeUndefined();
+  });
+  it('verifies notifications from the complete persisted record and preserves legacy notification bytes',async()=>{
+    const directory=await mkdtemp(join(tmpdir(),'axon-scene-origin-'));cleanup.push(()=>rm(directory,{recursive:true,force:true}));const databasePath=join(directory,'simulation.sqlite'),scene=await setup(databasePath),created=await scene.create(),active=await scene.activate(created.body.instance),applied=await scene.apply(active.body.instance,'E01'),id=active.body.instance.instanceId;
+    const db=new DatabaseSync(databasePath);cleanup.push(async()=>db.close());const row=db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!,record=JSON.parse(String(row.body)) as {actions:ScenarioAction[]};
+    const original=record.actions[0];delete original.notification.scenarioInstanceId;original.notification.sourceMessageId='legacy-exact-notification';original.sendState='unconfirmed';
+    for(let i=0;i<25;i++)record.actions.push({...structuredClone(original),id:randomUUID(),notification:{...original.notification,sourceMessageId:`other-${i}`}});
+    db.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(JSON.stringify(record),id);
+    const path=`/control/instances/${id}/notifications/${original.notification.sourceMessageId}`;
+    expect((await scene.request(path,'GET',undefined,token)).status).toBe(401);
+    const origin=await scene.request<{instanceId:string;systemId:string;actionId:string;notification:SimulationNotification}>(path);expect(origin.status).toBe(200);expect(origin.body).toEqual({instanceId:id,systemId:original.systemId,actionId:original.id,notification:original.notification});
+    const fullPath=`/control/instances/${id}/provenance`;expect((await scene.request(fullPath,'GET',undefined,token)).status).toBe(401);
+    const full=await scene.request<{instanceId:string;tasks:unknown[];actions:ScenarioAction[];notifications:Array<{actionId:string;systemId:string;notification:SimulationNotification}>}>(fullPath);expect(full.status).toBe(200);expect(full.body.instanceId).toBe(id);expect(full.body.tasks).toHaveLength(3);expect(full.body.notifications).toHaveLength(26);expect(full.body.notifications[0]).toEqual({actionId:original.id,systemId:original.systemId,notification:original.notification});expect(full.body.actions).toEqual(record.actions);expect(full.body.actions[0].sendState).toBe('unconfirmed');
+    const detail=await scene.request<ScenarioInstanceDetail>(`/control/instances/${id}`);expect(detail.body.actions).toHaveLength(20);expect(detail.body.actions.some(action=>action.id===original.id)).toBe(false);
+    const second=await scene.create();expect((await scene.request(`/control/instances/${second.body.instance.instanceId}/notifications/${original.notification.sourceMessageId}`)).status).toBe(404);
+    const sent=await scene.send(applied.body.actions[0]);expect(sent.status).toBe(200);expect(scene.receiver.notifications[0]).toEqual({...original.notification,scenarioInstanceId:id});
+    expect((await scene.request<typeof origin.body>(path)).body.notification).toEqual(original.notification);
   });
   it('requires explicit retention of unsent old messages and blocks replacement while receipt remains unknown',async()=>{
     const scene=await setup(),first=await scene.create();let instance=(await scene.activate(first.body.instance)).body.instance;const applied=await scene.apply(instance,'E01');instance=applied.body.instance;

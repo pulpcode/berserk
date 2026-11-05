@@ -86,6 +86,7 @@ export interface TaskLinkDependencies {
   /** Current source permission OR an actual delivery to this seat, plus scope. Not scope alone. */
   canRead(actor: Identity, event: BackgroundEvent, job: BackgroundJob): boolean;
   sourceName(sourceId: string): string;
+  assertWrite?(event:BackgroundEvent,job:BackgroundJob):void;
   readContent(actor: Identity, event: BackgroundEvent, job: BackgroundJob): Promise<TaskInformationContent>;
   analysisSummaries?(actor: Identity, taskId: string, eventId: string, jobId: string): BackgroundAnalysisSummary[];
 }
@@ -100,7 +101,7 @@ export class TaskLinkService {
     return current;
   }
   private readable(actor: Identity, event: BackgroundEvent, job: BackgroundJob) {
-    return job.eventId === event.id && job.sourceId === event.sourceId && job.kind === 'preprocess' && job.status === 'succeeded'
+    return job.eventId === event.id && job.sourceId === event.sourceId && job.scenarioInstanceId === event.scenarioInstanceId && job.kind === 'preprocess' && job.status === 'succeeded'
       && !!job.result && this.dependencies.canRead(actor, event, job);
   }
   authorize(actor: Identity, eventId: string, jobId: string) {
@@ -109,7 +110,8 @@ export class TaskLinkService {
     if (!this.readable(actor, event, job)) throw missing();
     return {actor, event, job};
   }
-  private manageable(actor: Identity, task: TaskSpace) { return this.access.canCollaborate(actor.seatId) && (task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId); }
+  private canWrite(event:BackgroundEvent,job:BackgroundJob) {try{this.dependencies.assertWrite?.(event,job);return true;}catch{return false;}}
+  private manageable(actor: Identity, task: TaskSpace) { return (task.scenarioInstanceId===undefined || this.access.scenario?.isWritable(task.scenarioInstanceId)===true) && this.access.canCollaborate(actor.seatId) && (task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId); }
   private overrides(eventId?: string, taskId?: string) {
     const where = [eventId ? 'event_id=?' : '', taskId ? 'task_id=?' : ''].filter(Boolean);
     return this.store.db.prepare(`SELECT * FROM information_task_overrides${where.length ? ` WHERE ${where.join(' AND ')}` : ''}`).all(...[eventId, taskId].filter((value): value is string => value !== undefined)).map(decodeOverride);
@@ -124,6 +126,7 @@ export class TaskLinkService {
     return this.store.transaction(() => {
       signal?.throwIfAborted();
       const job = this.store.getJob(jobId);
+      if(job.eventId)this.dependencies.assertWrite?.(this.store.getEvent(job.eventId),job);
       if (job.kind !== 'preprocess' || job.status !== 'running' || job.cancelRequestedAt
         || !job.ruleSnapshot?.profile.tools.includes('information_record_task_assessment')) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '本次处理不能记录任务判断。', 409);
       if (!input || !Array.isArray(input.relations) || input.relations.length > 100 || Object.keys(input).some(key => !['relations', 'newTaskSuggestion', 'emptyReason'].includes(key))) throw invalid();
@@ -134,6 +137,7 @@ export class TaskLinkService {
         const revision = observed.tasks.get(relation.taskId);
         if (revision === undefined) throw new RequestError('TASK_NOT_QUERIED', '请先查询需要关联的任务。');
         const task = this.access.getActivePublic(relation.taskId);
+        if (task.scenarioInstanceId !== job.scenarioInstanceId) throw conflict('资料与任务范围不一致。');
         if (task.revision !== revision) throw conflict('任务已变化，请重新查询后记录判断。');
         if (seen.has(task.id)) {
           if (items.find(item => item.taskSpaceId === task.id)?.reason !== relation.reason.trim()) throw invalid('同一任务不能提交不同关联理由。');
@@ -156,6 +160,7 @@ export class TaskLinkService {
   }
   /** Choose a whole batch in persisted insertion order, after authorization. */
   private effective(actor: Identity, task: TaskSpace, event: BackgroundEvent, jobs: BackgroundJob[], override?: TaskInformationOverride): TaskInformationItem | undefined {
+    if (task.scenarioInstanceId !== event.scenarioInstanceId) return;
     if (override?.mode === 'exclude') return;
     const job = override?.mode === 'include'
       ? jobs.find(job => job.id === override.jobId && this.readable(actor, event, job))
@@ -190,6 +195,7 @@ export class TaskLinkService {
   resolve(actor: Identity, taskId: string, eventId: string, jobId: string, write = false) {
     const authorized = this.authorize(actor, eventId, jobId); actor = authorized.actor;
     const task = this.access.get(taskId, actor.seatId, write);
+    if(write)this.dependencies.assertWrite?.(authorized.event,authorized.job);
     const item = this.effective(actor, task, authorized.event, this.store.listJobs(), this.overrides(eventId, taskId)[0]);
     if (!item || item.jobId !== jobId) throw conflict('当前任务的信息关联或分析版本已变化，请返回列表刷新。');
     return {...authorized, task, item};
@@ -211,7 +217,7 @@ export class TaskLinkService {
   }
   links(actor: Identity, eventId: string, jobId: string): TaskLinksView {
     const authorized = this.authorize(actor, eventId, jobId); actor = authorized.actor;
-    const {job, event} = authorized, tasks = this.access.list(actor.seatId), decisions = new Map(this.overrides(eventId).map(value => [value.taskSpaceId, value]));
+    const {job, event} = authorized, tasks = this.access.list(actor.seatId).filter(task=>task.scenarioInstanceId===authorized.event.scenarioInstanceId), decisions = new Map(this.overrides(eventId).map(value => [value.taskSpaceId, value]));
     const links: TaskInformationLink[] = [];
     for (const task of tasks) {
       const decision = decisions.get(task.id), item = job.taskAssessment?.items.find(item => item.taskSpaceId === task.id);
@@ -222,18 +228,20 @@ export class TaskLinkService {
       if (!this.readable(actor, event, chosen) || (mode === 'exclude' && !this.manageable(actor, task))) continue;
       const version = mode === 'auto' ? item!.taskRevision : decision!.taskRevision;
       links.push({task, jobId: chosen.id, reason: mode === 'auto' ? item!.reason : decision!.reason, mode,
-        revision: decision?.revision ?? 0, taskRevision: version, taskChanged: version !== task.revision, canManage: this.manageable(actor, task)});
+        revision: decision?.revision ?? 0, taskRevision: version, taskChanged: version !== task.revision, canManage: this.canWrite(event,chosen) && this.manageable(actor, task)});
     }
     const assessment = job.taskAssessment ? {...job.taskAssessment, items: job.taskAssessment.items.filter(item => tasks.some(task => task.id === item.taskSpaceId))} : undefined;
     const revisions = Object.fromEntries(tasks.filter(task => this.manageable(actor, task) && decisions.has(task.id))
       .map(task => [task.id, decisions.get(task.id)!.revision]));
-    return {eventId, jobId, assessment, creation: job.taskSuggestionCreation, links, revisions, canCreateTask: this.access.canCollaborate(actor.seatId) && !!job.taskAssessment?.newTaskSuggestion && actor.createPublicTask && !job.taskSuggestionCreation};
+    return {eventId, jobId, assessment, creation: job.taskSuggestionCreation, links, revisions, canCreateTask: this.canWrite(event,job) && (job.scenarioInstanceId===undefined || this.access.scenario?.isWritable(job.scenarioInstanceId)===true) && this.access.canCollaborate(actor.seatId) && !!job.taskAssessment?.newTaskSuggestion && actor.createPublicTask && !job.taskSuggestionCreation};
   }
   update(actor: Identity, eventId: string, taskId: string, input: TaskLinkUpdateInput): TaskInformationOverride {
     this.access.assertCanCollaborate(actor.seatId);
     return this.store.transaction(() => {
       const authorized = this.authorize(actor, eventId, input.jobId); actor = authorized.actor;
+      this.dependencies.assertWrite?.(authorized.event,authorized.job);
       const task = this.access.get(taskId, actor.seatId, true);
+      if(task.scenarioInstanceId !== authorized.event.scenarioInstanceId)throw conflict('资料与任务范围不一致。');
       if (!this.manageable(actor, task)) throw new RequestError('FORBIDDEN', '当前席位无权调整此任务的关联。', 403);
       if (!['include', 'exclude', 'auto'].includes(input.mode) || !Number.isSafeInteger(input.revision) || input.revision < 0
         || (input.reason !== undefined && (typeof input.reason !== 'string' || input.reason.length > 1500)) || (input.mode === 'include' && !reasonText(input.reason))) throw invalid('请填写有效的关联理由。');
@@ -247,13 +255,15 @@ export class TaskLinkService {
   createFromSuggestion(actor: Identity, eventId: string, input: TaskSuggestionCreateInput): TaskSuggestionCreateResult {
     this.access.assertCanCollaborate(actor.seatId);
     return this.store.transaction(() => {
-      const {actor: current, job} = this.authorize(actor, eventId, input.jobId); actor = current;
+      const {actor: current, job, event} = this.authorize(actor, eventId, input.jobId); actor = current;
+      this.dependencies.assertWrite?.(event,job);
+      if(job.scenarioInstanceId)this.access.assertScenarioWritable(job.scenarioInstanceId);
       if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
       if (!job.taskAssessment?.newTaskSuggestion) throw conflict('该分析没有新建任务建议。');
       if (!UUID.test(input.clientActionId) || !reasonText(input.reason) || typeof input.title !== 'string' || !input.title.trim() || input.title.length > 60
         || typeof input.goal !== 'string' || !input.goal.trim() || input.goal.length > 8000) throw invalid('请填写有效的任务名称、目标和关联理由。');
       const creationInput = {title: input.title, goal: input.goal, visibility: 'public' as const, clientActionId: input.clientActionId, context: input.context};
-      const origin = {eventId, jobId: job.id, reason: input.reason.trim()};
+      const origin = {eventId, jobId: job.id, reason: input.reason.trim(), ...(job.scenarioInstanceId ? {scenarioInstanceId:job.scenarioInstanceId} : {})};
       if (job.taskSuggestionCreation) {
         const creation = job.taskSuggestionCreation, used = this.access.findCreation(actor, input.clientActionId)[0];
         if (used && used.id !== creation.taskSpaceId) throw conflict('相同操作标识已用于另一项任务。');

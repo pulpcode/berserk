@@ -1,3 +1,4 @@
+import { ScenarioScope } from '../scenario/scope.js';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import type { PiLab } from '../pi/lab.js';
 import type { BackgroundService } from '../background/service.js';
@@ -31,7 +32,17 @@ export function scenarioDirector(lab:PiLab,background:BackgroundService|undefine
 export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnType<typeof apiScope>,background:BackgroundService|undefined,env:NodeJS.ProcessEnv) {
   const simulation=lab.context?.config.simulation;
   if(!lab.access||!simulation?.enabled||!simulation.directorSeatId)return;
-  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access);await tasks.prepare();
+  const runScope=new ScenarioScope(lab.context!.config,env);lab.scenario=runScope;lab.access.scenario=runScope;lab.context!.scenario=runScope;
+  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access);await tasks.prepare(async(id,definitions)=>{
+    const raw=contextRecord(await runScope.provenance(id),['instanceId','tasks','notifications','actions'],['instanceId','tasks']);
+    if(raw.instanceId!==id||JSON.stringify(scenarioTaskDefinitions(raw.tasks))!==JSON.stringify(definitions))throw conflict('任务归属与已保存来源不一致。');
+  });
+  const unfinished=await tasks.activation();
+  if(unfinished?.state==='pending'){if(unfinished.previousInstanceId)runScope.close(unfinished.previousInstanceId);runScope.close(unfinished.instanceId);}
+  await runScope.sync();
+  if(background)await runScope.reconcileLegacy(await Promise.all(background.store.listEvents().filter(event=>event.scenarioInstanceId===undefined&&simulation.sources.some(source=>source.sourceId===event.sourceId&&lab.context!.config.systems.some(system=>system.id===source.systemId&&system.scenarioClock===true))).map(async event=>({...event,text:await background.eventText(event)}))),(eventId,id)=>background.bindLegacyScenario(eventId,id));
+  if(runScope.activeId()&&runScope.isWritable(runScope.activeId()!))await background?.activateRun(runScope.activeId()!);
+
   const mutex=new Mutex(),base=`${scope.base}/simulation`;
   const call=async(request:FastifyRequest,path:string,body?:Record<string,unknown>,includeActor=true)=>{
     const {actor,config}=scenarioDirector(lab,background,request),token=env[config.tokenEnv];
@@ -44,7 +55,9 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     if(!r.instance||typeof r.instance!=='object')throw conflict('来源场景状态无效。');
     const i=r.instance as Record<string,unknown>,clock={instanceId:i.instanceId,businessNow:i.businessNow,revision:i.revision};
     if(!isScenarioClock(clock)||clock.instanceId!==id||typeof i.paused!=='boolean'||!['prepared','active','frozen'].includes(String(i.status))||!Array.isArray(r.actions))throw conflict('来源场景状态无效。');
-    const sendStates=r.actions.map(action=>{if(!action||typeof action!=='object'||!('sendState' in action)||!['unsent','unconfirmed','accepted'].includes(String(action.sendState)))throw conflict('通知回执状态无效。');return String(action.sendState);});
+    const full=contextRecord(await runScope.provenance(id),['instanceId','tasks','notifications','actions'],['instanceId','actions']);
+    if(full.instanceId!==id||!Array.isArray(full.actions))throw conflict('来源通知记录无效。');
+    const sendStates=full.actions.map(action=>{if(!action||typeof action!=='object'||!('sendState' in action)||!['unsent','unconfirmed','accepted'].includes(String(action.sendState)))throw conflict('通知回执状态无效。');return String(action.sendState);});
     return {clock,paused:i.paused,status:String(i.status),sendStates,definitionId:contextText(i.definitionId,64),definitionVersion:contextText(i.definitionVersion,64),definitionHash:contextText(i.definitionHash,128)};
   };
   const checkTaskManagement=(request:FastifyRequest)=>{const {actor}=scenarioDirector(lab,background,request);if(!actor.createPublicTask)throw new RequestError('FORBIDDEN','演示任务准备还需要工作任务管理权限。',403);return actor;};
@@ -59,7 +72,10 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
       if(!r.instance||typeof r.instance!=='object'||!r.operation||typeof r.operation!=='object')throw conflict('激活操作回执无效。');
       const instance=r.instance as Record<string,unknown>,op=r.operation as Record<string,unknown>;
       if(instance.instanceId!==receipt.instanceId||op.id!==id||op.kind!=='activate')throw conflict('激活回执与原操作不一致。');
+      await runScope.confirmActive(receipt.instanceId);
       await tasks.saveActivation({...receipt,state:'complete'});
+      runScope.open(receipt.instanceId);
+      await background?.activateRun(receipt.instanceId);
     }
     return raw;
   };
@@ -78,6 +94,13 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     if(r.businessDay!==undefined)contextTimestamp(`${contextText(r.businessDay,10)}T00:00:00+08:00`);
     return call(request,'instances',{...r,definitionId:contextText(r.definitionId,64),version:contextText(r.version,64),clientActionId:operationId(r.clientActionId)});
   }));
+  app.get<{Params:{id:string}}>(`${base}/instances/:id/preflight`,{schema:{params,querystring:empty}},async request=>{
+    scenarioDirector(lab,background,request);const id=scenarioId(request.params.id),current=await status(request,id);
+    const jobs=background!.store.listJobs().filter(job=>job.scenarioInstanceId===id);
+    return {queuedJobs:jobs.filter(job=>job.status==='queued').length,runningJobs:jobs.filter(job=>job.status==='running').length,
+      foregroundRequests:lab.scenarioRequestCount(id),unconfirmedNotifications:current.sendStates.filter(state=>state==='unconfirmed').length,
+      unsentNotifications:current.sendStates.filter(state=>state==='unsent').length};
+  });
   app.get<{Params:{id:string}}>(`${base}/instances/:id/initialize`,{schema:{params,querystring:empty}},async request=>{
     const {actor}=scenarioDirector(lab,background,request);await status(request,request.params.id);return tasks.read(actor,request.params.id);
   });
@@ -115,15 +138,24 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
       if(previous&&previous!==id){
         const old=await status(request,previous);
         if(!old.paused||old.sendStates.includes('unconfirmed')||old.sendStates.includes('unsent')&&input.terminateUnsent!==true)throw conflict('请先暂停旧轮并核清通知；未发送通知需明确选择终止旧轮。');
-        if(background?.store.listJobs().some(job=>['queued','running'].includes(job.status)))throw conflict('后台仍有作业，请结束后再切换轮次。');
         checkTaskManagement(request);
       }
       receipt={operationId:input.clientActionId,instanceId:id,previousInstanceId:previous,userId:actor.userId,inputHash:hash,state:'pending'};
       await tasks.saveActivation(receipt);
+      runScope.close(id);
+      if(previous&&previous!==id){
+        runScope.close(previous);
+        await Promise.all([background?.stopRun(previous),lab.stopScenario(previous)]);
+        const taskIds=lab.access!.db.prepare("SELECT id FROM task_spaces WHERE json_extract(data,'$.scenarioInstanceId')=?").all(previous).map(row=>String(row.id));
+        if(lab.access!.hasAdmissions(taskIds))throw conflict('资料仍有正在处理的写入，请核对后继续原操作。');
+      }
       if(previous&&previous!==id)await tasks.archive(actor,previous,taskId=>(lab.collaboration?.hasUnfinishedTask(taskId)??false)||(background?.store.hasTaskReservations(taskId)??false),()=>{checkTaskManagement(request);});
       const result=await call(request,`instances/${id}/activate`,{...input,expectedActiveRevision:activeRevision}) as ScenarioMutationResult;
       if(result.instance?.instanceId!==id||result.operation?.id!==input.clientActionId||result.operation.kind!=='activate')throw conflict('激活回执与请求不一致，请核对原操作。');
-      await tasks.saveActivation({...receipt,state:'complete'});return result;
+      await runScope.confirmActive(id);
+      await tasks.saveActivation({...receipt,state:'complete'});
+      runScope.open(id);
+      await background?.activateRun(id);return result;
     }catch(error){
       if(error instanceof RequestError&&[401,403].includes(error.statusCode))throw error;
       scenarioDirector(lab,background,request);

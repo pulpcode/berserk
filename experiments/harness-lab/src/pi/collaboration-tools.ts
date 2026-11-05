@@ -11,6 +11,7 @@ export interface ApprovedWorkAction { operationId: string; parameters: Record<st
 interface Options {
   actor: ActorContext; workspace: Workspace; sessionId: string; requestId: string; signal: AbortSignal;
   check: () => void;
+  authorizeTask?: (taskId:string)=>void;
   takeApproval: (toolCallId: string) => ApprovedWorkAction | undefined;
   fail: () => void;
 }
@@ -46,6 +47,7 @@ export function collaborationTools(service: CollaborationService, options: Optio
     combined.throwIfAborted();
     try {
       const result = await operation(combined);
+      combined.throwIfAborted();options.check();
       return { content: [{ type: 'text' as const, text: JSON.stringify(result) }], details: result };
     } catch (error) {
       if (error instanceof RequestError) throw new Error(`${error.code}: ${error.message}`);
@@ -61,7 +63,8 @@ export function collaborationTools(service: CollaborationService, options: Optio
       parameters: workReadSchema, executionMode: 'sequential',
       execute: (_id, params, signal) => execute(() => {
         if (Boolean(params.workItemId) === Boolean(params.operationId)) throw new RequestError('INVALID_INPUT', '请选择一个工作编号或操作编号查询。');
-        return params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
+        const result=params.operationId ? service.getAction(actor, params.operationId) : service.read(actor, params.workItemId!);
+        options.authorizeTask?.(result.taskSpaceId);return result;
       }, signal) }),
     defineTool({ name: 'work_item_action', label: '工作交接', description: '发起分派（assign）、签收（claim）、提交文件（submit）或验收／退回（review）。系统核对内容并展示确认卡，本次调用等待用户批准后执行；成功返回 committed=true、交接回执及实际文件清单，表示已执行。文件来自当前工作区，交接使用固定副本。assign 新建分派，依据已有对话和资料确定接收席位、工作目标与附件，不需要已有工作编号或修订号。claim、submit、review 操作已有工作，工作编号与 expectedRevision 从工作详情取得。当现有信息不足以确定接收对象、工作范围或附件选择时，先澄清。',
       parameters: workActionToolSchema, executionMode: 'sequential',
@@ -72,7 +75,10 @@ export function collaborationTools(service: CollaborationService, options: Optio
           throw new RequestError('CONFIRMATION_REQUIRED', '该调用未获得对应内容的确认。', 409);
         }
         try {
-          const files = service.getAction(actor, approved.operationId).files;
+          const action=service.getAction(actor,approved.operationId);
+          options.authorizeTask?.(action.taskSpaceId);
+          if(action.taskSpaceId!==workspace.taskSpaceId)throw new RequestError('WORK_NOT_FOUND','操作不属于当前会话项目。',404);
+          const files = action.files;
           const receipt = await service.commitAgent(actor, approved.operationId, approved.grant, scopedSignal);
           return { ...receipt, committed: true, files };
         }

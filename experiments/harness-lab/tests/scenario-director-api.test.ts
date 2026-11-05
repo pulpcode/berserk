@@ -61,7 +61,7 @@ async function setup(directorConfigured=true){
   const store=new BackgroundStore(lab.access!.db);
   for(const source of background.sources)for(const seat of [directorSeat,...businessSeats])store.grant('seat',seat,source.sourceId,seat==='seat-overall'?'manage':'view');
   const director=await login(app,directorSeat);
-  return {dir,app,lab,store,director,fake};
+  return {dir,app,lab,store,director,fake,config,background,context};
 }
 type Fixture=Awaited<ReturnType<typeof setup>>;
 async function create(f:Fixture,operationId=randomUUID()){
@@ -191,7 +191,7 @@ describe('scenario director authorization and host/source integration',()=>{
     expect(f.fake.calls).toHaveLength(0);
   },30000);
 
-  it('resumes the original pending activation after partial archival and restoration of the matching source definition',async()=>{
+  it('resumes the original pending activation after outstanding writes settle and the matching source definition is restored',async()=>{
     const f=await setup(),{result:created}=await create(f),oldId=created.instance.instanceId,oldTasks=await initialize(f,oldId);
     const old=await activate(f,created);
     await json<ScenarioMutationResult>(f.director.call(`/api/simulation/instances/${oldId}/control`,{clientActionId:randomUUID(),expectedRevision:old.instance.revision,action:'pause'}));
@@ -201,14 +201,14 @@ describe('scenario director authorization and host/source integration',()=>{
     const path=`/api/simulation/instances/${nextId}/activate`,receiptPath=join(f.dir,'axon','scenario-runs','.activation.json');
     const release=f.lab.access!.acquire(oldTasks.tasks[1].taskId,'seat-overall'),definitionHash=scenarioDefinition.definitionHash;
     try{
-      // The first archive commits; the second is blocked before the source activation is sent.
+      // The run gate closes, but no task is archived before outstanding writes settle.
       const interrupted=await f.director.call(path,input);
       expect(interrupted.statusCode).toBe(409);expect(interrupted.json()).toMatchObject({error:{code:'SCENARIO_ACTIVATION_PENDING'}});expect(interrupted.body).toContain(input.clientActionId);
       const pending=JSON.parse(await readFile(receiptPath,'utf8')) as {state:string;operationId:string;inputHash:string};
       expect(pending).toMatchObject({state:'pending',operationId:input.clientActionId});
       expect(JSON.parse(pending.inputHash)).toEqual([nextId,f.director.auth.identity!.userId,input.expectedRevision,input.expectedActiveRevision,false]);
-      expect(oldTasks.tasks.map(task=>f.lab.access!.get(task.taskId,directorSeat).state)).toEqual(['archived','active','active']);
-      const firstArchiveRevision=f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision;
+      expect(oldTasks.tasks.map(task=>f.lab.access!.get(task.taskId,directorSeat).state)).toEqual(['active','active','active']);
+      const initialRevision=f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision;
       expect((await f.director.call(`/api/simulation/operations/${input.clientActionId}`)).statusCode).toBe(404);
       expect((await f.director.call('/api/simulation/instances',{...next.input,clientActionId:randomUUID()})).statusCode).toBe(409);
       f.lab.access!.db.prepare('UPDATE seats SET control_scenarios=0 WHERE id=?').run(directorSeat);
@@ -227,11 +227,55 @@ describe('scenario director authorization and host/source integration',()=>{
       expect(JSON.parse(await readFile(receiptPath,'utf8'))).toMatchObject({state:'complete',operationId:input.clientActionId});
       expect((await json<ScenarioInstanceDetail>(f.director.call(`/api/simulation/instances/${oldId}`))).instance.status).toBe('frozen');
       for(const task of oldTasks.tasks)expect(f.lab.access!.get(task.taskId,directorSeat).state).toBe('archived');
-      expect(f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision).toBe(firstArchiveRevision);
+      expect(f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision).toBe(initialRevision+1);
       for(const task of nextTasks.tasks)expect(f.lab.access!.get(task.taskId,directorSeat).state).toBe('active');
       expect(f.lab.access!.list(directorSeat)).toHaveLength(6);
       expect(f.fake.calls).toHaveLength(0);
     }finally{release();scenarioDefinition.definitionHash=definitionHash;}
+  },30000);
+
+  it('keeps both sides closed after restart until the original activation receipt is reconciled',async()=>{
+    const f=await setup(),{result:created}=await create(f),oldId=created.instance.instanceId,oldTasks=await initialize(f,oldId);
+    const old=await activate(f,created),taskId=oldTasks.tasks[0].taskId;
+    const workspace=await f.lab.workspaces.ensureWorkspace(taskId,'seat-overall','原任务');
+    const action=await f.lab.collaboration!.prepare({seatId:'seat-overall'},{kind:'assign',taskSpaceId:taskId,payload:{workspaceId:workspace.id,assigneeSeatId:'seat-intelligence',title:'尚未完成的核对',goal:'核对现场情况',inputPaths:[]}},{source:'page',clientActionId:randomUUID()});
+    const work=await f.lab.collaboration!.commitPage({seatId:'seat-overall'},action.operationId);
+    const originalWork=f.lab.collaboration!.read({seatId:'seat-intelligence'},work.workItemId);
+    await json(f.director.call(`/api/simulation/instances/${oldId}/control`,{clientActionId:randomUUID(),expectedRevision:old.instance.revision,action:'pause'}));
+    const next=await create(f),nextId=next.result.instance.instanceId,nextTasks=await initialize(f,nextId),activated=await activate(f,next.result);
+    // Existing unfinished business remains truthful; only the run's write gate seals it.
+    expect(f.lab.access!.get(taskId,directorSeat).state).toBe('active');
+    expect(f.lab.collaboration!.read({seatId:'seat-intelligence'},work.workItemId)).toEqual(originalWork);
+    const receiptPath=join(f.dir,'axon','scenario-runs','.activation.json');
+    const receipt=JSON.parse(await readFile(receiptPath,'utf8')) as Record<string,unknown>;
+    expect(receipt).toMatchObject({state:'complete',previousInstanceId:oldId,instanceId:nextId});
+    // Fault point: the source committed B but the host did not durably confirm its reply.
+    await writeFile(receiptPath,JSON.stringify({...receipt,state:'pending'}));
+    await f.app.close();
+    const fake=await fakeRuntime(f.config,()=>({text:'不得自动运行'})),lab=await PiLab.create(f.config,fake.runtime);
+    const app=await createApp(lab,false,{config:f.background,env},{config:f.context,env});cleanup.push(()=>app.close());
+    const director=await login(app,directorSeat),overall=await login(app,'seat-overall');
+    expect(lab.scenario!.activeId()).toBe(nextId);
+    expect(lab.scenario!.isWritable(oldId)).toBe(false);expect(lab.scenario!.isWritable(nextId)).toBe(false);
+    expect(JSON.parse(await readFile(receiptPath,'utf8')).state).toBe('pending');
+    const source=await json<ScenarioInstanceDetail>(director.call(`/api/simulation/instances/${nextId}`));expect(source.instance.stepIndex).toBe(0);
+    for(const row of [oldTasks.tasks[0],nextTasks.tasks[0]]){
+      const task=await json<TaskSpace>(overall.call(`/api/tasks/${row.taskId}`));
+      expect(task.readOnly).toBe(true);expect(task).not.toHaveProperty('scenarioInstanceId');
+      expect((await overall.call(`/api/tasks/${row.taskId}/workspace`,{})).statusCode).toBe(409);
+    }
+    await expect(lab.collaboration!.prepare({seatId:'seat-intelligence'},{kind:'claim',workItemId:work.workItemId,expectedRevision:originalWork.revision,payload:{}},{source:'page',clientActionId:randomUUID()})).rejects.toMatchObject({code:'TASK_READ_ONLY'});
+    expect(lab.collaboration!.read({seatId:'seat-intelligence'},work.workItemId)).toEqual(originalWork);
+    expect(fake.calls).toHaveLength(0);
+    expect((await json<ScenarioMutationResult>(director.call(`/api/simulation/operations/${activated.operation.id}`))).operation.id).toBe(activated.operation.id);
+    expect(lab.scenario!.isWritable(nextId)).toBe(true);expect(lab.scenario!.isWritable(oldId)).toBe(false);
+    expect(JSON.parse(await readFile(receiptPath,'utf8')).state).toBe('complete');
+    expect((await overall.call(`/api/tasks/${nextTasks.tasks[0].taskId}/workspace`,{})).statusCode).toBe(200);
+    expect((await overall.call(`/api/tasks/${taskId}/workspace`,{})).statusCode).toBe(409);
+    expect(lab.workspaces.list('seat-overall').workspaces.map(item=>item.taskSpaceId)).toEqual([nextTasks.tasks[0].taskId]);
+    expect(lab.activity('seat-overall').workspaces.map(item=>item.taskSpaceId)).toEqual([nextTasks.tasks[0].taskId]);
+    expect(lab.workspaces.get(workspace.id,'seat-overall').taskSpaceId).toBe(taskId);
+    expect(fake.calls).toHaveLength(0);
   },30000);
 
   it('keeps old state/action/edit routes from exposing or changing the new scene and rejects client-supplied actor authority',async()=>{

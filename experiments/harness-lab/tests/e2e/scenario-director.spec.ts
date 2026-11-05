@@ -86,6 +86,7 @@ async function setup() {
         }
         const segments=url.pathname.split('/'),id=segments[4],detail=details.get(id);
         if(!detail){await respond({error:{code:'NOT_FOUND',message:'实例不存在'}},404);return;}
+        if(segments[5]==='preflight'){await respond({queuedJobs:0,runningJobs:0,foregroundRequests:0,unconfirmedNotifications:detail.actions.filter(a=>a.sendState==='unconfirmed').length,unsentNotifications:detail.actions.filter(a=>a.sendState==='unsent').length});return;}
         if(segments[5]==='initialize'){
           if(req.method()==='POST'){ counts.initialize++; initialized.set(id,{instanceId:id,initialized:true,tasks:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',taskId:`task-${index}`,title:['仓储火情支援','交通救援','训练任务'][index]}))});
             if(loseInitializeResponse){loseInitializeResponse=false;await route.abort('failed');return;}

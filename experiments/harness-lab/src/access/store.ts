@@ -1,3 +1,4 @@
+import type { ScenarioScope } from '../scenario/scope.js';
 import { checkAnnotationTables } from '../annotations/store.js';
 import { baseSchemaVersion, scenarioSchemaVersion, upgradeSeatColumns } from './schema.js';
 import { enqueueContinuousTaskChange } from '../background/continuous-store.js';
@@ -19,6 +20,7 @@ export function derivePassword(password: string, salt: string): Promise<Buffer> 
 function decodeTask(row: {id: unknown;data:unknown}): TaskSpace {
   const task=JSON.parse(String(row.data)) as TaskSpace;
   if(!task || typeof task!=='object' || task.id!==row.id || !UUID.test(task.id) || typeof task.title!=='string' || !task.title.trim() || task.title.length>60 || typeof task.goal!=='string' || task.goal.length>8000 || !['public','private'].includes(task.visibility) || !['active','archived'].includes(task.state) || !Number.isSafeInteger(task.revision) || task.revision<1 || !/^[a-zA-Z0-9_-]{1,64}$/.test(task.ownerSeatId) || !UUID.test(task.createdByUserId) || !UUID.test(task.updatedByUserId) || !Number.isFinite(Date.parse(task.createdAt)) || !Number.isFinite(Date.parse(task.updatedAt)))throw stateError();
+  if (task.scenarioInstanceId !== undefined && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(task.scenarioInstanceId)) throw stateError();
   if (task.context !== undefined) {
     try { normalizeTaskContext(task.context); } catch { throw stateError(); }
   }
@@ -28,6 +30,7 @@ function decodeTask(row: {id: unknown;data:unknown}): TaskSpace {
 /** Owns task/account metadata; never copies or interprets Pi messages. */
 export class AccessStore {
   private busy = new Map<string, number>();
+  scenario?: ScenarioScope;
   /** The host supplies its current configuration; this is not a persisted role. */
   scenarioDirectorSeatId?: () => string | undefined;
   constructor(readonly db: DatabaseSync) {
@@ -116,17 +119,17 @@ export class AccessStore {
     catch(error) { this.db.exec('ROLLBACK'); throw error; }
   }
   list(seatId: string): TaskSpace[] {
-    return this.db.prepare('SELECT id,data FROM task_spaces ORDER BY rowid DESC').all().map(row => decodeTask({id:row.id,data:row.data})).filter(task => task.visibility === 'public' || task.ownerSeatId === seatId);
+    return this.db.prepare('SELECT id,data FROM task_spaces ORDER BY rowid DESC').all().map(row => decodeTask({id:row.id,data:row.data})).filter(task => (task.visibility === 'public' || task.ownerSeatId === seatId) && (this.isScenarioDirectorSeat(seatId) || task.scenarioInstanceId === undefined || this.scenario?.isWritable(task.scenarioInstanceId)));
   }
   /** Service queries are explicitly public-only; no synthetic seat or workspace is involved. */
   listActivePublic(): TaskSpace[] {
-    return this.db.prepare("SELECT id,data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row => decodeTask({id:row.id,data:row.data}));
+    return this.db.prepare("SELECT id,data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row => decodeTask({id:row.id,data:row.data})).filter(task=>task.scenarioInstanceId===undefined || this.scenario?.isWritable(task.scenarioInstanceId));
   }
   getActivePublic(id: string): TaskSpace {
     const row = this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
     if (!row) throw missing();
     const task = decodeTask({id:row.id,data:row.data});
-    if (task.visibility !== 'public' || task.state !== 'active') throw missing();
+    if (task.visibility !== 'public' || task.state !== 'active' || task.scenarioInstanceId !== undefined && !this.scenario?.isWritable(task.scenarioInstanceId)) throw missing();
     return task;
   }
   get(id: string, seatId: string, write = false): TaskSpace {
@@ -134,6 +137,7 @@ export class AccessStore {
     if (!row) throw missing();
     const task = decodeTask({id:row.id,data:row.data});
     if (task.visibility !== 'public' && task.ownerSeatId !== seatId) throw missing();
+    if (write && task.scenarioInstanceId !== undefined) this.assertScenarioWritable(task.scenarioInstanceId);
     if (write && task.state !== 'active') throw new RequestError('TASK_ARCHIVED', '任务已归档，请先重新开启。', 409);
     return task;
   }
@@ -141,29 +145,47 @@ export class AccessStore {
     const row=this.db.prepare('SELECT task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,actionId);
     return row ? [this.get(String(row.task_id),actor.seatId)] : [];
   }
-  create(actor: Identity, input: TaskInput): TaskSpace {
+  create(actor: Identity, input: TaskInput, scenarioInstanceId?: string): TaskSpace {
     this.db.exec('BEGIN IMMEDIATE');
-    try { const task = this.createInTransaction(actor, input); this.db.exec('COMMIT'); return task; }
+    try { const task = this.createInTransaction(actor, input, undefined, scenarioInstanceId); this.db.exec('COMMIT'); return task; }
     catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
   /** Caller owns the transaction, so information linkage and creation share one commit. */
-  createInTransaction(actor: Identity, input: TaskInput, origin?: {eventId: string; jobId: string; reason: string}): TaskSpace {
+  createInTransaction(actor: Identity, input: TaskInput, origin?: {eventId: string; jobId: string; reason: string; scenarioInstanceId?: string}, preparedInstanceId?: string): TaskSpace {
     if (!input.title.trim() || input.title.trim().length > 60 || input.goal.length > 8000 || !['public','private'].includes(input.visibility) || (input.visibility === 'public' && !input.goal.trim())) throw new RequestError('INVALID_INPUT', '请填写名称，工作任务还需要目标说明。');
     if (input.visibility === 'public' && !actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
+    const scenarioInstanceId = origin?.scenarioInstanceId ?? preparedInstanceId;
+    if (scenarioInstanceId !== undefined) {
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(scenarioInstanceId)) throw conflict();
+      if (preparedInstanceId !== undefined && !this.isScenarioDirectorSeat(actor.seatId)) throw new RequestError('FORBIDDEN','无权准备业务资料。',403);
+      if (origin?.scenarioInstanceId !== undefined) this.assertScenarioWritable(scenarioInstanceId);
+    }
     const context = input.context === undefined ? undefined : normalizeTaskContext(input.context);
     // Keep legacy no-context creation receipts replayable without migrating task_actions.
-    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context ? [context] : []),...(origin ? [origin] : [])]);
+    const digest = JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context ? [context] : []),...(origin ? [origin] : []),...(preparedInstanceId === undefined ? [] : [{scenarioInstanceId:preparedInstanceId}])]);
     const old = this.db.prepare('SELECT input,task_id FROM task_actions WHERE user_id=? AND action_id=?').get(actor.userId,input.clientActionId);
-    if (old) { if (old.input !== digest) throw conflict('同一次创建的内容已变化，请先核对任务列表。'); return this.get(String(old.task_id),actor.seatId); }
+    if (old) {
+      const task=this.get(String(old.task_id),actor.seatId);
+      if(task.scenarioInstanceId!==scenarioInstanceId)throw conflict();
+      if(old.input!==digest){
+        const legacyOrigin=origin?{eventId:origin.eventId,jobId:origin.jobId,reason:origin.reason}:undefined;
+        const legacy=JSON.stringify([input.title.trim(),input.goal.trim(),input.visibility,...(context?[context]:[]),...(legacyOrigin?[legacyOrigin]:[])]);
+        if(scenarioInstanceId===undefined||old.input!==legacy)throw conflict('同一次创建的内容已变化，请先核对任务列表。');
+        if(origin?.scenarioInstanceId!==undefined)this.bindSourceScenarioTask(task.id,scenarioInstanceId,origin.eventId,origin.jobId,{createdByUserId:actor.userId,clientActionId:input.clientActionId});
+      }
+      return task;
+    }
     const time = new Date().toISOString();
-    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {})};
+    const task: TaskSpace = {id:randomUUID(),title:input.title.trim(),goal:input.goal.trim(),visibility:input.visibility,ownerSeatId:actor.seatId,state:'active',revision:1,createdByUserId:actor.userId,updatedByUserId:actor.userId,createdAt:time,updatedAt:time,...(context ? {context} : {}),...(scenarioInstanceId === undefined ? {} : {scenarioInstanceId})};
     this.db.prepare('INSERT INTO task_spaces VALUES(?,?)').run(task.id,JSON.stringify(task));
     this.db.prepare('INSERT INTO task_actions VALUES(?,?,?,?)').run(actor.userId,input.clientActionId,digest,task.id);
     enqueueContinuousTaskChange(this.db,task);
     return task;
   }
-  update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false): TaskSpace {
+  update(actor: Identity, id: string, revision: number, change: {title?:string;goal?:string;state?:TaskSpace['state'];context?:TaskContext|null}, blocked: () => boolean = () => false, archiveEndedScenario = false): TaskSpace {
     const task = this.get(id,actor.seatId);
+    const sealedArchive = archiveEndedScenario && task.scenarioInstanceId !== undefined && actor.controlScenarios && this.isScenarioDirectorSeat(actor.seatId) && Object.keys(change).length === 1 && change.state === 'archived';
+    if (task.scenarioInstanceId !== undefined && !sealedArchive) this.assertScenarioWritable(task.scenarioInstanceId);
     // The existing public-create capability also governs all public task metadata management.
     const allowed = task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId;
     if (!allowed) throw new RequestError('FORBIDDEN','当前席位无权管理此任务。',403);
@@ -184,6 +206,39 @@ export class AccessStore {
       enqueueContinuousTaskChange(this.db,next);
       this.db.exec('COMMIT');return next;
     } catch(error){this.db.exec('ROLLBACK');throw error;}
+  }
+  assertScenarioWritable(instanceId: string) {
+    if(!this.scenario)throw new RequestError('TASK_READ_ONLY','资料已只读，请重新进入后操作。',409);
+    this.scenario.assertWritable(instanceId);
+  }
+  hasAdmissions(taskIds: string[]): boolean { return taskIds.some(id => (this.busy.get(id) ?? 0) > 0); }
+  /** Exact migration from the host's saved creation receipt; no text or identifier guessing. */
+  bindScenarioTask(id: string, scenarioInstanceId: string, actionId: string, userId: string, expectedInput: TaskInput) {
+    const receipt=this.db.prepare('SELECT task_id,input FROM task_actions WHERE user_id=? AND action_id=?').get(userId,actionId);
+    const row=this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
+    const context=expectedInput.context===undefined?undefined:normalizeTaskContext(expectedInput.context);
+    const legacy=JSON.stringify([expectedInput.title.trim(),expectedInput.goal.trim(),expectedInput.visibility,...(context?[context]:[])]);
+    const current=JSON.stringify([expectedInput.title.trim(),expectedInput.goal.trim(),expectedInput.visibility,...(context?[context]:[]),{scenarioInstanceId}]);
+    if(receipt?.task_id!==id || receipt.input!==legacy && receipt.input!==current || !row || !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(scenarioInstanceId))throw conflict('资料归属核验失败。');
+    const task=decodeTask({id:row.id,data:row.data});
+    if(task.scenarioInstanceId!==undefined && task.scenarioInstanceId!==scenarioInstanceId)throw conflict();
+    if(task.scenarioInstanceId===undefined)this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify({...task,scenarioInstanceId}),id);
+  }
+  /** Bind a proven source-created task without rewriting its original creation digest. */
+  bindSourceScenarioTask(id: string, scenarioInstanceId: string, eventId: string, jobId: string, creation: {createdByUserId:string;clientActionId:string}) {
+    const receipt=this.db.prepare('SELECT task_id,input FROM task_actions WHERE user_id=? AND action_id=?').get(creation.createdByUserId,creation.clientActionId);
+    const row=this.db.prepare('SELECT id,data FROM task_spaces WHERE id=?').get(id);
+    const jobRow=this.db.prepare('SELECT data FROM background_jobs WHERE id=?').get(jobId);
+    const eventRow=this.db.prepare('SELECT data FROM background_events WHERE id=?').get(eventId);
+    if(!row||!jobRow||!eventRow||receipt?.task_id!==id||!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(scenarioInstanceId))throw conflict('资料归属核验失败。');
+    const task=decodeTask({id:row.id,data:row.data}),job=JSON.parse(String(jobRow.data)),event=JSON.parse(String(eventRow.data));
+    const input=JSON.parse(String(receipt.input));
+    const origin=Array.isArray(input)?input.at(-1):undefined;
+    if(task.visibility!=='public'||task.createdByUserId!==creation.createdByUserId||job.eventId!==eventId||event.scenarioInstanceId!==scenarioInstanceId
+      ||job.taskSuggestionCreation?.taskSpaceId!==id||job.taskSuggestionCreation?.createdByUserId!==creation.createdByUserId||job.taskSuggestionCreation?.clientActionId!==creation.clientActionId
+      ||!origin||typeof origin!=='object'||Object.keys(origin).some(key=>!['eventId','jobId','reason','scenarioInstanceId'].includes(key))||origin.eventId!==eventId||origin.jobId!==jobId||typeof origin.reason!=='string'||!origin.reason.trim()
+      ||origin.scenarioInstanceId!==undefined&&origin.scenarioInstanceId!==scenarioInstanceId||task.scenarioInstanceId!==undefined&&task.scenarioInstanceId!==scenarioInstanceId)throw conflict('资料归属核验失败。');
+    if(task.scenarioInstanceId===undefined)this.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify({...task,scenarioInstanceId}),id);
   }
   /** Synchronous admission, held only for the actual write/request lifetime. No execution queue. */
   acquire(id: string, seatId: string): () => void {

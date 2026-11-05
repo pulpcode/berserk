@@ -17,7 +17,11 @@ export function contextTools(context: ContextService, tasks: TaskQueryService | 
   controller: AbortController, authorize: () => void,
   observeTasks?: (items: TaskQueryItem[], searched: boolean) => void, observeSituation?: (result: ContextQueryResult, toolCallId: string) => void) {
   const visibleIds = principal.kind === 'seat' ? context.catalog(principal.seatId).systems.map(system => system.id) : principal.scope.systemIds;
-  const systems = context.config.systems.filter(system => visibleIds.includes(system.id));
+  const systems = context.config.systems.filter(system => visibleIds.includes(system.id) && (principal.scenarioInstanceId !== undefined || !system.scenarioClock));
+  const sourceQuery = (tool:'information_search'|'information_read'|'situation_query',params:{systemId:string},signal:AbortSignal) => {
+    if(principal.scenarioInstanceId === undefined && context.config.systems.some(system=>system.id===params.systemId&&system.scenarioClock)) throw new RequestError('CONTEXT_SCOPE_REQUIRED','请从所属任务进入后查询相关资料。',409);
+    return context.query(tool,params,principal,signal);
+  };
   const catalog = (adapter: 'mock-information-http' | 'mock-situation-http') => systems.filter(system => system.adapter === adapter)
     .map(system => `${system.id}（${system.name}${system.adapter === 'mock-situation-http' ? '；对象类型 road 道路、resource 资源、area 区域' : ''}）`).join('；') || '无';
   const execute = async <T>(work: (signal: AbortSignal) => T | Promise<T>, signal?: AbortSignal, observe?: (result: T) => void) => {
@@ -38,14 +42,14 @@ export function contextTools(context: ContextService, tasks: TaskQueryService | 
     defineTool({name: 'information_search', label: '查询报告',
       description: `查询业务系统报告索引与历史修订，分页返回。支持的 systemId：${catalog('mock-information-http')}。组合筛选取交集；当前适配器 query 按完整文本包含匹配，不自动将多个词拆开搜索；无命中仅表示本次条件未找到。from/to 筛选观测时间。索引不等于正文，正文用 information_read。界面根据实际查询结果提供地图入口，正文无需拼写地图链接。`,
       parameters: Type.Object({systemId: id, ...filters, reportId: Type.Optional(id), subjectId: Type.Optional(id), ...time}, {additionalProperties: false}), executionMode: 'sequential',
-      execute: (_id, params, signal) => execute(scoped => context.query('information_search', params, principal, scoped), signal)}),
+      execute: (_id, params, signal) => execute(scoped => sourceQuery('information_search', params, scoped), signal)}),
     defineTool({name: 'information_read', label: '读取报告', description: `按 systemId、reportId 读取完整报告。支持的 systemId：${catalog('mock-information-http')}。revision 指定历史修订，省略时返回最新修订；返回实际修订、业务时间和对象引用。界面根据实际查询结果提供地图入口，正文无需拼写地图链接。`,
       parameters: Type.Object({systemId: id, reportId: id, revision: Type.Optional(Type.Integer({minimum: 1}))}, {additionalProperties: false}), executionMode: 'sequential',
-      execute: (_id, params, signal) => execute(scoped => context.query('information_read', params, principal, scoped), signal)}),
+      execute: (_id, params, signal) => execute(scoped => sourceQuery('information_read', params, scoped), signal)}),
     defineTool({name: 'situation_query', label: '查询态势', description: `查询当前对象状态（current）或变化记录（changes）。支持的 systemId：${catalog('mock-situation-http')}。需要来源区域边界时，可用任务 focus.areaIds 筛选并分页查找 area 对象，再用返回的完整 ref 精确读取；不猜测区域对象 ID。objectTypes 在来源分页前筛选 road/resource/area；省略保持混合对象查询。它不判断任务关系。objectRefs/areaIds/query 组合取交集，query 为完整文本包含匹配。仅查询点线未返回区域不代表区域不存在；未查询、无命中、缺 geometry 和来源失败须区分，不自行估算来源边界。queriedAt 是实际宿主查询时间；snapshotClock 存在时businessNow才是该模拟场景当前业务时点，日志/date/接收时间不能替代它，旧结果保留当时的场景时点。asOf 是来源快照时间，effectiveAt/validTime 是业务时间，引用时保留原值，不只更换时区后缀。changes 可用 after 或 from/to，不能混用；cursor 仅翻页，末页 nextAfter 用于增量查询。unknownRefs 表示未找到，不能推断状态。界面根据实际查询结果提供地图入口，正文无需拼写地图链接。`,
       parameters: Type.Object({systemId: id, mode: Type.Union([Type.Literal('current'), Type.Literal('changes')]), objectTypes:Type.Optional(Type.Array(Type.Union(['road','resource','area'].map(t=>Type.Literal(t))),{minItems:1,maxItems:3,uniqueItems:true})), ...filters, ...time,
         after: Type.Optional(Type.String({minLength: 1, maxLength: 2048}))}, {additionalProperties: false}), executionMode: 'sequential',
-      execute: (callId, params, signal) => execute(scoped => context.query('situation_query', params, principal, scoped), signal, result => observeSituation?.(result, callId))}),
+      execute: (callId, params, signal) => execute(scoped => sourceQuery('situation_query', params, scoped), signal, result => observeSituation?.(result, callId))}),
     ...(tasks ? [
       defineTool({name: 'task_search', label: '查询相关任务', description: '查询可见活动任务的目标与关注范围。businessRefs、areaIds、query 按并集查找候选；query按完整文字包含匹配，不拆分多个关键词；无命中仅表示当前筛选未找到，可不带筛选分页列出全部活动任务。返回命中原因；候选不代表受影响，需结合任务时间和业务资料判断。服务身份仅查活动公共任务，不读取任务文件或会话。',
         parameters: Type.Object({businessRefs: Type.Optional(refs), areaIds: Type.Optional(Type.Array(id, {maxItems: 10})), query: filters.query, limit: filters.limit, cursor: filters.cursor}, {additionalProperties: false}), executionMode: 'sequential',

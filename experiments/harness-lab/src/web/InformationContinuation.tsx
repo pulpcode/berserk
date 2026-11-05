@@ -20,7 +20,7 @@ export function InformationContinuation({ conversationOnly = false, scope, visib
   const { api, storageKey } = useApi();
   const key = storageKey(`axon.information-draft:${scope}`);
   const [stored, setStored] = useState<AnalysisDraft | undefined>(() => { try { const saved = JSON.parse(sessionStorage.getItem(key) || 'null'); if(saved)return saved; return scope.startsWith('inbox:') ? JSON.parse(sessionStorage.getItem(storageKey('axon.inbox-drafts')) || '{}')[scope.slice(6)] : undefined; } catch { return undefined; } });
-  const preferred = preferredTaskIds.filter(id => tasks.some(task => task.id === id && task.state === 'active'));
+  const preferred = preferredTaskIds.filter(id => tasks.some(task => task.id === id && task.state === 'active' && !task.readOnly));
   const draft: AnalysisDraft = stored || { taskSpaceId: fixedTaskId || (preferred.length === 1 ? preferred[0]! : ''), goal: '', includeResult: true, fileIds: resultFiles.map(file => file.id), skillIds: [], agentIds: [] };
   const task = tasks.find(item => item.id === (fixedTaskId || draft.taskSpaceId));
   const [error, setError] = useState(''); const [notice, setNotice] = useState(''); const [busy, setBusy] = useState(false); const [confirm, setConfirm] = useState(false);
@@ -67,7 +67,7 @@ export function InformationContinuation({ conversationOnly = false, scope, visib
     if (result.status === 'completed') releasePending(result.clientActionId, clearGoal);
   }, [changed, openPrepared, releasePending]);
   async function submit(mode: BackgroundAnalysisInput['mode'], retry = false) {
-    if (lock.current || task?.state !== 'active' || draft.pending && !retry) return;
+    if (lock.current || task?.state !== 'active' || task?.readOnly || draft.pending && !retry) return;
     const input: BackgroundAnalysisInput = retry && draft.pending ? draft.pending : { clientActionId: randomUUID(), mode, taskSpaceId: task.id, goal: draft.goal.trim(), includeResult: draft.includeResult, fileIds: draft.fileIds, skillIds: draft.skillIds, agentIds: draft.agentIds };
     update({ ...draft, pending: input }); lock.current = true; setBusy(true); setError(''); setNotice(''); setConfirm(false); setAction(undefined); setJobId('');
     const current = guard();
@@ -107,7 +107,7 @@ export function InformationContinuation({ conversationOnly = false, scope, visib
   const related = choices.filter(item => preferred.includes(item.id));
   const otherTasks = choices.filter(item => !preferred.includes(item.id));
   const materialSummary = draft.includeResult ? `已带入本次分析${draft.fileIds.length ? ` · ${draft.fileIds.length} 个文件` : ''}` : draft.fileIds.length ? `已选 ${draft.fileIds.length} 个文件` : '选择带入资料';
-  const disabled = busy || Boolean(draft.pending) || task?.state !== 'active' || !draft.goal.trim();
+  const disabled = busy || Boolean(draft.pending) || task?.state !== 'active' || task?.readOnly || !draft.goal.trim();
   function selectTask(taskSpaceId: string) { update({ ...draft, taskSpaceId, skillIds: [], agentIds: [] }); }
   return <section className="information-continuation"><h3>继续处理</h3><form className="information-form continuation-form" onSubmit={event => { event.preventDefault(); void submit('conversation'); }}>
     <fieldset disabled={busy || Boolean(draft.pending)}>
@@ -136,7 +136,8 @@ export function InformationContinuation({ conversationOnly = false, scope, visib
         </details>
       </div>
     </fieldset>
-    {task?.state === 'archived' && <p role="status">任务已归档，可查看历史，重新开启后才能开展处理。</p>}
+    {task?.readOnly && <p role="status">任务只读，可查看历史。</p>}
+    {!task?.readOnly && task?.state === 'archived' && <p role="status">任务已归档，可查看历史，重新开启后才能开展处理。</p>}
     <div className="information-actions continuation-actions"><button type="submit" className="primary-action" disabled={disabled}><Send size={16} aria-hidden="true" />{busy ? '正在准备…' : '发送并进入对话'}</button>{!conversationOnly && <button type="button" disabled={disabled} onClick={() => setConfirm(true)}><Clock3 size={16} aria-hidden="true" />后台处理</button>}</div>
   </form>
     {error && <p className="resource-error" role="alert">{error}</p>}{notice && <p className="resource-success" role="status">{notice}</p>}

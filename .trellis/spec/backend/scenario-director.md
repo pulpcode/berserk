@@ -4,6 +4,8 @@
 
 Read when changing the M1 harbor-fire demo, director authentication, scene-source HTTP, resource clock semantics or replay recovery. This is an isolated synthetic source demo; it does not add physical dispatch, plan approval, vehicle motion, a workflow platform or a Pi loop. The ordinary task/map/source features remain independent.
 
+The confirmed-parent isolation extension is specified in [Scenario Run Isolation](scenario-run-isolation.md); unfinished work is preserved read-only rather than forced into archive.
+
 ## 2. Signatures
 
 - `MOCK_CONTEXT_SCENARIOS_ENABLED=true` enables `scripts/mock-context/scenarios` in the existing mock process; default off. It requires separate query/control tokens. Example context/background/notification files live in `experiments/harness-lab/fixtures/scenario-demo`.

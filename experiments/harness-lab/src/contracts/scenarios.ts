@@ -53,3 +53,4 @@ export interface ScenarioActivateInput extends ScenarioMutationInput { expectedA
 export interface ScenarioControlInput extends ScenarioMutationInput { action: 'pause' | 'resume' }
 export interface ScenarioTaskDefinition { code: 'T01' | 'T02' | 'T03'; title: string; goal: string; businessRefs: ContextRef[]; areaIds: string[] }
 export interface ScenarioTaskInitialization { instanceId: string; tasks: Array<{code: 'T01' | 'T02' | 'T03'; taskId: string; title: string}>; initialized: boolean }
+export interface ScenarioPreflight { queuedJobs: number; runningJobs: number; foregroundRequests: number; unconfirmedNotifications: number; unsentNotifications: number }

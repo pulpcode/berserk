@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { PiLab } from '../pi/lab.js';
 import { RequestError } from '../contracts/errors.js';
-import { pageHandoffImportSchema, pageWorkPrepareSchema, type PageWorkPrepareInput } from '../contracts/collaboration.js';
+import { pageHandoffImportSchema, pageWorkPrepareSchema, type PageWorkPrepareInput, type WorkDetail } from '../contracts/collaboration.js';
 import type { apiScope } from './seat-scope.js';
 import { sendFile } from './file-response.js';
 
@@ -11,8 +11,17 @@ export async function collaborationRoutes(app: FastifyInstance, lab: PiLab, scop
   const empty = { type: 'object', additionalProperties: false };
   const uuid = { type: 'string', format: 'uuid' };
   const params = scope.params({ id: uuid });
-  app.get(`${scope.base}/work-items`, { schema: { querystring: empty } }, request => service.list({ seatId: scope.seat(request) }));
-  app.get<{ Params: { id: string } }>(`${scope.base}/work-items/:id`, { schema: { params, querystring: empty } }, request => service.read({ seatId: scope.seat(request) }, request.params.id));
+  app.get(`${scope.base}/work-items`, { schema: { querystring: empty } }, request => {
+    const seatId=scope.seat(request),items=service.list({seatId});
+    if(!lab.access)return items;
+    const visible=new Set(lab.access.list(seatId).map(task=>task.id));
+    return items.filter(item=>visible.has(item.taskSpaceId));
+  });
+  app.get<{ Params: { id: string } }>(`${scope.base}/work-items/:id`, { schema: { params, querystring: empty } }, request => {
+    const seatId=scope.seat(request),item:WorkDetail=service.read({seatId},request.params.id);
+    const owner=lab.access?.get(item.taskSpaceId,seatId).scenarioInstanceId;
+    return {...item,...(owner!==undefined&&!lab.scenario?.isWritable(owner)?{readOnly:true}:{})};
+  });
   app.post<{ Body: PageWorkPrepareInput }>(`${scope.base}/work-items/prepare`, { schema: { body: pageWorkPrepareSchema, querystring: empty } }, request => {
     const { clientActionId, ...input } = request.body;
     return service.prepare({ seatId: scope.seat(request) }, input, { source: 'page', clientActionId });

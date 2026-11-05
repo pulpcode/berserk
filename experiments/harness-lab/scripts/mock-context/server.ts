@@ -208,7 +208,10 @@ export function createMockContextServer(options: {token: string; controlToken?: 
         if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
         const url=new URL(path,'http://127.0.0.1'),systemId=url.pathname.startsWith('/intel/')?'intel':url.pathname.startsWith('/situation/')?'situation':undefined;
         if(systemId&&unavailable.has(systemId))throw fail('UNAVAILABLE','来源暂不可用。',503);
-        body = scenarios?.query(url) ?? query(url);
+        const boundInstanceId=req.headers['x-axon-scenario-instance'];
+        if(Array.isArray(boundInstanceId))throw fail('SCENARIO_CLOCK_CONFLICT','固定来源范围无效。',409);
+        if(boundInstanceId!==undefined&&!scenarios)throw fail('SCENARIO_CLOCK_CONFLICT','当前来源不支持固定场景范围。',409);
+        body = scenarios?.query(url,boundInstanceId) ?? query(url);
       }
     } catch (error) {
       status = error instanceof RequestError ? error.statusCode : 400;

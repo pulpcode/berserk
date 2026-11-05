@@ -10,9 +10,10 @@ function timed<T>(items:T[],stamp:(item:T)=>string|null,from?:string,to?:string)
 
 export function scenarioQuery(store:ScenarioStore) {
   const cursors=new Map<string,{instanceId:string;revision:number;key:string;offset:number}>();
-  return (url:URL):unknown|undefined => {
+  return (url:URL,boundInstanceId?:string):unknown|undefined => {
     const detail=/^\/intel\/reports\/([^/]+)$/.exec(url.pathname),reports=url.pathname==='/intel/reports',current=url.pathname==='/situation/objects',changes=url.pathname==='/situation/changes';
     if(!detail&&!reports&&!current&&!changes)return;
+    if(boundInstanceId!==undefined&&!/^run-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(boundInstanceId))throw sceneError('固定来源范围无效。','SCENARIO_CLOCK_CONFLICT');
     const systemId=detail||reports?'intel':'situation',raw:Record<string,unknown>={systemId,...(current||changes?{mode:current?'current':'changes'}:{})};
     if(detail)raw.reportId=decodeURIComponent(detail[1]);
     const allowed=detail?['revision']:reports?['reportId','subjectId','objectRefs','areaIds','from','to','query','limit','cursor']:['objectRefs','areaIds','objectTypes','taskId','relation','category','query','limit','cursor',...(changes?['after','from','to']:[])];
@@ -23,10 +24,10 @@ export function scenarioQuery(store:ScenarioStore) {
     const selectedOwners=[...new Set(values.map(owner).filter((id):id is string=>Boolean(id)))];
     const cursor='cursor' in params&&params.cursor?cursors.get(params.cursor):undefined;
     if(cursor)selectedOwners.push(cursor.instanceId);
-    const unique=[...new Set(selectedOwners)];if(unique.length>1||unique.length&&values.some(value=>!owner(value)))throw sceneError('同一次查询不能混合场景轮次或旧来源范围。','SCENARIO_CLOCK_CONFLICT');
-    if(!unique.length&&values.length)return;
-    if('cursor' in params&&params.cursor&&!cursor)return;
-    const instanceId=unique[0]??store.active().instanceId;if(!instanceId)return;
+    const unique=[...new Set(selectedOwners)];if(unique.length>1||unique.length&&values.some(value=>!owner(value))||boundInstanceId!==undefined&&(unique.some(id=>id!==boundInstanceId)||values.some(value=>owner(value)!==boundInstanceId)))throw sceneError('同一次查询不能混合场景轮次或旧来源范围。','SCENARIO_CLOCK_CONFLICT');
+    if('cursor' in params&&params.cursor&&!cursor){if(boundInstanceId!==undefined)throw sceneError('分页游标无效。','INVALID_CURSOR',400);return;}
+    if(boundInstanceId===undefined&&!unique.length&&values.length)return;
+    const instanceId=boundInstanceId??unique[0]??store.active().instanceId;if(!instanceId)return;
     const record=store.get(instanceId),clock=sceneClock(record),asOf=clock.businessNow;
     const page=<T>(items:T[],filters:ContextFilters,timeUnknownCount=0)=>{
       const key=stable({path:url.pathname,...Object.fromEntries(Object.entries(filters).filter(([key])=>key!=='cursor'))});let offset=0;

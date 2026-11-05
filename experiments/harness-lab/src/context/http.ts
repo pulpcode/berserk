@@ -1,9 +1,9 @@
 import { RequestError } from '../contracts/errors.js';
 
-export interface ContextHttpOptions { timeoutMs?: number; maxBytes?: number; fetch?: typeof fetch; method?: 'GET' | 'POST'; body?: unknown }
+export interface ContextHttpOptions { timeoutMs?: number; maxBytes?: number; fetch?: typeof fetch; method?: 'GET' | 'POST'; body?: unknown; scenarioInstanceId?: string }
 const sourceErrors: Record<string, {message: string; status: number}> = {
   SCENARIO_CONFLICT: {message: '场景状态不允许本次操作，请刷新预览并核对通知。', status: 409},
-  SCENARIO_CLOCK_CONFLICT: {message: '场景实例或时间口径不一致，请重新选择同一轮次。', status: 409},
+  SCENARIO_CLOCK_CONFLICT: {message: '资料范围或时间口径不一致，请重新进入后查询。', status: 409},
   SCENARIO_FROZEN: {message: '旧轮已经冻结，请创建或选择新轮。', status: 409},
   SCENARIO_DEFINITION_CHANGED: {message: '场景定义已变化，旧轮保持只读。', status: 409},
   SCENARIO_LIMIT: {message: '本轮操作已达上限，请核对后创建新轮。', status: 409},
@@ -31,7 +31,7 @@ export async function readContextJson(url: URL, token: string, signal?: AbortSig
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? 15_000);
   const maxBytes = options.maxBytes ?? 256 * 1024;
   try {
-    const response = await (options.fetch ?? fetch)(url, {method: options.method ?? 'GET', ...(options.body !== undefined ? {body: JSON.stringify(options.body)} : {}), headers: {Authorization: `Bearer ${token}`, Accept: 'application/json', ...(options.body !== undefined ? {'Content-Type':'application/json'} : {})}, redirect: 'manual', signal: controller.signal});
+    const response = await (options.fetch ?? fetch)(url, {method: options.method ?? 'GET', ...(options.body !== undefined ? {body: JSON.stringify(options.body)} : {}), headers: {Authorization: `Bearer ${token}`, Accept: 'application/json', ...(options.body !== undefined ? {'Content-Type':'application/json'} : {}), ...(options.scenarioInstanceId ? {'x-axon-scenario-instance':options.scenarioInstanceId} : {})}, redirect: 'manual', signal: controller.signal});
     if (response.status >= 300 && response.status < 400) { await response.body?.cancel(); throw new RequestError('CONTEXT_INVALID_RESPONSE', '来源返回了不允许的重定向。', 502); }
     const length = response.headers.get('content-length');
     if (length !== null && Number(length) > maxBytes) { await response.body?.cancel(); throw new RequestError('CONTEXT_RESPONSE_TOO_LARGE', `来源响应超过 ${Math.floor(maxBytes / 1024)} KiB，未读取部分资料。`, 502); }

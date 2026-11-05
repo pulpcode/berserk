@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { AccessStore } from '../access/store.js';
 import type { Identity } from '../contracts/access.js';
@@ -32,7 +32,20 @@ export class ScenarioTasks {
     this.directory=join(dataDir,'scenario-runs');
     this.ready=mkdir(this.directory,{recursive:true,mode:0o700}).then(()=>checkDirectory(this.directory));
   }
-  async prepare() { await this.ready; }
+  async prepare(verify?: (id:string,definitions:ScenarioTaskDefinition[])=>Promise<void>) {
+    await this.ready;
+    for (const name of await readdir(this.directory)) {
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}\.json$/.test(name)) continue;
+      const run = await this.load(name.slice(0,-5));
+      if (!run) continue;
+      await verify?.(run.instanceId,run.tasks.map(({code,title,goal,businessRefs,areaIds})=>({code,title,goal,businessRefs,areaIds})));
+      for (const row of run.tasks) {
+        const receipt=this.access.db.prepare('SELECT task_id FROM task_actions WHERE user_id=? AND action_id=?').get(run.userId,row.clientActionId);
+        const taskId=row.taskId??(receipt?.task_id ? String(receipt.task_id) : undefined);
+        if(taskId)this.access.bindScenarioTask(taskId,run.instanceId,row.clientActionId,run.userId,{title:row.title,goal:row.goal,visibility:'public',clientActionId:row.clientActionId,context:{businessRefs:row.businessRefs,focus:{areaIds:row.areaIds}}});
+      }
+    }
+  }
   private async load(id: string): Promise<RunTasks | null> {
     await this.ready;
     const text=await readControlled(join(this.directory,`${scenarioId(id)}.json`),64*1024,true);if(text===null)return null;
@@ -67,7 +80,9 @@ export class ScenarioTasks {
     for(const row of run.tasks){
       check();
       if(!row.taskId){
-        const task=this.access.create(actor,{title:row.title,goal:row.goal,visibility:'public',clientActionId:row.clientActionId,context:{businessRefs:row.businessRefs,focus:{areaIds:row.areaIds}}});
+        const known=this.access.findCreation(actor,row.clientActionId)[0];
+        if(known){row.taskId=known.id;await this.save(run);continue;}
+        const task=this.access.create(actor,{title:row.title,goal:row.goal,visibility:'public',clientActionId:row.clientActionId,context:{businessRefs:row.businessRefs,focus:{areaIds:row.areaIds}}},id);
         row.taskId=task.id;await this.save(run);
       }
     }
@@ -75,11 +90,11 @@ export class ScenarioTasks {
   }
   async requireReady(actor: Identity,id: string) {
     const run=await this.read(actor,id);if(!run.initialized)throw conflict('请先完成本轮三个任务的初始化。');
-    for(const task of run.tasks)this.access.get(task.taskId,actor.seatId,true);return run;
+    for(const task of run.tasks){const stored=this.access.get(task.taskId,actor.seatId);if(stored.state!=='active'||stored.scenarioInstanceId!==id)throw conflict('演示任务状态或归属已变化。');}return run;
   }
   async archive(actor: Identity,id: string, blocked: (taskId:string)=>boolean, check:()=>void) {
     const run=await this.read(actor,id);if(!run.initialized)throw conflict('旧轮任务映射不完整，请先核对。');
-    for(const row of run.tasks){check();const task=this.access.get(row.taskId,actor.seatId);if(task.state==='active')this.access.update(actor,task.id,task.revision,{state:'archived'},()=>blocked(task.id));}
+    for(const row of run.tasks){check();const task=this.access.get(row.taskId,actor.seatId);if(task.state==='active'&&!blocked(task.id))this.access.update(actor,task.id,task.revision,{state:'archived'},()=>blocked(task.id),true);}
   }
   async activation(): Promise<ActivationReceipt | null> {
     await this.ready;const text=await readControlled(join(this.directory,'.activation.json'),8192,true);if(text===null)return null;

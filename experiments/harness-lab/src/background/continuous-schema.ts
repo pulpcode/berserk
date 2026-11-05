@@ -56,18 +56,21 @@ function validateContinuousMetadata(db:DatabaseSync){
     for(const row of db.prepare('SELECT * FROM continuous_streams').all()){
       const stream=decode<ContinuousStream>(row.data);
       if(stream.epochId!==row.epoch_id||stream.id!==row.stream_id||!UUID.test(stream.id)||!UUID.test(stream.epochId)||!UUID.test(stream.sessionId)||!Number.isSafeInteger(stream.revision)||stream.revision<1||!['active','paused','retired'].includes(stream.state)||typeof stream.enabled!=='boolean'||!stream.sourceIds.length||new Set(stream.sourceIds).size!==stream.sourceIds.length||!stream.recipientSeatIds.length||new Set(stream.recipientSeatIds).size!==stream.recipientSeatIds.length||stream.profile.id!==stream.profileId)throw stateError();
+      if(stream.scenarioInstanceId!==undefined&&!/^run-[0-9a-f-]{36}$/i.test(stream.scenarioInstanceId)||stream.configurationEpochId!==undefined&&!UUID.test(stream.configurationEpochId)||stream.legacyScenarioHistory!==undefined&&typeof stream.legacyScenarioHistory!=='boolean')throw stateError();
+      if(stream.scenarioTemplate!==undefined&&(stream.scenarioTemplate!==true||stream.scenarioInstanceId!==undefined)||stream.scenarioEnded!==undefined&&(stream.scenarioEnded!==true||stream.scenarioInstanceId===undefined))throw stateError();
       if(row.current===1&&stream.state==='retired')throw stateError();
       if(row.current===1&&stream.enabled)for(const sourceId of stream.sourceIds){if(currentSources.has(sourceId)||db.prepare('SELECT 1 FROM information_rules WHERE source_id=? AND enabled=1').get(sourceId))throw stateError();currentSources.add(sourceId);}
       streams.set(stream.epochId,stream);
     }
+    for(const stream of streams.values())if(stream.configurationEpochId){const config=streams.get(stream.configurationEpochId);if(!config||config.id!==stream.id||config.configurationEpochId||!stream.scenarioInstanceId||stream.configurationEpochId===stream.epochId)throw stateError();}
     const inputs=new Map<string,ContinuousInput>(),consumed=new Map<string,boolean>();
     for(const row of db.prepare('SELECT * FROM continuous_inputs').all()){
       const input=decode<ContinuousInput>(row.data),stream=streams.get(input.epochId);
       if(!stream||input.id!==row.id||input.epochId!==row.epoch_id||input.receivedAt!==row.received_at||!Number.isSafeInteger(input.bytes)||input.bytes<0||!UUID.test(input.id))throw stateError();
       if(input.kind==='event'){
         const event=db.prepare('SELECT source_id,data FROM background_events WHERE id=?').get(input.eventId);
-        if(input.eventId!==row.event_id||row.task_id!==null||!event||!stream.sourceIds.includes(String(event.source_id))||decode<{continuousEpochId?:string}>(event.data).continuousEpochId!==input.epochId)throw stateError();
-      }else if(input.kind!=='task_revision'||input.task.id!==row.task_id||row.event_id!==null||input.task.visibility!=='public'||!Number.isSafeInteger(input.task.revision))throw stateError();
+        if(input.eventId!==row.event_id||row.task_id!==null||!event||!stream.sourceIds.includes(String(event.source_id))||decode<{continuousEpochId?:string}>(event.data).continuousEpochId!==input.epochId || stream.scenarioInstanceId!==undefined&&decode<{scenarioInstanceId?:string}>(event.data).scenarioInstanceId!==stream.scenarioInstanceId)throw stateError();
+      }else if(input.kind!=='task_revision'||input.task.id!==row.task_id||row.event_id!==null||input.task.visibility!=='public'||!Number.isSafeInteger(input.task.revision)||stream.scenarioInstanceId!==input.task.scenarioInstanceId)throw stateError();
       inputs.set(input.id,input);consumed.set(input.id,row.consumed===1);
     }
     for(const row of db.prepare("SELECT id,data FROM background_events WHERE json_extract(data,'$.continuousEpochId') IS NOT NULL").all()){const epochId=decode<{continuousEpochId:string}>(row.data).continuousEpochId;if(!streams.has(epochId)||![...inputs.values()].some(i=>i.kind==='event'&&i.eventId===row.id&&i.epochId===epochId))throw stateError();}
@@ -76,10 +79,10 @@ function validateContinuousMetadata(db:DatabaseSync){
     for(const row of db.prepare('SELECT * FROM continuous_batches').all()){
       const batch=decode<ContinuousBatch>(row.data),job=jobs.get(batch.jobId);
       if(!job||job.batchId!==batch.id||job.streamEpochId!==batch.epochId||batch.id!==row.id||batch.epochId!==row.epoch_id||batch.jobId!==row.job_id||!batch.inputIds.length||new Set(batch.inputIds).size!==batch.inputIds.length||batch.inputIds.some(id=>inputs.get(id)?.epochId!==batch.epochId))throw stateError();
-      if(batch.previousJobId&&!jobs.has(batch.previousJobId))throw stateError();
+      if(batch.previousJobId&&jobs.get(batch.previousJobId)?.streamEpochId!==batch.epochId)throw stateError();
       batches.set(batch.id,batch);
     }
-    for(const job of jobs.values())if(job.kind!=='continuous_analysis'||!batches.has(job.batchId)||!streams.has(job.streamEpochId)||job.eventId!==undefined||job.sourceId!==undefined)throw stateError();
+    for(const job of jobs.values())if(job.kind!=='continuous_analysis'||!batches.has(job.batchId)||!streams.has(job.streamEpochId)||job.eventId!==undefined||job.sourceId!==undefined||job.scenarioInstanceId!==streams.get(job.streamEpochId)?.scenarioInstanceId)throw stateError();
     const publications=new Map<string,{status:string;update?:AnalysisUpdate}>();
     for(const row of db.prepare('SELECT * FROM continuous_publications').all()){
       const publication=decode<{status:string;update?:AnalysisUpdate}>(row.data),job=jobs.get(String(row.job_id));

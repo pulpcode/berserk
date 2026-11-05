@@ -11,10 +11,14 @@ export interface ContinuousStreamInput {
 }
 /** Each configuration edit creates a fresh epoch and native session. */
 export interface ContinuousStream extends ContinuousStreamInput {
+  /** Internal partition of an immutable configuration epoch. */
+  scenarioInstanceId?: string; configurationEpochId?: string; legacyScenarioHistory?: boolean; scenarioEnded?: true; scenarioTemplate?: true;
   id: string; epochId: string; revision: number; profile: BackgroundProfileSnapshot;
   sessionId: string; state: 'active' | 'paused' | 'retired';
   createdAt: string; updatedAt: string; createdByUserId: string;
   pauseReason?: string; latestJobId?: string; pendingInputs: number; isCurrent?:boolean;
+  /** Read projection for the current execution; configuration edits retain their own revision. */
+  execution?: {epochId:string;revision:number;state:ContinuousStream['state'];pendingInputs:number;pauseReason?:string};
 }
 export type ContinuousInput = {
   id: string; epochId: string; receivedAt: string; bytes: number;

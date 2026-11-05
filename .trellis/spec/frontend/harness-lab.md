@@ -379,3 +379,8 @@ Good: submit identical text twice with different IDs, then delete only one. Base
 ### 7. Wrong vs Correct
 
 Wrong: `if (draft.trim() === submittedText) clearDraft()` after an async acknowledgement. Correct: require both the captured persisted draft version and submitted text to match, so a newly retyped identical draft is preserved.
+
+
+### Ended task read-only projection
+
+Task API `readOnly` is independent of the persisted active/archived business state. Disable new conversation, composer, task edits, work assignment and annotation writes when it is true; use ordinary “只读” copy without scene/run concepts. Keep the selected task's metadata through its authorized direct read even after it leaves the current directory; never retarget an old draft/session to a new task. Task maps pass the existing parent task ID to context routes, not a hidden run marker. Global unsourced task creation remains unchanged pending SIM-TASK-002. Director restart confirmation uses full preflight counts and states that old work remains read-only; native stopping is distinct from successful new activation.

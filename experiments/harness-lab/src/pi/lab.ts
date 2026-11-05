@@ -1,3 +1,4 @@
+import type { ScenarioScope } from '../scenario/scope.js';
 import { TaskResourceService } from '../context/task-resources.js';
 import { extractResourceResult, type ResourceResult } from '../contracts/resource-results.js';
 import { taskResourceTools } from './task-resource-tools.js';
@@ -178,6 +179,7 @@ export class PiLab {
   readonly files: FileService;
   collaboration?: CollaborationService;
   access?: AccessStore;
+  scenario?: ScenarioScope;
   annotations?: AnnotationService;
   context?: ContextService;
   contextUnavailable = false;
@@ -422,6 +424,7 @@ export class PiLab {
     if (input.streamEpochId && (!input.readAnalysisCurrent || !input.recordAnalysisUpdate || input.roles.length
       || input.tools.some(tool => !continuousToolNames.has(tool)))) throw new RequestError('CONTINUOUS_CAPABILITY_INVALID', '持续研判仅允许受控只读工具及变化记录。', 409);
     if (this.settingsUpdating) throw settingsBusy();
+    if(input.contextPrincipal?.scenarioInstanceId!==undefined){if(!this.scenario)throw new RequestError('TASK_READ_ONLY','资料已只读，请重新进入后操作。',409);this.scenario.assertWritable(input.contextPrincipal.scenarioInstanceId);}
     if (this.serviceRecords.get(input.sessionId)?.active) throw new RequestError('SESSION_BUSY', '后台会话正在执行。', 409);
     if (!this.config.apiKey || !this.config.contextReady) throw new RequestError('MODEL_NOT_CONFIGURED', '请先配置模型及上下文容量。', 503);
     if (input.tools.includes('information_suggest_recipients') && !input.recordRecipientSuggestion) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE', '补充建议记录服务不可用，未启动模型。', 503);
@@ -550,7 +553,8 @@ export class PiLab {
   }
 
   activity(seatId = this.config.seatId ?? 'test-seat'): ActivityOverview {
-    return { ...this.workspaces.list(seatId), sessions: [...this.records.values()].filter(record => record.seatId === seatId).map(record => {
+    const spaces=this.workspaces.list(seatId),visible=new Set(spaces.workspaces.map(workspace=>workspace.id));
+    return { ...spaces, sessions: [...this.records.values()].filter(record => record.seatId === seatId&&visible.has(record.workspaceId)).map(record => {
       const summary = this.summary(record);
       const backgroundJob = this.backgroundHooks?.getReservation?.(summary.id);
       return { ...summary, ...(backgroundJob ? { backgroundJob: { ...backgroundJob } } : {}), active: requestState(record.active),
@@ -839,7 +843,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const readonlyFiles = active.service?.streamEpochId ? continuousFileTools(active.service.directory, active.service.files, () => {
       active.controller.signal.throwIfAborted(); if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
     }) : active.sandbox ? workspaceFileTools(active.sandbox) : [];
-    const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', seatId: record.seatId};
+    const scenarioInstanceId = !active.service ? this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId : undefined;
+    const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})};
     if (this.access && !this.contextTasks) this.contextTasks = new TaskQueryService(this.access);
     const annotationState = !role && !active.background && this.annotations && active.annotationActor ? new AnnotationRequestState() : undefined;
     active.annotationState = annotationState;
@@ -849,6 +854,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const authorizeRequest = () => {
       active.controller.signal.throwIfAborted();
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
+      if (principal?.scenarioInstanceId !== undefined) this.scenario?.assertWritable(principal.scenarioInstanceId);
     };
     const queries = !role && this.context && principal ? contextTools(this.context, this.contextTasks, principal, active.controller, () => {
       authorizeRequest();
@@ -858,7 +864,17 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       queriedTasks ||= searched;
       for (const task of items) observedTasks.set(task.id, task.revision);
     }, (result, callId) => annotationState?.observeSources(result, callId)) : [];
-    const taskReads = !role && !active.service && this.taskInformation ? taskInformationTools(this.taskInformation,
+    const authorizeTask = (taskId:string) => {
+      authorizeRequest();
+      const task=this.access?.get(taskId,record.seatId);
+      if(task&&task.scenarioInstanceId!==principal?.scenarioInstanceId)throw new RequestError('TASK_NOT_FOUND','任务不存在或无权访问。',404);
+    };
+    const reader=this.taskInformation;
+    const scopedInformation: TaskInformationReader | undefined = reader ? {
+      list:async(seatId,taskId,params,signal)=>{authorizeTask(taskId);const result=await reader.list(seatId,taskId,params,signal);authorizeTask(taskId);return result;},
+      read:async(seatId,taskId,params,signal)=>{authorizeTask(taskId);const result=await reader.read(seatId,taskId,params,signal);authorizeTask(taskId);return result;},
+    } : undefined;
+    const taskReads = !role && !active.service && scopedInformation ? taskInformationTools(scopedInformation,
       record.seatId, this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId, active.controller, authorizeRequest) : [];
     const assessment = !role && active.service?.recordTaskAssessment && active.service.tools.includes('information_record_task_assessment')
       ? [taskAssessmentTool(active.service.recordTaskAssessment, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest)] : [];
@@ -889,7 +905,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {
         actor: { seatId: record.seatId }, workspace: this.workspaces.get(record.workspaceId, record.seatId),
         sessionId: record.manager.getSessionId(), requestId: active.id, signal: active.controller.signal,
-        check: () => { active.controller.signal.throwIfAborted(); if (record.active !== active || active.reason) throw new Error('当前请求已停止。'); },
+        check: authorizeRequest, authorizeTask,
         takeApproval: toolCallId => { const approved = active.grants?.get(toolCallId); active.grants?.delete(toolCallId); return approved; },
         fail: () => this.stop(record, active, 'failure', '工作交接记录或授权不可用，已停止本次请求；请核对原操作结果。'),
       }) : []), defineTool({
@@ -915,6 +931,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       const stopped = () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted;
       if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
       try {
+        authorizeRequest();
         if (!record.service) this.access?.assertCanCollaborate(record.seatId);
         // Pi's original hook may transform validated arguments; authorize its final values.
         const original = await originalBefore?.(context, signal);
@@ -1011,6 +1028,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     session.agent.streamFunction = (selected, context, options) => {
       if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
       if (!record.service) this.access?.assertCanCollaborate(record.seatId);
+      if(principal?.scenarioInstanceId!==undefined)this.scenario?.assertWritable(principal.scenarioInstanceId);
       if (!active.background && active.annotationActor) this.authorizeResultHistory(record, active.annotationActor);
       const purpose = active.compacting ? 'compaction' : 'reply';
       if (purpose === 'reply') annotationState?.beginInference();
@@ -1228,7 +1246,8 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         active.selections = {...active.selections, ...resolveComposerSelection(active.input ?? {}, snapshot, active.roles)};
         if (!Object.keys(active.selections).length) active.selections = undefined;
         if (active.input?.contextRefs) {
-          const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', seatId: record.seatId}, active.controller.signal);
+          const scenarioInstanceId=this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId;
+          const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})}, active.controller.signal);
           if (context) active.selections = {...active.selections, context};
         }
         if (active.input?.annotationRefs?.length) {
@@ -1446,6 +1465,25 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     if (!record.active || record.active.id !== requestId) throw new RequestError('STALE_REQUEST', '该请求已结束或已被替换。', 409);
     this.stop(record, record.active, 'cancelled');
     return this.get(id, record.seatId);
+  }
+
+  scenarioRequestCount(instanceId: string): number {
+    return [...this.records.values()].filter(record=>record.active&&this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId===instanceId).length;
+  }
+
+  async stopScenario(instanceId: string): Promise<void> {
+    const records=[...this.records.values()].filter(record=>this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId===instanceId);
+    const running=records.filter(record=>record.active);
+    for(const record of running)this.stop(record,record.active!,'cancelled');
+    let timer: ReturnType<typeof setTimeout>|undefined;
+    try {
+      await Promise.race([
+        Promise.all(running.map(record=>record.active?.done)),
+        new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new RequestError('SCENARIO_STOP_PENDING','处理仍在停止，请核对后继续原操作。',409)),15000);}),
+      ]);
+    } finally { if(timer)clearTimeout(timer); }
+    const missing=Object.entries(this.workspaces.allBindings()).some(([sessionId,workspaceId])=>{const workspace=this.workspaces.getAny(workspaceId);return this.access?.get(workspace.taskSpaceId,workspace.seatId!).scenarioInstanceId===instanceId&&!this.records.has(sessionId);});
+    if(missing||records.some(record=>record.active||record.warning||record.persistenceFailed||record.result?.instructionOutcomeUncertain))throw new RequestError('SCENARIO_STOP_PENDING','处理结果尚待核对，请保留原操作。',409);
   }
 
   async close(): Promise<void> {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { ScenarioDefinitionSummary, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioTaskInitialization } from '../contracts/scenarios';
+import type { ScenarioDefinitionSummary, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioTaskInitialization, ScenarioPreflight } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
 import { randomUUID } from './random-uuid';
 
@@ -16,7 +16,7 @@ interface ReplayDraft {
   request?: ReplayRequest;
   rejected?: boolean;
 }
-const stageNames: Record<ReplayStage, string> = {create: '创建演示', initialize: '准备演示任务', pause: '结束当前演示', activate: '启用演示'};
+const stageNames: Record<ReplayStage, string> = {create: '创建演示', initialize: '准备演示任务', pause: '锁定当前演示', activate: '核对原处理并启用演示'};
 const instancePath = (id: string) => `/api/simulation/instances/${encodeURIComponent(id)}`;
 
 function restore(key: string): ReplayDraft | undefined {
@@ -64,8 +64,9 @@ export function useDirectorReplay({disabled, completed, changed, failure}: {
     const list = await api<ScenarioInstances>('/api/simulation/instances');
     if (expectedId !== undefined && list.activeInstanceId !== expectedId) throw new Error('当前演示已切换，请核对演示记录。');
     const active = list.activeInstanceId ? await api<ScenarioInstanceDetail>(instancePath(list.activeInstanceId)) : undefined;
-    if (active?.actions.some(action => action.sendState === 'unconfirmed')) throw new Error('当前演示有接收未确认的通知，请先核对接收回执。');
-    return {list, active};
+    const preflight=list.activeInstanceId?await api<ScenarioPreflight>(`${instancePath(list.activeInstanceId)}/preflight`):undefined;
+    if (preflight?.unconfirmedNotifications) throw new Error('当前演示有接收未确认的通知，请先核对接收回执。');
+    return {list, active, preflight};
   }
   function request(path: string, body: ReplayRequest['body']): ReplayRequest {
     const id = randomUUID();
@@ -75,8 +76,8 @@ export function useDirectorReplay({disabled, completed, changed, failure}: {
     if (value.stage === 'create') return request('/api/simulation/instances', {definitionId: value.definitionId, version: value.version, mode: value.mode});
     if (!value.targetId) throw new Error('演示准备记录缺少实例，请核对演示记录。');
     if (value.stage === 'initialize') return request(`${instancePath(value.targetId)}/initialize`, {});
-    const {list, active} = await activeState(value.previousId);
-    if (active?.actions.some(action => action.sendState === 'unsent') && !value.terminateUnsent) throw new Error('当前演示有未发送通知，请先确认处理方式。');
+    const {list, active, preflight} = await activeState(value.previousId);
+    if (preflight?.unsentNotifications && !value.terminateUnsent) throw new Error('当前演示有未发送通知，请先确认处理方式。');
     if (value.stage === 'pause') {
       if (!active || active.instance.paused) return;
       return request(`${instancePath(active.instance.instanceId)}/control`, {action: 'pause', expectedRevision: active.instance.revision});

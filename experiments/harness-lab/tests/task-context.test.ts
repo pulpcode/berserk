@@ -2,7 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ScenarioScope } from '../src/scenario/scope.js';
 import { AccessStore } from '../src/access/store.js';
 import { openDatabase } from '../src/access/database.js';
 import type { AuthSession, Identity, TaskContext, TaskInput, TaskSpace } from '../src/contracts/access.js';
@@ -94,6 +95,23 @@ describe('task context persistence and access', () => {
 });
 
 describe('task query metadata projection', () => {
+  it('limits candidates and direct reads to the captured owner without exposing control metadata', async () => {
+    const {access, db, a, query}=await setup();
+    const plain=access.create(a,input());
+    const scope=new ScenarioScope({systems:[],scopes:[]},{});
+    vi.spyOn(scope,'isWritable').mockReturnValue(true);access.scenario=scope;
+    const runA='run-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',runB='run-bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+    const taskA=access.create(a,input()),taskB=access.create(a,input());
+    for(const [task,scenarioInstanceId] of [[taskA,runA],[taskB,runB]] as const) db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify({...task,scenarioInstanceId}),task.id);
+    const scoped={...service,scenarioInstanceId:runA};
+    expect(query.search({},scoped).data.items.map(item=>item.id)).toEqual([taskA.id]);
+    expect(query.search({},service).data.items.map(item=>item.id)).toEqual([plain.id]);
+    expect(JSON.stringify(query.read(taskA.id,scoped))).not.toContain('scenarioInstanceId');
+    for(const id of [taskB.id,plain.id]) expect(()=>query.read(id,scoped)).toThrow(expect.objectContaining({code:'TASK_NOT_FOUND'}));
+    expect(()=>query.read(taskA.id,service)).toThrow(expect.objectContaining({code:'TASK_NOT_FOUND'}));
+    const page=query.search({limit:1},{...service,scenarioInstanceId:runB});
+    expect(page.data.items.map(item=>item.id)).toEqual([taskB.id]);
+  });
   it('unions exact references, regions and text matches without silently filtering unknown or old task times', async () => {
     const {access, a, b, query, dir} = await setup();
     const referenceTask = access.create(a, {...input({businessRefs: [{...road, label: 'not-a-search-key'}]}), title: '引用任务', goal: '引用'});

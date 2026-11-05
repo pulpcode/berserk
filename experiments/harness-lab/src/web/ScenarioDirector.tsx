@@ -4,7 +4,7 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { useRef, useState } from 'react';
 import { ArrowRight, Check, CircleAlert, Clock3, ChevronDown, History, ArrowUpRight, Map as MapIcon, RotateCcw, Settings2, RefreshCw, Send } from 'lucide-react';
 import type { Identity } from '../contracts/access';
-import type { ScenarioDefinitions, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioStepSummary, ScenarioTaskInitialization } from '../contracts/scenarios';
+import type { ScenarioDefinitions, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioStepSummary, ScenarioTaskInitialization, ScenarioPreflight } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
 import { useInformationQuery } from './information-ui';
 import { randomUUID } from './random-uuid';
@@ -98,6 +98,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const blocked = Boolean(busy || pending || fetchError || replay.busy || replay.draft || !definitions.data || !instances.data);
   const activeId = instances.data?.activeInstanceId;
   const activeDetail = detail;
+  const preflight=useInformationQuery<ScenarioPreflight>(activeId?`${base}/preflight`:undefined,!denied&&panel==='restart',5000);
   const preparationDetail = useInformationQuery<ScenarioInstanceDetail>(panel === 'restart' && preparingId ? `/api/simulation/instances/${encodeURIComponent(preparingId)}` : undefined, !denied, 10000);
   const preparedInstance = preparationDetail.data?.instance;
   const preparedDefinitionChanged = Boolean(preparedInstance && (!definition || preparedInstance.definitionId !== definition.id || preparedInstance.definitionVersion !== definition.version || preparedInstance.definitionHash !== definition.definitionHash));
@@ -115,10 +116,10 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     || (recoveryTargetId && (!recoveryTarget.data || recoveryTarget.error)) || (recoveryPreviousId && (!recoveryPrevious.data || recoveryPrevious.error)));
   const preparedChoices = preparationInstances.data?.items.filter(item => item.status === 'prepared' && item.instanceId !== replay.draft?.targetId) || [];
   const showPreparations = Boolean(replay.draft || preparedChoices.length || preparationPages.length || instances.data?.hasMore);
-  const unsent = activeDetail.data?.actions.filter(action => action.sendState === 'unsent').length || 0;
-  const unconfirmed = activeDetail.data?.actions.some(action => action.sendState === 'unconfirmed');
+  const unsent = preflight.data?.unsentNotifications || 0;
+  const unconfirmed = Boolean(preflight.data?.unconfirmedNotifications);
   const restartBlocked = blocked || !identity.createPublicTask || !definition || !instances.data
-    || Boolean(activeId && !activeDetail.data) || Boolean(activeDetail.error || unconfirmed || (unsent && !terminateUnsent))
+    || Boolean(activeId && (!activeDetail.data || !preflight.data || preflight.error)) || Boolean(activeDetail.error || unconfirmed || (unsent && !terminateUnsent))
     || Boolean(preparingId && (!preparedInstance || preparationDetail.error || preparedInstance.status !== 'prepared' || preparedDefinitionChanged));
   const steps = instance?.mode==='main_story' ? detail.data?.steps.slice(0,5) || [] : detail.data?.steps || [];
   const delivery = useDirectorDelivery({
@@ -334,13 +335,16 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
         </> : <>
           {activeDetail.data && <div className="director-recovery-context"><span>结束当前演示</span><DirectorRunIdentity instance={activeDetail.data.instance}/></div>}
           <div className="director-recovery-context"><span>{preparingId ? '准备目标' : '新演示 · 待创建'}</span>{preparingId ? preparedInstance ? <DirectorRunIdentity instance={preparedInstance}/> : preparationDetail.error ? <p className="director-warning" role="alert">{preparationDetail.error}</p> : <LoadingIndicator label="正在读取准备目标…"/> : <p>{definition?.name} · {modes[mode]}</p>}</div>
-          {activeId && <p className="director-replay-note">原任务归档，历史记录保留。</p>}
+          {activeId && <p className="director-replay-note">原任务及未完成工作保留为只读，历史记录保留。</p>}
+          {preflight.data && (preflight.data.queuedJobs+preflight.data.runningJobs+preflight.data.foregroundRequests)>0 && <p className="director-replay-note">待处理 {preflight.data.queuedJobs} 项 · 正在处理 {preflight.data.runningJobs+preflight.data.foregroundRequests} 项。确认后停止，核清结果再开始新演示。</p>}
+          {activeId&&!preflight.data&&!preflight.error&&<LoadingIndicator label="正在核对处理状态…"/>}
           {unsent > 0 && <label className="director-replay-consent"><input type="checkbox" checked={terminateUnsent} disabled={Boolean(replay.busy)} onChange={event => setTerminateUnsent(event.target.checked)}/>放弃当前演示未发送的 {unsent} 条通知</label>}
           {preparedDefinitionChanged && <p className="director-warning" role="alert">该准备记录的场景定义已更新，请重新演示。</p>}
           {preparedInstance && preparedInstance.status !== 'prepared' && <p className="director-warning" role="alert">该演示已不在准备状态，请重新读取。</p>}
         </>}
         {unconfirmed && <p className="director-warning">当前演示有接收未确认的通知，请先核对接收回执。</p>}
         {activeDetail.error && <p className="director-warning">{activeDetail.error}</p>}
+        {preflight.error && <p className="director-warning" role="alert">{preflight.error}<button onClick={preflight.refresh}>重试</button></p>}
         {error && <p className="director-warning" role="alert">{error}</p>}
         <div className="director-dialog-actions">
           <button disabled={Boolean(replay.busy)} onClick={() => setPanel(undefined)}>{replay.draft ? '稍后处理' : '取消'}</button>

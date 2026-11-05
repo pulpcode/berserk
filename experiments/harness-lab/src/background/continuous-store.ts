@@ -23,6 +23,20 @@ export class ContinuousStore {
   stream(epochId:string) { const stream = this.streams().find(item => item.epochId === epochId); if (!stream) throw conflict('配置不存在。'); return stream; }
   current(id:string) { const stream = this.streams(true).find(item => item.id === id); if (!stream) throw conflict('配置不存在。'); return stream; }
   source(sourceId:string) { return this.streams(true).find(stream => stream.enabled && stream.sourceIds.includes(sourceId)); }
+  /** Separate native session, pending inputs and baselines for each known run/config pair. */
+  forRun(configuration:ContinuousStream,scenarioInstanceId:string):ContinuousStream {
+    const original=this.stream(configuration.configurationEpochId??configuration.epochId);
+    const prior=this.streams().find(stream=>stream.configurationEpochId===original.epochId&&stream.scenarioInstanceId===scenarioInstanceId);
+    if(prior)return prior;
+    return this.background.transaction(()=>{
+      const stream:ContinuousStream={...original,epochId:randomUUID(),configurationEpochId:original.epochId,scenarioInstanceId,legacyScenarioHistory:undefined,scenarioEnded:undefined,scenarioTemplate:undefined,sessionId:randomUUID(),latestJobId:undefined,pendingInputs:0,isCurrent:false,createdAt:now(),updatedAt:now()};
+      this.db.prepare('INSERT INTO continuous_streams VALUES(?,?,0,?)').run(stream.epochId,stream.id,JSON.stringify(stream));
+      for(const row of this.db.prepare("SELECT data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active' AND json_extract(data,'$.scenarioInstanceId')=?").all(scenarioInstanceId)){
+        const task=this.decode<TaskSpace>(row.data);this.add({id:randomUUID(),epochId:stream.epochId,kind:'task_revision',task,receivedAt:task.updatedAt,bytes:Buffer.byteLength(JSON.stringify(task))});
+      }
+      return this.stream(stream.epochId);
+    });
+  }
   save(stream:ContinuousStream) { this.db.prepare('UPDATE continuous_streams SET data=? WHERE epoch_id=?').run(JSON.stringify(stream),stream.epochId); return stream; }
   create(stream:ContinuousStream, previous?:ContinuousStream) {
     return this.background.transaction(() => {
@@ -61,9 +75,9 @@ export class ContinuousStore {
     this.db.prepare('INSERT INTO continuous_publications VALUES(?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET status=excluded.status,data=excluded.data').run(job.id,job.streamEpochId,publication.status,JSON.stringify(publication));
   }
   baseline(epochId:string,taskId:string):string|undefined {const row=this.db.prepare('SELECT job_id FROM continuous_current WHERE epoch_id=? AND task_id=?').get(epochId,taskId);return row?String(row.job_id):undefined;}
-  enqueueDue(time=Date.now()) {
+  enqueueDue(time=Date.now(),isWritable?:(instanceId:string)=>boolean) {
     for(const stream of this.streams()) {
-      if(stream.state==='paused')continue;
+      if(stream.state==='paused'||stream.legacyScenarioHistory||stream.scenarioTemplate||stream.scenarioInstanceId&&isWritable&&!isWritable(stream.scenarioInstanceId))continue;
       if(this.background.listJobs().some(job=>job.streamEpochId===stream.epochId && ['queued','running'].includes(job.status)))continue;
       const pending=this.pending(stream.epochId);if(!pending.length)continue;
       if(time-Date.parse(pending.at(-1)!.receivedAt)<(stream.quietMs??5000) && time-Date.parse(pending[0].receivedAt)<(stream.maxWaitMs??30000) && pending.length<32)continue;
@@ -72,7 +86,7 @@ export class ContinuousStore {
         for(const input of pending) {if(selected.length && (selected.length>=32 || bytes+input.bytes>128*1024))break;selected.push(input);bytes+=input.bytes;}
         const jobId=randomUUID(),batch:ContinuousBatch={id:randomUUID(),epochId:stream.epochId,jobId,inputIds:selected.map(i=>i.id),requiredTaskIds:[...new Set(selected.flatMap(i=>i.kind==='task_revision' && i.task.state==='active'?[i.task.id]:[]))],createdAt:now(),inputCutoff:selected.at(-1)!.receivedAt,previousJobId:stream.latestJobId};
         this.db.prepare('INSERT INTO continuous_batches VALUES(?,?,?,?)').run(batch.id,stream.epochId,jobId,JSON.stringify(batch));
-        this.background.insertJob({id:jobId,kind:'continuous_analysis',batchId:batch.id,streamEpochId:stream.epochId,status:'queued',revision:1,createdAt:batch.createdAt,sessionId:stream.sessionId,requestId:randomUUID(),contextScope:stream.profile.contextScope});
+        this.background.insertJob({id:jobId,kind:'continuous_analysis',scenarioInstanceId:stream.scenarioInstanceId,batchId:batch.id,streamEpochId:stream.epochId,status:'queued',revision:1,createdAt:batch.createdAt,sessionId:stream.sessionId,requestId:randomUUID(),contextScope:stream.profile.contextScope});
       });
     }
   }
@@ -81,13 +95,13 @@ export class ContinuousStore {
   publicationIssue(job:BackgroundJob,update:AnalysisUpdate):'stale'|'missing'|undefined {
     if(job.kind!=='continuous_analysis')throw conflict();
     if(update.taskCoverage){
-      const current=this.db.prepare("SELECT data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row=>this.decode<TaskSpace>(row.data));
+      const current=this.db.prepare("SELECT data FROM task_spaces WHERE json_extract(data,'$.visibility')='public' AND json_extract(data,'$.state')='active'").all().map(row=>this.decode<TaskSpace>(row.data)).filter(task=>task.scenarioInstanceId===job.scenarioInstanceId);
       if(current.length!==update.taskCoverage.length||current.some(task=>!update.taskCoverage!.some(item=>item.taskId===task.id&&item.taskRevision===task.revision)))return 'stale';
     }
     for(const item of update.taskUpdates) {
       const row=this.db.prepare('SELECT data FROM task_spaces WHERE id=?').get(item.taskId);
       const task=row?this.decode<TaskSpace>(row.data):undefined;
-      if(!task || task.revision!==item.taskRevision || task.state!=='active' || this.baseline(job.streamEpochId,item.taskId)!==item.previousJobId)return 'stale';
+      if(!task || task.scenarioInstanceId!==job.scenarioInstanceId || task.revision!==item.taskRevision || task.state!=='active' || this.baseline(job.streamEpochId,item.taskId)!==item.previousJobId)return 'stale';
     }
     if(this.requiredTaskInputIssues(job,update).length)return 'missing';
     return undefined;
@@ -124,7 +138,7 @@ export class ContinuousStore {
   private validate() {
     for(const stream of this.streams())if(!stream.sourceIds.length || !stream.recipientSeatIds.length || !stream.sessionId)throw conflict('持续配置损坏。');
     for(const job of this.background.listJobs())if(job.kind==='continuous_analysis') {
-      const batch=this.batch(job.batchId);if(batch.jobId!==job.id || batch.epochId!==job.streamEpochId)throw conflict('批次关系损坏。');this.stream(job.streamEpochId);this.inputs(batch);
+      const batch=this.batch(job.batchId);if(batch.jobId!==job.id || batch.epochId!==job.streamEpochId || this.stream(job.streamEpochId).scenarioInstanceId!==job.scenarioInstanceId)throw conflict('批次关系损坏。');this.stream(job.streamEpochId);this.inputs(batch);
     }
   }
 }
@@ -133,9 +147,10 @@ export class ContinuousStore {
 export function enqueueContinuousTaskChange(db:DatabaseSync,task:TaskSpace) {
   if(task.visibility!=='public'||task.state!=='active'||!db.prepare("SELECT 1 FROM sqlite_master WHERE name='continuous_streams'").get())return;
   const refs=task.context?.businessRefs??[];
-  for(const row of db.prepare('SELECT data FROM continuous_streams WHERE current=1').all()) {
+  const configurations=new Set(db.prepare('SELECT epoch_id FROM continuous_streams WHERE current=1').all().map(row=>String(row.epoch_id)));
+  for(const row of db.prepare('SELECT data FROM continuous_streams').all()) {
     const stream=JSON.parse(String(row.data)) as ContinuousStream;
-    if(!stream.enabled||!stream.profile.contextScope)continue;
+    if(!stream.enabled||stream.scenarioTemplate||!stream.profile.contextScope||stream.scenarioInstanceId!==task.scenarioInstanceId||!configurations.has(stream.configurationEpochId??stream.epochId))continue;
     const baseline=db.prepare('SELECT 1 FROM continuous_current WHERE epoch_id=? AND task_id=?').get(stream.epochId,task.id);
     if(!baseline&&refs.length&&!refs.some(ref=>stream.profile.contextScope!.systemIds.includes(ref.systemId)))continue;
     if(db.prepare("SELECT 1 FROM continuous_inputs WHERE epoch_id=? AND task_id=? AND json_extract(data,'$.task.revision')=?").get(stream.epochId,task.id,task.revision))continue;

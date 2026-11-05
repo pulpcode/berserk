@@ -11,7 +11,7 @@ function operationId(value:unknown){const id=contextText(value);if(!/^[0-9a-f]{8
 function actor(value:unknown):ScenarioActor {const r=contextRecord(value,['userId','seatId'],['userId','seatId']);return {userId:contextText(r.userId),seatId:contextText(r.seatId)};}
 async function receipt(target:NotificationTarget,action:ScenarioAction,method:'GET'|'POST'):Promise<SimulationReceipt> {
   const url=new URL(`/api/integrations/${encodeURIComponent(target.sourceId)}/events`,target.url);if(method==='GET')url.searchParams.set('sourceMessageId',action.notification.sourceMessageId);
-  const response=await fetch(url,{method,headers:{Authorization:`Bearer ${target.token}`,...(method==='POST'?{'Content-Type':'application/json'}:{})},redirect:'error',signal:AbortSignal.timeout(5000),...(method==='POST'?{body:JSON.stringify(action.notification)}:{})});if(!response.ok)throw new Error('接收请求未成功');
+  const response=await fetch(url,{method,headers:{Authorization:`Bearer ${target.token}`,...(method==='POST'?{'Content-Type':'application/json'}:{})},redirect:'error',signal:AbortSignal.timeout(5000),...(method==='POST'?{body:JSON.stringify({...action.notification,scenarioInstanceId:action.instanceId})}:{})});if(!response.ok)throw new Error('接收请求未成功');
   const reader=response.body?.getReader();if(!reader)throw new Error('回执为空');let text='',size=0;try{for(;;){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>16384)throw new Error('回执过大');text+=Buffer.from(part.value).toString('utf8');}}finally{await reader.cancel();}
   const r=contextRecord(JSON.parse(text),['eventId','sourceMessageId','receivedAt','status'],['eventId','sourceMessageId','receivedAt','status']);if(r.status!=='accepted'||r.sourceMessageId!==action.notification.sourceMessageId)throw new Error('回执不匹配');return {eventId:contextText(r.eventId),sourceMessageId:contextText(r.sourceMessageId),receivedAt:contextTimestamp(r.receivedAt),status:'accepted'};
 }
@@ -34,6 +34,10 @@ export function scenarioControl(store:ScenarioStore,targets:NotificationTarget[]
     }
     if(url.search)throw sceneError('此控制接口不接受查询参数。','INVALID_ARGUMENT',400);
     const operation=/^\/control\/operations\/([^/]+)$/.exec(path);if(operation&&req.method==='GET')return store.operation(operationId(operation[1]));
+    const provenance=/^\/control\/instances\/([^/]+)\/provenance$/.exec(path);
+    if(provenance&&req.method==='GET')return store.provenance(decodeURIComponent(provenance[1]));
+    const notification=/^\/control\/instances\/([^/]+)\/notifications\/([^/]+)$/.exec(path);
+    if(notification&&req.method==='GET')return store.notification(decodeURIComponent(notification[1]),decodeURIComponent(notification[2]));
     const action=/^\/control\/scenario-actions\/([^/]+)(\/send)?$/.exec(path);
     if(action){if(req.method!==(action[2]?'POST':'GET'))throw sceneError('控制方式无效。','INVALID_ARGUMENT',400);const found=store.action(operationId(action[1]));if(!found)throw sceneError('场景通知不存在。','NOT_FOUND',404);let sender:ScenarioActor|undefined;if(action[2]){const r=contextRecord(await body(req),['actor'],['actor']);sender=actor(r.actor);}if(!action[2]&&found.action.sendState!=='unconfirmed')return found.action;if(running.has(found.action.id))return running.get(found.action.id)!;const promise=deliver(found.action.id,Boolean(action[2]),sender).finally(()=>running.delete(found.action.id));running.set(found.action.id,promise);return promise;}
     if(req.method==='POST'&&path==='/control/instances'){

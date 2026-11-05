@@ -17,7 +17,7 @@ export function TaskAssociations({ eventId, jobId, visible, identity, tasks, sav
   const alive = useRef(true); const lock = useRef(false);
   useEffect(() => () => { alive.current = false; }, []);
   const value = query.data;
-  const manageable = tasks.filter(task => task.state === 'active' && (task.visibility === 'public' ? identity.createPublicTask : task.ownerSeatId === identity.seatId));
+  const manageable = tasks.filter(task => task.state === 'active' && !task.readOnly && (task.visibility === 'public' ? identity.createPublicTask : task.ownerSeatId === identity.seatId));
   function begin(taskId = '') {
     const link = value?.links.find(item => item.task.id === taskId);
     setEdit({ taskId, reason: link?.reason || '', mode: 'include', revision: value?.revisions?.[taskId] ?? link?.revision ?? 0, jobId: link?.jobId || jobId }); setNeedsRead(false); setLatest(undefined); setError(''); setNotice('');
@@ -46,7 +46,7 @@ export function TaskAssociations({ eventId, jobId, visible, identity, tasks, sav
       <ul className="task-association-list">{value.links.filter(link => link.mode !== 'exclude' || link.canManage).map(link => <li key={link.task.id}>
         <div className="information-actions"><button className="information-row-link" onClick={() => openTask(link.task.id)}>{link.task.title}</button><span>{linkMode[link.mode]}{link.task.state === 'archived' ? ' · 已归档' : ''}</span></div><p>{link.reason}</p>
         {link.taskChanged && <p className="resource-help">任务说明已更新，关联依据为旧版本。</p>}
-        {link.canManage && link.task.state === 'active' && <button disabled={busy} onClick={() => begin(link.task.id)}>调整关联</button>}
+        {link.canManage && link.task.state === 'active' && !link.task.readOnly && <button disabled={busy} onClick={() => begin(link.task.id)}>调整关联</button>}
       </li>)}</ul>
       {suggestion && <aside className="task-suggestion"><h4>建议新建公共任务</h4><strong>{suggestion.title}</strong><p>{suggestion.goal}</p><p>建议理由：{suggestion.reason}</p>
         {value.creation ? <p className="resource-success">已创建：<button className="information-row-link" onClick={() => openTask(value.creation!.taskSpaceId)}>{tasks.find(task => task.id === value.creation?.taskSpaceId)?.title || '查看任务'}</button></p> : value.canCreateTask ? <button disabled={busy} onClick={() => setCreate(true)}>创建公共任务并关联</button> : <p className="resource-help">有工作任务管理权限的人员可审阅并创建。</p>}

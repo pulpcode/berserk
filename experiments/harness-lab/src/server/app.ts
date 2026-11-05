@@ -81,6 +81,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     await registerApi(scoped, lab, scope);
     if (lab.annotations) await annotationRoutes(scoped, lab.annotations, scope, request => lab.annotations!.actorForSeat(scope.seat(request), lab.access ? identityOf(request).userId : undefined));
     await contextRoutes(scoped,lab,scope,background,contextOptions?.env);
+    if (lab.context) lab.context.scenario = lab.scenario;
   });
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });

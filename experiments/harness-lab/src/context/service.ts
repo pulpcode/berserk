@@ -9,6 +9,7 @@ import { decodeContextResponse, normalizeContextQuery } from './validation.js';
 const denied = () => new RequestError('CONTEXT_FORBIDDEN', '当前身份无权访问本次业务资料范围。', 403);
 export class ContextService {
   readonly config: ContextConfig;
+  scenario?: {assertWritable(instanceId: string): void};
   private readonly tokens: Map<string, string>;
   constructor(config: ContextConfig, env: NodeJS.ProcessEnv = process.env, private readonly httpOptions: ContextHttpOptions = {}) {
     this.config = parseContextConfig(config); assertContextCredentials(this.config, env);
@@ -40,7 +41,7 @@ export class ContextService {
       ...(scope.taskId===undefined?{}:{taskId:scope.taskId}),...(scope.relation===undefined?{}:{relation:scope.relation}),
       ...(scope.category===undefined?{}:{category:scope.category}),...(scope.cursor===undefined?{}:{cursor:scope.cursor}),limit:100},principal,signal);
   }
-  async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal): Promise<ContextQueryResult> {
+  async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal, readOnly = false): Promise<ContextQueryResult> {
     signal?.throwIfAborted();
     const params = normalizeContextQuery(tool, input), system = this.config.systems.find(s => s.id === params.systemId);
     if (principal.kind === 'service') {
@@ -48,6 +49,9 @@ export class ContextService {
       if (!principal.scope.systemIds.includes(params.systemId)) throw denied();
     } else if (!this.config.scopes.some(s => s.seatIds.includes(principal.seatId) && s.systemIds.includes(params.systemId))) throw denied();
     if (!system) throw denied();
+    const scenarioInstanceId = principal.scenarioInstanceId;
+    if (system.scenarioClock === true && !scenarioInstanceId && !readOnly && (this.scenario || principal.kind === 'service')) throw denied();
+    if (scenarioInstanceId && !readOnly) this.scenario?.assertWritable(scenarioInstanceId);
     if ((tool === 'situation_query') !== (system.adapter === 'mock-situation-http')) throw new RequestError('CONTEXT_UNSUPPORTED_FILTER', '所选系统不支持该查询工具。');
     if (tool === 'situation_query' && 'mode' in params) {
       const capability=system.resourceCapability;
@@ -64,11 +68,16 @@ export class ContextService {
       if (key === 'systemId' || key === 'mode' || (tool === 'information_read' && key === 'reportId')) continue;
       url.searchParams.set(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
     }
-    const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, this.httpOptions);
+    const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, {...this.httpOptions,
+      ...(system.scenarioClock === true && scenarioInstanceId ? {scenarioInstanceId} : {})});
     signal?.throwIfAborted();
+    if (scenarioInstanceId && !readOnly) this.scenario?.assertWritable(scenarioInstanceId);
     const data = decodeContextResponse(tool, params, raw);
     if (system.scenarioClock === true && !data.snapshotClock || system.scenarioClock !== true && data.snapshotClock) {
       throw new RequestError('CONTEXT_TIME_BASIS_CONFLICT', '来源场景时间缺失或未获配置授权，不能使用真实时间代替。', 409);
+    }
+    if (system.scenarioClock === true && scenarioInstanceId && data.snapshotClock?.instanceId !== scenarioInstanceId) {
+      throw new RequestError('CONTEXT_TIME_BASIS_CONFLICT', '来源资料不属于本次查询范围。', 409);
     }
     return {systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data, mapReferences: mapReferences(data)};
   }

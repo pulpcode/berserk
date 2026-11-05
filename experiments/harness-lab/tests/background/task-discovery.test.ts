@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { afterEach,expect,it,vi } from 'vitest';
 import { openDatabase } from '../../src/access/database.js';
 import { AccessStore } from '../../src/access/store.js';
+import { ScenarioScope } from '../../src/scenario/scope.js';
 import { ContextService } from '../../src/context/service.js';
 import { discoverTasks } from '../../src/background/task-discovery.js';
 import { BackgroundStore } from '../../src/background/store.js';
@@ -63,6 +64,17 @@ it('enumerates all task pages when a compound query finds nothing, and exposes a
   expect(new TaskQueryService(s.access).search({query:'东桥 封闭 车辆'},s.scope.principal).data.items).toEqual([]);
   delete s.event.subjectId;const result=await s.run();expect(result.tasks).toHaveLength(23);expect(result.tasks.every(t=>t.candidate==='uncertain')).toBe(true);expect(s.fetch).not.toHaveBeenCalled();
   for(let i=23;i<101;i++)s.task(`任务${i}`);await expect(s.run()).rejects.toMatchObject({code:'TASK_DISCOVERY_LIMIT'});
+});
+it('rechecks only the captured task scope when ordinary and scene tasks coexist',async()=>{
+  const s=await setup(),plain=s.task('普通工作'),bound=s.task('同名场景任务');
+  const scenarioInstanceId='run-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  s.db.prepare('UPDATE task_spaces SET data=? WHERE id=?').run(JSON.stringify({...bound,scenarioInstanceId}),bound.id);
+  const runScope=new ScenarioScope({systems:[],scopes:[]},{});vi.spyOn(runScope,'isWritable').mockReturnValue(true);s.access.scenario=runScope;
+  delete s.event.subjectId;
+  const scoped={...s.scope,principal:{...s.scope.principal,scenarioInstanceId}};
+  const scene=await discoverTasks(s.access,s.context,s.inputs,()=>s.event,scoped);
+  expect(scene.tasks.map(item=>item.task.id)).toEqual([bound.id]);
+  expect((await s.run()).tasks.map(item=>item.task.id)).toEqual([plain.id]);
 });
 it.each(['failure','missing'] as const)('retains %s gaps even for a previously assessed task',async mode=>{
   const s=await setup(),task=s.task('甲',[{...ref('road','r1'),role:'route'}]);s.scope.baseline=id=>id===task.id?'previous':undefined;s.setMode(mode);

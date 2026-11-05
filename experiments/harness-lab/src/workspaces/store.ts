@@ -87,7 +87,8 @@ export class WorkspaceStore {
     return new WorkspaceStore(dataDir, index, seatId);
   }
   list(seatId = this.seatId): WorkspaceList {
-    const workspaces = this.index.workspaces.filter(item => item.seatId === seatId).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name: this.access?.get(taskSpaceId, seatId).title ?? name, createdAt, taskSpaceId, seatId }));
+    const visible=this.access?new Set(this.access.list(seatId).map(task=>task.id)):undefined;
+    const workspaces = this.index.workspaces.filter(item => item.seatId === seatId && (!visible||visible.has(item.taskSpaceId))).map(({ id, name, createdAt, taskSpaceId, seatId }) => ({ id, name: this.access?.get(taskSpaceId, seatId).title ?? name, createdAt, taskSpaceId, seatId }));
     return { defaultWorkspaceId: workspaces.some(item => item.id === this.index.defaultWorkspaceId) ? this.index.defaultWorkspaceId : workspaces[0]?.id || '', workspaces };
   }
   get(id: string | undefined = undefined, seatId = this.seatId): WorkspaceEntry {

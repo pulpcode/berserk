@@ -4,8 +4,8 @@ import type { ScenarioClock } from './scenarios.js';
 export interface ContextRef { systemId: string; objectType: string; objectId: string }
 export interface ContextScopeSnapshot { scopeId: string; systemIds: string[] }
 export type ContextPrincipal =
-  | {kind: 'seat'; seatId: string}
-  | {kind: 'service'; profileId: string; jobId: string; scope: ContextScopeSnapshot};
+  | {kind: 'seat'; seatId: string; scenarioInstanceId?: string}
+  | {kind: 'service'; profileId: string; jobId: string; scope: ContextScopeSnapshot; scenarioInstanceId?: string};
 export type ContextTool = 'information_search' | 'information_read' | 'situation_query';
 export interface ContextCatalogSystem {
   id: string; name: string; objectTypes: string[];

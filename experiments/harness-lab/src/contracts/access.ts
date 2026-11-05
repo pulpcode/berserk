@@ -36,6 +36,10 @@ export interface TaskSpace {
   id: string; title: string; goal: string; visibility: 'public' | 'private'; ownerSeatId: string;
   state: 'active' | 'archived'; revision: number; createdByUserId: string; updatedByUserId: string; createdAt: string; updatedAt: string;
   context?: TaskContext;
+  /** Host-owned provenance; never accepted from the business task form. */
+  scenarioInstanceId?: string;
+  /** Business projection only; the original work/task state is retained. */
+  readOnly?: boolean;
 }
 export interface TaskInput { title: string; goal: string; visibility: 'public' | 'private'; clientActionId: string; context?: TaskContext }
 export interface TaskUpdateInput { title: string; goal: string; revision: number; context?: TaskContext | null }

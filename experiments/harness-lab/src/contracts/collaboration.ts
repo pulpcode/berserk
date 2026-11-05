@@ -8,6 +8,8 @@ export interface WorkItem {
   id: string; taskSpaceId: string; creatorSeatId: string; assigneeSeatId: string;
   title: string; goal: string; inputFileIds: string[]; state: WorkState; revision: number;
   latestSubmissionId?: string; createdAt: string; updatedAt: string;
+  /** Read projection only; ending a scenario does not complete the work. */
+  readOnly?: boolean;
 }
 export interface Submission {
   id: string; workItemId: string; attempt: number; file: HandoffFile;

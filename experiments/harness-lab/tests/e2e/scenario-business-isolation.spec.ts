@@ -102,3 +102,31 @@ test('business recipient lists omit director and same-browser identity changes r
     await logout(page);await expect(other.getByRole('button',{name:'登录',exact:true})).toBeVisible();await login(page,business[1]);await expect(page.getByRole('button',{name:'工作待办',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'分派工作',exact:true})).toBeVisible();await expect(other.getByRole('button',{name:'工作待办',exact:true})).toBeVisible();expect((await read<AuthSession>(page,'/api/auth/session')).identity?.canCollaborate).toBe(true);expect(f.fake.calls).toHaveLength(0);
   }finally{await f.close();}
 });
+
+test('ended unfinished task remains truthful and read-only in the business UI',async({page,context})=>{
+  test.setTimeout(75000);const f=await setup(context);await localVectorTiles(page);
+  try{
+    await login(page,director);const first=await createReady(page);const task=first.tasks[0]!;
+    const workspace=await f.lab.workspaces.ensureWorkspace(task.taskId,business[0],task.title);
+    const assignment=await f.lab.collaboration!.prepare({seatId:business[0]},{kind:'assign',taskSpaceId:task.taskId,payload:{workspaceId:workspace.id,assigneeSeatId:business[1],title:'仍未完成的现场核查',goal:'保留真实工作状态',inputPaths:[]}},{source:'page',clientActionId:randomUUID()});
+    const work=await f.lab.collaboration!.commitPage({seatId:business[0]},assignment.operationId);
+    await createReady(page);
+    expect(f.lab.access!.db.prepare("SELECT json_extract(data,'$.state') AS state FROM task_spaces WHERE id=?").get(task.taskId)?.state).toBe('active');
+    await logout(page);await login(page,business[0]);await page.goto(`/tasks/${task.taskId}/information?tab=description`);
+    await expect(page.locator('.task-home-meta')).toContainText('只读');
+    await expect(page.locator('.task-home-composer textarea')).toBeDisabled();
+    await expect(page.getByRole('button',{name:'发送并开始对话',exact:true})).toBeDisabled();
+    await expect(page.getByRole('button',{name:'编辑说明',exact:true})).toHaveCount(0);
+    await expect(page.locator('.task-home-meta')).not.toContainText('轮次');
+    await page.getByRole('button',{name:'态势',exact:true}).click();await expect(page.locator('.situation-canvas')).toBeVisible();
+    await expect(page.getByRole('button',{name:'引用到对话',exact:true})).toHaveCount(0);
+    await page.screenshot({path:test.info().outputPath('ended-task-readonly-desktop.png')});
+    await logout(page);await login(page,business[1]);
+    expect((await read<Array<{id:string}>>(page,'/api/work-items')).map(item=>item.id)).not.toContain(work.workItemId);
+    await page.goto(`/work?kind=work&id=${work.workItemId}`);
+    await expect(page.getByRole('heading',{name:'仍未完成的现场核查',exact:true})).toBeVisible();
+    await expect(page.locator('.work-state')).toContainText('只读');
+    await expect(page.getByRole('button',{name:'开始办理',exact:true})).toHaveCount(0);
+    expect(f.fake.calls).toHaveLength(0);
+  }finally{await f.close();}
+});

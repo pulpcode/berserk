@@ -14,8 +14,8 @@ import { mergeSituationParts, objectStatus, readSituation, sourceCategories, sou
 import { SourceTree } from './SourceTree';
 import { SourceResourceDetails, SourceResourceSummary } from './SourceResourceDetails';
 const Canvas = lazy(()=>import('./MapCanvas'));
-export interface SituationViewProps { readOnly?:boolean; sourceActions?: (item:SituationObject)=>ReactNode; analysis?: AnalysisMapState; workspaceControls?: ReactNode; focusRequest?: number; floating?: boolean; selectSource?: () => void; contentPanelTarget?: HTMLElement | null; contentPanelOpen?: boolean; openContentPanel?: () => void; closeContentPanel?: () => void; sourceVisibility?: (visible:boolean) => void; annotationSelected?: boolean; annotations?: AnnotationMapState; sourceVisible?: boolean; toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
-export default function SituationView({ readOnly=false,sourceActions, analysis, workspaceControls, toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference, annotations, annotationSelected=false, sourceVisible=true, contentPanelTarget, contentPanelOpen, openContentPanel, closeContentPanel, sourceVisibility, floating=false, selectSource, focusRequest }: SituationViewProps) {
+export interface SituationViewProps { taskId?:string; readOnly?:boolean; sourceActions?: (item:SituationObject)=>ReactNode; analysis?: AnalysisMapState; workspaceControls?: ReactNode; focusRequest?: number; floating?: boolean; selectSource?: () => void; contentPanelTarget?: HTMLElement | null; contentPanelOpen?: boolean; openContentPanel?: () => void; closeContentPanel?: () => void; sourceVisibility?: (visible:boolean) => void; annotationSelected?: boolean; annotations?: AnnotationMapState; sourceVisible?: boolean; toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
+export default function SituationView({ taskId,readOnly=false,sourceActions, analysis, workspaceControls, toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference, annotations, annotationSelected=false, sourceVisible=true, contentPanelTarget, contentPanelOpen, openContentPanel, closeContentPanel, sourceVisibility, floating=false, selectSource, focusRequest }: SituationViewProps) {
   const sourceTrigger=useRef<HTMLButtonElement|null>(null);const detailClose=useRef<HTMLButtonElement>(null);
   const [localPanel,setLocalPanel]=useState<HTMLElement|null>(null);const [panelOpen,setPanelOpen]=useState(false);const panelButton=useRef<HTMLButtonElement>(null);const [localSourceVisible,setLocalSourceVisible]=useState(true);const [locateRequest,setLocateRequest]=useState(0);
   const visible=sourceVisibility?sourceVisible:localSourceVisible;const setSourceVisible=sourceVisibility || setLocalSourceVisible;
@@ -25,10 +25,11 @@ export default function SituationView({ readOnly=false,sourceActions, analysis, 
   const [selected,setSelected]=useState(initial ? refKey(initial.ref) : ''); const [sourceState,setSourceState]=useState<{key:string;values:Record<string,SourceResult>}>(); const [errorState,setErrorState]=useState<{key:string;values:Record<string,string>}>(); const [busy,setBusy]=useState(false);
   useEffect(()=>{if(!annotationSelected)return;let active=true;queueMicrotask(()=>{if(active){setSelected('');sourceTrigger.current=null;}});return()=>{active=false;};},[annotationSelected]);
   const [layers,setLayers]=useState<string[]>(sourceCategories.map(([kind])=>kind)); const generation=useRef(0);
-  const contextKey=JSON.stringify(taskContext || null);const stableContext=useMemo(()=>JSON.parse(contextKey) as TaskContext | undefined,[contextKey]);
+  const contextKey=JSON.stringify(taskContext || null);
+  const taskQuery=taskId?`?taskId=${encodeURIComponent(taskId)}`:'';const stableContext=useMemo(()=>JSON.parse(contextKey) as TaskContext | undefined,[contextKey]);
   const initialKey=JSON.stringify(initial || null);const referenceKey=JSON.stringify([initialKey,focusRequest || 0]);const stableInitial=useMemo(()=>referenceKey===dismissedInitial?undefined:JSON.parse(initialKey) as MapReference | undefined,[initialKey,referenceKey,dismissedInitial]);
   useEffect(()=>{if(!stableInitial)return;let active=true;queueMicrotask(()=>{if(active){sourceTrigger.current=null;setLocateRequest(value=>value+1);setDismissedInitial('');setSelected(refKey(stableInitial.ref));setSource(stableInitial.ref.systemId);setSourceVisible(true);setLayers(old=>[...new Set([...old,...(stableInitial.ref.objectType==='resource'?['resource','vehicle','facility','hydrant']:[stableInitial.ref.objectType])])]);}});return()=>{active=false;};},[stableInitial,setSourceVisible]);
-  const scopeKey=JSON.stringify({source,area,all,contextKey,initial:stableInitial});
+  const scopeKey=JSON.stringify({taskId,source,area,all,contextKey,initial:stableInitial});
   const sources=useMemo(()=>sourceState?.key===scopeKey?sourceState.values:{},[sourceState,scopeKey]);const errors=errorState?.key===scopeKey?errorState.values:{};
   const setSources=useCallback((fn:(old:Record<string,SourceResult>)=>Record<string,SourceResult>)=>setSourceState(old=>({key:scopeKey,values:fn(old?.key===scopeKey?old.values:{})})),[scopeKey]);
   const setErrors=useCallback((fn:(old:Record<string,string>)=>Record<string,string>)=>setErrorState(old=>({key:scopeKey,values:fn(old?.key===scopeKey?old.values:{})})),[scopeKey]);
@@ -42,7 +43,7 @@ export default function SituationView({ readOnly=false,sourceActions, analysis, 
   useEffect(()=>{
     if(!catalog || (taskMode && !all && !hasRange && !area && !stableInitial)) return;
     const token=++generation.current; const controller=new AbortController(); let pending=false;
-    const transport=async (params:SituationQueryParams)=> (await checkResponse(await client.request(client.url('/api/context/situation'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(params),signal:controller.signal}))).json() as Promise<ContextQueryResult>;
+    const transport=async (params:SituationQueryParams)=> (await checkResponse(await client.request(client.url(`/api/context/situation${taskQuery}`),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(params),signal:controller.signal}))).json() as Promise<ContextQueryResult>;
     const refresh=async()=>{
       if(pending || document.visibilityState==='hidden')return; pending=true;setBusy(true);
       try {
@@ -50,7 +51,7 @@ export default function SituationView({ readOnly=false,sourceActions, analysis, 
         if(!all && !stableInitial && stableContext?.businessRefs) {
           for(const report of stableContext.businessRefs.filter(ref=>ref.objectType==='report')) {
             try {
-              const response=await checkResponse(await client.request(client.url(`/api/context/reports/${encodeURIComponent(report.systemId)}/${encodeURIComponent(report.objectId)}`),{signal:controller.signal,cache:'no-store'}));
+              const response=await checkResponse(await client.request(client.url(`/api/context/reports/${encodeURIComponent(report.systemId)}/${encodeURIComponent(report.objectId)}${taskQuery}`),{signal:controller.signal,cache:'no-store'}));
               const envelope=await response.json() as ContextQueryResult; if(!controller.signal.aborted && token===generation.current)setErrors(old=>({...old,[report.systemId]:''})); const refs=(envelope.data as InformationDetail).item.objectRefs;
               for(const systemId of new Set(refs.map(ref=>ref.systemId)))queries.push({systemId,mode:'current',objectRefs:refs.filter(ref=>ref.systemId===systemId)});
             }catch(error){if(!controller.signal.aborted && token===generation.current)setErrors(old=>({...old,[report.systemId]:error instanceof Error?error.message:'报告引用读取失败'}));}
@@ -69,7 +70,7 @@ export default function SituationView({ readOnly=false,sourceActions, analysis, 
     };
     void refresh();const timer=window.setInterval(()=>void refresh(),15000);document.addEventListener('visibilitychange',refresh);
     return()=>{controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',refresh);};
-  },[client,catalog,revision,taskMode,hasRange,all,area,stableInitial,source,stableContext,setSources,setErrors]);
+  },[client,taskQuery,catalog,revision,taskMode,hasRange,all,area,stableInitial,source,stableContext,setSources,setErrors]);
   // Query results own the tree, selection and counts; local visibility only affects map geometry.
   const objects=useMemo(()=>uniqueObjects(Object.values(sources).flatMap(value=>value.items)),[sources]);
   const sourceTimes=useMemo(()=>Object.fromEntries(Object.entries(sources).map(([id,result])=>[id,result.snapshotClock?.businessNow || result.queriedAt])),[sources]);

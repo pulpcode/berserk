@@ -133,7 +133,7 @@ export async function discoverTasks(access:AccessStore,context:ContextService,in
     if(gaps.length)item.reason+=` 资料缺口：${[...new Set(gaps)].join('；')}`;
   }
   check();
-  const current=access.listActivePublic().sort((a,b)=>a.id.localeCompare(b.id));
+  const current=access.listActivePublic().filter(task=>task.scenarioInstanceId===scope.principal.scenarioInstanceId).sort((a,b)=>a.id.localeCompare(b.id));
   if(JSON.stringify(current.map(t=>[t.id,t.revision]))!==JSON.stringify(tasks.map(i=>[i.task.id,i.task.revision]).sort(([a],[b])=>String(a).localeCompare(String(b)))))throw new RequestError('TASK_REVISION_CHANGED','任务清单在核验中变化，请重新核验。',409);
   if(Buffer.byteLength(JSON.stringify(result))>1024*1024)throw limit();
   return result;

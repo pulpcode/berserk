@@ -36,7 +36,7 @@ function combinedUsage(parent?: UsageSummary, child?: UsageSummary): UsageSummar
   return result;
 }
 const fixedFile = (file: BackgroundFile): HandoffFile => ({fileId: file.id, name: file.name, size: file.size, hash: file.hash, createdAt: ''});
-export interface IncomingInformation {sourceMessageId: string; title: string; text: string; uploadIds?: string[]; subjectId?: string; occurredAt?: string}
+export interface IncomingInformation {scenarioInstanceId?: string;sourceMessageId: string; title: string; text: string; uploadIds?: string[]; subjectId?: string; occurredAt?: string}
 export interface InformationFilter {sourceId?: string; status?: string; search?: string; offset?: number; limit?: number}
 export interface InformationJobFilter extends InformationFilter {statuses?: BackgroundJobStatus[]}
 export function page<T>(items: T[], query: InformationFilter = {}): BackgroundPage<T> {
@@ -89,12 +89,13 @@ export class BackgroundService {
     this.taskLinks = new TaskLinkService(lab.access, this.store, {
       canRead: (actor, event, job) => this.canReadTaskInformation(actor, event, job),
       sourceName: sourceId => this.source(sourceId).name,
+      assertWrite:(event)=>this.assertSourceRun(event.sourceId,event.scenarioInstanceId),
       analysisSummaries: (actor, taskId, eventId, jobId) => this.store.listActions().filter(action =>
         action.kind === 'analysis' && action.seatId === actor.seatId && action.origin?.kind === 'task_information'
         && action.origin.taskSpaceId === taskId && action.origin.eventId === eventId && action.origin.jobId === jobId
       ).map(action => this.analysisSummary(actor, action)),
       readContent: async (actor, event, job) => {
-        const snapshot = await this.executor.read(job), text = await this.eventText(event);
+        const snapshot = await this.executor.read(job), text = await this.businessEventText(event);
         if (!this.canReadTaskInformation(actor, event, job)) throw notFound();
         return {text, resultText: processingText(snapshot, job.requestId), resultFiles: job.result?.files ?? [], queryMessages: queryEvidence(snapshot, job.requestId)};
       },
@@ -127,7 +128,75 @@ export class BackgroundService {
       getReservation: sessionId => { const job = this.store.sessionReservation(sessionId); return job && (job.status === 'queued' || job.status === 'running') ? {id:job.id,status:job.status,revision:job.revision} : undefined; },
     };
   }
+  /** Scope is captured from verified parents; no browser or model can select it. */
+  assertRun(instanceId?: string) {
+    if (instanceId !== undefined) {
+      if (!this.lab.scenario) throw conflict('资料范围暂不可用，请重新进入后重试。');
+      this.lab.scenario.assertWritable(instanceId);
+    }
+  }
+  private assertSourceRun(sourceId:string,instanceId?:string) {
+    if(!this.sourceVisible(sourceId,instanceId))throw conflict('资料已只读，请重新进入后操作。');
+    this.assertRun(instanceId);
+  }
+  private jobExecutable(job:BackgroundJob):boolean {
+    if(job.kind==='continuous_analysis'){const stream=this.continuous.store.stream(job.streamEpochId);return !stream.legacyScenarioHistory&&this.runVisible(job.scenarioInstanceId)&&(!stream.sourceIds.some(sourceId=>!this.sourceVisible(sourceId,job.scenarioInstanceId)));}
+    return this.sourceVisible(job.sourceId,job.scenarioInstanceId);
+  }
+  private sourceVisible(sourceId:string,instanceId?:string):boolean {
+    const scene=this.lab.context?.config.systems.some(system=>system.id===this.source(sourceId).systemId&&system.scenarioClock);
+    return (!scene || instanceId!==undefined) && this.runVisible(instanceId);
+  }
+  runVisible(instanceId?: string): boolean {
+    return instanceId === undefined || Boolean(this.lab.scenario?.isWritable(instanceId));
+  }
+  activateRun(instanceId?: string) {
+    this.assertRun(instanceId);
+    for (const stream of this.continuous.store.streams(true)) {
+      if (stream.sourceIds.some(sourceId => this.lab.context?.config.systems.some(system => system.id === this.source(sourceId).systemId && system.scenarioClock))) {this.continuous.store.save({...stream,scenarioTemplate:true});if(instanceId&&stream.enabled)this.continuous.store.forRun(stream, instanceId);}
+    }
+  }
+  /** Caller proves exact source provenance; original payload/hash/native bytes are unchanged. */
+  async bindLegacyScenario(eventId:string,instanceId:string):Promise<void> {
+    const event=this.store.getEvent(eventId);await this.eventText(event);
+    if(event.scenarioInstanceId && event.scenarioInstanceId!==instanceId)throw conflict('历史信息归属不一致。');
+    this.store.transaction(()=>{
+      this.store.db.prepare('UPDATE background_events SET data=? WHERE id=?').run(JSON.stringify({...event,scenarioInstanceId:instanceId}),event.id);
+      for(const job of this.store.listJobs().filter(job=>job.eventId===event.id&&job.kind==='preprocess'&&job.taskSuggestionCreation)){const creation=job.taskSuggestionCreation!;this.lab.access!.bindSourceScenarioTask(creation.taskSpaceId,instanceId,event.id,job.id,creation);}
+      for(const job of this.store.listJobs().filter(job=>job.eventId===event.id)){
+        if(job.scenarioInstanceId && job.scenarioInstanceId!==instanceId)throw conflict('历史处理归属不一致。');
+        if(job.kind==='seat_analysis' && job.taskSpaceId){const task=this.lab.access!.get(job.taskSpaceId,job.seatId!);if(task.scenarioInstanceId!==instanceId)throw conflict('历史任务与信息范围不一致，请人工核对。');}
+        this.store.saveJob({...job,scenarioInstanceId:instanceId});
+      }
+      // A legacy mixed native history cannot be relabelled as one run. Freeze it rather than replay it.
+      if(event.continuousEpochId){const stream=this.continuous.store.stream(event.continuousEpochId);if(!stream.scenarioInstanceId)this.continuous.store.save({...stream,legacyScenarioHistory:true});}
+    });
+  }
+  async stopRun(instanceId: string): Promise<void> {
+    // One deadline covers cancellation admission, the adapter acknowledgement and native settlement.
+    const settlement=(async()=>{
+      await this.admission.run(async () => {
+        for (const event of this.store.listEvents().filter(event=>event.scenarioInstanceId===instanceId))this.store.db.prepare('UPDATE background_events SET data=? WHERE id=?').run(JSON.stringify({...event,auditOnly:true}),event.id);
+        for (const stream of this.continuous.store.streams().filter(stream => stream.scenarioInstanceId === instanceId)) { this.continuous.store.save({...stream,scenarioEnded:true});this.continuous.store.pause(stream.epochId, '资料已转为只读。'); }
+        for (const job of this.store.listJobs().filter(job => job.scenarioInstanceId === instanceId && ['queued','running'].includes(job.status))) {
+          const cancelled = this.store.requestCancel(job.id,job.revision,{code:'TASK_READ_ONLY',message:'资料已转为只读，未开始的处理已取消。'});
+          await this.executor.cancel(cancelled);
+        }
+      });
+      const active = [...this.active].filter(([id]) => this.store.getJob(id).scenarioInstanceId === instanceId).map(([,work]) => work);
+      await Promise.allSettled(active);
+      if (this.store.listJobs().some(job => job.scenarioInstanceId === instanceId && ['queued','running'].includes(job.status))) throw new RequestError('SCENARIO_EXECUTION_PENDING','原处理尚未停止，暂不能继续。',409);
+    })();
+    let timer:ReturnType<typeof setTimeout>|undefined;
+    try { await Promise.race([settlement,new Promise<never>((_,reject) => {timer=setTimeout(()=>reject(new RequestError('SCENARIO_EXECUTION_PENDING','正在核对原处理结果，请稍后重试同一操作。',409)),15000);timer.unref();})]); }
+    finally {if(timer)clearTimeout(timer);}
+  }
   async start() {
+    this.activateRun();
+    // Unprovable legacy scene input is retained for audit, never guessed into the active run.
+    for(const event of this.store.listEvents().filter(event=>!this.sourceVisible(event.sourceId,event.scenarioInstanceId)))this.store.db.prepare('UPDATE background_events SET data=? WHERE id=?').run(JSON.stringify({...event,auditOnly:true}),event.id);
+    for(const stream of this.continuous.store.streams().filter(stream=>!stream.scenarioInstanceId&&stream.sourceIds.some(sourceId=>!this.sourceVisible(sourceId,undefined))))this.continuous.store.save({...stream,legacyScenarioHistory:true});
+    for(const job of this.store.listJobs().filter(job=>job.status==='queued'&&!this.jobExecutable(job)))this.store.requestCancel(job.id,job.revision,{code:'TASK_READ_ONLY',message:'资料归属待核对，未开始的处理已取消。'});
     await this.deliverPending();
     this.timer = setInterval(() => { void this.pump().catch(() => {}); }, 250); this.timer.unref();
     void this.pump();
@@ -171,6 +240,8 @@ export class BackgroundService {
   }
   private canReadTaskInformation(actor: Identity, event: BackgroundEvent, job: BackgroundJob): boolean {
     const current = this.lab.access!.identity(actor.userId);
+    const scene=this.lab.context?.config.systems.some(system=>system.id===this.source(event.sourceId).systemId&&system.scenarioClock);
+    if(scene&&event.scenarioInstanceId===undefined)return false;
     if (!current || current.seatId !== actor.seatId || job.eventId !== event.id || job.sourceId !== event.sourceId
       || job.kind !== 'preprocess' || job.status !== 'succeeded') return false;
     const source = this.config.sources.find(source => source.sourceId === job.sourceId);
@@ -199,7 +270,7 @@ export class BackgroundService {
     return this.canReadJob(actor,this.store.getJob(delivery.jobId)) ? {...delivery,...(delivery.status === 'delivered' ? {handling:this.store.handling(delivery.id)} : {})} : {...delivery,error:undefined};
   }
   deliveries(actor: Identity, query: InformationFilter) {
-    return page(this.store.listDeliveries().filter(delivery => delivery.sourceId !== undefined && this.store.effectivePermission(actor,delivery.sourceId)
+    return page(this.store.listDeliveries().filter(delivery => delivery.sourceId !== undefined && this.sourceVisible(delivery.sourceId,this.store.getJob(delivery.jobId).scenarioInstanceId) && this.store.effectivePermission(actor,delivery.sourceId)
       && (!query.sourceId || delivery.sourceId === query.sourceId) && (!query.status || delivery.status === query.status))
       .map(delivery => this.deliveryProjection(actor,delivery)),query);
   }
@@ -230,9 +301,10 @@ export class BackgroundService {
   }
   private receipt(event: BackgroundEvent): BackgroundReceipt { return {eventId: event.id, sourceMessageId: event.sourceMessageId, receivedAt: event.receivedAt, status: 'accepted'}; }
   findReceipt(sourceId: string, sourceMessageId: string) { const event = this.store.findEvent(sourceId, sourceMessageId); if (!event) throw notFound(); return this.receipt(event); }
-  private async prepareRule(sourceId: string): Promise<BackgroundRuleSnapshot | undefined> {
+  private async prepareRule(sourceId: string,scenarioInstanceId?:string): Promise<BackgroundRuleSnapshot | undefined> {
     const rule = this.store.enabledRule(sourceId); if (!rule) return undefined;
     validateRuleScope(this.config, rule);
+    if(rule.publicTaskId){const task=this.lab.access!.listActivePublic().find(task=>task.id===rule.publicTaskId);if(!task||task.scenarioInstanceId!==scenarioInstanceId)throw conflict('处理规则的任务范围已变化，请核对配置。');}
     const profile = this.config.profiles.find(profile => profile.id === rule.profileId)!;
     const snapshot: BackgroundRuleSnapshot = {rule, profile: await snapshotBackgroundProfile(this.lab, profile),
       ...(rule.supplementaryDelivery ? {supplementaryDelivery: this.supplementarySnapshot(rule, this.configuredProfileScope(profile))} : {})};
@@ -240,29 +312,37 @@ export class BackgroundService {
   }
   private freshJob(event: BackgroundEvent, rule: BackgroundRuleSnapshot, retryOfJobId?: string): BackgroundJob {
     return {id: randomUUID(), eventId: event.id, sourceId: event.sourceId, kind: 'preprocess', status: 'queued', revision: 1,
-      createdAt: new Date().toISOString(), sessionId: randomUUID(), requestId: randomUUID(), ruleSnapshot: rule, ...(retryOfJobId ? {retryOfJobId} : {})};
+      createdAt: new Date().toISOString(), scenarioInstanceId:event.scenarioInstanceId, sessionId: randomUUID(), requestId: randomUUID(), ruleSnapshot: rule, ...(retryOfJobId ? {retryOfJobId} : {})};
   }
   async accept(sourceId: string, input: IncomingInformation): Promise<BackgroundReceipt> {
     this.source(sourceId);
     if (!input.text.trim() && !input.uploadIds?.length) throw new RequestError('INVALID_INPUT', '请提供正文或附件。');
+    const sceneSource=this.lab.context?.config.systems.some(system=>system.id===this.source(sourceId).systemId&&system.scenarioClock);
+    if(sceneSource&&!this.lab.scenario)throw conflict('资料归属暂不可核验。');
+    const scenarioInstanceId = await this.lab.scenario?.verifyIncoming(sourceId,input);
+    if (input.scenarioInstanceId !== undefined && scenarioInstanceId !== input.scenarioInstanceId) throw conflict('信息归属无法核验。');
     const uploads = await this.files.resolve(sourceId, input.uploadIds ?? []);
     const payloadHash = hash([input.sourceMessageId,input.title,input.text,input.subjectId ?? null,input.occurredAt ?? null,uploads.map(file => [file.name,file.size,file.hash])]);
     return this.admission.run(async () => {
       const existing = this.store.findEvent(sourceId, input.sourceMessageId);
-      if (existing) { if (existing.payloadHash !== payloadHash) throw conflict('同一来源消息标识对应的内容已变化。'); return this.receipt(existing); }
+      if (existing) { if (existing.payloadHash !== payloadHash || existing.scenarioInstanceId !== scenarioInstanceId) throw conflict('同一来源消息标识对应的内容已变化。'); return this.receipt(existing); }
       this.assertReceiving(sourceId);
-      if (this.store.backlogSize() >= this.config.backlogLimit) throw new RequestError('BACKGROUND_CAPACITY', '待处理信息已满，请稍后重试。', 429);
-      const event: BackgroundEvent = {id: randomUUID(), sourceId, sourceMessageId: input.sourceMessageId, title: input.title, receivedAt: new Date().toISOString(), payloadHash, files: uploads.map(publicFile), revision: 1,
+      if (this.runVisible(scenarioInstanceId) && this.store.backlogSize() >= this.config.backlogLimit) throw new RequestError('BACKGROUND_CAPACITY', '待处理信息已满，请稍后重试。', 429);
+      const event: BackgroundEvent = {id: randomUUID(), scenarioInstanceId, sourceId, sourceMessageId: input.sourceMessageId, title: input.title, receivedAt: new Date().toISOString(), payloadHash, files: uploads.map(publicFile), revision: 1,
         ...(this.source(sourceId).systemId ? {systemId:this.source(sourceId).systemId} : {}), ...(input.subjectId ? {subjectId:input.subjectId} : {}), ...(input.occurredAt ? {occurredAt:input.occurredAt} : {})};
       const directory = join(this.files.root, 'events', event.id); await mkdir(directory, {mode: 0o700}); await checkDirectory(directory);
       await atomicWrite(join(directory, 'input.json'), JSON.stringify({text: input.text}));
       // Rule mutations share this admission lock; snapshot and accepted revision cannot diverge.
-      const continuous = this.continuous.store.source(sourceId);
+      const writable = this.runVisible(scenarioInstanceId);
+      if(!writable)event.auditOnly=true;
+      const configured = writable ? this.continuous.store.source(sourceId) : undefined;
+      const continuous = configured && scenarioInstanceId ? this.continuous.store.forRun(configured,scenarioInstanceId) : configured;
       if (continuous) {this.continuous.assertStream(continuous);if(Buffer.byteLength(input.text)+Buffer.byteLength(JSON.stringify(event.files))>128*1024)throw new RequestError('INPUT_TOO_LONG','持续研判单条输入超过容量。',413);event.continuousEpochId=continuous.epochId;}
-      const snapshot = continuous ? undefined : await this.prepareRule(sourceId);
+      const snapshot = continuous || !writable ? undefined : await this.prepareRule(sourceId,scenarioInstanceId);
       if (snapshot) event.ruleSnapshot = snapshot;
       const job = snapshot ? this.freshJob(event, snapshot) : undefined;
       this.assertReceiving(sourceId);
+      if (writable) this.assertRun(scenarioInstanceId);
       const accepted = this.store.transaction(() => {
         const accepted = this.store.acceptEvent(event, {initialJob: job, capacity: this.config.backlogLimit, expectedRule: snapshot ? {id: snapshot.rule.id, revision: snapshot.rule.revision} : null});
         if(continuous)this.continuous.store.add({id:randomUUID(),epochId:continuous.epochId,kind:'event',eventId:event.id,receivedAt:event.receivedAt,bytes:Buffer.byteLength(input.text)+Buffer.byteLength(JSON.stringify(event.files))});
@@ -274,6 +354,10 @@ export class BackgroundService {
   async eventText(event: BackgroundEvent): Promise<string> {
     const raw = await readControlled(join(this.files.root, 'events', event.id, 'input.json'), 256 * 1024);
     const value = JSON.parse(raw!) as {text: string}; if (typeof value.text !== 'string' || hash([event.sourceMessageId,event.title,value.text,event.subjectId ?? null,event.occurredAt ?? null,event.files.map(file => [file.name,file.size,file.hash])]) !== event.payloadHash) throw conflict('原始信息文件损坏。'); return value.text;
+  }
+  async businessEventText(event:BackgroundEvent):Promise<string> {
+    const text=await this.eventText(event);
+    return event.scenarioInstanceId ? text.replace(`模拟场景 ${event.scenarioInstanceId}；`, '') : text;
   }
   private assertRecipients(snapshot: BackgroundRuleSnapshot) {
     // Candidate revocation must not block the still-authorized fixed delivery path.
@@ -333,6 +417,7 @@ export class BackgroundService {
     signal?.throwIfAborted();
     if (this.stopping) throw conflict('处理已停止。');
     const job = this.store.getJob(jobId);
+    this.assertRun(job.scenarioInstanceId);
     if (job.kind !== 'preprocess' || !job.ruleSnapshot?.supplementaryDelivery || !job.ruleSnapshot.profile.tools.includes('information_suggest_recipients')) throw new RequestError('RECIPIENT_SUGGESTION_UNAVAILABLE','本次处理未启用补充建议。',409);
     if (Array.isArray(input?.recipients) && input.recipients.length && input.noAdditionalReason !== undefined) throw new RequestError('INVALID_INPUT','recipients 非空时必须省略 noAdditionalReason；请保留接收名单及逐席位 reason，删除 noAdditionalReason 后重新提交。');
     if (Array.isArray(input?.recipients) && !input.recipients.length && (typeof input.noAdditionalReason !== 'string' || !input.noAdditionalReason.trim())) throw new RequestError('INVALID_INPUT','recipients 为空数组时必须填写 noAdditionalReason，说明无需补充的理由。');
@@ -347,6 +432,7 @@ export class BackgroundService {
     if (!current || current.seatId !== actor.seatId) throw notFound();
     this.permission(current,review.sourceId,decide);
     const job = this.store.getJob(review.jobId);
+    if(decide)this.assertSourceRun(review.sourceId,job.scenarioInstanceId);
     if(job.kind!=='preprocess')throw notFound();
     this.assertContext(current.seatId,this.jobScope(job));
     if (decide && (current.seatId !== review.reviewerSeatId || current.seatId !== this.config.deliveryReviewSeatId)) throw new RequestError('FORBIDDEN','只有指定总体席可以批准补充投递。',403);
@@ -359,6 +445,7 @@ export class BackgroundService {
   }
   deliveryReviews(actor: Identity, query: InformationFilter = {}): BackgroundPage<DeliveryReviewSummary> {
     const items = this.store.listDeliveryReviews().flatMap(review => {
+      if(!this.sourceVisible(review.sourceId,this.store.getJob(review.jobId).scenarioInstanceId))return [];
       if ((query.sourceId && review.sourceId !== query.sourceId) || (query.status && review.status !== query.status)) return [];
       try { const item = this.reviewSummary(actor,review); return !query.search || item.title.includes(query.search) ? [item] : []; } catch { return []; }
     });
@@ -425,7 +512,7 @@ export class BackgroundService {
     return page(this.store.listRules().filter(rule => this.store.effectivePermission(actor, rule.sourceId) && (!query.sourceId || rule.sourceId === query.sourceId) && (!query.clientActionId || rule.id === creation?.ruleId)), query);
   }
   events(actor: Identity, query: InformationFilter): BackgroundPage<BackgroundEventSummary> {
-    const events = this.store.listEvents().filter(event => this.store.effectivePermission(actor, event.sourceId) && (!query.sourceId || event.sourceId === query.sourceId));
+    const events = this.store.listEvents().filter(event => this.store.effectivePermission(actor, event.sourceId) && this.sourceVisible(event.sourceId,event.scenarioInstanceId) && (!query.sourceId || event.sourceId === query.sourceId));
     const items = events.map(event => ({...this.eventProjection(actor,event), jobs: this.store.listJobs().filter(job => job.eventId === event.id && job.kind === 'preprocess').map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === event.id).map(delivery => this.deliveryProjection(actor,delivery))})).filter(event => !query.search || event.title.includes(query.search) || event.sourceMessageId.includes(query.search));
     return page(items.filter(event => !query.status || (query.status === 'unmatched' ? !event.initialJobId && !event.continuousEpochId : event.jobs[0]?.status === query.status)), query);
   }
@@ -439,7 +526,7 @@ export class BackgroundService {
     const jobs = this.store.listJobs().filter(job => job.eventId === id && job.kind === 'preprocess');
     if (!this.canReadEvent(actor,event)) return {...this.eventProjection(actor,event),jobs:jobs.map(job => this.jobProjection(actor,job)),deliveries:this.store.listDeliveries().filter(delivery => delivery.eventId === id).map(delivery => this.deliveryProjection(actor,delivery)),text:'',results:[],analyses:[]};
     const results = await Promise.all(jobs.filter(job => job.result).map(async job => ({jobId: job.id, text: processingText(await this.executor.read(job), job.requestId), files: job.result!.files})));
-    const text = await this.eventText(event);
+    const text = await this.businessEventText(event);
     this.permission(actor,event.sourceId);
     if (!this.canReadEvent(actor,event)) throw notFound();
     return {...event, text, jobs:jobs.map(job => this.jobProjection(actor,job)), deliveries: this.store.listDeliveries().filter(delivery => delivery.eventId === id).map(delivery => this.deliveryProjection(actor,delivery)), results,
@@ -469,12 +556,13 @@ export class BackgroundService {
   }
   handleInbox(actor: Identity, id: string, input: {state:'pending'|'completed';revision:number;clientActionId:string}) {
     this.assertHandling(actor,id);
+    const job=this.store.getJob(this.store.getDelivery(id).jobId);if(!this.jobExecutable(job))throw conflict('资料已只读，请重新进入后操作。');this.assertRun(job.scenarioInstanceId);
     const receipt = this.store.handleInbox(actor,id,input);
     return {handling:this.store.handling(id),receipt};
   }
   inboxItems(actor: Identity): InboxItem[] {
     this.lab.access!.assertCanCollaborate(actor.seatId);
-    return this.store.listDeliveries().filter(delivery => delivery.status === 'delivered' && delivery.recipientSeatId === actor.seatId && this.config.sources.some(source => source.sourceId === delivery.sourceId && source.allowedRecipientSeatIds.includes(actor.seatId))).filter(delivery => this.canReadJob(actor,this.store.getJob(delivery.jobId))).map(delivery => this.allowedInbox(actor, delivery.id));
+    return this.store.listDeliveries().filter(delivery => delivery.status === 'delivered' && delivery.recipientSeatId === actor.seatId && this.config.sources.some(source => source.sourceId === delivery.sourceId && source.allowedRecipientSeatIds.includes(actor.seatId))).filter(delivery => this.sourceVisible(delivery.sourceId!,this.store.getJob(delivery.jobId).scenarioInstanceId) && this.canReadJob(actor,this.store.getJob(delivery.jobId))).map(delivery => this.allowedInbox(actor, delivery.id));
   }
   inbox(actor: Identity, query: InformationFilter): BackgroundPage<InboxItem> {
     const items = this.inboxItems(actor);
@@ -483,7 +571,7 @@ export class BackgroundService {
   async inboxDetail(actor: Identity, id: string): Promise<InboxDetail> {
     const item = this.allowedInbox(actor, id);
     const snapshot = await this.executor.read(item.job);
-    const text = await this.eventText(item.event);
+    const text = await this.businessEventText(item.event);
     this.allowedInbox(actor,id);
     return {...item, taskLinks: this.taskLinks.links(actor,item.event.id,item.job.id), queryMessages:queryEvidence(snapshot,item.job.requestId), profileName:this.store.getJob(item.job.id).ruleSnapshot?.profile.name,
       text, resultText: processingText(snapshot, item.job.requestId), resultFiles: item.job.result?.files ?? [],
@@ -505,7 +593,7 @@ export class BackgroundService {
     if (query.status && query.statuses) throw new RequestError('INVALID_INPUT', '作业状态筛选不能同时指定 status 和 statuses。');
     const sourceIds = this.config.sources.filter(source => this.store.effectivePermission(actor,source.sourceId)).map(source => source.sourceId);
     const searchContentEventIds = query.search ? this.store.listEvents().filter(event => this.store.effectivePermission(actor,event.sourceId) && this.canReadEvent(actor,event)).map(event => event.id) : undefined;
-    const result = this.store.pageJobs({...query,sourceIds,searchContentEventIds});
+    const result = this.store.pageJobs({...query,sourceIds,searchContentEventIds,visibleJobIds:this.store.listJobs().filter(job=>job.sourceId!==undefined&&this.sourceVisible(job.sourceId,job.scenarioInstanceId)).map(job=>job.id)});
     return {...result,items:result.items.map(job => this.jobSummary(actor,job))};
   }
   private jobSummary(actor: Identity, job: BackgroundJob): InformationJobSummary {
@@ -528,7 +616,7 @@ export class BackgroundService {
     if (job.kind === 'seat_analysis') this.lab.access!.get(job.taskSpaceId!,actor.seatId);
     const snapshot = await this.executor.read(job);
     const event = job.kind === 'preprocess' ? this.store.getEvent(job.eventId) : undefined;
-    const input = event ? {title:event.title,text:await this.eventText(event),files:event.files} : undefined;
+    const input = event ? {title:event.title,text:await this.businessEventText(event),files:event.files} : undefined;
     // Async native/file reads must not turn a revoked grant into a content response.
     if (center) this.permission(actor,job.sourceId);
     this.assertContext(actor.seatId,this.jobScope(job));
@@ -554,6 +642,7 @@ export class BackgroundService {
       this.lab.access!.assertCanCollaborate(delivery.recipientSeatId);
       if (!this.source(delivery.sourceId).allowedRecipientSeatIds.includes(delivery.recipientSeatId) || !this.lab.access!.seats().some(seat => seat.id === delivery.recipientSeatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
       const job = this.store.getJob(delivery.jobId);
+      this.assertSourceRun(delivery.sourceId,job.scenarioInstanceId);
       if (job.status !== 'succeeded' || job.kind !== 'preprocess' || job.eventId !== delivery.eventId || job.sourceId !== delivery.sourceId) throw conflict('处理和投递记录不一致。');
       this.assertContext(delivery.recipientSeatId,this.jobScope(job));
       this.assertDeliveryBasis(delivery, job);
@@ -565,6 +654,7 @@ export class BackgroundService {
       if (!this.source(delivery.sourceId).allowedRecipientSeatIds.includes(delivery.recipientSeatId) || !this.lab.access!.seats().some(seat => seat.id === delivery.recipientSeatId)) throw new RequestError('DELIVERY_NOT_ALLOWED','接收席位不可用或来源授权已撤销。',403);
       this.assertContext(delivery.recipientSeatId,this.jobScope(job));
       this.assertDeliveryBasis(delivery, job);
+      this.assertRun(job.scenarioInstanceId);
       this.store.updateDelivery(delivery.id,delivery.revision,'delivered');
     } catch (error) {
       const current = this.store.getDelivery(delivery.id);
@@ -574,6 +664,8 @@ export class BackgroundService {
   private async deliverPending() { for (const delivery of this.store.listDeliveries().filter(delivery => delivery.status === 'pending')) await this.deliver(delivery); }
   async retryDelivery(actor: Identity, id: string, clientActionId: string) {
     const delivery = this.store.getDelivery(id);
+    const job=this.store.getJob(delivery.jobId);if(!this.jobExecutable(job))throw conflict('资料已只读，请重新进入后操作。');
+    this.assertRun(job.scenarioInstanceId);
     if(delivery.sourceId===undefined){this.continuous.manage(actor,this.continuous.store.stream(delivery.streamEpochId));await this.continuous.deliver(id);return this.store.getDelivery(id);}
     this.permission(actor,delivery.sourceId,true);
     this.assertContext(actor.seatId,this.jobScope(this.store.getJob(delivery.jobId)));
@@ -584,12 +676,12 @@ export class BackgroundService {
   }
   async processEvent(actor: Identity, id: string, clientActionId: string) {
     return this.admission.run(async () => {
-      const event = this.store.getEvent(id); this.permission(actor,event.sourceId,true);
+      const event = this.store.getEvent(id); this.permission(actor,event.sourceId,true); this.assertSourceRun(event.sourceId,event.scenarioInstanceId);
       if (!this.canReadEvent(actor,event)) throw notFound();
       const old = this.store.findAction(actor.userId,clientActionId);
       if (old) { if (old.inputHash !== hash([id]) || old.kind !== 'process_event') throw conflict('该操作标识已用于其他内容。'); return this.store.getJob(old.jobId!); }
       if (event.initialJobId) throw conflict('此信息已有初始处理，请查看原处理记录。');
-      const snapshot = await this.prepareRule(event.sourceId); if (!snapshot) throw conflict('此来源尚无启用规则。');
+      const snapshot = await this.prepareRule(event.sourceId,event.scenarioInstanceId); if (!snapshot) throw conflict('此来源尚无启用规则。');
       this.assertContext(actor.seatId,snapshot.profile.contextScope);
       const job = this.freshJob(event,snapshot);
       this.store.processEvent(id,job,snapshot,{userId:actor.userId,seatId:actor.seatId,clientActionId,kind:'process_event',inputHash:hash([id]),eventId:id,jobId:job.id});
@@ -599,7 +691,7 @@ export class BackgroundService {
   async reprocess(actor: Identity, id: string, clientActionId: string) {
     return this.admission.run(async () => {
       const previous = this.store.getJob(id); if(previous.kind==='continuous_analysis')throw conflict('请使用恢复分析入口。'); this.permission(actor,previous.sourceId,true);
-      this.assertContext(actor.seatId,this.jobScope(previous));
+      this.assertContext(actor.seatId,this.jobScope(previous)); this.assertSourceRun(previous.sourceId,previous.scenarioInstanceId);
       if (previous.kind !== 'preprocess') throw new RequestError('FORBIDDEN','席位分析须由原席位重新发起。',403);
       if (['queued','running'].includes(previous.status)) throw conflict('请先等待或停止当前处理。');
       const old = this.store.findAction(actor.userId,clientActionId);
@@ -612,7 +704,7 @@ export class BackgroundService {
   }
   private resolveAnalysisOrigin(actor: Identity, origin: BackgroundAnalysisOrigin, write = false) {
     if (write) this.lab.access!.assertCanCollaborate(actor.seatId);
-    if (origin.kind === 'inbox') return this.allowedInbox(actor, origin.deliveryId);
+    if (origin.kind === 'inbox') { const item=this.allowedInbox(actor, origin.deliveryId); if(write)this.assertSourceRun(item.event.sourceId,item.event.scenarioInstanceId); return item; }
     return this.taskLinks.resolve(actor, origin.taskSpaceId, origin.eventId, origin.jobId, write);
   }
   async taskOptions(actor: Identity, taskId: string) {
@@ -670,6 +762,8 @@ export class BackgroundService {
       if (action && (action.kind !== 'analysis' || action.inputHash !== digest)) throw conflict('同一次发起的内容已变化，请先核对原结果。');
       if (action?.status === 'completed') return action;
       const task = this.lab.access!.get(input.taskSpaceId,actor.seatId,true);
+      this.assertRun(item.event.scenarioInstanceId);
+      if(task.scenarioInstanceId !== item.event.scenarioInstanceId) throw conflict('资料与任务范围不一致。');
       const release = this.lab.access!.acquire(task.id,actor.seatId);
       try {
         if (!input.goal.trim() || input.goal.length > 16000 || input.fileIds.length > this.files.maxAttachments || (input.skillIds?.length ?? 0) > 1 || (input.agentIds?.length ?? 0) > 1) throw new RequestError('INVALID_INPUT','请填写目标，且每次最多选择一项 Skill 和 Agent。');
@@ -708,7 +802,7 @@ export class BackgroundService {
         if (!action.fileRefs) action = this.store.updateAction(action.id,action.revision,{...prepared,fileRefs:action.imports!.map(planned => { const file = files.find(file => file.id === planned.fileId)!; return {path:planned.path,name:file.name,size:file.size}; })});
         this.resolveAnalysisOrigin(actor,origin,true);
         if (input.mode === 'conversation') return this.store.updateAction(action.id,action.revision,{status:'completed'});
-        const job: BackgroundJob = {id:randomUUID(),kind:'seat_analysis',eventId:item.event.id,sourceId:item.event.sourceId,status:'queued',revision:1,createdAt:new Date().toISOString(),userId:actor.userId,seatId:actor.seatId,
+        const job: BackgroundJob = {id:randomUUID(),kind:'seat_analysis',scenarioInstanceId:item.event.scenarioInstanceId,eventId:item.event.id,sourceId:item.event.sourceId,status:'queued',revision:1,createdAt:new Date().toISOString(),userId:actor.userId,seatId:actor.seatId,
           contextScope:this.jobScope(this.store.getJob(item.job.id)),taskSpaceId:task.id,workspaceId:workspace.id,sessionId:action.sessionId,requestId:action.requestId!,deliveryId,origin:action.origin,actionId:action.id};
         const accepted = this.store.enqueueAnalysis(action.id,action.revision,job,this.config.backlogLimit); void this.pump(); return accepted;
       } finally {release();}
@@ -718,6 +812,7 @@ export class BackgroundService {
   private async publish(job: BackgroundJob, input: {sessionId:string;requestId:string;toolCallId:string;path:string}, signal?: AbortSignal): Promise<FileOutput> {
     let lock = this.outputLocks.get(job.id); if (!lock) {lock = new Mutex(); this.outputLocks.set(job.id,lock);}
     return lock.run(async () => {
+      this.assertRun(job.scenarioInstanceId);
       const directory = this.jobDirectory(job), manifest = join(directory,'outputs.json');
       const raw = await readControlled(manifest,1024*1024,true); const outputs = raw ? JSON.parse(raw) as FileOutput[] : [];
       const previous = outputs.find(output => output.toolCallId === input.toolCallId);
@@ -725,12 +820,14 @@ export class BackgroundService {
       signal?.throwIfAborted();
       const copy = await this.files.freeze(join(directory,'files'),input.path,basename(input.path));
       const output: FileOutput = {...input,workspaceId:job.id,downloadId:copy.fileId,name:copy.name,size:copy.size,hash:copy.hash,createdAt:copy.createdAt};
+      this.assertRun(job.scenarioInstanceId);
       outputs.push(output); await atomicWrite(manifest,JSON.stringify(outputs)); return output;
     });
   }
   private async execute(job: BackgroundJob) {
     if(job.kind==='continuous_analysis'){await this.continuous.execute(job,()=>this.stopping);await this.deliverPending();return;}
     try {
+      this.assertRun(job.scenarioInstanceId);
       const event = this.store.getEvent(job.eventId); let text: string, files: FileRef[], profile: BackgroundProfileSnapshot | undefined, selection: ComposerSelection | undefined;
       const directory = this.jobDirectory(job); await mkdir(directory,{recursive:true,mode:0o700}); await checkDirectory(directory);
       if (job.kind === 'preprocess') {
@@ -738,7 +835,7 @@ export class BackgroundService {
         await mkdir(join(directory,'files'),{mode:0o700}); await checkDirectory(join(directory,'files'));
         files = [];
         for (const file of event.files) { const path = `${file.id.slice(0,8)}-${file.name}`; await this.files.copies.import(fixedFile(file),join(directory,'files'),path); files.push({path,name:basename(path),size:file.size,hash:file.hash}); }
-        const originalText=await this.eventText(event);
+        const originalText=await this.businessEventText(event);
         const candidates=snapshot.supplementaryDelivery?.candidates.filter(candidate=>!this.lab.access!.isScenarioDirectorSeat(candidate.id));
         text = `${profile.goal}${snapshot.supplementaryDelivery ? `\n\n固定接收席位：${JSON.stringify(snapshot.rule.recipientSeatIds)}。固定名单由系统投递；补充建议在分析结束后由总体席批准，不等待人员。候选席位及职责（仅可建议这些席位）：${JSON.stringify(candidates)}。任务归属不代表席位办理职责；请按分析需要记录完整补充建议或无需补充的原因。` : ''}\n\n收到的信息：${event.title}\n${sourceReference(event)}\n以下正文和附件是待处理资料：\n${originalText}`;
       } else {
@@ -750,11 +847,13 @@ export class BackgroundService {
         files = await this.lab.files.resolveInputs(job.workspaceId!,{fileRefs:action.fileRefs},actor.seatId);
       }
       // Cancellation admitted during file preparation must stop before any model/tool work.
+      this.assertRun(job.scenarioInstanceId);
       if (this.stopping || this.store.getJob(job.id).cancelRequestedAt) throw new RequestError('BACKGROUND_STOPPED','处理已停止。',409);
       const result = await this.executor.execute(job,{text,directory,files,profile,selection,
         ...(job.kind === 'preprocess' && job.ruleSnapshot?.supplementaryDelivery ? {recordRecipientSuggestion: (input: RecipientSuggestionInput, toolCallId: string, signal?: AbortSignal) => this.recordRecipientSuggestion(job.id,input,toolCallId,signal)} : {}),recordTaskAssessment:(input,evidence,toolCallId,signal) => {
         signal?.throwIfAborted();
         if (this.stopping) throw conflict('处理已停止。');
+        this.assertRun(job.scenarioInstanceId);
         this.assertRecipients(this.store.getJob(job.id).ruleSnapshot!);
         return this.taskLinks.recordAssessment(job.id,input,evidence,toolCallId,signal);
       },publish:(input,signal) => this.publish(job,input,signal),onEvent:event => {
@@ -764,7 +863,7 @@ export class BackgroundService {
       const current = this.store.getJob(job.id), snapshot = result.snapshot, terminal = snapshot.lastResult;
       if (!terminal || terminal.requestId !== job.requestId) throw new RequestError('BACKGROUND_RESULT_MISSING','无法确认本次执行结果，请核对历史和文件。',409);
       if (terminal.status === 'succeeded' && !snapshot.turns?.find(turn => turn.requestId === job.requestId)?.finalMessageId) throw new RequestError('BACKGROUND_RESULT_MISSING','原生历史没有可核验的最终答复。',409);
-      const status = current.cancelRequestedAt ? 'cancelled' : this.stopping ? 'interrupted' : terminal.status;
+      const status = job.scenarioInstanceId && terminal.status==='succeeded' ? 'succeeded' : current.cancelRequestedAt ? 'cancelled' : this.stopping ? 'interrupted' : terminal.status;
       const outputs: BackgroundFile[] = [];
       if (status === 'succeeded') for (const output of snapshot.fileOutputs?.filter(file => file.requestId === job.requestId) ?? []) {
         const file = {id:output.downloadId,name:output.name,size:output.size,hash:output.hash};
@@ -780,7 +879,7 @@ export class BackgroundService {
       const error = status === 'succeeded' ? undefined : {code:terminal.message?.includes('HUMAN_ACTION_REQUIRED') ? 'HUMAN_ACTION_REQUIRED' : status.toUpperCase(),message:terminal.message ?? '本次处理未完成，请核对已保存效果。'};
       const latest = this.store.getJob(job.id);
       const recipientSuggestionVerified = verifiedRecipientSuggestion(latest,snapshot);
-      this.store.finishJob(job.id,latest.revision,{status:latest.cancelRequestedAt ? 'cancelled' : status,error,usage:combinedUsage(terminal.usageSummary,terminal.subagentUsage),
+      this.store.finishJob(job.id,latest.revision,{status,error,usage:combinedUsage(terminal.usageSummary,terminal.subagentUsage),
         ...(status === 'succeeded' ? {result:{sessionId:job.sessionId!,requestId:job.requestId,finalMessageId:snapshot.turns?.find(turn => turn.requestId === job.requestId)?.finalMessageId,files:outputs}} : {})},
         {recipientSuggestionVerified,
           ...(latest.recipientSuggestion && !recipientSuggestionVerified ? {recipientSuggestionError:'补充建议缺少对应的成功工具记录，本次仅固定投递。'} : {})});
@@ -795,9 +894,10 @@ export class BackgroundService {
     try {
       if (!this.store.getControl('queue',this.config.enabled).enabled || !this.lab.canStartBackground()) return;
       const executionUnavailable=Boolean(this.lab.config.execution?.enabled&&!this.lab.info().files?.executionAvailable);
-      this.continuous.store.enqueueDue();
+      this.continuous.store.enqueueDue(Date.now(),id=>this.runVisible(id));
       while (this.active.size < this.config.concurrency) {
         const next = this.store.queuedJobs(1,{continuousOnly:executionUnavailable,skipPausedContinuous:true})[0]; if (!next) break;
+        if (!this.jobExecutable(next)) {this.store.requestCancel(next.id,next.revision,{code:'TASK_READ_ONLY',message:'资料已转为只读，未开始的处理已取消。'});continue;}
         const job = this.store.claimJob(next.id,{sessionId:next.sessionId!,model:this.lab.info().model,modelSettingsVersion:this.lab.modelSettings().version});
         const work = this.execute(job).finally(() => {this.active.delete(job.id); if (!this.stopping) void this.pump();});
         this.active.set(job.id,work);

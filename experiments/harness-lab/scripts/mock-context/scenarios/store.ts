@@ -46,6 +46,21 @@ export class ScenarioStore {
   detail(id:string):ScenarioInstanceDetail {
     const record=this.get(id);return {instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
   }
+  notification(id:string,sourceMessageId:string) {
+    const actions=this.get(id).actions.filter(action=>action.notification.sourceMessageId===sourceMessageId);
+    if(!actions.length)throw sceneError('场景通知不存在。','NOT_FOUND',404);
+    const action=actions[0];
+    if(actions.length!==1||action.instanceId!==id||action.notification.scenarioInstanceId!==undefined&&action.notification.scenarioInstanceId!==id)throw sceneError('场景通知归属不一致。','SCENARIO_SNAPSHOT_INVALID',500);
+    return {instanceId:id,systemId:action.systemId,actionId:action.id,notification:structuredClone(action.notification)};
+  }
+  provenance(id:string) {
+    const record=this.get(id),messages=new Set<string>();
+    const notifications=record.actions.map(action=>{
+      if(messages.has(action.notification.sourceMessageId)||action.instanceId!==id||action.notification.scenarioInstanceId!==undefined&&action.notification.scenarioInstanceId!==id)throw sceneError('场景通知归属不一致。','SCENARIO_SNAPSHOT_INVALID',500);
+      messages.add(action.notification.sourceMessageId);return {actionId:action.id,systemId:action.systemId,notification:structuredClone(action.notification)};
+    });
+    return {instanceId:id,tasks:record.tasks,notifications,actions:record.actions};
+  }
   private save(records:SceneRecord[],active?:ActivePointer) {
     if(!this.db){for(const record of records)this.memory.set(record.instance.instanceId,structuredClone(record));if(active)this.activeMemory={...active};return;}
     this.db.exec('BEGIN IMMEDIATE');try{for(const record of records)this.db.prepare('INSERT INTO scenario_instances(instance_id,body) VALUES(?,?) ON CONFLICT(instance_id) DO UPDATE SET body=excluded.body').run(record.instance.instanceId,JSON.stringify(record));if(active)this.db.prepare('INSERT INTO scenario_active(id,body) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body').run(JSON.stringify(active));this.db.exec('COMMIT');}catch(error){this.db.exec('ROLLBACK');throw error;}
@@ -88,7 +103,7 @@ export class ScenarioStore {
     else if(!step)reason='来源事件已投放完毕；这不表示业务任务完成。';
     else if(record.instance.mode==='main_story'&&record.instance.stepIndex>=5)reason='主故事已到待选择/批准方案节点；方案和执行能力属于后续阶段。';
     else if(record.actions.some(action=>action.sendState!=='accepted'))reason='请先发送并核对前一步的全部通知。';
-    return {instance:record.instance,step:step?.summary??null,changes:step?[...step.objects.map(o=>`${o.name} 更新至修订${o.revision}`),...step.reports.map(r=>`新增报告：${r.title}`)]:[],notifications:step?step.notices.map((notice,index)=>({sourceMessageId:`${id}-${step.summary.id}-${index+1}`,title:notice.title,text:notice.text,subjectId:notice.reportId,occurredAt:notice.occurredAt})):[],canApply:reason===undefined,...(reason?{reason}:{})};
+    return {instance:record.instance,step:step?.summary??null,changes:step?[...step.objects.map(o=>`${o.name} 更新至修订${o.revision}`),...step.reports.map(r=>`新增报告：${r.title}`)]:[],notifications:step?step.notices.map((notice,index)=>({sourceMessageId:`${id}-${step.summary.id}-${index+1}`,title:notice.title,text:notice.text,subjectId:notice.reportId,occurredAt:notice.occurredAt,scenarioInstanceId:id})):[],canApply:reason===undefined,...(reason?{reason}:{})};
   }
   apply(id:string,stepId:string,operationId:string,revision:number,actor:ScenarioActor):ScenarioMutationResult {
     const input=stable({kind:'step',id,stepId,operationId,revision,actor}),prior=this.prior(operationId,input);if(prior)return prior;

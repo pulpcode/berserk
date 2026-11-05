@@ -78,6 +78,7 @@ export class TaskQueryService {
   constructor(private readonly access: AccessStore) {}
 
   private authorize(principal: ContextPrincipal) {
+    if (principal.scenarioInstanceId !== undefined) this.access.assertScenarioWritable(principal.scenarioInstanceId);
     if (principal.kind === 'service') return;
     if (principal.kind !== 'seat' || !this.access.seats().some(seat => seat.id === principal.seatId)) throw new RequestError('FORBIDDEN', '当前席位不可查询任务。', 403);
   }
@@ -86,12 +87,13 @@ export class TaskQueryService {
     signal?.throwIfAborted(); this.authorize(principal);
     const query = normalize(input);
     const tasks = (principal.kind === 'service' ? this.access.listActivePublic() : this.access.list(principal.seatId).filter(task => task.state === 'active'))
+      .filter(task => task.scenarioInstanceId === principal.scenarioInstanceId)
       .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
     const filtered = !!(query.businessRefs?.length || query.areaIds?.length || query.query);
     const items = tasks.map(task => ({...project(task), matches: matches(task, query)}))
       .filter(task => !filtered || task.matches.businessRefs.length || task.matches.areaIds.length || task.matches.textFields.length);
     const {cursor, ...conditions} = query;
-    const queryHash = hash([principal.kind, principal.kind === 'seat' ? principal.seatId : principal.profileId, conditions]);
+    const queryHash = hash([principal.kind, principal.kind === 'seat' ? principal.seatId : principal.profileId, principal.scenarioInstanceId ?? null, conditions]);
     // Include all visible active revisions: a later edit could introduce a new match on an earlier page.
     const datasetHash = hash(tasks.map(task => [task.id, task.revision]));
     const offset = cursor ? this.readCursor(cursor, queryHash, datasetHash) : 0;
@@ -106,6 +108,7 @@ export class TaskQueryService {
     signal?.throwIfAborted(); this.authorize(principal);
     if (typeof taskId !== 'string' || !UUID.test(taskId)) throw invalid();
     const task = principal.kind === 'service' ? this.access.getActivePublic(taskId) : this.access.get(taskId, principal.seatId);
+    if (task.scenarioInstanceId !== principal.scenarioInstanceId) throw new RequestError('TASK_NOT_FOUND', '任务不存在或无权查看。', 404);
     return {systemId: 'axon', query: {taskId}, queriedAt: new Date().toISOString(), data: {item: project(task)}};
   }
 

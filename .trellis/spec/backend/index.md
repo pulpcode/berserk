@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Scenario Run Isolation](./scenario-run-isolation.md) for trusted source lineage, ending gates, continuous partitions and the deferred unsourced task-creation boundary.
+
 Read [Scenario Director and Business Clock](./scenario-director.md) for dedicated director authorization, scene instances, manual time, resource v4 and replay recovery.
 
 Read [Continuous Background Analysis](./continuous-analysis.md) for stream epochs, native continuation, task revision inputs, composite authorization, exact published evidence and recovery.

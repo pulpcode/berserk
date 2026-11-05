@@ -68,10 +68,11 @@ export class SpatialInputs {
       provenance=[{input:structuredClone(input),queriedAt:now,asOf:version.createdAt,hash:version.hash}];
     } else {
       if(!this.context) throw spatialError('UNAVAILABLE','未配置来源系统。');
+      const principal:ContextPrincipal='principal' in scope?scope.principal:{kind:'seat',seatId:scope.actor.seatId,scenarioInstanceId:this.annotations?.access?.get(scope.taskId,scope.actor.seatId).scenarioInstanceId};
       let cursor:string|undefined,asOf:string|undefined,changeCursor:string|undefined;
       const seen=new Set<string>(),expected=new Map(input.revisions?.map(v=>[sourceKey(v.ref),v.revision])??[]);
       do {
-        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.objectTypes?{objectTypes:input.objectTypes}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},'principal' in scope?scope.principal:{kind:'seat',seatId:scope.actor.seatId},scope.signal);
+        const query=await this.context.query('situation_query',{systemId:input.systemId,mode:'current',...(input.objectRefs?{objectRefs:input.objectRefs}:{}),...(input.objectTypes?{objectTypes:input.objectTypes}:{}),...(input.areaIds?{areaIds:input.areaIds}:{}),limit:100,...(cursor?{cursor}:{})},principal,scope.signal);
         scope.signal.throwIfAborted();scope.check();
         if(!('changeCursor' in query.data)) throw spatialError('INCOMPLETE','来源未返回当前对象快照。');
         const data=query.data;
