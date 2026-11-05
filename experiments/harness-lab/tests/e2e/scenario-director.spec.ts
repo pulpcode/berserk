@@ -57,7 +57,7 @@ async function setup() {
           const id=String(body.clientActionId),previous=ledger.get(id);
           if(previous){await respond(previous);return;}
           const instanceId=`run-${details.size+1}`;
-          const detail:ScenarioInstanceDetail={instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:body.mode==='source_replay'?'source_replay':'main_story',status:'prepared',paused:false,stepIndex:0,stepCount:2,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[{id:'E01',title:'收到仓储火情',description:'新增火情来报，保留背景业务。',businessTime:clock(12),messageCount:1},{id:'E02',title:'道路状态确认',description:'更新道路事实。',businessTime:clock(16),messageCount:1}],objects:[],reports:[],actions:[],operations:[]};
+          const detail:ScenarioInstanceDetail={instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:body.mode==='source_replay'?'source_replay':'main_story',status:'prepared',paused:false,stepIndex:0,stepCount:2,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[{id:'E01',title:'收到仓储火情',description:'新增火情来报，保留背景业务。',businessTime:clock(12),messageCount:1,taskCodes:['T01']},{id:'E02',title:'道路状态确认',description:'更新道路事实。',businessTime:clock(16),messageCount:1,taskCodes:['T02']}],taskDefinitions:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',title:['仓储火情支援','交通救援','训练任务'][index],goal:'预设任务说明',businessRefs:[],areaIds:[]})),objects:[],reports:[],actions:[],operations:[]};
           details.set(instanceId,detail);
           const result=operation(id,'create',detail,identity!);
           if(loseCreateResponse){loseCreateResponse=false;await route.abort('failed');return;}
@@ -112,14 +112,14 @@ test('director has its own page and controls only explicit events and notificati
   try {
     await login(page,directorSeat);await expect(page).toHaveURL(/\/scenario-director$/);await expect(page.getByRole('heading',{name:'场景导演台',exact:true})).toBeVisible();
     await expect(page.getByRole('button',{name:'场景导演台',exact:true})).toBeVisible();expect(env.counts.create).toBe(0);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);
-    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await expect(page.getByLabel('本轮场景时间')).toContainText('09:10');
-    await page.getByRole('button',{name:'准备本轮任务',exact:true}).click();await expect(page.getByRole('button',{name:'激活本轮',exact:true})).toBeEnabled();await page.getByRole('button',{name:'激活本轮',exact:true}).click();
-    await page.getByRole('button',{name:'预览下一事件',exact:true}).click();await expect(page.getByRole('heading',{name:'收到仓储火情',exact:true})).toBeVisible();expect(env.counts.apply).toBe(0);
+    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await expect(page.getByLabel('本轮场景时间')).toContainText('09:10');await expect(page.getByRole('heading',{name:'本轮任务',exact:true})).toHaveCount(0);await expect(page.locator('.director-event-tasks')).toContainText('仓储火情支援');
+    await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await expect(page.getByRole('button',{name:'启用本轮',exact:true})).toBeEnabled();await page.getByRole('button',{name:'启用本轮',exact:true}).click();
+    await page.getByRole('button',{name:'预览变化',exact:true}).click();await expect(page.locator('.director-step-toggle').filter({hasText:'收到仓储火情'})).toBeVisible();expect(env.counts.apply).toBe(0);
     await page.getByRole('button',{name:'应用本步事实',exact:true}).click();await expect(page.getByLabel('本轮场景时间')).toContainText('09:12');expect(env.counts.apply).toBe(1);expect(env.counts.send).toBe(0);
     await page.getByRole('button',{name:'暂停投放',exact:true}).click();await expect(page.getByRole('button',{name:'发送通知',exact:true})).toBeDisabled();
-    await page.getByRole('button',{name:'继续投放',exact:true}).click();await page.getByRole('button',{name:'发送通知',exact:true}).click();await expect(page.getByLabel('通知投放与核对')).toContainText('接收已确认');expect(env.counts.send).toBe(1);
+    await page.getByRole('button',{name:'继续投放',exact:true}).click();await page.getByRole('button',{name:'发送通知',exact:true}).click();await expect(page.locator('.director-step-toggle').first()).toContainText('已接收');await page.locator('.director-step-toggle').first().click();await expect(page.getByLabel('通知投放与核对')).toContainText('接收已确认');expect(env.counts.send).toBe(1);
     await page.reload();await expect(page.getByLabel('本轮场景时间')).toContainText('09:12');expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(1);expect(env.counts.send).toBe(1);expect(env.calls).toHaveLength(0);
-    await page.screenshot({path:join(tmpdir(),'axon-scenario-director-desktop.png'),fullPage:true});
+    await expect(page.locator('.director-event-tasks')).toContainText('交通救援');await expect(page.locator('.director-start')).toHaveCount(0);await page.screenshot({path:join(tmpdir(),'axon-scenario-director-desktop.png'),fullPage:true});
     await page.setViewportSize({width:1080,height:850});const bounds=await page.locator('.scenario-director').boundingBox();expect(bounds!.x+bounds!.width).toBeLessThanOrEqual(1080);
   } finally {await env.close();}
 });
@@ -151,9 +151,9 @@ test('lost create response survives reload and is reconciled without another POS
 test('partly completed activation survives reload and retries only the original request after checking its receipt',async({page})=>{
   const env=await setup();await env.attach(page);
   try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'准备本轮任务',exact:true}).click();await page.getByRole('button',{name:'激活本轮',exact:true}).click();await page.getByRole('button',{name:'暂停投放',exact:true}).click();
-    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'准备本轮任务',exact:true}).click();env.rejectNextActivation('SCENARIO_ACTIVATION_PENDING');
-    page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'激活本轮',exact:true}).click();
+    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await page.getByRole('button',{name:'启用本轮',exact:true}).click();await page.getByRole('button',{name:'暂停投放',exact:true}).click();
+    await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('SCENARIO_ACTIVATION_PENDING');
+    page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'启用本轮',exact:true}).click();
     const pending=page.getByRole('region',{name:'待核对操作'});await expect(pending).toBeVisible();await expect(page.getByRole('button',{name:'创建新轮',exact:true})).toBeDisabled();expect(env.activationRequests).toHaveLength(2);
     const original={...env.activationRequests[1]!};await page.reload();await expect(pending).toBeVisible();expect(env.activationRequests).toHaveLength(2);await expect(page.getByRole('button',{name:'重试原请求',exact:true})).toHaveCount(0);
     await pending.getByRole('button',{name:'核对操作结果',exact:true}).click();await expect(pending.getByRole('button',{name:'重试原请求',exact:true})).toBeVisible();expect(env.counts.operationReads).toBe(1);
@@ -165,8 +165,8 @@ test('partly completed activation survives reload and retries only the original 
 test('a definitive activation conflict clears the request and permits refreshed inputs',async({page})=>{
   const env=await setup();await env.attach(page);
   try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'准备本轮任务',exact:true}).click();env.rejectNextActivation('REVISION_CONFLICT');await page.getByRole('button',{name:'激活本轮',exact:true}).click();
-    await expect(page.getByRole('alert')).toContainText('场景已变化');await expect(page.getByRole('region',{name:'待核对操作'})).toHaveCount(0);await expect(page.getByRole('button',{name:'激活本轮',exact:true})).toBeEnabled();
-    const previous=env.activationRequests[0]!.clientActionId;await page.getByRole('button',{name:'激活本轮',exact:true}).click();await expect(page.getByRole('button',{name:'暂停投放',exact:true})).toBeVisible();expect(env.activationRequests[1]!.clientActionId).not.toBe(previous);expect(env.calls).toHaveLength(0);
+    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('REVISION_CONFLICT');await page.getByRole('button',{name:'启用本轮',exact:true}).click();
+    await expect(page.getByRole('alert')).toContainText('场景已变化');await expect(page.getByRole('region',{name:'待核对操作'})).toHaveCount(0);await expect(page.getByRole('button',{name:'启用本轮',exact:true})).toBeEnabled();
+    const previous=env.activationRequests[0]!.clientActionId;await page.getByRole('button',{name:'启用本轮',exact:true}).click();await expect(page.getByRole('button',{name:'暂停投放',exact:true})).toBeVisible();expect(env.activationRequests[1]!.clientActionId).not.toBe(previous);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });

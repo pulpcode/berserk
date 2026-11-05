@@ -40,7 +40,7 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     return readContextJson(new URL(`${config.baseUrl}/control/${path}`),token,undefined,{maxBytes:2*1024*1024,method:body===undefined?'GET':'POST',...(body===undefined?{}:{body:includeActor?{...body,actor:by}:body})});
   };
   const status=async(request:FastifyRequest,id:string)=>{
-    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','objects','reports','actions','operations'],['instance','actions']);
+    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','objects','reports','actions','operations','taskDefinitions'],['instance','actions']);
     if(!r.instance||typeof r.instance!=='object')throw conflict('来源场景状态无效。');
     const i=r.instance as Record<string,unknown>,clock={instanceId:i.instanceId,businessNow:i.businessNow,revision:i.revision};
     if(!isScenarioClock(clock)||clock.instanceId!==id||typeof i.paused!=='boolean'||!['prepared','active','frozen'].includes(String(i.status))||!Array.isArray(r.actions))throw conflict('来源场景状态无效。');

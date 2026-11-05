@@ -24,7 +24,7 @@ export interface ScenarioDefinitionSummary {
   counts: { vehicles: number; objects: number; resources: number; steps: number; messages: number };
   geography: { label: string; attribution: string; bounds: [number, number, number, number]; synthetic: true };
 }
-export interface ScenarioStepSummary { id: string; title: string; description: string; businessTime: string; messageCount: number }
+export interface ScenarioStepSummary { id: string; title: string; description: string; businessTime: string; messageCount: number; taskCodes?: ScenarioTaskDefinition['code'][] }
 export interface ScenarioInstance extends ScenarioClock {
   definitionId: string; definitionVersion: string; definitionHash: string; name: string; mode: ScenarioMode;
   status: 'prepared' | 'active' | 'frozen'; paused: boolean; stepIndex: number; stepCount: number;
@@ -38,6 +38,7 @@ export interface ScenarioOperation {
 export interface ScenarioInstanceDetail {
   instance: ScenarioInstance; steps: ScenarioStepSummary[]; objects: SituationObject[];
   reports: InformationReport[]; actions: ScenarioAction[]; operations: ScenarioOperation[];
+  taskDefinitions?: ScenarioTaskDefinition[];
 }
 export interface ScenarioDefinitions { items: ScenarioDefinitionSummary[] }
 export interface ScenarioInstances { items: ScenarioInstance[]; activeInstanceId: string | null; activeRevision: number; hasMore: boolean; nextCursor: string | null }

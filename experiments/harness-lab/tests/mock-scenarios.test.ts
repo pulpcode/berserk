@@ -76,8 +76,12 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const scene=await setup();expect((await scene.request('/control/scenarios','GET',undefined,token)).status).toBe(401);
     const id=randomUUID(),created=await scene.create('source_replay',id);expect(created.status).toBe(200);const duplicate=await scene.create('source_replay',id);expect(duplicate.body).toEqual(created.body);
     expect((await scene.create('main_story',id)).status).toBe(409);expect((await scene.request<ScenarioMutationResult>(`/control/operations/${id}`)).body).toEqual(created.body);
+    const director=await scene.request<ScenarioInstanceDetail>(`/control/instances/${created.body.instance.instanceId}`);
+    expect(director.body.steps[1].taskCodes).toEqual(['T02']);expect(director.body.steps[4].taskCodes).toEqual(['T01','T02','T03']);
+    expect(director.body.taskDefinitions?.map(task=>task.code)).toEqual(['T01','T02','T03']);
+    expect(sceneWorld(created.body.instance.instanceId).steps[0].summary).not.toHaveProperty('taskCodes');
     const active=await scene.activate(created.body.instance);expect(active.status).toBe(200);
-    const current=await scene.request<SituationCurrent>('/situation/objects?limit=100');expect(current.body.items).toHaveLength(53);expect(current.body).toMatchObject({asOf:'2026-11-03T09:10:00+08:00',snapshotClock:{instanceId:created.body.instance.instanceId,businessNow:'2026-11-03T09:10:00+08:00'}});
+    const current=await scene.request<SituationCurrent>('/situation/objects?limit=100');expect(current.body.items).toHaveLength(53);expect(JSON.stringify(current.body)).not.toMatch(/taskCodes|taskDefinitions/);expect(current.body).toMatchObject({asOf:'2026-11-03T09:10:00+08:00',snapshotClock:{instanceId:created.body.instance.instanceId,businessNow:'2026-11-03T09:10:00+08:00'}});
     expect((await scene.request<SituationCurrent>(`/situation/objects?limit=100&objectTypes=${encodeURIComponent(JSON.stringify(['resource']))}&category=fire_engine`)).body.items).toHaveLength(20);expect((await scene.request<SituationCurrent>(`/situation/objects?limit=100&objectTypes=${encodeURIComponent(JSON.stringify(['resource']))}&category=vehicle`)).body.items).toHaveLength(4);
     expect((await scene.request<{items:unknown[]}>('/intel/reports?limit=100')).body.items).toEqual([]);
     const hidden=`${created.body.instance.instanceId}-report-E08-a`;expect((await scene.request(`/intel/reports/${hidden}`)).status).toBe(404);

@@ -7,7 +7,7 @@ import type { SituationChange } from '../../../src/contracts/context.js';
 import type { ScenarioAction, ScenarioActor, ScenarioClock, ScenarioCreateInput, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioOperation, ScenarioPreview } from '../../../src/contracts/scenarios.js';
 import { isScenarioClock } from '../../../src/contracts/scenarios.js';
 import type { SimulationReceipt } from '../../../src/contracts/simulation.js';
-import { sceneWorld, scenarioDefinition, type SceneWorld } from './data.js';
+import { sceneWorld, scenarioDefinition, directorStepTasks, type SceneWorld } from './data.js';
 
 export const sceneError = (message:string,code='SCENARIO_CONFLICT',status=409) => new RequestError(code,message,status);
 export const stable = (value:unknown):string => JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).sort(([a],[b])=>a.localeCompare(b))):item);
@@ -44,7 +44,7 @@ export class ScenarioStore {
     const active=this.active(),hasMore=records.length>limit;return {items:records.slice(0,limit).map(record=>structuredClone(record.instance)),activeInstanceId:active.instanceId,activeRevision:active.revision,hasMore,nextCursor:hasMore?String(offset+limit):null};
   }
   detail(id:string):ScenarioInstanceDetail {
-    const record=this.get(id);return {instance:record.instance,steps:record.steps.map(step=>step.summary),objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
+    const record=this.get(id);return {instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
   }
   private save(records:SceneRecord[],active?:ActivePointer) {
     if(!this.db){for(const record of records)this.memory.set(record.instance.instanceId,structuredClone(record));if(active)this.activeMemory={...active};return;}

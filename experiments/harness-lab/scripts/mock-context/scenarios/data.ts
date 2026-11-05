@@ -96,5 +96,10 @@ export function sceneWorld(instanceId: string): SceneWorld {
   ];
   return {objects,reports:[],steps,tasks};
 }
+/** Director navigation only; excluded from world facts, definition hashes and notifications. */
+export const directorStepTasks: Record<string, ScenarioTaskDefinition['code'][]> = {
+  E01:['T01'], E02:['T02'], E03:['T03'], E04:['T01'], E05:['T01','T02','T03'],
+  E06:['T01'], E07:['T01'], E08:['T01'], E09:['T01'], E10:['T01'], E11:['T02'], E12:['T01'],
+};
 const definitionHash=createHash('sha256').update(JSON.stringify(sceneWorld('definition'))).digest('hex');
 export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'1',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'临港周边底图上的合成业务覆盖层',attribution:'业务对象和线面坐标均为合成演示数据，不代表真实道路、设施或路况；底图署名沿用地图来源。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
