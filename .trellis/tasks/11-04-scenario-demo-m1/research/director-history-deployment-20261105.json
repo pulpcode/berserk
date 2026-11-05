@@ -1,0 +1,42 @@
+{
+  "released": true,
+  "commit": "658a67017e2329fab0ff53db08191722149d83d7",
+  "backup": "/home/ubuntu/axon-scenario-release-68dded362074/backup/director-history-20261105-164046",
+  "processesBefore": {
+    "4315": 3244173,
+    "38371": 3244201
+  },
+  "processesAfter": {
+    "4315": 3335180,
+    "38371": 3335201
+  },
+  "old": {
+    "instanceId": "run-72500746-d466-48b4-973c-0324ddb5ec2b",
+    "definitionVersion": "1",
+    "businessNow": "2026-11-03T09:18:00+08:00",
+    "stepIndex": 5,
+    "revision": 7
+  },
+  "oldPreserved": true,
+  "oldEventsPreserved": 6,
+  "new": {
+    "instanceId": "run-6ffbee49-3ded-4053-8fad-d077a014d6ce",
+    "definitionId": "harbor-fire",
+    "definitionVersion": "2",
+    "definitionHash": "b24f803adfd0197af5df33d2f526fd3a9774895095c41a474e52207df64dbc5a",
+    "name": "\u4e34\u6e2f\u4ed3\u50a8\u706b\u60c5",
+    "mode": "main_story",
+    "status": "active",
+    "paused": false,
+    "revision": 2,
+    "businessNow": "2026-11-03T09:10:00+08:00",
+    "stepIndex": 0,
+    "stepCount": 12,
+    "createdAt": "2026-11-05T08:40:51.270Z",
+    "updatedAt": "2026-11-05T08:40:51.468Z"
+  },
+  "newTaskCount": 3,
+  "objectCount": 53,
+  "modelJobs": 0,
+  "health": true
+}

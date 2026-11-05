@@ -1,0 +1,48 @@
+{
+  "seats": [
+    {
+      "seatId": "seat-overall",
+      "login": true,
+      "collaborationAllowed": true,
+      "sceneControlAllowed": false,
+      "objects": 53,
+      "businessNow": "2026-11-03T09:10:00+08:00"
+    },
+    {
+      "seatId": "seat-intelligence",
+      "login": true,
+      "collaborationAllowed": true,
+      "sceneControlAllowed": false,
+      "objects": 53,
+      "businessNow": "2026-11-03T09:10:00+08:00"
+    },
+    {
+      "seatId": "seat-planning",
+      "login": true,
+      "collaborationAllowed": true,
+      "sceneControlAllowed": false,
+      "objects": 53,
+      "businessNow": "2026-11-03T09:10:00+08:00"
+    },
+    {
+      "seatId": "seat-situation",
+      "login": true,
+      "collaborationAllowed": true,
+      "sceneControlAllowed": false,
+      "objects": 53,
+      "businessNow": "2026-11-03T09:10:00+08:00"
+    },
+    {
+      "seatId": "seat-director",
+      "login": true,
+      "collaborationAllowed": false,
+      "sceneControlAllowed": true,
+      "objects": 53,
+      "businessNow": "2026-11-03T09:10:00+08:00"
+    }
+  ],
+  "activeInstanceId": "run-6ffbee49-3ded-4053-8fad-d077a014d6ce",
+  "sceneVersion": "2",
+  "stepIndex": 0,
+  "health": true
+}

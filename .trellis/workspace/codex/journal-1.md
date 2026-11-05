@@ -236,3 +236,27 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 9: 导演台历史只读调整与场景v2合并上线
+
+**Date**: 2026-11-05
+**Task**: 导演台历史只读调整与场景v2合并上线
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+按授权顺序提交方案、合并main与实际地理数据分支，分离历史查看/当前控场/准备恢复，部署658a670。保留旧演示6条接收记录并启用v2初始演示。21项不同桌面用例、工程检查及五席线上验证通过；全量1506测试一项并发超时，相关5项串行复验通过。待用户审阅，未启用场景自动分析或实施完整轮次隔离。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `9636302` | (see git log) |
+| `94689bc` | (see git log) |
+| `67adec9` | (see git log) |
+| `658a670` | (see git log) |
+
+### Status
+
+[OK] **Completed**
