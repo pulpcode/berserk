@@ -143,16 +143,16 @@ test('the primary control delivers only the displayed event; hovering other even
   const env = await setup(); await env.attach(page);
   try {
     const controls = await startRun(page);
-    const next = controls.getByRole('button',{name:'投放下一步',exact:true});
+    const next = controls.getByRole('button',{name:'投放事件',exact:true});
     await expect(controls).toContainText('09:12');
     await expect(controls).toContainText('收到仓储火情');
     await page.locator('.director-step-toggle').nth(1).hover();
     await expect(page.getByRole('dialog',{name:'道路状态确认'})).toContainText('交通救援');
     await expect(controls).toContainText('收到仓储火情');
     expect(env.counts.apply).toBe(0); expect(env.counts.send).toBe(0);
-    await page.getByRole('button',{name:'暂停投放',exact:true}).click();
+    await page.getByText('轮次管理',{exact:true}).click();await page.getByRole('button',{name:'锁定轮次',exact:true}).click();
     await expect(next).not.toBeEnabled();
-    await page.getByRole('button',{name:'继续投放',exact:true}).click();
+    await page.getByRole('button',{name:'解除锁定',exact:true}).click();
     await next.dblclick();
     await expect(controls).toContainText('道路状态确认');
     await expect(page.locator('.director-step-toggle').first()).toContainText('已接收');
@@ -175,7 +175,7 @@ test('partial final delivery survives reload, checks receipt and retries only th
   const env=await setup();await env.attach(page);
   try {
     const controls=await startRun(page);
-    const next=controls.getByRole('button',{name:'投放下一步',exact:true});
+    const next=controls.getByRole('button',{name:'投放事件',exact:true});
     await next.click();
     await expect(controls).toContainText('道路状态确认');
     env.interruptSend('run-1-E02-2');
@@ -186,7 +186,7 @@ test('partial final delivery survives reload, checks receipt and retries only th
     await page.reload();await expect(check).toBeEnabled();
     expect(env.sendIds).toHaveLength(3);
     await check.click();
-    await controls.getByRole('button',{name:'继续投放本步',exact:true}).click();
+    await controls.getByRole('button',{name:'继续投放',exact:true}).click();
     await expect(page.locator('.director-step-toggle').nth(1)).toContainText('已接收');
     expect(env.receiptReads).toContain(env.sendIds[2]);
     expect(env.sendIds).toHaveLength(4);expect(env.sendIds[3]).toBe(env.sendIds[2]);
@@ -199,11 +199,11 @@ test('a lost apply response is reconciled before explicitly continuing its notif
   try {
     const controls=await startRun(page);
     env.loseNextApply();
-    await controls.getByRole('button',{name:'投放下一步',exact:true}).click();
+    await controls.getByRole('button',{name:'投放事件',exact:true}).click();
     await expect(page.getByRole('button',{name:'核对操作结果'})).toBeEnabled();
     await page.reload();
     await page.getByRole('button',{name:'核对操作结果'}).click();
-    const resume=controls.getByRole('button',{name:'继续投放本步',exact:true});
+    const resume=controls.getByRole('button',{name:'继续投放',exact:true});
     await expect(resume).toBeEnabled();
     expect(env.counts.send).toBe(0);
     await resume.click();await expect(controls).toContainText('道路状态确认');
@@ -238,13 +238,13 @@ test('lost create response survives reload and is reconciled without another POS
 test('partly completed activation survives reload and retries only the original request after checking its receipt',async({page})=>{
   const env=await setup();await env.attach(page);
   try{
-    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await page.getByRole('button',{name:'启用本轮',exact:true}).click();await page.getByRole('button',{name:'暂停投放',exact:true}).click();
+    await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();await page.getByRole('button',{name:'启用本轮',exact:true}).click();await page.getByText('轮次管理',{exact:true}).click();await page.getByRole('button',{name:'锁定轮次',exact:true}).click();
     await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('SCENARIO_ACTIVATION_PENDING');
     page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'启用本轮',exact:true}).click();
     const pending=page.getByRole('region',{name:'待核对操作'});await expect(pending).toBeVisible();await expect(page.getByRole('button',{name:'创建新轮',exact:true})).toBeDisabled();expect(env.activationRequests).toHaveLength(2);
     const original={...env.activationRequests[1]!};await page.reload();await expect(pending).toBeVisible();expect(env.activationRequests).toHaveLength(2);await expect(page.getByRole('button',{name:'重试原请求',exact:true})).toHaveCount(0);
     await pending.getByRole('button',{name:'核对操作结果',exact:true}).click();await expect(pending.getByRole('button',{name:'重试原请求',exact:true})).toBeVisible();expect(env.counts.operationReads).toBe(1);
-    await pending.getByRole('button',{name:'重试原请求',exact:true}).click();await expect(pending).toHaveCount(0);await expect(page.getByRole('button',{name:'暂停投放',exact:true})).toBeVisible();
+    await pending.getByRole('button',{name:'重试原请求',exact:true}).click();await expect(pending).toHaveCount(0);await expect(page.getByRole('button',{name:'投放事件',exact:true})).toBeVisible();
     expect(env.activationRequests).toHaveLength(3);expect(env.activationRequests[2]).toEqual(original);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });
@@ -254,7 +254,7 @@ test('a definitive activation conflict clears the request and permits refreshed 
   try{
     await login(page,directorSeat);await page.getByRole('button',{name:'创建新轮',exact:true}).click();await page.getByRole('button',{name:'创建演示任务',exact:true}).click();env.rejectNextActivation('REVISION_CONFLICT');await page.getByRole('button',{name:'启用本轮',exact:true}).click();
     await expect(page.getByRole('alert')).toContainText('场景已变化');await expect(page.getByRole('region',{name:'待核对操作'})).toHaveCount(0);await expect(page.getByRole('button',{name:'启用本轮',exact:true})).toBeEnabled();
-    const previous=env.activationRequests[0]!.clientActionId;await page.getByRole('button',{name:'启用本轮',exact:true}).click();await expect(page.getByRole('button',{name:'暂停投放',exact:true})).toBeVisible();expect(env.activationRequests[1]!.clientActionId).not.toBe(previous);expect(env.calls).toHaveLength(0);
+    const previous=env.activationRequests[0]!.clientActionId;await page.getByRole('button',{name:'启用本轮',exact:true}).click();await expect(page.getByRole('button',{name:'投放事件',exact:true})).toBeVisible();expect(env.activationRequests[1]!.clientActionId).not.toBe(previous);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}
 });
 

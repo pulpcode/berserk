@@ -1,7 +1,7 @@
 import { useDirectorDelivery } from './useDirectorDelivery';
 import { LoadingIndicator } from './LoadingIndicator';
 import { useRef, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, Clock3, Pin, MoreHorizontal, History, ArrowUpRight, Map as MapIcon, Pause, Play, Plus, RefreshCw, Send } from 'lucide-react';
+import { ArrowRight, Check, CircleAlert, Clock3, Pin, MoreHorizontal, History, ArrowUpRight, Map as MapIcon, Plus, RefreshCw, Send } from 'lucide-react';
 import type { Identity } from '../contracts/access';
 import type { ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMode, ScenarioMutationResult, ScenarioStepSummary, ScenarioTaskInitialization } from '../contracts/scenarios';
 import { ApiFailure, useApi } from './api';
@@ -181,7 +181,9 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
           {definition && <><p className="director-scope">{definition.counts.vehicles}辆车 · {definition.counts.objects}个背景对象</p><button className={!instance ? 'primary-action' : undefined} disabled={blocked} onClick={()=>mutate('创建新轮', '/api/simulation/instances', {definitionId: definition.id, version: definition.version, mode})}><Plus size={16} aria-hidden="true"/>创建新轮</button><details><summary>场景说明</summary><p>{definition.description}</p><p>{definition.geography.label}</p><small>{definition.geography.attribution}</small></details></>}
           {definitions.data?.items.length === 0 && <p>暂无可用场景。</p>}
         </section>
-        <section className="director-card"><h2>轮次</h2><label htmlFor={domId('director-instance')}>场景实例<select id={domId('director-instance')} value={instanceId} disabled={Boolean(busy || pending) || !choices.length} onChange={event=>selectInstance(event.target.value)}>{instances.data && !choices.length && <option value="">尚未创建</option>}{choices.map(item=><option key={item.instanceId} value={item.instanceId}>{item.instanceId} · {instanceStates[item.status]}</option>)}</select></label>{(instancePages.length > 0 || instances.data?.hasMore) && <div className="director-buttons"><button disabled={blocked || !instancePages.length} onClick={()=>{setSelection(instanceId);setInstancePages(pages=>pages.slice(0,-1));}}>较新轮次</button><button disabled={blocked || !instances.data?.nextCursor} onClick={()=>{const cursor=instances.data?.nextCursor;if(cursor){setSelection(instanceId);setInstancePages(pages=>[...pages,cursor]);}}}>更早轮次</button></div>}{instance && <span className="director-scope">{modes[instance.mode]}</span>}</section>
+        <section className="director-card"><h2>轮次</h2><label htmlFor={domId('director-instance')}>场景实例<select id={domId('director-instance')} value={instanceId} disabled={Boolean(busy || pending) || !choices.length} onChange={event=>selectInstance(event.target.value)}>{instances.data && !choices.length && <option value="">尚未创建</option>}{choices.map(item=><option key={item.instanceId} value={item.instanceId}>{item.instanceId} · {instanceStates[item.status]}</option>)}</select></label>{(instancePages.length > 0 || instances.data?.hasMore) && <div className="director-buttons"><button disabled={blocked || !instancePages.length} onClick={()=>{setSelection(instanceId);setInstancePages(pages=>pages.slice(0,-1));}}>较新轮次</button><button disabled={blocked || !instances.data?.nextCursor} onClick={()=>{const cursor=instances.data?.nextCursor;if(cursor){setSelection(instanceId);setInstancePages(pages=>[...pages,cursor]);}}}>更早轮次</button></div>}{instance && <span className="director-scope">{modes[instance.mode]}</span>}{instance?.status === 'active' && <details><summary>轮次管理</summary><button disabled={blocked || delivery.syncing} onClick={() => mutate(instance.paused ? '解除锁定' : '锁定轮次', `${base}/control`, {
+            action: instance.paused ? 'resume' : 'pause', expectedRevision: instance.revision,
+          })}>{instance.paused ? '解除锁定' : '锁定轮次'}</button></details>}</section>
       </aside>
       <div className="director-workspace">
         {!instance ? !fetchError && <div className="director-card director-empty">
@@ -201,12 +203,9 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
               </div>
               <div className="director-buttons">
                 {instance.status === 'active' && <>
-                  <button disabled={blocked || delivery.syncing} onClick={() => mutate(instance.paused ? '继续' : '暂停', `${base}/control`, {
-                    action: instance.paused ? 'resume' : 'pause', expectedRevision: instance.revision,
-                  })}>{instance.paused ? <Play size={14}/> : <Pause size={14}/>} {instance.paused ? '继续投放' : '暂停投放'}</button>
                   {!stopped && <button className="primary-action" disabled={blocked || delivery.syncing || !delivery.step || (instance.paused && !delivery.checkFirst)}
                     onClick={event => { if (event.detail <= 1) { setError(''); void delivery.deliver(); } }}>
-                    <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放本步' : '投放下一步'}
+                    <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : '投放事件'}
                   </button>}
                 </>}
                 {instance.status === 'prepared' && (!identity.createPublicTask ? <span className="director-warning">缺少任务管理权限。</span> :
@@ -220,7 +219,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
             <div className="director-delivery-meta" role="group" aria-label="本轮场景时间">
               <span>场景时间 <time dateTime={instance.businessNow} title={instance.businessNow}>{instance.businessNow.slice(11,16)}</time></span>
               <span>{Math.min(instance.stepIndex,steps.length)} / {steps.length} 事件已应用</span>
-              {instance.paused && <span>已暂停</span>}
+              {instance.paused && <span>投放已锁定</span>}
             </div>
           </section>
           {taskState.error && <p className="director-warning" role="alert">{taskState.error}<button disabled={Boolean(busy)} onClick={taskState.refresh}>重新读取任务</button></p>}
