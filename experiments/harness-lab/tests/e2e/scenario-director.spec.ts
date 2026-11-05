@@ -389,7 +389,7 @@ test('hover expands an event in the list, moving between rows stays stable, and 
     await expect(details).toHaveCount(0);
     await expect(page.getByText('操作记录与来源资料',{exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:'演示记录',exact:true}).click();const records=page.getByRole('dialog',{name:'演示记录',exact:true});await expect(records).toBeVisible();await records.getByRole('button').filter({hasText:'当前演示'}).click();await records.getByRole('button',{name:'操作记录',exact:true}).click();await expect(records.getByRole('table')).toContainText('创建本轮');
-    await records.getByRole('button',{name:'数据概况',exact:true}).click();await expect(records.getByText('来源对象',{exact:true})).toBeVisible();await expect(records.getByText('run-1',{exact:true})).not.toBeVisible();await records.getByText('实例信息',{exact:true}).click();await expect(records.getByText('run-1',{exact:true})).toBeVisible();
+    await records.getByRole('button',{name:'数据概况',exact:true}).click();await expect(records.getByText('来源对象',{exact:true})).toBeVisible();await expect(records.getByText('run-1',{exact:true})).not.toBeVisible();await records.getByText('技术信息',{exact:true}).click();await expect(records.getByText('run-1',{exact:true})).toBeVisible();
     await page.keyboard.press('Escape');await expect(records).toHaveCount(0);await expect(page.getByRole('button',{name:'演示记录',exact:true})).toBeFocused();
     expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(0);expect(env.counts.send).toBe(0);expect(env.calls).toHaveLength(0);
   }finally{await env.close();}

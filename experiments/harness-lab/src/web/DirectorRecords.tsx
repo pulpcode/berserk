@@ -41,7 +41,7 @@ export function DirectorRecords({initialId, page, pageError, retry, activeId, id
     </div>}
   </section>;
   return <section aria-label="演示详情" className="director-record-detail">
-    <div className="director-record-heading"><button onClick={() => setSelectedId(undefined)}><ArrowLeft size={14} aria-hidden="true"/>返回列表</button><span className="director-scope">只读</span></div>
+    <div className="director-record-heading"><button className="director-record-back" onClick={() => setSelectedId(undefined)}><ArrowLeft size={14} aria-hidden="true"/>返回列表</button><span className="director-scope">只读</span></div>
     {detail.error && <p className="director-warning" role="alert">{detail.error}<button onClick={detail.refresh}>重新读取</button></p>}
     {!detail.data && !detail.error && <LoadingIndicator label="正在读取演示详情…"/>}
     {detail.data && <>
@@ -84,7 +84,7 @@ function RecordedOperations({detail, identity}: {detail: ScenarioInstanceDetail;
 
 function RecordedOverview({detail}: {detail: ScenarioInstanceDetail}) {
   return <section aria-label="数据概况"><dl className="director-data-summary"><div><dt>来源对象</dt><dd>{detail.objects.length}</dd></div><div><dt>报告</dt><dd>{detail.reports.length}</dd></div></dl>
-    <details className="director-instance-info"><summary>实例信息</summary><dl><dt>编号</dt><dd>{detail.instance.instanceId}</dd><dt>修订</dt><dd>{detail.instance.revision}</dd><dt>场景版本</dt><dd>{detail.instance.definitionVersion}</dd><dt>创建时间 · 本机时区</dt><dd><time dateTime={detail.instance.createdAt} title={detail.instance.createdAt}>{directorTimestamp(detail.instance.createdAt)}</time></dd></dl></details>
+    <details className="director-instance-info"><summary>技术信息</summary><dl><dt>演示编号</dt><dd>{detail.instance.instanceId}</dd><dt>状态版本</dt><dd>{detail.instance.revision}</dd><dt>场景版本</dt><dd>{detail.instance.definitionVersion}</dd><dt>创建时间 · 本机时区</dt><dd><time dateTime={detail.instance.createdAt} title={detail.instance.createdAt}>{directorTimestamp(detail.instance.createdAt)}</time></dd></dl></details>
     <details className="director-instance-info"><summary>对象清单</summary><ul className="director-object-list">{detail.objects.map(object => <li key={`${object.ref.systemId}:${object.ref.objectType}:${object.ref.objectId}`}>{object.name}</li>)}</ul></details>
   </section>;
 }

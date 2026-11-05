@@ -122,7 +122,8 @@
 .director-dialog-actions .primary-action { min-width: 100px; }
 
 .director-record-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-.director-record-heading button { display: inline-flex; align-items: center; gap: 6px; }
+.director-record-heading .director-record-back { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 4px 0; border: 0; border-radius: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 400; }
+.director-record-heading .director-record-back:hover:not(:disabled), .director-record-heading .director-record-back:active:not(:disabled) { background: transparent; color: var(--accent); }
 .director-run-identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; font-size: 12px; line-height: 1.7; color: var(--muted); }
 .director-run-identity > strong { flex-basis: 100%; color: var(--text); font-size: 14px; font-weight: 550; }
 .director-record-detail > .director-run-identity { margin-bottom: 20px; }
