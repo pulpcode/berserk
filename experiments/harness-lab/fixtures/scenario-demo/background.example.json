@@ -3,8 +3,8 @@
   "concurrency": 1,
   "modelConcurrency": 1,
   "sources": [
-    {"sourceId":"mock-intel-source","systemId":"intel","name":"场景接报通知","credentialRef":"MOCK_INTEL_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]},
-    {"sourceId":"mock-situation-source","systemId":"situation","name":"场景态势通知","credentialRef":"MOCK_SITUATION_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]}
+    {"sourceId":"mock-intel-source","systemId":"intel","name":"特情系统","credentialRef":"MOCK_INTEL_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]},
+    {"sourceId":"mock-situation-source","systemId":"situation","name":"态势系统","credentialRef":"MOCK_SITUATION_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]}
   ],
   "profiles": [{"id":"scenario-source-review","name":"场景来源核对（默认不配置执行规则）","goal":"按获准来源核对事实、版本和场景判断时点，区分真实接收时间与业务发生时间；不要因收到通知而宣称完成业务行动。","contextScopeId":"scenario-context","tools":["information_search","information_read","situation_query","task_search","task_read","information_record_task_assessment"],"instructions":"","skillIds":[],"agentIds":[],"resources":[]}]
 }

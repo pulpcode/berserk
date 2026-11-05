@@ -1,7 +1,7 @@
 {
   "systems": [
-    {"id":"intel","name":"临港场景接报来源","adapter":"mock-information-http","baseUrl":"http://127.0.0.1:4401/intel","tokenEnv":"MOCK_CONTEXT_API_TOKEN","scenarioClock":true},
-    {"id":"situation","name":"临港场景态势来源","adapter":"mock-situation-http","baseUrl":"http://127.0.0.1:4401/situation","tokenEnv":"MOCK_CONTEXT_API_TOKEN","scenarioClock":true,"resourceCapability":{"systemId":"situation","categories":["vehicle","fire_engine","facility","hydrant"],"units":["辆","处","个"],"relations":[],"filters":["category"],"pagination":"cursor","snapshot":"fixed_revision"}}
+    {"id":"intel","name":"特情系统","adapter":"mock-information-http","baseUrl":"http://127.0.0.1:4401/intel","tokenEnv":"MOCK_CONTEXT_API_TOKEN","scenarioClock":true},
+    {"id":"situation","name":"态势系统","adapter":"mock-situation-http","baseUrl":"http://127.0.0.1:4401/situation","tokenEnv":"MOCK_CONTEXT_API_TOKEN","scenarioClock":true,"resourceCapability":{"systemId":"situation","categories":["vehicle","fire_engine","facility","hydrant"],"units":["辆","处","个"],"relations":[],"filters":["category"],"pagination":"cursor","snapshot":"fixed_revision"}}
   ],
   "scopes": [{"id":"scenario-context","name":"临港场景业务资料","systemIds":["intel","situation"],"seatIds":["seat-director","seat-overall","seat-intelligence","seat-planning","seat-situation"]}],
   "simulation": {"enabled":true,"baseUrl":"http://127.0.0.1:4401","tokenEnv":"MOCK_CONTEXT_CONTROL_TOKEN","directorSeatId":"seat-director","sources":[{"systemId":"intel","sourceId":"mock-intel-source"},{"systemId":"situation","sourceId":"mock-situation-source"}]}

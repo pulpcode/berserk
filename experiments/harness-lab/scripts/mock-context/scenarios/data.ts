@@ -51,17 +51,17 @@ export function sceneWorld(instanceId: string): SceneWorld {
   }
   const stepRows: Array<[string,string,string,string,string[],string[]]> = [
     ['E01','09:12','首报位置待核实','社会来电称临港仓储区有烟，三号仓库与相邻仓库描述不一致，位置待核实。',['L01'],[]],
-    ['E02','09:13','交通救援进展','T02交通救援仍占用V02、V14，当前尚未释放，原承诺至10:00。',['L02','V02','V14'],['V02','V14']],
-    ['E03','09:14','登高演练继续','T03已批准演练正常进行，V05继续执行既定安排，占用至09:45，释放以回报为准。',['L03','V05'],['V05']],
+    ['E02','09:13','交通救援进展','城西交通救援仍占用V02、V14，当前尚未释放，原承诺至10:00。',['L02','V02','V14'],['V02','V14']],
+    ['E03','09:14','登高演练继续','临港登高演练已批准，演练正常进行，V05继续执行既定安排，占用至09:45，释放以回报为准。',['L03','V05'],['V05']],
     ['E04','09:16','仓库位置核实','园区值班员确认烟情来自临港三号仓库。',['L01'],[]],
-    ['E05','09:18','车辆资源清单确认','资源来源核对六站二十四车清单；V24仅有08:50旧记录，当前状态与位置待确认，其余状态按各车来源记录。',vehicleRows.map(r=>r[0]),vehicleRows.filter(r=>r[0]!=='V24').map(r=>r[0])],
-    ['E06','09:19','北货运路施工','R04北货运路局部施工限制通行，限制影响其自身路段。',['R04'],['R04']],
+    ['E05','09:18','车辆资源清单确认','已核对六站二十四车清单；V24仅有08:50旧记录，当前状态与位置待确认，其余车辆状态见各车记录。',vehicleRows.map(r=>r[0]),vehicleRows.filter(r=>r[0]!=='V24').map(r=>r[0])],
+    ['E06','09:19','北货运路施工','R04北货运路局部施工，限制通行。',['R04'],['R04']],
     ['E07','09:21','城北路巡查','R05城北路例行巡查确认通行正常。',['R05'],['R05']],
-    ['E08','09:23','中轴桥封闭','R01中轴桥因临时事故封闭至10:00。本次来源只提供道路状态，不提供车辆调派或过桥结论。',['R01'],['R01']],
-    ['E09','09:24','旧巡查报告晚到','延迟送达巡查报告：R01中轴桥在09:11观测时畅通。该记录描述旧时刻，不修改09:23封闭事实。',['R01'],[]],
-    ['E10','09:25','东环线通行确认','道路来源确认R02东环线当前通行正常。',['R02'],['R02']],
-    ['E11','09:30','交通救援持续处置','T02交通事件仍在处置，V02与V14暂未释放，原占用未因其他任务而改变。',['L02','V02','V14'],['V02','V14']],
-    ['E12','09:40','现场火势趋稳','临港三号仓库现场报告火势趋稳、继续处置，尚不能确认事件结束；本报告不证明本系统完成调派或支援到场。',['L01'],[]],
+    ['E08','09:23','中轴桥封闭','R01中轴桥因临时事故封闭至10:00。',['R01'],['R01']],
+    ['E09','09:24','旧巡查报告晚到','09:11巡查时，R01中轴桥通行正常。',['R01'],[]],
+    ['E10','09:25','东环线通行确认','R02东环线当前通行正常。',['R02'],['R02']],
+    ['E11','09:30','交通救援持续处置','城西交通救援仍在处置，V02与V14暂未释放。',['L02','V02','V14'],['V02','V14']],
+    ['E12','09:40','现场火势趋稳','临港三号仓库现场报告火势趋稳，继续处置，尚不能确认事件结束。',['L01'],[]],
   ];
   const simulated=structuredClone(objects),steps:SceneStep[]=[];
   for(const [id,time,title,text,ids,updated] of stepRows) {
@@ -75,11 +75,11 @@ export function sceneWorld(instanceId: string): SceneWorld {
     }
     const objectRefs=ids.map(code=>ref(code.startsWith('R')?'road':'resource',code));
     // Report reference cap is 20; inventory membership remains available in source objects.
-    const selectedRefs=objectRefs.slice(0,20),report:InformationReport={reportId:`${instanceId}-report-${id}-a`,subjectId:`${instanceId}-${id}`,revision:1,title,summary:text,content:text,objectRefs:selectedRefs,areaIds:[...new Set(selectedRefs.flatMap(r=>simulated.find(o=>o.ref.objectId===r.objectId)?.areaIds??[]))],observedAt:observed,publishedAt:stamp,validTime:id==='E09'?{from:observed,to:businessAt('09:12')}:null};
+    const selectedRefs=objectRefs.slice(0,20),report:InformationReport={reportId:`${instanceId}-report-${id}-a`,subjectId:`${instanceId}-${id}`,revision:1,title:id==='E09'?'中轴桥巡查情况':title,summary:text,content:text,objectRefs:selectedRefs,areaIds:[...new Set(selectedRefs.flatMap(r=>simulated.find(o=>o.ref.objectId===r.objectId)?.areaIds??[]))],observedAt:observed,publishedAt:stamp,validTime:id==='E09'?{from:observed,to:businessAt('09:12')}:null};
     const reports=[report];
     if(id==='E04')reports.push({...structuredClone(report),reportId:`${instanceId}-report-${id}-b`,title:'无人机确认仓库位置',summary:'无人机观测支持三号仓库位置判断。',content:'无人机在09:16观测到临港三号仓库烟情，位置与园区值班员报告一致。'});
     const systemId=['E06','E07','E08','E10'].includes(id)?'situation':'intel';
-    steps.push({summary:{id,title,description:text,businessTime:stamp,messageCount:reports.length},objects:updatedObjects,reports,notices:reports.map(r=>({systemId,reportId:r.reportId,title:r.title,text:`模拟场景 ${instanceId}；投放时场景时间 ${stamp}；观测时间 ${r.observedAt}。报告 intel/${r.reportId} 修订1：${r.summary} 请通过来源查询核对正文与对象。`,occurredAt:observed}))});
+    steps.push({summary:{id,title,description:text,businessTime:stamp,messageCount:reports.length},objects:updatedObjects,reports,notices:reports.map(r=>({systemId,reportId:r.reportId,title:r.title,text:`${r.summary}\n观测时间：${r.observedAt}。报告 intel/${r.reportId}，修订${r.revision}。`,occurredAt:observed}))});
   }
   const tasks:ScenarioTaskDefinition[]=[
     {code:'T01',title:'临港三号仓库火情',goal:`模拟场景：09:35前到齐4水罐+1泡沫+1抢险救援+1通信车。现场关注范围仅临港。支援检索范围为situation来源的本实例六个区域：${areaNames.map((_name,index)=>area(index)).join('、')}；先按此明确范围查询六站车辆。全部可读不等于与本任务相关或已分配，初始无车辆分配。来源只提供事实，方案须由人员决定；业务判断采用查询返回的场景时间。`,businessRefs:[ref('resource','L01')],areaIds:[area(0)]},
@@ -94,4 +94,4 @@ export const directorStepTasks: Record<string, ScenarioTaskDefinition['code'][]>
   E06:['T01'], E07:['T01'], E08:['T01'], E09:['T01'], E10:['T01'], E11:['T02'], E12:['T01'],
 };
 const definitionHash=createHash('sha256').update(JSON.stringify(sceneWorld('definition'))).digest('hex');
-export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'2',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
+export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'3',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};

@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
@@ -8,6 +9,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createMockContextServer } from '../scripts/mock-context/server.js';
 import { sceneWorld, scenarioDefinition } from '../scripts/mock-context/scenarios/data.js';
+import type { SceneRecord } from '../scripts/mock-context/scenarios/store.js';
 import { isScenarioClock, type ScenarioAction, type ScenarioInstanceDetail, type ScenarioInstances, type ScenarioMode, type ScenarioMutationResult, type ScenarioPreview } from '../src/contracts/scenarios.js';
 import type { SituationCurrent, InformationDetail } from '../src/contracts/context.js';
 import type { SimulationNotification, SimulationReceipt } from '../src/contracts/simulation.js';
@@ -20,12 +22,12 @@ const token='scenario-test-query',controlToken='scenario-test-control',actor={us
 const cleanup:Array<()=>Promise<unknown>>=[];
 afterEach(async()=>{for(const close of cleanup.splice(0).reverse())await close();vi.useRealTimers();});
 async function ingress() {
-  const events=new Map<string,SimulationReceipt>(),notifications:SimulationNotification[]=[];let fail=false,loseAck=false;
+  const events=new Map<string,SimulationReceipt>(),notifications:SimulationNotification[]=[],sourceIds:string[]=[];let fail=false,loseAck=false;
   const server=createServer(async(req,res)=>{const url=new URL(req.url!,'http://local');if(fail){res.writeHead(503);res.end();return;}if(req.method==='GET'){const receipt=events.get(url.searchParams.get('sourceMessageId')!);res.writeHead(receipt?200:404,{'content-type':'application/json'});res.end(JSON.stringify(receipt??{}));return;}
-    let text='';for await(const chunk of req)text+=chunk;const notification=JSON.parse(text) as SimulationNotification;notifications.push(notification);const receipt:SimulationReceipt={eventId:randomUUID(),sourceMessageId:notification.sourceMessageId,receivedAt:new Date().toISOString(),status:'accepted'};events.set(receipt.sourceMessageId,receipt);res.writeHead(loseAck?503:202,{'content-type':'application/json'});res.end(JSON.stringify(receipt));});
+    let text='';for await(const chunk of req)text+=chunk;const notification=JSON.parse(text) as SimulationNotification;notifications.push(notification);sourceIds.push(url.pathname.split('/')[3]);const receipt:SimulationReceipt={eventId:randomUUID(),sourceMessageId:notification.sourceMessageId,receivedAt:new Date().toISOString(),status:'accepted'};events.set(receipt.sourceMessageId,receipt);res.writeHead(loseAck?503:202,{'content-type':'application/json'});res.end(JSON.stringify(receipt));});
   await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));cleanup.push(()=>new Promise<void>(resolve=>{server.closeAllConnections();server.close(()=>resolve());}));
   const url=`http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  return {notifications,events,targets:['intel','situation'].map(systemId=>({systemId,sourceId:`mock-${systemId}`,url,token:'test-ingress-token'})),setFail:(value:boolean)=>{fail=value;},setLoseAck:(value:boolean)=>{loseAck=value;}};
+  return {notifications,events,sourceIds,targets:['intel','situation'].map(systemId=>({systemId,sourceId:`mock-${systemId}`,url,token:'test-ingress-token'})),setFail:(value:boolean)=>{fail=value;},setLoseAck:(value:boolean)=>{loseAck=value;}};
 }
 async function setup(databasePath?:string) {
   const receiver=await ingress(),mock=createMockContextServer({token,controlToken,scenariosEnabled:true,databasePath,targets:receiver.targets}),url=await mock.listen();let closed=false;const close=async()=>{if(!closed){closed=true;await mock.close();}};cleanup.push(close);
@@ -66,6 +68,33 @@ describe('versioned scenario world and boundary clock',()=>{
     const context=parseContextConfig(JSON.parse(await readFile(new URL('../fixtures/scenario-demo/context.example.json',import.meta.url),'utf8'))),background=parseBackgroundConfig(JSON.parse(await readFile(new URL('../fixtures/scenario-demo/background.example.json',import.meta.url),'utf8')));
     expect(context.systems.every(source=>source.scenarioClock===true)).toBe(true);expect(context.simulation?.directorSeatId).toBe('seat-director');expect(context.scopes[0].seatIds).toContain('seat-director');
     expect(background.sources.map(source=>source.sourceId)).toEqual(context.simulation!.sources.map(source=>source.sourceId));expect(background.sources.every(source=>!source.allowedRecipientSeatIds.includes('seat-director'))).toBe(true);expect(background.profiles[0].contextScopeId).toBe(context.scopes[0].id);
+    expect(context.systems.map(({id,name})=>({id,name}))).toEqual([{id:'intel',name:'特情系统'},{id:'situation',name:'态势系统'}]);
+    expect(background.sources.map(({systemId,name})=>({systemId,name}))).toEqual([{systemId:'intel',name:'特情系统'},{systemId:'situation',name:'态势系统'}]);
+    const targets=JSON.parse(await readFile(new URL('../fixtures/scenario-demo/notifications.example.json',import.meta.url),'utf8')) as Array<{systemId:string;sourceId:string}>;
+    expect(targets.map(({systemId,sourceId})=>({systemId,sourceId}))).toEqual(context.simulation!.sources);
+  });
+  it('publishes business reports without director instructions while retaining factual references and times',()=>{
+    const world=sceneWorld('content-audit');
+    expect(scenarioDefinition.version).toBe('3');
+    for(const step of world.steps){
+      for(const report of step.reports){
+        expect([report.title,report.summary,report.content].join('\n')).not.toMatch(/模拟场景|投放时|T0[123]|本系统|本次来源|不修改09:23|原占用未因其他任务/);
+        expect(report.observedAt).toBe(step.summary.id==='E09'?'2026-11-03T09:11:00+08:00':step.summary.businessTime);
+        expect(report.publishedAt).toBe(step.summary.businessTime);
+      }
+      for(const notice of step.notices){
+        const report=step.reports.find(item=>item.reportId===notice.reportId)!;
+        expect(notice.text).not.toMatch(/模拟场景|投放时|T0[123]|请通过来源查询|不证明本系统/);
+        expect(notice.text).toContain(report.summary);expect(notice.text).toContain(report.observedAt!);
+        expect(notice.text).toContain(`intel/${report.reportId}`);expect(notice.text).toContain(`修订${report.revision}`);
+      }
+    }
+    expect(world.steps.map(step=>step.notices[0].systemId)).toEqual(['intel','intel','intel','intel','intel','situation','situation','situation','intel','situation','intel','intel']);
+    expect(world.steps[8].summary.title).toBe('旧巡查报告晚到');expect(world.steps[8].reports[0]).toMatchObject({title:'中轴桥巡查情况',validTime:{from:'2026-11-03T09:11:00+08:00',to:'2026-11-03T09:12:00+08:00'}});
+    expect(world.steps[1].reports[0].content).toContain('V02、V14');expect(world.steps[1].reports[0].content).toContain('10:00');
+    expect(world.steps[2].reports[0].content).toContain('V05');expect(world.steps[2].reports[0].content).toContain('09:45');
+    expect(world.steps[7].reports[0].content).toContain('10:00');expect(world.steps[11].reports[0].content).toContain('尚不能确认事件结束');
+    expect(world.tasks[0].goal).toContain('模拟场景');
   });
   it('provides the full background, independent identities, actual type counts and no author answer labels',()=>{
     const world=sceneWorld(`run-${randomUUID()}`),resources=world.objects.filter(object=>object.ref.objectType==='resource'),vehicles=resources.filter(object=>object.resourceData?.resource.vehicle);
@@ -85,6 +114,50 @@ describe('versioned scenario world and boundary clock',()=>{
 });
 
 describe('scenario HTTP facts, controls and replay',()=>{
+  it('reuses both configured source identities across independent runs without changing delivery identities',async()=>{
+    const scene=await setup(),ids:string[][]=[];
+    for(let round=0;round<2;round++){
+      const created=await scene.create();let instance=(await scene.activate(created.body.instance,round)).body.instance;
+      const messages:string[]=[];
+      for(let index=1;index<=6;index++){
+        const applied=await scene.apply(instance,`E${String(index).padStart(2,'0')}`);expect(applied.status).toBe(200);instance=applied.body.instance;
+        for(const action of applied.body.actions){
+          const sent=await scene.send(action);expect(sent.status).toBe(200);expect(sent.body.notification.scenarioInstanceId).toBe(instance.instanceId);
+          const count=scene.receiver.notifications.length;expect((await scene.send(action)).body.receipt).toEqual(sent.body.receipt);expect(scene.receiver.notifications).toHaveLength(count);
+          messages.push(action.notification.sourceMessageId);
+        }
+      }
+      ids.push(messages);
+      const paused=await scene.request<ScenarioMutationResult>(`/control/instances/${instance.instanceId}/control`,'POST',{action:'pause',clientActionId:randomUUID(),expectedRevision:instance.revision,actor});expect(paused.status).toBe(200);
+    }
+    expect(scene.receiver.sourceIds.slice(0,7)).toEqual(['mock-intel','mock-intel','mock-intel','mock-intel','mock-intel','mock-intel','mock-situation']);
+    expect(scene.receiver.sourceIds.slice(7)).toEqual(scene.receiver.sourceIds.slice(0,7));
+    expect(ids[0].every(id=>!ids[1].includes(id))).toBe(true);
+    for(const message of scene.receiver.notifications)expect(message.text).not.toMatch(/模拟场景|投放时|T0[123]/);
+  });
+  it('keeps persisted version-two evidence and receipts byte-for-byte while only new runs use version three',async()=>{
+    const directory=await mkdtemp(join(tmpdir(),'axon-scene-v2-'));cleanup.push(()=>rm(directory,{recursive:true,force:true}));const databasePath=join(directory,'simulation.sqlite');
+    const scene=await setup(databasePath),created=await scene.create(),active=await scene.activate(created.body.instance),applied=await scene.apply(active.body.instance,'E01');await scene.send(applied.body.actions[0]);
+    const id=created.body.instance.instanceId;await scene.close();
+    const db=new DatabaseSync(databasePath);cleanup.push(async()=>db.close());const record=JSON.parse(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body)) as SceneRecord;
+    const oldHash='b24f803adfd0197af5df33d2f526fd3a9774895095c41a474e52207df64dbc5a';
+    record.instance.definitionVersion='2';record.instance.definitionHash=oldHash;record.instance.paused=true;
+    for(const operation of record.operations){operation.resultInstance.definitionVersion='2';operation.resultInstance.definitionHash=oldHash;}
+    const legacyText=`模拟场景 ${id}；投放时场景时间 2026-11-03T09:12:00+08:00；观测时间 2026-11-03T09:12:00+08:00。报告 intel/${id}-report-E01-a 修订1：${record.reports[0].summary} 请通过来源查询核对正文与对象。`;
+    record.actions[0].notification.text=legacyText;
+    const saved=JSON.stringify(record),digest=(text:string)=>createHash('sha256').update(text).digest('hex');db.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(saved,id);
+    const restored=await setup(databasePath),detail=await restored.request<ScenarioInstanceDetail>(`/control/instances/${id}`);
+    expect(detail.status).toBe(200);expect(detail.body.instance).toEqual(record.instance);expect(detail.body.actions).toEqual(record.actions);expect(detail.body.reports).toEqual(record.reports);
+    expect((await restored.send(record.actions[0])).body.receipt).toEqual(record.actions[0].receipt);expect(restored.receiver.notifications).toHaveLength(0);
+    const report=await restored.request<InformationDetail>(`/intel/reports/${id}-report-E01-a`);expect(report.body.item).toEqual(record.reports[0]);
+    expect((await restored.apply(record.instance,'E02')).status).toBe(409);
+    expect(digest(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body))).toBe(digest(saved));
+    const next=await restored.create();expect(next.body.instance.definitionVersion).toBe('3');expect(next.body.instance.definitionHash).not.toBe(oldHash);expect((await restored.activate(next.body.instance,1)).status).toBe(200);
+    const frozen=(await restored.request<ScenarioInstanceDetail>(`/control/instances/${id}`)).body;
+    expect(frozen.instance.status).toBe('frozen');expect(frozen.actions).toEqual(record.actions);expect(frozen.reports).toEqual(record.reports);
+    const fresh=await restored.apply((await restored.request<ScenarioInstanceDetail>(`/control/instances/${next.body.instance.instanceId}`)).body.instance,'E01');
+    expect(fresh.body.actions[0].notification.text).not.toContain('模拟场景');expect(fresh.body.actions[0].notification.text).not.toContain('投放时');
+  });
   it('is opt-in, separates credentials, deduplicates create and exposes no future facts through ordinary reads',async()=>{
     const disabled=createMockContextServer({token,controlToken}),base=await disabled.listen();cleanup.push(()=>disabled.close());expect((await fetch(`${base}/control/scenarios`,{headers:{Authorization:`Bearer ${controlToken}`}})).status).toBe(404);
     const scene=await setup();expect((await scene.request('/control/scenarios','GET',undefined,token)).status).toBe(401);
