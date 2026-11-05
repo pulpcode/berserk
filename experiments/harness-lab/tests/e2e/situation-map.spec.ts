@@ -9,6 +9,7 @@ import { createMockContextServer } from '../../scripts/mock-context/server';
 import { PiLab } from '../../src/pi/lab';
 import { createApp } from '../../src/server/app';
 import { fakeRuntime, testConfig } from '../pi/fake-runtime';
+import { scenarioDefinition } from '../../scripts/mock-context/scenarios/data';
 import { mapFixtures } from '../../scripts/mock-context/map-fixtures';
 import type { SituationCurrent } from '../../src/contracts/context';
 import type { SimulationAction } from '../../src/contracts/simulation';
@@ -21,7 +22,7 @@ async function setup(page:Page,simulation=false,missingGeometry=false,basemap?: 
  const source=createMockContextServer({token:'map-query-token',controlToken:'map-control-token',scenariosEnabled:scenario,databasePath:join(dir,'source.sqlite'),instanceId:'ui',day:'2026-10-11'});const base=await source.listen();
  if(scenario){
   const control=async(path:string,body:Record<string,unknown>)=>{const response=await fetch(`${base}/control/${path}`,{method:'POST',headers:{Authorization:'Bearer map-control-token','Content-Type':'application/json'},body:JSON.stringify({...body,actor:{userId:'map-ui-test-driver',seatId:'test-director'}})});expect(response.ok).toBe(true);return response.json() as Promise<ScenarioMutationResult>;};
-  const created=await control('instances',{definitionId:'harbor-fire',version:'1',mode:'main_story',clientActionId:randomUUID()});
+  const created=await control('instances',{definitionId:scenarioDefinition.id,version:scenarioDefinition.version,mode:'main_story',clientActionId:randomUUID()});
   await control(`instances/${created.instance.instanceId}/activate`,{expectedRevision:created.instance.revision,expectedActiveRevision:0,clientActionId:randomUUID()});
  }
  const db=await openDatabase(dir);const access=new AccessStore(db);const userId=await access.saveAccount({username:'a',displayName:'地图验证',seatId:'a',seatName:'总体席',password:'test-password-123',createPublicTask:true,manageModelSettings:true});const actor=access.identity(userId)!;
