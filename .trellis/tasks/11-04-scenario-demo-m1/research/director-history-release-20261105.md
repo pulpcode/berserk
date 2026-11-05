@@ -51,3 +51,9 @@
 脱敏证据：[发布](director-history-deployment-20261105.json)、[五席验证](director-history-seats-20261105.json)。本机截图位于`/Users/lau/Documents/Codex/场景导演台-20261105`。凭据、cookie、启动配置及运行数据库均未入库。
 
 测试入口：[场景导演台](http://49.232.156.14:4315/scenario-director)。沿用既有五席账号及密码。
+
+## 追加审阅：返回入口与技术信息
+
+用户反馈返回列表按钮过重，并询问实例信息含义。前端提交`8cf300c62291475f0def6c06dc12d985df64a732`已上线：返回改为无边框的12px轻量导航入口，保留28px点击区域、悬停及键盘焦点；“实例信息”改为“技术信息”，“编号/修订”改为“演示编号/状态版本”，数据及默认折叠不变。
+
+Typecheck、完整lint/边界、build及2项现有桌面回归通过；线上核对了实际样式、技术信息、Enter返回列表及1024宽度。仅更新前端，服务PID、活动演示及两个业务数据库内容保持，未发送场景事件。备份与脱敏证据见[本次前端验证](director-record-polish-20261105.json)。线上页面截图在本机`/Users/lau/Documents/Codex/场景导演台-20261105/director-polish-data.png`。

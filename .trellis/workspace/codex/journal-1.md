@@ -260,3 +260,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 10: 精简记录返回入口与技术信息文案
+
+**Date**: 2026-11-05
+**Task**: 精简记录返回入口与技术信息文案
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+按用户审阅反馈，将历史详情返回列表改为无边框轻量导航；实例信息改为技术信息，编号/修订改为演示编号/状态版本。工程检查和2项现有桌面回归通过，纯前端上线，线上键盘及样式验证通过，活动演示/数据/进程保持。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `8cf300c` | (see git log) |
+
+### Status
+
+[OK] **Completed**
