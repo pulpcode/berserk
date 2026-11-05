@@ -315,3 +315,32 @@
 ### Next Steps
 
 - SIM-TASK-002/A13待产品决定；线上尚未更新，后续须配套部署来源与宿主并先备份。
+
+
+## Session 12: 双系统来源命名与业务来报清理
+
+**Date**: 2026-11-05
+**Task**: 双系统来源命名与业务来报清理
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+沿用双系统，清理新v3业务来报；七类系统设计后延。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `67a3e90` | (see git log) |
+
+### Testing
+
+- [OK] 53项相关测试、22项桌面回归、TypeCheck、Lint、build通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 尚未上线；部署前先锁定旧演示并核清通知，再配套升级配置及定义。
