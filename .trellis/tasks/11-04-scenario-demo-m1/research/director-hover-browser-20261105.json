@@ -1,0 +1,17 @@
+{
+  "publicUi": true,
+  "hoverReadOnly": true,
+  "pinStable": true,
+  "keyboardAndEscape": true,
+  "noLayoutShift": true,
+  "noPermanentRecords": true,
+  "historyAndDataOnDemand": true,
+  "localTimeZone": "Asia/Singapore",
+  "desktopWidths": [
+    1440,
+    1080
+  ],
+  "simulationWrites": 0,
+  "sceneUnchanged": true,
+  "errors": []
+}

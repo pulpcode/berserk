@@ -15,7 +15,7 @@
   "branch": "codex/scenario-demo",
   "base_branch": "main",
   "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
-  "commit": "898688fc62ff7898419bf14fbddf8c31d5e9487e",
+  "commit": "37d158dd4637284e42e7d96f3a9deb25913437f8",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -28,6 +28,6 @@
     ".trellis/tasks/11-04-scenario-demo-m1/research/main-merge-deployment-20261104.md",
     ".trellis/tasks/11-04-scenario-demo-m1/research/director-ui-revision.md"
   ],
-  "notes": "P0—P2基线79d0e27、导演业务隔离1d6510b。2026-11-04按用户追加授权将main@0a8d73e合并为68dded3并上线，未推送；完整131文件/1504项、14项桌面、typecheck/lint/build及公网核验通过。独立副本迁移，保留旧四席/任务/原生历史及完整旧数据回退；新增导演和三任务，当前09:10未投放。旧即时引用时钟409兼容边界见发布记录。保持in_progress待用户测试；P3—P6未实施。 后续按用户要求统一五席密码并授权10位最小长度，6bbd22f已作为线上补丁；25项相关测试及typecheck/lint通过，五席登录逐一验证，旧登录失效、权限不变。 2026-11-05按用户要求完成导演台事件融合与精简，898688f已上线；任务/通知在事件展开项中，首事件内显式创建并启用。34项工程、7项桌面及typecheck/lint/build通过，公网1440/1080检查通过。数据、历史和09:10场景进度保留，待用户检查。",
+  "notes": "P0—P2基线79d0e27、导演业务隔离1d6510b。2026-11-04按用户追加授权将main@0a8d73e合并为68dded3并上线，未推送；完整131文件/1504项、14项桌面、typecheck/lint/build及公网核验通过。独立副本迁移，保留旧四席/任务/原生历史及完整旧数据回退；新增导演和三任务，当前09:10未投放。旧即时引用时钟409兼容边界见发布记录。保持in_progress待用户测试；P3—P6未实施。 后续按用户要求统一五席密码并授权10位最小长度，6bbd22f已作为线上补丁；25项相关测试及typecheck/lint通过，五席登录逐一验证，旧登录失效、权限不变。 2026-11-05按用户要求完成导演台事件融合与精简，898688f已上线；任务/通知在事件展开项中，首事件内显式创建并启用。34项工程、7项桌面及typecheck/lint/build通过，公网1440/1080检查通过。数据、历史和09:10场景进度保留，待用户检查。 追加37d158d已上线：悬停只读预览、点击固定操作，记录/数据按需面板；八项桌面及typecheck/lint/build通过，公网1440/1080验证通过。前端入口原子替换，不重启，业务数据及09:10进度保留。首次发布校验429自动回退，等待窗口并减少登录校验后成功，未改限流。",
   "meta": {}
 }

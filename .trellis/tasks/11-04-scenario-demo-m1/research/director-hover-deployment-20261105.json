@@ -1,0 +1,54 @@
+{
+  "released": true,
+  "frontendOnly": true,
+  "commit": "37d158dd4637284e42e7d96f3a9deb25913437f8",
+  "processesUnchanged": true,
+  "pids": {
+    "4315": 3244173,
+    "38371": 3244201
+  },
+  "seatsVerified": [
+    "seat-overall",
+    "seat-intelligence",
+    "seat-planning",
+    "seat-situation",
+    "seat-director"
+  ],
+  "before": {
+    "instanceId": "run-92f0bb86-63c1-4c39-89c7-91764fb5d625",
+    "definitionId": "harbor-fire",
+    "definitionVersion": "1",
+    "definitionHash": "e5c3f03f2b1f61674922dbca8a397525551fbb1cbf34237d03f409a7c37747df",
+    "name": "\u4e34\u6e2f\u4ed3\u50a8\u706b\u60c5",
+    "mode": "main_story",
+    "status": "active",
+    "paused": false,
+    "revision": 2,
+    "businessNow": "2026-11-03T09:10:00+08:00",
+    "stepIndex": 0,
+    "stepCount": 12,
+    "createdAt": "2026-11-04T14:40:36.137Z",
+    "updatedAt": "2026-11-04T14:40:36.252Z"
+  },
+  "after": {
+    "instanceId": "run-92f0bb86-63c1-4c39-89c7-91764fb5d625",
+    "definitionId": "harbor-fire",
+    "definitionVersion": "1",
+    "definitionHash": "e5c3f03f2b1f61674922dbca8a397525551fbb1cbf34237d03f409a7c37747df",
+    "name": "\u4e34\u6e2f\u4ed3\u50a8\u706b\u60c5",
+    "mode": "main_story",
+    "status": "active",
+    "paused": false,
+    "revision": 2,
+    "businessNow": "2026-11-03T09:10:00+08:00",
+    "stepIndex": 0,
+    "stepCount": 12,
+    "createdAt": "2026-11-04T14:40:36.137Z",
+    "updatedAt": "2026-11-04T14:40:36.252Z"
+  },
+  "sceneUnchanged": true,
+  "businessDataUnchanged": true,
+  "staticAssetsAdded": 0,
+  "backup": "/home/ubuntu/axon-scenario-release-68dded362074/backup/director-hover-20261105-105327",
+  "health": true
+}
