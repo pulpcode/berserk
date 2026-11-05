@@ -48,6 +48,20 @@ describe('versioned scenario world and boundary clock',()=>{
       else for(const areaId of object.areaIds){const area=areas.get(areaId)!;expect(area,areaId).toBeTruthy();if(area.type!=='Polygon')throw new Error('Area geometry must be polygon');expect(geometry.type==='Point'?booleanPointInPolygon(geometry,area):booleanIntersects(geometry,area),`${object.ref.objectId} in ${areaId}`).toBe(true);}
     }
   });
+  it('places the fire on the warehouse roof and keeps both approaches on their mapped junctions',()=>{
+    const {objects}=sceneWorld('lingang');
+    const geometry=(code:string)=>objects.find(o=>o.ref.objectId===`lingang-${code}`)?.geometry;
+    const warehouse=geometry('L01'),bridge=geometry('R01'),detour=geometry('R02'),frontage=geometry('R03');
+    if(warehouse?.type!=='Point'||bridge?.type!=='LineString'||detour?.type!=='LineString'||frontage?.type!=='LineString')throw new Error('Missing fire-site geometry');
+    // Corner nodes of OSM warehouse 401941361 v1, independent of the chosen incident point.
+    const roof=[[121.8637097,30.8825343],[121.865907,30.8806253],[121.8663609,30.881012],[121.8641587,30.8829166],[121.8637097,30.8825343]];
+    expect(booleanPointInPolygon(warehouse,{type:'Polygon',coordinates:[roof]})).toBe(true);
+    // Both ends of the surveyed bridge deck (way 376561255 v2).
+    expect(bridge.coordinates).toEqual([[121.8592305,30.8885162],[121.8596185,30.8881934]]);
+    expect(frontage.coordinates).toContainEqual(bridge.coordinates.at(-1));
+    expect(frontage.coordinates).toContainEqual(detour.coordinates.at(-1));
+    expect(booleanIntersects(bridge,detour)).toBe(false);
+  });
   it('ships matching isolated configuration without granting director rights to business recipients',async()=>{
     const context=parseContextConfig(JSON.parse(await readFile(new URL('../fixtures/scenario-demo/context.example.json',import.meta.url),'utf8'))),background=parseBackgroundConfig(JSON.parse(await readFile(new URL('../fixtures/scenario-demo/background.example.json',import.meta.url),'utf8')));
     expect(context.systems.every(source=>source.scenarioClock===true)).toBe(true);expect(context.simulation?.directorSeatId).toBe('seat-director');expect(context.scopes[0].seatIds).toContain('seat-director');

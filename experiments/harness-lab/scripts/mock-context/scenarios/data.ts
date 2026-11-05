@@ -1,3 +1,4 @@
+import { areaRings, hydrantPositions, roadRows, sitePositions, stationPositions } from './geography.js';
 import { createHash } from 'node:crypto';
 import type { ContextRef, InformationReport, SituationObject, Position } from '../../../src/contracts/context.js';
 import type { ScenarioDefinitionSummary, ScenarioStepSummary, ScenarioTaskDefinition } from '../../../src/contracts/scenarios.js';
@@ -6,7 +7,6 @@ export interface SceneNotice { systemId: 'intel' | 'situation'; reportId: string
 export interface SceneStep { summary: ScenarioStepSummary; objects: SituationObject[]; reports: InformationReport[]; notices: SceneNotice[] }
 export interface SceneWorld { objects: SituationObject[]; reports: InformationReport[]; steps: SceneStep[]; tasks: ScenarioTaskDefinition[] }
 export const businessAt = (time: string) => `2026-11-03T${time}:00+08:00`;
-const centers: Position[] = [[121.84,30.88],[121.90,30.90],[121.79,30.90],[121.85,30.96],[121.80,30.86],[121.93,30.96]];
 const areaNames = ['临港','东城','西城','北城','南湾','新区'];
 const vehicleRows: Array<[string, number, string, string, string]> = [
   ['V01',0,'water_tanker','S01','可用'],['V02',0,'water_tanker','L02','交通救援占用至10:00'],['V03',0,'foam','S01','可用'],['V04',0,'foam','S01','检修预计11:00完成，须确认'],['V05',0,'ladder','L03','演练占用至09:45'],['V06',0,'rescue','S01','可用'],
@@ -17,24 +17,16 @@ const vehicleRows: Array<[string, number, string, string, string]> = [
 ];
 const typeNames: Record<string,string> = {water_tanker:'水罐车',foam:'泡沫车',ladder:'登高车',rescue:'抢险救援车',communications:'通信车',logistics:'后勤车'};
 const unavailableUntil: Record<string,string> = {V02:'10:00',V04:'11:00',V05:'09:45',V12:'09:40',V14:'10:00'};
-const sitePositions: Record<string,Position> = {L01:[121.855,30.883],L02:[121.803,30.892],L03:[121.825,30.883]};
-const roadRows: Array<[string,string,number,Position[]]> = [
-  ['R01','中轴桥',0,[[121.82,30.895],[121.85,30.895],[121.88,30.895]]],['R02','东环线',1,[[121.90,30.90],[121.914,30.89],[121.897,30.875],[121.855,30.883]]],
-  ['R03','滨港路',0,[[121.84,30.88],[121.855,30.883],[121.875,30.878]]],['R04','北货运路',3,[[121.82,30.965],[121.85,30.96],[121.88,30.965]]],
-  ['R05','城北路',3,[[121.85,30.96],[121.89,30.955],[121.93,30.96]]],['R06','南湾支路',4,[[121.785,30.86],[121.80,30.86],[121.817,30.865]]],
-];
-
-/** All coordinates below are synthetic business overlays, not real road/vehicle observations. */
 export function sceneWorld(instanceId: string): SceneWorld {
   const ref = (type: string,id: string): ContextRef => ({systemId:'situation',objectType:type,objectId:`${instanceId}-${id}`});
   const area = (index:number) => `${instanceId}-A${String(index+1).padStart(2,'0')}`;
   const evidence = (objectRef:ContextRef,revision=1) => [{kind:'source' as const,ref:objectRef,revision}];
-  const position = (id:string):Position => id.startsWith('S') ? centers[Number(id.slice(1))-1] : sitePositions[id];
+  const position = (id:string):Position => id.startsWith('S') ? stationPositions[Number(id.slice(1))-1] : sitePositions[id];
   const base = (type:string,id:string,name:string,index:number):SituationObject => ({ref:ref(type,id),name,revision:1,areaIds:[area(index)],effectiveAt:businessAt('09:10'),validTime:null,properties:{}});
   const objects:SituationObject[]=[];
   for(let i=0;i<6;i++) {
     const id=`S${String(i+1).padStart(2,'0')}`,r=ref('resource',id);
-    objects.push({...base('resource',id,`${areaNames[i]}消防站`,i),geometry:{type:'Point',coordinates:centers[i]},resourceData:{entityId:`${instanceId}-${id}`,resource:{meaning:'actual_resource',category:'facility',granularity:'individual',quantity:{value:1,unit:'处',meaning:'entities',scope:r.objectId,evidence:evidence(r)},position:{meaning:'actual',appliesTo:'resource',reportedAt:businessAt('09:10'),evidence:evidence(r)}}}});
+    objects.push({...base('resource',id,`${areaNames[i]}消防站`,i),geometry:{type:'Point',coordinates:stationPositions[i]},resourceData:{entityId:`${instanceId}-${id}`,resource:{meaning:'actual_resource',category:'facility',granularity:'individual',quantity:{value:1,unit:'处',meaning:'entities',scope:r.objectId,evidence:evidence(r)},position:{meaning:'actual',appliesTo:'resource',reportedAt:businessAt('09:10'),evidence:evidence(r)}}}});
   }
   for(const [id,index,type,location,note] of vehicleRows) {
     const r=ref('resource',id),unknown=['V21','V24'].includes(id),until=unavailableUntil[id],observed=businessAt(id==='V24'?'08:50':'09:10');
@@ -49,13 +41,13 @@ export function sceneWorld(instanceId: string): SceneWorld {
     const r=ref('resource',id);objects.push({...base('resource',id,name,index),geometry:{type:'Point',coordinates:sitePositions[id]},resourceData:{entityId:`${instanceId}-${id}`,resource:{meaning:'actual_resource',category:'facility',granularity:'individual',quantity:{value:1,unit:'处',meaning:'entities',scope:r.objectId,evidence:evidence(r)},position:{meaning:'actual',appliesTo:'resource',reportedAt:businessAt('09:10'),evidence:evidence(r)}}}});
   }
   for(let i=0;i<8;i++) {
-    const id=`H${String(i+1).padStart(2,'0')}`,index=i<4?0:i-3,r=ref('resource',id),center=centers[index];
-    objects.push({...base('resource',id,`${id} 消火栓`,index),geometry:{type:'Point',coordinates:[center[0]+0.002*(i%3+1),center[1]+0.0015*(i%2+1)]},resourceData:{entityId:`${instanceId}-${id}`,resource:{meaning:'actual_resource',category:'hydrant',granularity:'individual',quantity:{value:1,unit:'个',meaning:'entities',scope:r.objectId,evidence:evidence(r)},availability:{state:'available',effectiveAt:businessAt('09:10'),reportedAt:businessAt('09:10'),evidence:evidence(r)},position:{meaning:'actual',appliesTo:'resource',reportedAt:businessAt('09:10'),evidence:evidence(r)}}}});
+    const id=`H${String(i+1).padStart(2,'0')}`,index=i<4?0:i-3,r=ref('resource',id);
+    objects.push({...base('resource',id,`${id} 消火栓`,index),geometry:{type:'Point',coordinates:hydrantPositions[i]},resourceData:{entityId:`${instanceId}-${id}`,resource:{meaning:'actual_resource',category:'hydrant',granularity:'individual',quantity:{value:1,unit:'个',meaning:'entities',scope:r.objectId,evidence:evidence(r)},availability:{state:'available',effectiveAt:businessAt('09:10'),reportedAt:businessAt('09:10'),evidence:evidence(r)},position:{meaning:'actual',appliesTo:'resource',reportedAt:businessAt('09:10'),evidence:evidence(r)}}}});
   }
   for(const [id,name,index,coordinates] of roadRows)objects.push({...base('road',id,name,index),geometry:{type:'LineString',coordinates},properties:{passability:'open'}});
   for(let i=0;i<6;i++) {
-    const [x,y]=centers[i],members=objects.filter(o=>o.areaIds.includes(area(i))).map(o=>o.ref);
-    objects.push({...base('area',`A${String(i+1).padStart(2,'0')}`,areaNames[i],i),geometry:{type:'Polygon',coordinates:[[[x-.023,y-.016],[x+.023,y-.016],[x+.023,y+.016],[x-.023,y+.016],[x-.023,y-.016]]]},properties:{memberRefs:members}});
+    const members=objects.filter(o=>o.areaIds.includes(area(i))).map(o=>o.ref);
+    objects.push({...base('area',`A${String(i+1).padStart(2,'0')}`,areaNames[i],i),geometry:{type:'Polygon',coordinates:[areaRings[i]]},properties:{memberRefs:members}});
   }
   const stepRows: Array<[string,string,string,string,string[],string[]]> = [
     ['E01','09:12','首报位置待核实','社会来电称临港仓储区有烟，三号仓库与相邻仓库描述不一致，位置待核实。',['L01'],[]],
@@ -102,4 +94,4 @@ export const directorStepTasks: Record<string, ScenarioTaskDefinition['code'][]>
   E06:['T01'], E07:['T01'], E08:['T01'], E09:['T01'], E10:['T01'], E11:['T02'], E12:['T01'],
 };
 const definitionHash=createHash('sha256').update(JSON.stringify(sceneWorld('definition'))).digest('hex');
-export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'1',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'临港周边底图上的合成业务覆盖层',attribution:'业务对象和线面坐标均为合成演示数据，不代表真实道路、设施或路况；底图署名沿用地图来源。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
+export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'2',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
