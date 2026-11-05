@@ -116,7 +116,6 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .tool-label { font-size: 10px; color: var(--muted); }
 .tool-body pre { white-space: pre-wrap; overflow-wrap: anywhere; font-family: inherit; font-size: 12px; line-height: 1.85; max-height: 340px; overflow-y: auto; }
 .thinking { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); padding-bottom: 15px; }
-.loading-conversation { margin: 60px auto; max-width: 760px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
 .loading-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #688675; animation: breathe 1.4s ease-in-out infinite; }
 @keyframes breathe { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
 .composer-dock { padding: 12px 32px 21px; position: relative; background: white; }
@@ -1037,7 +1036,7 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 }
 
 /* Unified lists retain the original business-detail state owners. */
-@media (min-width: 761px) { .workbench-context-header { display: none; } }
+@media (min-width: 761px) { .content-heading-only { display: none; } }
 .workbench { --work-actionable-bg: #fff3d6; --work-actionable-text: #8d5700; --work-following-bg: #eaf2ff; --work-following-text: #245c9a; display: flex; flex: 1; flex-direction: column; min-height: 0; overflow: hidden; padding: 22px 26px; }
 .workbench[hidden], .work-embedded[hidden], .information-embedded[hidden] { display: none; }
 .workbench > .work-inbox-header { margin-bottom: 24px; }

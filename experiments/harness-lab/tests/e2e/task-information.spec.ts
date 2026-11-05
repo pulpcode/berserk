@@ -112,7 +112,8 @@ test('multi-task information is visible without workspace creation; task continu
     expect(env.lab.get(action.sessionId!, 'a').messages.filter(message => message.role === 'user')).toHaveLength(1);
     await page.getByRole('textbox',{name:'发送消息',exact:true}).fill('对话里的下一条草稿');
     await page.getByRole('button',{name:'进入项目：设备转移任务',exact:true}).click();await page.getByRole('button', { name: '相关信息', exact: true }).click();
-    await expect(page.locator('.workspace-header .workspace-name')).toHaveText('设备转移任务');
+    await expect(page.locator('.workspace-header')).not.toBeVisible();
+    await expect(page.getByRole('heading',{level:1,name:'设备转移任务',exact:true})).toBeVisible();
     await expect(page.locator('.workspace-header').getByRole('button',{name:'项目资料',exact:true})).toHaveCount(0);
     await page.getByRole('button',{name:/道路通行信息.*自动关联/}).click();
     await expect(page.locator('.task-information .information-detail').getByLabel('问题或工作要求')).toHaveValue('');

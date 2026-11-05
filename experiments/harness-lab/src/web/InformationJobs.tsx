@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import type { BackgroundJobStatus, BackgroundPage, InformationJobSummary } from '../contracts/background';
@@ -32,7 +33,7 @@ export function InformationJobColumn({ column, query, offset, refreshKey, visibl
   return <section className={`information-job-column ${column.id}`} aria-label={`${column.title}作业`}>
     <header><h2>{column.title}</h2><span aria-label={`${column.title}共 ${result.data?.total ?? '…'} 项`}>{result.data?.total ?? '…'}</span></header>
     {result.error && <p className="resource-error" role="alert">{result.error}<button onClick={refresh}>重试</button></p>}
-    {!result.data && !result.error && <p className="information-column-empty" role="status">正在读取…</p>}
+    {!result.data && !result.error && <LoadingIndicator label="正在读取…" />}
     {result.data?.items.length === 0 && <p className="information-column-empty">暂无作业</p>}
     <div className="information-job-cards">{result.data?.items.map(job => <button key={job.id} type="button" className="information-job-card" data-information-id={job.id} aria-current={selectedId === job.id ? 'true' : undefined} onClick={() => select(job.id)}>
       <span className="information-card-heading"><JobStatus status={job.status} /><small>{job.kind === 'preprocess' ? '自动预处理' : '席位分析'}</small></span>

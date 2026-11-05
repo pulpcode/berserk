@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Columns3, List, RefreshCw } from 'lucide-react';
@@ -79,7 +80,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
   const feedback = <>{error && <p className="resource-error" role="alert">{error}</p>}{navigationError?.url === location.pathname + location.search && <p className="resource-error" role="alert">{navigationError.message}<button onClick={clearNavigationError}>关闭提示</button></p>}{notice && <p className="resource-success" role="status">{notice}</p>}</>;
   return <section id={domId('information-center')} tabIndex={-1} className="information-center" hidden={!visible} aria-label="工作总览">
     <header className="information-center-header work-page-header" inert={detailOpen || undefined}><h1>{readOnly?'来源记录':'工作总览'}</h1></header>
-    {!allowed && !continuous?.canRead && !identity?.viewWorkOverview && !capabilities ? <p className="information-empty" role="status">正在核对访问权限…</p> : !allowed && !continuous?.canRead && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
+    {!allowed && !continuous?.canRead && !identity?.viewWorkOverview && !capabilities ? <LoadingIndicator label="正在核对访问权限…" /> : !allowed && !continuous?.canRead && !identity?.viewWorkOverview ? <div className="information-empty"><h2>没有工作总览的访问权限</h2><p>可从工作待办查看本席位事项。</p></div> : <>
       <nav className="information-tabs" aria-label="工作总览栏目" inert={detailOpen || undefined}>
         {!readOnly&&continuous?.canRead && <button aria-current={route.tab === 'assessments' ? 'page' : undefined} onClick={() => navigate({ tab: 'assessments', id: '', offset: 0 })}>研判记录</button>}
         {!readOnly&&identity?.viewWorkOverview && <button aria-current={route.tab === 'work' ? 'page' : undefined} onClick={() => navigate({ tab: 'work', id: '', offset: 0, status: '' })}>席位工作</button>}
@@ -115,7 +116,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
       {!readOnly&&<DeliveryReviews visible={visible && route.tab === 'reviews'} selectedId={route.tab === 'reviews' ? route.id : ''} status={route.tab === 'reviews' ? route.status : 'pending'} offset={route.offset} capabilities={capabilities} select={id => navigate({id})} filter={status => navigate({status,id:'',offset:0})} page={offset => navigate({offset,id:''})} changed={refreshAccess} />}
       {visible && route.id && route.tab !== 'rules' && route.tab !== 'reviews' && <InformationDrawer key={`${route.tab}:${route.id}`} title={route.tab === 'events' ? '信息详情' : '后台作业详情'} selectedId={route.id} close={closeDetail}>
         {feedback}{detailError && <p className="resource-error" role="alert">{detailError}<button onClick={refresh}>重新读取详情</button></p>}
-        {route.tab === 'events' ? !shownEvent ? !detailError && <p role="status">正在读取信息…</p> : <>
+        {route.tab === 'events' ? !shownEvent ? !detailError && <LoadingIndicator label="正在读取信息…" /> : <>
           <header><h2>{shownEvent.title}</h2><p>{sourceName(shownEvent.sourceId)} · {informationTime(shownEvent.receivedAt)}</p></header>
           {shownEvent.contentRestricted ? <><p className="resource-help">无该资料范围访问权限，仅可查看处理状态。</p>{shownEvent.jobs.map(item=><p key={item.id}><JobStatus status={item.status}/> · {informationTime(item.createdAt)}</p>)}</> : <>
           <section><h3>原文与附件</h3><InformationText>{shownEvent.text}</InformationText><InformationFiles files={shownEvent.files} base={`/api/information/events/${encodeURIComponent(shownEvent.id)}/files`} /></section>
@@ -128,7 +129,7 @@ export function InformationCenter({ continuous, discussion, visible, capabilitie
           </div>)}</section>
           <AnalysisHistory items={shownEvent.analyses} seats={capabilities.seats} openSession={readOnly?undefined:openSession} />
           </>}
-        </> : !shownJob ? !detailError && <p role="status">正在读取作业…</p> : <>
+        </> : !shownJob ? !detailError && <LoadingIndicator label="正在读取作业…" /> : <>
           <header><h2>{jobTitle(shownJob, seatName)}</h2><JobStatus status={shownJob.status} /><p>{sourceName(shownJob.sourceId)} · {shownJob.kind === 'preprocess' ? '自动预处理' : '席位后台分析'}{shownJob.seatId ? ` · ${seatName(shownJob.seatId)}` : ''}</p></header>
           <dl className="information-metadata"><dt>排队时间</dt><dd>{informationTime(shownJob.createdAt)}</dd><dt>开始时间</dt><dd>{informationTime(shownJob.startedAt)}</dd><dt>结束时间</dt><dd>{informationTime(shownJob.endedAt)}</dd>{shownJob.status === 'running' && shownJob.phase && <><dt>当前阶段</dt><dd>{jobPhases[shownJob.phase]}</dd></>}</dl>
           {shownJob.contentRestricted ? <p className="resource-help">无该资料范围访问权限，仅可查看处理状态。</p> : <>

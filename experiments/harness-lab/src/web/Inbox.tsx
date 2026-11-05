@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Inbox as InboxIcon, RefreshCw } from 'lucide-react';
@@ -36,7 +37,7 @@ export function Inbox({ visible, identity, tasks, workspaces, seats, prepared, o
     <div className="information-toolbar"><label>搜索信息<input type="search" placeholder="标题或来源" value={search} onChange={event => { setSearch(event.target.value); setOffset(0); }} /></label></div></>}
     {(list.error || detail.error) && <p className="resource-error" role="alert">{list.error || detail.error}</p>}
     <div className="information-split">{!embedded && <div className="information-list"><ul>{list.data?.items.map(item => <li key={item.delivery.id}><button aria-current={selected === item.delivery.id ? 'true' : undefined} onClick={() => select(item.delivery.id)}><strong>{item.event.title}</strong><span>{item.sourceName || item.event.sourceId} · 已送达</span><small>{informationTime(item.delivery.deliveredAt)}</small></button></li>)}</ul>{list.data && !list.data.items.length && <p className="information-empty"><InboxIcon size={24} aria-hidden="true" />暂时没有收到的信息。</p>}<InformationPagination page={list.data} change={setOffset} /></div>}
-      <div className="information-detail">{!activeId ? <p className="information-empty">选择一条信息查看原文与结果。</p> : !value ? !detail.error && <p role="status">正在读取信息…</p> : <>
+      <div className="information-detail">{!activeId ? <p className="information-empty">选择一条信息查看原文与结果。</p> : !value ? !detail.error && <LoadingIndicator label="正在读取信息…" /> : <>
         <button className="information-back" onClick={() => select('')}><ArrowLeft size={15} aria-hidden="true" />返回列表</button><header><h2 ref={detailHeading} tabIndex={-1}>{value.event.title}</h2><p>{value.sourceName || value.event.sourceId} · {informationTime(value.delivery.deliveredAt)}</p></header>
         {value.deliveryReason && <details className="information-original"><summary>为何收到</summary>{value.deliveryReason.kind === 'fixed' ? <p>按来源规则固定投递给本席位。</p> : <><p>{seats.find(seat => seat.id === value.deliveryReason?.approvedBySeatId)?.name || '总体席'}批准补充投递。</p><p>{value.deliveryReason.reason}</p></>}</details>}
         <InboxHandlingControl key={activeId} id={activeId} initial={value.handling} changed={() => { detail.refresh(); list.refresh(); changed?.(); }} />

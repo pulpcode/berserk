@@ -1,3 +1,4 @@
+import { LoadingIndicator } from '../LoadingIndicator';
 import { createContext, lazy, Suspense, useContext, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Map as MapIcon, MapPin, Maximize2, Minimize2, X } from 'lucide-react';
 import type { SituationObject } from '../../contracts/context';
@@ -55,7 +56,7 @@ export function SituationProvider({children,reference,navigationKey,annotations,
     locate:focusItem=>changeAnalysis(state=>({...state,visible:true,selected:focusItem,focusItem,focusRequest:state.focusRequest+1})),
   }:undefined;
   const openAnalysis=(result:SpatialResult)=>reveal({analysis:{result,visible:true,focusRequest:(current?.analysis?.focusRequest || 0)+1}});
-  const panel=current?<Suspense fallback={<p role="status">正在打开地图…</p>}>{annotations
+  const panel=current?<Suspense fallback={<LoadingIndicator label="正在打开地图…" />}>{annotations
     ? <AnnotationWorkspace key={`${navigationKey}:${annotations.taskId}:${annotations.sessionId || ''}`} {...annotations} analysis={analysis} workspaceControls={workspaceControls} initial={current.annotation} focusRequest={current.annotationFocusRequest} sourceInitial={current.source} sourceFocusRequest={current.sourceFocusRequest} reference={annotationReference} sourceReference={sourceReference}/>
     : <SituationView readOnly={readOnly} key={navigationKey} analysis={analysis} workspaceControls={workspaceControls} initial={current.source} focusRequest={current.sourceFocusRequest} reference={sourceReference}/>}</Suspense>:undefined;
   return <MapContext.Provider value={{openAnalysis,open:item=>reveal({source:item}),reference:sourceReference,openAnnotations:item=>reveal({annotation:item}),annotationReference,derive:annotations?.derive || (async()=>{}),openSession:annotations?.openSession || (()=>{}),layout,chooseLayout,panel}}>{children}</MapContext.Provider>;

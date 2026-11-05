@@ -65,9 +65,11 @@
 
 .workspace-header:has(.map-titlebar-slot) { padding:5px 20px; gap:18px; }
 @media(max-width:767px) { .workspace-header:has(.map-titlebar-slot) { padding-top:3px; padding-bottom:3px; } }
-.workspace-header:has(.map-titlebar-slot) > .workspace-name,
-.workspace-header:has(.map-titlebar-slot) > .workspace-tools { display:none; }
-.map-titlebar-slot { flex:1; min-width:0; }
+.map-page-title { margin: 0; font-size: 16px; font-weight: 600; white-space: nowrap; }
+.map-page-context { display: flex; flex: 1; align-items: center; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 12px; }
+.map-page-context label { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+.map-page-context select { max-width: 240px; min-height: var(--control-height-compact); padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--text); }
+.map-titlebar-slot { min-width: 40px; }
 .situation-toolbar.in-titlebar { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
 .workspace-header:has(.map-titlebar-slot) { position:relative; z-index:2; }
 

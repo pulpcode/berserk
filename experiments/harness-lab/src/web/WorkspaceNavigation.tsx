@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { useApi } from './api';
 import { useState } from 'react';
 import { Activity, ArrowUpRight, BriefcaseBusiness, ChevronDown, Folder, FolderPlus, LoaderCircle, MessageSquare, Plus } from 'lucide-react';
@@ -71,7 +72,7 @@ export function WorkspaceNavigation({ readOnly=false,taskMode,taskMeta,createTas
   const [catalogCollapsed, setCatalogCollapsed] = useState<Record<string, boolean>>({});
   return <>
     <nav className="workspace-groups" aria-label="会话列表">
-      {loading && !workspaces.length && <p className="sidebar-empty">正在加载项目…</p>}
+      {loading && !workspaces.length && <LoadingIndicator label="正在加载项目…" />}
       {(taskMode ? ['public','private'] as const : ['legacy'] as const).map(group=>{
         const label=group==='public'?'工作任务':group==='private'?'个人空间':'项目';
         const folded=!!catalogCollapsed[group];
@@ -117,7 +118,7 @@ export function ActivityOverview({ workspaces, activities, unread, selectSession
   return <div className="activity-overview" id={domId('activity-overview')} tabIndex={0} aria-label="全部动态列表">
     <div className="activity-heading"><p className="eyebrow">项目概览</p><h1>全部动态</h1><p>查看各项目的处理进展，继续需要你关注的对话。</p></div>
     <div className="activity-filters" role="group" aria-label="动态筛选">{choices.map(choice => <button key={choice.id} aria-pressed={filter === choice.id} onClick={() => setFilter(choice.id)}>{choice.label}</button>)}<span>{visible.length} 个会话</span></div>
-    {loading && !activities.length ? <p className="activity-empty">正在读取动态…</p> : !visible.length ? <div className="activity-empty"><Activity size={24} aria-hidden="true" /><p>{filter === 'running' ? '目前没有正在处理的会话。' : filter === 'attention' ? '目前没有需要关注的会话。' : '从项目中新建一个对话，进展会显示在这里。'}</p></div> : <ul className="activity-list">{visible.map(session => {
+    {loading && !activities.length ? <LoadingIndicator label="正在读取动态…" /> : !visible.length ? <div className="activity-empty"><Activity size={24} aria-hidden="true" /><p>{filter === 'running' ? '目前没有正在处理的会话。' : filter === 'attention' ? '目前没有需要关注的会话。' : '从项目中新建一个对话，进展会显示在这里。'}</p></div> : <ul className="activity-list">{visible.map(session => {
       const workspace = workspaces.find(item => item.id === session.workspaceId);
       const date = new Date(session.statusUpdatedAt);
       const time = Number.isNaN(date.getTime()) ? '时间未知' : date.toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });

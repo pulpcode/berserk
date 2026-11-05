@@ -752,7 +752,7 @@ test('刷新后摘要先于正文到达，停止按钮等待同一请求的正�
     await expect.poll(() => Boolean(mock.faults.releaseSessionRead)).toBe(true);
     await expect(page.locator('.conversation-indicator.running')).toHaveCount(1);
     await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeDisabled();
-    await expect(page.getByText('正在读取会话…', { exact: true })).toBeVisible();
+    await expect(page.getByRole('status', { name: '正在读取会话…', exact: true })).toBeVisible();
     mock.faults.holdSessionRead = false; mock.faults.releaseSessionRead!();
     await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: '停止回复', exact: true }).click();

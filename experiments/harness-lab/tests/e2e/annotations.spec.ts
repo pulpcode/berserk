@@ -492,7 +492,8 @@ test('entry hints explain global, task and editable conversation maps without cr
   await expect(page.getByLabel('标绘上下文')).toContainText('本会话草稿 · 可编辑');
   const writes=env.requests.filter(r=>r.path.endsWith('/annotation/actions')).length;
   await page.goto('/situation');
-  await expect(page.getByLabel('全局态势入口')).toContainText('全局态势 · 只读');
+  await expect(page.getByRole('heading',{level:1,name:'态势地图',exact:true})).toBeVisible();
+  await expect(page.getByLabel('全局态势入口')).toContainText('全局 · 只读');
   await expect(page.getByRole('button',{name:'标绘工具',exact:true})).toHaveCount(0);
   await page.getByRole('combobox',{name:'进入任务',exact:true}).selectOption(env.task.id);
   await expect(page.getByRole('region',{name:'任务详情',exact:true})).toBeVisible();

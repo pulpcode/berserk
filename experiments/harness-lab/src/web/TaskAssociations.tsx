@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { useEffect, useRef, useState } from 'react';
 import type { Identity, TaskSpace } from '../contracts/access';
 import type { TaskLinkUpdateInput, TaskLinksView } from '../contracts/task-information';
@@ -39,7 +40,7 @@ export function TaskAssociations({ eventId, jobId, visible, identity, tasks, sav
   const linkMode = { auto: '自动关联', include: '人工保留', exclude: '已移除' };
   return <section className="task-associations" aria-label="任务关联"><h3>任务关联</h3>
     {query.error && <p className="resource-error" role="alert">{query.error}<button onClick={query.refresh}>重新读取关联</button></p>}
-    {!value ? !query.error && <p role="status">正在读取任务判断…</p> : <>
+    {!value ? !query.error && <LoadingIndicator label="正在读取任务判断…" /> : <>
       <p className="resource-help">{value.assessment ? `本次判断：${informationTime(value.assessment.recordedAt)}` : '此次分析未记录任务判断。'} 本区域展示所选分析版本及当前人工决定。</p>
       {value.assessment?.emptyReason && <p>暂不归口：{value.assessment.emptyReason}</p>}
       <ul className="task-association-list">{value.links.filter(link => link.mode !== 'exclude' || link.canManage).map(link => <li key={link.task.id}>

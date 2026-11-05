@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { AuthSession, Identity } from '../contracts/access';
 import type { AppInfo } from '../contracts/index';
@@ -5,6 +6,13 @@ import { api, ApiContext, createApiClient } from './api';
 
 export interface TestSeat { id: string; name: string }
 export interface SeatView { identity?: Identity; logout?: () => void; logoutError?: string; active: boolean; seatId?: string; seats: TestSeat[]; switchSeat: (id: string) => void }
+
+function Connecting({ error, retry }: { error: string; retry: () => void }) {
+  return <main className="bootstrap-message">
+    {error ? <><p role="alert">{error}</p><button onClick={retry}>重新连接</button></> :
+      <LoadingIndicator label="正在连接工作台…" />}
+  </main>;
+}
 
 /** Keep visited seats mounted: their streams, next-message drafts and late replies keep their owner. */
 function TestSeats({ children }: { children: (view: SeatView) => ReactNode }) {
@@ -24,7 +32,7 @@ function TestSeats({ children }: { children: (view: SeatView) => ReactNode }) {
     return () => { current = false; };
   }, [reload]);
   const clients = useMemo(() => new Map((info?.testSeats || [{ id: '', name: '' }]).map(seat => [seat.id, createApiClient(seat.id || undefined)])), [info]);
-  if (!info) return <main className="bootstrap-message" role="status">{error || '正在连接工作台…'}{error && <button onClick={() => setReload(value => value + 1)}>重新连接</button>}</main>;
+  if (!info) return <Connecting error={error} retry={() => { setError(''); setReload(value => value + 1); }} />;
   const switchSeat = (id: string) => {
     if (!clients.has(id)) return;
     setSelected(id); setVisited(previous => previous.includes(id) ? previous : [...previous, id]);
@@ -80,12 +88,13 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     try {const anonymous=await client!.api<AuthSession>('/api/auth/logout',{});client!.dispose();clearPrivateState();setPassword('');setState(anonymous);channel?.postMessage('changed');}
     catch(error){setError(error instanceof Error ? error.message : '退出失败，请重试。');}
   }
-  if(state?.mode==='test')return <TestSeats>{children}</TestSeats>;
+  if (!state) return <Connecting error={error} retry={() => { setError(''); setReload(value => value + 1); }} />;
+  if(state.mode==='test')return <TestSeats>{children}</TestSeats>;
   if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
   return <main className="login-page"><form className="login-card" onSubmit={e=>{e.preventDefault();void login();}}>
     <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1><p>进入你的席位工作台</p>
     <label htmlFor="login-seat">席位</label><select id="login-seat" name="seatId" autoComplete="username" value={seatId} onChange={e=>{setSeatId(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !state?.loginSeats?.length} required>
-      <option value="" disabled>{!state?'正在加载席位…':state.loginSeats?.length?'请选择席位':'暂无可用席位'}</option>
+      <option value="" disabled>{state.loginSeats?.length?'请选择席位':'暂无可用席位'}</option>
       {state?.loginSeats?.map(seat=><option key={seat.id} value={seat.id}>{seat.name}</option>)}
     </select>
     {state && !state.loginSeats?.length && <p role="status">暂无可用席位，请联系管理员。</p>}
@@ -93,6 +102,5 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
     <label className="show-password"><input type="checkbox" checked={show} onChange={e=>setShow(e.target.checked)}/>显示密码</label>
     {error && <p role="alert" className="resource-error">{error}</p>}
     <button className="primary-action" disabled={busy || !state?.loginSeats?.some(seat=>seat.id===seatId) || !password} type="submit">{busy?'正在登录…':'登录'}</button>
-    {!state && <button type="button" onClick={()=>setReload(x=>x+1)}>重新连接</button>}
   </form></main>;
 }

@@ -1,3 +1,4 @@
+import { LoadingIndicator } from './LoadingIndicator';
 import { randomUUID } from './random-uuid';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
@@ -25,7 +26,7 @@ export function DeliveryReviews({ visible, selectedId, status, offset, capabilit
   useEffect(() => { if (embedded && visible && loadedId) panel.current?.querySelector<HTMLElement>('h2')?.focus(); }, [embedded, visible, loadedId]);
   const seatName = (id: string) => capabilities.seats.find(seat => seat.id === id)?.name || id;
   function refresh() { list.refresh(); detail.refresh(); changed(); }
-  const content = <>{detail.error && <p className="resource-error" role="alert">{detail.error}<button onClick={detail.refresh}>重新读取详情</button></p>}{detail.data ? <DeliveryReviewForm key={selectedId} value={detail.data} seatName={seatName} refresh={refresh} /> : !detail.error && <p role="status">正在读取审批…</p>}</>;
+  const content = <>{detail.error && <p className="resource-error" role="alert">{detail.error}<button onClick={detail.refresh}>重新读取详情</button></p>}{detail.data ? <DeliveryReviewForm key={selectedId} value={detail.data} seatName={seatName} refresh={refresh} /> : !detail.error && <LoadingIndicator label="正在读取审批…" />}</>;
   return <section ref={panel} className={embedded ? 'information-detail delivery-review-embedded' : 'information-center-body'} hidden={!visible} aria-label="补充投递审批">
     {!embedded && <div inert={Boolean(selectedId) || undefined}>
       <div className="information-toolbar"><label>审批状态<select value={status} onChange={event => filter(event.target.value)}><option value="pending">待批准</option><option value="approved">已批准</option><option value="declined">不予补充</option><option value="">全部</option></select></label><button onClick={refresh}><RefreshCw size={16} aria-hidden="true" />刷新审批</button></div>

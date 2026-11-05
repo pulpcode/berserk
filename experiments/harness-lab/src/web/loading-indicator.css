@@ -1,0 +1,44 @@
+.loading-indicator {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+}
+
+.loading-indicator-ring {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: loading-indicator-reveal 120ms 150ms backwards, loading-indicator-turn 800ms linear infinite;
+}
+
+@keyframes loading-indicator-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes loading-indicator-turn {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-indicator-ring { animation: none; }
+}
+
+.situation-map-and-list > .loading-indicator,
+.scenario-director > .loading-indicator {
+  height: 100%;
+}
+
+.situation-map-feedback .loading-indicator { min-height: 20px; }
+
+.conversation-pane > .loading-indicator,
+.situation-side-panel > .loading-indicator {
+  flex: 1;
+}
+
+.bootstrap-message {
+  min-height: 100dvh;
+  justify-content: center;
+}

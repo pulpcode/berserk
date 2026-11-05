@@ -1,3 +1,4 @@
+import { LoadingIndicator } from '../LoadingIndicator';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Map, NavigationControl, GeoJSONSource, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
@@ -121,8 +122,9 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
   return <div className="situation-canvas-wrap"><div ref={container} className="situation-canvas" aria-label="态势地图画布"/>
     <div className="situation-basemap-switch" role="group" aria-label="底图视图">{basemapViews.map(option=><button key={option.id} type="button" aria-pressed={view===option.id} onClick={()=>chooseView(option.id)}>{option.label}</button>)}</div>
     <div className="situation-attribution" aria-label="底图署名">{activeBasemapKinds(view).flatMap(kind=>basemapConfig[kind].attributions).map((item,index)=><a key={`${index}:${item.url}`} href={item.url} target="_blank" rel="noreferrer">{item.text}</a>)}</div>
-    {(error || status.errors.length>0 || status.notices.length>0 || status.loading) && <div className="situation-map-feedback" role="status">
-      {error || <>{status.errors.map(message=><p key={message}>{message}</p>)}{status.errors.length>0&&<button type="button" onClick={()=>basemap.current?.retry()}>重试底图</button>}{status.notices.map(message=><p key={message}>{message}</p>)}{status.loading&&status.errors.length===0&&<p>正在加载底图…</p>}</>}
+    {(error || status.errors.length>0 || status.notices.length>0) && <div className="situation-map-feedback" role="status">
+      {error || <>{status.errors.map(message=><p key={message}>{message}</p>)}{status.errors.length>0&&<button type="button" onClick={()=>basemap.current?.retry()}>重试底图</button>}{status.notices.map(message=><p key={message}>{message}</p>)}</>}
     </div>}
+    {status.loading && !error && !status.errors.length && !status.notices.length && <div className="situation-map-feedback"><LoadingIndicator label="正在加载底图…" /></div>}
   </div>;
 }
