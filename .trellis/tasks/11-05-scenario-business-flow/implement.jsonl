@@ -1,0 +1,6 @@
+{"file":".trellis/tasks/11-05-scenario-business-flow/design.md","reason":"待审阅的本阶段边界、来源建任务、兼容、配置和分段验证；仅在用户批准后实施。"}
+{"file":".trellis/spec/backend/scenario-director.md","reason":"导演权限、版本快照、任务初始化和激活回执契约。"}
+{"file":".trellis/spec/backend/scenario-run-isolation.md","reason":"可信来源归属、全部已绑定任务的结束门禁、旧轮只读及无来源路径后延。"}
+{"file":".trellis/spec/backend/task-information.md","reason":"来源创建事务、权限、回执、关联版本及原生内容权威。"}
+{"file":".trellis/spec/backend/background-execution.md","reason":"普通预处理规则、原生Pi作业、结果验证与席位投递边界。"}
+{"file":".trellis/spec/frontend/state-management.md","reason":"沿用既有查询与表单状态，保持冲突草稿和异步归属核验。"}

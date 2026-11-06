@@ -21,7 +21,8 @@
   "children": [
     "11-04-scenario-demo-m1",
     "11-05-scenario-run-isolation",
-    "11-05-source-notice-cleanup"
+    "11-05-source-notice-cleanup",
+    "11-05-scenario-business-flow"
   ],
   "parent": null,
   "relatedFiles": [

@@ -1,0 +1,31 @@
+{
+  "id": "scenario-business-flow",
+  "name": "scenario-business-flow",
+  "title": "场景业务闭环：来报分析、人员建任务与协作验证",
+  "description": "拟定下一阶段方案供审阅：打通双系统来报、后台初析、总体席从已确认归属的来报分析结果创建任务与既有席位协作；区分有限编码、配置联调和模型测评，本次仅规划。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-05",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    ".trellis/tasks/11-05-scenario-business-flow/prd.md",
+    ".trellis/tasks/11-05-scenario-business-flow/design.md",
+    ".trellis/tasks/11-05-scenario-business-flow/implement.md",
+    ".trellis/tasks/11-03-scenario-demo/issues.md"
+  ],
+  "notes": "2026-11-05用户要求给出下一阶段方案待审阅。v0.1规划覆盖来报初析、人员从已绑定来源建任务、既有协作及分层验证；状态planning，未实施、未调用真实模型、未修改配置或部署。SIM-TASK-002保持待定。 2026-11-06按审阅讨论修订为v0.2：明确火情唯一完整主线与开场已有任务，区分已实现隔离和待补归档，补充eventId/jobId、来源建任务轮次继承与既有重新预处理的说明；SIM-EVAL-001后延，仍待审阅，未实施。",
+  "meta": {}
+}
