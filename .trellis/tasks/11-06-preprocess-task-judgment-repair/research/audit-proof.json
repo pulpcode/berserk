@@ -1,0 +1,150 @@
+{
+  "candidateCommit": "a2c00b8155577b1f5b493b19787018a0dbc33844",
+  "rubricSha256": "38b4ab7ba38321ce63eb5cd4448f3e8eddf785dee1dfbbfdef9ea4a19ca49fa6",
+  "trials": [
+    {
+      "trial": 1,
+      "notices": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 80
+      },
+      "maxTokens": {
+        "8192": 80
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    },
+    {
+      "trial": 2,
+      "notices": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 75
+      },
+      "maxTokens": {
+        "8192": 75
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    },
+    {
+      "trial": 3,
+      "notices": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 76
+      },
+      "maxTokens": {
+        "8192": 76
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    }
+  ],
+  "runtimeChangedFiles": [],
+  "actualLlmKeyScan": {
+    "scannedFiles": 160,
+    "filesContainingKey": []
+  },
+  "runnerStillRunning": false,
+  "productionHealth": 200,
+  "summarySha256": "5d2ec875dbd86a68a9ef6bbe0199c3235509066e0b87ffda9649a3967b72f893"
+}

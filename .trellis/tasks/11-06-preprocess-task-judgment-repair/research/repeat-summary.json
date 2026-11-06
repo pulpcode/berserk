@@ -1,0 +1,2221 @@
+{
+  "plannedTrials": 3,
+  "baselineCommit": "5fee449",
+  "candidateCommit": "a2c00b8155577b1f5b493b19787018a0dbc33844",
+  "rubric": {
+    "file": ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/review-rubric.md",
+    "sha256": "38b4ab7ba38321ce63eb5cd4448f3e8eddf785dee1dfbbfdef9ea4a19ca49fa6",
+    "frozenBeforeFirstCandidateCall": true
+  },
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "model": "deepseek-v4.1-flash",
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/plan/v3",
+    "contextWindow": 131072,
+    "maxOutputTokens": 8192,
+    "thinkingMode": "off",
+    "compactionReserveTokens": 16384,
+    "compactionKeepRecentTokens": 20000
+  },
+  "baselineHashes": [
+    {
+      "file": "scripts/probe-scenario-business.ts",
+      "sha256": "318026c835d2958ee1362205ff66ea95db2dc3771f54c70ddd8f104264a3e277"
+    },
+    {
+      "file": "scripts/probe-scenario-budget.ts",
+      "sha256": "620cb19bdd69ab07bb7074673141714e4c7ce17fc73d24ac2a034d81c1a5092d"
+    },
+    {
+      "file": "fixtures/scenario-demo/background.example.json",
+      "sha256": "269aa7d350131bdf00d78bea870e40cffc3fe3a1de41111df7a2819744bdb936"
+    },
+    {
+      "file": "fixtures/scenario-demo/context.example.json",
+      "sha256": "b95f641ee447a0522087f4c475b8394e9ca98c2b0f6bcc50d16a3609ab2f9ad8"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/data.ts",
+      "sha256": "3d6d8eab4f51f44003e11befff7bbaab01d4c619cfe1b0e6f0bf56dab19f44c8"
+    }
+  ],
+  "executionHashes": [
+    {
+      "file": "fixtures/agent-framework/README.md",
+      "sha256": "c9a12e8b56a87f9e36a3f7a74dc9aac905f209ad17d1ef10ef2eccd57b5305ff"
+    },
+    {
+      "file": "fixtures/agent-framework/review-checklist.md",
+      "sha256": "80c8f3fa8841e1cbf33145250324cdba26426c5b1a7eb531b90258319f1e93a1"
+    },
+    {
+      "file": "fixtures/agent-framework/初稿.md",
+      "sha256": "55c9e478ecb129c0df76f19c7b6f4dade664a1fdb80bb3fb3b06216d9a63c213"
+    },
+    {
+      "file": "fixtures/agents/analyst.md",
+      "sha256": "ed8850eed792095e373dfcf568f100ff04e034321f9d7d807d033d911d263250"
+    },
+    {
+      "file": "fixtures/agents/reviewer.md",
+      "sha256": "926bc47c5b8a6cb711f37f19b8a1d2e757a2fc57d1627188dceb1eb5f077fb7f"
+    },
+    {
+      "file": "fixtures/background-context.example.json",
+      "sha256": "4d8102d695942434063199cbbba86f1e550c8b7641c1f22c042348cfbf1c1486"
+    },
+    {
+      "file": "fixtures/background-seat-routing.example.json",
+      "sha256": "2df2f0dde56616f7b4e0c9c7b8561a738108db39c9d6b59b1b58d0c2366b174f"
+    },
+    {
+      "file": "fixtures/common/AGENTS.md",
+      "sha256": "0a74564fcc50d3d33231c5e2f272512cecf792f2e4cf376515da57a4a3cb2d07"
+    },
+    {
+      "file": "fixtures/context-config.example.json",
+      "sha256": "3e62b828058d68daa5013fd136eaef1e953241bffb601803f4fc160372eedf5e"
+    },
+    {
+      "file": "fixtures/context-seat-routing.example.json",
+      "sha256": "eb21c6822ff7bc851d20bf9295af9c635437f94820bc52238c7141819bc62b43"
+    },
+    {
+      "file": "fixtures/manual-handoff-retest/会议室绿植记录.txt",
+      "sha256": "5cce9e94d50f3667ae8db0c4f7d6a67b9f52a4adcef58b42f040b4ebb08ef373"
+    },
+    {
+      "file": "fixtures/manual-handoff-retest/资料归档说明_修订要求.md",
+      "sha256": "e315ae421b85ba210120fe5abf18d08aca256f63b682e2b74bf2ef73116df46f"
+    },
+    {
+      "file": "fixtures/manual-handoff-retest/资料归档说明_初稿.md",
+      "sha256": "66f31b387fde3594c1cd5f6c6f6a1d34ce80f9d2ae718e296a41f30ebb5d2098"
+    },
+    {
+      "file": "fixtures/meeting-notes.md",
+      "sha256": "a82adabbebd795770f09fea98f8a98ede5cdbb0b2ee329191ffbc15ed61411c0"
+    },
+    {
+      "file": "fixtures/resource-brief.md",
+      "sha256": "0d6674c68024ae6451c1a55795814993118123c62a00a10bf06eea83c17f0626"
+    },
+    {
+      "file": "fixtures/scenario-demo/background.example.json",
+      "sha256": "95689fae1679652f68434a7063864d2acf90ec94ead9c05cdec290dd90175c89"
+    },
+    {
+      "file": "fixtures/scenario-demo/context.example.json",
+      "sha256": "b95f641ee447a0522087f4c475b8394e9ca98c2b0f6bcc50d16a3609ab2f9ad8"
+    },
+    {
+      "file": "fixtures/scenario-demo/notifications.example.json",
+      "sha256": "ae2e0f15b2b6d2ed25dd7703ab01810f6b1326f4b8b19c50a2a87ed23f6949f6"
+    },
+    {
+      "file": "fixtures/scenario-demo/rules.example.json",
+      "sha256": "f21f749931656d7de4425266e240231d84c64bc36f399ae82537c95d579bc2b2"
+    },
+    {
+      "file": "fixtures/seat-responsibilities/intelligence.md",
+      "sha256": "76b21450c053635eba2d7ad68acec892d03fb9da55db4af1353fdf4b1e3f62a0"
+    },
+    {
+      "file": "fixtures/seat-responsibilities/overall.md",
+      "sha256": "09f73269596a12ecefc6a9474ddff39bc5eaef2314e0f656071df0df557426ba"
+    },
+    {
+      "file": "fixtures/seat-responsibilities/planning.md",
+      "sha256": "4248c096bea0c7b91369a5617a185c561f408a42a8b3f8a3f6f1beb299426fef"
+    },
+    {
+      "file": "fixtures/seat-responsibilities/situation.md",
+      "sha256": "ccf9ef363b4e49774e4d157479a4da039425a80d30836e8714637c1554340149"
+    },
+    {
+      "file": "fixtures/skills/map-annotations/SKILL.md",
+      "sha256": "6d5bbfd01e41858ab5ed6ce039b3e7d642e02fc0db8f4019e5a64a8836581fe0"
+    },
+    {
+      "file": "fixtures/skills/review/SKILL.md",
+      "sha256": "513a71b38a6ecf999a4a40fd034f734e9cde5b3ef2be6a4c1c72950cc9675904"
+    },
+    {
+      "file": "fixtures/skills/spatial-analysis/SKILL.md",
+      "sha256": "f947a59341898f1d89eccbb122b6518d1f174fa65f928b27721b564afe83bede"
+    },
+    {
+      "file": "fixtures/skills/synthesis/SKILL.md",
+      "sha256": "2a5c851ac69478391be3e262e401ee9ebcf703347c620e1b18cef29969de9bf6"
+    },
+    {
+      "file": "fixtures/task-plan-validation/操作示例.md",
+      "sha256": "69c71b69cd1361ce3f9af059f75f3529a6981c33a61f14f71eac17d9e7041d9d"
+    },
+    {
+      "file": "fixtures/task-plan-validation/补给方案_初稿.md",
+      "sha256": "1a96e5fe52e38ed360231a90ccad60a72a703ad87778f4616da9579bd7ad822a"
+    },
+    {
+      "file": "fixtures/task-resources-v1/README.md",
+      "sha256": "bc136a16c10505549488c03257cd2b7deb30ef152bc61a3c1a89396b5b942eb5"
+    },
+    {
+      "file": "fixtures/task-resources-v1/expected.json",
+      "sha256": "2ed32bdcb1fc6fb47f855cfa6ad614a77d4669436b3633fe6b4a3bb13ad87b68"
+    },
+    {
+      "file": "fixtures/task-resources-v1/inputs.json",
+      "sha256": "855d74074f34604cce0494074687a48840cfbec4dffd95c966dafbbdf2b932b2"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "b99cf852da63f2c9628af3fc0f59188be7a29fe1e3dccad9a251926f2bb02e15"
+    },
+    {
+      "file": "package.json",
+      "sha256": "baaae722cbf1ca387a5712b54cfa85f97047cbf95ababd518d1d975ec65d9eb8"
+    },
+    {
+      "file": "scripts/access-admin.ts",
+      "sha256": "f00b44d8411556385f04f6c7ada2f2c9251b227c9a535e8d026767adf73c9a86"
+    },
+    {
+      "file": "scripts/background-admin.ts",
+      "sha256": "79834233d3a70281899fbf17cc91e3d95dbbf410d32299ce2cb92b5a0e2ad2bc"
+    },
+    {
+      "file": "scripts/check-boundaries.mjs",
+      "sha256": "aae96394efa6408b83888818f55d0b3d26e1335d0c977de48133c60d01dbadc0"
+    },
+    {
+      "file": "scripts/continuous-spatial-source.ts",
+      "sha256": "edde7058c1458b08ab6d6ca44299d8aa02672192fb5cc9d37f62dba9da66151a"
+    },
+    {
+      "file": "scripts/migrate-seats.ts",
+      "sha256": "8e0044362c5b5932d0e88d3fdf52f72c52ee3ddea81ef20efd9beb0244f5914c"
+    },
+    {
+      "file": "scripts/migrate-workspace.ts",
+      "sha256": "d2b1fc2337f4bf7676bf69dce321cbec39fbc84976d4053cdcb16215ff64eaa8"
+    },
+    {
+      "file": "scripts/mock-context/README.md",
+      "sha256": "3eb16eebb120c53213e7f3f68ffaa8ae43b83cb240400704886b5f685b935d38"
+    },
+    {
+      "file": "scripts/mock-context/control-api.ts",
+      "sha256": "6db23697efea3d79fe040a118690958b6049e616e68f8a0a4540d30539a47238"
+    },
+    {
+      "file": "scripts/mock-context/control.ts",
+      "sha256": "7f0d7f92bcb42d0d34a92381c2e64b6d1135df327ea8f2ea7cb680fd25c8cadc"
+    },
+    {
+      "file": "scripts/mock-context/fixtures.ts",
+      "sha256": "5ec83e61954819ebd8a8a91504f17bd351a9ce8b3e88693da4b38d79e17e2cc2"
+    },
+    {
+      "file": "scripts/mock-context/main.ts",
+      "sha256": "784af63b5a975b5efa36ac4eab0ec33cf2b0d4ec737c37e76e1378b3d8319420"
+    },
+    {
+      "file": "scripts/mock-context/map-fixtures.ts",
+      "sha256": "f712189f589a4875e0e73e8a8e27d8862e0de038eddff534f00055f001b0e100"
+    },
+    {
+      "file": "scripts/mock-context/persistence.ts",
+      "sha256": "d6d41b297c6ec42499ddeb672b45daa909866c7789c4c3cb283e3aa4815b6c22"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/README.md",
+      "sha256": "0c269382df745568bf9c6b267e9a2fbfeb4046f3c0ae67bcbd68c9916aad467e"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/control.ts",
+      "sha256": "a1b33818b3c3185910fb1d6440100602554011e54ca52ae5d30a44ba0ba05521"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/data.ts",
+      "sha256": "3d6d8eab4f51f44003e11befff7bbaab01d4c619cfe1b0e6f0bf56dab19f44c8"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/geography.ts",
+      "sha256": "d1a54674db5a762aaa43bc9533339642bb87e7f567ec5eb85e7bfdf8a250e4f3"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/index.ts",
+      "sha256": "a1dd9bab236ea4b41f50e3b3038fc23c4c09533262d6b25de71914523cdf51c0"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/query.ts",
+      "sha256": "d4769d2d1677796a079f12b7e6ed85bda978393f3f2199be905a82aea854270e"
+    },
+    {
+      "file": "scripts/mock-context/scenarios/store.ts",
+      "sha256": "8e2941839f4ba7032e0e26545eed69af17a1d7cb0b38c60fb36afe846d635de2"
+    },
+    {
+      "file": "scripts/mock-context/server.ts",
+      "sha256": "d9ca2ec7fc28c5c17add8fd90fcfb76e0268b88170fc6eee5cd04057cc8f7c69"
+    },
+    {
+      "file": "scripts/probe-access.ts",
+      "sha256": "c774b4050bfd32b415f3abb680818fa3cc93394113fb86cbfcc5a314685112a4"
+    },
+    {
+      "file": "scripts/probe-agent-framework-observations.ts",
+      "sha256": "e3bcd4e8848a4748c31f6bbd0c02e93c0d0818127d31cfe14f710143929dde2f"
+    },
+    {
+      "file": "scripts/probe-agent-framework.ts",
+      "sha256": "3796ff13e6089626232b9e560c4fcc68b95a019adeee6a685fcf189205983dd4"
+    },
+    {
+      "file": "scripts/probe-annotations.ts",
+      "sha256": "1b1da6cc6b68a63b0527973448e397dd4784ae0107912e9392405a56e5215b50"
+    },
+    {
+      "file": "scripts/probe-background.ts",
+      "sha256": "2a753baf6d78aadb757df68eca15b8f8243609a45591de3b7cb71eecb1308f15"
+    },
+    {
+      "file": "scripts/probe-basemaps.ts",
+      "sha256": "4c57e50465394b6b59a6fd348debfed0fe18466f1d7c85eee8c3b59464bdd67c"
+    },
+    {
+      "file": "scripts/probe-compaction.ts",
+      "sha256": "e867f36d2540ea58ee1287350f58a6e4aaab6b55438268bb636ba0a68c26d021"
+    },
+    {
+      "file": "scripts/probe-context.ts",
+      "sha256": "6cd539b7c409d4f985fe978aa41e483c82b836fbcf111b8c63f0b4917ad710cd"
+    },
+    {
+      "file": "scripts/probe-continuous-multitask.ts",
+      "sha256": "691c7f6dabf81b8f68e7672a32540c3dd1cea6c8c5254807facbef1bd32a6e41"
+    },
+    {
+      "file": "scripts/probe-continuous-spatial.ts",
+      "sha256": "3a1b279b0ee2ce1311c369b91b74e1b8c71b2dbef7db8b839f852b3dd035efbb"
+    },
+    {
+      "file": "scripts/probe-continuous.ts",
+      "sha256": "7e448e87201fe1c53d7b2566d35ce53cf358b062fb2929a5e96d29f1c47c9736"
+    },
+    {
+      "file": "scripts/probe-desktop-map.README.md",
+      "sha256": "d0804c14286dee4bb3bb9f66f645e40461aa8fa33b43a4c98e34a9a515a14f1f"
+    },
+    {
+      "file": "scripts/probe-desktop-map.ts",
+      "sha256": "1822c691ace20ddb9d5ebc6e07599df29b5a689142ce93fcca96bc5bf00b988b"
+    },
+    {
+      "file": "scripts/probe-execution.ts",
+      "sha256": "c70ece5712dbbb0d109a594a47affec84c0221c55ded914a65f7327c928b456a"
+    },
+    {
+      "file": "scripts/probe-files-continuation.ts",
+      "sha256": "ce1e7487e83fca7997320f47cdd8a37b3b20944971aecf4a633a1c85b6570574"
+    },
+    {
+      "file": "scripts/probe-files.ts",
+      "sha256": "a422e604a6e9f63c0dee43f2921899d898227b706e2a621bac9ab335a8a83567"
+    },
+    {
+      "file": "scripts/probe-handoff.ts",
+      "sha256": "345761909018f5d79ce939614d2f3fd268933a2f180cfc310ca90f7326a53209"
+    },
+    {
+      "file": "scripts/probe-hitl.ts",
+      "sha256": "b2f48c654c6c29fc62960de6fdf5b65d98493db4d0640097a04ab6d9a7439996"
+    },
+    {
+      "file": "scripts/probe-live.ts",
+      "sha256": "5d0772088d742890cdeab83f4c7065932a673db99b2c28adbadd0ad6b38f57dd"
+    },
+    {
+      "file": "scripts/probe-map-query-cases.ts",
+      "sha256": "e51be69abf1d19e1ef9dc32bd95324beaaec2707950d4ac973a1b1cd2fafeb14"
+    },
+    {
+      "file": "scripts/probe-map-query-scope.ts",
+      "sha256": "2e80faada108a1153e3294b8f1fbed1432f760ed51a601361363995ae63ad1ca"
+    },
+    {
+      "file": "scripts/probe-map-result-projection.ts",
+      "sha256": "e974e691905cf88cd7ec588c608e80a4ef2c63106219fcc4f5f168432b062275"
+    },
+    {
+      "file": "scripts/probe-map-workflow.README.md",
+      "sha256": "70b97ce6c95849e01847dd46a9ff4ae14085fcf089d59232fe0ee33dca37fa12"
+    },
+    {
+      "file": "scripts/probe-map-workflow.ts",
+      "sha256": "98b92fdeda954d396d11d57736f15a99ae49aec80a9651ddcfe03060cf910b72"
+    },
+    {
+      "file": "scripts/probe-pi-recovery.ts",
+      "sha256": "826baeb393b70786c9711091ac609b6dd6b6e20f95205b56d655fd315676dc16"
+    },
+    {
+      "file": "scripts/probe-recipients.ts",
+      "sha256": "deafe7a3ad18242f70d502b08c4f177593e50538626e281fc6a988324cda7b65"
+    },
+    {
+      "file": "scripts/probe-references.ts",
+      "sha256": "2db455bdbf09831576f7cca40c3e55f8b5e5db87478d564bbd9910c59d9ebfe8"
+    },
+    {
+      "file": "scripts/probe-scenario-budget.ts",
+      "sha256": "d10568d9b298988d7d0ea69cde11cf7ef8be8c3e194ac8ecb99881fc5d561121"
+    },
+    {
+      "file": "scripts/probe-scenario-business.ts",
+      "sha256": "c7f8090befa7933acdad25617a8a1d04bdd795922c28e878b7e83b6379a1bf4e"
+    },
+    {
+      "file": "scripts/probe-session-recovery.ts",
+      "sha256": "44dc986c23c529fc1e3ec3f43a399a2871ec22b32fd27cd0c542586a344f956f"
+    },
+    {
+      "file": "scripts/probe-situation-map.ts",
+      "sha256": "ac862b321e0cf531a400e516461c1be352a90f700bf416b33ca374050aa45650"
+    },
+    {
+      "file": "scripts/probe-source-annotations.README.md",
+      "sha256": "140d6be46b0cae6edbb825562e563aac48c0cd70a889bf8f64fc9015a06628ab"
+    },
+    {
+      "file": "scripts/probe-source-annotations.ts",
+      "sha256": "72d7b72a77410da3a18d430178e8bdd55febf66f6ca9bd231bc6aa6de86a2245"
+    },
+    {
+      "file": "scripts/probe-spatial-batch.ts",
+      "sha256": "73dbdeaeddb1635624bd1404aca5f1d5e68f40c21ffd936f95332df7d1f28eaf"
+    },
+    {
+      "file": "scripts/probe-spatial-cases.ts",
+      "sha256": "e66eb7dc5ece3668ef889f23ced6033824a3eadc5885d4c43f837538b0c678df"
+    },
+    {
+      "file": "scripts/probe-spatial-evaluation.ts",
+      "sha256": "c6e6d8603b3a2f4a06f9317d392de2f9388517d56544a8a3221bb7126e9aeb32"
+    },
+    {
+      "file": "scripts/probe-spatial-evidence.ts",
+      "sha256": "a5f7a61cab4399326f5648ae74a2108960a3d863f66b5c23acf4ae0615490d0f"
+    },
+    {
+      "file": "scripts/probe-spatial-remediation.ts",
+      "sha256": "a37724c08bf1fb93864a286daebd31137bc558db13aa9e5aee82782c955198e7"
+    },
+    {
+      "file": "scripts/probe-spatial-replay.ts",
+      "sha256": "41931827e94afb08de7a62bd628c45c16fa84c1fe534edc0e2cee0d0af0dd081"
+    },
+    {
+      "file": "scripts/probe-spatial-report.ts",
+      "sha256": "fdb4de8914e47bd5eac59dd314def1956770fc4e048afdcb595a877857ba993f"
+    },
+    {
+      "file": "scripts/probe-subagent.ts",
+      "sha256": "3eea084b5ef062c9a6357f0e23ff0ce3b8921526a6658f1e55bafc7157656966"
+    },
+    {
+      "file": "scripts/probe-task-plan.ts",
+      "sha256": "82dc7713f739ac5ff13adf3a495a05bb03ccd75159be42b1355914b2c15e34d9"
+    },
+    {
+      "file": "scripts/probe-workspace.ts",
+      "sha256": "534bc1c3a3e49b60e64c5269b3a13328236a4634ddc60ab6d50d37c7a7325148"
+    },
+    {
+      "file": "src/access/context.ts",
+      "sha256": "d760710bd46f96a8a513fbc6d76ac56161e3f617f358c09fe96eaf83e64faba4"
+    },
+    {
+      "file": "src/access/database.ts",
+      "sha256": "99c1559730f037cf5325170e3acccd9a255f7fa83beff559ca1b9a371e01d5d0"
+    },
+    {
+      "file": "src/access/schema.ts",
+      "sha256": "0c2527b1fabac393218918834178641503360e0743c644a869e0fb0912bfef3d"
+    },
+    {
+      "file": "src/access/store.ts",
+      "sha256": "d9ce1d870ff6787ddb2313c31e5879e51ef83304f733a1c892f329ece13742f7"
+    },
+    {
+      "file": "src/annotations/errors.ts",
+      "sha256": "c024b2bfb3aec5f22a767eb698f99768195a128ddf780fac2def34e917f31fef"
+    },
+    {
+      "file": "src/annotations/service.ts",
+      "sha256": "ec2a971858b86f6cb9c0e1afd0574b6c3ecdcc20c5b0cd4ba5cb5416bc568938"
+    },
+    {
+      "file": "src/annotations/store.ts",
+      "sha256": "884c6d394a5491e93bbfbd94da00aca28c78f21efc292e456c37de4bb1433695"
+    },
+    {
+      "file": "src/annotations/validation.ts",
+      "sha256": "851f46bd06e6b44ee569d67a1b8b2f8353e9bb04e1a632223bcfdb5cfe4afbad"
+    },
+    {
+      "file": "src/background/assessment-quality.ts",
+      "sha256": "31fb2a076669e8dcfe01f6f300049b4f4c4580210ada779c2fd50bde9c89fcc8"
+    },
+    {
+      "file": "src/background/config.ts",
+      "sha256": "f33801a475923d7e10e781927946a65fa6f63a08d40344ac7be99ebb79845cfb"
+    },
+    {
+      "file": "src/background/context-evidence.ts",
+      "sha256": "3db319385b4fad918a4c0848901b6dcd4bc441fc9acc5c8113ed1c370fbd546b"
+    },
+    {
+      "file": "src/background/continuous-schema.ts",
+      "sha256": "ae4fa1960ccd1d0871d608509e7883884ae3a3ac14bf3e16955878b5d9ab04b1"
+    },
+    {
+      "file": "src/background/continuous-service.ts",
+      "sha256": "e378afe8bd89a72337af31227ff7690d94467299d7bf0cdc8cf9ade15274b691"
+    },
+    {
+      "file": "src/background/continuous-store.ts",
+      "sha256": "16043931ca46ba891ad01e32db70f476c49b3e3a241397f9b3a6114780b35071"
+    },
+    {
+      "file": "src/background/executor.ts",
+      "sha256": "cdb25e7a0f422f8567c493a9ecb02bdcc2f8c6ee95eb7a6f2d019e9ee14e54a1"
+    },
+    {
+      "file": "src/background/files.ts",
+      "sha256": "da1e0e8bc6194500d28acfcfa66ed95f692a7d3fb8c0be9fc1e178974277424d"
+    },
+    {
+      "file": "src/background/model-permits.ts",
+      "sha256": "96749915559173f71683e40ffb5b754e8f3f35b6c2b14d3d11200269941238d5"
+    },
+    {
+      "file": "src/background/recipient-evidence.ts",
+      "sha256": "5f1d06abeb4ca25075688467a320000d8cf300b97a1bddf2e47ba04ddf1bb914"
+    },
+    {
+      "file": "src/background/service.ts",
+      "sha256": "b4d0aeb00c5e3db841d558cd48c73873bca3e9987a203f6e9fa5356719e46b7a"
+    },
+    {
+      "file": "src/background/store.ts",
+      "sha256": "892f182c0d20646acd541b04e1faff216a178d4cec191878b00ebcc22751b845"
+    },
+    {
+      "file": "src/background/task-assessment-evidence.ts",
+      "sha256": "aac4b1ff8634b85a2ad435f16b30e1586c518d0db08aaff20ce0b8ab595547bf"
+    },
+    {
+      "file": "src/background/task-discovery.ts",
+      "sha256": "d1edfb2b229dcc1f3070fd916cf4e746ae0e60daae76e3cccb48ebc14861ce4d"
+    },
+    {
+      "file": "src/background/task-links.ts",
+      "sha256": "ac520d1b38f1db073b32f0982a804969d02b45f6a48d5f683e5e19915030af82"
+    },
+    {
+      "file": "src/collaboration/files.ts",
+      "sha256": "74eda546024c86c529f35941c3ef6d55388f22f03bc2c5bca81a4a467a89df8c"
+    },
+    {
+      "file": "src/collaboration/safe-import.py",
+      "sha256": "c03ea0decb2b860e465d03b5b766e61cd45bf0ee233bb13ef8468898a28c86fe"
+    },
+    {
+      "file": "src/collaboration/service.ts",
+      "sha256": "b6795bde0e9cc63796eef6965c6ff9ea2b914127ff772abd985d6fda5ae16358"
+    },
+    {
+      "file": "src/context/composer.ts",
+      "sha256": "c5b4d77bace346d509890fd1e5b2c441f85f9ae4679dc99ab7830edaada4fe7b"
+    },
+    {
+      "file": "src/context/config.ts",
+      "sha256": "f92a12f3dbf353b32058ed7332333fa03c785f59c276312d4dc29431096c7d58"
+    },
+    {
+      "file": "src/context/http.ts",
+      "sha256": "c2be672eaada8c1da1fc2400cd1a6f894837df8678baadf50142c057140b716f"
+    },
+    {
+      "file": "src/context/map-references.ts",
+      "sha256": "f5177dc5e5a8a8c0a131bd8e236cc2bb444cbfedb19333d6d77c59a93a853200"
+    },
+    {
+      "file": "src/context/service.ts",
+      "sha256": "b404fbcae687b6c1ab56315b9abd8ac7207403fca12671eae4bcc62846f09dd7"
+    },
+    {
+      "file": "src/context/task-query.ts",
+      "sha256": "b759e06db50a0b7719d954c76a0229b5e8712f4307a4f1468dc1e3448210a2c9"
+    },
+    {
+      "file": "src/context/task-resources.ts",
+      "sha256": "abfb562054f29e212649a549deb4735448a96d3c0cf2f46e4766fd076557bda0"
+    },
+    {
+      "file": "src/context/validation.ts",
+      "sha256": "5c690dee1efb92089c165219ed827a1fc8df4fffd90a78e82485e43e5c0b56d6"
+    },
+    {
+      "file": "src/contracts/access.ts",
+      "sha256": "5f37accb92a25699e98313c2bd9e09a95a4aca9b744cfbf9dabe0ec10c729662"
+    },
+    {
+      "file": "src/contracts/annotation-geometry.ts",
+      "sha256": "965fc73cb198477c3c5309c7412fe8c3f0195237bb084fef3296fda72cb7530b"
+    },
+    {
+      "file": "src/contracts/annotation-results.ts",
+      "sha256": "843e83c347672fe083e7ec6733a18d12d7a9d4a986c2a682e9b882f4b38393a8"
+    },
+    {
+      "file": "src/contracts/annotations.ts",
+      "sha256": "6b10a90a43c82998a194940e39f65c597bfeca5ac2631175fb53cea84910e8fb"
+    },
+    {
+      "file": "src/contracts/assessment-render.ts",
+      "sha256": "efc5f6402ab883c03a11535effe69f6975b5dd0676fcfc7575ee3506f43d4098"
+    },
+    {
+      "file": "src/contracts/background.ts",
+      "sha256": "a4d6d596ffc9ac97c1eb883d26a126bd8ddf6177d45a4c58a67336ff0cb6a2ca"
+    },
+    {
+      "file": "src/contracts/collaboration.ts",
+      "sha256": "2fa63f9a7430a728558cf83486b36d470df4a509f4b23b0413ecba48af360634"
+    },
+    {
+      "file": "src/contracts/context.ts",
+      "sha256": "4fbc8e234fc63e39a4810f87e87696c6270bb0a445b0744bb0802f7ee56a27c5"
+    },
+    {
+      "file": "src/contracts/continuous.ts",
+      "sha256": "6983810cde7055914a1f8a55f8678f63dc99985f0e1d504065e6650fe0758ba2"
+    },
+    {
+      "file": "src/contracts/errors.ts",
+      "sha256": "022ac80d1cd3d67214c2857e2bc7d5dafc5c9d64b4cbd5a21dde058789168996"
+    },
+    {
+      "file": "src/contracts/files.ts",
+      "sha256": "a5fcdfc012e7bbbb026797b3e6bc79fd7f8c225935d48ee6876daaff6f15b493"
+    },
+    {
+      "file": "src/contracts/index.ts",
+      "sha256": "2762ae31c89912fadc78a5e36ebba956be374826815533f49b2080883cf2cfba"
+    },
+    {
+      "file": "src/contracts/interactions.ts",
+      "sha256": "0569006cc80910ce4745c7428f49b19979c2b85d31a0076ce2a1451431639a8a"
+    },
+    {
+      "file": "src/contracts/map-symbols.ts",
+      "sha256": "78629d00c473b7800aa93230b530ef2977348d0f8fd840d0587014c2b54b7362"
+    },
+    {
+      "file": "src/contracts/map.ts",
+      "sha256": "072be934579031cd4fc8e45eda2398c95c70796060044c20c8726725a08dcd89"
+    },
+    {
+      "file": "src/contracts/resource-explanations.ts",
+      "sha256": "0f777a7b22c365ee06d0eb17b8056cde272e53be349f37c07268b3c5e4fe46de"
+    },
+    {
+      "file": "src/contracts/resource-results.ts",
+      "sha256": "3925aec8bb5291c2aed21991ee4f0e35f6bc04f9168f8ea490d06b3fa2589e26"
+    },
+    {
+      "file": "src/contracts/resource-summary-v1.ts",
+      "sha256": "ec2dcd4c525da2f5c059a25a3df82ce9f5ef5df0df0cd36b815e704fd69e1e35"
+    },
+    {
+      "file": "src/contracts/resource-summary.ts",
+      "sha256": "82405e5f3c08b7f543879ae6ebe59c81bad8a97754113f7fc266bc7f5d4bff66"
+    },
+    {
+      "file": "src/contracts/scenarios.ts",
+      "sha256": "1b5d9ed7450ab31d53e3803dfcf08b93f3d2f72d56eb5546743318a7684c0e44"
+    },
+    {
+      "file": "src/contracts/simulation.ts",
+      "sha256": "957d8298085652a89dd8a965bd130168caf8b5438a02610c1aaa620b7170f63e"
+    },
+    {
+      "file": "src/contracts/spatial.ts",
+      "sha256": "3291340bac7e29f3d6745e2d6ae169463f22175f87df621859e693e4d551c055"
+    },
+    {
+      "file": "src/contracts/task-information.ts",
+      "sha256": "dafb7a782fbf45ef9091272ef740418c7e526993e151694c05232066bd4c5d52"
+    },
+    {
+      "file": "src/contracts/task-resources.ts",
+      "sha256": "0834274f484ea8da87d090bf6fbf6f63490506365c6e8ec472b2a2a55bf701f4"
+    },
+    {
+      "file": "src/contracts/workbench.ts",
+      "sha256": "c667e4e1e3d412f371213a9e8f93edcb9b733beebae4a9199b75592492d558b7"
+    },
+    {
+      "file": "src/execution/command-policy.ts",
+      "sha256": "3d73855ac2c54dbaa13f4782d89df9ca7e39fa19c7f25944a98d4079b15b6ee0"
+    },
+    {
+      "file": "src/execution/docker.ts",
+      "sha256": "6f685d75ab2123f4798b0c4ce9a592339f0e3c043b8b9ed0dc13e458226770d2"
+    },
+    {
+      "file": "src/files/safe-fs.py",
+      "sha256": "72a8a9de57681e7190ab95c7bcdff35e5579a8345f8d88d2322090ce2ab12a6e"
+    },
+    {
+      "file": "src/files/service.ts",
+      "sha256": "e3a5966b7d53b3c4c47174ae1ffe4db7a00d30e077b9e0e5b0d89f31fbcbe682"
+    },
+    {
+      "file": "src/pi/analysis-calculation.ts",
+      "sha256": "6238c3af2b9c7f3ca0e1932e972c16aca71c032a0e4d0de064e0e4d96d3e088d"
+    },
+    {
+      "file": "src/pi/annotation-input.ts",
+      "sha256": "e314d487e0f34108fd9c9cfe24b1a4bc6c1bf0d4b5453cc436bec538356e265b"
+    },
+    {
+      "file": "src/pi/annotation-results.ts",
+      "sha256": "2bab2614c0da23bd739e3f81bec014ecf32239b115c56dccebfd9270204a9678"
+    },
+    {
+      "file": "src/pi/annotation-state.ts",
+      "sha256": "aa87cc09bf18d4ad6b077cfd00553d6044e605f5be88e549688731fae7af291a"
+    },
+    {
+      "file": "src/pi/annotation-tools.ts",
+      "sha256": "725736eda036badbc704d5d512df08ce58aeedab76582e3237ea4e71a68f533f"
+    },
+    {
+      "file": "src/pi/background-runner.ts",
+      "sha256": "abefb6d6998194b8e79197df17dd0543c6b98c29d4993875d537fddac275ca15"
+    },
+    {
+      "file": "src/pi/collaboration-tools.ts",
+      "sha256": "95a0d7bc4a0d18145dd1d1b9a1fffbda47be58d47a5b39ccddae82d08d05442d"
+    },
+    {
+      "file": "src/pi/compaction-history.ts",
+      "sha256": "683d631f1fe94be928dd70f22150bfc516a5cbabb55b3e7d2af425ea1fb5aa8b"
+    },
+    {
+      "file": "src/pi/composer-input.ts",
+      "sha256": "116d6cc1d8cf0e747c3b5dc6ecf26688e5174994da3b531775ed2ad3e56765ce"
+    },
+    {
+      "file": "src/pi/context-tools.ts",
+      "sha256": "49841bed5e6c5d3efcc093b79c47d12d4dad4325962fd64fbcf6bf02976c91f4"
+    },
+    {
+      "file": "src/pi/continuous-completion.ts",
+      "sha256": "bfc0d93e73b7a2aecfb9a2e893de0a7d97329898cff348b25d78c0c038709338"
+    },
+    {
+      "file": "src/pi/continuous-files.ts",
+      "sha256": "0f5fd4a400e1eb0ea8783dabdcefbb23339e7b0cceb21d4704e62d2ad7970fa7"
+    },
+    {
+      "file": "src/pi/continuous-tools.ts",
+      "sha256": "1b3564be9b10582aa201ff5397b1841536d688a3b03058363229c55b87352959"
+    },
+    {
+      "file": "src/pi/controlled-stream.ts",
+      "sha256": "5c57cdd18e96b4c4735362bf0ae6aaf7728a8a3f8d5fbf217cf6a3d91aba7e71"
+    },
+    {
+      "file": "src/pi/file-history.ts",
+      "sha256": "5aeca6a82350be66f25ecb135f43e3ab48d5f349802dcfee7f7bf667382e5e42"
+    },
+    {
+      "file": "src/pi/file-tools.ts",
+      "sha256": "9dc379f8e470e6a7cbe3037df8cd1ae257dc03d235234990786da37831d448ac"
+    },
+    {
+      "file": "src/pi/history-evidence.ts",
+      "sha256": "9a438b90d6071e03e806180b46e2d7ca5da65da28c67de8f5bf3b1f1fb4226fb"
+    },
+    {
+      "file": "src/pi/interactions.ts",
+      "sha256": "2e8e038a9433cc8e40379415094b4937e39a4f96a428deef2a87b8cb6d371536"
+    },
+    {
+      "file": "src/pi/lab.ts",
+      "sha256": "eaf6feee67a87830fdb4ffe78a1d5d73a1bd2d95e7507e33581ea7b9bcc9e7f8"
+    },
+    {
+      "file": "src/pi/message-intake.ts",
+      "sha256": "a29e5eba5418cf7c325ae9488c5ac0cb1c934455fa9a9324feaba7c6c4d960a0"
+    },
+    {
+      "file": "src/pi/migration.ts",
+      "sha256": "3c6f7cc84a47bf4c6eca361d935ab72d1e0e25e017d8121d46886f8c5d4bdb23"
+    },
+    {
+      "file": "src/pi/model-runtime.ts",
+      "sha256": "204ece3c21d8eca849b8aec24201f348c415ecf532a61995e0039ec959bce5d2"
+    },
+    {
+      "file": "src/pi/model-selection.ts",
+      "sha256": "e1148ff9b2d9239ce78a1259dea421f42f34b72a09388acc14df5fd06e7f6b93"
+    },
+    {
+      "file": "src/pi/native-completion.ts",
+      "sha256": "5c0c683b4e6f82335131e716fb642fb6c0af8d153c6d2082f74d6907bf17129d"
+    },
+    {
+      "file": "src/pi/recipient-tools.ts",
+      "sha256": "afab809a084547823b0610efbbe8ab77cacc4afd250d745dda35e2aacfc72dd6"
+    },
+    {
+      "file": "src/pi/resource-tools.ts",
+      "sha256": "3e39ad74e6a0c922213537aaecdbe45bbc35be4b946ebedf7d407bedb4bc2cfd"
+    },
+    {
+      "file": "src/pi/roles.ts",
+      "sha256": "804afed21e944dbae607c52a0ee2b6fd274f1d1c1cf0b2c1fe1a928e37a55a93"
+    },
+    {
+      "file": "src/pi/skill-metadata.ts",
+      "sha256": "c78f0e758018d07f3c1e21a79d900c19f0a1eb052867db33f3f9eed9d7a93340"
+    },
+    {
+      "file": "src/pi/skill-method-advice.ts",
+      "sha256": "6a469f8d38ad13b76925bc440c61f4c700b7d2ddb4882c3de775ba34194bc49b"
+    },
+    {
+      "file": "src/pi/spatial-results.ts",
+      "sha256": "262cef164ea28bfd5bb6100f87756bcbddfad0a5df30494cecc0a04c5cbc8852"
+    },
+    {
+      "file": "src/pi/spatial-tools.ts",
+      "sha256": "032b38f65aab293778104d93742b701c3c15db79c10cf8f75f1d4983a2ffbfdd"
+    },
+    {
+      "file": "src/pi/subagent-history.ts",
+      "sha256": "c90ac7f3aea074d3051d10cbd3082d7f6ea77e27c5989255471327f785fee3f8"
+    },
+    {
+      "file": "src/pi/task-information-tools.ts",
+      "sha256": "1863894058bd0c0726a021a043919d20c0a1f2fea63e9d3179854745bdca6326"
+    },
+    {
+      "file": "src/pi/task-resource-results.ts",
+      "sha256": "e38e64b37ed5a522c103d0fb8ee6ca1b7d59577df3912e2e06809aead25654f1"
+    },
+    {
+      "file": "src/pi/task-resource-tools.ts",
+      "sha256": "a58bed61c9b56f85116e267a260c7ca46f16b506e479d9f4a5b1c0fee8ad31f9"
+    },
+    {
+      "file": "src/pi/validation.ts",
+      "sha256": "ddd93c971804beee4bb92d71b4cc993ca84f817c72772a76cccad8e8c90d4b81"
+    },
+    {
+      "file": "src/resources/files.ts",
+      "sha256": "dd3ad1cfc676534ad9ff852bc94c7d5872f641c83b35f69a5b2b46c906b16aaf"
+    },
+    {
+      "file": "src/resources/service.ts",
+      "sha256": "67675e60e8b6fe42c8ddf2145c12a411d56948a6c8e71b2addb0d52f81604ae3"
+    },
+    {
+      "file": "src/scenario/scope.ts",
+      "sha256": "56cd82cd1689ba2dedb053f498d03c4c466f52250811a0ebeb96bf66109c6bd9"
+    },
+    {
+      "file": "src/scenario/task-definitions.ts",
+      "sha256": "59fc36e9096e1c1f812ba969f7e94582a08947fa9ceca9cee1026d5523d33cbe"
+    },
+    {
+      "file": "src/server/annotation-routes.ts",
+      "sha256": "54ccd339226a61915edbb61274fec1fe95d9062b52043969e31a8c5d5453a5cb"
+    },
+    {
+      "file": "src/server/app.ts",
+      "sha256": "02a8d5e1dfe329a7d6d7de12ca0dcecaf7fadcf8280403a97a6bf932fd67cf5b"
+    },
+    {
+      "file": "src/server/auth.ts",
+      "sha256": "f7f6863ea96ccbb2b06bc1d7dce6ab9461e4243217ba9f1b8dac2b619e371b0b"
+    },
+    {
+      "file": "src/server/background-routes.ts",
+      "sha256": "d97626e173a6f1afedcc77e815ac37520ab3b90002022719e8ddc61f44d1dde7"
+    },
+    {
+      "file": "src/server/collaboration-routes.ts",
+      "sha256": "ac25136602b234484d25eb065e2cb6f111bfafd12521ba7587d4cc719796581c"
+    },
+    {
+      "file": "src/server/config.ts",
+      "sha256": "f5001d991259e5f78ee8d9f8da081cd5963068f78e31d62aacd7e21f185e9ba2"
+    },
+    {
+      "file": "src/server/context-routes.ts",
+      "sha256": "9645c15d46f704d68bdd45f5b82b274d902b559653b857633bb57d960878c9c8"
+    },
+    {
+      "file": "src/server/continuous-routes.ts",
+      "sha256": "c5d4fb9ca24ac45ebad93a17e3bf6c1e5353bcaeaa80e156f2471d36650a6c39"
+    },
+    {
+      "file": "src/server/file-preview.ts",
+      "sha256": "93c014e051f528028ef7b8784e4d59498dfed8cc84ae8c1a81a5cd5e7cfd6a10"
+    },
+    {
+      "file": "src/server/file-response.ts",
+      "sha256": "edbe403a99dc7849d666c63275b686fc19b835a413f34f57b2b7f1681baa3038"
+    },
+    {
+      "file": "src/server/file-routes.ts",
+      "sha256": "ee3e6f730081584e0ce30fce075f8aaf33164caf9e1cbd43b5d40480366c89f6"
+    },
+    {
+      "file": "src/server/main.ts",
+      "sha256": "547261ff763868d8fbe291dbce324303fae44d55b6dfdfc808b1296bcfc42832"
+    },
+    {
+      "file": "src/server/model-settings.ts",
+      "sha256": "accb811891da594cabfe405f5c41af8e6b0c061de806119a421c3cc2e85ed0d3"
+    },
+    {
+      "file": "src/server/scenario-routes.ts",
+      "sha256": "0e7509087f2e75cb9968d3ed023ad76e678ed58d874397d8822c2d02af31fcbf"
+    },
+    {
+      "file": "src/server/scenario-tasks.ts",
+      "sha256": "4d75ce28f83289dc7d9e45afd93d4d48aeff7d605ee01b565423a23cb05e0985"
+    },
+    {
+      "file": "src/server/seat-scope.ts",
+      "sha256": "4b0e0fd4398be38ca6080c5a036a48385ebe0129930a3572fac9ae3e85b2a6ba"
+    },
+    {
+      "file": "src/server/task-information-routes.ts",
+      "sha256": "1ccbf675b1c31df7597a6699802c89ef78ad8748c64b90bb71b1cc63d2303f6d"
+    },
+    {
+      "file": "src/server/task-routes.ts",
+      "sha256": "a4eeb1f48c5b52dc0179b69192331b4044ad7c9e56a8221dc5c700103c44f7fb"
+    },
+    {
+      "file": "src/server/workbench-routes.ts",
+      "sha256": "84ed37d384b869f397e9ca1d0941835dd06af26177390388a0c4355318048858"
+    },
+    {
+      "file": "src/spatial/calculation.ts",
+      "sha256": "d77c74a3343fd0c9c5168f3048dee76719eea200d26e66599091ca940b3dea9d"
+    },
+    {
+      "file": "src/spatial/geometry.ts",
+      "sha256": "1c91f60b3d7258b109148559440c610bda9adb6cd25291685494fd1d3d3e19a1"
+    },
+    {
+      "file": "src/spatial/inputs.ts",
+      "sha256": "86b307fd27f889f280dfe81e34ab85464a86a4592afe827c65a947ea62603273"
+    },
+    {
+      "file": "src/spatial/service.ts",
+      "sha256": "3e86495618f4b9e16d2d3796ec163fd9f85a4c2f92ef5ec4842cbd2d7edb08e0"
+    },
+    {
+      "file": "src/spatial/validation.ts",
+      "sha256": "57bb3b7293c24bafe1ac41014275a78bc224fe363682bab17eb6865a871df89a"
+    },
+    {
+      "file": "src/spatial/worker.ts",
+      "sha256": "ea6ba3053929388f0c2059e6d2ad9d7c7125c383b165e12255eaa8e5a8c0b051"
+    },
+    {
+      "file": "src/tools/sources.ts",
+      "sha256": "cd978937250b804b25b5dfd0fc27f565ac51e910d61beb79c4aa32efcb9c49c1"
+    },
+    {
+      "file": "src/web/ChatMessage.tsx",
+      "sha256": "7b4c3dc146eec1d7334cf341a29567cc178eb061aa43a8174f46f3368865bb67"
+    },
+    {
+      "file": "src/web/ChatPresentation.tsx",
+      "sha256": "f514428503b6360da646548ccd76feed084740a7d8d3e0a2538d2358f8a7502b"
+    },
+    {
+      "file": "src/web/ComposerReferences.tsx",
+      "sha256": "caf7a8b23c91382e45f1ff2a492a8f8b9cc2c3764845b4135f3a67e1197408c8"
+    },
+    {
+      "file": "src/web/ContextEvidence.tsx",
+      "sha256": "2a020fdd09bc52a74ffb84fc549b6c78d878506d0c7dfee899d310613af0eda6"
+    },
+    {
+      "file": "src/web/ContinuousAssessments.tsx",
+      "sha256": "6a9ae52cb4f499c0b13672cf3a6b5a40bb3e3c30133ac595a334f9758f8ee292"
+    },
+    {
+      "file": "src/web/ContinuousRules.tsx",
+      "sha256": "d7fbde73b1387f929c8d67d91a3d32aa7177e2b2a8349cba5a72e7171e71a38a"
+    },
+    {
+      "file": "src/web/DeliveryReviews.tsx",
+      "sha256": "0e17900ff583ace98056dc9c9e1de84cede6f1de17475d19222c98a107397205"
+    },
+    {
+      "file": "src/web/DirectorEventTasks.tsx",
+      "sha256": "a588760816a4e42c0b847559c2aba689887eeb4cfdf3b80e729cc1ca3991c169"
+    },
+    {
+      "file": "src/web/DirectorPopover.tsx",
+      "sha256": "26376e9c81791fea2eae263c7ea158d46b0d3b6082757a0d2908397c4fcad322"
+    },
+    {
+      "file": "src/web/DirectorRecords.tsx",
+      "sha256": "fffdfd9f14894f25f3bc3d09e105b5d93704e953ac98d06274fdb21e35a9f2f3"
+    },
+    {
+      "file": "src/web/DirectoryStatus.tsx",
+      "sha256": "c0d3d637e36f28fa749716d27c977367b6eee6c3d7f974b35745fd17a4dcdf40"
+    },
+    {
+      "file": "src/web/Files.tsx",
+      "sha256": "008b87ac53db0a48dd7024747952ac8361152c36932cce6031ce5360052b6428"
+    },
+    {
+      "file": "src/web/HandoffFiles.tsx",
+      "sha256": "b6d0da25225b6cb246ed7c82ee1b32c2de330e1dbb21f7800265777bec1656c6"
+    },
+    {
+      "file": "src/web/Inbox.tsx",
+      "sha256": "5adab98a212f7c24c2dd6f7d8dad61edd720dfbe11464fc587f6b6792068c2ff"
+    },
+    {
+      "file": "src/web/InformationCenter.tsx",
+      "sha256": "411fd364b1fb69671f5d64911a31a0403fd9b81a9ceb958751000f41efd05a7f"
+    },
+    {
+      "file": "src/web/InformationContinuation.tsx",
+      "sha256": "694a3f9949aed1cd7651e25af822e5e59f7355772aa13e812e911c8a56e54db9"
+    },
+    {
+      "file": "src/web/InformationJobs.tsx",
+      "sha256": "9fcee2f7ddcaace0b3fc77544fb944d7efdfce89763a1c30f660b8105a8137ef"
+    },
+    {
+      "file": "src/web/InformationRules.tsx",
+      "sha256": "2f4a0d2347e744650d2b176567d9c1975514d750ce5ab8de4df56c0deec92fee"
+    },
+    {
+      "file": "src/web/InputQueue.tsx",
+      "sha256": "181b7ae81a095aec435dd4ea22021af41794194fb0d1651075531b43595f745d"
+    },
+    {
+      "file": "src/web/InteractionCard.tsx",
+      "sha256": "2818cbc53852197bb3e45f121108d18848daeb1a6f68995376fdca55ec47567f"
+    },
+    {
+      "file": "src/web/LoadingIndicator.tsx",
+      "sha256": "eb78b0ff5fae74219ab5de929488ae7ad0c79ccc260831311fe638fc002e5f16"
+    },
+    {
+      "file": "src/web/MapReferenceChips.tsx",
+      "sha256": "e56cc7ccbe0a28108e3413525991527e4171776345794828ad7f2d65835cd46e"
+    },
+    {
+      "file": "src/web/ModelCatalogSettings.tsx",
+      "sha256": "beb46cfeaf49fde17b01ed1050df6fe9b33781bef74d185357923009f0d483a3"
+    },
+    {
+      "file": "src/web/ModelPicker.tsx",
+      "sha256": "9540c3f2d170133ef38a1e1e19d1d1d6c1d2b18d50f42361d520c62146840575"
+    },
+    {
+      "file": "src/web/ModelSettings.tsx",
+      "sha256": "33cd8a0b7a1593d6b33b212675faadb4d0404de83666c34d815ec6be83412c89"
+    },
+    {
+      "file": "src/web/NewSession.tsx",
+      "sha256": "c5f8dbecf4d59cdebced7ba9e43c2132d0a051f93c4d59db3ffe47966b0f40e7"
+    },
+    {
+      "file": "src/web/ResourceResultCard.tsx",
+      "sha256": "398532e5f714fac6278378eef297116223ae57143dc6fb8522f36e57225fffcf"
+    },
+    {
+      "file": "src/web/Resources.tsx",
+      "sha256": "b2ed0733cb02a74d21d4a026f7f3266d3be8943b2d50e4bda5f166f4263361a6"
+    },
+    {
+      "file": "src/web/ScenarioDirector.tsx",
+      "sha256": "40ea035e820432fd5d1dbf183a238492a8ffcd82ec345660ed6756152a641d1a"
+    },
+    {
+      "file": "src/web/Seats.tsx",
+      "sha256": "4f1bd6b8bdb044fb2c1a2971c996db9f4b352954dc0c6dc93fa14b1c4baa6fcf"
+    },
+    {
+      "file": "src/web/Settings.tsx",
+      "sha256": "d464a347e5c9a7fb53c261960df08d37157e72fb3d6c33ff46070636315d5bab"
+    },
+    {
+      "file": "src/web/SubagentCard.tsx",
+      "sha256": "553de05b73b3485db54069e50357f97b397351dccb3c4331ffd31964cb966938"
+    },
+    {
+      "file": "src/web/TaskAssociations.tsx",
+      "sha256": "cfbe7c4a7339a998c0e1f8b7028276cc2afe0933c7fddf0e8eab54e71b798c22"
+    },
+    {
+      "file": "src/web/TaskContextEditor.tsx",
+      "sha256": "d5975fb166cde006a449f891fba154f3d7fdeed34f577d1409d5946b0c488952"
+    },
+    {
+      "file": "src/web/TaskHome.tsx",
+      "sha256": "eeeed22bcc41b8815ae5ab75fefb2b74071db3d2651588a6603eeb3144dad4dc"
+    },
+    {
+      "file": "src/web/TaskInformation.tsx",
+      "sha256": "af20d5b0c5d60b2e353620e30efcfd5c6494df2cedea8402bc437e42c0288231"
+    },
+    {
+      "file": "src/web/Tasks.tsx",
+      "sha256": "4a7a9c2d97a493009d1875250e1f7b4351d9eb0aed6f04c106a0919ef023d548"
+    },
+    {
+      "file": "src/web/WorkInbox.tsx",
+      "sha256": "f243830cc2977a6c0c4a22a12ea6d2a5f54c004d9711fce607f70bbc4dab111d"
+    },
+    {
+      "file": "src/web/WorkOverview.tsx",
+      "sha256": "ca74b32798a86719bb94d9d6a7a9690df161a3650de1e6849c3edaeab9d48ae9"
+    },
+    {
+      "file": "src/web/WorkOverviewSwimlane.tsx",
+      "sha256": "de053ff541a44afd1c817c295f1991a8387cee4637f01b5100ee69d979b666a4"
+    },
+    {
+      "file": "src/web/Workbench.tsx",
+      "sha256": "7db82c907e1805d5b77b9a9ca8bef92e1ca7184d46842a320128b570b954349b"
+    },
+    {
+      "file": "src/web/WorkspaceNavigation.tsx",
+      "sha256": "42dc5e89d9bd91a1bbe5fef1ace2420266f2d4c21f0c000f1698f5fe73dbaaf2"
+    },
+    {
+      "file": "src/web/annotations/AnnotationWorkspace.tsx",
+      "sha256": "7472d88de42bdba4e89b9e90f32610b0c6b048fc9c1fff3e8b209c8a4c0a68db"
+    },
+    {
+      "file": "src/web/annotations/EditComparison.tsx",
+      "sha256": "e1d9b0836df4506d44783cd648af551c03991063cc17f703d7df28259bd98f25"
+    },
+    {
+      "file": "src/web/annotations/FeatureEditor.tsx",
+      "sha256": "a4c18a612538456a7f40d461e702e3a9aebc8d88820ad7d54b76e720beb075d5"
+    },
+    {
+      "file": "src/web/annotations/LayerTree.tsx",
+      "sha256": "92b8164271179efe9d1f5c3f66812d98d64d6f834b1baba2170b8e9b9d3d1f8b"
+    },
+    {
+      "file": "src/web/annotations/ResourceFacts.tsx",
+      "sha256": "944303a1eaeabba25afd8556792e3be7a037a137e1ed7018086555bcb44f3973"
+    },
+    {
+      "file": "src/web/annotations/ResourceFields.tsx",
+      "sha256": "821b55b3d6e26296db584c619844808febcccfb46320529fde27e037de624197"
+    },
+    {
+      "file": "src/web/annotations/SourceImport.tsx",
+      "sha256": "17dad2a127ae140051cfd0f11c290f7220449a98209ee8f2eb92bf498e2afbdb"
+    },
+    {
+      "file": "src/web/annotations/SymbolPicker.tsx",
+      "sha256": "ce6f43066e7dab0839eacfc15da145d3c2b7dda04c8f51b3d0984cccc8d100f3"
+    },
+    {
+      "file": "src/web/annotations/annotations.css",
+      "sha256": "08751492f819b40848b403b93e1727e3cb463419f702bdd794ad766e04d8bf85"
+    },
+    {
+      "file": "src/web/annotations/edit-changes.ts",
+      "sha256": "23427ef3761dcad0ff19e5a25edbe544999964bcbd6ee64fc9cd1c95a858a1cd"
+    },
+    {
+      "file": "src/web/annotations/helpers.ts",
+      "sha256": "3a7d7d1588ca679bb9164a6246cf46ae5699c223bee6bdd5c9b9f169a0485043"
+    },
+    {
+      "file": "src/web/annotations/layer-tree.css",
+      "sha256": "77d3d7c20f4ac04296115a3a11e20961c247e982c1cded92fa963f2272162dde"
+    },
+    {
+      "file": "src/web/annotations/map-runtime.ts",
+      "sha256": "86744b9d7e675ff242aa1917939097a8dd500281722fb84fbdf3f035d3fcd014"
+    },
+    {
+      "file": "src/web/annotations/pausable-adapter.ts",
+      "sha256": "a3b39f0bcf7edfa00cf2db9bce98f1040aa8993c546e87fa0adad5caf62715f2"
+    },
+    {
+      "file": "src/web/annotations/rotation-handle.ts",
+      "sha256": "eeaf1034ff5f60d4a05542db4fc1e9a6cbc84a18de473b8434d7f270625591ed"
+    },
+    {
+      "file": "src/web/annotations/useAnnotations.ts",
+      "sha256": "b63ce0c0debf4a6c5de54d61b0a6fbc9a03775a8ea744841c2cb35623a2cbde6"
+    },
+    {
+      "file": "src/web/api.ts",
+      "sha256": "da5fdaf25551ccc5badc24cf1b7e964de3c62de867e528f5065810d706816bfc"
+    },
+    {
+      "file": "src/web/information-ui.tsx",
+      "sha256": "e702061bd23aff3aa068d118c4e782131fb147793e353a6b093575fc3f0f237a"
+    },
+    {
+      "file": "src/web/loading-indicator.css",
+      "sha256": "adb0a9eed26ed2b0114b104a0b63aebe2558acc0cbcc4b45ff6db39cfe4bf2c4"
+    },
+    {
+      "file": "src/web/main.tsx",
+      "sha256": "9b55f7aade6f3a638de7a2fbe17b3a8bb4f43a7b67ddbdc6d752716a6a147643"
+    },
+    {
+      "file": "src/web/map-symbols/README.md",
+      "sha256": "4e53c83586513c6f44b58fd5f19cce1fa325b117e16afd5d284a8351b3de3289"
+    },
+    {
+      "file": "src/web/map-symbols/assets/app.rescue-inflatable-boat.svg",
+      "sha256": "277fbf507c76dcd4a5ebdb28c84c505ac3dc17245f3207f59825993678d2a734"
+    },
+    {
+      "file": "src/web/map-symbols/assets/app.rescue-vessel.svg",
+      "sha256": "2adf6a274d36dd22fa1f8bcc237f0cd9b061782dfdbf033d84eb35bb499bf039"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.1.21.svg",
+      "sha256": "886da718dd6693d8558b1af1dab260afef49598b8492bb501369408197b5d906"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.1.27.svg",
+      "sha256": "599930ecbc0aa6746499e434db3e60624f1ea90cbe82044b23bf148ac84d2134"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.1.svg",
+      "sha256": "11e0a3cbae8495d38bab18ff20f82701b9d1d9e06054a54d2fdcfaeda2a40056"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.10.svg",
+      "sha256": "be389e1f354d4c0ff9c4196002467a3b0a81f22e337228a63ba3594c8b69f885"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.11.svg",
+      "sha256": "5d18dc6cf12892d492ac36891287224bb5eaaed8fe5a9826c49b92c5e268ff03"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.12.svg",
+      "sha256": "c44a22f343ee06bb15b7eefbffd5d512ea7853d7a75d09d5adfdacac2db06226"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.13.svg",
+      "sha256": "190227dda8c9aec019aefcb1acdadbca19488dd64e12f48dce18fa88b6361a67"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.14.svg",
+      "sha256": "d02d7b576f1127cca5a9ff5ecf84cc3ffbe32a5247e3c9de724ffd731147583b"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.15.svg",
+      "sha256": "929240f8b3beffcd044dcf9d90cfdf39add80ecbd006e32a24ee643fcaffd16a"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.16.svg",
+      "sha256": "272461bae2012351a34e32ece3ca329f533ec12aea3e2055a3c48f118a6e8026"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.17.svg",
+      "sha256": "358a4d526392006957fe65c0dead98728d3cd652b3b3c5e27d77324de8983a8b"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.18.svg",
+      "sha256": "ae1d10b417e10a7fdfe785c734bd46c4923d529de6e2f929c49ece9f480218d3"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.2.svg",
+      "sha256": "b0caf88f38f219ba791cbc2ca17491183d30ef785f177656c931ddba1d60620e"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.23.svg",
+      "sha256": "027f302253ca9e2170adc6b27baf0330f8f2e596848742541c872b7f6b972d9d"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.30.svg",
+      "sha256": "2246920b57125d59321bddb2f9e5eea0510c2f689d43a5f34ecdee87c70813f9"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.35.svg",
+      "sha256": "21d18f85ac874ad827948c3726001943c2723e1722ac69ce23a8a91b121aa518"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.36.svg",
+      "sha256": "689a3fd7f9a74a8da9ceb4c37f6c8a62cf9858ca1c8ff0dd26a8986a077276b8"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.37.svg",
+      "sha256": "172c63f0286837d73d71001faf99f900561ace38dc61835a48ac463d80caefda"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.5.svg",
+      "sha256": "523bf956fdefbcb5b0626d876275365993ca6b1c1988ba6ebdc4fd56177243a5"
+    },
+    {
+      "file": "src/web/map-symbols/assets/xf3013-2020.6.2.8.svg",
+      "sha256": "ccd62b3618e467f07e2d76d67bdcbf3f1209de1e773194961fa9a02316bcc8ef"
+    },
+    {
+      "file": "src/web/map-symbols/index.ts",
+      "sha256": "fff45229c7008c1c02bcadbe753676e1cc539d9639f7f252f13d626afed51689"
+    },
+    {
+      "file": "src/web/map-symbols/provenance.json",
+      "sha256": "3f5f29dba7de8e0a000265a7c569eba8dbe4d301233b3fdecd7bf2b1ebfb2442"
+    },
+    {
+      "file": "src/web/model-settings.css",
+      "sha256": "75fb674e04284a9c2a43e70de709abf99f1c4ca2f76bac355cb2aa95732be647"
+    },
+    {
+      "file": "src/web/processGroups.ts",
+      "sha256": "aa85b1a035b1668b81136d53c3fbc98d2ca331ec67127be387e01b94dc752aa4"
+    },
+    {
+      "file": "src/web/random-uuid.ts",
+      "sha256": "df20d56a11e0d406cb2b930a1f0ddab8f41285f7e257dbed96389e8868eead09"
+    },
+    {
+      "file": "src/web/resource-result.css",
+      "sha256": "a71fa1165365491f28f80f61f63c2da12a24d12733c950081a46f59107c2bdaf"
+    },
+    {
+      "file": "src/web/scenario-director.css",
+      "sha256": "78c0d9202419364568cd80762dcd1067f84524e18641688ad142cdacd488b036"
+    },
+    {
+      "file": "src/web/situation/AnalysisPanel.tsx",
+      "sha256": "19522ba681a08b1f8925bb41f4aa74f638a7267fb972eec94fd4de61dcc10814"
+    },
+    {
+      "file": "src/web/situation/MapCanvas.tsx",
+      "sha256": "d347523f37087a3e4c451e075397e93d20685ede14f574632ccb67a0d099557f"
+    },
+    {
+      "file": "src/web/situation/MapContext.tsx",
+      "sha256": "d83fbcdee9e44c9a5330fee87b4c8f3a54be3aab910fa04bd5a9acfa993c29d2"
+    },
+    {
+      "file": "src/web/situation/Simulation.tsx",
+      "sha256": "ac60db26af215478c658d8c143fe82b27b481e72447ff88e5274a87f81299098"
+    },
+    {
+      "file": "src/web/situation/SituationView.tsx",
+      "sha256": "777c4e05a29c9623b5282e3d515b2a384b662f70c3a9fc832ae68d41fe4119cb"
+    },
+    {
+      "file": "src/web/situation/SourceResourceDetails.tsx",
+      "sha256": "1e59de1fe4de1c332419d2b232119f18713ec14c2fa6a330a740409193a1d690"
+    },
+    {
+      "file": "src/web/situation/SourceTree.tsx",
+      "sha256": "f2ac8680ea78f8f66ae134b44427a584c0b4ce3f1248779b0570709b5d199081"
+    },
+    {
+      "file": "src/web/situation/analysis-runtime.ts",
+      "sha256": "3cc51cc65cd5e4315ba38d8141d45cf0ce0102720f19e9f6c717c9c405aea8fe"
+    },
+    {
+      "file": "src/web/situation/basemap-runtime.ts",
+      "sha256": "fbb29845af387a02e66e803fe57484bb6b5d85a8f11e0c886ad2447f56e4be8f"
+    },
+    {
+      "file": "src/web/situation/basemap-style.ts",
+      "sha256": "05d43b1350155ccf956fb2d611d51b3ae1755cadeeed4f48801e9e70b7ad2bbb"
+    },
+    {
+      "file": "src/web/situation/canvas-workspace.css",
+      "sha256": "69994f0f2eb70f02abbb2a8fb880618fe26a21f584285c32790896e062b867f5"
+    },
+    {
+      "file": "src/web/situation/evidence.ts",
+      "sha256": "b26a74c6ed48b82e1858a8517844c1c972886251df5aca955ef5e10efaba45b4"
+    },
+    {
+      "file": "src/web/situation/map-data.ts",
+      "sha256": "2b175992c49ba0f55354b2219f3e238dbc8bada37f8a4050f1a30d47e4c955a8"
+    },
+    {
+      "file": "src/web/situation/situation.css",
+      "sha256": "bc034a7f4421f77920b0238f02bcc4449401e6241c025bf8d09f870e55622c46"
+    },
+    {
+      "file": "src/web/situation/source-labels.ts",
+      "sha256": "373c671f00325a288db5e85b4c456ca38b885860a06466a54a1a0791e7d83d2d"
+    },
+    {
+      "file": "src/web/styles.css",
+      "sha256": "904ed878b08ae073ce3651f1170ce87ba26c9dd7a7a849343f6bde425169fed2"
+    },
+    {
+      "file": "src/web/useAttachments.ts",
+      "sha256": "b3be58b0ce1a94a034bd92aa06807f7403a76988819e746e4bc976680be79994"
+    },
+    {
+      "file": "src/web/useChat.ts",
+      "sha256": "fc809aee94ea0c908e11d7fae4e4d1aabac500948c688a4b7205e14b99904bce"
+    },
+    {
+      "file": "src/web/useChatItemFocus.ts",
+      "sha256": "1aada99d79da90e1c94a8a066664b203fcc8a80a265a78b5d692b0cdf2a641c6"
+    },
+    {
+      "file": "src/web/useComposerSelections.ts",
+      "sha256": "e5669e7906aa225703abe1c7f9c8d372c0da61ca8e2e495892493de700b39bda"
+    },
+    {
+      "file": "src/web/useDirectorDelivery.ts",
+      "sha256": "9f0731bbeae9217514e79830ab08a17af05468b5d35724127d77e2c4f0d11e0c"
+    },
+    {
+      "file": "src/web/useDirectorReplay.ts",
+      "sha256": "01c8755e9010cef520a24d601e8ead8f39c1e6d69d2ebf1b9369c868c7004159"
+    },
+    {
+      "file": "src/web/useInputQueue.ts",
+      "sha256": "a2d08fe86d0b4847424a7d2c1044996c9f4cca02e46ed17c05c2d858234532e6"
+    },
+    {
+      "file": "src/web/useInstructions.ts",
+      "sha256": "ff7c78672f2cbfb02c1240fc86d91e62622b5e653dde6809239cf26e29e0c4aa"
+    },
+    {
+      "file": "src/web/work-overview-layout.ts",
+      "sha256": "03be59f1eeb98f40c707379b6997edff436a3800d20afc494982ec3c99acee59"
+    },
+    {
+      "file": "src/workbench/service.ts",
+      "sha256": "5eebb7ecd6a92f116c199b69959b502838fa5fa6787d69c094b3eade299fe3c5"
+    },
+    {
+      "file": "src/workspaces/seat-migration.ts",
+      "sha256": "14f1cda6be5abe99140ba4645d5350321b8a2cbfb9b98575948476929e9cf5d3"
+    },
+    {
+      "file": "src/workspaces/store.ts",
+      "sha256": "d7e439dd5e22c3688f2a876c2170094e6994d42b676f0e3498e71913af97b067"
+    }
+  ],
+  "condition": "Fresh trials from the beginning; original business world/tools/main-task goal and model parameters; approved v0.2 required-record flag, general task-coverage method and combined-assessment contract; cumulative budget stops disabled by user. Random IDs and real audit times vary. Old partial trials retained separately.",
+  "cumulativeBudgetStops": false,
+  "rates": {
+    "inputCnyPerMillion": 2,
+    "outputCnyPerMillion": 8
+  },
+  "providerInputUpper": 1048576,
+  "trials": [
+    {
+      "trial": 1,
+      "executionError": false,
+      "protocolCompleted": true,
+      "semanticReviewPending": true,
+      "failure": null,
+      "mainTaskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+      "e05JobId": "4460f97b-c787-432a-a138-652344671b48",
+      "e05Status": "succeeded",
+      "validE05Judgment": true,
+      "judgmentMode": "relations",
+      "mainLinked": true,
+      "linkedTasks": [
+        {
+          "id": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+          "title": "城西交通救援",
+          "reason": "与城西交通救援直接相关：任务关注V02/V14在09:00—10:00的占用及释放。当前态势（asOf 2026-11-03T09:18，业务时点09:18）显示V02、V14均为unavailable，validUntil 10:00，占用说明为“交通救援占用至10:00”，与任务时段一致；本条车辆清单报告仅称“其余车辆状态见各车记录”，未给出释放事实。影响：确认占用状态延续，不构成可释放依据；不确定性：释放仍须以来源回报为准，报告本身未包含释放确认。另V04（S01泡沫车）检修至11:00（须确认），若后续需跨区补位可作为备选但同样未确认。"
+        },
+        {
+          "id": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+          "title": "临港登高演练",
+          "reason": "与临港登高演练直接相关：任务明确V05继续既定安排、09:45后释放以回报为准。当前态势V05为unavailable，validUntil 09:45，说明“演练占用至09:45”，与任务时段09:00—09:45一致；同站S01的V01、V03、V06为available，V04 unavailable至11:00（检修须确认）。影响：演练所需登高车占用状态与计划吻合，本条报告未提供提前释放或演练结束的确认；不确定性：09:45后是否释放仍需专门回报，本条不能替代。"
+        },
+        {
+          "id": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+          "title": "临港仓储烟情核实与处置研判",
+          "reason": "与该研判任务的资源事实核实部分相关（任务需核实临港一带当前道路及资源事实）。本条给出六站车辆可用性口径：A01/S01的V01、V03、V06可用，V04检修至11:00（须确认），V05演练占用至09:45；A03的V02、V14占用至10:00；A05的V21状态unknown（南湾留守，跨区支援需确认）；A06的V23可用、V24状态与位置未确认（仅08:50记录，位置有效期至09:10，业务时点09:18已过期）。影响：为处置研判提供可调用与不可调用车辆清单，并提示不能把V21/V24计为可用。不确定性：报告未涉及烟情位置、道路，也未列明24车全部状态（其objectRefs仅V01—V20、区域仅A01—A05，缺A06及V21—V24），故不能据此确认“六站二十四车”已完整核对。"
+        }
+      ],
+      "mainGoalReturnedByTool": true,
+      "mainGoalInProviderInput": true,
+      "contextProof": [
+        {
+          "attempt": 30,
+          "queriedAt": "2026-11-06T08:27:05.921Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 31,
+          "queriedAt": "2026-11-06T08:27:05.921Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:27:05.921Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:27:05.921Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 34,
+          "queriedAt": "2026-11-06T08:27:05.921Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 31,
+          "queriedAt": "2026-11-06T08:27:07.601Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:27:07.601Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:27:07.601Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 34,
+          "queriedAt": "2026-11-06T08:27:07.601Z",
+          "exactToolResult": true
+        }
+      ],
+      "allMessages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援",
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        }
+      ],
+      "completedSteps": 12,
+      "successfulJobs": 13,
+      "scriptedHandoffState": "completed",
+      "accounting": {
+        "apiRequests": 80,
+        "attempts": 80,
+        "inputTokensCharged": 1093078,
+        "outputTokensCharged": 56867,
+        "conservativeCostCny": 2.641092000000002,
+        "stoppedReason": null,
+        "elapsedMs": 344284,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 1048576,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "validation": "/home/ubuntu/axon-scenario-release-68dded362074/evidence/business-judgment-v02-2026-11-06T08-24-54-394Z/trial-1/validation.json"
+    },
+    {
+      "trial": 2,
+      "executionError": false,
+      "protocolCompleted": true,
+      "semanticReviewPending": true,
+      "failure": null,
+      "mainTaskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+      "e05JobId": "cc0f7b5c-ae36-4a0b-8eee-1560346fdc86",
+      "e05Status": "succeeded",
+      "validE05Judgment": true,
+      "judgmentMode": "relations",
+      "mainLinked": true,
+      "linkedTasks": [
+        {
+          "id": "882bef5f-6563-420d-a0d7-df74f53be70d",
+          "title": "临港仓储烟情核实与处置研判",
+          "reason": "报告主题是车辆资源清单核对，与任务目标中\"核实资源事实、整理不确定事项和进一步核实需求\"直接相关。按态势当前记录（asOf/businessNow 2026-11-03T09:18:00+08:00，快照 rev7）逐车核对：24 车中 17 辆可用（V01、V03、V06–V11、V13、V15–V20、V22、V23），5 辆不可用（V02、V14 至 10:00；V05 至 09:45；V04 检修预计 11:00，待确认；V12 例行检查最早 09:40，待完成确认），2 辆状态未知（V21\"南湾留守、跨区支援需确认\"；V24 最后记录 08:50，其位置记录 validUntil 09:10 已过期）。影响范围：全区 6 站 24 车的可用性判断与后续调派余量。不确定性：报告正文仅一句概述、未逐车给出状态，\"其余车辆状态见各车记录\"属指向性表述，须回态势逐车记录核实；报告引用仅 V01–V20（20 条）、区域仅 A01–A05，未覆盖 A06 的 V23/V24 及 A05 的 V21/V22；validTime 为空，该报告只是 09:18 时点快照，不是持续状态承诺。"
+        },
+        {
+          "id": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+          "title": "临港登高演练",
+          "reason": "V05 在报告的引用范围内，与本任务\"V05 继续既定安排、09:00—09:45 演练、之后释放以回报为准\"直接相关。核对结论：态势 V05 rev3 可用性 unavailable，有效至 2026-11-03T09:45，依据声明\"演练占用至 09:45\"，与任务时间窗 09:00—09:45 一致，未发现矛盾；09:18 时点 V05 仍处占用状态。影响范围：V05 在 09:45 前不可用于其他处置，属既定占用而非新增缺口。不确定性：报告未单列 V05 细节，上述结论依据态势当前记录；本报告不构成释放凭据，09:45 后是否释放仍须以来源回报为准。"
+        },
+        {
+          "id": "d27e489f-67c6-4100-9908-17dc9605d103",
+          "title": "城西交通救援",
+          "reason": "V02、V14 均在报告引用范围内，与任务\"09:00—10:00 城西交通救援、V02/V14 仍在作业、释放以来源回报为准\"直接相关。核对结论：态势 V02 rev3、V14 rev3 均为 unavailable，有效至 2026-11-03T10:00，依据声明\"交通救援占用至 10:00\"，与任务时间窗一致，未发现矛盾。影响范围：09:18 时点该两车仍在占用，10:00 前不可另调。不确定性：报告只确认清单层面，不构成释放凭据；任务另含\"不经过 R01/R02/R03\"的路线约束，本报告不含道路信息，无法据此核对路线，该约束须由其他资料确认。"
+        }
+      ],
+      "mainGoalReturnedByTool": true,
+      "mainGoalInProviderInput": true,
+      "contextProof": [
+        {
+          "attempt": 31,
+          "queriedAt": "2026-11-06T08:32:49.749Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:32:49.749Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:32:49.749Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:32:51.858Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:32:51.858Z",
+          "exactToolResult": true
+        }
+      ],
+      "allMessages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "城西交通救援"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练",
+            "城西交通救援"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练",
+            "城西交通救援"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练",
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        }
+      ],
+      "completedSteps": 12,
+      "successfulJobs": 13,
+      "scriptedHandoffState": "completed",
+      "accounting": {
+        "apiRequests": 75,
+        "attempts": 75,
+        "inputTokensCharged": 927766,
+        "outputTokensCharged": 57258,
+        "conservativeCostCny": 2.313595999999998,
+        "stoppedReason": null,
+        "elapsedMs": 354231,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 1048576,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "validation": "/home/ubuntu/axon-scenario-release-68dded362074/evidence/business-judgment-v02-2026-11-06T08-24-54-394Z/trial-2/validation.json"
+    },
+    {
+      "trial": 3,
+      "executionError": false,
+      "protocolCompleted": true,
+      "semanticReviewPending": true,
+      "failure": null,
+      "mainTaskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+      "e05JobId": "1445e752-40cb-48cf-b05a-80ba054da453",
+      "e05Status": "succeeded",
+      "validE05Judgment": true,
+      "judgmentMode": "relations",
+      "mainLinked": true,
+      "linkedTasks": [
+        {
+          "id": "55dcea5d-d6cc-4908-a666-e1114287750d",
+          "title": "临港登高演练",
+          "reason": "该任务以V05为核心资源（09:00—09:45临港登高演练，A01）。本条清单确认涉及V05：态势现值为V05 unavailable，validUntil 2026-11-03T09:45，依据为其自身声明“演练占用至09:45”，与任务时间窗一致；本条报告未改变、也未释放V05，仅称“其余车辆状态见各车记录”。对本任务的约束意义：V05在09:45前仍属占用，任务后续释放须以来源回报为准，本条不能作为释放依据。影响范围限于V05与A01演练场L03，不涉及本条其他车辆。"
+        },
+        {
+          "id": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+          "title": "城西交通救援",
+          "reason": "该任务关注V02/V14与A03城西交通救援现场（09:00—10:00，释放以来源回报为准，不经过R01/R02/R03）。本条清单确认覆盖V02、V14：态势现值均为unavailable，validUntil 2026-11-03T10:00，声明“交通救援占用至10:00”，与任务一致；本条未提供释放或位置变更的新事实，不构成释放依据。另V12（同属A03，西城站）为unavailable、最早09:40且“须完成确认”，本条未单独提示，属该任务时段内可用的邻近车辆资源需注意的待确认项。影响范围：A03车辆可用性判断，未发现与任务目标冲突的已确认事实。"
+        },
+        {
+          "id": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+          "title": "临港仓储烟情核实与处置研判",
+          "reason": "该任务目标为核实临港仓储烟情位置、当前道路及资源事实，整理不确定事项与进一步核实需求。本条正是资源事实类清单确认，直接服务于其“资源事实＋不确定事项”部分：已确认六站二十四车框架与各车状态记录（V01—V24中多数available；V02/V05/V14按占用至10:00/09:45；V04检修预计11:00“须确认”；V12例行检查最早09:40“须完成确认”）。同时提供三项不确定事项：V24仅有08:50旧记录且位置validUntil 09:10已过期、状态unknown；V21可用性unknown（“南湾留守，跨区支援需确认”）但本条未提示；本条对象引用仅V01—V20、区域仅A01—A05，未含A06新区站与V21—V24，与正文“六站二十四车”口径不一致。可用于该任务的研判，但不改变烟情位置与道路事实，烟情部分仍待核实。"
+        }
+      ],
+      "mainGoalReturnedByTool": true,
+      "mainGoalInProviderInput": true,
+      "contextProof": [
+        {
+          "attempt": 30,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 31,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 34,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 35,
+          "queriedAt": "2026-11-06T08:38:39.726Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 31,
+          "queriedAt": "2026-11-06T08:38:41.480Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 32,
+          "queriedAt": "2026-11-06T08:38:41.480Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 33,
+          "queriedAt": "2026-11-06T08:38:41.480Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 34,
+          "queriedAt": "2026-11-06T08:38:41.480Z",
+          "exactToolResult": true
+        },
+        {
+          "attempt": 35,
+          "queriedAt": "2026-11-06T08:38:41.480Z",
+          "exactToolResult": true
+        }
+      ],
+      "allMessages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练",
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "城西交通救援",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "城西交通救援",
+            "临港仓储烟情核实与处置研判"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港登高演练",
+            "临港仓储烟情核实与处置研判",
+            "城西交通救援"
+          ],
+          "hasSuggestion": true
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "城西交通救援"
+          ],
+          "hasSuggestion": false
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "status": "succeeded",
+          "recorded": true,
+          "recordingCalls": 1,
+          "failedRecordingCalls": 0,
+          "relatedTasks": [
+            "临港仓储烟情核实与处置研判",
+            "临港登高演练"
+          ],
+          "hasSuggestion": false
+        }
+      ],
+      "completedSteps": 12,
+      "successfulJobs": 13,
+      "scriptedHandoffState": "completed",
+      "accounting": {
+        "apiRequests": 76,
+        "attempts": 76,
+        "inputTokensCharged": 1012823,
+        "outputTokensCharged": 53809,
+        "conservativeCostCny": 2.4561180000000005,
+        "stoppedReason": null,
+        "elapsedMs": 322561,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 1048576,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "validation": "/home/ubuntu/axon-scenario-release-68dded362074/evidence/business-judgment-v02-2026-11-06T08-24-54-394Z/trial-3/validation.json"
+    }
+  ],
+  "completed": true,
+  "finished": true
+}

@@ -10,3 +10,12 @@
 6. 每条保留原生会话、实际提供方输入/输出、查询和记录回执、持久判断/API关联、投递与用量；离线核验任务覆盖、错误确定化、补做次数及新建理由。协议走完、真实记录和语义正确分别报告。
 
 桌面沿用现有关联列表和新建建议区域，没有新增说明或页面；浏览器回归核对二者可并存、人工确认后原关联保留、没有自动建任务/工作区。工程完整检查通过后再启动真实复验。
+
+## 固定候选与启动
+
+- 实施提交：`a2c00b8155577b1f5b493b19787018a0dbc33844`；归档SHA256：`c9abcdf656656b85c29030c64e251dff28439baa88a5179db8ab6735b9e819b9`。
+- 完整工程检查通过后，在`tencent-server:/home/ubuntu/axon-scenario-release-68dded362074/probe-code-judgment-v02-a2c00b8`建立独立代码，逐个验证347个运行文件哈希；package-lock与既有依赖一致，只复用node_modules。
+- 2026-11-06 08:24:54 UTC启动计划三轮，证据根目录：`/home/ubuntu/axon-scenario-release-68dded362074/evidence/business-judgment-v02-2026-11-06T08-24-54-394Z`。新目录、新来源/宿主数据库及合成身份；线上代码和数据不变。
+- 私有编排：`private/business-judgment-v02-runner.mjs`，实际运行清单`private/judgment-v02-manifest.json`，日志`private/judgment-v02-a2c00b8.log`。清单保存完整候选、运行文件及评审口径哈希；凭据不在这些文件中。
+
+三轮实际均完成，没有预算中止或替代补跑。结论与全部信息×任务明细见[复验报告](retest-results.md)。39条真实保存，关联语义未全达标，保留待用户审阅；本批未继续改提示词求通过。

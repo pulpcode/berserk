@@ -1,0 +1,3471 @@
+{
+  "rubricSha256": "38b4ab7ba38321ce63eb5cd4448f3e8eddf785dee1dfbbfdef9ea4a19ca49fa6",
+  "reviewType": "AI offline review; factual comparisons plus declared uncertainty; not independent human blind assessment",
+  "trials": [
+    {
+      "summary": {
+        "trial": 1,
+        "messages": 13,
+        "recorded": 13,
+        "receiptMatches": 13,
+        "apiMatches": 13,
+        "allCandidatesObserved": 13,
+        "fullGoalsObserved": 13,
+        "allQueriesInWire": 13,
+        "repairs": 0,
+        "pairCounts": {
+          "不计分": 1,
+          "符合": 25,
+          "未定·已关联": 7,
+          "漏关联": 2,
+          "未定·未关联": 3,
+          "无依据关联": 1
+        },
+        "newSuggestions": 3
+      },
+      "messages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "title": "首报位置待核实（09:12）",
+          "jobId": "69f9eb33-96f1-4f8c-a0b4-2ff39a2933ca",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": null,
+              "expected": "尚不存在",
+              "actualLinked": false,
+              "outcome": "不计分",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "同一临港区域（A01）：报告指向临港三号仓库（L01），该仓库位于演练任务关注区域内；当前业务时点09:12，演练任务使用的V05登高车按态势记录因演练占用至09:45不可用。若烟雾为真实火情，登高能力在约33分钟内受限，需作为该任务的持续约束和可能影响评估。但来电对“三号仓库”与“相邻仓库”的描述不一致，位置未核实，烟雾来源、规模及是否与演练有关均未确认，不能据此认定火情或演练冲突。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "核查临港仓储区烟雾报告",
+            "goal": "核实2026-11-03 09:12社会来电所称临港仓储区烟雾的具体位置（三号仓库或相邻仓库）、来源与规模；查明是否与临港登高演练有关；确认是否需启动消防响应及可用力量。位置未核实前不作火灾定性，并记录核实结果与不确定性。",
+            "reason": "现有“临港登高演练”任务目标限于09:00—09:45演练及V05安排，不承接烟雾报告的现场核查与定性；该报告位置、来源、规模均未确认，属于现有任务不宜承接的独立核查工作目标。新建需人员确认。"
+          },
+          "emptyReason": null,
+          "finalText": "## 事实核对结果\n\n**来源与版本**\n- 情报报告 `intel/...-report-E01-a`，修订1；观测/发布时间均为 **2026-11-03 09:12 +08:00**，业务时点同为 09:12。\n- 同一主题仅见这一份报告；临港区域（A01）在 08:50—09:30 内未检索到其他情报报告。\n- 内容性质为**社会来电**，不是现场核实结论。\n\n**已确认**\n- 来电称“临港仓储区有烟”，但对**三号仓库**与**相邻仓库**的描述不一致，明确标注“位置待核实”。\n- 报告关联对象为临港三号仓库（L01），所属区域为临港（A01）；态势记录中确有 L01，但不能据此确认烟情发生在其位置。\n- 当前态势记录（asOf 09:12）：V05 登高车因演练占用，**不可用至09:45**；V04 泡沫车检修，**不可用至11:00**（备注“须确认”）；V01、V03、V06 可用；H01—H04 消火栓可用；R01、R03 通行开放。\n- 09:00—09:12 未检索到该区域态势变化记录。\n\n**待核实与矛盾**\n- 烟雾具体位置未定：三号仓库与相邻仓库两种描述相互不一致，尚未消解。\n- 烟雾是否真实存在、来源、规模、是否有人员被困或危险品，均未确认；**不能定性为火灾**。\n- 是否与“临港登高演练”有关未确认；当前无火情记录，但“无记录”不等于“无烟情”。\n- V04 的“不可用”与“预计11:00完成、须确认”并存，恢复时间仍需确认。\n\n**任务判断**\n- **临港登高演练**：需纳入考虑。报告指向同一区域及 L01；若烟雾为真实火情，V05 登高能力在09:45前受限是持续约束。但因位置和来源未核实，暂不能认定与演练冲突或由演练引起。\n- **城西交通救援**：不关联。该任务聚焦 A03，涉及 L02/V02/V14；与本次 A01、L01 无交集，其道路限制也不涉及本次信息。\n- **新建建议**：建议另立“核查临港仓储区烟雾报告”，核实位置、来源、规模及是否与演练有关；现有演练任务目标不承接该核查。仅为建议，未创建任务，需人员确认。\n\n任务判断及新建建议已通过记录工具保存并取得成功回执。"
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "title": "交通救援进展（09:13）",
+          "jobId": "ba2a0774-15de-4d3f-b04d-94571ca153a7",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": false,
+              "outcome": "漏关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接相关且构成持续约束更新。来报（intel/E02-a，修订1，观测09:13）称城西交通救援仍占用V02、V14、当前尚未释放、原承诺至10:00；与态势当前记录一致：V02水罐车、V14抢险救援车均为unavailable，effectiveAt 09:10、reportedAt 09:13、validUntil 10:00，位置与L02“城西交通救援现场”重合，区域A03。该任务目标明确“V02/V14仍在作业，释放以来源回报为准”，本条即为任务所依赖的来源回报：截至09:13仍未释放得到确认，10:00为未来时点、尚未超期，暂不构成延误，但任务须继续以后续释放回报为准，不能按09:13自行推定已释放。不确定性：正文“原承诺至10:00”为转述承诺，未见变更或提前终止的书面来源；09:13之后是否按时释放尚待核实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已核对完毕并成功记录任务判断（记录回执已返回）。\n\n## 事实核对结果\n\n**来源与版本**\n- 报告：intel / `run-352e7f74-3488-4246-b2fb-de79930954fa-report-E02-a`，标题“交通救援进展”，**修订1 为当前最新**（无历史修订）。\n- 观测、发布和业务时点均为 **2026-11-03 09:13（+08:00）**；`validTime` 为空，正文未含独立有效期。\n- 该 subject 及“交通救援”检索下仅此一条来报，无同级修订可比对。\n\n**已确认**\n- 城西交通救援现场（L02，A03）与 V02 水罐车、V14 抢险救援车位置重合；两车在态势中均为 **unavailable**，`effectiveAt 09:10`、`reportedAt 09:13`、**`validUntil 10:00`**（依据含“交通救援占用至10:00”声明）。\n- 来报“仍占用、尚未释放”与态势当前记录一致，未见矛盾；截至 09:13，车辆确未释放。\n\n**待核实**\n- 09:13 之后是否按原时间释放，需以后续来源回报为准；本时点无法推定。\n- “原承诺至10:00”是转述的承诺，尚未见变更或提前结束的书面来源，承诺是否仍有效属不确定项。\n\n**业务判断时点提示**\n- 判断基准为 09:13，10:00 尚未来到，**当前不构成超期或延误**；只有过了 10:00 仍占用，才需按延误处理。\n\n## 任务关联判断\n\n- **城西交通救援**（dfdfadba）：直接相关，已记录。本条正是该任务“释放以来源回报为准”所依赖的回报，构成“至 09:13 未释放”的事实确认和持续约束。\n- **临港登高演练**（12b839ba）：不关联。对象为 A01、L03、V05，与 A03、L02、V02/V14 无交集，时间安排也不受影响。\n- **临港仓储烟情核实与处置研判**（e73fb51e）：不关联。该任务针对临港烟情的位置与资源事实核实，本条为城西占用状态，区域与对象均不同；无依据认为城西车辆是其核实对象，也未出现调度需求，故不作推测性关联。\n\n**新建任务**：不建议。本条完全可由现有“城西交通救援”任务承接，无独立于现有任务的工作目标，无需另建。\n\n**缺口说明**：无 09:13 之后的释放回报、无资源变更记录（变更时间线止于 09:13 的两条 rev1→rev2 更新），故“能否按期释放”无法核实。以上为事实核对与关联判断，未创建任务、未分派工作。"
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "title": "登高演练继续（09:14）",
+          "jobId": "2bcfa306-754d-4aff-88bf-0789d1cfec0e",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "同区域A01的间接关联：本条提供V05在09:45前被演练占用、释放待回报的资源可用性约束，可能影响临港仓储烟情处置时的资源调配判断。但烟情报告E01-a所指L01仓储位置与本条的L03演练场不同，本条未提及烟情，二者是否同点、是否构成处置资源冲突均未确认；仅作为区域内资源约束线索，待烟情位置核实后再判断影响，不视为已确认冲突。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "与本任务目标直接对应：报告E03-a修订1（观测09:14）确认临港登高演练已批准、正常进行，V05继续既定安排、占用至09:45、释放以回报为准；任务业务引用正是L03与V05、关注区域A01。态势记录V05修订2（effectiveAt 09:14）availability=unavailable、validUntil 09:45、依据含“演练占用至09:45”，与报告一致，未发现矛盾。对本任务的事实确认意义：09:00—09:45占用窗口继续有效；09:45是占用上限而非已释放，释放须以回报为准，不能按时间自动推定V05恢复可用。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已核对完毕，本条的判断记录已取得成功回执。以下是给总体席的事实核对结果：\n\n**一、来源与版本**\n- 报告：intel/run-352e7f74-3488-4246-b2fb-de79930954fa-report-E03-a，**修订 1（最新）**，标题“登高演练继续”。\n- 观测/发布：2026-11-03 09:14:00+08:00；业务当前时点亦为 09:14（场景 revision 5），因此本条属于**当前时点信息**，并非历史追溯。\n\n**二、已确认事实**\n1. 临港登高演练**已获批准、正常进行**；V05（登高车）继续既定安排。\n2. V05 占用至 **09:45**，**释放以回报为准**。\n3. 态势记录可相互印证：V05 修订 2（effectiveAt 09:14）可用性为 unavailable，validUntil 09:45，依据包含“演练占用至09:45”的声明；L03“临港登高演练场”修订 1（effectiveAt 09:10）位于区域 A01。\n\n**三、待核实/不确定性**\n- 09:45 是**占用上限，并非已释放时点**；不能据此推定 V05 在 09:45 自动恢复可用，须等来源回报。\n- 报告未说明演练具体科目、现场安全状况及是否影响周边道路通行；L03 仅有一个点位，报告未额外提供范围信息。\n\n**四、矛盾核对**\n- 未发现本条与已获准来源之间的矛盾。同批另两条信息互不冲突：E01-a（09:12）是临港仓储区烟情、位置在“三号仓库与相邻仓库”间待核实；E02-a（09:13）是城西交通救援占用 V02/V14，与 V05、L03 分属不同区域和资源。\n- 需要留意的是**同名区域下的不同事项**：烟情涉及 L01 仓储点，演练涉及 L03 演练场；报告未提及二者位置是否重合，不能因同属 A01 就认定为同一事件或已发生资源冲突。\n\n**五、任务关联判断（仅记录，未做任何业务动作）**\n- **临港登高演练**（12b839ba…）：直接相关，本条为演练继续与 V05 占用窗口的状态确认，与其 09:00—09:45、释放以回报为准的目标一致。\n- **临港仓储烟情核实与处置研判**（e73fb51e…）：间接相关。V05 在 09:45 前的占用构成区域内资源可用性约束，可能影响后续处置调配；但因位置关系与烟情事实尚未确认，只作为线索，不视为冲突。\n- **城西交通救援**（dfdfadba…）：关注 A03、资源 V02/V14，与本条无对象或区域交集，不作为本条关联任务。\n- 新建建议：**无**。现有“临港登高演练”任务已完整承接本条的状态确认与持续约束，未发现需另立目标的独立工作。\n\n**六、缺口提示**\n- 资源可用性只按当前有效记录（V05 修订 2）描述；09:45 之后 V05 的释放与可用状态需以新回报为准，目前无该时点之后的记录。"
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "title": "仓库位置核实·园区值班员（09:16）",
+          "jobId": "9e975075-5a01-40bc-a229-9a22e51e4252",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "本条是该任务“位置核实”的核心事实：09:16 园区值班员确认烟情来自临港三号仓库（intel/E04-a 修订1，objectRef 临港三号仓库 L01，区域 A01），与同主题 E04-b（无人机09:16观测，位置与值班员报告一致）构成两路来源一致，可消解 09:12 E01-a 中“三号仓库与相邻仓库描述不一致、位置待核实”的不确定性。同时应标注剩余缺口：态势系统 L01 资源记录仅有位置/数量，无烟情状态字段，changes 查询为空，说明“位置”有来源支持但烟情本身无态势状态记录；仓库内具体点位、烟情规模与性质、所谓“相邻仓库”范围（A01 内仅见 L01 三号仓库与 L03 演练场两处设施，其余为 H01-H04 消火栓，未找到相邻仓库独立对象）、周边道路与可用资源仍未核实。建议在该任务内将“位置=临港三号仓库”列为已确认（双源），其余保持待核实。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "存在有依据的可能影响，非已确认冲突：同一临港区域 A01 内，演练至 09:45；V05 登高车当前 unavailable，validUntil 2026-11-03T09:45（rev2，effectiveAt 09:10，reportedAt 09:14，依据“演练占用至09:45”申报），位置在 L03 演练场，按坐标与 L01 三号仓库直线约 200 米。烟情位置确认在三号仓库后，若需登高车或该区域资源增援，09:45 前 V05 不可用；本条不改变“演练已批准、V05 继续既定安排、释放以回报为准”，但为总体席判断是否调整演练或预置替代资源提供依据。烟情是否实际影响演练取决于规模与后续核实，目前不确定。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（供总体席；判断时点：业务时间 2026-11-03T09:16+08:00，态势快照 revision 6）**\n\n**一、本条信息本体**\n- 报告：intel/run-…-report-E04-a，标题“仓库位置核实”，修订 1（最新修订，无历史修订）。\n- 观测与发布均为 2026-11-03T09:16:00+08:00，validTime 为空；绑定对象为“临港三号仓库”（situation/resource/L01），区域 A01 临港。\n- 内容为一句话的单一来源陈述：园区值班员确认烟情来自临港三号仓库；未给出仓库内具体点位、烟情规模、起火物、道路或资源状态。\n\n**二、已确认（有来源支持，且两路独立来源相互印证）**\n- 烟情位置指向临港三号仓库：本条（园区值班员）与同一主题下的 intel/E04-b 修订 1（无人机 09:16 观测，“位置与园区值班员报告一致”）一致，构成两条独立来源的相同判断。\n- 由此，09:12 intel/E01-a 修订 1 所述“三号仓库与相邻仓库描述不一致、位置待核实”中的位置不确定性，可视为已收敛到“三号仓库”级别。E01-a 与 E04 系列不构成矛盾，属先待核实、后经核实的时序关系。\n- 对象存在性：态势系统 L01“临港三号仓库”存在（rev1，effectiveAt 09:10，点坐标 121.8650368, 30.88177），隶属 A01；本条引用与来源对象一致。\n\n**三、待核实与资料缺口**\n- 态势系统 L01 的资源记录只有类别、数量和位置，无烟情或火情状态字段；L01 的 changes 查询返回空。因此“位置确认”有报告支撑，但“烟情客观存在及当前状态”在态势系统中没有对应记录，两系统间存在信息落差。\n- 仓库内具体部位、烟情规模与性质、是否有明火、人员情况：本条及现有来源均未提供。\n- E01-a 提到的“相邻仓库”没有独立对象可核：A01 成员中设施类仅见 L01 三号仓库、L03 登高演练场，H01–H04 均为消火栓，未找到相邻仓库对象，该表述的范围需现场核实。\n- 道路与可用资源事实尚未在本条体现，仍属该项核实任务范围。\n\n**四、与在办任务的关联判断（已通过记录工具提交并取得成功回执）**\n- 临港仓储烟情核实与处置研判（e73fb51e）：直接相关，建议将“位置=临港三号仓库”列为已确认，其余保持待核实。\n- 临港登高演练（12b839ba）：相关，属可能影响而非已确认冲突。V05 登高车当前 unavailable，validUntil 09:45（rev2，effectiveAt 09:10，reportedAt 09:14，依据“演练占至 09:45”申报），位于 L03 演练场，按坐标与 L01 直线约 200 米（估算）。若烟情升级需登高车或区域内资源增援，09:45 前 V05 不可用；是否影响演练取决于烟情规模，目前不确定，演练本身仍按已批准安排执行、释放以回报为准。\n- 城西交通救援（dfdfadba）：未关联。该任务在 A03，关注 V02/V14、L02 及绕开 R01/R02/R03 的约束，本条无证据与之相干，不因区域编号或名称相近而关联。\n- 独立新任务：无。本条属既有“烟情核实”任务的输入，不宜另立目标（未提交新建建议）。\n- 任务发现范围：已不带筛选分页查询获准活动公共任务，共 3 条、hasMore=false，并逐一读取完整目标。\n\n以上为核对与研判建议，未创建任务、未分派工作，也未对外发布或宣称任何业务处置已完成。"
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "title": "仓库位置核实·无人机（09:16）",
+          "jobId": "dc53f69b-de38-46ea-8403-08346cd7cf3c",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接事实补充，属该任务「核实具体位置、整理不确定事项与进一步核实需求」范围。本条 E04-b 修订1（观测=发布=09:16，最新修订，无历史版本）称无人机09:16观测到临港三号仓库烟情、位置与园区值班员报告一致，与同一 subject E04、同一观测时刻的 E04-a（园区值班员确认烟情来自临港三号仓库）相互印证，可初步回应 E01-a（09:12，社会来电称三号仓库与相邻仓库描述不一致、位置待核实）的位置歧义，但不能证明其内容错误。态势当前记录：L01「临港三号仓库」位于 A01，点位 121.8650368,30.88177，effectiveAt 09:10，revision 1，可作位置基准。仍待核实：烟情性质（明火/仅冒烟）、规模与蔓延方向、是否有人员被困、无人机航点与拍摄时间精度、是否仅确认单一仓库；「支持位置判断」不等于排除了相邻仓库同时存在异常，故位置判断为已获两份来源支持的较强判断，非绝对确认。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "有依据的可能影响与持续约束，非已确认冲突。该演练在 A01 临港 09:00—09:45 进行，与本条观测 09:16 同时段、同区域；演练场 L03（121.8631572,30.8824992）与烟情所指 L01（121.8650368,30.88177）点位相距约数百米（按坐标近似，非来源给出距离）。态势 revision 2 显示 V05 登高车 unavailable，validUntil 09:45，声明「演练占用至09:45」，与任务目标中释放以回报为准一致；若烟情核实后需登高车参与处置，该车在 09:45 前不可用，构成资源约束，需演练方与总体席确认是否调整。本条并未报告烟情已影响演练，故不得据此认定演练中断或人员受影响。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（供总体席）\n\n**来源与版本**\n- 报告：`intel/run-352e7f74-3488-4246-b2fb-de79930954fa-report-E04-b`，**修订 1（最新，无历史修订）**；标题「无人机确认仓库位置」。\n- 观测时间=发布时间=**2026-11-03 09:16:00+08:00**；业务时点（snapshotClock.businessNow）同为 09:16，本条无时滞；asOf 09:16。宿主查询时间为 2026-11-06，仅属系统时间，不作业务判断时点。\n- 关联对象：资源 L01（临港三号仓库），区域 A01（临港）。\n- 正文全文：「无人机在09:16观测到临港三号仓库烟情，位置与园区值班员报告一致。」\n\n**已确认**\n- 无人机 09:16 观测到临港区域烟情，位置判断指向**三号仓库（L01）**。\n- 态势当前记录支持该点位存在：L01「临港三号仓库」，A01，点位 121.8650368, 30.88177，effectiveAt 09:10，revision 1。\n- 与同一 subject（E04）、同一观测时刻的 **E04-a（园区值班员确认烟情来自临港三号仓库）**表述一致，两条相互印证。\n\n**待核实（不得当作已确认）**\n- 烟情性质（明火／仅冒烟）、规模、蔓延方向、是否有人员被困。\n- 位置精度：报告只说「支持位置判断」，不能推出已排除相邻仓库同时存在异常；E01-a（09:12，社会来电称三号仓库与相邻仓库描述不一致、位置待核实）反映的初始歧义被两份来源**削弱但未逐条核销**。\n- 无人机航点、拍摄时刻精度、观测是否具备夜间／烟尘条件下的识别能力，来源未说明。\n\n**矛盾情况**\n- 无同层级的直接矛盾；存在**版本间的时序演进**：E01-a（09:12）位置待核实 → E04-a／E04-b（09:16）两份来源同指三号仓库。属疑点收敛，不构成 E01-a 被证伪。\n\n**资源与道路（按当前有效记录，effectiveAt 09:10，V05 为 revision 2 effectiveAt 09:14）**\n- 不可用：**V05 登高车** unavailable 至 09:45（演练占用）；**V04 泡沫车** unavailable 至 11:00（声明为「检修预计11:00完成，须确认」，即该时点本身待确认）。\n- 可用：V01 水罐车、V03 泡沫车、V06 抢险救援车；H01–H04 消火栓均 available；S01 临港消防站。\n- 道路：R01 中轴桥、R03 滨港路 passability=open（A01 内）。\n- 缺口：未取得烟情规模、被困人员和仓储内部危险品信息，也无针对烟情的独立监测或气象数据。\n\n**任务关联判断（已按完整发现：3 个活动公共任务，单页返回完毕）**\n1. `临港仓储烟情核实与处置研判`（e73fb51e）— 直接纳入，本条为其位置核实与不确定事项清单提供事实增量。\n2. `临港登高演练`（12b839ba）— 作为**可能影响与持续约束**纳入：同区域 A01、时段重叠（09:00–09:45），演练场 L03 与 L01 点位相距数百米（按坐标近似，来源未给距离）；V05 至 09:45 不可用。本条未报告演练受影响，故不能认定演练中断或调整。\n3. `城西交通救援`（dfdfadba）— 判断**无关联依据**：关注区域为 A03，无共享业务对象，且任务明确不经过 R01/R02/R03，本条未涉及该区域或相关道路状态；不因道路同属一图面而关联。\n\n**新建建议**：无。本条的位置确认与不确定事项整理均落在现有「临港仓储烟情核实与处置研判」目标内，不构成现有任务不宜承接的独立工作目标。\n\n任务判断已通过记录工具提交并取得成功回执（recordedAt 2026-11-06T08:26:57Z，关联 2 项任务，无新建建议）。未创建任务、未分派工作、未执行任何业务处置动作。"
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "title": "车辆资源清单确认（09:18）",
+          "jobId": "4460f97b-c787-432a-a138-652344671b48",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "与该研判任务的资源事实核实部分相关（任务需核实临港一带当前道路及资源事实）。本条给出六站车辆可用性口径：A01/S01的V01、V03、V06可用，V04检修至11:00（须确认），V05演练占用至09:45；A03的V02、V14占用至10:00；A05的V21状态unknown（南湾留守，跨区支援需确认）；A06的V23可用、V24状态与位置未确认（仅08:50记录，位置有效期至09:10，业务时点09:18已过期）。影响：为处置研判提供可调用与不可调用车辆清单，并提示不能把V21/V24计为可用。不确定性：报告未涉及烟情位置、道路，也未列明24车全部状态（其objectRefs仅V01—V20、区域仅A01—A05，缺A06及V21—V24），故不能据此确认“六站二十四车”已完整核对。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "与城西交通救援直接相关：任务关注V02/V14在09:00—10:00的占用及释放。当前态势（asOf 2026-11-03T09:18，业务时点09:18）显示V02、V14均为unavailable，validUntil 10:00，占用说明为“交通救援占用至10:00”，与任务时段一致；本条车辆清单报告仅称“其余车辆状态见各车记录”，未给出释放事实。影响：确认占用状态延续，不构成可释放依据；不确定性：释放仍须以来源回报为准，报告本身未包含释放确认。另V04（S01泡沫车）检修至11:00（须确认），若后续需跨区补位可作为备选但同样未确认。"
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "与临港登高演练直接相关：任务明确V05继续既定安排、09:45后释放以回报为准。当前态势V05为unavailable，validUntil 09:45，说明“演练占用至09:45”，与任务时段09:00—09:45一致；同站S01的V01、V03、V06为available，V04 unavailable至11:00（检修须确认）。影响：演练所需登高车占用状态与计划吻合，本条报告未提供提前释放或演练结束的确认；不确定性：09:45后是否释放仍需专门回报，本条不能替代。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "六站车辆清单完整性核对与V24/V21状态确认",
+            "goal": "核实“六站二十四车”清单的完整性并补齐状态缺口：1）确认报告intel/run-352e7f74-3488-4246-b2fb-de79930954fa-report-E05-a所称24车是否覆盖A06/V21—V24（该报告仅引用V01—V20、区域A01—A05，与V23/V24所属A06不符）；2）确认V24泡沫车（A06/S06）当前可用状态与实际位置，其最后记录为08:50、位置有效期至09:10，业务时点09:18已过期；3）确认V21抢险救援车（A05/S05，状态unknown、“南湾留守，跨区支援需确认”）是否可跨区调用；4）对V04（检修至11:00）、V12（检查最早09:40）等带“须确认”说明的车辆取得完成确认。输出一份经核对的车辆状态台账，标明已确认、待核实与相互矛盾项。",
+            "reason": "本条车辆清单报告声称已核对六站二十四车，但其自身引用只有20台车、5个区域，缺A06与V21—V24，且V24记录已过期、V21状态未知。现有三个任务分别聚焦临港登高演练的V05、城西交通救援的V02/V14、以及临港仓储烟情的现场与资源研判，均不以跨站车辆台账完整性为目标，难以承接该独立核对工作，故建议单列任务；是否创建由人员确认。"
+          },
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（给总体席）\n\n**来源与版本**：`intel/...-report-E05-a`，修订1，观测时间与发布均为 2026-11-03 09:18；按同一 subjectId 检索只有这一版，无更早或更新修订可比对，故不存在版本冲突，但也无其他版本佐证。态势系统 businessNow 同为 09:18，报告时点与业务时点一致。\n\n**已确认（与当前有效记录一致）**\n- 资源总量结构对得上：V01–V24 共24辆、S01–S06 六个站，均存在于态势系统。\n- 17辆为可用：V01、V03、V06、V07、V08、V09、V10、V11、V13、V15、V16、V17、V18、V19、V20、V22、V23（各车 reportedAt 09:18，声明“可用”）。\n- 5辆不可用且给出有效期：V02、V14 交通救援占用至10:00；V05 演练占用至09:45；V04 检修预计11:00（备注“须确认”）；V12 例行检查最早09:40（备注“须完成确认”）。\n- V24 确为旧记录：状态 unknown，reportedAt 08:50，位置 validUntil 09:10，到业务时点 09:18 已过期，“当前状态与位置待确认”的表述成立。\n\n**待核实**\n- V24 的实际位置与可用性（无 09:10 之后的位置或状态回报）。\n- V21 抢险救援车状态为 unknown（说明“南湾留守，跨区支援需确认”），报告未提示，不能计入可用。\n- V04 检修能否按11:00完成、V12 检查能否09:40结束，均为来源自带“须确认”，尚无完成回报。\n\n**相互矛盾/缺口（报告自身）**\n- 报告称“已核对六站二十四车”，但其引用对象只有 V01–V20，区域只有 A01–A05；V23/V24 属 A06，V21–V24 均未在引用范围内。清单口径与声称范围不一致，不能视为已完整核对。\n- 正文“其余车辆状态见各车记录”属指向性表述，未列明状态，无法据此对20辆以外车辆作判断；报告也未涉及任何烟情、道路事实。\n\n**与任务的关联判断（已通过记录工具保存，回执成功）**\n- 城西交通救援：V02/V14 占用至10:00 与任务时段一致，仅为状态延续，不构成释放依据。\n- 临港登高演练：V05 占用至09:45 与既定安排吻合，09:45 后释放仍须专门回报。\n- 临港仓储烟情核实与处置研判：提供可用/不可用车辆口径（A01 可用 V01/V03/V06），但未含烟情位置与道路，不能替代现场核实。\n- 另提交新建建议：跨站车辆台账完整性与 V24/V21 状态确认（含 V04/V12 完成确认），现有三个任务均不以该目标为核心，是否创建由人员决定；未创建任务、未分派工作。"
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "title": "北货运路施工（09:19）",
+          "jobId": "88a924cb-a51c-4e5f-bb95-afd242141d65",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "北货运路施工限行核实与通行影响评估",
+            "goal": "核实R04北货运路（北城A04）局部施工的范围、占用车道、起止时间与解除条件，确认当前实际可通行状态及绕行路线；评估其对北城辖区（北城消防站S04及V16-V19等车辆出动路线）和相邻区域通行的可能影响，形成待核实清单供总体席决策。现有三项活动任务分别聚焦临港A01、西城A03及临港仓储烟情，均未覆盖A04北货运路通行限制，故需独立承接。",
+            "reason": "情报E06-a（观测09:19）与态势系统R04修订2（effectiveAt 09:19）一致显示北货运路passability=restricted、备注“局部施工限制通行”，该状态为持续约束；但报告与对象均无施工路段范围、开始/结束时间（validTime为null）、车道占用方式、责任单位和绕行方案，属关键信息缺口。全部活动公共任务中无任何任务引用R04或A04（按对象、区域筛选均为空），现有任务范围最接近的“城西交通救援”仅限A03且明确不经过R01/R02/R03，“临港登高演练”“临港仓储烟情核实”均在A01（约北纬30.88°，与A04约30.96°相距数公里，无共用对象），均无资料依据承接此道路限行事实，故建议新建独立任务，由人员确认后决定是否建立。"
+          },
+          "emptyReason": null,
+          "finalText": "**事实核对结果：北货运路施工（intel/report-E06-a，修订1）**\n\n**已确认（情报与态势一致）**\n- 对象：R04 北货运路，所属区域 A04 北城；几何为 LineString，范围约 121.8905–121.8936E / 30.9560–30.9746N。\n- 观测与发布时间：2026-11-03 09:19:00+08:00；情报修订1，无更早修订。\n- 通行状态：passability = restricted，备注“局部施工限制通行”。态势系统 R04 当前为修订2，effectiveAt 09:19，与报告内容一致；变更记录显示 09:10 修订1 为 open，09:19 起转为受限——状态变化已获两方印证。\n- 同区域其他道路 R05 城北路仍为 open；A04 内 S04 北城消防站、H07 消火栓及 V16–V19 车辆当前记录为可用、位置在站内（reported 09:18）。\n\n**待核实（资料缺口）**\n- 施工具体路段/里程范围、占用车道数、是否单向或全幅封闭；\n- 施工起止时间与解除条件（报告 validTime 为 null，态势对象也无有效期，仅有生效时刻）；\n- 施工责任单位、交通组织与绕行方案、现场警示措施；\n- 受限状态的实际执行情况（是否有现场管控）——目前仅为单一来源文字描述，无现场照片/复核报告。\n\n**矛盾项**：暂未发现。情报正文与态势属性互相一致，仅“09:10 开放→09:19 受限”的时间序列，属正常状态更新，非矛盾。\n\n**任务判断（已通过记录工具保存，回执成功，未创建任务）**\n- 现有 3 项活动公共任务均不承接本条：临港登高演练（A01，V05/L03）、城西交通救援（A03，V02/V14，明确不经过 R01/R02/R03）、临港仓储烟情核实（A01 方向）。经按对象 R04、区域 A04 检索，无任何任务引用；A04 与 A01（约 30.88°N）、A03（约 30.90°N、121.79°E）相距数公里且无共用对象，不因同城关联。\n- 已建议新建独立任务“北货运路施工限行核实与通行影响评估”，理由为 A04 道路限行属持续约束，且范围/时长/绕行均缺，可能影响北城消防站出动路线；是否建立由人员确认。\n\n**能力与边界**：以上仅为事实核对与关联判断；未创建任务、未派发工作、未对外发布，也未核实现场实际情况。"
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "title": "城北路巡查（09:21）",
+          "jobId": "0e386f73-12dd-4424-9255-007c1abcaa10",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": "已完整遍历3个获准活动公共任务并读取目标：①“临港登高演练”关注A01及L03/V05；②“城西交通救援”关注A03及L02/V02/V14，明确不经过R01/R02/R03；③“临港仓储烟情核实与处置研判”关注临港仓储烟情的位置、道路及资源事实。本条为A04北城R05城北路的例行巡查“通行正常”，与上述任务的区域、道路和资源引用均无重叠，也无证据表明城北路是城西救援路线或与临港烟情相关；仅“城北”与“城西”等名称相似不构成关联。该报告仅为通行正常的例行确认，不形成需现有任务承接的影响、确认或持续约束，也不存在需新建任务的独立工作目标。故不关联、不建议新建。",
+          "finalText": "**事实核对结果（供总体席参考）**\n\n- **已确认**：报告 `intel/...-report-E07-a`（修订1）正文与摘要一致；2026-11-03 09:21，对 R05 城北路开展例行巡查，确认**通行正常**。\n- **来源状态一致**：态势系统当前记录显示，R05 城北路位于 A04 北城，**revision 2** 于 09:21 生效，`passability=open`，与巡查结论一致。09:10 的 revision 1 当时同样为开放，09:21 的版本变化未改变通行状态。\n- **版本与时间**：报告为修订1，我的观测时间和发布时间均为 09:21，没有 `validTime`；业务当前时点同样为 09:21。因此，上述结论只反映该时点的巡查结果，之后是否存在变化尚没有更新的记录。\n- **待核实或信息缺口**：报告未说明通行正常对应的具体车道、持续时间及巡查覆盖范围，因此不能推断后续一直保持正常。\n- **矛盾情况**：未发现相互矛盾的记录。同一区域有 R04 北货运路局部施工、限制通行的报告，但其属于另一条道路，不构成本条信息的反证。\n\n**任务判断**：已完整查询并读取全部3个获准活动公共任务。该信息与“临港登高演练”“城西交通救援”“临港仓储烟情核实与处置研判”在区域、道路及资源上均无重叠或可依据的关联，因此不因同地或名称相近而列入关联；也不构成需要新建任务的独立目标。该判断已通过记录工具保存并取得成功回执。"
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "title": "中轴桥封闭（09:23）",
+          "jobId": "8d96207b-6fa7-4317-80ce-5e4578eff018",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务目标明确要求核实临港仓储烟情的位置、当前道路及资源事实并梳理不确定事项；R01中轴桥位于A01临港，距L01临港三号仓库约0.7公里，09:23—10:00封闭是直接相关道路事实，可能影响通往仓库的路线和处置车辆进出，应纳入道路事实与不确定事项清单。同时“临时事故”的性质、具体位置、是否与仓储烟情为同一事件、封闭是否提前解除或延长均未说明，需进一步核实；R03滨港路当前open，但是否适合作为替代路线及限高限重等条件未知。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "临港登高演练09:00—09:45在A01进行，V05按当前记录占用至09:45；R01中轴桥09:23—10:00封闭，与演练后段时段重叠，且R01与演练场L03同属A01、直线距离约0.7公里，可能影响演练车辆进出或区域应急通行，属于需要考虑的可能影响/持续约束。但任务目标未给出V05往返路线，是否必经R01尚不明确；R03滨港路当前为open，可作候选绕行，通行条件未核实。建议在演练收尾和释放判断时核对路线影响，不能仅因同区就认定已发生冲突。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已完成核对与任务判断记录（记录工具返回成功回执）。以下为事实核对摘要：\n\n## 一、已确认事实\n\n- **来报**：`intel/...-report-E08-a`，修订 1；标题《中轴桥封闭》，摘要“R01中轴桥因临时事故封闭至10:00”。观测时间等于发布时间：**2026-11-03 09:23 +08:00**。\n- **态势当前记录**：R01 中轴桥为 **revision 2**，`effectiveAt` 09:23，`validTime` **09:23—10:00**，`passability=closed`，备注“临时事故封闭至10:00”。\n- **版本变化**：R01 在 revision 1 时（09:10）为 `open`；09:23 起转为封闭。来报与态势记录在封闭状态、原因表述和结束时间上**一致**，未发现相互矛盾。\n- **业务时点**：来源快照 `businessNow` 为 **2026-11-03 09:23 +08:00**，与来报观测时间一致；判断应以此为准。\n- **区域关系**：R01 属于 **A01 临港**；同区道路 R03 滨港路当前为 `open`。R02 东环线属于 A02，当前也是 `open`。\n\n## 二、待核实或不确定事项\n\n1. **“临时事故”的具体性质、位置、涉及对象和处置情况均未说明**，无法确认是否与临港仓储烟情（E01/E04）为同一事件；仅同属 A01，不能据此认定相关。\n2. **封闭至 10:00 是预计结束时间，不是已确认恢复通行**；来报 `validTime` 为空，10:00 这一时限来自态势记录，后续需以恢复通行回报为准。\n3. **对登高演练的影响不确定**：R01 与演练场 L03 同属 A01，两者直线距离约 0.7 公里，封闭时段（09:23—10:00）与演练后段（至 09:45）重叠；但任务目标未提供 V05 往返路线，无法确认是否必经 R01。\n4. **对仓储烟情处置路线的影响不确定**：R01 距 L01 临港三号仓库约 0.7 公里，可能影响进出路线；R03 可开行，但限高、限重、通行能力及是否为既定路线尚未核实。\n5. **资源状态（据当前有效记录）**：V05 登高车不可用至 **09:45**（演练占用）；V02 水罐车、V14 抢险救援车不可用至 **10:00**（交通救援占用）。以上均为声明占用，释放应以来源回报为准。\n\n## 三、任务判断\n\n- **临港登高演练**（12b839ba…）：**需考虑**。主要是演练后段与 R01 封闭时段重叠，且在同一区域；属于可能影响或持续约束，但目前**不是已确认冲突**，取决于 V05 的实际路线。\n- **临港仓储烟情核实与处置研判**（e73fb51e…）：**需考虑**。该任务本就要求核实“当前道路及资源事实”并梳理不确定性，R01 封闭应纳入道路事实与不确定事项；事故性质及与烟情是否同一事件需核实。\n- **城西交通救援**（dfdfadba…）：**未建立关联**。任务聚焦 A03 西城，且目标明确“不经过 R01/R02/R03”，没有依据认为 R01 封闭会影响其既定路线。\n- **新建任务**：**不建议**。现有“烟情核实与处置研判”已可承接道路事实和不确定性梳理，“登高演练”可承接演练影响核对，未发现现有任务不宜承接的独立工作目标。\n\n本摘要只做事实核对与任务判断，不代替总体席决策，也未创建任务、分派工作或宣称任何业务行动已完成。"
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "title": "旧巡查报告晚到（09:24收、09:11观测）",
+          "jobId": "c0e44c09-8bcc-41b3-88b3-a85fab2dc5b7",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "目标明确要求核实“临港当前道路及资源事实”，本条正是临港A01内R01中轴桥的巡查事实：09:11观测通行正常，与态势源R01修订1（09:10生效，passability=open）一致。但同一区域已有09:23观测的E08-a“中轴桥封闭”及态势源R01修订2（09:23生效，临时事故封闭至10:00），说明本条仅能确认09:11时点、其有效窗口09:11—09:12已过。应纳入该任务的已确认/待核实清单：确认09:11正常、当前封闭；待核实事故性质与位置、是否与仓储烟情同一事件、10:00能否解除、对临港三号仓库(L01)通道的影响。影响范围限A01内R01及其与R03滨港路衔接段（几何上R03起点与R01端点重合），不确定性较高。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "任务关注范围为A01临港，09:00—09:45在临港登高演练场(L03)开展演练，V05演练占用至09:45。R01中轴桥位于同一区域，09:23—10:00临时封闭与演练后半段重叠，可能影响演练车辆出入或周边通行组织；本条09:11正常只能说明演练开始阶段道路无阻，不能代表09:23后。不确定性：任务未给出经R01的行驶路线，无法确认直接影响；V05在L03场地内占用、09:45释放，与桥封闭无直接冲突。作为可能影响与时段重叠提示关联，不视为已确认冲突。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已核对来报、同一道路的其他特情报告及态势来源，判断已记录并取得回执。以下为事实核对结果（业务判断时点为 2026-11-03 09:24，与来源快照时钟一致）。\n\n**一、来报本身**\n\n| 项 | 内容 |\n|---|---|\n| 版本 | intel/…-report-E09-a，修订 1（最新） |\n| 观测时间 | 2026-11-03 09:11 |\n| 发布时间 | 09:24（比观测晚 13 分钟） |\n| 有效窗口 | 09:11—09:12，**已过期** |\n| 对象 | 道路 R01 中轴桥，区域 A01 临港 |\n\n结论：来报只证实 **09:11 时点** R01 通行正常。这与态势源 R01 修订 1（09:10 生效，passability=open）一致，属于**已确认**。\n\n**二、与当前状态的关系（重要）**\n\n态势源 R01 最新为修订 2，**09:23 生效，passability=closed，注明“临时事故封闭至 10:00”**，有效期至 10:00；特情系统另有 09:23 观测并发布的 E08-a《中轴桥封闭》，内容一致。\n\n因此，来报与当前记录并非同一时点的互相矛盾，而是**观测后路况发生变化**：09:11 正常 → 09:23 起因临时事故封闭。但不能把来报读作“当前通行正常”，其有效窗口 09:12 即已结束。另外，E08-a 未给有效窗口，封闭截止 10:00 目前是来源标注，尚未见解除回报。\n\n**三、关联任务（2 个）**\n\n1. **临港仓储烟情核实与处置研判**：该任务目标是核实临港当前道路及资源事实，本条正属于其范围。建议纳入：09:11 正常为已确认事实；09:23 起封闭为当前事实；需核实事故性质与位置、是否与仓储烟情为同一事件、10:00 能否按期解除、对临港三号仓库（L01）通道的影响。影响范围限于 A01 内 R01 及其与 R03 滨港路衔接段（两者端点坐标重合，封闭可能切断该衔接，属几何推断，未获通行组织资料确认）。\n2. **临港登高演练**：关注范围为 A01，演练 09:00—09:45，与封闭时段 09:23—10:00 重叠，可能影响演练车辆出入或周边通行。但任务未给出经 R01 的路线，V05 是在 L03 场地内占用至 09:45，与桥封闭无直接冲突，故仅作**可能影响提示**，不认定冲突。\n\n**四、未关联**\n\n- **城西交通救援**：目标明确“不经过 R01/R02/R03”，关注区域为 A03，与中轴桥无业务交集，不因同次场景或名称相近而关联。\n\n**五、资源状态（依据当前有效记录）**\n\n- V05 登高车：09:45 前演练占用，不可用（有效至 09:45）。\n- V04 泡沫车：检修不可用，预计 11:00 完成，来源明确标注“须确认”。\n- V01/V03/V06：09:18 报告为可用。\n- 以上与来报无冲突。\n\n**六、缺口**\n\n未见临时事故的位置、性质、涉事对象及现场处置信息；封闭与烟情是否同源无资料佐证；10:00 解除仅有计划值，无核实记录。未建议新建任务：道路事实核实已由“临港仓储烟情核实与处置研判”承接，另建会重复。未创建任务、未分派工作。"
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "title": "东环线通行确认（09:25）",
+          "jobId": "d46e7921-e132-4cd3-a114-4099bb657f99",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "该任务要求核实临港仓储烟情的位置、当前道路及资源事实并整理不确定事项，本条提供A02东城R02通行状态，属道路事实补充。依据：R02几何南端节点121.867461,30.8814147与临港A01边界顶点重合，R03滨港路同节点相接，R02构成经东城方向通往临港片区的通道；同期R01中轴桥09:23封闭至10:00，R03为open，故R02是否可用会影响进场/绕行研判。不确定性：无任何来源显示烟情处置实际使用或需要R02，三号仓库精确位置、烟情是否影响东环线车流均未核实，本报告仅为09:25单次通行正常观测，不含烟情要素；不应据此外推R02未受影响或可用于处置。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务目标明确将R02列入通行排除范围（不经过R01/R02/R03），且任务时段09:00—10:00覆盖本条观测时点09:25。资料事实：情报E10-a修订1称R02东环线当前通行正常，观测/发布时间09:25；态势来源R02第2版effectiveAt 09:25，passability=open，与来报一致，未见矛盾。影响判断：仅确认R02自身当前可通行，不改变任务既定绕行约束，也不构成可以经R02通行的依据；R01中轴桥09:23封闭至10:00与本任务排除约束无冲突。不确定性：单一观测点、无容量/管制/现场核验细节，任务释放仍以来源回报为准，09:25之后的通行状态未覆盖。"
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（R02 东环线通行确认，供总体席参考）**\n\n已确认\n- 来报：情报系统 `intel/…-report-E10-a` 修订1（最新），标题“东环线通行确认”，正文仅一句“R02东环线当前通行正常”，对象指向 situation/road/R02，所属区域 A02（东城），观测与发布时间均为 2026-11-03 09:25:00+08:00，无有效期字段（validTime 为空）。\n- 态势来源：R02（东环线）当前第2版，`effectiveAt` 09:25:00+08:00，`passability=open`，与来报表述一致。\n- 版本沿革：R02 仅两次记录，第1版 09:10（open）、第2版 09:25（open），几何与通行属性未见实质冲突，属同一状态再次确认。\n- 检索范围内（全部11条情报）无任何报告称 R02 封闭、限行或受烟情影响，本轮未见相互矛盾信息。\n\n业务判断时点\n- 模拟场景当前业务时点为 2026-11-03 09:25:00+08:00，与来报观测时间一致；本条结论只对该时点有效，09:25 之后无覆盖。\n\n待核实与不确定\n- 只有单点、单次“通行正常”表述，无容量、管制、现场核验或持续时段信息；天气、车流、临时管制均未知。\n- 报告与道路记录同步于 09:25 刷新，无法区分“独立核实”与“记录同步”，可靠性依赖来源本身。\n- 同期相关事实：R01 中轴桥 09:23 起封闭至 10:00（临时事故），R03 滨港路 open，R04 北货运路局部施工限行；R02 南端节点与临港 A01 边界顶点重合、与 R03 同节点相接。此为几何关系推断，非来源明示。\n\n任务关联判断（已记录，回执成功）\n- 城西交通救援：直接相关。其目标明确“不经过R01/R02/R03”，时段 09:00—10:00 含 09:25。本条只证明 R02 当前可通行，不解除该绕行约束，也不构成“可走 R02”的依据。\n- 临港仓储烟情核实与处置研判：作为道路事实补充纳入考虑。R02 可视为经东城方向通往临港的通道，叠加 R01 封闭可能影响进场/绕行研判。但无来源显示烟情处置使用或需要 R02，三号仓库精确位置、烟情是否波及东环线车流均未核实，不可外推。\n- 临港登高演练：未关联。任务目标只涉 V05 与 09:45 前既定安排，未提任何道路或通行路线，仅因同处临港区域不足以构成关联依据。\n\n新建任务建议\n- 未提出：本条为单一道路状态确认，已由上述任务的目标覆盖，无现有任务不宜承接的独立工作目标。\n\n资源与状态依据说明\n- R02 状态依据态势来源第2版记录（09:25，open）；任务目标、时段依据三条获准活动公共任务的最新修订（均为修订1）。缺口在于缺少 R02 的持续时段、承载能力及现场核验来源。\n\n以上为事实核对与判断整理，不代表已创建任务、分派工作或完成任何处置行动。"
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "title": "交通救援尚未结束（09:30）",
+          "jobId": "405d6f4b-71eb-4aa5-ab7b-ab23c5368dac",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": false,
+              "outcome": "漏关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "本条报告的对象（L02现场、V02、V14）与区域A03完全落在“城西交通救援”任务的目标和关注范围内，时间09:30处于任务09:00—10:00窗口内。事实核对：报告称V02/V14暂未释放，与09:13来报E02-a及态势当前记录一致（V02/V14均为第4版，availability=unavailable，effectiveAt 09:10，reportedAt 09:30，validUntil 10:00，声明“交通救援占用至10:00”），未发现矛盾，属对任务现有判断的再次确认。影响与不确定性：可用状态仍为占用，任务“释放以来源回报为准”的持续约束继续成立，暂无释放证据，不得据本条推断已释放或可调度；10:00可用期届满前需后续来源回报，报告未给出处置细节、延长需求或新的释放时点，延长与否待核实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（供总体席参考）\n\n**本条信息**：intel 报告 `report-E11-a`《交通救援持续处置》，修订 1，观测/发布 2026-11-03 09:30。正文仅一句：“城西交通救援仍在处置，V02与V14暂未释放。”对象引用为 L02（城西交通救援现场）、V02、V14，区域 A03。\n\n**已确认（多源一致，未发现矛盾）**\n- 态势当前记录与本条报告一致：V02（水罐车，第 4 版）、V14（抢险救援车，第 4 版）均为 `unavailable`，effectiveAt 09:10、reportedAt 09:30、validUntil 10:00，并带声明“交通救援占用至 10:00”。\n- 与 09:13 来报 E02-a 状况描述（仍占用 V02/V14、原承诺至 10:00）连续一致，属于对既有判断的再次确认，而非新变化。\n- L02 现场记录（第 1 版，09:10）位于 A03，与报告区域标注一致。\n\n**待核实 / 信息缺口**\n- 报告未给出处置细节、现场是否仍需两车、是否申请延长、新的预计释放时点。10:00 可用期届满后是继续占用还是释放，须以后续来源回报为准。\n- 本条为最新修订（修订 1），未检索到同一 subject 的其他修订可作版本比对；本条无 validTime，业务有效期以态势记录的 validUntil 10:00 为参照。\n\n**业务判断时点**：场景业务时点为 2026-11-03 09:30（与观测时间同一时点），非宿主查询时钟；上述状态即该时点的有效记录。\n\n**任务关联**\n- 已记录关联：任务 `dfdfadba…`（城西交通救援，09:00—10:00，关注 L02/V02/V14、A03）——本条落在其目标与时段内，支持“释放以来源回报”的持续约束，持续结果为“仍占用、未释放”。\n- 另两个活动任务（临港登高演练，V05/L03/A01；临港仓储烟情核实与处置研判）与本条无对象、区域及时段重叠依据，未建立关联；若后续研判需调用城西车辆，V02/V14 至 10:00 不可用可作为资源条件参考，但这属推测，现有资料不足以据此建立关联。\n- 未提出新建任务建议：本条由现有“城西交通救援”任务完整承接，未见需独立承接的工作目标。\n\n任务判断已通过记录工具提交并取得成功回执（recorded）。以上仅为核对与判断记录，未创建任务、未分派工作，也不代表任何处置行动已完成。"
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "title": "仓库火势趋稳（09:40）",
+          "jobId": "6756e703-f252-4c5d-abf1-88424298c16b",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+            "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+            "e73fb51e-99c9-4b13-a9c3-0a58748cb67a"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e73fb51e-99c9-4b13-a9c3-0a58748cb67a",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接相关：本条为临港三号仓库（situation/resource/L01，A01）09:40 的现场最新状态，称火势趋稳、继续处置、尚不能确认事件结束，正是该任务所需“烟情/处置事实与不确定事项”的更新。可与09:16园区值班员确认（E04-a）及无人机支持（E04-b）的位置判断相互印证，位置已确认指向L01；但火势程度仅为现场定性描述，无量化指标、无处置单位与资源投入、未说明是否复燃风险，也不能据此认定事件结束。态势系统中L01仅有09:10位置记录、无火势或处置状态字段，无法交叉核验“趋稳”，需继续以来源回报为准。"
+            },
+            {
+              "task": "T02",
+              "taskId": "dfdfadba-df6f-4604-98fe-dbd7dc042397",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "12b839ba-8779-44d1-9e5c-85150c8f8eb4",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "可能影响待观察：演练任务聚焦A01，计划09:00—09:45进行，V05占用至09:45、释放以回报为准；本条09:40观测显示同一区域（A01）三号仓库火势虽趋稳但处置继续、事件未结束，距演练计划结束仅5分钟，存在区域安全与V05后续释放是否受现场处置影响的问题。但本条未涉及V05、L03或演练本身，无证据表明演练已受影响，关联仅为时段与区域重叠，需以演练专项回报和现场安全确认为准，不能据此调整或释放。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（供总体席）\n\n**来源与版本**\n- 报告：intel / `run-...-report-E12-a`，主题 E12，**修订1（该主题仅此一版，无历史修订可比对）**\n- 观测时间与发布时间均为 **2026-11-03 09:40:00 +08:00**；validTime 为空\n- 来源场景当前业务时点（businessNow）同为 **09:40**，即本条为目前最新的现场状态信息，无滞后\n- 对象：`situation/resource/L01`（临港三号仓库），区域 A01\n\n**已确认**\n- 位置：09:16 园区值班员确认（E04-a）与无人机观测（E04-b）两个独立来源均指向临港三号仓库 L01，指向一致\n- 09:12 首报（E01-a）“三号仓库与相邻仓库描述不一致”的位置歧义，已由 09:16 的两条核实信息解释；现状无位置争议\n- 现场在 09:40 报告 **火势趋稳、仍在处置**——这是来自现场的单一定性表述\n\n**待核实（缺口）**\n- “趋稳”无量化依据：未给明火/烟控制程度、复燃风险、过火或影响范围\n- 未说明处置单位、投入资源、现场负责人，也未给下一次回报时间\n- 未给出“事件结束”的判定标准；报告明确 **尚不能确认结束**\n- 态势系统 L01 仅有 09:10 的位置记录（有效至查询时点），**无火势、处置或事件状态字段**，无法用态势记录交叉验证“趋稳”\n- 本条不涉及道路通行；R01 中轴桥 09:23 封闭至 10:00（E08-a）与 09:11 巡查通行正常（E09-a，有效窗 09:11—09:12）时段不同，不构成矛盾，但对本事件的影响本条未覆盖\n\n**矛盾情况**：未发现与本条直接冲突的信息；本条属新增状态更新，不是对既有结论的更正。\n\n**影响范围与任务关联**（已调用记录工具并为以下任务保存判断，取得成功回执）\n- **临港仓储烟情核实与处置研判**：直接相关。本条是该任务所需的最新现场状态与不确定事项更新；可将“趋稳、继续处置、未结束”纳入事实层，但不足以支撑降级或结束判断。\n- **临港登高演练**（A01，09:00—09:45，V05 释放以回报为准）：**可能影响、待观察**。仅时段与区域重叠，本条未涉及 V05、L03 或演练，无证据表明演练受影响；不能据此调整或释放。\n- **城西交通救援**（A03，避开 R01/R02/R03）：不相关，未纳入。\n- 无独立于现有任务的新工作目标，故未提新建建议。\n\n**模型建议（非行动指令）**：下一次回报宜要求现场明确火势量化变化、复燃风险、处置主体与资源、预计控制时间及“结束”判定依据；在获得确认前，按“处置中、未结束”对待。任务创建、分派与对外发布仍由人员决定。"
+        }
+      ]
+    },
+    {
+      "summary": {
+        "trial": 2,
+        "messages": 13,
+        "recorded": 13,
+        "receiptMatches": 13,
+        "apiMatches": 13,
+        "allCandidatesObserved": 13,
+        "fullGoalsObserved": 13,
+        "allQueriesInWire": 13,
+        "repairs": 0,
+        "pairCounts": {
+          "不计分": 1,
+          "无依据关联": 4,
+          "未定·已关联": 6,
+          "漏关联": 1,
+          "符合": 23,
+          "未定·未关联": 4
+        },
+        "newSuggestions": 4
+      },
+      "messages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "title": "首报位置待核实（09:12）",
+          "jobId": "071d369c-cd3c-45d4-b94b-aecfa75a4911",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": null,
+              "expected": "尚不存在",
+              "actualLinked": false,
+              "outcome": "不计分",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "经比对不认为该任务需要考虑本条信息：该任务聚焦西城A03，作业与引用对象为L02、V02、V14，并明确不经过R01/R02/R03；本条烟情报属临港A01，引用L01，二者无共享对象、无同区域、时段目标也不同。仅同属一个业务辖区不构成关联依据，故不关联，后续如出现跨区增援或资源冲突再行判断。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "同一区域与同一时段的直接关联：该演练任务聚焦临港A01，09:00—09:45 在L03临港登高演练场进行，V05占用至09:45；本条烟情报观测时点09:12正处演练时段内，objectRefs指向同区A01的L01临港三号仓库（与L03同区、位置相近）。需考虑两种可能：一是烟情与演练作业的扬尘/发烟有关，属需排除的干扰；二是真实火情，则演练的既有安排（V05继续待命至09:45、之后按回报释放）可能需重新评估，且该任务的'以回报为准'释放条件需以现场核实结论为依据。目前位置与仓库编号均未确认，不能认定冲突或影响已成立，仅列为需持续关注的可能影响。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "核实临港仓储区烟情与位置",
+            "goal": "对intel/run-e8bef624-b83e-411c-b371-b2b6b30b50a8-report-E01-a（修订1，观测2026-11-03T09:12:00+08:00）开展独立核实：确认临港仓储区是否确实有烟、烟点究竟位于三号仓库(L01)还是来电所述的相邻仓库，消除报告内部的位置描述不一致；同时判断是否为临港登高演练(L03，09:00—09:45)作业产生的烟尘或其他非火情原因；若为真实火情，则明确影响范围与需要的处置力量。核实结论应同时用于判断临港登高演练任务中V05的释放时点是否需要提前。",
+            "reason": "现有两个活动任务均不宜承接此项工作：临港登高演练任务的目标是完成演练并按回报释放V05，不含对一条位置待核实的社会来电烟情做独立查证；城西交通救援任务属另一区域且无共享对象。该烟情本身具备独立工作目标属性（事实核实+位置消歧+演练干扰排除），但位置、仓库编号、烟的性质均未确认，故仅作为新建建议提交，由人员决定是否立任务。"
+          },
+          "emptyReason": null,
+          "finalText": "**事实核对结果（给总体席）**\n\n一、来源与版本（已确认）\n- 报告为 intel/…-report-E01-a，修订1，是该 subject（E01）下唯一一条报告，没有后续修订，也没有第二路来源。\n- 观测时间和发布时间均为 2026-11-03T09:12:00+08:00，validTime 为空；宿主快照业务时点（businessNow）同为 09:12，因此时间基准一致，不存在时间差或版本歧义。本次查询的实际执行时间不是业务时点，引用时应以 09:12 为准。\n\n二、可确认的事实\n- 有一通社会来电报告“临港仓储区有烟”；报告关联对象是临港三号仓库 L01（点坐标 121.8650368,30.88177），所属区域为 A01“临港”（区域边界记录 rev1 存在）。\n- 区域与对象记录：L01 位于 A01，属于该区域成员清单中的设施。\n\n三、待核实（尚无独立证据）\n- 是否确实有烟、烟点是否在三号仓库，还是在其相邻仓库；报告标题和正文都写明“位置待核实”。\n- 烟的性质（火情、演练扬尘或其他）、颜色、规模、持续时间；来电人的身份与可信度。\n- 报告内部的描述不一致（先写“三号仓库”、又写“相邻仓库”）属于**来源内部矛盾且未解释**，不能当成两个地点都有情况，也不能据此确定位置。\n\n四、与既有活动的可能关联（非已确认影响）\n- 同一区域存在进行中的“临港登高演练”任务：09:00—09:45 在 L03 临港登高演练场（121.8631572,30.8824992），它与 L01 同属 A01，粗略直线距离约 200 米（估算值，不作为定论）。烟情冒出时点正处演练时段内，因此“烟来自演练作业”是需要排除的干扰假设；如果最终确认为真火情，则该演练中 V05 的待命和释放安排（现为占用至 09:45、之后以回报为准）需要重新评估。目前不能认定为冲突。\n- “城西交通救援”任务属 A03，涉及 L02、V02、V14，且不经过 R01、R02、R03，与本条没有共享对象或同区关系，已判定无需关联。\n\n五、资源条件（按 09:10 有效记录，A01 内）\n- 可用：V01 水罐车、V03 泡沫车、V06 抢险救援车；H01—H04 消火栓均为 available。\n- 不可用：V05 登高车占用至 09:45（演练）；V04 泡沫车检修不可用至 11:00，且注明“须确认”，其恢复时点属不确定项。\n\n六、资料缺口\n- 无现场核实回报、无第二来源、无烟情要素描述与天气信息；区域成员清单中无独立核实力量配置记录，因此“是否有人力可即刻核实”无法从现有记录确认。\n\n七、记录情况\n- 已完整发现 2 个获准活动公共任务（已遍历，无更多分页），并已通过记录工具提交判断并取得成功回执：关联“临港登高演练”（可能影响和持续约束）、说明“城西交通救援”无需关联的理由；另提交一项新建建议“核实临港仓储区烟情与位置”，理由是现有任务目标都不承接对这条烟情做独立查证。该建议尚未创建任务，是否立任务或如何分派由人员决定。\n\n我未修改任何状态、未创建任务、未启动业务行动。"
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "title": "交通救援进展（09:13）",
+          "jobId": "9a4af8a3-697c-45ac-afa2-d3ba267d875c",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": false,
+              "outcome": "漏关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接对应任务目标：城西交通救援09:00—10:00、V02/V14在作业、释放以来源回报为准，业务引用与focus(A03)完全一致。本条报告(E02-a修订1，观测/发布时间均为2026-11-03T09:13+08:00，业务当前时点同为09:13)确认截至09:13两车仍未释放，与态势系统当前记录一致：V02(rev2)、V14(rev2) availability=unavailable，effectiveAt 09:10、reportedAt 09:13，validUntil 10:00，声明备注‘交通救援占用至10:00’，位置报告时间09:10，场地L02(rev1)。报告所称‘原承诺至10:00’与来源validUntil及任务时间窗一致，未发现矛盾；该10:00属承诺/预计值，非已确认释放时间。影响范围限于V02/V14两辆车的可用性及该救援任务时间窗，尚未涉及道路占用或R01/R02/R03绕行约束的执行情况(资料缺口)，亦无迹象表明需延长或改变任务目标，持续以后续来源回报核对实际释放时点即可。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已完成核对并保存任务判断（回执：recorded）。\n\n## 事实核对结果（截至业务时点 2026-11-03 09:13）\n\n**来报本身**\n- 报告 `intel/…-report-E02-a`，**修订 1**（最新），标题“交通救援进展”；观测时间与发布时间均为 2026-11-03 09:13+08:00，`validTime` 为空。\n- 正文要点：城西交通救援仍占用 V02、V14，当前尚未释放，原承诺至 10:00。\n- 引用对象：L02（城西交通救援现场）、V02、V14；区域 A03。\n\n**与当前有效来源的核对（已确认一致）**\n- V02 水罐车（rev2）、V14 抢险救援车（rev2）：可用状态均为 `unavailable`；`validUntil` 10:00；`effectiveAt` 09:10，`reportedAt` 09:13；声明备注“交通救援占用至10:00”；位置报告时间 09:10。\n- 现场 L02（rev1，位于 A03）坐标与两车一致，`effectiveAt`/`reportedAt` 09:10。\n- 两车变更记录只有一次 09:13 的修订（报告时间由 09:10 更新为 09:13），**没有释放事件**。\n\n**判断**\n- 已确认：截至 09:13，两车在城西交通救援现场作业、未释放；与任务“城西交通救援”（09:00—10:00，V02/V14 在作业，释放以来源回报为准）的业务引用与关注区域完全对应。\n- 待核实：10:00 只是**原承诺/预计释放时间**（`validUntil` 与“承诺”性质一致），不等于已确认的实际释放时点；若作业延长，需新的回报。\n- 相互矛盾：未发现。来报、态势当前记录、任务目标三者的时间与状态相互印证。\n- 资料缺口：本报告未涉及道路占用情况，也未提供“不经过 R01/R02/R03”这一绕行约束的执行证据，无法据此核对；其他两辆相关资源不在本条范围内。\n\n## 任务关联（已记录）\n- **城西交通救援**（唯一关联）：本条属其时间窗内的进展回报，影响范围限于 V02/V14 可用性与该任务释放时点，不改变任务目标；后续以来源回报核对实际释放即可。\n- 临港登高演练（V05、L03、A01）与临港仓储烟情核实（临港仓储、道路资源待核）与本条无对象、区域或时间窗口上的依据关联，未作勉强关联。\n- 未提出新建任务建议：该信息可由现有“城西交通救援”任务完整承接。\n\n说明：以上为事实核对与记录结果，未创建任务、未分派工作，也未主张任何业务行动已完成。"
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "title": "登高演练继续（09:14）",
+          "jobId": "357c2358-04df-40d5-8ad0-70fc7660515f",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "作为资源与位置背景需要考虑，非已确认冲突。该任务需核实烟情位置、当前道路及资源事实；来报虽不涉及烟情本身，但确认 A01 内唯一被点名的登高车 V05 在09:45前处于演练占用、以回报释放的状态，构成可用资源约束。位置事实：L03 演练场（121.8631572,30.8824992）与 E01-a（09:12，位置待核实）所引临港三号仓库 L01（121.8650368,30.88177）同属 A01，按点位直线估算相距约200米。不确定性：来报未证实或排除烟情，不能据此推断演练与烟情存在因果关系，也不能认为演练占用可解释烟情；仅提示若核实后需登高车或该区域资源，V05 在09:45前不可用，且释放时间须待回报确认。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "本条是任务核心事实的直接确认。来报 intel/report-E03-a（修订1，观测/发布均为2026-11-03T09:14:00+08:00）称演练已批准、正常进行、V05继续既定安排、占用至09:45、释放以回报为准，与任务目标逐项吻合。态势当前记录同样一致：V05 rev2（effectiveAt 09:10，reportedAt 09:14，availability=unavailable，validUntil 09:45）与 L03 临港登高演练场 rev1（09:10），同属 A01，V05 坐标与 L03 重合，显示车辆在场。未发现版本或时间冲突。需保留的约束与不确定性：09:45 是声明占用上限，validUntil 不等于自动恢复可用，实际释放须以来源回报为准；任务目标所写 09:00 开始时间在态势记录中无对应节点（最早记录为09:10），属未经态势佐证的时间；批准机关/文号、参演其他车辆、演练封控或影响道路范围本次资料均未提供，属资料缺口。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已核对并记录判断（任务判断保存成功回执已取得）。以下供总体席参考。\n\n**一、获准活动公共任务（已逐页完整发现，共3项）**\n1. 临港登高演练（关注范围 A01，业务对象为 L03、V05）\n2. 临港仓储烟情核实与处置研判（无业务引用与区域限定）\n3. 城西交通救援（关注范围 A03，业务对象为 L02、V02、V14）\n\n**二、本条信息的事实核对**\n- 来源：intel / report-E03-a，修订1（当前最新修订），观测时间与发布时间均为 2026-11-03T09:14:00+08:00；validTime 未给出；场景当前业务时点为 09:14。\n- 内容：临港登高演练已批准、正常进行，V05 继续既定安排，占用至 09:45，释放以回报为准。\n- 与当前有效态势记录一致，未见版本或时间冲突：\n - V05 登高车 rev2：effectiveAt 09:10，reportedAt 09:14，availability=unavailable，validUntil 09:45，声明备注“演练占用至09:45”；位置点与 L03 重合（121.8631572, 30.8824992）。\n - L03 临港登高演练场 rev1：effectiveAt 09:10，A01。\n - 与任务目标（09:00—09:45、V05继续既定安排、释放以回报为准）逐项吻合。\n\n**三、已确认 / 待核实 / 矛盾**\n- 已确认：V05 自 09:10 起处于演练占用、状态不可用，声明占用上限 09:45；车辆位于演练场，二者同在 A01。来报与态势记录相互吻合。\n- 待核实：①“已批准”仅有本条来源，未见批准机关或文号；②09:45 是计划上限，validUntil 不等于自动恢复，实际释放须待来源回报；③任务目标中的 09:00 开始时间在态势记录中无对应节点（最早记录 09:10），仅属来报与任务表述；④参演其他资源、演练是否封控或影响周边道路，本次资料未提供。\n- 矛盾：无直接矛盾。仅有一处表述需区分——“占用至09:45”是计划上限，“释放以回报为准”是实际释放条件，不能据前者在 09:45 自动判定 V05 可用。\n\n**四、任务关联判断（已记录）**\n- 临港登高演练：本条是核心事实的直接确认，不改变任务范围，但须保留“释放待回报”的持续约束及上述资料缺口。\n- 临港仓储烟情核实与处置研判：作为资源与位置背景需要考虑。E01-a（09:12，位置待核实，引用临港三号仓库 L01，121.8650368, 30.88177）与 L03 演练场同属 A01，点位直线估算相距约 200 米；若核实后需登高车或该区域资源，V05 在 09:45 前不可用构成约束。来报并未证实或排除烟情，不能推断演练与烟情存在因果或以此解释烟情。\n- 城西交通救援：关注范围为 A03，对象为 L02、V02、V14，与本条的资源、区域均无交集，不纳入。\n\n**五、新建建议**\n无。本条已被现有“临港登高演练”任务完整承接，不存在需另立目标的独立工作。未创建任务、未分派工作，也未据此宣称演练释放或烟情结论已成立。"
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "title": "仓库位置核实·园区值班员（09:16）",
+          "jobId": "57621253-e3a0-46d8-9102-2d8982e59577",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接支撑该任务目标（核实临港仓储烟情具体位置）。本条(E04-a，rev1，观测/发布 2026-11-03T09:16+08:00，引用资源 L01、区域 A01)由园区值班员确认烟情来自临港三号仓库，与同为 E04 主题的 E04-b(rev1，09:16，无人机观测支持三号仓库判断)相互印证，基本解决 E01-a(09:12)所称“三号仓库与相邻仓库描述不一致、位置待核实”的位置矛盾。situation 当前(业务时点 09:16，快照 rev6)：L01 临港三号仓库 rev1，A01，坐标 121.8650368,30.88177，设施无状态属性。仍待核实：相邻仓库是否受影响/是否排除、烟量与是否有明火、人员情况、仓储物性质、风向；道路 R01/R03 状态为 09:10 生效的 open，早于本条，存在时间滞后。可用于处置研判的资源条件：V01/V03/V06 可用，V04 检修不可用至 11:00(来源注明“须确认”)，V05 演练占用不可用至 09:45。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "可能影响但非已确认冲突。该演练任务关注 A01 内 V05 登高车（继续既定安排、占用至 09:45、释放以回报为准）。本条确认烟情位于同一区域 A01 的 L01 临港三号仓库（121.8650368,30.88177），与演练场 L03(121.8631572,30.8824992)相距约数百米；situation 显示 V05 rev2 于 09:14 因演练占用不可用至 09:45。若烟情升级为需出水/登高处置，V05 的可调性将受限，演练原安排可能需重新权衡。本条未涉及 V05、演练场或演练指令，无召回或变更依据，是否调整由总体席判断。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（供总体席参考）**\n\n**1. 本条与版本**\n- 来源：intel / 报告 run-…-E04-a，主题 E04，**修订 1（当前唯一条修订，无历史版本可比对）**。\n- 观测时间＝发布时间＝**2026-11-03T09:16:00+08:00**；正文仅一句：“园区值班员确认烟情来自临港三号仓库。”\n- 引用对象：situation 资源 **L01（临港三号仓库）**；区域 **A01（临港）**。\n- 业务判断时点：情况系统快照 revision 6，businessNow＝**2026-11-03T09:16:00+08:00**，与观测时间一致；检索宿主时间为 2026-11-06，仅代表本次查询时刻，不作业务时间。\n\n**2. 已确认**\n- 烟情来源位置：**临港三号仓库（L01）**，A01 内，坐标 121.8650368,30.88177（L01 rev1，生效 09:10）。\n- 同主题 **E04-b（rev1，09:16）**独立佐证：“无人机在 09:16 观测到临港三号仓库烟情，位置与园区值班员报告一致。”两条独立来源互不矛盾。\n- 因此 **E01-a（09:12，首报）所称“三号仓库与相邻仓库描述不一致、位置待核实”中的“来源仓库”一项已获合理解答**。\n- 现状：L01 在情况系统中只有位置/数量属性，**无设施状态（过火、受损、可用性）记录**；R01 中轴桥、R03 滨港路 passability＝open，但生效时间为 **09:10**，早于本条 6 分钟，存在时滞，不能等同 09:16 的通行实况。\n\n**3. 待核实（本条未覆盖）**\n- 相邻仓库是否受影响、是否可排除（首报“描述不一致”的另一方未被明确排除）。\n- 烟量、有无明火、燃烧物/仓储物性质、人员被困或伤亡、风向与扩散方向。\n- 无人机为同一时点的一次观测，**无后续持续监测记录**。\n\n**4. 相互矛盾情况**\n- 现存资料间**无实质性矛盾**；E01-a 与 E04-a/b 的关系是“先前不确定→后续确认”，属版本推进而非冲突。\n- 需注意一类常见误读：**不能由本报告推断相邻仓库无烟**，报告只确认了来源位置。\n\n**5. 当前资源与状态（依据 situation 快照 rev6，业务时点 09:16）**\n- 可用：V01 水罐车、V03 泡沫车、V06 抢险救援车。\n- **V04 泡沫车不可用**，检修预计至 11:00（来源声明注明“须确认”）。\n- **V05 登高车不可用**（rev2，reportedAt 09:14），因登高演练占用至 09:45，释放以回报为准。\n- 消防站 S01、消火栓 H01–H04 在 A01 内，均为 available（09:10 生效）。\n\n**6. 任务关联判断（已通过记录工具保存，取得成功回执）**\n- **临港仓储烟情核实与处置研判**：直接支撑，已确认位置并给出仍待核实项与资源条件。\n- **临港登高演练**：有依据的**可能影响**，非已确认冲突——烟情在同一 A01 区域，L01 与演练场 L03 相距约数百米，且 V05 正因演练占用至 09:45；若需登高/出水处置，V05 可调性受限。本条不含召回或变更演练的任何依据，是否调整由总体席决定。\n- **城西交通救援**：未关联——属 A03、涉及 L02/V02/V14，且明确不经 R01/R02/R03，与本站所述位置和对象无事实交集；同名“临港”不构成关联依据。\n- 未提出新建任务建议：位置核实与不确定项梳理已在现有任务目标范围内，尚无现有任务不宜承接的独立工作目标。\n\n以上为事实核对，不代替人员决策；未创建任务、未分派工作。"
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "title": "仓库位置核实·无人机（09:16）",
+          "jobId": "5171cfda-cb4e-43b8-ab11-732a5aa0c318",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接回应任务目标“核实临港仓储烟情的具体位置”。事实：无人机09:16观测到临港三号仓库烟情，与09:16值班员报告E04-a（三号仓库）一致；态势侧L01即“临港三号仓库”，位于A01内，坐标121.8650368,30.88177，09:10生效记录，资源目录完整无缺失。可判定为：位置指向三号仓库已获值班员与无人机两源印证。仍待核实：(1) 09:12首报E01-a称“三号仓库与相邻仓库描述不一致”，本次仅总体称“一致”，未逐项澄清相邻仓库是否也有烟情；(2) 烟情性质、规模、是否明火未描述，未附无人机影像/航迹/热成像信息；(3) 标题“确认”与正文“支持…判断”语气不一，应按正文理解为支持性证据；(4) 道路R01中轴桥、R03滨港路仅见09:10 passability=open，不能视为09:16后通行保障已确认。建议任务把“位置”项更新为两源印证、证据等级仍为待补充原始影像，并保留上述不确定项。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "存在事实层面的资源与地理联系，需演练方自行判断而非直接认定冲突：演练场L03（121.8631572,30.8824992）与已获印证的L01三号仓库（121.8650368,30.88177）同属A01，直线约200米；V05登高车为区域唯一登高车，当前unavailable至09:45、状态依据为“演练占用至09:45”（revision 2，09:14回报）。若烟情后续需要登高车，演练占用即构成资源约束。不确定点：报告未涉及演练安排，未说明烟情与演练是否同源、是否已产生安全影响，故不能断言演练受威胁或须中止；仅提示该任务需核对演练是否继续、V05是否需提前释放，释放仍以来源回报为准。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已完整查询获准活动公共任务（3 项，无分页），读取了全部任务目标，并完成资料核对与判断记录（回执成功，已关联 2 项任务，未新建任务）。\n\n## 一、本条信息核对结果\n\n**报告本体**：intel / run-e8bef624-…-report-E04-b，修订 1（无历史修订，不存在版本覆盖问题）；标题“无人机确认仓库位置”；观测时间与发布时间均为 2026-11-03T09:16:00+08:00。业务当前时点取来源快照 2026-11-03T09:16:00+08:00（快照 revision 6），此前的宿主查询时间仅为本轮查询时刻，不作业务时间使用。\n\n**已确认（两源印证）**\n- 点位结论：无人机 09:16 观测到临港三号仓库烟情，与同一时点园区值班员报告（E04-a）一致。\n- 对象对应：态势侧 L01 即“临港三号仓库”，属 A01，坐标 121.8650368, 30.88177，09:10 生效；A01 资源目录返回完整，无缺失对象。\n\n**待核实 / 表述需注意**\n- 标题写“确认”，正文只写“支持…位置判断”，语气强于证据强度，建议按正文理解为**支持性印证**，而非现场取证结论；报告未附无人机影像、航迹或热成像信息。\n- 09:12 首报（E01-a）称“三号仓库与相邻仓库描述不一致”，本条只说“与值班员报告一致”，**未逐项澄清相邻仓库是否同时有烟情**，不能据此排除。\n- 烟情性质、规模、是否明火均未描述；三条来源的观测时点分别为 09:12、09:16、09:16，信息增量有限。\n- 无明显相互矛盾：现有资料是三段递进（首报存疑→值班员指向三号仓库→无人机支持），并非互相冲突；但“一致”是结论层面的一致，不是细节层面的一致。\n\n## 二、任务关联判断（已落库）\n\n- **临港仓储烟情核实与处置研判**：直接相关。位置项可更新为“三号仓库、两源印证、原始影像待补”；同时保留相邻仓库、烟情性质、道路通行三项待核实。\n- **临港登高演练**：有事实层面联系但非已确认冲突。演练场 L03 与三号仓库同属 A01，直线约 200 米；V05 为区域唯一登高车，当前不可用至 09:45（依据“演练占用至 09:45”，revision 2，09:14 回报）。若烟情需要登高车，演练占用即构成资源约束，需该任务自行核对是否续演或提前释放（释放以来源回报为准）。\n- **城西交通救援**：经核查判定不纳入。其关注范围为 A03，业务引用为 L02/V02/V14，且明确不经过 R01/R02/R03，与本条（A01、L01）无共享对象或路径关系，仅“同时处于活动状态”不构成关联依据。\n\n## 三、资源与状态缺口（按当前有效记录）\n\n- 可用：V01 水罐车、V03 泡沫车、V06 抢险救援车，H01–H04 消火栓均可用（09:10 生效）。\n- 不可用：V05 登高车至 09:45（演练占用）；V04 泡沫车检修至 11:00，备注“须确认”，属**未最终确认的可用性**。\n- 道路：R01 中轴桥、R03 滨港路 09:10 记录为可通行，09:16 之后未更新，不能视为已确认保障。\n- 缺口：仓库周边消防设施与建筑结构、烟情规模、无人机原始取证材料均无记录。\n\n未创建任务、未分派工作；新建建议为空，理由是位置核实事项目标已由现有“临港仓储烟情核实与处置研判”承接，无独立于其外的新工作目标。"
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "title": "车辆资源清单确认（09:18）",
+          "jobId": "cc0f7b5c-ae36-4a0b-8eee-1560346fdc86",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "报告主题是车辆资源清单核对，与任务目标中\"核实资源事实、整理不确定事项和进一步核实需求\"直接相关。按态势当前记录（asOf/businessNow 2026-11-03T09:18:00+08:00，快照 rev7）逐车核对：24 车中 17 辆可用（V01、V03、V06–V11、V13、V15–V20、V22、V23），5 辆不可用（V02、V14 至 10:00；V05 至 09:45；V04 检修预计 11:00，待确认；V12 例行检查最早 09:40，待完成确认），2 辆状态未知（V21\"南湾留守、跨区支援需确认\"；V24 最后记录 08:50，其位置记录 validUntil 09:10 已过期）。影响范围：全区 6 站 24 车的可用性判断与后续调派余量。不确定性：报告正文仅一句概述、未逐车给出状态，\"其余车辆状态见各车记录\"属指向性表述，须回态势逐车记录核实；报告引用仅 V01–V20（20 条）、区域仅 A01–A05，未覆盖 A06 的 V23/V24 及 A05 的 V21/V22；validTime 为空，该报告只是 09:18 时点快照，不是持续状态承诺。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "V02、V14 均在报告引用范围内，与任务\"09:00—10:00 城西交通救援、V02/V14 仍在作业、释放以来源回报为准\"直接相关。核对结论：态势 V02 rev3、V14 rev3 均为 unavailable，有效至 2026-11-03T10:00，依据声明\"交通救援占用至 10:00\"，与任务时间窗一致，未发现矛盾。影响范围：09:18 时点该两车仍在占用，10:00 前不可另调。不确定性：报告只确认清单层面，不构成释放凭据；任务另含\"不经过 R01/R02/R03\"的路线约束，本报告不含道路信息，无法据此核对路线，该约束须由其他资料确认。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "V05 在报告的引用范围内，与本任务\"V05 继续既定安排、09:00—09:45 演练、之后释放以回报为准\"直接相关。核对结论：态势 V05 rev3 可用性 unavailable，有效至 2026-11-03T09:45，依据声明\"演练占用至 09:45\"，与任务时间窗 09:00—09:45 一致，未发现矛盾；09:18 时点 V05 仍处占用状态。影响范围：V05 在 09:45 前不可用于其他处置，属既定占用而非新增缺口。不确定性：报告未单列 V05 细节，上述结论依据态势当前记录；本报告不构成释放凭据，09:45 后是否释放仍须以来源回报为准。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "六站二十四车清单完整性与状态缺口确认",
+            "goal": "以 2026-11-03T09:18:00+08:00 为业务时点，核清该清单报告与实际资源集的一致性并补齐缺口：1）报告称\"六站二十四车\"，态势确有 S01–S06 六站、V01–V24 二十四车，但报告对象引用仅 V01–V20 共 20 条、区域仅 A01–A05，V21–V24 未被引用（可能为导出条数截断，需确认是否遗漏）；2）逐项确认 V24 泡沫车（A06）当前位置与可用性（最后记录 08:50，位置记录 validUntil 09:10 已过）、V21 抢险救援车（A05）\"南湾留守、跨区支援需确认\"的实际可用性、V04 检修（预计 11:00）与 V12 例行检查（最早 09:40）的完成情况、V22 与 V23 的可用性；3）产出 09:18 时点全量 24 车\"可用／不可用（含占用来源与解除时点）／未知\"三分清单及待核实清单，供总体席判断调派余量。仅整理事实与缺口，不代替人员决策或调派。",
+            "reason": "现有三项活动任务分别聚焦临港仓储烟情核实、临港登高演练（V05）、城西交通救援（V02/V14），均未承接\"全量车辆清单完整性、引用覆盖缺口与 A06 车辆状态确认\"这一独立目标。该报告自称\"已核对\"，但引用与区域覆盖不完整、正文无逐车状态，若不单独跟进，V21/V24 未知状态与 V04/V12 待确认事项无任务承接，易被当作已核实使用。"
+          },
+          "emptyReason": null,
+          "finalText": "已完成核对并保存任务判断（回执 status=recorded）。以下为提交总体席的核对结果。\n\n## 一、报告基本要素\n- 报告：intel / `run-e8bef624-...-report-E05-a`，修订 1，观测与发布时间均为 2026-11-03T09:18:00+08:00，`validTime` 为空 → 属 09:18 时点快照，非持续状态承诺。\n- 与态势快照对时：同一业务时点 2026-11-03T09:18:00+08:00（快照 rev7），两侧可比，无时点错位。\n\n## 二、已确认（报告与当前有效记录一致）\n- 数量与编成：\"六站二十四车\"与现状吻合——S01–S06 共 6 站、V01–V24 共 24 车。\n- V24：态势 rev1，可用性 `unknown`，最后上报 08:50，声明\"最后 08:50 记录，当前状态与位置待确认\"，与报告表述一致。\n- V05：unavailable，有效至 09:45，依据\"演练占用至 09:45\"，与临港登高演练时间窗一致。\n- V02、V14：均 unavailable，有效至 10:00，依据\"交通救援占用至 10:00\"，与城西交通救援时间窗一致。\n\n## 三、待核实\n- V24 位置记录 `validUntil` 09:10 已过期，09:18 时点位置不可用；当前状态与位置均缺。\n- V21：可用性亦为 `unknown`（\"南湾留守，跨区支援需确认\"），报告未单独提示，只笼统称\"见各车记录\"。\n- V04 检修（预计 11:00，\"须确认\"）、V12 例行检查（最早 09:40，\"须完成确认\"）：解除时点为预估，未经确认。\n\n## 四、相互矛盾/覆盖缺口\n- 无直接事实冲突，但存在口径缺口：报告称\"已核对二十四车\"，对象引用却仅 V01–V20（20 条）、区域仅 A01–A05；V21、V22（A05）与 V23、V24（A06）未被引用，A06 未纳入区域。可能为导出条数截断，但按已发布报告计，覆盖不完整。\n- 报告正文仅一句概述，\"其余车辆状态见各车记录\"是指向性表述，不构成逐车核实结论；不能当作已核实凭据使用。\n- 任务路线约束（城西救援\"不经过 R01/R02/R03\"）本报告不含道路信息，无法据此核对。\n\n## 五、09:18 时点车辆三分（据态势当前记录）\n- 可用 17 辆：V01、V03、V06–V11、V13、V15–V20、V22、V23。\n- 不可用 5 辆：V02（至 10:00）、V14（至 10:00）、V05（至 09:45）、V04（检修，约至 11:00）、V12（检查，最早 09:40）。\n- 未知 2 辆：V21、V24。\n\n## 六、任务判断（已记录）\n- 临港仓储烟情核实与处置研判：相关，提供资源事实与不确定事项；影响全区调派余量判断。\n- 临港登高演练：相关，V05 占用至 09:45 与任务窗口一致，无冲突；报告不构成释放凭据。\n- 城西交通救援：相关，V02/V14 占用至 10:00 与任务窗口一致；报告不构成释放凭据。\n- 另提新建建议（未创建，待人员确认）：\"六站二十四车清单完整性与状态缺口确认\"——现有三项任务均未承接全量清单完整性、V21–V24 引用缺口及 A06 车辆状态确认。\n\n权限内未创建任务、未分派工作、未对外回报；V24/V21 状态与 V04/V12 解除时点仍为资料缺口，需来源补充。"
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "title": "北货运路施工（09:19）",
+          "jobId": "0d55395b-0fdb-4c81-a625-3d8cd1534ecf",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "北货运路施工通行影响核实",
+            "goal": "核实北城北货运路（R04）局部施工的具体路段、限制通行方式、预计起止时间及可绕行路线，跟踪通行恢复情况，并向总体席反馈核实结果与仍存缺口。",
+            "reason": "来报与态势当前记录一致显示R04于2026-11-03 09:19由“open”变为“restricted（局部施工限制通行）”，但未给出施工路段范围、限制车道、结束时间和绕行安排。现有三项活动任务分别聚焦临港A01（烟情核实、登高演练）和西城A03（交通救援），均不覆盖北城A04/R04，无法承接该核实工作，故建议由人员确认是否新建。"
+          },
+          "emptyReason": null,
+          "finalText": "## 北货运路施工来报核对结果\n\n**来源与版本**\n- 报告：intel `run-e8bef624-b83e-411c-b371-b2b6b30b50a8-report-E06-a`，修订 **1**（当前最新，也是唯一修订）\n- 来源标识：mock-situation-source\n- 观测时间和发布时间：**2026-11-03 09:19:00 +08:00**\n- 业务判断时点：态势快照 `businessNow` 为 **2026-11-03 09:19:00 +08:00**（快照修订 8）；本轮宿主查询时间 2026-11-06 仅用于记录本次查询，不作为业务时点\n\n**已确认事实**\n- 道路：**R04 北货运路**，所属区域为 **A04 北城**\n- 通行状态：态势当前记录为 **restricted，即局部施工限制通行**，有效时间从 2026-11-03 09:19 起\n- 变化前：R04 修订 1 的有效时间为 09:10，状态为 **open**\n- 报告正文与态势记录相互一致，未发现事实矛盾\n\n**待核实或缺口**\n- 具体施工路段和影响长度尚未说明\n- 限制方式，例如是全封闭还是部分车道受限，以及应急车辆能否通行，均未说明\n- 施工起止时间、预计恢复时间均未给出，`validTime` 为空\n- 绕行路线尚未明确\n- 未发现该主题的其他修订或补充报告\n\n**任务判断**\n- 已核对全部 3 项获准活动公共任务，均未建立关联：\n  - 临港仓储烟情核实（A01）：不涉及 A04、R04\n  - 临港登高演练（A01，09:00—09:45）：不涉及 A04、R04\n  - 城西交通救援（A03，09:00—10:00，明确不经过 R01、R02、R03）：不涉及 A04、R04\n- R04 与上述任务的关注区域不同，现有资料也没有显示上述任务会使用 R04，因此不因“道路施工”这一关键词强行关联。\n- 已通过任务判断记录工具成功保存，回执状态为 `recorded`。\n- 另建议由人员确认是否新建“北货运路施工通行影响核实”任务，该建议**尚未创建任务**，也不代表已经分派工作。\n\n**资源情况**：本条报告未引用任何资源对象，因此没有可核对的资源状态；A04 的区域成员包含 S04、V16—V19、H07、R04、R05，但这些对象的当前作业状态不在本条来报范围内，尚未逐项核实。"
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "title": "城北路巡查（09:21）",
+          "jobId": "f025127f-a7da-411e-9690-67e395c67e67",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": "已不带筛选完整列出并逐一读取全部 3 个获准活动公共任务：①临港仓储烟情核实与处置研判（聚焦临港 A01 的 L01 仓储烟情，位置/道路/资源事实）；②临港登高演练（A01，资源 L03、V05，09:00—09:45）；③城西交通救援（A03，资源 L02、V02、V14，09:00—10:00，明确不经过 R01/R02/R03）。本条信息仅为北城 A04 内 R05 城北路的例行巡查，观测时间 2026-11-03T09:21:00+08:00，报告修订 1，内容为“通行正常”。与三个任务的地域（A01/A03 对 A04）、对象（L01/L03/V05/L02/V02/V14 对 R05）及作业路线均无交集；现有报告记录中也没有任何任务把 R05 或北城区域列为通行依赖、替代路线或待核实事项（临港烟情首报、仓库位置核实等均在 A01/L01），因此不因“城北路”名称与“城西”相似而关联。事实层面该报告与态势系统 R05 当前记录（revision 2，effectiveAt 09:21，passability=open；变更记录 09:10 revision 1 至 09:21 revision 2 通行状态未变）一致，属例行确认，未对任何任务构成影响、待核实项或持续约束；北城同区 R04 北货运路 09:19 局部施工限制通行是另一条道路，不构成本信息与上述任务的关联依据。本条亦无现有任务不宜承接的独立工作目标（无需处置、核验或持续跟踪），故不提出新建任务建议。",
+          "finalText": "已按要求完成核对：先不带筛选完整列出 3 个获准活动公共任务，并逐条读取其完整目标；随后调用判断记录工具记录结果，且已取得成功回执（即工具返回的成功回执，记录时间为 2026-11-06T08:34:21Z，未创建新任务，未改变投递）。以下给总体席的事实核对结论。\n\n**一、本条信息事实**\n- 来源与版本：systemId=situation 的 sourceId=mock-situation-source，对应情报报告 intel/run-e8bef624-b83e-411c-b371-b2b6b30b50a8-report-E07-a，修订第 1 版（当前最新版，无历史修订）。\n- 内容：R05 城北路例行巡查，确认通行正常；正文仅一行，没有巡查时段、路线细节、异常描述和巡查人。\n- 时间：观测时间 = 发布时间 = 2026-11-03T09:21:00+08:00；validTime 为空；场景业务当前时点（businessNow）同为 09:21，即本条为当前时点的快照，不覆盖此后变化。\n- 对象：道路 R05 城北路，所属区域 A04（北城）。\n\n**二、与当前有效记录的核对（已确认）**\n- 态势系统 R05 当前记录为 revision 2，effectiveAt 09:21，passability=open；变更记录显示从 revision 1（09:10）到 revision 2（09:21），通行状态始终为 open。报告结论与之一致，因此“通行正常”可按已确认事实引用。\n- 不存在相互矛盾：本条与现有记录、同期报告均无冲突。\n\n**三、需注意但不属于本条的相邻事实**\n- 同属 A04 的 R04 北货运路（intel/…-report-E06-a，09:19）报告局部施工、限制通行。该情况属于另一条道路，不能据此推断城北路受限，也不能把“北城有施工”扩大为城北路受影响；如需掌握北城整体通行状况，应以 R04 单独记录为准。\n\n**四、待核实与资料缺口**\n- 例行巡查的覆盖范围有多大、是否包含 R05 全线、巡查持续了多久均未说明，因此不足以支撑长时间窗口内的通行保证。\n- 当前快照未包含 09:21 之后的任何状态变化，使用结论时需注明时点。\n\n**五、任务关联判断（已记录）**\n- 三个活动任务：临港仓储烟情核实与处置研判（A01、L01）、临港登高演练（A01、L03/V05）、城西交通救援（A03、L02/V02/V14，明确不经过 R01/R02/R03）。\n- 本条信息落在 A04 北城，对象与作业路线均与上述任务无交集，现有报告也没有任何任务将 R05 或北城列为通行依赖、替代路线或待核实项；不因“城北路”与“城西”字面相近而关联。\n- 结论：本条属例行确认，未对任何任务构成影响、事实补充或持续约束；也没有需要新任务承接的独立目标，因此没有提出新建任务建议，相关理由已随判断一并记录。\n\n以上仅为事实核对与影响研判，未代替人员创建任务、分派工作或认定业务行动已完成。"
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "title": "中轴桥封闭（09:23）",
+          "jobId": "d67d54f3-5d17-465f-8857-8f7b944d087f",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "任务目标明确包含核实临港仓储烟情的“当前道路及资源事实”并整理不确定事项。本条报告 R01 中轴桥位于临港 A01，自 09:23 起因临时事故封闭至 10:00，直接影响通往临港三号仓库（L01，烟情已由 E04-a/E04-b 指认为目标仓库）方向的通行事实。影响范围：A01 内出勤/增援路线选择，以及 09:23—10:00 窗口内的到场时间评估。不确定性：事故性质、是否设有绕行路线、10:00 能否按期解封均未确认；R03 滨港路在来源中为 open，但未核实其是否为可用替代通道。建议该任务将 R01 封闭及替代路线一并纳入道路事实与核实需求，不以本条推断烟情变化。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务承载“不经过 R01/R02/R03”的持续约束，作业区为 A03、时段 09:00—10:00。本条 R01 封闭至 10:00 与该约束方向一致，不构成冲突，也不要求调整既有安排；作用是把该约束从计划要求变为有来源支持的实际限制。不确定性：任务目标是救援作业与按来源回报释放，来源未说明 V02/V14 的实际行驶轨迹，故无法核验是否确实未进入 R01。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "该演练在临港 A01 的 L03 登高演练场进行，V05 占用至 09:45，与 R01 封闭时间窗（09:23—10:00）重叠。影响范围：演练结束后的车辆撤离、器材补给或转场路线若需经中轴桥，则受限；若演练就地结束并按既定安排释放，则影响很小。不确定性：来源未给出 V05 及演练保障车辆的行驶路线，V05 当前位置与演练场同点，无法确认是否涉及 R01。建议仅作为持续约束提示，暂不改变已批准演练安排，释放仍以专项回报为准。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "中轴桥封闭原因与解封核实",
+            "goal": "核实 R01 中轴桥 09:23 临时事故的性质、现场处置与道路封闭范围，确认是否存在可用的绕行路线（重点核实 R03 滨港路等），并跟踪 10:00 预定解封是否兑现；形成封闭窗口内对临港 A01 通行的确认结论与待核实清单，供总体席研判。不替代人员决策或现场指挥。",
+            "reason": "现有三个任务中，“临港仓储烟情核实与处置研判”侧重于烟情位置与处置所需资源事实，“临港登高演练”和“城西交通救援”各有既定作业目标与路线约束，均不以核实事故本身、绕行可行性和解封时点为工作目标。本条仅一行“临时事故封闭至10:00”，事故原因、封闭范围、绕行方案和解封确认均无来源支持，属于现有任务不宜承接的独立核实事项，需人员确认后建立。"
+          },
+          "emptyReason": null,
+          "finalText": "已核对完毕，判断已记录并取得成功回执。以下事实核对结果给总体席：\n\n**本条信息（intel/E08-a，修订1）**\n- 正文仅一句：R01 中轴桥因“临时事故”封闭至 10:00；观测与发布时间均为 2026-11-03T09:23:00+08:00，无独立 validTime 字段。\n- 业务判断时点：来源快照 businessNow = 2026-11-03 09:23，与观测时间一致，本条属“刚发生”的报告，不是事后回溯。\n\n**已确认（来报与态势记录一致）**\n- 态势系统 R01 中轴桥（rev 2）当前可通行性为 closed，限制说明“临时事故封闭至10:00”，有效期 09:23—10:00，属临港 A01；两者无矛盾。\n- 关联设施均在 A01：临港三号仓库 L01、登高演练场 L03、消防站 S01 及消火栓 H01—H04；R03 滨港路为 open。\n\n**待核实**\n- 事故性质、封闭范围（全幅还是单向）、是否有绕行方案均无来源支持；“至10:00”是预定解封时点，未见解封确认。\n- R03 滨港路虽为 open，但能否作为中轴桥的有效替代通道未核实。\n- 无独立佐证报告，本条为单一来源。\n\n**相互矛盾**：现有资料中未见与 R01 状态相矛盾的记录。需注意的一点是：本条与 R01 封闭同时，A01 内 V05 仍为 unavailable（演练占用，validUntil 09:45），这是资源状态而非道路状态冲突，时间窗与封闭期部分重叠。\n\n**任务判断（3 项已记录，另提 1 项新建建议）**\n1. 临港仓储烟情核实与处置研判——需纳入。该任务目标本身包含“当前道路及资源事实”，R01 是通往 L01 方向的通行限制；影响到场时间评估，不据此推断烟情变化。\n2. 临港登高演练——需关注。封闭期覆盖演练结束（09:45）后的撤离/转场时段；但 V05 当前位置与演练场同点、来源未给行驶路线，故仅为持续约束提示，不改变既定安排。\n3. 城西交通救援——需参照。任务已载“不经过 R01/R02/R03”，本条与该约束方向一致，无冲突；V02/V14 实际轨迹无来源，无法核验。\n4. 新建建议（待人员确认）：中轴桥封闭原因与解封核实——核事故性质、绕行可行性（含 R03）、10:00 解封是否兑现。现有任务均不以该独立核实为目标。\n\n以上为事实核对与关联判断，未创建任务、未分派工作，也未视为业务处置已完成。"
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "title": "旧巡查报告晚到（09:24收、09:11观测）",
+          "jobId": "310dd225-3ded-4d90-98a9-d480988da1d6",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务明确要求核实当前道路事实。本条仅提供09:11时点（有效窗口09:11—09:12）的R01中轴桥通行正常快照，已被09:23生效的当前记录（R01封闭、临时事故封闭至10:00）取代，不能作为现状引用。影响范围：A01区域内道路通行判断；不确定性：R01是否落在烟情具体影响范围内未确认，本条未涉及烟情位置。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务明确设定“不经过R01/R02/R03”的持续约束，R01封闭至10:00覆盖救援时段09:00—10:00，与本条及其后续状态直接相关：09:11通行正常不改变禁止经过的约束，09:23封闭进一步支持该约束。影响范围：救援路线选择与作业窗口；不确定性：救援具体行经道路未在资料中列明，无法确认是否还有相邻道路受封闭影响。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "演练在09:00—09:45于A01开展，R01中轴桥位于同一区域，且封闭期09:23—10:00与演练时段重叠。本条09:11记录属演练期内但在封闭前，可作为封闭前基线，不能说明当前可通行。影响范围：区域内车辆通行与可能的路线选择；不确定性：任务目标未写明演练是否经过或需要使用R01，是否存在实际影响需进一步核对。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（总体席）**\n\n**本条来报**\n- 报告：intel/…-report-E09-a，修订 1（仅此一版，无历史修订）\n- 观测时间：2026-11-03 09:11；有效窗口 09:11–09:12；发布时间 09:24\n- 内容：巡查时 R01 中轴桥通行正常（对象 situation/road/…-R01，区域 A01）\n\n**版本与时间线核对**\n| 时间 | 事实 | 来源 |\n|---|---|---|\n| 09:10 起 | R01 通行正常（rev.1） | 态势变化记录 |\n| 09:11 | 巡查：通行正常 | 本条 E09-a |\n| 09:23 | R01 封闭，临时事故封闭至 10:00（rev.2，当前有效） | 态势记录；另有 E08-a「中轴桥封闭」同刻报告 |\n| 09:24 | 业务时点（当前快照） | snapshotClock |\n\n**判断**\n- **已确认**：09:11 时点 R01 通行正常，属封闭前的真实快照；当前（09:24）R01 为封闭状态，依据当前有效记录及 E08-a。\n- **不构成矛盾**：两者观测时点不同，其间 09:23 发生状态变更；本条并未误报。\n- **待核实**：事故具体性质、封控范围、10:00 能否如期恢复，以及 E08-a 之外的现场细节；资料中未见对 10:00 后状态的记录。\n- **需注意的时效风险**：本条发布在封闭之后（09:24）却描述 09:11 的正常状态，其有效窗口已于 09:12 结束，**不可作为现状引用**；若被当作当前通行情况，可能误导路线安排。\n\n**任务关联（已成功记录，回执已取得）**\n- 临港仓储烟情核实与处置研判：该任务需要当前道路事实，本条已被 09:23 封闭取代，只能作历史基线；烟情是否落在 R01 影响范围内未确认。\n- 临港登高演练：同处 A01，封闭期 09:23–10:00 与演练 09:00–09:45 重叠；但任务目标未写明是否需经 R01。\n- 城西交通救援：任务明确「不经过 R01/R02/R03」的持续约束，封闭至 10:00 覆盖救援窗口，与该约束一致；救援实际行经道路资料未列明。\n\n未新建任务建议：R01 封闭事实已由 E08-a 与态势记录承载，且三个活动任务已分别覆盖区域道路事实、演练影响与通行约束，暂不认为存在现有任务不宜承接的独立目标。\n\n以上为核对与关联结论，未代替人员创建任务、分派工作或采取业务行动。"
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "title": "东环线通行确认（09:25）",
+          "jobId": "123d9899-e8d3-4a16-a29c-73798546fcd8",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "任务目标明确把R02列入路线约束“不经过R01/R02/R03”，本条是对该任务所涉道路的状态事实确认：intel E10-a修订1（观测/发布09:25，业务时点亦为09:25）称R02东环线通行正常，与situation当前记录（R02修订2，effectiveAt 09:25，passability=open）一致，且09:10修订1也已是open，说明本次只是再次确认、非状态变化。对任务的影响限于事实层面：R02当前可通行，但“不经过R02”的既定约束不因此解除，也不构成改道依据；任务的核心资源事实（V02/V14仍占用、释放以回报为准、作业时段09:00—10:00）不受本条影响。不确定性：任务未说明禁止经过R02是出于道路条件还是其他管制/作业安排，资料不足，不能推断可经R02通行或需改道；另R01封闭等信息来自其他报告，不在本条范围内。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对：东环线通行确认（intel E10-a，修订1）**\n\n已确认\n- 来报正文、摘要一致：“R02东环线当前通行正常”，无附件，无其他版本（仅修订1）。\n- 观测时间与发布时间均为 2026-11-03T09:25:00+08:00；场景业务时点同为 09:25，两者可比；有效时段（validTime）未填，属无起止时间的单点确认。\n- 与态势系统当前一致：R02 东环线（A02）修订2，effectiveAt 09:25，通行状态 open。该道路 09:10 的修订1已是 open，因此本条只是再次确认，并非状态变化（revision 递增但属性未变）。\n- 地域归属：R02 属 A02，不在临港（A01）及城西（A03）作业区域内。\n\n待核实、资料不足\n- 未说明观测方式（巡查、视频或无人机）及确认人，也未说明是否覆盖全线；只能确认“东环线当前可通行”这一时点结论。\n- 与该道路是否承担临港方向进出任务无关信息未给，无法据本条推断可作替代路线。\n- 其他道路信息不在本条范围（如 R01 中轴桥封闭与 09:11 巡查正常之间的时间差矛盾，需另行核对）。\n\n任务关联判断（已用记录工具保存，回执成功）\n- 城西交通救援（d27e489f…）：目标中明确写有“不经过R01/R02/R03”，R02 属该任务的路线约束范围，因此本条作为事实确认纳入。影响有限：R02 当前可通行，但既定“不经过”约束不因此解除，也不构成改道依据；该任务核心事实（V02/V14 仍占用至 10:00、释放以回报为准）不变。\n- 临港仓储烟情核实与处置研判、临港登高演练：未关联。两者聚焦 A01 的 L01 烟情与 L03、V05 演练占用，本条道路属 A02，且任务内未提及 R02，仅地域相近不足以构成关联依据。\n- 未提出新建任务：本条为单点通行确认，无独立处置目标；现有任务已能承接其事实价值。\n\n以上仅为核对结论，未创建任务、未分派工作，也未采取业务行动。"
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "title": "交通救援尚未结束（09:30）",
+          "jobId": "0eec57e1-e39d-4ce2-a3f7-12f30073464b",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务目标包括核实临港仓储烟情的位置、当前道路及资源事实，需掌握可用资源。本条确认V02（水罐车）与V14（抢险救援车）自09:10被城西交通救援占用，09:30仍未释放，有效至10:00，构成对当前资源可选范围的持续约束，属于可能影响其后续处置研判的事实依据。不确定性：临港片区（A01）与城西（A03）不同区域，报告未涉及临港，无冲突证据；该任务具体位置、道路与是否需水罐/抢险类资源尚未明确，故仅记为资源可用性约束，不能判断为已影响或已冲突。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "同源同资源：报告objectRefs即任务业务引用L02/V02/V14，区域A03为任务关注范围；报告观测时间2026-11-03T09:30（业务时点同为09:30）落在任务时段09:00—10:00内。内容“仍在处置、暂未释放”与任务目标“V02/V14仍在作业，释放以来源回报为准”一致，并与态势当前记录相互印证：V02 revision 4、V14 revision 4，availability=unavailable，effectiveAt 09:10、reportedAt 09:30、validUntil 10:00；同主题前报E02-a（09:13观测）亦为同一判断，无矛盾。影响：确认09:30时点两车仍被占用，处置延续、10:00前不可用。不确定性：报告未给出救援进度、现场道路占用范围及实际结束时间，10:00为原承诺/有效截止而非已确认释放，需以后续来源回报核实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（报告 intel/…-report-E11-a，修订1）**\n\n**报告自身时间与版本**\n- 观测时间、发布时间均为 2026-11-03T09:30:00+08:00（等同当前业务时点）；业务有效期（validTime）未填写；本对象仅有修订1，没有更早版本可对比。\n\n**已确认（多处来源一致）**\n- 城西交通救援仍在处置，V02、V14 至 09:30 未释放。\n- 态势当前记录与之一致：V02（水罐车）revision 4、V14（抢险救援车）revision 4，availability=unavailable，effectiveAt 09:10，reportedAt 09:30，validUntil 10:00（依据为“交通救援占用至10:00”的声明）；位置与现场 L02（城西交通救援现场，A03）坐标重合。\n- 与前报 E02-a（09:13 观测）的判断一致，未发现相互矛盾；本条是对同一状态的后续确认，未构成释放或结案。\n\n**待核实**\n- 10:00 是原承诺时间和状态有效期截止时间，不是已确认的释放时间；实际释放须以后续来源回报为准。\n- 报告未给出救援进度、现场占用道路范围及预计结束时间；任务目标中的“不经过 R01/R02/R03”在本条中无新增证据。\n\n**对活动任务的影响**\n1. 城西交通救援（主要承接任务）：本条直接印证其“V02/V14 仍在作业”的前提，处置在 09:30 延续，两车 10:00 前不可调用。\n2. 临港仓储烟情核实与处置研判：仅作为资源可用性约束记录：水罐车、抢险救援车 09:30—10:00 不可用，可能收窄可调配资源。临港（A01）与城西（A03）不同区域，且该任务位置、道路及所需资源类型尚未明确，**不能据此判断已影响或已冲突**。\n3. 临港登高演练：涉及 V05 与 L03（A01），V05 占用至 09:45 为独立安排，本条未涉及，不构成对该演练的影响。\n\n**记录情况**：已遍历全部 3 项活动公共任务并逐项读取目标；判断已通过记录工具保存并取得成功回执（关联城西交通救援、临港仓储烟情核实与处置研判；本条由现有任务完整承接，未提新建建议）。以上为事实核对与不确定性说明，不代替人员决策或分派。"
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "title": "仓库火势趋稳（09:40）",
+          "jobId": "f6740310-f45d-4d89-88ac-d75e08640097",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "882bef5f-6563-420d-a0d7-df74f53be70d",
+            "9db9efd8-471f-4715-87d1-d06b61a8f463",
+            "d27e489f-67c6-4100-9908-17dc9605d103"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "882bef5f-6563-420d-a0d7-df74f53be70d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接涉及该任务核心对象：本条报告对象为 L01 临港三号仓库、所属 A01 临港区域，与任务“核实临港仓储烟情位置、道路及资源事实、整理不确定事项”一致。事实核对：09:40 现场报告火势趋稳、继续处置、尚不能确认事件结束；与 09:12 首报（烟情、三号仓库与相邻仓库描述不一致）、09:16 园区值班员与无人机确认烟情来自三号仓库可衔接，位置已由待核实转为已确认。需注意口径变化：此前均为“烟情”，本条首次使用“火势”，是否已有明火、燃烧物、过火面积、复燃风险均未说明，属待核实。态势侧：L01 当前记录仅有设施类别与位置（revision 1，reportedAt 09:10），无火情状态字段；09:30—09:40 A01 无对象状态变更记录，故“趋稳”目前仅有单一现场口径，无法独立印证。可用常量：R01 中轴桥 09:23 起封闭至 10:00，R03 滨港路通行，H01—H04 消火栓可用，V01/V03/V06 可用、V04 检修至 11:00（须确认）、V05 演练占用至 09:45；本条未报告资源或道路变化。结论：事件未结束，不满足收尾条件，处置与相关管控应继续；更新的是“当前态势”而非“事件完结”。"
+            },
+            {
+              "task": "T02",
+              "taskId": "d27e489f-67c6-4100-9908-17dc9605d103",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "9db9efd8-471f-4715-87d1-d06b61a8f463",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "同区域关联：任务关注 A01 临港区域的 L03 登高演练场与 V05，本条报告发生在同一区域且处置仍在继续。状态核对：V05 自 09:18 报告起为 unavailable、占用至 09:45，09:40 仍未被释放，与本任务“演练至 09:45、释放以回报为准”一致，本条未提及演练或 V05，无直接冲突，也无证据显示演练受火情影响或 V05 已投入灭火。纳入考虑的理由是可能影响：A01 内事件持续处置，09:45 V05 释放后的去向、演练场地周边安全条件及是否需要为处置保留资源，均需在本任务后续判断时一并考虑。不确定性：报告未给出演练是否照常、是否需提前终止或场地是否受限，须以演练方回报和现场安全确认为准，不能据本条推断演练状态改变。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（供总体席参考）\n\n**信息来源与版本**\n- 报告 `intel/…-report-E12-a`，修订 1，主题 E12，观测=发布=2026-11-03T09:40:00+08:00；关联对象 L01 临港三号仓库、区域 A01 临港。\n- 业务时点：来源快照 `businessNow` 为 2026-11-03T09:40:00+08:00，与本条观测时间一致，因此这条信息是当前时点现场口径，不是旧信息。系统实际查询时间为 2026-11-06，不能当作业务时点。\n\n**已确认**\n- 位置已不再“待核实”：09:16 园区值班员确认以及无人机观测，已两次支持“烟情来自临港三号仓库”（E04-a、E04-b），与本条的 L01 指向一致。\n- 该报告表示处置仍在进行，且明确“尚不能确认事件结束”。因此，事件尚未结束，不能按收尾处理。\n- 区域内的道路与资源常量：R01 中轴桥自 09:23 起封闭至 10:00，此前 09:11 巡查正常，属于前后状态变化而非矛盾；R03 滨港路通行正常；H01—H04 消火栓可用；V01 水罐车、V03 泡沫车、V06 抢险救援车可用；V04 泡沫车检修，标称至 11:00，须确认；V05 登高车演练占用至 09:45。\n\n**待核实**\n- 表述不一致：09:12 首报为“烟情”，本条首次使用“火势”，并称“火势趋稳”。是否确有明火、燃烧物性质、过火面积与复燃风险均无说明；这是“烟情”到“火势”的阶段变化，需要现场明确。\n- “趋稳”只有单一现场口径：态势系统中 L01 仅有设施类别与位置，revision 1，reportedAt 09:10，没有火情、事件状态字段；09:30—09:40 A01 无任何对象状态变更记录，因此无法用态势侧记录独立印证“趋稳”，也不能据此推断力量已减少。\n- 处置力量投入与是否需要延长 V05 等资源，报告未涉及。\n\n**相互矛盾**：未发现硬性矛盾。唯一需澄清的是“烟情”与“火势”两条口径的关系。\n\n**任务判断（已落库，回执成功）**\n- 关联“临港仓储烟情核实与处置研判”：强关联。本条更新了该任务的当前事实和不确定事项，结论是事件未结束、处置与相关管控继续。\n- 关联“临港登高演练”：同区域关联。V05 09:40 仍演练占用至 09:45，与本条无冲突；纳入理由是 09:45 释放后的去向、场地周边安全以及是否为处置保留资源需要一并考虑，演练是否照常须以演练方回报为准。\n- “城西交通救援”区域为 A03，对象为 L02/V02/V14，与本条无共同对象或区域，不关联。\n- 无需新建任务：现有“烟情核实与处置研判”已能承接本条，本轮未提新建建议。未创建任务、未分派工作。"
+        }
+      ]
+    },
+    {
+      "summary": {
+        "trial": 3,
+        "messages": 13,
+        "recorded": 13,
+        "receiptMatches": 13,
+        "apiMatches": 13,
+        "allCandidatesObserved": 13,
+        "fullGoalsObserved": 13,
+        "allQueriesInWire": 13,
+        "repairs": 0,
+        "pairCounts": {
+          "不计分": 1,
+          "符合": 22,
+          "未定·已关联": 6,
+          "漏关联": 2,
+          "无依据关联": 4,
+          "未定·未关联": 4
+        },
+        "newSuggestions": 5
+      },
+      "messages": [
+        {
+          "step": "E01",
+          "notice": 1,
+          "title": "首报位置待核实（09:12）",
+          "jobId": "fa117479-181a-4404-8c3d-f1e651816f19",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": null,
+              "expected": "尚不存在",
+              "actualLinked": false,
+              "outcome": "不计分",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "同属临港A01区域：报告观测09:12落在该任务09:00—09:45演练时段内，V05登高车按当前记录占用至09:45（不可用，演练占用）。报告称A01仓储区有烟（关联L01临港三号仓库），但具体是三号仓库还是相邻仓库描述不一致、位置待核实，且无现场确认或后续修订。需考虑两种可能：烟情与演练活动有关（需澄清以免误判），或为真实烟情/火情（需重新评估演练是否继续及V05是否可释放）。影响范围为A01区域演练安排与V05可用性判断，不确定性为主报位置与烟因未核实。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "核实临港仓储区烟情与位置",
+            "goal": "核实社会来电所称临港仓储区烟情的具体位置（三号仓库L01或相邻仓库）、烟的来源与规模，并判断是否与09:00—09:45临港登高演练活动相关；在核实前按位置不确定处理，不将位置锁定为单一仓库。同步评估对临港登高演练是否继续及V05登高车09:45前占用安排的影响，回报核实结论与仍需确认事项。",
+            "reason": "现有两个活动任务中，城西交通救援位于A03且涉及L02/V02/V14，与A01及L01无地域或资源交集，无需考虑。临港登高演练任务目标仅为按批准安排开展演练并管理V05占用，未包含核实烟情、辨别烟因的工作目标；本条信息位置待核实、三号仓库与相邻仓库描述矛盾，属独立的事实确认工作，建议由人员确认是否新建。"
+          },
+          "emptyReason": null,
+          "finalText": "**事实核对结果**\n\n**已确认**\n- 报告 intel/run-497d7325-b0d2-4c48-8b62-2831a81f7dd1-report-E01-a，修订1（唯一修订），观测与发布时间均为 2026-11-03 09:12:00+08:00，与当前业务时点一致。\n- 该来电主体仅存在这一份报告，未发现后续修订或补充通报。\n- 报告挂在临港 A01 区域，关联对象 L01“临港三号仓库”（点位生效时间 09:10，修订1）。\n- 当前记录显示 V05 登高车不可用至 09:45，原因是“演练占用”；V01 水罐车、V03/V06 可用，V04 泡沫车检修不可用至 11:00（“须确认”）；H01—H04 消火栓均可用。\n\n**待核实**\n- 烟情是否真实存在、规模多大、由什么引起。社会来电中没有现场确认，也没有图片等佐证。\n- 烟的具体位置：三号仓库还是相邻仓库。\n- 烟与 09:00—09:45 临港登高演练是否存在因果关系。若是演练产生的烟尘或扬尘，则可能属于误报；若是真实烟情，演练继续以及 V05 能否占用至 09:45 都需要重新评估。\n\n**相互矛盾**\n- 来电描述内部矛盾：位置一说是“三号仓库”，一说是“相邻仓库”，报告标题也标注“位置待核实”。目前不能把位置确定为 L01 或任一相邻仓库。\n\n**任务判断（已记录，回执成功）**\n- 需要考虑：**临港登高演练**。该任务覆盖 A01 区域，当前 09:12 正处于任务时段内，且 V05 占用状态直接受烟情真假影响。关联理由已写入记录。\n- 无需考虑：**城西交通救援**。该任务位于 A03，涉及 L02/V02/V14 与 R01/R02/R03，与本条信息没有地域或资源交集，仅因同属一个场景并不构成关联。\n- 独立工作目标建议：核实现场烟情与位置。现有演练任务只承接演练安排与 V05 占用管理，不包含核实烟情的职责。该建议需要人员确认后才能建立，未创建任何任务，也未分派工作。\n\n**缺口**：缺少现场核实信息、后续修订和相邻仓库的关联对象记录，因此无法判断烟因与影响范围，建议以“位置不确定”为前提处理。"
+        },
+        {
+          "step": "E02",
+          "notice": 1,
+          "title": "交通救援进展（09:13）",
+          "jobId": "51e4be9e-e326-4133-8dff-46c53ad59355",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": false,
+              "outcome": "漏关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接对应：该任务目标为09:00—10:00城西交通救援，明确V02/V14仍在作业、释放以来源回报为准，关注区域A03，与本报告对象（L02、V02、V14，A03）完全一致。已确认：报告观测时点2026-11-03T09:13:00+08:00与业务当前时点09:13一致，修订1为唯一版本；态势系统当前记录同样显示V02（水罐车）、V14（抢险救援车）availability=unavailable，effectiveAt 09:10、reportedAt 09:13、validUntil 10:00，并有“交通救援占用至10:00”声明，二者不矛盾。待核实：“原承诺至10:00”的措辞提示可能延期，报告未给出新承诺时点，也未说明作业进度与延期原因；10:00能否如期释放须待后续来源回报。影响范围：A03区域内V02、V14两车的可用性及本任务09:00—10:00作业安排，任何依赖这两辆车或经该区域的任务需按“最早10:00释放”预留不确定性。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（总体席参考）**\n\n**已核对一致**\n- 本报告（intel，reportId `…-report-E02-a`）是当前唯一版本，修订号为 1；观测时间、发布时间和业务当前时点均为 2026-11-03 09:13。\n- 报告正文提到的对象与来源一致：现场 L02、作业车 V02（水罐车）、V14（抢险救援车），所属区域为 A03。\n- 态势系统当前记录与报告正文不矛盾：V02、V14 的状态都是 unavailable；生效时间 09:10，上报时间 09:13，有效期至 10:00；记录中还附有“交通救援占用至10:00”的声明和相同的坐标点位。\n- 因此，“这两辆车此刻仍在占用、尚未释放”可视为已确认事实。\n\n**待核实**\n- “原承诺至10:00”这一措辞暗示可能延期，但报告没有给出新的释放时间，也没有说明作业进度或延期原因；10:00 能否如期释放，只能等后续来源回报确认。\n- 这一可用性只到 10:00 为止；10:00 之后是仍未确认的状态，不能视为已经释放。\n\n**任务判断（已通过记录工具提交，并收到成功回执）**\n- 需要纳入考虑的任务：**城西交通救援**（目标 09:00—10:00、V02/V14 作业、释放以来源回报为准、关注 A03），本条信息与该任务直接对应，可作为该任务当前事实基准。\n- 其他活动任务无需关联：**临港登高演练**涉及 V05/L03/A01，与城西的车辆和区域没有交集；**临港仓储烟情核实与处置研判**针对临港烟情，且没有对象引用指向 V02、V14、L02 或 A03，因此不因地名或关键词相似而关联。\n- 未提出新建任务：本条属于既有城西任务目标内的进展回报，没有独立于现有任务的工作目标需要另行承接。\n\n**影响范围与不确定性**：A03 区域内两辆消防车的可用性以及 09:00—10:00 的作业安排；任何需要调用 V02/V14 或经过 A03 的计划，都应按“最早 10:00 释放、可能延期”预留余量。资料缺口为作业进度、延期原因和新的预期释放时间。\n\n以上仅为核对结论，未创建任务或分派工作。"
+        },
+        {
+          "step": "E03",
+          "notice": 1,
+          "title": "登高演练继续（09:14）",
+          "jobId": "29cc7942-399e-45bb-b5cc-f9546a8f2f1a",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "可能影响与事实确认：该任务正在核实临港仓储烟情的具体位置、当前道路及资源事实并整理进一步核实需求，本条确认的临港区域登高车V05在09:45前不可用，属于其关注范围内的资源事实和持续约束；若后续处置需要登高车，A01内V05至09:45不可调用，需考虑替代资源或等待释放。不确定性：该任务未给出区域或资源引用，烟情具体位置、是否位于A01、是否需要登高车均未确认，故仅为有依据的可能影响，不能认定为冲突；建议在资源事实清单中标注V05占用状态与有效期，并向来源核实烟情位置与登高需求。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接对应：该任务即09:00—09:45的临港登高演练，业务引用L03、V05，关注区域A01。来报（观测/发布09:14，修订1，为唯一版本）确认演练已批准、正常进行、V05继续既定安排并占用至09:45、释放以回报为准，与任务目标一致。来源核对：V05当前revision 2为unavailable，reportedAt 09:14、validUntil 09:45，evidence含声明“演练占用至09:45”，与来报一致；位置未变、仍在A01；L03临港登高演练场revision 1、effectiveAt 09:10，与业务时点09:14吻合；V05变化记录显示revision 1→2仅可用状态上报时间由09:10更新为09:14，状态未反转，无版本矛盾。已确认：继续执行、占用至09:45。待核实/不确定：批准凭据未在本次来源中体现，仅依据来报声明；09:45为预计占用上限，实际释放以回报为准，届时需以新回报更新，不能据此自行判定释放。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已完成来源核对与任务判断记录（记录回执成功）。以下为供总体席参考的事实核对结果。\n\n## 一、来报信息与版本\n- 报告：`intel/run-…-report-E03-a`，修订 1，是当前最新且唯一修订，未发现历史版本被替代。\n- 观测/发布时间：2026-11-03 09:14:00+08:00；场景业务时点同为 09:14（快照 revision 5）。\n- 引用对象：资源 L03（临港登高演练场）、V05（登高车），区域 A01（临港）。\n- 核心内容：登高演练已批准、正常进行；V05 继续既定安排，占用至 09:45；释放以回报为准。\n\n## 二、事实核对\n**已确认（来源间一致）**\n- V05 当前为 `unavailable`（不可用），`reportedAt` 09:14、`validUntil` 09:45，证据含声明“演练占用至09:45”，与来报“占用至09:45”一致（situation revision 2）。\n- V05 位置未变，仍属 A01；L03 位于 A01，`effectiveAt` 09:10。\n- 变化记录显示 V05 仅由 revision 1 更新至 revision 2，前一版状态同为不可用、有效期同为 09:45，差别仅为可用状态上报时间 09:10→09:14，**不存在状态反转或版本矛盾**。\n- 任务“临港登高演练”的目标时段 09:00—09:45 与来报一致。\n\n**待核实**\n- “已批准”：本次仅有来报单一来源声明，未见批复文件或系统审批记录，无法独立核实审批依据；不影响 V05 当前占用状态的事实判断。\n- “正常进行”：无现场进展或过程记录佐证，属来源声明。\n- 实际释放时点：09:45 是预计占用上限，来报明确“释放以回报为准”，尚不能认定届时自动释放。\n\n**相互矛盾**\n- 本次核对未发现事实矛盾。V05 两个修订之间状态一致；来报与态势系统一致。\n\n**资料缺口**\n- 审批凭据、现场进展、释放回报均未取得。\n- “临港仓储烟情核实与处置研判”任务未给出区域或资源引用，无法确认烟情位置与 A01、V05 的关系。\n\n## 三、任务判断（已保存，2 项关联）\n1. **临港登高演练**：直接对应，来报正是该任务执行状态的确认，影响范围限于 A01 内 V05、L03 及 09:00—09:45 时段；已确认继续执行与占用至 09:45，释放仍待回报。\n2. **临港仓储烟情核实与处置研判**：有依据的可能影响与事实确认。V05 至 09:45 不可用，若烟情处置需调用登高车，将构成资源约束；但烟情位置、是否位于 A01、是否需要登高车均未确认，**不认定为冲突**，建议列入其资源事实清单并继续核实。\n\n**未关联“城西交通救援”**：该任务关注 A03、V02/V14、L02，且明确不经过 R01/R02/R03；本条为 A01 的 V05/L03，两者在区域、资源、道路条件上均无交集，也未显示跨区调配登高车的需求，故仅“同属救援/演练类”不构成关联依据。\n\n## 四、对总体席的提示\n- 当前有效记录支持“V05 在 09:45 前不可用”，可作为资源条件使用；但不得据此推断 09:45 自动释放。\n- 建议后续重点补齐：批准依据、09:45 前后的释放回报、烟情位置与登高资源需求。\n- 未创建任务、未分派工作、未替代任何业务处置。"
+        },
+        {
+          "step": "E04",
+          "notice": 1,
+          "title": "仓库位置核实·园区值班员（09:16）",
+          "jobId": "9a8a1a5d-6004-451e-aca1-3df75b249d92",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接回答该任务核心问题之一。E04-a（园区值班员，09:16，修订1）确认烟情来自临港三号仓库，对象 situation/resource/L01；同一 subject 的 E04-b（无人机，09:16，修订1）称\"位置与园区值班员报告一致\"，两路来源相互印证。相对 E01-a（09:12：三号仓库与相邻仓库描述不一致、位置待核实），位置不确定性明显下降，但仍为口头确认+空中观测，未做仓库内部或起火部位核实。该任务所需的\"道路及资源事实\"仍以 09:10/09:14 快照为准：R01 中轴桥、R03 滨港路 passability=open；V01/V03/V06 available，V04 unavailable（检修，预计11:00，标注须确认），V05 unavailable（演练占用至09:45）；H01–H04 均 available。上述记录均无烟情影响道路或消防设施的内容，不能据此推断封路、设施受损或水源受影响。烟情性质（明火/阴燃）、范围、涉及物质、人员情况、蔓延趋势仍无资料，应作为待核实项保留。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务含持续约束\"不经过 R01/R02/R03\"，其中 R01 中轴桥、R03 滨港路归属 A01，R03 东南段与已确认烟源 L01（121.8650368,30.88177）距离较近，存在处置期间道路管控影响绕行约束的可能。但本条仅确认烟源位置，未涉及道路通行状态或城西方向交通，R01/R03 当前记录仍为 open（09:10 快照，早于 09:16 烟情确认），无封路依据；V02/V14 作业与\"释放以来源回报为准\"亦不受本条影响。故仅列为低置信持续关注项，非已确认关联或冲突。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "同属 A01 临港，演练场 L03 与已确认烟源 L01 三号仓库坐标接近，演练时段 09:00—09:45 与烟情确认时点 09:16 重叠；V05 为登高车，现行记录（revision 2，09:14）为 unavailable、占用至 09:45、释放以回报为准。本条确认烟源为 L01 后，若后续临港处置需要登高车，09:45 前 V05 不可用构成潜在资源约束。但本条未提出调派要求，也无证据显示演练需调整，演练\"正常进行、既定安排不变\"与烟情位置确认之间不存在已确认冲突，故按可能影响/持续约束记录，待人员判断是否需提前释放。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "**事实核对结果（供总体席参考）**\n来源：intel / run-…-report-E04-a，标题“仓库位置核实”，修订 1（最新修订，无后续修订）；观测、发布时间均为 2026-11-03 09:16（+08:00）；业务时点快照为 09:16；validTime 为空。\n\n**已确认**\n- 园区值班员确认烟情来自临港三号仓库；该仓库对应 situation 资源 L01，位于 A01 临港区域，点位坐标 121.8650368, 30.88177，记录修订 1，生效时间为 09:10。\n- 同一 subject 下的 E04-b（无人机观测，09:16，修订 1）明确说明“位置与园区值班员报告一致”，构成第二个独立来源。因此，“烟源为三号仓库（L01）”可以按两个来源一致对待。\n\n**前序信息与当下判断的关系**\n- E01-a（09:12，修订 1）称“三号仓库与相邻仓库描述不一致、位置待核实”；E04-a、E04-b 在 09:16 解决了这一位置歧义，因此 E01-a 的“待核实”不再适用于位置判断。\n- 但两份 09:16 记录都只属确认性描述：一份是口头确认，另一份是空中观测相互印证；未涉及仓库内部起火部位、是否有明火、涉及物质、范围、人员情况。位置已基本可定型，但性质和影响仍未核实，不能据此认定已发生火灾或需要疏散。\n\n**当前有效资源与道路记录（依据 09:10/09:14 快照，均早于或等于本报告时点）**\n- 道路：R01 中轴桥、R03 滨港路通行状态为 open。\n- 车辆：V01、V03、V06 可用；V04 不可用（检修，预计 11:00，记录本身标注“须确认”）；V05 不可用（演练占用至 09:45，释放以回报为准）。\n- 水源：H01–H04 消火栓均可用。\n- 缺口：没有任何记录说明烟情对道路、消火栓、仓库结构造成影响；无法判断是否需要封路或是否存在供水受限。\n\n**任务关联（已通过记录工具提交并取得成功回执）**\n1. 临港仓储烟情核实与处置研判 — 直接命中，本条把“位置待核实”为“两来源一致指向 L01”；同时补入道路与资源现状，并保留性质、范围、人员与影响等待核实项。\n2. 临港登高演练 — 同区域、时段重叠，V05 在 09:45 前不可用，构成潜在资源约束；本条未要求调整演练，演练既定安排与位置确认之间无已确认冲突。\n3. 城西交通救援 — 低置信关注：该任务含“不经过 R01、R02、R03”的持续约束，其中 R01、R03 在 A01 且 R03 距 L01 较近；但本条不涉及道路状态，现记录仍为 open，无封路依据，暂不改变其绕行与车辆安排。\n\n**未建议新建任务**：本条目标落在现有“烟情核实与处置研判”任务范围内，无独立于该任务的另一项工作目标；是否升级处置、是否调派或封路需由人员决定。"
+        },
+        {
+          "step": "E04",
+          "notice": 2,
+          "title": "仓库位置核实·无人机（09:16）",
+          "jobId": "227593c9-427a-4faa-a6f6-77e8cc6af818",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接服务于该任务“核实临港仓储烟情具体位置”的目标。无人机09:16观测支持烟情位于临港三号仓库（L01），与同一观测时点园区值班员报告E04-a一致，可增强位置判断置信度。但本条仅支持位置，未确认烟量、起因、范围或是否波及相邻仓库；09:12首报E01-a所称“三号仓库与相邻仓库描述不一致”仍未说明排除依据，需继续核实相邻仓库、周边道路及资源影响。观测时间09:16即当前业务时点，修订1为最新。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "可能影响而非已确认冲突：烟情位于A01内L01三号仓库，与同区域L03登高演练场直线距离约200米；V05当前为不可用、占用至09:45。若烟情扩大或需登高车/区域管控，可能对演练形成安全或资源约束。现有E03-a仍称演练正常进行、V05继续既定安排，尚无证据表明演练已受影响，故仅需纳入持续关注，不能据此认定演练需调整或V05已可释放。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "以下信息已核对，并已按要求完成活动公共任务的完整发现与判断记录（回执成功）。\n\n**一、本条事实**\n- 报告：intel/run-497d7325-b0d2-4c48-8b62-2831a81f7dd1-report-E04-b，修订1（最新）。\n- 摘要称“无人机观测支持三号仓库位置判断”；正文为“无人机在09:16观测到临港三号仓库烟情，位置与园区值班员报告一致”。\n- 观测、发布时间均为 2026-11-03 09:16:00+08:00；validTime 为空。\n- 关联对象：L01“临港三号仓库”，区域 A01。\n- 判断时点：模拟场景业务当前时点为 2026-11-03 09:16:00+08:00；本次查询发生在 11-06，不作为业务判断时点。\n\n**二、事实状态区分**\n- 已确认：L01“临港三号仓库”确实存在，点位在 A01 内，态势记录 effectiveAt 为 09:10；09:16 值班员报告（E04-a）与本条无人机报告均指向三号仓库，位置判断获得两类来源的同时间支持。\n- 待核实：烟量、起火原因、燃烧范围、是否危及相邻仓库、周边道路是否受影响及是否需要管控；无人机机型、任务架次和实时状态在态势系统中无对应资源记录，资源依据存在缺口。本条正文只支持“位置”，不足以确认烟情整体态势。\n- 时间上的不一致：09:12 首报（E01-a）称“三号仓库与相邻仓库描述不一致，位置待核实”；09:16 两条报告统一指向三号仓库。该变化可解释为首报后的核实收敛，但首报为何提及相邻仓库、相邻仓库是否已排除，现有资料未说明，不能视为已完全消除疑点。\n\n**三、任务判断**\n- 已关联“临港仓储烟情核实与处置研判”（e751b723…）：本条直接增强位置核实依据，但不替代烟情范围、起因、道路和资源核实。\n- 已关联“临港登高演练”（55dcea5d…）：同属 A01，L01 与 L03 演练场按点位粗算相距约 200 米（依据坐标估算，非来源边界测算）；V05 当前不可用、占用至 09:45。属于可能的安全或资源约束，尚无证据表明演练已受影响，也未达到“V05 已可释放”的结论。\n- 未关联“城西交通救援”（80c8ff3b…）：其范围在 A03，涉及 L02、V02、V14，与三号仓库及本条信息无事实关联。\n- 未提出新建任务建议：现有“临港仓储烟情核实与处置研判”已能承接本条的位置核实与后续研判工作，无现有任务不宜承接的独立目标。\n\n**四、总体席提示**\n建议将本条作为位置判断的支持性证据，而非烟情已全面确认的依据；后续仍需补核相邻仓库是否受影响、烟情范围与起因、周边道路状况及可用资源，尤其关注 V05 在 09:45 前的占用安排。以上为事实核对与判断记录，未创建任务、未分派工作，也未宣称任何处置行动已完成。"
+        },
+        {
+          "step": "E05",
+          "notice": 1,
+          "title": "车辆资源清单确认（09:18）",
+          "jobId": "1445e752-40cb-48cf-b05a-80ba054da453",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务目标为核实临港仓储烟情位置、当前道路及资源事实，整理不确定事项与进一步核实需求。本条正是资源事实类清单确认，直接服务于其“资源事实＋不确定事项”部分：已确认六站二十四车框架与各车状态记录（V01—V24中多数available；V02/V05/V14按占用至10:00/09:45；V04检修预计11:00“须确认”；V12例行检查最早09:40“须完成确认”）。同时提供三项不确定事项：V24仅有08:50旧记录且位置validUntil 09:10已过期、状态unknown；V21可用性unknown（“南湾留守，跨区支援需确认”）但本条未提示；本条对象引用仅V01—V20、区域仅A01—A05，未含A06新区站与V21—V24，与正文“六站二十四车”口径不一致。可用于该任务的研判，但不改变烟情位置与道路事实，烟情部分仍待核实。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务关注V02/V14与A03城西交通救援现场（09:00—10:00，释放以来源回报为准，不经过R01/R02/R03）。本条清单确认覆盖V02、V14：态势现值均为unavailable，validUntil 2026-11-03T10:00，声明“交通救援占用至10:00”，与任务一致；本条未提供释放或位置变更的新事实，不构成释放依据。另V12（同属A03，西城站）为unavailable、最早09:40且“须完成确认”，本条未单独提示，属该任务时段内可用的邻近车辆资源需注意的待确认项。影响范围：A03车辆可用性判断，未发现与任务目标冲突的已确认事实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务以V05为核心资源（09:00—09:45临港登高演练，A01）。本条清单确认涉及V05：态势现值为V05 unavailable，validUntil 2026-11-03T09:45，依据为其自身声明“演练占用至09:45”，与任务时间窗一致；本条报告未改变、也未释放V05，仅称“其余车辆状态见各车记录”。对本任务的约束意义：V05在09:45前仍属占用，任务后续释放须以来源回报为准，本条不能作为释放依据。影响范围限于V05与A01演练场L03，不涉及本条其他车辆。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "六站二十四车清单缺口补充核实",
+            "goal": "在2026-11-03 09:18清单确认基础上补齐资源事实缺口：1) 核实V24（A06新区站泡沫车）当前可用状态与实际位置——来源仅有08:50记录，位置有效期至09:10已过期，可用性为unknown；2) 确认V21（A05南湾站抢险救援车）跨区支援可用性（unknown，“南湾留守，跨区支援需确认”）并明确留守约束；3) 取得V04（检修预计11:00）与V12（例行检查最早09:40）的完成确认，判断其能否提前释放；4) 补齐本条报告缺失的引用范围（V21—V24、A06），使“六站二十四车”口径与对象引用一致。产出为分车状态结论与待核实清单，供总体席统一判断可用资源，不代替人员派车或对外发布。",
+            "reason": "现有三项活动任务分别针对V05登高演练、V02/V14交通救援和临港仓储烟情核实，均属具体事件/区域；对A06新区站V21—V24的清单缺口核实与报告引用范围一致性检查，没有现有任务在场域上承接，属独立于事件处置的资源台账核对目标。本条报告已明确V24当前状态与位置待确认，且来源显示V21可用性unknown，具备独立立项的事实依据；是否新建需人员确认。"
+          },
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（总体席）\n\n**资料与版本**\n- 报告：intel `…-report-E05-a`，修订 1（仅此一版，未发现历史修订）。\n- 观测与发布均为 2026-11-03T09:18:00+08:00，与态势快照业务时点 09:18（快照 revision 7）一致，时间可以对上。\n- 正文即摘要，无附件；引用资源 20 项、区域 5 个。\n\n**已确认（来源与报告一致）**\n\n| 项 | 事实 |\n|---|---|\n| 清单规模 | 态势中确有六站 S01–S06、车辆 V01–V24，与“六站二十四车”口径相符 |\n| V02、V14 | 不可用，validUntil 10:00，注明“交通救援占用至10:00” |\n| V05 | 不可用，validUntil 09:45，注明“演练占用至09:45” |\n| V23（A06） | 可用，09:18 报 |\n| 其余多数车 | 可用，reportedAt 09:18 |\n| V24 | 与报告一致：仅 revision 1，最后记录 08:50，位置 validUntil 09:10（观测时点已过期），可用性 unknown，注明“最后08:50记录，当前状态与位置待确认” |\n\n**待核实（报告未充分提示）**\n- V21（南湾 S05 抢险救援车）：可用性同样是 **unknown**，注明“南湾留守，跨区支援需确认”，报告未单独点出。\n- V04：不可用至 11:00，注明“检修预计11:00完成，须确认”。\n- V12：不可用，最早 09:40，“须完成确认”（同属 A03）。\n\n**相互矛盾/口径不一致**\n- 报告称“其余车辆状态见各车记录”，但实际存在上述三项 unknown/待确认状态，概括偏乐观；不属于事实冲突，属不确定性披露不足。\n- 报告正文“六站二十四车”，而对象引用只到 V01–V20、区域只到 A01–A05，缺 V21–V24 与 A06（新区消防站）；引用范围与正文规模不一致。\n- 未发现车辆状态与报告陈述直接对立之处；V24“待确认”与来源完全吻合。\n\n**约束时点提示**：V24 位置已过期（09:10 前有效）；V12 09:40、V05 09:45、V02/V14 10:00、V04 11:00 为各自有效期末，均早于/接近当前 09:18 之后的关键决策窗口，释放一律须另行来源回报。\n\n**任务判断（已记录并取得回执）**\n- 临港登高演练：相关。V05 状态与任务时间窗一致，本条不构成释放依据。\n- 城西交通救援：相关。V02/V14 占用至 10:00 确认，无释放信息；另 V12 为同区待确认项。\n- 临港仓储烟情核实与处置研判：相关。本条提供资源事实与不确定事项，但烟情位置与道路事实仍未涉及。\n- 新建建议（待人员确认，未创建）：六站二十四车清单缺口补充核实——V24 状态/位置、V21 跨区可用性、V04/V12 完成确认、补齐 A06 与 V21–V24 引用。\n\n**缺口**：本次未查道路对象，报告亦未涉及烟情位置与道路，相关事实仍依赖其他来报；逐车明细以态势各车记录为准，报告本身不含分车明细。以上仅为事实核对与任务判断，不代替派车或对外发布。"
+        },
+        {
+          "step": "E06",
+          "notice": 1,
+          "title": "北货运路施工（09:19）",
+          "jobId": "39643ad7-2772-48fa-8c5b-9f1ce99e941d",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "北货运路施工限制通行核实",
+            "goal": "核实R04北货运路局部施工的具体路段、起止时间、管控方式与可行绕行路线，确认当前通行限制对北城片区（A04）车辆通行及后续资源调度的可能影响，并整理尚缺的施工与交通管制信息。",
+            "reason": "现有三个活动任务分别聚焦临港（A01）登高演练、城西（A03）交通救援和临港仓储烟情核实，均未覆盖北城（A04）道路；本条为09:19刚生效的道路通行限制（R04由通行改为受限），缺少施工范围、工期和绕行信息，属现有任务不宜承接的独立核实事项。"
+          },
+          "emptyReason": null,
+          "finalText": "## 事实核对\n\n**来源与版本**\n- 报告：`intel/…-report-E06-a`，修订 1（无其他修订）；标题和正文均为“R04北货运路局部施工，限制通行”。\n- 观测时间为 2026-11-03 09:19 +08:00，发布时间同为 09:19；`validTime` 为空，即未给出明确有效期。\n- 关联对象：道路 R04（北货运路），所属区域 A04（北城）。\n\n**态势侧状态（当前有效记录）**\n- 业务时点：2026-11-03 09:19（快照 revision 8）。\n- R04 revision 1 于 09:10 生效，`passability=open`；revision 2 于 09:19 生效，`passability=restricted`，备注“局部施工限制通行”。\n- 两次修订的几何线形一致，变化只涉及通行属性。\n\n**判断分级**\n- 已确认：R04 自 09:19 起处于限制通行状态，来源与报告的时间、对象、描述一致；不存在版本冲突，也未发现相互矛盾的信息。\n- 待核实：施工具体路段及长度、起止时间、是半幅还是全幅管控、绕行路线、是否已发布交通管制通告；报告为单条概要，未附来源单位与现场核验方式。\n- 表述粒度差异（非矛盾）：报告中是“局部施工”，道路对象记录的是整条线路的通行属性；不能据此推断整条北货运路封闭。\n\n## 任务关联判断\n\n已查询全部获准活动公共任务（3 项，无下一页），逐项比对后**无关联任务**，理由：\n- 临港登高演练：关注 A01 临港及 L03、V05（占用至 09:45），无道路或北城要素。\n- 城西交通救援：关注 A03 西城及 L02、V02、V14，明确避开 R01、R02、R03，不涉及 R04，也无经由北城的依据。\n- 临港仓储烟情核实与处置研判：围绕 A01 临港仓储与 L01，与北城道路无事实交集。\n\nR04、A04 目前未被任何活动任务的关注范围或业务引用覆盖，不因“道路名称相近”而强行关联；若后续出现北城方向运输或跨区调派，需重新评估。\n\n## 独立目标判断\n\n已在记录工具中提交新建建议（**未创建任务**，待人员确认）：“北货运路施工限制通行核实”——核实具体路段、工期、管控与绕行，并评估对北城通行及资源调度的可能影响。记录已取得成功回执。\n\n以上仅为事实核对与判断建议，未代替总体席创建任务、分派工作或实施交通组织措施。"
+        },
+        {
+          "step": "E07",
+          "notice": 1,
+          "title": "城北路巡查（09:21）",
+          "jobId": "c5a65a59-d0cb-4088-ab37-cf6fb3bbd40e",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": "已遍历全部3项活动公共任务（临港登高演练、城西交通救援、临港仓储烟情核实与处置研判），逐项核对后均无需纳入本条信息：①临港登高演练关注A01临港、资源L03/V05，与R05城北路/北城A04无对象或区域交集；②城西交通救援关注A03西城，目标是\"不经过R01/R02/R03\"，未涉及R05，R05亦不在A03成员内（A03成员为S03、V02、V12-V15、L02、H06），无依据将其视为绕行或替代路线；③临港仓储烟情核实关注临港仓储位置、道路与资源事实，R05属北城区域，与A01成员道路R01/R03不同，资料未显示烟情影响北城或R05。本条为R05例行巡查确认通行正常，观测时间2026-11-03T09:21:00+08:00与业务时点一致，修订1为唯一版本；特情检索仅此一条，无历史版本冲突。事项为\"正常\"的例行确认，无待办动作、无异常处置需求，不构成现有任务不宜承接的独立工作目标，故不建议新建任务。",
+          "finalText": "**事实核对**\n\n- 正文只有一句话：「R05 城北路例行巡查确认通行正常」，没有附件，也没有补充细节（巡查时刻、路段起止、巡查方式都未说明）。\n- 观测时间与发布时间都是 2026-11-03T09:21:00+08:00，与来源快照中的业务时间点（businessNow）一致；validTime 为空，即没有额外的生效区间。\n- 版本：这是修订 1，也是唯一修订；按对象检索（R05 城北路）和按“城北路”全文检索都只命中这一条，没有更早版本，也没有相互矛盾的记录。\n- 来源状态与来报一致：道路 R05 现行记录 revision 2、通行性 passability = open，所属区域为北城 A04，有效时间为 2026-11-03T09:21:00+08:00，与来报互证。\n- 已确认：R05 在 09:21 时点通行正常。待核实：这次“正常”只是例行巡查得到的时点结论，不含路面设施细节、高峰时段变化，也没有说明形成对周边资源的持续约束。矛盾项：无。\n\n**任务判断（已记录，回执成功）**\n\n已完整列出全部 3 项活动公共任务，逐项判断后本条信息与它们都无关联，已记录空关联理由：\n\n- 临港登高演练（A01 临港，L03/V05）：与 R05、A04 没有对象或区域交集。\n- 城西交通救援（A03 西城，L02/V02/V14，目标含“不经过 R01/R02/R03”）：R05 不在其路线约束和区域成员内（A03 成员为 S03、V02、V12–V15、L02、H06），没有依据把 R05 当作绕行或替代通道。\n- 临港仓储烟情核实与处置研判（临港仓储位置、道路、资源事实）：R05 属北城，与 A01 成员道路 R01/R03 不同，现有资料也显示烟情并不波及北城。\n\n本条是“正常”的例行确认，没有待办动作，不构成现有任务不宜承接的独立工作目标，因此未提新建建议。以上仅为事实核对与判断记录，未创建任务、未分派工作，也未替代任何业务处置。"
+        },
+        {
+          "step": "E08",
+          "notice": 1,
+          "title": "中轴桥封闭（09:23）",
+          "jobId": "f8ca170e-9458-40d9-ba95-27698ca7b4be",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "任务目标包含核实临港仓储烟情的'当前道路及资源事实'，R01中轴桥属A01道路且自09:23起passability=closed至10:00，可作为该区域道路事实纳入研判。但L01临港三号仓库位于(121.8650368,30.88177)，与R01几何无直接相邻证据，是否影响通往三号仓库的处置通道、是否需绕行滨港路R03(open)均待核实，不能据此认定冲突。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "事实确认型关联、影响可忽略：R01中轴桥位于A01临港，城西救援聚焦A03西城，现场L02(121.7892354,30.8987365)距中轴桥约数公里，V02/V14(rev3)均在L02、占用至10:00。任务目标已明确'不经过R01/R02/R03'，本条封闭(R01 09:23—10:00 closed)与该绕行约束一致，且截止时间与救援占用至10:00吻合，无需调整；仅提示约束期内持续有效。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "地域与时段均与本条重叠：演练聚焦A01临港（09:00—09:45），中轴桥R01同属A01，封闭时段09:23—10:00。当前记录显示V05(rev3)位于L03登高演练场(121.8631572,30.8824992)，状态unavailable至09:45，为固定场地作业；无资料显示演练进出场或作业依赖中轴桥，故不构成已确认冲突，仅为可能的通行影响，需核实进场/撤场路线是否经R01。现有'继续既定安排、释放以回报为准'不因本条改变。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "中轴桥封闭原因与通行影响核实",
+            "goal": "核实R01中轴桥临时事故的性质、封闭实际范围与现场通行状况，确认09:23—10:00封闭期间临港区域(A01)是否有车辆或任务需改道，跟踪10:00能否按时解除并记录解除依据；对资料未覆盖的事故类型、是否有次生影响、封闭是否仅限桥面等缺口明确列出待核实项。",
+            "reason": "现有三项任务目标分别为登高演练、城西交通救援和仓储烟情核实：城西救援仅约定绕行R01/R02/R03，演练在固定场地L03，烟情任务聚焦仓储位置与资源事实，均不以中轴桥封闭本身为工作目标。本条封闭涉及A01区域通行，且来报仅一句话，事故原因、封闭范围和解除情况均无来源支撑，现有任务不宜承接，建议单独立项跟踪，是否创建请人员确认。"
+          },
+          "emptyReason": null,
+          "finalText": "**事实核对结果（供总体席参考）**\n\n**已确认（来源一致）**\n- 来报 `intel/...-report-E08-a` 修订1，无其他历史修订；观测=发布时间 2026-11-03 09:23，正文仅一句“R01中轴桥因临时事故封闭至10:00”，未填 validTime。\n- 态势记录一致：R01 中轴桥（A01 临港）rev2，effectiveAt 09:23，validTime 09:23—10:00，passability=closed，restrictionNote 与来报同文。变更记录显示 rev1 自 09:10 起为 open，09:23 转为 closed，版本演进正常。\n- 周边道路：R03 滨港路 A01 open；R02 东环线 A02 open。\n- 在办资源：V05（rev3）在 L03 登高演练场，占用至 09:45；V02/V14（rev3）在 L02 城西现场，占用至 10:00。\n\n**相互矛盾**：未发现。两处记录实为同一事实的两份登记，非独立第二来源，佐证强度有限。\n\n**待核实（资料缺口）**\n- “临时事故”类型、是否有伤亡或次生影响、封闭是桥面全幅还是部分——来报均未说明。\n- 10:00 能否按时解除，无来源支撑。\n- 对在办任务的实际影响：\n  - 临港登高演练（A01，09:00—09:45）：与封闭时段重叠，但演练在固定场地 L03，无资料显示依赖中轴桥；进出场路线是否经 R01 待核实，目前不构成已确认冲突，既定安排无需据此调整。\n  - 城西交通救援（A03）：目标已明确不经过 R01/R02/R03，现场距中轴桥约数公里，判为无实质影响；封闭截止 10:00 与该约束时段吻合，约束期内继续有效。\n  - 临港仓储烟情核实：任务要求整理临港区域道路事实，R01 封闭可纳入；三号仓库 L01（121.8650368,30.88177）与 R01 无直接相邻证据，通往仓库的处置通道是否受影响、是否改走 R03 待核实。\n\n**任务判断**：已查询全部 3 项活动公共任务并逐项记录关联（含可能影响、事实确认与持续约束），另提交新建建议“中轴桥封闭原因与通行影响核实”——现有任务均不以该封闭本身为目标，是否创建请人员决定。记录已取得成功回执，未创建任务、未分派工作。"
+        },
+        {
+          "step": "E09",
+          "notice": 1,
+          "title": "旧巡查报告晚到（09:24收、09:11观测）",
+          "jobId": "dad463cf-0800-4930-bfda-a3cf2ecb9231",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "该任务目标为核实临港烟情位置、当前道路及资源事实并整理不确定事项，R01中轴桥属A01道路事实范围。本条提供09:11时点的通行基线（正常），但09:23起R01为closed（临时事故封闭至10:00），说明09:23前后道路状态发生变化。封闭所称“临时事故”与本轮烟情是否同一事件尚无来源明确关联，属待核实缺口；本条可确认的是09:11—09:12正常，不能作为当前道路事实。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务目标明确“不经过R01/R02/R03”，区域为A03。本条涉及R01但不改变其绕行约束，也不影响V02/V14作业安排；仅作持续约束的背景确认，无需据此调整。若后续出现该任务实际途经R01的迹象，再另行核实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "该任务关注A01区域，09:00—09:45开展临港登高演练，V05占用至09:45。R01中轴桥位于A01。本条仅证明09:11—09:12通行正常（validTime 09:11—09:12），而R01在09:23已因临时事故封闭至10:00，覆盖演练剩余时段，存在演练相关车辆经中轴桥进出的通行影响可能。但演练具体路线未在任务目标中给出，是否依赖R01待核实；本条不能用于说明当前可通行。"
+            }
+          ],
+          "newTaskSuggestion": {
+            "title": "核实R01中轴桥封闭与巡查记录时效",
+            "goal": "核实R01中轴桥09:23临时事故封闭的原因、责任方及与临港烟情是否存在关联，确认预计10:00恢复是否仍有效；同时将09:11“通行正常”巡查结论标注为仅覆盖09:11—09:12的过期记录，避免被当作当前通行状态使用；补充封闭期间可用的替代通行路径，供总体席判断演练与后续处置使用。",
+            "reason": "现有三个活动任务分别聚焦演练执行（V05/L03）、烟情位置核实和A03城西救援绕行，均未以R01封闭状态跟踪与巡查记录时效修正为目标。本条报告在封闭后1分钟才发布、内容已过期，且封闭原因与烟情关系不明，属于现有任务不宜承接的独立核实工作，建议由总体席决定是否立项。"
+          },
+          "emptyReason": null,
+          "finalText": "**事实核对（R01 中轴桥巡查，报告 intel/…-E09-a，修订 1）**\n\n**可确认的事实**\n- 该报告观测时间为 **2026-11-03 09:11:00+08:00**，正文仅一句：“09:11 巡查时，R01 中轴桥通行正常”。这一记录的有效期是 **09:11—09:12**，只覆盖约 1 分钟。\n- 该报告发布于 **09:24**，比观测时间晚约 13 分钟，而且是在封闭消息（09:23）之后才发出的。\n- 另一来源 E08-a（修订 1，观测时间与发布时间同为 09:23）称 R01 因临时事故**封闭至 10:00**。\n- 态势系统当前记录：R01 中轴桥 **revision 2，effectiveAt 09:23**，validTime 09:23—10:00，passability = **closed**，备注“临时事故封闭至 10:00”。当前业务时点为 **09:24**，即封闭刚生效约 1 分钟。\n\n**判断：并非相互矛盾，但也并非当前有效**\n- 两条记录的时间点不同：09:11 通行正常，09:23 起封闭，因此从时间顺序上看并不冲突。\n- 但本条信息在收到时已经过期，**不能用来判断 R01 当前可通行**；如果只引用这条信息的结论，就会与态势中的封闭状态相矛盾。所以按“已确认的过期记录”处理，不能视为“已确认的当前通行正常”。\n- 封闭原因只被表述为“临时事故”，**没有来源说明它与临港烟情是否属于同一事件**，这一点属于待核实。\n\n**任务关联（已记录，均未创建或派发）**\n1. **临港登高演练**（A01，09:00—09:45，V05 占用至 09:45）：R01 位于演练关注区域内，封闭时间 09:23—10:00 覆盖演练剩余时段，存在演练相关车辆经中轴桥进出的可能影响。但任务目标未写明具体路线，是否依赖 R01 待核实。\n2. **临港仓储烟情核实与处置研判**：该任务本就需要核实“当前道路事实”，本条提供了 09:11 的通行基线；09:23 封闭说明状态已有变化，封闭是否与烟情同源尚不明确，属于不确定项。\n3. **城西交通救援**（A03）：任务已明确“不经过 R01/R02/R03”，本条不改变其绕行约束，无需调整，仅作为持续约束的背景确认。\n\n**建议另行核实（仅为建议，需总体席决定）**：R01 封闭的具体原因及责任方、10:00 恢复是否仍有效、封闭期间的替代通行路径，以及把 09:11 巡查结论标注为过期记录，避免后续误用。\n\n**缺口**：演练实际路线、封闭事故与烟情的关系、替代路径与恢复情况均无来源支撑。以上仅为事实核对，未创建任务、未分派工作。"
+        },
+        {
+          "step": "E10",
+          "notice": 1,
+          "title": "东环线通行确认（09:25）",
+          "jobId": "1ea366ee-a39d-4c3c-8eb3-9339dfd2d765",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": true,
+              "outcome": "无依据关联",
+              "reason": "该任务目标明确包含“不经过R01/R02/R03”的通行约束，本条信息正好涉及R02东环线。事实核对：intel报告E10-a（修订1，观测/发布时间均为2026-11-03T09:25:00+08:00，业务时点亦为09:25）称R02当前通行正常；态势系统R02当前为revision 2、effectiveAt 09:25、passability=open，与前一版本revision 1（09:10，同为open）一致，二者无矛盾。判断：R02在09:10与09:25均为可通行，说明该任务对R02的排除并非因道路封闭所致，本条通行正常信息不构成放宽“不经过R01/R02/R03”约束的依据；影响范围限于路线选择背景事实，不改变西城救援作业与V02/V14状态。不确定项：任务未记录排除R01/R02/R03的原因，R02可通行是否能替代绕行需由总体席结合未明示的排除理由判断；报告仅笼统称“当前通行正常”，未说明核查范围（全线/分段）与方式。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": false,
+              "outcome": "未定·未关联",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已核对并记录任务关联判断（回执成功）。\n\n**事实核对结果**\n\n| 项目 | 内容 |\n|---|---|\n| 来报 | intel 报告 `…-report-E10-a`《东环线通行确认》，修订 1（最新，无历史修订） |\n| 观测时间/发布 | 2026-11-03T09:25:00+08:00；业务时点（快照）同为 09:25 |\n| 来源正文 | “R02东环线当前通行正常”，对象 situation/road/R02，区域 A02 |\n| 当前有效记录 | 态势系统 R02 名称“东环线”，revision 2，effectiveAt 2026-11-03T09:25:00+08:00，properties.passability = open |\n| 前一版本 | revision 1，effectiveAt 09:10，同为 open；无可行状态回退或封闭记录 |\n\n结论：**已确认（互相印证、无矛盾）**——R02 在 09:10 与 09:25 两个版本均记录为可通行，来报与态势现状一致。**待核实**：报告只给“当前通行正常”的结论，未说明核查范围（全线还是分段）、核查方式及有效时长（validTime 为空）；也不清楚是什么事件或条件使得“不经过R02”成为一条约束。资料中**未发现相互矛盾**的表述。\n\n**逐任务判断**\n\n1. 城西交通救援（80c8ff3b…）——**需要考虑**。该任务目标中直接写明“不经过R01/R02/R03”，本条正指向 R02。由于 R02 在 09:10 与 09:25 均开放，该排除并非因道路封闭所致，本条信息不构成放宽该通行约束的依据；影响范围仅限路线选择的背景事实，不改变西城救援作业及 V02/V14 状态（其状态仍以来源回报为准）。是否可改走 R02，取决于任务未记录的排除理由，需由总体席判断。\n2. 临港登高演练（55dcea5d…）——**不考虑**。关注范围为 A01 临港及 L03/V05，R02 属 A02 东城，A01 成员道路为 R01/R03，无引用或范围交集。\n3. 临港仓储烟情核实与处置研判（e751b723…）——**不考虑**。目标是核实临港仓储烟情位置及临港区域道路、资源事实，R02 不在临港范围；名称相近（“东环线”与“东城”）不构成相关依据。\n\n**新建建议**：无。本条为单一道路通行确认，已有任务（城西交通救援的路线约束）足以承接其后续考虑，无需另立独立工作目标。\n\n**资料缺口**：R02 通行正常的持续性（无 validTime）、“不经过R01/R02/R03”的排除原因、报告核查范围均未见记录；本回复仅为事实核对，未创建任务、未分派工作，也未代替总体席作出路线决策。"
+        },
+        {
+          "step": "E11",
+          "notice": 1,
+          "title": "交通救援尚未结束（09:30）",
+          "jobId": "af997579-f5f8-45f5-9e4a-63415806c0c4",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 100
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": false,
+              "outcome": "漏关联",
+              "reason": null
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "本条信息直接对应“城西交通救援”任务：报告引用对象 L02（城西交通救援现场）、V02、V14 与该任务 businessRefs 完全一致，区域 A03 与任务 focus 一致。任务时间窗 09:00—10:00 覆盖报告观测时点 09:30。事实核验：报告（rev1，观测/发布 09:30，validTime 为空）称“仍在处置、V02 与 V14 暂未释放”，与当前态势 V02/V14（均 rev4，availability=unavailable，effectiveAt 09:10、reportedAt 09:30、validUntil 10:00，证据含声明“交通救援占用至10:00”）一致；与前一条来报 E02-a（观测 09:13，“仍占用、尚未释放、原承诺至10:00”）一致，未发现相互矛盾。影响范围：仅城西交通救援任务内的两辆作业车与现场设施，占用状态预计延续至 10:00，对任务截止前的资源可用性构成持续约束；任务要求“释放以来源回报为准”，本条仅为 09:30 的未释放确认，不能作为释放依据。不确定项：报告未说明现场处置具体进展、是否已恢复道路通行（任务要求不经过 R01/R02/R03，本条未涉及道路状态）、10:00 后能否按期释放，需后续来源回报核实。"
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "## 事实核对结果（交通救援持续处置）\n\n**信息本体与版本**\n- 报告：`intel/run-497d7325-b0d2-4c48-8b62-2831a81f7dd1-report-E11-a`，标题「交通救援持续处置」，**修订 1**（按 subjectId E11 检索仅此一条，无更早或更新修订）。\n- 观测时间 = 发布时间 = `2026-11-03T09:30:00+08:00`；`validTime` 为空（未给出时效区间，属持续状态陈述而非限时承诺）。\n- 正文极简，仅一句结论：“城西交通救援仍在处置，V02 与 V14 暂未释放”；引用对象 L02、V02、V14，所属区域 A03。\n- 来源快照业务时点为 `2026-11-03 09:30:00+08:00`（revision 13），本条观测点与当前场景时点重合，不存在滞后交叉比对问题。\n\n**已确认（报告 + 当前有效态势记录一致）**\n| 对象 | 版本 | 状态 | 生效 / 上报 / 有效期 |\n|---|---|---|---|\n| V02 水罐车 | rev4 | unavailable | effectiveAt 09:10、reportedAt 09:30、validUntil 10:00（证据含声明“交通救援占用至10:00”） |\n| V14 抢险救援车 | rev4 | unavailable | 同上 |\n| L02 城西交通救援现场 | rev1 | 设施，位置点与两车一致 | 位置上报 09:10 |\n\n- 两车与现场坐标一致（121.7892354, 30.8987365），区域 A03，与报告中“仍在处置”的空间描述相符。\n- 与前一版本性来报 E02-a（观测 09:13，“仍占用、尚未释放，原承诺至 10:00”）方向一致，**未发现相互矛盾**：09:13→09:30 为同一状态的连续确认。\n\n**待核实（资料缺口）**\n1. 现场处置的具体进展与剩余工作量，报告未披露，无法判断 10:00 能否按期释放。\n2. 道路通行状态未覆盖：任务要求“不经过 R01/R02/R03”，本条未涉及任何道路对象，道路开放/管制情况仍属未核实。\n3. 释放须“以来源回报为准”：本条只是 09:30 的**未释放**确认，不能当作释放依据；10:00 后的实际释放仍待专门回报。\n4. 报告未说明“暂未释放”是计划内占用还是处置受阻，性质需来源澄清。\n\n**任务关联判断（已完整发现 3 条活动公共任务并逐条读取目标）**\n- 需考虑：**城西交通救援**（80c8ff3b…，09:00—10:00）——业务引用与关注区域均完全对应，时间窗包含观测点，本条确认其占用状态延续至 10:00，构成任务期内的资源可用性持续约束，也部分满足任务“以来源回报为准”的确认路径。\n- 不需考虑：临港登高演练（A01、V05/L03）、临港仓储烟情核实与处置研判——对象、区域均无交集，仅地名/系统同源不构成关联。\n- 独立新目标：不另建。本条是既有任务的进展确认与约束补充，道路状态与释放核实宜在既有任务内跟踪，避免重复建单。\n\n**不确定性说明**：以上判断基于 intel 与 situation 两个来源在 09:30 时点的快照，resourceCoverage 完整、无 unknownRefs；若后续出现 V02/V14 释放记录或道路管制变化，需重新比对。本条仅为信息核对结论，任务创建与处置动作由人员决定。"
+        },
+        {
+          "step": "E12",
+          "notice": 1,
+          "title": "仓库火势趋稳（09:40）",
+          "jobId": "50186970-8b50-4aca-bdfc-57b742b814d7",
+          "status": "succeeded",
+          "recorded": true,
+          "receiptMatches": true,
+          "apiMatches": true,
+          "candidateIdsObserved": [
+            "55dcea5d-d6cc-4908-a666-e1114287750d",
+            "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+            "e751b723-ffd5-461f-b9c5-ab5439fbe1ff"
+          ],
+          "allCandidatesObserved": true,
+          "fullGoalsObserved": true,
+          "queries": [
+            {
+              "tool": "task_search",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": 50
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            },
+            {
+              "tool": "task_read",
+              "isError": false,
+              "page": {
+                "count": null,
+                "offset": null,
+                "limit": null
+              }
+            }
+          ],
+          "allQueriesInWire": true,
+          "repairs": 0,
+          "failedRecordCalls": 0,
+          "pairs": [
+            {
+              "task": "M",
+              "taskId": "e751b723-ffd5-461f-b9c5-ab5439fbe1ff",
+              "expected": "应关联",
+              "actualLinked": true,
+              "outcome": "符合",
+              "reason": "直接相关。本条是临港三号仓库（L01，A01）火势/处置状态的最新现场回报，观测与发布均为2026-11-03T09:40，修订1且为该subject唯一修订，与该任务“核实临港仓储烟情具体位置、当前道路及资源事实，整理不确定事项”的目标直接对应。已确认：事发对象为临港三号仓库（E04-a园区值班员确认、E04-b无人机支持，与态势L01位置121.8650368,30.88177及A01归属一致）；观测时点火势趋稳、处置仍在继续。待核实：趋稳的程度与是否已控制、是否具备结束条件、当前现场道路通行与资源占用、后续是否仍需增援。缺口：态势系统L01当前记录仅有类别（facility）与坐标，无火势或事件状态字段，本条状态无系统记录可交叉印证，仅有单一现场来源；该报告无历史修订可比。影响范围限于A01临港三号仓库及现场处置力量。"
+            },
+            {
+              "task": "T02",
+              "taskId": "80c8ff3b-8dad-4ee3-89d7-b9f0e317a462",
+              "expected": "无关联依据",
+              "actualLinked": false,
+              "outcome": "符合",
+              "reason": null
+            },
+            {
+              "task": "T03",
+              "taskId": "55dcea5d-d6cc-4908-a666-e1114287750d",
+              "expected": "未定",
+              "actualLinked": true,
+              "outcome": "未定·已关联",
+              "reason": "依据有限的可能约束，不确定性高，非已确认冲突。该任务为09:00—09:45临港登高演练，V05占用至09:45且“释放以回报为准”（E03-a；态势V05 rev3 validUntil 09:45、state unavailable）；本条观测时点09:40处于演练窗口内并显示火势趋稳但仍在处置、未确认结束，演练场L03与三号仓库L01同属A01、直线相距约200米。若现场后续需要登高车，可能与09:45的释放时点形成衔接关注；但本条未涉及V05、演练场或资源调配，故不构成对演练安排或释放时点的变更，仅作持续关注。待核实：09:45后V05是否按回报释放、现场是否提出登高车需求。"
+            }
+          ],
+          "newTaskSuggestion": null,
+          "emptyReason": null,
+          "finalText": "已记录任务判断（回执已成功返回）。以下为事实核对结果。\n\n**信息本体**\n- 报告：intel / run-497d7325-b0d2-4c48-8b62-2831a81f7dd1-report-E12-a，标题“现场火势趋稳”，修订 1，该主题（E12）仅此一条修订，无历史版本可比对，不存在同主题版本冲突。\n- 观测时间与发布时间一致：2026-11-03T09:40:00+08:00；validTime 为空，即该判断未声明有效期。\n- 业务判断时点：态势快照 businessNow 为 2026-11-03T09:40:00+08:00，与本条观测时间同点；注意系统查询时间为 2026-11-06，晚于业务时点，不能把查询时间当作现场时点。\n- 对象：临港三号仓库 L01，所属区域 A01（临港）。\n\n**已确认**\n- 事发对象为临港三号仓库：报告引用 L01；E04-a（园区值班员确认，09:16）、E04-b（无人机支持，09:16）与态势 L01 记录（facility，121.8650368, 30.88177，A01）一致。\n- 本条明确的事实仅为：现场报告火势趋稳、继续处置。\n\n**待核实**\n- “趋稳”的程度（是否已控制、有无复燃），以及事件是否结束——正文明确“尚不能确认事件结束”。\n- 现场当前道路通行与资源占用情况（本条未涉及 R01/R03 及任何车辆）。\n- 后续是否仍需增援、是否需要调整演练或救援安排。\n\n**矛盾情况**\n- 本条与其他报告之间未见直接矛盾。既无“已扑灭/事件结束”的相反记录，也无升级报告。E01-a（09:12）的“位置待核实”已被 E04-a/E04-b（09:16）取代，属已解决的早期不确定，不构成本条冲突。\n- 需注意：E08-a（09:23，R01 中轴桥封闭至 10:00）与 E09-a（09:11 巡查通行正常）时间点不同，属时段差异而非矛盾，且与本条火势无关。\n\n**资料缺口（依当前有效记录）**\n- 态势系统 L01 仅有类别与坐标，无火势、事件状态或结束标志字段，本条状态无系统记录可交叉印证，来源单一。\n- 车辆侧：V05 rev3 为 unavailable、validUntil 09:45（演练占用）；V04 rev2 为 unavailable、validUntil 11:00（检修，注明须确认）；V01/V03/V06 为 available。本条未产生任何资源状态变更。\n\n**任务关联判断（已记录）**\n- 临港仓储烟情核实与处置研判：直接相关，本条是其核心状态更新的最新一笔，补入“趋稳但未结束”的现状与上述待核实项。\n- 临港登高演练：仅作低确定性关注。演练窗口 09:00—09:45，V05 占用至 09:45、释放以回报为准，演练场与三号仓库同属 A01、相距约 200 米；若现场需登高车，可能涉及释放时点衔接。但本条未提及 V05 或演练，不构成冲突或变更，需等 09:45 后的释放回报确认。\n- 城西交通救援（A03，V02/V14，避让 R01/R02/R03）：不关联。区域、对象与事由均无交集，本条不含道路或该批资源信息。\n\n**是否需新建任务**\n- 无新建建议。“火势趋稳但未确认结束”的核实与不确定性整理已落在既有“临港仓储烟情核实与处置研判”目标范围内，无现有任务不宜承接的独立工作目标。\n\n未创建任务、未分派工作，也未对现场作处置结论；以上为核对结果，供总体席决策参考。"
+        }
+      ]
+    }
+  ]
+}

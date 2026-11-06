@@ -2,7 +2,7 @@
   "id": "preprocess-task-judgment-repair",
   "name": "preprocess-task-judgment-repair",
   "title": "普通初析任务判断修复：关联一致性与真实记录",
-  "description": "v0.2已批准并实施中：优先保证所有应考虑已有任务的正确完整关联，再考虑额外独立新建；原生记录校验与最多两次补做。工程检查后进行三轮完整隔离复验，结果待用户审阅，暂不部署线上。",
+  "description": "v0.2已实施并完成三轮完整复验。工程检查通过，39条判断均真实保存，E05三轮完整关联；全量冻结口径仍有5项漏关联、9项无依据关联，新建建议存在目标重叠风险。整体语义验收未通过，结果待用户审阅；未部署线上。",
   "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "preprocess-task-assessment",
@@ -15,7 +15,7 @@
   "branch": "codex/scenario-demo",
   "base_branch": "codex/scenario-demo",
   "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
-  "commit": null,
+  "commit": "a2c00b8",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -28,8 +28,18 @@
     ".trellis/tasks/11-06-preprocess-task-judgment-repair/check.jsonl",
     ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/review-rubric.md",
     ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/retest-protocol.md",
-    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/implementation-verification.md"
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/implementation-verification.md",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/retest-results.md",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/coverage-review.json",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/audit-proof.json",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/repeat-summary.json"
   ],
-  "notes": "2026-11-06用户要求针对漏关联主任务、未记录却声称已记录给出修复方案并落盘待审阅。已核对本次E05真实证据、10月27日持续研判漏记录修复及当前普通初析/任务判断契约。v0.1建议显式requireTaskAssessment、复用Pi原生完成检查与最多2次补做、按完整目标判断并允许关联与新建建议并存。仅规划，未修改产品代码/提示词/配置/场景/线上服务，未调用模型或运行产品测试；未批准实施，保持planning。 2026-11-06按用户最新对齐优化为v0.2：已有任务关联的正确性和完整性第一优先，额外独立工作新建第二；先在授权范围分页发现活动任务，再按目标/时点/资源/约束核对所有需考虑对象。潜在影响有依据且标条件，资料不足与无关分开；不以Top N、首个命中或广撒网替代覆盖。验收由E05单点扩展到全部13来报×当时活动任务，新建合理性单列，首报不倒扣后建任务。仅修改规划文档及任务元数据，未实施、未测评、未部署，仍待审阅。 用户已批准v0.2并要求先提交再实施、完成三轮完整复验；方案提交b133400后已激活。UI仅必要修改且须简洁克制。本次未授权更新线上产品，复验保持独立代码和数据。 实施与独立复核完成，修复了输出异步核验后的提交竞争；完整Vitest138文件1581项、桌面35项、lint/typecheck/build通过。待固定候选后进行三轮真实完整复验，结果留用户审阅；不部署线上。",
-  "meta": {}
+  "notes": "2026-11-06用户要求针对漏关联主任务、未记录却声称已记录给出修复方案并落盘待审阅。已核对本次E05真实证据、10月27日持续研判漏记录修复及当前普通初析/任务判断契约。v0.1建议显式requireTaskAssessment、复用Pi原生完成检查与最多2次补做、按完整目标判断并允许关联与新建建议并存。仅规划，未修改产品代码/提示词/配置/场景/线上服务，未调用模型或运行产品测试；未批准实施，保持planning。 2026-11-06按用户最新对齐优化为v0.2：已有任务关联的正确性和完整性第一优先，额外独立工作新建第二；先在授权范围分页发现活动任务，再按目标/时点/资源/约束核对所有需考虑对象。潜在影响有依据且标条件，资料不足与无关分开；不以Top N、首个命中或广撒网替代覆盖。验收由E05单点扩展到全部13来报×当时活动任务，新建合理性单列，首报不倒扣后建任务。仅修改规划文档及任务元数据，未实施、未测评、未部署，仍待审阅。 用户已批准v0.2并要求先提交再实施、完成三轮完整复验；方案提交b133400后已激活。UI仅必要修改且须简洁克制。本次未授权更新线上产品，复验保持独立代码和数据。 实施与独立复核完成，修复了输出异步核验后的提交竞争；完整Vitest138文件1581项、桌面35项、lint/typecheck/build通过。待固定候选后进行三轮真实完整复验，结果留用户审阅；不部署线上。 三轮固定候选复验已完成（12步/13来报/脚本交接各3次），39记录/回执/API一致，0次真实补做。全部任务目标与实际请求可见，0压缩；42应关联漏5、42无依据中多关联9，30未定单列，12新建建议中6项重叠风险待审。证据160文件Key零命中，进程结束、线上健康200，未部署。任务保留in_progress待审阅，不能标记整体语义验收通过。",
+  "meta": {
+    "planCommit": "b133400",
+    "candidateCommit": "a2c00b8",
+    "reviewPending": true,
+    "semanticAcceptancePassed": false,
+    "resultsFile": ".trellis/tasks/11-06-preprocess-task-judgment-repair/research/retest-results.md"
+  }
 }
