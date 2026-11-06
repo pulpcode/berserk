@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 16
+- **Total Sessions**: 17
 - **Last Active**: 2026-11-06
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~490 | Active |
+| `journal-1.md` | ~525 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 17 | 2026-11-06 | v0.2线上发布与只读核验 | `48c99a1`, `a2c00b8` | `codex/scenario-demo` |
 | 16 | 2026-11-06 | 普通初析v0.2实施与三轮完整复验 | `b133400`, `a2c00b8`, `9a5d723` | `codex/scenario-demo` |
 | 15 | 2026-11-06 | 取消实验预算停止并完成三轮完整复验 | `d2d8789`, `04b8ad0` | `codex/scenario-demo` |
 | 14 | 2026-11-06 | 业务闭环上线与E05独立复验 | `afe9fb3` | `codex/scenario-demo` |

@@ -52,3 +52,5 @@ npm run test:e2e -- --workers=1 tests/e2e/information.spec.ts tests/e2e/task-inf
 以上是预计责任范围，不要求每个文件都改；不得扩展为通用工作流、新数据库状态体系、模型切换或场景补答案。
 
 执行结果见[三轮复验报告](research/retest-results.md)：工程通过，39条真实保存，关联语义仍有5漏/9无依据，保留用户审阅项未勾选。
+
+2026-11-06后续：用户追加授权“更新线上服务”，已发布48c99a1，详见[发布记录](research/online-release.md)。此前“不部署/另行授权”描述为当时范围；本次上线不代表剩余关联语义问题通过验收。
