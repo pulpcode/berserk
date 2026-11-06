@@ -3,13 +3,14 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-import { guardScenarioRuntime, ScenarioBudgetGuard, type ScenarioProbeBudget } from '../scripts/probe-scenario-budget.js';
+import { guardScenarioRuntime, ScenarioBudgetGuard, type ScenarioProbeAccounting, type ScenarioProbeBudget } from '../scripts/probe-scenario-budget.js';
 import { runScenarioBusiness, scenarioBusinessOptions } from '../scripts/probe-scenario-business.js';
 import { configuredRuntime } from '../src/pi/model-runtime.js';
 import { testConfig } from './pi/fake-runtime.js';
 
 const limits: ScenarioProbeBudget = { maxApiRequests: 2, maxInputTokens: 1200, maxOutputTokens: 200, maxSeconds: 60,
   maxCostCny: 1, inputCnyPerMillion: 2, outputCnyPerMillion: 8, providerInputLimitTokens: 1000 };
+const accounting: ScenarioProbeAccounting = { inputCnyPerMillion: 2, outputCnyPerMillion: 8, providerInputLimitTokens: 1000 };
 function message(input = 100, output = 10): AssistantMessage {
   return { role: 'assistant', api: 'openai-completions', provider: 'test-local', model: 'deterministic-model',
     content: [{ type: 'text', text: '实际输出' }], timestamp: 1, stopReason: 'stop',
@@ -40,6 +41,14 @@ describe('scenario probe dispatch budget', () => {
     expect(() => scenarioBusinessOptions(['--output', '/tmp/new-evidence', '--live', '--max-seconds', 'Infinity'])).toThrow(/Finite/);
     expect(() => scenarioBusinessOptions(['--output', '/tmp/new-evidence', '--prepare-only', '--live'])).toThrow(/mutually exclusive/);
     expect(() => new ScenarioBudgetGuard().begin(1000, 100)).toThrow(/prepare-only/);
+  });
+  it('requires an explicit live usage-only selection and rejects mixed budget flags', () => {
+    const args = ['--output', '/tmp/new-evidence', '--usage-only', '--provider-input-limit-tokens', '1000', '--input-cny-per-million', '2', '--output-cny-per-million', '8'];
+    expect(() => scenarioBusinessOptions(args)).toThrow(/explicit --live/);
+    expect(() => scenarioBusinessOptions(['--output', '/tmp/new-evidence', '--live', '--usage-only'])).toThrow(/requires provider/);
+    expect(() => scenarioBusinessOptions([...args, '--live', '--max-api-requests', '2'])).toThrow(/cannot include/);
+    expect(scenarioBusinessOptions([...args, '--live'])).toMatchObject({ live: true, budget: undefined, accounting });
+    expect(() => new ScenarioBudgetGuard(limits, accounting)).toThrow(/mutually exclusive/);
   });
   it('reserves provider bounds, settles actual cached tokens at full rates and blocks the next dispatch before overspend', () => {
     const guard = new ScenarioBudgetGuard(limits), first = guard.begin(1000, 100);
@@ -87,9 +96,35 @@ describe('scenario probe dispatch budget', () => {
     expect(guard.snapshot()).toMatchObject({ apiRequests: 1, inputTokensCharged: 100, outputTokensCharged: 10, stoppedReason: null });
     expect(records.find(record => record.kind === 'provider-accounting')?.value).toMatchObject({ reservation: { input: 1000, output: 100 } });
   });
-  it('keeps a failed actual SDK response and forbids a second transport attempt', async () => {
+  it('keeps actual SDK output and usage beyond cumulative request/token/cost/time thresholds in usage-only mode', async () => {
+    const formerLimits = { ...limits, maxInputTokens: 300, maxOutputTokens: 30, maxCostCny: 0.001 };
+    const config = testConfig('/tmp/unused-scenario-usage-sdk', { contextWindow: 8192, maxOutputTokens: 100 });
+    const runtime = await configuredRuntime(config), guard = new ScenarioBudgetGuard(undefined, accounting), records: Array<{ kind: string; value: unknown }> = [];
+    guardScenarioRuntime(runtime, guard, new URL(config.baseUrl).origin, async (kind, value) => { records.push({ kind, value }); });
+    const now = vi.spyOn(Date, 'now').mockReturnValue(guard.startedAt + formerLimits.maxSeconds * 1000 + 1);
+    const transport = vi.fn(async () => providerResponse(config.model));
+    try {
+      for (let i = 0; i < 4; i++) {
+        const stream = runtime.streamSimple(runtime.getModel(config.provider, config.model)!, { messages: [{ role: 'user', content: '读取当前事实。', timestamp: 1 }] },
+          { apiKey: config.apiKey, maxTokens: 100, fetch: transport });
+        const final = await stream.result();
+        expect(final.stopReason).toBe('stop'); expect(final.content).toEqual([expect.objectContaining({ type: 'text', text: '实际输出' })]);
+      }
+      const result = guard.snapshot();
+      expect(result).toMatchObject({ apiRequests: 4, attempts: 4, inputTokensCharged: 400, outputTokensCharged: 40, limits: null, accountingOnly: accounting, stoppedReason: null });
+      expect(result.apiRequests).toBeGreaterThan(formerLimits.maxApiRequests);
+      expect(result.inputTokensCharged).toBeGreaterThan(formerLimits.maxInputTokens);
+      expect(result.outputTokensCharged).toBeGreaterThan(formerLimits.maxOutputTokens);
+      expect(result.conservativeCostCny).toBeGreaterThan(formerLimits.maxCostCny);
+      expect(result.elapsedMs).toBeGreaterThan(formerLimits.maxSeconds * 1000);
+      expect(result.conservativeCostCny).toBeCloseTo(0.00112);
+      expect(transport).toHaveBeenCalledTimes(4);
+      expect(records.filter(record => record.kind === 'provider-accounting')).toHaveLength(4);
+    } finally { now.mockRestore(); }
+  });
+  it.each(['budgeted', 'usage-only'] as const)('keeps a failed actual SDK response and forbids a second transport attempt in %s mode', async mode => {
     const config = testConfig('/tmp/unused-scenario-budget-failure', { maxOutputTokens: 100 }), runtime = await configuredRuntime(config);
-    const guard = new ScenarioBudgetGuard(limits), records: unknown[] = [], transport = vi.fn(async () => new Response('{"error":{"message":"synthetic failure"}}', { status: 503 }));
+    const guard = new ScenarioBudgetGuard(mode === 'budgeted' ? limits : undefined, mode === 'usage-only' ? accounting : undefined), records: unknown[] = [], transport = vi.fn(async () => new Response('{"error":{"message":"synthetic failure"}}', { status: 503 }));
     guardScenarioRuntime(runtime, guard, new URL(config.baseUrl).origin, async (_kind, value) => { records.push(value); });
     const model = runtime.getModel(config.provider, config.model)!, context = { messages: [{ role: 'user' as const, content: '来报核对', timestamp: 1 }] };
     expect((await runtime.streamSimple(model, context, { apiKey: config.apiKey, fetch: transport }).result()).stopReason).toBe('error');
@@ -97,7 +132,7 @@ describe('scenario probe dispatch budget', () => {
     expect(() => runtime.streamSimple(model, context, { apiKey: config.apiKey, fetch: transport })).toThrow(/stopped/);
     expect(transport).toHaveBeenCalledTimes(1);
   });
-  it('runs the driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review', async () => {
+  it.each(['budgeted', 'usage-only'] as const)('runs the %s driver over all real source/host notices with synthetic provider SSE, preserving pending semantic review', async mode => {
     const parent = await mkdtemp(join(tmpdir(), 'axon-scenario-probe-driver-')), output = join(parent, 'new-evidence');
     const originalFetch = globalThis.fetch; let providerCalls = 0;
     for (const [name, value] of Object.entries({ LLM_PROVIDER: 'test-local', LLM_MODEL: 'deterministic-model', LLM_API_KEY: 'fake-probe-only-credential',
@@ -110,11 +145,17 @@ describe('scenario probe dispatch budget', () => {
     };
     try {
       const result = await runScenarioBusiness({ output, live: true, scriptedHandoff: true,
-        budget: { ...limits, maxApiRequests: 20, maxInputTokens: 10000, maxOutputTokens: 2000 } });
+        budget: mode === 'budgeted' ? { ...limits, maxApiRequests: 20, maxInputTokens: 10000, maxOutputTokens: 2000 } : undefined,
+        ...(mode === 'usage-only' ? { accounting } : {}) });
       expect(result).toMatchObject({ preparationCompleted: true, protocolCompleted: true, semanticReviewPending: true,
         scriptedHandoffReceipt: { state: 'completed' }, accounting: { apiRequests: 13, stoppedReason: null } });
       expect(providerCalls).toBe(13);
-      expect(JSON.parse(await readFile(join(output, 'validation.json'), 'utf8')).steps).toHaveLength(12);
+      const evidence = JSON.parse(await readFile(join(output, 'validation.json'), 'utf8'));
+      expect(evidence.steps).toHaveLength(12);
+      if (mode === 'usage-only') {
+        expect(evidence).toMatchObject({ limits: null, accountingOnly: accounting, accounting: { limits: null, accountingOnly: accounting, inputTokensCharged: 1300, outputTokensCharged: 130 } });
+        expect(evidence.budgetPolicy).toMatch(/without cumulative request\/token\/cost\/time stopping/);
+      }
       expect(await readFile(join(output, 'provider-input.jsonl'), 'utf8')).not.toContain('fake-probe-only-credential');
       expect(await readFile(join(output, 'scripted-actions.jsonl'), 'utf8')).toContain('human-source-task-create');
     } finally { globalThis.fetch = originalFetch; vi.unstubAllEnvs(); await rm(parent, { recursive: true, force: true }); }

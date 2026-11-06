@@ -8,6 +8,7 @@ export interface ScenarioProbeBudget {
   /** Verified provider limit, independent of the host's estimated compaction window. */
   providerInputLimitTokens: number;
 }
+export type ScenarioProbeAccounting = Pick<ScenarioProbeBudget, 'inputCnyPerMillion' | 'outputCnyPerMillion' | 'providerInputLimitTokens'>;
 interface Reservation { id: number; input: number; output: number; cost: number; sent: boolean }
 
 /** Probe-only accounting. Rates must upper-bound all billed tokens, including cache/reasoning. */
@@ -21,8 +22,9 @@ export class ScenarioBudgetGuard {
   private cost = 0;
   private active?: Reservation;
   private reason?: string;
-  constructor(readonly limits?: ScenarioProbeBudget) {
-    if (limits) for (const value of Object.values(limits)) assert.ok(Number.isFinite(value) && value > 0, 'Every live budget/rate must be finite and positive');
+  constructor(readonly limits?: ScenarioProbeBudget, readonly accounting?: ScenarioProbeAccounting) {
+    assert.ok(!(limits && accounting), 'Budget and usage-only modes are mutually exclusive');
+    for (const value of Object.values(limits ?? accounting ?? {})) assert.ok(Number.isFinite(value) && value > 0, 'Every live budget/rate must be finite and positive');
   }
   stop(reason: string) {
     this.reason ??= reason;
@@ -35,16 +37,17 @@ export class ScenarioBudgetGuard {
   snapshot() {
     return { apiRequests: this.calls, attempts: this.attempts, inputTokensCharged: this.input, outputTokensCharged: this.output,
       conservativeCostCny: this.cost, pendingReservation: this.active, stoppedReason: this.reason ?? null,
-      elapsedMs: Date.now() - this.startedAt, limits: this.limits ?? null };
+      elapsedMs: Date.now() - this.startedAt, limits: this.limits ?? null, accountingOnly: this.accounting ?? null };
   }
   begin(inputCap: number, outputCap: number) {
     this.check();
-    assert.ok(this.limits, 'prepare-only blocks every provider request');
+    const rates = this.limits ?? this.accounting;
+    assert.ok(rates, 'prepare-only blocks every provider request');
     assert.ok(!this.active, 'Probe requires one provider request at a time');
     assert.ok(Number.isSafeInteger(inputCap) && inputCap > 0 && Number.isSafeInteger(outputCap) && outputCap > 0, 'Verified model context/output limits required');
-    const cost = (inputCap * this.limits.inputCnyPerMillion + outputCap * this.limits.outputCnyPerMillion) / 1_000_000;
-    if (this.calls >= this.limits.maxApiRequests || this.input + inputCap > this.limits.maxInputTokens
-      || this.output + outputCap > this.limits.maxOutputTokens || this.cost + cost > this.limits.maxCostCny) {
+    const cost = (inputCap * rates.inputCnyPerMillion + outputCap * rates.outputCnyPerMillion) / 1_000_000;
+    if (this.limits && (this.calls >= this.limits.maxApiRequests || this.input + inputCap > this.limits.maxInputTokens
+      || this.output + outputCap > this.limits.maxOutputTokens || this.cost + cost > this.limits.maxCostCny)) {
       this.stop('request_reservation_exceeds_budget'); this.check();
     }
     const reservation = { id: ++this.attempts, input: inputCap, output: outputCap, cost, sent: false };
@@ -62,7 +65,8 @@ export class ScenarioBudgetGuard {
     const known = [input, output, usage?.totalTokens].every(value => Number.isSafeInteger(value) && Number(value) >= 0)
       && input + output > 0 && usage?.totalTokens === input + output;
     if (known) {
-      const cost = (input * this.limits!.inputCnyPerMillion + output * this.limits!.outputCnyPerMillion) / 1_000_000;
+      const rates = this.limits ?? this.accounting!;
+      const cost = (input * rates.inputCnyPerMillion + output * rates.outputCnyPerMillion) / 1_000_000;
       this.input += input - reservation.input; this.output += output - reservation.output; this.cost += cost - reservation.cost;
       if (input > reservation.input || output > reservation.output) this.stop('provider_usage_exceeded_verified_limits');
     } else this.stop('provider_usage_unknown_reservation_retained');
@@ -77,7 +81,7 @@ export function guardScenarioRuntime(runtime: ModelRuntime, guard: ScenarioBudge
   record: (kind: string, value: unknown) => Promise<void>) {
   const original = runtime.streamSimple.bind(runtime);
   runtime.streamSimple = (model, context, options) => {
-    const reservation = guard.begin(guard.limits?.providerInputLimitTokens ?? model.contextWindow, options?.maxTokens ?? model.maxTokens);
+    const reservation = guard.begin(guard.limits?.providerInputLimitTokens ?? guard.accounting?.providerInputLimitTokens ?? model.contextWindow, options?.maxTokens ?? model.maxTokens);
     const safe = createAssistantMessageEventStream();
     void (async () => {
       let final: AssistantMessage | undefined;

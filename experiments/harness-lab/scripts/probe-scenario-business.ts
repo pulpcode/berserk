@@ -22,7 +22,7 @@ import { createApp } from '../src/server/app.js';
 import { loadConfig } from '../src/server/config.js';
 import { createMockContextServer } from './mock-context/server.js';
 import type { NotificationTarget } from './mock-context/control-api.js';
-import { guardScenarioRuntime, ScenarioBudgetGuard, type ScenarioProbeBudget } from './probe-scenario-budget.js';
+import { guardScenarioRuntime, ScenarioBudgetGuard, type ScenarioProbeAccounting, type ScenarioProbeBudget } from './probe-scenario-budget.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const numericFlags = {
@@ -31,14 +31,16 @@ const numericFlags = {
   '--input-cny-per-million': 'inputCnyPerMillion', '--output-cny-per-million': 'outputCnyPerMillion',
   '--provider-input-limit-tokens': 'providerInputLimitTokens',
 } as const;
+const accountingFlags = ['--provider-input-limit-tokens', '--input-cny-per-million', '--output-cny-per-million'];
 export function scenarioBusinessOptions(args: string[]) {
-  let output = '', live = false, prepare = false, scriptedHandoff = false;
+  let output = '', live = false, prepare = false, scriptedHandoff = false, usageOnly = false;
   const budget: Partial<ScenarioProbeBudget> = {}, seen = new Set<string>();
   for (let i = 0; i < args.length; i++) {
     const flag = args[i]; assert.ok(!seen.has(flag), `Duplicate argument: ${flag}`); seen.add(flag);
     if (flag === '--live') live = true;
     else if (flag === '--prepare-only') prepare = true;
     else if (flag === '--scripted-handoff') scriptedHandoff = true;
+    else if (flag === '--usage-only') usageOnly = true;
     else if (flag === '--output') { assert.ok(args[i + 1] && !args[i + 1].startsWith('--'), '--output requires a new directory'); output = resolve(args[++i]); }
     else if (flag in numericFlags) {
       const value = Number(args[++i]); assert.ok(Number.isFinite(value) && value > 0, `Finite positive value required: ${flag}`);
@@ -47,17 +49,21 @@ export function scenarioBusinessOptions(args: string[]) {
       budget[key] = value;
     } else throw new Error(`Unknown argument: ${flag}`);
   }
-  assert.ok(output, 'Use --output NEW_DIRECTORY [--prepare-only], or --live with every explicit budget/rate flag');
+  assert.ok(output, 'Use --output NEW_DIRECTORY [--prepare-only], or --live with explicit budgets or --usage-only accounting flags');
   assert.ok(!(live && prepare), '--live and --prepare-only are mutually exclusive');
-  assert.ok(!live || Object.keys(numericFlags).every(flag => seen.has(flag)), '--live requires all request/token/time/cost/rate budgets');
+  assert.ok(!usageOnly || live, '--usage-only requires explicit --live');
+  assert.ok(!live || (usageOnly ? accountingFlags : Object.keys(numericFlags)).every(flag => seen.has(flag)),
+    usageOnly ? '--usage-only requires provider input limit and both rates' : '--live requires all request/token/time/cost/rate budgets');
+  assert.ok(!usageOnly || Object.keys(budget).length === accountingFlags.length, '--usage-only cannot include cumulative budget flags');
   assert.ok(live || !Object.keys(budget).length, 'Budget flags require explicit --live');
-  return { output, live, scriptedHandoff, budget: live ? budget as ScenarioProbeBudget : undefined };
+  return { output, live, scriptedHandoff, budget: live && !usageOnly ? budget as ScenarioProbeBudget : undefined,
+    ...(usageOnly ? { accounting: budget as ScenarioProbeAccounting } : {}) };
 }
 
 export async function runScenarioBusiness(options: ReturnType<typeof scenarioBusinessOptions>) {
   // No existing output, source database, accounts or model settings may be reused.
   await mkdir(options.output, { mode: 0o700 });
-  const guard = new ScenarioBudgetGuard(options.budget), secrets: string[] = [];
+  const guard = new ScenarioBudgetGuard(options.budget, options.accounting), secrets: string[] = [];
   const encode = (value: unknown) => {
     let text = JSON.stringify(value, null, 2);
     for (const secret of secrets) if (secret) text = text.split(secret).join('[redacted]');
@@ -89,10 +95,12 @@ export async function runScenarioBusiness(options: ReturnType<typeof scenarioBus
   let app: Awaited<ReturnType<typeof createApp>> | undefined, lab: PiLab | undefined;
   const evidence: Record<string, unknown> = { schemaVersion: 1, mode: options.live ? 'live' : 'prepare-only',
     protocolCompleted: false, semanticReviewPending: true, scriptedHandoff: options.scriptedHandoff, startedAt: new Date().toISOString(),
-    budgetPolicy: 'Reserve explicitly verified provider input limit (independent of host compaction window) + maxOutputTokens output before each SDK request; settle reported input+cache and output (including reasoning) at supplied upper CNY rates. Unknown usage retains full reservation and stops. No HTTP retries, redirects, model discovery or fallback. This policy bounds dispatch under the verified model limits/rates; it is not an account billing setting.',
+    budgetPolicy: options.accounting
+      ? 'Usage-only: record actual requests, input+cache and output at supplied upper CNY rates without cumulative request/token/cost/time stopping. Individual provider limits, operator cancellation, evidence/provider failures and no automatic retries remain enforced. Not an account billing setting.'
+      : 'Reserve explicitly verified provider input limit (independent of host compaction window) + maxOutputTokens output before each SDK request; settle reported input+cache and output (including reasoning) at supplied upper CNY rates. Unknown usage retains full reservation and stops. No HTTP retries, redirects, model discovery or fallback. This policy bounds dispatch under the verified model limits/rates; it is not an account billing setting.',
     model: { provider: config.provider, model: config.model, baseUrl: config.baseUrl, contextWindow: config.contextWindow, maxOutputTokens: config.maxOutputTokens,
       thinkingMode: config.thinkingMode ?? 'off', compactionReserveTokens: config.compactionReserveTokens, compactionKeepRecentTokens: config.compactionKeepRecentTokens },
-    limits: options.budget ?? null,
+    limits: options.budget ?? null, accountingOnly: options.accounting ?? null,
     rateReference: { url: 'https://docs.volcengine.com/docs/ark/model-pricing?lang=zh&redirect=1', currency: 'CNY',
       modelRow: 'deepseek-v4-1-flash', ownerVerifiedOn: '2026-11-06', peakInputPerMillion: 2, peakOutputPerMillion: 8,
       note: 'Reference metadata only. The batch owner must verify selected endpoint/model and upper rates before --live; no billing settings or prepaid/fallback assumptions.' },
