@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import type { FastifyInstance } from 'fastify';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { openDatabase } from '../src/access/database.js';
 import { AccessStore } from '../src/access/store.js';
 import { BackgroundStore } from '../src/background/store.js';
@@ -107,21 +107,87 @@ describe('scenario director authorization and host/source integration',()=>{
     expect(f.fake.calls).toHaveLength(0);
   },30000);
 
-  it('creates and recovers exactly three host tasks, explicitly sends frozen notices, and archives only the prior round on replay',async()=>{
+  it('recovers a committed creation with a missing file acknowledgment after restart without duplicating opening tasks',async()=>{
+    const f=await setup(),{result:created}=await create(f),id=created.instance.instanceId,clientActionId=randomUUID();
+    const createTask=f.lab.access!.create.bind(f.lab.access!);
+    const crash=vi.spyOn(f.lab.access!,'create').mockImplementationOnce((...args)=>{createTask(...args);throw new Error('Injected stop after task commit, before mapping acknowledgment');});
+    try {expect((await f.director.call(`/api/simulation/instances/${id}/initialize`,{clientActionId})).statusCode).toBe(500);} finally {crash.mockRestore();}
+    const partial=await json<ScenarioTaskInitialization>(f.director.call(`/api/simulation/instances/${id}/initialize`));
+    expect(partial.initialized).toBe(false);expect(partial.tasks.map(task=>task.code)).toEqual(['T02']);
+    const path=join(f.dir,'axon','scenario-runs',`${id}.json`),pending=JSON.parse(await readFile(path,'utf8'));
+    expect(pending).toMatchObject({schemaVersion:2,operationId:clientActionId,taskBootstrap:{expectedTaskCodes:['T02','T03']}});
+    expect(pending.tasks.every((task:{taskId?:string})=>task.taskId===undefined)).toBe(true);
+    await f.app.close();
+    const fake=await fakeRuntime(f.config,()=>({text:'不得自动运行'})),lab=await PiLab.create(f.config,fake.runtime);
+    const app=await createApp(lab,false,{config:f.background,env},{config:f.context,env});cleanup.push(()=>app.close());
+    const director=await login(app,directorSeat),recovered=JSON.parse(await readFile(path,'utf8'));
+    expect(recovered.tasks[0].taskId).toBe(partial.tasks[0].taskId);expect(recovered.tasks[1].taskId).toBeUndefined();
+    const completed=await json<ScenarioTaskInitialization>(director.call(`/api/simulation/instances/${id}/initialize`,{clientActionId}));
+    expect(completed.initialized).toBe(true);expect(completed.tasks.map(task=>task.code)).toEqual(['T02','T03']);expect(completed.tasks[0]).toEqual(partial.tasks[0]);
+    expect(await json(director.call(`/api/simulation/instances/${id}/initialize`,{clientActionId}))).toEqual(completed);
+    expect(lab.access!.list(directorSeat)).toHaveLength(2);expect(fake.calls).toEqual([]);
+    expect(JSON.parse(await readFile(path,'utf8')).tasks.map((task:{clientActionId:string})=>task.clientActionId)).toEqual(pending.tasks.map((task:{clientActionId:string})=>task.clientActionId));
+  },30000);
+
+  it('rejects unknown, incomplete or changed host bootstrap mappings before activation without rewriting them',async()=>{
+    const f=await setup(),{result:created}=await create(f),id=created.instance.instanceId;await initialize(f,id);
+    const path=join(f.dir,'axon','scenario-runs',`${id}.json`),original=JSON.parse(await readFile(path,'utf8'));
+    const invalid=[
+      {...original,schemaVersion:99}, {...original,schemaVersion:'2'},
+      {...original,taskBootstrap:undefined}, {...original,taskBootstrap:{...original.taskBootstrap,schemaVersion:3}},
+      {...original,taskBootstrap:{...original.taskBootstrap,expectedTaskCodes:['T02']}},
+      {...original,taskBootstrap:{...original.taskBootstrap,definitionHash:'a'.repeat(64)}},
+      {...original,tasks:[]}, {...original,tasks:original.tasks.slice(0,1)}, {...original,tasks:[original.tasks[0],original.tasks[0]]},
+      {...original,tasks:original.tasks.map((task:object,index:number)=>index?task:{...task,goal:'Changed saved definition'})},
+    ];
+    for(const value of invalid){
+      const bytes=JSON.stringify(value);await writeFile(path,bytes);
+      expect((await f.director.call(`/api/simulation/instances/${id}/initialize`)).statusCode).toBe(409);
+      const rejected=await f.director.call(`/api/simulation/instances/${id}/activate`,{clientActionId:randomUUID(),expectedRevision:created.instance.revision,expectedActiveRevision:0});
+      expect(rejected.statusCode,rejected.body).toBe(409);expect(await readFile(path,'utf8')).toBe(bytes);
+      expect(await readdir(join(f.dir,'axon','scenario-runs'))).not.toContain('.activation.json');
+    }
+    await writeFile(path,JSON.stringify(original));expect((await activate(f,created)).instance.status).toBe('active');
+    expect(f.lab.access!.list(directorSeat)).toHaveLength(2);expect(f.fake.calls).toEqual([]);
+  },30000);
+
+  it('keeps saved legacy three-task provenance and initialization receipts readable with strict legacy completeness',async()=>{
+    const f=await setup(),{result:created}=await create(f),id=created.instance.instanceId,sourceDb=new DatabaseSync(join(f.dir,'source.sqlite'));
+    try {
+      const legacy=JSON.parse(String(sourceDb.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body));
+      legacy.schemaVersion=1;delete legacy.taskBootstrap;legacy.instance.definitionVersion='3';legacy.instance.definitionHash='b'.repeat(64);
+      legacy.tasks.unshift({code:'T01',title:'临港三号仓库火情',goal:'模拟场景：09:35前核对支援资源。',businessRefs:[],areaIds:[]});
+      sourceDb.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(JSON.stringify(legacy),id);
+    }finally {sourceDb.close();}
+    const prepared=await initialize(f,id);expect(prepared.tasks.map(task=>task.code)).toEqual(['T01','T02','T03']);expect(prepared).not.toHaveProperty('taskBootstrap');
+    const path=join(f.dir,'axon','scenario-runs',`${id}.json`),original=await readFile(path,'utf8'),saved=JSON.parse(original);
+    expect(saved.schemaVersion).toBe(1);expect(saved).not.toHaveProperty('taskBootstrap');
+    await f.app.close();
+    const fake=await fakeRuntime(f.config,()=>({text:'不得自动运行'})),lab=await PiLab.create(f.config,fake.runtime),app=await createApp(lab,false,{config:f.background,env},{config:f.context,env});cleanup.push(()=>app.close());
+    const director=await login(app,directorSeat);
+    expect(await json(director.call(`/api/simulation/instances/${id}/initialize`))).toEqual(prepared);
+    expect(await json(director.call(`/api/simulation/instances/${id}/initialize`,{clientActionId:randomUUID()}))).toEqual(prepared);
+    expect(await readFile(path,'utf8')).toBe(original);expect(lab.access!.list(directorSeat)).toHaveLength(3);
+    await writeFile(path,JSON.stringify({...saved,tasks:saved.tasks.slice(1)}));
+    expect((await director.call(`/api/simulation/instances/${id}/initialize`)).statusCode).toBe(409);
+    await writeFile(path,original);expect(fake.calls).toEqual([]);
+  },30000);
+
+  it('creates and recovers exactly two host tasks, explicitly sends frozen notices, and archives only the prior round on replay',async()=>{
     const f=await setup(),creationId=randomUUID(),{result:created,input}=await create(f,creationId),id=created.instance.instanceId;
     expect(created.operation.actor).toEqual({userId:f.director.auth.identity!.userId,seatId:directorSeat});
     expect(await json(f.director.call(`/api/simulation/operations/${creationId}`))).toEqual(created);
     expect((await json<ScenarioMutationResult>(f.director.call('/api/simulation/instances',input))).instance.instanceId).toBe(id);
     expect((await json<ScenarioInstances>(f.director.call('/api/simulation/instances'))).items).toHaveLength(1);
-    expect(await json(f.director.call(`/api/simulation/instances/${id}/initialize`))).toEqual({instanceId:id,initialized:false,tasks:[]});
+    expect(await json(f.director.call(`/api/simulation/instances/${id}/initialize`))).toMatchObject({instanceId:id,initialized:false,tasks:[],taskBootstrap:{schemaVersion:2,definitionVersion:'4',expectedTaskCodes:['T02','T03']}});
     const prepared=await initialize(f,id);
-    expect(prepared.initialized).toBe(true);expect(prepared.tasks.map(t=>t.code)).toEqual(['T01','T02','T03']);
-    expect(f.lab.access!.list(directorSeat)).toHaveLength(3);
+    expect(prepared.initialized).toBe(true);expect(prepared.tasks.map(t=>t.code)).toEqual(['T02','T03']);expect(prepared.taskBootstrap?.definitionHash).toBe(created.instance.definitionHash);
+    expect(f.lab.access!.list(directorSeat)).toHaveLength(2);
     const mappingPath=join(f.dir,'axon','scenario-runs',`${id}.json`);
     const mapping=JSON.parse(await readFile(mappingPath,'utf8')) as {tasks:Array<{taskId?:string}>};
     delete mapping.tasks[1].taskId;await writeFile(mappingPath,JSON.stringify(mapping));
     expect(await json(f.director.call(`/api/simulation/instances/${id}/initialize`))).toEqual(prepared);
-    expect(await initialize(f,id)).toEqual(prepared);expect(f.lab.access!.list(directorSeat)).toHaveLength(3);
+    expect(await initialize(f,id)).toEqual(prepared);expect(f.lab.access!.list(directorSeat)).toHaveLength(2);
     let state=await activate(f,created);
     const activationPath=join(f.dir,'axon','scenario-runs','.activation.json');
     const receipt=JSON.parse(await readFile(activationPath,'utf8')) as Record<string,unknown>;receipt.state='pending';await writeFile(activationPath,JSON.stringify(receipt));
@@ -177,7 +243,7 @@ describe('scenario director authorization and host/source integration',()=>{
     const sourceDb=new DatabaseSync(join(f.dir,'source.sqlite'));
     try{
       const original=String(sourceDb.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(nextId)!.body);
-      const changed=JSON.parse(original) as {instance:{definitionHash:string}};changed.instance.definitionHash='previous-definition';
+      const changed=JSON.parse(original) as {instance:{definitionHash:string};taskBootstrap:{definitionHash:string}};changed.instance.definitionHash='a'.repeat(64);changed.taskBootstrap.definitionHash=changed.instance.definitionHash;
       sourceDb.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(JSON.stringify(changed),nextId);
       expect((await f.director.call(`/api/simulation/instances/${nextId}/activate`,{clientActionId:randomUUID(),expectedRevision:next.result.instance.revision,expectedActiveRevision:list.activeRevision})).statusCode).toBe(409);
       await checkUnchanged();
@@ -207,7 +273,7 @@ describe('scenario director authorization and host/source integration',()=>{
       const pending=JSON.parse(await readFile(receiptPath,'utf8')) as {state:string;operationId:string;inputHash:string};
       expect(pending).toMatchObject({state:'pending',operationId:input.clientActionId});
       expect(JSON.parse(pending.inputHash)).toEqual([nextId,f.director.auth.identity!.userId,input.expectedRevision,input.expectedActiveRevision,false]);
-      expect(oldTasks.tasks.map(task=>f.lab.access!.get(task.taskId,directorSeat).state)).toEqual(['active','active','active']);
+      expect(oldTasks.tasks.map(task=>f.lab.access!.get(task.taskId,directorSeat).state)).toEqual(['active','active']);
       const initialRevision=f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision;
       expect((await f.director.call(`/api/simulation/operations/${input.clientActionId}`)).statusCode).toBe(404);
       expect((await f.director.call('/api/simulation/instances',{...next.input,clientActionId:randomUUID()})).statusCode).toBe(409);
@@ -229,7 +295,7 @@ describe('scenario director authorization and host/source integration',()=>{
       for(const task of oldTasks.tasks)expect(f.lab.access!.get(task.taskId,directorSeat).state).toBe('archived');
       expect(f.lab.access!.get(oldTasks.tasks[0].taskId,directorSeat).revision).toBe(initialRevision+1);
       for(const task of nextTasks.tasks)expect(f.lab.access!.get(task.taskId,directorSeat).state).toBe('active');
-      expect(f.lab.access!.list(directorSeat)).toHaveLength(6);
+      expect(f.lab.access!.list(directorSeat)).toHaveLength(4);
       expect(f.fake.calls).toHaveLength(0);
     }finally{release();scenarioDefinition.definitionHash=definitionHash;}
   },30000);
@@ -298,7 +364,7 @@ describe('scenario director authorization and host/source integration',()=>{
     f.lab.access!.db.prepare('UPDATE seats SET create_public=0 WHERE id=?').run(directorSeat);
     expect((await f.director.call('/api/simulation/scenarios')).statusCode).toBe(200);
     expect((await f.director.call(`/api/simulation/instances/${id}/initialize`,{clientActionId:randomUUID()})).statusCode).toBe(403);
-    expect(await json(f.director.call(`/api/simulation/instances/${id}/initialize`))).toEqual({instanceId:id,initialized:false,tasks:[]});
+    expect(await json(f.director.call(`/api/simulation/instances/${id}/initialize`))).toMatchObject({instanceId:id,initialized:false,tasks:[],taskBootstrap:{schemaVersion:2,definitionVersion:'4',expectedTaskCodes:['T02','T03']}});
     expect(f.lab.access!.list(directorSeat)).toHaveLength(0);
     f.lab.access!.db.prepare('UPDATE seats SET create_public=1 WHERE id=?').run(directorSeat);
     expect((await initialize(f,id)).initialized).toBe(true);

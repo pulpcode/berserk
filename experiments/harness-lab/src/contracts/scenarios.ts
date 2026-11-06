@@ -39,6 +39,7 @@ export interface ScenarioInstanceDetail {
   instance: ScenarioInstance; steps: ScenarioStepSummary[]; objects: SituationObject[];
   reports: InformationReport[]; actions: ScenarioAction[]; operations: ScenarioOperation[];
   taskDefinitions?: ScenarioTaskDefinition[];
+  taskBootstrap?: ScenarioTaskBootstrap;
 }
 export interface ScenarioDefinitions { items: ScenarioDefinitionSummary[] }
 export interface ScenarioInstances { items: ScenarioInstance[]; activeInstanceId: string | null; activeRevision: number; hasMore: boolean; nextCursor: string | null }
@@ -52,5 +53,20 @@ export interface ScenarioMutationInput { clientActionId: string; expectedRevisio
 export interface ScenarioActivateInput extends ScenarioMutationInput { expectedActiveRevision: number; terminateUnsent?: boolean }
 export interface ScenarioControlInput extends ScenarioMutationInput { action: 'pause' | 'resume' }
 export interface ScenarioTaskDefinition { code: 'T01' | 'T02' | 'T03'; title: string; goal: string; businessRefs: ContextRef[]; areaIds: string[] }
-export interface ScenarioTaskInitialization { instanceId: string; tasks: Array<{code: 'T01' | 'T02' | 'T03'; taskId: string; title: string}>; initialized: boolean }
+export interface ScenarioTaskBootstrap {
+  schemaVersion: 2; definitionId: 'harbor-fire'; definitionVersion: '4'; definitionHash: string;
+  expectedTaskCodes: ['T02', 'T03'];
+}
+export const LEGACY_SCENARIO_TASK_CODES = ['T01', 'T02', 'T03'] as const;
+export const SCENARIO_BOOTSTRAP_TASK_CODES = ['T02', 'T03'] as const;
+export function isScenarioTaskBootstrap(value: unknown): value is ScenarioTaskBootstrap {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const r = value as Record<string, unknown>;
+  return Object.keys(r).length === 5 && Object.keys(r).every(key => ['schemaVersion', 'definitionId', 'definitionVersion', 'definitionHash', 'expectedTaskCodes'].includes(key))
+    && r.schemaVersion === 2 && r.definitionId === 'harbor-fire' && r.definitionVersion === '4'
+    && typeof r.definitionHash === 'string' && /^[a-f0-9]{64}$/.test(r.definitionHash)
+    && Array.isArray(r.expectedTaskCodes) && r.expectedTaskCodes.length === SCENARIO_BOOTSTRAP_TASK_CODES.length
+    && r.expectedTaskCodes.every((code, index) => code === SCENARIO_BOOTSTRAP_TASK_CODES[index]);
+}
+export interface ScenarioTaskInitialization { instanceId: string; tasks: Array<{code: 'T01' | 'T02' | 'T03'; taskId: string; title: string}>; initialized: boolean; taskBootstrap?: ScenarioTaskBootstrap }
 export interface ScenarioPreflight { queuedJobs: number; runningJobs: number; foregroundRequests: number; unconfirmedNotifications: number; unsentNotifications: number }

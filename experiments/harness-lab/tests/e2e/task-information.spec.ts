@@ -210,15 +210,46 @@ test('new-task suggestion uses editable public task form; unknown response is qu
     await expect(panel.getByLabel('任务名称')).toHaveValue('人员确认后的核实任务');
     await panel.getByRole('button',{name:'核对创建结果',exact:true}).click();
     await expect(panel).toHaveCount(0);
-    await expect(page.locator('.task-suggestion')).toContainText('已创建');
+    await expect(page.locator('.task-source-creation')).toContainText('已创建');
     const created=env.store.getJob(job.id).taskSuggestionCreation!;expect(created).toBeDefined();
     expect(env.lab.access!.get(created.taskSpaceId,'a').title).toBe('人员确认后的核实任务');
     expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
-    await page.reload();await expect(page.locator('.task-suggestion')).toContainText('已创建');
+    await page.reload();await expect(page.locator('.task-source-creation')).toContainText('已创建');
     expect(env.lab.access!.list('a').filter(task=>task.title==='人员确认后的核实任务')).toHaveLength(1);
-    await page.locator('.task-suggestion').getByRole('button',{name:'人员确认后的核实任务'}).click();
+    await page.locator('.task-source-creation').getByRole('button',{name:'人员确认后的核实任务'}).click();
     await expect(page.locator('.task-information')).toContainText('道路通行信息');
   }finally{await env.close();await context.close();}
+});
+
+test('a successful analysis without a suggestion opens a blank manual task form and recovers a lost creation response', async ({ page, browser }) => {
+  const env=await setup(),context=await browser.newContext(),b=await context.newPage();await env.attach(page);await env.attach(b);
+  try {
+    const eventId=await env.receive();await expect.poll(()=>env.store.listDeliveries().filter(item=>item.status==='delivered').length).toBe(2);
+    const job=env.store.listJobs().find(item=>item.eventId===eventId)!;
+    expect(job.taskAssessment).toBeUndefined();const calls=env.fake.calls.length;
+    await login(b,'b');await inbox(b);await expect(b.getByRole('button',{name:'创建公共任务并关联',exact:true})).toHaveCount(0);
+    await login(page,'a');await inbox(page);await expect(page.locator('.task-suggestion')).toHaveCount(0);
+    await page.getByRole('button',{name:'创建公共任务并关联',exact:true}).click();
+    const panel=page.getByRole('dialog',{name:'创建公共任务并关联',exact:true});
+    for(const label of ['任务名称','目标与说明','关联理由'])await expect(panel.getByLabel(label,{exact:true})).toHaveValue('');
+    await panel.getByLabel('任务名称').fill('取消前的草稿');await panel.getByRole('button',{name:'关闭面板',exact:true}).click();
+    expect(env.store.getJob(job.id).taskSuggestionCreation).toBeUndefined();expect(env.lab.access!.list('a')).toHaveLength(2);
+    await page.getByRole('button',{name:'创建公共任务并关联',exact:true}).click();
+    await expect(panel.getByLabel('任务名称')).toHaveValue('');
+    await panel.getByLabel('任务名称').fill('人工决定的现场核实');await panel.getByLabel('目标与说明').fill('核实当前道路条件后提交事实报告');
+    await expect(panel.getByRole('button',{name:'创建公共任务并关联',exact:true})).toBeDisabled();
+    await panel.getByLabel('关联理由').fill('根据原来报，由总体席决定独立核实');
+    env.loseNextCreateResponse();await panel.getByRole('button',{name:'创建公共任务并关联',exact:true}).click();
+    await expect(panel.getByRole('alert')).toContainText('本次响应未收到');await expect(panel.getByLabel('关联理由')).toHaveValue('根据原来报，由总体席决定独立核实');
+    await panel.getByRole('button',{name:'核对创建结果',exact:true}).click();await expect(panel).toHaveCount(0);
+    await expect(page.locator('.task-source-creation')).toContainText('人工决定的现场核实');
+    const creation=env.store.getJob(job.id).taskSuggestionCreation!;expect(creation).toBeDefined();
+    expect(env.store.getJob(job.id).taskAssessment).toBeUndefined();
+    expect(env.lab.access!.list('a')).toHaveLength(3);expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);expect(env.fake.calls).toHaveLength(calls);
+    await page.reload();await expect(page.locator('.task-source-creation')).toContainText('已创建');
+    await page.locator('.task-source-creation').getByRole('button',{name:'人工决定的现场核实',exact:true}).click();
+    await expect(page.locator('.task-information')).toContainText('道路通行信息');
+  } finally {await env.close();await context.close();}
 });
 
 test('manual link conflict keeps draft and requires reading the latest decision before retry', async ({ page }) => {

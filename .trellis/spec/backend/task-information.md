@@ -21,7 +21,11 @@ Persist judgment in `BackgroundJob.taskAssessment`; publish only after the exist
 
 Manual `{revision,mode,jobId,reason?}` uses event/task CAS. `include` pins a readable successful version, `exclude` persists across reprocessing, `auto` restores computed behavior. Keep revision metadata available to authorized managers even when restoring auto yields no visible association; absence from `links` does not mean revision zero. Conflict recovery preserves draft text and reloads decision versions.
 
-Human suggestion creation accepts `{jobId,clientActionId,title,goal,reason,context?}`. Require current task-management and source-content rights. In one existing SQLite transaction, create TaskSpace, task_actions, manual include and `taskSuggestionCreation` receipt. Use `AccessStore.createInTransaction`, not nested calls to `create`. The source event/job is part of the idempotency input. A job receipt prevents two people from creating twice from the same suggestion, even after an association is removed or its task archived. No model request, directory, WorkItem or file import occurs here.
+Human source creation accepts `{jobId,clientActionId,title,goal,reason,context?}` through the existing `createFromSuggestion` service and route. Require a readable, succeeded preprocessing job with a verified result, current public-task management and business-collaboration eligibility, and source-content/context rights. A model `newTaskSuggestion` is optional: use it only as editable form defaults; without one, open the same blank form. Unrecorded judgments, explicit no-assignment and existing-task judgments do not remove the person's creation authority. Failed, cancelled or unfinished analyses never authorize creation. Title, goal and association reason require explicit human confirmation.
+
+In one existing SQLite transaction, create TaskSpace, task_actions, manual include and the backward-compatible `taskSuggestionCreation` receipt. Use `AccessStore.createInTransaction`, not nested calls to `create`. The verified source event/job and optional run owner are part of the immutable idempotency input. Same-action payload changes conflict, including substituting another job. Check creation receipts for the whole event inside the transaction so concurrent submissions from different reprocessing jobs return one actual task/receipt, even after its association is removed or its task archived. Preserve each historical job's original receipt; later jobs read the existing event creation without receiving a copied receipt. No name matching, model request, directory, WorkItem or file import occurs here.
+
+`TaskLinksView.creation` and its `creationJobId` identify the original creation only when that original analysis is readable. Check the current override's pinned job separately before returning its reason or revision metadata, including creation retry responses. A readable later analysis does not authorize earlier or differently scoped analysis content. An unreadable existing creation still blocks another creation without exposing its task ID or reason. Task DTOs in links and creation responses omit internal `scenarioInstanceId`, projecting `readOnly` when the established owner is sealed; ownership remains in storage and commit-time checks. Ending a run rejects both stale creation and old lost-response retries rather than rebinding them to the next run.
 
 Read authorization is task visibility AND successful preprocessing content rights (actual seat delivery OR source grant) AND context scope. Scope alone is insufficient. Filter before pagination, counts, titles and reasons. Task links do not expand source recipients. Seat analyses and personal spaces remain private. Source pause stops new intake, not access to old authorized results.
 
@@ -44,17 +48,19 @@ No new environment key. Existing profiles opt in through `tools`; old profiles/h
 | Removed or replaced task/event/job | 409; no silent substitution or new continuation |
 | Invalid mixed judgment / oversized fields | `INVALID_INPUT`; no truncation |
 | Same creation action with changed payload | Conflict; do not update the existing task |
-| Concurrent creation for same suggestion | Return one actual task/receipt |
+| Successful readable analysis without new-task suggestion | Human may fill the existing form and confirm creation |
+| Concurrent creation from different analyses of the same event | Return one actual task/receipt; keep the original job and immutable action input |
+| Original creation/current override job unreadable | Hide its receipt/reason/revision; prevent duplicate creation |
 
 ## 5. Good / Base / Bad Cases
 
 Base: one analysis references two public tasks with separate reasons; both lists reference the same event/job and original blobs.
-Good: an authorized person edits a proposed task, creates it atomically with the source link, then explicitly starts a seat conversation with selected files.
+Good: an authorized person edits a proposed task or fills a blank source form, creates it atomically with the source link, then explicitly starts a seat conversation with selected files.
 Bad: treating successful delivery as proof of correct relevance, creating tasks because a search is empty, or copying full analysis text into publicly visible task descriptions.
 
 ## 6. Tests Required
 
-Run typecheck, lint/boundaries, Vitest, build and desktop Playwright sequentially per test runner. Core tests cover whole-batch version selection, permissions, CAS including include→auto→include, private collections, transaction rollback, creation receipts and v3→v4 reopen. API/native-Pi tests cover actual tool registration, query observations, no-side-effect browsing, exact files and seat/task continuation history. E2E covers suggestion response loss, retained conflict drafts, task switching and delayed navigation.
+Run typecheck, lint/boundaries, Vitest, build and desktop Playwright sequentially per test runner. Core tests cover whole-batch version selection, permissions, CAS including include→auto→include, private collections, transaction rollback, creation receipts and v3→v4 reopen. API/native-Pi tests cover actual tool registration, query observations, no-side-effect browsing, exact files and seat/task continuation history. Human-creation regressions cover successful no-suggestion jobs, same-event/different-job concurrent POSTs, immutable action conflicts, archive/restart, original/current-job scope privacy and sealed-run refusal. E2E covers both suggestion and blank-form cancellation/response loss, retained conflict drafts, task switching and delayed navigation.
 
 Keep real-provider semantic evidence separate from deterministic tests. Use isolated synthetic tasks/events, including changed task conditions, unrelated reference material and an independent work request. Do not force a second classification call or inject expected IDs to make the probe pass.
 

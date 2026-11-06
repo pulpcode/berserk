@@ -1,5 +1,37 @@
 # Agent Scenario Validation
 
+## Scenario business-flow probe (2026-11-06)
+
+### 1. Scope / Trigger
+
+Use for the isolated v4 source → ordinary native preprocessing → human source-task creation → fixed-file handoff probe. It exercises existing capabilities, never production data, new host Agent loops or automatic business decisions.
+
+### 2. Signatures
+
+`npm run probe:scenario-business -- --output NEW_DIRECTORY [--prepare-only]` defaults to preparation without provider calls. Explicit `--live` requires finite positive `--max-api-requests`, `--max-input-tokens`, `--max-output-tokens`, `--provider-input-limit-tokens`, `--max-seconds`, `--max-cost-cny`, `--input-cny-per-million` and `--output-cny-per-million`. Optional `--scripted-handoff` uses exact synthetic page actions. Helpers live in `scripts/probe-scenario-budget.ts`.
+
+### 3. Contracts
+
+Create new source/host databases, random synthetic accounts/tokens, two opening tasks and ordinary rules delivering only to overall. Each of twelve steps sends its fixed notices and waits for actual native terminal evidence/delivery; thirteen events/jobs are expected. A scripted person creates the main task from E01 independently of the model's suggestion. Preserve prompts, returned judgments, source state, native history, immutable receipts and script/config hashes. Credentials, cookies and tokens are not evidence payloads.
+
+The probe wraps the public runtime SDK stream, preserving host transforms while checking actual output limits. Before dispatch, reserve the independently verified provider input upper bound plus actual max_tokens output at supplied upper CNY rates; charge cache tokens at the full input rate and settle actual usage. SDK/HTTP retries, redirects and another provider origin are blocked. Unknown usage retains the reservation and stops subsequent work. A host compaction-window estimate is not a provider input bound. Rate references are metadata, not automatic billing configuration or proof of current tariffs.
+
+### 4. Validation / Error Matrix
+
+Existing output directories, missing budgets/rates, missing credentials or unverified limits reject before live dispatch. Insufficient reservation, unknown usage, provider error, changed origin, time limit or evidence-write failure stops the batch with original evidence; no automatic rerun. A successful last authorized request must be retained. Prepare-only must record zero requests.
+
+### 5. Good / Base / Bad Cases
+
+Good: retain a semantic task-link omission despite thirteen successful jobs, and separately review exact reports/versions. Base: prepare accounts/rules with no input publication. Bad: count scripted work confirmation as model autonomy, emit source-task answers in the profile, or relabel provider usage as the actual account bill.
+
+### 6. Tests Required
+
+`tests/probe-scenario-budget.test.ts` uses the real SDK with stub fetch to cover default/missing budgets, reservations and cache settlement, unknown usage, retries, origins/limits/time, and the full twelve-step/thirteen-notice driver with scripted handoff. Keep deterministic tests separate from actual provider evidence and subsequent semantic review.
+
+### 7. Wrong vs Correct
+
+Wrong: `protocolCompleted=true` means all model judgments passed. Correct: it means the physical flow finished; retain `semanticReviewPending`, label agent review separately from independent human annotations, and disclose omissions or unsupported claims without rewriting the original batch.
+
 ## 1. Scope / Trigger
 
 Read when changing the synthetic end-to-end probe joining source queries, conversation annotations, ordinary files and seat handoffs. This validates existing capabilities; it does not add a business workflow engine or make model reasoning authoritative.

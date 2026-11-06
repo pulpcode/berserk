@@ -111,6 +111,14 @@ export class TaskLinkService {
     return {actor, event, job};
   }
   private canWrite(event:BackgroundEvent,job:BackgroundJob) {try{this.dependencies.assertWrite?.(event,job);return true;}catch{return false;}}
+  private creationJob(eventId: string, selected: BackgroundJob) {
+    // Keep each historical job's original receipt; new reprocessing uses the first creation.
+    return selected.taskSuggestionCreation ? selected : this.store.listJobs().reverse().find(job => job.eventId === eventId && job.kind === 'preprocess' && job.taskSuggestionCreation);
+  }
+  private businessTask(task: TaskSpace): TaskSpace {
+    const {scenarioInstanceId, ...business} = task;
+    return {...business, ...(scenarioInstanceId !== undefined && !this.access.scenario?.isWritable(scenarioInstanceId) ? {readOnly: true} : {})};
+  }
   private manageable(actor: Identity, task: TaskSpace) { return (task.scenarioInstanceId===undefined || this.access.scenario?.isWritable(task.scenarioInstanceId)===true) && this.access.canCollaborate(actor.seatId) && (task.visibility === 'public' ? actor.createPublicTask : task.ownerSeatId === actor.seatId); }
   private overrides(eventId?: string, taskId?: string) {
     const where = [eventId ? 'event_id=?' : '', taskId ? 'task_id=?' : ''].filter(Boolean);
@@ -227,13 +235,15 @@ export class TaskLinkService {
       const chosen = mode === 'auto' ? job : this.store.getJob(decision!.jobId);
       if (!this.readable(actor, event, chosen) || (mode === 'exclude' && !this.manageable(actor, task))) continue;
       const version = mode === 'auto' ? item!.taskRevision : decision!.taskRevision;
-      links.push({task, jobId: chosen.id, reason: mode === 'auto' ? item!.reason : decision!.reason, mode,
+      links.push({task: this.businessTask(task), jobId: chosen.id, reason: mode === 'auto' ? item!.reason : decision!.reason, mode,
         revision: decision?.revision ?? 0, taskRevision: version, taskChanged: version !== task.revision, canManage: this.canWrite(event,chosen) && this.manageable(actor, task)});
     }
     const assessment = job.taskAssessment ? {...job.taskAssessment, items: job.taskAssessment.items.filter(item => tasks.some(task => task.id === item.taskSpaceId))} : undefined;
-    const revisions = Object.fromEntries(tasks.filter(task => this.manageable(actor, task) && decisions.has(task.id))
+    const revisions = Object.fromEntries(tasks.filter(task => this.manageable(actor, task) && decisions.has(task.id) && this.readable(actor, event, this.store.getJob(decisions.get(task.id)!.jobId)))
       .map(task => [task.id, decisions.get(task.id)!.revision]));
-    return {eventId, jobId, assessment, creation: job.taskSuggestionCreation, links, revisions, canCreateTask: this.canWrite(event,job) && (job.scenarioInstanceId===undefined || this.access.scenario?.isWritable(job.scenarioInstanceId)===true) && this.access.canCollaborate(actor.seatId) && !!job.taskAssessment?.newTaskSuggestion && actor.createPublicTask && !job.taskSuggestionCreation};
+    const createdFrom = this.creationJob(eventId, job);
+    const creation = createdFrom && this.readable(actor, event, createdFrom) ? createdFrom.taskSuggestionCreation : undefined;
+    return {eventId, jobId, assessment, creation, ...(creation ? {creationJobId: createdFrom!.id} : {}), links, revisions, canCreateTask: this.canWrite(event,job) && (job.scenarioInstanceId===undefined || this.access.scenario?.isWritable(job.scenarioInstanceId)===true) && this.access.canCollaborate(actor.seatId) && actor.createPublicTask && !createdFrom};
   }
   update(actor: Identity, eventId: string, taskId: string, input: TaskLinkUpdateInput): TaskInformationOverride {
     this.access.assertCanCollaborate(actor.seatId);
@@ -259,24 +269,26 @@ export class TaskLinkService {
       this.dependencies.assertWrite?.(event,job);
       if(job.scenarioInstanceId)this.access.assertScenarioWritable(job.scenarioInstanceId);
       if (!actor.createPublicTask) throw new RequestError('FORBIDDEN', '当前席位无权创建工作任务。', 403);
-      if (!job.taskAssessment?.newTaskSuggestion) throw conflict('该分析没有新建任务建议。');
       if (!UUID.test(input.clientActionId) || !reasonText(input.reason) || typeof input.title !== 'string' || !input.title.trim() || input.title.length > 60
         || typeof input.goal !== 'string' || !input.goal.trim() || input.goal.length > 8000) throw invalid('请填写有效的任务名称、目标和关联理由。');
       const creationInput = {title: input.title, goal: input.goal, visibility: 'public' as const, clientActionId: input.clientActionId, context: input.context};
       const origin = {eventId, jobId: job.id, reason: input.reason.trim(), ...(job.scenarioInstanceId ? {scenarioInstanceId:job.scenarioInstanceId} : {})};
-      if (job.taskSuggestionCreation) {
-        const creation = job.taskSuggestionCreation, used = this.access.findCreation(actor, input.clientActionId)[0];
+      const createdFrom = this.creationJob(eventId, job);
+      if (createdFrom) {
+        const creation = createdFrom.taskSuggestionCreation!, used = this.access.findCreation(actor, input.clientActionId)[0];
         if (used && used.id !== creation.taskSpaceId) throw conflict('相同操作标识已用于另一项任务。');
         // The original action must keep its original payload, even after response loss.
         if (creation.createdByUserId === actor.userId && creation.clientActionId === input.clientActionId) this.access.createInTransaction(actor, creationInput, origin);
+        if (!this.readable(actor, event, createdFrom)) throw conflict('该信息已创建任务，请由有权读取原分析的人员核对。');
         const link = this.overrides(eventId, creation.taskSpaceId)[0]; if (!link) throw stateError();
-        return {task: this.access.get(creation.taskSpaceId, actor.seatId), creation, link};
+        if (!this.readable(actor, event, this.store.getJob(link.jobId))) throw conflict('请由有权读取当前关联分析的人员核对任务。');
+        return {task: this.businessTask(this.access.get(creation.taskSpaceId, actor.seatId)), creation, link};
       }
       const task = this.access.createInTransaction(actor, creationInput, origin), time = new Date().toISOString();
       const link = this.writeOverride({eventId, taskSpaceId: task.id, mode: 'include', jobId: job.id, taskRevision: task.revision, reason: input.reason.trim(), revision: 1, updatedByUserId: actor.userId, updatedAt: time});
       const creation: TaskSuggestionCreation = {taskSpaceId: task.id, createdByUserId: actor.userId, clientActionId: input.clientActionId, createdAt: time};
       this.store.saveTaskSuggestionCreationInTransaction(job, creation);
-      return {task, creation, link};
+      return {task: this.businessTask(task), creation, link};
     });
   }
 }

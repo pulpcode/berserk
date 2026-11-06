@@ -2,11 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { openDatabase } from '../../src/access/database.js';
 import { AccessStore } from '../../src/access/store.js';
 import { BackgroundStore, backgroundHash } from '../../src/background/store.js';
 import { TaskLinkService } from '../../src/background/task-links.js';
+import { ScenarioScope } from '../../src/scenario/scope.js';
 import type { Identity, TaskSpace } from '../../src/contracts/access.js';
 import type { BackgroundEvent, BackgroundJob, BackgroundProfileSnapshot } from '../../src/contracts/background.js';
 import type { TaskAssessmentInput } from '../../src/contracts/task-information.js';
@@ -15,7 +16,7 @@ const cleanups: Array<() => Promise<unknown> | void> = [];
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close(); });
 const profile: BackgroundProfileSnapshot = {id: 'analysis', name: '综合分析', goal: '分析输入及相关任务', tools: ['information_record_task_assessment'], skillIds: [], agentIds: [], instructions: 'PRIVATE SERVICE INSTRUCTIONS', resources: []};
 const draft = {title: '编制新说明', goal: '按来文要求形成工作说明', reason: '具有独立目标，没有现有任务可承接'};
-async function setup() {
+async function setup(scenarioInstanceId?: string) {
   const dir = await mkdtemp(join(tmpdir(), 'axon-task-link-'));
   cleanups.push(() => rm(dir, {recursive: true, force: true}));
   const db = await openDatabase(dir); cleanups.push(() => db.close());
@@ -32,14 +33,15 @@ async function setup() {
     canRead: (actor, _event, job) => !scopeDenied.has(`${actor.seatId}:${job.id}`) && ((job.kind !== 'continuous_analysis' && !!store.effectivePermission(actor, job.sourceId))
       || store.listDeliveries(job.id).some(delivery => delivery.recipientSeatId === actor.seatId && delivery.status === 'delivered')),
     sourceName: id => `来源 ${id}`,
+    assertWrite: event => { if (event.scenarioInstanceId) access.assertScenarioWritable(event.scenarioInstanceId); },
     readContent: async (_actor, event, job) => ({text: `original:${event.id}`, resultText: `result:${job.id}`, resultFiles: [], queryMessages: []}),
   });
   const task = (name = '任务', visibility: 'public' | 'private' = 'public', actor = actors.a) => access.create(actor, {title: name, goal: '处理工作', visibility, clientActionId: randomUUID()});
   function queued(event?: BackgroundEvent, sourceId = 'intel') {
     const first = !event;
     const sourceRule = sourceId === 'intel' ? rule : store.listRules().find(item => item.sourceId === sourceId) || store.createRule(actors.a.userId, randomUUID(), {name: rule.name, sourceId, profileId: rule.profileId, recipientSeatIds: rule.recipientSeatIds, enabled: true});
-    event ??= {id: randomUUID(), sourceId, sourceMessageId: randomUUID(), title: '信息', receivedAt: new Date().toISOString(), payloadHash: backgroundHash('input'), files: [], revision: 1, ruleSnapshot: {rule: sourceRule, profile}};
-    const job: BackgroundJob = {id: randomUUID(), eventId: event.id, sourceId: event.sourceId, kind: 'preprocess', status: 'queued', revision: 1, requestId: randomUUID(), createdAt: new Date().toISOString(), ruleSnapshot: {rule: event.ruleSnapshot?.rule || sourceRule, profile}};
+    event ??= {id: randomUUID(), sourceId, sourceMessageId: randomUUID(), title: '信息', receivedAt: new Date().toISOString(), payloadHash: backgroundHash('input'), files: [], revision: 1, ruleSnapshot: {rule: sourceRule, profile}, ...(scenarioInstanceId ? {scenarioInstanceId} : {})};
+    const job: BackgroundJob = {id: randomUUID(), eventId: event.id, sourceId: event.sourceId, kind: 'preprocess', status: 'queued', revision: 1, requestId: randomUUID(), createdAt: new Date().toISOString(), ruleSnapshot: {rule: event.ruleSnapshot?.rule || sourceRule, profile}, ...(event.scenarioInstanceId ? {scenarioInstanceId: event.scenarioInstanceId} : {})};
     if (first) store.acceptEvent(event, {initialJob: job, capacity: 100, expectedRule: sourceRule}); else store.enqueueJob(job, 100);
     return {event, job};
   }
@@ -63,6 +65,7 @@ describe('task assessment storage and effective relationships', () => {
     expect(s.links.links(s.a, event.id, job.id)).toMatchObject({canCreateTask: false, links: [expect.objectContaining({canManage: false})]});
     expect(() => s.links.update(s.a, event.id, task.id, {mode: 'include', revision: 0, jobId: job.id, reason: '导演不得改归口'})).toThrow(expect.objectContaining({statusCode: 403}));
     expect(() => s.links.createFromSuggestion(s.a, suggestion.event.id, {...draft, jobId: suggestion.job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({statusCode: 403}));
+    expect(() => s.links.createFromSuggestion(s.a, event.id, {...draft, jobId: job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({statusCode: 403}));
     expect(s.access.list(s.a.seatId)).toEqual(before);
     expect(s.store.getJob(job.id).taskSuggestionCreation).toBeUndefined();
     expect(s.db.prepare('SELECT * FROM information_task_overrides').all()).toEqual([]);
@@ -121,7 +124,7 @@ describe('task assessment storage and effective relationships', () => {
     s.record(first.job, {relations: [], newTaskSuggestion: draft}); s.finish(first.job);
     expect(s.links.links(s.a, first.event.id, first.job.id)).toMatchObject({assessment: {newTaskSuggestion: draft}, canCreateTask: true});
     const second = s.running(); s.record(second.job, {relations: [], emptyReason: '仅供参考，不需要独立办理'}); s.finish(second.job);
-    expect(s.links.links(s.a, second.event.id, second.job.id)).toMatchObject({assessment: {emptyReason: '仅供参考，不需要独立办理'}, canCreateTask: false});
+    expect(s.links.links(s.a, second.event.id, second.job.id)).toMatchObject({assessment: {emptyReason: '仅供参考，不需要独立办理'}, canCreateTask: true});
     const third = s.running(); s.finish(third.job);
     expect(s.links.links(s.a, third.event.id, third.job.id).assessment).toBeUndefined();
     expect(s.access.list(s.a.seatId)).toHaveLength(1);
@@ -233,17 +236,93 @@ describe('task assessment storage and effective relationships', () => {
     expect(s.links.createFromSuggestion(s.a, event.id, input).task.title).toBe(draft.title);
   });
 
-  it('does not create from failed/no-suggestion jobs or grant public-create permission through source access', async () => {
+  it('does not create from unfinished/failed/cancelled jobs or grant public-create permission through source access', async () => {
     const s = await setup(), {event, job} = s.running(); s.record(job, {relations: [], newTaskSuggestion: draft});
     const input = {...draft, jobId: job.id, clientActionId: randomUUID()};
     expect(() => s.links.createFromSuggestion(s.a, event.id, input)).toThrow(expect.objectContaining({statusCode: 404}));
     s.finish(job, 'failed'); expect(() => s.links.createFromSuggestion(s.a, event.id, input)).toThrow(expect.objectContaining({statusCode: 404}));
-    const other = s.running(event); s.finish(other.job);
-    expect(() => s.links.createFromSuggestion(s.a, event.id, {...input, jobId: other.job.id})).toThrow(expect.objectContaining({code: 'INFORMATION_LINK_CONFLICT'}));
+    const other = s.queued(event);
+    expect(() => s.links.createFromSuggestion(s.a, event.id, {...input, jobId: other.job.id})).toThrow(expect.objectContaining({statusCode: 404}));
+    s.store.requestCancel(other.job.id, other.job.revision);
+    expect(() => s.links.createFromSuggestion(s.a, event.id, {...input, jobId: other.job.id})).toThrow(expect.objectContaining({statusCode: 404}));
     const suggested = s.running(event); s.record(suggested.job, {relations: [], newTaskSuggestion: draft}); s.finish(suggested.job);
     s.store.grant('seat', 'c', 'intel', 'manage');
     expect(() => s.links.createFromSuggestion(s.c, event.id, {...input, jobId: suggested.job.id})).toThrow(expect.objectContaining({code: 'FORBIDDEN'}));
     expect(s.access.list(s.a.seatId)).toEqual([]);
+  });
+
+  it.each(['unrecorded', 'unassigned', 'existing'] as const)('allows a human to create from a successful %s analysis without a suggestion', async mode => {
+    const s = await setup(), {event, job} = s.running();
+    if (mode === 'unassigned') s.record(job, {relations: [], emptyReason: '位置待核实，暂不归口'});
+    if (mode === 'existing') { const task = s.task(); s.record(job, relations(task), [task]); }
+    s.finish(job);
+    expect(s.links.links(s.a, event.id, job.id)).toMatchObject({canCreateTask: true});
+    const input = {...draft, jobId: job.id, clientActionId: randomUUID()};
+    expect(() => s.links.createFromSuggestion(s.a, event.id, {...input, reason: ' '})).toThrow(expect.objectContaining({code: 'INVALID_INPUT'}));
+    const created = s.links.createFromSuggestion(s.a, event.id, input);
+    expect(created.link).toMatchObject({eventId: event.id, jobId: job.id, taskSpaceId: created.task.id});
+    expect(s.links.createFromSuggestion(s.a, event.id, input)).toEqual(created);
+    expect(() => new BackgroundStore(s.db)).not.toThrow();
+    expect((await readdir(s.dir)).sort()).toEqual(['collaboration']);
+  });
+
+  it('keeps original event creation across reprocessing, removed associations, archive and restart', async () => {
+    const s = await setup(), {event, job} = s.running(); s.finish(job);
+    const input = {...draft, jobId: job.id, clientActionId: randomUUID()};
+    const created = s.links.createFromSuggestion(s.a, event.id, input);
+    const receipt = s.db.prepare('SELECT input FROM task_actions WHERE action_id=?').get(input.clientActionId);
+    const later = s.running(event); s.record(later.job, {relations: [], emptyReason: '重新核对后暂不归口'}); s.finish(later.job);
+    expect(s.links.links(s.a, event.id, later.job.id)).toMatchObject({creation: created.creation, creationJobId: job.id, canCreateTask: false});
+    expect(() => s.links.createFromSuggestion(s.a, event.id, {...input, jobId: later.job.id})).toThrow(expect.objectContaining({code: 'TASK_CONFLICT'}));
+    const retry = {...input, jobId: later.job.id, clientActionId: randomUUID(), title: '新分析中的其他名称'};
+    expect(s.links.createFromSuggestion(s.b, event.id, retry)).toEqual(created);
+    s.links.update(s.a, event.id, created.task.id, {mode: 'exclude', revision: 1, jobId: job.id});
+    s.access.update(s.a, created.task.id, created.task.revision, {state: 'archived'});
+    const reopened = new TaskLinkService(new AccessStore(s.db), new BackgroundStore(s.db), {
+      canRead: () => true, sourceName: id => id, readContent: async () => ({text: '', resultText: '', resultFiles: []}),
+    });
+    expect(reopened.createFromSuggestion(s.a, event.id, retry)).toMatchObject({task: {id: created.task.id, state: 'archived'}, creation: created.creation, link: {mode: 'exclude', jobId: job.id}});
+    expect(s.store.getJob(later.job.id).taskSuggestionCreation).toBeUndefined();
+    expect(s.db.prepare('SELECT input FROM task_actions WHERE action_id=?').get(input.clientActionId)).toEqual(receipt);
+    expect(s.access.list(s.a.seatId)).toHaveLength(1);
+  });
+
+  it('does not reveal original creation or override reasons through a readable reprocessing job with different scope', async () => {
+    const s = await setup(), {event, job} = s.running(); s.finish(job);
+    const created = s.links.createFromSuggestion(s.a, event.id, {...draft, jobId: job.id, clientActionId: randomUUID()});
+    const later = s.running(event); s.finish(later.job); s.scopeDenied.add(`b:${job.id}`);
+    const view = s.links.links(s.b, event.id, later.job.id);
+    expect(view).toMatchObject({canCreateTask: false, links: []});
+    expect(view.creation).toBeUndefined(); expect(view.creationJobId).toBeUndefined();
+    expect(JSON.stringify(view)).not.toContain(created.task.id); expect(JSON.stringify(view)).not.toContain(draft.reason);
+    expect(() => s.links.createFromSuggestion(s.b, event.id, {...draft, jobId: later.job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({code: 'INFORMATION_LINK_CONFLICT'}));
+    expect(s.access.list(s.a.seatId)).toHaveLength(1);
+    s.scopeDenied.delete(`b:${job.id}`); s.scopeDenied.add(`b:${later.job.id}`);
+    s.links.update(s.a, event.id, created.task.id, {mode: 'include', revision: 1, jobId: later.job.id, reason: '仅新版本范围可读的人工说明'});
+    expect(s.links.links(s.b, event.id, job.id)).toMatchObject({creation: created.creation, links: [], revisions: {}});
+    expect(() => s.links.createFromSuggestion(s.b, event.id, {...draft, jobId: job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({code: 'INFORMATION_LINK_CONFLICT'}));
+    s.scopeDenied.add(`a:${later.job.id}`);
+    expect(() => s.links.links(s.a, event.id, later.job.id)).toThrow(expect.objectContaining({statusCode: 404}));
+  });
+
+  it('inherits the verified source run and rejects a stale creation or lost-response retry after it ends', async () => {
+    const owner = `run-${randomUUID()}`, s = await setup(owner), scope = new ScenarioScope({systems: [], scopes: []});
+    let writable = true; vi.spyOn(scope, 'isWritable').mockImplementation(id => writable && id === owner); s.access.scenario = scope;
+    const first = s.running(); s.finish(first.job);
+    expect(s.links.links(s.a, first.event.id, first.job.id).canCreateTask).toBe(true);
+    const input = {...draft, jobId: first.job.id, clientActionId: randomUUID()};
+    const created = s.links.createFromSuggestion(s.a, first.event.id, input);
+    expect(created.task.scenarioInstanceId).toBeUndefined();
+    expect(s.access.get(created.task.id, s.a.seatId).scenarioInstanceId).toBe(owner);
+    expect(s.links.links(s.a, first.event.id, first.job.id).links[0].task.scenarioInstanceId).toBeUndefined();
+    const pending = s.running(); s.finish(pending.job);
+    writable = false;
+    expect(s.links.links(s.a, pending.event.id, pending.job.id).canCreateTask).toBe(false);
+    expect(() => s.links.createFromSuggestion(s.a, pending.event.id, {...input, jobId: pending.job.id, clientActionId: randomUUID()})).toThrow(expect.objectContaining({code: 'TASK_READ_ONLY'}));
+    expect(() => s.links.createFromSuggestion(s.a, first.event.id, input)).toThrow(expect.objectContaining({code: 'TASK_READ_ONLY'}));
+    expect(s.access.get(created.task.id, s.a.seatId).scenarioInstanceId).toBe(owner);
+    expect(s.db.prepare('SELECT count(*) n FROM task_spaces').get()?.n).toBe(1);
+    expect(s.store.getJob(pending.job.id).taskSuggestionCreation).toBeUndefined();
   });
 
   it('rechecks the exact relationship after asynchronous content reads and strips service configuration', async () => {

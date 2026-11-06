@@ -4,15 +4,16 @@ import { dirname } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { RequestError } from '../../../src/contracts/errors.js';
 import type { SituationChange } from '../../../src/contracts/context.js';
-import type { ScenarioAction, ScenarioActor, ScenarioClock, ScenarioCreateInput, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioOperation, ScenarioPreview } from '../../../src/contracts/scenarios.js';
+import type { ScenarioAction, ScenarioActor, ScenarioClock, ScenarioCreateInput, ScenarioInstance, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioOperation, ScenarioPreview, ScenarioTaskBootstrap } from '../../../src/contracts/scenarios.js';
 import { isScenarioClock } from '../../../src/contracts/scenarios.js';
+import { scenarioTaskBootstrap, scenarioTaskDefinitions } from '../../../src/scenario/task-definitions.js';
 import type { SimulationReceipt } from '../../../src/contracts/simulation.js';
-import { sceneWorld, scenarioDefinition, directorStepTasks, type SceneWorld } from './data.js';
+import { sceneWorld, scenarioDefinition, directorStepTasks, taskBootstrap, type SceneWorld } from './data.js';
 
 export const sceneError = (message:string,code='SCENARIO_CONFLICT',status=409) => new RequestError(code,message,status);
 export const stable = (value:unknown):string => JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).sort(([a],[b])=>a.localeCompare(b))):item);
 interface StoredOperation extends ScenarioOperation { input:string; resultInstance:ScenarioInstance }
-export interface SceneRecord extends SceneWorld { schemaVersion:1; instance:ScenarioInstance; changes:SituationChange[]; actions:ScenarioAction[]; operations:StoredOperation[] }
+export interface SceneRecord extends SceneWorld { schemaVersion:1|2; taskBootstrap?:ScenarioTaskBootstrap; instance:ScenarioInstance; changes:SituationChange[]; actions:ScenarioAction[]; operations:StoredOperation[] }
 interface ActivePointer { instanceId:string|null; revision:number }
 const now = () => new Date().toISOString();
 const publicOperation = ({input:_input,resultInstance:_instance,...operation}:StoredOperation):ScenarioOperation => {void _input;void _instance;return structuredClone(operation);};
@@ -35,16 +36,26 @@ export class ScenarioStore {
     const row=this.db?.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id);
     const record=this.db?(row?JSON.parse(String(row.body)) as SceneRecord:undefined):this.memory.get(id);
     if(!record)throw sceneError('场景实例不存在。','NOT_FOUND',404);
-    if(record.schemaVersion!==1||record.instance.instanceId!==id||!isScenarioClock(sceneClock(record)))throw sceneError('场景快照无法读取，未覆盖原数据。','SCENARIO_SNAPSHOT_INVALID',500);
+    if(!record.instance||record.instance.instanceId!==id||!isScenarioClock(sceneClock(record)))throw sceneError('场景快照无法读取，未覆盖原数据。','SCENARIO_SNAPSHOT_INVALID',500);
+    try {
+      if(record.schemaVersion===1){
+        if(record.taskBootstrap!==undefined||record.instance.definitionId!=='harbor-fire'||!['1','2','3'].includes(record.instance.definitionVersion))throw new Error('Unknown legacy definition');
+        scenarioTaskDefinitions(record.tasks);
+      }else if(record.schemaVersion===2){
+        const bootstrap=scenarioTaskBootstrap(record.taskBootstrap);
+        if(!bootstrap||bootstrap.definitionId!==record.instance.definitionId||bootstrap.definitionVersion!==record.instance.definitionVersion||bootstrap.definitionHash!==record.instance.definitionHash)throw new Error('Bootstrap mismatch');
+        scenarioTaskDefinitions(record.tasks,bootstrap);
+      }else throw new Error('Unknown snapshot schema');
+    }catch {throw sceneError('场景任务快照无法读取，未覆盖原数据。','SCENARIO_SNAPSHOT_INVALID',500);}
     return structuredClone(record);
   }
   has(id:string){return this.db?Boolean(this.db.prepare('SELECT 1 FROM scenario_instances WHERE instance_id=?').get(id)):this.memory.has(id);}
   list(offset=0,limit=20):ScenarioInstances {
     const records=this.db?this.db.prepare('SELECT body FROM scenario_instances ORDER BY rowid DESC LIMIT ? OFFSET ?').all(limit+1,offset).map(row=>JSON.parse(String(row.body)) as SceneRecord):[...this.memory.values()].reverse().slice(offset,offset+limit+1);
-    const active=this.active(),hasMore=records.length>limit;return {items:records.slice(0,limit).map(record=>structuredClone(record.instance)),activeInstanceId:active.instanceId,activeRevision:active.revision,hasMore,nextCursor:hasMore?String(offset+limit):null};
+    const active=this.active(),hasMore=records.length>limit;return {items:records.slice(0,limit).map(record=>this.get(record.instance.instanceId).instance),activeInstanceId:active.instanceId,activeRevision:active.revision,hasMore,nextCursor:hasMore?String(offset+limit):null};
   }
   detail(id:string):ScenarioInstanceDetail {
-    const record=this.get(id);return {instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
+    const record=this.get(id);return {instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,...(record.taskBootstrap?{taskBootstrap:record.taskBootstrap}:{}),objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
   }
   notification(id:string,sourceMessageId:string) {
     const actions=this.get(id).actions.filter(action=>action.notification.sourceMessageId===sourceMessageId);
@@ -59,15 +70,15 @@ export class ScenarioStore {
       if(messages.has(action.notification.sourceMessageId)||action.instanceId!==id||action.notification.scenarioInstanceId!==undefined&&action.notification.scenarioInstanceId!==id)throw sceneError('场景通知归属不一致。','SCENARIO_SNAPSHOT_INVALID',500);
       messages.add(action.notification.sourceMessageId);return {actionId:action.id,systemId:action.systemId,notification:structuredClone(action.notification)};
     });
-    return {instanceId:id,tasks:record.tasks,notifications,actions:record.actions};
+    return {instanceId:id,tasks:record.tasks,...(record.taskBootstrap?{taskBootstrap:record.taskBootstrap}:{}),notifications,actions:record.actions};
   }
   private save(records:SceneRecord[],active?:ActivePointer) {
     if(!this.db){for(const record of records)this.memory.set(record.instance.instanceId,structuredClone(record));if(active)this.activeMemory={...active};return;}
     this.db.exec('BEGIN IMMEDIATE');try{for(const record of records)this.db.prepare('INSERT INTO scenario_instances(instance_id,body) VALUES(?,?) ON CONFLICT(instance_id) DO UPDATE SET body=excluded.body').run(record.instance.instanceId,JSON.stringify(record));if(active)this.db.prepare('INSERT INTO scenario_active(id,body) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET body=excluded.body').run(JSON.stringify(active));this.db.exec('COMMIT');}catch(error){this.db.exec('ROLLBACK');throw error;}
   }
   private findOperation(id:string):{record:SceneRecord;operation:StoredOperation}|undefined {
-    if(this.db){const row=this.db.prepare("SELECT i.body FROM scenario_instances i, json_each(i.body,'$.operations') op WHERE json_extract(op.value,'$.id')=? LIMIT 1").get(id);if(!row)return;const record=JSON.parse(String(row.body)) as SceneRecord;return {record,operation:record.operations.find(op=>op.id===id)!};}
-    for(const record of this.memory.values()){const operation=record.operations.find(op=>op.id===id);if(operation)return {record:structuredClone(record),operation:structuredClone(operation)};}
+    if(this.db){const row=this.db.prepare("SELECT i.instance_id FROM scenario_instances i, json_each(i.body,'$.operations') op WHERE json_extract(op.value,'$.id')=? LIMIT 1").get(id);if(!row)return;const record=this.get(String(row.instance_id));return {record,operation:record.operations.find(op=>op.id===id)!};}
+    for(const saved of this.memory.values()){const operation=saved.operations.find(op=>op.id===id);if(operation){const record=this.get(saved.instance.instanceId);return {record,operation:record.operations.find(op=>op.id===id)!};}}
   }
   private result(record:SceneRecord,operation:StoredOperation):ScenarioMutationResult {return {instance:structuredClone(operation.resultInstance),operation:publicOperation(operation),actions:record.actions.filter(action=>operation.actionIds.includes(action.id)).map(action=>structuredClone(action))};}
   operation(id:string):ScenarioMutationResult {const found=this.findOperation(id);if(!found)throw sceneError('场景操作尚不存在。','NOT_FOUND',404);return this.result(found.record,found.operation);}
@@ -85,7 +96,7 @@ export class ScenarioStore {
     const key=stable({kind:'create',input,actor}),prior=this.prior(input.clientActionId,key);if(prior)return prior;
     if(input.definitionId!==scenarioDefinition.id||input.version!==scenarioDefinition.version||!scenarioDefinition.modes.includes(input.mode)||input.businessDay!==undefined&&input.businessDay!==scenarioDefinition.businessDay)throw sceneError('场景定义、版本、模式或业务日期无效。','INVALID_ARGUMENT',400);
     const instanceId=`run-${randomUUID()}`,time=now(),world=sceneWorld(instanceId);
-    const record:SceneRecord={schemaVersion:1,instance:{instanceId,definitionId:scenarioDefinition.id,definitionVersion:scenarioDefinition.version,definitionHash:scenarioDefinition.definitionHash,name:scenarioDefinition.name,mode:input.mode,status:'prepared',paused:false,revision:1,businessNow:scenarioDefinition.initialBusinessNow,stepIndex:0,stepCount:world.steps.length,createdAt:time,updatedAt:time},...world,changes:[],actions:[],operations:[]};
+    const record:SceneRecord={schemaVersion:2,taskBootstrap:structuredClone(taskBootstrap),instance:{instanceId,definitionId:scenarioDefinition.id,definitionVersion:scenarioDefinition.version,definitionHash:scenarioDefinition.definitionHash,name:scenarioDefinition.name,mode:input.mode,status:'prepared',paused:false,revision:1,businessNow:scenarioDefinition.initialBusinessNow,stepIndex:0,stepCount:world.steps.length,createdAt:time,updatedAt:time},...world,changes:[],actions:[],operations:[]};
     const operation=this.append(record,'create',input.clientActionId,key,actor);this.save([record]);return this.result(record,operation);
   }
   activate(id:string,operationId:string,revision:number,activeRevision:number,terminateUnsent:boolean,actor:ScenarioActor):ScenarioMutationResult {
@@ -101,7 +112,7 @@ export class ScenarioStore {
     if(record.instance.status!=='active')reason=record.instance.status==='frozen'?'旧轮已冻结。':'请先初始化任务并激活本轮。';
     else if(record.instance.paused)reason='本轮已暂停，请继续后再投放。';
     else if(!step)reason='来源事件已投放完毕；这不表示业务任务完成。';
-    else if(record.instance.mode==='main_story'&&record.instance.stepIndex>=5)reason='主故事已到待选择/批准方案节点；方案和执行能力属于后续阶段。';
+    else if(record.instance.mode==='main_story'&&record.instance.stepIndex>=5)reason='主线演示事件已投放完毕，等待人员继续研判、选择方案。';
     else if(record.actions.some(action=>action.sendState!=='accepted'))reason='请先发送并核对前一步的全部通知。';
     return {instance:record.instance,step:step?.summary??null,changes:step?[...step.objects.map(o=>`${o.name} 更新至修订${o.revision}`),...step.reports.map(r=>`新增报告：${r.title}`)]:[],notifications:step?step.notices.map((notice,index)=>({sourceMessageId:`${id}-${step.summary.id}-${index+1}`,title:notice.title,text:notice.text,subjectId:notice.reportId,occurredAt:notice.occurredAt,scenarioInstanceId:id})):[],canApply:reason===undefined,...(reason?{reason}:{})};
   }
@@ -118,8 +129,8 @@ export class ScenarioStore {
     const record=this.get(id);this.writable(record,revision);if(record.instance.status!=='active')throw sceneError('只能暂停或继续活动轮次。');record.instance.paused=action==='pause';record.instance.revision++;record.instance.updatedAt=now();const operation=this.append(record,action,operationId,input,actor);this.save([record]);return this.result(record,operation);
   }
   action(id:string):{record:SceneRecord;action:ScenarioAction}|undefined {
-    if(this.db){const row=this.db.prepare("SELECT i.body FROM scenario_instances i,json_each(i.body,'$.actions') a WHERE json_extract(a.value,'$.id')=? LIMIT 1").get(id);if(!row)return;const record=JSON.parse(String(row.body)) as SceneRecord;return {record,action:record.actions.find(a=>a.id===id)!};}
-    for(const value of this.memory.values()){const record=structuredClone(value),action=record.actions.find(a=>a.id===id);if(action)return {record,action};}
+    if(this.db){const row=this.db.prepare("SELECT i.instance_id FROM scenario_instances i,json_each(i.body,'$.actions') a WHERE json_extract(a.value,'$.id')=? LIMIT 1").get(id);if(!row)return;const record=this.get(String(row.instance_id));return {record,action:record.actions.find(a=>a.id===id)!};}
+    for(const value of this.memory.values()){const record=this.get(value.instance.instanceId),action=record.actions.find(a=>a.id===id);if(action)return {record,action};}
   }
   delivery(id:string,state:ScenarioAction['sendState'],receipt?:SimulationReceipt,error?:string,actor?:ScenarioActor):ScenarioAction {
     const found=this.action(id);if(!found)throw sceneError('通知不存在。','NOT_FOUND',404);const action=found.action;action.sendState=state;if(receipt)action.receipt=receipt;if(error)action.error=error;else delete action.error;if(actor){action.deliveryActor=structuredClone(actor);action.deliveryAt=now();}this.save([found.record]);return structuredClone(action);

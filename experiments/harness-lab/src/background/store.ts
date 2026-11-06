@@ -67,7 +67,7 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     if (data.taskAssessment !== undefined && (data.kind !== 'preprocess' || !validTaskAssessment(data.taskAssessment))) throw stateError();
     if (data.recipientSuggestion !== undefined && (data.kind !== 'preprocess' || !validSuggestion(data.recipientSuggestion))) throw stateError();
     if (data.recipientSuggestionError !== undefined && (typeof data.recipientSuggestionError !== 'string' || !data.recipientSuggestionError)) throw stateError();
-    if (data.taskSuggestionCreation !== undefined && (data.status !== 'succeeded' || !(data.taskAssessment as TaskAssessment | undefined)?.newTaskSuggestion || !validSuggestionCreation(data.taskSuggestionCreation))) throw stateError();
+    if (data.taskSuggestionCreation !== undefined && (data.kind !== 'preprocess' || data.status !== 'succeeded' || !data.result || !validSuggestionCreation(data.taskSuggestionCreation))) throw stateError();
     if (data.origin !== undefined && !validAnalysisOrigin(data.origin)) throw stateError();
     const origin = data.origin as BackgroundAction['origin'];
     if (origin?.kind === 'task_information' && (origin.eventId !== data.eventId || origin.taskSpaceId !== data.taskSpaceId)) throw stateError();

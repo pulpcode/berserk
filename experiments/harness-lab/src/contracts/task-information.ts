@@ -35,7 +35,11 @@ export interface TaskInformationLink {
   mode: TaskInformationOverride['mode']; revision: number; taskRevision: number; taskChanged: boolean; canManage: boolean;
 }
 export interface TaskLinksView {
-  eventId: string; jobId: string; assessment?: TaskAssessment; creation?: TaskSuggestionCreation;
+  eventId: string; jobId: string; assessment?: TaskAssessment;
+  /** Original creation for this event, only when its analysis is readable. */
+  creation?: TaskSuggestionCreation;
+  /** Original analysis job; present with the authorized creation receipt. */
+  creationJobId?: string;
   /** This job's historical judgment, with current human overrides. */
   links: TaskInformationLink[]; canCreateTask: boolean;
   /** Editable decision versions, including auto decisions without a current association. */

@@ -75,7 +75,7 @@ describe('versioned scenario world and boundary clock',()=>{
   });
   it('publishes business reports without director instructions while retaining factual references and times',()=>{
     const world=sceneWorld('content-audit');
-    expect(scenarioDefinition.version).toBe('3');
+    expect(scenarioDefinition.version).toBe('4');
     for(const step of world.steps){
       for(const report of step.reports){
         expect([report.title,report.summary,report.content].join('\n')).not.toMatch(/模拟场景|投放时|T0[123]|本系统|本次来源|不修改09:23|原占用未因其他任务/);
@@ -94,7 +94,7 @@ describe('versioned scenario world and boundary clock',()=>{
     expect(world.steps[1].reports[0].content).toContain('V02、V14');expect(world.steps[1].reports[0].content).toContain('10:00');
     expect(world.steps[2].reports[0].content).toContain('V05');expect(world.steps[2].reports[0].content).toContain('09:45');
     expect(world.steps[7].reports[0].content).toContain('10:00');expect(world.steps[11].reports[0].content).toContain('尚不能确认事件结束');
-    expect(world.tasks[0].goal).toContain('模拟场景');
+    for(const task of world.tasks)expect(task.goal).not.toMatch(/模拟场景|本实例|场景时间/);
   });
   it('provides the full background, independent identities, actual type counts and no author answer labels',()=>{
     const world=sceneWorld(`run-${randomUUID()}`),resources=world.objects.filter(object=>object.ref.objectType==='resource'),vehicles=resources.filter(object=>object.resourceData?.resource.vehicle);
@@ -103,8 +103,8 @@ describe('versioned scenario world and boundary clock',()=>{
     expect(vehicles.map(o=>o.resourceData!.resource.availability!.state).reduce((counts,state)=>{counts[state]=(counts[state]??0)+1;return counts;},{} as Record<string,number>)).toEqual({available:17,unavailable:5,unknown:2});
     expect(vehicles.reduce((counts,object)=>{const station=object.resourceData!.resource.vehicle!.homeStationRef.objectId.slice(-3);counts[station]=(counts[station]??0)+1;return counts;},{} as Record<string,number>)).toEqual({S01:6,S02:5,S03:4,S04:4,S05:3,S06:2});
     const v02=vehicles.find(o=>o.name.startsWith('V02'))!;expect(v02.areaIds[0]).toMatch(/-A03$/);expect(v02.resourceData!.resource.vehicle!.homeStationRef.objectId).toMatch(/-S01$/);expect(v02.geometry).toEqual(world.objects.find(o=>o.name==='城西交通救援现场')!.geometry);
-    expect(world.steps).toHaveLength(12);expect(world.steps.flatMap(step=>step.notices)).toHaveLength(13);expect(world.steps[3].reports).toHaveLength(2);expect(world.tasks.map(t=>t.code)).toEqual(['T01','T02','T03']);
-    expect(world.tasks[0].areaIds).toHaveLength(1);for(let i=1;i<=6;i++)expect(world.tasks[0].goal).toContain(`A${String(i).padStart(2,'0')}`);expect(world.tasks[0].goal).toContain('全部可读不等于与本任务相关或已分配');
+    expect(world.steps).toHaveLength(12);expect(world.steps.flatMap(step=>step.notices)).toHaveLength(13);expect(world.steps[3].reports).toHaveLength(2);expect(world.tasks.map(t=>t.code)).toEqual(['T02','T03']);
+    expect(world.tasks[0]).toMatchObject({code:'T02',areaIds:[expect.stringMatching(/-A03$/)]});expect(world.tasks[0].goal).toContain('V02/V14');expect(world.tasks[1].goal).toContain('09:45');
     expect(JSON.stringify(world.objects)).not.toMatch(/推荐|主角|干扰|方案A|方案B/);expect(world.objects.find(o=>o.name.startsWith('V24'))!.resourceData!.resource.position).toMatchObject({reportedAt:'2026-11-03T08:50:00+08:00',validUntil:'2026-11-03T09:10:00+08:00'});
   });
   it('strictly validates the shared clock shape and calendar time',()=>{
@@ -135,12 +135,14 @@ describe('scenario HTTP facts, controls and replay',()=>{
     expect(ids[0].every(id=>!ids[1].includes(id))).toBe(true);
     for(const message of scene.receiver.notifications)expect(message.text).not.toMatch(/模拟场景|投放时|T0[123]/);
   });
-  it('keeps persisted version-two evidence and receipts byte-for-byte while only new runs use version three',async()=>{
+  it('keeps persisted version-two evidence and receipts byte-for-byte while only new runs use version four',async()=>{
     const directory=await mkdtemp(join(tmpdir(),'axon-scene-v2-'));cleanup.push(()=>rm(directory,{recursive:true,force:true}));const databasePath=join(directory,'simulation.sqlite');
     const scene=await setup(databasePath),created=await scene.create(),active=await scene.activate(created.body.instance),applied=await scene.apply(active.body.instance,'E01');await scene.send(applied.body.actions[0]);
     const id=created.body.instance.instanceId;await scene.close();
     const db=new DatabaseSync(databasePath);cleanup.push(async()=>db.close());const record=JSON.parse(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body)) as SceneRecord;
     const oldHash='b24f803adfd0197af5df33d2f526fd3a9774895095c41a474e52207df64dbc5a';
+    record.schemaVersion=1;delete record.taskBootstrap;
+    record.tasks.unshift({code:'T01',title:'临港三号仓库火情',goal:'模拟场景：09:35前到齐4水罐+1泡沫+1抢险救援+1通信车。',businessRefs:[],areaIds:[]});
     record.instance.definitionVersion='2';record.instance.definitionHash=oldHash;record.instance.paused=true;
     for(const operation of record.operations){operation.resultInstance.definitionVersion='2';operation.resultInstance.definitionHash=oldHash;}
     const legacyText=`模拟场景 ${id}；投放时场景时间 2026-11-03T09:12:00+08:00；观测时间 2026-11-03T09:12:00+08:00。报告 intel/${id}-report-E01-a 修订1：${record.reports[0].summary} 请通过来源查询核对正文与对象。`;
@@ -152,11 +154,34 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const report=await restored.request<InformationDetail>(`/intel/reports/${id}-report-E01-a`);expect(report.body.item).toEqual(record.reports[0]);
     expect((await restored.apply(record.instance,'E02')).status).toBe(409);
     expect(digest(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body))).toBe(digest(saved));
-    const next=await restored.create();expect(next.body.instance.definitionVersion).toBe('3');expect(next.body.instance.definitionHash).not.toBe(oldHash);expect((await restored.activate(next.body.instance,1)).status).toBe(200);
+    const next=await restored.create();expect(next.body.instance.definitionVersion).toBe('4');expect(next.body.instance.definitionHash).not.toBe(oldHash);expect((await restored.activate(next.body.instance,1)).status).toBe(200);
     const frozen=(await restored.request<ScenarioInstanceDetail>(`/control/instances/${id}`)).body;
     expect(frozen.instance.status).toBe('frozen');expect(frozen.actions).toEqual(record.actions);expect(frozen.reports).toEqual(record.reports);
     const fresh=await restored.apply((await restored.request<ScenarioInstanceDetail>(`/control/instances/${next.body.instance.instanceId}`)).body.instance,'E01');
     expect(fresh.body.actions[0].notification.text).not.toContain('模拟场景');expect(fresh.body.actions[0].notification.text).not.toContain('投放时');
+  });
+  it('rejects damaged versioned task snapshots without treating missing metadata or tasks as a new two-task format',async()=>{
+    const directory=await mkdtemp(join(tmpdir(),'axon-scene-bootstrap-'));cleanup.push(()=>rm(directory,{recursive:true,force:true}));
+    const path=join(directory,'source.sqlite'),scene=await setup(path),created=await scene.create(),id=created.body.instance.instanceId,db=new DatabaseSync(path);cleanup.push(async()=>db.close());
+    const original=JSON.parse(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body));
+    const invalid=[
+      {...original,schemaVersion:99}, {...original,taskBootstrap:undefined},
+      {...original,taskBootstrap:{...original.taskBootstrap,expectedTaskCodes:[]}},
+      {...original,taskBootstrap:{...original.taskBootstrap,definitionVersion:'5'}},
+      {...original,taskBootstrap:{...original.taskBootstrap,definitionHash:'a'.repeat(64)}},
+      {...original,tasks:[]}, {...original,tasks:original.tasks.slice(0,1)}, {...original,tasks:[original.tasks[0],original.tasks[0]]},
+      {...original,schemaVersion:1,taskBootstrap:undefined,instance:{...original.instance,definitionVersion:'3'}},
+      {...original,schemaVersion:1,taskBootstrap:undefined},
+    ];
+    for(const value of invalid){
+      const bytes=JSON.stringify(value);db.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(bytes,id);
+      const result=await scene.request<{error:{code:string}}>(`/control/instances/${id}`);expect(result.status).toBe(500);expect(result.body.error.code).toBe('SCENARIO_SNAPSHOT_INVALID');
+      expect((await scene.request(`/control/instances/${id}/tasks`)).status).toBe(500);expect((await scene.request(`/control/instances/${id}/provenance`)).status).toBe(500);
+      expect(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body)).toBe(bytes);
+    }
+    db.prepare('UPDATE scenario_instances SET body=? WHERE instance_id=?').run(JSON.stringify(original),id);
+    const definition=await scene.request<{items:unknown[];taskBootstrap:unknown}>(`/control/instances/${id}/tasks`);
+    expect(definition.status).toBe(200);expect(definition.body.items).toHaveLength(2);expect(definition.body.taskBootstrap).toEqual(original.taskBootstrap);
   });
   it('is opt-in, separates credentials, deduplicates create and exposes no future facts through ordinary reads',async()=>{
     const disabled=createMockContextServer({token,controlToken}),base=await disabled.listen();cleanup.push(()=>disabled.close());expect((await fetch(`${base}/control/scenarios`,{headers:{Authorization:`Bearer ${controlToken}`}})).status).toBe(404);
@@ -164,8 +189,8 @@ describe('scenario HTTP facts, controls and replay',()=>{
     const id=randomUUID(),created=await scene.create('source_replay',id);expect(created.status).toBe(200);const duplicate=await scene.create('source_replay',id);expect(duplicate.body).toEqual(created.body);
     expect((await scene.create('main_story',id)).status).toBe(409);expect((await scene.request<ScenarioMutationResult>(`/control/operations/${id}`)).body).toEqual(created.body);
     const director=await scene.request<ScenarioInstanceDetail>(`/control/instances/${created.body.instance.instanceId}`);
-    expect(director.body.steps[1].taskCodes).toEqual(['T02']);expect(director.body.steps[4].taskCodes).toEqual(['T01','T02','T03']);
-    expect(director.body.taskDefinitions?.map(task=>task.code)).toEqual(['T01','T02','T03']);
+    expect(director.body.steps[1].taskCodes).toEqual(['T02']);expect(director.body.steps[4].taskCodes).toEqual(['T02','T03']);
+    expect(director.body.taskDefinitions?.map(task=>task.code)).toEqual(['T02','T03']);expect(director.body.steps.flatMap(step=>step.taskCodes??[])).not.toContain('T01');expect(director.body.taskBootstrap).toMatchObject({schemaVersion:2,definitionVersion:'4',definitionHash:created.body.instance.definitionHash,expectedTaskCodes:['T02','T03']});
     expect(sceneWorld(created.body.instance.instanceId).steps[0].summary).not.toHaveProperty('taskCodes');
     const active=await scene.activate(created.body.instance);expect(active.status).toBe(200);
     const current=await scene.request<SituationCurrent>('/situation/objects?limit=100');expect(current.body.items).toHaveLength(53);expect(JSON.stringify(current.body)).not.toMatch(/taskCodes|taskDefinitions/);expect(current.body).toMatchObject({asOf:'2026-11-03T09:10:00+08:00',snapshotClock:{instanceId:created.body.instance.instanceId,businessNow:'2026-11-03T09:10:00+08:00'}});
@@ -198,7 +223,7 @@ describe('scenario HTTP facts, controls and replay',()=>{
   it('stops the main story at the decision boundary without fabricating approval or arrival',async()=>{
     const scene=await setup(),created=await scene.create('main_story');let instance=(await scene.activate(created.body.instance)).body.instance;
     for(let i=1;i<=5;i++){const applied=await scene.apply(instance,`E${String(i).padStart(2,'0')}`);expect(applied.status).toBe(200);instance=applied.body.instance;for(const action of applied.body.actions)await scene.send(action);}
-    const preview=await scene.request<ScenarioPreview>(`/control/instances/${instance.instanceId}/preview`,'POST',{});expect(preview.body.canApply).toBe(false);expect(preview.body.reason).toContain('待选择/批准');expect((await scene.apply(instance,'E06')).status).toBe(409);expect(preview.body.instance.businessNow).toBe('2026-11-03T09:18:00+08:00');
+    const preview=await scene.request<ScenarioPreview>(`/control/instances/${instance.instanceId}/preview`,'POST',{});expect(preview.body.canApply).toBe(false);expect(preview.body.reason).toContain('等待人员继续研判');expect((await scene.apply(instance,'E06')).status).toBe(409);expect(preview.body.instance.businessNow).toBe('2026-11-03T09:18:00+08:00');
   });
   it('pins source pagination, rejects mixed rounds and preserves fixed references when a new round replaces the old',async()=>{
     const scene=await setup(),first=await scene.create();let instance=(await scene.activate(first.body.instance)).body.instance;
@@ -241,7 +266,7 @@ describe('scenario HTTP facts, controls and replay',()=>{
     expect((await scene.request(path,'GET',undefined,token)).status).toBe(401);
     const origin=await scene.request<{instanceId:string;systemId:string;actionId:string;notification:SimulationNotification}>(path);expect(origin.status).toBe(200);expect(origin.body).toEqual({instanceId:id,systemId:original.systemId,actionId:original.id,notification:original.notification});
     const fullPath=`/control/instances/${id}/provenance`;expect((await scene.request(fullPath,'GET',undefined,token)).status).toBe(401);
-    const full=await scene.request<{instanceId:string;tasks:unknown[];actions:ScenarioAction[];notifications:Array<{actionId:string;systemId:string;notification:SimulationNotification}>}>(fullPath);expect(full.status).toBe(200);expect(full.body.instanceId).toBe(id);expect(full.body.tasks).toHaveLength(3);expect(full.body.notifications).toHaveLength(26);expect(full.body.notifications[0]).toEqual({actionId:original.id,systemId:original.systemId,notification:original.notification});expect(full.body.actions).toEqual(record.actions);expect(full.body.actions[0].sendState).toBe('unconfirmed');
+    const full=await scene.request<{instanceId:string;tasks:unknown[];actions:ScenarioAction[];notifications:Array<{actionId:string;systemId:string;notification:SimulationNotification}>}>(fullPath);expect(full.status).toBe(200);expect(full.body.instanceId).toBe(id);expect(full.body.tasks).toHaveLength(2);expect(full.body.notifications).toHaveLength(26);expect(full.body.notifications[0]).toEqual({actionId:original.id,systemId:original.systemId,notification:original.notification});expect(full.body.actions).toEqual(record.actions);expect(full.body.actions[0].sendState).toBe('unconfirmed');
     const detail=await scene.request<ScenarioInstanceDetail>(`/control/instances/${id}`);expect(detail.body.actions).toHaveLength(20);expect(detail.body.actions.some(action=>action.id===original.id)).toBe(false);
     const second=await scene.create();expect((await scene.request(`/control/instances/${second.body.instance.instanceId}/notifications/${original.notification.sourceMessageId}`)).status).toBe(404);
     const sent=await scene.send(applied.body.actions[0]);expect(sent.status).toBe(200);expect(scene.receiver.notifications[0]).toEqual({...original.notification,scenarioInstanceId:id});

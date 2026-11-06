@@ -1,0 +1,4 @@
+[
+  {"name":"特情来报初析","sourceId":"mock-intel-source","profileId":"scenario-source-review","recipientSeatIds":["seat-overall"],"enabled":true},
+  {"name":"态势来报初析","sourceId":"mock-situation-source","profileId":"scenario-source-review","recipientSeatIds":["seat-overall"],"enabled":true}
+]

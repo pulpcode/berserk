@@ -24,6 +24,10 @@ A replay persists its immutable activation request before closing old/new admiss
 
 Ended-run tasks with unfinished work remain truthful and read-only. Archive only records eligible under existing busy/unfinished-work rules. Never mark work completed, delete records, or bypass the generic archive guard to allow replay. Bound writes fail closed if the scope service is absent. Prepared/ended tasks leave current business candidates and workbench; direct authorized history remains readable.
 
+Replay's archive scan covers every task whose persisted `scenarioInstanceId` matches the old run, including tasks created by people from source analyses after initialization. The opening-task map is readiness/recovery evidence, not the complete archive set. Continue to check foreground admissions, background reservations and unfinished work; ineligible tasks retain their actual state and become read-only. Archive state never appoints ownership or determines isolation.
+
+Human source creation reads and verifies the exact event/job parent inside the existing SQLite transaction. It inherits that parent's run and never consults the active pointer as a replacement owner. Recheck admission before any receipt lookup or task effect, so a held A submission or lost-response retry released after A closes fails with the read-only conflict rather than creating in B. A creation that commits before closure remains under A. Same-event reprocessing retains one creation across different jobs without copying the original receipt to the later job. Ordinary unsourced creation is unchanged and remains outside this claim.
+
 Agent tools capture the originating task/job owner. Task candidate search, direct reads, cursor hashes, source HTTP, resources, spatial reads and final task-version checks must retain that owner. Re-check admission after asynchronous work. Continuous analysis partitions native session, input queue, batches, task coverage and published baseline by both configuration epoch and run; neither global active tasks nor a shared configuration session may replace that partition.
 
 Preserve original source payload hashes, creation receipts and native Pi JSONL. Legacy binding requires exact saved host creation receipts and full authenticated source provenance; no regex/prefix/latest-window guesses. Control prefixes may be removed in a business content projection after verified binding; original bytes remain available to integrity checks. Necessary opaque references and snapshot clocks remain valid evidence. Do not label a transformed projection as verbatim original text.
@@ -45,11 +49,13 @@ Preserve original source payload hashes, creation receipts and native Pi JSONL. 
 
 ## 5. Good / Base / Bad Cases
 
-Base: director prepares B's three tasks with B's explicit identity; an A job can only query A's authorized tasks and facts. Good: cancel is requested while A runs; B remains prepared until A's actual terminal state, and late A evidence stays under A. Bad: route by equal task names, archive incomplete work as completed, or let a global unbound query repair a missing model owner.
+Base: director prepares B's versioned opening tasks with B's explicit identity (two in v4, three in legacy runs); an A job can only query A's authorized tasks and facts. Good: cancel is requested while A runs; B remains prepared until A's actual terminal state, and late A evidence stays under A. Bad: route by equal task names, archive incomplete work as completed, or let a global unbound query repair a missing model owner.
 
 ## 6. Tests Required
 
 Use deterministic local HTTP/SQLite and native fake providers, not paid models. Cover `mock-scenarios`, `scenario-scope`, `scenario-run-isolation-integration`, `context-scenario-scope`, `task-context`, continuous discovery/coverage, pending activation restart, resources/spatial and director access tests. Assert original receipt/hash/history preservation, stop-request versus terminal distinction, queued cancellation, native-success race, late input, fixed task map scope and full notification windows. Run typecheck, lint/boundaries, build, full Vitest and affected desktop Playwright. A13 unsourced creation remains deferred; deterministic execution tests do not prove real-model reasoning.
+
+`scenario-business-flow` uses real authenticated HTTP, SQLite and native Pi with a fake provider to cover human creation, subsequent actual task reads/associations, assignment→claim→submission→review, replay and restart. Explicit reached/release barriers hold a submitted creation across A→B; assert 409, unchanged opening maps, no task/creation receipt, and preserved source hash/native bytes. Independently test in-flight native analysis cancellation and unfinished collaboration. These checks establish engineering behavior, not relevance or resource-reasoning accuracy.
 
 ## 7. Wrong vs Correct
 

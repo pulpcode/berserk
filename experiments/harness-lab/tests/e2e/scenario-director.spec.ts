@@ -14,10 +14,12 @@ import { fakeRuntime, testConfig } from '../pi/fake-runtime';
 
 const directorSeat = 'seat-director';
 const businessSeats = ['seat-overall', 'seat-intelligence', 'seat-planning', 'seat-situation'];
-const definition: ScenarioDefinitionSummary = {id:'ui-fire',version:'1',name:'临港仓储火情',description:'导演台桌面流程验证资料',definitionHash:'ui-fixture',businessDay:'2026-11-03',initialBusinessNow:'2026-11-03T09:10:00+08:00',modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:2,messages:3},geography:{label:'合成业务覆盖层',attribution:'UI流程测试资料',bounds:[121,30,122,31],synthetic:true}};
+const fixtureDefinition: ScenarioDefinitionSummary = {id:'ui-fire',version:'1',name:'临港仓储火情',description:'导演台桌面流程验证资料',definitionHash:'ui-fixture',businessDay:'2026-11-03',initialBusinessNow:'2026-11-03T09:10:00+08:00',modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:2,messages:3},geography:{label:'合成业务覆盖层',attribution:'UI流程测试资料',bounds:[121,30,122,31],synthetic:true}};
 
 /** Real authentication/SQLite/client behavior; source DTOs here are deterministic UI fixtures. */
-async function setup() {
+async function setup(twoTasks = false) {
+  const definition = twoTasks ? {...fixtureDefinition, id:'harbor-fire', version:'4', definitionHash:'a'.repeat(64)} : fixtureDefinition;
+  const taskBootstrap = twoTasks ? {schemaVersion:2 as const,definitionId:'harbor-fire' as const,definitionVersion:'4' as const,definitionHash:definition.definitionHash,expectedTaskCodes:['T02','T03'] as ['T02','T03']} : undefined;
   const dir = await mkdtemp(join(tmpdir(), 'axon-director-web-'));
   const db = await openDatabase(dir), access = new AccessStore(db);
   for (const seat of [directorSeat, ...businessSeats]) await access.saveAccount({username:seat,displayName:seat===directorSeat?'演示操作员':seat,seatId:seat,seatName:seat===directorSeat?'导演席':seat,password:'test-password-123',createPublicTask:seat===directorSeat||seat==='seat-overall',manageModelSettings:false,controlScenarios:seat===directorSeat});
@@ -67,6 +69,7 @@ async function setup() {
           if(previous){await respond(previous);return;}
           const instanceId=`run-${details.size+1}`;
           const detail:ScenarioInstanceDetail={instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:body.mode==='source_replay'?'source_replay':'main_story',status:'prepared',paused:false,stepIndex:0,stepCount:2,businessNow:clock(10),revision:1,createdAt:'2026-11-04T06:00:00Z',updatedAt:'2026-11-04T06:00:00Z'},steps:[{id:'E01',title:'收到仓储火情',description:'新增火情来报，保留背景业务。',businessTime:clock(12),messageCount:1,taskCodes:['T01']},{id:'E02',title:'道路状态确认',description:'更新道路事实。',businessTime:clock(16),messageCount:2,taskCodes:['T02']}],taskDefinitions:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',title:['仓储火情支援','交通救援','训练任务'][index],goal:'预设任务说明',businessRefs:[],areaIds:[]})),objects:[],reports:[],actions:[],operations:[]};
+          if(taskBootstrap){detail.taskBootstrap=taskBootstrap;detail.taskDefinitions=detail.taskDefinitions!.filter(task=>task.code!=='T01');detail.steps[0].taskCodes=[];}
           details.set(instanceId,detail);
           const result=operation(id,'create',detail,identity!);
           if(loseCreateResponse){loseCreateResponse=false;await route.abort('failed');return;}
@@ -88,7 +91,7 @@ async function setup() {
         if(!detail){await respond({error:{code:'NOT_FOUND',message:'实例不存在'}},404);return;}
         if(segments[5]==='preflight'){await respond({queuedJobs:0,runningJobs:0,foregroundRequests:0,unconfirmedNotifications:detail.actions.filter(a=>a.sendState==='unconfirmed').length,unsentNotifications:detail.actions.filter(a=>a.sendState==='unsent').length});return;}
         if(segments[5]==='initialize'){
-          if(req.method()==='POST'){ counts.initialize++; initialized.set(id,{instanceId:id,initialized:true,tasks:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',taskId:`task-${index}`,title:['仓储火情支援','交通救援','训练任务'][index]}))});
+          if(req.method()==='POST'){ counts.initialize++; initialized.set(id,{instanceId:id,initialized:true,...(taskBootstrap?{taskBootstrap}:{}),tasks:['T01','T02','T03'].map((code,index)=>({code:code as 'T01'|'T02'|'T03',taskId:`task-${index}`,title:['仓储火情支援','交通救援','训练任务'][index]})).filter(task=>!twoTasks||task.code!=='T01')});
             if(loseInitializeResponse){loseInitializeResponse=false;await route.abort('failed');return;}
           }
           await respond(initialized.get(id)||{instanceId:id,initialized:false,tasks:[]});return;
@@ -149,6 +152,30 @@ async function startRun(page: Page) {
   await expect(controls.getByRole('button',{name:'投放事件',exact:true})).toBeEnabled();
   return controls;
 }
+
+test('new scenes show a main task only after an actual notice association exists',async({page})=>{
+  const env=await setup(true);await env.attach(page);
+  const jobId=randomUUID(),taskId=randomUUID();let associated=false;
+  await page.route('**/api/information/events/**',async route=>{
+    const path=new URL(route.request().url()).pathname;
+    if(path.endsWith('/task-links'))await route.fulfill({json:{links:associated?[{task:{id:taskId,title:'人员创建的仓库核实任务'},mode:'include',jobId}]:[]}});
+    else await route.fulfill({json:{jobs:[{id:jobId,kind:'preprocess',status:'succeeded'}]}});
+  });
+  try{
+    const controls=await startRun(page);
+    await page.locator('.director-step-toggle').first().hover();
+    const detail=page.getByRole('region',{name:'收到仓储火情',exact:true});
+    await expect(detail.getByText('仓储火情支援',{exact:true})).toHaveCount(0);
+    await controls.getByRole('button',{name:'投放事件',exact:true}).click();
+    await expect(page.locator('.director-step-toggle').first()).toContainText('已接收');
+    await page.locator('.director-step-toggle').first().hover();
+    await expect(detail.getByRole('button',{name:'人员创建的仓库核实任务',exact:true})).toHaveCount(0);
+    associated=true;await page.reload();await page.locator('.director-step-toggle').first().hover();
+    await expect(detail.getByRole('button',{name:'人员创建的仓库核实任务',exact:true})).toBeVisible();
+    expect(env.counts.create).toBe(1);expect(env.counts.apply).toBe(1);expect(env.calls).toHaveLength(0);
+    await page.screenshot({path:'test-results/scenario-business-director.png',fullPage:true});
+  }finally{await env.close();}
+});
 
 test('the primary control delivers only the displayed event; hovering other events does not change its target',async({page})=>{
   const env = await setup(); await env.attach(page);
@@ -434,7 +461,7 @@ test('an old scene definition remains readable but cannot deliver or unlock; a f
   const env=await setup();await env.attach(page);
   try {
     await startRun(page);
-    await page.route('**/api/simulation/scenarios',route=>route.fulfill({json:{items:[{...definition,version:'2',definitionHash:'new-geography'}]}}));
+    await page.route('**/api/simulation/scenarios',route=>route.fulfill({json:{items:[{...fixtureDefinition,version:'2',definitionHash:'new-geography'}]}}));
     await page.reload();
     await expect(page.getByRole('alert')).toContainText('场景定义已更新');
     await expect(page.getByRole('region',{name:'事件投放'}).getByRole('button',{name:'投放事件',exact:true})).toBeDisabled();

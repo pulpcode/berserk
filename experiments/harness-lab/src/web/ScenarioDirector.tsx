@@ -10,6 +10,7 @@ import { useInformationQuery } from './information-ui';
 import { randomUUID } from './random-uuid';
 import { Panel } from './Resources';
 import { useDirectorEvents } from './DirectorPopover';
+import { DirectorEventTasks } from './DirectorEventTasks';
 import { DirectorRecords, DirectorRunIdentity, directorInstanceStatus, directorModes as modes, directorTimestamp as realTimestamp } from './DirectorRecords';
 import './scenario-director.css';
 
@@ -291,19 +292,20 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
             const pinned=selected?.pinned===true;
             const status = confirmed ? '已接收' : applied ? '待接收' : isNext ? '下一事件' : '待发生';
             const tasks=(step.taskCodes || []).flatMap(code=>{
-              const initialized=taskState.data?.tasks.find(task=>task.code===code),definition=detail.data?.taskDefinitions?.find(task=>task.code===code);
-              return initialized||definition?[{code,title:initialized?.title || definition!.title,taskId:initialized?.taskId}]:[];
+              const initialized=taskState.data?.tasks.find(task=>task.code===code);
+              return initialized?[{code,title:initialized.title,taskId:initialized.taskId}]:[];
             });
             return <li key={step.id} className={`${applied?'is-applied':''} ${selected?'is-expanded':''}`} onPointerMove={event=>{const anchor=event.currentTarget.querySelector<HTMLButtonElement>('.director-step-toggle');if(anchor)eventDetails.move(step.id,anchor,event);}} aria-current={isNext?'step':undefined}>
               <button className="director-step-toggle" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onClick={event=>eventDetails.toggle(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{status}</span><ChevronDown size={14} aria-hidden="true"/></button>
               {selected && <div className="director-step-body" id={domId(`director-step-${step.id}`)} role="region" aria-label={step.title} data-pinned={pinned}><p>{step.description}</p>
-                {tasks.length>0 && <div className="director-event-tasks"><span>场景任务</span>{tasks.map(task=>task.taskId?<button key={task.code} onClick={()=>openTask(task.taskId!)}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>:<span className="director-task-name" key={task.code}>{task.title}</span>)}</div>}
+                {tasks.length>0 && <div className="director-event-tasks"><span>场景任务</span>{tasks.map(task=><button key={task.code} onClick={()=>openTask(task.taskId)}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>)}</div>}
                 {actions.length ? <ul className="director-notifications" aria-label="事件通知">
                   {actions.map(action => <li key={action.id}>
                     <div className="director-notification-heading"><strong>{action.notification.title}</strong><span className="director-status">{notificationStates[action.sendState]}</span></div>
                     <p>{action.notification.text}</p>
                     <small>观测 <time dateTime={action.notification.occurredAt}>{action.notification.occurredAt.replace('T', ' ')}</time> · 实际保存 {realTimestamp(action.createdAt)}</small>
                     {action.receipt && <a href={`/overview?tab=events&id=${encodeURIComponent(action.receipt.eventId)}`} target="_blank" rel="noreferrer">接收记录 <ArrowUpRight size={13}/></a>}
+                    {detail.data?.taskBootstrap && action.receipt && <DirectorEventTasks eventId={action.receipt.eventId} shownTaskIds={tasks.map(task=>task.taskId)} openTask={openTask}/>}
                   </li>)}
                 </ul> : <span className="director-scope">{step.messageCount} 条通知</span>}
               </div>}

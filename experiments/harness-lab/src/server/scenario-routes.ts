@@ -10,7 +10,8 @@ import { readContextJson } from '../context/http.js';
 import { Mutex } from '../resources/files.js';
 import { identityOf } from './auth.js';
 import type { apiScope } from './seat-scope.js';
-import { ScenarioTasks, scenarioId, scenarioTaskDefinitions } from './scenario-tasks.js';
+import { ScenarioTasks, scenarioId } from './scenario-tasks.js';
+import { scenarioTaskBootstrap, scenarioTaskDefinitions } from '../scenario/task-definitions.js';
 
 const conflict=(message:string)=>new RequestError('SCENARIO_HOST_CONFLICT',message,409);
 const empty={type:'object',additionalProperties:false};
@@ -33,9 +34,10 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
   const simulation=lab.context?.config.simulation;
   if(!lab.access||!simulation?.enabled||!simulation.directorSeatId)return;
   const runScope=new ScenarioScope(lab.context!.config,env);lab.scenario=runScope;lab.access.scenario=runScope;lab.context!.scenario=runScope;
-  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access);await tasks.prepare(async(id,definitions)=>{
-    const raw=contextRecord(await runScope.provenance(id),['instanceId','tasks','notifications','actions'],['instanceId','tasks']);
-    if(raw.instanceId!==id||JSON.stringify(scenarioTaskDefinitions(raw.tasks))!==JSON.stringify(definitions))throw conflict('任务归属与已保存来源不一致。');
+  const tasks=new ScenarioTasks(lab.config.dataDir,lab.access);await tasks.prepare(async(id,definitions,bootstrap)=>{
+    const raw=contextRecord(await runScope.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','tasks']);
+    const savedBootstrap=scenarioTaskBootstrap(raw.taskBootstrap);
+    if(raw.instanceId!==id||JSON.stringify(savedBootstrap)!==JSON.stringify(bootstrap)||JSON.stringify(scenarioTaskDefinitions(raw.tasks,savedBootstrap))!==JSON.stringify(definitions))throw conflict('任务归属与已保存来源不一致。');
   });
   const unfinished=await tasks.activation();
   if(unfinished?.state==='pending'){if(unfinished.previousInstanceId)runScope.close(unfinished.previousInstanceId);runScope.close(unfinished.instanceId);}
@@ -51,14 +53,17 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     return readContextJson(new URL(`${config.baseUrl}/control/${path}`),token,undefined,{maxBytes:2*1024*1024,method:body===undefined?'GET':'POST',...(body===undefined?{}:{body:includeActor?{...body,actor:by}:body})});
   };
   const status=async(request:FastifyRequest,id:string)=>{
-    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','objects','reports','actions','operations','taskDefinitions'],['instance','actions']);
+    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance','actions']);
     if(!r.instance||typeof r.instance!=='object')throw conflict('来源场景状态无效。');
     const i=r.instance as Record<string,unknown>,clock={instanceId:i.instanceId,businessNow:i.businessNow,revision:i.revision};
     if(!isScenarioClock(clock)||clock.instanceId!==id||typeof i.paused!=='boolean'||!['prepared','active','frozen'].includes(String(i.status))||!Array.isArray(r.actions))throw conflict('来源场景状态无效。');
-    const full=contextRecord(await runScope.provenance(id),['instanceId','tasks','notifications','actions'],['instanceId','actions']);
+    const full=contextRecord(await runScope.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','tasks','actions']);
+    const bootstrap=scenarioTaskBootstrap(r.taskBootstrap),provenanceBootstrap=scenarioTaskBootstrap(full.taskBootstrap);
+    if(!bootstrap&&!['1','2','3'].includes(String(i.definitionVersion))||bootstrap&&(bootstrap.definitionId!==i.definitionId||bootstrap.definitionVersion!==i.definitionVersion||bootstrap.definitionHash!==i.definitionHash)||JSON.stringify(bootstrap)!==JSON.stringify(provenanceBootstrap))throw conflict('来源开场任务版本与场景不一致。');
+    const taskDefinitions=scenarioTaskDefinitions(full.tasks,bootstrap);
     if(full.instanceId!==id||!Array.isArray(full.actions))throw conflict('来源通知记录无效。');
     const sendStates=full.actions.map(action=>{if(!action||typeof action!=='object'||!('sendState' in action)||!['unsent','unconfirmed','accepted'].includes(String(action.sendState)))throw conflict('通知回执状态无效。');return String(action.sendState);});
-    return {clock,paused:i.paused,status:String(i.status),sendStates,definitionId:contextText(i.definitionId,64),definitionVersion:contextText(i.definitionVersion,64),definitionHash:contextText(i.definitionHash,128)};
+    return {clock,paused:i.paused,status:String(i.status),sendStates,definitionId:contextText(i.definitionId,64),definitionVersion:contextText(i.definitionVersion,64),definitionHash:contextText(i.definitionHash,128),taskBootstrap:bootstrap,taskDefinitions};
   };
   const checkTaskManagement=(request:FastifyRequest)=>{const {actor}=scenarioDirector(lab,background,request);if(!actor.createPublicTask)throw new RequestError('FORBIDDEN','演示任务准备还需要工作任务管理权限。',403);return actor;};
   const mutation=(body:unknown,extra:string[]=[]):Record<string,unknown>&{clientActionId:string;expectedRevision:number}=>{
@@ -102,15 +107,18 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
       unsentNotifications:current.sendStates.filter(state=>state==='unsent').length};
   });
   app.get<{Params:{id:string}}>(`${base}/instances/:id/initialize`,{schema:{params,querystring:empty}},async request=>{
-    const {actor}=scenarioDirector(lab,background,request);await status(request,request.params.id);return tasks.read(actor,request.params.id);
+    const {actor}=scenarioDirector(lab,background,request),state=await status(request,request.params.id),result=await tasks.read(actor,request.params.id,state.taskBootstrap,state.taskDefinitions);
+    if(JSON.stringify(result.taskBootstrap)!==JSON.stringify(state.taskBootstrap))throw conflict('本轮保存的开场任务版本与来源不一致。');return result;
   });
   app.post<{Params:{id:string}}>(`${base}/instances/:id/initialize`,{schema:{params,querystring:empty}},request=>mutex.run(async()=>{
     const actor=checkTaskManagement(request);await tasks.assertSettled();
     const r=contextRecord(request.body,['clientActionId'],['clientActionId']),id=scenarioId(request.params.id);
     const state=await status(request,id);if(state.status==='frozen')throw conflict('旧轮已经冻结，不能初始化任务。');
-    const definitionResponse=contextRecord(await call(request,`instances/${id}/tasks`),['items'],['items']);
-    const definitions=scenarioTaskDefinitions(definitionResponse.items);
-    return tasks.initialize(actor,id,operationId(r.clientActionId),definitions,()=>{checkTaskManagement(request);});
+    const definitionResponse=contextRecord(await call(request,`instances/${id}/tasks`),['items','taskBootstrap'],['items']);
+    const bootstrap=scenarioTaskBootstrap(definitionResponse.taskBootstrap);
+    if(JSON.stringify(bootstrap)!==JSON.stringify(state.taskBootstrap))throw conflict('来源开场任务定义已变化。');
+    const definitions=scenarioTaskDefinitions(definitionResponse.items,bootstrap);
+    return tasks.initialize(actor,id,operationId(r.clientActionId),definitions,()=>{checkTaskManagement(request);},bootstrap);
   }));
   app.post<{Params:{id:string}}>(`${base}/instances/:id/activate`,{schema:{params,querystring:empty}},request=>mutex.run(async()=>{
     const {actor}=scenarioDirector(lab,background,request),id=scenarioId(request.params.id),input=mutation(request.body,['expectedActiveRevision','terminateUnsent']);
@@ -122,9 +130,9 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
         if(receipt.inputHash!==hash||receipt.userId!==actor.userId)throw conflict('相同激活编号的内容或操作者已变化。');
         try{return await reconcile(request,input.clientActionId);}catch(error){if(!(error instanceof RequestError&&error.code==='CONTEXT_NOT_FOUND'))throw error;}
       }
-      await tasks.requireReady(actor,id);
       // Reject known source conflicts before persisting a pending receipt or archiving old tasks.
       const next=await status(request,id);
+      await tasks.requireReady(actor,id,next.taskBootstrap,next.taskDefinitions);
       if(next.status!=='prepared'||next.clock.revision!==input.expectedRevision)throw conflict('新轮状态或修订已变化，请刷新后核对。');
       const definitions=contextRecord(await call(request,'scenarios'),['items'],['items']);
       if(!Array.isArray(definitions.items)||!definitions.items.some(item=>{

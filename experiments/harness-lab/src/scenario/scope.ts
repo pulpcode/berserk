@@ -39,7 +39,7 @@ export class ScenarioScope {
       if(!Array.isArray(list.items))throw mismatch();
       for(const item of list.items){
         const id=instanceId((item as {instanceId?:unknown}).instanceId);
-        const raw=contextRecord(await this.provenance(id),['instanceId','tasks','notifications','actions'],['instanceId','notifications']);
+        const raw=contextRecord(await this.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','notifications']);
         if(raw.instanceId!==id||!Array.isArray(raw.notifications))throw mismatch();
         for(const entry of raw.notifications){
           const row=contextRecord(entry,['actionId','systemId','notification'],['actionId','systemId','notification']);

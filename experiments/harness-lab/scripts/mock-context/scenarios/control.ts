@@ -45,7 +45,7 @@ export function scenarioControl(store:ScenarioStore,targets:NotificationTarget[]
       const input:ScenarioCreateInput={definitionId:contextText(r.definitionId),version:contextText(r.version),mode:contextText(r.mode) as ScenarioCreateInput['mode'],clientActionId:operationId(r.clientActionId),...(r.businessDay===undefined?{}:{businessDay:contextText(r.businessDay)})};return store.create(input,actor(r.actor));
     }
     const instance=/^\/control\/instances\/([^/]+)(?:\/(activate|preview|control|tasks|steps\/([^/]+)))?$/.exec(path);if(!instance)throw sceneError('场景控制接口不存在。','NOT_FOUND',404);
-    const id=decodeURIComponent(instance[1]);if(!instance[2]&&req.method==='GET')return store.detail(id);if(instance[2]==='tasks'&&req.method==='GET')return {items:store.get(id).tasks};
+    const id=decodeURIComponent(instance[1]);if(!instance[2]&&req.method==='GET')return store.detail(id);if(instance[2]==='tasks'&&req.method==='GET'){const record=store.get(id);return {items:record.tasks,...(record.taskBootstrap?{taskBootstrap:record.taskBootstrap}:{})};}
     if(req.method!=='POST')throw sceneError('控制方式无效。','INVALID_ARGUMENT',400);
     if(instance[2]==='preview'){const r=contextRecord(await body(req),['expectedRevision']);if(r.expectedRevision!==undefined&&contextInteger(r.expectedRevision)!==store.get(id).instance.revision)throw sceneError('场景已变化，请刷新。','REVISION_CONFLICT');return store.preview(id);}
     const keys=['clientActionId','expectedRevision','actor',...(instance[2]==='activate'?['expectedActiveRevision','terminateUnsent']:instance[2]==='control'?['action']:[])],r=contextRecord(await body(req),keys,['clientActionId','expectedRevision','actor']);

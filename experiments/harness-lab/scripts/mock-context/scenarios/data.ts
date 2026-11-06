@@ -1,7 +1,7 @@
 import { areaRings, hydrantPositions, roadRows, sitePositions, stationPositions } from './geography.js';
 import { createHash } from 'node:crypto';
 import type { ContextRef, InformationReport, SituationObject, Position } from '../../../src/contracts/context.js';
-import type { ScenarioDefinitionSummary, ScenarioStepSummary, ScenarioTaskDefinition } from '../../../src/contracts/scenarios.js';
+import type { ScenarioDefinitionSummary, ScenarioStepSummary, ScenarioTaskDefinition, ScenarioTaskBootstrap } from '../../../src/contracts/scenarios.js';
 
 export interface SceneNotice { systemId: 'intel' | 'situation'; reportId: string; title: string; text: string; occurredAt: string }
 export interface SceneStep { summary: ScenarioStepSummary; objects: SituationObject[]; reports: InformationReport[]; notices: SceneNotice[] }
@@ -82,16 +82,17 @@ export function sceneWorld(instanceId: string): SceneWorld {
     steps.push({summary:{id,title,description:text,businessTime:stamp,messageCount:reports.length},objects:updatedObjects,reports,notices:reports.map(r=>({systemId,reportId:r.reportId,title:r.title,text:`${r.summary}\n观测时间：${r.observedAt}。报告 intel/${r.reportId}，修订${r.revision}。`,occurredAt:observed}))});
   }
   const tasks:ScenarioTaskDefinition[]=[
-    {code:'T01',title:'临港三号仓库火情',goal:`模拟场景：09:35前到齐4水罐+1泡沫+1抢险救援+1通信车。现场关注范围仅临港。支援检索范围为situation来源的本实例六个区域：${areaNames.map((_name,index)=>area(index)).join('、')}；先按此明确范围查询六站车辆。全部可读不等于与本任务相关或已分配，初始无车辆分配。来源只提供事实，方案须由人员决定；业务判断采用查询返回的场景时间。`,businessRefs:[ref('resource','L01')],areaIds:[area(0)]},
-    {code:'T02',title:'城西交通救援',goal:'模拟场景：09:00—10:00交通救援，V02/V14仍在作业，释放以来源回报为准；不经过R01/R02/R03。业务判断采用查询返回的场景时间。',businessRefs:[ref('resource','L02'),ref('resource','V02'),ref('resource','V14')],areaIds:[area(2)]},
-    {code:'T03',title:'临港登高演练',goal:'模拟场景：09:00—09:45已批准演练，V05继续既定安排，之后释放以回报为准。业务判断采用查询返回的场景时间。',businessRefs:[ref('resource','L03'),ref('resource','V05')],areaIds:[area(0)]},
+    {code:'T02',title:'城西交通救援',goal:'09:00—10:00开展城西交通救援，V02/V14仍在作业，释放以来源回报为准；不经过R01/R02/R03。',businessRefs:[ref('resource','L02'),ref('resource','V02'),ref('resource','V14')],areaIds:[area(2)]},
+    {code:'T03',title:'临港登高演练',goal:'09:00—09:45开展已批准的临港登高演练，V05继续既定安排，之后释放以回报为准。',businessRefs:[ref('resource','L03'),ref('resource','V05')],areaIds:[area(0)]},
   ];
   return {objects,reports:[],steps,tasks};
 }
 /** Director navigation only; excluded from world facts, definition hashes and notifications. */
 export const directorStepTasks: Record<string, ScenarioTaskDefinition['code'][]> = {
-  E01:['T01'], E02:['T02'], E03:['T03'], E04:['T01'], E05:['T01','T02','T03'],
-  E06:['T01'], E07:['T01'], E08:['T01'], E09:['T01'], E10:['T01'], E11:['T02'], E12:['T01'],
+  E01:[], E02:['T02'], E03:['T03'], E04:[], E05:['T02','T03'],
+  E06:[], E07:[], E08:[], E09:[], E10:[], E11:['T02'], E12:[],
 };
 const definitionHash=createHash('sha256').update(JSON.stringify(sceneWorld('definition'))).digest('hex');
-export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'3',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
+export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'4',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
+
+export const taskBootstrap:ScenarioTaskBootstrap={schemaVersion:2,definitionId:'harbor-fire',definitionVersion:'4',definitionHash,expectedTaskCodes:['T02','T03']};
