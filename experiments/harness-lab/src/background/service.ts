@@ -850,6 +850,12 @@ export class BackgroundService {
       this.assertRun(job.scenarioInstanceId);
       if (this.stopping || this.store.getJob(job.id).cancelRequestedAt) throw new RequestError('BACKGROUND_STOPPED','处理已停止。',409);
       const result = await this.executor.execute(job,{text,directory,files,profile,selection,
+        ...(job.kind === 'preprocess' && profile?.requireTaskAssessment ? {checkTaskAssessmentCompletion: (snapshot: SessionSnapshot) => {
+          if (this.stopping) throw conflict('处理已停止。');
+          this.assertRun(job.scenarioInstanceId);
+          this.assertRecipients(this.store.getJob(job.id).ruleSnapshot!);
+          return this.taskLinks.completion(job.id, snapshot);
+        }} : {}),
         ...(job.kind === 'preprocess' && job.ruleSnapshot?.supplementaryDelivery ? {recordRecipientSuggestion: (input: RecipientSuggestionInput, toolCallId: string, signal?: AbortSignal) => this.recordRecipientSuggestion(job.id,input,toolCallId,signal)} : {}),recordTaskAssessment:(input,evidence,toolCallId,signal) => {
         signal?.throwIfAborted();
         if (this.stopping) throw conflict('处理已停止。');
@@ -876,8 +882,15 @@ export class BackgroundService {
         }
         outputs.push(file);
       }
-      const error = status === 'succeeded' ? undefined : {code:terminal.message?.includes('HUMAN_ACTION_REQUIRED') ? 'HUMAN_ACTION_REQUIRED' : status.toUpperCase(),message:terminal.message ?? '本次处理未完成，请核对已保存效果。'};
+      const error = status === 'succeeded' ? undefined : {code:terminal.message === '任务判断未完成。' ? 'TASK_ASSESSMENT_INCOMPLETE' : terminal.message?.includes('HUMAN_ACTION_REQUIRED') ? 'HUMAN_ACTION_REQUIRED' : status.toUpperCase(),message:terminal.message ?? '本次处理未完成，请核对已保存效果。'};
       const latest = this.store.getJob(job.id);
+      // Output verification awaits may admit task/authority/run changes; recheck at commit.
+      if (status === 'succeeded' && job.kind === 'preprocess' && profile?.requireTaskAssessment) {
+        if (this.stopping) throw conflict('处理已停止。');
+        this.assertRun(job.scenarioInstanceId);
+        this.assertRecipients(latest.ruleSnapshot!);
+        if (this.taskLinks.completion(job.id, snapshot) !== 'ready') throw new RequestError('TASK_ASSESSMENT_INCOMPLETE', '任务判断未完成。', 409);
+      }
       const recipientSuggestionVerified = verifiedRecipientSuggestion(latest,snapshot);
       this.store.finishJob(job.id,latest.revision,{status,error,usage:combinedUsage(terminal.usageSummary,terminal.subagentUsage),
         ...(status === 'succeeded' ? {result:{sessionId:job.sessionId!,requestId:job.requestId,finalMessageId:snapshot.turns?.find(turn => turn.requestId === job.requestId)?.finalMessageId,files:outputs}} : {})},

@@ -221,6 +221,37 @@ test('new-task suggestion uses editable public task form; unknown response is qu
   }finally{await env.close();await context.close();}
 });
 
+test('existing task links and an independent work suggestion coexist without automatic task creation', async ({ page }) => {
+  const env = await setup(); await env.attach(page);
+  try {
+    await env.receive();
+    await expect.poll(() => env.store.listDeliveries().filter(item => item.status === 'delivered').length).toBe(2);
+    assess(env, {
+      items: [{ taskSpaceId: env.task.id, taskRevision: env.task.revision, reason: '道路信息支持本任务的综合分析' }],
+      newTaskSuggestion: { title: '独立现场勘验', goal: '形成现场勘验记录', reason: '已有分析任务未承担现场勘验交付' },
+    });
+    const taskCount = env.lab.access!.list('a').length, calls = env.fake.calls.length;
+    await login(page, 'a'); await inbox(page);
+    const associations = page.getByRole('region', { name: '任务关联', exact: true });
+    await expect(associations.locator('.task-association-list')).toContainText(env.task.title);
+    await expect(associations.locator('.task-suggestion')).toContainText('独立现场勘验');
+    expect(env.lab.access!.list('a')).toHaveLength(taskCount);
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
+    expect(env.fake.calls).toHaveLength(calls);
+    await associations.screenshot({ path: 'test-results/task-assessment-mixed-desktop.png' });
+    await associations.getByRole('button', { name: '创建公共任务并关联', exact: true }).click();
+    const panel = page.getByRole('dialog', { name: '创建公共任务并关联', exact: true });
+    await expect(panel.getByLabel('任务名称')).toHaveValue('独立现场勘验');
+    await panel.getByRole('button', { name: '创建公共任务并关联', exact: true }).click();
+    await expect(panel).toHaveCount(0);
+    await expect(associations.locator('.task-association-list')).toContainText(env.task.title);
+    await expect(associations.locator('.task-source-creation')).toContainText('已创建');
+    expect(env.lab.access!.list('a')).toHaveLength(taskCount + 1);
+    expect(env.lab.workspaces.list('a').workspaces).toHaveLength(0);
+    expect(env.fake.calls).toHaveLength(calls);
+  } finally { await env.close(); }
+});
+
 test('a successful analysis without a suggestion opens a blank manual task form and recovers a lost creation response', async ({ page, browser }) => {
   const env=await setup(),context=await browser.newContext(),b=await context.newPage();await env.attach(page);await env.attach(b);
   try {

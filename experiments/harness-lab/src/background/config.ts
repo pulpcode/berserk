@@ -43,8 +43,10 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
   if (raw.enabled !== undefined && typeof raw.enabled !== 'boolean') throw fail();
   if (!Array.isArray(raw.sources) || !Array.isArray(raw.profiles) || raw.sources.length > 100 || raw.profiles.length > 100) throw fail();
   const profiles = raw.profiles.map(item => {
-    const p = record(item); fields(p, ['id', 'name', 'goal', 'tools', 'skillIds', 'agentIds', 'instructions', 'resources', 'contextScopeId']);
+    const p = record(item); fields(p, ['id', 'name', 'goal', 'tools', 'skillIds', 'agentIds', 'instructions', 'resources', 'contextScopeId', 'requireTaskAssessment']);
     const selectedTools = list(p.tools); if (!selectedTools.length || selectedTools.some(tool => !tools.has(tool))) throw fail();
+    if (p.requireTaskAssessment !== undefined && typeof p.requireTaskAssessment !== 'boolean') throw fail();
+    if (p.requireTaskAssessment === true && !['task_search', 'information_record_task_assessment'].every(tool => selectedTools.includes(tool))) throw fail();
     if (p.resources !== undefined && (!Array.isArray(p.resources) || p.resources.length > 100)) throw fail();
     const resources = ((p.resources ?? []) as unknown[]).map(item => {
       const r = record(item); fields(r, ['id', 'title', 'content']);
@@ -54,6 +56,7 @@ export function parseBackgroundConfig(value: unknown): BackgroundConfig {
     const instructions = text(p.instructions ?? '', 16_384, true);
     if (Buffer.byteLength(instructions, 'utf8') > 16_384) throw fail();
     return {id: identifier(p.id), name: text(p.name ?? p.id, 100), goal: text(p.goal, 16_000), tools: selectedTools,
+      ...(p.requireTaskAssessment === undefined ? {} : {requireTaskAssessment: p.requireTaskAssessment}),
       ...(p.contextScopeId === undefined ? {} : {contextScopeId: identifier(p.contextScopeId)}), skillIds: list(p.skillIds, true), agentIds: list(p.agentIds, true), instructions, resources};
   });
   const sources = raw.sources.map(item => {

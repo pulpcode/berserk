@@ -19,6 +19,7 @@ export type ReadTaskCandidates = (toolCallId:string, signal?:AbortSignal) => Pro
 export type ReadAnalysisCurrent = (query: ContinuousCurrentQuery, signal?: AbortSignal) => Promise<ContinuousCurrentResult>;
 /** Read-only host check while the same native request is still active. */
 export type CheckAnalysisCompletion = (snapshot: SessionSnapshot) => 'ready' | 'missing' | 'stale';
+export type CheckTaskAssessmentCompletion = (snapshot: SessionSnapshot) => 'ready' | 'missing';
 
 /** Adapter boundary: background queue owns admission; the Pi adapter owns native execution/history. */
 export interface BackgroundExecutionInput {
@@ -33,6 +34,7 @@ export interface BackgroundExecutionInput {
   readAssessmentSource?: (id:string,offset:number,limit:number,signal?:AbortSignal)=>Promise<unknown>;
   calculateAnalysis?: (input:CalculationInput,toolCallId:string,signal?:AbortSignal,evidence?:TaskAssessmentEvidence)=>unknown;
   checkAnalysisCompletion?: CheckAnalysisCompletion;
+  checkTaskAssessmentCompletion?: CheckTaskAssessmentCompletion;
   onEvent(event: StreamEvent): void;
   publish(input: {sessionId: string; requestId: string; toolCallId: string; path: string}, signal?: AbortSignal): Promise<FileOutput>;
 }

@@ -25,13 +25,16 @@ export async function snapshotBackgroundProfile(lab: PiLab, profile: BackgroundP
   return { ...structuredClone(profile), skills, agents, ...(contextScope ? {contextScope} : {}) };
 }
 
-function resources(profile: BackgroundProfileSnapshot, jobId: string): ResourceSnapshot {
+function resources(profile: BackgroundProfileSnapshot, jobId: string, taskAssessmentRequired: boolean): ResourceSnapshot {
   if (profile.skills?.length !== profile.skillIds.length || profile.agents?.length !== profile.agentIds.length
     || profile.skills.some(skill => !profile.skillIds.includes(skill.id) || hashContent(skill.content) !== skill.hash)
     || profile.agents.some(agent => !profile.agentIds.includes(agent.name))) throw new RequestError('BACKGROUND_SNAPSHOT_INVALID', '处理方案资源快照缺失或损坏，未启动模型。', 409);
+  const instructions = taskAssessmentRequired
+    ? `${profile.instructions}\n本次处理必须先成功查询获准活动公共任务，再调用 information_record_task_assessment 保存完整判断并取得成功回执，才能完成。无关联也须记录理由；仅文字声称已记录不构成完成。`
+    : profile.instructions;
   return { workspaceId: jobId, instructions: [
     { fileId: 'common', name: '服务指令（AGENTS.md）', content: '', hash: null, editable: false },
-    { fileId: 'workspace', name: '预处理指令（AGENTS.md）', content: profile.instructions, hash: hashContent(profile.instructions), editable: false },
+    { fileId: 'workspace', name: '预处理指令（AGENTS.md）', content: instructions, hash: hashContent(instructions), editable: false },
   ], sources: profile.resources.map(item => ({ ...item, description: item.title, hash: hashContent(item.content) })), skills: structuredClone(profile.skills) };
 }
 
@@ -65,6 +68,8 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         }
         if (!input.profile) throw new RequestError('BACKGROUND_PROFILE_MISSING', '后台处理方案快照缺失。', 409);
         const continuous = input.continuous;
+        if (!continuous && input.profile.requireTaskAssessment && (!input.checkTaskAssessmentCompletion || !input.recordTaskAssessment
+          || !['task_search', 'information_record_task_assessment'].every(tool => input.profile!.tools.includes(tool)))) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '任务判断完成检查不可用，未启动模型。', 503);
         if ((job.kind === 'continuous_analysis') !== Boolean(continuous)) throw new RequestError('CONTINUOUS_INPUT_INVALID', '持续研判批次与作业不一致。', 409);
         if (continuous && (continuous.batch.jobId !== job.id || continuous.stream.sessionId !== job.sessionId
           || continuous.batch.epochId !== continuous.stream.epochId || job.kind !== 'continuous_analysis'
@@ -72,8 +77,9 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         const tools = continuous ? [...new Set([...input.profile.tools.filter(tool => continuousToolNames.has(tool)), 'analysis_current_read', 'information_record_analysis_update', 'analysis_calculate', 'analysis_evidence_read', ...(input.readTaskCandidates ? ['analysis_task_candidates'] : []), 'read', 'ls', 'find'])]
           : input.profile.tools.filter(tool => tool !== 'information_suggest_recipients' || !!input.recordRecipientSuggestion);
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
-          text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id), roles: continuous ? [] : input.profile.agents!, tools,
+          text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id, !continuous && input.profile.requireTaskAssessment === true), roles: continuous ? [] : input.profile.agents!, tools,
           ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, calculateAnalysis: input.calculateAnalysis, readAssessmentSource: input.readAssessmentSource, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
+          ...(!continuous && input.profile.requireTaskAssessment ? {checkTaskAssessmentCompletion: input.checkTaskAssessmentCompletion} : {}),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope, scenarioInstanceId:job.scenarioInstanceId}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });
         running.set(job.id, prepared.cancel);

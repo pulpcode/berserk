@@ -7,6 +7,8 @@ import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
 import type { BackgroundStore } from './store.js';
+import { verifiedTaskAssessment } from './task-assessment-evidence.js';
+import type { SessionSnapshot } from '../contracts/index.js';
 
 const missing = () => new RequestError('INFORMATION_NOT_FOUND', '信息不存在或无权访问。', 404);
 const conflict = (message = '关联已变化，请读取最新内容后重试。') => new RequestError('INFORMATION_LINK_CONFLICT', message, 409);
@@ -30,8 +32,8 @@ export function validTaskAssessment(value: unknown): value is TaskAssessment {
       || Object.keys(item).some(key => !['taskSpaceId', 'taskRevision', 'reason'].includes(key)) || ids.has(item.taskSpaceId)) return false;
     ids.add(item.taskSpaceId);
   }
-  const modes = Number(value.items.length > 0) + Number(value.newTaskSuggestion !== undefined) + Number(value.emptyReason !== undefined);
-  return modes === 1 && (value.newTaskSuggestion === undefined || suggestion(value.newTaskSuggestion))
+  const hasWork = value.items.length > 0 || value.newTaskSuggestion !== undefined;
+  return hasWork !== (value.emptyReason !== undefined) && (value.newTaskSuggestion === undefined || suggestion(value.newTaskSuggestion))
     && (value.emptyReason === undefined || reasonText(value.emptyReason));
 }
 export function validSuggestionCreation(value: unknown): value is TaskSuggestionCreation {
@@ -95,6 +97,21 @@ export interface ObservedTasks { queried: boolean; tasks: ReadonlyMap<string, nu
 /** Metadata relations only. Native Pi history remains the authority for all analysis content. */
 export class TaskLinkService {
   constructor(readonly access: AccessStore, readonly store: BackgroundStore, private readonly dependencies: TaskLinkDependencies) {}
+  /** Recheck live authority and versions; the native receipt is not itself a publication grant. */
+  completion(jobId: string, snapshot: SessionSnapshot): 'ready' | 'missing' {
+    const job = this.store.getJob(jobId);
+    if (job.kind !== 'preprocess' || job.status !== 'running' || job.cancelRequestedAt
+      || !job.ruleSnapshot?.profile.tools.includes('information_record_task_assessment')) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '本次处理不能完成任务判断。', 409);
+    this.dependencies.assertWrite?.(this.store.getEvent(job.eventId!), job);
+    if (!verifiedTaskAssessment(job, snapshot)) return 'missing';
+    for (const item of job.taskAssessment!.items) {
+      try {
+        const task = this.access.getActivePublic(item.taskSpaceId);
+        if (task.revision !== item.taskRevision || task.scenarioInstanceId !== job.scenarioInstanceId) return 'missing';
+      } catch { return 'missing'; }
+    }
+    return 'ready';
+  }
   private actor(actor: Identity) {
     const current = this.access.identity(actor.userId);
     if (!current || current.seatId !== actor.seatId) throw missing();
@@ -138,6 +155,7 @@ export class TaskLinkService {
       if (job.kind !== 'preprocess' || job.status !== 'running' || job.cancelRequestedAt
         || !job.ruleSnapshot?.profile.tools.includes('information_record_task_assessment')) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '本次处理不能记录任务判断。', 409);
       if (!input || !Array.isArray(input.relations) || input.relations.length > 100 || Object.keys(input).some(key => !['relations', 'newTaskSuggestion', 'emptyReason'].includes(key))) throw invalid();
+      if (job.ruleSnapshot.profile.requireTaskAssessment && !observed.queried) throw new RequestError('TASK_NOT_QUERIED', '请先成功查询活动公共任务，再记录判断。');
       const items: TaskAssessment['items'] = [], seen = new Set<string>();
       for (const relation of input.relations) {
         if (!relation || typeof relation.taskId !== 'string' || !UUID.test(relation.taskId) || !reasonText(relation.reason)
@@ -157,7 +175,7 @@ export class TaskLinkService {
       const assessment: TaskAssessment = {recordedAt: new Date().toISOString(), toolCallId, items,
         ...(input.emptyReason !== undefined ? {emptyReason: input.emptyReason} : {}),
         ...(input.newTaskSuggestion !== undefined ? {newTaskSuggestion: input.newTaskSuggestion} : {})};
-      if (!validTaskAssessment(assessment)) throw invalid('请选择关联已有任务、建议新建或暂不归口其中一种，并填写理由。');
+      if (!validTaskAssessment(assessment)) throw invalid('请记录已有任务关联或新建建议；暂不归口须单独填写理由。');
       if (assessment.emptyReason) assessment.emptyReason = assessment.emptyReason.trim();
       if (assessment.newTaskSuggestion) assessment.newTaskSuggestion = {title: assessment.newTaskSuggestion.title.trim(), goal: assessment.newTaskSuggestion.goal.trim(), reason: assessment.newTaskSuggestion.reason.trim()};
       const content = (value: TaskAssessment) => JSON.stringify([value.items, value.newTaskSuggestion, value.emptyReason]);

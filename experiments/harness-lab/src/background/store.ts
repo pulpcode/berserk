@@ -80,6 +80,8 @@ function decode<T extends {id: string; revision: number}>(row: Record<string, un
     const contextId = (value: unknown) => typeof value === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value);
     if (data.systemId !== undefined && !contextId(data.systemId)) throw stateError();
     const profile = (data.ruleSnapshot as BackgroundRuleSnapshot | undefined)?.profile;
+    if (profile?.requireTaskAssessment !== undefined && typeof profile.requireTaskAssessment !== 'boolean') throw stateError();
+    if (profile?.requireTaskAssessment === true && !['task_search', 'information_record_task_assessment'].every(tool => profile.tools.includes(tool))) throw stateError();
     if (profile?.contextScopeId !== undefined && !contextId(profile.contextScopeId)) throw stateError();
     for (const scope of [data.contextScope,profile?.contextScope].filter(scope => scope !== undefined)) {
       const value = scope as {scopeId?:unknown;systemIds?:unknown};

@@ -17,11 +17,12 @@ function message(input = 100, output = 10): AssistantMessage {
     usage: { input: input - 20, cacheRead: 20, cacheWrite: 0, output, totalTokens: input + output,
       cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } } };
 }
-function providerResponse(model: string) {
+function providerResponse(model: string, tool?: {name: string; arguments: object}) {
+  const delta = tool ? {role: 'assistant', tool_calls: [{index: 0, id: `synthetic-${tool.name}`, type: 'function', function: {name: tool.name, arguments: JSON.stringify(tool.arguments)}}]} : {role: 'assistant', content: '实际输出'};
   return new Response('data: ' + JSON.stringify({ id: 'synthetic-sdk', object: 'chat.completion.chunk', created: 1, model,
-    choices: [{ index: 0, delta: { role: 'assistant', content: '实际输出' }, finish_reason: null }] }) + '\n\n'
+    choices: [{ index: 0, delta, finish_reason: null }] }) + '\n\n'
     + 'data: ' + JSON.stringify({ id: 'synthetic-sdk', object: 'chat.completion.chunk', created: 1, model,
-      choices: [{ index: 0, delta: {}, finish_reason: 'stop' }], usage: { prompt_tokens: 100, completion_tokens: 10, total_tokens: 110, prompt_tokens_details: { cached_tokens: 20 } } })
+      choices: [{ index: 0, delta: {}, finish_reason: tool ? 'tool_calls' : 'stop' }], usage: { prompt_tokens: 100, completion_tokens: 10, total_tokens: 110, prompt_tokens_details: { cached_tokens: 20 } } })
     + '\n\ndata: [DONE]\n\n', { headers: { 'content-type': 'text/event-stream' } });
 }
 
@@ -139,21 +140,30 @@ describe('scenario probe dispatch budget', () => {
       LLM_BASE_URL: 'https://no-network.invalid', LLM_CONTEXT_WINDOW: '8192', LLM_MAX_OUTPUT_TOKENS: '100', LLM_THINKING_MODE: 'off' })) vi.stubEnv(name, value);
     globalThis.fetch = async (input, init) => {
       const url = new URL(input instanceof Request ? input.url : String(input));
-      if (url.origin === 'https://no-network.invalid') { providerCalls++; return providerResponse('deterministic-model'); }
+      if (url.origin === 'https://no-network.invalid') {
+        providerCalls++;
+        const body = JSON.parse(String(init?.body)), last = body.messages.at(-1);
+        const tools = body.tools as Array<{function: {name: string}}>;
+        const required = tools?.some(tool => tool.function.name === 'information_record_task_assessment');
+        const tool = required && last.role === 'user' ? {name: 'task_search', arguments: {}}
+          : required && last.role === 'tool' && (last.name === 'task_search' || last.tool_call_id === 'synthetic-task_search')
+            ? {name: 'information_record_task_assessment', arguments: {relations: [], emptyReason: '合成提供者仅检验执行与计量链路，语义结果另行审阅。'}} : undefined;
+        return providerResponse('deterministic-model', tool);
+      }
       if (!['127.0.0.1', 'localhost'].includes(url.hostname)) throw new Error('Unexpected external request in offline driver test');
       return originalFetch(input, init);
     };
     try {
       const result = await runScenarioBusiness({ output, live: true, scriptedHandoff: true,
-        budget: mode === 'budgeted' ? { ...limits, maxApiRequests: 20, maxInputTokens: 10000, maxOutputTokens: 2000 } : undefined,
+        budget: mode === 'budgeted' ? { ...limits, maxApiRequests: 60, maxInputTokens: 10000, maxOutputTokens: 2000 } : undefined,
         ...(mode === 'usage-only' ? { accounting } : {}) });
       expect(result).toMatchObject({ preparationCompleted: true, protocolCompleted: true, semanticReviewPending: true,
-        scriptedHandoffReceipt: { state: 'completed' }, accounting: { apiRequests: 13, stoppedReason: null } });
-      expect(providerCalls).toBe(13);
+        scriptedHandoffReceipt: { state: 'completed' }, accounting: { apiRequests: 39, stoppedReason: null } });
+      expect(providerCalls).toBe(39);
       const evidence = JSON.parse(await readFile(join(output, 'validation.json'), 'utf8'));
       expect(evidence.steps).toHaveLength(12);
       if (mode === 'usage-only') {
-        expect(evidence).toMatchObject({ limits: null, accountingOnly: accounting, accounting: { limits: null, accountingOnly: accounting, inputTokensCharged: 1300, outputTokensCharged: 130 } });
+        expect(evidence).toMatchObject({ limits: null, accountingOnly: accounting, accounting: { limits: null, accountingOnly: accounting, inputTokensCharged: 3900, outputTokensCharged: 390 } });
         expect(evidence.budgetPolicy).toMatch(/without cumulative request\/token\/cost\/time stopping/);
       }
       expect(await readFile(join(output, 'provider-input.jsonl'), 'utf8')).not.toContain('fake-probe-only-credential');

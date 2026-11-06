@@ -22,7 +22,8 @@ import { recipientSuggestionTool } from './recipient-tools.js';
 import { continuousFileTools } from './continuous-files.js';
 import { continuousTools, continuousToolNames } from './continuous-tools.js';
 import { continuousCompletion } from './continuous-completion.js';
-import type { RecordTaskAssessment, RecordRecipientSuggestion, ReadAnalysisCurrent, ReadTaskCandidates, RecordAnalysisUpdate, CheckAnalysisCompletion } from '../background/executor.js';
+import { nativeCompletion } from './native-completion.js';
+import type { RecordTaskAssessment, RecordRecipientSuggestion, ReadAnalysisCurrent, ReadTaskCandidates, RecordAnalysisUpdate, CheckAnalysisCompletion, CheckTaskAssessmentCompletion } from '../background/executor.js';
 import { ContextService } from '../context/service.js';
 import { TaskQueryService } from '../context/task-query.js';
 import type { ContextPrincipal } from '../contracts/context.js';
@@ -86,6 +87,7 @@ export interface PreprocessInput {
   calculateAnalysis?: import('../background/executor.js').BackgroundExecutionInput['calculateAnalysis'];
   recordAnalysisUpdate?: RecordAnalysisUpdate;
   checkAnalysisCompletion?: CheckAnalysisCompletion;
+  checkTaskAssessmentCompletion?: CheckTaskAssessmentCompletion;
   publish: (input: { sessionId: string; requestId: string; toolCallId: string; path: string }, signal: AbortSignal) => Promise<FileOutput>;
 }
 export interface PreprocessReference { jobId: string; sessionId: string; directory: string; streamEpochId?: string; requestId?: string; contextPrincipal?: Extract<ContextPrincipal,{kind:'service'}> }
@@ -817,6 +819,12 @@ ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_i
         ? [continuousCompletion(() => active.service!.checkAnalysisCompletion!(this.serviceSnapshot(record, active.id)),
           () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted,
           error => this.stop(record, active, 'failure', error instanceof Error ? error.message : '研判完成检查失败。'))]
+        : active.service?.checkTaskAssessmentCompletion
+          ? [nativeCompletion(() => active.service!.checkTaskAssessmentCompletion!(this.serviceSnapshot(record, active.id)),
+            () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted,
+            error => this.stop(record, active, 'failure', error instanceof Error ? error.message : '任务判断完成检查失败。'),
+            attempt => `[系统补做提示 ${attempt}/2] 本次任务判断尚无完整有效的保存记录及成功回执。请核对已查询的活动公共任务与完整目标，根据现有资料调用 information_record_task_assessment 保存完整判断；若查询或记录失败，按工具错误处理。已有任务关联与独立新建建议可以并存；无关联也须记录理由。只在正文声明“已记录”不能完成。成功记录后给出最终结论。`,
+            () => { throw new Error('任务判断未完成。'); })]
         : role || active.background ? [] : [interactionExtension(async (toolCallId, questions, signal) => {
         const item = { ...this.interactionBase(record, active, toolCallId, 'ask_user'), kind: 'question' as const, questions, status: 'pending' as const };
         return await this.waitForInteraction(record, active, item, signal) as QuestionInteraction;

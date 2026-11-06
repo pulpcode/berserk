@@ -118,7 +118,7 @@ describe('task assessment storage and effective relationships', () => {
     const s = await setup(), task = s.task();
     const first = s.running();
     expect(() => s.links.recordAssessment(first.job.id, {relations: [], newTaskSuggestion: draft}, {queried: false, tasks: new Map()}, 'call')).toThrow(expect.objectContaining({code: 'TASK_NOT_QUERIED'}));
-    for (const input of [{relations: []}, {...relations(task), newTaskSuggestion: draft}, {relations: [], newTaskSuggestion: draft, emptyReason: '无任务'}, {relations: [], emptyReason: ''}]) {
+    for (const input of [{relations: []}, {...relations(task), emptyReason: '无任务'}, {relations: [], newTaskSuggestion: draft, emptyReason: '无任务'}, {relations: [], emptyReason: ''}]) {
       expect(() => s.record(first.job, input, [task])).toThrow(expect.objectContaining({code: 'INVALID_INPUT'}));
     }
     s.record(first.job, {relations: [], newTaskSuggestion: draft}); s.finish(first.job);
@@ -128,6 +128,19 @@ describe('task assessment storage and effective relationships', () => {
     const third = s.running(); s.finish(third.job);
     expect(s.links.links(s.a, third.event.id, third.job.id).assessment).toBeUndefined();
     expect(s.access.list(s.a.seatId)).toHaveLength(1);
+  });
+
+  it('persists existing relations together with an independent new-work suggestion and reopens both', async () => {
+    const s = await setup(), a = s.task('道路核实'), b = s.task('资源核实'), first = s.running();
+    const mixed = {...relations(a, b), newTaskSuggestion: draft};
+    s.record(first.job, mixed, [a, b]); s.finish(first.job);
+    const reopened = new BackgroundStore(s.db);
+    expect(reopened.getJob(first.job.id).taskAssessment?.newTaskSuggestion).toEqual(draft);
+    const view = s.links.links(s.a, first.event.id, first.job.id);
+    expect(view.assessment).toMatchObject({items: [expect.objectContaining({taskSpaceId: a.id}), expect.objectContaining({taskSpaceId: b.id})], newTaskSuggestion: draft});
+    expect(view.links).toHaveLength(2); expect(view.canCreateTask).toBe(true);
+    expect(s.access.list(s.a.seatId)).toHaveLength(2);
+    expect(() => s.links.links(s.c, first.event.id, first.job.id)).toThrow(expect.objectContaining({code: 'INFORMATION_NOT_FOUND'}));
   });
 
   it('chooses the latest inserted readable whole batch, ignoring completion order, failure and missing judgment', async () => {

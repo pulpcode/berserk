@@ -26,7 +26,7 @@ async function login(app: FastifyInstance, username: string) {
   const auth=result.json<AuthSession>(),headers={cookie:result.cookies.map(c=>`${c.name}=${c.value}`).join('; '),origin:'http://localhost:4310','x-csrf-token':auth.csrf!,'x-axon-view':auth.viewId!};
   return {auth,call:(url:string,payload?:object,method:'POST'|'PUT'='POST')=>app.inject({url,method:payload===undefined?'GET':method,headers,...(payload===undefined?{}:{payload})})};
 }
-async function fixture(mode:'existing'|'suggestion'|'unassigned'|'legacy'='existing') {
+async function fixture(mode:'existing'|'mixed'|'suggestion'|'unassigned'|'legacy'='existing') {
   const dir=await mkdtemp(join(tmpdir(),'axon-task-information-api-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir),access=new AccessStore(db);
   for(const seat of ['a','b','c'])await access.saveAccount({username:seat,displayName:seat,seatId:seat,seatName:seat,password:'test-password-123',createPublicTask:seat==='a',manageModelSettings:seat==='a'});
@@ -43,13 +43,13 @@ async function fixture(mode:'existing'|'suggestion'|'unassigned'|'legacy'='exist
         return {text:'完整分析正文：已核对来文与候选任务，按下列判断归口。',tools:[{name:'information_record_task_assessment',arguments:mode==='suggestion'
           ? {relations:[],newTaskSuggestion:{title:'新资料编制',goal:'编制独立来文要求的说明。',reason:'已查询活动任务，没有合适的承接任务。'}}
           : mode==='unassigned' ? {relations:[],emptyReason:'位置待核实，由人员继续判断。'}
-          : {relations:tasks.filter(task=>task.title.startsWith('西区')).map(task=>({taskId:task.id,reason:`与${task.title}关注道路相关。`}))}}]};
+          : {relations:tasks.filter(task=>task.title.startsWith('西区')).map(task=>({taskId:task.id,reason:`与${task.title}关注道路相关。`})), ...(mode==='mixed'?{newTaskSuggestion:{title:'独立复核说明',goal:'另行编写跨部门复核说明',reason:'现有任务继续使用事实，但没有承接独立编制目标。'}}:{})}}]};
       }
     }
     return {text:'分析结果：根据实际资料核对任务影响。'};
   });
   const lab=await PiLab.create(config,fake.runtime);
-  const background=parseBackgroundConfig({enabled:true,concurrency:1,modelConcurrency:1,sources:[{sourceId:'input',name:'测试来源',credentialRef:'INPUT_TOKEN',allowedProfileIds:['analysis'],allowedRecipientSeatIds:['a','b']}],profiles:[{id:'analysis',name:'信息研判',goal:'判断相关任务或提出新建建议。',instructions:'PRIVATE_SERVICE_CONFIG',tools:mode==='legacy'?['source_read']:['task_search','information_record_task_assessment'],...(mode==='legacy'?{}:{contextScopeId:'demo'})}]});
+  const background=parseBackgroundConfig({enabled:true,concurrency:1,modelConcurrency:1,sources:[{sourceId:'input',name:'测试来源',credentialRef:'INPUT_TOKEN',allowedProfileIds:['analysis'],allowedRecipientSeatIds:['a','b']}],profiles:[{id:'analysis',name:'信息研判',...(mode==='mixed'?{requireTaskAssessment:true}:{}),goal:'判断相关任务或提出新建建议。',instructions:'PRIVATE_SERVICE_CONFIG',tools:mode==='legacy'?['source_read']:['task_search','information_record_task_assessment'],...(mode==='legacy'?{}:{contextScopeId:'demo'})}]});
   const app=await createApp(lab,false,{config:background,env},mode==='legacy'?undefined:{config:{systems:[{id:'intel',name:'测试资料',adapter:'mock-information-http',baseUrl:`${baseUrl}/intel`,tokenEnv:'CONTEXT_TOKEN'}],scopes:[{id:'demo',name:'资料范围',systemIds:['intel'],seatIds:['a','b']}]},env});cleanup.push(()=>app.close());
   let creationGate: (()=>Promise<void>)|undefined;
   app.addHook('preHandler',async request=>{if(request.method==='POST' && /^\/api\/information\/events\/[^/]+\/tasks$/.test(request.url))await creationGate?.();});
@@ -106,6 +106,17 @@ describe('task information HTTP/native Pi integration',()=>{
     expect(f.lab.workspaces.listAll()).toEqual([]);expect(f.store.listJobs()).toHaveLength(1);
     const box=(await f.b.call('/api/inbox')).json<BackgroundPage<InboxItem>>().items[0];
     const detail=(await f.b.call(`/api/inbox/${box.delivery.id}`)).json<InboxDetail>();expect(detail.taskLinks?.links).toHaveLength(2);expect(detail.resultText).toContain('完整分析正文');
+  });
+  it('returns combined assessment and independent suggestion without auto-creation or permission leakage',async()=>{
+    const f=await fixture('mixed'),west=await task(f,'西区核实'),{event,job}=await receive(f);
+    const view=(await f.b.call(linksUrl(event.id,job.id))).json<TaskLinksView>();
+    expect(view).toMatchObject({assessment:{items:[{taskSpaceId:west.id}],newTaskSuggestion:{title:'独立复核说明'}},canCreateTask:false});
+    expect(view.links).toHaveLength(1);expect(f.lab.access!.list('a')).toHaveLength(1);
+    expect((await f.c.call(linksUrl(event.id,job.id))).statusCode).toBe(404);
+    const receipt=(await f.a.call(`/api/information/events/${event.id}/tasks`,{jobId:job.id,clientActionId:randomUUID(),title:'人员确认的独立说明',goal:'完成独立编制目标',reason:'另行承接独立目标'})).json<TaskSuggestionCreateResult>();
+    expect(receipt.task.title).toBe('人员确认的独立说明');
+    expect((await f.a.call(listUrl(west.id))).json().total).toBe(1);
+    expect(new BackgroundStore(f.lab.access!.db).getJob(job.id).taskAssessment?.newTaskSuggestion?.title).toBe('独立复核说明');
   });
   it('keeps a new-task suggestion advisory until an authorized human creates and links, with replay and changed-input checks',async()=>{
     const f=await fixture('suggestion'),{event,job}=await receive(f);

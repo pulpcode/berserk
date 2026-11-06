@@ -33,7 +33,7 @@ export function taskAssessmentTool(record: RecordTaskAssessment, evidence: () =>
   controller: AbortController, authorize: () => void) {
   return defineTool({
     name: 'information_record_task_assessment', label: '记录任务判断',
-    description: '记录当前信息的任务判断：关联已查询的公共任务，或建议新建公共任务，或说明暂不归口的原因。每次提交完整判断，三者选一；新建建议须有独立工作目标及理由；任务可为一次性交付。本工具不创建任务，不改变投递。',
+    description: '保存当前信息的完整任务判断。先查询获准活动公共任务，必要时不带筛选遍历各页、读取完整目标；结合事实、时段和不确定性，关联所有有依据需要考虑该信息的任务，包括可能影响、事实确认和持续约束，不只找已确认冲突。地域或名称相同不等于相关，资料不足不等于无关。先覆盖已有任务，再判断是否另有独立目标需要新建；relations 与 newTaskSuggestion 可同时提交，新建须人员确认。本工具不创建任务、不改变投递。只有两者均无时才单独填写 emptyReason，不能全部留空。每次提交完整判断，以成功回执为准。',
     parameters: Type.Object({
       relations: Type.Array(Type.Object({taskId, reason}, {additionalProperties: false}), {maxItems: 100}),
       newTaskSuggestion: Type.Optional(Type.Object({title: Type.String({minLength: 1, maxLength: 60}),
@@ -44,7 +44,7 @@ export function taskAssessmentTool(record: RecordTaskAssessment, evidence: () =>
     execute: (toolCallId, params, signal) => execute(controller, authorize, signal, async scoped => {
       const result = await record(params, evidence(), toolCallId, scoped);
       return {...result, message: result.assessment.newTaskSuggestion
-        ? '建议已记录，尚未创建任务；本次分析成功结束后展示。'
+        ? '任务判断及新建建议已记录，尚未创建任务；本次分析成功结束后展示。'
         : '任务判断已记录，本次分析成功结束后展示。'};
     }),
   });

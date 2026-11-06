@@ -71,7 +71,7 @@ async function setup() {
     manageModelSettings: false, controlScenarios: seatId === directorSeat });
   database.close();
   const config = testConfig(dataDir, { seatId: overallSeat, auth: { secret: 'business-flow-signing-secret-at-least-32', sessionMs: 28800000 } });
-  let holdNext = false, heldCall: number | undefined;
+  let holdNext = false, holdRepair = false, heldCall: number | undefined;
   const fake = await fakeRuntime(config, (context, index) => {
     const last = context.messages.at(-1), preprocessing = context.tools?.some(tool => tool.name === 'information_record_task_assessment');
     if (!preprocessing) {
@@ -80,7 +80,7 @@ async function setup() {
       return { text: '已依据本任务与当前来源核对事实。' };
     }
     if (last?.role === 'user') {
-      if (holdNext) { holdNext = false; heldCall = index; return { waitForAbort: true }; }
+      if (holdNext || holdRepair && JSON.stringify(last).includes('[系统补做提示')) { holdNext = false; holdRepair = false; heldCall = index; return { waitForAbort: true }; }
       return { tools: [{ name: 'information_search', arguments: { systemId: 'intel', limit: 100 } }] };
     }
     if (last?.role !== 'toolResult') throw new Error('Expected the native Pi tool loop');
@@ -95,6 +95,7 @@ async function setup() {
       case 'information_read': return { tools: [{ name: 'situation_query', arguments: { systemId: 'situation', mode: 'current', limit: 100 } }] };
       case 'situation_query': return { tools: [{ name: 'task_search', arguments: {} }] };
       case 'task_search': {
+        if (holdRepair) return {text: '任务判断已记录（本测试故意省略调用）'};
         const report = toolResult<{ data: InformationDetail }>(context, 'information_read').data.item;
         const candidates = toolResult<{ data: { items: TaskQueryItem[] } }>(context, 'task_search').data.items;
         const relevant = candidates.find(task => task.context?.businessRefs?.some(ref => report.objectRefs.some(other => sameRef(ref, other))));
@@ -113,7 +114,7 @@ async function setup() {
     sources: [
       { sourceId: 'scene-intel', systemId: 'intel', name: '特情来源', credentialRef: 'INTEL_TOKEN', allowedProfileIds: ['analysis'], allowedRecipientSeatIds: [overallSeat] },
       { sourceId: 'scene-situation', systemId: 'situation', name: '态势来源', credentialRef: 'SITUATION_TOKEN', allowedProfileIds: ['analysis'], allowedRecipientSeatIds: [overallSeat] },
-    ], profiles: [{ id: 'analysis', name: '来报初析', goal: '核对实际报告、对象、业务时间与已有任务，将分析投递总体席。',
+    ], profiles: [{ id: 'analysis', name: '来报初析', requireTaskAssessment: true, goal: '核对实际报告、对象、业务时间与已有任务，将分析投递总体席。',
       tools: ['information_search', 'information_read', 'situation_query', 'task_search', 'task_read', 'information_record_task_assessment'], contextScopeId: 'scene' }] });
   const context: ContextConfig = { systems: [
     { id: 'intel', name: '特情', adapter: 'mock-information-http', baseUrl: `${sourceUrl}/intel`, tokenEnv: 'QUERY_TOKEN', scenarioClock: true },
@@ -188,7 +189,7 @@ async function setup() {
     return json<WorkReceipt>(actor.call(`/api/work-actions/${action.operationId}/commit`, { confirm: true }));
   }
   return { get host() { return host; }, directory, dataDir, sourcePath, fake, create, activate, apply, pause, send, completed, native, nativeBytes, work,
-    get heldCall() { return heldCall; }, holdNextAnalysis() { holdNext = true; },
+    get heldCall() { return heldCall; }, holdNextAnalysis() { holdNext = true; }, holdNextRepair() { holdRepair = true; },
     holdTaskCreation() {
       let arrive!: () => void, release!: () => void;
       const reached = new Promise<void>(resolve => { arrive = resolve; }), released = new Promise<void>(resolve => { release = resolve; });
@@ -333,6 +334,22 @@ describe('scenario business flow through authenticated HTTP, SQLite and native P
     expect(f.host.lab.access!.db.prepare('SELECT count(*) n FROM task_spaces').get()?.n).toBe(4);
     expect(f.host.store.getEvent(received.event.id)).toMatchObject({ scenarioInstanceId: a.result.instance.instanceId, payloadHash: received.event.payloadHash });
     expect(await f.nativeBytes(received.job)).toBe(nativeBefore);
+  }, 30000);
+
+  it('ends A during a native completion repair without delivering or carrying the follow-up into B', async () => {
+    const f = await setup(), a = await f.create(), active = await f.activate(a.result);
+    f.holdNextRepair(); const step = await f.apply(active.instance, 'E01'), sent = await f.send(step.actions[0]);
+    await vi.waitFor(() => expect(f.heldCall).toBeDefined());
+    const event = f.host.store.getEvent(sent.receipt!.eventId), job = f.host.store.getJob(event.initialJobId!);
+    expect((await f.native(job)).messages.filter(m => m.role === 'user' && m.text.startsWith('[系统补做提示'))).toHaveLength(1);
+    await f.pause(step.instance); const b = await f.create(), activeB = await f.activate(b.result);
+    expect(f.fake.calls[f.heldCall!].aborted).toBe(true); expect(f.host.store.getJob(job.id).status).toBe('cancelled');
+    expect(f.host.store.listDeliveries(job.id)).toEqual([]);
+    const before = f.fake.calls.length, old = await f.nativeBytes(job);
+    const next = await f.apply(activeB.instance, 'E01'), received = await f.completed(next.actions[0]);
+    expect(received.job.scenarioInstanceId).toBe(b.result.instance.instanceId);
+    expect(JSON.stringify(f.fake.calls.slice(before).map(call => call.context.messages))).not.toContain('[系统补做提示');
+    expect(await f.nativeBytes(job)).toBe(old);
   }, 30000);
 
   it('cancels an actual in-flight native analysis before B and preserves its A history without delivery', async () => {

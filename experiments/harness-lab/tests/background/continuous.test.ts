@@ -20,7 +20,7 @@ import type { AnalysisUpdateInput, TaskDiscovery } from '../../src/contracts/con
 const cleanup:Array<()=>Promise<unknown>|void>=[];
 afterEach(async()=>{for(const fn of cleanup.splice(0).reverse())await fn();});
 type Mode='evidence'|'calculate'|'quiet'|'significant'|'unassigned'|'missing'|'omit'|'race'|'wait'|'large'|'race-before-record'|'repair'|'repair-error'|'repair-wait'|'unrelated'|'input-repair';
-async function setup(options:{inputText?:string;executionUnavailable?:boolean;timeoutMs?:number;beforeReply?:(stage:number)=>void;transformUpdate?:(update:AnalysisUpdateInput,stage:number,lastToolText:string)=>AnalysisUpdateInput}={}){
+async function setup(options:{requireTaskAssessment?:boolean;inputText?:string;executionUnavailable?:boolean;timeoutMs?:number;beforeReply?:(stage:number)=>void;transformUpdate?:(update:AnalysisUpdateInput,stage:number,lastToolText:string)=>AnalysisUpdateInput}={}){
   const dir=await mkdtemp(join(tmpdir(),'axon-continuous-service-'));cleanup.push(()=>rm(dir,{recursive:true,force:true}));
   const db=await openDatabase(dir),access=new AccessStore(db),actors={} as Record<'a'|'b'|'c',Identity>;
   for(const name of ['a','b','c'] as const){const id=randomUUID();db.prepare('INSERT INTO seats(id,name,create_public,manage_model) VALUES(?,?,?,?)').run(name,name,1,0);db.prepare('INSERT INTO accounts VALUES(?,?,?,?,?,?,1)').run(id,name,name,name,'test-only','test-only');actors[name]=access.identity(id)!;}
@@ -71,7 +71,7 @@ async function setup(options:{inputText?:string;executionUnavailable?:boolean;ti
   });
   const lab=await PiLab.create(config,fake.runtime,options.executionUnavailable?new DockerExecutionService({instanceId:dir},async()=>{throw new Error('Fixture sandbox unavailable');}):undefined);cleanup.push(()=>lab.close());
   lab.context=new ContextService({systems:[{id:'intel',name:'资料',adapter:'mock-information-http',baseUrl:'http://127.0.0.1:1',tokenEnv:'TOKEN'}],scopes:[{id:'scope',name:'共同范围',systemIds:['intel'],seatIds:['a','b','c']}]},{TOKEN:'test-only'});
-  const host=new BackgroundService(lab,{enabled:true,concurrency:1,modelConcurrency:1,backlogLimit:100,sources:['one','two'].map(sourceId=>({sourceId,name:sourceId,credentialRef:'TOKEN',allowedProfileIds:['profile'],allowedRecipientSeatIds:['a','b']})),profiles:[{id:'profile',name:'分析',goal:'比较变化',tools:['source_read','task_read','task_search'],contextScopeId:'scope',skillIds:[],agentIds:[],instructions:'',resources:[]}]});
+  const host=new BackgroundService(lab,{enabled:true,concurrency:1,modelConcurrency:1,backlogLimit:100,sources:['one','two'].map(sourceId=>({sourceId,name:sourceId,credentialRef:'TOKEN',allowedProfileIds:['profile'],allowedRecipientSeatIds:['a','b']})),profiles:[{id:'profile',name:'分析',goal:'比较变化',...(options.requireTaskAssessment?{requireTaskAssessment:true}:{}),tools:['source_read','task_read','task_search',...(options.requireTaskAssessment?['information_record_task_assessment']:[])],contextScopeId:'scope',skillIds:[],agentIds:[],instructions:'',resources:[]}]});
   await host.initialize();cleanup.push(()=>host.close());
   for(const source of ['one','two'])host.store.grant('seat','a',source,'manage');host.store.grant('seat','c','one','view');
   task=lab.access!.create(actors.a,{title:'公共任务',goal:'车辆需求 3 辆',visibility:'public',clientActionId:randomUUID()});
@@ -82,6 +82,11 @@ async function setup(options:{inputText?:string;executionUnavailable?:boolean;ti
 }
 
 describe('continuous queue, native evidence and atomic publication',()=>{
+  it('keeps continuous completion independent of the profile preprocess judgment requirement',async()=>{
+    const s=await setup({requireTaskAssessment:true});await s.accept();const job=await s.settled(1);
+    expect(job.status).toBe('succeeded');expect(s.host.continuous.store.publication(job.id).status).toBe('published');
+    expect(JSON.stringify(s.fake.calls.map(call=>call.context.systemPrompt))).not.toContain('本次处理必须先成功查询获准活动公共任务');
+  });
   it('rejects a newly designated director as a continuous recipient and cannot handle an old delivered notification',async()=>{
     const s=await setup();s.setMode('significant');await s.accept();await s.settled(1);
     await vi.waitFor(()=>expect(s.host.store.listDeliveries().some(d=>d.recipientSeatId==='b'&&d.status==='delivered')).toBe(true));

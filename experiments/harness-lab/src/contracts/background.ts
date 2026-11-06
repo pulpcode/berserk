@@ -24,6 +24,8 @@ export interface InformationRule extends InformationRuleInput {
 export interface BackgroundProfileSnapshot {
   id: string; name: string; goal: string; tools: string[]; skillIds: string[]; agentIds: string[];
   instructions: string;
+  /** Opt-in preprocess completion requirement, frozen at acceptance. Absent means optional. */
+  requireTaskAssessment?: boolean;
   contextScopeId?: string;
   contextScope?: ContextScopeSnapshot;
   resources: Array<{ id: string; title: string; content: string }>;

@@ -4,8 +4,10 @@ import type { PublicMessage } from './index.js';
 
 export interface NewTaskSuggestion { title: string; goal: string; reason: string }
 export interface TaskAssessmentInput {
+  /** Existing task coverage comes first; an independent new goal may be suggested alongside it. */
   relations: Array<{taskId: string; reason: string}>;
   newTaskSuggestion?: NewTaskSuggestion;
+  /** Exclusive with relations and newTaskSuggestion. */
   emptyReason?: string;
 }
 export interface TaskAssessment {
