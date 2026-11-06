@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 15
+- **Total Sessions**: 16
 - **Last Active**: 2026-11-06
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~453 | Active |
+| `journal-1.md` | ~490 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 16 | 2026-11-06 | 普通初析v0.2实施与三轮完整复验 | `b133400`, `a2c00b8`, `9a5d723` | `codex/scenario-demo` |
 | 15 | 2026-11-06 | 取消实验预算停止并完成三轮完整复验 | `d2d8789`, `04b8ad0` | `codex/scenario-demo` |
 | 14 | 2026-11-06 | 业务闭环上线与E05独立复验 | `afe9fb3` | `codex/scenario-demo` |
 | 13 | 2026-11-06 | 完成场景业务闭环实现与首批方舟测评 | `6987d34`, `cf48131` | `codex/scenario-demo` |
