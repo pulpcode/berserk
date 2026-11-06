@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 12
-- **Last Active**: 2026-11-05
+- **Total Sessions**: 13
+- **Last Active**: 2026-11-06
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~346 | Active |
+| `journal-1.md` | ~386 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 13 | 2026-11-06 | 完成场景业务闭环实现与首批方舟测评 | `6987d34`, `cf48131` | `codex/scenario-demo` |
 | 12 | 2026-11-05 | 双系统来源命名与业务来报清理 | `67a3e90` | `codex/scenario-demo` |
 | 11 | 2026-11-05 | 多轮演示隔离与重新演示收束 | `214f831`, `e3a5cb8` | `codex/scenario-demo` |
 | 10 | 2026-11-05 | 精简记录返回入口与技术信息文案 | `8cf300c` | `codex/scenario-demo` |
