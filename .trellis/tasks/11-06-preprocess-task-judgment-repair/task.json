@@ -1,0 +1,32 @@
+{
+  "id": "preprocess-task-judgment-repair",
+  "name": "preprocess-task-judgment-repair",
+  "title": "普通初析任务判断修复：关联一致性与真实记录",
+  "description": "v0.2待审阅：首要保证每条信息正确完整关联所有需要考虑它的已有任务，含有依据的潜在影响；之后才考虑现有任务不适合承接的额外独立新建工作。复用Pi真实记录检查及有限补做，验收覆盖全部来报×当时任务。仅规划，未实施。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "preprocess-task-assessment",
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-06",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-05-scenario-business-flow",
+  "relatedFiles": [
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/prd.md",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/design.md",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/implement.md",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/implement.jsonl",
+    ".trellis/tasks/11-06-preprocess-task-judgment-repair/check.jsonl"
+  ],
+  "notes": "2026-11-06用户要求针对漏关联主任务、未记录却声称已记录给出修复方案并落盘待审阅。已核对本次E05真实证据、10月27日持续研判漏记录修复及当前普通初析/任务判断契约。v0.1建议显式requireTaskAssessment、复用Pi原生完成检查与最多2次补做、按完整目标判断并允许关联与新建建议并存。仅规划，未修改产品代码/提示词/配置/场景/线上服务，未调用模型或运行产品测试；未批准实施，保持planning。 2026-11-06按用户最新对齐优化为v0.2：已有任务关联的正确性和完整性第一优先，额外独立工作新建第二；先在授权范围分页发现活动任务，再按目标/时点/资源/约束核对所有需考虑对象。潜在影响有依据且标条件，资料不足与无关分开；不以Top N、首个命中或广撒网替代覆盖。验收由E05单点扩展到全部13来报×当时活动任务，新建合理性单列，首报不倒扣后建任务。仅修改规划文档及任务元数据，未实施、未测评、未部署，仍待审阅。",
+  "meta": {}
+}
