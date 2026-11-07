@@ -16,7 +16,9 @@ const cleanups: Array<() => Promise<unknown> | void> = [];
 afterEach(async () => { for (const close of cleanups.splice(0).reverse()) await close(); });
 const profile: BackgroundProfileSnapshot = {id: 'analysis', name: '综合分析', goal: '分析输入及相关任务', tools: ['information_record_task_assessment'], skillIds: [], agentIds: [], instructions: 'PRIVATE SERVICE INSTRUCTIONS', resources: []};
 const draft = {title: '编制新说明', goal: '按来文要求形成工作说明', reason: '具有独立目标，没有现有任务可承接'};
-async function setup(scenarioInstanceId?: string) {
+async function setup(scenarioInstanceId?: string, explicit = false) {
+  const jobProfile = explicit ? {...profile, taskAssessmentFormat: 'decisions' as const, requireTaskAssessment: true,
+    tools: ['task_search', 'information_record_task_assessment']} : profile;
   const dir = await mkdtemp(join(tmpdir(), 'axon-task-link-'));
   cleanups.push(() => rm(dir, {recursive: true, force: true}));
   const db = await openDatabase(dir); cleanups.push(() => db.close());
@@ -40,8 +42,8 @@ async function setup(scenarioInstanceId?: string) {
   function queued(event?: BackgroundEvent, sourceId = 'intel') {
     const first = !event;
     const sourceRule = sourceId === 'intel' ? rule : store.listRules().find(item => item.sourceId === sourceId) || store.createRule(actors.a.userId, randomUUID(), {name: rule.name, sourceId, profileId: rule.profileId, recipientSeatIds: rule.recipientSeatIds, enabled: true});
-    event ??= {id: randomUUID(), sourceId, sourceMessageId: randomUUID(), title: '信息', receivedAt: new Date().toISOString(), payloadHash: backgroundHash('input'), files: [], revision: 1, ruleSnapshot: {rule: sourceRule, profile}, ...(scenarioInstanceId ? {scenarioInstanceId} : {})};
-    const job: BackgroundJob = {id: randomUUID(), eventId: event.id, sourceId: event.sourceId, kind: 'preprocess', status: 'queued', revision: 1, requestId: randomUUID(), createdAt: new Date().toISOString(), ruleSnapshot: {rule: event.ruleSnapshot?.rule || sourceRule, profile}, ...(event.scenarioInstanceId ? {scenarioInstanceId: event.scenarioInstanceId} : {})};
+    event ??= {id: randomUUID(), sourceId, sourceMessageId: randomUUID(), title: '信息', receivedAt: new Date().toISOString(), payloadHash: backgroundHash('input'), files: [], revision: 1, ruleSnapshot: {rule: sourceRule, profile: jobProfile}, ...(scenarioInstanceId ? {scenarioInstanceId} : {})};
+    const job: BackgroundJob = {id: randomUUID(), eventId: event.id, sourceId: event.sourceId, kind: 'preprocess', status: 'queued', revision: 1, requestId: randomUUID(), createdAt: new Date().toISOString(), ruleSnapshot: {rule: event.ruleSnapshot?.rule || sourceRule, profile: jobProfile}, ...(event.scenarioInstanceId ? {scenarioInstanceId: event.scenarioInstanceId} : {})};
     if (first) store.acceptEvent(event, {initialJob: job, capacity: 100, expectedRule: sourceRule}); else store.enqueueJob(job, 100);
     return {event, job};
   }
@@ -90,6 +92,46 @@ describe('task assessment storage and effective relationships', () => {
     expect(s.links.list(s.a, b.id).items[0].taskChanged).toBe(true);
     expect(s.store.listEvents()).toHaveLength(1);
     expect(() => s.record(job, relations(a), [a])).toThrow(expect.objectContaining({code: 'TASK_ASSESSMENT_UNAVAILABLE'}));
+  });
+
+  it('checks every explicit verdict before storing its positive subset', async () => {
+    const s = await setup(undefined, true), a = s.task('保留'), b = s.task('排除'), c = s.task('待核实');
+    const {job, event} = s.running();
+    const input = {decisions: [
+      {taskId: a.id, verdict: 'link' as const, reason: '需要考虑的依据'},
+      {taskId: b.id, verdict: 'exclude' as const, reason: '明确排除该路线'},
+      {taskId: c.id, verdict: 'insufficient' as const, reason: '尚无足够依据'},
+    ], newTaskSuggestion: draft};
+    expect(() => s.record(job, relations(a), [a])).toThrow(expect.objectContaining({code: 'INVALID_INPUT'}));
+    expect(() => s.record(job, input, [a, b])).toThrow(expect.objectContaining({code: 'TASK_NOT_QUERIED'}));
+    const observed = [a, b, c];
+    expect(() => s.record(job, {...input, decisions: [...input.decisions, {...input.decisions[1], verdict: 'link'}]}, observed))
+      .toThrow(expect.objectContaining({code: 'INVALID_INPUT'}));
+    const privateTask = s.task('私有', 'private');
+    expect(() => s.record(job, {...input, decisions: [{...input.decisions[1], taskId: privateTask.id}]}, [privateTask]))
+      .toThrow(expect.objectContaining({code: 'TASK_NOT_FOUND'}));
+    expect(s.store.getJob(job.id).taskAssessment).toBeUndefined();
+    const receipt = s.record(job, input, observed);
+    expect(receipt.assessment.items).toEqual([{taskSpaceId: a.id, taskRevision: 1, reason: '需要考虑的依据'}]);
+    expect(receipt.decisions).toEqual(input.decisions.map(row => ({...row, taskRevision: 1})));
+    expect(receipt.assessment.newTaskSuggestion).toEqual(draft);
+    expect(s.record(job, input, observed).status).toBe('unchanged');
+    s.access.update(s.a, b.id, b.revision, {title: '变更排除项'});
+    expect(() => s.record(job, input, observed)).toThrow(expect.objectContaining({code: 'INFORMATION_LINK_CONFLICT'}));
+    s.finish(job);
+    expect(s.links.links(s.b, event.id, job.id).links.map(link => link.task.id)).toEqual([a.id]);
+    expect(s.links.list(s.b, c.id).total).toBe(0);
+  });
+
+  it('rejects nonpositive decisions even when an out-of-scope task version is supplied', async () => {
+    const owner = `run-${randomUUID()}`, s = await setup(owner, true);
+    const task = s.task(), scope = new ScenarioScope({systems: [], scopes: []});
+    vi.spyOn(scope, 'isWritable').mockImplementation(id => id === owner);
+    s.access.scenario = scope;
+    const {job} = s.running();
+    expect(() => s.record(job, {decisions: [{taskId: task.id, verdict: 'insufficient', reason: '资源尚待核实'}],
+      emptyReason: '暂无归口依据'}, [task])).toThrow(expect.objectContaining({code: 'INFORMATION_LINK_CONFLICT'}));
+    expect(s.store.getJob(job.id).taskAssessment).toBeUndefined();
   });
 
   it('lists all authorized associated sources before pagination and filters, without leaking other sources', async () => {

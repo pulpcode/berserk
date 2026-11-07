@@ -27,6 +27,14 @@ describe('background deployment catalog', () => {
     for (const tools of [['task_search'], ['information_record_task_assessment']]) expect(() => parseBackgroundConfig({...fixture(), profiles: [{...profile, tools, requireTaskAssessment: true}]})).toThrow();
     expect(parseBackgroundConfig({...fixture(), profiles: [{...profile, tools: ['task_search', 'information_record_task_assessment'], requireTaskAssessment: true}]}).profiles[0].requireTaskAssessment).toBe(true);
   });
+  it('freezes the explicit decision format only on supported required assessment profiles', () => {
+    const profile = {...fixture().profiles[0], tools: ['task_search', 'information_record_task_assessment'],
+      requireTaskAssessment: true, taskAssessmentFormat: 'decisions'};
+    expect(parseBackgroundConfig({...fixture(), profiles: [profile]}).profiles[0].taskAssessmentFormat).toBe('decisions');
+    for (const patch of [{taskAssessmentFormat: 'other'}, {requireTaskAssessment: false}]) {
+      expect(() => parseBackgroundConfig({...fixture(), profiles: [{...profile, ...patch}]})).toThrow();
+    }
+  });
   it('loads a controlled absolute config file and authenticates credentials separately without leaking them', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'axon-background-config-')); paths.push(dir); const path = join(dir, 'background.json');
     await writeFile(path, JSON.stringify({...fixture(), enabled: true}), {mode: 0o600});

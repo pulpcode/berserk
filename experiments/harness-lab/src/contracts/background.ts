@@ -26,6 +26,8 @@ export interface BackgroundProfileSnapshot {
   instructions: string;
   /** Opt-in preprocess completion requirement, frozen at acceptance. Absent means optional. */
   requireTaskAssessment?: boolean;
+  /** Absence selects the original relations-only tool input. */
+  taskAssessmentFormat?: 'decisions';
   contextScopeId?: string;
   contextScope?: ContextScopeSnapshot;
   resources: Array<{ id: string; title: string; content: string }>;

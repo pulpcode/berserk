@@ -2,7 +2,7 @@ import type { DatabaseSync } from 'node:sqlite';
 import type { AccessStore } from '../access/store.js';
 import type { Identity, TaskSpace } from '../contracts/access.js';
 import type { BackgroundAnalysisSummary, BackgroundEvent, BackgroundJob } from '../contracts/background.js';
-import type { BackgroundAnalysisOrigin, TaskAssessment, TaskAssessmentInput, TaskInformationContent, TaskInformationDetail, TaskInformationFilter, TaskInformationItem, TaskInformationLink, TaskInformationOverride, TaskInformationPage, TaskLinkUpdateInput, TaskLinksView, TaskSuggestionCreateInput, TaskSuggestionCreateResult, TaskSuggestionCreation } from '../contracts/task-information.js';
+import type { BackgroundAnalysisOrigin, TaskAssessment, TaskAssessmentInput, TaskDecision, TaskInformationContent, TaskInformationDetail, TaskInformationFilter, TaskInformationItem, TaskInformationLink, TaskInformationOverride, TaskInformationPage, TaskLinkUpdateInput, TaskLinksView, TaskSuggestionCreateInput, TaskSuggestionCreateResult, TaskSuggestionCreation } from '../contracts/task-information.js';
 import { RequestError } from '../contracts/errors.js';
 import { parseJsonStrict, stateError } from '../resources/files.js';
 import { UUID } from '../workspaces/store.js';
@@ -36,6 +36,22 @@ export function validTaskAssessment(value: unknown): value is TaskAssessment {
   return hasWork !== (value.emptyReason !== undefined) && (value.newTaskSuggestion === undefined || suggestion(value.newTaskSuggestion))
     && (value.emptyReason === undefined || reasonText(value.emptyReason));
 }
+/** Select the schema from the admitted job, never from the submitted body. */
+function taskDecisions(input: unknown, explicit: boolean): TaskDecision[] {
+  const field = explicit ? 'decisions' : 'relations';
+  if (!object(input) || Object.keys(input).some(key => ![field, 'newTaskSuggestion', 'emptyReason'].includes(key))) throw invalid();
+  const entries = input[field];
+  if (!Array.isArray(entries) || entries.length > 100) throw invalid();
+  return entries.map(entry => {
+    if (!object(entry) || typeof entry.taskId !== 'string' || !UUID.test(entry.taskId)
+      || typeof entry.reason !== 'string' || !reasonText(entry.reason)
+      || Object.keys(entry).some(key => key !== 'taskId' && key !== 'reason' && !(explicit && key === 'verdict'))) throw invalid();
+    const verdict = explicit ? entry.verdict : 'link';
+    if (verdict !== 'link' && verdict !== 'exclude' && verdict !== 'insufficient') throw invalid();
+    return {taskId: entry.taskId, verdict, reason: entry.reason.trim()};
+  });
+}
+
 export function validSuggestionCreation(value: unknown): value is TaskSuggestionCreation {
   return object(value) && Object.keys(value).every(key => ['taskSpaceId', 'createdByUserId', 'clientActionId', 'createdAt'].includes(key))
     && [value.taskSpaceId, value.createdByUserId, value.clientActionId].every(id => typeof id === 'string' && UUID.test(id)) && timestamp(value.createdAt);
@@ -103,14 +119,13 @@ export class TaskLinkService {
     if (job.kind !== 'preprocess' || job.status !== 'running' || job.cancelRequestedAt
       || !job.ruleSnapshot?.profile.tools.includes('information_record_task_assessment')) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '本次处理不能完成任务判断。', 409);
     this.dependencies.assertWrite?.(this.store.getEvent(job.eventId!), job);
-    if (!verifiedTaskAssessment(job, snapshot)) return 'missing';
-    for (const item of job.taskAssessment!.items) {
+    const ready = verifiedTaskAssessment(job, snapshot, (taskId, revision) => {
       try {
-        const task = this.access.getActivePublic(item.taskSpaceId);
-        if (task.revision !== item.taskRevision || task.scenarioInstanceId !== job.scenarioInstanceId) return 'missing';
-      } catch { return 'missing'; }
-    }
-    return 'ready';
+        const task = this.access.getActivePublic(taskId);
+        return task.revision === revision && task.scenarioInstanceId === job.scenarioInstanceId;
+      } catch { return false; }
+    });
+    return ready ? 'ready' : 'missing';
   }
   private actor(actor: Identity) {
     const current = this.access.identity(actor.userId);
@@ -154,23 +169,24 @@ export class TaskLinkService {
       if(job.eventId)this.dependencies.assertWrite?.(this.store.getEvent(job.eventId),job);
       if (job.kind !== 'preprocess' || job.status !== 'running' || job.cancelRequestedAt
         || !job.ruleSnapshot?.profile.tools.includes('information_record_task_assessment')) throw new RequestError('TASK_ASSESSMENT_UNAVAILABLE', '本次处理不能记录任务判断。', 409);
-      if (!input || !Array.isArray(input.relations) || input.relations.length > 100 || Object.keys(input).some(key => !['relations', 'newTaskSuggestion', 'emptyReason'].includes(key))) throw invalid();
+      const explicit = job.ruleSnapshot.profile.taskAssessmentFormat === 'decisions';
+      const decisions = taskDecisions(input, explicit);
       if (job.ruleSnapshot.profile.requireTaskAssessment && !observed.queried) throw new RequestError('TASK_NOT_QUERIED', '请先成功查询活动公共任务，再记录判断。');
-      const items: TaskAssessment['items'] = [], seen = new Set<string>();
-      for (const relation of input.relations) {
-        if (!relation || typeof relation.taskId !== 'string' || !UUID.test(relation.taskId) || !reasonText(relation.reason)
-          || Object.keys(relation).some(key => !['taskId', 'reason'].includes(key))) throw invalid();
-        const revision = observed.tasks.get(relation.taskId);
-        if (revision === undefined) throw new RequestError('TASK_NOT_QUERIED', '请先查询需要关联的任务。');
-        const task = this.access.getActivePublic(relation.taskId);
+      const items: TaskAssessment['items'] = [];
+      const checked = new Map<string, TaskDecision & {taskRevision: number}>();
+      for (const decision of decisions) {
+        const revision = observed.tasks.get(decision.taskId);
+        if (revision === undefined) throw new RequestError('TASK_NOT_QUERIED', '请先查询需要判断的任务。');
+        const task = this.access.getActivePublic(decision.taskId);
         if (task.scenarioInstanceId !== job.scenarioInstanceId) throw conflict('资料与任务范围不一致。');
         if (task.revision !== revision) throw conflict('任务已变化，请重新查询后记录判断。');
-        if (seen.has(task.id)) {
-          if (items.find(item => item.taskSpaceId === task.id)?.reason !== relation.reason.trim()) throw invalid('同一任务不能提交不同关联理由。');
-          continue;
-        }
-        seen.add(task.id); items.push({taskSpaceId: task.id, taskRevision: revision, reason: relation.reason.trim()});
+        const previous = checked.get(task.id);
+        if (previous && (previous.verdict !== decision.verdict || previous.reason !== decision.reason)) throw invalid('同一任务不能提交不同的结论或理由。');
+        if (previous) continue;
+        checked.set(task.id, {...decision, taskRevision: revision});
+        if (decision.verdict === 'link') items.push({taskSpaceId: task.id, taskRevision: revision, reason: decision.reason});
       }
+      const nativeDecisions = explicit ? {decisions: [...checked.values()]} : {};
       if (input.newTaskSuggestion !== undefined && !observed.queried) throw new RequestError('TASK_NOT_QUERIED', '请先成功查询活动公共任务，再记录新建建议。');
       const assessment: TaskAssessment = {recordedAt: new Date().toISOString(), toolCallId, items,
         ...(input.emptyReason !== undefined ? {emptyReason: input.emptyReason} : {}),
@@ -179,9 +195,9 @@ export class TaskLinkService {
       if (assessment.emptyReason) assessment.emptyReason = assessment.emptyReason.trim();
       if (assessment.newTaskSuggestion) assessment.newTaskSuggestion = {title: assessment.newTaskSuggestion.title.trim(), goal: assessment.newTaskSuggestion.goal.trim(), reason: assessment.newTaskSuggestion.reason.trim()};
       const content = (value: TaskAssessment) => JSON.stringify([value.items, value.newTaskSuggestion, value.emptyReason]);
-      if (job.taskAssessment && content(job.taskAssessment) === content(assessment)) return {status: 'unchanged' as const, assessment: job.taskAssessment, published: false as const};
+      if (job.taskAssessment && content(job.taskAssessment) === content(assessment)) return {status: 'unchanged' as const, assessment: job.taskAssessment, ...nativeDecisions, published: false as const};
       this.store.saveTaskAssessmentInTransaction(job, assessment);
-      return {status: 'recorded' as const, assessment, published: false as const};
+      return {status: 'recorded' as const, assessment, ...nativeDecisions, published: false as const};
     });
   }
   /** Choose a whole batch in persisted insertion order, after authorization. */

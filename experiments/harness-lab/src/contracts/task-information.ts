@@ -3,13 +3,14 @@ import type { BackgroundAnalysisSummary, BackgroundEvent, BackgroundFile, Backgr
 import type { PublicMessage } from './index.js';
 
 export interface NewTaskSuggestion { title: string; goal: string; reason: string }
-export interface TaskAssessmentInput {
-  /** Existing task coverage comes first; an independent new goal may be suggested alongside it. */
-  relations: Array<{taskId: string; reason: string}>;
+export interface TaskDecision {
+  taskId: string; verdict: 'link' | 'exclude' | 'insufficient'; reason: string;
+}
+export type TaskAssessmentInput = ({relations: Array<{taskId: string; reason: string}>} | {decisions: TaskDecision[]}) & {
   newTaskSuggestion?: NewTaskSuggestion;
   /** Exclusive with relations and newTaskSuggestion. */
   emptyReason?: string;
-}
+};
 export interface TaskAssessment {
   recordedAt: string; toolCallId: string;
   items: Array<{taskSpaceId: string; taskRevision: number; reason: string}>;

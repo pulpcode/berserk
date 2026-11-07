@@ -42,7 +42,7 @@ async function setup(reply: Parameters<typeof fakeRuntime>[1]) {
     createdAt: new Date().toISOString(), sessionId: randomUUID(), requestId: randomUUID()};
   const record = vi.fn<RecordTaskAssessment>((input, evidence, toolCallId) => ({status: 'recorded', published: false,
     assessment: {recordedAt: new Date().toISOString(), toolCallId,
-      items: input.relations.map(item => ({taskSpaceId: item.taskId, taskRevision: evidence.tasks.get(item.taskId)!, reason: item.reason})),
+      items: ('relations' in input ? input.relations : []).map(item => ({taskSpaceId: item.taskId, taskRevision: evidence.tasks.get(item.taskId)!, reason: item.reason})),
       ...(input.newTaskSuggestion ? {newTaskSuggestion: input.newTaskSuggestion} : {}), ...(input.emptyReason ? {emptyReason: input.emptyReason} : {})}}));
   const input: BackgroundExecutionInput = {text: '分析收到的资料并按需记录任务判断', files: [], directory: join(dataDir, 'background', 'jobs', job.id),
     profile: await snapshotBackgroundProfile(lab, profile), recordTaskAssessment: record, onEvent: () => {}, publish: async () => { throw new Error('not used'); }};

@@ -79,6 +79,7 @@ export function createBackgroundExecutor(lab: PiLab): BackgroundExecutor {
         const prepared = await lab.startPreprocess({ jobId: job.id, sessionId: job.sessionId, requestId: job.requestId, directory: input.directory,
           text: input.text, files: input.files, resources: resources(input.profile, continuous?.stream.epochId ?? job.id, !continuous && input.profile.requireTaskAssessment === true), roles: continuous ? [] : input.profile.agents!, tools,
           ...(continuous ? {streamEpochId: continuous.stream.epochId, readAnalysisCurrent: input.readAnalysisCurrent, readTaskCandidates: input.readTaskCandidates, calculateAnalysis: input.calculateAnalysis, readAssessmentSource: input.readAssessmentSource, recordAnalysisUpdate: input.recordAnalysisUpdate, checkAnalysisCompletion: input.checkAnalysisCompletion} : {}),
+          ...(!continuous && input.profile.taskAssessmentFormat ? {taskAssessmentFormat: input.profile.taskAssessmentFormat} : {}),
           ...(!continuous && input.profile.requireTaskAssessment ? {checkTaskAssessmentCompletion: input.checkTaskAssessmentCompletion} : {}),
           ...(input.profile.contextScope ? {contextPrincipal: {kind: 'service', profileId: input.profile.id, jobId: job.id, scope: input.profile.contextScope, scenarioInstanceId:job.scenarioInstanceId}} : {}),
           publish: input.publish, recordTaskAssessment: input.recordTaskAssessment, recordRecipientSuggestion: input.recordRecipientSuggestion });

@@ -3,7 +3,8 @@ import type { BackgroundJob } from '../contracts/background.js';
 import type { SessionSnapshot } from '../contracts/index.js';
 
 /** Execution proof only: a successful search does not prove semantic task coverage. */
-export function verifiedTaskAssessment(job: BackgroundJob, snapshot: SessionSnapshot): boolean {
+export function verifiedTaskAssessment(job: BackgroundJob, snapshot: SessionSnapshot,
+  current?: (taskId: string, revision: number) => boolean): boolean {
   const assessment = job.taskAssessment;
   if (!assessment || snapshot.recoveryWarning) return false;
   const end = snapshot.messages.at(-1);
@@ -38,6 +39,20 @@ export function verifiedTaskAssessment(job: BackgroundJob, snapshot: SessionSnap
       if (message.toolName === 'task_search') searched = true;
       for (const item of items) observed.set(item.id, item.revision);
     }
-    return searched && assessment.items.every(item => observed.get(item.taskSpaceId) === item.taskRevision);
+    const matches = (id: string, revision: number) => observed.get(id) === revision && (!current || current(id, revision));
+    if (!searched) return false;
+    if (job.ruleSnapshot?.profile.taskAssessmentFormat === 'decisions') {
+      if (!Array.isArray(result.decisions) || result.decisions.length > 100) return false;
+      const linked = [], seen = new Set<string>();
+      for (const row of result.decisions) {
+        if (!row || seen.has(row.taskId) || typeof row.taskId !== 'string' || !Number.isSafeInteger(row.taskRevision)
+          || !['link', 'exclude', 'insufficient'].includes(row.verdict) || typeof row.reason !== 'string' || !row.reason.trim()
+          || !matches(row.taskId, row.taskRevision)) return false;
+        seen.add(row.taskId);
+        if (row.verdict === 'link') linked.push({taskSpaceId: row.taskId, taskRevision: row.taskRevision, reason: row.reason});
+      }
+      return isDeepStrictEqual(linked, assessment.items);
+    }
+    return assessment.items.every(item => matches(item.taskSpaceId, item.taskRevision));
   } catch { return false; }
 }

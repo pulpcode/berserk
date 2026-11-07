@@ -78,6 +78,7 @@ export interface PreprocessInput {
   roles: Array<{ name: string; description: string; systemPrompt: string; tools: readonly string[]; hash: string }>;
   tools: string[]; files: FileRef[];
   contextPrincipal?: Extract<ContextPrincipal, {kind: 'service'}>;
+  taskAssessmentFormat?: import('../contracts/background.js').BackgroundProfileSnapshot['taskAssessmentFormat'];
   recordTaskAssessment?: RecordTaskAssessment;
   recordRecipientSuggestion?: RecordRecipientSuggestion;
   streamEpochId?: string;
@@ -823,7 +824,7 @@ ${work ? `关联工作（本轮开始时的业务信息，操作前可用 work_i
           ? [nativeCompletion(() => active.service!.checkTaskAssessmentCompletion!(this.serviceSnapshot(record, active.id)),
             () => record.active !== active || Boolean(active.reason) || active.controller.signal.aborted,
             error => this.stop(record, active, 'failure', error instanceof Error ? error.message : '任务判断完成检查失败。'),
-            attempt => `[系统补做提示 ${attempt}/2] 本次任务判断尚无完整有效的保存记录及成功回执。请核对已查询的活动公共任务与完整目标，根据现有资料调用 information_record_task_assessment 保存完整判断；若查询或记录失败，按工具错误处理。已有任务关联与独立新建建议可以并存；无关联也须记录理由。只在正文声明“已记录”不能完成。成功记录后给出最终结论。`,
+            attempt => `[系统补做提示 ${attempt}/2] 本次任务判断尚无完整有效的保存记录及成功回执。请核对已查询的活动公共任务与完整目标，根据现有资料调用 information_record_task_assessment 保存完整判断；若查询或记录失败，按工具错误处理。${active.service?.taskAssessmentFormat === 'decisions' ? '请按 decisions 逐项给出 link、exclude 或 insufficient。最终列举的关联以回执 assessment.items 为准。' : ''}已有任务关联与独立新建建议可以并存；无关联也须记录理由。只在正文声明“已记录”不能完成。成功记录后给出最终结论。`,
             () => { throw new Error('任务判断未完成。'); })]
         : role || active.background ? [] : [interactionExtension(async (toolCallId, questions, signal) => {
         const item = { ...this.interactionBase(record, active, toolCallId, 'ask_user'), kind: 'question' as const, questions, status: 'pending' as const };
@@ -885,7 +886,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
     const taskReads = !role && !active.service && scopedInformation ? taskInformationTools(scopedInformation,
       record.seatId, this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId, active.controller, authorizeRequest) : [];
     const assessment = !role && active.service?.recordTaskAssessment && active.service.tools.includes('information_record_task_assessment')
-      ? [taskAssessmentTool(active.service.recordTaskAssessment, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest)] : [];
+      ? [taskAssessmentTool(active.service.recordTaskAssessment, () => ({queried: queriedTasks, tasks: new Map(observedTasks)}), active.controller, authorizeRequest, active.service.taskAssessmentFormat)] : [];
 
     const recipients = !role && active.service?.recordRecipientSuggestion && active.service.tools.includes('information_suggest_recipients')
       ? [recipientSuggestionTool(active.service.recordRecipientSuggestion, active.controller, authorizeRequest)] : [];

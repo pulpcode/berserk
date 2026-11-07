@@ -75,6 +75,36 @@ describe('required ordinary preprocess judgment in the original native request',
     expect(repairs(snapshot)).toHaveLength(0); expect(job.taskAssessment?.items[0].taskSpaceId).toBe(s.task.id);
     expect(s.host.store.listDeliveries(job.id)).toHaveLength(1);
   });
+  it('uses the admitted schema for reprocessing and verifies excluded task revisions in the native receipt', async () => {
+    const s = await setup((context, index) => {
+      const tool = context.tools?.find(t => t.name === recordName);
+      const explicit = Boolean(tool && Object.hasOwn(Reflect.get(tool.parameters, 'properties') ?? {}, 'decisions'));
+      if (index % 3 === 0) return search;
+      if (index % 3 === 2) return final;
+      return explicit ? {tools: [{name: recordName, arguments: {decisions: [
+        {taskId: s.task.id, verdict: 'exclude', reason: '已排除此路线'},
+      ], emptyReason: '没有需要考虑本条路况的任务'}}]} : empty;
+    });
+    await s.accept(); const old = await s.settled();
+    s.host.config.profiles[0].taskAssessmentFormat = 'decisions';
+    const retry = await s.host.reprocess(s.actor, old.id, randomUUID());
+    expect((await s.settled(retry.id)).status).toBe('succeeded');
+    expect(retry.ruleSnapshot!.profile.taskAssessmentFormat).toBeUndefined();
+    expect(s.calls[3].context.tools!.find(t => t.name === recordName)!.parameters).toHaveProperty('properties.relations');
+    const next = await s.accept(), job = await s.settled(s.host.store.listJobs().find(item => item.eventId === next.eventId)!.id);
+    expect(job.status, JSON.stringify(job.error)).toBe('succeeded');
+    expect(job.ruleSnapshot?.profile.taskAssessmentFormat).toBe('decisions');
+    expect(job.taskAssessment?.items).toEqual([]);
+    const snapshot = (await s.snapshot(job))!;
+    const receipt = snapshot.messages.find(m => m.toolName === recordName)!;
+    const saved = JSON.parse(receipt.text);
+    expect(saved.decisions).toEqual([{taskId: s.task.id, taskRevision: 1, verdict: 'exclude', reason: '已排除此路线'}]);
+    expect(verifiedTaskAssessment(job, snapshot, () => false)).toBe(false);
+    expect(verifiedTaskAssessment(job, snapshot)).toBe(true);
+    expect(repairs(snapshot)).toHaveLength(0);
+    receipt.text = JSON.stringify({...saved, decisions: [{...saved.decisions[0], verdict: 'link'}]});
+    expect(verifiedTaskAssessment(job, snapshot)).toBe(false);
+  });
   it('requires matching current-request native receipt and query versions, never a historical or fabricated proof', async () => {
     const s = await setup((_c, i) => [search, s.relation(), final][i]);
     await s.accept(); const job = await s.settled(), snapshot = (await s.snapshot(job))!;

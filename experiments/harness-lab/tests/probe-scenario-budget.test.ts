@@ -147,7 +147,9 @@ describe('scenario probe dispatch budget', () => {
         const required = tools?.some(tool => tool.function.name === 'information_record_task_assessment');
         const tool = required && last.role === 'user' ? {name: 'task_search', arguments: {}}
           : required && last.role === 'tool' && (last.name === 'task_search' || last.tool_call_id === 'synthetic-task_search')
-            ? {name: 'information_record_task_assessment', arguments: {relations: [], emptyReason: '合成提供者仅检验执行与计量链路，语义结果另行审阅。'}} : undefined;
+            ? {name: 'information_record_task_assessment', arguments: {decisions: JSON.parse(last.content).data.items.map((task: {id: string}) => ({
+                taskId: task.id, verdict: 'insufficient', reason: '仅验证工具链路，本次无语义依据。',
+              })), emptyReason: '合成提供者仅检验执行与计量链路，语义结果另行审阅。'}} : undefined;
         return providerResponse('deterministic-model', tool);
       }
       if (!['127.0.0.1', 'localhost'].includes(url.hostname)) throw new Error('Unexpected external request in offline driver test');
