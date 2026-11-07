@@ -1,0 +1,162 @@
+{
+  "candidateCommit": "0a24faf9c2f40c1cc5949cec8d853d9514af3784",
+  "rubricSha256": "38b4ab7ba38321ce63eb5cd4448f3e8eddf785dee1dfbbfdef9ea4a19ca49fa6",
+  "trials": [
+    {
+      "trial": 1,
+      "notices": 13,
+      "explicitFormatFrozen": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 92
+      },
+      "maxTokens": {
+        "8192": 92
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    },
+    {
+      "trial": 2,
+      "notices": 13,
+      "explicitFormatFrozen": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 89
+      },
+      "maxTokens": {
+        "8192": 89
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    },
+    {
+      "trial": 3,
+      "notices": 13,
+      "explicitFormatFrozen": 13,
+      "requiredFrozen": 13,
+      "sameRequestNativeHistories": 13,
+      "modelIds": {
+        "deepseek-v4.1-flash": 86
+      },
+      "maxTokens": {
+        "8192": 86
+      },
+      "explicitThinkingFields": {},
+      "compactions": 0,
+      "crossResourceEvidence": [
+        {
+          "step": "E02",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            },
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        },
+        {
+          "step": "E11",
+          "returnedVehicleEvidence": [
+            {
+              "V02HomeRefPresent": true,
+              "stationS01NamePresent": false,
+              "inProviderInput": true
+            }
+          ]
+        }
+      ],
+      "humanCreateResultKeys": [
+        "task",
+        "creation",
+        "link"
+      ],
+      "mainCreationFromFirstJob": true
+    }
+  ],
+  "runtimeChangedFiles": [],
+  "actualLlmKeyScan": {
+    "scannedFiles": 172,
+    "filesContainingKey": []
+  },
+  "executionEnvironment": "local isolated macOS / Node 24",
+  "summarySha256": "cd9db915d27a92641388845e671265dc316dc9b3ec5e8a7d862a1501985b7703"
+}

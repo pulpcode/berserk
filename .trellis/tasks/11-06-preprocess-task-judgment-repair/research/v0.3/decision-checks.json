@@ -1,0 +1,925 @@
+[
+  {
+    "trial": 1,
+    "summary": {
+      "trial": 1,
+      "messages": 13,
+      "recorded": 13,
+      "receiptMatches": 13,
+      "apiMatches": 13,
+      "allCandidatesObserved": 13,
+      "fullGoalsObserved": 13,
+      "allQueriesInWire": 13,
+      "repairs": 0,
+      "pairCounts": {
+        "不计分": 1,
+        "符合": 27,
+        "未定·已关联": 1,
+        "漏关联": 1,
+        "未定·未关联": 9
+      },
+      "newSuggestions": 2
+    },
+    "messages": [
+      {
+        "event": "E01",
+        "notice": 1,
+        "jobId": "c594a29d-9ece-4f25-b181-6d7bcff0fb94",
+        "savedVerdicts": {
+          "T03": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "link",
+            "reason": "同一A01（临港）关注区。报告E01-a（rev1，观测/发布2026-11-03T09:12:00+08:00，业务时点同为09:12，A01该窗口changes=0）称临港仓储区有烟，引用L01临港三号仓库（A01，点121.8650368,30.88177，09:10位置上报），与演练场L03（121.8631572,30.8824992）直线约200米。条件性依赖：若烟雾核实为真实火情，09:00—09:45演练在A01内需评估提前终止/让出作业面，并影响V05释放时点——V05是区域内唯一登高车，现状态unavailable至09:45（演练占用，归属临港消防站S01）；若核实为误报或外部烟源，则演练与V05按既定安排延续。截至09:12报告未给出烟雾真伪与准确位置，故属条件性影响，非已确认处置需求。可用替代资源：V01/V03/V06可用，V04检修至11:00（待确认）。"
+          }
+        ],
+        "suggestion": {
+          "title": "核实临港仓储区烟雾首报位置",
+          "goal": "核实2026-11-03T09:12首报（intel report E01-a rev1）的临港仓储区烟雾：真伪、准确位置（临港三号仓库L01 与来电所称相邻仓库的差异）、烟雾来源与影响范围，明确是否需转入实际处置，并记录对A01临港登高演练（09:00—09:45）及V05占用（至09:45）的影响，供演练任务判断是否提前释放。",
+          "reason": "报告核心交付是“位置待核实”的烟雾首报核实，现有两个活动任务目标分别为A01登高演练执行（V05继续既定安排）与A03城西交通救援，均未将该核实列为目标，无法承接；演练任务仅能承接其条件性影响，故需独立核实任务。首报未给出烟雾真伪，L01与“相邻仓库”描述不一致且A01内无对应相邻仓库来源对象，需现场/来源复核，不宜由现有目标替代。"
+        }
+      },
+      {
+        "event": "E02",
+        "notice": 1,
+        "jobId": "8b54f589-d20f-48f1-9616-5050b67b3133",
+        "savedVerdicts": {
+          "T02": "link",
+          "M": "link",
+          "T03": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E03",
+        "notice": 1,
+        "jobId": "fb3d27a0-9790-497f-92c1-ec747d3c1546",
+        "savedVerdicts": {
+          "T03": "link",
+          "M": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 1,
+        "jobId": "a3ebb2b1-f428-437e-a2af-f18faf03998a",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "任务目标是09:00—09:45按既定安排开展临港登高演练、V05占用至09:45并按回报释放。本报告只涉及L01烟情位置，未涉及V05、L03或演练执行与释放；态势中V05 revision 2（09:14）为unavailable至09:45、L03未变，属任务自身状态延续，无需本报告支持。同属A01不构成具体依赖，目前无证据显示烟情影响演练场或V05；如后续回报显示影响再评估。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 2,
+        "jobId": "5fb30e21-1708-40a9-9a8a-88070ecbf9bd",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "临港登高演练的目标是 L03 演练场与 V05 按既定安排执行、之后以回报释放。本条报告只确认 L01 临港三号仓库的烟情位置，未提及 L03、V05 或演练进程；V05 在 09:14 发生修订后仍为不可用至 09:45（演练占用声明），与本报告无关，本报告也不是释放回报。虽与演练场同属 A01，但无演练改用 L01 或受烟情影响的具体依赖证据，故不关联。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E05",
+        "notice": 1,
+        "jobId": "26d890b7-d866-49d5-aa9f-9906acc48ffc",
+        "savedVerdicts": {
+          "T03": "link",
+          "M": "link",
+          "T02": "link"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": {
+          "title": "六站二十四车清单完整性核实",
+          "goal": "核实S01—S06六站二十四车清单的完整性与当前事实，重点补齐报告未引用的V21—V24：确认V21（南湾留守、跨区支援待定）的可用性，确认V24在08:50最后记录后的当前状态与位置，并核对A06新区站车辆的归属与所在地，形成完整清单与待确认项。",
+          "reason": "该项为全队清单完整性的独立核实交付：演练任务仅关注V05，城西救援任务仅关注V02/V14，临港烟情任务聚焦临港仓储资源事实，现有三个目标均无法承接V21—V24及A06范围的清单补齐与状态确认。"
+        }
+      },
+      {
+        "event": "E06",
+        "notice": 1,
+        "jobId": "5982a150-1a6d-4b42-b56f-636d62d48225",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "任务核实对象为临港仓储烟情的位置、当前道路及资源事实；相关来源E01/E04-a/E04-b均指向A01临港L01三号仓库，A01道路R01中轴桥、R03滨港路均为open。来报R04位于A04北城（北货运路，距临港区域约9公里），正文仅给出局部施工限制通行，未提供临港位置、道路可用性或资源占用信息，无法回答该任务的任何核实问题，也无证据显示烟情处置会改用R04。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E07",
+        "notice": 1,
+        "jobId": "31263b02-0006-44b6-b27b-5d90ec4b2739",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "T02": "exclude",
+          "M": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "该任务核实临港仓储烟情的位置、当前道路及资源事实，已指向临港A01的三号仓库L01。来报的R05城北路位于北城A04，距临港现场较远，既非烟情位置也非已证实的前往现场道路，未回答该任务的核实问题。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E08",
+        "notice": 1,
+        "jobId": "b633b923-f50e-46f1-aba0-8e1b538cab8b",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "报告 E08-a（intel，修订1，观测/发布 2026-11-03T09:23:00+08:00，业务时点同为09:23）只述 R01 中轴桥因临时事故封闭至10:00，未涉及 V05 或演练安排。V05 当前在 L03 临港登高演练场（A01），可用性 unavailable、有效至09:45（来源声明“演练占用至09:45”），归属站 S01 临港消防站亦在 A01 且与演练场位置邻近；同区滨港路 R03 当前 passability=open。未见演练进行或09:45后释放返站须经中轴桥的证据，R01 封闭既不改变演练计划，也不改变 V05 的占用状态，故不构成该任务的实际依赖或核实项；若后续明确 V05 释放后须经 R01 转场，则需另行复核。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E09",
+        "notice": 1,
+        "jobId": "2f45f368-3872-4db5-ba47-f43407bfd9b9",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "该任务目标是09:00—09:45在临港登高演练场L03开展演练、V05继续既定安排并以回报为准释放；关注对象为L03、V05及A01，未涉及R01中轴桥或任何道路路线。本报告E09-a仅记录09:11巡查时R01通行正常（有效窗口09:11—09:12），不回答演练进展、场地状况或V05占用/释放问题，故不构成该任务的依赖。若后续出现演练车辆或人员须经R01进出的具体证据，再按依赖重新评估。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E10",
+        "notice": 1,
+        "jobId": "35ce7032-1e6f-4ea3-9701-4b56ad53faad",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "目标核实临港仓储（L01，A01）烟情具体位置及当前道路、资源事实，并整理不确定事项。R02归属A02东城，报告只确认其09:25通行正常（situation中revision1→2均为open，属状态延续），与L01烟情位置及现场道路无直接关系；任务未将R02列为依赖或替代路线，也无证据表明处置研判须以R02为具体依赖，故不构成该任务的核实项。"
+          },
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "目标为09:00—09:45在临港（A01）演练场L03开展登高演练、V05继续既定安排至09:45并以回报为准释放；报告仅确认东环线R02（归属A02东城）09:25通行正常，未涉及L03/V05，也无证据表明演练路线或资源调用依赖R02。报告不回答演练是否继续、V05占用或释放问题，属无关道路状态。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E11",
+        "notice": 1,
+        "jobId": "1192f0a9-45e2-47b4-8e5d-215b1f07e56b",
+        "savedVerdicts": {
+          "T02": "link",
+          "M": "link",
+          "T03": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E12",
+        "notice": 1,
+        "jobId": "f33da30f-6e80-4067-8421-0d307669d2e4",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "该任务目标为09:00—09:45已批准临港登高演练、V05按既定安排占用至09:45后『释放以回报为准』，业务引用为L03演练场与V05。E12（09:40）只报L01临港三号仓库火势趋稳，未涉及演练进程、V05占用或释放条件，与L03/V05无共用资源或路线证据；仅同属A01区域不构成事实依赖，故不关联。"
+          }
+        ],
+        "suggestion": null
+      }
+    ]
+  },
+  {
+    "trial": 2,
+    "summary": {
+      "trial": 2,
+      "messages": 13,
+      "recorded": 13,
+      "receiptMatches": 13,
+      "apiMatches": 13,
+      "allCandidatesObserved": 13,
+      "fullGoalsObserved": 13,
+      "allQueriesInWire": 13,
+      "repairs": 0,
+      "pairCounts": {
+        "不计分": 1,
+        "符合": 28,
+        "未定·已关联": 3,
+        "未定·未关联": 7
+      },
+      "newSuggestions": 1
+    },
+    "messages": [
+      {
+        "event": "E01",
+        "notice": 1,
+        "jobId": "005ef313-8626-440d-8d0b-70bb2e2d62d8",
+        "savedVerdicts": {
+          "T03": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "link",
+            "reason": "报告观测/发布均为09:12（业务时点同），落在该任务09:00—09:45演练窗口内，且同属A01临港。V05为A01在用登高车，状态unavailable、声明“演练占用至09:45”（validUntil 09:45），位置与演练场L03同点(121.8631572,30.8824992)；报告引用的L01临港三号仓库(121.8650368,30.88177)距L03直线约200米（估算）。条件性影响：若烟情位置核实为三号仓库或相邻仓库，则演练场与疑似烟点邻近，V05“继续既定安排、之后释放以回报为准”的判断需按此回报重估，可能涉及提前释放；若为误报或烟点远离L03，则V05按原计划至09:45。资源背景：A01的V01水罐、V03泡沫、V06抢险及H01—H04消火栓当前可用；V04检修至11:00（声明注明须确认）、V02在A03救援占用至10:00，A01无第二辆登高车，释放V05的替代与代价需一并权衡。位置待核实，故为条件性关联而非已确认影响。"
+          }
+        ],
+        "suggestion": {
+          "title": "核实临港仓储区烟情位置与是否出动",
+          "goal": "核实社会来电所称“临港仓储区有烟”：确定是三号仓库L01还是相邻仓库，明确相邻仓库的具体对象，确认是否确有烟/火、影响范围及是否需要出动。核实前不得将L01视为已确认起火点，也不得据首报推断位置。核实后结合A01资源评估处置：已查V01水罐、V03泡沫、V06抢险及H01—H04消火栓可用；V05登高车演练占用至09:45，V02在A03救援占用至10:00，V04检修至11:00（须确认），A01暂无第二辆登高车。若确认火情，再判断是否需与临港登高演练协调V05释放，并与城西救援任务核对资源冲突（不得经过R01/R02/R03）。",
+          "reason": "现有两项目标分别只覆盖临港登高演练的V05延续/释放和A03城西交通救援，均未设定“核实A01烟情位置、确认是否起火、决定是否出动”的独立目标；首报内容为未核实的社会来电，位置与对象均待定，需单独承接核实与处置评估。"
+        }
+      },
+      {
+        "event": "E02",
+        "notice": 1,
+        "jobId": "ecbb6f26-df34-43d8-b845-0bb5b121b8d9",
+        "savedVerdicts": {
+          "T02": "link",
+          "M": "link",
+          "T03": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E03",
+        "notice": 1,
+        "jobId": "65b0c923-ae57-4fa8-aaa2-a00b8abacad2",
+        "savedVerdicts": {
+          "T03": "link",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 1,
+        "jobId": "0a905883-768b-4403-9fae-a8aeaaf89fa4",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "link",
+            "reason": "条件性关联：来报确认烟情来源 L01（临港三号仓库）位于演练场 L03 同一区域 A01，坐标 121.8631572/30.8824992，直线距离约200m，且报告时点09:16处于演练时段09:00—09:45内；若烟情扩散至演练场或影响登高作业安全，演练是否继续/调整需要评估——成立条件即烟情范围是否覆盖演练场。但报告未引用 L03 或 V05，也未改变其状态：V05 仍为 unavailable，validUntil 09:45，依据为 09:14 修订2 的“演练占用至09:45”声明；L03 无异常属性；E03-a（09:14）仍称演练正常、V05继续既定安排、释放以回报为准。故本报告不更新 V05 占用/释放事实，仅提示同区域烟情的条件性安全影响，供演练任务补充核实。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 2,
+        "jobId": "b33e69b3-3e93-488a-bd0b-22c70c3a5309",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "link",
+            "reason": "条件性关联。演练场 L03 与 V05（当前坐标即演练场坐标、占用至09:45，homeStation 仍为 S01）均在同一区域 A01；本报告确认 09:16 三号仓库（L01）存在烟情，位于同一区域且按点坐标粗算距演练场约200米，处于09:00—09:45演练时段内。成立条件：若该烟情被判定为需处置的真实火情、或导致园区局部封控、占用演练相关通道与资源，则可能影响演练继续及 V05 在09:45前的占用安排。报告本身未涉及 L03、V05 或演练安排，是否受影响须由演练组织方确认，不能据此认定演练已受影响。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E05",
+        "notice": 1,
+        "jobId": "b7ba8ee2-3541-4444-bc0e-bf175400b37a",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "link",
+          "T02": "link"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E06",
+        "notice": 1,
+        "jobId": "dba0d49a-e2e9-4bc4-aa22-cde967accbee",
+        "savedVerdicts": {
+          "M": "exclude",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "本报告唯一对象是北城 A04 的 R04 北货运路，来源实查与该报一致：rev1（09:10）passability=open → rev2（09:19）restricted、restrictionNote「局部施工限制通行」，A04 成员表含 R04、R05。任务目标是核实临港 A01 三号仓库（L01）烟情的位置、当前道路及资源事实；A04 与 A01 区域不重叠，报告未引用 L01/A01 或任何任务资源，R04 也不在 A01 成员表内（A01 道路为 R01、R03）。因此该事实不回答本任务的核实问题；仅当后续出现「响应路线经北城 A04」的具体证据时才需重估。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E07",
+        "notice": 1,
+        "jobId": "7f0d3fc2-8861-423d-af08-8fa1279f4dfc",
+        "savedVerdicts": {
+          "M": "exclude",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "来报只确认 R05 城北路（北城 A04，passability=open，状态方向 rev2，effectiveAt 2026-11-03T09:21:00+08:00，与 rev1 09:10 同为 open，属状态延续）通行正常。该任务核实对象是临港仓储烟情（首报 E01-a 指向 A01 的 L01，位置与三号仓库描述待核实），关注范围为临港 A01；城北路位于北城 A04，与烟情位置核实、临港道路/资源事实无交集，报告也未提供任何指向 A01 或 L01 的位置线索，无法回答问题中的位置、当前道路及资源事实，故不构成依赖。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E08",
+        "notice": 1,
+        "jobId": "cbc98830-0f4e-4c55-9bb3-25531baee126",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "insufficient",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "insufficient",
+            "reason": "【事实】演练任务关注临港（A01），引用 L03 演练场与 V05（归属 S01 临港消防站，当前位于 L03、unavailable 至 09:45 演练占用）。【报告范围】E08-a 仅述 R01 中轴桥 09:23—10:00 封闭，未涉及演练路线、场地出入口或回撤通道；R01 位于 L03 西北侧，现有资料无证据表明演练执行或 V05 09:45 释放后的移动依赖中轴桥。【判断】本报告不回答该任务“演练是否继续、V05 何时释放”的问题，也未构成可确认的具体依赖；若后续回报显示演练回撤或增援需经 R01，再复核（封闭至10:00，晚于演练结束09:45）。故依据不足，暂不关联。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E09",
+        "notice": 1,
+        "jobId": "1b1a441b-c502-4916-ad5b-11b85912a58a",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "演练任务依赖V05与L03：V05当前位于L03演练场（revision3，09:18回报，演练占用至09:45不可用），演练为场内既定安排，释放以回报为准。E09只涉及R01中轴桥通行，未提及V05/L03或演练路线，也未确认演练占用延续；R01封闭（09:23—10:00）未证明影响场内演练或V05释放路径（同区R03开放），不构成该任务的核实问题或具体依赖。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E10",
+        "notice": 1,
+        "jobId": "bd5ad04f-5b87-4a2e-845c-1768bac23310",
+        "savedVerdicts": {
+          "T02": "exclude",
+          "T03": "exclude",
+          "M": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "任务需核实临港仓储烟情的位置、当前道路与资源事实；烟情已由 E01/E04 指向临港 A01 的三号仓库（L01），临港区内道路为 R01 中轴桥（closed，临时事故封闭至10:00）与 R03 滨港路（open）。R02 东环线属东城 A02，不是临港区内道路，报告只确认其 open，未说明它是进入临港的替代路线，也未提供任何处置路线依赖证据，因此不直接回答该任务的核实问题；若后续明确改由东城侧经东环线进入临港，方可在该条件下作为道路可行性事实使用。"
+          },
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "任务为 09:00—09:45 已批准的临港登高演练，关注范围为 A01（临港）、L03 演练场与 V05；目标是 V05 继续既定安排并\"以回报为准\"释放。报告对象 R02 东环线属 A02（东城），既未涉及 V05 的占用或释放，也未涉及演练场地或 A01 内道路，与任务目标无事实衔接。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E11",
+        "notice": 1,
+        "jobId": "f6bd7e8c-992d-41bf-88bb-7aa9a9786d74",
+        "savedVerdicts": {
+          "T02": "link",
+          "M": "link",
+          "T03": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E12",
+        "notice": 1,
+        "jobId": "c9f95bed-ce2d-466f-8d02-6e1d9a4ba33b",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "任务2关注临港登高演练场L03与V05登高车（A01），要求V05继续既定安排、占用至09:45、释放以演练回报为准。E12-a仅引用L01临港三号仓库，正文未提及L03、V05、演练安排或释放，未回答任务2的任何问题。虽同属A01，但同一区域不等于具体依赖；本报告不能作为调整或释放V05的依据，故排除。"
+          }
+        ],
+        "suggestion": null
+      }
+    ]
+  },
+  {
+    "trial": 3,
+    "summary": {
+      "trial": 3,
+      "messages": 13,
+      "recorded": 13,
+      "receiptMatches": 13,
+      "apiMatches": 13,
+      "allCandidatesObserved": 13,
+      "fullGoalsObserved": 13,
+      "allQueriesInWire": 13,
+      "repairs": 0,
+      "pairCounts": {
+        "不计分": 1,
+        "符合": 28,
+        "未定·已关联": 2,
+        "未定·未关联": 8
+      },
+      "newSuggestions": 1
+    },
+    "messages": [
+      {
+        "event": "E01",
+        "notice": 1,
+        "jobId": "dba16c43-38ed-4a2d-9a95-e25ed499e2bb",
+        "savedVerdicts": {
+          "T03": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "link",
+            "reason": "同一区域且资源状态延续可支持任务。报告引用 L01 临港三号仓库（09:10 位置 121.8650,30.8818），属 A01；演练场 L03（121.8632,30.8825）与 V05 也在 A01，直线距离约 200 米。已确认：业务时点 09:12，V05 仍为 unavailable、validUntil 09:45（演练占用），与任务“V05 继续既定安排、09:45 后释放以回报为准”一致，说明演练占用状态仍在延续。条件性影响：若烟情核实确在 L01 或相邻仓库且波及演练场周边，则演练安全和 V05 能否按时释放需重新评估；但该报告是位置待核实的首报，三号仓库与相邻仓库描述矛盾尚未消除，不能据此直接调整演练安排。"
+          }
+        ],
+        "suggestion": {
+          "title": "核实临港仓储区烟情位置",
+          "goal": "核实社会来电所称临港仓储区烟情：确认是否确有烟/火情，判定位置在三号仓库（L01）还是相邻仓库，消除两种描述的矛盾；同步核对 A01 内可用资源（V01 水罐车、V03 泡沫车、V06 抢险救援车可用，V05 登高车至 09:45 演练占用，V04 泡沫车检修至 11:00 待确认）及 H01—H04 消火栓可用状态，为人员决定是否调派提供依据。",
+          "reason": "现有“临港登高演练”目标只覆盖演练实施与 V05 释放，无法承接对独立烟情来报的位置核实与火情确认；“城西交通救援”在 A03 且不涉及该区域。该来报的核实属额外独立交付。"
+        }
+      },
+      {
+        "event": "E02",
+        "notice": 1,
+        "jobId": "c2b3ea62-58cf-4436-a6dd-4b10bef02a66",
+        "savedVerdicts": {
+          "T02": "link",
+          "M": "link",
+          "T03": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E03",
+        "notice": 1,
+        "jobId": "fe6905e8-dbb1-4708-8d9b-b7768ce0dd50",
+        "savedVerdicts": {
+          "T03": "link",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 1,
+        "jobId": "d753537b-b87f-4a2d-b2c2-39d39dd923b8",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "该任务关注 V05 与演练场 L03 在 A01 的既定安排（09:00—09:45 演练，V05 占用至 09:45、释放以回报为准）。本报告仅确认烟情来源为 L01，未包含 V05/L03 的状态、占用、可用性变化，也未说明演练是否调整；来源事实为 V05 revision2 状态 unavailable、validUntil 09:45，与 E03“演练继续、正常进行”一致，无改用或影响 V05/L03 的证据。若后续证据显示烟情处置需动用 V05 或涉及演练场 L03，再重新评估；本报告本身不构成该任务的具体依赖。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E04",
+        "notice": 2,
+        "jobId": "fdb2a49f-83a0-4f75-8c3f-5d48bd8ad70c",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "本条来报只核实三号仓库L01的位置，objectRefs仅L01、areaIds仅A01，未引用演练场L03或登高车V05，也未涉及演练安排、演练安全或V05占用/释放；因此不能回答该任务“V05继续既定安排、之后以回报为准”的核实问题。E03-a（09:14）已说明演练正常进行、V05占用至09:45；态势快照中V05修订2（09:14报告，available至09:45，声明“演练占用至09:45”）也延续该状态，但该状态延续并非来自本报告。L01与L03同属A01、直线距离约200米，仅属空间邻近，不构成本报告对该任务的依赖或核实项；如后续证实烟情波及演练场或需动用V05，再另行关联。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E05",
+        "notice": 1,
+        "jobId": "a75baae9-fdd4-48a1-a030-031eae4a3020",
+        "savedVerdicts": {
+          "T03": "link",
+          "M": "link",
+          "T02": "link"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E06",
+        "notice": 1,
+        "jobId": "e3f273b7-f5d3-410c-bde9-93c415c63df6",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "任务要求核实临港仓储烟情的位置、当前道路及资源事实。烟情对象L01及首报、位置核实来报均在临港A01；A01的道路仅R01中轴桥、R03滨港路，当前均为open。来报引用的是北城A04的R04北货运路（restricted），既非仓储所在道路，也不在A01道路集合内，不能佐证或修正烟情位置与当前道路判断；报告也未涉及该任务的资源对象。故排除，仅作为A04背景道路状态，与该任务核实结论无关。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E07",
+        "notice": 1,
+        "jobId": "f2986038-4b32-4c7f-a811-350c819961eb",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "exclude",
+            "reason": "任务要核实临港仓储烟情的位置、当前道路及资源事实。既有来报E04-a/E04-b将烟情定位在A01临港L01，而来报R05城北路属A04北城，报告未引用L01、A01或其他临港道路；R05通行正常不能作为临港道路核实结论，也不能替代烟情位置、资源事实的核实，故不构成本任务依据。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E08",
+        "notice": 1,
+        "jobId": "aa23cf99-28a5-4111-a3bf-71d0238b1eb9",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "任务目标仅要求V05在09:00—09:45继续既定登高演练、之后以回报释放。核查：V05当前位于L03临港登高演练场（121.8631572,30.8824992），归属S01临港消防站（121.8634737,30.8839218），两者均在A01东侧；V05可用性unavailable，占用至09:45。报告及任务均未给出V05或演练保障需经R01中轴桥的进出路线，R01封闭（09:23—10:00）与V05演练、占用及释放无具体依赖，仅同属A01关注区域，不能据此改变演练安排，故排除。若后续出现V05或增援车辆需经中轴桥进出的证据，可重新评估。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E09",
+        "notice": 1,
+        "jobId": "fdc80f65-d205-42d0-a8a7-0cc7e9b9678c",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "insufficient",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "insufficient",
+            "reason": "任务目标是09:00—09:45临港登高演练、V05继续既定安排并以回报释放；本报告只涉及R01道路通行，未提及V05、演练场或撤离路线。R01与V05、演练场同属A01（临港），R01于09:23—10:00封闭与演练窗口及09:45释放时点重叠，但演练及V05撤离是否实际经R01无来源证据，故不能确认实际依赖；若后续证实路线经R01，封闭将影响09:45后撤离，否则与本任务无关。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E10",
+        "notice": 1,
+        "jobId": "42a74354-3592-4c4b-b890-b5cd12420562",
+        "savedVerdicts": {
+          "T03": "exclude",
+          "M": "link",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "M",
+            "verdict": "link",
+            "reason": "任务要求核实临港仓储烟情的位置、当前道路及资源事实。报告确认R02东环线09:25通行正常，来源态势同刻一致（revision 2，effectiveAt 09:25，passability=open），可承接“当前道路事实”中的可通行性一项。但R02属A02东城、不在临港A01，单独通行正常并不回答烟情具体位置；成立条件为：后续核实或处置需从东侧经东环线进入临港片区——来源几何显示R02西端与A01滨港路R03东端同点相接，R03再连中轴桥R01（09:23封闭至10:00），此时R02开放可作为绕行/接近路线依据。若不经该路线，则仅供背景参考。"
+          },
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "该任务关注A01临港登高演练及L03、V05资源的占用与释放，业务引用均为资源，无道路依赖。本报告仅涉及A02东城的R02东环线09:25通行正常，与演练区域、资源均无交集，也无归属引用指向R02，不能承接其任何核实项。"
+          }
+        ],
+        "suggestion": null
+      },
+      {
+        "event": "E11",
+        "notice": 1,
+        "jobId": "ca467716-4fe4-48c6-a4e4-f4a8d26a970c",
+        "savedVerdicts": {
+          "T02": "link",
+          "T03": "exclude",
+          "M": "link"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [],
+        "suggestion": null
+      },
+      {
+        "event": "E12",
+        "notice": 1,
+        "jobId": "eca9f9b4-43ab-4854-8541-787efb2c0811",
+        "savedVerdicts": {
+          "M": "link",
+          "T03": "exclude",
+          "T02": "exclude"
+        },
+        "allCandidatesJudged": true,
+        "toolInputEqualsReceipt": true,
+        "positiveProjectionMatches": true,
+        "visibleLinksMatch": true,
+        "deliveryCount": 1,
+        "undetermined": [
+          {
+            "task": "T03",
+            "verdict": "exclude",
+            "reason": "报告未提及 V05、登高演练、演练场 L03 或释放安排，其唯一引用对象为 L01 临港三号仓库，与该任务业务引用 L03/V05 无交集。虽同属 A01，且 09:40 仍在演练窗口（至 09:45）内，但没有来源事实表明本次火情改变或延续演练安排；V05 释放仍须以专门回报为准。故不关联到该演练任务；若后续出现 V05 占用/释放或演练受火情具体影响的来源，再行评估。"
+          }
+        ],
+        "suggestion": null
+      }
+    ]
+  }
+]
