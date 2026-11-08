@@ -33,7 +33,7 @@ export const interactionResponseSchema = Type.Union([
 const base = { schemaVersion: Type.Literal(1), interactionId: uuid, workspaceId: uuid, sessionId: uuid, requestId: uuid,
   toolCallId: Type.String({ minLength: 1 }), toolName: id, createdAt: text, resolvedAt: Type.Optional(text), reason: Type.Optional(text) };
 const policySchema = Type.Object({ requestId: uuid, workspaceId: uuid, sessionId: uuid, seatId: Type.String({ pattern: '^[a-zA-Z0-9_-]{1,64}$' }),
-  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo'), Type.Literal('work_item_commit'), Type.Literal('work_item_action')]), parameters: Type.Record(Type.String(), Type.Unknown()),
+  toolCallId: text, toolName: Type.Union([Type.Literal('bash'), Type.Literal('confirmation_demo'), Type.Literal('work_item_commit'), Type.Literal('work_item_action'), Type.Literal('simulation_command_send')]), parameters: Type.Record(Type.String(), Type.Unknown()),
   policy: Type.Object({ decision: Type.Union([Type.Literal('allow'), Type.Literal('ask'), Type.Literal('deny')]), ruleId: text, reason: text, version: text }, strict),
 }, strict);
 const interactionSchema = Type.Union([
@@ -41,7 +41,7 @@ const interactionSchema = Type.Union([
     status: Type.Union(['pending', 'answered', 'skipped', 'cancelled', 'expired'].map(value => Type.Literal(value))), answers: Type.Optional(Type.Array(answerSchema)) }, strict),
   Type.Object({ ...base, kind: Type.Literal('confirmation'),
     status: Type.Union(['pending', 'approved', 'rejected', 'cancelled', 'expired'].map(value => Type.Literal(value))),
-    action: Type.Object({ title: text, description: text, command: Type.Optional(Type.String({ minLength: 1 })), cwd: Type.Optional(text), parameters: Type.Record(Type.String(), Type.Unknown()), handoff: Type.Optional(handoffConfirmationSchema) }, strict),
+    action: Type.Object({ title: text, description: text, command: Type.Optional(Type.String({ minLength: 1 })), cwd: Type.Optional(text), parameters: Type.Record(Type.String(), Type.Unknown()), commandReference: Type.Optional(Type.Object({id:uuid,contentHash:Type.String({pattern:'^[0-9a-f]{64}$'})},strict)), handoff: Type.Optional(handoffConfirmationSchema) }, strict),
     rule: Type.Object({ ruleId: text, reason: text, version: text }, strict),
   }, strict),
 ]);
@@ -110,7 +110,7 @@ function decodeInteraction(value: unknown): Interaction {
     if (item.toolName !== 'ask_user' || (item.status === 'answered') !== (item.answers !== undefined)) throw stateError();
     if (item.answers) { try { decodeResponse({ requestId: item.requestId, kind: 'question', action: 'answer', answers: item.answers }, item); } catch { throw stateError(); } }
   } else {
-    if (!['bash', 'confirmation_demo', 'work_item_commit', 'work_item_action'].includes(item.toolName)) throw stateError();
+    if (!['bash', 'confirmation_demo', 'work_item_commit', 'work_item_action', 'simulation_command_send'].includes(item.toolName)) throw stateError();
     if (item.toolName === 'work_item_commit' || item.toolName === 'work_item_action') {
       const validParameters = item.toolName === 'work_item_commit'
         ? isDeepStrictEqual(item.action.parameters, { operationId: item.action.handoff?.operationId })
@@ -119,6 +119,7 @@ function decodeInteraction(value: unknown): Interaction {
         || item.action.command !== undefined || item.action.cwd !== undefined || item.action.title !== item.action.handoff.title
         || item.action.description !== item.action.handoff.description) throw stateError();
     } else if (item.action.handoff !== undefined) throw stateError();
+    if ((item.toolName === 'simulation_command_send') !== (item.action.commandReference !== undefined)) throw stateError();
   }
   return item;
 }
@@ -143,13 +144,16 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
       const item = [...items.values()].find(item => item.requestId === requestId && item.toolCallId === result.toolCallId);
       const key = `${requestId}:${result.toolCallId}`;
       const policy = policies.get(key);
-      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (['work_item_commit', 'work_item_action'].includes(result.toolName) && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
-      const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown; operationId?: unknown } | undefined;
+      if (!result.isError && ((result.toolName === 'ask_user' && !item) || (['work_item_commit', 'work_item_action', 'simulation_command_send'].includes(result.toolName) && (!item || !policy)) || (policy?.decision === 'ask' && (!item || item.status !== 'approved')))) throw stateError();
+      const details = result.details as { commandPolicy?: unknown; executionStarted?: unknown; operationId?: unknown; id?: unknown; contentHash?: unknown; status?: unknown } | undefined;
       if (!result.isError && result.toolName === 'work_item_action' && (item?.kind !== 'confirmation' || details?.operationId !== item.action.handoff?.operationId)) throw stateError();
       if (policy && ((!result.isError && (details?.executionStarted !== true || !isDeepStrictEqual(details.commandPolicy, policy)))
         || (policy.decision === 'deny' && (!result.isError || details?.executionStarted === true))
         || (policy.decision === 'ask' && details?.executionStarted === true && (item?.kind !== 'confirmation' || item.status !== 'approved'))
         || (details?.commandPolicy !== undefined && !isDeepStrictEqual(details.commandPolicy, policy)))) throw stateError();
+      if (!result.isError && result.toolName === 'simulation_command_send' && (item?.kind !== 'confirmation'
+        || details?.id !== item.action.commandReference?.id || details?.contentHash !== item.action.commandReference?.contentHash
+        || !['received', 'unknown', 'rejected'].includes(String(details?.status)))) throw stateError();
       const commandPolicy = commandPolicies.get(key);
       if (commandPolicy) {
         if (returned.has(key) || result.toolName !== 'bash') throw stateError();
@@ -160,7 +164,13 @@ export function interactionEvidence(entries: SessionEntry[], workspaceId: string
         returned.add(key);
         if (item.kind === 'confirmation') {
           if (item.status !== 'approved' && (!result.isError || details?.executionStarted === true)) throw stateError();
-          if (item.status === 'approved') item.execution = details?.executionStarted === true ? (result.isError ? 'failed' : 'succeeded') : 'not_started';
+          if (item.status === 'approved') {
+            item.execution = details?.executionStarted === true ? (result.isError ? 'failed' : 'succeeded') : 'not_started';
+            if (!result.isError && item.toolName === 'simulation_command_send') {
+              if (details?.status === 'unknown') item.execution = 'unknown';
+              if (details?.status === 'rejected') item.execution = 'failed';
+            }
+          }
         } else if (!result.isError && (!['answered', 'skipped'].includes(item.status)
           || !isDeepStrictEqual(result.details, { interactionId: item.interactionId, ...questionResult(item) })
           || !isDeepStrictEqual(result.content, [{ type: 'text', text: JSON.stringify(questionResult(item)) }]))) throw stateError();

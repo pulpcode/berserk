@@ -79,6 +79,22 @@ npm start
 
 同一Axon登录页选择导演席并认证后进入导演台。创建实例、初始化两个开场已有任务、激活、预览和应用事件，再分别发送每条冻结通知并核对回执。需要下一事件时，前一步所有通知须已确认接收。未配置自动规则的通知可以显示“未匹配处理规则”，这不代表接收失败。
 
+## 业务控制席与指令下达
+
+新增控制席沿用同一登录页和既有业务协作。停服后开通独立账号，密码由终端输入。
+
+```sh
+npm run access:admin -- account --data-dir /tmp/axon-scenario-demo --username control --name 业务控制 --seat seat-control --seat-name 控制席 --service-stopped
+npm run background:admin -- grant --data-dir /tmp/axon-scenario-demo --source mock-intel-source --seat seat-control --permission view --service-stopped
+npm run background:admin -- grant --data-dir /tmp/axon-scenario-demo --source mock-situation-source --seat seat-control --permission view --service-stopped
+```
+
+示例 context 配置用 `commands.enabled=true` 和 `commands.seatIds=["seat-control"]` 显式授予指挥接口资格，并把控制席加入双系统读取范围。账号名称本身不授予指挥权。接口固定连接该配置中的 simulation 地址和服务端控制令牌，业务页面及模型不能选择 endpoint、凭据或演示编号。导演席的控场权限独立，不能下达业务指令。
+
+业务约定为“业务席提交文件 → 总体席审核 → 总体席将固定文件副本交给控制席 → 控制席核对并确认下达”。可使用现有工作分派、退回、验收和附件导入。方案审核没有成为指挥接口的前置状态，附件可选。已绑定有效任务的控制席可从任务主页打开下达入口，也可让 Agent 准备指令后在原生确认卡批准。
+
+本轮模拟服务只接收并持久保存指令，返回可查询接收回执；车辆位置、占用与场景时间不因接收而变化。结果不明时查询原编号，不能借新编号盲目重发。车辆行动和动态反馈由后续阶段建设。
+
 ## 来报初析与人员建任务
 
 在独立演示目录中，给总体席两来源的 `manage` 权限，用于现有处理规则管理；协作所需的其他业务席按需授予来源 `view`，导演仍只用 `view`。沿用上面的停服授权命令，修改 `--seat` 与 `--permission` 即可，不授予他人私有会话访问权。

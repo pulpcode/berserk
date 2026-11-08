@@ -7,6 +7,8 @@ export interface Identity {
   viewWorkOverview?: boolean;
   /** Independent, explicitly provisioned scenario control capability; absence is denied. */
   controlScenarios?: boolean;
+  /** Explicit server integration grant; never inferred from a seat name. */
+  canIssueCommands?: boolean;
   /** Server-computed current business participation; absent only in legacy fixtures. */
   canCollaborate?: boolean;
 }

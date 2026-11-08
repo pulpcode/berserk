@@ -15,7 +15,7 @@ async function setup(secondManager = false) {
   const fake=await fakeRuntime(config,()=>({text:'当前任务处理完成'}));const lab=await PiLab.create(config,fake.runtime);const app=await createApp(lab);const pages:Page[]=[];
   const attach=async(page:Page)=>{pages.push(page);await page.route('**/api/**',async route=>{
     const req=route.request(),url=new URL(req.url());
-    const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...req.headers(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
+    const response=await app.inject({method:req.method() as 'GET'|'POST'|'PUT'|'DELETE',url:url.pathname+url.search,headers:{...await req.allHeaders(),host:'127.0.0.1',origin:'http://localhost:4310'},...(req.postDataBuffer()?{payload:req.postDataBuffer()!}:{})});
     await route.fulfill({status:response.statusCode,headers:Object.fromEntries(Object.entries(response.headers).filter(([,v])=>v!==undefined).map(([k,v])=>[k,String(v)])),body:response.rawPayload});
   });};
   return {lab,attach,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};

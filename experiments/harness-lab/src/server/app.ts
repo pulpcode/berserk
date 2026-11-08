@@ -1,3 +1,5 @@
+import { CommandService } from '../commands/service.js';
+import { commandRoutes } from './command-routes.js';
 import { continuousRoutes } from './continuous-routes.js';
 import { annotationRoutes } from './annotation-routes.js';
 import { annotationSelectionSchema } from '../pi/annotation-tools.js';
@@ -35,6 +37,7 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
       if (config) lab.context = new ContextService(config, contextOptions?.env);
     } catch { lab.contextUnavailable = true; }
   }
+  if (lab.access) lab.access.commandSeatIds = () => lab.context?.config.commands?.enabled ? lab.context.config.commands.seatIds : [];
   if (lab.annotations) lab.annotations.context = lab.context;
   const backgroundConfig = backgroundOptions?.config ?? (lab.access ? await loadBackgroundConfig() : undefined);
   if (!backgroundConfig && lab.access && [3,4,5,6,8,10,11,12].includes(baseSchemaVersion(Number(lab.access.db.prepare('PRAGMA user_version').get()?.user_version)))) {
@@ -83,6 +86,10 @@ export async function createApp(lab: PiLab, serveWeb = false, backgroundOptions?
     await contextRoutes(scoped,lab,scope,background,contextOptions?.env);
     if (lab.context) lab.context.scenario = lab.scenario;
   });
+  if (lab.context?.config.commands?.enabled && lab.access) {
+    lab.commands = await CommandService.open(lab, contextOptions?.env);
+    await commandRoutes(app, lab);
+  }
   if (serveWeb && existsSync(resolve('dist/index.html'))) {
     await app.register(fastifyStatic, { root: resolve('dist'), wildcard: true, list: false });
     app.get('/login',(_request,reply)=>reply.sendFile('index.html'));

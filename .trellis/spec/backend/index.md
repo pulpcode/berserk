@@ -12,6 +12,8 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 ## Pre-Development and Quality Check
 
+Read [Simulation Command Integration](./commands.md) for control-seat grants, document soft workflow, native confirmation, external reception and command history.
+
 Read [Scenario Run Isolation](./scenario-run-isolation.md) for trusted source lineage, ending gates, continuous partitions and the deferred unsourced task-creation boundary.
 
 Read [Scenario Director and Business Clock](./scenario-director.md) for dedicated director authorization, scene instances, manual time, resource v4 and replay recovery.

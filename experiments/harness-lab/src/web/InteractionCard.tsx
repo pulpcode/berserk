@@ -74,18 +74,23 @@ const executionLabels: Record<NonNullable<ConfirmationInteraction['execution']>,
   succeeded: '执行已完成。', failed: '执行失败，请查看详情。',
   unknown: '执行结果未确认，请核对后再继续。', not_started: '未执行：操作在开始前已停止。',
 };
+const commandExecutionLabels: Record<NonNullable<ConfirmationInteraction['execution']>, string> = {
+  succeeded: '外部系统已接收。', failed: '本次下达未完成，请查看结果。',
+  not_started: '本次指令未下达。', unknown: '接收结果待核对。',
+};
 const handoffConfirmLabels = { assign: '确认分派', claim: '确认签收', submit: '确认提交', review: '确认审核' };
 
 function ConfirmationCard({ interaction: item, canRespond, submission, respond, query, result }: Omit<InteractionCardProps, 'interaction'> & { interaction: ConfirmationInteraction }) {
   const pending = item.status === 'pending';
   const command = item.action.command !== undefined;
+  const externalCommand = item.toolName === 'simulation_command_send';
   const disabled = !canRespond || Boolean(submission?.busy || submission?.needsQuery);
   const status = confirmationLabels[item.status];
-  const outcome = item.status === 'approved' ? item.execution ? executionLabels[item.execution] : '执行结果待确认。' : undefined;
+  const outcome = item.status === 'approved' ? item.execution ? (externalCommand ? commandExecutionLabels : executionLabels)[item.execution] : externalCommand ? '接收结果待核对。' : '执行结果待确认。' : undefined;
   const Icon = item.status === 'approved' && item.execution === 'succeeded' ? Check
     : item.status === 'rejected' || item.status === 'cancelled' ? X
     : command || item.execution === 'failed' || item.execution === 'unknown' ? CircleAlert : Clock3;
-  const confirmLabel = item.action.handoff ? handoffConfirmLabels[item.action.handoff.kind] : command ? '允许本次执行' : '确认执行';
+  const confirmLabel = externalCommand ? '确认下达' : item.action.handoff ? handoffConfirmLabels[item.action.handoff.kind] : command ? '允许本次执行' : '确认执行';
   const details = <>
     {item.action.handoff?.kind === 'assign' && <AssignmentAttachments files={item.action.handoff.files} />}
     <p className="confirmation-description">{item.action.description}</p>

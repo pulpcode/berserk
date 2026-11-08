@@ -3,8 +3,8 @@
   "concurrency": 1,
   "modelConcurrency": 1,
   "sources": [
-    {"sourceId":"mock-intel-source","systemId":"intel","name":"特情系统","credentialRef":"MOCK_INTEL_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]},
-    {"sourceId":"mock-situation-source","systemId":"situation","name":"态势系统","credentialRef":"MOCK_SITUATION_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation"]}
+    {"sourceId":"mock-intel-source","systemId":"intel","name":"特情系统","credentialRef":"MOCK_INTEL_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation","seat-control"]},
+    {"sourceId":"mock-situation-source","systemId":"situation","name":"态势系统","credentialRef":"MOCK_SITUATION_SOURCE_TOKEN","allowedProfileIds":["scenario-source-review"],"allowedRecipientSeatIds":["seat-overall","seat-intelligence","seat-planning","seat-situation","seat-control"]}
   ],
   "profiles": [{"id":"scenario-source-review","name":"来报核对与任务研判","goal":"核对来源事实、版本和业务时点，区分已确认、条件性影响与待核实事项。通过现有查询和分页发现获准活动公共任务，逐个对照完整目标：这条来报回答了任务中的哪个问题？资源当前所在地与归属是两种事实；若归属关系可能影响核实范围，沿归属引用查询对应对象，再判断占用、可用性或限制对哪些任务有用。确认状态延续也可以支持任务。区分实际依赖与任务明确排除的对象或路线；已排除对象的状态变化，须有改用该对象或其他具体依赖的证据才关联。先将已有目标能承接的核实项写入关联理由；只有能说明额外独立交付及现有目标为何无法承接时才建议新建。报告的引用范围与来源实际查得的事实分别核对。一次提交各任务的判断，按成功回执给总体席简洁说明，任务创建和调派由人员决定。","requireTaskAssessment":true,"taskAssessmentFormat":"decisions","contextScopeId":"scenario-context","tools":["information_search","information_read","situation_query","task_search","task_read","information_record_task_assessment"],"instructions":"","skillIds":[],"agentIds":[],"resources":[]}]
 }

@@ -16,6 +16,8 @@ This product targets desktop browsers only (user decision, 2026-10-13). Do not a
 
 ## Pre-Development and Quality Check
 
+Read [Simulation Command Integration](../backend/commands.md) for control-seat grants, document soft workflow, native confirmation, external reception and command history.
+
 Read [Scenario Director and Business Clock](../backend/scenario-director.md) for the independent director page, authenticated entry, forbidden business seats and explicit scene/real-time labels.
 
 Read [Continuous Background Analysis](../backend/continuous-analysis.md) for task current/history views, fixed-version private discussions, recipient-only records and epoch configuration controls.

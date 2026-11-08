@@ -35,7 +35,7 @@ async function setup(rule = true, reply?: Parameters<typeof fakeRuntime>[1], ext
     pages.push(page);
     await page.route('**/api/**', async route => {
       const request = route.request(); const url = new URL(request.url());
-      const response = await app.inject({ method: request.method() as 'GET' | 'POST' | 'PUT' | 'DELETE', url: url.pathname + url.search, headers: { ...request.headers(), host: '127.0.0.1', origin: 'http://localhost:4310' }, ...(request.postDataBuffer() ? { payload: request.postDataBuffer()! } : {}) });
+      const response = await app.inject({ method: request.method() as 'GET' | 'POST' | 'PUT' | 'DELETE', url: url.pathname + url.search, headers: { ...await request.allHeaders(), host: '127.0.0.1', origin: 'http://localhost:4310' }, ...(request.postDataBuffer() ? { payload: request.postDataBuffer()! } : {}) });
       if(loseCreateResponse && request.method()==='POST' && /^\/api\/information\/events\/[^/]+\/tasks$/.test(url.pathname)){loseCreateResponse=false;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'TEST_LOST_RESPONSE',message:'本次响应未收到，请核对创建结果'}})});return;}
       await route.fulfill({ status: response.statusCode, headers: Object.fromEntries(Object.entries(response.headers).filter(([, value]) => value !== undefined).map(([key, value]) => [key, String(value)])), body: response.rawPayload });
     });

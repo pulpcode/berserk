@@ -204,7 +204,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
       if(isControl&&!options.controlToken)throw fail('NOT_FOUND','控制未启用。',404);
       const supplied = Buffer.from(req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.slice(7) : ''), expected = Buffer.from(isControl ? options.controlToken! : options.token);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) throw fail('UNAUTHORIZED', '查询凭证无效。', 401);
-      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(scenarios?.handlesControl(url.pathname))body=await scenarios.control(req,url);else {if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);}} else {
+      if(isControl) {const url=new URL(path,'http://127.0.0.1');if(scenarios && /^\/control\/commands(?:\/|$)/.test(url.pathname))body=await scenarios.commands(req,url);else if(scenarios?.handlesControl(url.pathname))body=await scenarios.control(req,url);else {if(url.search)throw fail('INVALID_ARGUMENT','控制接口不接受查询参数。');body=await control(req,url.pathname);}} else {
         if (method !== 'GET') throw fail('INVALID_ARGUMENT', '只支持只读 GET。');
         const url=new URL(path,'http://127.0.0.1'),systemId=url.pathname.startsWith('/intel/')?'intel':url.pathname.startsWith('/situation/')?'situation':undefined;
         if(systemId&&unavailable.has(systemId))throw fail('UNAVAILABLE','来源暂不可用。',503);

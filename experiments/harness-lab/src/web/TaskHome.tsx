@@ -7,6 +7,7 @@ import { useApi } from './api';
 import { InformationText } from './information-ui';
 import { TaskContextSummary } from './TaskContextEditor';
 import { ModelPicker } from './ModelPicker';
+import { TaskCommands } from './TaskCommands';
 
 export function TaskHome({ taskId, task, identity, edit, assessment, draft, setDraft, models, modelId, chooseModel, modelsError, refreshModels, busy, error, start }: {
   assessment?: ReactNode; taskId: string; task?: TaskSpace; identity: Identity; edit: () => void;
@@ -36,6 +37,7 @@ export function TaskHome({ taskId, task, identity, edit, assessment, draft, setD
       </div>
     </section>
     {assessment}
+    {identity.canIssueCommands && task && <TaskCommands key={task.id} task={task} />}
     {canCollaborate?<form className="task-home-composer" onSubmit={event => { event.preventDefault(); if (ready && !busy && draft.trim()) start(); }} aria-busy={busy}>
       <h2>新建对话</h2><p>围绕{task?.visibility === 'private' ? '这个空间' : '这个任务'}，你想先处理什么？</p>
       <label htmlFor={domId(`task-question-${taskId}`)}>问题或工作要求</label>

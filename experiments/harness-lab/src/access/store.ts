@@ -33,6 +33,11 @@ export class AccessStore {
   scenario?: ScenarioScope;
   /** The host supplies its current configuration; this is not a persisted role. */
   scenarioDirectorSeatId?: () => string | undefined;
+  commandSeatIds?: () => readonly string[];
+  canIssueCommands(seatId:string) {
+    return (this.commandSeatIds?.().includes(seatId) ?? false) && !this.isScenarioDirectorSeat(seatId)
+      && Boolean(this.db.prepare('SELECT 1 FROM accounts WHERE seat_id=? AND enabled=1').get(seatId));
+  }
   constructor(readonly db: DatabaseSync) {
     const version=Number(db.prepare('PRAGMA user_version').get()?.user_version);
     if([2,3,4,5,6,7,8,9,10,11,12].includes(baseSchemaVersion(version))) {
@@ -85,7 +90,7 @@ export class AccessStore {
   }
   identity(id: string): Identity | undefined {
     const row = this.db.prepare(`SELECT a.id userId,a.username,a.display_name displayName,a.seat_id seatId,s.name seatName,s.create_public createPublicTask,s.manage_model manageModelSettings,s.view_work_overview viewWorkOverview,s.control_scenarios controlScenarios FROM accounts a JOIN seats s ON a.seat_id=s.id WHERE a.id=? AND a.enabled=1`).get(id);
-    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview, controlScenarios: !!row.controlScenarios, canCollaborate: !this.isScenarioDirectorSeat(String(row.seatId)) } as unknown as Identity : undefined;
+    return row ? { ...row, createPublicTask: !!row.createPublicTask, manageModelSettings: !!row.manageModelSettings, viewWorkOverview: !!row.viewWorkOverview, controlScenarios: !!row.controlScenarios, canIssueCommands: this.canIssueCommands(String(row.seatId)), canCollaborate: !this.isScenarioDirectorSeat(String(row.seatId)) } as unknown as Identity : undefined;
   }
   identityForSeat(seatId: string): Identity | undefined {
     const row = this.db.prepare('SELECT id FROM accounts WHERE seat_id=? AND enabled=1').get(seatId);

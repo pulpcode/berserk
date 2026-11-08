@@ -1,3 +1,6 @@
+import { commandTools, type ApprovedCommand } from './command-tools.js';
+import type { CommandRecord } from '../contracts/commands.js';
+import type { CommandService } from '../commands/service.js';
 import type { ScenarioScope } from '../scenario/scope.js';
 import { TaskResourceService } from '../context/task-resources.js';
 import { extractResourceResult, type ResourceResult } from '../contracts/resource-results.js';
@@ -130,6 +133,8 @@ interface Active {
   policies?: Map<string, ReturnType<typeof evaluateCommand>>;
   work?: WorkDetail;
   grants?: Map<string, ApprovedWorkAction>;
+  commandApprovals?: Map<string, ApprovedCommand>;
+  preparedCommands?: Set<string>;
 }
 interface RecordState {
   intake?: MessageIntake;
@@ -183,6 +188,7 @@ export class PiLab {
   collaboration?: CollaborationService;
   access?: AccessStore;
   scenario?: ScenarioScope;
+  commands?: CommandService;
   annotations?: AnnotationService;
   context?: ContextService;
   contextUnavailable = false;
@@ -911,6 +917,10 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       }) : []),
       ...(active.sandbox ? writableFileTools(active.sandbox, { seatId: record.seatId, background: active.background, files: active.service ? { publish: (_workspaceId, input, signal) => active.service!.publish(input, signal ?? active.controller.signal) } : this.files, logsDir: record.service ? join(record.service.directory, 'logs') : join(this.config.dataDir, 'file-storage', record.workspaceId, 'executions'), requestId: active.id, workspaceId: record.workspaceId,
         sessionId: record.manager.getSessionId(), manager: record.manager, signal: active.controller.signal, output: file => active.onFile?.(file) }) : []),
+      ...(!role && !active.background && this.commands?.allowed(record.seatId) && this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId ? commandTools(this.commands, {
+        seatId: record.seatId, taskId: this.workspaces.get(record.workspaceId, record.seatId).taskSpaceId!, signal: active.controller.signal, check: authorizeRequest,
+        takeApproval: toolCallId => { const grant = active.commandApprovals?.get(toolCallId); active.commandApprovals?.delete(toolCallId); return grant; },
+      }) : []),
       ...(!active.background && this.collaboration ? collaborationTools(this.collaboration, {
         actor: { seatId: record.seatId }, workspace: this.workspaces.get(record.workspaceId, record.seatId),
         sessionId: record.manager.getSessionId(), requestId: active.id, signal: active.controller.signal,
@@ -951,9 +961,21 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
         if (!record.service) this.access?.assertCanCollaborate(record.seatId);
         const { toolCall } = context;
-        if (toolCall.name !== 'bash' && toolCall.name !== 'confirmation_demo' && toolCall.name !== 'work_item_action') return original;
+        if (toolCall.name !== 'bash' && toolCall.name !== 'confirmation_demo' && toolCall.name !== 'work_item_action' && toolCall.name !== 'simulation_command_send') return original;
         const parameters = structuredClone(context.args) as Record<string, unknown>;
         let action: WorkAction | undefined;
+        let commandAction: CommandRecord | undefined;
+        if (toolCall.name === 'simulation_command_send') {
+          if (!this.commands || !this.commands.allowed(record.seatId)) throw new RequestError('FORBIDDEN', '当前席位无权下达指令。', 403);
+          try {
+            commandAction = await this.commands.prepare(record.seatId, record.workspaceId, parameters.command, 'agent', `${record.manager.getSessionId()}:${active.id}:${toolCall.id}`, active.controller.signal);
+            active.preparedCommands ??= new Set(); active.preparedCommands.add(commandAction.id);
+            if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
+          } catch (error) {
+            if (error instanceof RequestError && ['INVALID_INPUT', 'FORBIDDEN', 'COMMAND_SCOPE_REQUIRED', 'WORK_NOT_FOUND', 'FILE_NOT_FOUND'].includes(error.code)) return { block: true, reason: `${error.code}: ${error.message}` };
+            throw error;
+          }
+        }
         if (toolCall.name === 'work_item_action') {
           try {
             const service = this.requireCollaboration(); const actor = { seatId: record.seatId };
@@ -969,7 +991,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
           }
         }
         const handoff = action ? handoffConfirmation(action) : undefined;
-        const policy = toolCall.name === 'work_item_action'
+        const policy = commandAction
+          ? { decision: 'ask' as const, ruleId: 'simulation_command_send', reason: '确认本次车辆、目的地和路线后发送。', version: '1' }
+          : toolCall.name === 'work_item_action'
           ? { decision: 'ask' as const, ruleId: 'work_item_action', reason: '确认本次工作交接的对象、内容与固定文件后执行。', version: '1' }
           : toolCall.name === 'bash' ? evaluateCommand(String(parameters.command), '/workspace')
           : { decision: 'ask' as const, ruleId: 'confirmation_demo', reason: '仅生成本地演示回执，不发送消息或改动用户文件。', version: '1' };
@@ -979,15 +1003,29 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (policy.decision === 'deny') return { block: true, reason: `${policy.reason} 请改用当前工作区内无需提权的操作。` };
         if (policy.decision === 'allow') return original;
         if (active.background) return { block: true, reason: `后台无法审批，本次命令未执行。${policy.reason}` };
+        const commandDescription = commandAction ? [
+          `车辆：${commandAction.command.vehicles.map(ref => ref.objectId).join('、')}`,
+          `目的地：${commandAction.command.destination.objectId}`,
+          `路线：${commandAction.command.route.map(ref => ref.objectId).join(' → ') || '未指定'}`,
+          ...(commandAction.command.notes ? [`执行说明：${commandAction.command.notes}`] : []),
+          ...(commandAction.attachment ? [`参考文件：${commandAction.attachment.name}`] : []),
+        ].join('\n') : undefined;
         const item: ConfirmationInteraction = { ...this.interactionBase(record, active, toolCall.id, toolCall.name),
           kind: 'confirmation', status: 'pending',
-          action: { title: handoff?.title ?? (toolCall.name === 'bash' ? '执行命令' : '确认演示'), description: handoff?.description ?? policy.reason,
-            ...(toolCall.name === 'bash' ? { command: String(parameters.command), cwd: '/workspace' } : handoff ? { handoff } : { description: String(parameters.content) }), parameters },
+          action: { ...(commandAction ? {commandReference: {id:commandAction.id,contentHash:commandAction.contentHash}} : {}), title: commandAction ? '下达指令' : handoff?.title ?? (toolCall.name === 'bash' ? '执行命令' : '确认演示'), description: commandDescription ?? handoff?.description ?? policy.reason,
+            ...(commandAction ? {} : toolCall.name === 'bash' ? { command: String(parameters.command), cwd: '/workspace' } : handoff ? { handoff } : { description: String(parameters.content) }), parameters },
           rule: { ruleId: policy.ruleId, reason: policy.reason, version: policy.version } };
         const resolved = await this.waitForInteraction(record, active, item, signal);
         if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
         if (!isDeepStrictEqual(parameters, context.args)) throw new Error('批准后的操作参数发生变化。');
-        if (resolved.status !== 'approved') return { block: true, reason: '用户拒绝了本次操作，尚未执行。请说明或调整方案。' };
+        if (resolved.status !== 'approved') {
+          if (commandAction) this.commands?.expire(record.seatId, commandAction.id);
+          return { block: true, reason: '用户拒绝了本次操作，尚未执行。请说明或调整方案。' };
+        }
+        if (commandAction) {
+          active.commandApprovals ??= new Map();
+          active.commandApprovals.set(toolCall.id, {id:commandAction.id,parameters});
+        }
         if (handoff) {
           const grant = { sessionId: record.manager.getSessionId(), requestId: active.id, toolCallId: toolCall.id, interactionId: item.interactionId };
           this.requireCollaboration().authorizeAgent({ seatId: record.seatId }, handoff.operationId, grant);
@@ -1377,6 +1415,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             model: active.model.config.model, modelSettingsVersion: active.model.version });
         }
       }
+      for (const commandId of active.preparedCommands ?? []) this.commands?.expire(record.seatId, commandId);
       record.intake?.finish();
       unsubscribe?.(); active.compacting = false;
       record.session?.dispose(); record.session = undefined;
@@ -1504,6 +1543,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       record.session?.dispose();
     }));
     await this.execution?.close();
+    this.commands?.close();
     this.collaboration?.close();
   }
 }

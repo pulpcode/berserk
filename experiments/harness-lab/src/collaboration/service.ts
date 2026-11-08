@@ -341,6 +341,13 @@ export class CollaborationService {
     else if (file.ownerSeatId !== actor.seatId) throw notFound();
     return file;
   }
+  async referenceFile(actor:ActorContext,id:string,taskSpaceId:string) {
+    const file=this.authorizedFile(actor,id);
+    if(file.taskSpaceId!==taskSpaceId)throw notFound();
+    await this.files.assertValid(file);
+    this.authorizedFile(actor,id);
+    return this.publicFile(file);
+  }
   async openFile(actor: ActorContext, id: string) { return this.files.open(this.authorizedFile(actor,id)); }
   async importFile(actor: ActorContext, id: string, workspaceId: string, path?: string, signal?: AbortSignal): Promise<HandoffImportResult> {
     this.actor(actor);

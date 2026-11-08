@@ -9,7 +9,8 @@ export interface ContextSystemConfig {
 }
 export interface ContextScopeConfig { id: string; name: string; systemIds: string[]; seatIds: string[] }
 export interface SimulationConfig { enabled: boolean; baseUrl: string; tokenEnv: string; directorSeatId?: string; sources: Array<{systemId: string; sourceId: string}> }
-export interface ContextConfig { systems: ContextSystemConfig[]; scopes: ContextScopeConfig[]; simulation?: SimulationConfig; map?: MapConfig }
+export interface CommandIntegrationConfig { enabled:boolean; seatIds:string[] }
+export interface ContextConfig { commands?:CommandIntegrationConfig; systems: ContextSystemConfig[]; scopes: ContextScopeConfig[]; simulation?: SimulationConfig; map?: MapConfig }
 const fail = () => new Error('业务查询配置无效，请核对系统、资料范围和凭证环境变量名称。');
 function object(value: unknown, keys: string[]): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !keys.includes(key))) throw fail();
@@ -46,7 +47,7 @@ function metadata(raw: Record<string,unknown>): BasemapSourceMetadata {
   return {providerId:id(raw.providerId),name:text(raw.name,100),coordinateSystem:'wgs84',projection:'web-mercator',scheme:'xyz',bounds:bounds as BasemapSourceMetadata['bounds'],minZoom:raw.minZoom,maxZoom:raw.maxZoom,attributions};
 }
 export function parseContextConfig(value: unknown): ContextConfig {
-  const raw = object(value, ['systems', 'scopes', 'simulation', 'map']);
+  const raw = object(value, ['systems', 'scopes', 'simulation', 'map', 'commands']);
   if (!Array.isArray(raw.systems) || !Array.isArray(raw.scopes) || raw.systems.length > 100 || raw.scopes.length > 100) throw fail();
   const systems = raw.systems.map(value => {
     const s = object(value, ['id', 'name', 'adapter', 'baseUrl', 'tokenEnv', 'areas', 'resourceCapability', 'scenarioClock']);
@@ -80,6 +81,14 @@ export function parseContextConfig(value: unknown): ContextConfig {
     if (directorSeatId && ['seat-overall','seat-intelligence','seat-planning','seat-situation'].includes(directorSeatId)) throw fail();
     simulation = {enabled:c.enabled,baseUrl:url.href.replace(/\/$/,''),tokenEnv,sources,...(directorSeatId ? {directorSeatId} : {})};
   }
+  let commands:CommandIntegrationConfig|undefined;
+  if(raw.commands!==undefined) {
+    const c=object(raw.commands,['enabled','seatIds']);
+    if(typeof c.enabled!=='boolean')throw fail();
+    const seatIds=list(c.seatIds);
+    if(c.enabled && (!simulation?.enabled || !seatIds.length || seatIds.includes(simulation.directorSeatId ?? '') || seatIds.some(seatId=>!scopes.some(scope=>scope.seatIds.includes(seatId)&&scope.systemIds.includes('situation')))))throw fail();
+    commands={enabled:c.enabled,seatIds};
+  }
   let map: MapConfig | undefined;
   if (raw.map !== undefined) {
     const m = object(raw.map,['defaultView','imagery','roads','providerId','tiles','tileSize','attributionText','attributionUrl']);
@@ -99,7 +108,7 @@ export function parseContextConfig(value: unknown): ContextConfig {
       map = {providerId:id(m.providerId),tiles:tileUrls(m.tiles),tileSize:m.tileSize,attributionText:text(m.attributionText,500),attributionUrl:publicUrl(m.attributionUrl,true)};
     }
   }
-  return {systems, scopes,...(simulation ? {simulation} : {}),...(map ? {map} : {})};
+  return {systems, scopes,...(commands ? {commands} : {}),...(simulation ? {simulation} : {}),...(map ? {map} : {})};
 }
 export function assertContextCredentials(config: ContextConfig, env: NodeJS.ProcessEnv) {
   if (config.systems.some(system => !env[system.tokenEnv]?.trim()) || (config.simulation?.enabled && !env[config.simulation.tokenEnv]?.trim())) throw new Error('业务查询凭证未配置，请在服务端环境变量中配置。');

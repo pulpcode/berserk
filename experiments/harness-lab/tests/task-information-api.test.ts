@@ -160,6 +160,7 @@ describe('task information HTTP/native Pi integration',()=>{
     const reprocessed=await f.a.call(`/api/information/jobs/${job.id}/reprocess`,{clientActionId:randomUUID()});
     expect(reprocessed.statusCode,reprocessed.body).toBe(200);const later=reprocessed.json<BackgroundJob>();
     await vi.waitFor(()=>expect(f.store.getJob(later.id).status).toBe('succeeded'),{timeout:10000});
+    await vi.waitFor(()=>expect(f.store.listDeliveries(later.id).filter(delivery=>delivery.status==='delivered')).toHaveLength(2),{timeout:10000});
     expect(later.eventId).toBe(event.id);expect(later.id).not.toBe(job.id);
     expect(f.store.getJob(later.id).retryOfJobId).toBe(job.id);
     f.lab.access!.db.prepare('UPDATE seats SET create_public=1 WHERE id=?').run('b');
