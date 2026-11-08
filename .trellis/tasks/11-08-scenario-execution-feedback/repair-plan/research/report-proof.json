@@ -1,0 +1,492 @@
+{
+  "finished": true,
+  "candidate": "2723aeb9350392ecdc7452b68b66ab085bacfaf2",
+  "archiveSha256": "c34deae997cdd266558abb2460061dd37a51effccad3a05ff1c767a3d069883f",
+  "rubricSha256": "42e1c9887937c8f63a446326bb2d8babf99024098694c2d3796c49ec15e6ab0b",
+  "trials": [
+    {
+      "trial": 1,
+      "protocolCompleted": true,
+      "sourceSteps": 36,
+      "presetMessages": 13,
+      "executionFeedback": 8,
+      "notices": 21,
+      "succeeded": 21,
+      "recorded": 21,
+      "delivered": 21,
+      "physicalFinal": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "accounting": {
+        "apiRequests": 145,
+        "attempts": 145,
+        "inputTokensCharged": 2897271,
+        "outputTokensCharged": 133705,
+        "conservativeCostCny": 6.864181999999995,
+        "stoppedReason": null,
+        "elapsedMs": 1550863,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "vehiclePathAndTraceSha256": {
+        "V01": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V03": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V06": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V07": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V08": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V11": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V13": "ab9ba7d885fd208f878f0f8cc143e7b111e524142db0d881369c31d13f189dd8"
+      },
+      "allFourBlockedAtClosure": true,
+      "allFourRemainBlockedAfterOldReport": true,
+      "recordingAuditPassed": true,
+      "actualWireParameters": [
+        [
+          "deepseek-v4.1-flash",
+          8192,
+          null,
+          false,
+          false
+        ]
+      ],
+      "nativeCompactions": [
+        {
+          "file": "data/background/jobs/a1a6f15e-2c63-4ca9-a88f-fed8b8a2635a/sessions/2026-11-08T13-15-30-787Z_2ed02ad5-6eff-4776-8a1b-25f07cc4604d.jsonl",
+          "tokensBefore": 117864,
+          "summaryLength": 1847
+        }
+      ],
+      "extraUserTurns": 0,
+      "nativeToolErrors": 7,
+      "historyChecks": [
+        {
+          "label": "resources-0930-093814",
+          "completed": true,
+          "expectedCount": 38,
+          "pages": 1,
+          "maxBodyBytes": 139632
+        },
+        {
+          "label": "v13-all-history",
+          "completed": true,
+          "expectedCount": 36,
+          "pages": 1,
+          "maxBodyBytes": 131895
+        }
+      ],
+      "deadlineReview": {
+        "sessionId": "01a1bb4a-5375-7174-b48b-fe0275adf0cc",
+        "requestId": "5280bfc8-dd06-40b3-a61c-4fc34c1af581",
+        "status": "succeeded",
+        "commandIds": [
+          "18f6a21d-3df1-4af2-97be-86cd8321b573",
+          "01c01600-b52a-4722-91a8-0aead43c3bb9"
+        ],
+        "semanticReviewPending": true
+      }
+    },
+    {
+      "trial": 2,
+      "protocolCompleted": true,
+      "sourceSteps": 36,
+      "presetMessages": 13,
+      "executionFeedback": 8,
+      "notices": 21,
+      "succeeded": 21,
+      "recorded": 21,
+      "delivered": 21,
+      "physicalFinal": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "accounting": {
+        "apiRequests": 149,
+        "attempts": 149,
+        "inputTokensCharged": 2938751,
+        "outputTokensCharged": 154474,
+        "conservativeCostCny": 7.113293999999993,
+        "stoppedReason": null,
+        "elapsedMs": 1777669,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "vehiclePathAndTraceSha256": {
+        "V01": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V03": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V06": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V07": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V08": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V11": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V13": "ab9ba7d885fd208f878f0f8cc143e7b111e524142db0d881369c31d13f189dd8"
+      },
+      "allFourBlockedAtClosure": true,
+      "allFourRemainBlockedAfterOldReport": true,
+      "recordingAuditPassed": true,
+      "actualWireParameters": [
+        [
+          "deepseek-v4.1-flash",
+          8192,
+          null,
+          false,
+          false
+        ]
+      ],
+      "nativeCompactions": [
+        {
+          "file": "data/background/jobs/01bb441a-9c93-4217-a8e9-19c8cc0c01a4/sessions/2026-11-08T13-32-03-770Z_acace2ca-a13a-4c41-b07e-21bf756626a9.jsonl",
+          "tokensBefore": 126732,
+          "summaryLength": 4019
+        }
+      ],
+      "extraUserTurns": 0,
+      "nativeToolErrors": 1,
+      "historyChecks": [
+        {
+          "label": "resources-0930-093814",
+          "completed": true,
+          "expectedCount": 38,
+          "pages": 1,
+          "maxBodyBytes": 139632
+        },
+        {
+          "label": "v13-all-history",
+          "completed": true,
+          "expectedCount": 36,
+          "pages": 1,
+          "maxBodyBytes": 131895
+        }
+      ],
+      "deadlineReview": {
+        "sessionId": "01a1bb64-ea35-7174-b48b-fe0857eee320",
+        "requestId": "d940fec3-ef71-42f6-8dae-49c9883578d4",
+        "status": "succeeded",
+        "commandIds": [
+          "d6623229-ed87-4842-a168-ab106899dd7c",
+          "e74864e0-fb12-4155-a4ff-1d38d469280e"
+        ],
+        "semanticReviewPending": true
+      }
+    },
+    {
+      "trial": 3,
+      "protocolCompleted": true,
+      "sourceSteps": 36,
+      "presetMessages": 13,
+      "executionFeedback": 8,
+      "notices": 21,
+      "succeeded": 21,
+      "recorded": 21,
+      "delivered": 21,
+      "physicalFinal": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "accounting": {
+        "apiRequests": 137,
+        "attempts": 137,
+        "inputTokensCharged": 2611242,
+        "outputTokensCharged": 144391,
+        "conservativeCostCny": 6.3776119999999965,
+        "stoppedReason": null,
+        "elapsedMs": 1648915,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "vehiclePathAndTraceSha256": {
+        "V01": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V03": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V06": "dd22913e73d1e3eadc00d891d77b1fb5b24c0d58d08fc6a971e4ab49c9dc20f3",
+        "V07": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V08": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V11": "781b8033d59ec68d5ead88405f9b4583acebcc1fbece7bd64172b71c7c87002b",
+        "V13": "ab9ba7d885fd208f878f0f8cc143e7b111e524142db0d881369c31d13f189dd8"
+      },
+      "allFourBlockedAtClosure": true,
+      "allFourRemainBlockedAfterOldReport": true,
+      "recordingAuditPassed": true,
+      "actualWireParameters": [
+        [
+          "deepseek-v4.1-flash",
+          8192,
+          null,
+          false,
+          false
+        ]
+      ],
+      "nativeCompactions": [],
+      "extraUserTurns": 0,
+      "nativeToolErrors": 4,
+      "historyChecks": [
+        {
+          "label": "resources-0930-093814",
+          "completed": true,
+          "expectedCount": 38,
+          "pages": 1,
+          "maxBodyBytes": 139632
+        },
+        {
+          "label": "v13-all-history",
+          "completed": true,
+          "expectedCount": 36,
+          "pages": 1,
+          "maxBodyBytes": 131895
+        }
+      ],
+      "deadlineReview": {
+        "sessionId": "01a1bb7d-a634-7174-b48b-fe0b36d5d42e",
+        "requestId": "fb1b92c3-6cb6-4bb2-b34b-071f898c78e3",
+        "status": "succeeded",
+        "commandIds": [
+          "fc7a26a9-2098-4b54-bc63-1564be1cb217",
+          "436ddb68-1f70-499a-9b74-cc4430a7f8c0"
+        ],
+        "semanticReviewPending": true
+      }
+    }
+  ],
+  "identicalPhysicalFinals": true,
+  "identicalVehiclePathsAndTraces": true,
+  "fixedRuntimeFilesVerified": 559,
+  "candidateArchiveVerified": true,
+  "runnerVerified": true,
+  "samePhysicalFinalAsV5": true,
+  "samePathsAndTracesAsV5": true
+}

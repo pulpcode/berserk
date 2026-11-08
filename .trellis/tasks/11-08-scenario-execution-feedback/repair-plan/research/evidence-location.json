@@ -1,0 +1,11 @@
+{
+  "serverArchive": "/home/ubuntu/axon-scenario-release-68dded362074/private/execution-v6-repair-evidence-20261108.tar.gz",
+  "sha256": "a68527df6dedc6bbddd78b11357365a9dc7739b7450db10f7993424fc421c2ee",
+  "bytes": 67516280,
+  "originalBatch": "/home/ubuntu/axon-scenario-release-68dded362074/probe-repair-20261108/evidence/execution-v6-2026-11-08T12-54-03-537Z",
+  "candidateCommit": "2723aeb9350392ecdc7452b68b66ab085bacfaf2",
+  "scannedFiles": 3622,
+  "keyFound": false,
+  "excludedDependencyDirectory": "node_modules; existing shared dependencies not copied",
+  "localArchive": "/Users/lau/Documents/Codex/执行反馈修复复验-20261108/v6-三轮完整原始证据.tar.gz"
+}
