@@ -1,1 +1,9 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/backend/commands.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/scenario-director.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/scenario-run-isolation.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/task-handoff.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/task-resources.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/context-analysis.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/background-execution.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/frontend/map-symbols.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
+{"file": ".trellis/spec/backend/situation-map.md", "reason": "执行模拟、时钟事务、来源事实、权限隔离及现有地图/通知集成契约"}
