@@ -1,0 +1,904 @@
+[
+  {
+    "trial": "trial-1",
+    "protocolCompleted": true,
+    "predefinedRows": 13,
+    "positiveHits": 13,
+    "correctExclusions": 14,
+    "missed": [
+      [
+        "E02a",
+        "M"
+      ]
+    ],
+    "unsupported": [],
+    "rows": [
+      {
+        "node": "E01",
+        "code": "E01a",
+        "title": "首报位置待核实",
+        "eventId": "2ef36606-ebf8-4eee-b024-40a860c3a2ba",
+        "jobId": "51e816c2-8391-423f-a1b7-5c6be0d144ff",
+        "actualLinks": [
+          "T03"
+        ],
+        "newTaskSuggestion": {
+          "title": "核实临港仓储区烟情与位置",
+          "goal": "核实社会来电所述临港仓储区烟情：确认是否确有烟雾或火情、所指对象究竟为临港三号仓库（L01）还是相邻仓库，明确现场位置与可核查的现场信息；若属实，评估临港站可投入资源（V01/V03/V06可用，V05至09:45演练占用，V04检修至11:00须确认）与H01—H04消火栓可用性，并说明对临港登高演练继续安排的影响；若为误报，记录核实结论与依据。",
+          "reason": "来报为位置待核实的社会来电首报，且描述在三号仓库与相邻仓库之间矛盾，核实本身是独立交付；现有两个活动任务的目标分别为临港演练执行（含V05释放以回报为准）与城西交通救援，均不含对社会来电烟情及仓库位置的核实，无法承接该核实项；核实结论同时决定是否需要对A01资源与演练安排作调整。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E02",
+        "code": "E02a",
+        "title": "交通救援进展",
+        "eventId": "59590513-8c5a-450d-bf28-0a680128a7b7",
+        "jobId": "1100d3f7-3afe-4adf-9086-efabba8c6d8d",
+        "actualLinks": [
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [
+          "M"
+        ],
+        "unsupported": []
+      },
+      {
+        "node": "E03",
+        "code": "E03a",
+        "title": "登高演练继续",
+        "eventId": "8f16f861-0be7-4784-b142-705f2a3b3b08",
+        "jobId": "f105d8cb-a33f-46e3-965e-70abdf05370f",
+        "actualLinks": [
+          "M",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04a",
+        "title": "仓库位置核实",
+        "eventId": "edb725c7-5bf7-49f0-9ee7-3f06918c03a1",
+        "jobId": "c7d11c8b-e1cf-4959-b380-ebeb7a54e09f",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04b",
+        "title": "无人机确认仓库位置",
+        "eventId": "5ad2ea6e-176f-4429-9836-d866264869f4",
+        "jobId": "d9e6b0e4-6f76-41ca-a3e6-399ab079f835",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E05",
+        "code": "E05a",
+        "title": "车辆资源清单确认",
+        "eventId": "00fd7a35-3b33-4bb6-92ae-c49b8fccdd51",
+        "jobId": "9fb6bffb-e964-4a75-943c-633be998d3eb",
+        "actualLinks": [
+          "M",
+          "T02",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": "E06a",
+        "title": "北货运路施工",
+        "eventId": "ed7d5fcb-1b20-490e-a5bb-05feccc64a38",
+        "jobId": "d7eb89b4-f147-4428-ae4f-cfec8d95ba51",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "63bdf6d7-a654-4133-9ede-b5709722ad3d",
+        "jobId": "27c071bd-d10e-481e-b617-17939c04ccbc",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "d07a93f3-0651-4c2e-abb6-b2d0a4d81af3",
+        "jobId": "9277c871-39e9-4f1f-aeb3-c41e2ff10bf4",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793668775000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "72d75a18-d52a-46a3-b154-ea852f9f1a54",
+        "jobId": "00da1262-138e-4c02-84a1-a223780704c4",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E07",
+        "code": "E07a",
+        "title": "城北路巡查",
+        "eventId": "432b3098-0893-42c4-a14a-9cfad6b17d7c",
+        "jobId": "e8bf17f5-4f38-49ac-a28d-26b83720b023",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": "E08a",
+        "title": "中轴桥封闭",
+        "eventId": "1b7f888d-2212-46a0-bd22-9824d556dcdd",
+        "jobId": "1bee2e40-1d33-4446-aa56-9f95a1f72f2d",
+        "actualLinks": [
+          "M",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": null,
+        "title": "车辆执行反馈：前方道路封闭，等待调整",
+        "eventId": "42afc2e2-d0b3-48e3-b761-9a6752fb539a",
+        "jobId": "99e9d5c1-6547-45cb-ac44-e498e5121199",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E09",
+        "code": "E09a",
+        "title": "中轴桥巡查情况",
+        "eventId": "b485a172-e18b-46f1-aeb8-c2a281dfe0f5",
+        "jobId": "aaff8c84-9f4a-48e8-80f4-61c2787a281f",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": "E10a",
+        "title": "东环线通行确认",
+        "eventId": "429b525c-f777-4de6-8573-17b3ffc8dec7",
+        "jobId": "a9c3e13a-8c9e-4994-8c20-28100f0e9b2c",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": null,
+        "title": "车辆执行反馈：已接收调整，等待继续出发",
+        "eventId": "846599f9-da86-4e60-90b8-0184a6acae73",
+        "jobId": "a967e457-ebd3-44a4-931b-a202d9664f34",
+        "actualLinks": [],
+        "newTaskSuggestion": {
+          "title": "指令0fa91ab7车队受阻与调整执行跟踪",
+          "goal": "核清V07、V08、V11、V13在09:23受阻时所处道路及封闭原因（是否与临港R01中轴桥临时封闭有关），确认09:25“已接收调整”的具体调整方案与预计恢复出发时间，跟踪四车由waiting转为继续行驶的回报，并评估恢复前对东城S02、西城S03资源可用性的占用影响。",
+          "reason": "现有三个任务均不承接该指令：临港烟情任务聚焦A01位置、道路与临港资源；登高演练仅涉V05/L03；城西救援仅涉V02/V14且明确不经过R01/R02/R03。四车分属东城/西城站、被0fa91ab7占用并停在两区间，无任务跟踪其受阻原因与调整执行，属独立跟进交付；建议仅提交人员确认，不含调派动作。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669160000",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "ec547ca2-cb3e-4b40-89e4-853bbe91aabc",
+        "jobId": "9cd6a546-c826-41e8-8892-a26614ef5ca3",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E11",
+        "code": "E11a",
+        "title": "交通救援持续处置",
+        "eventId": "b343fd6b-bc68-4275-a864-4b9fe2dbbd61",
+        "jobId": "fb89e00f-8f07-486f-a325-e02eb23c7f4a",
+        "actualLinks": [
+          "M",
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669894000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "3e600c28-ba8b-4fbe-a7aa-9593646ed6ef",
+        "jobId": "d9bb0ee3-2a7f-4374-a148-1a0750f84059",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E12",
+        "code": "E12a",
+        "title": "现场火势趋稳",
+        "eventId": "dcdf5c52-5b4f-4def-bd6c-694763ab60c5",
+        "jobId": "abd0e44b-8dc9-49f5-9447-1215f4e7447c",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793670402000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "8f0526a1-227b-4a94-b00b-ac3c07bfd4bd",
+        "jobId": "174684fb-4c8f-41f2-88cb-6b9ff62b8d47",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      }
+    ]
+  },
+  {
+    "trial": "trial-2",
+    "protocolCompleted": true,
+    "predefinedRows": 13,
+    "positiveHits": 13,
+    "correctExclusions": 14,
+    "missed": [
+      [
+        "E11a",
+        "M"
+      ]
+    ],
+    "unsupported": [],
+    "rows": [
+      {
+        "node": "E01",
+        "code": "E01a",
+        "title": "首报位置待核实",
+        "eventId": "16e3e268-01d0-459b-9672-19183c27d442",
+        "jobId": "1d7ac164-76ea-48ba-8b81-ad265ee724a6",
+        "actualLinks": [
+          "T03"
+        ],
+        "newTaskSuggestion": {
+          "title": "核实临港仓储区烟情",
+          "goal": "核实2026-11-03T09:12:00+08:00社会来电所称临港仓储区烟雾：确认真实性、具体位置（临港三号仓库L01还是描述不一致的相邻仓库）、范围与影响；对照演练场L03及V05（演练占用至09:45）评估对09:00—09:45临港登高演练的影响，回报核实结论与建议。",
+          "reason": "首报E01-a明确“位置待核实”，三号仓库与相邻仓库描述不一致，引用对象仅L01，定位结论尚无。现有“临港登高演练”目标仅涉及演练安排与V05释放，“城西交通救援”在A03且排除R01/R02/R03，均不承接烟情位置核实这一独立交付。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E02",
+        "code": "E02a",
+        "title": "交通救援进展",
+        "eventId": "8a028ab9-b277-45a8-9aca-707c18337a4f",
+        "jobId": "55dbcb7d-c37c-47c3-aab4-818932cef3a1",
+        "actualLinks": [
+          "M",
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E03",
+        "code": "E03a",
+        "title": "登高演练继续",
+        "eventId": "26e62e6f-1df1-4cdd-8570-d4b2bd13e70e",
+        "jobId": "a729e0cf-ee93-4d4a-86ca-1893a8f17152",
+        "actualLinks": [
+          "M",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04a",
+        "title": "仓库位置核实",
+        "eventId": "79f04c6f-b7c4-4c1f-87be-24615a618634",
+        "jobId": "b149ab52-a62f-48ac-a67e-a22d379da9ba",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04b",
+        "title": "无人机确认仓库位置",
+        "eventId": "1b778367-d3d6-44a1-af6b-36b392889cbd",
+        "jobId": "effa0a36-1b6d-48a9-85c7-379849d19a5c",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E05",
+        "code": "E05a",
+        "title": "车辆资源清单确认",
+        "eventId": "011d31ac-f829-433e-bd90-0269b6dbfda3",
+        "jobId": "9db158a6-bcb9-4fca-a94d-a5c69b3e0764",
+        "actualLinks": [
+          "M",
+          "T02",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": "E06a",
+        "title": "北货运路施工",
+        "eventId": "f60d9118-31ed-4311-a642-d52b923007a4",
+        "jobId": "9dcbebaf-970b-4f6f-aa13-845967aa9a17",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "360a6661-6ca3-4e40-8200-5b477b812ec3",
+        "jobId": "66132122-0172-476f-bede-70fe449da80e",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "0bee473f-ebb8-4d95-ab5e-721559569666",
+        "jobId": "5d7358c7-1433-499e-b616-86b5394726f7",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793668775000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "e0e7b1e4-9f26-4325-892c-89c6c1b0c0c7",
+        "jobId": "47e79d49-81a2-4e73-a4cd-ca7a62ef62e8",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E07",
+        "code": "E07a",
+        "title": "城北路巡查",
+        "eventId": "467b0891-b3f0-4ca1-a7c8-511aaec6983d",
+        "jobId": "2768baa1-2669-44a2-9ccc-efc76f04dd32",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": "E08a",
+        "title": "中轴桥封闭",
+        "eventId": "ca3c5cad-f3b1-4c9d-84e7-fe62a4e9bfca",
+        "jobId": "23ec5fd2-bd6e-4e49-8bf8-b1719273abb3",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": null,
+        "title": "车辆执行反馈：前方道路封闭，等待调整",
+        "eventId": "044da40a-1915-4890-9a57-29f9e3597eed",
+        "jobId": "d15b65ec-6fe7-4b78-8353-6d815c34781c",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": {
+          "title": "指令7bf3a727受阻车队通行调整核实",
+          "goal": "核实 V07/V08/V11/V13 前方封闭道路的具体路名与位置、以及该指令的目的地（是否属临港烟情增援）；结合 R01 中轴桥 09:23—10:00 临时封闭与各车当前位置，评估绕行或等待至 10:00 的可行方案及到场时间，回报总体席供人员决策。",
+          "reason": "现有三个任务分别聚焦城西 V02/V14 救援、临港演练 V05/L03、临港烟情核实与研判，均未承接指令 7bf3a727 下车队本身的路线调整与到场时间问题；烟情任务只覆盖核实研判，无法承接对该车队执行方案的独立交付。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E09",
+        "code": "E09a",
+        "title": "中轴桥巡查情况",
+        "eventId": "182cd7a3-cc15-409c-8b93-b25300cebfd4",
+        "jobId": "b160f90f-e1e3-4f79-9957-98707acffca3",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": {
+          "title": "中轴桥封闭原因与替代路线核实",
+          "goal": "核实R01中轴桥09:23起临时事故封闭的具体原因、涉及车辆与现场情况，确认滨港路R03等替代路线在09:23—10:00期间对临港区域通行（含三号仓库处置车辆进出）的可用性，并说明E09-a巡查结论（09:11—09:12通行正常）为何不能作为当前道路事实引用。",
+          "reason": "现有三个活动任务的核查目标均未承接这一独立交付：仓储烟情任务聚焦烟情位置与当前道路/资源事实汇总，不负责封闭原因与替代路线可用性结论；登高演练与交通救援任务分别排除R01或与R01无关。E09-a与E08-a之间存在观测时点与封闭时点的衔接缺口（09:12—09:23），需单独核实。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": "E10a",
+        "title": "东环线通行确认",
+        "eventId": "257ce68d-a383-4dc2-8d44-9ed4f85798f7",
+        "jobId": "fce1a111-f1e6-4514-a622-f2d92d3b20a3",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": null,
+        "title": "车辆执行反馈：已接收调整，等待继续出发",
+        "eventId": "c3d7c473-84c3-4a43-83a0-00258d046215",
+        "jobId": "6f179fe7-5ad8-41ae-9870-f9ad7dd39963",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669160000",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "82c24397-f6be-4c1b-a65e-e7bd81440b96",
+        "jobId": "a8c9c230-b919-4694-a51d-e7bb0c4b0bbd",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E11",
+        "code": "E11a",
+        "title": "交通救援持续处置",
+        "eventId": "8355ed5c-d5ee-40fc-abdd-e2f2e324b1a4",
+        "jobId": "a9ba7abc-a939-4cb9-8b3d-88f9a789b084",
+        "actualLinks": [
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [
+          "M"
+        ],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669894000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "49bf3c37-7127-483f-9bfa-164d005e0094",
+        "jobId": "eedb1cb5-d237-4d5a-ae27-cc8d8774031e",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E12",
+        "code": "E12a",
+        "title": "现场火势趋稳",
+        "eventId": "f42ac3f4-c14b-472e-9856-88c0c2ef2d5c",
+        "jobId": "13d6147d-fddd-46dc-9ac1-05b8fa3a2942",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793670402000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "48186dfb-ddb8-4b4e-b286-7f554bf9280e",
+        "jobId": "6e07c543-7347-443a-a6c7-a155ccffd7fc",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      }
+    ]
+  },
+  {
+    "trial": "trial-3",
+    "protocolCompleted": true,
+    "predefinedRows": 13,
+    "positiveHits": 13,
+    "correctExclusions": 14,
+    "missed": [
+      [
+        "E11a",
+        "M"
+      ]
+    ],
+    "unsupported": [],
+    "rows": [
+      {
+        "node": "E01",
+        "code": "E01a",
+        "title": "首报位置待核实",
+        "eventId": "78614d8d-1f89-4ca8-b164-cc733ebd5abb",
+        "jobId": "db3b5f61-9afc-41b3-aa3e-c64f3e9b4d8a",
+        "actualLinks": [
+          "T03"
+        ],
+        "newTaskSuggestion": {
+          "title": "临港仓储区烟情首报核实",
+          "goal": "核实2026-11-03 09:12社会来电所述临港仓储区烟情：查明烟点究竟位于三号仓库（L01）还是相邻仓库，是否存在真实烟情及其范围，并评估对临港仓储区人员设施、A01内资源及09:00—09:45登高演练的实际影响；核实后按来源回报更新或撤销。",
+          "reason": "现有两个活动任务分别是既定登高演练和城西交通救援，目标均不含对独立社会来电烟情的查证与定性；本首报位置待核实、仓库描述不一致，属于需要单独核实交付的事项，演练任务只能承接其中与演练是否维持相关的判断，无法覆盖烟情本身的查证与处置。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E02",
+        "code": "E02a",
+        "title": "交通救援进展",
+        "eventId": "0606e739-5897-43ca-a95f-40284a4ed0e5",
+        "jobId": "79240a3a-5838-43fe-996f-30bc21eebe02",
+        "actualLinks": [
+          "M",
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E03",
+        "code": "E03a",
+        "title": "登高演练继续",
+        "eventId": "8ca34f49-cd55-43b3-bbc8-a7e6fc7b0c7e",
+        "jobId": "736d8932-1686-4396-b631-2d577100b3f1",
+        "actualLinks": [
+          "M",
+          "T03"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04a",
+        "title": "仓库位置核实",
+        "eventId": "225b268f-fea1-4313-b4fe-a37954d21344",
+        "jobId": "89cb8c8b-f2ce-4d02-9ad8-e2e9af346c42",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E04",
+        "code": "E04b",
+        "title": "无人机确认仓库位置",
+        "eventId": "6b196600-3e46-40e1-936d-802d59afb48b",
+        "jobId": "39d9ac89-0b7c-4955-b631-34c4e2eab435",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E05",
+        "code": "E05a",
+        "title": "车辆资源清单确认",
+        "eventId": "80c49f14-579a-4d8c-9857-470f6db66b36",
+        "jobId": "2ea88abd-ba5a-4b75-945f-5d2cb409df28",
+        "actualLinks": [
+          "M",
+          "T02",
+          "T03"
+        ],
+        "newTaskSuggestion": {
+          "title": "六站二十四车清单引用范围与状态完整性核对",
+          "goal": "以 situation 当前快照（businessNow 2026-11-03T09:18:00+08:00，场景 revision 7）逐车核对 V01—V24 与 S01—S06、A01—A06 的清单完整性：说明 E05-a 只引用 V01—V20（20 辆）和 A01—A05（5 个区域）却自述\"六站二十四车\"的差异；补核 V24（仅 08:50 记录、位置 validUntil 09:10 已过期、可用性 unknown、归属 A06 新区站）、V21（南湾留守、跨区支援需确认）、V04（检修至 11:00 须确认）、V12（例行检查最早 09:40 须完成确认）的状态与位置，形成逐车可用性与待核实清单。",
+          "reason": "三个现有任务分别聚焦临港仓储烟情、临港登高演练与城西交通救援；临港烟情目标只能承接 A01 站区资源可用性，而全车队 24 车的清单完整性、A06 新区站车辆（V23/V24）状态、以及报告引用范围（20 辆/5 区域）与自述\"六站二十四车\"不一致，属现有目标无法承接的独立交付。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": "E06a",
+        "title": "北货运路施工",
+        "eventId": "c6b40f3d-2563-4538-844b-e888cd5f409b",
+        "jobId": "eac6558d-ccf7-4585-9680-17af1b998441",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "372cdf91-12ba-48c5-9cb0-ab93ef3d634e",
+        "jobId": "60f2cc5d-f070-403a-ab28-778f956f06cd",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E06",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "387110dd-d188-4a88-8955-82c785e32944",
+        "jobId": "108b5571-d317-4f2b-b12a-20db11782257",
+        "actualLinks": [],
+        "newTaskSuggestion": {
+          "title": "核实指令35ab8288车辆去向与占用影响",
+          "goal": "核实指令35ab8288-f1f9-4a8b-8de3-9a711df9146d的任务归属、目的地及预计到达/释放时间，确认V07/V08/V11/V13四车（3辆水罐车、1辆通信车）出动是否用于增援临港烟情或城西救援，并评估对东城站S02、西城站S03可用资源的影响。当前仅确认09:19已出发且占用不可用，车辆位置仍与站址坐标一致，尚未体现位移。",
+          "reason": "现有三个活动任务均无法承接该指令及四车的核实：临港任务聚焦A01/L01现场，登高演练仅涉及V05/L03，城西救援仅涉及V02/V14及路线排除；四车去向与任务归属不明，属额外独立核实交付。"
+        },
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793668775000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "3937eb75-d17e-45c3-b4ae-9c0fe5ec7bf6",
+        "jobId": "1e5ca281-af57-44b8-b52f-6ae0e14c4e82",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E07",
+        "code": "E07a",
+        "title": "城北路巡查",
+        "eventId": "bd79ad87-10e3-4d67-b6a8-a59967069f44",
+        "jobId": "24c1636b-a216-44e2-9f33-7904e619bd7e",
+        "actualLinks": [],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": "E08a",
+        "title": "中轴桥封闭",
+        "eventId": "0c061498-953e-430a-a5ef-6408f3719fa0",
+        "jobId": "1d5c9802-9c55-439b-9c8e-95669a8df4d0",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E08",
+        "code": null,
+        "title": "车辆执行反馈：前方道路封闭，等待调整",
+        "eventId": "26950fec-300c-4ddd-838b-72e19f399dfd",
+        "jobId": "de20fbf5-f4a1-4947-948f-b0fb33756505",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E09",
+        "code": "E09a",
+        "title": "中轴桥巡查情况",
+        "eventId": "7374e91c-2f73-43d2-afab-f70696fac582",
+        "jobId": "ea7ac2cf-e304-460a-a947-37476f4717a1",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": "E10a",
+        "title": "东环线通行确认",
+        "eventId": "130696c8-55c0-4dea-898a-b52cfcc94bb3",
+        "jobId": "67aa85e1-1f63-460a-bba8-0c85b4aed1d9",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E10",
+        "code": null,
+        "title": "车辆执行反馈：已接收调整，等待继续出发",
+        "eventId": "ad877253-a823-4d27-a23d-a54f2cfa609a",
+        "jobId": "26f9d3e3-0871-40b8-8b25-3e99264e4872",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669160000",
+        "code": null,
+        "title": "车辆执行反馈：已出发",
+        "eventId": "4eaf290f-3a3e-4a60-b4a5-4b303cf42193",
+        "jobId": "62f75f68-1ef0-4d8f-bd6a-32e1560e4560",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E11",
+        "code": "E11a",
+        "title": "交通救援持续处置",
+        "eventId": "8665b84f-433b-4c2b-bc44-44cd2bdbf64d",
+        "jobId": "1bd119c7-48b3-4273-b46b-a85e8c970035",
+        "actualLinks": [
+          "T02"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [
+          "M"
+        ],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793669894000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "d45bcbfd-f261-41a5-bb6e-4afe3e967e64",
+        "jobId": "61c2848b-7f2d-4469-b778-525e54ea1464",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "E12",
+        "code": "E12a",
+        "title": "现场火势趋稳",
+        "eventId": "83f74c57-ed9b-40fb-97de-88e6649db7e4",
+        "jobId": "0b6eb7eb-ae1e-4467-a9d9-2a0ddcac8d24",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      },
+      {
+        "node": "exec-1793670402000",
+        "code": null,
+        "title": "车辆执行反馈：已到场，继续任务占用",
+        "eventId": "12dd180b-889b-410b-b01e-c5c40d0e4d45",
+        "jobId": "fc68b50a-73b7-43e0-ac9b-686caffa74c5",
+        "actualLinks": [
+          "M"
+        ],
+        "newTaskSuggestion": null,
+        "missing": [],
+        "unsupported": []
+      }
+    ]
+  }
+]

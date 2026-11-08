@@ -1,0 +1,427 @@
+{
+  "candidateCommit": "beef47bd2675009cc81ec55c02237c8c47593bff",
+  "archiveSha256": "f019a2492b53f837e3ac67b5e8fc2777fa38fe2cf08acf8b5fe2101c43b19201",
+  "rubricSha256": "341cb77f2db6feebe1134738ecdb62ca64bd2fd9f7522274ef712d3c2a0bf2c5",
+  "plannedTrials": 3,
+  "finished": true,
+  "trials": [
+    {
+      "trial": 1,
+      "protocolCompleted": true,
+      "failure": null,
+      "definition": {
+        "id": "harbor-fire",
+        "version": "5",
+        "name": "临港仓储火情",
+        "description": "支持车辆指令、确定性行进与执行反馈的合成场景。",
+        "definitionHash": "487d9ea157c728467c6a176e5a2f47753da17d69c553dbc793621bc83e26992a",
+        "businessDay": "2026-11-03",
+        "initialBusinessNow": "2026-11-03T09:10:00+08:00",
+        "modes": [
+          "main_story",
+          "source_replay"
+        ],
+        "counts": {
+          "vehicles": 24,
+          "objects": 53,
+          "resources": 41,
+          "steps": 12,
+          "messages": 13
+        },
+        "geography": {
+          "label": "上海临港实景上的消防演示",
+          "attribution": "道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。",
+          "bounds": [
+            121.76,
+            30.82,
+            121.96,
+            30.98
+          ],
+          "synthetic": true
+        }
+      },
+      "accounting": {
+        "apiRequests": 146,
+        "attempts": 146,
+        "inputTokensCharged": 3274483,
+        "outputTokensCharged": 172802,
+        "conservativeCostCny": 7.931381999999999,
+        "stoppedReason": null,
+        "elapsedMs": 1934862,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "final": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "steps": 36,
+      "notices": 21,
+      "succeeded": 21,
+      "delivered": 21,
+      "recorded": 21
+    },
+    {
+      "trial": 2,
+      "protocolCompleted": true,
+      "failure": null,
+      "definition": {
+        "id": "harbor-fire",
+        "version": "5",
+        "name": "临港仓储火情",
+        "description": "支持车辆指令、确定性行进与执行反馈的合成场景。",
+        "definitionHash": "487d9ea157c728467c6a176e5a2f47753da17d69c553dbc793621bc83e26992a",
+        "businessDay": "2026-11-03",
+        "initialBusinessNow": "2026-11-03T09:10:00+08:00",
+        "modes": [
+          "main_story",
+          "source_replay"
+        ],
+        "counts": {
+          "vehicles": 24,
+          "objects": 53,
+          "resources": 41,
+          "steps": 12,
+          "messages": 13
+        },
+        "geography": {
+          "label": "上海临港实景上的消防演示",
+          "attribution": "道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。",
+          "bounds": [
+            121.76,
+            30.82,
+            121.96,
+            30.98
+          ],
+          "synthetic": true
+        }
+      },
+      "accounting": {
+        "apiRequests": 138,
+        "attempts": 138,
+        "inputTokensCharged": 2800221,
+        "outputTokensCharged": 168757,
+        "conservativeCostCny": 6.950497999999993,
+        "stoppedReason": null,
+        "elapsedMs": 1866096,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "final": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "steps": 36,
+      "notices": 21,
+      "succeeded": 21,
+      "delivered": 21,
+      "recorded": 21
+    },
+    {
+      "trial": 3,
+      "protocolCompleted": true,
+      "failure": null,
+      "definition": {
+        "id": "harbor-fire",
+        "version": "5",
+        "name": "临港仓储火情",
+        "description": "支持车辆指令、确定性行进与执行反馈的合成场景。",
+        "definitionHash": "487d9ea157c728467c6a176e5a2f47753da17d69c553dbc793621bc83e26992a",
+        "businessDay": "2026-11-03",
+        "initialBusinessNow": "2026-11-03T09:10:00+08:00",
+        "modes": [
+          "main_story",
+          "source_replay"
+        ],
+        "counts": {
+          "vehicles": 24,
+          "objects": 53,
+          "resources": 41,
+          "steps": 12,
+          "messages": 13
+        },
+        "geography": {
+          "label": "上海临港实景上的消防演示",
+          "attribution": "道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。",
+          "bounds": [
+            121.76,
+            30.82,
+            121.96,
+            30.98
+          ],
+          "synthetic": true
+        }
+      },
+      "accounting": {
+        "apiRequests": 151,
+        "attempts": 151,
+        "inputTokensCharged": 3293616,
+        "outputTokensCharged": 171669,
+        "conservativeCostCny": 7.960583999999996,
+        "stoppedReason": null,
+        "elapsedMs": 1900994,
+        "limits": null,
+        "accountingOnly": {
+          "providerInputLimitTokens": 131072,
+          "inputCnyPerMillion": 2,
+          "outputCnyPerMillion": 8
+        }
+      },
+      "final": {
+        "arrivedVehicles": 7,
+        "allArrivedBy0935": false,
+        "businessNow": "2026-11-03T09:46:42.000+08:00",
+        "local": [
+          {
+            "vehicle": "V01",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V03",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V06",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:19:35.000+08:00",
+            "distanceMeters": 416.20805456672275,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ],
+        "cross": [
+          {
+            "vehicle": "V07",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V08",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V11",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:38:14.000+08:00",
+            "distanceMeters": 8804.809290158515,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          },
+          {
+            "vehicle": "V13",
+            "state": "arrived",
+            "arrivedAt": "2026-11-03T09:46:42.000+08:00",
+            "distanceMeters": 14893.16919153821,
+            "position": [
+              121.8650368,
+              30.88177
+            ]
+          }
+        ]
+      },
+      "steps": 36,
+      "notices": 21,
+      "succeeded": 21,
+      "delivered": 21,
+      "recorded": 21
+    }
+  ],
+  "startedAt": "2026-11-08T08:51:59.192Z",
+  "executionEnvironment": "local isolated macOS",
+  "scriptedHumanControl": true,
+  "model": {
+    "provider": "volcengine-agent-plan",
+    "model": "deepseek-v4.1-flash",
+    "contextWindow": 131072,
+    "maxOutputTokens": 8192
+  },
+  "cumulativeBudgetStops": false,
+  "preparationZeroCalls": true,
+  "currentTrial": 3,
+  "finishedAt": "2026-11-08T10:27:06.401Z"
+}

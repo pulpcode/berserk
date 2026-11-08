@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 18
+- **Total Sessions**: 19
 - **Last Active**: 2026-11-08
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~547 | Active |
+| `journal-1.md` | ~583 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 19 | 2026-11-08 | 外部模拟执行与反馈集成及三轮复验 | `a266329`, `beef47b` | `codex/scenario-demo` |
 | 18 | 2026-11-08 | 控制席指令下达与文档软流程实施 | `d36947a`, `7c964a5` | `codex/scenario-demo` |
 | 17 | 2026-11-06 | v0.2线上发布与只读核验 | `48c99a1`, `a2c00b8` | `codex/scenario-demo` |
 | 16 | 2026-11-06 | 普通初析v0.2实施与三轮完整复验 | `b133400`, `a2c00b8`, `9a5d723` | `codex/scenario-demo` |

@@ -1,0 +1,285 @@
+{
+  "reviewer": "AI离线核对，待用户审阅",
+  "notes": [
+    {
+      "trial": 1,
+      "node": "E02",
+      "title": "交通救援进展",
+      "kind": "missed-main-task",
+      "evidence": "临港仓储烟情核实（44062dfa）→ 排除：来报只覆盖城西救援，不能回答临港烟情位置、道路或资源核实项；V02 的占用至多构成‘若需调用临港站水罐车则不可用’的背景，无实际依赖。",
+      "assessment": "主任务要求核实资源事实，V02归属临港且在外占用本身就是相关资源限制。沿用前期完整目标口径，属于已知类别的漏关联。",
+      "evidenceRecords": [
+        {
+          "eventId": "59590513-8c5a-450d-bf28-0a680128a7b7",
+          "jobId": "1100d3f7-3afe-4adf-9086-efabba8c6d8d"
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "node": "E01",
+      "title": "首报位置待核实",
+      "kind": "incorrect-owner",
+      "evidence": "仅可确认V02/V14归属西城消防站S03",
+      "assessment": "V02归属S01，当前位置在A03/L02；把所在地与归属混为一谈。E02正文后来正确区分，不消除E01原判断理由错误。",
+      "evidenceRecords": [
+        {
+          "eventId": "2ef36606-ebf8-4eee-b024-40a860c3a2ba",
+          "jobId": "51e816c2-8391-423f-a1b7-5c6be0d144ff"
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "node": "E08",
+      "title": "中轴桥封闭",
+      "kind": "incorrect-owner",
+      "evidence": "V02/V14 归属 S03 西城消防站",
+      "assessment": "V02归属S01，当前位置在A03/L02；同类事实错误再次出现。",
+      "evidenceRecords": [
+        {
+          "eventId": "1b7f888d-2212-46a0-bd22-9824d556dcdd",
+          "jobId": "1bee2e40-1d33-4446-aa56-9f95a1f72f2d"
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "node": "E06",
+      "title": "车辆执行反馈：已出发",
+      "kind": "date-inconsistency",
+      "evidence": "业务时间 2026-03-11 09:19 +08:00，即 2026-11-03T09:19:00+08:00",
+      "assessment": "同一行将11月3日写成3月11日；原ISO与来源仍正确，模拟计算未用模型文本。",
+      "evidenceRecords": [
+        {
+          "eventId": "63bdf6d7-a654-4133-9ede-b5709722ad3d",
+          "jobId": "27c071bd-d10e-481e-b617-17939c04ccbc"
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "node": "E10",
+      "title": "车辆执行反馈：已接收调整，等待继续出发",
+      "kind": "feedback-context-gap-and-new-task-review",
+      "evidence": "指令的任务目的与所属任务——现有09:19、09:23、09:25三条反馈均未说明目的地；建议跟踪该指令车队受阻原因与调整执行。",
+      "assessment": "反馈正文及车辆来源属性仅提供原指令号、状态和轨迹，不含目的地/路线；后台profile没有指令查询工具。模型因而无法直接核对这四车实际属于主任务安排，出现全部不关联并建议独立跟踪。单列为反馈业务上下文缺口，不能简单归为漏读或模型无依据编造。后续应以外部事实补足目的地/路线或授权查询引用，不能塞预设任务关联答案。 当前主任务目标沿用核实与决策支持，是否另立执行跟踪任务还需审阅独立交付，不能仅凭脚本把指令挂在M下就认定所有新建议错误。",
+      "evidenceRecords": [
+        {
+          "eventId": "846599f9-da86-4e60-90b8-0184a6acae73",
+          "jobId": "a967e457-ebd3-44a4-931b-a202d9664f34"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E01",
+      "title": "首报位置待核实",
+      "kind": "release-condition-overstated",
+      "evidence": "若为误报或远离演练场，演练可按计划延续，V05 仍 09:45 释放。",
+      "assessment": "原任务与来源都要求释放以回报为准，此处把计划占用截止说成确定释放。该轮后续E03又正确说明不能仅凭09:45认定释放。外部程序不采用模型文本释放车辆。",
+      "evidenceRecords": [
+        {
+          "eventId": "16e3e268-01d0-459b-9672-19183c27d442",
+          "jobId": "1d7ac164-76ea-48ba-8b81-ad265ee724a6"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E08",
+      "title": "车辆执行反馈：前方道路封闭，等待调整",
+      "kind": "direction-reversed",
+      "evidence": "四车当前分别位于东城站以东、西城站以西的路上",
+      "assessment": "已查坐标相反：V07/V08/V11为121.8788、东城站121.9018，车在站西；V13为121.8168、西城站121.7872，车在站东。属于方向表述错误，不是来源坐标或路径改动。",
+      "evidenceRecords": [
+        {
+          "eventId": "044da40a-1915-4890-9a57-29f9e3597eed",
+          "jobId": "d15b65ec-6fe7-4b78-8353-6d815c34781c"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E09",
+      "title": "中轴桥巡查情况",
+      "kind": "new-task-overlap",
+      "evidence": "中轴桥封闭原因与替代路线核实；现有三个目标均未承接该独立交付",
+      "assessment": "主任务已有当前道路事实、整理不确定事项与进一步核实需求目标。封闭原因、替代路线和旧观测不可作当前依据，一般可由现有目标承接，缺少为何必须独立交付的说明。只是建议，未自动创建。",
+      "evidenceRecords": [
+        {
+          "eventId": "182cd7a3-cc15-409c-8b93-b25300cebfd4",
+          "jobId": "b160f90f-e1e3-4f79-9957-98707acffca3"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E08",
+      "title": "车辆执行反馈：前方道路封闭，等待调整",
+      "kind": "arrival-time-overstated",
+      "evidence": "涉及A01的处置时间窗建议按10:00以后预留",
+      "assessment": "R01封闭至10:00不等于所有接近路线都必须等待10:00。来源有R02/R03通行事实，本轮实际09:25绕行、三车09:38:14到场。若按原路等解封须明确该条件；不能把缺少路线/指令查询转成所有A01处置都晚于10:00的建议。",
+      "evidenceRecords": [
+        {
+          "eventId": "044da40a-1915-4890-9a57-29f9e3597eed",
+          "jobId": "d15b65ec-6fe7-4b78-8353-6d815c34781c"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E11",
+      "title": "交通救援持续处置",
+      "kind": "missed-main-task",
+      "evidence": "仅存在边际联系（V02属临港站却在A03占用至10:00），任务未指定该资源、也无使用计划证据",
+      "assessment": "与第一轮E02同类：主任务完整目标包含资源事实核实，本地所属V02在外占用即为资源约束。第二轮E02曾正确关联，后续状态延续却漏掉主任务。",
+      "evidenceRecords": [
+        {
+          "eventId": "8355ed5c-d5ee-40fc-abdd-e2f2e324b1a4",
+          "jobId": "a9ba7abc-a939-4cb9-8b3d-88f9a789b084"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "exec-1793669160000",
+      "title": "车辆执行反馈：已出发",
+      "kind": "position-membership-conflation",
+      "evidence": "位置：V07/V08/V11在A02（121.8788,30.91），V13在A03（121.8169,30.9018）。所在地与归属两事实一致",
+      "assessment": "这些点在对应区域多边形之外，areaIds/homeStation是归属口径。本轮09:25的上一份反馈正确区分，09:26正文又把二者混同；原始位置和轨迹没有跳回归属区域。",
+      "evidenceRecords": [
+        {
+          "eventId": "82c24397-f6be-4c1b-a65e-e7bd81440b96",
+          "jobId": "a8c9c230-b919-4694-a51d-e7bb0c4b0bbd"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "E10",
+      "title": "东环线通行确认",
+      "kind": "invented-geometry-change",
+      "evidence": "修订2于09:25仅几何坐标微调",
+      "assessment": "已逐点比较该作业实际查得R02变更记录before.geometry与after.geometry，完全相同；该更新确认通行状态延续，没有几何微调。",
+      "evidenceRecords": [
+        {
+          "eventId": "257ce68d-a383-4dc2-8d44-9ed4f85798f7",
+          "jobId": "fce1a111-f1e6-4514-a622-f2d92d3b20a3"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "exec-1793670402000",
+      "title": "车辆执行反馈：已到场，继续任务占用",
+      "kind": "incorrect-real-query-time",
+      "evidence": "07:53:28是本轮宿主查询时间，不是业务时点",
+      "assessment": "该作业实际工具结果queriedAt为2026-11-08T09:53:28.110Z等09:53/09:54 UTC记录，正文将09写成07。业务到场时刻09:46:42仍引用正确；不是来源时钟或隔离系统把时间改了。",
+      "evidenceRecords": [
+        {
+          "eventId": "48186dfb-ddb8-4b4e-b286-7f554bf9280e",
+          "jobId": "6e07c543-7347-443a-a6c7-a155ccffd7fc"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "E06",
+      "title": "车辆执行反馈：已出发",
+      "kind": "feedback-context-gap-and-new-task-review",
+      "evidence": "四车在A02/A03，与临港A01/L01无引用、区域或资源交集；建议核实指令35ab8288车辆去向与占用影响",
+      "assessment": "实际该四车由主任务控制工作区派出，但后台反馈未含目的地/路线且无指令读取工具。因业务事实不足，该条全部排除并建议另立去向核实。与第一轮调整反馈同类，属于需补足来源事实的上下文缺口；不计入原预设84个关系的正确率。",
+      "evidenceRecords": [
+        {
+          "eventId": "387110dd-d188-4a88-8955-82c785e32944",
+          "jobId": "108b5571-d317-4f2b-b12a-20db11782257"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "E05",
+      "title": "车辆资源清单确认",
+      "kind": "new-task-scope-review",
+      "evidence": "六站二十四车清单引用范围与状态完整性核对；车队清单完整性属额外独立交付",
+      "assessment": "主任务可承接相关资源事实和不确定项。全市台账完整性是否额外形成独立交付由总体席审阅，不能只因引用不齐就默认另立，也不能把全部跨区台账工作强行纳入主任务。本建议未自动创建。",
+      "evidenceRecords": [
+        {
+          "eventId": "80c49f14-579a-4d8c-9857-470f6db66b36",
+          "jobId": "2ea88abd-ba5a-4b75-945f-5d2cb409df28"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "exec-1793669160000",
+      "title": "车辆执行反馈：已出发",
+      "kind": "confirmation-misreported-as-reopening",
+      "evidence": "R02东环线在09:25恢复开放",
+      "assessment": "R02自09:10即为open，09:25是open→open的通行正常确认，并未恢复或解除封闭。该轮E10正文已经正确说明状态延续，后续反馈正文又误写为恢复。外部道路状态没有发生这种恢复。",
+      "evidenceRecords": [
+        {
+          "eventId": "4eaf290f-3a3e-4a60-b4a5-4b303cf42193",
+          "jobId": "62f75f68-1ef0-4d8f-bd6a-32e1560e4560"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "E11",
+      "title": "交通救援持续处置",
+      "kind": "missed-main-task",
+      "evidence": "目标为烟情位置/道路/资源核实，来报为城西救援占用，无具体依赖",
+      "assessment": "与前两轮同类。V02归属临港S01且继续在外占用，是主任务要求核实的资源事实。该轮E02正确关联，E11状态延续确认反而排除了主任务。",
+      "evidenceRecords": [
+        {
+          "eventId": "8665b84f-433b-4c2b-bc44-44cd2bdbf64d",
+          "jobId": "1bd119c7-48b3-4273-b46b-a85e8c970035"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "exec-1793670402000",
+      "title": "车辆执行反馈：已到场，继续任务占用",
+      "kind": "unsupported-time-condition",
+      "evidence": "均以“占用持续、08时前未释放”为前提",
+      "assessment": "当前业务时点为09:46:42，来源没有08时相关的释放条件。正文出现未受来源支持的时间条件；实际来源执行和占用记录没有采用该条件。",
+      "evidenceRecords": [
+        {
+          "eventId": "12dd180b-889b-410b-b01e-c5c40d0e4d45",
+          "jobId": "fc68b50a-73b7-43e0-ac9b-686caffa74c5"
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "node": "exec-1793669894000",
+      "title": "车辆执行反馈：已到场，继续任务占用",
+      "kind": "source-change-response-too-large",
+      "evidence": "CONTEXT_RESPONSE_TOO_LARGE: 来源响应超过256KiB，未读取部分资料。",
+      "assessment": "变更记录before/after重复包含不断增长的executionTrack。第二轮100条资源变更、第三轮仅V13的50条变更均触及现有上限。模型没有补查原历史范围，改用或保留已取得的当前资料完成记录。需收口来源历史返回体积及读取策略；当前状态可查和记录成功均不证明历史已查全。",
+      "evidenceRecords": [
+        {
+          "eventId": "49bf3c37-7127-483f-9bfa-164d005e0094",
+          "jobId": "eedb1cb5-d237-4d5a-ae27-cc8d8774031e"
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "node": "exec-1793670402000",
+      "title": "车辆执行反馈：已到场，继续任务占用",
+      "kind": "source-change-response-too-large",
+      "evidence": "CONTEXT_RESPONSE_TOO_LARGE: 来源响应超过256KiB，未读取部分资料。",
+      "assessment": "变更记录before/after重复包含不断增长的executionTrack。第二轮100条资源变更、第三轮仅V13的50条变更均触及现有上限。模型没有补查原历史范围，改用或保留已取得的当前资料完成记录。需收口来源历史返回体积及读取策略；当前状态可查和记录成功均不证明历史已查全。",
+      "evidenceRecords": [
+        {
+          "eventId": "12dd180b-889b-410b-b01e-c5c40d0e4d45",
+          "jobId": "fc68b50a-73b7-43e0-ac9b-686caffa74c5"
+        }
+      ]
+    }
+  ]
+}

@@ -2,8 +2,8 @@
   "id": "scenario-execution-feedback",
   "name": "scenario-execution-feedback",
   "title": "场景第二轮：外部模拟执行与反馈集成",
-  "description": "形成外部模拟执行、占用、行动反馈和Axon集成方案供审阅，仅规划。",
-  "status": "in_progress",
+  "description": "完成外部确定性模拟执行、指令查询与调整、导演行动节点和来源反馈集成；工程及三轮真实模型复验已完成，结果待审阅。",
+  "status": "review",
   "dev_type": "fullstack",
   "scope": "scenario-execution-feedback",
   "package": null,
@@ -15,7 +15,7 @@
   "branch": "codex/scenario-demo",
   "base_branch": "codex/scenario-demo",
   "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
-  "commit": null,
+  "commit": "beef47bd2675009cc81ec55c02237c8c47593bff",
   "pr_url": null,
   "subtasks": [],
   "children": [],
@@ -23,8 +23,30 @@
   "relatedFiles": [
     ".trellis/tasks/11-08-scenario-execution-feedback/design.md",
     ".trellis/tasks/11-08-scenario-execution-feedback/prd.md",
-    ".trellis/tasks/11-08-scenario-execution-feedback/implement.md"
+    ".trellis/tasks/11-08-scenario-execution-feedback/implement.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/research/implementation-verification.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/research/retest-results.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/research/report-proof.json"
   ],
-  "notes": "用户要求提交当前Git并给出第二轮方案待审阅，先不实施。规划以前轮已上线b69e07b/f6ff748为基础。建议外部执行原子占用、手动推进、受阻后人员调整、两来源反馈及旧轮隔离，仅规划。 用户通过后续讨论明确：动作与规则推演、模拟服务不调用LLM、导演推进场景进展、Axon动态消费来源事实。2026-11-08明确要求完善方案、提交Git并实施，已反映于v0.2。",
-  "meta": {}
+  "notes": "用户要求提交当前Git并给出第二轮方案待审阅，先不实施。规划以前轮已上线b69e07b/f6ff748为基础。建议外部执行原子占用、手动推进、受阻后人员调整、两来源反馈及旧轮隔离，仅规划。 用户通过后续讨论明确：动作与规则推演、模拟服务不调用LLM、导演推进场景进展、Axon动态消费来源事实。2026-11-08明确要求完善方案、提交Git并实施，已反映于v0.2。\n2026-11-08：方案a266329、实施候选beef47b；工程141文件1623项、桌面31项通过。三轮各36节点/21来报，实际记录和投递63/63，七车最终到场、完整路径与轨迹一致。末车09:46:42，原09:35目标未满足；反馈目的地/路线/受阻路段上下文缺口、2次历史查询超体积未补全、关联与正文问题保留待审阅。本次未上线，不归档待审任务。",
+  "meta": {
+    "engineeringPassed": true,
+    "unitTestFiles": 141,
+    "unitTestsPassed": 1623,
+    "desktopTestsPassed": 31,
+    "candidateCommit": "beef47bd2675009cc81ec55c02237c8c47593bff",
+    "scenarioDefinitionVersion": "5",
+    "scenarioDefinitionHash": "487d9ea157c728467c6a176e5a2f47753da17d69c553dbc793621bc83e26992a",
+    "realModelCompletedTrials": 3,
+    "realModelNotices": 63,
+    "identicalPhysicalResults": true,
+    "identicalPathsAndTraces": true,
+    "semanticReviewPending": true,
+    "feedbackBusinessContextGap": true,
+    "sourceHistoryResponseLimitHits": 2,
+    "historyReadCompletenessPending": true,
+    "original0935DeadlineMet": false,
+    "productionUpdatedByThisTask": false,
+    "evidenceDirectory": "/Users/lau/Documents/Codex/外部模拟执行反馈-20261108"
+  }
 }
