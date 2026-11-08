@@ -142,7 +142,7 @@ async function setup() {
       name: `${sourceId}普通初析`, recipientSeatIds: [overallSeat], enabled: true }));
   }
   async function create() {
-    const definition = (await json<ScenarioDefinitions>(host.director.call('/api/simulation/scenarios'))).items[0];
+    const definition = (await json<ScenarioDefinitions>(host.director.call('/api/simulation/scenarios'))).items.find(item => item.version === '4')!;
     expect(definition.version).toBe('4');
     const result = await json<ScenarioMutationResult>(host.director.call('/api/simulation/instances', { definitionId: definition.id, version: definition.version, mode: 'source_replay', clientActionId: randomUUID() }));
     const tasks = await json<ScenarioTaskInitialization>(host.director.call(`/api/simulation/instances/${result.instance.instanceId}/initialize`, { clientActionId: randomUUID() }));

@@ -53,10 +53,26 @@ export async function scenarioRoutes(app:FastifyInstance,lab:PiLab,scope:ReturnT
     return readContextJson(new URL(`${config.baseUrl}/control/${path}`),token,undefined,{maxBytes:2*1024*1024,method:body===undefined?'GET':'POST',...(body===undefined?{}:{body:includeActor?{...body,actor:by}:body})});
   };
   const status=async(request:FastifyRequest,id:string)=>{
-    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance','actions']);
+    const raw=await call(request,`instances/${scenarioId(id)}`),r=contextRecord(raw,['instance','steps','timeline','objects','reports','actions','operations','taskDefinitions','taskBootstrap'],['instance','actions']);
     if(!r.instance||typeof r.instance!=='object')throw conflict('来源场景状态无效。');
     const i=r.instance as Record<string,unknown>,clock={instanceId:i.instanceId,businessNow:i.businessNow,revision:i.revision};
     if(!isScenarioClock(clock)||clock.instanceId!==id||typeof i.paused!=='boolean'||!['prepared','active','frozen'].includes(String(i.status))||!Array.isArray(r.actions))throw conflict('来源场景状态无效。');
+    if (r.timeline !== undefined) {
+      if (!Array.isArray(r.timeline)) throw conflict('来源事件列表无效。');
+      for (const item of r.timeline) {
+        const node = contextRecord(item, ['id', 'title', 'description', 'businessTime', 'messageCount', 'taskCodes', 'kind', 'state'], ['id', 'title', 'description', 'businessTime', 'messageCount']);
+        scenarioId(node.id);
+        contextText(node.title, 200);
+        contextText(node.description, 4000);
+        contextTimestamp(node.businessTime);
+        contextInteger(node.messageCount, 0);
+        if (node.kind !== undefined && node.kind !== 'source' && node.kind !== 'execution'
+          || node.state !== undefined && node.state !== 'applied' && node.state !== 'pending'
+          || node.taskCodes !== undefined && (!Array.isArray(node.taskCodes) || node.taskCodes.some(code => !['T01', 'T02', 'T03'].includes(String(code))))) {
+          throw conflict('来源事件类型或状态无效。');
+        }
+      }
+    }
     const full=contextRecord(await runScope.provenance(id),['instanceId','tasks','taskBootstrap','notifications','actions'],['instanceId','tasks','actions']);
     const bootstrap=scenarioTaskBootstrap(r.taskBootstrap),provenanceBootstrap=scenarioTaskBootstrap(full.taskBootstrap);
     if(!bootstrap&&!['1','2','3'].includes(String(i.definitionVersion))||bootstrap&&(bootstrap.definitionId!==i.definitionId||bootstrap.definitionVersion!==i.definitionVersion||bootstrap.definitionHash!==i.definitionHash)||JSON.stringify(bootstrap)!==JSON.stringify(provenanceBootstrap))throw conflict('来源开场任务版本与场景不一致。');

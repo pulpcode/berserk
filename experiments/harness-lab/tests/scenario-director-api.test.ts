@@ -14,6 +14,8 @@ import type { ScenarioAction, ScenarioDefinitions, ScenarioInstanceDetail, Scena
 import type { ContextConfig } from '../src/context/config.js';
 import { PiLab } from '../src/pi/lab.js';
 import { createApp } from '../src/server/app.js';
+import { ScenarioTasks } from '../src/server/scenario-tasks.js';
+import { scenarioTaskBootstrap } from '../src/scenario/task-definitions.js';
 import { createMockContextServer } from '../scripts/mock-context/server.js';
 import { scenarioDefinition } from '../scripts/mock-context/scenarios/data.js';
 import type { NotificationTarget } from '../scripts/mock-context/control-api.js';
@@ -66,8 +68,8 @@ async function setup(directorConfigured=true){
 type Fixture=Awaited<ReturnType<typeof setup>>;
 async function create(f:Fixture,operationId=randomUUID()){
   const definitions=await json<ScenarioDefinitions>(f.director.call('/api/simulation/scenarios'));
-  expect(definitions.items).toHaveLength(1);
-  const definition=definitions.items[0],input={definitionId:definition.id,version:definition.version,mode:'source_replay',clientActionId:operationId};
+  expect(definitions.items.map(item=>item.version)).toEqual(['5','4']);
+  const definition=definitions.items.find(item=>item.version==='4')!,input={definitionId:definition.id,version:definition.version,mode:'source_replay',clientActionId:operationId};
   const result=await json<ScenarioMutationResult>(f.director.call('/api/simulation/instances',input));
   return {result,input};
 }
@@ -78,6 +80,34 @@ async function activate(f:Fixture,created:ScenarioMutationResult,terminateUnsent
 }
 
 describe('scenario director authorization and host/source integration',()=>{
+
+  it('initializes and reopens v5 task mappings without reinterpreting the saved bootstrap as v4', async () => {
+    const f = await setup();
+    const definitions = await json<ScenarioDefinitions>(f.director.call('/api/simulation/scenarios'));
+    const current = definitions.items.find(item => item.version === '5')!;
+    const legacy = definitions.items.find(item => item.version === '4')!;
+    expect(current.definitionHash).not.toBe(legacy.definitionHash);
+    const created = await json<ScenarioMutationResult>(f.director.call('/api/simulation/instances', {
+      definitionId: current.id, version: current.version, mode: 'source_replay', clientActionId: randomUUID(),
+    }));
+    const id = created.instance.instanceId;
+    const prepared = await initialize(f, id);
+    expect(prepared.taskBootstrap).toMatchObject({ definitionVersion: '5', definitionHash: current.definitionHash });
+    expect(prepared.tasks.map(task => task.code)).toEqual(['T02', 'T03']);
+    const detail = await json<ScenarioInstanceDetail>(f.director.call(`/api/simulation/instances/${id}`));
+    const savedPath = join(f.config.dataDir, 'scenario-runs', `${id}.json`);
+    const bytes = await readFile(savedPath, 'utf8');
+    const reopened = new ScenarioTasks(f.config.dataDir, f.lab.access!);
+    await reopened.prepare();
+    const actor = f.director.auth.identity!;
+    expect(await reopened.read(actor, id, prepared.taskBootstrap, detail.taskDefinitions)).toEqual(prepared);
+    await expect(reopened.read(actor, id, { ...prepared.taskBootstrap!, definitionVersion: '4' }, detail.taskDefinitions)).rejects.toMatchObject({ code: 'SCENARIO_HOST_CONFLICT' });
+    expect(await readFile(savedPath, 'utf8')).toBe(bytes);
+    for (const version of [4, 5, '6']) {
+      expect(() => scenarioTaskBootstrap({ ...prepared.taskBootstrap, definitionVersion: version })).toThrow();
+    }
+    await activate(f, created);
+  });
   it('leaves an existing deployment without a configured director free of new routes and run state',async()=>{
     const f=await setup(false),overall=await login(f.app,'seat-overall');
     expect(await json(f.director.call('/api/context/map-config'))).toMatchObject({scenarioControlEnabled:false});

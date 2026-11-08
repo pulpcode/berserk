@@ -16,6 +16,7 @@ export async function commandRoutes(app: FastifyInstance, lab: PiLab) {
   app.post<{ Body: { workspaceId: string; clientActionId: string; command: CommandInput } }>('/api/commands/prepare', { schema: { querystring: empty, body: pageCommandPrepareSchema } }, request =>
     service.prepare(identityOf(request).seatId, request.body.workspaceId, request.body.command, 'page', request.body.clientActionId));
   app.get<{ Params: { id: string } }>('/api/commands/:id', { schema: { params, querystring: empty } }, request => service.read(identityOf(request).seatId, request.params.id));
+  app.get<{ Params: { id: string } }>('/api/commands/:id/execution', { schema: { params, querystring: empty } }, request => service.reconcile(identityOf(request).seatId, request.params.id));
   app.post<{ Params: { id: string }; Body: { confirm: true } }>('/api/commands/:id/commit', { schema: { params, querystring: empty, body: {
     type: 'object', additionalProperties: false, required: ['confirm'], properties: { confirm: { const: true } },
   } } }, request => service.commit(identityOf(request).seatId, request.params.id, 'page'));

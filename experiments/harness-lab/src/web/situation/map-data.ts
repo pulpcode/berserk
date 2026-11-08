@@ -55,6 +55,16 @@ export function taskQueries(catalog: ContextCatalog, context?: TaskContext): Sit
   return result;
 }
 export function uniqueObjects(items: SituationObject[]) { return [...new Map(items.map(item => [refKey(item.ref), item])).values()]; }
+export function executionTrailFeatures(objects: SituationObject[], selected?: string) {
+  return objects.flatMap(item => {
+    if (!('executionTrack' in item.properties) || !item.properties.executionTrack || item.properties.executionTrack.length < 2) return [];
+    return [{
+      type: 'Feature' as const,
+      geometry: { type: 'LineString' as const, coordinates: item.properties.executionTrack.map(point => point.position) },
+      properties: { key: refKey(item.ref), selected: refKey(item.ref) === selected, state: item.properties.executionState },
+    }];
+  });
+}
 export const sourceCategories=[['road','道路'],['vehicle','车辆'],['facility','站点与地点'],['hydrant','水源'],['resource','资源池'],['area','区域']] as const;
 export type SourceCategory=typeof sourceCategories[number][0];
 /** Display grouping follows declared fields, never names or inferred vehicle models. */
@@ -85,6 +95,10 @@ export function positionNote(item:SituationObject,at?:string) {
   return '';
 }
 export function objectStatus(item: SituationObject,at?:string) {
+  if ('executionState' in item.properties && item.properties.executionState) return {
+    waiting: '待出发 · 任务占用', en_route: '途中 · 任务占用', blocked: '受阻 · 任务占用',
+    arrived: '已到场 · 任务占用', cancelled: '行动已取消',
+  }[item.properties.executionState];
   if ('availableCount' in item.properties) return `可用车辆 ${item.properties.availableCount} 辆`;
   if ('passability' in item.properties) return ({ open: '可通行', restricted: '限制通行', closed: '封闭', unknown: '状态未知' } as Record<string,string>)[String(item.properties.passability)] || '状态未知';
   const resource=item.resourceData?.resource;

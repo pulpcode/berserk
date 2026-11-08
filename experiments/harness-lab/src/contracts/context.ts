@@ -1,3 +1,4 @@
+import type { ExecutionTrackPoint, VehicleExecutionState } from './commands.js';
 import type { SourceResource, TaskResource, RESOURCE_RELATIONS } from './task-resources.js';
 import type { ScenarioClock } from './scenarios.js';
 /** Capability-validation contracts; these are not a universal domain data model. */
@@ -44,7 +45,7 @@ export interface SituationObject {
   effectiveAt: string | null; validTime: ContextTimeRange | null;
   geometry?: SituationGeometry | null;
   resourceData?: SourceResource;
-  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | Record<string, never>;
+  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | {executionTrack: ExecutionTrackPoint[]; executionState: VehicleExecutionState; executionCommandId: string} | Record<string, never>;
 }
 export interface SituationChange {
   cursor: string; effectiveAt: string | null; before: SituationObject; after: SituationObject;

@@ -16,8 +16,16 @@ export function scenarioCommands(store: ScenarioStore, path?: string) {
     close() { db.close(); },
     async handle(req: IncomingMessage, url: URL) {
       if (url.search) throw sceneError('指令接口不接受查询参数。', 'INVALID_ARGUMENT', 400);
+      const executionMatch = /^\/control\/commands\/([0-9a-f-]{36})\/execution$/.exec(url.pathname);
+      if (req.method === 'GET' && executionMatch) {
+        const execution = store.commandExecution(executionMatch[1]);
+        if (!execution) throw sceneError('没有该指令的执行记录。', 'NOT_FOUND', 404);
+        return execution;
+      }
       const match = /^\/control\/commands\/([0-9a-f-]{36})$/.exec(url.pathname);
       if (req.method === 'GET' && match) {
+        const current = store.command(match[1]);
+        if (current) return current.command.receipt;
         const row = read(match[1]);
         if (!row) throw sceneError('尚无该指令的接收回执。', 'NOT_FOUND', 404);
         return JSON.parse(String(row.receipt)) as CommandReceipt;
@@ -46,6 +54,14 @@ export function scenarioCommands(store: ScenarioStore, path?: string) {
       }
       const command = input.command;
       if (!/^[0-9a-f-]{36}$/.test(input.commandId) || !/^[0-9a-f-]{36}$/.test(input.taskId) || commandHash(command) !== input.contentHash) throw sceneError('指令编号或内容校验失败。', 'INVALID_ARGUMENT', 400);
+      const prior = store.command(input.commandId);
+      if (prior || store.get(input.scenarioInstanceId).instance.definitionVersion === '5') {
+        try { return store.receiveCommand(input); }
+        catch(error) {
+          if(error instanceof RequestError && error.code==='INVALID_INPUT')throw sceneError(error.message,'INVALID_ARGUMENT',400);
+          throw error;
+        }
+      }
       const encoded = stableCommand(input);
       db.exec('BEGIN IMMEDIATE');
       try {

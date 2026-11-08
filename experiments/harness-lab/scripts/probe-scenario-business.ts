@@ -149,7 +149,9 @@ export async function runScenarioBusiness(options: ReturnType<typeof scenarioBus
     const rules: InformationRule[] = [];
     for (const source of background.sources) rules.push(await overall<InformationRule>('/api/information/rules', { clientActionId: randomUUID(), sourceId: source.sourceId,
       profileId: source.allowedProfileIds[0], name: `${source.name}普通初析`, recipientSeatIds: ['seat-overall'], enabled: true }));
-    const definition = (await director<ScenarioDefinitions>('/api/simulation/scenarios')).items[0]; assert.equal(definition.version, '4');
+    const definitions = await director<ScenarioDefinitions>('/api/simulation/scenarios');
+    const definition = definitions.items.find(item => item.id === 'harbor-fire' && item.version === '4');
+    assert.ok(definition, 'The original business-flow probe requires the frozen v4 scenario');
     const created = await director<ScenarioMutationResult>('/api/simulation/instances', { definitionId: definition.id, version: definition.version, mode: 'source_replay', clientActionId: randomUUID() });
     const id = created.instance.instanceId, initialized = await director<ScenarioTaskInitialization>(`/api/simulation/instances/${id}/initialize`, { clientActionId: randomUUID() });
     assert.equal(initialized.initialized, true); assert.deepEqual(initialized.tasks.map(task => task.code), ['T02', 'T03']);

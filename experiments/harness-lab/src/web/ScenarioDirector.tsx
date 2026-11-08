@@ -62,6 +62,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   // Legacy links may open a read-only record, but never select a live control target.
   const [initialRecordId, setInitialRecordId] = useState(() => new URLSearchParams(location.search).get('instance') || undefined);
   const [definitionId, setDefinitionId] = useState('');
+  const [definitionVersion, setDefinitionVersion] = useState('');
   const [instancePages, setInstancePages] = useState<string[]>([]);
   const [modeOverride, setMode] = useState<ScenarioMode>();
   const [terminateUnsent, setTerminateUnsent] = useState(false);
@@ -86,13 +87,13 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const taskState = useInformationQuery<ScenarioTaskInitialization>(instanceId ? `${base}/initialize` : undefined, !denied, 10000);
   const instance = detail.data?.instance;
   const mode = modeOverride || instance?.mode || 'main_story';
-  const definition = definitions.data?.items.find(item => item.id === (definitionId || instance?.definitionId)) || definitions.data?.items[0];
-  const activeDefinition = definitions.data?.items.find(item => item.id === instance?.definitionId);
+  const definition = definitions.data?.items.find(item => item.id === (definitionId || instance?.definitionId) && item.version === (definitionVersion || instance?.definitionVersion)) || definitions.data?.items[0];
+  const activeDefinition = definitions.data?.items.find(item => item.id === instance?.definitionId && item.version === instance?.definitionVersion);
   const definitionChanged = Boolean(instance && definitions.data && (!activeDefinition || activeDefinition.version !== instance.definitionVersion || activeDefinition.definitionHash !== instance.definitionHash));
   const fetchError = definitions.error || instances.error || detail.error;
   const replay = useDirectorReplay({
     disabled: Boolean(busy || pending || fetchError || !definitions.data || !instances.data),
-    completed: () => { setInstancePages([]); setPreparationPages([]); setPanel(undefined); setPreparingId(undefined); setMode(undefined); setDefinitionId(''); eventDetails.close(); setNotice('演示已就绪。'); },
+    completed: () => { setInstancePages([]); setPreparationPages([]); setPanel(undefined); setPreparingId(undefined); setMode(undefined); setDefinitionId(''); setDefinitionVersion(''); eventDetails.close(); setNotice('演示已就绪。'); },
     changed: refresh,
     failure,
   });
@@ -110,8 +111,8 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const recoveryTarget = useInformationQuery<ScenarioInstanceDetail>(recoveryTargetId ? `/api/simulation/instances/${encodeURIComponent(recoveryTargetId)}` : undefined, !denied, 10000);
   const recoveryPreviousId = replay.draft?.previousId;
   const recoveryPrevious = useInformationQuery<ScenarioInstanceDetail>(recoveryPreviousId ? `/api/simulation/instances/${encodeURIComponent(recoveryPreviousId)}` : undefined, !denied, 10000);
-  const recoveryDefinition = definitions.data?.items.find(item => item.id === replay.draft?.definitionId);
-  const recoveryVersionChanged = Boolean(replay.draft && recoveryDefinition && replay.draft.version !== recoveryDefinition.version);
+  const recoveryDefinition = definitions.data?.items.find(item => item.id === replay.draft?.definitionId && item.version === replay.draft?.version);
+  const recoveryVersionChanged = Boolean(replay.draft && definitions.data && !recoveryDefinition);
   const recoveryCreationState = replay.draft?.request && replay.draft.stage === 'create' ? '创建结果待核对' : '待创建';
   const recoveryBlocked = Boolean(busy || pending || fetchError || !identity.createPublicTask
     || (recoveryTargetId && (!recoveryTarget.data || recoveryTarget.error)) || (recoveryPreviousId && (!recoveryPrevious.data || recoveryPrevious.error)));
@@ -122,12 +123,13 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
   const restartBlocked = blocked || !identity.createPublicTask || !definition || !instances.data
     || Boolean(activeId && (!activeDetail.data || !preflight.data || preflight.error)) || Boolean(activeDetail.error || unconfirmed || (unsent && !terminateUnsent))
     || Boolean(preparingId && (!preparedInstance || preparationDetail.error || preparedInstance.status !== 'prepared' || preparedDefinitionChanged));
-  const steps = instance?.mode==='main_story' ? detail.data?.steps.slice(0,5) || [] : detail.data?.steps || [];
+  const timeline = detail.data?.timeline;
+  const steps = timeline || (instance?.mode==='main_story' ? detail.data?.steps.slice(0,5) || [] : detail.data?.steps || []);
   const delivery = useDirectorDelivery({
     detail: detail.data, steps, blocked: blocked || definitionChanged, apply: applyStep, working: setBusy, notice: setNotice, failure,
     refresh,
   });
-  const stopped = Boolean(instance && instance.stepIndex >= steps.length && !delivery.waiting);
+  const stopped = Boolean(instance && (timeline ? !steps.some(step => step.state === 'pending') : instance.stepIndex >= steps.length) && !delivery.waiting);
 
   function remember(request?: PendingRequest) {
     pendingRef.current = request; setPending(request); setReviewed(false);
@@ -203,18 +205,18 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     setRecords(false);
     setTerminateUnsent(false);
     setPreparingId(existing?.instanceId);
-    if (existing) { setDefinitionId(existing.definitionId); setMode(existing.mode); }
+    if (existing) { setDefinitionId(existing.definitionId); setDefinitionVersion(existing.definitionVersion); setMode(existing.mode); }
     setPanel('restart');
   }
   function openRecovery() {
     if (!replay.draft) return;
-    setDefinitionId(replay.draft.definitionId); setMode(replay.draft.mode); setPreparingId(undefined);
+    setDefinitionId(replay.draft.definitionId); setDefinitionVersion(replay.draft.version); setMode(replay.draft.mode); setPreparingId(undefined);
     setRecords(false); setError(''); setPanel('restart');
   }
 
   const modeFields = <>
-    {definitions.data && <label>场景<select value={definition?.id || ''} disabled={blocked || Boolean(preparingId)} onChange={event => setDefinitionId(event.target.value)}>
-      {definitions.data.items.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+    {definitions.data && <label>场景<select value={definition ? `${definition.id}@${definition.version}` : ''} disabled={blocked || Boolean(preparingId)} onChange={event => { const item = definitions.data?.items.find(item => `${item.id}@${item.version}` === event.target.value); if (item) { setDefinitionId(item.id); setDefinitionVersion(item.version); } }}>
+      {definitions.data.items.map(item => <option key={`${item.id}@${item.version}`} value={`${item.id}@${item.version}`}>{item.name} · v{item.version}</option>)}
     </select></label>}
     <label>演示模式<select value={mode} disabled={blocked || Boolean(preparingId)} onChange={event => setMode(event.target.value as ScenarioMode)}>
       <option value="main_story">{modes.main_story}</option><option value="source_replay">{modes.source_replay}</option>
@@ -261,10 +263,10 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
             <div className="director-delivery-main">
               <div>
                 <span className="director-scope">{instance.status === 'prepared' ? '演示准备' : instance.status === 'frozen' ? '历史演示' : stopped ? '投放结束' : delivery.waiting ? '待完成投放' : '下一步'}</span>
-                <h2>{instance.status === 'frozen' ? '已结束' : stopped ? (instance.mode === 'main_story' ? '待方案选择' : '来源回放完成') : delivery.step && <>
-                  <time dateTime={delivery.step.businessTime}>{delivery.step.businessTime.slice(11,16)}</time>{delivery.step.title}
+                <h2>{instance.status === 'frozen' ? '已结束' : stopped ? (timeline ? '暂无待推进节点' : instance.mode === 'main_story' ? '待方案选择' : '来源回放完成') : delivery.step && <>
+                  <time dateTime={delivery.step.businessTime}>{delivery.step.businessTime.slice(11,timeline?19:16)}</time>{delivery.step.title}
                 </>}</h2>
-                {instance.status !== 'frozen' && !stopped && delivery.step && <small>{delivery.waiting
+                {instance.status !== 'frozen' && !stopped && delivery.step && (!timeline || delivery.waiting) && <small>{delivery.waiting
                   ? `待接收 ${delivery.remaining.length} 条 · ${delivery.waiting.notification.title}`
                   : `${delivery.step.messageCount} 条通知`}</small>}
               </div>
@@ -272,31 +274,31 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
                 {instance.status === 'active' && <>
                   {!stopped && <button className="primary-action" disabled={blocked || definitionChanged || delivery.syncing || !delivery.step || (instance.paused && !delivery.checkFirst)}
                     onClick={event => { if (event.detail <= 1) { setError(''); void delivery.deliver(); } }}>
-                    <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : '投放事件'}
+                    <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : delivery.step?.kind === 'execution' ? '推进节点' : '投放事件'}
                   </button>}
                 </>}
               </div>
             </div>
             <div className="director-delivery-meta" role="group" aria-label="本轮场景时间">
-              <span>场景时间 <time dateTime={instance.businessNow} title={instance.businessNow}>{instance.businessNow.slice(11,16)}</time></span>
-              <span>{Math.min(instance.stepIndex,steps.length)} / {steps.length} 事件已应用</span>
+              <span>场景时间 <time dateTime={instance.businessNow} title={instance.businessNow}>{instance.businessNow.slice(11,timeline?19:16)}</time></span>
+              <span>{timeline ? steps.filter(step => step.state === 'applied').length : Math.min(instance.stepIndex,steps.length)} / {steps.length} {timeline ? '节点已推进' : '事件已应用'}</span>
               {instance.status === 'active' && instance.paused && <span>投放已锁定</span>}
             </div>
           </section>
           {taskState.error && <p className="director-warning" role="alert">{taskState.error}<button disabled={Boolean(busy)} onClick={taskState.refresh}>重新读取任务</button></p>}
-          <section className="director-card director-events" aria-label="事件与通知"><div className="director-section-heading"><h2>事件顺序</h2></div><ol ref={eventList} className="director-steps">{steps.map((step,index)=>{
+          <section className="director-card director-events" aria-label="事件与通知"><div className="director-section-heading"><h2>事件顺序</h2></div><ol ref={eventList} className={`director-steps${timeline?' has-execution':''}`}>{steps.map((step,index)=>{
             const actions=detail.data?.actions.filter(action=>action.stepId===step.id) || [];
-            const applied=index<instance.stepIndex,confirmed=actions.length>0&&actions.every(action=>action.sendState==='accepted');
+            const applied=timeline?step.state==='applied':index<instance.stepIndex,confirmed=actions.length>0&&actions.every(action=>action.sendState==='accepted');
             const isNext=step.id===delivery.step?.id && instance.status==='active';
             const selected=eventDetails.selection?.id===step.id?eventDetails.selection:undefined;
             const pinned=selected?.pinned===true;
-            const status = confirmed ? '已接收' : applied ? '待接收' : isNext ? '下一事件' : '待发生';
+            const status = confirmed ? '已接收' : applied ? (step.messageCount ? '待接收' : '已推进') : isNext ? '下一事件' : '待发生';
             const tasks=(step.taskCodes || []).flatMap(code=>{
               const initialized=taskState.data?.tasks.find(task=>task.code===code);
               return initialized?[{code,title:initialized.title,taskId:initialized.taskId}]:[];
             });
-            return <li key={step.id} className={`${applied?'is-applied':''} ${selected?'is-expanded':''}`} onPointerMove={event=>{const anchor=event.currentTarget.querySelector<HTMLButtonElement>('.director-step-toggle');if(anchor)eventDetails.move(step.id,anchor,event);}} aria-current={isNext?'step':undefined}>
-              <button className="director-step-toggle" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onClick={event=>eventDetails.toggle(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,16)}</time><strong>{step.title}</strong><span className="director-step-status">{status}</span><ChevronDown size={14} aria-hidden="true"/></button>
+            return <li key={step.id} data-kind={step.kind} className={`${applied?'is-applied':''} ${selected?'is-expanded':''}`} onPointerMove={event=>{const anchor=event.currentTarget.querySelector<HTMLButtonElement>('.director-step-toggle');if(anchor)eventDetails.move(step.id,anchor,event);}} aria-current={isNext?'step':undefined}>
+              <button className="director-step-toggle" aria-expanded={Boolean(selected)} aria-controls={selected?domId(`director-step-${step.id}`):undefined} onClick={event=>eventDetails.toggle(step.id,event.currentTarget)}><span className="director-step-number">{confirmed?<Check size={14} aria-label="已接收"/>:String(index+1).padStart(2,'0')}</span><time dateTime={step.businessTime}>{step.businessTime.slice(11,timeline?19:16)}</time><strong>{step.title}</strong><span className="director-step-status">{status}</span><ChevronDown size={14} aria-hidden="true"/></button>
               {selected && <div className="director-step-body" id={domId(`director-step-${step.id}`)} role="region" aria-label={step.title} data-pinned={pinned}><p>{step.description}</p>
                 {tasks.length>0 && <div className="director-event-tasks"><span>场景任务</span>{tasks.map(task=><button key={task.code} onClick={()=>openTask(task.taskId)}>{task.title}<ArrowUpRight size={13} aria-hidden="true"/></button>)}</div>}
                 {actions.length ? <ul className="director-notifications" aria-label="事件通知">
@@ -307,7 +309,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
                     {action.receipt && <a href={`/overview?tab=events&id=${encodeURIComponent(action.receipt.eventId)}`} target="_blank" rel="noreferrer">接收记录 <ArrowUpRight size={13}/></a>}
                     {detail.data?.taskBootstrap && action.receipt && <DirectorEventTasks eventId={action.receipt.eventId} shownTaskIds={tasks.map(task=>task.taskId)} openTask={openTask}/>}
                   </li>)}
-                </ul> : <span className="director-scope">{step.messageCount} 条通知</span>}
+                </ul> : <span className="director-scope">{timeline && step.kind === 'execution' ? '行动反馈' : `${step.messageCount} 条来源通知`}</span>}
               </div>}
             </li>;
           })}</ol></section>

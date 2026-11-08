@@ -8,7 +8,7 @@ import type { SituationObject } from '../contracts/context.js';
 import { RequestError } from '../contracts/errors.js';
 import { readContextJson } from '../context/http.js';
 import { atomicWrite, checkDirectory, readControlled, stateError } from '../resources/files.js';
-import { assertCommandObjects, commandHash, commandInput, stableCommand } from './validation.js';
+import { assertCommandObjects, commandExecution, commandHash, commandInput, stableCommand } from './validation.js';
 
 interface StoredCommand extends CommandRecord {
   scenarioInstanceId: string;
@@ -56,6 +56,11 @@ export class CommandService {
     if ((record.status === 'received') !== (record.receipt !== undefined)
       || record.receipt !== undefined && !this.validReceipt(record.receipt, record)) throw stateError();
     if (['unknown', 'received', 'rejected'].includes(record.status) && !record.issuedByUserId) throw stateError();
+    if (record.execution !== undefined) {
+      const execution = commandExecution(record.execution);
+      if (record.status !== 'received' || execution.commandId !== record.id
+        || execution.rootCommandId !== (record.command.targetCommandId ?? record.id)) throw stateError();
+    }
     return record;
   }
   private validReceipt(value: unknown, record: Pick<StoredCommand, 'id' | 'contentHash'>): value is CommandReceipt {
@@ -133,6 +138,20 @@ export class CommandService {
       if (stored.workspaceId !== workspaceId || stableCommand(stored.command) !== stableCommand(command)) throw new RequestError('COMMAND_CONFLICT', '操作编号已用于其他内容。', 409);
       return this.public(stored);
     }
+    if (command.action === 'reroute' || command.action === 'cancel') {
+      const target = this.owned(seatId, command.targetCommandId!, true);
+      if (target.taskSpaceId !== task.id || (target.command.action ?? 'dispatch') !== 'dispatch' || target.status !== 'received') {
+        throw new RequestError('COMMAND_NOT_FOUND', '原指令不属于当前任务或尚未确认接收。', 404);
+      }
+      const original = new Set(target.command.vehicles.map(vehicle => vehicle.objectId));
+      if (command.vehicles.some(vehicle => !original.has(vehicle.objectId))
+        || stableCommand(command.destination) !== stableCommand(target.command.destination)) {
+        throw new RequestError('INVALID_INPUT', '请保留原目的地，并选择原指令中的车辆。');
+      }
+      const current = await this.refreshExecution(seatId, target.id, signal);
+      if (!current.execution || current.executionError) throw new RequestError('COMMAND_EXECUTION_UNAVAILABLE', '原指令执行进展尚未确认，请先查询。', 409);
+      if (current.execution.revision !== command.expectedExecutionRevision) throw new RequestError('COMMAND_EXECUTION_CONFLICT', '执行进展已变化，请重新核对后准备。', 409);
+    }
     const refs = [...command.vehicles, command.destination, ...command.route];
     const objects: SituationObject[] = [];
     for (let offset = 0; offset < refs.length; offset += 20) {
@@ -188,7 +207,7 @@ export class CommandService {
     signal?.throwIfAborted();
     const sending: StoredCommand = { ...record, status: 'unknown', issuedByUserId: this.authorize(seatId, record.taskSpaceId).actor.userId };
     this.save(sending);
-    try { return await this.call(sending, true, signal); }
+    try { await this.call(sending, true, signal); }
     catch (error) {
       const current = this.raw(id);
       if (current.status === 'received') return this.public(current);
@@ -198,11 +217,50 @@ export class CommandService {
       this.save({ ...current, status: rejected ? 'rejected' : 'unknown', error: message });
       return this.public(this.raw(id));
     }
+    return this.refreshExecution(seatId, id, signal);
+  }
+  private async refreshExecution(seatId: string, id: string, signal?: AbortSignal) {
+    const record = this.owned(seatId, id);
+    if (record.status !== 'received') return this.public(record);
+    const { config } = this.authorize(seatId, record.taskSpaceId, false);
+    const token = this.env[config.tokenEnv];
+    if (!token) throw unavailable();
+    try {
+      const value = await readContextJson(new URL(`${config.baseUrl}/control/commands/${encodeURIComponent(id)}/execution`), token, signal, { maxBytes: 4 * 1024 * 1024 });
+      const execution = commandExecution(value);
+      if (execution.commandId !== id || execution.rootCommandId !== (record.command.targetCommandId ?? id)) {
+        throw new RequestError('COMMAND_EXECUTION_INVALID', '执行进展与原指令不匹配。', 502);
+      }
+      const root = this.owned(seatId, execution.rootCommandId);
+      if (root.taskSpaceId !== record.taskSpaceId || root.scenarioInstanceId !== record.scenarioInstanceId) throw stateError();
+      const vehicles = new Set(root.command.vehicles.map(vehicle => vehicle.objectId));
+      if (execution.vehicles.some(vehicle => !vehicles.has(vehicle.vehicle.objectId))
+        || execution.status !== 'refused' && execution.vehicles.length !== vehicles.size) {
+        throw new RequestError('COMMAND_EXECUTION_INVALID', '执行进展包含原指令之外的车辆。', 502);
+      }
+      signal?.throwIfAborted();
+      const current = this.owned(seatId, id);
+      if (!current.execution || current.execution.revision <= execution.revision) this.save({ ...current, execution, executionError: undefined });
+    } catch (error) {
+      signal?.throwIfAborted();
+      const current = this.owned(seatId, id);
+      if (error instanceof RequestError && error.code === 'CONTEXT_NOT_FOUND' && !current.execution) {
+        this.save({ ...current, executionError: undefined });
+      } else {
+        this.save({ ...current, executionError: '执行进展暂不可用，请重新查询。' });
+      }
+    }
+    return this.public(this.owned(seatId, id));
   }
   async reconcile(seatId: string, id: string, signal?: AbortSignal) {
     const record = this.owned(seatId, id);
+    if (record.status === 'received') return this.refreshExecution(seatId, id, signal);
     if (record.status !== 'unknown') return this.public(record);
-    try { return await this.call(record, false, signal); }
-    catch { return this.public(this.raw(id)); }
+    try { await this.call(record, false, signal); }
+    catch {
+      signal?.throwIfAborted();
+      return this.public(this.owned(seatId, id));
+    }
+    return this.refreshExecution(seatId, id, signal);
   }
 }

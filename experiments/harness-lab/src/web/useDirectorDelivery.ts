@@ -35,7 +35,7 @@ export function useDirectorDelivery({detail, steps, blocked, apply, working, not
     awaitingRead.acceptedIds.some(id => !detail?.actions.some(action => action.id === id && action.sendState === 'accepted'))
   );
   const waiting = detail?.actions.find(action => action.sendState !== 'accepted');
-  const step = waiting ? steps.find(item => item.id === waiting.stepId) : steps[instance?.stepIndex ?? 0];
+  const step = waiting ? steps.find(item => item.id === waiting.stepId) : detail?.timeline ? steps.find(item => item.state === 'pending') : steps[instance?.stepIndex ?? 0];
   const remaining = waiting ? detail!.actions.filter(action => action.stepId === waiting.stepId && action.sendState !== 'accepted') : [];
   const receiptKey = (id: string) => storageKey('berserk.scenario-director.receipt.' + id);
 
@@ -81,8 +81,9 @@ export function useDirectorDelivery({detail, steps, blocked, apply, working, not
         if (!result || !mounted.current) return;
         revision = result.instance.revision;
         actions = result.actions;
-        if (result.instance.instanceId !== instance.instanceId || result.instance.stepIndex !== instance.stepIndex + 1 ||
-          actions.length !== step.messageCount || actions.some(action => action.instanceId !== instance.instanceId || action.stepId !== step.id)) {
+        const expectedStepIndex = instance.stepIndex + (step.kind === 'execution' ? 0 : 1);
+        if (result.instance.instanceId !== instance.instanceId || result.instance.stepIndex !== expectedStepIndex ||
+          actions.length !== preview.step.messageCount || actions.some(action => action.instanceId !== instance.instanceId || action.stepId !== step.id)) {
           throw new Error('本步通知与操作回执不符，请刷新核对。');
         }
       }

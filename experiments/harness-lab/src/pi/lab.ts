@@ -972,7 +972,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
             active.preparedCommands ??= new Set(); active.preparedCommands.add(commandAction.id);
             if (stopped()) return { block: true, reason: '当前请求已停止。', terminate: true };
           } catch (error) {
-            if (error instanceof RequestError && ['INVALID_INPUT', 'FORBIDDEN', 'COMMAND_SCOPE_REQUIRED', 'WORK_NOT_FOUND', 'FILE_NOT_FOUND'].includes(error.code)) return { block: true, reason: `${error.code}: ${error.message}` };
+            if (error instanceof RequestError && ['INVALID_INPUT', 'FORBIDDEN', 'COMMAND_SCOPE_REQUIRED', 'WORK_NOT_FOUND', 'FILE_NOT_FOUND', 'COMMAND_NOT_FOUND', 'COMMAND_EXECUTION_CONFLICT', 'COMMAND_EXECUTION_UNAVAILABLE'].includes(error.code)) return { block: true, reason: `${error.code}: ${error.message}` };
             throw error;
           }
         }
@@ -1003,7 +1003,9 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (policy.decision === 'deny') return { block: true, reason: `${policy.reason} 请改用当前工作区内无需提权的操作。` };
         if (policy.decision === 'allow') return original;
         if (active.background) return { block: true, reason: `后台无法审批，本次命令未执行。${policy.reason}` };
+        const commandTitle = commandAction?.command.action === 'reroute' ? '确认改道' : commandAction?.command.action === 'cancel' ? '确认取消执行' : '下达指令';
         const commandDescription = commandAction ? [
+          ...(commandAction.command.targetCommandId ? [`原指令：${commandAction.command.targetCommandId} · 执行修订 ${commandAction.command.expectedExecutionRevision}`] : []),
           `车辆：${commandAction.command.vehicles.map(ref => ref.objectId).join('、')}`,
           `目的地：${commandAction.command.destination.objectId}`,
           `路线：${commandAction.command.route.map(ref => ref.objectId).join(' → ') || '未指定'}`,
@@ -1012,7 +1014,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         ].join('\n') : undefined;
         const item: ConfirmationInteraction = { ...this.interactionBase(record, active, toolCall.id, toolCall.name),
           kind: 'confirmation', status: 'pending',
-          action: { ...(commandAction ? {commandReference: {id:commandAction.id,contentHash:commandAction.contentHash}} : {}), title: commandAction ? '下达指令' : handoff?.title ?? (toolCall.name === 'bash' ? '执行命令' : '确认演示'), description: commandDescription ?? handoff?.description ?? policy.reason,
+          action: { ...(commandAction ? {commandReference: {id:commandAction.id,contentHash:commandAction.contentHash}} : {}), title: commandAction ? commandTitle : handoff?.title ?? (toolCall.name === 'bash' ? '执行命令' : '确认演示'), description: commandDescription ?? handoff?.description ?? policy.reason,
             ...(commandAction ? {} : toolCall.name === 'bash' ? { command: String(parameters.command), cwd: '/workspace' } : handoff ? { handoff } : { description: String(parameters.content) }), parameters },
           rule: { ruleId: policy.ruleId, reason: policy.reason, version: policy.version } };
         const resolved = await this.waitForInteraction(record, active, item, signal);

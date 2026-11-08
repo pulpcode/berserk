@@ -12,7 +12,7 @@ import { activeBasemapKinds, createBasemapRuntime, type BasemapStatus } from './
 import { createAnalysisRuntime, analysisLayerIds, analysisGeometries, geometryPositions, type AnalysisMapState } from './analysis-runtime';
 import { createAnnotationRuntime, type AnnotationMapState } from '../annotations/map-runtime';
 import { createSourceLabels } from './source-labels';
-import { positionNote, sourceCategory } from './map-data';
+import { executionTrailFeatures, positionNote, sourceCategory } from './map-data';
 function rememberedView(key: string, fallback: BasemapView): BasemapView {
   try {const value=localStorage.getItem(key);return isBasemapView(value)?value:fallback;} catch {return fallback;}
 }
@@ -53,6 +53,7 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       analysisRuntime.update();
       const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, typed:['vehicle','facility','hydrant'].includes(sourceCategory(item)), positionUnconfirmed:Boolean(positionNote(item,latest.current.sourceTimes[item.ref.systemId])), passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
       (instance.getSource('business:objects') as GeoJSONSource | undefined)?.setData({ type:'FeatureCollection', features });
+      (instance.getSource('business:execution-tracks') as GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: executionTrailFeatures(latest.current.objects, latest.current.selected) });
       sourceLabels.update(latest.current.objects,latest.current.selected,latest.current.sourceTimes,!latest.current.annotations?.edit || latest.current.annotations.edit.paused);
       const analysis=latest.current.analysis;
       const nextAnalysisFocus=analysis?JSON.stringify([analysis.result.resultRef,analysis.focusRequest]):'';
@@ -95,6 +96,11 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       instance.addLayer({id:'business:road-halo',type:'line',source:'business:objects',filter:['==',['geometry-type'],'LineString'],paint:{'line-color':'#ffffff','line-width':['case',['get','selected'],11,8]}});
       instance.addLayer({ id:'business:roads', type:'line', source:'business:objects', filter:['==',['geometry-type'],'LineString'], paint:{ 'line-width':['case',['get','selected'],8,5], 'line-color':['match',['get','passability'],'open','#376e5d','restricted','#a26913','closed','#b34d48','#687582'] } });
       instance.addLayer({ id:'business:restricted-roads', type:'line', source:'business:objects', filter:['all',['==',['geometry-type'],'LineString'],['!=',['get','passability'],'open']], paint:{ 'line-width':2,'line-color':'#ffffff','line-dasharray':[2,3] } });
+      instance.addSource('business:execution-tracks', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      instance.addLayer({ id: 'business:execution-tracks', type: 'line', source: 'business:execution-tracks', paint: {
+        'line-color': ['match', ['get', 'state'], 'blocked', '#a26913', 'cancelled', '#687582', '#376e5d'],
+        'line-width': ['case', ['get', 'selected'], 4, 2], 'line-opacity': ['case', ['get', 'selected'], 0.95, 0.6],
+      } });
       instance.addLayer({ id:'business:resources', type:'circle', source:'business:objects', filter:['==',['geometry-type'],'Point'], paint:{ 'circle-radius':['case',['get','selected'],11,7], 'circle-color':['case',['get','positionUnconfirmed'],'#a26913',['get','typed'],'#53687a','#416858'],'circle-stroke-color':'white','circle-stroke-width':2 } });
       basemapRuntime.update(latest.current.basemapConfig,latest.current.view);
       annotationRuntime.restore();
@@ -106,7 +112,7 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       if(latest.current.annotations?.edit && !latest.current.annotations.edit.paused)return;
       const hits=instance.queryRenderedFeatures(event.point);
       if(hits.some(feature=>feature.properties?.group && feature.properties?.objectId)){latest.current.select('');return;}
-      const feature=hits.find(feature=>['business:resources','business:roads','business:areas'].includes(feature.layer.id) && feature.properties?.key);
+      const feature=hits.find(feature=>['business:resources','business:roads','business:areas','business:execution-tracks'].includes(feature.layer.id) && feature.properties?.key);
       if(!feature){
         const analysisHit=hits.find(hit=>analysisLayerIds.some(id=>id===hit.layer.id));
         if(analysisHit){latest.current.analysis?.pick(String(analysisHit.properties?.analysisId || '') || undefined);return;}

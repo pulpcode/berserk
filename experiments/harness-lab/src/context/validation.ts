@@ -98,8 +98,18 @@ export function situationObject(value: unknown, systemId: string): SituationObje
     if(resourceEvidence(data.resource).some(item=>item.kind==='source' && item.ref.systemId!==systemId)) throw invalid();
   }
   if (ref.objectType === 'resource') {
-    const p = contextRecord(r.properties, ['availableCount', 'unit'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
-    if(Object.keys(p).length) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
+    const p = contextRecord(r.properties, ['availableCount', 'unit', 'executionState', 'executionCommandId', 'executionTrack'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    if(p.availableCount!==undefined || p.unit!==undefined) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
+    if(p.executionState!==undefined || p.executionTrack!==undefined || p.executionCommandId!==undefined) {
+      if(!r.resourceData || !['waiting','en_route','blocked','arrived','cancelled'].includes(String(p.executionState)))throw invalid();
+      contextText(p.executionCommandId,64);
+      array(p.executionTrack,2000,entry=>{
+        const item=contextRecord(entry,['businessTime','position','sourceRevision'],['businessTime','position','sourceRevision']);
+        contextTimestamp(item.businessTime);contextInteger(item.sourceRevision);
+        if(!Array.isArray(item.position)||item.position.length!==2||item.position.some(v=>typeof v!=='number'||!Number.isFinite(v))||Math.abs(item.position[0])>180||Math.abs(item.position[1])>90)throw invalid();
+        return item;
+      });
+    }
   } else if (ref.objectType === 'area') {
     const p = contextRecord(r.properties, ['memberRefs'], ['memberRefs']);
     for (const member of refList(p.memberRefs)) if (member.systemId !== systemId || !['road', 'resource', 'area'].includes(member.objectType)) throw invalid();

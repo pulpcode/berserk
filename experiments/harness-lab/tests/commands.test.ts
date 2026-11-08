@@ -35,7 +35,7 @@ async function login(app: FastifyInstance, seatId: string) {
   const headers = { cookie: response.cookies.map(c => `${c.name}=${c.value}`).join('; '), origin: 'http://localhost:4310', 'x-csrf-token': auth.csrf!, 'x-axon-view': auth.viewId! };
   return { auth, call: (url: string, payload?: object) => app.inject({ url, method: payload === undefined ? 'GET' : 'POST', headers, ...(payload === undefined ? {} : { payload }) }) };
 }
-async function setup() {
+async function setup(version = '4') {
   const directory = await mkdtemp(join(tmpdir(), 'axon-commands-'));
   cleanup.push(() => rm(directory, { recursive: true, force: true }));
   const env = { QUERY: 'command-query-token', CONTROL: 'command-control-token', INTEL: 'command-intel-source-token', SITUATION: 'command-situation-source-token' };
@@ -71,7 +71,7 @@ async function setup() {
   let host = await open(); cleanup.push(() => host.app.close());
   async function create() {
     const d = await login(host.app, director);
-    const created = await d.call('/api/simulation/instances', { definitionId: 'harbor-fire', version: '4', mode: 'source_replay', clientActionId: randomUUID() });
+    const created = await d.call('/api/simulation/instances', { definitionId: 'harbor-fire', version, mode: 'source_replay', clientActionId: randomUUID() });
     expect(created.statusCode, created.body).toBe(200);
     const run = created.json<ScenarioMutationResult>();
     const initialized = await d.call(`/api/simulation/instances/${run.instance.instanceId}/initialize`, { clientActionId: randomUUID() });
@@ -311,4 +311,144 @@ describe('指令下达与外部接收', () => {
     expect(await read.json()).toEqual(received.receipt);
   }, 30000);
 
+});
+
+
+describe('外部执行进展与调整集成', () => {
+  it('接收与执行分别返回，查询不推进场景时间，调整须引用根指令和最新执行版本', async () => {
+    const f = await setup('5');
+    const { record, client } = await f.prepare();
+    const sent = await client.call(`/api/commands/${record.id}/commit`, { confirm: true });
+    expect(sent.statusCode, sent.body).toBe(200);
+    const accepted = sent.json<CommandRecord>();
+    expect(accepted.status).toBe('received');
+    expect(accepted.executionError).toBeUndefined();
+    expect(accepted.execution).toMatchObject({ protocolVersion: 2, commandId: record.id, rootCommandId: record.id, status: 'accepted' });
+    const snapshot = accepted.execution!;
+    expect(snapshot.vehicles.map(item => item.vehicle.objectId)).toEqual(f.command.vehicles.map(item => item.objectId));
+    const read = (await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>();
+    expect(read.execution).toEqual(snapshot);
+    const invalid = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: { ...f.command, action: 'reroute' } });
+    expect(invalid.statusCode).toBe(400);
+    const changed = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: {
+      ...f.command, action: 'reroute', targetCommandId: record.id, expectedExecutionRevision: snapshot.revision + 1,
+    } });
+    expect(changed.statusCode).toBe(409);
+    expect(changed.json().error.code).toBe('COMMAND_EXECUTION_CONFLICT');
+  }, 30000);
+
+  it('取消执行通过新的确认指令提交，保留原接收回执并更新根进展', async () => {
+    const f = await setup('5');
+    const { record, client } = await f.prepare();
+    const original = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(original.execution?.status).toBe('accepted');
+    const prepared = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: {
+      ...f.command, action: 'cancel', route: [], targetCommandId: record.id, expectedExecutionRevision: original.execution!.revision,
+    } });
+    expect(prepared.statusCode, prepared.body).toBe(200);
+    const operation = prepared.json<CommandRecord>();
+    expect(operation.status).toBe('prepared');
+    expect((await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>().execution?.revision).toBe(original.execution!.revision);
+    const cancelled = (await client.call(`/api/commands/${operation.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(cancelled.status).toBe('received');
+    expect(cancelled.executionError).toBeUndefined();
+    expect(cancelled.execution).toMatchObject({ commandId: operation.id, rootCommandId: record.id, status: 'cancelled' });
+    const root = (await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>();
+    expect(root.receipt).toEqual(original.receipt);
+    expect(root.execution?.vehicles.every(item => item.state === 'cancelled')).toBe(true);
+    expect(root.execution!.revision).toBeGreaterThan(original.execution!.revision);
+    expect(root.execution?.history.some(item => item.commandId === operation.id && item.action === 'cancel')).toBe(true);
+  }, 30000);
+
+  it('旧接收回执查询不生成执行，错误调整和外任务原指令被拒绝', async () => {
+    const f = await setup();
+    const { record, client } = await f.prepare();
+    const original = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(original.execution).toBeUndefined();
+    expect(original.executionError).toBeUndefined();
+    expect((await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>().execution).toBeUndefined();
+    const response = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: {
+      ...f.command, action: 'cancel', targetCommandId: record.id, expectedExecutionRevision: 1,
+    } });
+    expect(response.statusCode).toBe(409);
+    expect(response.json().error.code).toBe('COMMAND_EXECUTION_UNAVAILABLE');
+    const changed = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: {
+      ...f.command, action: 'reroute', targetCommandId: randomUUID(), expectedExecutionRevision: 1,
+    } });
+    expect(changed.statusCode).toBe(404);
+  }, 30000);
+
+  it('来源执行查询失败或返回错指令时，保留真实接收和上次进展并提示查询失败', async () => {
+    const f = await setup('5');
+    const { record, client } = await f.prepare();
+    const original = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(original.execution).toBeDefined();
+    const fetch = globalThis.fetch;
+    for (const wrongId of [false, true]) {
+      const spy = vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+        if (String(input).endsWith(`/commands/${record.id}/execution`)) {
+          if (!wrongId) throw new TypeError('source unavailable');
+          return Promise.resolve(new Response(JSON.stringify({ ...original.execution!, commandId: randomUUID() }), { headers: { 'Content-Type': 'application/json' } }));
+        }
+        return fetch(input, init);
+      });
+      try {
+        const read = (await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>();
+        expect(read.status).toBe('received');
+        expect(read.receipt).toEqual(original.receipt);
+        expect(read.execution).toEqual(original.execution);
+        expect(read.executionError).toBeTruthy();
+      } finally { spy.mockRestore(); }
+    }
+    expect((await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>().executionError).toBeUndefined();
+  }, 30000);
+});
+
+
+describe('执行拒绝保持接收事实', () => {
+  it('忙碌车辆指令可被接收但执行拒绝，原确认成功不能冒充车辆出发', async () => {
+    const f = await setup('5'), client = await login(f.app, control);
+    const command = { ...f.command, vehicles: [{ ...f.command.vehicles[0], objectId: `${f.a.run.instance.instanceId}-V02` }] };
+    const prepared = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command });
+    expect(prepared.statusCode, prepared.body).toBe(200);
+    const id = prepared.json<CommandRecord>().id;
+    const response = await client.call(`/api/commands/${id}/commit`, { confirm: true });
+    expect(response.statusCode, response.body).toBe(200);
+    const record = response.json<CommandRecord>();
+    expect(record.status).toBe('received');
+    expect(record.receipt?.commandId).toBe(id);
+    expect(record.executionError).toBeUndefined();
+    expect(record.execution).toMatchObject({ status: 'refused', commandId: id, rootCommandId: id });
+    expect(record.execution?.reason).toBeTruthy();
+    expect(record.execution?.vehicles.some(vehicle => vehicle.state === 'en_route' || vehicle.state === 'arrived')).toBe(false);
+  }, 30000);
+});
+
+describe('调整确认中的执行版本竞争', () => {
+  it('同修订准备两条调整，先提交的改道成功，后提交的旧修订取消收到执行拒绝', async () => {
+    const f = await setup('5');
+    const { record, client } = await f.prepare();
+    const sent = (await client.call(`/api/commands/${record.id}/commit`, { confirm: true })).json<CommandRecord>();
+    const revision = sent.execution!.revision;
+    const prepare = async (action: 'reroute' | 'cancel') => {
+      const response = await client.call('/api/commands/prepare', { workspaceId: f.workspaceId, clientActionId: randomUUID(), command: {
+        ...f.command, action, targetCommandId: record.id, expectedExecutionRevision: revision,
+      } });
+      expect(response.statusCode, response.body).toBe(200);
+      return response.json<CommandRecord>();
+    };
+    const [reroute, cancel] = await Promise.all([prepare('reroute'), prepare('cancel')]);
+    const changed = (await client.call(`/api/commands/${reroute.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(changed.executionError).toBeUndefined();
+    expect(changed.execution?.status).not.toBe('refused');
+    expect(changed.execution!.revision).toBeGreaterThan(revision);
+    const rejected = (await client.call(`/api/commands/${cancel.id}/commit`, { confirm: true })).json<CommandRecord>();
+    expect(rejected.status).toBe('received');
+    expect(rejected.executionError).toBeUndefined();
+    expect(rejected.execution).toMatchObject({ status: 'refused', rootCommandId: record.id, commandId: cancel.id });
+    expect(rejected.execution?.reason).toBeTruthy();
+    const current = (await client.call(`/api/commands/${record.id}/execution`)).json<CommandRecord>();
+    expect(current.execution?.vehicles.every(vehicle => vehicle.state === 'waiting')).toBe(true);
+    expect(current.execution?.history.some(item => item.commandId === reroute.id && item.action === 'reroute')).toBe(true);
+  }, 30000);
 });

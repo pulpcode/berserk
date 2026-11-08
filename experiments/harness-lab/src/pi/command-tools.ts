@@ -12,7 +12,7 @@ export function commandTools(service: CommandService, options: {
 }) {
   return [
     defineTool({ name: 'simulation_command_send', label: '下达指令',
-      description: '向模拟外部系统下达车辆、目的地和路线指令。系统展示本次具体内容，等待人员确认后发送；只按真实回执说明已接收，接收不代表车辆出动。可选attachmentFileId引用已获准的固定交接文件。结果不明时查询原编号，不重新发送。',
+      description: '向模拟外部系统下达派遣（dispatch）、改道（reroute）或取消执行（cancel）指令。改道和取消须引用原始派遣的rootCommandId及当前execution.revision，并指定原车辆子集、保留目的地。系统展示本次具体内容，等待人员确认后发送；接收回执说明已接收；执行受理、出发、受阻和到场以execution中的状态与逐车记录为准，executionError表示进展待核。可选attachmentFileId引用已获准的固定交接文件。结果不明时查询原编号，不重新发送。',
       parameters: commandToolSchema, executionMode: 'sequential',
       execute: async (toolCallId, parameters, signal) => {
         options.check();
@@ -23,7 +23,7 @@ export function commandTools(service: CommandService, options: {
         return { content: [{ type: 'text' as const, text: JSON.stringify(result) }], details: result };
       },
     }),
-    defineTool({ name: 'simulation_command_read', label: '核查指令', description: '查看当前任务下达记录；提供commandId时查询该指令并核对不明回执。查询不会重新发送。',
+    defineTool({ name: 'simulation_command_read', label: '核查指令', description: '查看当前任务下达记录；提供commandId时查询该指令的外部执行进展及不明回执，包含根指令、执行修订、逐车状态和实际位置。查询不会重新发送。',
       parameters: Type.Object({ commandId: Type.Optional(Type.String({ pattern: '^[0-9a-f-]{36}$' })) }, { additionalProperties: false }), executionMode: 'sequential',
       execute: async (_id, parameters, signal) => {
         options.check();

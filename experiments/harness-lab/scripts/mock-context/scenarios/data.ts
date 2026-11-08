@@ -1,3 +1,4 @@
+import { executionRoutingParameters, simulationAccessCorridors } from './routing.js';
 import { areaRings, hydrantPositions, roadRows, sitePositions, stationPositions } from './geography.js';
 import { createHash } from 'node:crypto';
 import type { ContextRef, InformationReport, SituationObject, Position } from '../../../src/contracts/context.js';
@@ -96,3 +97,7 @@ const definitionHash=createHash('sha256').update(JSON.stringify(sceneWorld('defi
 export const scenarioDefinition:ScenarioDefinitionSummary={id:'harbor-fire',version:'4',name:'临港仓储火情',description:'虚构城市澜江市六站二十四车的来源事件演示。',definitionHash,businessDay:'2026-11-03',initialBusinessNow:businessAt('09:10'),modes:['main_story','source_replay'],counts:{vehicles:24,objects:53,resources:41,steps:12,messages:13},geography:{label:'上海临港实景上的消防演示',attribution:'道路、建筑锚点及街区几何 © OpenStreetMap contributors（ODbL）。消防设施、辖区、车辆和路况为演示设定。',bounds:[121.76,30.82,121.96,30.98],synthetic:true}};
 
 export const taskBootstrap:ScenarioTaskBootstrap={schemaVersion:2,definitionId:'harbor-fire',definitionVersion:'4',definitionHash,expectedTaskCodes:['T02','T03']};
+
+/** V5 adds parameter-driven execution; V4 facts/hash remain addressable unchanged. */
+export const executionDefinition:ScenarioDefinitionSummary={...scenarioDefinition,version:'5',description:'支持车辆指令、确定性行进与执行反馈的合成场景。',definitionHash:createHash('sha256').update(JSON.stringify({definitionHash,executionRoutingParameters,simulationAccessCorridors})).digest('hex')};
+export const executionBootstrap:ScenarioTaskBootstrap={...taskBootstrap,definitionVersion:'5',definitionHash:executionDefinition.definitionHash};

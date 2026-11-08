@@ -3,7 +3,7 @@ import { contextInteger, contextRecord, contextText, contextTimestamp } from '..
 import type { ScenarioAction, ScenarioActor, ScenarioCreateInput } from '../../../src/contracts/scenarios.js';
 import type { SimulationReceipt } from '../../../src/contracts/simulation.js';
 import type { NotificationTarget } from '../control-api.js';
-import { scenarioDefinition } from './data.js';
+import { scenarioDefinition, executionDefinition } from './data.js';
 import { ScenarioStore, sceneError } from './store.js';
 
 async function body(req:IncomingMessage){let text='',bytes=0;for await(const chunk of req){bytes+=Buffer.byteLength(chunk);if(bytes>16384)throw sceneError('控制请求过大。','INVALID_ARGUMENT',400);text+=chunk;}try{return JSON.parse(text||'{}') as unknown;}catch{throw sceneError('控制JSON无效。','INVALID_ARGUMENT',400);}}
@@ -27,7 +27,7 @@ export function scenarioControl(store:ScenarioStore,targets:NotificationTarget[]
   }
   return async(req:IncomingMessage,url:URL):Promise<unknown>=>{
     const path=url.pathname;
-    if(req.method==='GET'&&path==='/control/scenarios'){if(url.search)throw sceneError('场景列表不接受查询参数。','INVALID_ARGUMENT',400);return {items:[scenarioDefinition]};}
+    if(req.method==='GET'&&path==='/control/scenarios'){if(url.search)throw sceneError('场景列表不接受查询参数。','INVALID_ARGUMENT',400);return {items:[executionDefinition,scenarioDefinition]};}
     if(req.method==='GET'&&path==='/control/instances'){
       if([...url.searchParams.keys()].some(key=>!['cursor','limit'].includes(key)||url.searchParams.getAll(key).length!==1))throw sceneError('实例分页参数无效。','INVALID_ARGUMENT',400);
       const offset=url.searchParams.get('cursor')??'0',limit=url.searchParams.get('limit')??'20';if(!/^\d+$/.test(offset)||!/^\d+$/.test(limit))throw sceneError('实例分页参数无效。','INVALID_ARGUMENT',400);return store.list(contextInteger(Number(offset),0),contextInteger(Number(limit),1,20));

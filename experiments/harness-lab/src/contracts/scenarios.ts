@@ -24,7 +24,7 @@ export interface ScenarioDefinitionSummary {
   counts: { vehicles: number; objects: number; resources: number; steps: number; messages: number };
   geography: { label: string; attribution: string; bounds: [number, number, number, number]; synthetic: true };
 }
-export interface ScenarioStepSummary { id: string; title: string; description: string; businessTime: string; messageCount: number; taskCodes?: ScenarioTaskDefinition['code'][] }
+export interface ScenarioStepSummary { id: string; title: string; description: string; businessTime: string; messageCount: number; taskCodes?: ScenarioTaskDefinition['code'][]; kind?: 'source'|'execution'; state?: 'applied'|'pending' }
 export interface ScenarioInstance extends ScenarioClock {
   definitionId: string; definitionVersion: string; definitionHash: string; name: string; mode: ScenarioMode;
   status: 'prepared' | 'active' | 'frozen'; paused: boolean; stepIndex: number; stepCount: number;
@@ -36,7 +36,7 @@ export interface ScenarioOperation {
   revision: number; businessNow: string; createdAt: string; actor: ScenarioActor; actionIds: string[];
 }
 export interface ScenarioInstanceDetail {
-  instance: ScenarioInstance; steps: ScenarioStepSummary[]; objects: SituationObject[];
+  instance: ScenarioInstance; steps: ScenarioStepSummary[]; timeline?: ScenarioStepSummary[]; objects: SituationObject[];
   reports: InformationReport[]; actions: ScenarioAction[]; operations: ScenarioOperation[];
   taskDefinitions?: ScenarioTaskDefinition[];
   taskBootstrap?: ScenarioTaskBootstrap;
@@ -54,7 +54,7 @@ export interface ScenarioActivateInput extends ScenarioMutationInput { expectedA
 export interface ScenarioControlInput extends ScenarioMutationInput { action: 'pause' | 'resume' }
 export interface ScenarioTaskDefinition { code: 'T01' | 'T02' | 'T03'; title: string; goal: string; businessRefs: ContextRef[]; areaIds: string[] }
 export interface ScenarioTaskBootstrap {
-  schemaVersion: 2; definitionId: 'harbor-fire'; definitionVersion: '4'; definitionHash: string;
+  schemaVersion: 2; definitionId: 'harbor-fire'; definitionVersion: '4'|'5'; definitionHash: string;
   expectedTaskCodes: ['T02', 'T03'];
 }
 export const LEGACY_SCENARIO_TASK_CODES = ['T01', 'T02', 'T03'] as const;
@@ -63,7 +63,7 @@ export function isScenarioTaskBootstrap(value: unknown): value is ScenarioTaskBo
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const r = value as Record<string, unknown>;
   return Object.keys(r).length === 5 && Object.keys(r).every(key => ['schemaVersion', 'definitionId', 'definitionVersion', 'definitionHash', 'expectedTaskCodes'].includes(key))
-    && r.schemaVersion === 2 && r.definitionId === 'harbor-fire' && r.definitionVersion === '4'
+    && r.schemaVersion === 2 && r.definitionId === 'harbor-fire' && (r.definitionVersion === '4' || r.definitionVersion === '5')
     && typeof r.definitionHash === 'string' && /^[a-f0-9]{64}$/.test(r.definitionHash)
     && Array.isArray(r.expectedTaskCodes) && r.expectedTaskCodes.length === SCENARIO_BOOTSTRAP_TASK_CODES.length
     && r.expectedTaskCodes.every((code, index) => code === SCENARIO_BOOTSTRAP_TASK_CODES[index]);
