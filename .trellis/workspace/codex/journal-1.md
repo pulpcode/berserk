@@ -581,3 +581,34 @@
 ### Next Steps
 
 - 待用户审阅反馈业务信息缺口、两次历史查询超体积未补全和原故事到场时限；本次未上线，不归档待审任务。
+
+
+## Session 20: 执行反馈修复与服务器三轮复验
+
+**Date**: 2026-11-08
+**Task**: 执行反馈修复与服务器三轮复验
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+完成v6来源反馈、历史状态视图与字节分页修复；服务器142文件1630项及桌面31项通过，固定三轮63条记录/投递一致、历史6/6查全、关系83/84；保留正文剩余问题与全部失败证据，未更新生产，待用户审阅。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `190b8d2` | (see git log) |
+| `2723aeb` | (see git log) |
+| `44452dd` | (see git log) |
+
+### Testing
+
+- [OK] 三轮火山方舟deepseek-v4.1-flash真实复验全部在tencent-server独立目录运行；物理轨迹与v5一致。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户审阅repair-plan/research/retest-results.md，确定剩余正文优化及发布安排；任务保持review，不归档。
