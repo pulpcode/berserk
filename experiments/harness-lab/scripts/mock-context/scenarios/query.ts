@@ -29,12 +29,23 @@ export function scenarioQuery(store:ScenarioStore) {
     if(boundInstanceId===undefined&&!unique.length&&values.length)return;
     const instanceId=boundInstanceId??unique[0]??store.active().instanceId;if(!instanceId)return;
     const record=store.get(instanceId),clock=sceneClock(record),asOf=clock.businessNow;
-    const page=<T>(items:T[],filters:ContextFilters,timeUnknownCount=0)=>{
+    const page=<T>(items:T[],filters:ContextFilters,timeUnknownCount=0,extra:(hasMore:boolean)=>Record<string,unknown>=()=>({}))=>{
       const key=stable({path:url.pathname,...Object.fromEntries(Object.entries(filters).filter(([key])=>key!=='cursor'))});let offset=0;
       if(filters.cursor){const saved=cursors.get(filters.cursor);if(!saved||saved.key!==key||saved.instanceId!==instanceId)throw sceneError('分页游标无效。','INVALID_CURSOR',400);if(saved.revision!==clock.revision)throw sceneError('场景已推进或切换，请重新查询第一页。','CURSOR_STALE');offset=saved.offset;}
-      const limit=filters.limit??20,hasMore=offset+limit<items.length;let nextCursor:string|null=null;
-      if(hasMore){nextCursor=randomUUID();cursors.set(nextCursor,{instanceId,revision:clock.revision,key,offset:offset+limit});if(cursors.size>2048)cursors.delete(cursors.keys().next().value!);}
-      return {systemId,asOf,snapshotClock:clock,items:items.slice(offset,offset+limit),limit,nextCursor,hasMore,timeUnknownCount};
+      const limit=filters.limit??20,token=randomUUID();
+      const response=(count:number)=>{
+        const hasMore=offset+count<items.length;
+        return {systemId,asOf,snapshotClock:clock,items:items.slice(offset,offset+count),limit,nextCursor:hasMore?token:null,hasMore,timeUnknownCount,...extra(hasMore)};
+      };
+      let count=0;
+      while(count<limit && offset+count<items.length) {
+        if(Buffer.byteLength(JSON.stringify(response(count+1)),'utf8')>200*1024)break;
+        count++;
+      }
+      const result=response(count);
+      if(Buffer.byteLength(JSON.stringify(result),'utf8')>200*1024 || !count && offset<items.length)throw sceneError('单条来源资料超过分页预算，请缩小资料范围。','RESPONSE_TOO_LARGE',413);
+      if(result.hasMore){cursors.set(token,{instanceId,revision:clock.revision,key,offset:offset+count});if(cursors.size>2048)cursors.delete(cursors.keys().next().value!);}
+      return result;
     };
     if(detail&&'reportId' in params){const item=record.reports.filter(r=>r.reportId===params.reportId&&(!('revision' in params)||r.revision===params.revision)).sort((a,b)=>b.revision-a.revision)[0];if(!item)throw sceneError('报告或修订不存在。','NOT_FOUND',404);return {systemId,asOf,snapshotClock:clock,item};}
     if(reports&&'limit' in params){const selection=record.reports.filter(r=>(!('reportId' in params)||!params.reportId||r.reportId===params.reportId)&&(!('subjectId' in params)||!params.subjectId||r.subjectId===params.subjectId)&&matches(r,params,`${r.title}\n${r.content}`));const result=timed(selection,r=>r.observedAt,'from' in params?params.from:undefined,'to' in params?params.to:undefined);return page(result.items.sort((a,b)=>a.reportId.localeCompare(b.reportId)||a.revision-b.revision).map(({content:_content,...index}:InformationReport)=>{void _content;return index;}),params,result.timeUnknownCount);}
@@ -43,8 +54,15 @@ export function scenarioQuery(store:ScenarioStore) {
     if(filters.taskId!==undefined||filters.relation!==undefined)throw sceneError('本来源不依据平台任务编号推断分配或支援。','UNSUPPORTED_FILTER',400);
     const category=(object:SituationObject)=>(!filters.objectTypes||filters.objectTypes.includes(object.ref.objectType))&&(filters.category===undefined||object.resourceData?.resource.category===filters.category);
     const unknownRefs=filters.objectRefs?.filter(ref=>!record.objects.some(object=>sameRef(ref,object.ref)))??[],head=sceneChangeCursor(instanceId,record.changes.length);
-    if(current)return {...page(record.objects.filter(object=>category(object)&&matches({objectRefs:[object.ref],areaIds:object.areaIds},filters,object.name)).sort((a,b)=>a.ref.objectType.localeCompare(b.ref.objectType)||a.ref.objectId.localeCompare(b.ref.objectId)),filters),unknownRefs,changeCursor:head,resourceCoverage:{status:'complete'}};
+    if(current)return page(record.objects.filter(object=>category(object)&&matches({objectRefs:[object.ref],areaIds:object.areaIds},filters,object.name)).sort((a,b)=>a.ref.objectType.localeCompare(b.ref.objectType)||a.ref.objectId.localeCompare(b.ref.objectId)),filters,0,()=>({unknownRefs,changeCursor:head,resourceCoverage:{status:'complete'}}));
     let start=0;if(filters.after!==undefined){const index=[sceneChangeCursor(instanceId,0),...record.changes.map(c=>c.cursor)].indexOf(filters.after);if(index<0)throw sceneError('变化游标不属于本轮。','INVALID_CHANGE_CURSOR',400);start=index;}
-    const result=timed(record.changes.slice(start).filter(change=>category(change.after)&&matches({objectRefs:[change.after.ref],areaIds:change.after.areaIds},filters,change.after.name)),change=>change.effectiveAt,filters.from,filters.to),response=page(result.items,filters,result.timeUnknownCount);return {...response,unknownRefs,nextAfter:response.hasMore?null:head};
+    const result=timed(record.changes.slice(start).filter(change=>category(change.after)&&matches({objectRefs:[change.after.ref],areaIds:change.after.areaIds},filters,change.after.name)),change=>change.effectiveAt,filters.from,filters.to),summary=record.instance.definitionVersion==='6';
+    const project=(item:SituationObject):SituationObject=>{
+      if(!summary || !('executionTrack' in item.properties))return item;
+      const {executionState,executionCommandId}=item.properties;
+      return {...item,properties:{executionState,executionCommandId,executionTrackIncluded:false}};
+    };
+    const items=summary?result.items.map(change=>({...change,before:project(change.before),after:project(change.after)})):result.items;
+    return page(items,filters,result.timeUnknownCount,hasMore=>({unknownRefs,nextAfter:hasMore?null:head,...(summary?{historyView:'state'}:{})}));
   };
 }

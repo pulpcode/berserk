@@ -60,7 +60,7 @@ async function setup(context: BrowserContext) {
   for (const id of ['intel-source', 'situation-source']) store.grant('seat', overall, id, 'manage');
   for (const sourceId of ['intel-source', 'situation-source']) store.grant('seat', director, sourceId, 'view');
   const call = await apiLogin(app, director);
-  const definition = (await call<ScenarioDefinitions>('/api/simulation/scenarios')).items.find(item => item.version === '5')!;
+  const definition = (await call<ScenarioDefinitions>('/api/simulation/scenarios')).items.find(item => item.version === '6')!;
   expect(definition).toBeDefined();
   const created = await call<ScenarioMutationResult>('/api/simulation/instances', { definitionId: definition.id, version: definition.version, mode: 'source_replay', clientActionId: randomUUID() });
   await call(`/api/simulation/instances/${created.instance.instanceId}/initialize`, { clientActionId: randomUUID() });
@@ -275,7 +275,7 @@ test('a new rehearsal starts with separate commands and old progress stays uncha
     const before = await readControl<CommandRecord>(`/api/commands/${original.id}/execution`);
     const old = await detail(f);
     await f.call(`/api/simulation/instances/${f.runId}/control`, { clientActionId: randomUUID(), expectedRevision: old.instance.revision, action: 'pause' });
-    const created = await f.call<ScenarioMutationResult>('/api/simulation/instances', { definitionId: 'harbor-fire', version: '5', mode: 'source_replay', clientActionId: randomUUID() });
+    const created = await f.call<ScenarioMutationResult>('/api/simulation/instances', { definitionId: 'harbor-fire', version: '6', mode: 'source_replay', clientActionId: randomUUID() });
     await f.call(`/api/simulation/instances/${created.instance.instanceId}/initialize`, { clientActionId: randomUUID() });
     const instances = await f.call<ScenarioInstances>('/api/simulation/instances');
     await f.call(`/api/simulation/instances/${created.instance.instanceId}/activate`, { clientActionId: randomUUID(), expectedRevision: created.instance.revision, expectedActiveRevision: instances.activeRevision, terminateUnsent: true });
@@ -298,7 +298,7 @@ test('scenario selector distinguishes definition versions and can start the lega
     await page.getByRole('button', { name: '重新演示', exact: true }).click();
     const panel = page.getByRole('dialog', { name: '重新演示', exact: true });
     const scenario = panel.getByLabel('场景');
-    await expect(scenario.locator('option')).toHaveText(['临港仓储火情 · v5', '临港仓储火情 · v4']);
+    await expect(scenario.locator('option')).toHaveText(['临港仓储火情 · v6', '临港仓储火情 · v5', '临港仓储火情 · v4']);
     await scenario.selectOption('harbor-fire@4');
     await panel.getByRole('button', { name: '开始演示', exact: true }).click();
     await expect.poll(async () => {

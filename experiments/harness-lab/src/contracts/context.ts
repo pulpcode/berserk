@@ -45,7 +45,7 @@ export interface SituationObject {
   effectiveAt: string | null; validTime: ContextTimeRange | null;
   geometry?: SituationGeometry | null;
   resourceData?: SourceResource;
-  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | {executionTrack: ExecutionTrackPoint[]; executionState: VehicleExecutionState; executionCommandId: string} | Record<string, never>;
+  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | {executionTrack: ExecutionTrackPoint[]; executionState: VehicleExecutionState; executionCommandId: string} | {executionTrackIncluded: false; executionState: VehicleExecutionState; executionCommandId: string} | Record<string, never>;
 }
 export interface SituationChange {
   cursor: string; effectiveAt: string | null; before: SituationObject; after: SituationObject;
@@ -53,7 +53,7 @@ export interface SituationChange {
 /** Source-declared business coverage, independent of whether pagination has finished. */
 export interface SituationResourceCoverage { status: 'complete' | 'partial'; reason?: string }
 export interface SituationCurrent extends ContextPage<SituationObject> { unknownRefs: ContextRef[]; changeCursor: string; resourceCoverage?: SituationResourceCoverage }
-export interface SituationChanges extends ContextPage<SituationChange> { unknownRefs: ContextRef[]; nextAfter: string | null }
+export interface SituationChanges extends ContextPage<SituationChange> { historyView?: 'state'; unknownRefs: ContextRef[]; nextAfter: string | null }
 export type ContextData = ContextPage<InformationReportIndex> | InformationDetail | SituationCurrent | SituationChanges;
 export interface MapReference { ref: ContextRef; revision?: number; href: string }
 export type { MapConfig } from './map.js';

@@ -87,7 +87,7 @@ function report(value: unknown, detail: boolean) {
   nullableTime(r.observedAt); nullableTime(r.publishedAt); timeRange(r.validTime);
   if (detail) contextText(r.content, 64_000, true);
 }
-export function situationObject(value: unknown, systemId: string): SituationObject {
+export function situationObject(value: unknown, systemId: string, historyState = false): SituationObject {
   const keys = ['ref', 'name', 'revision', 'areaIds', 'effectiveAt', 'validTime', 'properties'];
   const r = contextRecord(value, [...keys, 'geometry', 'resourceData'], keys), ref = contextRef(r.ref);
   if (ref.systemId !== systemId || !['road', 'resource', 'area'].includes(ref.objectType)) throw invalid();
@@ -98,12 +98,14 @@ export function situationObject(value: unknown, systemId: string): SituationObje
     if(resourceEvidence(data.resource).some(item=>item.kind==='source' && item.ref.systemId!==systemId)) throw invalid();
   }
   if (ref.objectType === 'resource') {
-    const p = contextRecord(r.properties, ['availableCount', 'unit', 'executionState', 'executionCommandId', 'executionTrack'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    const p = contextRecord(r.properties, ['availableCount', 'unit', 'executionState', 'executionCommandId', 'executionTrack', 'executionTrackIncluded'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
     if(p.availableCount!==undefined || p.unit!==undefined) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
-    if(p.executionState!==undefined || p.executionTrack!==undefined || p.executionCommandId!==undefined) {
+    if(p.executionState!==undefined || p.executionTrack!==undefined || p.executionCommandId!==undefined || p.executionTrackIncluded!==undefined) {
       if(!r.resourceData || !['waiting','en_route','blocked','arrived','cancelled'].includes(String(p.executionState)))throw invalid();
       contextText(p.executionCommandId,64);
-      array(p.executionTrack,2000,entry=>{
+      if(historyState && p.executionTrackIncluded!==false)throw invalid();
+      if(p.executionTrackIncluded!==undefined && (p.executionTrackIncluded!==false || !historyState || p.executionTrack!==undefined))throw invalid();
+      if(p.executionTrackIncluded!==false) array(p.executionTrack,2000,entry=>{
         const item=contextRecord(entry,['businessTime','position','sourceRevision'],['businessTime','position','sourceRevision']);
         contextTimestamp(item.businessTime);contextInteger(item.sourceRevision);
         if(!Array.isArray(item.position)||item.position.length!==2||item.position.some(v=>typeof v!=='number'||!Number.isFinite(v))||Math.abs(item.position[0])>180||Math.abs(item.position[1])>90)throw invalid();
@@ -150,8 +152,9 @@ export function decodeContextResponse(tool: ContextTool, params: ContextQueryPar
     const changes = tool === 'situation_query' && !current;
     const keys = ['systemId', 'asOf', ...(detail ? ['item'] : ['items', 'limit', 'nextCursor', 'hasMore', 'timeUnknownCount']),
       ...(current ? ['unknownRefs', 'changeCursor'] : changes ? ['unknownRefs', 'nextAfter'] : [])];
-    const r = contextRecord(value, [...keys, 'snapshotClock', ...(current ? ['resourceCoverage'] : [])], keys);
+    const r = contextRecord(value, [...keys, 'snapshotClock', ...(current ? ['resourceCoverage'] : changes ? ['historyView'] : [])], keys);
     if (r.snapshotClock !== undefined && (!isScenarioClock(r.snapshotClock) || r.snapshotClock.businessNow !== r.asOf)) throw invalid();
+    if(changes && r.historyView!==undefined && r.historyView!=='state')throw invalid();
     if (current && r.resourceCoverage !== undefined) situationResourceCoverage(r.resourceCoverage);
     if (r.systemId !== params.systemId) throw invalid(); contextTimestamp(r.asOf);
     if (detail) {
@@ -168,7 +171,7 @@ export function decodeContextResponse(tool: ContextTool, params: ContextQueryPar
         else {
           const c = contextRecord(item, ['cursor', 'effectiveAt', 'before', 'after'], ['cursor', 'effectiveAt', 'before', 'after']);
           contextText(c.cursor, 2048); nullableTime(c.effectiveAt);
-          const before = situationObject(c.before, params.systemId), after = situationObject(c.after, params.systemId);
+          const before = situationObject(c.before, params.systemId, r.historyView==='state'), after = situationObject(c.after, params.systemId, r.historyView==='state');
           if (!sameRef(before.ref, after.ref) || before.revision >= after.revision || c.effectiveAt !== after.effectiveAt) throw invalid();
         }
       }, r.hasMore === true);

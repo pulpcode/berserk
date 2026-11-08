@@ -101,3 +101,7 @@ export const taskBootstrap:ScenarioTaskBootstrap={schemaVersion:2,definitionId:'
 /** V5 adds parameter-driven execution; V4 facts/hash remain addressable unchanged. */
 export const executionDefinition:ScenarioDefinitionSummary={...scenarioDefinition,version:'5',description:'支持车辆指令、确定性行进与执行反馈的合成场景。',definitionHash:createHash('sha256').update(JSON.stringify({definitionHash,executionRoutingParameters,simulationAccessCorridors})).digest('hex')};
 export const executionBootstrap:ScenarioTaskBootstrap={...taskBootstrap,definitionVersion:'5',definitionHash:executionDefinition.definitionHash};
+
+/** V6 changes notification facts and history read projection, never motion parameters. */
+export const repairedExecutionDefinition:ScenarioDefinitionSummary={...executionDefinition,version:'6',description:'逐车执行事实反馈与轻量历史查询的合成场景。',definitionHash:createHash('sha256').update(JSON.stringify({executionHash:executionDefinition.definitionHash,feedbackVersion:2,historyView:'state'})).digest('hex')};
+export const repairedExecutionBootstrap:ScenarioTaskBootstrap={...executionBootstrap,definitionVersion:'6',definitionHash:repairedExecutionDefinition.definitionHash};

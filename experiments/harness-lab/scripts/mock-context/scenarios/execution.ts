@@ -11,6 +11,7 @@ interface StoredVehicle extends VehicleExecution {
     lastAt: string;
     occupied: boolean;
     hasDeparted: boolean;
+    blockedRoadRef?: ContextRef;
 }
 interface StoredExecution extends Omit<CommandExecution, 'vehicles'> {
     vehicles: StoredVehicle[];
@@ -34,6 +35,10 @@ const plus = (time: string, seconds: number) => stamp(Date.parse(time) + seconds
 const refEquals = (a: ContextRef, b: ContextRef) => a.systemId === b.systemId && a.objectType === b.objectType && a.objectId === b.objectId;
 const object = (record: SceneRecord, ref: ContextRef) => record.objects.find(o => refEquals(o.ref, ref));
 const point = (item: SituationObject | undefined) => item?.geometry?.type === 'Point' ? item.geometry.coordinates : undefined;
+function blockingSegment(record: SceneRecord, vehicle: StoredVehicle) {
+    let offset=0;
+    return vehicle.segments.find(segment=>{offset+=segment.meters;return offset>vehicle.travelledMeters && segment.road && record.objects.some(o=>o.ref.objectId.endsWith('-'+segment.road)&&'passability' in o.properties&&o.properties.passability!=='open');});
+}
 export function executionState(record: SceneRecord): ExecutionState {
     record.execution ??= { schemaVersion: 1, commands: {}, roots: {}, timeline: [] };
     if (record.execution.schemaVersion !== 1 || !record.execution.commands || !record.execution.roots || !Array.isArray(record.execution.timeline))
@@ -62,6 +67,8 @@ export function executionState(record: SceneRecord): ExecutionState {
                 || !vehicle.segments.length || vehicle.path.length !== vehicle.segments.length + 1
                 || vehicle.travelledMeters > vehicle.distanceMeters + 0.001)
                 throw new Error('执行车辆记录损坏。');
+            if(vehicle.blockedRoadRef && (vehicle.state!=='blocked' || vehicle.blockedRoadRef.systemId!=='situation' || vehicle.blockedRoadRef.objectType!=='road' || !object(record,vehicle.blockedRoadRef) || !vehicle.route.some(ref=>refEquals(ref,vehicle.blockedRoadRef!))))throw new Error('受阻道路引用损坏。');
+            if(record.instance.definitionVersion==='6' && vehicle.state==='blocked' && !vehicle.blockedRoadRef)throw new Error('受阻道路引用缺失。');
             let length = 0;
             for (const [index, segment] of vehicle.segments.entries()) {
                 if (!Number.isFinite(segment.meters) || segment.meters < 0
@@ -91,7 +98,7 @@ export function executionView(record: SceneRecord, id: string): CommandExecution
     const { taskId: _task, seatId: _seat, ...view } = root;
     void _task;
     void _seat;
-    return { ...structuredClone(view), commandId: id, businessNow: record.instance.businessNow, vehicles: view.vehicles.map(({ segments: _segments, lastAt: _at, occupied: _occupied, hasDeparted: _departed, ...vehicle }) => { void _segments; void _at; void _occupied; void _departed; return structuredClone(vehicle); }) };
+    return { ...structuredClone(view), commandId: id, businessNow: record.instance.businessNow, vehicles: view.vehicles.map(({ segments: _segments, lastAt: _at, occupied: _occupied, hasDeparted: _departed, blockedRoadRef: _blockedRoad, ...vehicle }) => { void _segments; void _at; void _occupied; void _departed; void _blockedRoad; return structuredClone(vehicle); }) };
 }
 function changeVehicle(record: SceneRecord, root: StoredExecution, vehicle: StoredVehicle) {
     const source = object(record, vehicle.vehicle);
@@ -113,9 +120,26 @@ function notify(record: SceneRecord, root: StoredExecution, vehicles: StoredVehi
         return;
     const time = record.instance.businessNow, code = `execution-${root.rootCommandId}-${root.revision}-${record.actions.length}`;
     const title = `车辆执行反馈：${message}`;
-    const text = `${vehicles.map(v => object(record, v.vehicle)?.name ?? v.vehicle.objectId).join('、')}：${message}。指令${root.rootCommandId}。业务时间${time}。`;
+    let text = `${vehicles.map(v => object(record, v.vehicle)?.name ?? v.vehicle.objectId).join('、')}：${message}。指令${root.rootCommandId}。业务时间${time}。`;
+    let references = vehicles.map(v => v.vehicle);
+    let summary=text;
+    if(record.instance.definitionVersion==='6') {
+        const destination=record.execution?.commands[root.rootCommandId]?.input.command.destination;
+        if(!destination||!object(record,destination))throw new Error('执行反馈缺少原指令目的地。');
+        const names=(refs:ContextRef[])=>refs.map(ref=>object(record,ref)?.name??ref.objectId).join(' → ');
+        const labels={waiting:'待出发',en_route:'途中',blocked:'受阻',arrived:'已到场',cancelled:'已取消'};
+        summary=`${message}；目的地${names([destination])}；本条涉及${vehicles.length}辆；业务时间${time}。`;
+        const rows=vehicles.map(v=>{
+            const source=object(record,v.vehicle)!;
+            const blocked=v.state==='blocked'&&v.blockedRoadRef?`；计划路线因${names([v.blockedRoadRef])}不可通行而受阻，当前位置不代表阻断路段位置`:'';
+            const arrival=v.state==='arrived'?`；实际到场${v.arrivedAt}`:['waiting','en_route'].includes(v.state)&&!blockingSegment(record,v)?`；预计到场${v.estimatedArrivalAt}`:'；预计到场未确定';
+            return `${source.name}：${labels[v.state]}，当前位置[${v.position.join(', ')}]，路线${names(v.route)}${blocked}${arrival}；${v.occupied?'仍为本指令任务占用，不可另派':'未出发安排已取消，可另派'}${v.state==='arrived'?'；到场不代表事件结束':''}；来源修订${source.revision}。`;
+        });
+        text=`${text}\n指令目的地：${names([destination])}。本条涉及${vehicles.length}辆；本指令车组已到场${root.vehicles.filter(v=>v.state==='arrived').length}/${root.vehicles.length}辆。\n${rows.join('\n')}`;
+        references=[...new Map([destination,...vehicles.flatMap(v=>[v.vehicle,...v.route,...(v.blockedRoadRef?[v.blockedRoadRef]:[])])].map(ref=>[JSON.stringify(ref),ref])).values()];
+    }
     const reportId = `${record.instance.instanceId}-report-${code}`;
-    record.reports.push({ reportId, subjectId: reportId, revision: 1, title, summary: text, content: text, objectRefs: vehicles.map(v => v.vehicle), areaIds: [...new Set(vehicles.flatMap(v => object(record, v.vehicle)?.areaIds ?? []))], observedAt: time, publishedAt: time, validTime: null });
+    record.reports.push({ reportId, subjectId: reportId, revision: 1, title, summary, content: text, objectRefs: references, areaIds: [...new Set(vehicles.flatMap(v => object(record, v.vehicle)?.areaIds ?? []))], observedAt: time, publishedAt: time, validTime: null });
     const action: ScenarioAction = { id: randomUUID(), instanceId: record.instance.instanceId, stepId, actor: structuredClone(actor), systemId: 'situation', revision: record.instance.revision, createdAt: new Date().toISOString(), sendState: 'unsent', notification: { scenarioInstanceId: record.instance.instanceId, sourceMessageId: `${record.instance.instanceId}-${code}`, title, text: `${text}\n报告 intel/${reportId}，修订1。`, subjectId: reportId, occurredAt: time } };
     record.actions.push(action);
 }
@@ -164,6 +188,7 @@ export function receiveExecution(record: SceneRecord, input: ExternalCommand, ac
                 const next = structuredClone(vehicle);
                 if (action === 'cancel') {
                     next.state = 'cancelled';
+                    if(record.instance.definitionVersion==='6'){delete next.blockedRoadRef;delete next.blockedReason;}
                     next.occupied = vehicle.hasDeparted;
                     return next;
                 }
@@ -180,6 +205,7 @@ export function receiveExecution(record: SceneRecord, input: ExternalCommand, ac
                 next.lastAt = time;
                 next.state = 'waiting';
                 delete next.blockedReason;
+                delete next.blockedRoadRef;
                 return next;
             });
             root = original;
@@ -229,12 +255,11 @@ export function advanceExecution(record: SceneRecord, actor: ScenarioActor, step
                 vehicle.lastAt = vehicle.departAt;
                 departed.push(vehicle);
             }
-            let offset = 0;
-            const remaining = vehicle.segments.filter(segment => { offset += segment.meters; return offset > vehicle.travelledMeters; });
-            const closed = remaining.find(segment => segment.road && record.objects.some(o => o.ref.objectId.endsWith('-' + segment.road) && 'passability' in o.properties && o.properties.passability !== 'open'));
+            const closed = blockingSegment(record,vehicle);
             if (closed) {
                 vehicle.state = 'blocked';
                 vehicle.blockedReason = `前方${closed.road}不可通行`;
+                if(record.instance.definitionVersion==='6') vehicle.blockedRoadRef = record.objects.find(o=>o.ref.objectType==='road'&&o.ref.objectId.endsWith('-'+closed.road))?.ref;
                 blocked.push(vehicle);
             }
             else {

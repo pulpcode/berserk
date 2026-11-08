@@ -62,3 +62,11 @@ Run typecheck, lint/boundaries, Vitest, build and desktop Playwright. `context-h
 ## 7. Wrong vs Correct
 
 Wrong: list every system in every tool description, then rely on errors to teach the model which systems implement reports. Correct: derive supported IDs from actual adapter capabilities. Wrong: append mock answers to instructions. Correct: mock APIs supply facts; only the test driver knows task IDs and expected comparisons.
+
+## V6 scenario history projection and bounded pages
+
+Paged scenario source lists apply both the requested row ceiling and a 200 KiB UTF-8 budget to the entire source response, including clock, unknown references, continuation metadata and coverage. The HTTP reader's 256 KiB limit remains unchanged. `limit` echoes the requested ceiling even when bytes cause fewer rows; `nextCursor` advances by the actual returned count. A nonterminal page must contain rows and have a usable cursor. A single item or response envelope that cannot fit returns explicit source `RESPONSE_TOO_LARGE` (HTTP 413), mapped to `CONTEXT_RESPONSE_TOO_LARGE`, without publishing partial body data or an empty looping page.
+
+V6 changes responses declare `historyView:'state'`. Executing resource snapshots in those before/after rows omit the accumulated `executionTrack` and explicitly carry `executionTrackIncluded:false`. All remaining source facts, reference identity, revisions and business timestamps remain exact, including same-value state confirmations. The decoder accepts this omission only inside that declared history view; current objects must retain full tracks, and legacy full-history responses remain valid. Unknown view values, a current response pretending to omit its track, or a contradictory marker plus track are rejected. This is a read projection, not a rewrite or truncation of saved source history.
+
+Cursor identity, snapshot revision checks, inclusive `from`/exclusive `to`, source filters and final-page-only `nextAfter` retain their existing semantics. Models must distinguish pagination completion from source-declared resource coverage, and query failure from zero changes. Follow pages when the used history range requires completion; a partial explanation is not evidence that every history row was read. Current and map reads continue to obtain complete trajectories from the existing object interface.

@@ -68,7 +68,7 @@ async function setup(directorConfigured=true){
 type Fixture=Awaited<ReturnType<typeof setup>>;
 async function create(f:Fixture,operationId=randomUUID()){
   const definitions=await json<ScenarioDefinitions>(f.director.call('/api/simulation/scenarios'));
-  expect(definitions.items.map(item=>item.version)).toEqual(['5','4']);
+  expect(definitions.items.map(item=>item.version)).toEqual(['6','5','4']);
   const definition=definitions.items.find(item=>item.version==='4')!,input={definitionId:definition.id,version:definition.version,mode:'source_replay',clientActionId:operationId};
   const result=await json<ScenarioMutationResult>(f.director.call('/api/simulation/instances',input));
   return {result,input};
@@ -103,7 +103,7 @@ describe('scenario director authorization and host/source integration',()=>{
     expect(await reopened.read(actor, id, prepared.taskBootstrap, detail.taskDefinitions)).toEqual(prepared);
     await expect(reopened.read(actor, id, { ...prepared.taskBootstrap!, definitionVersion: '4' }, detail.taskDefinitions)).rejects.toMatchObject({ code: 'SCENARIO_HOST_CONFLICT' });
     expect(await readFile(savedPath, 'utf8')).toBe(bytes);
-    for (const version of [4, 5, '6']) {
+    for (const version of [4, 5, '7']) {
       expect(() => scenarioTaskBootstrap({ ...prepared.taskBootstrap, definitionVersion: version })).toThrow();
     }
     await activate(f, created);

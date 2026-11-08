@@ -49,7 +49,7 @@ export function taskAssessmentTool(record: RecordTaskAssessment, evidence: () =>
   };
   if (format === 'decisions') return defineTool({
     ...shared,
-    description: '查询获准活动公共任务并对照完整目标，逐项提交 taskId、verdict 及理由。link 表示事实支持该任务的核实问题或具体依赖，有条件的影响写清成立条件。exclude 表示已排除，insufficient 表示依据不足。只有 link 会进入任务关联清单。若存在已有任务无法承接的独立交付，在 newTaskSuggestion 中说明目标和理由。没有 link 和新建建议时填写 emptyReason。用成功回执 assessment.items 核对最终关联，任务创建由人员确认。',
+    description: '查询获准活动公共任务并对照完整目标，逐项提交 taskId、verdict 及理由。link 表示事实支持该任务的核实问题或具体依赖，有条件的影响写清成立条件。exclude 表示已排除，insufficient 表示依据不足。只有 link 会进入任务关联清单。若存在已有任务无法承接的独立交付，在 newTaskSuggestion 中说明目标和理由。没有 link 和新建建议时填写 emptyReason。每个decision仅填写taskId、verdict、reason；newTaskSuggestion和emptyReason是顶层字段，不额外添加备注字段。用成功回执 assessment.items 核对最终关联，任务创建由人员确认。',
     parameters: Type.Object({
       decisions: Type.Array(Type.Object({
         taskId, verdict: Type.Union([Type.Literal('link'), Type.Literal('exclude'), Type.Literal('insufficient')]), reason,

@@ -3,7 +3,7 @@
   "name": "scenario-execution-feedback",
   "title": "场景第二轮：外部模拟执行与反馈集成",
   "description": "完成外部确定性模拟执行、指令查询与调整、导演行动节点和来源反馈集成；工程及三轮真实模型复验已完成，结果待审阅。",
-  "status": "review",
+  "status": "in_progress",
   "dev_type": "fullstack",
   "scope": "scenario-execution-feedback",
   "package": null,
@@ -29,9 +29,11 @@
     ".trellis/tasks/11-08-scenario-execution-feedback/research/report-proof.json",
     ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/prd.md",
     ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/design.md",
-    ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/implement.md"
+    ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/implement.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/retest-protocol.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan/research/engineering-results.md"
   ],
-  "notes": "用户要求提交当前Git并给出第二轮方案待审阅，先不实施。规划以前轮已上线b69e07b/f6ff748为基础。建议外部执行原子占用、手动推进、受阻后人员调整、两来源反馈及旧轮隔离，仅规划。 用户通过后续讨论明确：动作与规则推演、模拟服务不调用LLM、导演推进场景进展、Axon动态消费来源事实。2026-11-08明确要求完善方案、提交Git并实施，已反映于v0.2。\n2026-11-08：方案a266329、实施候选beef47b；工程141文件1623项、桌面31项通过。三轮各36节点/21来报，实际记录和投递63/63，七车最终到场、完整路径与轨迹一致。末车09:46:42，原09:35目标未满足；反馈目的地/路线/受阻路段上下文缺口、2次历史查询超体积未补全、关联与正文问题保留待审阅。本次未上线，不归档待审任务。\n2026-11-08：用户要求针对本轮复验错误形成修复方案待审阅。已写repair-plan v0.1，优先来源反馈和历史查询，轻量调整Agent，漏关联继续低优先级；09:35用普通业务文档在控制席前台另验。本次仅文档，未实施、未调用真实模型、未上线。",
+  "notes": "用户要求提交当前Git并给出第二轮方案待审阅，先不实施。规划以前轮已上线b69e07b/f6ff748为基础。建议外部执行原子占用、手动推进、受阻后人员调整、两来源反馈及旧轮隔离，仅规划。 用户通过后续讨论明确：动作与规则推演、模拟服务不调用LLM、导演推进场景进展、Axon动态消费来源事实。2026-11-08明确要求完善方案、提交Git并实施，已反映于v0.2。\n2026-11-08：方案a266329、实施候选beef47b；工程141文件1623项、桌面31项通过。三轮各36节点/21来报，实际记录和投递63/63，七车最终到场、完整路径与轨迹一致。末车09:46:42，原09:35目标未满足；反馈目的地/路线/受阻路段上下文缺口、2次历史查询超体积未补全、关联与正文问题保留待审阅。本次未上线，不归档待审任务。\n2026-11-08：用户要求针对本轮复验错误形成修复方案待审阅。已写repair-plan v0.1，优先来源反馈和历史查询，轻量调整Agent，漏关联继续低优先级；09:35用普通业务文档在控制席前台另验。本次仅文档，未实施、未调用真实模型、未上线。\n2026-11-08：用户批准修复实施及三轮完整复验，并要求测验在服务器执行。v6来源反馈、历史状态视图/字节分页、轻量工具/profile和期限核对驱动已完成；服务器工程142文件1630项、桌面31项已有通过结果，失败/中断证据保留，正式真实模型三轮尚待最终候选冻结后执行。未发布生产。",
   "meta": {
     "engineeringPassed": true,
     "unitTestFiles": 141,
@@ -53,9 +55,15 @@
     "evidenceDirectory": "/Users/lau/Documents/Codex/外部模拟执行反馈-20261108",
     "repairPlan": {
       "version": "0.1",
-      "status": "pending_review",
+      "status": "implemented_pending_real_retest",
       "path": ".trellis/tasks/11-08-scenario-execution-feedback/repair-plan",
-      "implementationAuthorized": false
+      "implementationAuthorized": true,
+      "engineeringPassed": true,
+      "serverUnitTestFiles": 142,
+      "serverUnitTestsPassed": 1630,
+      "serverDesktopTestsPassed": 31,
+      "testsEnvironment": "tencent-server isolated directory",
+      "retestProtocol": "repair-plan/retest-protocol.md"
     }
   }
 }

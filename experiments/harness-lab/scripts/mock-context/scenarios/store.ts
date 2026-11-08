@@ -11,7 +11,7 @@ import type { ScenarioAction, ScenarioActor, ScenarioClock, ScenarioCreateInput,
 import { isScenarioClock } from '../../../src/contracts/scenarios.js';
 import { scenarioTaskBootstrap, scenarioTaskDefinitions } from '../../../src/scenario/task-definitions.js';
 import type { SimulationReceipt } from '../../../src/contracts/simulation.js';
-import { sceneWorld, scenarioDefinition, executionDefinition, executionBootstrap, directorStepTasks, taskBootstrap, type SceneWorld } from './data.js';
+import { sceneWorld, scenarioDefinition, executionDefinition, repairedExecutionDefinition, executionBootstrap, repairedExecutionBootstrap, directorStepTasks, taskBootstrap, type SceneWorld } from './data.js';
 
 export const sceneError = (message:string,code='SCENARIO_CONFLICT',status=409) => new RequestError(code,message,status);
 export const stable = (value:unknown):string => JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).sort(([a],[b])=>a.localeCompare(b))):item);
@@ -50,7 +50,7 @@ export class ScenarioStore {
         scenarioTaskDefinitions(record.tasks,bootstrap);
       }else throw new Error('Unknown snapshot schema');
     }catch {throw sceneError('场景任务快照无法读取，未覆盖原数据。','SCENARIO_SNAPSHOT_INVALID',500);}
-    if(record.schemaVersion===3){if(record.instance.definitionVersion!=='5'||!record.execution)throw sceneError('执行快照缺失。','SCENARIO_SNAPSHOT_INVALID',500);executionState(record);}
+    if(record.schemaVersion===3){if(!['5','6'].includes(record.instance.definitionVersion)||!record.execution)throw sceneError('执行快照缺失。','SCENARIO_SNAPSHOT_INVALID',500);executionState(record);}
     return structuredClone(record);
   }
   has(id:string){return this.db?Boolean(this.db.prepare('SELECT 1 FROM scenario_instances WHERE instance_id=?').get(id)):this.memory.has(id);}
@@ -59,7 +59,7 @@ export class ScenarioStore {
     const active=this.active(),hasMore=records.length>limit;return {items:records.slice(0,limit).map(record=>this.get(record.instance.instanceId).instance),activeInstanceId:active.instanceId,activeRevision:active.revision,hasMore,nextCursor:hasMore?String(offset+limit):null};
   }
   detail(id:string):ScenarioInstanceDetail {
-    const record=this.get(id);return {...(record.instance.definitionVersion==='5'?{timeline:this.timeline(record)}:{}),instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,...(record.taskBootstrap?{taskBootstrap:record.taskBootstrap}:{}),objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
+    const record=this.get(id);return {...(['5','6'].includes(record.instance.definitionVersion)?{timeline:this.timeline(record)}:{}),instance:record.instance,steps:record.steps.map(step=>({...step.summary,...(record.instance.definitionId===scenarioDefinition.id&&record.instance.definitionVersion===scenarioDefinition.version?{taskCodes:directorStepTasks[step.summary.id]??[]}: {})})),taskDefinitions:record.tasks,...(record.taskBootstrap?{taskBootstrap:record.taskBootstrap}:{}),objects:record.objects,reports:record.reports,actions:record.actions.slice(-20),operations:record.operations.slice(-20).map(publicOperation)};
   }
   notification(id:string,sourceMessageId:string) {
     const actions=this.get(id).actions.filter(action=>action.notification.sourceMessageId===sourceMessageId);
@@ -88,7 +88,7 @@ export class ScenarioStore {
   operation(id:string):ScenarioMutationResult {const found=this.findOperation(id);if(!found)throw sceneError('场景操作尚不存在。','NOT_FOUND',404);return this.result(found.record,found.operation);}
   private prior(id:string,input:string) {const found=this.findOperation(id);if(!found)return;if(found.operation.input!==input)throw sceneError('操作编号已用于不同内容。','ACTION_CONFLICT');return this.result(found.record,found.operation);}
   private writable(record:SceneRecord,revision:number) {
-    if(![scenarioDefinition,executionDefinition].some(def=>def.version===record.instance.definitionVersion&&def.definitionHash===record.instance.definitionHash))throw sceneError('场景定义已变化，旧轮仅可读，请创建新轮。','SCENARIO_DEFINITION_CHANGED');
+    if(![scenarioDefinition,executionDefinition,repairedExecutionDefinition].some(def=>def.version===record.instance.definitionVersion&&def.definitionHash===record.instance.definitionHash))throw sceneError('场景定义已变化，旧轮仅可读，请创建新轮。','SCENARIO_DEFINITION_CHANGED');
     if(record.instance.status==='frozen')throw sceneError('旧轮已冻结，不能继续修改。','SCENARIO_FROZEN');
     if(record.instance.revision!==revision)throw sceneError('场景已更新，请刷新并核对。','REVISION_CONFLICT');
     if(record.operations.length>=1000)throw sceneError('本轮控制操作已达上限，请建立新轮。','SCENARIO_LIMIT');
@@ -98,10 +98,10 @@ export class ScenarioStore {
   }
   create(input:ScenarioCreateInput,actor:ScenarioActor):ScenarioMutationResult {
     const key=stable({kind:'create',input,actor}),prior=this.prior(input.clientActionId,key);if(prior)return prior;
-    const definition=input.version==='5'?executionDefinition:scenarioDefinition;
+    const definition=input.version==='6'?repairedExecutionDefinition:input.version==='5'?executionDefinition:scenarioDefinition;
     if(input.definitionId!==definition.id||input.version!==definition.version||!definition.modes.includes(input.mode)||input.businessDay!==undefined&&input.businessDay!==definition.businessDay)throw sceneError('场景定义、版本、模式或业务日期无效。','INVALID_ARGUMENT',400);
     const instanceId=`run-${randomUUID()}`,time=now(),world=sceneWorld(instanceId);
-    const record:SceneRecord={schemaVersion:input.version==='5'?3:2,...(input.version==='5'?{execution:{schemaVersion:1 as const,commands:{},roots:{},timeline:[]}}:{}),taskBootstrap:structuredClone(input.version==='5'?executionBootstrap:taskBootstrap),instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:input.mode,status:'prepared',paused:false,revision:1,businessNow:scenarioDefinition.initialBusinessNow,stepIndex:0,stepCount:world.steps.length,createdAt:time,updatedAt:time},...world,changes:[],actions:[],operations:[]};
+    const record:SceneRecord={schemaVersion:['5','6'].includes(input.version)?3:2,...(['5','6'].includes(input.version)?{execution:{schemaVersion:1 as const,commands:{},roots:{},timeline:[]}}:{}),taskBootstrap:structuredClone(input.version==='6'?repairedExecutionBootstrap:input.version==='5'?executionBootstrap:taskBootstrap),instance:{instanceId,definitionId:definition.id,definitionVersion:definition.version,definitionHash:definition.definitionHash,name:definition.name,mode:input.mode,status:'prepared',paused:false,revision:1,businessNow:scenarioDefinition.initialBusinessNow,stepIndex:0,stepCount:world.steps.length,createdAt:time,updatedAt:time},...world,changes:[],actions:[],operations:[]};
     const operation=this.append(record,'create',input.clientActionId,key,actor);this.save([record]);return this.result(record,operation);
   }
   activate(id:string,operationId:string,revision:number,activeRevision:number,terminateUnsent:boolean,actor:ScenarioActor):ScenarioMutationResult {
@@ -171,7 +171,7 @@ export class ScenarioStore {
     return record.actions.slice(start);
   }
   preview(id:string):ScenarioPreview {
-    const record=this.get(id);if(record.instance.definitionVersion!=='5')return this.legacyPreview(id);
+    const record=this.get(id);if(!['5','6'].includes(record.instance.definitionVersion))return this.legacyPreview(id);
     const step=this.nextStep(record);let reason:string|undefined;
     if(record.instance.status!=='active')reason='请先激活有效演示。';
     else if(record.instance.paused)reason='当前演示已暂停。';
@@ -181,7 +181,7 @@ export class ScenarioStore {
     return {instance:record.instance,step:step?{...step,messageCount:actions.length}:null,changes:actions.map(action=>action.notification.title),notifications:actions.map(action=>action.notification),canApply:reason===undefined,...(reason?{reason}:{})};
   }
   apply(id:string,stepId:string,operationId:string,revision:number,actor:ScenarioActor):ScenarioMutationResult {
-    if(this.get(id).instance.definitionVersion!=='5')return this.legacyApply(id,stepId,operationId,revision,actor);
+    if(!['5','6'].includes(this.get(id).instance.definitionVersion))return this.legacyApply(id,stepId,operationId,revision,actor);
     const input=stable({kind:'step',id,stepId,operationId,revision,actor}),prior=this.prior(operationId,input);if(prior)return prior;
     const record=this.get(id);this.writable(record,revision);const preview=this.preview(id);if(!preview.canApply)throw sceneError(preview.reason!);
     const actions=this.applyV5(record,stepId,actor),operation=this.append(record,'step',operationId,input,actor,actions.map(a=>a.id));this.save([record]);return this.result(record,operation);

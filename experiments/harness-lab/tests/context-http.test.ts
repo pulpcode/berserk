@@ -218,3 +218,15 @@ describe('host HTTP boundaries', () => {
     await expect(readContextJson(url, token, controller.signal)).rejects.toMatchObject({name: 'AbortError'});
   });
 });
+
+
+it('preserves source item-size failure without exposing its body as successful context', async () => {
+  const url = await rawServer((_request, response) => {
+    response.writeHead(413, {'content-type': 'application/json'});
+    response.end(JSON.stringify({error: {code: 'RESPONSE_TOO_LARGE', message: 'private-source-detail'}}));
+  });
+  await expect(readContextJson(url, token)).rejects.toMatchObject({
+    code: 'CONTEXT_RESPONSE_TOO_LARGE', statusCode: 413,
+    message: expect.not.stringContaining('private-source-detail'),
+  });
+});

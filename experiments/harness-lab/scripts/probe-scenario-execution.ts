@@ -1,7 +1,9 @@
-/** Isolated v5 execution driver. Control actions are scripted human decisions; model semantics remain pending review. */
+/** Isolated v6 execution driver. Control actions are scripted human decisions; model semantics remain pending review. */
 import assert from 'node:assert/strict';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { DatabaseSync } from 'node:sqlite';
+import type { DockerExecutionService } from '../src/execution/docker.js';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AccessStore } from '../src/access/store.js';
@@ -10,7 +12,8 @@ import { parseBackgroundConfig } from '../src/background/config.js';
 import { BackgroundStore } from '../src/background/store.js';
 import type { AuthSession, TaskSpace } from '../src/contracts/access.js';
 import type { BackgroundJob, InboxDetail, InformationRule } from '../src/contracts/background.js';
-import type { Workspace } from '../src/contracts/index.js';
+import type { Workspace, SessionSnapshot, StreamEvent, WorkAction, WorkReceipt, WorkPrepareInput, WorkDetail } from '../src/contracts/index.js';
+import type { SituationChanges, SituationChange, SituationQueryParams } from '../src/contracts/context.js';
 import type { ScenarioAction, ScenarioDefinitions, ScenarioInstanceDetail, ScenarioInstances, ScenarioMutationResult, ScenarioPreview, ScenarioTaskInitialization } from '../src/contracts/scenarios.js';
 import type { CommandInput, CommandRecord } from '../src/contracts/commands.js';
 import type { TaskLinksView, TaskSuggestionCreateResult } from '../src/contracts/task-information.js';
@@ -29,7 +32,7 @@ import { scenarioBusinessOptions } from './probe-scenario-business.js';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export const scenarioExecutionOptions = scenarioBusinessOptions;
 
-export async function runScenarioExecution(options: ReturnType<typeof scenarioBusinessOptions>) {
+export async function runScenarioExecution(options: ReturnType<typeof scenarioBusinessOptions>, execution?: DockerExecutionService) {
   // No existing output, source database, accounts or model settings may be reused.
   await mkdir(options.output, { mode: 0o700 });
   const guard = new ScenarioBudgetGuard(options.budget, options.accounting), secrets: string[] = [];
@@ -42,7 +45,7 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
   const record = async (kind: string, value: unknown) => {
     await appendFile(join(options.output, `${kind}.jsonl`), encode(value).trim().replace(/\n\s*/g, '') + '\n', { mode: 0o600 });
   };
-  const config = loadConfig({ ...process.env, LAB_AUTH_MODE: 'test', LAB_TEST_SEATS: undefined, LAB_EXECUTION_ENABLED: 'false',
+  const config = loadConfig({ ...process.env, LAB_AUTH_MODE: 'test', LAB_TEST_SEATS: undefined, LAB_EXECUTION_ENABLED: options.live ? 'true' : 'false',
     LAB_LISTEN_HOST: '127.0.0.1', LAB_PUBLIC_ORIGIN: undefined, LAB_DATA_DIR: join(options.output, 'data'),
     ...(options.live ? {} : { LLM_API_KEY: '' }) });
   assert.ok(!options.live || config.apiKey, 'Live requires an explicitly configured model credential');
@@ -91,7 +94,7 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
     db.close();
     const runtime = await configuredRuntime(config);
     guardScenarioRuntime(runtime, guard, new URL(config.baseUrl).origin, record);
-    lab = await PiLab.create(config, runtime); app = await createApp(lab, false, { config: background, env }, { config: context, env });
+    lab = await PiLab.create(config, runtime, execution); app = await createApp(lab, false, { config: background, env }, { config: context, env });
     const appUrl = await app.listen({ host: '127.0.0.1', port: 0 }), store = new BackgroundStore(lab.access!.db);
     for (const source of background.sources) {
       store.grant('seat', 'seat-overall', source.sourceId, 'manage'); store.grant('seat', 'seat-director', source.sourceId, 'view');
@@ -119,8 +122,8 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
     for (const source of background.sources) rules.push(await overall<InformationRule>('/api/information/rules', { clientActionId: randomUUID(), sourceId: source.sourceId,
       profileId: source.allowedProfileIds[0], name: `${source.name}普通初析`, recipientSeatIds: ['seat-overall'], enabled: true }));
     const definitions = await director<ScenarioDefinitions>('/api/simulation/scenarios');
-    const definition = definitions.items.find(item => item.id === 'harbor-fire' && item.version === '5');
-    assert.ok(definition, 'The execution probe requires the v5 execution scenario');
+    const definition = definitions.items.find(item => item.id === 'harbor-fire' && item.version === '6');
+    assert.ok(definition, 'The execution probe requires the v6 execution scenario');
     const created = await director<ScenarioMutationResult>('/api/simulation/instances', { definitionId: definition.id, version: definition.version, mode: 'source_replay', clientActionId: randomUUID() });
     const id = created.instance.instanceId, initialized = await director<ScenarioTaskInitialization>(`/api/simulation/instances/${id}/initialize`, { clientActionId: randomUUID() });
     assert.equal(initialized.initialized, true); assert.deepEqual(initialized.tasks.map(task => task.code), ['T02', 'T03']);
@@ -140,6 +143,77 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
     const appliedSteps = new Set<string>();
     const processedActions = new Set<string>();
     const baseSteps = new Set<string>();
+    const historyChecks: unknown[] = []; evidence.historyChecks = historyChecks;
+    async function verifyHistory(label: string, filters: Omit<SituationQueryParams, 'systemId' | 'mode' | 'cursor'>) {
+      const db = new DatabaseSync(join(options.output, 'source.sqlite'), { readOnly: true });
+      let stored: { changes: SituationChange[] };
+      try { stored = JSON.parse(String(db.prepare('SELECT body FROM scenario_instances WHERE instance_id=?').get(id)!.body)); }
+      finally { db.close(); }
+      const expected = stored.changes.filter(change => change.after.ref.objectType === 'resource'
+        && (!filters.objectRefs || filters.objectRefs.some(ref => ref.objectId === change.after.ref.objectId))
+        && (!filters.from || Date.parse(change.effectiveAt!) >= Date.parse(filters.from))
+        && (!filters.to || Date.parse(change.effectiveAt!) < Date.parse(filters.to))).map(change => change.cursor);
+      const pages: unknown[] = [], actual: string[] = [], cursors = new Set<string>();
+      const check = { label, filters, expectedCursors: expected, pages, completed: false };
+      historyChecks.push(check); await save('validation.json', evidence);
+      let cursor: string | undefined;
+      do {
+        const response = await lab!.context!.query('situation_query', { systemId: 'situation', mode: 'changes', ...filters, ...(cursor ? { cursor } : {}) },
+          { kind: 'seat', seatId: 'seat-control', scenarioInstanceId: id }, guard.controller.signal);
+        const data = response.data as SituationChanges, bytes = Buffer.byteLength(JSON.stringify(data));
+        pages.push({ response, sourceBodyBytes: bytes }); await save('validation.json', evidence);
+        assert.ok(bytes <= 200 * 1024); assert.equal(data.limit, filters.limit); assert.equal(data.historyView, 'state');
+        for (const change of data.items) {
+          actual.push(change.cursor);
+          for (const object of [change.before, change.after]) if ('executionState' in object.properties) {
+            assert.ok(!('executionTrack' in object.properties));
+            assert.ok('executionTrackIncluded' in object.properties && object.properties.executionTrackIncluded === false);
+          }
+        }
+        if (!data.hasMore) { assert.ok(data.nextAfter); break; }
+        assert.ok(data.nextCursor && !cursors.has(data.nextCursor)); assert.equal(data.nextAfter, null);
+        assert.ok(data.items.length > 0); cursors.add(data.nextCursor); cursor = data.nextCursor;
+        assert.ok(pages.length <= expected.length + 1);
+      } while (cursor);
+      assert.deepEqual(actual, expected); check.completed = true; await save('validation.json', evidence);
+    }
+    async function reviewDeadline() {
+      assert.ok(mainTask && workspace && local && cross);
+      assert.ok(lab!.info().files?.executionAvailable, 'Deadline document review requires the normal file sandbox');
+      const sender = await overall<Workspace>(`/api/tasks/${mainTask.id}/workspace`, {});
+      const name = '支援时限要求.md';
+      const content = '# 支援时限要求\n业务日期：2026-11-03，UTC+08:00。\n临港三号仓库支援要求：V01、V03、V06、V07、V08、V11、V13共七辆车，应于09:35前到齐。请核对已有安排及预计到场，说明能否满足时限和待核实事项。调整车辆或路线由人员决定，控制席确认。\n';
+      await writeFile(join(lab!.files.filesDirectory(sender.id, 'seat-overall'), name), content, { mode: 0o600 });
+      async function work(actor: typeof overall, input: WorkPrepareInput) {
+        const action = await actor<WorkAction>('/api/work-items/prepare', { ...input, clientActionId: randomUUID() });
+        const receipt = await actor<WorkReceipt>(`/api/work-actions/${action.operationId}/commit`, { confirm: true });
+        await record('scripted-actions', { kind: 'human-deadline-handoff', input, action, receipt }); return receipt;
+      }
+      const assigned = await work(overall, { kind: 'assign', taskSpaceId: mainTask.id, payload: { workspaceId: sender.id, assigneeSeatId: 'seat-control', title: '支援时限核对', goal: '读取交接文档并核对已下达指令的预计到场，仅作评估，不修改指令。', inputPaths: [name] } });
+      await work(control, { kind: 'claim', workItemId: assigned.workItemId, expectedRevision: assigned.revision, payload: {} });
+      const session = await control<SessionSnapshot>('/api/sessions', { workspaceId: workspace.id, workItemId: assigned.workItemId });
+      const detail = await control<WorkDetail>(`/api/work-items/${assigned.workItemId}`), file = detail.inputFiles[0];
+      const path = `收到资料/${assigned.workItemId}/${file.fileId}/${file.name}`;
+      assert.equal(await readFile(join(lab!.files.filesDirectory(workspace.id, 'seat-control'), path), 'utf8'), content);
+      const prompt = `交接文件：${path}\n指令编号：${local.id}、${cross.id}\n请先读取交接文件，再用simulation_command_read逐条查询上述指令的最新执行进度，对照文档要求简要说明时限能否满足、依据和不确定事项。仅作只读核对，不下达或调整指令，不修改文件。`;
+      const sourceBefore = await director<ScenarioInstanceDetail>(`/api/simulation/instances/${id}`);
+      const commandsBefore = await control<CommandRecord[]>(`/api/commands?taskId=${mainTask.id}`);
+      const events: StreamEvent[] = [], request = lab!.start(session.id, prompt, { fileRefs: [{ path }] }, 'seat-control');
+      const review = { workItem: detail, document: { ...file, path }, sessionId: session.id, requestId: request.requestId, prompt, commandIds: [local.id, cross.id], events, snapshot: undefined as SessionSnapshot | undefined, semanticReviewPending: true };
+      evidence.deadlineReview = review; await save('validation.json', evidence);
+      let unexpected = false;
+      await request.run(event => { events.push(event); if (event.type === 'interaction.updated' && event.interaction.status === 'pending') { unexpected = true; lab!.cancel(session.id, request.requestId, 'seat-control'); } });
+      review.snapshot = lab!.get(session.id, 'seat-control'); await save('validation.json', evidence);
+      assert.equal(unexpected, false, 'Read-only deadline review requested a new operation');
+      assert.equal(review.snapshot.lastResult?.status, 'succeeded', review.snapshot.lastResult?.message);
+      const reads = review.snapshot.messages.filter(m => m.requestId === request.requestId && m.role === 'tool' && !m.isError);
+      assert.ok(reads.some(m => m.toolName === 'read' && m.text.includes('09:35')), 'The normal handoff document was not actually read');
+      for (const commandId of [local.id, cross.id]) assert.ok(reads.some(m => m.toolName === 'simulation_command_read' && JSON.parse(m.text).id === commandId), 'Missing native execution query');
+      assert.ok(!review.snapshot.messages.some(m => m.requestId === request.requestId && m.role === 'tool' && ['write','edit','bash','simulation_command_send','work_item_action','instructions.update'].includes(m.toolName ?? '')), 'Deadline review attempted a non-read action');
+      assert.equal(await readFile(join(lab!.files.filesDirectory(workspace.id, 'seat-control'), path), 'utf8'), content);
+      assert.deepEqual(await director<ScenarioInstanceDetail>(`/api/simulation/instances/${id}`), sourceBefore, 'Read-only deadline review changed source facts');
+      assert.deepEqual((await control<CommandRecord[]>(`/api/commands?taskId=${mainTask.id}`)).map(x => x.id), commandsBefore.map(x => x.id), 'Read-only deadline review created a command');
+    }
     async function observeCommands() {
       const executions: CommandRecord[] = [];
       for (const item of [local, cross]) if (item) {
@@ -200,7 +274,7 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
       const result = await control<CommandRecord>(`/api/commands/${prepared.id}/commit`, { confirm: true });
       await record('scripted-actions', { kind: 'human-command-confirm', commandId: prepared.id, input: { confirm: true }, result });
       assert.equal(result.status, 'received'); assert.equal(result.executionError, undefined);
-      assert.ok(result.execution, 'No execution returned for a confirmed v5 command');
+      assert.ok(result.execution, 'No execution returned for a confirmed v6 command');
       assert.notEqual(result.execution.status, 'refused', result.execution.reason);
       return result;
     }
@@ -238,9 +312,10 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
         const revised = await issue({ action: 'reroute', targetCommandId: cross.id, expectedExecutionRevision: cross.execution.revision,
           vehicles: blocked.map(vehicle => vehicle.vehicle as CommandInput['vehicles'][number]), destination: ref('L01'), route: ['R02', 'R03'].map(code => ref(code, 'road')),
           notes: '脚本代表总体席复核后由控制席确认绕行；保留已到场事实。' });
-        evidence.reroute = revised; await flush(entry); entry.executionsAfterControl = await observeCommands();
+        evidence.reroute = revised; await flush(entry); entry.executionsAfterControl = await observeCommands(); await reviewDeadline();
       }
       entry.source = await director<ScenarioInstanceDetail>(`/api/simulation/instances/${id}`);
+      if (Date.parse(current.instance.businessNow) === Date.parse('2026-11-03T09:38:14+08:00')) await verifyHistory('resources-0930-093814', { objectTypes: ['resource'], limit: 100, from: '2026-11-03T09:30:00+08:00', to: '2026-11-03T09:38:14+08:00' });
       entry.completedAt = new Date().toISOString(); await save('validation.json', evidence);
     }
     assert.equal(baseSteps.size, 12, 'Not all preset source steps completed');
@@ -265,6 +340,8 @@ export async function runScenarioExecution(options: ReturnType<typeof scenarioBu
       assert.equal(sourceObject.revision, vehicle.trace.at(-1)!.sourceRevision);
     }
     assert.equal(store.listJobs().length, processedActions.size); assert.equal(store.listEvents().length, processedActions.size);
+    await verifyHistory('v13-all-history', { objectRefs: [ref('V13')], limit: 50 });
+    assert.equal(historyChecks.length, 2);
     evidence.final = { analysedNotices: processedActions.size, predefinedSteps: baseSteps.size, source: final, local: local.execution, cross: cross.execution, arrivedVehicles: vehicles.length,
       allArrivedBy0935: vehicles.every(vehicle => Date.parse(vehicle.arrivedAt!) <= Date.parse('2026-11-03T09:35:00+08:00')) };
     evidence.protocolCompleted = true; return evidence;

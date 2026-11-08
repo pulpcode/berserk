@@ -19,6 +19,7 @@ const sourceErrors: Record<string, {message: string; status: number}> = {
   FORBIDDEN: {message: '来源拒绝本次查询。', status: 403},
   NOT_FOUND: {message: '指定报告或修订不存在。', status: 404},
   CURSOR_STALE: {message: '资料已更新，分页游标失效，请重新查询第一页。', status: 409},
+  RESPONSE_TOO_LARGE: {message: '来源单项资料超过响应上限，未完成本次读取；请缩小资料范围。', status: 413},
   UNAVAILABLE: {message: '业务资料来源暂不可用。', status: 503},
 };
 /** Fixed host URL only. Never forward source messages, credentials, redirect targets or partial bodies. */
