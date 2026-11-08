@@ -1,0 +1,30 @@
+{
+  "id": "scenario-execution-feedback",
+  "name": "scenario-execution-feedback",
+  "title": "场景第二轮：外部模拟执行与反馈集成",
+  "description": "形成外部模拟执行、占用、行动反馈和Axon集成方案供审阅，仅规划。",
+  "status": "planning",
+  "dev_type": "fullstack",
+  "scope": "scenario-execution-feedback",
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-08",
+  "completedAt": null,
+  "branch": "codex/scenario-demo",
+  "base_branch": "codex/scenario-demo",
+  "worktree_path": "/Users/lau/.codex/worktrees/scenario-demo/berserk",
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": "11-03-scenario-demo",
+  "relatedFiles": [
+    ".trellis/tasks/11-08-scenario-execution-feedback/design.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/prd.md",
+    ".trellis/tasks/11-08-scenario-execution-feedback/implement.md"
+  ],
+  "notes": "用户要求提交当前Git并给出第二轮方案待审阅，先不实施。规划以前轮已上线b69e07b/f6ff748为基础。建议外部执行原子占用、手动推进、受阻后人员调整、两来源反馈及旧轮隔离，仅规划。",
+  "meta": {}
+}
