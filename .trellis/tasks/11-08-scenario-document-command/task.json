@@ -2,8 +2,8 @@
   "id": "scenario-document-command",
   "name": "scenario-document-command",
   "title": "场景第一轮：文档协作与控制席指挥入口",
-  "description": "形成简明待审阅方案，复用普通文档和既有交接实现业务席提交、总体席审核、控制席下达的软流程；仅规划。",
-  "status": "in_progress",
+  "description": "第一轮已实施并通过工程及三席桌面验收，普通文档软流程、控制席明确授权、真实HTTP最小指令接收与回执核对已完成；待用户审阅。",
+  "status": "review",
   "dev_type": "fullstack",
   "scope": "scenario-command",
   "package": null,
@@ -23,8 +23,15 @@
   "relatedFiles": [
     ".trellis/tasks/11-08-scenario-document-command/design.md",
     ".trellis/tasks/11-08-scenario-document-command/prd.md",
-    ".trellis/tasks/11-08-scenario-document-command/implement.md"
+    ".trellis/tasks/11-08-scenario-document-command/implement.md",
+    ".trellis/tasks/11-08-scenario-document-command/research/implementation-verification.md"
   ],
-  "notes": "2026-11-08用户要求第一轮简明方案待审阅。按软流程复用普通文档、工作提交/审核/转交；仅指挥接口采用明确权限。拟新增独立业务控制席，最小外部接收接口供本轮验证，车辆行动后延；这两项明确列为审阅建议。仅规划，未激活实施。 用户随后明确同意新增独立业务控制席。已同步设计、需求及实施安排，整体方案仍待审阅；现有工作审核复用，不新增方案审批流程。 用户已明确批准按照本版整体方案实施。",
-  "meta": {}
+  "notes": "2026-11-08用户要求第一轮简明方案待审阅。按软流程复用普通文档、工作提交/审核/转交；仅指挥接口采用明确权限。拟新增独立业务控制席，最小外部接收接口供本轮验证，车辆行动后延；这两项明确列为审阅建议。仅规划，未激活实施。 用户随后明确同意新增独立业务控制席。已同步设计、需求及实施安排，整体方案仍待审阅；现有工作审核复用，不新增方案审批流程。 用户已明确批准按照本版整体方案实施。 本轮实施完成，139文件1596单元项、11项新HTTP/native、63既有桌面项与3项新桌面流程通过。新增控制席接入和明确指挥权限，最小外部接收不产生车辆行动。独立check修复已复验，相关旧E2E转发Cookie错误已修复。仅本地工程/确定性模型验证，等待用户审阅和发布授权。",
+  "meta": {
+    "planCommit": "d36947a",
+    "candidateCommit": "7c964a5e19e0228ed0be588e4fac1ae3f5b66d37",
+    "engineeringAcceptancePassed": true,
+    "reviewPending": true,
+    "resultsFile": ".trellis/tasks/11-08-scenario-document-command/research/implementation-verification.md"
+  }
 }

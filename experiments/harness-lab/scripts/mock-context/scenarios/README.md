@@ -32,7 +32,7 @@
 
 仅在新的演示数据目录使用，下列JSON都只含环境变量名称，没有真实令牌：
 
-- `fixtures/scenario-demo/context.example.json`：两来源均显式信任scenarioClock，包含五席读取范围及独立directorSeatId。
+- `fixtures/scenario-demo/context.example.json`：两来源均显式信任scenarioClock，包含导演及五个业务席读取范围及独立directorSeatId。
 - `fixtures/scenario-demo/background.example.json`：登记双系统入站来源及来报核对Profile；配置文件本身不自动创建规则或重跑历史。
 - `fixtures/scenario-demo/rules.example.json`：通过现有信息中心处理规则入口设置的建议值，两条规则均只向总体席投递初析结果。按实际部署的 sourceId 映射填写，不按场景或轮次创建新来源。
 - `fixtures/scenario-demo/notifications.example.json`：模拟服务发送到Axon的来源映射；URL仅为Axon origin。
@@ -60,7 +60,7 @@ npm run access:admin -- account --data-dir /tmp/axon-scenario-demo --username di
 
 导演席与业务协作隔离：公共任务管理能力仅用于准备/归档演示任务，不使导演成为业务参与者。导演没有分派、签收、提交、验收或办理对话入口，服务端也拒绝直接调用；业务接收名单与Agent分派目录排除导演，登录页仍可选择导演。任务说明、地图和已授权来源回执可只读核对。
 
-四个业务账号使用既有开通方式，席位分别是seat-overall、seat-intelligence、seat-planning、seat-situation；它们不授予controlScenarios。导演需要核对入站回执时，在同样停服条件下对两来源分别授予`view`（读取）权限，不需要通用来源manage：
+原有四个业务账号使用既有开通方式，席位分别是seat-overall、seat-intelligence、seat-planning、seat-situation；它们不授予controlScenarios。导演需要核对入站回执时，在同样停服条件下对两来源分别授予`view`（读取）权限，不需要通用来源manage：
 
 ```sh
 npm run background:admin -- grant --data-dir /tmp/axon-scenario-demo --source mock-intel-source --seat seat-director --permission view --service-stopped

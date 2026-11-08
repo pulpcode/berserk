@@ -6,3 +6,4 @@
 {"file": ".trellis/spec/backend/seat-delivery.md", "reason": "指挥接口集成、席位权限、原生确认、固定文件及轮次隔离须复用现有契约"}
 {"file": ".trellis/spec/frontend/harness-lab.md", "reason": "指挥接口集成、席位权限、原生确认、固定文件及轮次隔离须复用现有契约"}
 {"file": ".trellis/spec/backend/workbench.md", "reason": "指挥接口集成、席位权限、原生确认、固定文件及轮次隔离须复用现有契约"}
+{"file": ".trellis/spec/backend/commands.md", "reason": "已实现的下达权限、真实HTTP回执与原生确认契约"}
