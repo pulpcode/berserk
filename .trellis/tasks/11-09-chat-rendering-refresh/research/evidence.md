@@ -29,13 +29,15 @@
 ## 已有规划与本次增量
 
 - `.trellis/tasks/09-20-w01-10-chat-presentation/prd.md`、`design.md`、`research/references.md`：早期已借鉴 DSH 做过程折叠，并建立只读终态证据、请求归属、异常/交互/文件独立可见等规则。相关事实已在现有文件可读，不额外检索会话日志。
-- 本草案保留其数据和执行边界，提出“普通阶段说明保留主消息流”这一明确增量；它与旧设计不同，批准后才更新生效规范。
+- 本草案保留其数据和执行边界，提出“普通进度说明保留主消息流”这一明确增量；它与旧设计不同，批准后才更新生效规范。
 - `bd2712c`：输入区提示/排队入口精简及快捷键调整。
 - `2188aaf`：交付文件卡紧凑布局及正文对齐。
 - `347d489`：登录页精简与密码显隐；属于本次方案范围外，保留。
 - `c3e0228`：队列行引导按钮去边框。
 
 ## DSH 已查阅的一手参考
+
+GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。Web 应用入口：[https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/web](https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/web)。聊天界面核心源码：[packages/client/ui-chat](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-chat)。
 
 参考访问日期：2026-11-09。以下是本次对话已实际查阅的 `master` 源文件/包文档链接；移动分支不是固定版本。正式实施前固定当时的 commit 并复核与本草案的差异，本轮不声称已完成外部依赖或视觉原型验收。
 

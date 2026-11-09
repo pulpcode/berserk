@@ -2,11 +2,15 @@
 
 版本：v0.1，2026-11-09。状态：待审阅；需求范围尚未批准实施。审阅入口为 [review.md](review.md)。
 
+参考 GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。Web 应用入口：[apps/web](https://github.com/deepseek-ai/deepseek-harness/tree/master/apps/web)；聊天核心源码：[packages/client/ui-chat](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/client/ui-chat)。
+
 ## 目标与价值
 
 统一聊天页面中的正文、处理过程、工具结果、文件与人工交互的展示层次，使用户能顺畅阅读回复、了解正在进行的工作、发现需要自己处理的事项，并按需查阅执行细节。
 
 参考 DeepSeek Harness 的紧凑过程行、活动摘要、就地展开和过程折叠，结合现有任务、席位、文件固定交付及地图业务，不要求复制其全部界面或插件体系。
+
+本文“进度说明”指 Agent 在最终答复前已发给用户的自然语言消息，例如“我先读取资料，再核对差异”。其是否随工具过程收起是待审阅决策 D2，具体例子见 [审阅入口](review.md)。
 
 ## 已确认事实与约束
 
@@ -23,7 +27,7 @@
 
 | ID | 内容 | 推荐阶段 | 可观察目标 |
 | --- | --- | --- | --- |
-| R01 | 消息正文与 Markdown | A | 普通回复、阶段说明和最终答复使用同一正文起点；标题、段落、列表、引用、代码块与表格具有统一层次，宽内容在自己的区域内可读 |
+| R01 | 消息正文与 Markdown | A | 普通回复、进度说明和最终答复使用同一正文起点；标题、段落、列表、引用、代码块与表格具有统一层次，宽内容在自己的区域内可读 |
 | R02 | 过程组织与折叠 | A | 普通 assistant 正文留在消息流；工具和适合收拢的 Agent 执行记录归入相邻过程段，保留原时序与两层以内的常规披露 |
 | R03 | 过程行与活动摘要 | A | 紧凑行统一图标、文字、状态及展开位置；运行中只显示有事件证据的当前活动，结束后按实际类别概括，不以调用次数作为唯一信息 |
 | R04 | 工具结果专门视图 | B | 按可验证数据分别显示命令/输出、文件读取、修改 diff、查询结果；缺数据或不支持时仍能展开原始返回内容 |
