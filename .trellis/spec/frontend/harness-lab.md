@@ -99,6 +99,8 @@ FilesPanel uses captured workspace IDs, directory navigation, filename search, p
 
 files.output SSE and terminal snapshots carry validated FileOutput metadata; render FileOutputCard with its downloadId, never fabricate a card from model prose or a path. Keep cards in their owning request and merge under existing stream guards. These links are fixed bytes. HistoricalFile checks files/status only when clicked and labels current/changed/missing before offering a current-file download; missing refs do not gain a same-name substitute. No per-poll filesystem hashing or raw hash display. Files dialogs cover the chat for unread tracking. No extra user-facing debugging controls.
 
+File output cards align with the reply text and size to their content, capped at 480px and the available conversation width. Keep the download link beside the file metadata, and let long filenames wrap completely without clipping or horizontal overflow.
+
 ### Interaction and accessibility
 
 Enter sends only outside IME composition; Shift+Enter inserts a newline. During a foreground reply keep the composer editable and use the native input queue contract below for plain-text additions; rich drafts wait until settlement. Stop uses the exact active request ID and remains stopping until settlement. If an active summary arrives before the matching conversation snapshot, show reading/busy state and disable Stop until snapshot request ID matches; the current cancel path depends on that snapshot. Stop disappearing alone does not imply the send form is ready: loaded conversation, configuration and settled request are all required. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.
@@ -265,6 +267,8 @@ Once `response.started` has supplied a requestId, an SSE read error (including p
 
 Formal `Seats` first queries `/api/auth/session`; failures never fall back to test identity. Anonymous `loginSeats` populates the native seat selector; start with no selection, require a password, and submit `{seatId,password}`. Changing the selection clears the password and error; loading and empty seat lists cannot submit. Existing account passwords are reused, and the server alone resolves seat identity. Login mounts exactly one App keyed by opaque viewId, with an immutable authenticated API client. Origin/CSRF/view headers cover JSON, SSE, binary previews and XHR uploads; logout/unmount aborts client connections and pending XHR without cancelling accepted server jobs. Existing test-seat trees exist only after an explicit `mode=test` response.
 
+Keep the login form concise without a workbench tagline. Place the password visibility eye button inside the input's right edge, reserve text padding, label its current action as “显示密码” / “隐藏密码”, and disable it during submission. The button never submits the form or changes the password; changing seats clears the value and restores masking.
+
 SessionStorage keys for drafts/selections/read state are view-scoped; logout warns that unsent content will clear. BroadcastChannel invalidates other same-origin tabs and focus revalidates identity. Server checks remain authoritative even before the other tab receives the event. Late results cannot update the new App. Independent simultaneous accounts require separate browser storage contexts.
 
 Task sidebar groups public and seat-private metadata. Public work tasks use `BriefcaseBusiness` icons in both expanded and collapsed sidebar views; personal spaces and legacy projects retain `Folder` icons. Task descriptions do not provision a workspace; a row plus or global new conversation lazily prepares the current seat's directory. Task panels use revision CAS, keep text on conflict and show latest text separately before manual merge. Unknown creation results must be queried by clientActionId before retry. The sidebar lists active tasks only; archived metadata and selected archived history remain readable, with new work disabled and host-enforced. Do not expose private tasks in cross-seat assignment selectors. The sidebar footer has one Settings entry for every seat. Account identity and logout live inside settings; only authorized seats see model management.
@@ -344,7 +348,7 @@ Render entries beside tool results and a succeeded turn's authoritative finalMes
 
 ### 1. Scope / Trigger
 
-Applies to `InputQueue`, `QueueSend`, `useInputQueue`, `useChat` and conversation presentation. Queue UI attaches above the composer, shows up to three text rows, and expands on demand; no separate processing cards. Existing HITL and process history remain.
+Applies to `InputQueue`, `useInputQueue`, `useChat` and conversation presentation. Queue UI attaches above the composer, shows up to three text rows, and expands on demand; no separate processing cards. Existing HITL and process history remain.
 
 ### 2. Signatures
 
@@ -352,7 +356,7 @@ Applies to `InputQueue`, `QueueSend`, `useInputQueue`, `useChat` and conversatio
 
 ### 3. Contracts
 
-Busy Enter queues; Ctrl/Cmd+Enter or the send menu guides; row “引导” converts an existing pending item. Shift+Enter and IME do not submit. Disable rich-input selection while busy; retained attachments/Skill/Agent/map references block addition with an explanation. Preserve an independent stop icon.
+Busy Enter queues as `followUp`; row “引导” converts an existing pending item to `steer` and is the only composer entry for guiding. Do not render a separate queue/send-mode button or a composer status/shortcut footer. Ctrl/Cmd+Enter does not submit or guide; Shift+Enter inserts a newline and IME does not submit. Disable rich-input selection while busy; retained attachments/Skill/Agent/map references block addition with an explanation. Preserve an independent stop icon. Progress remains in the conversation and navigation, without repeated stage notices beneath the composer.
 
 `useInputQueue` stores unresolved operation IDs and text in seat-partitioned sessionStorage, never automatically retries a write. An accepted receipt clears the draft only if its captured **draft version and text** still match; retyping identical text counts as a new draft. UUID creation uses `random-uuid.ts` for public HTTP compatibility. Queue action locks are per session; delayed results stay attached to that session.
 
@@ -362,7 +366,7 @@ Returned items append to the owning draft without replacement, are marked locall
 
 ### 4. Validation & Error Matrix
 
-- Unavailable native phase, stopping, background reservation or stale target: keep draft, show server reason; never create a new run implicitly.
+- Unavailable native phase, stopping, background reservation or stale target: keep draft and block submission; do not repeat the phase/admission reason beneath the composer or create a new run implicitly. Explicit mutation failures still show their server reason.
 - HTTP 4xx mutation rejection: preserve draft, release local mutation lock.
 - Transport/5xx uncertainty: keep operation ID and draft, expose “查询状态”; do not resend.
 - Null receipt: keep uncertainty until explicit user acknowledgement; do not infer failure.
@@ -374,7 +378,7 @@ Good: submit identical text twice with different IDs, then delete only one. Base
 
 ### 6. Tests Required
 
-`tests/e2e/message-queue.spec.ts` uses real PiLab/API with a fake provider to verify duplicate text, guide, deletion/undo, takeback/stop, reload, lost acknowledgements, retyped drafts, IME, keyboard/menu and 375px layout. It removes native `crypto.randomUUID` to exercise public HTTP fallback. `tests/web/process-groups.test.ts` keeps multiple replies visible within one host request. Existing chat/reference E2E must remain green.
+`tests/e2e/message-queue.spec.ts` uses real PiLab/API with a fake provider to verify duplicate text, row guide, deletion/undo, takeback/stop, reload, lost acknowledgements, retyped drafts, IME, removed Ctrl/Cmd+Enter actions and 960px desktop layout. It removes native `crypto.randomUUID` to exercise public HTTP fallback. `hitl.spec.ts` verifies waiting questions/confirmations retain their controls without redundant composer notices. `tests/web/process-groups.test.ts` keeps multiple replies visible within one host request. Existing chat/reference E2E must remain green.
 
 ### 7. Wrong vs Correct
 

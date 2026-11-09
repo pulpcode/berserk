@@ -206,6 +206,11 @@ test('中文输入、独立草稿、多轮消息与刷新不重发', async ({ pa
     expect(mock.counts.sends).toBe(0);
     await input.dispatchEvent('compositionend');
     await input.fill('第一轮');
+    for (const shortcut of ['Control+Enter', 'Meta+Enter']) {
+      await input.press(shortcut);
+      await expect(input).toHaveValue('第一轮');
+      expect(mock.counts.sends).toBe(0);
+    }
     await input.press('Shift+Enter');
     expect(mock.counts.sends).toBe(0);
     await input.fill('第一轮'); await input.press('Enter');
@@ -917,7 +922,7 @@ test('跨项目创建失败可见，切换会话保护后续选择，手机新�
     await expect(page.getByLabel('模型 ID')).toBeVisible();
     mock.finish('new-2');
     // Wait for the browser's terminal state, not merely an unread value that was already absent.
-    await expect(page.locator('.request-status')).toBeEmpty();
+    await expect(page.locator('.composer-stop')).toHaveCount(0);
     await expect(page.getByRole('dialog', { name: '设置', exact: true })).toBeVisible();
     expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('berserk.read-results') || '{}')['new-2'])).toBeUndefined();
     await page.keyboard.press('Escape');
@@ -1008,7 +1013,7 @@ test('压缩状态跨项目可见，摘要完成不终结请求或产生未读�
     const requestId = session.active!.requestId;
     session.active!.phase = 'compacting';
     mock.event('A', { type: 'context.compaction_started', sessionId: 'A', requestId, reason: 'threshold' });
-    await expect(page.locator('.request-status')).toHaveText('正在压缩上下文');
+    await expect(page.locator('.thinking')).toContainText('正在压缩上下文');
     await input.fill('A 的下一轮草稿');
     await expect(page.getByRole('button', { name: '会话 A', exact: true }).getByRole('img', { name: '正在压缩上下文' })).toBeVisible();
     await page.getByRole('button', { name: '会话 C', exact: true }).click();
@@ -1023,12 +1028,10 @@ test('压缩状态跨项目可见，摘要完成不终结请求或产生未读�
     await expect(input).toHaveValue('A 的下一轮草稿');
     await page.getByRole('button', { name: '停止回复' }).click();
     mock.event('A', { type: 'context.compaction_started', sessionId: 'A', requestId, reason: 'threshold' });
-    await expect(page.locator('.request-status')).toHaveText('正在停止');
     await expect(page.getByRole('button', { name: '正在停止', exact: true })).toBeDisabled();
     mock.finish('A', 'cancelled');
-    await expect(page.locator('.request-status')).toHaveText('已停止');
-    await expect(page.getByText('终态之后的迟到内容不得展示')).toHaveCount(0);
     await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
+    await expect(page.getByText('终态之后的迟到内容不得展示')).toHaveCount(0);
     expect(mock.counts.cancels).toEqual([requestId]); expect(mock.counts.sends).toBe(1);
   } finally { await mock.close(); }
 });
@@ -1071,17 +1074,16 @@ test('刷新压缩中的会话只查询状态，最终失败可见且保留下�
     session.active = { requestId: 'existing-compaction', status: 'responding', phase: 'compacting' };
     session.messages = [{ id: 'existing-user', role: 'user', requestId: 'existing-compaction', text: '继续处理原任务' }];
     await page.goto('/');
-    await expect(page.locator('.request-status')).toHaveText('正在压缩上下文');
+    await expect(page.locator('.thinking')).toContainText('正在压缩上下文');
     const input = page.getByRole('textbox', { name: '发送消息' });
     await input.fill('下一轮补充信息');
     await page.reload();
-    await expect(page.locator('.request-status')).toHaveText('正在压缩上下文');
+    await expect(page.locator('.thinking')).toContainText('正在压缩上下文');
     await expect(input).toHaveValue('下一轮补充信息');
     expect(mock.counts.sends).toBe(0);
     session.active = null;
     session.lastResult = { requestId: 'existing-compaction', status: 'failed', message: '上下文压缩失败：摘要未完整生成，请调整后重试。' };
     await expect(page.getByRole('alert')).toContainText('上下文压缩失败');
-    await expect(page.locator('.request-status')).toHaveText('回复未完成');
     await expect(input).toHaveValue('下一轮补充信息');
     await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(0);
@@ -1148,7 +1150,7 @@ test('子任务完成不结束父请求或产生蓝点，跨项目草稿独立�
     const requestId = mock.sessions.get('A')!.active!.requestId;
     const child = childTask(requestId, 'live-child', 'reviewer');
     mock.updateChild('A', { ...child, phase: 'compacting' });
-    await expect(page.locator('.request-status')).toHaveText('reviewer · 正在压缩上下文');
+    await expect(page.locator('[data-subagent-id="live-child"] > summary')).toContainText('正在压缩上下文');
     mock.event('A', { type: 'subagent.updated', sessionId: 'A', requestId, subagent: childTask('other-request', 'foreign-child', '不属于当前请求') });
     await expect(page.locator('[data-subagent-id="foreign-child"]')).toHaveCount(0);
     await input.fill('A 的后续草稿');
@@ -1182,7 +1184,7 @@ test('停止覆盖活动子任务，迟到进度不覆盖停止或父终态', as
     const requestId = mock.sessions.get('A')!.active!.requestId;
     const child = childTask(requestId, 'stop-child');
     mock.updateChild('A', { ...child, phase: 'retrying' });
-    await expect(page.locator('.request-status')).toHaveText('analyst · 正在重试');
+    await expect(page.locator('[data-subagent-id="stop-child"] > summary')).toContainText('正在重试');
     await page.getByRole('button', { name: '停止回复' }).click();
     mock.event('A', { type: 'subagent.updated', sessionId: 'A', requestId, subagent: { ...child, phase: 'compacting' } });
     await expect(page.locator('[data-subagent-id="stop-child"] > summary')).toContainText('正在停止');
@@ -1191,7 +1193,7 @@ test('停止覆盖活动子任务，迟到进度不覆盖停止或父终态', as
     expect(mock.counts.sends).toBe(1);
     mock.updateChild('A', { ...child, status: 'cancelled', error: '用户停止了本次处理。' });
     mock.finish('A', 'cancelled');
-    await expect(page.locator('.request-status')).toHaveText('已停止');
+    await expect(page.getByRole('button', { name: '发送消息', exact: true })).toBeEnabled();
     const card = page.locator('[data-subagent-id="stop-child"]');
     await card.locator('summary').click();
     await expect(card).toContainText('用户停止了本次处理。');
@@ -1236,7 +1238,7 @@ test('刷新查询恢复子卡片，手机安全Markdown与中断状态可读且
     mock.updateChild('A', interrupted);
     session.active = null; session.lastResult = { requestId: child.parentRequestId, status: 'failed', message: '上次执行中断。' };
     await expect(page.locator('[data-subagent-id="interrupted-child"]')).toContainText('执行中断');
-    await expect(page.locator('.request-status')).toHaveText('回复未完成');
+    await expect(page.getByRole('alert')).toContainText('上次执行中断。');
     expect(mock.counts.sends).toBe(0); expect(mock.counts.creates).toBe(0);
   } finally { await mock.close(); }
 });
@@ -1257,7 +1259,7 @@ test('子事件不抢阅读位置或输入焦点，断线后查询恢复且不�
     const conversation = page.getByLabel('对话内容', { exact: true });
     await conversation.evaluate(element => { element.scrollTop = 0; element.dispatchEvent(new Event('scroll')); });
     mock.updateChild('A', { ...child, phase: 'tool', toolName: 'source_read' });
-    await expect(page.locator('.request-status')).toHaveText('analyst · 正在读取资料');
+    await expect(page.locator('[data-subagent-id="reconnect-child"] > summary')).toContainText('正在读取资料');
     await expect(input).toBeFocused();
     expect(await conversation.evaluate(element => element.scrollTop)).toBeLessThan(5);
     const beforeReads = mock.counts.sessionReads.length;
@@ -1267,7 +1269,7 @@ test('子事件不抢阅读位置或输入焦点，断线后查询恢复且不�
     mock.updateChild('A', { ...child, status: 'succeeded', result: '断线后由查询获取的结果。' });
     mock.finish('A');
     await expect(page.locator('[data-subagent-id="reconnect-child"] > summary')).toContainText('已完成');
-    await expect(page.locator('.request-status')).toBeEmpty();
+    await expect(page.locator('.composer-stop')).toHaveCount(0);
     expect(await conversation.evaluate(element => element.scrollTop)).toBeLessThan(5);
     await expect(input).toHaveValue('断线也不丢失的下一轮草稿');
     await expect(page.getByRole('button', { name: /^会话 A/ }).getByLabel('有新回复未读')).toHaveCount(1);

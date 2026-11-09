@@ -43,10 +43,20 @@ test('queue keeps identical submissions independent, supports 引导 / undo / ta
   const env = await setup(page);
   const rows = page.locator('.input-queue-row');
   try {
+    await expect(page.locator('.composer-footnote')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '排队', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: '选择追加方式', exact: true })).toHaveCount(0);
+    await composer(page).fill('快捷键不再引导');
+    for (const shortcut of ['Control+Enter', 'Meta+Enter']) {
+      await composer(page).press(shortcut);
+      await expect(composer(page)).toHaveValue('快捷键不再引导');
+      expect(env.lab.get(env.session.id).inputQueue?.items).toHaveLength(0);
+    }
     for (let n = 0; n < 2; n++) {
       await composer(page).fill('相同的补充'); await composer(page).press('Enter');
       await expect(rows).toHaveCount(n + 1); await expect(composer(page)).toHaveValue('');
     }
+    expect(env.lab.get(env.session.id).inputQueue?.items.map(item => item.mode)).toEqual(['followUp', 'followUp']);
     await rows.first().getByRole('button', { name: '引导', exact: true }).click();
     await expect(rows.first()).toContainText('等待引导');
     await rows.last().getByRole('button', { name: '删除排队消息' }).click();
@@ -67,25 +77,25 @@ test('queue keeps identical submissions independent, supports 引导 / undo / ta
   } finally { await env.close(); }
 });
 
-test('lost acceptance response is queried after reload without reposting; shortcut and narrow layout work', async ({ page }) => {
+test('lost acceptance response is queried after reload without reposting; queue actions fit a narrow desktop window', async ({ page }) => {
   const env = await setup(page); let posted = 0;
   try {
     await page.route('**/api/sessions/*/inputs', async route => {
       posted++; await env.reply(route); await route.abort('failed');
     });
-    await composer(page).fill('确认只接收一次'); await composer(page).press('Control+Enter');
+    await composer(page).fill('确认只接收一次'); await composer(page).press('Enter');
     await expect(page.getByRole('button', { name: '查询状态', exact: true })).toBeVisible();
     await expect(composer(page)).toHaveValue('确认只接收一次');
     await page.reload();
     await page.getByRole('button', { name: '查询状态', exact: true }).click();
     await expect(composer(page)).toHaveValue('');
     await expect(page.locator('.input-queue-row')).toHaveCount(1);
-    await expect(page.locator('.input-queue-row')).toContainText('等待引导');
+    await expect(page.locator('.input-queue-row').getByRole('button', { name: '引导', exact: true })).toBeEnabled();
     expect(posted).toBe(1);
-    await page.setViewportSize({ width: 375, height: 812 });
+    await page.setViewportSize({ width: 960, height: 800 });
     await expect(page.locator('.input-queue-row')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.screenshot({ path: '/tmp/axon-message-queue-mobile.png' });
+    await page.screenshot({ path: '/tmp/axon-message-queue-narrow-desktop.png' });
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.screenshot({ path: '/tmp/axon-message-queue-desktop.png' });
   } finally { await env.close(); }
@@ -111,14 +121,14 @@ test('late acknowledgement preserves a retyped draft and composition never submi
     await composer(page).fill(''); await composer(page).fill('同文新草稿');
     release();
     await expect(page.locator('.input-queue-row')).toHaveCount(1);
-    await expect(page.getByRole('button', { name: '排队', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
     await expect(composer(page)).toHaveValue('同文新草稿');
     await composer(page).press('Shift+Enter');
     await expect(composer(page)).toHaveValue('同文新草稿\n');
     expect(env.lab.get(env.session.id).inputQueue?.items).toHaveLength(1);
-    await page.getByRole('button', { name: '选择追加方式', exact: true }).click();
-    await page.getByRole('button', { name: '引导发送', exact: true }).click();
+    await composer(page).press('Enter');
     await expect(page.locator('.input-queue-row')).toHaveCount(2);
+    await page.locator('.input-queue-row').last().getByRole('button', { name: '引导', exact: true }).click();
     await expect(page.locator('.input-queue-row').last()).toContainText('等待引导');
     await expect(composer(page)).toHaveValue('');
   } finally { release(); await env.close(); }
