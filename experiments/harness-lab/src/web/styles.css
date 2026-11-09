@@ -1149,7 +1149,7 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
 .input-queue-row { display: flex; align-items: center; gap: 6px; min-width: 0; color: #65716b; position: relative; }
 .input-queue-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #27352d; font-size: 14px; }
 .input-queue .icon-button { width: 32px; height: 36px; min-height: 36px; padding: 0; flex-shrink: 0; }
-.input-queue .queue-guide { display: flex; align-items: center; gap: 4px; padding: 0 6px; min-height: 36px; flex-shrink: 0; }
+.input-queue .queue-guide { display: flex; align-items: center; gap: 4px; padding: 0 6px; min-height: 36px; flex-shrink: 0; border: 0; background: transparent; }
 .input-queue-label { font-size: 12px; white-space: nowrap; }
 .queue-more { position: relative; }
 .queue-menu { position: absolute; right: 0; bottom: 100%; z-index: 20; padding: 4px; background: white; border: 1px solid #d9dedb; border-radius: 10px; box-shadow: 0 4px 16px #0001; white-space: nowrap; }
