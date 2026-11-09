@@ -1,0 +1,34 @@
+{
+  "id": "execution-vehicle-motion",
+  "name": "execution-vehicle-motion",
+  "title": "外部模拟执行车辆沿路径动态展示",
+  "description": "v0.2规划：来源受控走时到下一事件后停止，无运动跳转/有运动统一限时展示，完整已走轨迹、查询固定快照、多席位近同步及到场点核对；待确认，不编码。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "codex",
+  "assignee": "codex",
+  "createdAt": "2026-11-09",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    ".trellis/tasks/11-09-execution-vehicle-motion/prd.md",
+    ".trellis/tasks/11-09-execution-vehicle-motion/design.md",
+    ".trellis/tasks/11-09-execution-vehicle-motion/implement.md"
+  ],
+  "notes": "用户要求先分析现状并形成简洁方案，确认后实施。已只读核对源码及服务器既有V01复验证据：7点path、3点trace、416.208m、09:19出发/09:19:35到场。规划来源已行驶几何+地图短时回显、多席位共同时间锚点，并核对屋顶事件锚点与车辆外围到场点。未改产品代码或启动模拟/测试。\n2026-11-09根据后续讨论重写v0.2：放弃先跳到目标再回显，改为来源统一走时，至下一已有事件停止；运动依据实际行驶距离/状态分段判断，普通位置采样内部处理。加入固定查询快照、重复推进、控制变更/断连/重启/换轮边界。本期已扩展到来源时间机制，不是仅前端动画，等待用户确认本版后实施。",
+  "meta": {
+    "planVersion": "0.2",
+    "implementationAuthorized": false,
+    "timeMode": "source_controlled_advance_to_next_event"
+  }
+}
