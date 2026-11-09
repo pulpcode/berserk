@@ -181,6 +181,11 @@ test('job board uses independent pages, retains filters and restores drawer deep
     const detail = page.getByRole('complementary', { name: '后台作业详情', exact: true });
     await expect(detail.getByRole('button', { name: '取消预处理', exact: true })).toBeVisible();
     await expect(detail.getByRole('button', { name: '关闭后台作业详情', exact: true })).toBeFocused();
+    await detail.locator('h2').first().click(); await expect(detail).toBeVisible();
+    const overview = await page.locator('.information-center:visible').boundingBox(); expect(overview).not.toBeNull();
+    await page.mouse.click(overview!.x + 12, overview!.y + 12);
+    await expect(detail).toHaveCount(0); await expect(card).toBeFocused();
+    await card.click(); await expect(detail).toBeVisible();
     const deepLink = page.url();
     await page.keyboard.press('Escape'); await expect(detail).toHaveCount(0); await expect(card).toBeFocused();
     await page.goBack(); await expect(detail).toBeVisible(); expect(page.url()).toBe(deepLink);
