@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "D2 已由用户确认：进度说明仿照 DSH Web 默认行为保持可见。D1/D3/D4 仍待审阅，整体未批准实施。入口 review.md，当前不得 task.py start。",
+  "notes": "D2 已确认沿用 DSH Web 默认保留进度说明；D3 已确认分阶段方向：A 暂留交互卡原位，C 最终在输入区附近处理当前待办、聊天保留回执。D1/D4 及 C 详细交互仍待审阅，整体未批准实施。入口 review.md，当前不得 task.py start。",
   "meta": {
     "implementationApproved": false,
     "desktopOnly": true,
@@ -40,12 +40,23 @@
         "reference": "DSH Web 默认 All replies",
         "userComment": "可以，仿照dsh web的行为来",
         "scope": "仅确认进度说明和最终答复保持可见；不批准整体实施、其他决策或新增显示模式设置。"
+      },
+      "D3": {
+        "status": "direction_confirmed",
+        "confirmedAt": "2026-11-09",
+        "userComment": "好的，按照这样；根据讨论，更新方案，然后提交git",
+        "stageA": "确认/提问卡暂留原消息位置，先精简密度与历史摘要。",
+        "targetC": "当前待办靠近输入区，服务端确认已处理后在聊天原位置保留可展开结果回执，并恢复原草稿。",
+        "detailsStatus": "awaiting_separate_review",
+        "scope": "仅确认分阶段方案方向；具体承载、多待办及草稿/队列共存仍待设计，不构成整体实施批准。"
       }
     },
     "pendingDecisions": [
       "D1",
-      "D3",
       "D4"
+    ],
+    "pendingDesignReviews": [
+      "C-interaction-details"
     ]
   }
 }

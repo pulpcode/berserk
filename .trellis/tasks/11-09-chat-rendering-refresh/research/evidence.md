@@ -30,6 +30,7 @@
 
 - `.trellis/tasks/09-20-w01-10-chat-presentation/prd.md`、`design.md`、`research/references.md`：早期已借鉴 DSH 做过程折叠，并建立只读终态证据、请求归属、异常/交互/文件独立可见等规则。相关事实已在现有文件可读，不额外检索会话日志。
 - 本草案保留其数据和执行边界；用户于 2026-11-09 已确认 D2“普通进度说明保留主消息流”，仿照 DSH Web 默认 All replies。它与旧设计不同，整体方案获批并实施后才更新生效规范。
+- 2026-11-09 用户同意 D3 按讨论分开记录：A 暂留确认/提问卡原位，C 最终将当前待办放在输入区附近、处理结果留在聊天原位置。C 的详细交互与整体实施仍待批准。
 - `bd2712c`：输入区提示/排队入口精简及快捷键调整。
 - `2188aaf`：交付文件卡紧凑布局及正文对齐。
 - `347d489`：登录页精简与密码显隐；属于本次方案范围外，保留。
@@ -47,7 +48,7 @@ GitHub 仓库：[https://github.com/deepseek-ai/deepseek-harness](https://github
 | [DisclosureRow.tsx](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-primitives/src/DisclosureRow.tsx)、[样式](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-primitives/src/DisclosureRow.module.css) | 紧凑过程行、弱化装饰、就地展开与键盘交互 | 使用本项目现有主题与图标，不引入其 Slots/Cordis 插件体系 |
 | [ToolRow.tsx](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-tool/src/client/tool/components/ToolRow.tsx)、[工具渲染说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-tool/README.md) | 动作/摘要同排，命令、读取、diff 等专门结果体 | 依赖原始参数、结果与元数据；当前公共契约缺少的部分进入 B |
 | [TurnProcessNodeView.tsx](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-chat/src/client/chat/TurnProcessNodeView.tsx)、[ChatView 样式](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-chat/src/client/chat/ChatView.module.css) | 完成披露、行间距、状态位置稳定 | 本项目无通用真实时间字段，不添加猜测计时/耗时 |
-| [审批呈现](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-approval/README.md)、[提问呈现](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-user-questions/README.md) | 当前待办靠近输入区、历史答案摘要 | 位置改变列为 C；不复制计时提问、持久授权或快捷键政策 |
+| [审批呈现](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-approval/README.md)、[提问呈现](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-user-questions/README.md) | 当前待办靠近输入区、历史答案摘要 | 位置迁移是 C 的已确认目标，详细交互仍待审阅；不复制计时提问、持久授权或快捷键政策 |
 | [交付文件说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/client/ui-deliverables/README.md) | 文件入口与交付的紧凑呈现 | 不能替换本项目固定副本交付语义，预览与下载保持同一版本 |
 | [许可证](https://github.com/deepseek-ai/deepseek-harness/blob/master/LICENSE) | 仓库提供 MIT 许可文本 | 若正式复用代码，按所复制文件及许可证保留应有说明；本轮仅设计对照 |
 
