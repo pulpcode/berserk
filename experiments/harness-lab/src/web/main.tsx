@@ -3,7 +3,7 @@ import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useSta
 import { createRoot } from 'react-dom/client';
 import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, CircleAlert, FolderOpen, LayoutDashboard, ListTodo, Map as MapIcon, Workflow, Menu, PanelLeftClose, PanelLeftOpen, MessageSquare, Plus, Settings, Square, SquarePen, X } from 'lucide-react';
 import type { WorkspaceResources } from '../contracts/index';
-import { InputQueue, QueueSend } from './InputQueue';
+import { InputQueue } from './InputQueue';
 import { useChat } from './useChat';
 import { useApi } from './api';
 import { InformationCenter } from './InformationCenter';
@@ -22,7 +22,6 @@ import { NewSession } from './NewSession';
 import { SettingsPanel } from './Settings';
 import { ModelPicker } from './ModelPicker';
 import { DirectoryStatus } from './DirectoryStatus';
-import { subagentStatus } from './SubagentCard';
 import { Attachments, FilesPanel } from './Files';
 import { LinkedWork, type WorkInboxHandle } from './WorkInbox';
 import { TaskPanel, useTasks } from './Tasks';
@@ -172,9 +171,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const [backgroundStopping, setBackgroundStopping] = useState(false);
   const busy = Boolean(active || backgroundJob || chat.pending || chat.creating);
   const loadingSession = Boolean(chat.selected && !snapshot);
-  const activeChild = snapshot?.subagents?.find(child => child.parentRequestId === active?.requestId && (child.status === 'running' || child.status === 'stopping'));
   const waiting = active?.phase === 'waiting_answer' || active?.phase === 'waiting_confirmation';
-  const status = loadingSession || chat.loading ? '正在读取会话' : active?.status === 'stopping' ? '正在停止' : active?.phase === 'waiting_answer' ? '待回答' : active?.phase === 'waiting_confirmation' ? '待确认' : active?.phase === 'compacting' ? '正在压缩上下文' : active?.phase === 'subagent' ? activeChild ? `${activeChild.role} · ${subagentStatus(activeChild)}` : 'Agent 处理中' : backgroundJob?.status === 'queued' ? '后台分析排队中' : busy ? '回复中' : snapshot?.lastResult?.status === 'interrupted' ? '已中断' : snapshot?.lastResult?.status === 'cancelled' ? '已停止' : snapshot?.lastResult?.status === 'succeeded' ? '' : snapshot?.lastResult?.status === 'failed' ? '回复未完成' : '';
   const messages = snapshot?.messages || [];
   const lastMessage = messages.at(-1);
   const error = chat.error || (snapshot?.lastResult?.status === 'failed' ? snapshot.lastResult.message || '本次回复未完成，请调整后重试。' : '');
@@ -185,7 +182,7 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
   const intakeUncertain = chat.inputQueue.operations[chat.selected];
   const canQueue = Boolean(composerReady && active && !backgroundJob && active.status !== 'stopping' && snapshot?.active?.requestId === active.requestId && queue?.requestId === active.requestId && queue.available && !richDraft && !intakeWorking && !intakeUncertain && chat.draft.trim());
   const pendingInputs = (queue?.items || []).filter(item => item.status === 'pending');
-  const intakeNotice = richDraft && active ? '回复期间只支持追加文字；附件和引用已保留，请等待本次回复结束后发送。' : active && !backgroundJob && !queue?.available ? queue?.reason || '当前阶段暂不能追加，草稿已保留。' : '';
+  const intakeNotice = richDraft && active ? '回复期间只支持追加文字；附件和引用已保留，请等待本次回复结束后发送。' : '';
   const canSend = composerReady && !busy && !intakeWorking && !intakeUncertain && !loadingSession && !chat.loading && Boolean(chat.selectedModel?.configured && chat.selectedModel.contextReady) && !chat.modelSaving && !chat.modelsError && !chat.modelError && !snapshot?.recoveryWarning && Boolean(chat.draft.trim()) && !blockedAttachments;
 
   useEffect(() => {
@@ -498,21 +495,21 @@ function App({ active: seatActive, seatId, seats, switchSeat, identity, logout, 
             <ComposerReferences key={`${chat.draftKey}:${seatActive}:${view}`} control={referenceControl} scope={chat.draftKey} workspaceId={chat.workspaceId} enabled={seatActive && view === 'chat' && composerReady && !busy} fileEnabled={Boolean(fileLimits?.enabled)} text={chat.draft} textarea={textarea} selection={chat.composerSelections.all[chat.draftKey] || {}} setText={chat.setDraft} select={chat.setComposerSelection} reference={file => chat.attachments.reference(chat.resolveDraftOwner(), chat.workspaceId, file, fileLimits?.maxAttachments || 0)} upload={() => attachmentInput.current?.click()} />
             {attachmentList}
             {draggingFiles && <p className="attachment-notice">松开文件，上传到当前项目</p>}
-            <textarea id={domId('message-input')} aria-label="发送消息" ref={textarea} disabled={!composerReady} rows={1} value={chat.draft} placeholder="描述你的问题，或继续补充想法…" aria-describedby={domId('input-hint')} onChange={event => { chat.setDraft(event.target.value); const input = event.nativeEvent as InputEvent; if (composing.current || input.isComposing) return; referenceControl.current?.input(event.target.value, event.target.selectionStart, !composing.current && !input.isComposing && input.inputType !== 'insertFromPaste'); }} onPaste={() => referenceControl.current?.close()} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={event => { composing.current = false; referenceControl.current?.input(event.currentTarget.value, event.currentTarget.selectionStart, true); }} onClick={event => referenceControl.current?.caret(event.currentTarget.selectionStart, event.currentTarget.selectionEnd)} onKeyDown={event => {
+            <textarea id={domId('message-input')} aria-label="发送消息" ref={textarea} disabled={!composerReady} rows={1} value={chat.draft} placeholder="描述你的问题，或继续补充想法…" onChange={event => { chat.setDraft(event.target.value); const input = event.nativeEvent as InputEvent; if (composing.current || input.isComposing) return; referenceControl.current?.input(event.target.value, event.target.selectionStart, !composing.current && !input.isComposing && input.inputType !== 'insertFromPaste'); }} onPaste={() => referenceControl.current?.close()} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={event => { composing.current = false; referenceControl.current?.input(event.currentTarget.value, event.currentTarget.selectionStart, true); }} onClick={event => referenceControl.current?.caret(event.currentTarget.selectionStart, event.currentTarget.selectionEnd)} onKeyDown={event => {
               if (!composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229 && referenceControl.current?.keyDown(event)) return;
               if (event.key === 'Enter' && !event.shiftKey && !composing.current && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
                 event.preventDefault();
-                if (canQueue) void chat.inputQueue.submit(chat.selected, event.ctrlKey || event.metaKey ? 'steer' : 'followUp');
+                if (event.ctrlKey || event.metaKey) return;
+                if (canQueue) void chat.inputQueue.submit(chat.selected, 'followUp');
                 else if (canSend) void chat.send();
               }
             }} />
-            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button><ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{active && !backgroundJob && <QueueSend key={chat.draftKey} disabled={!canQueue} guide={() => void chat.inputQueue.submit(chat.selected, 'steer')} />}{backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button> : busy ? <button type="button" className="stop-button composer-stop" aria-label={active?.status === 'stopping' ? '正在停止' : '停止回复'} title={active?.status === 'stopping' ? '正在停止' : '停止回复'} disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" /></button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
+            <div className="composer-toolbar">{fileLimits?.enabled && <><input ref={attachmentInput} className="visually-hidden" tabIndex={-1} type="file" multiple aria-label="选择附件" disabled={!composerReady} onChange={event => { uploadFiles(Array.from(event.target.files || [])); event.target.value = ''; }} /></> }<button type="button" className="icon-button attach-button" aria-label="添加附件" title="添加文件、Skill 或 Agents" disabled={!composerReady || busy} onClick={() => referenceControl.current?.open()}><Plus size={19} /></button><ModelPicker models={chat.models} value={chat.selectedModelId} disabled={!composerReady || busy || loadingSession || chat.modelSaving} saving={chat.modelSaving} choose={id => { void chat.chooseModel(id); }} />{backgroundJob ? <button type="button" className="stop-button" disabled={backgroundStopping} onClick={() => void stopBackground()}><Square size={13} aria-hidden="true" />{backgroundStopping ? '正在停止' : backgroundJob.status === 'queued' ? '取消排队' : '停止后台分析'}</button> : busy ? <button type="button" className="stop-button composer-stop" aria-label={active?.status === 'stopping' ? '正在停止' : '停止回复'} title={active?.status === 'stopping' ? '正在停止' : '停止回复'} disabled={!active || snapshot?.active?.requestId !== active.requestId || active.status === 'stopping'} onClick={() => void chat.cancel()}><Square size={13} fill="currentColor" aria-hidden="true" /></button> : <button type="submit" className="send-button" aria-label="发送消息" disabled={!canSend}><ArrowUp size={20} aria-hidden="true" /></button>}</div>
           </form>
           {intakeNotice && <p className="attachment-notice" role="status">{intakeNotice}</p>}
           {blockedAttachments && <p className="attachment-notice" role="status">请等待上传完成，或重试／移除未完成的附件后发送。</p>}
           {fileLimits?.enabled && !fileLimits.executionAvailable && attachmentItems.length > 0 && <p className="attachment-notice" role="status">处理环境尚未就绪，Agent 暂时无法读取、修改或执行工作区文件。</p>}
           {(attachmentItems.length > 0 || chat.composerSelections.all[chat.draftKey]?.skill || chat.composerSelections.all[chat.draftKey]?.agent) && !chat.draft.trim() && <p className="attachment-notice">请描述本次希望完成的目标。</p>}
-          <div className="composer-footnote"><span className={`request-status${busy ? ' active' : ''}`} role="status" aria-live="polite">{status && (busy && !waiting ? <span className="loading-dot" /> : <span className="status-dot" />)}{status}</span><span id={domId('input-hint')}>{active && !backgroundJob ? 'Enter 排队 · Ctrl/⌘ + Enter 引导' : 'Enter 发送'}<span className="shortcut-divider"> · </span>Shift + Enter 换行</span></div>
         </div>
       </div>
       </>}

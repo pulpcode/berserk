@@ -129,9 +129,6 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
 .composer-toolbar { display: flex; align-items: center; justify-content: flex-end; min-height: 34px; gap: 12px; margin-top: 2px; }
 .send-button { display: grid; place-items: center; width: 36px; height: 36px; background: var(--accent); color: white; border: 0; border-radius: var(--control-radius); }
 .stop-button { display: flex; align-items: center; gap: 6px; padding: 9px 12px; min-height: 36px; border-radius: var(--control-radius); border: 1px solid var(--line); background: #f7f8f7; font-size: 11px; }
-.composer-footnote { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; color: var(--muted); font-size: 10px; }
-.request-status { display: flex; gap: 5px; align-items: center; }
-.request-status.active { color: var(--accent); }
 .notice { display: flex; align-items: center; gap: 8px; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; font-size: 12px; line-height: 1.6; }
 .notice > span { flex: 1; overflow-wrap: anywhere; }
 .notice button { flex-shrink: 0; font-size: 11px; border: 0; background: transparent; color: inherit; padding: 5px; text-decoration: underline; text-underline-offset: 3px; }
@@ -208,7 +205,6 @@ h1 { font-size: clamp(25px, 2.6vw, 34px); letter-spacing: -1.1px; font-weight: 6
   .composer { padding: 12px 13px 9px; }
   .composer textarea { font-size: 16px; }
   .send-button { width: 40px; height: 40px; }
-  .composer-footnote { font-size: 9px; margin-top: 8px; }
   .notice { font-size: 11px; }
 }
 @media (max-height: 680px) { .empty-state { padding-top: 32px; } .welcome-symbol { margin-bottom: 17px; } .suggestions { margin-top: 22px; } }
@@ -1162,16 +1158,10 @@ button.danger-action:hover:not(:disabled), .stop-button:hover:not(:disabled) { c
   .input-queue { margin-inline: 4px; padding-inline: 6px; }
   .input-queue .icon-button { width: 44px; height: 44px; min-height: 44px; }
   .input-queue .queue-guide { min-height: 44px; }
-  .composer-footnote { flex-wrap: wrap; gap: 4px; }
 }
 .composer-toolbar .composer-stop { width: 40px; height: 40px; min-width: 40px; min-height: 40px; padding: 0; border-radius: 50%; background: #1f2923; color: white; border-color: #1f2923; flex-shrink: 0; justify-content: center; }
 .composer-toolbar .composer-stop:hover:not(:disabled) { background: #344239; color: white; }
 @media (max-width: 767px), (pointer: coarse) { .composer-toolbar .composer-stop { width: 44px; height: 44px; min-width: 44px; min-height: 44px; } }
-.queue-send-picker { position: relative; display: flex; align-items: center; flex-shrink: 0; }
-.queue-send-picker > button:first-child { padding-inline: 8px; }
-.queue-send-picker > .icon-button { width: 32px; height: 40px; min-height: 40px; padding: 0; }
-.queue-send-picker .queue-menu button { display: flex; gap: 5px; align-items: center; }
-@media (max-width: 767px), (pointer: coarse) { .queue-send-picker > .icon-button { width: 44px; height: 44px; min-height: 44px; } }
 
 /* Continuous assessments share the task content column and existing modal surfaces. */
 .task-assessments { min-width: 0; padding-block: 20px; border-top: 1px solid var(--line); }

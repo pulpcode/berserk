@@ -30,20 +30,3 @@ export function InputQueue({ items, disabled, act }: {
     {items.length > 3 && <button type="button" className="queue-expand" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? '收起' : `展开其余 ${items.length - 3} 条`}</button>}
   </div>;
 }
-
-export function QueueSend({ disabled, guide }: { disabled: boolean; guide: () => void }) {
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const close = (event: Event) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
-    document.addEventListener('pointerdown', close); document.addEventListener('focusin', close);
-    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('focusin', close); };
-  }, [open]);
-  return <div ref={root} className="queue-send-picker" onKeyDown={event => { if (event.key === 'Escape') { setOpen(false); button.current?.focus(); } }}>
-    <button type="submit" disabled={disabled}>排队</button>
-    <button ref={button} type="button" className="icon-button" aria-label="选择追加方式" aria-expanded={open} disabled={disabled} onClick={() => setOpen(value => !value)}><MoreHorizontal size={16} aria-hidden="true" /></button>
-    {open && <div className="queue-menu"><button type="button" disabled={disabled} onClick={() => { setOpen(false); guide(); }}><CornerDownRight size={15} aria-hidden="true" />引导发送</button></div>}
-  </div>;
-}

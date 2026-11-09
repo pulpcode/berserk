@@ -344,7 +344,7 @@ Render entries beside tool results and a succeeded turn's authoritative finalMes
 
 ### 1. Scope / Trigger
 
-Applies to `InputQueue`, `QueueSend`, `useInputQueue`, `useChat` and conversation presentation. Queue UI attaches above the composer, shows up to three text rows, and expands on demand; no separate processing cards. Existing HITL and process history remain.
+Applies to `InputQueue`, `useInputQueue`, `useChat` and conversation presentation. Queue UI attaches above the composer, shows up to three text rows, and expands on demand; no separate processing cards. Existing HITL and process history remain.
 
 ### 2. Signatures
 
@@ -352,7 +352,7 @@ Applies to `InputQueue`, `QueueSend`, `useInputQueue`, `useChat` and conversatio
 
 ### 3. Contracts
 
-Busy Enter queues; Ctrl/Cmd+Enter or the send menu guides; row “引导” converts an existing pending item. Shift+Enter and IME do not submit. Disable rich-input selection while busy; retained attachments/Skill/Agent/map references block addition with an explanation. Preserve an independent stop icon.
+Busy Enter queues as `followUp`; row “引导” converts an existing pending item to `steer` and is the only composer entry for guiding. Do not render a separate queue/send-mode button or a composer status/shortcut footer. Ctrl/Cmd+Enter does not submit or guide; Shift+Enter inserts a newline and IME does not submit. Disable rich-input selection while busy; retained attachments/Skill/Agent/map references block addition with an explanation. Preserve an independent stop icon. Progress remains in the conversation and navigation, without repeated stage notices beneath the composer.
 
 `useInputQueue` stores unresolved operation IDs and text in seat-partitioned sessionStorage, never automatically retries a write. An accepted receipt clears the draft only if its captured **draft version and text** still match; retyping identical text counts as a new draft. UUID creation uses `random-uuid.ts` for public HTTP compatibility. Queue action locks are per session; delayed results stay attached to that session.
 
@@ -362,7 +362,7 @@ Returned items append to the owning draft without replacement, are marked locall
 
 ### 4. Validation & Error Matrix
 
-- Unavailable native phase, stopping, background reservation or stale target: keep draft, show server reason; never create a new run implicitly.
+- Unavailable native phase, stopping, background reservation or stale target: keep draft and block submission; do not repeat the phase/admission reason beneath the composer or create a new run implicitly. Explicit mutation failures still show their server reason.
 - HTTP 4xx mutation rejection: preserve draft, release local mutation lock.
 - Transport/5xx uncertainty: keep operation ID and draft, expose “查询状态”; do not resend.
 - Null receipt: keep uncertainty until explicit user acknowledgement; do not infer failure.
@@ -374,7 +374,7 @@ Good: submit identical text twice with different IDs, then delete only one. Base
 
 ### 6. Tests Required
 
-`tests/e2e/message-queue.spec.ts` uses real PiLab/API with a fake provider to verify duplicate text, guide, deletion/undo, takeback/stop, reload, lost acknowledgements, retyped drafts, IME, keyboard/menu and 375px layout. It removes native `crypto.randomUUID` to exercise public HTTP fallback. `tests/web/process-groups.test.ts` keeps multiple replies visible within one host request. Existing chat/reference E2E must remain green.
+`tests/e2e/message-queue.spec.ts` uses real PiLab/API with a fake provider to verify duplicate text, row guide, deletion/undo, takeback/stop, reload, lost acknowledgements, retyped drafts, IME, removed Ctrl/Cmd+Enter actions and 960px desktop layout. It removes native `crypto.randomUUID` to exercise public HTTP fallback. `hitl.spec.ts` verifies waiting questions/confirmations retain their controls without redundant composer notices. `tests/web/process-groups.test.ts` keeps multiple replies visible within one host request. Existing chat/reference E2E must remain green.
 
 ### 7. Wrong vs Correct
 

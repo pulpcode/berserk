@@ -177,6 +177,12 @@ for (const scenario of [
 
 for (const initial of [question(), confirmation()]) test(`restart expires ${initial.kind} without reopening old controls or resending chat`, async ({ page }) => {
   const { a, state } = await fixture(page, initial);
+  a.inputQueue = { requestId: 'r1', revision: 1, available: false, reason: '请先回答或确认当前问题。', items: [] };
+  await page.reload();
+  await expect(page.getByRole('button', { name: '停止回复', exact: true })).toBeEnabled();
+  await expect(page.locator('.composer-footnote')).toHaveCount(0);
+  await expect(page.getByText('请先回答或确认当前问题。', { exact: true })).toHaveCount(0);
+  if (initial.kind === 'confirmation') await page.screenshot({ path: test.info().outputPath('composer-waiting-confirmation.png') });
   await page.getByRole('textbox', { name: '发送消息' }).fill('重启前编辑的新草稿');
   a.active = null;
   a.lastResult = { requestId: 'r1', status: 'interrupted', message: '上次处理已中断，已保存内容保留，可继续发送消息。' };
