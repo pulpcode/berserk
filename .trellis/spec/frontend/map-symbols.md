@@ -80,3 +80,11 @@ Successful saves of new or existing objects preserve center, zoom, bearing and p
 Wrong: merge source and annotation objects by display name, recolor standard glyphs to represent status, or rebuild the map when toggling tools.
 
 Correct: keep full source reference identity and annotation group/layer/object identity, render the controlled glyph unchanged, label information nature separately, and resize/suspend the existing runtime.
+
+## Source situation points
+
+`web/situation/source-symbols.ts` maps explicit `resource.vehicle.type` to existing water-tanker, foam, rescue and communications glyphs. A generic ladder declaration does not choose between aerial-ladder and platform subtypes. Generic vehicle/site/hydrant/resource SVGs are application pictograms outside the persisted professional catalog. Names, counts and inferred building roles never choose a professional subtype.
+
+Source and annotation rendering share `registerSymbolImage` (existing rasterization, halo and neutral failure image) and the per-map professional registry. Source glyphs use fixed artwork orientation without inventing a heading; selected/unconfirmed position halos remain separate from the artwork's colors. All original reference identities, geometry, paths and source data remain unchanged.
+
+Coincident source points render one representative glyph. Multiple coincident vehicles default to a generic fleet glyph; selecting a member displays its declared subtype. Existing coincident labels keep every member selectable; low-zoom counts are compact. Do not displace reported coordinates to separate glyphs. Include the source symbol layer in map picking and preserve annotation hit priority. Loading retains the circle fallback; decoded asset failures get a neutral selectable question mark and a short exception notice.

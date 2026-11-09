@@ -60,6 +60,16 @@ function missingImage(): ImageData {
   return context.getImageData(0, 0, 128, 128);
 }
 
+/** Shared loader for controlled professional and source-category SVGs. */
+export async function registerSymbolImage(map:MapLibreMap,imageId:string,url:string|undefined):Promise<boolean> {
+  if(map.hasImage(imageId))return true;
+  let image:ImageData;let loaded=true;
+  try {if(!url)throw new Error('缺少图标素材');image=await rasterize(url);}
+  catch {loaded=false;image=missingImage();}
+  if(!map.hasImage(imageId))map.addImage(imageId,image,{pixelRatio:4});
+  return loaded;
+}
+
 /** Register once per retained map. Basemap changes do not own these images.
  * Failures are reported to the caller and get a neutral, selectable fallback. */
 export function ensureMapSymbols(map: MapLibreMap): Promise<string[]> {
@@ -67,18 +77,7 @@ export function ensureMapSymbols(map: MapLibreMap): Promise<string[]> {
   if (existing) return existing;
   const loading = Promise.all(MAP_SYMBOLS.map(async definition => {
     const imageId = symbolImageId(definition.id);
-    if (map.hasImage(imageId)) return undefined;
-    let image: ImageData;
-    let failed = false;
-    try {
-      const url = symbolAssetUrl(definition.id);
-      if (!url) throw new Error(`缺少符号素材：${definition.name}`);
-      image = await rasterize(url);
-    } catch {
-      failed = true; image = missingImage();
-    }
-    if (!map.hasImage(imageId)) map.addImage(imageId, image, { pixelRatio: 4 });
-    return failed ? definition.id : undefined;
+    return await registerSymbolImage(map,imageId,symbolAssetUrl(definition.id)) ? undefined : definition.id;
   })).then(results => results.filter((id): id is string => id !== undefined));
   registrations.set(map, loading);
   return loading;

@@ -58,3 +58,23 @@ test('a missing controlled asset registers a neutral image and reports the faile
   `});
   await expect.poll(()=>page.evaluate(()=>window.symbolFailure)).toEqual({failed:['xf3013-2020.6.2.1'],registered:true});
 });
+
+declare global { interface Window { sourceIconFailure?:{failed:string[];registered:boolean} } }
+test('source category asset failure retains a neutral registered glyph',async({page})=>{
+  await page.route('http://127.0.0.1:*/',route=>route.fulfill({contentType:'text/html',body:'<div id="map" style="width:800px;height:600px"></div>'}));
+  await page.route('**/src/web/situation/source-symbols.ts',async route=>{
+    const response=await route.fetch(),source=await response.text();
+    const body=source.replace('const registrations =',"assets.hydrant='/missing-source-hydrant.svg'; const registrations =");
+    if(body===source)throw new Error('source asset capture point not found');
+    await route.fulfill({response,body});
+  });
+  await page.route('**/missing-source-hydrant.svg',route=>route.abort());
+  await page.goto('/');
+  await page.addScriptTag({type:'module',content:`
+    import * as maplibregl from '/node_modules/maplibre-gl/dist/maplibre-gl.mjs';
+    import {ensureSourceSymbols} from '/src/web/situation/source-symbols.ts';
+    const map=new maplibregl.Map({container:'map',style:{version:8,sources:{},layers:[]},center:[121,31],zoom:10});
+    map.once('load',async()=>{const failed=await ensureSourceSymbols(map);window.sourceIconFailure={failed,registered:map.hasImage('source-symbol:hydrant')};});
+  `});
+  await expect.poll(()=>page.evaluate(()=>window.sourceIconFailure)).toEqual({failed:['hydrant'],registered:true});
+});

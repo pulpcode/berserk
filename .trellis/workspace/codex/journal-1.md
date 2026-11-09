@@ -673,3 +673,34 @@
 ### Next Steps
 
 - 用户审阅复验报告与录像后，再按指示发布
+
+
+## Session 23: 以已有标绘替换态势圆点并完成服务器复验
+
+**Date**: 2026-11-09
+**Task**: 以已有标绘替换态势圆点并完成服务器复验
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+复用水罐、泡沫、救援、通信标绘，添加克制的类别图标与重合代表；服务器11项单元和5项桌面回归、类型/静态/构建通过。保留截图录像，未发布。
+
+### Main Changes
+
+- 仅修改公共地图展示，不改场景数据、模拟或Agent
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 服务器隔离目录icons-20261109；桌面覆盖移动、点击、重合、回退和原地图功能
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户审阅图标截图、录像后决定发布

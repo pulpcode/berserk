@@ -1,3 +1,4 @@
+import { ensureSourceSymbols, sourcePointSymbols } from './source-symbols';
 import { LoadingIndicator } from '../LoadingIndicator';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Map, NavigationControl, GeoJSONSource, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
@@ -30,9 +31,10 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
   const latest = useRef({ analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view }); useLayoutEffect(()=>{latest.current = { analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view };},[analysis, analysisPanel, analysisPanelOpen, closeAnalysisPanel, objects, sourceTimes, selected, select, annotations, unavailable, focusRequest, deferFocus, basemapConfig, view]);
   const updater=useRef<()=>void>(()=>{}); const fitted=useRef('');
   const [error, setError] = useState('');
+  const [symbolError,setSymbolError]=useState('');
   useEffect(() => {
     if (!container.current) return;
-    let instance: Map;
+    let instance: Map;let disposed=false;let symbolsReady=false;
     try {
       const probe=document.createElement('canvas').getContext('webgl2');
       if(!probe)throw new Error('WebGL unavailable');
@@ -51,7 +53,8 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
     const update = () => {
       annotationRuntime.update();
       analysisRuntime.update();
-      const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, typed:['vehicle','facility','hydrant'].includes(sourceCategory(item)), positionUnconfirmed:Boolean(positionNote(item,latest.current.sourceTimes[item.ref.systemId])), passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
+      const pointSymbols=symbolsReady?sourcePointSymbols(latest.current.objects,latest.current.selected):undefined;
+      const features = latest.current.objects.filter(item => item.geometry).map(item => ({ type: 'Feature' as const, geometry: item.geometry!, properties: { key: refKey(item.ref), selected: refKey(item.ref) === latest.current.selected, typed:['vehicle','facility','hydrant'].includes(sourceCategory(item)),...(pointSymbols?.get(refKey(item.ref))??{}), positionUnconfirmed:Boolean(positionNote(item,latest.current.sourceTimes[item.ref.systemId])), passability: 'passability' in item.properties ? item.properties.passability : 'unknown' } }));
       (instance.getSource('business:objects') as GeoJSONSource | undefined)?.setData({ type:'FeatureCollection', features });
       (instance.getSource('business:execution-tracks') as GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: executionTrailFeatures(latest.current.objects, latest.current.selected) });
       sourceLabels.update(latest.current.objects,latest.current.selected,latest.current.sourceTimes,!latest.current.annotations?.edit || latest.current.annotations.edit.paused);
@@ -101,7 +104,10 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
         'line-color': ['match', ['get', 'state'], 'blocked', '#a26913', 'cancelled', '#687582', '#376e5d'],
         'line-width': ['case', ['get', 'selected'], 4, 2], 'line-opacity': ['case', ['get', 'selected'], 0.95, 0.6],
       } });
-      instance.addLayer({ id:'business:resources', type:'circle', source:'business:objects', filter:['==',['geometry-type'],'Point'], paint:{ 'circle-radius':['case',['get','selected'],11,7], 'circle-color':['case',['get','positionUnconfirmed'],'#a26913',['get','typed'],'#53687a','#416858'],'circle-stroke-color':'white','circle-stroke-width':2 } });
+      instance.addLayer({ id:'business:resources', type:'circle', source:'business:objects', filter:['all',['==',['geometry-type'],'Point'],['!', ['has','image']]], paint:{ 'circle-radius':['case',['get','selected'],11,7], 'circle-color':['case',['get','positionUnconfirmed'],'#a26913',['get','typed'],'#53687a','#416858'],'circle-stroke-color':'white','circle-stroke-width':2 } });
+      instance.addLayer({id:'business:point-halo',type:'circle',source:'business:objects',filter:['all',['==',['geometry-type'],'Point'],['any',['get','selected'],['get','positionUnconfirmed']]],paint:{'circle-radius':21,'circle-color':'#ffffff','circle-opacity':0.75,'circle-stroke-color':['case',['get','positionUnconfirmed'],'#a26913','#416858'],'circle-stroke-width':2}});
+      instance.addLayer({id:'business:symbols',type:'symbol',source:'business:objects',filter:['all',['has','image'],['==',['get','symbolVisible'],true]],layout:{'icon-image':['get','image'],'icon-size':1,'icon-rotation-alignment':'viewport','icon-pitch-alignment':'viewport','icon-allow-overlap':true,'icon-ignore-placement':true}});
+      void ensureSourceSymbols(instance).then(failed=>{if(disposed)return;symbolsReady=true;setSymbolError(failed.length?'部分图标不可用，已用问号代替。':'');update();}).catch(()=>{if(!disposed)setSymbolError('图标加载失败，暂用圆点显示。');});
       basemapRuntime.update(latest.current.basemapConfig,latest.current.view);
       annotationRuntime.restore();
       update();
@@ -112,7 +118,7 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       if(latest.current.annotations?.edit && !latest.current.annotations.edit.paused)return;
       const hits=instance.queryRenderedFeatures(event.point);
       if(hits.some(feature=>feature.properties?.group && feature.properties?.objectId)){latest.current.select('');return;}
-      const feature=hits.find(feature=>['business:resources','business:roads','business:areas','business:execution-tracks'].includes(feature.layer.id) && feature.properties?.key);
+      const feature=hits.find(feature=>['business:symbols','business:point-halo','business:resources','business:roads','business:areas','business:execution-tracks'].includes(feature.layer.id) && feature.properties?.key);
       if(!feature){
         const analysisHit=hits.find(hit=>analysisLayerIds.some(id=>id===hit.layer.id));
         if(analysisHit){latest.current.analysis?.pick(String(analysisHit.properties?.analysisId || '') || undefined);return;}
@@ -121,16 +127,16 @@ export default function MapCanvas({ analysis, analysisPanel, analysisPanelOpen, 
       latest.current.select(feature?.properties?.key?String(feature.properties.key):'');
     });
     const resize = new ResizeObserver(() => instance.resize()); resize.observe(container.current);
-    return () => { updater.current=()=>{}; resize.disconnect(); sourceLabels.destroy(); analysisRuntime.destroy(); annotationRuntime.destroy(); basemapRuntime.destroy(); basemap.current=undefined; instance.remove(); map.current=undefined; };
+    return () => { disposed=true;updater.current=()=>{}; resize.disconnect(); sourceLabels.destroy(); analysisRuntime.destroy(); annotationRuntime.destroy(); basemapRuntime.destroy(); basemap.current=undefined; instance.remove(); map.current=undefined; };
   }, []);
   useEffect(()=>{basemap.current?.update(basemapConfig,view);},[basemapConfig,view]);
   useEffect(()=>{updater.current();},[analysis,analysisPanel,analysisPanelOpen,closeAnalysisPanel,objects,sourceTimes,selected,annotations,focusRequest,deferFocus]);
   return <div className="situation-canvas-wrap"><div ref={container} className="situation-canvas" aria-label="态势地图画布"/>
     <div className="situation-basemap-switch" role="group" aria-label="底图视图">{basemapViews.map(option=><button key={option.id} type="button" aria-pressed={view===option.id} onClick={()=>chooseView(option.id)}>{option.label}</button>)}</div>
     <div className="situation-attribution" aria-label="底图署名">{activeBasemapKinds(view).flatMap(kind=>basemapConfig[kind].attributions).map((item,index)=><a key={`${index}:${item.url}`} href={item.url} target="_blank" rel="noreferrer">{item.text}</a>)}</div>
-    {(error || status.errors.length>0 || status.notices.length>0) && <div className="situation-map-feedback" role="status">
-      {error || <>{status.errors.map(message=><p key={message}>{message}</p>)}{status.errors.length>0&&<button type="button" onClick={()=>basemap.current?.retry()}>重试底图</button>}{status.notices.map(message=><p key={message}>{message}</p>)}</>}
+    {(error || symbolError || status.errors.length>0 || status.notices.length>0) && <div className="situation-map-feedback" role="status">
+      {error || <>{symbolError&&<p>{symbolError}</p>}{status.errors.map(message=><p key={message}>{message}</p>)}{status.errors.length>0&&<button type="button" onClick={()=>basemap.current?.retry()}>重试底图</button>}{status.notices.map(message=><p key={message}>{message}</p>)}</>}
     </div>}
-    {status.loading && !error && !status.errors.length && !status.notices.length && <div className="situation-map-feedback"><LoadingIndicator label="正在加载底图…" /></div>}
+    {status.loading && !error && !symbolError && !status.errors.length && !status.notices.length && <div className="situation-map-feedback"><LoadingIndicator label="正在加载底图…" /></div>}
   </div>;
 }

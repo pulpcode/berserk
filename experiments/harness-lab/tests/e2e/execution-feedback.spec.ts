@@ -352,10 +352,13 @@ test('v7 advances once while two business maps join the shared live journey',asy
     const pages:Page[]=[];
     for(const [index,viewer] of viewers.entries()){
       await f.connect(viewer);const map=await viewer.newPage();await captureMap(map);await localVectorTiles(map);await login(map,index===0?control:overall);await map.goto('/situation');pages.push(map);
-      await expect.poll(()=>map.evaluate(()=>{const source=window.__basemapTestMap?.getStyle().sources['business:objects'];return Boolean(source&&'data' in source&&typeof source.data==='object'&&'features' in source.data&&source.data.features.length);})).toBe(true);
+      await expect.poll(()=>map.evaluate(()=>{const source=window.__basemapTestMap?.getStyle()?.sources['business:objects'];return Boolean(source&&'data' in source&&typeof source.data==='object'&&'features' in source.data&&source.data.features.length);})).toBe(true);
       await map.evaluate(()=>window.__basemapTestMap!.fitBounds([[121.8627,30.8822],[121.8646,30.8846]],{padding:60,duration:0}));
     }
     const ref=(code:string)=>({systemId:'situation' as const,objectType:code[0]==='R'?'road':'resource',objectId:`${f.runId}-${code}`});
+    await expect.poll(()=>pages[0].evaluate(()=>window.__basemapTestMap!.queryRenderedFeatures({layers:['business:symbols']}).length)).toBeGreaterThan(0);
+    await expect(pages[0].locator('.source-point-label')).toContainText(['同位置记录']);
+    await pages[0].screenshot({path:test.info().outputPath('source-category-icons.png')});
     const command={vehicles:[ref('V01'),ref('V06')],route:[ref('R03')],destination:ref('L01')};
     // The same authorized control-page API and explicit confirmation as the normal UI.
     const call=await apiLogin(f.app,control);
@@ -365,7 +368,7 @@ test('v7 advances once while two business maps join the shared live journey',asy
     await page.reload();await advanceOne(page,f); // departure, no travel yet
     const samples:number[][][]=[[],[]];
     const sample=async()=>{for(const [index,map] of pages.entries()){
-      const point=await map.evaluate((id)=>{const source=window.__basemapTestMap?.getStyle().sources['business:objects'];if(!source||!('data' in source)||typeof source.data!=='object')return;const data=source.data as {features?:Array<{properties?:{key?:string};geometry?:{type:string;coordinates:number[]}}>};return data.features?.find(feature=>feature.properties?.key?.includes(id))?.geometry?.coordinates;},`${f.runId}-V01`);
+      const point=await map.evaluate((id)=>{const source=window.__basemapTestMap?.getStyle()?.sources['business:objects'];if(!source||!('data' in source)||typeof source.data!=='object')return;const data=source.data as {features?:Array<{properties?:{key?:string};geometry?:{type:string;coordinates:number[]}}>};return data.features?.find(feature=>feature.properties?.key?.includes(id))?.geometry?.coordinates;},`${f.runId}-V01`);
       if(point)samples[index].push(point);
     }};
     const button=page.locator('.director-delivery').getByRole('button',{name:'推进节点',exact:true});await expect(button).toBeEnabled();await button.click();
@@ -373,6 +376,23 @@ test('v7 advances once while two business maps join the shared live journey',asy
     await expect.poll(async()=>Boolean((await detail(f)).instance.advancing)).toBe(false);
     for(const points of samples)expect(new Set(points.map(point=>JSON.stringify(point))).size).toBeGreaterThan(3);
     await test.info().attach('map-motion-samples',{body:JSON.stringify(samples),contentType:'application/json'});
+    await pages[0].locator('.source-point-label button').filter({hasText:/^V01 /}).click();
+    await expect(pages[0].getByRole('heading',{name:'V01 水罐车',exact:true})).toBeVisible();
+    await expect.poll(()=>pages[0].evaluate((id)=>{
+      const map=window.__basemapTestMap!,feature=map.queryRenderedFeatures({layers:['business:symbols']}).find(feature=>String(feature.properties?.key).includes(id));
+      return feature?.properties?.image;
+    },`${f.runId}-V01`)).toBe('annotation-symbol:xf3013-2020.6.2.1');
+    await pages[0].locator('.situation-detail button[aria-label="关闭对象详情"]').click();
+    await pages[0].evaluate(()=>window.__basemapTestMap!.fitBounds([[121.8627,30.8822],[121.8646,30.8846]],{padding:60,duration:0}));
+    await expect.poll(()=>pages[0].evaluate((id)=>window.__basemapTestMap!.queryRenderedFeatures({layers:['business:symbols']}).some(feature=>String(feature.properties?.key).includes(id)),`${f.runId}-V01`)).toBe(true);
+    const anchor=await pages[0].evaluate((id)=>{
+      const map=window.__basemapTestMap!,feature=map.queryRenderedFeatures({layers:['business:symbols']}).find(feature=>String(feature.properties?.key).includes(id));
+      if(feature?.geometry.type!=='Point')return;
+      const p=map.project(feature.geometry.coordinates as [number,number]);return {x:p.x,y:p.y};
+    },`${f.runId}-V01`);
+    expect(anchor).toBeDefined();
+    if(anchor)await pages[0].locator('.maplibregl-canvas').click({position:anchor});
+    await expect(pages[0].getByRole('heading',{name:/^V0[156] /})).toBeVisible();
     await pages[0].screenshot({path:test.info().outputPath('motion-arrived.png')});
     expect(f.fake.calls).toHaveLength(0);
   }finally{await f.close();for(const viewer of viewers)await viewer.close();}

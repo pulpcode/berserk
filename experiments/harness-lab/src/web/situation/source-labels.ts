@@ -20,7 +20,7 @@ export function createSourceLabels(map:LibreMap,pick:(key:string)=>void) {
         const vehicles=items.filter(item=>sourceCategory(item)==='vehicle');
         const facilities=items.filter(item=>sourceCategory(item)==='facility');
         const selectedItem=items.find(item=>refKey(item.ref)===selected);
-        if(!detailed && !facilities.length && !selectedItem)continue;
+        if(!detailed && !facilities.length && !selectedItem && vehicles.length<2)continue;
         const element=document.createElement('div');element.className='source-point-label';element.style.pointerEvents=interactive?'auto':'none';
         element.addEventListener('click',event=>event.stopPropagation());element.addEventListener('wheel',event=>event.stopPropagation());
         const addItem=(item:SituationObject)=>{
@@ -30,10 +30,10 @@ export function createSourceLabels(map:LibreMap,pick:(key:string)=>void) {
           const note=positionNote(item,sourceTimes[item.ref.systemId]);if(note){const text=document.createElement('small');text.className='source-position-note';text.textContent=note;element.append(text);}
         };
         if(facilities.length)facilities.forEach(addItem);
-        if(vehicles.length>1){const count=document.createElement('small');count.textContent=`同位置记录${vehicles.length}辆`;element.append(count);}
+        if(vehicles.length>1){const count=document.createElement('small');count.textContent=detailed?`同位置记录${vehicles.length}辆`:`${vehicles.length}辆`;count.title=`同位置记录${vehicles.length}辆`;element.append(count);}
         if(detailed)items.filter(item=>!facilities.includes(item)).forEach(addItem);
         else if(selectedItem&&!facilities.includes(selectedItem))addItem(selectedItem);
-        const coordinates=items[0]!.geometry!;if(coordinates.type==='Point')markers.push(new Marker({element,anchor:'left',offset:[12,0]}).setLngLat(coordinates.coordinates).addTo(map));
+        const coordinates=items[0]!.geometry!;if(coordinates.type==='Point')markers.push(new Marker({element,anchor:'left',offset:[22,0]}).setLngLat(coordinates.coordinates).addTo(map));
       }
     },
     destroy(){clear();},
