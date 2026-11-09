@@ -1,0 +1,72 @@
+{
+  "released": true,
+  "commit": "dfaf46e97b669fef9f010adb5f0d7d2aef7214e9",
+  "archiveSha256": "e5f241e003a910226d5752df72bfca3074472847e8615c8446e15940d3fae27a",
+  "backup": "/home/ubuntu/axon-scenario-release-68dded362074/backup/merged-ui-20261109-084247",
+  "health": true,
+  "pid": 481476,
+  "dataPreserved": true,
+  "privateConfigPreserved": true,
+  "active": {
+    "instanceId": "run-2563b6e1-41ed-426f-91b2-42e3c082e293",
+    "definitionId": "harbor-fire",
+    "definitionVersion": "6",
+    "definitionHash": "45ddd3b8a8e3e196cc09b668a20c2ad31ce1efdc23dee9b0b389fef953908424",
+    "name": "临港仓储火情",
+    "mode": "main_story",
+    "status": "active",
+    "paused": false,
+    "revision": 10,
+    "businessNow": "2026-11-03T09:19:35.000+08:00",
+    "stepIndex": 6,
+    "stepCount": 12,
+    "createdAt": "2026-11-09T03:49:17.736Z",
+    "updatedAt": "2026-11-09T06:54:06.013Z"
+  },
+  "runtimeFilesVerified": 364,
+  "assets": [
+    "/login",
+    "/scenario-director",
+    "/assets/index-DvBSw0-a.js",
+    "/assets/index-Da17NHCf.css"
+  ],
+  "motionPlanImplemented": false,
+  "modelCalls": 0,
+  "eventsSent": 0,
+  "commandsSent": 0,
+  "seatChecks": [
+    {
+      "seatId": "seat-director",
+      "canCollaborate": false,
+      "canIssueCommands": false
+    },
+    {
+      "seatId": "seat-overall",
+      "canCollaborate": true,
+      "canIssueCommands": false
+    },
+    {
+      "seatId": "seat-intelligence",
+      "canCollaborate": true,
+      "canIssueCommands": false
+    },
+    {
+      "seatId": "seat-planning",
+      "canCollaborate": true,
+      "canIssueCommands": false
+    },
+    {
+      "seatId": "seat-situation",
+      "canCollaborate": true,
+      "canIssueCommands": false
+    },
+    {
+      "seatId": "seat-control",
+      "canCollaborate": true,
+      "canIssueCommands": true
+    }
+  ],
+  "sourcePid": 481518,
+  "onlyOneAxonInstance": true,
+  "temporaryPreviewStopped": true
+}
