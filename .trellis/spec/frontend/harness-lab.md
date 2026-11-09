@@ -99,6 +99,8 @@ FilesPanel uses captured workspace IDs, directory navigation, filename search, p
 
 files.output SSE and terminal snapshots carry validated FileOutput metadata; render FileOutputCard with its downloadId, never fabricate a card from model prose or a path. Keep cards in their owning request and merge under existing stream guards. These links are fixed bytes. HistoricalFile checks files/status only when clicked and labels current/changed/missing before offering a current-file download; missing refs do not gain a same-name substitute. No per-poll filesystem hashing or raw hash display. Files dialogs cover the chat for unread tracking. No extra user-facing debugging controls.
 
+File output cards align with the reply text and size to their content, capped at 480px and the available conversation width. Keep the download link beside the file metadata, and let long filenames wrap completely without clipping or horizontal overflow.
+
 ### Interaction and accessibility
 
 Enter sends only outside IME composition; Shift+Enter inserts a newline. During a foreground reply keep the composer editable and use the native input queue contract below for plain-text additions; rich drafts wait until settlement. Stop uses the exact active request ID and remains stopping until settlement. If an active summary arrives before the matching conversation snapshot, show reading/busy state and disable Stop until snapshot request ID matches; the current cancel path depends on that snapshot. Stop disappearing alone does not imply the send form is ready: loaded conversation, configuration and settled request are all required. Refresh, comparison viewing, discard and history viewing perform GET/local state changes only.

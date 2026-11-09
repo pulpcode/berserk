@@ -462,7 +462,7 @@ input, select { font: inherit; }
 .message-attachments { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .message-attachments li { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; font-size: 12px; overflow-wrap: anywhere; padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; }
 .message-attachments small { flex-basis: 100%; color: var(--muted); }
-.file-output { display: flex; align-items: center; gap: 12px; padding: 15px; margin: 12px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.file-output { display: flex; align-items: center; gap: 12px; width: fit-content; max-width: min(480px, calc(100% - var(--reply-inset, 0px))); padding: 15px; margin: 12px 0 12px var(--reply-inset, 0px); border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .file-output > svg { flex-shrink: 0; color: var(--muted); }
 .file-output > div { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .file-output strong, .file-output small { display: block; }
