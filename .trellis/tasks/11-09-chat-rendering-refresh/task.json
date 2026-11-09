@@ -21,7 +21,7 @@
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "仅规划落盘，待用户审阅 D1–D4；未批准实施。入口 review.md，当前不得 task.py start。",
+  "notes": "D2 已由用户确认：进度说明仿照 DSH Web 默认行为保持可见。D1/D3/D4 仍待审阅，整体未批准实施。入口 review.md，当前不得 task.py start。",
   "meta": {
     "implementationApproved": false,
     "desktopOnly": true,
@@ -31,6 +31,21 @@
     "reviewEntry": "review.md",
     "relatedTasks": [
       "09-20-w01-10-chat-presentation"
+    ],
+    "decisions": {
+      "D2": {
+        "status": "confirmed",
+        "confirmedAt": "2026-11-09",
+        "behavior": "all_replies_visible",
+        "reference": "DSH Web 默认 All replies",
+        "userComment": "可以，仿照dsh web的行为来",
+        "scope": "仅确认进度说明和最终答复保持可见；不批准整体实施、其他决策或新增显示模式设置。"
+      }
+    },
+    "pendingDecisions": [
+      "D1",
+      "D3",
+      "D4"
     ]
   }
 }
