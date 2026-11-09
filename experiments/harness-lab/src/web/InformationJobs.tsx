@@ -49,7 +49,7 @@ export function InformationJobColumn({ column, query, offset, refreshKey, visibl
 }
 
 /** A non-modal side panel keeps navigation usable; closing restores its originating card. */
-export function InformationDrawer({ title, selectedId, close, children }: { title: string; selectedId: string; close: () => void; children: ReactNode }) {
+export function InformationDrawer({ title, selectedId, close, closeOnOutsideClick = false, children }: { title: string; selectedId: string; close: () => void; closeOnOutsideClick?: boolean; children: ReactNode }) {
   const closeButton = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -67,6 +67,15 @@ export function InformationDrawer({ title, selectedId, close, children }: { titl
     const keydown = (event: KeyboardEvent) => { if (event.key === 'Escape' && !document.querySelector('dialog[open]')) { event.preventDefault(); close(); } };
     document.addEventListener('keydown', keydown); return () => document.removeEventListener('keydown', keydown);
   }, [close]);
+  useEffect(() => {
+    if (!closeOnOutsideClick) return;
+    const center = panel.current?.closest('.information-center');
+    const clickOutside = (event: Event) => {
+      if (event.target instanceof Node && center?.contains(event.target) && !panel.current?.contains(event.target) && !document.querySelector('dialog[open]')) close();
+    };
+    center?.addEventListener('click', clickOutside);
+    return () => center?.removeEventListener('click', clickOutside);
+  }, [close, closeOnOutsideClick]);
   return <aside ref={panel} className="information-detail information-drawer" aria-label={title}>
     <div className="information-drawer-heading"><h2>{title}</h2><button className="icon-button" ref={closeButton} onClick={close} aria-label={`关闭${title}`}><X size={18} aria-hidden="true" /></button></div>
     <div className="information-drawer-body">{children}</div>
