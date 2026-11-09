@@ -5,13 +5,15 @@ import type { ContextRef, SituationObject } from '../../../src/contracts/context
 import { assertCommandObjects, commandExecution, commandHash, commandInput } from '../../../src/commands/validation.js';
 import { resourceFactActive } from '../../../src/contracts/task-resources.js';
 import type { SceneRecord } from './store.js';
-import { executionRoutingParameters as parameters, meters, pathFor, positionAlong, type PathSegment } from './routing.js';
+import { travelledPath } from './motion-path.js';
+import { motionArrival, motionAccessCorridors, simulationAccessCorridors, executionRoutingParameters as parameters, meters, pathFor, positionAlong, type PathSegment } from './routing.js';
 interface StoredVehicle extends VehicleExecution {
     segments: PathSegment[];
     lastAt: string;
     occupied: boolean;
     hasDeparted: boolean;
     blockedRoadRef?: ContextRef;
+    completedPaths?: [number,number][][];
 }
 interface StoredExecution extends Omit<CommandExecution, 'vehicles'> {
     vehicles: StoredVehicle[];
@@ -68,7 +70,7 @@ export function executionState(record: SceneRecord): ExecutionState {
                 || vehicle.travelledMeters > vehicle.distanceMeters + 0.001)
                 throw new Error('执行车辆记录损坏。');
             if(vehicle.blockedRoadRef && (vehicle.state!=='blocked' || vehicle.blockedRoadRef.systemId!=='situation' || vehicle.blockedRoadRef.objectType!=='road' || !object(record,vehicle.blockedRoadRef) || !vehicle.route.some(ref=>refEquals(ref,vehicle.blockedRoadRef!))))throw new Error('受阻道路引用损坏。');
-            if(record.instance.definitionVersion==='6' && vehicle.state==='blocked' && !vehicle.blockedRoadRef)throw new Error('受阻道路引用缺失。');
+            if(['6','7'].includes(record.instance.definitionVersion) && vehicle.state==='blocked' && !vehicle.blockedRoadRef)throw new Error('受阻道路引用缺失。');
             let length = 0;
             for (const [index, segment] of vehicle.segments.entries()) {
                 if (!Number.isFinite(segment.meters) || segment.meters < 0
@@ -98,7 +100,7 @@ export function executionView(record: SceneRecord, id: string): CommandExecution
     const { taskId: _task, seatId: _seat, ...view } = root;
     void _task;
     void _seat;
-    return { ...structuredClone(view), commandId: id, businessNow: record.instance.businessNow, vehicles: view.vehicles.map(({ segments: _segments, lastAt: _at, occupied: _occupied, hasDeparted: _departed, blockedRoadRef: _blockedRoad, ...vehicle }) => { void _segments; void _at; void _occupied; void _departed; void _blockedRoad; return structuredClone(vehicle); }) };
+    return { ...structuredClone(view), commandId: id, businessNow: record.instance.businessNow, vehicles: view.vehicles.map(({ segments: _segments, lastAt: _at, occupied: _occupied, hasDeparted: _departed, blockedRoadRef: _blockedRoad, completedPaths: _paths, ...vehicle }) => { void _segments; void _at; void _occupied; void _departed; void _blockedRoad; void _paths; return structuredClone(vehicle); }) };
 }
 function changeVehicle(record: SceneRecord, root: StoredExecution, vehicle: StoredVehicle) {
     const source = object(record, vehicle.vehicle);
@@ -112,7 +114,7 @@ function changeVehicle(record: SceneRecord, root: StoredExecution, vehicle: Stor
     source.resourceData.resource.availability = { state: vehicle.occupied ? 'unavailable' : 'available', effectiveAt: time, reportedAt: time, evidence: [...evidence, { kind: 'declaration', note: vehicle.occupied ? (vehicle.state === 'cancelled' ? '行动安排已取消，车辆保持当前位置并待后续处置' : `车辆执行任务占用，指令${root.rootCommandId}`) : '未出发安排已取消，车辆可用' }] };
     source.resourceData.resource.position = { meaning: 'actual', appliesTo: 'resource', effectiveAt: time, reportedAt: time, evidence };
     vehicle.trace.push({ businessTime: time, position: [...vehicle.position], sourceRevision: source.revision });
-    source.properties = { executionState: vehicle.state, executionCommandId: root.rootCommandId, executionTrack: structuredClone(vehicle.trace) };
+    source.properties = { executionState: vehicle.state, executionCommandId: root.rootCommandId, executionTrack: structuredClone(vehicle.trace), ...(record.instance.definitionVersion==='7'?{executionTrail:[...(vehicle.completedPaths??[]),travelledPath(vehicle.segments,vehicle.travelledMeters)]}:{}) };
     record.changes.push({ cursor: `scene:${record.instance.instanceId}:${record.changes.length + 1}`, effectiveAt: time, before, after: structuredClone(source) });
 }
 function notify(record: SceneRecord, root: StoredExecution, vehicles: StoredVehicle[], message: string, stepId: string, actor: ScenarioActor) {
@@ -123,7 +125,7 @@ function notify(record: SceneRecord, root: StoredExecution, vehicles: StoredVehi
     let text = `${vehicles.map(v => object(record, v.vehicle)?.name ?? v.vehicle.objectId).join('、')}：${message}。指令${root.rootCommandId}。业务时间${time}。`;
     let references = vehicles.map(v => v.vehicle);
     let summary=text;
-    if(record.instance.definitionVersion==='6') {
+    if(['6','7'].includes(record.instance.definitionVersion)) {
         const destination=record.execution?.commands[root.rootCommandId]?.input.command.destination;
         if(!destination||!object(record,destination))throw new Error('执行反馈缺少原指令目的地。');
         const names=(refs:ContextRef[])=>refs.map(ref=>object(record,ref)?.name??ref.objectId).join(' → ');
@@ -143,14 +145,15 @@ function notify(record: SceneRecord, root: StoredExecution, vehicles: StoredVehi
     const action: ScenarioAction = { id: randomUUID(), instanceId: record.instance.instanceId, stepId, actor: structuredClone(actor), systemId: 'situation', revision: record.instance.revision, createdAt: new Date().toISOString(), sendState: 'unsent', notification: { scenarioInstanceId: record.instance.instanceId, sourceMessageId: `${record.instance.instanceId}-${code}`, title, text: `${text}\n报告 intel/${reportId}，修订1。`, subjectId: reportId, occurredAt: time } };
     record.actions.push(action);
 }
+const arrivalPoint=(record:SceneRecord,ref:ContextRef)=>record.instance.definitionVersion==='7'&&ref.objectId.endsWith('-L01')?motionArrival:point(object(record,ref));
 function newVehicle(record: SceneRecord, ref: ContextRef, input: ExternalCommand['command']): StoredVehicle {
-    const item = object(record, ref), position = point(item), destination = point(object(record, input.destination));
+    const item = object(record, ref), position = point(item), destination = arrivalPoint(record,input.destination);
     if (!position || !destination || !item?.resourceData?.resource.vehicle)
         throw new Error('车辆位置或目的地缺少可核验坐标。');
     const state = item.resourceData.resource.availability;
     if (!resourceFactActive(state, record.instance.businessNow) || state?.state !== 'available')
         throw new Error(`${item.name}当前不可调派或依据已过期。`);
-    const segments = pathFor(position, destination, input.route, record.objects), distanceMeters = segments.reduce((n, s) => n + s.meters, 0), departAt = plus(record.instance.businessNow, parameters.preparationSeconds);
+    const segments = pathFor(position, destination, input.route, record.objects, false, record.instance.definitionVersion==='7'?motionAccessCorridors:simulationAccessCorridors), distanceMeters = segments.reduce((n, s) => n + s.meters, 0), departAt = plus(record.instance.businessNow, parameters.preparationSeconds);
     return { vehicle: ref, state: 'waiting', position: [...position], route: structuredClone(input.route), path: [segments[0].from, ...segments.map(s => s.to)], segments, distanceMeters, travelledMeters: 0, speedMetersPerSecond: parameters.speedMetersPerSecond, departAt, estimatedArrivalAt: plus(departAt, Math.ceil(distanceMeters / parameters.speedMetersPerSecond)), trace: [], lastAt: record.instance.businessNow, occupied: true, hasDeparted: false };
 }
 export function receiveExecution(record: SceneRecord, input: ExternalCommand, actor: ScenarioActor): CommandReceipt {
@@ -188,14 +191,15 @@ export function receiveExecution(record: SceneRecord, input: ExternalCommand, ac
                 const next = structuredClone(vehicle);
                 if (action === 'cancel') {
                     next.state = 'cancelled';
-                    if(record.instance.definitionVersion==='6'){delete next.blockedRoadRef;delete next.blockedReason;}
+                    if(['6','7'].includes(record.instance.definitionVersion)){delete next.blockedRoadRef;delete next.blockedReason;}
                     next.occupied = vehicle.hasDeparted;
                     return next;
                 }
-                const destination = point(object(record, input.command.destination));
+                const destination = arrivalPoint(record,input.command.destination);
                 if (!destination)
                     throw new Error('目的地坐标缺失。');
-                next.segments = pathFor(vehicle.position, destination, input.command.route, record.objects);
+                if(record.instance.definitionVersion==='7')next.completedPaths=[...(vehicle.completedPaths??[]),travelledPath(vehicle.segments,vehicle.travelledMeters)];
+                next.segments = pathFor(vehicle.position, destination, input.command.route, record.objects, false, record.instance.definitionVersion==='7'?motionAccessCorridors:simulationAccessCorridors);
                 next.path = [next.segments[0].from, ...next.segments.map(s => s.to)];
                 next.route = structuredClone(input.command.route);
                 next.distanceMeters = next.segments.reduce((n, s) => n + s.meters, 0);
@@ -235,7 +239,7 @@ export function nextExecutionTime(record: SceneRecord): number | undefined {
             if (vehicle.state === 'waiting')
                 times.push(Date.parse(vehicle.departAt));
             else if (vehicle.state === 'en_route')
-                times.push(Math.min(Date.parse(vehicle.estimatedArrivalAt), Date.parse(vehicle.lastAt) + parameters.updateSeconds * 1000));
+                times.push(record.instance.definitionVersion==='7'?Date.parse(vehicle.estimatedArrivalAt):Math.min(Date.parse(vehicle.estimatedArrivalAt), Date.parse(vehicle.lastAt) + parameters.updateSeconds * 1000));
         }
     return times.length ? Math.max(Date.parse(record.instance.businessNow), Math.min(...times)) : undefined;
 }
@@ -259,14 +263,14 @@ export function advanceExecution(record: SceneRecord, actor: ScenarioActor, step
             if (closed) {
                 vehicle.state = 'blocked';
                 vehicle.blockedReason = `前方${closed.road}不可通行`;
-                if(record.instance.definitionVersion==='6') vehicle.blockedRoadRef = record.objects.find(o=>o.ref.objectType==='road'&&o.ref.objectId.endsWith('-'+closed.road))?.ref;
+                if(['6','7'].includes(record.instance.definitionVersion)) vehicle.blockedRoadRef = record.objects.find(o=>o.ref.objectType==='road'&&o.ref.objectId.endsWith('-'+closed.road))?.ref;
                 blocked.push(vehicle);
             }
             else {
                 const elapsed = Math.max(0, (Date.parse(time) - Date.parse(vehicle.lastAt)) / 1000);
                 vehicle.travelledMeters = Math.min(vehicle.distanceMeters, vehicle.travelledMeters + elapsed * vehicle.speedMetersPerSecond);
                 vehicle.position = positionAlong(vehicle.segments, vehicle.travelledMeters);
-                if (vehicle.travelledMeters >= vehicle.distanceMeters - 0.001) {
+                if (vehicle.travelledMeters >= vehicle.distanceMeters - 0.001 && (record.instance.definitionVersion!=='7'||Date.parse(time)>=Date.parse(vehicle.estimatedArrivalAt))) {
                     vehicle.state = 'arrived';
                     vehicle.arrivedAt = time;
                     arrived.push(vehicle);

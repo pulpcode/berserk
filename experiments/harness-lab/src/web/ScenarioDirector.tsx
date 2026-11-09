@@ -97,7 +97,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     changed: refresh,
     failure,
   });
-  const blocked = Boolean(busy || pending || fetchError || replay.busy || replay.draft || !definitions.data || !instances.data);
+  const blocked = Boolean(busy || instance?.advancing || pending || fetchError || replay.busy || replay.draft || !definitions.data || !instances.data);
   const activeId = instances.data?.activeInstanceId;
   const activeDetail = detail;
   const preflight=useInformationQuery<ScenarioPreflight>(activeId?`${base}/preflight`:undefined,!denied&&panel==='restart',5000);
@@ -145,6 +145,13 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
     if (result.operation.kind === 'create') setInstancePages([]);
     remember(); refresh();
   }
+  async function settledOperation(result:ScenarioMutationResult) {
+    while(result.operation.state==='advancing'){
+      await new Promise(resolve=>setTimeout(resolve,500));
+      result=await api<ScenarioMutationResult>(`/api/simulation/operations/${encodeURIComponent(result.operation.id)}`);
+    }
+    return result;
+  }
   async function submitRequest(request: PendingRequest, sendingStep = false): Promise<ScenarioMutationResult | undefined> {
     remember(request); setNotice(''); setError('');
     try {
@@ -153,7 +160,8 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
         if (!result.initialized) throw new Error('任务准备尚未完成，请核对已有任务后重试同一请求。');
         remember(); setNotice('已创建3项演示任务。'); refresh();
       } else {
-        const result = await api<ScenarioMutationResult>(request.path, request.body);
+        const result = await settledOperation(await api<ScenarioMutationResult>(request.path, request.body));
+        if(result.operation.state==='interrupted'){remember();refresh();setNotice('推进已停止。');return;}
         if (sendingStep) {
           if (result.operation.id !== request.id || result.operation.kind !== 'step' || result.instance.instanceId !== request.instanceId) {
             throw new Error('事件操作回执与请求不符。');
@@ -186,7 +194,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
         const result = await api<ScenarioTaskInitialization>(`${request.path}`);
         if (result.initialized) { remember(); refresh(); setNotice('已核对本轮任务准备完成。'); }
         else { setReviewed(true); setError('任务尚未准备齐全，可重试原请求补齐；已有任务会保留。'); }
-      } else accepted(await api<ScenarioMutationResult>(`/api/simulation/operations/${encodeURIComponent(request.id)}`), request.label);
+      } else {const result=await settledOperation(await api<ScenarioMutationResult>(`/api/simulation/operations/${encodeURIComponent(request.id)}`));accepted(result,result.operation.state==='interrupted'?'推进已停止':request.label);}
     } catch (reason) {
       if (reason instanceof ApiFailure && reason.status === 404) { setReviewed(true); setError('服务器尚未找到该操作回执。可重试原请求，继续使用相同操作编号。'); }
       else failure(reason);
@@ -274,7 +282,7 @@ function DirectorWorkspace({identity, openTask, back}: {identity: Identity; open
                 {instance.status === 'active' && <>
                   {!stopped && <button className="primary-action" disabled={blocked || definitionChanged || delivery.syncing || !delivery.step || (instance.paused && !delivery.checkFirst)}
                     onClick={event => { if (event.detail <= 1) { setError(''); void delivery.deliver(); } }}>
-                    <Send size={15} aria-hidden="true"/>{delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : delivery.step?.kind === 'execution' ? '推进节点' : '投放事件'}
+                    <Send size={15} aria-hidden="true"/>{busy ? '推进中' : delivery.checkFirst ? '核对接收回执' : delivery.waiting ? '继续投放' : delivery.step?.kind === 'execution' ? '推进节点' : '投放事件'}
                   </button>}
                 </>}
               </div>

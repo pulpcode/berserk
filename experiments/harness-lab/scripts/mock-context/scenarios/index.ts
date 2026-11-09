@@ -6,6 +6,7 @@ import { ScenarioStore } from './store.js';
 
 export function createScenarioEngine(options:{databasePath?:string;targets:NotificationTarget[]}) {
   const store=new ScenarioStore(options.databasePath);
+  store.startScheduler();
   const commands=scenarioCommands(store,options.databasePath);
   return {commands:commands.handle,query:scenarioQuery(store),control:scenarioControl(store,options.targets),handlesControl:(path:string)=>/^\/control\/(?:scenarios|instances|operations|scenario-actions)(?:\/|$)/.test(path),close:()=>{commands.close();store.close();}};
 }

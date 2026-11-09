@@ -38,10 +38,12 @@ export async function contextRoutes(app: FastifyInstance, lab: PiLab, scope: Ret
     return {kind:'seat' as const,seatId,scenarioInstanceId:task.scenarioInstanceId};
   };
   const readQuery=(request:FastifyRequest,signal:AbortSignal,tool:'situation_query'|'information_search'|'information_read',input:unknown)=>{
-    const principal=queryPrincipal(request);
+    const principal:{kind:'seat';seatId:string;scenarioInstanceId?:string;readId?:string}=queryPrincipal(request);
+    const readId=request.headers['x-axon-read-id'];
+    if(readId!==undefined){if(typeof readId!=='string'||! /^[0-9a-f-]{36}$/.test(readId))throw new RequestError('INVALID_INPUT','读取编号无效。',400);principal.readId=readId;}
     // Global current browsing creates no association. An explicit parent must have its own proven scope.
     const readOnly=!(request.query as {taskId?:string}).taskId || principal.scenarioInstanceId!==undefined;
-    return context().query(tool,input,principal,signal,readOnly);
+    return context().query(tool,input,principal,signal,readOnly,request.headers['x-axon-map-display']==='1');
   };
   app.get(`${scope.base}/context/map-config`,{schema:{querystring:empty}},request => {
     let simulationEnabled = false; try {simulation(request);simulationEnabled=true;} catch { /* Optional control capability. */ }

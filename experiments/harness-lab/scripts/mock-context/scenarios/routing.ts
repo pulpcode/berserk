@@ -22,17 +22,17 @@ function project(point: Position, a: Position, b: Position) {
     const x = b[0] - a[0], y = b[1] - a[1], ratio = Math.max(0, Math.min(1, ((point[0] - a[0]) * x + (point[1] - a[1]) * y) / (x * x + y * y || 1)));
     return [a[0] + ratio * x, a[1] + ratio * y] as Position;
 }
-function graphSegments() {
+function graphSegments(corridors:Position[][]) {
     const result: PathSegment[] = [];
     for (const [id, , , points] of roadRows)
         for (let i = 1; i < points.length; i++)
             result.push({ from: points[i - 1], to: points[i], meters: meters(points[i - 1], points[i]), road: id });
-    for (const points of simulationAccessCorridors)
+    for (const points of corridors)
         for (let i = 1; i < points.length; i++)
             result.push({ from: points[i - 1], to: points[i], meters: meters(points[i - 1], points[i]) });
     return result;
 }
-export function pathFor(origin: Position, destination: Position, route: ContextRef[], objects: SituationObject[], allowClosed = false): PathSegment[] {
+export function pathFor(origin: Position, destination: Position, route: ContextRef[], objects: SituationObject[], allowClosed = false, corridors=simulationAccessCorridors): PathSegment[] {
     const roads = route.map(ref => ref.objectId.slice(-3));
     if (!roads.length || roads.some(id => !roadRows.some(row => row[0] === id)))
         throw new Error('请指定支持的道路，当前指令缺少可执行路线。');
@@ -40,7 +40,7 @@ export function pathFor(origin: Position, destination: Position, route: ContextR
         const road = objects.find(item => item.ref.objectId.endsWith('-' + id));
         return !road || !('passability' in road.properties) || road.properties.passability !== 'open';
     })) throw new Error('所选路线当前不可通行。');
-    let segments = graphSegments();
+    let segments = graphSegments(corridors);
     for (const point of [origin, destination]) {
         if (segments.some(s => pointKey(s.from) === pointKey(point) || pointKey(s.to) === pointKey(point)))
             continue;
@@ -113,3 +113,12 @@ export function positionAlong(path: PathSegment[], traveled: number): Position {
     }
     return path.at(-1)!.to;
 }
+
+/** V7 reviewed access: exterior S01 departure and paved warehouse yard, not roof anchors. */
+export const motionDeparture:Position=[121.8635917,30.8837077];
+export const motionArrival:Position=[121.8631572,30.8824992];
+export const motionAccessCorridors:Position[][]=[
+  [motionDeparture,[121.8636855,30.8838113],[121.8640611,30.8840875],roadRows[2][3][4]],
+  [roadRows[2][3][5],[121.8640745,30.8840300],[121.8631893,30.8832818],[121.8630418,30.8830632],[121.8631223,30.8828790],motionArrival],
+  ...simulationAccessCorridors.slice(2),
+];

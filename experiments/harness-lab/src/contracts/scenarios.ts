@@ -29,10 +29,12 @@ export interface ScenarioInstance extends ScenarioClock {
   definitionId: string; definitionVersion: string; definitionHash: string; name: string; mode: ScenarioMode;
   status: 'prepared' | 'active' | 'frozen'; paused: boolean; stepIndex: number; stepCount: number;
   createdAt: string; updatedAt: string;
+  advancing?: {operationId:string;stepId:string;from:string;to:string;startedAt:string;durationMs:number};
 }
 export interface ScenarioAction extends SimulationAction { instanceId: string; stepId: string; actor: ScenarioActor; deliveryActor?: ScenarioActor; deliveryAt?: string }
 export interface ScenarioOperation {
   id: string; instanceId: string; kind: 'create' | 'activate' | 'step' | 'pause' | 'resume';
+  state?: 'advancing'|'completed'|'interrupted';
   revision: number; businessNow: string; createdAt: string; actor: ScenarioActor; actionIds: string[];
 }
 export interface ScenarioInstanceDetail {
@@ -54,7 +56,7 @@ export interface ScenarioActivateInput extends ScenarioMutationInput { expectedA
 export interface ScenarioControlInput extends ScenarioMutationInput { action: 'pause' | 'resume' }
 export interface ScenarioTaskDefinition { code: 'T01' | 'T02' | 'T03'; title: string; goal: string; businessRefs: ContextRef[]; areaIds: string[] }
 export interface ScenarioTaskBootstrap {
-  schemaVersion: 2; definitionId: 'harbor-fire'; definitionVersion: '4'|'5'|'6'; definitionHash: string;
+  schemaVersion: 2; definitionId: 'harbor-fire'; definitionVersion: '4'|'5'|'6'|'7'; definitionHash: string;
   expectedTaskCodes: ['T02', 'T03'];
 }
 export const LEGACY_SCENARIO_TASK_CODES = ['T01', 'T02', 'T03'] as const;
@@ -63,7 +65,7 @@ export function isScenarioTaskBootstrap(value: unknown): value is ScenarioTaskBo
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
   const r = value as Record<string, unknown>;
   return Object.keys(r).length === 5 && Object.keys(r).every(key => ['schemaVersion', 'definitionId', 'definitionVersion', 'definitionHash', 'expectedTaskCodes'].includes(key))
-    && r.schemaVersion === 2 && r.definitionId === 'harbor-fire' && (r.definitionVersion === '4' || r.definitionVersion === '5' || r.definitionVersion === '6')
+    && r.schemaVersion === 2 && r.definitionId === 'harbor-fire' && (r.definitionVersion === '4' || r.definitionVersion === '5' || r.definitionVersion === '6' || r.definitionVersion === '7')
     && typeof r.definitionHash === 'string' && /^[a-f0-9]{64}$/.test(r.definitionHash)
     && Array.isArray(r.expectedTaskCodes) && r.expectedTaskCodes.length === SCENARIO_BOOTSTRAP_TASK_CODES.length
     && r.expectedTaskCodes.every((code, index) => code === SCENARIO_BOOTSTRAP_TASK_CODES[index]);

@@ -1,4 +1,4 @@
-import { executionRoutingParameters, simulationAccessCorridors } from './routing.js';
+import { motionAccessCorridors, motionArrival, motionDeparture, executionRoutingParameters, simulationAccessCorridors } from './routing.js';
 import { areaRings, hydrantPositions, roadRows, sitePositions, stationPositions } from './geography.js';
 import { createHash } from 'node:crypto';
 import type { ContextRef, InformationReport, SituationObject, Position } from '../../../src/contracts/context.js';
@@ -105,3 +105,7 @@ export const executionBootstrap:ScenarioTaskBootstrap={...taskBootstrap,definiti
 /** V6 changes notification facts and history read projection, never motion parameters. */
 export const repairedExecutionDefinition:ScenarioDefinitionSummary={...executionDefinition,version:'6',description:'逐车执行事实反馈与轻量历史查询的合成场景。',definitionHash:createHash('sha256').update(JSON.stringify({executionHash:executionDefinition.definitionHash,feedbackVersion:2,historyView:'state'})).digest('hex')};
 export const repairedExecutionBootstrap:ScenarioTaskBootstrap={...executionBootstrap,definitionVersion:'6',definitionHash:repairedExecutionDefinition.definitionHash};
+
+/** V7 retains older worlds, adding source-controlled motion. */
+export const motionDefinition:ScenarioDefinitionSummary={...repairedExecutionDefinition,version:'7',description:'来源统一走时与沿路径车辆展示。',definitionHash:createHash('sha256').update(JSON.stringify({executionHash:repairedExecutionDefinition.definitionHash,motionVersion:1,motionAccessCorridors,motionArrival,motionDeparture})).digest('hex')};
+export const motionBootstrap:ScenarioTaskBootstrap={...repairedExecutionBootstrap,definitionVersion:'7',definitionHash:motionDefinition.definitionHash};

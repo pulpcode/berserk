@@ -51,3 +51,11 @@ Reports and notifications share the same committed facts, with authorized destin
 V6 history projection and byte pagination follow [Multi-source Context Queries](context-analysis.md). Current object queries and authorized command detail retain full tracks. This repair does not replace source storage with a new trajectory service.
 
 Current v6 generated feedback `areaIds` uses the affected vehicles' source-declared area tags, not the union of destination and route-reference areas. A destination-area-only report search can therefore miss such feedback. Treat tag coverage as a known discovery limitation pending domain semantics; do not interpret source area tags as proof of current physical position.
+
+## V7 source-controlled motion
+
+V7 adds a durable `ScenarioInstance.advancing` anchor tied to one existing step operation. The source scheduler, independent of viewers, settles at a bounded 500ms real cadence, with a maximum four-second display interval. Ordinary position samples cease to be director steps in v7. Source/road/departure/arrival nodes retain their ordering, physics and authority. No-motion intervals commit immediately. Only the source completes arrival and produces feedback; HTTP reads remain readonly. Normal source storage failure stops the scheduler and fails reads explicitly until recovery; it never continues uncommitted movement.
+
+The original operation remains `advancing` until it becomes `completed` or `interrupted`. Exact retries/readback retain the operation ID. On service recovery, stop at committed business time, never catch up downtime. Pause, termination and incoming commands interrupt the active advance before subsequent changes. Old v4/v5/v6 behavior and hashes remain addressable.
+
+V7 stores travelled path prefixes separately as `executionTrail` parts, preserving corners and pre-reroute geometry. These are derived geometry, not synthetic GPS messages; `executionTrack` retains source position records. History state projection omits both heavy geometries. V7 explicitly versions exterior S01 departure/access corridors and the paved warehouse arrival yard; L01 remains the building incident anchor. Synthetic access corridors do not establish legal public navigation.

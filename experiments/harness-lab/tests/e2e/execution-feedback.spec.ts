@@ -35,7 +35,7 @@ async function apiLogin(app: FastifyInstance, seatId: string) {
 }
 
 /** Browser uses real authenticated APIs, SQLite and the actual HTTP source. Model calls are not needed. */
-async function setup(context: BrowserContext) {
+async function setup(context: BrowserContext, version='6') {
   await context.addInitScript(() => { Object.defineProperty(crypto, 'randomUUID', { value: undefined, configurable: true }); });
   const dir = await mkdtemp(join(tmpdir(), 'axon-command-browser-'));
   const env = { QUERY: 'command-test-query', CONTROL: 'command-test-control', INTEL: 'command-test-intel-token', SITUATION: 'command-test-situation-token' };
@@ -60,7 +60,7 @@ async function setup(context: BrowserContext) {
   for (const id of ['intel-source', 'situation-source']) store.grant('seat', overall, id, 'manage');
   for (const sourceId of ['intel-source', 'situation-source']) store.grant('seat', director, sourceId, 'view');
   const call = await apiLogin(app, director);
-  const definition = (await call<ScenarioDefinitions>('/api/simulation/scenarios')).items.find(item => item.version === '6')!;
+  const definition = (await call<ScenarioDefinitions>('/api/simulation/scenarios')).items.find(item => item.version === version)!;
   expect(definition).toBeDefined();
   const created = await call<ScenarioMutationResult>('/api/simulation/instances', { definitionId: definition.id, version: definition.version, mode: 'source_replay', clientActionId: randomUUID() });
   await call(`/api/simulation/instances/${created.instance.instanceId}/initialize`, { clientActionId: randomUUID() });
@@ -298,7 +298,7 @@ test('scenario selector distinguishes definition versions and can start the lega
     await page.getByRole('button', { name: '重新演示', exact: true }).click();
     const panel = page.getByRole('dialog', { name: '重新演示', exact: true });
     const scenario = panel.getByLabel('场景');
-    await expect(scenario.locator('option')).toHaveText(['临港仓储火情 · v6', '临港仓储火情 · v5', '临港仓储火情 · v4']);
+    await expect(scenario.locator('option')).toHaveText(['临港仓储火情 · v7', '临港仓储火情 · v6', '临港仓储火情 · v5', '临港仓储火情 · v4']);
     await scenario.selectOption('harbor-fire@4');
     await panel.getByRole('button', { name: '开始演示', exact: true }).click();
     await expect.poll(async () => {
@@ -339,4 +339,41 @@ test('cancelling the remaining vehicle preserves arrival and shows an ended mixe
     await expect(execution).not.toContainText('本指令车辆已到场');
     await page.screenshot({ path: test.info().outputPath('mixed-terminal-progress.png') });
   } finally { await page.goto('about:blank'); await f.close(); }
+});
+
+
+test('v7 advances once while two business maps join the shared live journey',async({page,context,browser})=>{
+  test.setTimeout(180000);
+  const f=await setup(context,'7');
+  const viewers=await Promise.all([browser.newContext({recordVideo:{dir:test.info().outputPath('control-video')}}),browser.newContext({recordVideo:{dir:test.info().outputPath('overall-video')}})]);
+  try{
+    await login(page,director);await page.goto('/scenario-director');
+    await advanceUntil(page,f,state=>state.instance.stepIndex>=5);
+    const pages:Page[]=[];
+    for(const [index,viewer] of viewers.entries()){
+      await f.connect(viewer);const map=await viewer.newPage();await captureMap(map);await localVectorTiles(map);await login(map,index===0?control:overall);await map.goto('/situation');pages.push(map);
+      await expect.poll(()=>map.evaluate(()=>{const source=window.__basemapTestMap?.getStyle().sources['business:objects'];return Boolean(source&&'data' in source&&typeof source.data==='object'&&'features' in source.data&&source.data.features.length);})).toBe(true);
+      await map.evaluate(()=>window.__basemapTestMap!.fitBounds([[121.8627,30.8822],[121.8646,30.8846]],{padding:60,duration:0}));
+    }
+    const ref=(code:string)=>({systemId:'situation' as const,objectType:code[0]==='R'?'road':'resource',objectId:`${f.runId}-${code}`});
+    const command={vehicles:[ref('V01'),ref('V06')],route:[ref('R03')],destination:ref('L01')};
+    // The same authorized control-page API and explicit confirmation as the normal UI.
+    const call=await apiLogin(f.app,control);
+    const workspace=await f.lab.workspaces.ensureWorkspace(f.task.id,control,f.task.title);
+    const prepared=await call<CommandRecord>('/api/commands/prepare',{workspaceId:workspace.id,clientActionId:randomUUID(),command});
+    await call(`/api/commands/${prepared.id}/commit`,{confirm:true});
+    await page.reload();await advanceOne(page,f); // departure, no travel yet
+    const samples:number[][][]=[[],[]];
+    const sample=async()=>{for(const [index,map] of pages.entries()){
+      const point=await map.evaluate((id)=>{const source=window.__basemapTestMap?.getStyle().sources['business:objects'];if(!source||!('data' in source)||typeof source.data!=='object')return;const data=source.data as {features?:Array<{properties?:{key?:string};geometry?:{type:string;coordinates:number[]}}>};return data.features?.find(feature=>feature.properties?.key?.includes(id))?.geometry?.coordinates;},`${f.runId}-V01`);
+      if(point)samples[index].push(point);
+    }};
+    const button=page.locator('.director-delivery').getByRole('button',{name:'推进节点',exact:true});await expect(button).toBeEnabled();await button.click();
+    for(let i=0;i<12;i++){await sample();await new Promise(resolve=>setTimeout(resolve,350));}
+    await expect.poll(async()=>Boolean((await detail(f)).instance.advancing)).toBe(false);
+    for(const points of samples)expect(new Set(points.map(point=>JSON.stringify(point))).size).toBeGreaterThan(3);
+    await test.info().attach('map-motion-samples',{body:JSON.stringify(samples),contentType:'application/json'});
+    await pages[0].screenshot({path:test.info().outputPath('motion-arrived.png')});
+    expect(f.fake.calls).toHaveLength(0);
+  }finally{await f.close();for(const viewer of viewers)await viewer.close();}
 });

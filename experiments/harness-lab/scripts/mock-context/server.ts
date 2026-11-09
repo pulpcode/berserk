@@ -211,7 +211,7 @@ export function createMockContextServer(options: {token: string; controlToken?: 
         const boundInstanceId=req.headers['x-axon-scenario-instance'];
         if(Array.isArray(boundInstanceId))throw fail('SCENARIO_CLOCK_CONFLICT','固定来源范围无效。',409);
         if(boundInstanceId!==undefined&&!scenarios)throw fail('SCENARIO_CLOCK_CONFLICT','当前来源不支持固定场景范围。',409);
-        body = scenarios?.query(url,boundInstanceId) ?? query(url);
+        body = scenarios?.query(url,boundInstanceId,typeof req.headers['x-axon-read-id']==='string'?req.headers['x-axon-read-id']:undefined,req.headers['x-axon-map-display']==='1') ?? query(url);
       }
     } catch (error) {
       status = error instanceof RequestError ? error.statusCode : 400;

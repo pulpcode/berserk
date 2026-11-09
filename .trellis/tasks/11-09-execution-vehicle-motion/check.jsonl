@@ -1,1 +1,4 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python3 .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/backend/commands.md", "reason": "指令权限、v7走时与车辆轨迹契约"}
+{"file": ".trellis/spec/backend/scenario-director.md", "reason": "导演操作、时间和地图读取边界"}
+{"file": ".trellis/spec/backend/scenario-run-isolation.md", "reason": "冻结、恢复与跨轮禁止写入"}
+{"file": ".trellis/spec/frontend/harness-lab.md", "reason": "既有React、API、控件与恢复约定"}

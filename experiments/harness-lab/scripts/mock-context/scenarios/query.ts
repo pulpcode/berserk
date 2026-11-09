@@ -9,8 +9,11 @@ function matches(item:{objectRefs:ContextRef[];areaIds:string[]},filters:Context
 function timed<T>(items:T[],stamp:(item:T)=>string|null,from?:string,to?:string){if(!from&&!to)return {items,timeUnknownCount:0};return {items:items.filter(item=>{const time=stamp(item);return time!==null&&(!from||Date.parse(time)>=Date.parse(from))&&(!to||Date.parse(time)<Date.parse(to));}),timeUnknownCount:items.filter(item=>stamp(item)===null).length};}
 
 export function scenarioQuery(store:ScenarioStore) {
+  const versions=new Map<string,{at:number;record:ReturnType<ScenarioStore['get']>}>();
+  const expired=new Set<string>();
+  const snapshots=new Map<string,{at:number;ttlMs:number;record:ReturnType<ScenarioStore['get']>}>();
   const cursors=new Map<string,{instanceId:string;revision:number;key:string;offset:number}>();
-  return (url:URL,boundInstanceId?:string):unknown|undefined => {
+  return (url:URL,boundInstanceId?:string,readId?:string,mapDisplay=false):unknown|undefined => {
     const detail=/^\/intel\/reports\/([^/]+)$/.exec(url.pathname),reports=url.pathname==='/intel/reports',current=url.pathname==='/situation/objects',changes=url.pathname==='/situation/changes';
     if(!detail&&!reports&&!current&&!changes)return;
     if(boundInstanceId!==undefined&&!/^run-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(boundInstanceId))throw sceneError('固定来源范围无效。','SCENARIO_CLOCK_CONFLICT');
@@ -28,14 +31,25 @@ export function scenarioQuery(store:ScenarioStore) {
     if('cursor' in params&&params.cursor&&!cursor){if(boundInstanceId!==undefined)throw sceneError('分页游标无效。','INVALID_CURSOR',400);return;}
     if(boundInstanceId===undefined&&!unique.length&&values.length)return;
     const instanceId=boundInstanceId??unique[0]??store.active().instanceId;if(!instanceId)return;
-    const record=store.get(instanceId),clock=sceneClock(record),asOf=clock.businessNow;
+    let record=store.get(instanceId);
+    const readKey=readId?`${instanceId}:${readId}`:undefined;
+    if(readKey&&record.instance.definitionVersion==='7'){
+      if(expired.has(readKey))throw sceneError('读取快照已过期，请重新查询。','CURSOR_STALE');
+      const saved=snapshots.get(readKey);
+      if(saved){if(Date.now()-saved.at>saved.ttlMs)throw sceneError('读取快照已过期，请重新查询。','CURSOR_STALE');record=saved.record;}
+      else {for(const [key,value] of snapshots)if(Date.now()-value.at>value.ttlMs){expired.add(key);snapshots.delete(key);}if(expired.size>100000||snapshots.size>=2048)throw sceneError('固定读取容量已满，请稍后重试。','UNAVAILABLE',503);const versionKey=`${instanceId}:${record.instance.revision}`;
+        for(const [key,value] of versions)if(Date.now()-value.at>60000)versions.delete(key);
+        const shared=versions.get(versionKey);if(shared)record=shared.record;else versions.set(versionKey,{at:Date.now(),record});
+        snapshots.set(readKey,{at:Date.now(),ttlMs:mapDisplay?60000:30*60000,record});}
+    }
+    const clock=sceneClock(record),asOf=clock.businessNow;
     const page=<T>(items:T[],filters:ContextFilters,timeUnknownCount=0,extra:(hasMore:boolean)=>Record<string,unknown>=()=>({}))=>{
       const key=stable({path:url.pathname,...Object.fromEntries(Object.entries(filters).filter(([key])=>key!=='cursor'))});let offset=0;
       if(filters.cursor){const saved=cursors.get(filters.cursor);if(!saved||saved.key!==key||saved.instanceId!==instanceId)throw sceneError('分页游标无效。','INVALID_CURSOR',400);if(saved.revision!==clock.revision)throw sceneError('场景已推进或切换，请重新查询第一页。','CURSOR_STALE');offset=saved.offset;}
       const limit=filters.limit??20,token=randomUUID();
       const response=(count:number)=>{
         const hasMore=offset+count<items.length;
-        return {systemId,asOf,snapshotClock:clock,items:items.slice(offset,offset+count),limit,nextCursor:hasMore?token:null,hasMore,timeUnknownCount,...extra(hasMore)};
+        return {systemId,asOf,snapshotClock:clock,...(mapDisplay&&record.instance.advancing?{mapMotion:{businessNow:asOf,serverNow:new Date().toISOString(),progress:record.instance.advancing,vehicles:Object.values(record.execution?.roots??{}).flatMap(root=>root.vehicles).filter(v=>v.state==='en_route').map(v=>({ref:v.vehicle,path:v.path,distance:v.distanceMeters,travelled:v.travelledMeters,speed:v.speedMetersPerSecond}))}}:{}),items:items.slice(offset,offset+count),limit,nextCursor:hasMore?token:null,hasMore,timeUnknownCount,...extra(hasMore)};
       };
       let count=0;
       while(count<limit && offset+count<items.length) {
@@ -56,7 +70,7 @@ export function scenarioQuery(store:ScenarioStore) {
     const unknownRefs=filters.objectRefs?.filter(ref=>!record.objects.some(object=>sameRef(ref,object.ref)))??[],head=sceneChangeCursor(instanceId,record.changes.length);
     if(current)return page(record.objects.filter(object=>category(object)&&matches({objectRefs:[object.ref],areaIds:object.areaIds},filters,object.name)).sort((a,b)=>a.ref.objectType.localeCompare(b.ref.objectType)||a.ref.objectId.localeCompare(b.ref.objectId)),filters,0,()=>({unknownRefs,changeCursor:head,resourceCoverage:{status:'complete'}}));
     let start=0;if(filters.after!==undefined){const index=[sceneChangeCursor(instanceId,0),...record.changes.map(c=>c.cursor)].indexOf(filters.after);if(index<0)throw sceneError('变化游标不属于本轮。','INVALID_CHANGE_CURSOR',400);start=index;}
-    const result=timed(record.changes.slice(start).filter(change=>category(change.after)&&matches({objectRefs:[change.after.ref],areaIds:change.after.areaIds},filters,change.after.name)),change=>change.effectiveAt,filters.from,filters.to),summary=record.instance.definitionVersion==='6';
+    const result=timed(record.changes.slice(start).filter(change=>category(change.after)&&matches({objectRefs:[change.after.ref],areaIds:change.after.areaIds},filters,change.after.name)),change=>change.effectiveAt,filters.from,filters.to),summary=['6','7'].includes(record.instance.definitionVersion);
     const project=(item:SituationObject):SituationObject=>{
       if(!summary || !('executionTrack' in item.properties))return item;
       const {executionState,executionCommandId}=item.properties;

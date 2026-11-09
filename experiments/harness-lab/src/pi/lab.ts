@@ -859,7 +859,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
       active.controller.signal.throwIfAborted(); if (record.active !== active || active.reason) throw new Error('当前请求已停止。');
     }) : active.sandbox ? workspaceFileTools(active.sandbox) : [];
     const scenarioInstanceId = !active.service ? this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId : undefined;
-    const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})};
+    const principal: ContextPrincipal | undefined = active.service ? active.service.contextPrincipal : {kind: 'seat', readId:active.id, seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})};
     if (this.access && !this.contextTasks) this.contextTasks = new TaskQueryService(this.access);
     const annotationState = !role && !active.background && this.annotations && active.annotationActor ? new AnnotationRequestState() : undefined;
     active.annotationState = annotationState;
@@ -1296,7 +1296,7 @@ ${active.sandbox ? `${record.service ? '当前工作目录是 /workspace，仅�
         if (!Object.keys(active.selections).length) active.selections = undefined;
         if (active.input?.contextRefs) {
           const scenarioInstanceId=this.access?.get(this.workspaces.get(record.workspaceId,record.seatId).taskSpaceId,record.seatId).scenarioInstanceId;
-          const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})}, active.controller.signal);
+          const context = await loadComposerContext(active.input.contextRefs, this.context, {kind: 'seat', readId:active.id, seatId: record.seatId,...(scenarioInstanceId===undefined?{}:{scenarioInstanceId})}, active.controller.signal);
           if (context) active.selections = {...active.selections, context};
         }
         if (active.input?.annotationRefs?.length) {

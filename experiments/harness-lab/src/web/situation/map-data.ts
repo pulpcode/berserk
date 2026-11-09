@@ -3,7 +3,7 @@ import type { TaskContext } from '../../contracts/access';
 import type { ScenarioClock } from '../../contracts/scenarios';
 import { resourceFactActive } from '../../contracts/task-resources';
 import { refKey } from './evidence';
-export interface SourceResult { systemId: string; items: SituationObject[]; queriedAt: string; asOf: string; unknownRefs: ContextRef[]; snapshotClock?: ScenarioClock }
+export interface SourceResult { systemId: string; items: SituationObject[]; queriedAt: string; asOf: string; unknownRefs: ContextRef[]; snapshotClock?: ScenarioClock; mapMotion?:import('../../contracts/context').MapMotion }
 export type QueryTransport = (params: SituationQueryParams) => Promise<ContextQueryResult>;
 const clockKey = (clock?: ScenarioClock) => clock ? JSON.stringify([clock.instanceId,clock.businessNow,clock.revision]) : '';
 const clockConflict = () => new Error('场景在查询期间已推进，请刷新态势后重新查看。');
@@ -34,7 +34,7 @@ export async function readSituation(transport: QueryTransport, params: Situation
         if (cursor) seen.add(cursor);
       } while (cursor);
       const page = last!.data as SituationCurrent;
-      return { systemId: params.systemId, items, queriedAt: last!.queriedAt, asOf: page.asOf, unknownRefs: page.unknownRefs || [], ...(page.snapshotClock?{snapshotClock:page.snapshotClock}:{}) };
+      return { ...(last!.mapMotion?{mapMotion:last!.mapMotion}:{}),systemId: params.systemId, items, queriedAt: last!.queriedAt, asOf: page.asOf, unknownRefs: page.unknownRefs || [], ...(page.snapshotClock?{snapshotClock:page.snapshotClock}:{}) };
     } catch (error) {
       if (error && typeof error === 'object' && 'code' in error && String(error.code).includes('CURSOR_STALE')) {
         if(sceneRead)throw clockConflict();
@@ -57,6 +57,7 @@ export function taskQueries(catalog: ContextCatalog, context?: TaskContext): Sit
 export function uniqueObjects(items: SituationObject[]) { return [...new Map(items.map(item => [refKey(item.ref), item])).values()]; }
 export function executionTrailFeatures(objects: SituationObject[], selected?: string) {
   return objects.flatMap(item => {
+    if('executionTrail' in item.properties&&item.properties.executionTrail)return item.properties.executionTrail.filter(part=>part.length>1).map(coordinates=>({type:'Feature' as const,geometry:{type:'LineString' as const,coordinates},properties:{key:refKey(item.ref),selected:refKey(item.ref)===selected,state:'executionState' in item.properties?item.properties.executionState:undefined}}));
     if (!('executionTrack' in item.properties) || !item.properties.executionTrack || item.properties.executionTrack.length < 2) return [];
     return [{
       type: 'Feature' as const,

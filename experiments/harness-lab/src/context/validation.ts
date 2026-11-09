@@ -98,7 +98,8 @@ export function situationObject(value: unknown, systemId: string, historyState =
     if(resourceEvidence(data.resource).some(item=>item.kind==='source' && item.ref.systemId!==systemId)) throw invalid();
   }
   if (ref.objectType === 'resource') {
-    const p = contextRecord(r.properties, ['availableCount', 'unit', 'executionState', 'executionCommandId', 'executionTrack', 'executionTrackIncluded'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    const p = contextRecord(r.properties, ['availableCount', 'unit', 'executionState', 'executionCommandId', 'executionTrack', 'executionTrackIncluded', 'executionTrail'], r.resourceData===undefined ? ['availableCount', 'unit'] : []);
+    if(p.executionTrail!==undefined) array(p.executionTrail,100,part=>array(part,4000,point=>{if(!Array.isArray(point)||point.length!==2||point.some(v=>typeof v!=='number'||!Number.isFinite(v))||Math.abs(point[0])>180||Math.abs(point[1])>90)throw invalid();return point;}));
     if(p.availableCount!==undefined || p.unit!==undefined) {contextInteger(p.availableCount, 0); if (p.unit !== '辆') throw invalid();}
     if(p.executionState!==undefined || p.executionTrack!==undefined || p.executionCommandId!==undefined || p.executionTrackIncluded!==undefined) {
       if(!r.resourceData || !['waiting','en_route','blocked','arrived','cancelled'].includes(String(p.executionState)))throw invalid();

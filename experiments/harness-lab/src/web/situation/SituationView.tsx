@@ -1,3 +1,5 @@
+import { randomUUID } from '../random-uuid';
+import { useVehicleMotion } from './useVehicleMotion';
 import { LoadingIndicator } from '../LoadingIndicator';
 import { AnalysisPanel } from './AnalysisPanel';
 import type { AnalysisMapState } from './analysis-runtime';
@@ -16,6 +18,7 @@ import { SourceResourceDetails, SourceResourceSummary } from './SourceResourceDe
 const Canvas = lazy(()=>import('./MapCanvas'));
 export interface SituationViewProps { taskId?:string; readOnly?:boolean; sourceActions?: (item:SituationObject)=>ReactNode; analysis?: AnalysisMapState; workspaceControls?: ReactNode; focusRequest?: number; floating?: boolean; selectSource?: () => void; contentPanelTarget?: HTMLElement | null; contentPanelOpen?: boolean; openContentPanel?: () => void; closeContentPanel?: () => void; sourceVisibility?: (visible:boolean) => void; annotationSelected?: boolean; annotations?: AnnotationMapState; sourceVisible?: boolean; toolbarTarget?: HTMLElement | null; taskContext?: TaskContext; taskMode?: boolean; initial?: MapReference; compact?: boolean; reference: (item: SituationObject) => void; }
 export default function SituationView({ taskId,readOnly=false,sourceActions, analysis, workspaceControls, toolbarTarget, taskContext, taskMode=false, initial, compact=false, reference, annotations, annotationSelected=false, sourceVisible=true, contentPanelTarget, contentPanelOpen, openContentPanel, closeContentPanel, sourceVisibility, floating=false, selectSource, focusRequest }: SituationViewProps) {
+  const root=useRef<HTMLElement>(null);
   const sourceTrigger=useRef<HTMLButtonElement|null>(null);const detailClose=useRef<HTMLButtonElement>(null);
   const [localPanel,setLocalPanel]=useState<HTMLElement|null>(null);const [panelOpen,setPanelOpen]=useState(false);const panelButton=useRef<HTMLButtonElement>(null);const [localSourceVisible,setLocalSourceVisible]=useState(true);const [locateRequest,setLocateRequest]=useState(0);
   const visible=sourceVisibility?sourceVisible:localSourceVisible;const setSourceVisible=sourceVisibility || setLocalSourceVisible;
@@ -42,16 +45,16 @@ export default function SituationView({ taskId,readOnly=false,sourceActions, ana
   const hasRange=Boolean(taskContext?.businessRefs?.length || taskContext?.focus?.areaIds?.length);
   useEffect(()=>{
     if(!catalog || (taskMode && !all && !hasRange && !area && !stableInitial)) return;
-    const token=++generation.current; const controller=new AbortController(); let pending=false;
-    const transport=async (params:SituationQueryParams)=> (await checkResponse(await client.request(client.url(`/api/context/situation${taskQuery}`),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(params),signal:controller.signal}))).json() as Promise<ContextQueryResult>;
+    const token=++generation.current; const controller=new AbortController(); let pending=false;let readId='';let sceneRead=false;let nextReadAt=0;
+    const transport=async (params:SituationQueryParams)=> (await checkResponse(await client.request(client.url(`/api/context/situation${taskQuery}`),{method:'POST',headers:{'Content-Type':'application/json','x-axon-read-id':readId,'x-axon-map-display':'1'},body:JSON.stringify(params),signal:controller.signal}))).json() as Promise<ContextQueryResult>;
     const refresh=async()=>{
-      if(pending || document.visibilityState==='hidden')return; pending=true;setBusy(true);
+      if(pending || Date.now()<nextReadAt || document.visibilityState==='hidden'|| !root.current?.getClientRects().length)return; pending=true;const startedAt=Date.now();readId=randomUUID();setBusy(true);
       try {
         let queries:SituationQueryParams[] = stableInitial ? [{systemId:stableInitial.ref.systemId,mode:'current',objectRefs:[stableInitial.ref]}] : all || area ? catalog.systems.filter(s=>s.capabilities.includes('situation_current') && (!source || s.id===source)).map(s=>({systemId:s.id,mode:'current',...(area?{areaIds:[area]}:{})})) : taskQueries(catalog,stableContext);
         if(!all && !stableInitial && stableContext?.businessRefs) {
           for(const report of stableContext.businessRefs.filter(ref=>ref.objectType==='report')) {
             try {
-              const response=await checkResponse(await client.request(client.url(`/api/context/reports/${encodeURIComponent(report.systemId)}/${encodeURIComponent(report.objectId)}${taskQuery}`),{signal:controller.signal,cache:'no-store'}));
+              const response=await checkResponse(await client.request(client.url(`/api/context/reports/${encodeURIComponent(report.systemId)}/${encodeURIComponent(report.objectId)}${taskQuery}`),{signal:controller.signal,cache:'no-store',headers:{'x-axon-read-id':readId,'x-axon-map-display':'1'}}));
               const envelope=await response.json() as ContextQueryResult; if(!controller.signal.aborted && token===generation.current)setErrors(old=>({...old,[report.systemId]:''})); const refs=(envelope.data as InformationDetail).item.objectRefs;
               for(const systemId of new Set(refs.map(ref=>ref.systemId)))queries.push({systemId,mode:'current',objectRefs:refs.filter(ref=>ref.systemId===systemId)});
             }catch(error){if(!controller.signal.aborted && token===generation.current)setErrors(old=>({...old,[report.systemId]:error instanceof Error?error.message:'报告引用读取失败'}));}
@@ -62,19 +65,21 @@ export default function SituationView({ taskId,readOnly=false,sourceActions, ana
           try{
             const parts=await Promise.all(queries.filter(query=>query.systemId===id).map(query=>readSituation(transport,query)));
             if(controller.signal.aborted || token!==generation.current)return;
-            const merged=mergeSituationParts(parts);
-            setSources(old=>({...old,[id]:merged}));setErrors(old=>({...old,[id]:''}));
+            const merged=mergeSituationParts(parts);sceneRead ||= Boolean(merged.snapshotClock);
+            setSources(old=>old[id]?.snapshotClock&&merged.snapshotClock&&JSON.stringify(old[id].snapshotClock)===JSON.stringify(merged.snapshotClock)?old:({...old,[id]:merged}));setErrors(old=>({...old,[id]:''}));
           }catch(error){if(!controller.signal.aborted && token===generation.current){if(error && typeof error==='object' && 'status' in error && [401,403,404].includes(Number(error.status)))setSources(old=>Object.fromEntries(Object.entries(old).filter(([key])=>key!==id)));setErrors(old=>({...old,[id]:error instanceof Error?error.message:'态势更新失败'}));}}
         }
-      }finally{pending=false;if(!controller.signal.aborted && token===generation.current)setBusy(false);}
+      }finally{pending=false;nextReadAt=startedAt+(sceneRead?1000:15000);if(!controller.signal.aborted && token===generation.current)setBusy(false);}
     };
-    void refresh();const timer=window.setInterval(()=>void refresh(),15000);document.addEventListener('visibilitychange',refresh);
-    return()=>{controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',refresh);};
+    const visibleRefresh=()=>{nextReadAt=0;void refresh();};
+    void refresh();const timer=window.setInterval(()=>void refresh(),1000);document.addEventListener('visibilitychange',visibleRefresh);
+    return()=>{controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',visibleRefresh);};
   },[client,taskQuery,catalog,revision,taskMode,hasRange,all,area,stableInitial,source,stableContext,setSources,setErrors]);
   // Query results own the tree, selection and counts; local visibility only affects map geometry.
   const objects=useMemo(()=>uniqueObjects(Object.values(sources).flatMap(value=>value.items)),[sources]);
+  const displayObjects=useVehicleMotion(objects,sources,Object.values(errors).some(Boolean));
   const sourceTimes=useMemo(()=>Object.fromEntries(Object.entries(sources).map(([id,result])=>[id,result.snapshotClock?.businessNow || result.queriedAt])),[sources]);
-  const mapObjects=useMemo(()=>visible?objects.filter(item=>layers.includes(sourceCategory(item))):[],[objects,layers,visible]);
+  const mapObjects=useMemo(()=>visible?displayObjects.filter(item=>layers.includes(sourceCategory(item))):[],[displayObjects,layers,visible]);
   const chosen=objects.find(item=>refKey(item.ref)===selected);
   const referencesMissing=Object.values(sources).flatMap(result=>result.unknownRefs);
   const sourceName=systems.find(item=>item.id===source)?.name || '全部获准来源';
@@ -103,7 +108,7 @@ export default function SituationView({ taskId,readOnly=false,sourceActions, ana
     {toolbarTarget===undefined&&!workspaceControls&&<span className="situation-map-title">态势地图</span>}
     <button ref={panelButton} type="button" className="icon-button" aria-label="图层与对象" title="图层与对象" aria-expanded={panelOpen} onClick={()=>setPanelOpen(!panelOpen)}><Layers size={20} strokeWidth={1.75} aria-hidden="true"/></button>{workspaceControls}
   </div>;
-  return <section className={`situation-view unified-map${compact?' compact':''}${toolbarTarget?' titlebar-map':''}${floating?' floating-map':''}`} aria-label="态势地图">
+  return <section ref={root} className={`situation-view unified-map${compact?' compact':''}${toolbarTarget?' titlebar-map':''}${floating?' floating-map':''}`} aria-label="态势地图">
     {!annotations&&(toolbarTarget?createPortal(toolbar,toolbarTarget):toolbar)}
     {contentPanelTarget?createPortal(tree,contentPanelTarget):!annotations&&<aside ref={setLocalPanel} className="situation-content-panel" hidden={!panelOpen} aria-label="图层与对象" onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setPanelOpen(false);panelButton.current?.focus();}}}><header className="annotation-panel-heading"><strong>图层与对象</strong><button className="icon-button" aria-label="关闭图层与对象" onClick={()=>{setPanelOpen(false);panelButton.current?.focus();}}><X size={18} aria-hidden="true"/></button></header>{tree}</aside>}
     {!!sceneTimes.length&&<p className="situation-scene-label">场景演示 · 合成业务覆盖层 · 设施与路况为模拟记录 · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a></p>}

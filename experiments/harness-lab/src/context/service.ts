@@ -1,3 +1,4 @@
+import { decodeMapMotion } from './map-motion.js';
 import type { ResourceQueryScope } from '../contracts/task-resources.js';
 import { mapReferences } from './map-references.js';
 import { RequestError } from '../contracts/errors.js';
@@ -10,6 +11,7 @@ const denied = () => new RequestError('CONTEXT_FORBIDDEN', '当前身份无权�
 export class ContextService {
   readonly config: ContextConfig;
   scenario?: {assertWritable(instanceId: string): void};
+  private readonly readClocks=new Map<string,{clock:string;at:number}>();
   private readonly tokens: Map<string, string>;
   constructor(config: ContextConfig, env: NodeJS.ProcessEnv = process.env, private readonly httpOptions: ContextHttpOptions = {}) {
     this.config = parseContextConfig(config); assertContextCredentials(this.config, env);
@@ -41,7 +43,7 @@ export class ContextService {
       ...(scope.taskId===undefined?{}:{taskId:scope.taskId}),...(scope.relation===undefined?{}:{relation:scope.relation}),
       ...(scope.category===undefined?{}:{category:scope.category}),...(scope.cursor===undefined?{}:{cursor:scope.cursor}),limit:100},principal,signal);
   }
-  async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal, readOnly = false): Promise<ContextQueryResult> {
+  async query(tool: ContextTool, input: unknown, principal: ContextPrincipal, signal?: AbortSignal, readOnly = false, mapDisplay = false): Promise<ContextQueryResult> {
     signal?.throwIfAborted();
     const params = normalizeContextQuery(tool, input), system = this.config.systems.find(s => s.id === params.systemId);
     if (principal.kind === 'service') {
@@ -68,10 +70,16 @@ export class ContextService {
       if (key === 'systemId' || key === 'mode' || (tool === 'information_read' && key === 'reportId')) continue;
       url.searchParams.set(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
     }
-    const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, {...this.httpOptions,
-      ...(system.scenarioClock === true && scenarioInstanceId ? {scenarioInstanceId} : {})});
+    const readId=principal.readId??(principal.kind==='service'?principal.jobId:undefined);
+    const raw = await readContextJson(url, this.tokens.get(system.id)!, signal, {...this.httpOptions, mapDisplay,
+      ...(system.scenarioClock === true && scenarioInstanceId ? {scenarioInstanceId} : {}), ...(system.scenarioClock===true&&readId?{readId}:{})});
     signal?.throwIfAborted();
     if (scenarioInstanceId && !readOnly) this.scenario?.assertWritable(scenarioInstanceId);
+    let mapMotion:import('../contracts/context.js').MapMotion|undefined;
+    if(raw&&typeof raw==='object'&&'mapMotion' in raw){
+      if(mapDisplay)mapMotion=decodeMapMotion(raw.mapMotion);
+      delete raw.mapMotion;
+    }
     const data = decodeContextResponse(tool, params, raw);
     if (system.scenarioClock === true && !data.snapshotClock || system.scenarioClock !== true && data.snapshotClock) {
       throw new RequestError('CONTEXT_TIME_BASIS_CONFLICT', '来源场景时间缺失或未获配置授权，不能使用真实时间代替。', 409);
@@ -79,6 +87,12 @@ export class ContextService {
     if (system.scenarioClock === true && scenarioInstanceId && data.snapshotClock?.instanceId !== scenarioInstanceId) {
       throw new RequestError('CONTEXT_TIME_BASIS_CONFLICT', '来源资料不属于本次查询范围。', 409);
     }
-    return {systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data, mapReferences: mapReferences(data)};
+    if(mapMotion&&(!data.snapshotClock||mapMotion.businessNow!==data.snapshotClock.businessNow||Date.parse(mapMotion.progress.from)>Date.parse(mapMotion.businessNow)||Date.parse(mapMotion.progress.to)<=Date.parse(mapMotion.businessNow)||mapMotion.vehicles.some(v=>!v.ref.objectId.startsWith(data.snapshotClock!.instanceId+'-'))))throw new RequestError('CONTEXT_INVALID_RESPONSE','地图运动资料与来源时点不一致。',502);
+    if(data.snapshotClock&&readId){
+      const key=readId,stamp=JSON.stringify(data.snapshotClock),previous=this.readClocks.get(key);
+      if(previous&&(previous.clock!==stamp||Date.now()-previous.at>30*60*1000))throw new RequestError('CONTEXT_READ_SNAPSHOT_CONFLICT','固定读取已失效，请重新发起查询。',409);
+      if(!previous){if(this.readClocks.size>=100000)throw new RequestError('CONTEXT_UNAVAILABLE','固定读取容量已满。',503);this.readClocks.set(key,{clock:stamp,at:Date.now()});}
+    }
+    return {...(mapMotion?{mapMotion}:{}),systemId: params.systemId, query: params, queriedAt: new Date().toISOString(), data, mapReferences: mapReferences(data)};
   }
 }

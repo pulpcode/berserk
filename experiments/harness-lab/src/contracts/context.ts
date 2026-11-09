@@ -5,8 +5,8 @@ import type { ScenarioClock } from './scenarios.js';
 export interface ContextRef { systemId: string; objectType: string; objectId: string }
 export interface ContextScopeSnapshot { scopeId: string; systemIds: string[] }
 export type ContextPrincipal =
-  | {kind: 'seat'; seatId: string; scenarioInstanceId?: string}
-  | {kind: 'service'; profileId: string; jobId: string; scope: ContextScopeSnapshot; scenarioInstanceId?: string};
+  | {kind: 'seat'; seatId: string; scenarioInstanceId?: string; readId?: string}
+  | {kind: 'service'; profileId: string; jobId: string; scope: ContextScopeSnapshot; scenarioInstanceId?: string; readId?: string};
 export type ContextTool = 'information_search' | 'information_read' | 'situation_query';
 export interface ContextCatalogSystem {
   id: string; name: string; objectTypes: string[];
@@ -45,7 +45,7 @@ export interface SituationObject {
   effectiveAt: string | null; validTime: ContextTimeRange | null;
   geometry?: SituationGeometry | null;
   resourceData?: SourceResource;
-  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | {executionTrack: ExecutionTrackPoint[]; executionState: VehicleExecutionState; executionCommandId: string} | {executionTrackIncluded: false; executionState: VehicleExecutionState; executionCommandId: string} | Record<string, never>;
+  properties: RoadProperties | {availableCount: number; unit: '辆'} | {memberRefs: ContextRef[]} | {executionTrack: ExecutionTrackPoint[]; executionTrail?: Position[][]; executionState: VehicleExecutionState; executionCommandId: string} | {executionTrackIncluded: false; executionState: VehicleExecutionState; executionCommandId: string} | Record<string, never>;
 }
 export interface SituationChange {
   cursor: string; effectiveAt: string | null; before: SituationObject; after: SituationObject;
@@ -58,6 +58,8 @@ export type ContextData = ContextPage<InformationReportIndex> | InformationDetai
 export interface MapReference { ref: ContextRef; revision?: number; href: string }
 export type { MapConfig } from './map.js';
 export interface LoadedContextSelection { refs: ContextRef[]; queries: ContextQueryResult[] }
+export interface MapMotion {serverNow:string;businessNow:string;progress:NonNullable<import('./scenarios.js').ScenarioInstance['advancing']>;vehicles:Array<{ref:ContextRef;path:Position[];distance:number;travelled:number;speed:number}>}
 export interface ContextQueryResult {
+  mapMotion?:MapMotion;
   systemId: string; query: ContextQueryParams; queriedAt: string; data: ContextData; mapReferences?: MapReference[];
 }

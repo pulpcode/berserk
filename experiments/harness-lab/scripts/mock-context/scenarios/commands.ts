@@ -55,7 +55,7 @@ export function scenarioCommands(store: ScenarioStore, path?: string) {
       const command = input.command;
       if (!/^[0-9a-f-]{36}$/.test(input.commandId) || !/^[0-9a-f-]{36}$/.test(input.taskId) || commandHash(command) !== input.contentHash) throw sceneError('指令编号或内容校验失败。', 'INVALID_ARGUMENT', 400);
       const prior = store.command(input.commandId);
-      if (prior || ['5', '6'].includes(store.get(input.scenarioInstanceId).instance.definitionVersion)) {
+      if (prior || ['5', '6', '7'].includes(store.get(input.scenarioInstanceId).instance.definitionVersion)) {
         try { return store.receiveCommand(input); }
         catch(error) {
           if(error instanceof RequestError && error.code==='INVALID_INPUT')throw sceneError(error.message,'INVALID_ARGUMENT',400);
