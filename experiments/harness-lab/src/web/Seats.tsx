@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import type { AuthSession, Identity } from '../contracts/access';
 import type { AppInfo } from '../contracts/index';
 import { api, ApiContext, createApiClient } from './api';
@@ -77,14 +78,15 @@ export function Seats({children}:{children:(view:SeatView)=>ReactNode}) {
   if(state?.mode==='test')return <TestSeats>{children}</TestSeats>;
   if(state?.identity && client)return <ApiContext.Provider key={state.viewId} value={client}>{children({active:true,identity:state.identity,seatId:state.identity.seatId,seats:state.seats || [],switchSeat:()=>{},logout:()=>void logout(),logoutError:error})}</ApiContext.Provider>;
   return <main className="login-page"><form className="login-card" onSubmit={e=>{e.preventDefault();void login();}}>
-    <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1><p>进入你的席位工作台</p>
+    <img src="/brand/axon-app-icon.svg" width="52" height="52" alt=""/><h1>登录 Axon</h1>
     <label htmlFor="login-seat">席位</label><select id="login-seat" name="seatId" autoComplete="username" value={seatId} onChange={e=>{setSeatId(e.target.value);setPassword('');setShow(false);setError('');}} disabled={busy || !state?.loginSeats?.length} required>
       <option value="" disabled>{!state?'正在加载席位…':state.loginSeats?.length?'请选择席位':'暂无可用席位'}</option>
       {state?.loginSeats?.map(seat=><option key={seat.id} value={seat.id}>{seat.name}</option>)}
     </select>
     {state && !state.loginSeats?.length && <p role="status">暂无可用席位，请联系管理员。</p>}
-    <label htmlFor="login-password">密码</label><input id="login-password" name="password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} disabled={busy} required/>
-    <label className="show-password"><input type="checkbox" checked={show} onChange={e=>setShow(e.target.checked)}/>显示密码</label>
+    <label htmlFor="login-password">密码</label><div className="login-password"><input id="login-password" name="password" type={show?'text':'password'} autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} maxLength={256} disabled={busy} required/>
+      <button type="button" className="icon-button" aria-label={show?'隐藏密码':'显示密码'} title={show?'隐藏密码':'显示密码'} aria-controls="login-password" disabled={busy} onClick={()=>setShow(value=>!value)}>{show?<EyeOff size={18} aria-hidden="true"/>:<Eye size={18} aria-hidden="true"/>}</button>
+    </div>
     {error && <p role="alert" className="resource-error">{error}</p>}
     <button className="primary-action" disabled={busy || !state?.loginSeats?.some(seat=>seat.id===seatId) || !password} type="submit">{busy?'正在登录…':'登录'}</button>
     {!state && <button type="button" onClick={()=>setReload(x=>x+1)}>重新连接</button>}

@@ -20,16 +20,29 @@ async function setup(secondManager = false) {
   });};
   return {lab,attach,close:async()=>{for(const page of pages)if(!page.isClosed()){await page.goto('about:blank');await page.unrouteAll({behavior:'wait'});}await app.close();await rm(dir,{recursive:true,force:true});}};
 }
-test('seat login supports errors, password clearing and a narrow viewport', async ({ page }) => {
+test('seat login supports password visibility, errors, clearing and a narrow viewport', async ({ page }) => {
   const env=await setup();await env.attach(page);
   try {
-    await page.setViewportSize({width:375,height:812});await page.goto('/');
+    await page.goto('/');
     const seat=page.getByLabel('席位',{exact:true}),password=page.getByLabel('密码',{exact:true}),submit=page.getByRole('button',{name:'登录',exact:true});
     await expect(seat).toHaveValue('');await expect(submit).toBeDisabled();
     await expect(seat.locator('option')).toHaveText(['请选择席位','席位 a','席位 b']);
-    await seat.selectOption('a');await password.fill('wrong-password');await submit.click();
+    await expect(page.getByText('进入你的席位工作台',{exact:true})).toHaveCount(0);
+    await expect(page.getByRole('checkbox',{name:'显示密码',exact:true})).toHaveCount(0);
+    await seat.selectOption('a');await password.fill('wrong-password');
+    await page.getByRole('button',{name:'显示密码',exact:true}).click();
+    await expect(password).toHaveAttribute('type','text');await expect(password).toHaveValue('wrong-password');
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    await page.getByRole('button',{name:'隐藏密码',exact:true}).press('Space');
+    await expect(password).toHaveAttribute('type','password');
+    await page.getByRole('button',{name:'显示密码',exact:true}).click();
+    await submit.click();
     await expect(page.getByRole('alert')).toHaveText('席位或密码不正确。');await expect(seat).toHaveValue('a');
     await seat.selectOption('b');await expect(password).toHaveValue('');await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(password).toHaveAttribute('type','password');
+    await expect(page.getByRole('button',{name:'显示密码',exact:true})).toBeVisible();
+    await page.screenshot({path:test.info().outputPath('login-compact-desktop.png')});
+    await page.setViewportSize({width:375,height:812});
     const bounds=await page.locator('.login-card').boundingBox();expect(bounds!.x).toBeGreaterThanOrEqual(0);expect(bounds!.x+bounds!.width).toBeLessThanOrEqual(375);
     await password.fill('test-password-123');await password.press('Enter');await expect(submit).toHaveCount(0);
   } finally {await env.close();}
