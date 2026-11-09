@@ -33,3 +33,5 @@
 - [控制席图标移动录像](/Users/lau/Documents/Codex/态势图标复验-20261109/控制席图标移动.webm)
 - [总体席图标移动录像](/Users/lau/Documents/Codex/态势图标复验-20261109/总体席图标移动.webm)
 - [全部证据](/Users/lau/Documents/Codex/态势图标复验-20261109/review-evidence.tar.gz)
+
+后续发布：704c892已按用户指示原位上线，详见[publish-704c892.md](publish-704c892.md)。上文未发布状态指复验完成时的历史状态。
