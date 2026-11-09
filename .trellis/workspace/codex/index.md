@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 20
-- **Last Active**: 2026-11-08
+- **Total Sessions**: 21
+- **Last Active**: 2026-11-09
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~614 | Active |
+| `journal-1.md` | ~643 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 21 | 2026-11-09 | 提交走时方案并合并main原位发布 | `3ea9272`, `11ed5dd`, `13d397b`, `dfaf46e`, `0acb29b` | `codex/scenario-demo` |
 | 20 | 2026-11-08 | 执行反馈修复与服务器三轮复验 | `190b8d2`, `2723aeb`, `44452dd` | `codex/scenario-demo` |
 | 19 | 2026-11-08 | 外部模拟执行与反馈集成及三轮复验 | `a266329`, `beef47b` | `codex/scenario-demo` |
 | 18 | 2026-11-08 | 控制席指令下达与文档软流程实施 | `d36947a`, `7c964a5` | `codex/scenario-demo` |

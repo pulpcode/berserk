@@ -612,3 +612,32 @@
 ### Next Steps
 
 - 用户审阅repair-plan/research/retest-results.md，确定剩余正文优化及发布安排；任务保持review，不归档。
+
+
+## Session 21: 提交走时方案并合并main原位发布
+
+**Date**: 2026-11-09
+**Task**: 提交走时方案并合并main原位发布
+**Branch**: `codex/scenario-demo`
+
+### Summary
+
+仅提交车辆受控走时v0.2方案，未实施；合并main及此前工作总览UI修改，服务器类型/静态/构建及107桌面回归通过；按授权取消指定控制席等待后原位发布dfaf46e，业务/来源/配置保留、六席权限和公网200，单套Axon运行。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3ea9272` | (see git log) |
+| `11ed5dd` | (see git log) |
+| `13d397b` | (see git log) |
+| `dfaf46e` | (see git log) |
+| `0acb29b` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 用户刷新页面检查；车辆动态展示等待本版实施确认，SIM-MAP-001仍搁置。
